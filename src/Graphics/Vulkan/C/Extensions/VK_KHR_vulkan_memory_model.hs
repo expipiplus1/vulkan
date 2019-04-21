@@ -38,7 +38,7 @@ import Graphics.Vulkan.C.Core10.Core
 --
 -- Unresolved directive in VkPhysicalDeviceVulkanMemoryModelFeaturesKHR.txt
 -- -
--- include::..\/validity\/structs\/VkPhysicalDeviceVulkanMemoryModelFeaturesKHR.txt[]
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceVulkanMemoryModelFeaturesKHR.txt[]
 --
 -- = See Also
 --
@@ -50,18 +50,18 @@ data VkPhysicalDeviceVulkanMemoryModelFeaturesKHR = VkPhysicalDeviceVulkanMemory
   vkPNext :: Ptr ()
   , -- | @vulkanMemoryModel@ indicates whether the Vulkan Memory Model is
   -- supported, as defined in
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-model Vulkan Memory Model>.
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-model Vulkan Memory Model>.
   -- This also indicates whether shader modules /can/ declare the
   -- @VulkanMemoryModelKHR@ capability.
   vkVulkanMemoryModel :: VkBool32
   , -- | @vulkanMemoryModelDeviceScope@ indicates whether the Vulkan Memory Model
-  -- can use @Device@ scope synchronization. This also indicates whether
-  -- shader modules /can/ declare the @VulkanMemoryModelDeviceScopeKHR@
-  -- capability.
+  -- can use 'Graphics.Vulkan.Core10.DeviceInitialization.Device' scope
+  -- synchronization. This also indicates whether shader modules /can/
+  -- declare the @VulkanMemoryModelDeviceScopeKHR@ capability.
   vkVulkanMemoryModelDeviceScope :: VkBool32
   , -- | @vulkanMemoryModelAvailabilityVisibilityChains@ indicates whether the
   -- Vulkan Memory Model can use
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-model-availability-visibility availability and visibility chains>
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-model-availability-visibility availability and visibility chains>
   -- with more than one element.
   vkVulkanMemoryModelAvailabilityVisibilityChains :: VkBool32
   }
@@ -82,17 +82,20 @@ instance Storable VkPhysicalDeviceVulkanMemoryModelFeaturesKHR where
                 *> poke (ptr `plusPtr` 24) (vkVulkanMemoryModelAvailabilityVisibilityChains (poked :: VkPhysicalDeviceVulkanMemoryModelFeaturesKHR))
 
 instance Zero VkPhysicalDeviceVulkanMemoryModelFeaturesKHR where
-  zero = VkPhysicalDeviceVulkanMemoryModelFeaturesKHR zero
+  zero = VkPhysicalDeviceVulkanMemoryModelFeaturesKHR VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES_KHR
                                                       zero
                                                       zero
                                                       zero
                                                       zero
+
 -- No documentation found for TopLevel "VK_KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME"
 pattern VK_KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME = "VK_KHR_vulkan_memory_model"
+
 -- No documentation found for TopLevel "VK_KHR_VULKAN_MEMORY_MODEL_SPEC_VERSION"
 pattern VK_KHR_VULKAN_MEMORY_MODEL_SPEC_VERSION :: Integral a => a
 pattern VK_KHR_VULKAN_MEMORY_MODEL_SPEC_VERSION = 3
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES_KHR"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES_KHR = VkStructureType 1000211000

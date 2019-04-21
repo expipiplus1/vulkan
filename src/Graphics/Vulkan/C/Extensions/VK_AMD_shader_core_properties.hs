@@ -38,24 +38,24 @@ import Graphics.Vulkan.C.Core10.Core
 --
 -- = Members
 --
--- The members of the @VkPhysicalDeviceShaderCorePropertiesAMD@ structure
+-- The members of the 'VkPhysicalDeviceShaderCorePropertiesAMD' structure
 -- describe the following implementation-dependent limits:
 --
 -- = Description
 --
--- If the @VkPhysicalDeviceShaderCorePropertiesAMD@ structure is included
+-- If the 'VkPhysicalDeviceShaderCorePropertiesAMD' structure is included
 -- in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- == Valid Usage (Implicit)
+-- Unresolved directive in VkPhysicalDeviceShaderCorePropertiesAMD.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceShaderCorePropertiesAMD.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkPhysicalDeviceShaderCorePropertiesAMD = VkPhysicalDeviceShaderCorePropertiesAMD
-  { -- | @sType@ /must/ be
-  -- @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -146,7 +146,7 @@ instance Storable VkPhysicalDeviceShaderCorePropertiesAMD where
                 *> poke (ptr `plusPtr` 68) (vkVgprAllocationGranularity (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))
 
 instance Zero VkPhysicalDeviceShaderCorePropertiesAMD where
-  zero = VkPhysicalDeviceShaderCorePropertiesAMD zero
+  zero = VkPhysicalDeviceShaderCorePropertiesAMD VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD
                                                  zero
                                                  zero
                                                  zero
@@ -162,12 +162,15 @@ instance Zero VkPhysicalDeviceShaderCorePropertiesAMD where
                                                  zero
                                                  zero
                                                  zero
+
 -- No documentation found for TopLevel "VK_AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME"
 pattern VK_AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME = "VK_AMD_shader_core_properties"
+
 -- No documentation found for TopLevel "VK_AMD_SHADER_CORE_PROPERTIES_SPEC_VERSION"
 pattern VK_AMD_SHADER_CORE_PROPERTIES_SPEC_VERSION :: Integral a => a
 pattern VK_AMD_SHADER_CORE_PROPERTIES_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD = VkStructureType 1000185000

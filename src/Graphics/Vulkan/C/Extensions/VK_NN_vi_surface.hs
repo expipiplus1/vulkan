@@ -10,11 +10,9 @@
 module Graphics.Vulkan.C.Extensions.VK_NN_vi_surface
   ( VkViSurfaceCreateFlagsNN(..)
   , VkViSurfaceCreateInfoNN(..)
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkCreateViSurfaceNN
-#endif
   , FN_vkCreateViSurfaceNN
   , PFN_vkCreateViSurfaceNN
+  , vkCreateViSurfaceNN
   , pattern VK_NN_VI_SURFACE_EXTENSION_NAME
   , pattern VK_NN_VI_SURFACE_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN
@@ -64,6 +62,9 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkAllocationCallbacks(..)
   , VkInstance
   )
+import Graphics.Vulkan.C.Dynamic
+  ( InstanceCmds(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_KHR_surface
   ( VkSurfaceKHR
   )
@@ -93,20 +94,24 @@ instance Read VkViSurfaceCreateFlagsNN where
                     )
 
 
+
 -- | VkViSurfaceCreateInfoNN - Structure specifying parameters of a newly
 -- created VI surface object
 --
--- == Valid Usage (Implicit)
+-- == Valid Usage
+--
+-- Unresolved directive in VkViSurfaceCreateInfoNN.txt -
+-- include::{generated}\/validity\/structs\/VkViSurfaceCreateInfoNN.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkViSurfaceCreateInfoNN = VkViSurfaceCreateInfoNN
-  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @flags@ /must/ be @0@
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkViSurfaceCreateFlagsNN
   , -- | @window@ /must/ be a valid @nn@::@vi@::@NativeWindowHandle@
   vkWindow :: Ptr ()
@@ -126,11 +131,11 @@ instance Storable VkViSurfaceCreateInfoNN where
                 *> poke (ptr `plusPtr` 24) (vkWindow (poked :: VkViSurfaceCreateInfoNN))
 
 instance Zero VkViSurfaceCreateInfoNN where
-  zero = VkViSurfaceCreateInfoNN zero
+  zero = VkViSurfaceCreateInfoNN VK_STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN
                                  zero
                                  zero
                                  zero
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkCreateViSurfaceNN - Create a
 -- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' object for a
 -- VI layer
@@ -140,13 +145,13 @@ instance Zero VkViSurfaceCreateInfoNN where
 -- -   @instance@ is the instance with which to associate the surface.
 --
 -- -   @pCreateInfo@ is a pointer to an instance of the
---     @VkViSurfaceCreateInfoNN@ structure containing parameters affecting
+--     'VkViSurfaceCreateInfoNN' structure containing parameters affecting
 --     the creation of the surface object.
 --
 -- -   @pAllocator@ is the allocator used for host memory allocated for the
 --     surface object when there is no more specific allocator available
 --     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
 --
 -- -   @pSurface@ points to a
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
@@ -168,48 +173,40 @@ instance Zero VkViSurfaceCreateInfoNN where
 -- swapchain’s @imageExtent@ (e.g., by matching the result of a call to
 -- @nn@::@vi@::@GetDisplayResolution@).
 --
--- == Valid Usage (Implicit)
---
--- -   @instance@ /must/ be a valid @VkInstance@ handle
---
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     @VkViSurfaceCreateInfoNN@ structure
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
---
--- -   @pSurface@ /must/ be a valid pointer to a @VkSurfaceKHR@ handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
---
---     -   @VK_ERROR_NATIVE_WINDOW_IN_USE_KHR@
+-- Unresolved directive in vkCreateViSurfaceNN.txt -
+-- include::{generated}\/validity\/protos\/vkCreateViSurfaceNN.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCreateViSurfaceNN" vkCreateViSurfaceNN :: ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkViSurfaceCreateInfoNN) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
-
+#else
+vkCreateViSurfaceNN :: InstanceCmds -> ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkViSurfaceCreateInfoNN) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
+vkCreateViSurfaceNN deviceCmds = mkVkCreateViSurfaceNN (pVkCreateViSurfaceNN deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCreateViSurfaceNN
+  :: FunPtr (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkViSurfaceCreateInfoNN) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult) -> (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkViSurfaceCreateInfoNN) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult)
+#endif
+
 type FN_vkCreateViSurfaceNN = ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkViSurfaceCreateInfoNN) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
 type PFN_vkCreateViSurfaceNN = FunPtr FN_vkCreateViSurfaceNN
+
 -- No documentation found for TopLevel "VK_NN_VI_SURFACE_EXTENSION_NAME"
 pattern VK_NN_VI_SURFACE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_NN_VI_SURFACE_EXTENSION_NAME = "VK_NN_vi_surface"
+
 -- No documentation found for TopLevel "VK_NN_VI_SURFACE_SPEC_VERSION"
 pattern VK_NN_VI_SURFACE_SPEC_VERSION :: Integral a => a
 pattern VK_NN_VI_SURFACE_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN"
 pattern VK_STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN :: VkStructureType
 pattern VK_STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN = VkStructureType 1000062000

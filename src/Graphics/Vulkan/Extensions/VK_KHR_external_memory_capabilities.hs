@@ -111,15 +111,21 @@ import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities
 
 type ExternalBufferPropertiesKHR = ExternalBufferProperties
 -- TODO: Pattern constructor alias)
+
 type ExternalImageFormatPropertiesKHR = ExternalImageFormatProperties
 -- TODO: Pattern constructor alias)
+
 type ExternalMemoryPropertiesKHR = ExternalMemoryProperties
 -- TODO: Pattern constructor alias)
+
 type PhysicalDeviceExternalBufferInfoKHR = PhysicalDeviceExternalBufferInfo
 -- TODO: Pattern constructor alias)
+
 type PhysicalDeviceExternalImageFormatInfoKHR = PhysicalDeviceExternalImageFormatInfo
 -- TODO: Pattern constructor alias)
+
 type PhysicalDeviceIDPropertiesKHR = PhysicalDeviceIDProperties
 -- TODO: Pattern constructor alias)
+
 getPhysicalDeviceExternalBufferPropertiesKHR :: PhysicalDevice ->  PhysicalDeviceExternalBufferInfo ->  IO (ExternalBufferProperties)
 getPhysicalDeviceExternalBufferPropertiesKHR = getPhysicalDeviceExternalBufferProperties

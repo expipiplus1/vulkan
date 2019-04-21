@@ -83,7 +83,7 @@ import Graphics.Vulkan.C.Core10.Core
 -- = Description
 --
 -- Unresolved directive in VkConformanceVersionKHR.txt -
--- include::..\/validity\/structs\/VkConformanceVersionKHR.txt[]
+-- include::{generated}\/validity\/structs\/VkConformanceVersionKHR.txt[]
 --
 -- = See Also
 --
@@ -117,6 +117,7 @@ instance Zero VkConformanceVersionKHR where
                                  zero
                                  zero
                                  zero
+
 -- ** VkDriverIdKHR
 
 -- | VkDriverIdKHR - Khronos driver IDs
@@ -219,6 +220,7 @@ pattern VK_DRIVER_ID_GOOGLE_PASTEL_KHR = VkDriverIdKHR 10
 -- No documentation found for Nested "VkDriverIdKHR" "VK_DRIVER_ID_GGP_PROPRIETARY_KHR"
 pattern VK_DRIVER_ID_GGP_PROPRIETARY_KHR :: VkDriverIdKHR
 pattern VK_DRIVER_ID_GGP_PROPRIETARY_KHR = VkDriverIdKHR 11
+
 -- | VkPhysicalDeviceDriverPropertiesKHR - Structure containing driver
 -- identification information
 --
@@ -228,7 +230,7 @@ pattern VK_DRIVER_ID_GGP_PROPRIETARY_KHR = VkDriverIdKHR 11
 -- processes, driver versions, and system reboots.
 --
 -- Unresolved directive in VkPhysicalDeviceDriverPropertiesKHR.txt -
--- include::..\/validity\/structs\/VkPhysicalDeviceDriverPropertiesKHR.txt[]
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceDriverPropertiesKHR.txt[]
 --
 -- = See Also
 --
@@ -269,28 +271,33 @@ instance Storable VkPhysicalDeviceDriverPropertiesKHR where
                 *> poke (ptr `plusPtr` 532) (vkConformanceVersion (poked :: VkPhysicalDeviceDriverPropertiesKHR))
 
 instance Zero VkPhysicalDeviceDriverPropertiesKHR where
-  zero = VkPhysicalDeviceDriverPropertiesKHR zero
+  zero = VkPhysicalDeviceDriverPropertiesKHR VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR
                                              zero
                                              zero
                                              zero
                                              zero
                                              zero
+
 -- No documentation found for TopLevel "VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME"
 pattern VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME = "VK_KHR_driver_properties"
+
 -- No documentation found for TopLevel "VK_KHR_DRIVER_PROPERTIES_SPEC_VERSION"
 pattern VK_KHR_DRIVER_PROPERTIES_SPEC_VERSION :: Integral a => a
 pattern VK_KHR_DRIVER_PROPERTIES_SPEC_VERSION = 1
+
 -- No documentation found for TopLevel "VK_MAX_DRIVER_INFO_SIZE_KHR"
 type VK_MAX_DRIVER_INFO_SIZE_KHR = 256
 -- No documentation found for Nested "Integral a => a" "VK_MAX_DRIVER_INFO_SIZE_KHR"
 pattern VK_MAX_DRIVER_INFO_SIZE_KHR :: Integral a => a
 pattern VK_MAX_DRIVER_INFO_SIZE_KHR = 256
+
 -- No documentation found for TopLevel "VK_MAX_DRIVER_NAME_SIZE_KHR"
 type VK_MAX_DRIVER_NAME_SIZE_KHR = 256
 -- No documentation found for Nested "Integral a => a" "VK_MAX_DRIVER_NAME_SIZE_KHR"
 pattern VK_MAX_DRIVER_NAME_SIZE_KHR :: Integral a => a
 pattern VK_MAX_DRIVER_NAME_SIZE_KHR = 256
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR = VkStructureType 1000196000

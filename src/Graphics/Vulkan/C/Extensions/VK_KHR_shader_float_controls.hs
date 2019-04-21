@@ -36,13 +36,13 @@ import Graphics.Vulkan.C.Core10.Core
 --
 -- = Description
 --
--- If the @VkPhysicalDeviceFloatControlsPropertiesKHR@ structure is
+-- If the 'VkPhysicalDeviceFloatControlsPropertiesKHR' structure is
 -- included in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
 -- Unresolved directive in VkPhysicalDeviceFloatControlsPropertiesKHR.txt -
--- include::..\/validity\/structs\/VkPhysicalDeviceFloatControlsPropertiesKHR.txt[]
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceFloatControlsPropertiesKHR.txt[]
 --
 -- = See Also
 --
@@ -190,7 +190,7 @@ instance Storable VkPhysicalDeviceFloatControlsPropertiesKHR where
                 *> poke (ptr `plusPtr` 80) (vkShaderRoundingModeRTZFloat64 (poked :: VkPhysicalDeviceFloatControlsPropertiesKHR))
 
 instance Zero VkPhysicalDeviceFloatControlsPropertiesKHR where
-  zero = VkPhysicalDeviceFloatControlsPropertiesKHR zero
+  zero = VkPhysicalDeviceFloatControlsPropertiesKHR VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES_KHR
                                                     zero
                                                     zero
                                                     zero
@@ -209,12 +209,15 @@ instance Zero VkPhysicalDeviceFloatControlsPropertiesKHR where
                                                     zero
                                                     zero
                                                     zero
+
 -- No documentation found for TopLevel "VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME"
 pattern VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME = "VK_KHR_shader_float_controls"
+
 -- No documentation found for TopLevel "VK_KHR_SHADER_FLOAT_CONTROLS_SPEC_VERSION"
 pattern VK_KHR_SHADER_FLOAT_CONTROLS_SPEC_VERSION :: Integral a => a
 pattern VK_KHR_SHADER_FLOAT_CONTROLS_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES_KHR"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES_KHR = VkStructureType 1000197000

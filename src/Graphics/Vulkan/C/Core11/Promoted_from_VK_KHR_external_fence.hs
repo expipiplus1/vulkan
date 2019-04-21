@@ -61,13 +61,8 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities
 --     reported by
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceProperties'.
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO@
---
--- -   @handleTypes@ /must/ be a valid combination of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceHandleTypeFlagBits'
---     values
+-- Unresolved directive in VkExportFenceCreateInfo.txt -
+-- include::{generated}\/validity\/structs\/VkExportFenceCreateInfo.txt[]
 --
 -- = See Also
 --
@@ -98,9 +93,10 @@ instance Storable VkExportFenceCreateInfo where
                 *> poke (ptr `plusPtr` 16) (vkHandleTypes (poked :: VkExportFenceCreateInfo))
 
 instance Zero VkExportFenceCreateInfo where
-  zero = VkExportFenceCreateInfo zero
+  zero = VkExportFenceCreateInfo VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO
                                  zero
                                  zero
+
 -- ** VkFenceImportFlagBits
 
 -- | VkFenceImportFlagBits - Bitmask specifying additional parameters of
@@ -126,23 +122,25 @@ instance Read VkFenceImportFlagBits where
                         )
                     )
 
--- | @VK_FENCE_IMPORT_TEMPORARY_BIT@ specifies that the fence payload will be
+-- | 'VK_FENCE_IMPORT_TEMPORARY_BIT' specifies that the fence payload will be
 -- imported only temporarily, as described in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence Payloads>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence Payloads>,
 -- regardless of the permanence of @handleType@.
 pattern VK_FENCE_IMPORT_TEMPORARY_BIT :: VkFenceImportFlagBits
 pattern VK_FENCE_IMPORT_TEMPORARY_BIT = VkFenceImportFlagBits 0x00000001
+
 -- | VkFenceImportFlags - Bitmask of VkFenceImportFlagBits
 --
 -- = Description
 --
--- @VkFenceImportFlags@ is a bitmask type for setting a mask of zero or
+-- 'VkFenceImportFlags' is a bitmask type for setting a mask of zero or
 -- more 'VkFenceImportFlagBits'.
 --
 -- = See Also
 --
 -- 'VkFenceImportFlagBits'
 type VkFenceImportFlags = VkFenceImportFlagBits
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO = VkStructureType 1000113000

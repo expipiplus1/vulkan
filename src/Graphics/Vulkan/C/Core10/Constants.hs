@@ -88,16 +88,19 @@ instance Read VkPipelineCacheHeaderVersion where
                         )
                     )
 
--- | @VK_PIPELINE_CACHE_HEADER_VERSION_ONE@ specifies version one of the
+-- | 'VK_PIPELINE_CACHE_HEADER_VERSION_ONE' specifies version one of the
 -- pipeline cache.
 pattern VK_PIPELINE_CACHE_HEADER_VERSION_ONE :: VkPipelineCacheHeaderVersion
 pattern VK_PIPELINE_CACHE_HEADER_VERSION_ONE = VkPipelineCacheHeaderVersion 1
+
 -- No documentation found for Nested "Word32" "VK_ATTACHMENT_UNUSED"
 pattern VK_ATTACHMENT_UNUSED :: Word32
 pattern VK_ATTACHMENT_UNUSED = 0xffffffff
+
 -- No documentation found for Nested "CFloat" "VK_LOD_CLAMP_NONE"
 pattern VK_LOD_CLAMP_NONE :: CFloat
 pattern VK_LOD_CLAMP_NONE = 1000.0
+
 -- | VK_NULL_HANDLE - Reserved non-valid object handle
 --
 -- = See Also
@@ -106,18 +109,23 @@ pattern VK_LOD_CLAMP_NONE = 1000.0
 pattern VK_NULL_HANDLE :: Ptr a
 pattern VK_NULL_HANDLE <- ((== nullPtr) -> True)
   where VK_NULL_HANDLE = nullPtr
+
 -- No documentation found for Nested "Word32" "VK_QUEUE_FAMILY_IGNORED"
 pattern VK_QUEUE_FAMILY_IGNORED :: Word32
 pattern VK_QUEUE_FAMILY_IGNORED = 0xffffffff
+
 -- No documentation found for Nested "Word32" "VK_REMAINING_ARRAY_LAYERS"
 pattern VK_REMAINING_ARRAY_LAYERS :: Word32
 pattern VK_REMAINING_ARRAY_LAYERS = 0xffffffff
+
 -- No documentation found for Nested "Word32" "VK_REMAINING_MIP_LEVELS"
 pattern VK_REMAINING_MIP_LEVELS :: Word32
 pattern VK_REMAINING_MIP_LEVELS = 0xffffffff
+
 -- No documentation found for Nested "Word32" "VK_SUBPASS_EXTERNAL"
 pattern VK_SUBPASS_EXTERNAL :: Word32
 pattern VK_SUBPASS_EXTERNAL = 0xffffffff
+
 -- No documentation found for Nested "Word64" "VK_WHOLE_SIZE"
 pattern VK_WHOLE_SIZE :: Word64
 pattern VK_WHOLE_SIZE = 0xffffffffffffffff

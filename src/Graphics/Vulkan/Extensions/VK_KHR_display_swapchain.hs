@@ -41,9 +41,6 @@ import Foreign.Ptr
 import Foreign.Storable
   ( peekElemOff
   )
-import qualified Graphics.Vulkan.C.Dynamic
-  ( createSharedSwapchainsKHR
-  )
 
 
 import Graphics.Vulkan.C.Core10.Core
@@ -52,6 +49,7 @@ import Graphics.Vulkan.C.Core10.Core
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_display_swapchain
   ( VkDisplayPresentInfoKHR(..)
+  , vkCreateSharedSwapchainsKHR
   , pattern VK_STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR
   )
 import Graphics.Vulkan.Core10.Core
@@ -91,33 +89,122 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_display_swapchain
   )
 
 
--- No documentation found for TopLevel "DisplayPresentInfoKHR"
+
+-- | VkDisplayPresentInfoKHR - Structure describing parameters of a queue
+-- presentation to a swapchain
+--
+-- = Description
+--
+-- If the extent of the @srcRect@ and @dstRect@ are not equal, the
+-- presented pixels will be scaled accordingly.
+--
+-- == Valid Usage
+--
+-- -   @srcRect@ /must/ specify a rectangular region that is a subset of
+--     the image being presented
+--
+-- -   @dstRect@ /must/ specify a rectangular region that is a subset of
+--     the @visibleRegion@ parameter of the display mode the swapchain
+--     being presented uses
+--
+-- -   If the @persistentContent@ member of the
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayPropertiesKHR'
+--     structure returned by
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetPhysicalDeviceDisplayPropertiesKHR'
+--     for the display the present operation targets then @persistent@
+--     /must/ be 'Graphics.Vulkan.C.Core10.Core.VK_FALSE'
+--
+-- Unresolved directive in VkDisplayPresentInfoKHR.txt -
+-- include::{generated}\/validity\/structs\/VkDisplayPresentInfoKHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data DisplayPresentInfoKHR = DisplayPresentInfoKHR
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "DisplayPresentInfoKHR" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "DisplayPresentInfoKHR" "srcRect"
-  vkSrcRect :: Rect2D
+  srcRect :: Rect2D
   , -- No documentation found for Nested "DisplayPresentInfoKHR" "dstRect"
-  vkDstRect :: Rect2D
+  dstRect :: Rect2D
   , -- No documentation found for Nested "DisplayPresentInfoKHR" "persistent"
-  vkPersistent :: Bool
+  persistent :: Bool
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkDisplayPresentInfoKHR' and
+-- marshal a 'DisplayPresentInfoKHR' into it. The 'VkDisplayPresentInfoKHR' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructDisplayPresentInfoKHR :: DisplayPresentInfoKHR -> (VkDisplayPresentInfoKHR -> IO a) -> IO a
-withCStructDisplayPresentInfoKHR from cont = withCStructRect2D (vkDstRect (from :: DisplayPresentInfoKHR)) (\dstRect -> withCStructRect2D (vkSrcRect (from :: DisplayPresentInfoKHR)) (\srcRect -> maybeWith withSomeVkStruct (vkPNext (from :: DisplayPresentInfoKHR)) (\pPNext -> cont (VkDisplayPresentInfoKHR VK_STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR pPNext srcRect dstRect (boolToBool32 (vkPersistent (from :: DisplayPresentInfoKHR)))))))
+withCStructDisplayPresentInfoKHR marshalled cont = withCStructRect2D (dstRect (marshalled :: DisplayPresentInfoKHR)) (\dstRect'' -> withCStructRect2D (srcRect (marshalled :: DisplayPresentInfoKHR)) (\srcRect'' -> maybeWith withSomeVkStruct (next (marshalled :: DisplayPresentInfoKHR)) (\pPNext -> cont (VkDisplayPresentInfoKHR VK_STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR pPNext srcRect'' dstRect'' (boolToBool32 (persistent (marshalled :: DisplayPresentInfoKHR)))))))
+
+-- | A function to read a 'VkDisplayPresentInfoKHR' and all additional
+-- structures in the pointer chain into a 'DisplayPresentInfoKHR'.
 fromCStructDisplayPresentInfoKHR :: VkDisplayPresentInfoKHR -> IO DisplayPresentInfoKHR
 fromCStructDisplayPresentInfoKHR c = DisplayPresentInfoKHR <$> -- Univalued Member elided
                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDisplayPresentInfoKHR)))
                                                            <*> (fromCStructRect2D (vkSrcRect (c :: VkDisplayPresentInfoKHR)))
                                                            <*> (fromCStructRect2D (vkDstRect (c :: VkDisplayPresentInfoKHR)))
                                                            <*> pure (bool32ToBool (vkPersistent (c :: VkDisplayPresentInfoKHR)))
+
 instance Zero DisplayPresentInfoKHR where
   zero = DisplayPresentInfoKHR Nothing
                                zero
                                zero
                                False
 
--- | Wrapper for 'vkCreateSharedSwapchainsKHR'
+
+
+-- | vkCreateSharedSwapchainsKHR - Create multiple swapchains that share
+-- presentable images
+--
+-- = Parameters
+--
+-- -   @device@ is the device to create the swapchains for.
+--
+-- -   @swapchainCount@ is the number of swapchains to create.
+--
+-- -   @pCreateInfos@ is a pointer to an array of
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR'
+--     structures specifying the parameters of the created swapchains.
+--
+-- -   @pAllocator@ is the allocator used for host memory allocated for the
+--     swapchain objects when there is no more specific allocator available
+--     (see
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+--
+-- -   @pSwapchains@ is a pointer to an array of
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
+--     handles in which the created swapchain objects will be returned.
+--
+-- = Description
+--
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display_swapchain.vkCreateSharedSwapchainsKHR'
+-- is similar to
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkCreateSwapchainKHR',
+-- except that it takes an array of
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR'
+-- structures, and returns an array of swapchain objects.
+--
+-- The swapchain creation parameters that affect the properties and number
+-- of presentable images /must/ match between all the swapchains. If the
+-- displays used by any of the swapchains do not use the same presentable
+-- image layout or are incompatible in a way that prevents sharing images,
+-- swapchain creation will fail with the result code
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display_swapchain.VK_ERROR_INCOMPATIBLE_DISPLAY_KHR'.
+-- If any error occurs, no swapchains will be created. Images presented to
+-- multiple swapchains /must/ be re-acquired from all of them before
+-- transitioning away from
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VK_IMAGE_LAYOUT_PRESENT_SRC_KHR'.
+-- After destroying one or more of the swapchains, the remaining swapchains
+-- and the presentable images /can/ continue to be used.
+--
+-- Unresolved directive in vkCreateSharedSwapchainsKHR.txt -
+-- include::{generated}\/validity\/protos\/vkCreateSharedSwapchainsKHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 createSharedSwapchainsKHR :: Device ->  Vector SwapchainCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO (Vector SwapchainKHR)
-createSharedSwapchainsKHR = \(Device device commandTable) -> \createInfos -> \allocator -> allocaArray ((Data.Vector.length createInfos)) (\pSwapchains -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> withVec withCStructSwapchainCreateInfoKHR createInfos (\pCreateInfos -> Graphics.Vulkan.C.Dynamic.createSharedSwapchainsKHR commandTable device (fromIntegral $ Data.Vector.length createInfos) pCreateInfos pAllocator pSwapchains >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((Data.Vector.generateM ((Data.Vector.length createInfos)) (peekElemOff pSwapchains)))))))
+createSharedSwapchainsKHR = \(Device device' commandTable) -> \createInfos' -> \allocator -> allocaArray ((Data.Vector.length createInfos')) (\pSwapchains' -> maybeWith (\marshalled -> withCStructAllocationCallbacks marshalled . flip with) allocator (\pAllocator -> withVec withCStructSwapchainCreateInfoKHR createInfos' (\pCreateInfos' -> vkCreateSharedSwapchainsKHR commandTable device' (fromIntegral $ Data.Vector.length createInfos') pCreateInfos' pAllocator pSwapchains' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((Data.Vector.generateM ((Data.Vector.length createInfos')) (peekElemOff pSwapchains')))))))

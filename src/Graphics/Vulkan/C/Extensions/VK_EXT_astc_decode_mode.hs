@@ -39,40 +39,54 @@ import Graphics.Vulkan.C.Core10.Core
 --
 -- == Valid Usage
 --
--- -   @decodeMode@ /must/ be one of @VK_FORMAT_R16G16B16A16_SFLOAT@,
---     @VK_FORMAT_R8G8B8A8_UNORM@, or @VK_FORMAT_E5B9G9R9_UFLOAT_PACK32@
+-- -   @decodeMode@ /must/ be one of
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16B16A16_SFLOAT',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8B8A8_UNORM', or
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_E5B9G9R9_UFLOAT_PACK32'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-astc-decodeModeSharedExponent decodeModeSharedExponent>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-astc-decodeModeSharedExponent decodeModeSharedExponent>
 --     feature is not enabled, @decodeMode@ /must/ not be
---     @VK_FORMAT_E5B9G9R9_UFLOAT_PACK32@
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_E5B9G9R9_UFLOAT_PACK32'
 --
--- -   If @decodeMode@ is @VK_FORMAT_R8G8B8A8_UNORM@ the image view /must/
---     not include blocks using any of the ASTC HDR modes
+-- -   If @decodeMode@ is
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8B8A8_UNORM' the image
+--     view /must/ not include blocks using any of the ASTC HDR modes
 --
 -- -   @format@ of the image view /must/ be one of
---     @VK_FORMAT_ASTC_4x4_UNORM_BLOCK@, @VK_FORMAT_ASTC_4x4_SRGB_BLOCK@,
---     @VK_FORMAT_ASTC_5x4_UNORM_BLOCK@, @VK_FORMAT_ASTC_5x4_SRGB_BLOCK@,
---     @VK_FORMAT_ASTC_5x5_UNORM_BLOCK@, @VK_FORMAT_ASTC_5x5_SRGB_BLOCK@,
---     @VK_FORMAT_ASTC_6x5_UNORM_BLOCK@, @VK_FORMAT_ASTC_6x5_SRGB_BLOCK@,
---     @VK_FORMAT_ASTC_6x6_UNORM_BLOCK@, @VK_FORMAT_ASTC_6x6_SRGB_BLOCK@,
---     @VK_FORMAT_ASTC_8x5_UNORM_BLOCK@, @VK_FORMAT_ASTC_8x5_SRGB_BLOCK@,
---     @VK_FORMAT_ASTC_8x6_UNORM_BLOCK@, @VK_FORMAT_ASTC_8x6_SRGB_BLOCK@,
---     @VK_FORMAT_ASTC_8x8_UNORM_BLOCK@, @VK_FORMAT_ASTC_8x8_SRGB_BLOCK@,
---     @VK_FORMAT_ASTC_10x5_UNORM_BLOCK@, @VK_FORMAT_ASTC_10x5_SRGB_BLOCK@,
---     @VK_FORMAT_ASTC_10x6_UNORM_BLOCK@, @VK_FORMAT_ASTC_10x6_SRGB_BLOCK@,
---     @VK_FORMAT_ASTC_10x8_UNORM_BLOCK@, @VK_FORMAT_ASTC_10x8_SRGB_BLOCK@,
---     @VK_FORMAT_ASTC_10x10_UNORM_BLOCK@,
---     @VK_FORMAT_ASTC_10x10_SRGB_BLOCK@,
---     @VK_FORMAT_ASTC_12x10_UNORM_BLOCK@,
---     @VK_FORMAT_ASTC_12x10_SRGB_BLOCK@,
---     @VK_FORMAT_ASTC_12x12_UNORM_BLOCK@, or
---     @VK_FORMAT_ASTC_12x12_SRGB_BLOCK@
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_4x4_UNORM_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_4x4_SRGB_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_5x4_UNORM_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_5x4_SRGB_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_5x5_UNORM_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_5x5_SRGB_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_6x5_UNORM_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_6x5_SRGB_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_6x6_UNORM_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_6x6_SRGB_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_8x5_UNORM_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_8x5_SRGB_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_8x6_UNORM_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_8x6_SRGB_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_8x8_UNORM_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_8x8_SRGB_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_10x5_UNORM_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_10x5_SRGB_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_10x6_UNORM_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_10x6_SRGB_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_10x8_UNORM_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_10x8_SRGB_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_10x10_UNORM_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_10x10_SRGB_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_12x10_UNORM_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_12x10_SRGB_BLOCK',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_12x12_UNORM_BLOCK', or
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_12x12_SRGB_BLOCK'
 --
 -- If @format@ uses sRGB encoding then the @decodeMode@ has no effect.
 --
 -- Unresolved directive in VkImageViewASTCDecodeModeEXT.txt -
--- include::..\/validity\/structs\/VkImageViewASTCDecodeModeEXT.txt[]
+-- include::{generated}\/validity\/structs\/VkImageViewASTCDecodeModeEXT.txt[]
 --
 -- = See Also
 --
@@ -99,29 +113,30 @@ instance Storable VkImageViewASTCDecodeModeEXT where
                 *> poke (ptr `plusPtr` 16) (vkDecodeMode (poked :: VkImageViewASTCDecodeModeEXT))
 
 instance Zero VkImageViewASTCDecodeModeEXT where
-  zero = VkImageViewASTCDecodeModeEXT zero
+  zero = VkImageViewASTCDecodeModeEXT VK_STRUCTURE_TYPE_IMAGE_VIEW_ASTC_DECODE_MODE_EXT
                                       zero
                                       zero
+
 -- | VkPhysicalDeviceASTCDecodeFeaturesEXT - Structure describing ASTC decode
 -- mode features
 --
 -- = Members
 --
--- The members of the @VkPhysicalDeviceASTCDecodeFeaturesEXT@ structure
+-- The members of the 'VkPhysicalDeviceASTCDecodeFeaturesEXT' structure
 -- describe the following features:
 --
 -- = Description
 --
--- If the @VkPhysicalDeviceASTCDecodeFeaturesEXT@ structure is included in
+-- If the 'VkPhysicalDeviceASTCDecodeFeaturesEXT' structure is included in
 -- the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceFeatures2KHR',
 -- it is filled with values indicating whether each feature is supported.
--- @VkPhysicalDeviceASTCDecodeFeaturesEXT@ /can/ also be used in the
+-- 'VkPhysicalDeviceASTCDecodeFeaturesEXT' /can/ also be used in the
 -- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.vkCreateDevice' to
 -- enable features.
 --
 -- Unresolved directive in VkPhysicalDeviceASTCDecodeFeaturesEXT.txt -
--- include::..\/validity\/structs\/VkPhysicalDeviceASTCDecodeFeaturesEXT.txt[]
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceASTCDecodeFeaturesEXT.txt[]
 --
 -- = See Also
 --
@@ -132,7 +147,8 @@ data VkPhysicalDeviceASTCDecodeFeaturesEXT = VkPhysicalDeviceASTCDecodeFeaturesE
   , -- No documentation found for Nested "VkPhysicalDeviceASTCDecodeFeaturesEXT" "pNext"
   vkPNext :: Ptr ()
   , -- | @decodeModeSharedExponent@ indicates whether the implementation supports
-  -- decoding ASTC compressed formats to @VK_FORMAT_E5B9G9R9_UFLOAT_PACK32@
+  -- decoding ASTC compressed formats to
+  -- 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_E5B9G9R9_UFLOAT_PACK32'
   -- internal precision.
   vkDecodeModeSharedExponent :: VkBool32
   }
@@ -149,18 +165,22 @@ instance Storable VkPhysicalDeviceASTCDecodeFeaturesEXT where
                 *> poke (ptr `plusPtr` 16) (vkDecodeModeSharedExponent (poked :: VkPhysicalDeviceASTCDecodeFeaturesEXT))
 
 instance Zero VkPhysicalDeviceASTCDecodeFeaturesEXT where
-  zero = VkPhysicalDeviceASTCDecodeFeaturesEXT zero
+  zero = VkPhysicalDeviceASTCDecodeFeaturesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT
                                                zero
                                                zero
+
 -- No documentation found for TopLevel "VK_EXT_ASTC_DECODE_MODE_EXTENSION_NAME"
 pattern VK_EXT_ASTC_DECODE_MODE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_ASTC_DECODE_MODE_EXTENSION_NAME = "VK_EXT_astc_decode_mode"
+
 -- No documentation found for TopLevel "VK_EXT_ASTC_DECODE_MODE_SPEC_VERSION"
 pattern VK_EXT_ASTC_DECODE_MODE_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_ASTC_DECODE_MODE_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_VIEW_ASTC_DECODE_MODE_EXT"
 pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_ASTC_DECODE_MODE_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_ASTC_DECODE_MODE_EXT = VkStructureType 1000067000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT = VkStructureType 1000067001

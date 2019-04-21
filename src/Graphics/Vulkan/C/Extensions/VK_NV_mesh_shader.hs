@@ -10,21 +10,15 @@ module Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader
   ( VkDrawMeshTasksIndirectCommandNV(..)
   , VkPhysicalDeviceMeshShaderFeaturesNV(..)
   , VkPhysicalDeviceMeshShaderPropertiesNV(..)
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkCmdDrawMeshTasksIndirectCountNV
-#endif
   , FN_vkCmdDrawMeshTasksIndirectCountNV
   , PFN_vkCmdDrawMeshTasksIndirectCountNV
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkCmdDrawMeshTasksIndirectNV
-#endif
+  , vkCmdDrawMeshTasksIndirectCountNV
   , FN_vkCmdDrawMeshTasksIndirectNV
   , PFN_vkCmdDrawMeshTasksIndirectNV
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkCmdDrawMeshTasksNV
-#endif
+  , vkCmdDrawMeshTasksIndirectNV
   , FN_vkCmdDrawMeshTasksNV
   , PFN_vkCmdDrawMeshTasksNV
+  , vkCmdDrawMeshTasksNV
   , pattern VK_NV_MESH_SHADER_EXTENSION_NAME
   , pattern VK_NV_MESH_SHADER_SPEC_VERSION
   , pattern VK_PIPELINE_STAGE_MESH_SHADER_BIT_NV
@@ -73,6 +67,9 @@ import Graphics.Vulkan.C.Core10.Queue
   ( VkPipelineStageFlagBits(..)
   , VkCommandBuffer
   )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
+  )
 import Graphics.Vulkan.NamedType
   ( (:::)
   )
@@ -83,20 +80,20 @@ import Graphics.Vulkan.NamedType
 --
 -- = Description
 --
--- The members of @VkDrawMeshTasksIndirectCommandNV@ have the same meaning
+-- The members of 'VkDrawMeshTasksIndirectCommandNV' have the same meaning
 -- as the similarly named parameters of 'vkCmdDrawMeshTasksNV'.
 --
 -- == Valid Usage
 --
 -- Unresolved directive in VkDrawMeshTasksIndirectCommandNV.txt -
--- include::..\/validity\/structs\/VkDrawMeshTasksIndirectCommandNV.txt[]
+-- include::{generated}\/validity\/structs\/VkDrawMeshTasksIndirectCommandNV.txt[]
 --
 -- = See Also
 --
--- UNKNOWN:vkCmdDrawMeshTasksIndirectNV
+-- 'vkCmdDrawMeshTasksIndirectNV'
 data VkDrawMeshTasksIndirectCommandNV = VkDrawMeshTasksIndirectCommandNV
   { -- | @taskCount@ /must/ be less than or equal to
-  -- @VkPhysicalDeviceMeshShaderPropertiesNV@::@maxDrawMeshTasksCount@
+  -- 'VkPhysicalDeviceMeshShaderPropertiesNV'::@maxDrawMeshTasksCount@
   vkTaskCount :: Word32
   , -- | @firstTask@ is the X component of the first workgroup ID.
   vkFirstTask :: Word32
@@ -114,21 +111,22 @@ instance Storable VkDrawMeshTasksIndirectCommandNV where
 instance Zero VkDrawMeshTasksIndirectCommandNV where
   zero = VkDrawMeshTasksIndirectCommandNV zero
                                           zero
+
 -- | VkPhysicalDeviceMeshShaderFeaturesNV - Structure describing mesh shading
 -- features that can be supported by an implementation
 --
 -- = Description
 --
--- If the @VkPhysicalDeviceMeshShaderFeaturesNV@ structure is included in
+-- If the 'VkPhysicalDeviceMeshShaderFeaturesNV' structure is included in
 -- the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2',
 -- it is filled with a value indicating whether the feature is supported.
--- @VkPhysicalDeviceMeshShaderFeaturesNV@ /can/ also be used in @pNext@
+-- 'VkPhysicalDeviceMeshShaderFeaturesNV' /can/ also be used in @pNext@
 -- chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable
 -- the features.
 --
 -- Unresolved directive in VkPhysicalDeviceMeshShaderFeaturesNV.txt -
--- include::..\/validity\/structs\/VkPhysicalDeviceMeshShaderFeaturesNV.txt[]
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceMeshShaderFeaturesNV.txt[]
 --
 -- = See Also
 --
@@ -158,27 +156,28 @@ instance Storable VkPhysicalDeviceMeshShaderFeaturesNV where
                 *> poke (ptr `plusPtr` 20) (vkMeshShader (poked :: VkPhysicalDeviceMeshShaderFeaturesNV))
 
 instance Zero VkPhysicalDeviceMeshShaderFeaturesNV where
-  zero = VkPhysicalDeviceMeshShaderFeaturesNV zero
+  zero = VkPhysicalDeviceMeshShaderFeaturesNV VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_FEATURES_NV
                                               zero
                                               zero
                                               zero
+
 -- | VkPhysicalDeviceMeshShaderPropertiesNV - Structure describing mesh
 -- shading properties
 --
 -- = Members
 --
--- The members of the @VkPhysicalDeviceMeshShaderPropertiesNV@ structure
+-- The members of the 'VkPhysicalDeviceMeshShaderPropertiesNV' structure
 -- describe the following implementation-dependent limits:
 --
 -- = Description
 --
--- If the @VkPhysicalDeviceMeshShaderPropertiesNV@ structure is included in
+-- If the 'VkPhysicalDeviceMeshShaderPropertiesNV' structure is included in
 -- the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
 -- Unresolved directive in VkPhysicalDeviceMeshShaderPropertiesNV.txt -
--- include::..\/validity\/structs\/VkPhysicalDeviceMeshShaderPropertiesNV.txt[]
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceMeshShaderPropertiesNV.txt[]
 --
 -- = See Also
 --
@@ -190,7 +189,7 @@ data VkPhysicalDeviceMeshShaderPropertiesNV = VkPhysicalDeviceMeshShaderProperti
   vkPNext :: Ptr ()
   , -- | @maxDrawMeshTasksCount@ is the maximum number of local workgroups that
   -- /can/ be launched by a single draw mesh tasks command. See
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#drawing-mesh-shading {html_spec_relative}#drawing-mesh-shading>.
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#drawing-mesh-shading>.
   vkMaxDrawMeshTasksCount :: Word32
   , -- | @maxTaskWorkGroupInvocations@ is the maximum total number of task shader
   -- invocations in a single local workgroup. The product of the X, Y, and Z
@@ -284,7 +283,7 @@ instance Storable VkPhysicalDeviceMeshShaderPropertiesNV where
                 *> poke (ptr `plusPtr` 80) (vkMeshOutputPerPrimitiveGranularity (poked :: VkPhysicalDeviceMeshShaderPropertiesNV))
 
 instance Zero VkPhysicalDeviceMeshShaderPropertiesNV where
-  zero = VkPhysicalDeviceMeshShaderPropertiesNV zero
+  zero = VkPhysicalDeviceMeshShaderPropertiesNV VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_PROPERTIES_NV
                                                 zero
                                                 zero
                                                 zero
@@ -299,7 +298,7 @@ instance Zero VkPhysicalDeviceMeshShaderPropertiesNV where
                                                 zero
                                                 zero
                                                 zero
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkCmdDrawMeshTasksIndirectCountNV - Perform an indirect mesh tasks draw
 -- with the draw count sourced from a buffer
 --
@@ -326,7 +325,7 @@ instance Zero VkPhysicalDeviceMeshShaderPropertiesNV where
 --
 -- = Description
 --
--- @vkCmdDrawMeshTasksIndirectCountNV@ behaves similarly to
+-- 'vkCmdDrawMeshTasksIndirectCountNV' behaves similarly to
 -- 'vkCmdDrawMeshTasksIndirectNV' except that the draw count is read by the
 -- device from a buffer during execution. The command will read an unsigned
 -- 32-bit integer from @countBuffer@ located at @countBufferOffset@ and use
@@ -334,156 +333,50 @@ instance Zero VkPhysicalDeviceMeshShaderPropertiesNV where
 --
 -- == Valid Usage
 --
--- -   If @buffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
---
--- -   @buffer@ /must/ have been created with the
---     @VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT@ bit set
---
--- -   If @countBuffer@ is non-sparse then it /must/ be bound completely
---     and contiguously to a single @VkDeviceMemory@ object
---
--- -   @countBuffer@ /must/ have been created with the
---     @VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT@ bit set
---
--- -   @offset@ /must/ be a multiple of @4@
---
--- -   @countBufferOffset@ /must/ be a multiple of @4@
---
--- -   @stride@ /must/ be a multiple of @4@ and /must/ be greater than or
---     equal to @sizeof@(@VkDrawMeshTasksIndirectCommandNV@)
---
--- -   If @maxDrawCount@ is greater than or equal to @1@, (@stride@ ×
---     (@maxDrawCount@ - 1) + @offset@ +
---     @sizeof@(@VkDrawMeshTasksIndirectCommandNV@)) /must/ be less than or
---     equal to the size of @buffer@
---
--- -   The current render pass /must/ be
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility compatible>
---     with the @renderPass@ member of the @VkGraphicsPipelineCreateInfo@
---     structure specified when creating the @VkPipeline@ currently bound
---     to @VK_PIPELINE_BIND_POINT_GRAPHICS@.
---
--- -   The subpass index of the current render pass /must/ be equal to the
---     @subpass@ member of the @VkGraphicsPipelineCreateInfo@ structure
---     specified when creating the @VkPipeline@ currently bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@.
---
--- -   For each set /n/ that is statically used by the @VkPipeline@
---     currently bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@, a descriptor
---     set /must/ have been bound to /n/ at
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@, with a @VkPipelineLayout@ that is
---     compatible for set /n/, with the @VkPipelineLayout@ used to create
---     the current @VkPipeline@, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
---
--- -   For each push constant that is statically used by the @VkPipeline@
---     currently bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@, a push
---     constant value /must/ have been set for
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@, with a @VkPipelineLayout@ that is
---     compatible for push constants, with the @VkPipelineLayout@ used to
---     create the current @VkPipeline@, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
---
--- -   Descriptors in each bound descriptor set, specified via
---     @vkCmdBindDescriptorSets@, /must/ be valid if they are statically
---     used by the currently bound @VkPipeline@ object, specified via
---     @vkCmdBindPipeline@
---
--- -   A valid graphics pipeline /must/ be bound to the current command
---     buffer with @VK_PIPELINE_BIND_POINT_GRAPHICS@
---
--- -   If the @VkPipeline@ object currently bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@ requires any dynamic state, that
---     state /must/ have been set on the current command buffer
---
--- -   If the count stored in @countBuffer@ is equal to @1@, (@offset@ +
---     @sizeof@(@VkDrawMeshTasksIndirectCommandNV@)) /must/ be less than or
---     equal to the size of @buffer@
---
--- -   If the count stored in @countBuffer@ is greater than @1@, (@stride@
---     × (@drawCount@ - 1) + @offset@ +
---     @sizeof@(@VkDrawMeshTasksIndirectCommandNV@)) /must/ be less than or
---     equal to the size of @buffer@
---
--- -   The count stored in @countBuffer@ /must/ be less than or equal to
---     @VkPhysicalDeviceLimits@::@maxDrawIndirectCount@
---
--- -   Every input attachment used by the current subpass /must/ be bound
---     to the pipeline via a descriptor set
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ currently bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@
---     uses unnormalized coordinates, it /must/ not be used to sample from
---     any @VkImage@ with a @VkImageView@ of the type
---     @VK_IMAGE_VIEW_TYPE_3D@, @VK_IMAGE_VIEW_TYPE_CUBE@,
---     @VK_IMAGE_VIEW_TYPE_1D_ARRAY@, @VK_IMAGE_VIEW_TYPE_2D_ARRAY@ or
---     @VK_IMAGE_VIEW_TYPE_CUBE_ARRAY@, in any shader stage
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ currently bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@
---     uses unnormalized coordinates, it /must/ not be used with any of the
---     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions with
---     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ currently bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@
---     uses unnormalized coordinates, it /must/ not be used with any of the
---     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions that
---     includes a LOD bias or any offset values, in any shader stage
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and any shader stage in the @VkPipeline@
---     object currently bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ accesses
---     a uniform buffer, it /must/ not access values outside of the range
---     of that buffer specified in the currently bound descriptor set
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and any shader stage in the @VkPipeline@
---     object currently bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ accesses
---     a storage buffer, it /must/ not access values outside of the range
---     of that buffer specified in the currently bound descriptor set
---
--- -   Any @VkImageView@ being sampled with @VK_FILTER_LINEAR@ as a result
---     of this command /must/ be of a format which supports linear
---     filtering, as specified by the
---     @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT@ flag in
---     @VkFormatProperties@::@linearTilingFeatures@ (for a linear image) or
---     @VkFormatProperties@::@optimalTilingFeatures@(for an optimally tiled
---     image) returned by @vkGetPhysicalDeviceFormatProperties@
---
--- -   Image subresources used as attachments in the current render pass
---     /must/ not be accessed in any way other than as an attachment by
---     this command.
---
--- -   If the draw is recorded in a render pass instance with multiview
---     enabled, the maximum instance index /must/ be less than or equal to
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_multiview.VkPhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@.
---
--- -   If the currently bound graphics pipeline was created with
---     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkPipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
---     set to @VK_TRUE@ and the current subpass has a depth\/stencil
---     attachment, then that attachment /must/ have been created with the
---     @VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT@ bit set
+-- Unresolved directive in vkCmdDrawMeshTasksIndirectCountNV.txt -
+-- include::{chapters}\/commonvalidity\/draw_common.txt[] Unresolved
+-- directive in vkCmdDrawMeshTasksIndirectCountNV.txt -
+-- include::{chapters}\/commonvalidity\/draw_dispatch_indirect_common.txt[]
+-- Unresolved directive in vkCmdDrawMeshTasksIndirectCountNV.txt -
+-- include::{chapters}\/commonvalidity\/draw_indirect_count_common.txt[] *
+-- @stride@ /must/ be a multiple of @4@ and /must/ be greater than or equal
+-- to @sizeof@('VkDrawMeshTasksIndirectCommandNV') * If @maxDrawCount@ is
+-- greater than or equal to @1@, (@stride@ × (@maxDrawCount@ - 1) +
+-- @offset@ + @sizeof@('VkDrawMeshTasksIndirectCommandNV')) /must/ be less
+-- than or equal to the size of @buffer@ * If the count stored in
+-- @countBuffer@ is equal to @1@, (@offset@ +
+-- @sizeof@('VkDrawMeshTasksIndirectCommandNV')) /must/ be less than or
+-- equal to the size of @buffer@ * If the count stored in @countBuffer@ is
+-- greater than @1@, (@stride@ × (@drawCount@ - 1) + @offset@ +
+-- @sizeof@('VkDrawMeshTasksIndirectCommandNV')) /must/ be less than or
+-- equal to the size of @buffer@
 --
 -- Unresolved directive in vkCmdDrawMeshTasksIndirectCountNV.txt -
--- include::..\/validity\/protos\/vkCmdDrawMeshTasksIndirectCountNV.txt[]
+-- include::{generated}\/validity\/protos\/vkCmdDrawMeshTasksIndirectCountNV.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdDrawMeshTasksIndirectCountNV" vkCmdDrawMeshTasksIndirectCountNV :: ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("countBuffer" ::: VkBuffer) -> ("countBufferOffset" ::: VkDeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
-
+#else
+vkCmdDrawMeshTasksIndirectCountNV :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("countBuffer" ::: VkBuffer) -> ("countBufferOffset" ::: VkDeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
+vkCmdDrawMeshTasksIndirectCountNV deviceCmds = mkVkCmdDrawMeshTasksIndirectCountNV (pVkCmdDrawMeshTasksIndirectCountNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdDrawMeshTasksIndirectCountNV
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("countBuffer" ::: VkBuffer) -> ("countBufferOffset" ::: VkDeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("countBuffer" ::: VkBuffer) -> ("countBufferOffset" ::: VkDeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ())
+#endif
+
 type FN_vkCmdDrawMeshTasksIndirectCountNV = ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("countBuffer" ::: VkBuffer) -> ("countBufferOffset" ::: VkDeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
 type PFN_vkCmdDrawMeshTasksIndirectCountNV = FunPtr FN_vkCmdDrawMeshTasksIndirectCountNV
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkCmdDrawMeshTasksIndirectNV - Issue an indirect mesh tasks draw into a
 -- command buffer
 --
@@ -503,7 +396,7 @@ type PFN_vkCmdDrawMeshTasksIndirectCountNV = FunPtr FN_vkCmdDrawMeshTasksIndirec
 --
 -- = Description
 --
--- @vkCmdDrawMeshTasksIndirectNV@ behaves similarly to
+-- 'vkCmdDrawMeshTasksIndirectNV' behaves similarly to
 -- 'vkCmdDrawMeshTasksNV' except that the parameters are read by the device
 -- from a buffer during execution. @drawCount@ draws are executed by the
 -- command, with parameters taken from @buffer@ starting at @offset@ and
@@ -514,172 +407,47 @@ type PFN_vkCmdDrawMeshTasksIndirectCountNV = FunPtr FN_vkCmdDrawMeshTasksIndirec
 --
 -- == Valid Usage
 --
--- -   If @buffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
---
--- -   @buffer@ /must/ have been created with the
---     @VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT@ bit set
---
--- -   @offset@ /must/ be a multiple of @4@
---
--- -   If @drawCount@ is greater than @1@, @stride@ /must/ be a multiple of
---     @4@ and /must/ be greater than or equal to
---     @sizeof@(@VkDrawMeshTasksIndirectCommandNV@)
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-multiDrawIndirect multi-draw indirect>
---     feature is not enabled, @drawCount@ /must/ be @0@ or @1@
---
--- -   The current render pass /must/ be
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility compatible>
---     with the @renderPass@ member of the @VkGraphicsPipelineCreateInfo@
---     structure specified when creating the @VkPipeline@ currently bound
---     to @VK_PIPELINE_BIND_POINT_GRAPHICS@.
---
--- -   The subpass index of the current render pass /must/ be equal to the
---     @subpass@ member of the @VkGraphicsPipelineCreateInfo@ structure
---     specified when creating the @VkPipeline@ currently bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@.
---
--- -   For each set /n/ that is statically used by the @VkPipeline@
---     currently bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@, a descriptor
---     set /must/ have been bound to /n/ at
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@, with a @VkPipelineLayout@ that is
---     compatible for set /n/, with the @VkPipelineLayout@ used to create
---     the current @VkPipeline@, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
---
--- -   For each push constant that is statically used by the @VkPipeline@
---     currently bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@, a push
---     constant value /must/ have been set for
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@, with a @VkPipelineLayout@ that is
---     compatible for push constants, with the @VkPipelineLayout@ used to
---     create the current @VkPipeline@, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
---
--- -   Descriptors in each bound descriptor set, specified via
---     @vkCmdBindDescriptorSets@, /must/ be valid if they are statically
---     used by the currently bound @VkPipeline@ object, specified via
---     @vkCmdBindPipeline@
---
--- -   All vertex input bindings accessed via vertex input variables
---     declared in the vertex shader entry point’s interface /must/ have
---     valid buffers bound
---
--- -   A valid graphics pipeline /must/ be bound to the current command
---     buffer with @VK_PIPELINE_BIND_POINT_GRAPHICS@
---
--- -   If the @VkPipeline@ object currently bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@ requires any dynamic state, that
---     state /must/ have been set on the current command buffer
---
--- -   If @drawCount@ is equal to @1@, (@offset@ +
---     @sizeof@('VkDrawMeshTasksIndirectCommandNV')) /must/ be less than or
---     equal to the size of @buffer@
---
--- -   If @drawCount@ is greater than @1@, (@stride@ × (@drawCount@ - 1) +
---     @offset@ + @sizeof@('VkDrawMeshTasksIndirectCommandNV')) /must/ be
---     less than or equal to the size of @buffer@
---
--- -   @drawCount@ /must/ be less than or equal to
---     @VkPhysicalDeviceLimits@::@maxDrawIndirectCount@
---
--- -   Every input attachment used by the current subpass /must/ be bound
---     to the pipeline via a descriptor set
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ currently bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@
---     uses unnormalized coordinates, it /must/ not be used to sample from
---     any @VkImage@ with a @VkImageView@ of the type
---     @VK_IMAGE_VIEW_TYPE_3D@, @VK_IMAGE_VIEW_TYPE_CUBE@,
---     @VK_IMAGE_VIEW_TYPE_1D_ARRAY@, @VK_IMAGE_VIEW_TYPE_2D_ARRAY@ or
---     @VK_IMAGE_VIEW_TYPE_CUBE_ARRAY@, in any shader stage
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ currently bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@
---     uses unnormalized coordinates, it /must/ not be used with any of the
---     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions with
---     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ currently bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@
---     uses unnormalized coordinates, it /must/ not be used with any of the
---     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions that
---     includes a LOD bias or any offset values, in any shader stage
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and any shader stage in the @VkPipeline@
---     object currently bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ accesses
---     a uniform buffer, it /must/ not access values outside of the range
---     of that buffer specified in the currently bound descriptor set
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and any shader stage in the @VkPipeline@
---     object currently bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ accesses
---     a storage buffer, it /must/ not access values outside of the range
---     of that buffer specified in the currently bound descriptor set
---
--- -   Any @VkImageView@ being sampled with @VK_FILTER_LINEAR@ as a result
---     of this command /must/ be of a format which supports linear
---     filtering, as specified by the
---     @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT@ flag in
---     @VkFormatProperties@::@linearTilingFeatures@ (for a linear image) or
---     @VkFormatProperties@::@optimalTilingFeatures@(for an optimally tiled
---     image) returned by @vkGetPhysicalDeviceFormatProperties@
---
--- -   Image subresources used as attachments in the current render pass
---     /must/ not be accessed in any way other than as an attachment by
---     this command.
---
--- -   Any 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' being sampled
---     with @VK_FILTER_CUBIC_IMG@ as a result of this command /must/ be of
---     a format which supports cubic filtering, as specified by the
---     @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG@ flag in
---     @VkFormatProperties@::@linearTilingFeatures@ (for a linear image) or
---     @VkFormatProperties@::@optimalTilingFeatures@(for an optimally tiled
---     image) returned by @vkGetPhysicalDeviceFormatProperties@
---
--- -   Any 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' being sampled
---     with @VK_FILTER_CUBIC_IMG@ as a result of this command /must/ not
---     have a 'Graphics.Vulkan.C.Core10.ImageView.VkImageViewType' of
---     @VK_IMAGE_VIEW_TYPE_3D@, @VK_IMAGE_VIEW_TYPE_CUBE@, or
---     @VK_IMAGE_VIEW_TYPE_CUBE_ARRAY@
---
--- -   If the draw is recorded in a render pass instance with multiview
---     enabled, the maximum instance index /must/ be less than or equal to
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_multiview.VkPhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@.
---
--- -   If the currently bound graphics pipeline was created with
---     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkPipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
---     set to @VK_TRUE@ and the current subpass has a depth\/stencil
---     attachment, then that attachment /must/ have been created with the
---     @VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT@ bit set
---
--- -   Any 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' created with
---     a 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@flags@
---     containing @VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV@ sampled as a
---     result of this command /must/ only be sampled using a
---     'Graphics.Vulkan.C.Core10.Sampler.VkSamplerAddressMode' of
---     @VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE@.
+-- Unresolved directive in vkCmdDrawMeshTasksIndirectNV.txt -
+-- include::{chapters}\/commonvalidity\/draw_common.txt[] Unresolved
+-- directive in vkCmdDrawMeshTasksIndirectNV.txt -
+-- include::{chapters}\/commonvalidity\/draw_dispatch_indirect_common.txt[]
+-- Unresolved directive in vkCmdDrawMeshTasksIndirectNV.txt -
+-- include::{chapters}\/commonvalidity\/draw_indirect_drawcount.txt[] * If
+-- @drawCount@ is greater than @1@, @stride@ /must/ be a multiple of @4@
+-- and /must/ be greater than or equal to
+-- @sizeof@('VkDrawMeshTasksIndirectCommandNV') * If @drawCount@ is equal
+-- to @1@, (@offset@ + @sizeof@('VkDrawMeshTasksIndirectCommandNV')) /must/
+-- be less than or equal to the size of @buffer@ * If @drawCount@ is
+-- greater than @1@, (@stride@ × (@drawCount@ - 1) + @offset@ +
+-- @sizeof@('VkDrawMeshTasksIndirectCommandNV')) /must/ be less than or
+-- equal to the size of @buffer@
 --
 -- Unresolved directive in vkCmdDrawMeshTasksIndirectNV.txt -
--- include::..\/validity\/protos\/vkCmdDrawMeshTasksIndirectNV.txt[]
+-- include::{generated}\/validity\/protos\/vkCmdDrawMeshTasksIndirectNV.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdDrawMeshTasksIndirectNV" vkCmdDrawMeshTasksIndirectNV :: ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
-
+#else
+vkCmdDrawMeshTasksIndirectNV :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
+vkCmdDrawMeshTasksIndirectNV deviceCmds = mkVkCmdDrawMeshTasksIndirectNV (pVkCmdDrawMeshTasksIndirectNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdDrawMeshTasksIndirectNV
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ())
+#endif
+
 type FN_vkCmdDrawMeshTasksIndirectNV = ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
 type PFN_vkCmdDrawMeshTasksIndirectNV = FunPtr FN_vkCmdDrawMeshTasksIndirectNV
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkCmdDrawMeshTasksNV - Draw mesh task work items
 --
 -- = Parameters
@@ -699,164 +467,65 @@ type PFN_vkCmdDrawMeshTasksIndirectNV = FunPtr FN_vkCmdDrawMeshTasksIndirectNV
 --
 -- == Valid Usage
 --
--- -   @taskCount@ /must/ be less than or equal to
---     @VkPhysicalDeviceMeshShaderPropertiesNV@::@maxDrawMeshTasksCount@
---
--- -   The current render pass /must/ be
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility compatible>
---     with the @renderPass@ member of the @VkGraphicsPipelineCreateInfo@
---     structure specified when creating the @VkPipeline@ currently bound
---     to @VK_PIPELINE_BIND_POINT_GRAPHICS@.
---
--- -   The subpass index of the current render pass /must/ be equal to the
---     @subpass@ member of the @VkGraphicsPipelineCreateInfo@ structure
---     specified when creating the @VkPipeline@ currently bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@.
---
--- -   For each set /n/ that is statically used by the @VkPipeline@
---     currently bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@, a descriptor
---     set /must/ have been bound to /n/ at
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@, with a @VkPipelineLayout@ that is
---     compatible for set /n/, with the @VkPipelineLayout@ used to create
---     the current @VkPipeline@, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
---
--- -   For each push constant that is statically used by the @VkPipeline@
---     currently bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@, a push
---     constant value /must/ have been set for
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@, with a @VkPipelineLayout@ that is
---     compatible for push constants, with the @VkPipelineLayout@ used to
---     create the current @VkPipeline@, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
---
--- -   Descriptors in each bound descriptor set, specified via
---     @vkCmdBindDescriptorSets@, /must/ be valid if they are statically
---     used by the currently bound @VkPipeline@ object, specified via
---     @vkCmdBindPipeline@
---
--- -   A valid graphics pipeline /must/ be bound to the current command
---     buffer with @VK_PIPELINE_BIND_POINT_GRAPHICS@
---
--- -   If the @VkPipeline@ object currently bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@ requires any dynamic state, that
---     state /must/ have been set on the current command buffer
---
--- -   Every input attachment used by the current subpass /must/ be bound
---     to the pipeline via a descriptor set
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ currently bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@
---     uses unnormalized coordinates, it /must/ not be used to sample from
---     any @VkImage@ with a @VkImageView@ of the type
---     @VK_IMAGE_VIEW_TYPE_3D@, @VK_IMAGE_VIEW_TYPE_CUBE@,
---     @VK_IMAGE_VIEW_TYPE_1D_ARRAY@, @VK_IMAGE_VIEW_TYPE_2D_ARRAY@ or
---     @VK_IMAGE_VIEW_TYPE_CUBE_ARRAY@, in any shader stage
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ currently bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@
---     uses unnormalized coordinates, it /must/ not be used with any of the
---     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions with
---     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ currently bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@
---     uses unnormalized coordinates, it /must/ not be used with any of the
---     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions that
---     includes a LOD bias or any offset values, in any shader stage
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and any shader stage in the @VkPipeline@
---     object currently bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ accesses
---     a uniform buffer, it /must/ not access values outside of the range
---     of that buffer specified in the currently bound descriptor set
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and any shader stage in the @VkPipeline@
---     object currently bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ accesses
---     a storage buffer, it /must/ not access values outside of the range
---     of that buffer specified in the currently bound descriptor set
---
--- -   Any @VkImageView@ being sampled with @VK_FILTER_LINEAR@ as a result
---     of this command /must/ be of a format which supports linear
---     filtering, as specified by the
---     @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT@ flag in
---     @VkFormatProperties@::@linearTilingFeatures@ (for a linear image) or
---     @VkFormatProperties@::@optimalTilingFeatures@(for an optimally tiled
---     image) returned by @vkGetPhysicalDeviceFormatProperties@
---
--- -   Image subresources used as attachments in the current render pass
---     /must/ not be accessed in any way other than as an attachment by
---     this command.
---
--- -   Any 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' being sampled
---     with @VK_FILTER_CUBIC_IMG@ as a result of this command /must/ be of
---     a format which supports cubic filtering, as specified by the
---     @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG@ flag in
---     @VkFormatProperties@::@linearTilingFeatures@ (for a linear image) or
---     @VkFormatProperties@::@optimalTilingFeatures@(for an optimally tiled
---     image) returned by @vkGetPhysicalDeviceFormatProperties@
---
--- -   Any 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' being sampled
---     with @VK_FILTER_CUBIC_IMG@ as a result of this command /must/ not
---     have a 'Graphics.Vulkan.C.Core10.ImageView.VkImageViewType' of
---     @VK_IMAGE_VIEW_TYPE_3D@, @VK_IMAGE_VIEW_TYPE_CUBE@, or
---     @VK_IMAGE_VIEW_TYPE_CUBE_ARRAY@
---
--- -   If the draw is recorded in a render pass instance with multiview
---     enabled, the maximum instance index /must/ be less than or equal to
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_multiview.VkPhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@.
---
--- -   If the currently bound graphics pipeline was created with
---     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkPipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
---     set to @VK_TRUE@ and the current subpass has a depth\/stencil
---     attachment, then that attachment /must/ have been created with the
---     @VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT@ bit set
---
--- -   Any 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' created with
---     a 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@flags@
---     containing @VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV@ sampled as a
---     result of this command /must/ only be sampled using a
---     'Graphics.Vulkan.C.Core10.Sampler.VkSamplerAddressMode' of
---     @VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE@.
+-- Unresolved directive in vkCmdDrawMeshTasksNV.txt -
+-- include::{chapters}\/commonvalidity\/draw_common.txt[] * @taskCount@
+-- /must/ be less than or equal to
+-- 'VkPhysicalDeviceMeshShaderPropertiesNV'::@maxDrawMeshTasksCount@
 --
 -- Unresolved directive in vkCmdDrawMeshTasksNV.txt -
--- include::..\/validity\/protos\/vkCmdDrawMeshTasksNV.txt[]
+-- include::{generated}\/validity\/protos\/vkCmdDrawMeshTasksNV.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdDrawMeshTasksNV" vkCmdDrawMeshTasksNV :: ("commandBuffer" ::: VkCommandBuffer) -> ("taskCount" ::: Word32) -> ("firstTask" ::: Word32) -> IO ()
-
+#else
+vkCmdDrawMeshTasksNV :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("taskCount" ::: Word32) -> ("firstTask" ::: Word32) -> IO ()
+vkCmdDrawMeshTasksNV deviceCmds = mkVkCmdDrawMeshTasksNV (pVkCmdDrawMeshTasksNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdDrawMeshTasksNV
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("taskCount" ::: Word32) -> ("firstTask" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("taskCount" ::: Word32) -> ("firstTask" ::: Word32) -> IO ())
+#endif
+
 type FN_vkCmdDrawMeshTasksNV = ("commandBuffer" ::: VkCommandBuffer) -> ("taskCount" ::: Word32) -> ("firstTask" ::: Word32) -> IO ()
 type PFN_vkCmdDrawMeshTasksNV = FunPtr FN_vkCmdDrawMeshTasksNV
+
 -- No documentation found for TopLevel "VK_NV_MESH_SHADER_EXTENSION_NAME"
 pattern VK_NV_MESH_SHADER_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_NV_MESH_SHADER_EXTENSION_NAME = "VK_NV_mesh_shader"
+
 -- No documentation found for TopLevel "VK_NV_MESH_SHADER_SPEC_VERSION"
 pattern VK_NV_MESH_SHADER_SPEC_VERSION :: Integral a => a
 pattern VK_NV_MESH_SHADER_SPEC_VERSION = 1
--- No documentation found for Nested "VkPipelineStageFlagBits" "VK_PIPELINE_STAGE_MESH_SHADER_BIT_NV"
+
+-- | 'VK_PIPELINE_STAGE_MESH_SHADER_BIT_NV' specifies the mesh shader stage.
 pattern VK_PIPELINE_STAGE_MESH_SHADER_BIT_NV :: VkPipelineStageFlagBits
 pattern VK_PIPELINE_STAGE_MESH_SHADER_BIT_NV = VkPipelineStageFlagBits 0x00100000
--- No documentation found for Nested "VkPipelineStageFlagBits" "VK_PIPELINE_STAGE_TASK_SHADER_BIT_NV"
+
+-- | 'VK_PIPELINE_STAGE_TASK_SHADER_BIT_NV' specifies the task shader stage.
 pattern VK_PIPELINE_STAGE_TASK_SHADER_BIT_NV :: VkPipelineStageFlagBits
 pattern VK_PIPELINE_STAGE_TASK_SHADER_BIT_NV = VkPipelineStageFlagBits 0x00080000
--- | @VK_SHADER_STAGE_MESH_BIT_NV@ specifies the mesh stage.
+
+-- | 'VK_SHADER_STAGE_MESH_BIT_NV' specifies the mesh stage.
 pattern VK_SHADER_STAGE_MESH_BIT_NV :: VkShaderStageFlagBits
 pattern VK_SHADER_STAGE_MESH_BIT_NV = VkShaderStageFlagBits 0x00000080
--- | @VK_SHADER_STAGE_TASK_BIT_NV@ specifies the task stage.
+
+-- | 'VK_SHADER_STAGE_TASK_BIT_NV' specifies the task stage.
 pattern VK_SHADER_STAGE_TASK_BIT_NV :: VkShaderStageFlagBits
 pattern VK_SHADER_STAGE_TASK_BIT_NV = VkShaderStageFlagBits 0x00000040
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_FEATURES_NV"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_FEATURES_NV :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_FEATURES_NV = VkStructureType 1000202000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_PROPERTIES_NV"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_PROPERTIES_NV :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_PROPERTIES_NV = VkStructureType 1000202001

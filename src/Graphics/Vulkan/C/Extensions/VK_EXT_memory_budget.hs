@@ -53,7 +53,7 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
 -- each heap.
 --
 -- Unresolved directive in VkPhysicalDeviceMemoryBudgetPropertiesEXT.txt -
--- include::..\/validity\/structs\/VkPhysicalDeviceMemoryBudgetPropertiesEXT.txt[]
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceMemoryBudgetPropertiesEXT.txt[]
 --
 -- = See Also
 --
@@ -89,16 +89,19 @@ instance Storable VkPhysicalDeviceMemoryBudgetPropertiesEXT where
                 *> poke (ptr `plusPtr` 144) (vkHeapUsage (poked :: VkPhysicalDeviceMemoryBudgetPropertiesEXT))
 
 instance Zero VkPhysicalDeviceMemoryBudgetPropertiesEXT where
-  zero = VkPhysicalDeviceMemoryBudgetPropertiesEXT zero
+  zero = VkPhysicalDeviceMemoryBudgetPropertiesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT
                                                    zero
                                                    zero
                                                    zero
+
 -- No documentation found for TopLevel "VK_EXT_MEMORY_BUDGET_EXTENSION_NAME"
 pattern VK_EXT_MEMORY_BUDGET_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_MEMORY_BUDGET_EXTENSION_NAME = "VK_EXT_memory_budget"
+
 -- No documentation found for TopLevel "VK_EXT_MEMORY_BUDGET_SPEC_VERSION"
 pattern VK_EXT_MEMORY_BUDGET_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_MEMORY_BUDGET_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT = VkStructureType 1000237000

@@ -45,21 +45,57 @@ import Graphics.Vulkan.C.Extensions.VK_NV_corner_sampled_image
   )
 
 
--- No documentation found for TopLevel "PhysicalDeviceCornerSampledImageFeaturesNV"
+
+-- | VkPhysicalDeviceCornerSampledImageFeaturesNV - Structure describing
+-- corner sampled image features that can be supported by an implementation
+--
+-- = Members
+--
+-- The members of the
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_corner_sampled_image.VkPhysicalDeviceCornerSampledImageFeaturesNV'
+-- structure describe the following features:
+--
+-- = Description
+--
+-- If the
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_corner_sampled_image.VkPhysicalDeviceCornerSampledImageFeaturesNV'
+-- structure is included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
+-- it is filled with values indicating whether each feature is supported.
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_corner_sampled_image.VkPhysicalDeviceCornerSampledImageFeaturesNV'
+-- /can/ also be used in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
+--
+-- Unresolved directive in VkPhysicalDeviceCornerSampledImageFeaturesNV.txt
+-- -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceCornerSampledImageFeaturesNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data PhysicalDeviceCornerSampledImageFeaturesNV = PhysicalDeviceCornerSampledImageFeaturesNV
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceCornerSampledImageFeaturesNV" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDeviceCornerSampledImageFeaturesNV" "cornerSampledImage"
-  vkCornerSampledImage :: Bool
+  cornerSampledImage :: Bool
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPhysicalDeviceCornerSampledImageFeaturesNV' and
+-- marshal a 'PhysicalDeviceCornerSampledImageFeaturesNV' into it. The 'VkPhysicalDeviceCornerSampledImageFeaturesNV' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPhysicalDeviceCornerSampledImageFeaturesNV :: PhysicalDeviceCornerSampledImageFeaturesNV -> (VkPhysicalDeviceCornerSampledImageFeaturesNV -> IO a) -> IO a
-withCStructPhysicalDeviceCornerSampledImageFeaturesNV from cont = maybeWith withSomeVkStruct (vkPNext (from :: PhysicalDeviceCornerSampledImageFeaturesNV)) (\pPNext -> cont (VkPhysicalDeviceCornerSampledImageFeaturesNV VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV pPNext (boolToBool32 (vkCornerSampledImage (from :: PhysicalDeviceCornerSampledImageFeaturesNV)))))
+withCStructPhysicalDeviceCornerSampledImageFeaturesNV marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PhysicalDeviceCornerSampledImageFeaturesNV)) (\pPNext -> cont (VkPhysicalDeviceCornerSampledImageFeaturesNV VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV pPNext (boolToBool32 (cornerSampledImage (marshalled :: PhysicalDeviceCornerSampledImageFeaturesNV)))))
+
+-- | A function to read a 'VkPhysicalDeviceCornerSampledImageFeaturesNV' and all additional
+-- structures in the pointer chain into a 'PhysicalDeviceCornerSampledImageFeaturesNV'.
 fromCStructPhysicalDeviceCornerSampledImageFeaturesNV :: VkPhysicalDeviceCornerSampledImageFeaturesNV -> IO PhysicalDeviceCornerSampledImageFeaturesNV
 fromCStructPhysicalDeviceCornerSampledImageFeaturesNV c = PhysicalDeviceCornerSampledImageFeaturesNV <$> -- Univalued Member elided
                                                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceCornerSampledImageFeaturesNV)))
                                                                                                      <*> pure (bool32ToBool (vkCornerSampledImage (c :: VkPhysicalDeviceCornerSampledImageFeaturesNV)))
+
 instance Zero PhysicalDeviceCornerSampledImageFeaturesNV where
   zero = PhysicalDeviceCornerSampledImageFeaturesNV Nothing
                                                     False
+

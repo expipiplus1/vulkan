@@ -8,11 +8,9 @@
 
 module Graphics.Vulkan.C.Extensions.VK_NVX_image_view_handle
   ( VkImageViewHandleInfoNVX(..)
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkGetImageViewHandleNVX
-#endif
   , FN_vkGetImageViewHandleNVX
   , PFN_vkGetImageViewHandleNVX
+  , vkGetImageViewHandleNVX
   , pattern VK_NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME
   , pattern VK_NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX
@@ -51,6 +49,9 @@ import Graphics.Vulkan.C.Core10.ImageView
 import Graphics.Vulkan.C.Core10.Sampler
   ( VkSampler
   )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
+  )
 import Graphics.Vulkan.NamedType
   ( (:::)
   )
@@ -61,25 +62,34 @@ import Graphics.Vulkan.NamedType
 --
 -- == Valid Usage
 --
--- -   @descriptorType@ /must/ be @VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE@,
---     @VK_DESCRIPTOR_TYPE_STORAGE_IMAGE@, or
---     @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@
+-- -   @descriptorType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE',
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE',
+--     or
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
 --
 -- -   @sampler@ /must/ be a valid
 --     'Graphics.Vulkan.C.Core10.Sampler.VkSampler' if @descriptorType@ is
---     @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
 --
--- -   If descriptorType is @VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE@ or
---     @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@, the image that
---     @imageView@ was created from /must/ have been created with the
---     @VK_IMAGE_USAGE_SAMPLED_BIT@ usage bit set
+-- -   If descriptorType is
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE'
+--     or
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
+--     the image that @imageView@ was created from /must/ have been created
+--     with the
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_SAMPLED_BIT'
+--     usage bit set
 --
--- -   If descriptorType is @VK_DESCRIPTOR_TYPE_STORAGE_IMAGE@, the image
---     that @imageView@ was created from /must/ have been created with the
---     @VK_IMAGE_USAGE_STORAGE_BIT@ usage bit set
+-- -   If descriptorType is
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE',
+--     the image that @imageView@ was created from /must/ have been created
+--     with the
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_STORAGE_BIT'
+--     usage bit set
 --
 -- Unresolved directive in VkImageViewHandleInfoNVX.txt -
--- include::..\/validity\/structs\/VkImageViewHandleInfoNVX.txt[]
+-- include::{generated}\/validity\/structs\/VkImageViewHandleInfoNVX.txt[]
 --
 -- = See Also
 --
@@ -114,12 +124,12 @@ instance Storable VkImageViewHandleInfoNVX where
                 *> poke (ptr `plusPtr` 32) (vkSampler (poked :: VkImageViewHandleInfoNVX))
 
 instance Zero VkImageViewHandleInfoNVX where
-  zero = VkImageViewHandleInfoNVX zero
+  zero = VkImageViewHandleInfoNVX VK_STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX
                                   zero
                                   zero
                                   zero
                                   zero
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkGetImageViewHandleNVX - Get the handle for an image view for a
 -- specific descriptor type
 --
@@ -132,26 +142,39 @@ instance Zero VkImageViewHandleInfoNVX where
 -- = Description
 --
 -- Unresolved directive in vkGetImageViewHandleNVX.txt -
--- include::..\/validity\/protos\/vkGetImageViewHandleNVX.txt[]
+-- include::{generated}\/validity\/protos\/vkGetImageViewHandleNVX.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetImageViewHandleNVX" vkGetImageViewHandleNVX :: ("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkImageViewHandleInfoNVX) -> IO Word32
-
+#else
+vkGetImageViewHandleNVX :: DeviceCmds -> ("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkImageViewHandleInfoNVX) -> IO Word32
+vkGetImageViewHandleNVX deviceCmds = mkVkGetImageViewHandleNVX (pVkGetImageViewHandleNVX deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetImageViewHandleNVX
+  :: FunPtr (("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkImageViewHandleInfoNVX) -> IO Word32) -> (("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkImageViewHandleInfoNVX) -> IO Word32)
+#endif
+
 type FN_vkGetImageViewHandleNVX = ("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkImageViewHandleInfoNVX) -> IO Word32
 type PFN_vkGetImageViewHandleNVX = FunPtr FN_vkGetImageViewHandleNVX
+
 -- No documentation found for TopLevel "VK_NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME"
 pattern VK_NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME = "VK_NVX_image_view_handle"
+
 -- No documentation found for TopLevel "VK_NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION"
 pattern VK_NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION :: Integral a => a
 pattern VK_NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX"
 pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX :: VkStructureType
 pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX = VkStructureType 1000030000

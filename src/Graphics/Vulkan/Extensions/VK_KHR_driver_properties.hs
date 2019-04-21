@@ -2,12 +2,24 @@
 {-# language CPP #-}
 {-# language DuplicateRecordFields #-}
 {-# language PatternSynonyms #-}
+{-# language TypeFamilies #-}
 
 module Graphics.Vulkan.Extensions.VK_KHR_driver_properties
   ( withCStructConformanceVersionKHR
   , fromCStructConformanceVersionKHR
   , ConformanceVersionKHR(..)
   , DriverIdKHR
+  , pattern DRIVER_ID_AMD_PROPRIETARY_KHR
+  , pattern DRIVER_ID_AMD_OPEN_SOURCE_KHR
+  , pattern DRIVER_ID_MESA_RADV_KHR
+  , pattern DRIVER_ID_NVIDIA_PROPRIETARY_KHR
+  , pattern DRIVER_ID_INTEL_PROPRIETARY_WINDOWS_KHR
+  , pattern DRIVER_ID_INTEL_OPEN_SOURCE_MESA_KHR
+  , pattern DRIVER_ID_IMAGINATION_PROPRIETARY_KHR
+  , pattern DRIVER_ID_QUALCOMM_PROPRIETARY_KHR
+  , pattern DRIVER_ID_ARM_PROPRIETARY_KHR
+  , pattern DRIVER_ID_GOOGLE_PASTEL_KHR
+  , pattern DRIVER_ID_GGP_PROPRIETARY_KHR
   , withCStructPhysicalDeviceDriverPropertiesKHR
   , fromCStructPhysicalDeviceDriverPropertiesKHR
   , PhysicalDeviceDriverPropertiesKHR(..)
@@ -50,6 +62,17 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_driver_properties
   ( VkConformanceVersionKHR(..)
   , VkDriverIdKHR(..)
   , VkPhysicalDeviceDriverPropertiesKHR(..)
+  , pattern VK_DRIVER_ID_AMD_OPEN_SOURCE_KHR
+  , pattern VK_DRIVER_ID_AMD_PROPRIETARY_KHR
+  , pattern VK_DRIVER_ID_ARM_PROPRIETARY_KHR
+  , pattern VK_DRIVER_ID_GGP_PROPRIETARY_KHR
+  , pattern VK_DRIVER_ID_GOOGLE_PASTEL_KHR
+  , pattern VK_DRIVER_ID_IMAGINATION_PROPRIETARY_KHR
+  , pattern VK_DRIVER_ID_INTEL_OPEN_SOURCE_MESA_KHR
+  , pattern VK_DRIVER_ID_INTEL_PROPRIETARY_WINDOWS_KHR
+  , pattern VK_DRIVER_ID_MESA_RADV_KHR
+  , pattern VK_DRIVER_ID_NVIDIA_PROPRIETARY_KHR
+  , pattern VK_DRIVER_ID_QUALCOMM_PROPRIETARY_KHR
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR
   )
 import Graphics.Vulkan.Marshal.Utils
@@ -68,49 +91,166 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_driver_properties
   )
 
 
--- No documentation found for TopLevel "ConformanceVersionKHR"
+
+-- | VkConformanceVersionKHR - Structure containing the conformance test
+-- suite version the implementation is compliant with
+--
+-- = Description
+--
+-- Unresolved directive in VkConformanceVersionKHR.txt -
+-- include::{generated}\/validity\/structs\/VkConformanceVersionKHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data ConformanceVersionKHR = ConformanceVersionKHR
   { -- No documentation found for Nested "ConformanceVersionKHR" "major"
-  vkMajor :: Word8
+  major :: Word8
   , -- No documentation found for Nested "ConformanceVersionKHR" "minor"
-  vkMinor :: Word8
+  minor :: Word8
   , -- No documentation found for Nested "ConformanceVersionKHR" "subminor"
-  vkSubminor :: Word8
+  subminor :: Word8
   , -- No documentation found for Nested "ConformanceVersionKHR" "patch"
-  vkPatch :: Word8
+  patch :: Word8
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkConformanceVersionKHR' and
+-- marshal a 'ConformanceVersionKHR' into it. The 'VkConformanceVersionKHR' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructConformanceVersionKHR :: ConformanceVersionKHR -> (VkConformanceVersionKHR -> IO a) -> IO a
-withCStructConformanceVersionKHR from cont = cont (VkConformanceVersionKHR (vkMajor (from :: ConformanceVersionKHR)) (vkMinor (from :: ConformanceVersionKHR)) (vkSubminor (from :: ConformanceVersionKHR)) (vkPatch (from :: ConformanceVersionKHR)))
+withCStructConformanceVersionKHR marshalled cont = cont (VkConformanceVersionKHR (major (marshalled :: ConformanceVersionKHR)) (minor (marshalled :: ConformanceVersionKHR)) (subminor (marshalled :: ConformanceVersionKHR)) (patch (marshalled :: ConformanceVersionKHR)))
+
+-- | A function to read a 'VkConformanceVersionKHR' and all additional
+-- structures in the pointer chain into a 'ConformanceVersionKHR'.
 fromCStructConformanceVersionKHR :: VkConformanceVersionKHR -> IO ConformanceVersionKHR
 fromCStructConformanceVersionKHR c = ConformanceVersionKHR <$> pure (vkMajor (c :: VkConformanceVersionKHR))
                                                            <*> pure (vkMinor (c :: VkConformanceVersionKHR))
                                                            <*> pure (vkSubminor (c :: VkConformanceVersionKHR))
                                                            <*> pure (vkPatch (c :: VkConformanceVersionKHR))
+
 instance Zero ConformanceVersionKHR where
   zero = ConformanceVersionKHR zero
                                zero
                                zero
                                zero
--- No documentation found for TopLevel "DriverIdKHR"
+
+
+-- | VkDriverIdKHR - Khronos driver IDs
+--
+-- = Description
+--
+-- __Note__
+--
+-- Khronos driver IDs may be allocated by vendors at any time. There may be
+-- multiple driver IDs for the same vendor, representing different drivers
+-- (for e.g. different platforms, proprietary or open source, etc.). Only
+-- the latest canonical versions of this Specification, of the
+-- corresponding @vk.xml@ API Registry, and of the corresponding
+-- @vulkan_core.h@ header file /must/ contain all reserved Khronos driver
+-- IDs.
+--
+-- Only driver IDs registered with Khronos are given symbolic names. There
+-- /may/ be unregistered driver IDs returned.
+--
+-- = See Also
+--
+-- No cross-references are available
 type DriverIdKHR = VkDriverIdKHR
--- No documentation found for TopLevel "PhysicalDeviceDriverPropertiesKHR"
+
+
+-- No documentation found for Nested "DriverIdKHR" "DRIVER_ID_AMD_PROPRIETARY_KHR"
+pattern DRIVER_ID_AMD_PROPRIETARY_KHR :: (a ~ DriverIdKHR) => a
+pattern DRIVER_ID_AMD_PROPRIETARY_KHR = VK_DRIVER_ID_AMD_PROPRIETARY_KHR
+
+
+-- No documentation found for Nested "DriverIdKHR" "DRIVER_ID_AMD_OPEN_SOURCE_KHR"
+pattern DRIVER_ID_AMD_OPEN_SOURCE_KHR :: (a ~ DriverIdKHR) => a
+pattern DRIVER_ID_AMD_OPEN_SOURCE_KHR = VK_DRIVER_ID_AMD_OPEN_SOURCE_KHR
+
+
+-- No documentation found for Nested "DriverIdKHR" "DRIVER_ID_MESA_RADV_KHR"
+pattern DRIVER_ID_MESA_RADV_KHR :: (a ~ DriverIdKHR) => a
+pattern DRIVER_ID_MESA_RADV_KHR = VK_DRIVER_ID_MESA_RADV_KHR
+
+
+-- No documentation found for Nested "DriverIdKHR" "DRIVER_ID_NVIDIA_PROPRIETARY_KHR"
+pattern DRIVER_ID_NVIDIA_PROPRIETARY_KHR :: (a ~ DriverIdKHR) => a
+pattern DRIVER_ID_NVIDIA_PROPRIETARY_KHR = VK_DRIVER_ID_NVIDIA_PROPRIETARY_KHR
+
+
+-- No documentation found for Nested "DriverIdKHR" "DRIVER_ID_INTEL_PROPRIETARY_WINDOWS_KHR"
+pattern DRIVER_ID_INTEL_PROPRIETARY_WINDOWS_KHR :: (a ~ DriverIdKHR) => a
+pattern DRIVER_ID_INTEL_PROPRIETARY_WINDOWS_KHR = VK_DRIVER_ID_INTEL_PROPRIETARY_WINDOWS_KHR
+
+
+-- No documentation found for Nested "DriverIdKHR" "DRIVER_ID_INTEL_OPEN_SOURCE_MESA_KHR"
+pattern DRIVER_ID_INTEL_OPEN_SOURCE_MESA_KHR :: (a ~ DriverIdKHR) => a
+pattern DRIVER_ID_INTEL_OPEN_SOURCE_MESA_KHR = VK_DRIVER_ID_INTEL_OPEN_SOURCE_MESA_KHR
+
+
+-- No documentation found for Nested "DriverIdKHR" "DRIVER_ID_IMAGINATION_PROPRIETARY_KHR"
+pattern DRIVER_ID_IMAGINATION_PROPRIETARY_KHR :: (a ~ DriverIdKHR) => a
+pattern DRIVER_ID_IMAGINATION_PROPRIETARY_KHR = VK_DRIVER_ID_IMAGINATION_PROPRIETARY_KHR
+
+
+-- No documentation found for Nested "DriverIdKHR" "DRIVER_ID_QUALCOMM_PROPRIETARY_KHR"
+pattern DRIVER_ID_QUALCOMM_PROPRIETARY_KHR :: (a ~ DriverIdKHR) => a
+pattern DRIVER_ID_QUALCOMM_PROPRIETARY_KHR = VK_DRIVER_ID_QUALCOMM_PROPRIETARY_KHR
+
+
+-- No documentation found for Nested "DriverIdKHR" "DRIVER_ID_ARM_PROPRIETARY_KHR"
+pattern DRIVER_ID_ARM_PROPRIETARY_KHR :: (a ~ DriverIdKHR) => a
+pattern DRIVER_ID_ARM_PROPRIETARY_KHR = VK_DRIVER_ID_ARM_PROPRIETARY_KHR
+
+
+-- No documentation found for Nested "DriverIdKHR" "DRIVER_ID_GOOGLE_PASTEL_KHR"
+pattern DRIVER_ID_GOOGLE_PASTEL_KHR :: (a ~ DriverIdKHR) => a
+pattern DRIVER_ID_GOOGLE_PASTEL_KHR = VK_DRIVER_ID_GOOGLE_PASTEL_KHR
+
+
+-- No documentation found for Nested "DriverIdKHR" "DRIVER_ID_GGP_PROPRIETARY_KHR"
+pattern DRIVER_ID_GGP_PROPRIETARY_KHR :: (a ~ DriverIdKHR) => a
+pattern DRIVER_ID_GGP_PROPRIETARY_KHR = VK_DRIVER_ID_GGP_PROPRIETARY_KHR
+
+
+-- | VkPhysicalDeviceDriverPropertiesKHR - Structure containing driver
+-- identification information
+--
+-- = Description
+--
+-- @driverID@ /must/ be immutable for a given driver across instances,
+-- processes, driver versions, and system reboots.
+--
+-- Unresolved directive in VkPhysicalDeviceDriverPropertiesKHR.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceDriverPropertiesKHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data PhysicalDeviceDriverPropertiesKHR = PhysicalDeviceDriverPropertiesKHR
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceDriverPropertiesKHR" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDeviceDriverPropertiesKHR" "driverID"
-  vkDriverID :: DriverIdKHR
+  driverID :: DriverIdKHR
   , -- No documentation found for Nested "PhysicalDeviceDriverPropertiesKHR" "driverName"
-  vkDriverName :: ByteString
+  driverName :: ByteString
   , -- No documentation found for Nested "PhysicalDeviceDriverPropertiesKHR" "driverInfo"
-  vkDriverInfo :: ByteString
+  driverInfo :: ByteString
   , -- No documentation found for Nested "PhysicalDeviceDriverPropertiesKHR" "conformanceVersion"
-  vkConformanceVersion :: ConformanceVersionKHR
+  conformanceVersion :: ConformanceVersionKHR
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPhysicalDeviceDriverPropertiesKHR' and
+-- marshal a 'PhysicalDeviceDriverPropertiesKHR' into it. The 'VkPhysicalDeviceDriverPropertiesKHR' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPhysicalDeviceDriverPropertiesKHR :: PhysicalDeviceDriverPropertiesKHR -> (VkPhysicalDeviceDriverPropertiesKHR -> IO a) -> IO a
-withCStructPhysicalDeviceDriverPropertiesKHR from cont = withCStructConformanceVersionKHR (vkConformanceVersion (from :: PhysicalDeviceDriverPropertiesKHR)) (\conformanceVersion -> maybeWith withSomeVkStruct (vkPNext (from :: PhysicalDeviceDriverPropertiesKHR)) (\pPNext -> cont (VkPhysicalDeviceDriverPropertiesKHR VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR pPNext (vkDriverID (from :: PhysicalDeviceDriverPropertiesKHR)) (byteStringToNullTerminatedSizedVector (vkDriverName (from :: PhysicalDeviceDriverPropertiesKHR))) (byteStringToNullTerminatedSizedVector (vkDriverInfo (from :: PhysicalDeviceDriverPropertiesKHR))) conformanceVersion)))
+withCStructPhysicalDeviceDriverPropertiesKHR marshalled cont = withCStructConformanceVersionKHR (conformanceVersion (marshalled :: PhysicalDeviceDriverPropertiesKHR)) (\conformanceVersion'' -> maybeWith withSomeVkStruct (next (marshalled :: PhysicalDeviceDriverPropertiesKHR)) (\pPNext -> cont (VkPhysicalDeviceDriverPropertiesKHR VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR pPNext (driverID (marshalled :: PhysicalDeviceDriverPropertiesKHR)) (byteStringToNullTerminatedSizedVector (driverName (marshalled :: PhysicalDeviceDriverPropertiesKHR))) (byteStringToNullTerminatedSizedVector (driverInfo (marshalled :: PhysicalDeviceDriverPropertiesKHR))) conformanceVersion'')))
+
+-- | A function to read a 'VkPhysicalDeviceDriverPropertiesKHR' and all additional
+-- structures in the pointer chain into a 'PhysicalDeviceDriverPropertiesKHR'.
 fromCStructPhysicalDeviceDriverPropertiesKHR :: VkPhysicalDeviceDriverPropertiesKHR -> IO PhysicalDeviceDriverPropertiesKHR
 fromCStructPhysicalDeviceDriverPropertiesKHR c = PhysicalDeviceDriverPropertiesKHR <$> -- Univalued Member elided
                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceDriverPropertiesKHR)))
@@ -118,9 +258,11 @@ fromCStructPhysicalDeviceDriverPropertiesKHR c = PhysicalDeviceDriverPropertiesK
                                                                                    <*> Data.Vector.Storable.unsafeWith (Data.Vector.Storable.Sized.fromSized (vkDriverName (c :: VkPhysicalDeviceDriverPropertiesKHR))) packCString
                                                                                    <*> Data.Vector.Storable.unsafeWith (Data.Vector.Storable.Sized.fromSized (vkDriverInfo (c :: VkPhysicalDeviceDriverPropertiesKHR))) packCString
                                                                                    <*> (fromCStructConformanceVersionKHR (vkConformanceVersion (c :: VkPhysicalDeviceDriverPropertiesKHR)))
+
 instance Zero PhysicalDeviceDriverPropertiesKHR where
   zero = PhysicalDeviceDriverPropertiesKHR Nothing
                                            zero
                                            Data.ByteString.empty
                                            Data.ByteString.empty
                                            zero
+

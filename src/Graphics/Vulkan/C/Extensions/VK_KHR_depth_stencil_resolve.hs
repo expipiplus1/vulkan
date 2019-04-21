@@ -71,14 +71,14 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2
 --
 -- = Members
 --
--- The members of the @VkPhysicalDeviceDepthStencilResolvePropertiesKHR@
+-- The members of the 'VkPhysicalDeviceDepthStencilResolvePropertiesKHR'
 -- structure describe the following implementation-dependent limits:
 --
 -- = Description
 --
 -- Unresolved directive in
 -- VkPhysicalDeviceDepthStencilResolvePropertiesKHR.txt -
--- include::..\/validity\/structs\/VkPhysicalDeviceDepthStencilResolvePropertiesKHR.txt[]
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceDepthStencilResolvePropertiesKHR.txt[]
 --
 -- = See Also
 --
@@ -90,22 +90,24 @@ data VkPhysicalDeviceDepthStencilResolvePropertiesKHR = VkPhysicalDeviceDepthSte
   vkPNext :: Ptr ()
   , -- | @supportedDepthResolveModes@ is a bitmask of 'VkResolveModeFlagBitsKHR'
   -- indicating the set of supported depth resolve modes.
-  -- @VK_RESOLVE_MODE_SAMPLE_ZERO_BIT_KHR@ /must/ be included in the set but
+  -- 'VK_RESOLVE_MODE_SAMPLE_ZERO_BIT_KHR' /must/ be included in the set but
   -- implementations /may/ support additional modes.
   vkSupportedDepthResolveModes :: VkResolveModeFlagsKHR
   , -- | @supportedStencilResolveModes@ is a bitmask of
   -- 'VkResolveModeFlagBitsKHR' indicating the set of supported stencil
-  -- resolve modes. @VK_RESOLVE_MODE_SAMPLE_ZERO_BIT_KHR@ /must/ be included
+  -- resolve modes. 'VK_RESOLVE_MODE_SAMPLE_ZERO_BIT_KHR' /must/ be included
   -- in the set but implementations /may/ support additional modes.
-  -- @VK_RESOLVE_MODE_AVERAGE_BIT_KHR@ /must/ not be included in the set.
+  -- 'VK_RESOLVE_MODE_AVERAGE_BIT_KHR' /must/ not be included in the set.
   vkSupportedStencilResolveModes :: VkResolveModeFlagsKHR
-  , -- | @independentResolveNone@ is @VK_TRUE@ if the implementation supports
-  -- setting the depth and stencil resolve modes to different values when one
-  -- of those modes is @VK_RESOLVE_MODE_NONE_KHR@. Otherwise the
-  -- implementation only supports setting both modes to the same value.
+  , -- | @independentResolveNone@ is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' if
+  -- the implementation supports setting the depth and stencil resolve modes
+  -- to different values when one of those modes is
+  -- 'VK_RESOLVE_MODE_NONE_KHR'. Otherwise the implementation only supports
+  -- setting both modes to the same value.
   vkIndependentResolveNone :: VkBool32
-  , -- | @independentResolve@ is @VK_TRUE@ if the implementation supports all
-  -- combinations of the supported depth and stencil resolve modes.
+  , -- | @independentResolve@ is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' if the
+  -- implementation supports all combinations of the supported depth and
+  -- stencil resolve modes.
   vkIndependentResolve :: VkBool32
   }
   deriving (Eq, Show)
@@ -127,12 +129,13 @@ instance Storable VkPhysicalDeviceDepthStencilResolvePropertiesKHR where
                 *> poke (ptr `plusPtr` 28) (vkIndependentResolve (poked :: VkPhysicalDeviceDepthStencilResolvePropertiesKHR))
 
 instance Zero VkPhysicalDeviceDepthStencilResolvePropertiesKHR where
-  zero = VkPhysicalDeviceDepthStencilResolvePropertiesKHR zero
+  zero = VkPhysicalDeviceDepthStencilResolvePropertiesKHR VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES_KHR
                                                           zero
                                                           zero
                                                           zero
                                                           zero
                                                           zero
+
 -- ** VkResolveModeFlagBitsKHR
 
 -- | VkResolveModeFlagBitsKHR - Bitmask indicating supported depth and
@@ -166,64 +169,71 @@ instance Read VkResolveModeFlagBitsKHR where
                         )
                     )
 
--- | @VK_RESOLVE_MODE_SAMPLE_ZERO_BIT_KHR@ indicates that result of the
+-- | 'VK_RESOLVE_MODE_SAMPLE_ZERO_BIT_KHR' indicates that result of the
 -- resolve operation is equal to the value of sample 0.
 pattern VK_RESOLVE_MODE_SAMPLE_ZERO_BIT_KHR :: VkResolveModeFlagBitsKHR
 pattern VK_RESOLVE_MODE_SAMPLE_ZERO_BIT_KHR = VkResolveModeFlagBitsKHR 0x00000001
 
--- | @VK_RESOLVE_MODE_AVERAGE_BIT_KHR@ indicates that result of the resolve
+-- | 'VK_RESOLVE_MODE_AVERAGE_BIT_KHR' indicates that result of the resolve
 -- operation is the average of the sample values.
 pattern VK_RESOLVE_MODE_AVERAGE_BIT_KHR :: VkResolveModeFlagBitsKHR
 pattern VK_RESOLVE_MODE_AVERAGE_BIT_KHR = VkResolveModeFlagBitsKHR 0x00000002
 
--- | @VK_RESOLVE_MODE_MIN_BIT_KHR@ indicates that result of the resolve
+-- | 'VK_RESOLVE_MODE_MIN_BIT_KHR' indicates that result of the resolve
 -- operation is the minimum of the sample values.
 pattern VK_RESOLVE_MODE_MIN_BIT_KHR :: VkResolveModeFlagBitsKHR
 pattern VK_RESOLVE_MODE_MIN_BIT_KHR = VkResolveModeFlagBitsKHR 0x00000004
 
--- | @VK_RESOLVE_MODE_MAX_BIT_KHR@ indicates that result of the resolve
+-- | 'VK_RESOLVE_MODE_MAX_BIT_KHR' indicates that result of the resolve
 -- operation is the maximum of the sample values.
 pattern VK_RESOLVE_MODE_MAX_BIT_KHR :: VkResolveModeFlagBitsKHR
 pattern VK_RESOLVE_MODE_MAX_BIT_KHR = VkResolveModeFlagBitsKHR 0x00000008
 
--- | @VK_RESOLVE_MODE_NONE_KHR@ indicates that no resolve operation is done.
+-- | 'VK_RESOLVE_MODE_NONE_KHR' indicates that no resolve operation is done.
 pattern VK_RESOLVE_MODE_NONE_KHR :: VkResolveModeFlagBitsKHR
 pattern VK_RESOLVE_MODE_NONE_KHR = VkResolveModeFlagBitsKHR 0x00000000
+
 -- | VkResolveModeFlagsKHR - Bitmask of VkResolveModeFlagBitsKHR
 --
 -- = Description
 --
--- @VkResolveModeFlagsKHR@ is a bitmask type for setting a mask of zero or
+-- 'VkResolveModeFlagsKHR' is a bitmask type for setting a mask of zero or
 -- more 'VkResolveModeFlagBitsKHR'.
 --
 -- = See Also
 --
 -- No cross-references are available
 type VkResolveModeFlagsKHR = VkResolveModeFlagBitsKHR
+
 -- | VkSubpassDescriptionDepthStencilResolveKHR - Structure specifying
 -- depth\/stencil resolve operations for a subpass
 --
 -- == Valid Usage
 --
 -- -   If @pDepthStencilResolveAttachment@ is not @NULL@ and does not have
---     the value @VK_ATTACHMENT_UNUSED@, @pDepthStencilAttachment@ /must/
---     not have the value @VK_ATTACHMENT_UNUSED@
+--     the value 'Graphics.Vulkan.C.Core10.Constants.VK_ATTACHMENT_UNUSED',
+--     @pDepthStencilAttachment@ /must/ not have the value
+--     'Graphics.Vulkan.C.Core10.Constants.VK_ATTACHMENT_UNUSED'
 --
 -- -   If @pDepthStencilResolveAttachment@ is not @NULL@ and does not have
---     the value @VK_ATTACHMENT_UNUSED@, @depthResolveMode@ and
---     @stencilResolveMode@ /must/ not both be @VK_RESOLVE_MODE_NONE_KHR@
+--     the value 'Graphics.Vulkan.C.Core10.Constants.VK_ATTACHMENT_UNUSED',
+--     @depthResolveMode@ and @stencilResolveMode@ /must/ not both be
+--     'VK_RESOLVE_MODE_NONE_KHR'
 --
 -- -   If @pDepthStencilResolveAttachment@ is not @NULL@ and does not have
---     the value @VK_ATTACHMENT_UNUSED@, @pDepthStencilAttachment@ /must/
---     not have a sample count of @VK_SAMPLE_COUNT_1_BIT@
+--     the value 'Graphics.Vulkan.C.Core10.Constants.VK_ATTACHMENT_UNUSED',
+--     @pDepthStencilAttachment@ /must/ not have a sample count of
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_SAMPLE_COUNT_1_BIT'
 --
 -- -   If @pDepthStencilResolveAttachment@ is not @NULL@ and does not have
---     the value @VK_ATTACHMENT_UNUSED@, @pDepthStencilResolveAttachment@
---     /must/ have a sample count of @VK_SAMPLE_COUNT_1_BIT@
+--     the value 'Graphics.Vulkan.C.Core10.Constants.VK_ATTACHMENT_UNUSED',
+--     @pDepthStencilResolveAttachment@ /must/ have a sample count of
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_SAMPLE_COUNT_1_BIT'
 --
 -- -   If @pDepthStencilResolveAttachment@ is not @NULL@ and does not have
---     the value @VK_ATTACHMENT_UNUSED@ then it /must/ have a format whose
---     features contain @VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT@
+--     the value 'Graphics.Vulkan.C.Core10.Constants.VK_ATTACHMENT_UNUSED'
+--     then it /must/ have a format whose features contain
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- -   If the 'Graphics.Vulkan.C.Core10.Core.VkFormat' of
 --     @pDepthStencilResolveAttachment@ has a depth component, then the
@@ -239,33 +249,33 @@ type VkResolveModeFlagsKHR = VkResolveModeFlagBitsKHR
 --
 -- -   The value of @depthResolveMode@ /must/ be one of the bits set in
 --     'VkPhysicalDeviceDepthStencilResolvePropertiesKHR'::@supportedDepthResolveModes@
---     or @VK_RESOLVE_MODE_NONE_KHR@
+--     or 'VK_RESOLVE_MODE_NONE_KHR'
 --
 -- -   The value of @stencilResolveMode@ /must/ be one of the bits set in
 --     'VkPhysicalDeviceDepthStencilResolvePropertiesKHR'::@supportedStencilResolveModes@
---     or @VK_RESOLVE_MODE_NONE_KHR@
+--     or 'VK_RESOLVE_MODE_NONE_KHR'
 --
 -- -   If the 'Graphics.Vulkan.C.Core10.Core.VkFormat' of
 --     @pDepthStencilResolveAttachment@ has both depth and stencil
 --     components,
 --     'VkPhysicalDeviceDepthStencilResolvePropertiesKHR'::@independentResolve@
---     is @VK_FALSE@, and
+--     is 'Graphics.Vulkan.C.Core10.Core.VK_FALSE', and
 --     'VkPhysicalDeviceDepthStencilResolvePropertiesKHR'::@independentResolveNone@
---     is @VK_FALSE@, then the values of @depthResolveMode@ and
---     @stencilResolveMode@ /must/ be identical
+--     is 'Graphics.Vulkan.C.Core10.Core.VK_FALSE', then the values of
+--     @depthResolveMode@ and @stencilResolveMode@ /must/ be identical
 --
 -- -   If the 'Graphics.Vulkan.C.Core10.Core.VkFormat' of
 --     @pDepthStencilResolveAttachment@ has both depth and stencil
 --     components,
 --     'VkPhysicalDeviceDepthStencilResolvePropertiesKHR'::@independentResolve@
---     is @VK_FALSE@ and
+--     is 'Graphics.Vulkan.C.Core10.Core.VK_FALSE' and
 --     'VkPhysicalDeviceDepthStencilResolvePropertiesKHR'::@independentResolveNone@
---     is @VK_TRUE@, then the values of @depthResolveMode@ and
---     @stencilResolveMode@ /must/ be identical or one of them /must/ be
---     @VK_RESOLVE_MODE_NONE_KHR@
+--     is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE', then the values of
+--     @depthResolveMode@ and @stencilResolveMode@ /must/ be identical or
+--     one of them /must/ be 'VK_RESOLVE_MODE_NONE_KHR'
 --
 -- Unresolved directive in VkSubpassDescriptionDepthStencilResolveKHR.txt -
--- include::..\/validity\/structs\/VkSubpassDescriptionDepthStencilResolveKHR.txt[]
+-- include::{generated}\/validity\/structs\/VkSubpassDescriptionDepthStencilResolveKHR.txt[]
 --
 -- = See Also
 --
@@ -303,20 +313,24 @@ instance Storable VkSubpassDescriptionDepthStencilResolveKHR where
                 *> poke (ptr `plusPtr` 24) (vkPDepthStencilResolveAttachment (poked :: VkSubpassDescriptionDepthStencilResolveKHR))
 
 instance Zero VkSubpassDescriptionDepthStencilResolveKHR where
-  zero = VkSubpassDescriptionDepthStencilResolveKHR zero
+  zero = VkSubpassDescriptionDepthStencilResolveKHR VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE_KHR
                                                     zero
                                                     zero
                                                     zero
                                                     zero
+
 -- No documentation found for TopLevel "VK_KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME"
 pattern VK_KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME = "VK_KHR_depth_stencil_resolve"
+
 -- No documentation found for TopLevel "VK_KHR_DEPTH_STENCIL_RESOLVE_SPEC_VERSION"
 pattern VK_KHR_DEPTH_STENCIL_RESOLVE_SPEC_VERSION :: Integral a => a
 pattern VK_KHR_DEPTH_STENCIL_RESOLVE_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES_KHR"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES_KHR = VkStructureType 1000199000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE_KHR"
 pattern VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE_KHR = VkStructureType 1000199001

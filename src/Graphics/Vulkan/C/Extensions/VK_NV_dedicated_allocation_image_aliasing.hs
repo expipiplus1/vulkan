@@ -38,22 +38,22 @@ import Graphics.Vulkan.C.Core10.Core
 -- = Members
 --
 -- The members of the
--- @VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV@ structure
+-- 'VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV' structure
 -- describe the following features:
 --
 -- = Description
 --
--- If the @VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV@
+-- If the 'VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV'
 -- structure is included in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
 -- it is filled with values indicating whether each feature is supported.
--- @VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV@ /can/ also
+-- 'VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV' /can/ also
 -- be used in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
 --
 -- Unresolved directive in
 -- VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV.txt -
--- include::..\/validity\/structs\/VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV.txt[]
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV.txt[]
 --
 -- = See Also
 --
@@ -80,15 +80,18 @@ instance Storable VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV whe
                 *> poke (ptr `plusPtr` 16) (vkDedicatedAllocationImageAliasing (poked :: VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV))
 
 instance Zero VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV where
-  zero = VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV zero
+  zero = VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEDICATED_ALLOCATION_IMAGE_ALIASING_FEATURES_NV
                                                                     zero
                                                                     zero
+
 -- No documentation found for TopLevel "VK_NV_DEDICATED_ALLOCATION_IMAGE_ALIASING_EXTENSION_NAME"
 pattern VK_NV_DEDICATED_ALLOCATION_IMAGE_ALIASING_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_NV_DEDICATED_ALLOCATION_IMAGE_ALIASING_EXTENSION_NAME = "VK_NV_dedicated_allocation_image_aliasing"
+
 -- No documentation found for TopLevel "VK_NV_DEDICATED_ALLOCATION_IMAGE_ALIASING_SPEC_VERSION"
 pattern VK_NV_DEDICATED_ALLOCATION_IMAGE_ALIASING_SPEC_VERSION :: Integral a => a
 pattern VK_NV_DEDICATED_ALLOCATION_IMAGE_ALIASING_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEDICATED_ALLOCATION_IMAGE_ALIASING_FEATURES_NV"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEDICATED_ALLOCATION_IMAGE_ALIASING_FEATURES_NV :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEDICATED_ALLOCATION_IMAGE_ALIASING_FEATURES_NV = VkStructureType 1000240000

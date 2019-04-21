@@ -12,36 +12,24 @@ module Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback
   , VkPhysicalDeviceTransformFeedbackPropertiesEXT(..)
   , VkPipelineRasterizationStateStreamCreateFlagsEXT(..)
   , VkPipelineRasterizationStateStreamCreateInfoEXT(..)
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkCmdBeginQueryIndexedEXT
-#endif
   , FN_vkCmdBeginQueryIndexedEXT
   , PFN_vkCmdBeginQueryIndexedEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkCmdBeginTransformFeedbackEXT
-#endif
+  , vkCmdBeginQueryIndexedEXT
   , FN_vkCmdBeginTransformFeedbackEXT
   , PFN_vkCmdBeginTransformFeedbackEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkCmdBindTransformFeedbackBuffersEXT
-#endif
+  , vkCmdBeginTransformFeedbackEXT
   , FN_vkCmdBindTransformFeedbackBuffersEXT
   , PFN_vkCmdBindTransformFeedbackBuffersEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkCmdDrawIndirectByteCountEXT
-#endif
+  , vkCmdBindTransformFeedbackBuffersEXT
   , FN_vkCmdDrawIndirectByteCountEXT
   , PFN_vkCmdDrawIndirectByteCountEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkCmdEndQueryIndexedEXT
-#endif
+  , vkCmdDrawIndirectByteCountEXT
   , FN_vkCmdEndQueryIndexedEXT
   , PFN_vkCmdEndQueryIndexedEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkCmdEndTransformFeedbackEXT
-#endif
+  , vkCmdEndQueryIndexedEXT
   , FN_vkCmdEndTransformFeedbackEXT
   , PFN_vkCmdEndTransformFeedbackEXT
+  , vkCmdEndTransformFeedbackEXT
   , pattern VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT
   , pattern VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT
   , pattern VK_ACCESS_TRANSFORM_FEEDBACK_WRITE_BIT_EXT
@@ -97,14 +85,9 @@ import Graphics.Vulkan.C.Core10.Buffer
   ( VkBufferUsageFlagBits(..)
   )
 import Graphics.Vulkan.C.Core10.CommandBuffer
-  ( VkQueryControlFlags
-  )
-
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-import Graphics.Vulkan.C.Core10.CommandBuffer
   ( VkQueryControlFlagBits(..)
+  , VkQueryControlFlags
   )
-#endif
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
   , VkStructureType(..)
@@ -128,6 +111,9 @@ import Graphics.Vulkan.C.Core10.Queue
   ( VkPipelineStageFlagBits(..)
   , VkCommandBuffer
   )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
+  )
 import Graphics.Vulkan.NamedType
   ( (:::)
   )
@@ -138,22 +124,22 @@ import Graphics.Vulkan.NamedType
 --
 -- = Members
 --
--- The members of the @VkPhysicalDeviceTransformFeedbackFeaturesEXT@
+-- The members of the 'VkPhysicalDeviceTransformFeedbackFeaturesEXT'
 -- structure describe the following features:
 --
 -- = Description
 --
--- If the @VkPhysicalDeviceTransformFeedbackFeaturesEXT@ structure is
+-- If the 'VkPhysicalDeviceTransformFeedbackFeaturesEXT' structure is
 -- included in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
 -- it is filled with values indicating whether each feature is supported.
--- @VkPhysicalDeviceTransformFeedbackFeaturesEXT@ /can/ also be used in the
+-- 'VkPhysicalDeviceTransformFeedbackFeaturesEXT' /can/ also be used in the
 -- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to
 -- enable features.
 --
 -- Unresolved directive in VkPhysicalDeviceTransformFeedbackFeaturesEXT.txt
 -- -
--- include::..\/validity\/structs\/VkPhysicalDeviceTransformFeedbackFeaturesEXT.txt[]
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceTransformFeedbackFeaturesEXT.txt[]
 --
 -- = See Also
 --
@@ -186,28 +172,29 @@ instance Storable VkPhysicalDeviceTransformFeedbackFeaturesEXT where
                 *> poke (ptr `plusPtr` 20) (vkGeometryStreams (poked :: VkPhysicalDeviceTransformFeedbackFeaturesEXT))
 
 instance Zero VkPhysicalDeviceTransformFeedbackFeaturesEXT where
-  zero = VkPhysicalDeviceTransformFeedbackFeaturesEXT zero
+  zero = VkPhysicalDeviceTransformFeedbackFeaturesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_FEATURES_EXT
                                                       zero
                                                       zero
                                                       zero
+
 -- | VkPhysicalDeviceTransformFeedbackPropertiesEXT - Structure describing
 -- transform feedback properties that can be supported by an implementation
 --
 -- = Members
 --
--- The members of the @VkPhysicalDeviceTransformFeedbackPropertiesEXT@
+-- The members of the 'VkPhysicalDeviceTransformFeedbackPropertiesEXT'
 -- structure describe the following implementation-dependent limits:
 --
 -- = Description
 --
--- If the @VkPhysicalDeviceTransformFeedbackPropertiesEXT@ structure is
+-- If the 'VkPhysicalDeviceTransformFeedbackPropertiesEXT' structure is
 -- included in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits and properties.
 --
 -- Unresolved directive in
 -- VkPhysicalDeviceTransformFeedbackPropertiesEXT.txt -
--- include::..\/validity\/structs\/VkPhysicalDeviceTransformFeedbackPropertiesEXT.txt[]
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceTransformFeedbackPropertiesEXT.txt[]
 --
 -- = See Also
 --
@@ -220,7 +207,7 @@ data VkPhysicalDeviceTransformFeedbackPropertiesEXT = VkPhysicalDeviceTransformF
   , -- | @maxTransformFeedbackStreams@ is the maximum number of vertex streams
   -- that can be output from geometry shaders declared with the
   -- @GeometryStreams@ capability. If the implementation does not support
-  -- @VkPhysicalDeviceTransformFeedbackFeaturesEXT@::@geometryStreams@ then
+  -- 'VkPhysicalDeviceTransformFeedbackFeaturesEXT'::@geometryStreams@ then
   -- @maxTransformFeedbackStreams@ /must/ be set to @1@.
   vkMaxTransformFeedbackStreams :: Word32
   , -- | @maxTransformFeedbackBuffers@ is the maximum number of transform
@@ -243,7 +230,7 @@ data VkPhysicalDeviceTransformFeedbackPropertiesEXT = VkPhysicalDeviceTransformF
   -- each capture of vertex data to the buffer.
   vkMaxTransformFeedbackBufferDataStride :: Word32
   , -- | @transformFeedbackQueries@ is true if the implementation supports the
-  -- @VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT@ query type.
+  -- 'VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT' query type.
   -- @transformFeedbackQueries@ is false if queries of this type /cannot/ be
   -- created.
   vkTransformFeedbackQueries :: VkBool32
@@ -297,7 +284,7 @@ instance Storable VkPhysicalDeviceTransformFeedbackPropertiesEXT where
                 *> poke (ptr `plusPtr` 56) (vkTransformFeedbackDraw (poked :: VkPhysicalDeviceTransformFeedbackPropertiesEXT))
 
 instance Zero VkPhysicalDeviceTransformFeedbackPropertiesEXT where
-  zero = VkPhysicalDeviceTransformFeedbackPropertiesEXT zero
+  zero = VkPhysicalDeviceTransformFeedbackPropertiesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_PROPERTIES_EXT
                                                         zero
                                                         zero
                                                         zero
@@ -309,6 +296,7 @@ instance Zero VkPhysicalDeviceTransformFeedbackPropertiesEXT where
                                                         zero
                                                         zero
                                                         zero
+
 -- ** VkPipelineRasterizationStateStreamCreateFlagsEXT
 
 -- | VkPipelineRasterizationStateStreamCreateFlagsEXT - Reserved for future
@@ -316,7 +304,7 @@ instance Zero VkPhysicalDeviceTransformFeedbackPropertiesEXT where
 --
 -- = Description
 --
--- @VkPipelineRasterizationStateStreamCreateFlagsEXT@ is a bitmask type for
+-- 'VkPipelineRasterizationStateStreamCreateFlagsEXT' is a bitmask type for
 -- setting a mask, but is currently reserved for future use.
 --
 -- = See Also
@@ -340,6 +328,7 @@ instance Read VkPipelineRasterizationStateStreamCreateFlagsEXT where
                     )
 
 
+
 -- | VkPipelineRasterizationStateStreamCreateInfoEXT - Structure defining the
 -- geometry stream used for rasterization
 --
@@ -352,7 +341,7 @@ instance Read VkPipelineRasterizationStateStreamCreateFlagsEXT where
 --
 -- Unresolved directive in
 -- VkPipelineRasterizationStateStreamCreateInfoEXT.txt -
--- include::..\/validity\/structs\/VkPipelineRasterizationStateStreamCreateInfoEXT.txt[]
+-- include::{generated}\/validity\/structs\/VkPipelineRasterizationStateStreamCreateInfoEXT.txt[]
 --
 -- = See Also
 --
@@ -365,8 +354,8 @@ data VkPipelineRasterizationStateStreamCreateInfoEXT = VkPipelineRasterizationSt
   , -- | @flags@ is reserved for future use.
   vkFlags :: VkPipelineRasterizationStateStreamCreateFlagsEXT
   , -- | @rasterizationStream@ /must/ be zero if
-  -- @VkPhysicalDeviceTransformFeedbackPropertiesEXT@::@transformFeedbackRasterizationStreamSelect@
-  -- is @VK_FALSE@
+  -- 'VkPhysicalDeviceTransformFeedbackPropertiesEXT'::@transformFeedbackRasterizationStreamSelect@
+  -- is 'Graphics.Vulkan.C.Core10.Core.VK_FALSE'
   vkRasterizationStream :: Word32
   }
   deriving (Eq, Show)
@@ -384,11 +373,11 @@ instance Storable VkPipelineRasterizationStateStreamCreateInfoEXT where
                 *> poke (ptr `plusPtr` 20) (vkRasterizationStream (poked :: VkPipelineRasterizationStateStreamCreateInfoEXT))
 
 instance Zero VkPipelineRasterizationStateStreamCreateInfoEXT where
-  zero = VkPipelineRasterizationStateStreamCreateInfoEXT zero
+  zero = VkPipelineRasterizationStateStreamCreateInfoEXT VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_STREAM_CREATE_INFO_EXT
                                                          zero
                                                          zero
                                                          zero
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkCmdBeginQueryIndexedEXT - Begin an indexed query
 --
 -- = Parameters
@@ -408,12 +397,12 @@ instance Zero VkPipelineRasterizationStateStreamCreateInfoEXT where
 --     performed.
 --
 -- -   @index@ is the query type specific index. When the query type is
---     @VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT@ the index represents
+--     'VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT' the index represents
 --     the vertex stream.
 --
 -- = Description
 --
--- The @vkCmdBeginQueryIndexedEXT@ command operates the same as the
+-- The 'vkCmdBeginQueryIndexedEXT' command operates the same as the
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBeginQuery'
 -- command, except that it also accepts a query type specific @index@
 -- parameter.
@@ -422,75 +411,91 @@ instance Zero VkPipelineRasterizationStateStreamCreateInfoEXT where
 --
 -- -   @queryPool@ /must/ have been created with a @queryType@ that differs
 --     from that of any queries that are
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-active active>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#queries-operation-active active>
 --     within @commandBuffer@
 --
 -- -   All queries used by the command /must/ be unavailable
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-occlusionQueryPrecise precise occlusion queries>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-occlusionQueryPrecise precise occlusion queries>
 --     feature is not enabled, or the @queryType@ used to create
---     @queryPool@ was not @VK_QUERY_TYPE_OCCLUSION@, @flags@ /must/ not
---     contain @VK_QUERY_CONTROL_PRECISE_BIT@
+--     @queryPool@ was not
+--     'Graphics.Vulkan.C.Core10.Query.VK_QUERY_TYPE_OCCLUSION', @flags@
+--     /must/ not contain
+--     'Graphics.Vulkan.C.Core10.CommandBuffer.VK_QUERY_CONTROL_PRECISE_BIT'
 --
 -- -   @query@ /must/ be less than the number of queries in @queryPool@
 --
 -- -   If the @queryType@ used to create @queryPool@ was
---     @VK_QUERY_TYPE_OCCLUSION@, the @VkCommandPool@ that @commandBuffer@
---     was allocated from /must/ support graphics operations
---
--- -   If the @queryType@ used to create @queryPool@ was
---     @VK_QUERY_TYPE_PIPELINE_STATISTICS@ and any of the
---     @pipelineStatistics@ indicate graphics operations, the
---     @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- -   If the @queryType@ used to create @queryPool@ was
---     @VK_QUERY_TYPE_PIPELINE_STATISTICS@ and any of the
---     @pipelineStatistics@ indicate compute operations, the
---     @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support compute operations
---
--- -   If @vkCmdBeginQuery@ is called within a render pass instance, the
---     sum of @query@ and the number of bits set in the current subpass’s
---     view mask /must/ be less than or equal to the number of queries in
---     @queryPool@
---
--- -   If the @queryType@ used to create @queryPool@ was
---     @VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT@ the @VkCommandPool@
---     that @commandBuffer@ was allocated from /must/ support graphics
+--     'Graphics.Vulkan.C.Core10.Query.VK_QUERY_TYPE_OCCLUSION', the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics
 --     operations
 --
 -- -   If the @queryType@ used to create @queryPool@ was
---     @VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT@ the @index@ parameter
+--     'Graphics.Vulkan.C.Core10.Query.VK_QUERY_TYPE_PIPELINE_STATISTICS'
+--     and any of the @pipelineStatistics@ indicate graphics operations,
+--     the 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
+--
+-- -   If the @queryType@ used to create @queryPool@ was
+--     'Graphics.Vulkan.C.Core10.Query.VK_QUERY_TYPE_PIPELINE_STATISTICS'
+--     and any of the @pipelineStatistics@ indicate compute operations, the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support compute operations
+--
+-- -   If 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBeginQuery'
+--     is called within a render pass instance, the sum of @query@ and the
+--     number of bits set in the current subpass’s view mask /must/ be less
+--     than or equal to the number of queries in @queryPool@
+--
+-- -   If the @queryType@ used to create @queryPool@ was
+--     'VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT' the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
+--
+-- -   If the @queryType@ used to create @queryPool@ was
+--     'VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT' the @index@ parameter
 --     /must/ be less than
---     @VkPhysicalDeviceTransformFeedbackPropertiesEXT@::@maxTransformFeedbackStreams@
+--     'VkPhysicalDeviceTransformFeedbackPropertiesEXT'::@maxTransformFeedbackStreams@
 --
 -- -   If the @queryType@ used to create @queryPool@ was not
---     @VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT@ the @index@ /must/ be
+--     'VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT' the @index@ /must/ be
 --     zero
 --
 -- -   If the @queryType@ used to create @queryPool@ was
---     @VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT@ then
---     @VkPhysicalDeviceTransformFeedbackPropertiesEXT@::@transformFeedbackQueries@
+--     'VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT' then
+--     'VkPhysicalDeviceTransformFeedbackPropertiesEXT'::@transformFeedbackQueries@
 --     /must/ be supported
 --
 -- Unresolved directive in vkCmdBeginQueryIndexedEXT.txt -
--- include::..\/validity\/protos\/vkCmdBeginQueryIndexedEXT.txt[]
+-- include::{generated}\/validity\/protos\/vkCmdBeginQueryIndexedEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdBeginQueryIndexedEXT" vkCmdBeginQueryIndexedEXT :: ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("flags" ::: VkQueryControlFlags) -> ("index" ::: Word32) -> IO ()
-
+#else
+vkCmdBeginQueryIndexedEXT :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("flags" ::: VkQueryControlFlags) -> ("index" ::: Word32) -> IO ()
+vkCmdBeginQueryIndexedEXT deviceCmds = mkVkCmdBeginQueryIndexedEXT (pVkCmdBeginQueryIndexedEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdBeginQueryIndexedEXT
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("flags" ::: VkQueryControlFlags) -> ("index" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("flags" ::: VkQueryControlFlags) -> ("index" ::: Word32) -> IO ())
+#endif
+
 type FN_vkCmdBeginQueryIndexedEXT = ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("flags" ::: VkQueryControlFlags) -> ("index" ::: Word32) -> IO ()
 type PFN_vkCmdBeginQueryIndexedEXT = FunPtr FN_vkCmdBeginQueryIndexedEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkCmdBeginTransformFeedbackEXT - Make transform feedback active in the
 -- command buffer
 --
@@ -537,21 +542,23 @@ type PFN_vkCmdBeginQueryIndexedEXT = FunPtr FN_vkCmdBeginQueryIndexedEXT
 --
 -- == Valid Usage
 --
--- -   @VkPhysicalDeviceTransformFeedbackFeaturesEXT@::@transformFeedback@
+-- -   'VkPhysicalDeviceTransformFeedbackFeaturesEXT'::@transformFeedback@
 --     /must/ be enabled
 --
 -- -   Transform feedback /must/ not be active
 --
 -- -   @firstCounterBuffer@ /must/ be less than
---     @VkPhysicalDeviceTransformFeedbackPropertiesEXT@::@maxTransformFeedbackBuffers@
+--     'VkPhysicalDeviceTransformFeedbackPropertiesEXT'::@maxTransformFeedbackBuffers@
 --
 -- -   The sum of @firstCounterBuffer@ and @counterBufferCount@ /must/ be
 --     less than or equal to
---     @VkPhysicalDeviceTransformFeedbackPropertiesEXT@::@maxTransformFeedbackBuffers@
+--     'VkPhysicalDeviceTransformFeedbackPropertiesEXT'::@maxTransformFeedbackBuffers@
 --
 -- -   If @counterBufferCount@ is not @0@, and @pCounterBuffers@ is not
 --     @NULL@, @pCounterBuffers@ /must/ be a valid pointer to an array of
---     @counterBufferCount@ @VkBuffer@ handles that are either valid or
+--     @counterBufferCount@
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handles that
+--     are either valid or
 --     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE'
 --
 -- -   For each buffer handle in the array, if it is not
@@ -565,27 +572,37 @@ type PFN_vkCmdBeginQueryIndexedEXT = FunPtr FN_vkCmdBeginQueryIndexedEXT
 -- -   For each buffer handle in the @pCounterBuffers@ array that is not
 --     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE' it /must/ have
 --     been created with a @usage@ value containing
---     @VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT@
+--     'VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT'
 --
 -- -   Transform feedback /must/ not be made active in a render pass
 --     instance with multiview enabled
 --
 -- Unresolved directive in vkCmdBeginTransformFeedbackEXT.txt -
--- include::..\/validity\/protos\/vkCmdBeginTransformFeedbackEXT.txt[]
+-- include::{generated}\/validity\/protos\/vkCmdBeginTransformFeedbackEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdBeginTransformFeedbackEXT" vkCmdBeginTransformFeedbackEXT :: ("commandBuffer" ::: VkCommandBuffer) -> ("firstCounterBuffer" ::: Word32) -> ("counterBufferCount" ::: Word32) -> ("pCounterBuffers" ::: Ptr VkBuffer) -> ("pCounterBufferOffsets" ::: Ptr VkDeviceSize) -> IO ()
-
+#else
+vkCmdBeginTransformFeedbackEXT :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("firstCounterBuffer" ::: Word32) -> ("counterBufferCount" ::: Word32) -> ("pCounterBuffers" ::: Ptr VkBuffer) -> ("pCounterBufferOffsets" ::: Ptr VkDeviceSize) -> IO ()
+vkCmdBeginTransformFeedbackEXT deviceCmds = mkVkCmdBeginTransformFeedbackEXT (pVkCmdBeginTransformFeedbackEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdBeginTransformFeedbackEXT
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("firstCounterBuffer" ::: Word32) -> ("counterBufferCount" ::: Word32) -> ("pCounterBuffers" ::: Ptr VkBuffer) -> ("pCounterBufferOffsets" ::: Ptr VkDeviceSize) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("firstCounterBuffer" ::: Word32) -> ("counterBufferCount" ::: Word32) -> ("pCounterBuffers" ::: Ptr VkBuffer) -> ("pCounterBufferOffsets" ::: Ptr VkDeviceSize) -> IO ())
+#endif
+
 type FN_vkCmdBeginTransformFeedbackEXT = ("commandBuffer" ::: VkCommandBuffer) -> ("firstCounterBuffer" ::: Word32) -> ("counterBufferCount" ::: Word32) -> ("pCounterBuffers" ::: Ptr VkBuffer) -> ("pCounterBufferOffsets" ::: Ptr VkDeviceSize) -> IO ()
 type PFN_vkCmdBeginTransformFeedbackEXT = FunPtr FN_vkCmdBeginTransformFeedbackEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkCmdBindTransformFeedbackBuffersEXT - Bind transform feedback buffers
 -- to a command buffer
 --
@@ -607,9 +624,9 @@ type PFN_vkCmdBeginTransformFeedbackEXT = FunPtr FN_vkCmdBeginTransformFeedbackE
 -- -   @pSizes@ is an optional array of buffer sizes, which specifies the
 --     maximum number of bytes to capture to the corresponding transform
 --     feedback buffer. If @pSizes@ is @NULL@, or the value of the @pSizes@
---     array element is @VK_WHOLE_SIZE@, then the maximum bytes captured
---     will be the size of the corresponding buffer minus the buffer
---     offset.
+--     array element is 'Graphics.Vulkan.C.Core10.Constants.VK_WHOLE_SIZE',
+--     then the maximum bytes captured will be the size of the
+--     corresponding buffer minus the buffer offset.
 --
 -- = Description
 --
@@ -621,15 +638,15 @@ type PFN_vkCmdBeginTransformFeedbackEXT = FunPtr FN_vkCmdBeginTransformFeedbackE
 --
 -- == Valid Usage
 --
--- -   @VkPhysicalDeviceTransformFeedbackFeaturesEXT@::@transformFeedback@
+-- -   'VkPhysicalDeviceTransformFeedbackFeaturesEXT'::@transformFeedback@
 --     /must/ be enabled
 --
 -- -   @firstBinding@ /must/ be less than
---     @VkPhysicalDeviceTransformFeedbackPropertiesEXT@::@maxTransformFeedbackBuffers@
+--     'VkPhysicalDeviceTransformFeedbackPropertiesEXT'::@maxTransformFeedbackBuffers@
 --
 -- -   The sum of @firstBinding@ and @bindingCount@ /must/ be less than or
 --     equal to
---     @VkPhysicalDeviceTransformFeedbackPropertiesEXT@::@maxTransformFeedbackBuffers@
+--     'VkPhysicalDeviceTransformFeedbackPropertiesEXT'::@maxTransformFeedbackBuffers@
 --
 -- -   All elements of @pOffsets@ /must/ be less than the size of the
 --     corresponding element in @pBuffers@
@@ -637,41 +654,54 @@ type PFN_vkCmdBeginTransformFeedbackEXT = FunPtr FN_vkCmdBeginTransformFeedbackE
 -- -   All elements of @pOffsets@ /must/ be a multiple of 4
 --
 -- -   All elements of @pBuffers@ /must/ have been created with the
---     @VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT@ flag
+--     'VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT' flag
 --
 -- -   If the optional @pSize@ array is specified, each element of @pSizes@
---     /must/ either be @VK_WHOLE_SIZE@, or be less than or equal to
---     @VkPhysicalDeviceTransformFeedbackPropertiesEXT@::@maxTransformFeedbackBufferSize@
+--     /must/ either be 'Graphics.Vulkan.C.Core10.Constants.VK_WHOLE_SIZE',
+--     or be less than or equal to
+--     'VkPhysicalDeviceTransformFeedbackPropertiesEXT'::@maxTransformFeedbackBufferSize@
 --
 -- -   All elements of @pSizes@ /must/ be less than or equal to the size of
 --     the corresponding buffer in @pBuffers@
 --
 -- -   All elements of @pOffsets@ plus @pSizes@, where the @pSizes@,
---     element is not @VK_WHOLE_SIZE@, /must/ be less than or equal to the
---     size of the corresponding element in @pBuffers@
+--     element is not 'Graphics.Vulkan.C.Core10.Constants.VK_WHOLE_SIZE',
+--     /must/ be less than or equal to the size of the corresponding
+--     element in @pBuffers@
 --
 -- -   Each element of @pBuffers@ that is non-sparse /must/ be bound
---     completely and contiguously to a single @VkDeviceMemory@ object
+--     completely and contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
 -- -   Transform feedback /must/ not be active when the
---     @vkCmdBindTransformFeedbackBuffersEXT@ command is recorded
+--     'vkCmdBindTransformFeedbackBuffersEXT' command is recorded
 --
 -- Unresolved directive in vkCmdBindTransformFeedbackBuffersEXT.txt -
--- include::..\/validity\/protos\/vkCmdBindTransformFeedbackBuffersEXT.txt[]
+-- include::{generated}\/validity\/protos\/vkCmdBindTransformFeedbackBuffersEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdBindTransformFeedbackBuffersEXT" vkCmdBindTransformFeedbackBuffersEXT :: ("commandBuffer" ::: VkCommandBuffer) -> ("firstBinding" ::: Word32) -> ("bindingCount" ::: Word32) -> ("pBuffers" ::: Ptr VkBuffer) -> ("pOffsets" ::: Ptr VkDeviceSize) -> ("pSizes" ::: Ptr VkDeviceSize) -> IO ()
-
+#else
+vkCmdBindTransformFeedbackBuffersEXT :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("firstBinding" ::: Word32) -> ("bindingCount" ::: Word32) -> ("pBuffers" ::: Ptr VkBuffer) -> ("pOffsets" ::: Ptr VkDeviceSize) -> ("pSizes" ::: Ptr VkDeviceSize) -> IO ()
+vkCmdBindTransformFeedbackBuffersEXT deviceCmds = mkVkCmdBindTransformFeedbackBuffersEXT (pVkCmdBindTransformFeedbackBuffersEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdBindTransformFeedbackBuffersEXT
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("firstBinding" ::: Word32) -> ("bindingCount" ::: Word32) -> ("pBuffers" ::: Ptr VkBuffer) -> ("pOffsets" ::: Ptr VkDeviceSize) -> ("pSizes" ::: Ptr VkDeviceSize) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("firstBinding" ::: Word32) -> ("bindingCount" ::: Word32) -> ("pBuffers" ::: Ptr VkBuffer) -> ("pOffsets" ::: Ptr VkDeviceSize) -> ("pSizes" ::: Ptr VkDeviceSize) -> IO ())
+#endif
+
 type FN_vkCmdBindTransformFeedbackBuffersEXT = ("commandBuffer" ::: VkCommandBuffer) -> ("firstBinding" ::: Word32) -> ("bindingCount" ::: Word32) -> ("pBuffers" ::: Ptr VkBuffer) -> ("pOffsets" ::: Ptr VkDeviceSize) -> ("pSizes" ::: Ptr VkDeviceSize) -> IO ()
 type PFN_vkCmdBindTransformFeedbackBuffersEXT = FunPtr FN_vkCmdBindTransformFeedbackBuffersEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkCmdDrawIndirectByteCountEXT - Draw primitives where the vertex count
 -- is derived from the counter byte value in the counter buffer
 --
@@ -717,147 +747,45 @@ type PFN_vkCmdBindTransformFeedbackBuffersEXT = FunPtr FN_vkCmdBindTransformFeed
 --
 -- == Valid Usage
 --
--- -   @VkPhysicalDeviceTransformFeedbackFeaturesEXT@::@transformFeedback@
---     /must/ be enabled
---
--- -   The implementation /must/ support
---     @VkPhysicalDeviceTransformFeedbackPropertiesEXT@::@transformFeedbackDraw@
---
--- -   @vertexStride@ /must/ be greater than 0 and less than or equal to
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxTransformFeedbackBufferDataStride@
---
--- -   @counterBuffer@ /must/ have been created with the
---     @VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT@ bit set
---
--- -   The current render pass /must/ be
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility compatible>
---     with the @renderPass@ member of the @VkGraphicsPipelineCreateInfo@
---     structure specified when creating the @VkPipeline@ bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@
---
--- -   The subpass index of the current render pass /must/ be equal to the
---     @subpass@ member of the @VkGraphicsPipelineCreateInfo@ structure
---     specified when creating the @VkPipeline@ bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@
---
--- -   For each set /n/ that is statically used by the @VkPipeline@ bound
---     to @VK_PIPELINE_BIND_POINT_GRAPHICS@, a descriptor set /must/ have
---     been bound to /n/ at @VK_PIPELINE_BIND_POINT_GRAPHICS@, with a
---     @VkPipelineLayout@ that is compatible for set /n/, with the
---     @VkPipelineLayout@ used to create the current @VkPipeline@, as
---     described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
---
--- -   For each push constant that is statically used by the @VkPipeline@
---     bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@, a push constant value
---     /must/ have been set for @VK_PIPELINE_BIND_POINT_GRAPHICS@, with a
---     @VkPipelineLayout@ that is compatible for push constants, with the
---     @VkPipelineLayout@ used to create the current @VkPipeline@, as
---     described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
---
--- -   Descriptors in each bound descriptor set, specified via
---     @vkCmdBindDescriptorSets@, /must/ be valid if they are statically
---     used by the bound @VkPipeline@ object, specified via
---     @vkCmdBindPipeline@
---
--- -   All vertex input bindings accessed via vertex input variables
---     declared in the vertex shader entry point’s interface /must/ have
---     valid buffers bound
---
--- -   For a given vertex buffer binding, any attribute data fetched /must/
---     be entirely contained within the corresponding vertex buffer
---     binding, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fxvertex-input {html_spec_relative}#fxvertex-input>
---
--- -   A valid graphics pipeline /must/ be bound to the current command
---     buffer with @VK_PIPELINE_BIND_POINT_GRAPHICS@
---
--- -   If the @VkPipeline@ object bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@ requires any dynamic state, that
---     state /must/ have been set on the current command buffer
---
--- -   Every input attachment used by the current subpass /must/ be bound
---     to the pipeline via a descriptor set
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ uses
---     unnormalized coordinates, it /must/ not be used to sample from any
---     @VkImage@ with a @VkImageView@ of the type @VK_IMAGE_VIEW_TYPE_3D@,
---     @VK_IMAGE_VIEW_TYPE_CUBE@, @VK_IMAGE_VIEW_TYPE_1D_ARRAY@,
---     @VK_IMAGE_VIEW_TYPE_2D_ARRAY@ or @VK_IMAGE_VIEW_TYPE_CUBE_ARRAY@, in
---     any shader stage
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ uses
---     unnormalized coordinates, it /must/ not be used with any of the
---     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions with
---     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ uses
---     unnormalized coordinates, it /must/ not be used with any of the
---     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions that
---     includes a LOD bias or any offset values, in any shader stage
---
--- -   Image subresources used as attachments in the current render pass
---     /must/ not be accessed in any way other than as an attachment by
---     this command
---
--- -   If a @VkImageView@ is sampled with @VK_FILTER_LINEAR@ as a result of
---     this command, then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT@
---
--- -   If a @VkImageView@ is sampled with @VK_FILTER_CUBIC_EXT@ as a result
---     of this command, then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain
---     @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT@
---
--- -   Any 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' being sampled
---     with @VK_FILTER_CUBIC_EXT@ as a result of this command /must/ have a
---     'Graphics.Vulkan.C.Core10.ImageView.VkImageViewType' and format that
---     supports cubic filtering, as specified by
---     @VkFilterCubicImageViewImageFormatPropertiesEXT@::@filterCubic@
---     returned by @vkGetPhysicalDeviceImageFormatProperties2@
---
--- -   Any 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' being sampled
---     with @VK_FILTER_CUBIC_EXT@ with a reduction mode of either
---     @VK_SAMPLER_REDUCTION_MODE_MIN_EXT@ or
---     @VK_SAMPLER_REDUCTION_MODE_MAX_EXT@ as a result of this command
---     /must/ have a 'Graphics.Vulkan.C.Core10.ImageView.VkImageViewType'
---     and format that supports cubic filtering together with minmax
---     filtering, as specified by
---     @VkFilterCubicImageViewImageFormatPropertiesEXT@::@filterCubicMinmax@
---     returned by @vkGetPhysicalDeviceImageFormatProperties2@
---
--- -   If the draw is recorded in a render pass instance with multiview
---     enabled, the maximum instance index /must/ be less than or equal to
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_multiview.VkPhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@
---
--- -   If the bound graphics pipeline was created with
---     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkPipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
---     set to @VK_TRUE@ and the current subpass has a depth\/stencil
---     attachment, then that attachment /must/ have been created with the
---     @VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT@ bit set
+-- Unresolved directive in vkCmdDrawIndirectByteCountEXT.txt -
+-- include::{chapters}\/commonvalidity\/draw_common.txt[] Unresolved
+-- directive in vkCmdDrawIndirectByteCountEXT.txt -
+-- include::{chapters}\/commonvalidity\/draw_vertex_binding.txt[] *
+-- 'VkPhysicalDeviceTransformFeedbackFeaturesEXT'::@transformFeedback@
+-- /must/ be enabled * The implementation /must/ support
+-- 'VkPhysicalDeviceTransformFeedbackPropertiesEXT'::@transformFeedbackDraw@
+-- * @vertexStride@ /must/ be greater than 0 and less than or equal to
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxTransformFeedbackBufferDataStride@
+-- * @counterBuffer@ /must/ have been created with the
+-- 'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT'
+-- bit set
 --
 -- Unresolved directive in vkCmdDrawIndirectByteCountEXT.txt -
--- include::..\/validity\/protos\/vkCmdDrawIndirectByteCountEXT.txt[]
+-- include::{generated}\/validity\/protos\/vkCmdDrawIndirectByteCountEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdDrawIndirectByteCountEXT" vkCmdDrawIndirectByteCountEXT :: ("commandBuffer" ::: VkCommandBuffer) -> ("instanceCount" ::: Word32) -> ("firstInstance" ::: Word32) -> ("counterBuffer" ::: VkBuffer) -> ("counterBufferOffset" ::: VkDeviceSize) -> ("counterOffset" ::: Word32) -> ("vertexStride" ::: Word32) -> IO ()
-
+#else
+vkCmdDrawIndirectByteCountEXT :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("instanceCount" ::: Word32) -> ("firstInstance" ::: Word32) -> ("counterBuffer" ::: VkBuffer) -> ("counterBufferOffset" ::: VkDeviceSize) -> ("counterOffset" ::: Word32) -> ("vertexStride" ::: Word32) -> IO ()
+vkCmdDrawIndirectByteCountEXT deviceCmds = mkVkCmdDrawIndirectByteCountEXT (pVkCmdDrawIndirectByteCountEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdDrawIndirectByteCountEXT
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("instanceCount" ::: Word32) -> ("firstInstance" ::: Word32) -> ("counterBuffer" ::: VkBuffer) -> ("counterBufferOffset" ::: VkDeviceSize) -> ("counterOffset" ::: Word32) -> ("vertexStride" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("instanceCount" ::: Word32) -> ("firstInstance" ::: Word32) -> ("counterBuffer" ::: VkBuffer) -> ("counterBufferOffset" ::: VkDeviceSize) -> ("counterOffset" ::: Word32) -> ("vertexStride" ::: Word32) -> IO ())
+#endif
+
 type FN_vkCmdDrawIndirectByteCountEXT = ("commandBuffer" ::: VkCommandBuffer) -> ("instanceCount" ::: Word32) -> ("firstInstance" ::: Word32) -> ("counterBuffer" ::: VkBuffer) -> ("counterBufferOffset" ::: VkDeviceSize) -> ("counterOffset" ::: Word32) -> ("vertexStride" ::: Word32) -> IO ()
 type PFN_vkCmdDrawIndirectByteCountEXT = FunPtr FN_vkCmdDrawIndirectByteCountEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkCmdEndQueryIndexedEXT - Ends a query
 --
 -- = Parameters
@@ -875,47 +803,57 @@ type PFN_vkCmdDrawIndirectByteCountEXT = FunPtr FN_vkCmdDrawIndirectByteCountEXT
 --
 -- = Description
 --
--- The @vkCmdEndQueryIndexedEXT@ command operates the same as the
+-- The 'vkCmdEndQueryIndexedEXT' command operates the same as the
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdEndQuery' command,
 -- except that it also accepts a query type specific @index@ parameter.
 --
 -- == Valid Usage
 --
 -- -   All queries used by the command /must/ be
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-active active>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#queries-operation-active active>
 --
 -- -   @query@ /must/ be less than the number of queries in @queryPool@
 --
--- -   If @vkCmdEndQuery@ is called within a render pass instance, the sum
---     of @query@ and the number of bits set in the current subpass’s view
---     mask /must/ be less than or equal to the number of queries in
---     @queryPool@
+-- -   If 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdEndQuery' is
+--     called within a render pass instance, the sum of @query@ and the
+--     number of bits set in the current subpass’s view mask /must/ be less
+--     than or equal to the number of queries in @queryPool@
 --
 -- -   If the @queryType@ used to create @queryPool@ was
---     @VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT@ the @index@ parameter
+--     'VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT' the @index@ parameter
 --     /must/ be less than
---     @VkPhysicalDeviceTransformFeedbackPropertiesEXT@::@maxTransformFeedbackStreams@
+--     'VkPhysicalDeviceTransformFeedbackPropertiesEXT'::@maxTransformFeedbackStreams@
 --
 -- -   If the @queryType@ used to create @queryPool@ was not
---     @VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT@ the @index@ /must/ be
+--     'VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT' the @index@ /must/ be
 --     zero
 --
 -- Unresolved directive in vkCmdEndQueryIndexedEXT.txt -
--- include::..\/validity\/protos\/vkCmdEndQueryIndexedEXT.txt[]
+-- include::{generated}\/validity\/protos\/vkCmdEndQueryIndexedEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdEndQueryIndexedEXT" vkCmdEndQueryIndexedEXT :: ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("index" ::: Word32) -> IO ()
-
+#else
+vkCmdEndQueryIndexedEXT :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("index" ::: Word32) -> IO ()
+vkCmdEndQueryIndexedEXT deviceCmds = mkVkCmdEndQueryIndexedEXT (pVkCmdEndQueryIndexedEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdEndQueryIndexedEXT
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("index" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("index" ::: Word32) -> IO ())
+#endif
+
 type FN_vkCmdEndQueryIndexedEXT = ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("index" ::: Word32) -> IO ()
 type PFN_vkCmdEndQueryIndexedEXT = FunPtr FN_vkCmdEndQueryIndexedEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkCmdEndTransformFeedbackEXT - Make transform feedback inactive in the
 -- command buffer
 --
@@ -951,21 +889,23 @@ type PFN_vkCmdEndQueryIndexedEXT = FunPtr FN_vkCmdEndQueryIndexedEXT
 --
 -- == Valid Usage
 --
--- -   @VkPhysicalDeviceTransformFeedbackFeaturesEXT@::@transformFeedback@
+-- -   'VkPhysicalDeviceTransformFeedbackFeaturesEXT'::@transformFeedback@
 --     /must/ be enabled
 --
 -- -   Transform feedback /must/ be active
 --
 -- -   @firstCounterBuffer@ /must/ be less than
---     @VkPhysicalDeviceTransformFeedbackPropertiesEXT@::@maxTransformFeedbackBuffers@
+--     'VkPhysicalDeviceTransformFeedbackPropertiesEXT'::@maxTransformFeedbackBuffers@
 --
 -- -   The sum of @firstCounterBuffer@ and @counterBufferCount@ /must/ be
 --     less than or equal to
---     @VkPhysicalDeviceTransformFeedbackPropertiesEXT@::@maxTransformFeedbackBuffers@
+--     'VkPhysicalDeviceTransformFeedbackPropertiesEXT'::@maxTransformFeedbackBuffers@
 --
 -- -   If @counterBufferCount@ is not @0@, and @pCounterBuffers@ is not
 --     @NULL@, @pCounterBuffers@ /must/ be a valid pointer to an array of
---     @counterBufferCount@ @VkBuffer@ handles that are either valid or
+--     @counterBufferCount@
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handles that
+--     are either valid or
 --     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE'
 --
 -- -   For each buffer handle in the array, if it is not
@@ -979,66 +919,90 @@ type PFN_vkCmdEndQueryIndexedEXT = FunPtr FN_vkCmdEndQueryIndexedEXT
 -- -   For each buffer handle in the @pCounterBuffers@ array that is not
 --     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE' it /must/ have
 --     been created with a @usage@ value containing
---     @VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT@
+--     'VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT'
 --
 -- Unresolved directive in vkCmdEndTransformFeedbackEXT.txt -
--- include::..\/validity\/protos\/vkCmdEndTransformFeedbackEXT.txt[]
+-- include::{generated}\/validity\/protos\/vkCmdEndTransformFeedbackEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdEndTransformFeedbackEXT" vkCmdEndTransformFeedbackEXT :: ("commandBuffer" ::: VkCommandBuffer) -> ("firstCounterBuffer" ::: Word32) -> ("counterBufferCount" ::: Word32) -> ("pCounterBuffers" ::: Ptr VkBuffer) -> ("pCounterBufferOffsets" ::: Ptr VkDeviceSize) -> IO ()
-
+#else
+vkCmdEndTransformFeedbackEXT :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("firstCounterBuffer" ::: Word32) -> ("counterBufferCount" ::: Word32) -> ("pCounterBuffers" ::: Ptr VkBuffer) -> ("pCounterBufferOffsets" ::: Ptr VkDeviceSize) -> IO ()
+vkCmdEndTransformFeedbackEXT deviceCmds = mkVkCmdEndTransformFeedbackEXT (pVkCmdEndTransformFeedbackEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdEndTransformFeedbackEXT
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("firstCounterBuffer" ::: Word32) -> ("counterBufferCount" ::: Word32) -> ("pCounterBuffers" ::: Ptr VkBuffer) -> ("pCounterBufferOffsets" ::: Ptr VkDeviceSize) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("firstCounterBuffer" ::: Word32) -> ("counterBufferCount" ::: Word32) -> ("pCounterBuffers" ::: Ptr VkBuffer) -> ("pCounterBufferOffsets" ::: Ptr VkDeviceSize) -> IO ())
+#endif
+
 type FN_vkCmdEndTransformFeedbackEXT = ("commandBuffer" ::: VkCommandBuffer) -> ("firstCounterBuffer" ::: Word32) -> ("counterBufferCount" ::: Word32) -> ("pCounterBuffers" ::: Ptr VkBuffer) -> ("pCounterBufferOffsets" ::: Ptr VkDeviceSize) -> IO ()
 type PFN_vkCmdEndTransformFeedbackEXT = FunPtr FN_vkCmdEndTransformFeedbackEXT
--- | @VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT@ specifies read
+
+-- | 'VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT' specifies read
 -- access to a transform feedback counter buffer which is read when
--- @vkCmdBeginTransformFeedbackEXT@ executes.
+-- 'vkCmdBeginTransformFeedbackEXT' executes.
 pattern VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT :: VkAccessFlagBits
 pattern VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT = VkAccessFlagBits 0x04000000
--- | @VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT@ specifies write
+
+-- | 'VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT' specifies write
 -- access to a transform feedback counter buffer which is written when
--- @vkCmdEndTransformFeedbackEXT@ executes.
+-- 'vkCmdEndTransformFeedbackEXT' executes.
 pattern VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT :: VkAccessFlagBits
 pattern VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT = VkAccessFlagBits 0x08000000
--- | @VK_ACCESS_TRANSFORM_FEEDBACK_WRITE_BIT_EXT@ specifies write access to a
+
+-- | 'VK_ACCESS_TRANSFORM_FEEDBACK_WRITE_BIT_EXT' specifies write access to a
 -- transform feedback buffer made when transform feedback is active.
 pattern VK_ACCESS_TRANSFORM_FEEDBACK_WRITE_BIT_EXT :: VkAccessFlagBits
 pattern VK_ACCESS_TRANSFORM_FEEDBACK_WRITE_BIT_EXT = VkAccessFlagBits 0x02000000
--- | @VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT@ specifies that the
+
+-- | 'VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT' specifies that the
 -- buffer is suitable for using for binding as a transform feedback buffer
 -- with 'vkCmdBindTransformFeedbackBuffersEXT'.
 pattern VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT :: VkBufferUsageFlagBits
 pattern VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT = VkBufferUsageFlagBits 0x00000800
--- | @VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT@ specifies
+
+-- | 'VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT' specifies
 -- that the buffer is suitable for using as a counter buffer with
 -- 'vkCmdBeginTransformFeedbackEXT' and 'vkCmdEndTransformFeedbackEXT'.
 pattern VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT :: VkBufferUsageFlagBits
 pattern VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT = VkBufferUsageFlagBits 0x00001000
+
 -- No documentation found for TopLevel "VK_EXT_TRANSFORM_FEEDBACK_EXTENSION_NAME"
 pattern VK_EXT_TRANSFORM_FEEDBACK_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_TRANSFORM_FEEDBACK_EXTENSION_NAME = "VK_EXT_transform_feedback"
+
 -- No documentation found for TopLevel "VK_EXT_TRANSFORM_FEEDBACK_SPEC_VERSION"
 pattern VK_EXT_TRANSFORM_FEEDBACK_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_TRANSFORM_FEEDBACK_SPEC_VERSION = 1
--- No documentation found for Nested "VkPipelineStageFlagBits" "VK_PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT"
+
+-- | 'VK_PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT' specifies the stage of
+-- the pipeline where vertex attribute output values are written to the
+-- transform feedback buffers.
 pattern VK_PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT :: VkPipelineStageFlagBits
 pattern VK_PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT = VkPipelineStageFlagBits 0x01000000
--- | @VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT@ specifies a
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-transform-feedback transform feedback query>.
+
+-- | 'VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT' specifies a
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#queries-transform-feedback transform feedback query>.
 pattern VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT :: VkQueryType
 pattern VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT = VkQueryType 1000028004
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_FEATURES_EXT"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_FEATURES_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_FEATURES_EXT = VkStructureType 1000028000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_PROPERTIES_EXT"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_PROPERTIES_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_PROPERTIES_EXT = VkStructureType 1000028001
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_STREAM_CREATE_INFO_EXT"
 pattern VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_STREAM_CREATE_INFO_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_STREAM_CREATE_INFO_EXT = VkStructureType 1000028002

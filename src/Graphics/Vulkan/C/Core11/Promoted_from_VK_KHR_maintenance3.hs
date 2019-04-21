@@ -8,11 +8,9 @@
 module Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance3
   ( VkDescriptorSetLayoutSupport(..)
   , VkPhysicalDeviceMaintenance3Properties(..)
-#if defined(EXPOSE_CORE11_COMMANDS)
-  , vkGetDescriptorSetLayoutSupport
-#endif
   , FN_vkGetDescriptorSetLayoutSupport
   , PFN_vkGetDescriptorSetLayoutSupport
+  , vkGetDescriptorSetLayoutSupport
   , pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES
   ) where
@@ -43,6 +41,9 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkDevice
   , VkDeviceSize
   )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
+  )
 import Graphics.Vulkan.NamedType
   ( (:::)
   )
@@ -53,19 +54,22 @@ import Graphics.Vulkan.NamedType
 --
 -- = Description
 --
--- @supported@ is set to @VK_TRUE@ if the descriptor set /can/ be created,
--- or else is set to @VK_FALSE@.
+-- @supported@ is set to 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' if the
+-- descriptor set /can/ be created, or else is set to
+-- 'Graphics.Vulkan.C.Core10.Core.VK_FALSE'.
 --
--- == Valid Usage (Implicit)
+-- Unresolved directive in VkDescriptorSetLayoutSupport.txt -
+-- include::{generated}\/validity\/structs\/VkDescriptorSetLayoutSupport.txt[]
 --
 -- = See Also
 --
--- @VkBool32@, 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
 -- 'vkGetDescriptorSetLayoutSupport'
 data VkDescriptorSetLayoutSupport = VkDescriptorSetLayoutSupport
-  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
   , -- | @supported@ specifies whether the descriptor set layout /can/ be
   -- created.
@@ -84,32 +88,34 @@ instance Storable VkDescriptorSetLayoutSupport where
                 *> poke (ptr `plusPtr` 16) (vkSupported (poked :: VkDescriptorSetLayoutSupport))
 
 instance Zero VkDescriptorSetLayoutSupport where
-  zero = VkDescriptorSetLayoutSupport zero
+  zero = VkDescriptorSetLayoutSupport VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT
                                       zero
                                       zero
+
 -- | VkPhysicalDeviceMaintenance3Properties - Structure describing descriptor
 -- set properties
 --
 -- = Members
 --
--- The members of the @VkPhysicalDeviceMaintenance3Properties@ structure
+-- The members of the 'VkPhysicalDeviceMaintenance3Properties' structure
 -- describe the following implementation-dependent limits:
 --
 -- = Description
 --
--- If the @VkPhysicalDeviceMaintenance3Properties@ structure is included in
+-- If the 'VkPhysicalDeviceMaintenance3Properties' structure is included in
 -- the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- == Valid Usage (Implicit)
+-- Unresolved directive in VkPhysicalDeviceMaintenance3Properties.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceMaintenance3Properties.txt[]
 --
 -- = See Also
 --
--- @VkDeviceSize@, 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceMaintenance3Properties = VkPhysicalDeviceMaintenance3Properties
-  { -- | @sType@ /must/ be
-  -- @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -140,11 +146,11 @@ instance Storable VkPhysicalDeviceMaintenance3Properties where
                 *> poke (ptr `plusPtr` 24) (vkMaxMemoryAllocationSize (poked :: VkPhysicalDeviceMaintenance3Properties))
 
 instance Zero VkPhysicalDeviceMaintenance3Properties where
-  zero = VkPhysicalDeviceMaintenance3Properties zero
+  zero = VkPhysicalDeviceMaintenance3Properties VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES
                                                 zero
                                                 zero
                                                 zero
-#if defined(EXPOSE_CORE11_COMMANDS)
+
 -- | vkGetDescriptorSetLayoutSupport - Query whether a descriptor set layout
 -- can be created
 --
@@ -170,7 +176,8 @@ instance Zero VkPhysicalDeviceMaintenance3Properties where
 -- This command returns information about whether a descriptor set
 -- satisfies this limit. If the descriptor set layout satisfies the
 -- 'VkPhysicalDeviceMaintenance3Properties'::@maxPerSetDescriptors@ limit,
--- this command is guaranteed to return @VK_TRUE@ in
+-- this command is guaranteed to return
+-- 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' in
 -- 'VkDescriptorSetLayoutSupport'::@supported@. If the descriptor set
 -- layout exceeds the
 -- 'VkPhysicalDeviceMaintenance3Properties'::@maxPerSetDescriptors@ limit,
@@ -186,28 +193,43 @@ instance Zero VkPhysicalDeviceMaintenance3Properties where
 --
 -- __Note__
 --
--- This is a @VkDevice@ query rather than @VkPhysicalDevice@ because the
--- answer /may/ depend on enabled features.
+-- This is a 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' query
+-- rather than
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice' because
+-- the answer /may/ depend on enabled features.
 --
--- == Valid Usage (Implicit)
+-- Unresolved directive in vkGetDescriptorSetLayoutSupport.txt -
+-- include::{generated}\/validity\/protos\/vkGetDescriptorSetLayoutSupport.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutCreateInfo',
 -- 'VkDescriptorSetLayoutSupport',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
+#if defined(EXPOSE_CORE11_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetDescriptorSetLayoutSupport" vkGetDescriptorSetLayoutSupport :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkDescriptorSetLayoutCreateInfo) -> ("pSupport" ::: Ptr VkDescriptorSetLayoutSupport) -> IO ()
-
+#else
+vkGetDescriptorSetLayoutSupport :: DeviceCmds -> ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkDescriptorSetLayoutCreateInfo) -> ("pSupport" ::: Ptr VkDescriptorSetLayoutSupport) -> IO ()
+vkGetDescriptorSetLayoutSupport deviceCmds = mkVkGetDescriptorSetLayoutSupport (pVkGetDescriptorSetLayoutSupport deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetDescriptorSetLayoutSupport
+  :: FunPtr (("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkDescriptorSetLayoutCreateInfo) -> ("pSupport" ::: Ptr VkDescriptorSetLayoutSupport) -> IO ()) -> (("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkDescriptorSetLayoutCreateInfo) -> ("pSupport" ::: Ptr VkDescriptorSetLayoutSupport) -> IO ())
+#endif
+
 type FN_vkGetDescriptorSetLayoutSupport = ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkDescriptorSetLayoutCreateInfo) -> ("pSupport" ::: Ptr VkDescriptorSetLayoutSupport) -> IO ()
 type PFN_vkGetDescriptorSetLayoutSupport = FunPtr FN_vkGetDescriptorSetLayoutSupport
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT"
 pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT = VkStructureType 1000168001
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES = VkStructureType 1000168000

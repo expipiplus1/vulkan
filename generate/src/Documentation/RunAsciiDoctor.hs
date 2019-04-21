@@ -47,7 +47,14 @@ asciidoctor extensions vkPath manTxt = do
       -- This is mimicing the Makefile in Vulkan-Docs
       extAttribs      = preceedAll "-a" (T.unpack <$> extensions)
       -- TODO: Version information here
-      attribOpts      = extAttribs
+      attribOpts =
+        [ "-a"
+        , "chapters=" <> vkPath <> "/chapters"
+        , "-a"
+        , "images=" <> vkPath <> "/images"
+        , "-a"
+        , "generated=" <> vkPath <> "/gen"
+        ]
       noteOpts        = []
       adocExts =
         [ "-r"
@@ -67,7 +74,8 @@ asciidoctor extensions vkPath manTxt = do
         -- , "mathematical-ppi=100"
         -- ]
       args =
-        adocOpts
+        attribOpts
+          ++ adocOpts
           ++ mathemeticalOpts
           ++ ["--backend", "docbook5", manTxt, "--out-file", "-"]
       p = setStdin closed $ proc asciidoctorPath args

@@ -8,11 +8,9 @@
 
 module Graphics.Vulkan.C.Extensions.VK_EXT_host_query_reset
   ( VkPhysicalDeviceHostQueryResetFeaturesEXT(..)
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkResetQueryPoolEXT
-#endif
   , FN_vkResetQueryPoolEXT
   , PFN_vkResetQueryPoolEXT
+  , vkResetQueryPoolEXT
   , pattern VK_EXT_HOST_QUERY_RESET_EXTENSION_NAME
   , pattern VK_EXT_HOST_QUERY_RESET_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES_EXT
@@ -46,6 +44,9 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
 import Graphics.Vulkan.C.Core10.Query
   ( VkQueryPool
   )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
+  )
 import Graphics.Vulkan.NamedType
   ( (:::)
   )
@@ -56,21 +57,21 @@ import Graphics.Vulkan.NamedType
 --
 -- = Members
 --
--- The members of the @VkPhysicalDeviceHostQueryResetFeaturesEXT@ structure
+-- The members of the 'VkPhysicalDeviceHostQueryResetFeaturesEXT' structure
 -- describe the following features:
 --
 -- = Description
 --
--- If the @VkPhysicalDeviceHostQueryResetFeaturesEXT@ structure is included
+-- If the 'VkPhysicalDeviceHostQueryResetFeaturesEXT' structure is included
 -- in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2',
 -- it is filled with values indicating whether the feature is supported.
--- @VkPhysicalDeviceHostQueryResetFeaturesEXT@ /can/ also be used in the
+-- 'VkPhysicalDeviceHostQueryResetFeaturesEXT' /can/ also be used in the
 -- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to
 -- enable features.
 --
 -- Unresolved directive in VkPhysicalDeviceHostQueryResetFeaturesEXT.txt -
--- include::..\/validity\/structs\/VkPhysicalDeviceHostQueryResetFeaturesEXT.txt[]
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceHostQueryResetFeaturesEXT.txt[]
 --
 -- = See Also
 --
@@ -97,10 +98,10 @@ instance Storable VkPhysicalDeviceHostQueryResetFeaturesEXT where
                 *> poke (ptr `plusPtr` 16) (vkHostQueryReset (poked :: VkPhysicalDeviceHostQueryResetFeaturesEXT))
 
 instance Zero VkPhysicalDeviceHostQueryResetFeaturesEXT where
-  zero = VkPhysicalDeviceHostQueryResetFeaturesEXT zero
+  zero = VkPhysicalDeviceHostQueryResetFeaturesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES_EXT
                                                    zero
                                                    zero
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkResetQueryPoolEXT - Reset queries in a query pool
 --
 -- = Parameters
@@ -120,7 +121,7 @@ instance Zero VkPhysicalDeviceHostQueryResetFeaturesEXT where
 -- == Valid Usage
 --
 -- -   The
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-hostQueryReset hostQueryReset>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-hostQueryReset hostQueryReset>
 --     feature /must/ be enabled
 --
 -- -   @firstQuery@ /must/ be less than the number of queries in
@@ -130,26 +131,39 @@ instance Zero VkPhysicalDeviceHostQueryResetFeaturesEXT where
 --     equal to the number of queries in @queryPool@
 --
 -- Unresolved directive in vkResetQueryPoolEXT.txt -
--- include::..\/validity\/protos\/vkResetQueryPoolEXT.txt[]
+-- include::{generated}\/validity\/protos\/vkResetQueryPoolEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkResetQueryPoolEXT" vkResetQueryPoolEXT :: ("device" ::: VkDevice) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> IO ()
-
+#else
+vkResetQueryPoolEXT :: DeviceCmds -> ("device" ::: VkDevice) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> IO ()
+vkResetQueryPoolEXT deviceCmds = mkVkResetQueryPoolEXT (pVkResetQueryPoolEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkResetQueryPoolEXT
+  :: FunPtr (("device" ::: VkDevice) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> IO ()) -> (("device" ::: VkDevice) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> IO ())
+#endif
+
 type FN_vkResetQueryPoolEXT = ("device" ::: VkDevice) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> IO ()
 type PFN_vkResetQueryPoolEXT = FunPtr FN_vkResetQueryPoolEXT
+
 -- No documentation found for TopLevel "VK_EXT_HOST_QUERY_RESET_EXTENSION_NAME"
 pattern VK_EXT_HOST_QUERY_RESET_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_HOST_QUERY_RESET_EXTENSION_NAME = "VK_EXT_host_query_reset"
+
 -- No documentation found for TopLevel "VK_EXT_HOST_QUERY_RESET_SPEC_VERSION"
 pattern VK_EXT_HOST_QUERY_RESET_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_HOST_QUERY_RESET_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES_EXT"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES_EXT = VkStructureType 1000261000

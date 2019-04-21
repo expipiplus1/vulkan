@@ -2,9 +2,14 @@
 
 This program generates the haskell source from the Vulkan xml specification. 
 
+The Vulkan asciidoctor man pages should be generated beforehand if documented
+bindings are desired. This can be done by running `./makeAllExts validusage
+man/apispec.txt` in a `Vulkan-Docs` repository. `asciidoctor` and `python3` are
+required.
+
 ## Developing
 
-To regenerate the  bindings:
+To regenerate the bindings:
 
 ```
 ./generate.sh \

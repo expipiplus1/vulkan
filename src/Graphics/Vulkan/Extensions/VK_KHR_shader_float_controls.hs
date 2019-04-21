@@ -43,49 +43,73 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_shader_float_controls
   )
 
 
--- No documentation found for TopLevel "PhysicalDeviceFloatControlsPropertiesKHR"
+
+-- | VkPhysicalDeviceFloatControlsPropertiesKHR - Structure describing
+-- properties supported by VK_KHR_shader_float_controls
+--
+-- = Description
+--
+-- If the
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_shader_float_controls.VkPhysicalDeviceFloatControlsPropertiesKHR'
+-- structure is included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
+-- it is filled with the implementation-dependent limits.
+--
+-- Unresolved directive in VkPhysicalDeviceFloatControlsPropertiesKHR.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceFloatControlsPropertiesKHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data PhysicalDeviceFloatControlsPropertiesKHR = PhysicalDeviceFloatControlsPropertiesKHR
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceFloatControlsPropertiesKHR" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDeviceFloatControlsPropertiesKHR" "separateDenormSettings"
-  vkSeparateDenormSettings :: Bool
+  separateDenormSettings :: Bool
   , -- No documentation found for Nested "PhysicalDeviceFloatControlsPropertiesKHR" "separateRoundingModeSettings"
-  vkSeparateRoundingModeSettings :: Bool
+  separateRoundingModeSettings :: Bool
   , -- No documentation found for Nested "PhysicalDeviceFloatControlsPropertiesKHR" "shaderSignedZeroInfNanPreserveFloat16"
-  vkShaderSignedZeroInfNanPreserveFloat16 :: Bool
+  shaderSignedZeroInfNanPreserveFloat16 :: Bool
   , -- No documentation found for Nested "PhysicalDeviceFloatControlsPropertiesKHR" "shaderSignedZeroInfNanPreserveFloat32"
-  vkShaderSignedZeroInfNanPreserveFloat32 :: Bool
+  shaderSignedZeroInfNanPreserveFloat32 :: Bool
   , -- No documentation found for Nested "PhysicalDeviceFloatControlsPropertiesKHR" "shaderSignedZeroInfNanPreserveFloat64"
-  vkShaderSignedZeroInfNanPreserveFloat64 :: Bool
+  shaderSignedZeroInfNanPreserveFloat64 :: Bool
   , -- No documentation found for Nested "PhysicalDeviceFloatControlsPropertiesKHR" "shaderDenormPreserveFloat16"
-  vkShaderDenormPreserveFloat16 :: Bool
+  shaderDenormPreserveFloat16 :: Bool
   , -- No documentation found for Nested "PhysicalDeviceFloatControlsPropertiesKHR" "shaderDenormPreserveFloat32"
-  vkShaderDenormPreserveFloat32 :: Bool
+  shaderDenormPreserveFloat32 :: Bool
   , -- No documentation found for Nested "PhysicalDeviceFloatControlsPropertiesKHR" "shaderDenormPreserveFloat64"
-  vkShaderDenormPreserveFloat64 :: Bool
+  shaderDenormPreserveFloat64 :: Bool
   , -- No documentation found for Nested "PhysicalDeviceFloatControlsPropertiesKHR" "shaderDenormFlushToZeroFloat16"
-  vkShaderDenormFlushToZeroFloat16 :: Bool
+  shaderDenormFlushToZeroFloat16 :: Bool
   , -- No documentation found for Nested "PhysicalDeviceFloatControlsPropertiesKHR" "shaderDenormFlushToZeroFloat32"
-  vkShaderDenormFlushToZeroFloat32 :: Bool
+  shaderDenormFlushToZeroFloat32 :: Bool
   , -- No documentation found for Nested "PhysicalDeviceFloatControlsPropertiesKHR" "shaderDenormFlushToZeroFloat64"
-  vkShaderDenormFlushToZeroFloat64 :: Bool
+  shaderDenormFlushToZeroFloat64 :: Bool
   , -- No documentation found for Nested "PhysicalDeviceFloatControlsPropertiesKHR" "shaderRoundingModeRTEFloat16"
-  vkShaderRoundingModeRTEFloat16 :: Bool
+  shaderRoundingModeRTEFloat16 :: Bool
   , -- No documentation found for Nested "PhysicalDeviceFloatControlsPropertiesKHR" "shaderRoundingModeRTEFloat32"
-  vkShaderRoundingModeRTEFloat32 :: Bool
+  shaderRoundingModeRTEFloat32 :: Bool
   , -- No documentation found for Nested "PhysicalDeviceFloatControlsPropertiesKHR" "shaderRoundingModeRTEFloat64"
-  vkShaderRoundingModeRTEFloat64 :: Bool
+  shaderRoundingModeRTEFloat64 :: Bool
   , -- No documentation found for Nested "PhysicalDeviceFloatControlsPropertiesKHR" "shaderRoundingModeRTZFloat16"
-  vkShaderRoundingModeRTZFloat16 :: Bool
+  shaderRoundingModeRTZFloat16 :: Bool
   , -- No documentation found for Nested "PhysicalDeviceFloatControlsPropertiesKHR" "shaderRoundingModeRTZFloat32"
-  vkShaderRoundingModeRTZFloat32 :: Bool
+  shaderRoundingModeRTZFloat32 :: Bool
   , -- No documentation found for Nested "PhysicalDeviceFloatControlsPropertiesKHR" "shaderRoundingModeRTZFloat64"
-  vkShaderRoundingModeRTZFloat64 :: Bool
+  shaderRoundingModeRTZFloat64 :: Bool
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPhysicalDeviceFloatControlsPropertiesKHR' and
+-- marshal a 'PhysicalDeviceFloatControlsPropertiesKHR' into it. The 'VkPhysicalDeviceFloatControlsPropertiesKHR' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPhysicalDeviceFloatControlsPropertiesKHR :: PhysicalDeviceFloatControlsPropertiesKHR -> (VkPhysicalDeviceFloatControlsPropertiesKHR -> IO a) -> IO a
-withCStructPhysicalDeviceFloatControlsPropertiesKHR from cont = maybeWith withSomeVkStruct (vkPNext (from :: PhysicalDeviceFloatControlsPropertiesKHR)) (\pPNext -> cont (VkPhysicalDeviceFloatControlsPropertiesKHR VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES_KHR pPNext (boolToBool32 (vkSeparateDenormSettings (from :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (vkSeparateRoundingModeSettings (from :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (vkShaderSignedZeroInfNanPreserveFloat16 (from :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (vkShaderSignedZeroInfNanPreserveFloat32 (from :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (vkShaderSignedZeroInfNanPreserveFloat64 (from :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (vkShaderDenormPreserveFloat16 (from :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (vkShaderDenormPreserveFloat32 (from :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (vkShaderDenormPreserveFloat64 (from :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (vkShaderDenormFlushToZeroFloat16 (from :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (vkShaderDenormFlushToZeroFloat32 (from :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (vkShaderDenormFlushToZeroFloat64 (from :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (vkShaderRoundingModeRTEFloat16 (from :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (vkShaderRoundingModeRTEFloat32 (from :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (vkShaderRoundingModeRTEFloat64 (from :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (vkShaderRoundingModeRTZFloat16 (from :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (vkShaderRoundingModeRTZFloat32 (from :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (vkShaderRoundingModeRTZFloat64 (from :: PhysicalDeviceFloatControlsPropertiesKHR)))))
+withCStructPhysicalDeviceFloatControlsPropertiesKHR marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR)) (\pPNext -> cont (VkPhysicalDeviceFloatControlsPropertiesKHR VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES_KHR pPNext (boolToBool32 (separateDenormSettings (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (separateRoundingModeSettings (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderSignedZeroInfNanPreserveFloat16 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderSignedZeroInfNanPreserveFloat32 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderSignedZeroInfNanPreserveFloat64 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderDenormPreserveFloat16 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderDenormPreserveFloat32 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderDenormPreserveFloat64 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderDenormFlushToZeroFloat16 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderDenormFlushToZeroFloat32 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderDenormFlushToZeroFloat64 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderRoundingModeRTEFloat16 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderRoundingModeRTEFloat32 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderRoundingModeRTEFloat64 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderRoundingModeRTZFloat16 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderRoundingModeRTZFloat32 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderRoundingModeRTZFloat64 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR)))))
+
+-- | A function to read a 'VkPhysicalDeviceFloatControlsPropertiesKHR' and all additional
+-- structures in the pointer chain into a 'PhysicalDeviceFloatControlsPropertiesKHR'.
 fromCStructPhysicalDeviceFloatControlsPropertiesKHR :: VkPhysicalDeviceFloatControlsPropertiesKHR -> IO PhysicalDeviceFloatControlsPropertiesKHR
 fromCStructPhysicalDeviceFloatControlsPropertiesKHR c = PhysicalDeviceFloatControlsPropertiesKHR <$> -- Univalued Member elided
                                                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceFloatControlsPropertiesKHR)))
@@ -106,6 +130,7 @@ fromCStructPhysicalDeviceFloatControlsPropertiesKHR c = PhysicalDeviceFloatContr
                                                                                                  <*> pure (bool32ToBool (vkShaderRoundingModeRTZFloat16 (c :: VkPhysicalDeviceFloatControlsPropertiesKHR)))
                                                                                                  <*> pure (bool32ToBool (vkShaderRoundingModeRTZFloat32 (c :: VkPhysicalDeviceFloatControlsPropertiesKHR)))
                                                                                                  <*> pure (bool32ToBool (vkShaderRoundingModeRTZFloat64 (c :: VkPhysicalDeviceFloatControlsPropertiesKHR)))
+
 instance Zero PhysicalDeviceFloatControlsPropertiesKHR where
   zero = PhysicalDeviceFloatControlsPropertiesKHR Nothing
                                                   False
@@ -125,3 +150,4 @@ instance Zero PhysicalDeviceFloatControlsPropertiesKHR where
                                                   False
                                                   False
                                                   False
+

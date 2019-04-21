@@ -61,13 +61,8 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabili
 --     reported by
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreProperties'.
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO@
---
--- -   @handleTypes@ /must/ be a valid combination of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreHandleTypeFlagBits'
---     values
+-- Unresolved directive in VkExportSemaphoreCreateInfo.txt -
+-- include::{generated}\/validity\/structs\/VkExportSemaphoreCreateInfo.txt[]
 --
 -- = See Also
 --
@@ -98,9 +93,10 @@ instance Storable VkExportSemaphoreCreateInfo where
                 *> poke (ptr `plusPtr` 16) (vkHandleTypes (poked :: VkExportSemaphoreCreateInfo))
 
 instance Zero VkExportSemaphoreCreateInfo where
-  zero = VkExportSemaphoreCreateInfo zero
+  zero = VkExportSemaphoreCreateInfo VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO
                                      zero
                                      zero
+
 -- ** VkSemaphoreImportFlagBits
 
 -- | VkSemaphoreImportFlagBits - Bitmask specifying additional parameters of
@@ -130,23 +126,25 @@ instance Read VkSemaphoreImportFlagBits where
                         )
                     )
 
--- | @VK_SEMAPHORE_IMPORT_TEMPORARY_BIT@ specifies that the semaphore payload
+-- | 'VK_SEMAPHORE_IMPORT_TEMPORARY_BIT' specifies that the semaphore payload
 -- will be imported only temporarily, as described in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>,
 -- regardless of the permanence of @handleType@.
 pattern VK_SEMAPHORE_IMPORT_TEMPORARY_BIT :: VkSemaphoreImportFlagBits
 pattern VK_SEMAPHORE_IMPORT_TEMPORARY_BIT = VkSemaphoreImportFlagBits 0x00000001
+
 -- | VkSemaphoreImportFlags - Bitmask of VkSemaphoreImportFlagBits
 --
 -- = Description
 --
--- @VkSemaphoreImportFlags@ is a bitmask type for setting a mask of zero or
+-- 'VkSemaphoreImportFlags' is a bitmask type for setting a mask of zero or
 -- more 'VkSemaphoreImportFlagBits'.
 --
 -- = See Also
 --
 -- 'VkSemaphoreImportFlagBits'
 type VkSemaphoreImportFlags = VkSemaphoreImportFlagBits
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO = VkStructureType 1000077000

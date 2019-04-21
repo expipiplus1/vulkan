@@ -69,15 +69,21 @@ import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_memory_requirements2
 
 type BufferMemoryRequirementsInfo2KHR = BufferMemoryRequirementsInfo2
 -- TODO: Pattern constructor alias)
+
 type ImageMemoryRequirementsInfo2KHR = ImageMemoryRequirementsInfo2
 -- TODO: Pattern constructor alias)
+
 type ImageSparseMemoryRequirementsInfo2KHR = ImageSparseMemoryRequirementsInfo2
 -- TODO: Pattern constructor alias)
+
 type SparseImageMemoryRequirements2KHR = SparseImageMemoryRequirements2
 -- TODO: Pattern constructor alias)
+
 getBufferMemoryRequirements2KHR :: Device ->  BufferMemoryRequirementsInfo2 ->  IO (MemoryRequirements2)
 getBufferMemoryRequirements2KHR = getBufferMemoryRequirements2
+
 getImageMemoryRequirements2KHR :: Device ->  ImageMemoryRequirementsInfo2 ->  IO (MemoryRequirements2)
 getImageMemoryRequirements2KHR = getImageMemoryRequirements2
+
 getImageSparseMemoryRequirements2KHR :: Device ->  ImageSparseMemoryRequirementsInfo2 ->  Word32 ->  IO (Vector SparseImageMemoryRequirements2)
 getImageSparseMemoryRequirements2KHR = getImageSparseMemoryRequirements2

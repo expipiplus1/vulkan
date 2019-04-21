@@ -11,11 +11,9 @@ module Graphics.Vulkan.C.Extensions.VK_GGP_stream_descriptor_surface
   ( GgpStreamDescriptor
   , VkStreamDescriptorSurfaceCreateFlagsGGP(..)
   , VkStreamDescriptorSurfaceCreateInfoGGP(..)
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkCreateStreamDescriptorSurfaceGGP
-#endif
   , FN_vkCreateStreamDescriptorSurfaceGGP
   , PFN_vkCreateStreamDescriptorSurfaceGGP
+  , vkCreateStreamDescriptorSurfaceGGP
   , pattern VK_GGP_STREAM_DESCRIPTOR_SURFACE_EXTENSION_NAME
   , pattern VK_GGP_STREAM_DESCRIPTOR_SURFACE_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP
@@ -68,6 +66,9 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkAllocationCallbacks(..)
   , VkInstance
   )
+import Graphics.Vulkan.C.Dynamic
+  ( InstanceCmds(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_KHR_surface
   ( VkSurfaceKHR
   )
@@ -79,6 +80,7 @@ import Graphics.Vulkan.NamedType
 -- No documentation found for TopLevel "GgpStreamDescriptor"
 type GgpStreamDescriptor = Word32
   
+
 -- ** VkStreamDescriptorSurfaceCreateFlagsGGP
 
 -- No documentation found for TopLevel "VkStreamDescriptorSurfaceCreateFlagsGGP"
@@ -100,13 +102,14 @@ instance Read VkStreamDescriptorSurfaceCreateFlagsGGP where
                     )
 
 
+
 -- | VkStreamDescriptorSurfaceCreateInfoGGP - Structure specifying parameters
 -- of a newly created Google Games Platform stream surface object
 --
 -- == Valid Usage
 --
 -- Unresolved directive in VkStreamDescriptorSurfaceCreateInfoGGP.txt -
--- include::..\/validity\/structs\/VkStreamDescriptorSurfaceCreateInfoGGP.txt[]
+-- include::{generated}\/validity\/structs\/VkStreamDescriptorSurfaceCreateInfoGGP.txt[]
 --
 -- = See Also
 --
@@ -118,7 +121,7 @@ data VkStreamDescriptorSurfaceCreateInfoGGP = VkStreamDescriptorSurfaceCreateInf
   vkPNext :: Ptr ()
   , -- | @flags@ is reserved for future use.
   vkFlags :: VkStreamDescriptorSurfaceCreateFlagsGGP
-  , -- | @streamDescriptor@ /must/ be a valid @GgpStreamDescriptor@
+  , -- | @streamDescriptor@ /must/ be a valid 'GgpStreamDescriptor'
   vkStreamDescriptor :: GgpStreamDescriptor
   }
   deriving (Eq, Show)
@@ -136,11 +139,11 @@ instance Storable VkStreamDescriptorSurfaceCreateInfoGGP where
                 *> poke (ptr `plusPtr` 20) (vkStreamDescriptor (poked :: VkStreamDescriptorSurfaceCreateInfoGGP))
 
 instance Zero VkStreamDescriptorSurfaceCreateInfoGGP where
-  zero = VkStreamDescriptorSurfaceCreateInfoGGP zero
+  zero = VkStreamDescriptorSurfaceCreateInfoGGP VK_STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP
                                                 zero
                                                 zero
                                                 zero
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkCreateStreamDescriptorSurfaceGGP - Create a
 -- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' object for a
 -- Google Games Platform stream
@@ -150,13 +153,13 @@ instance Zero VkStreamDescriptorSurfaceCreateInfoGGP where
 -- -   @instance@ is the instance to associate with the surface.
 --
 -- -   @pCreateInfo@ is a pointer to an instance of the
---     @VkStreamDescriptorSurfaceCreateInfoGGP@ structure containing
+--     'VkStreamDescriptorSurfaceCreateInfoGGP' structure containing
 --     parameters that affect the creation of the surface object.
 --
 -- -   @pAllocator@ is the allocator used for host memory allocated for the
 --     surface object when there is no more specific allocator available
 --     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
 --
 -- -   @pSurface@ points to a
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
@@ -165,26 +168,39 @@ instance Zero VkStreamDescriptorSurfaceCreateInfoGGP where
 -- = Description
 --
 -- Unresolved directive in vkCreateStreamDescriptorSurfaceGGP.txt -
--- include::..\/validity\/protos\/vkCreateStreamDescriptorSurfaceGGP.txt[]
+-- include::{generated}\/validity\/protos\/vkCreateStreamDescriptorSurfaceGGP.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCreateStreamDescriptorSurfaceGGP" vkCreateStreamDescriptorSurfaceGGP :: ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkStreamDescriptorSurfaceCreateInfoGGP) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
-
+#else
+vkCreateStreamDescriptorSurfaceGGP :: InstanceCmds -> ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkStreamDescriptorSurfaceCreateInfoGGP) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
+vkCreateStreamDescriptorSurfaceGGP deviceCmds = mkVkCreateStreamDescriptorSurfaceGGP (pVkCreateStreamDescriptorSurfaceGGP deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCreateStreamDescriptorSurfaceGGP
+  :: FunPtr (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkStreamDescriptorSurfaceCreateInfoGGP) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult) -> (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkStreamDescriptorSurfaceCreateInfoGGP) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult)
+#endif
+
 type FN_vkCreateStreamDescriptorSurfaceGGP = ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkStreamDescriptorSurfaceCreateInfoGGP) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
 type PFN_vkCreateStreamDescriptorSurfaceGGP = FunPtr FN_vkCreateStreamDescriptorSurfaceGGP
+
 -- No documentation found for TopLevel "VK_GGP_STREAM_DESCRIPTOR_SURFACE_EXTENSION_NAME"
 pattern VK_GGP_STREAM_DESCRIPTOR_SURFACE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_GGP_STREAM_DESCRIPTOR_SURFACE_EXTENSION_NAME = "VK_GGP_stream_descriptor_surface"
+
 -- No documentation found for TopLevel "VK_GGP_STREAM_DESCRIPTOR_SURFACE_SPEC_VERSION"
 pattern VK_GGP_STREAM_DESCRIPTOR_SURFACE_SPEC_VERSION :: Integral a => a
 pattern VK_GGP_STREAM_DESCRIPTOR_SURFACE_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP"
 pattern VK_STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP :: VkStructureType
 pattern VK_STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP = VkStructureType 1000049000

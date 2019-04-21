@@ -10,31 +10,21 @@ module Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker
   ( VkDebugMarkerMarkerInfoEXT(..)
   , VkDebugMarkerObjectNameInfoEXT(..)
   , VkDebugMarkerObjectTagInfoEXT(..)
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkCmdDebugMarkerBeginEXT
-#endif
   , FN_vkCmdDebugMarkerBeginEXT
   , PFN_vkCmdDebugMarkerBeginEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkCmdDebugMarkerEndEXT
-#endif
+  , vkCmdDebugMarkerBeginEXT
   , FN_vkCmdDebugMarkerEndEXT
   , PFN_vkCmdDebugMarkerEndEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkCmdDebugMarkerInsertEXT
-#endif
+  , vkCmdDebugMarkerEndEXT
   , FN_vkCmdDebugMarkerInsertEXT
   , PFN_vkCmdDebugMarkerInsertEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkDebugMarkerSetObjectNameEXT
-#endif
+  , vkCmdDebugMarkerInsertEXT
   , FN_vkDebugMarkerSetObjectNameEXT
   , PFN_vkDebugMarkerSetObjectNameEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkDebugMarkerSetObjectTagEXT
-#endif
+  , vkDebugMarkerSetObjectNameEXT
   , FN_vkDebugMarkerSetObjectTagEXT
   , PFN_vkDebugMarkerSetObjectTagEXT
+  , vkDebugMarkerSetObjectTagEXT
   , pattern VK_EXT_DEBUG_MARKER_EXTENSION_NAME
   , pattern VK_EXT_DEBUG_MARKER_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT
@@ -79,6 +69,9 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
 import Graphics.Vulkan.C.Core10.Queue
   ( VkCommandBuffer
   )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_debug_report
   ( VkDebugReportObjectTypeEXT(..)
   )
@@ -90,17 +83,21 @@ import Graphics.Vulkan.NamedType
 -- | VkDebugMarkerMarkerInfoEXT - Specify parameters of a command buffer
 -- marker region
 --
--- == Valid Usage (Implicit)
+-- = Description
+--
+-- Unresolved directive in VkDebugMarkerMarkerInfoEXT.txt -
+-- include::{generated}\/validity\/structs\/VkDebugMarkerMarkerInfoEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkDebugMarkerMarkerInfoEXT = VkDebugMarkerMarkerInfoEXT
-  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @pMarkerName@ /must/ be a null-terminated UTF-8 string
+  , -- | @pMarkerName@ is a pointer to a null-terminated UTF-8 string that
+  -- contains the name of the marker.
   vkPMarkerName :: Ptr CChar
   , -- | @color@ is an /optional/ RGBA color value that can be associated with
   -- the marker. A particular implementation /may/ choose to ignore this
@@ -123,39 +120,43 @@ instance Storable VkDebugMarkerMarkerInfoEXT where
                 *> poke (ptr `plusPtr` 24) (vkColor (poked :: VkDebugMarkerMarkerInfoEXT))
 
 instance Zero VkDebugMarkerMarkerInfoEXT where
-  zero = VkDebugMarkerMarkerInfoEXT zero
+  zero = VkDebugMarkerMarkerInfoEXT VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT
                                     zero
                                     zero
                                     zero
+
 -- | VkDebugMarkerObjectNameInfoEXT - Specify parameters of a name to give to
 -- an object
 --
 -- = Description
 --
 -- Applications /may/ change the name associated with an object simply by
--- calling @vkDebugMarkerSetObjectNameEXT@ again with a new string. To
+-- calling 'vkDebugMarkerSetObjectNameEXT' again with a new string. To
 -- remove a previously set name, @pObjectName@ /should/ be set to an empty
 -- string.
 --
--- == Valid Usage (Implicit)
+-- == Valid Usage
+--
+-- Unresolved directive in VkDebugMarkerObjectNameInfoEXT.txt -
+-- include::{generated}\/validity\/structs\/VkDebugMarkerObjectNameInfoEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkDebugMarkerObjectNameInfoEXT = VkDebugMarkerObjectNameInfoEXT
-  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @objectType@ /must/ be a valid
-  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VkDebugReportObjectTypeEXT'
-  -- value
+  , -- | @objectType@ /must/ not be
+  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT'
   vkObjectType :: VkDebugReportObjectTypeEXT
   , -- | @object@ /must/ be a Vulkan object of the type associated with
   -- @objectType@ as defined in
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#debug-report-object-types {html_spec_relative}#debug-report-object-types>.
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#debug-report-object-types>.
   vkObject :: Word64
-  , -- | @pObjectName@ /must/ be a null-terminated UTF-8 string
+  , -- | @pObjectName@ is a null-terminated UTF-8 string specifying the name to
+  -- apply to @object@.
   vkPObjectName :: Ptr CChar
   }
   deriving (Eq, Show)
@@ -175,11 +176,12 @@ instance Storable VkDebugMarkerObjectNameInfoEXT where
                 *> poke (ptr `plusPtr` 32) (vkPObjectName (poked :: VkDebugMarkerObjectNameInfoEXT))
 
 instance Zero VkDebugMarkerObjectNameInfoEXT where
-  zero = VkDebugMarkerObjectNameInfoEXT zero
+  zero = VkDebugMarkerObjectNameInfoEXT VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT
                                         zero
                                         zero
                                         zero
                                         zero
+
 -- | VkDebugMarkerObjectTagInfoEXT - Specify parameters of a tag to attach to
 -- an object
 --
@@ -189,29 +191,32 @@ instance Zero VkDebugMarkerObjectNameInfoEXT where
 -- being tagged. This can be used by debugging layers to easily filter for
 -- only data that can be used by that implementation.
 --
--- == Valid Usage (Implicit)
+-- == Valid Usage
+--
+-- Unresolved directive in VkDebugMarkerObjectTagInfoEXT.txt -
+-- include::{generated}\/validity\/structs\/VkDebugMarkerObjectTagInfoEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkDebugMarkerObjectTagInfoEXT = VkDebugMarkerObjectTagInfoEXT
-  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @objectType@ /must/ be a valid
-  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VkDebugReportObjectTypeEXT'
-  -- value
+  , -- | @objectType@ /must/ not be
+  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VK_DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT'
   vkObjectType :: VkDebugReportObjectTypeEXT
   , -- | @object@ /must/ be a Vulkan object of the type associated with
   -- @objectType@ as defined in
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#debug-report-object-types {html_spec_relative}#debug-report-object-types>.
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#debug-report-object-types>.
   vkObject :: Word64
   , -- | @tagName@ is a numerical identifier of the tag.
   vkTagName :: Word64
-  , -- | @tagSize@ /must/ be greater than @0@
+  , -- | @tagSize@ is the number of bytes of data to attach to the object.
   vkTagSize :: CSize
-  , -- | @pTag@ /must/ be a valid pointer to an array of @tagSize@ bytes
+  , -- | @pTag@ is an array of @tagSize@ bytes containing the data to be
+  -- associated with the object.
   vkPTag :: Ptr ()
   }
   deriving (Eq, Show)
@@ -235,14 +240,14 @@ instance Storable VkDebugMarkerObjectTagInfoEXT where
                 *> poke (ptr `plusPtr` 48) (vkPTag (poked :: VkDebugMarkerObjectTagInfoEXT))
 
 instance Zero VkDebugMarkerObjectTagInfoEXT where
-  zero = VkDebugMarkerObjectTagInfoEXT zero
+  zero = VkDebugMarkerObjectTagInfoEXT VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT
                                        zero
                                        zero
                                        zero
                                        zero
                                        zero
                                        zero
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkCmdDebugMarkerBeginEXT - Open a command buffer marker region
 --
 -- = Parameters
@@ -254,56 +259,34 @@ instance Zero VkDebugMarkerObjectTagInfoEXT where
 --     'VkDebugMarkerMarkerInfoEXT' structure specifying the parameters of
 --     the marker region to open.
 --
--- == Valid Usage (Implicit)
+-- = Description
 --
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @pMarkerInfo@ /must/ be a valid pointer to a valid
---     @VkDebugMarkerMarkerInfoEXT@ structure
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics, or compute operations
---
--- == Host Synchronization
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdDebugMarkerBeginEXT.txt -
+-- include::{generated}\/validity\/protos\/vkCmdDebugMarkerBeginEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdDebugMarkerBeginEXT" vkCmdDebugMarkerBeginEXT :: ("commandBuffer" ::: VkCommandBuffer) -> ("pMarkerInfo" ::: Ptr VkDebugMarkerMarkerInfoEXT) -> IO ()
-
+#else
+vkCmdDebugMarkerBeginEXT :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("pMarkerInfo" ::: Ptr VkDebugMarkerMarkerInfoEXT) -> IO ()
+vkCmdDebugMarkerBeginEXT deviceCmds = mkVkCmdDebugMarkerBeginEXT (pVkCmdDebugMarkerBeginEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdDebugMarkerBeginEXT
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("pMarkerInfo" ::: Ptr VkDebugMarkerMarkerInfoEXT) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("pMarkerInfo" ::: Ptr VkDebugMarkerMarkerInfoEXT) -> IO ())
+#endif
+
 type FN_vkCmdDebugMarkerBeginEXT = ("commandBuffer" ::: VkCommandBuffer) -> ("pMarkerInfo" ::: Ptr VkDebugMarkerMarkerInfoEXT) -> IO ()
 type PFN_vkCmdDebugMarkerBeginEXT = FunPtr FN_vkCmdDebugMarkerBeginEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkCmdDebugMarkerEndEXT - Close a command buffer marker region
 --
 -- = Parameters
@@ -317,13 +300,13 @@ type PFN_vkCmdDebugMarkerBeginEXT = FunPtr FN_vkCmdDebugMarkerBeginEXT
 -- close it in another, or otherwise split marker regions across multiple
 -- command buffers or multiple queue submissions. When viewed from the
 -- linear series of submissions to a single queue, the calls to
--- @vkCmdDebugMarkerBeginEXT@ and @vkCmdDebugMarkerEndEXT@ /must/ be
+-- 'vkCmdDebugMarkerBeginEXT' and 'vkCmdDebugMarkerEndEXT' /must/ be
 -- matched and balanced.
 --
 -- == Valid Usage
 --
 -- -   There /must/ be an outstanding 'vkCmdDebugMarkerBeginEXT' command
---     prior to the @vkCmdDebugMarkerEndEXT@ on the queue that
+--     prior to the 'vkCmdDebugMarkerEndEXT' on the queue that
 --     @commandBuffer@ is submitted to
 --
 -- -   If @commandBuffer@ is a secondary command buffer, there /must/ be an
@@ -331,53 +314,32 @@ type PFN_vkCmdDebugMarkerBeginEXT = FunPtr FN_vkCmdDebugMarkerBeginEXT
 --     @commandBuffer@ that has not previously been ended by a call to
 --     'vkCmdDebugMarkerEndEXT'.
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics, or compute operations
---
--- == Host Synchronization
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdDebugMarkerEndEXT.txt -
+-- include::{generated}\/validity\/protos\/vkCmdDebugMarkerEndEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdDebugMarkerEndEXT" vkCmdDebugMarkerEndEXT :: ("commandBuffer" ::: VkCommandBuffer) -> IO ()
-
+#else
+vkCmdDebugMarkerEndEXT :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> IO ()
+vkCmdDebugMarkerEndEXT deviceCmds = mkVkCmdDebugMarkerEndEXT (pVkCmdDebugMarkerEndEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdDebugMarkerEndEXT
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> IO ())
+#endif
+
 type FN_vkCmdDebugMarkerEndEXT = ("commandBuffer" ::: VkCommandBuffer) -> IO ()
 type PFN_vkCmdDebugMarkerEndEXT = FunPtr FN_vkCmdDebugMarkerEndEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkCmdDebugMarkerInsertEXT - Insert a marker label into a command buffer
 --
 -- = Parameters
@@ -389,56 +351,34 @@ type PFN_vkCmdDebugMarkerEndEXT = FunPtr FN_vkCmdDebugMarkerEndEXT
 --     'VkDebugMarkerMarkerInfoEXT' structure specifying the parameters of
 --     the marker to insert.
 --
--- == Valid Usage (Implicit)
+-- = Description
 --
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @pMarkerInfo@ /must/ be a valid pointer to a valid
---     @VkDebugMarkerMarkerInfoEXT@ structure
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics, or compute operations
---
--- == Host Synchronization
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdDebugMarkerInsertEXT.txt -
+-- include::{generated}\/validity\/protos\/vkCmdDebugMarkerInsertEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdDebugMarkerInsertEXT" vkCmdDebugMarkerInsertEXT :: ("commandBuffer" ::: VkCommandBuffer) -> ("pMarkerInfo" ::: Ptr VkDebugMarkerMarkerInfoEXT) -> IO ()
-
+#else
+vkCmdDebugMarkerInsertEXT :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("pMarkerInfo" ::: Ptr VkDebugMarkerMarkerInfoEXT) -> IO ()
+vkCmdDebugMarkerInsertEXT deviceCmds = mkVkCmdDebugMarkerInsertEXT (pVkCmdDebugMarkerInsertEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdDebugMarkerInsertEXT
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("pMarkerInfo" ::: Ptr VkDebugMarkerMarkerInfoEXT) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("pMarkerInfo" ::: Ptr VkDebugMarkerMarkerInfoEXT) -> IO ())
+#endif
+
 type FN_vkCmdDebugMarkerInsertEXT = ("commandBuffer" ::: VkCommandBuffer) -> ("pMarkerInfo" ::: Ptr VkDebugMarkerMarkerInfoEXT) -> IO ()
 type PFN_vkCmdDebugMarkerInsertEXT = FunPtr FN_vkCmdDebugMarkerInsertEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkDebugMarkerSetObjectNameEXT - Give a user-friendly name to an object
 --
 -- = Parameters
@@ -449,40 +389,34 @@ type PFN_vkCmdDebugMarkerInsertEXT = FunPtr FN_vkCmdDebugMarkerInsertEXT
 --     'VkDebugMarkerObjectNameInfoEXT' structure specifying the parameters
 --     of the name to set on the object.
 --
--- == Valid Usage (Implicit)
+-- = Description
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   @pNameInfo@ /must/ be a valid pointer to a valid
---     @VkDebugMarkerObjectNameInfoEXT@ structure
---
--- == Host Synchronization
---
--- -   Host access to @pNameInfo.object@ /must/ be externally synchronized
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- Unresolved directive in vkDebugMarkerSetObjectNameEXT.txt -
+-- include::{generated}\/validity\/protos\/vkDebugMarkerSetObjectNameEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkDebugMarkerSetObjectNameEXT" vkDebugMarkerSetObjectNameEXT :: ("device" ::: VkDevice) -> ("pNameInfo" ::: Ptr VkDebugMarkerObjectNameInfoEXT) -> IO VkResult
-
+#else
+vkDebugMarkerSetObjectNameEXT :: DeviceCmds -> ("device" ::: VkDevice) -> ("pNameInfo" ::: Ptr VkDebugMarkerObjectNameInfoEXT) -> IO VkResult
+vkDebugMarkerSetObjectNameEXT deviceCmds = mkVkDebugMarkerSetObjectNameEXT (pVkDebugMarkerSetObjectNameEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkDebugMarkerSetObjectNameEXT
+  :: FunPtr (("device" ::: VkDevice) -> ("pNameInfo" ::: Ptr VkDebugMarkerObjectNameInfoEXT) -> IO VkResult) -> (("device" ::: VkDevice) -> ("pNameInfo" ::: Ptr VkDebugMarkerObjectNameInfoEXT) -> IO VkResult)
+#endif
+
 type FN_vkDebugMarkerSetObjectNameEXT = ("device" ::: VkDevice) -> ("pNameInfo" ::: Ptr VkDebugMarkerObjectNameInfoEXT) -> IO VkResult
 type PFN_vkDebugMarkerSetObjectNameEXT = FunPtr FN_vkDebugMarkerSetObjectNameEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkDebugMarkerSetObjectTagEXT - Attach arbitrary data to an object
 --
 -- = Parameters
@@ -493,51 +427,50 @@ type PFN_vkDebugMarkerSetObjectNameEXT = FunPtr FN_vkDebugMarkerSetObjectNameEXT
 --     'VkDebugMarkerObjectTagInfoEXT' structure specifying the parameters
 --     of the tag to attach to the object.
 --
--- == Valid Usage (Implicit)
+-- = Description
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   @pTagInfo@ /must/ be a valid pointer to a valid
---     @VkDebugMarkerObjectTagInfoEXT@ structure
---
--- == Host Synchronization
---
--- -   Host access to @pTagInfo.object@ /must/ be externally synchronized
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- Unresolved directive in vkDebugMarkerSetObjectTagEXT.txt -
+-- include::{generated}\/validity\/protos\/vkDebugMarkerSetObjectTagEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkDebugMarkerSetObjectTagEXT" vkDebugMarkerSetObjectTagEXT :: ("device" ::: VkDevice) -> ("pTagInfo" ::: Ptr VkDebugMarkerObjectTagInfoEXT) -> IO VkResult
-
+#else
+vkDebugMarkerSetObjectTagEXT :: DeviceCmds -> ("device" ::: VkDevice) -> ("pTagInfo" ::: Ptr VkDebugMarkerObjectTagInfoEXT) -> IO VkResult
+vkDebugMarkerSetObjectTagEXT deviceCmds = mkVkDebugMarkerSetObjectTagEXT (pVkDebugMarkerSetObjectTagEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkDebugMarkerSetObjectTagEXT
+  :: FunPtr (("device" ::: VkDevice) -> ("pTagInfo" ::: Ptr VkDebugMarkerObjectTagInfoEXT) -> IO VkResult) -> (("device" ::: VkDevice) -> ("pTagInfo" ::: Ptr VkDebugMarkerObjectTagInfoEXT) -> IO VkResult)
+#endif
+
 type FN_vkDebugMarkerSetObjectTagEXT = ("device" ::: VkDevice) -> ("pTagInfo" ::: Ptr VkDebugMarkerObjectTagInfoEXT) -> IO VkResult
 type PFN_vkDebugMarkerSetObjectTagEXT = FunPtr FN_vkDebugMarkerSetObjectTagEXT
+
 -- No documentation found for TopLevel "VK_EXT_DEBUG_MARKER_EXTENSION_NAME"
 pattern VK_EXT_DEBUG_MARKER_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_DEBUG_MARKER_EXTENSION_NAME = "VK_EXT_debug_marker"
+
 -- No documentation found for TopLevel "VK_EXT_DEBUG_MARKER_SPEC_VERSION"
 pattern VK_EXT_DEBUG_MARKER_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_DEBUG_MARKER_SPEC_VERSION = 4
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT"
 pattern VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT = VkStructureType 1000022002
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT"
 pattern VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT = VkStructureType 1000022000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT"
 pattern VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT = VkStructureType 1000022001

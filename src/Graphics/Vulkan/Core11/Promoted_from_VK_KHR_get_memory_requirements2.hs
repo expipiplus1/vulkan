@@ -63,11 +63,6 @@ import Foreign.Storable
   ( peek
   , peekElemOff
   )
-import qualified Graphics.Vulkan.C.Dynamic
-  ( getBufferMemoryRequirements2
-  , getImageMemoryRequirements2
-  , getImageSparseMemoryRequirements2
-  )
 
 
 import Graphics.Vulkan.C.Core10.Core
@@ -79,6 +74,9 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2
   , VkImageSparseMemoryRequirementsInfo2(..)
   , VkMemoryRequirements2(..)
   , VkSparseImageMemoryRequirements2(..)
+  , vkGetBufferMemoryRequirements2
+  , vkGetImageMemoryRequirements2
+  , vkGetImageSparseMemoryRequirements2
   , pattern VK_STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2
   , pattern VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2
   , pattern VK_STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2
@@ -107,118 +105,382 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   )
 
 
--- No documentation found for TopLevel "BufferMemoryRequirementsInfo2"
+
+-- | VkBufferMemoryRequirementsInfo2 - (None)
+--
+-- = Description
+--
+-- Unresolved directive in VkBufferMemoryRequirementsInfo2.txt -
+-- include::{generated}\/validity\/structs\/VkBufferMemoryRequirementsInfo2.txt[]
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.vkGetBufferMemoryRequirements2'
 data BufferMemoryRequirementsInfo2 = BufferMemoryRequirementsInfo2
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "BufferMemoryRequirementsInfo2" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "BufferMemoryRequirementsInfo2" "buffer"
-  vkBuffer :: Buffer
+  buffer :: Buffer
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkBufferMemoryRequirementsInfo2' and
+-- marshal a 'BufferMemoryRequirementsInfo2' into it. The 'VkBufferMemoryRequirementsInfo2' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructBufferMemoryRequirementsInfo2 :: BufferMemoryRequirementsInfo2 -> (VkBufferMemoryRequirementsInfo2 -> IO a) -> IO a
-withCStructBufferMemoryRequirementsInfo2 from cont = maybeWith withSomeVkStruct (vkPNext (from :: BufferMemoryRequirementsInfo2)) (\pPNext -> cont (VkBufferMemoryRequirementsInfo2 VK_STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2 pPNext (vkBuffer (from :: BufferMemoryRequirementsInfo2))))
+withCStructBufferMemoryRequirementsInfo2 marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: BufferMemoryRequirementsInfo2)) (\pPNext -> cont (VkBufferMemoryRequirementsInfo2 VK_STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2 pPNext (buffer (marshalled :: BufferMemoryRequirementsInfo2))))
+
+-- | A function to read a 'VkBufferMemoryRequirementsInfo2' and all additional
+-- structures in the pointer chain into a 'BufferMemoryRequirementsInfo2'.
 fromCStructBufferMemoryRequirementsInfo2 :: VkBufferMemoryRequirementsInfo2 -> IO BufferMemoryRequirementsInfo2
 fromCStructBufferMemoryRequirementsInfo2 c = BufferMemoryRequirementsInfo2 <$> -- Univalued Member elided
                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkBufferMemoryRequirementsInfo2)))
                                                                            <*> pure (vkBuffer (c :: VkBufferMemoryRequirementsInfo2))
+
 instance Zero BufferMemoryRequirementsInfo2 where
   zero = BufferMemoryRequirementsInfo2 Nothing
                                        zero
--- No documentation found for TopLevel "ImageMemoryRequirementsInfo2"
+
+
+
+-- | VkImageMemoryRequirementsInfo2 - (None)
+--
+-- == Valid Usage
+--
+-- -   If @image@ was created with a /multi-planar/ format and the
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_CREATE_DISJOINT_BIT'
+--     flag, there /must/ be a
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkImagePlaneMemoryRequirementsInfo'
+--     in the @pNext@ chain of the
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkImageMemoryRequirementsInfo2'
+--     structure
+--
+-- -   If @image@ was created with
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_CREATE_DISJOINT_BIT'
+--     and with
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
+--     then there /must/ be a
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkImagePlaneMemoryRequirementsInfo'
+--     in the @pNext@ chain of the
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkImageMemoryRequirementsInfo2'
+--     structure
+--
+-- -   If @image@ was not created with the
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_CREATE_DISJOINT_BIT'
+--     flag, there /must/ not be a
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkImagePlaneMemoryRequirementsInfo'
+--     in the @pNext@ chain of the
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkImageMemoryRequirementsInfo2'
+--     structure
+--
+-- -   If @image@ was created with a single-plane format and with any
+--     @tiling@ other than
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
+--     then there /must/ not be a
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkImagePlaneMemoryRequirementsInfo'
+--     in the @pNext@ chain of the
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkImageMemoryRequirementsInfo2'
+--     structure
+--
+-- -   If @image@ was created with the
+--     'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
+--     external memory handle type, then @image@ /must/ be bound to memory.
+--
+-- Unresolved directive in VkImageMemoryRequirementsInfo2.txt -
+-- include::{generated}\/validity\/structs\/VkImageMemoryRequirementsInfo2.txt[]
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.vkGetImageMemoryRequirements2'
 data ImageMemoryRequirementsInfo2 = ImageMemoryRequirementsInfo2
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "ImageMemoryRequirementsInfo2" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "ImageMemoryRequirementsInfo2" "image"
-  vkImage :: Image
+  image :: Image
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkImageMemoryRequirementsInfo2' and
+-- marshal a 'ImageMemoryRequirementsInfo2' into it. The 'VkImageMemoryRequirementsInfo2' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructImageMemoryRequirementsInfo2 :: ImageMemoryRequirementsInfo2 -> (VkImageMemoryRequirementsInfo2 -> IO a) -> IO a
-withCStructImageMemoryRequirementsInfo2 from cont = maybeWith withSomeVkStruct (vkPNext (from :: ImageMemoryRequirementsInfo2)) (\pPNext -> cont (VkImageMemoryRequirementsInfo2 VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2 pPNext (vkImage (from :: ImageMemoryRequirementsInfo2))))
+withCStructImageMemoryRequirementsInfo2 marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: ImageMemoryRequirementsInfo2)) (\pPNext -> cont (VkImageMemoryRequirementsInfo2 VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2 pPNext (image (marshalled :: ImageMemoryRequirementsInfo2))))
+
+-- | A function to read a 'VkImageMemoryRequirementsInfo2' and all additional
+-- structures in the pointer chain into a 'ImageMemoryRequirementsInfo2'.
 fromCStructImageMemoryRequirementsInfo2 :: VkImageMemoryRequirementsInfo2 -> IO ImageMemoryRequirementsInfo2
 fromCStructImageMemoryRequirementsInfo2 c = ImageMemoryRequirementsInfo2 <$> -- Univalued Member elided
                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkImageMemoryRequirementsInfo2)))
                                                                          <*> pure (vkImage (c :: VkImageMemoryRequirementsInfo2))
+
 instance Zero ImageMemoryRequirementsInfo2 where
   zero = ImageMemoryRequirementsInfo2 Nothing
                                       zero
--- No documentation found for TopLevel "ImageSparseMemoryRequirementsInfo2"
+
+
+
+-- | VkImageSparseMemoryRequirementsInfo2 - (None)
+--
+-- = Description
+--
+-- Unresolved directive in VkImageSparseMemoryRequirementsInfo2.txt -
+-- include::{generated}\/validity\/structs\/VkImageSparseMemoryRequirementsInfo2.txt[]
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.vkGetImageSparseMemoryRequirements2'
 data ImageSparseMemoryRequirementsInfo2 = ImageSparseMemoryRequirementsInfo2
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "ImageSparseMemoryRequirementsInfo2" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "ImageSparseMemoryRequirementsInfo2" "image"
-  vkImage :: Image
+  image :: Image
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkImageSparseMemoryRequirementsInfo2' and
+-- marshal a 'ImageSparseMemoryRequirementsInfo2' into it. The 'VkImageSparseMemoryRequirementsInfo2' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructImageSparseMemoryRequirementsInfo2 :: ImageSparseMemoryRequirementsInfo2 -> (VkImageSparseMemoryRequirementsInfo2 -> IO a) -> IO a
-withCStructImageSparseMemoryRequirementsInfo2 from cont = maybeWith withSomeVkStruct (vkPNext (from :: ImageSparseMemoryRequirementsInfo2)) (\pPNext -> cont (VkImageSparseMemoryRequirementsInfo2 VK_STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2 pPNext (vkImage (from :: ImageSparseMemoryRequirementsInfo2))))
+withCStructImageSparseMemoryRequirementsInfo2 marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: ImageSparseMemoryRequirementsInfo2)) (\pPNext -> cont (VkImageSparseMemoryRequirementsInfo2 VK_STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2 pPNext (image (marshalled :: ImageSparseMemoryRequirementsInfo2))))
+
+-- | A function to read a 'VkImageSparseMemoryRequirementsInfo2' and all additional
+-- structures in the pointer chain into a 'ImageSparseMemoryRequirementsInfo2'.
 fromCStructImageSparseMemoryRequirementsInfo2 :: VkImageSparseMemoryRequirementsInfo2 -> IO ImageSparseMemoryRequirementsInfo2
 fromCStructImageSparseMemoryRequirementsInfo2 c = ImageSparseMemoryRequirementsInfo2 <$> -- Univalued Member elided
                                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkImageSparseMemoryRequirementsInfo2)))
                                                                                      <*> pure (vkImage (c :: VkImageSparseMemoryRequirementsInfo2))
+
 instance Zero ImageSparseMemoryRequirementsInfo2 where
   zero = ImageSparseMemoryRequirementsInfo2 Nothing
                                             zero
--- No documentation found for TopLevel "MemoryRequirements2"
+
+
+
+-- | VkMemoryRequirements2 - Structure specifying memory requirements
+--
+-- = Description
+--
+-- Unresolved directive in VkMemoryRequirements2.txt -
+-- include::{generated}\/validity\/structs\/VkMemoryRequirements2.txt[]
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.vkGetBufferMemoryRequirements2',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.vkGetImageMemoryRequirements2'
 data MemoryRequirements2 = MemoryRequirements2
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "MemoryRequirements2" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "MemoryRequirements2" "memoryRequirements"
-  vkMemoryRequirements :: MemoryRequirements
+  memoryRequirements :: MemoryRequirements
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkMemoryRequirements2' and
+-- marshal a 'MemoryRequirements2' into it. The 'VkMemoryRequirements2' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructMemoryRequirements2 :: MemoryRequirements2 -> (VkMemoryRequirements2 -> IO a) -> IO a
-withCStructMemoryRequirements2 from cont = withCStructMemoryRequirements (vkMemoryRequirements (from :: MemoryRequirements2)) (\memoryRequirements -> maybeWith withSomeVkStruct (vkPNext (from :: MemoryRequirements2)) (\pPNext -> cont (VkMemoryRequirements2 VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2 pPNext memoryRequirements)))
+withCStructMemoryRequirements2 marshalled cont = withCStructMemoryRequirements (memoryRequirements (marshalled :: MemoryRequirements2)) (\memoryRequirements'' -> maybeWith withSomeVkStruct (next (marshalled :: MemoryRequirements2)) (\pPNext -> cont (VkMemoryRequirements2 VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2 pPNext memoryRequirements'')))
+
+-- | A function to read a 'VkMemoryRequirements2' and all additional
+-- structures in the pointer chain into a 'MemoryRequirements2'.
 fromCStructMemoryRequirements2 :: VkMemoryRequirements2 -> IO MemoryRequirements2
 fromCStructMemoryRequirements2 c = MemoryRequirements2 <$> -- Univalued Member elided
                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkMemoryRequirements2)))
                                                        <*> (fromCStructMemoryRequirements (vkMemoryRequirements (c :: VkMemoryRequirements2)))
+
 instance Zero MemoryRequirements2 where
   zero = MemoryRequirements2 Nothing
                              zero
+
+
 type MemoryRequirements2KHR = MemoryRequirements2
 -- TODO: Pattern constructor alias)
--- No documentation found for TopLevel "SparseImageMemoryRequirements2"
+
+
+-- | VkSparseImageMemoryRequirements2 - (None)
+--
+-- = Description
+--
+-- Unresolved directive in VkSparseImageMemoryRequirements2.txt -
+-- include::{generated}\/validity\/structs\/VkSparseImageMemoryRequirements2.txt[]
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageMemoryRequirements',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.vkGetImageSparseMemoryRequirements2'
 data SparseImageMemoryRequirements2 = SparseImageMemoryRequirements2
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "SparseImageMemoryRequirements2" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "SparseImageMemoryRequirements2" "memoryRequirements"
-  vkMemoryRequirements :: SparseImageMemoryRequirements
+  memoryRequirements :: SparseImageMemoryRequirements
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkSparseImageMemoryRequirements2' and
+-- marshal a 'SparseImageMemoryRequirements2' into it. The 'VkSparseImageMemoryRequirements2' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructSparseImageMemoryRequirements2 :: SparseImageMemoryRequirements2 -> (VkSparseImageMemoryRequirements2 -> IO a) -> IO a
-withCStructSparseImageMemoryRequirements2 from cont = withCStructSparseImageMemoryRequirements (vkMemoryRequirements (from :: SparseImageMemoryRequirements2)) (\memoryRequirements -> maybeWith withSomeVkStruct (vkPNext (from :: SparseImageMemoryRequirements2)) (\pPNext -> cont (VkSparseImageMemoryRequirements2 VK_STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2 pPNext memoryRequirements)))
+withCStructSparseImageMemoryRequirements2 marshalled cont = withCStructSparseImageMemoryRequirements (memoryRequirements (marshalled :: SparseImageMemoryRequirements2)) (\memoryRequirements'' -> maybeWith withSomeVkStruct (next (marshalled :: SparseImageMemoryRequirements2)) (\pPNext -> cont (VkSparseImageMemoryRequirements2 VK_STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2 pPNext memoryRequirements'')))
+
+-- | A function to read a 'VkSparseImageMemoryRequirements2' and all additional
+-- structures in the pointer chain into a 'SparseImageMemoryRequirements2'.
 fromCStructSparseImageMemoryRequirements2 :: VkSparseImageMemoryRequirements2 -> IO SparseImageMemoryRequirements2
 fromCStructSparseImageMemoryRequirements2 c = SparseImageMemoryRequirements2 <$> -- Univalued Member elided
                                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSparseImageMemoryRequirements2)))
                                                                              <*> (fromCStructSparseImageMemoryRequirements (vkMemoryRequirements (c :: VkSparseImageMemoryRequirements2)))
+
 instance Zero SparseImageMemoryRequirements2 where
   zero = SparseImageMemoryRequirements2 Nothing
                                         zero
 
--- | Wrapper for 'vkGetBufferMemoryRequirements2'
+
+
+-- | vkGetBufferMemoryRequirements2 - Returns the memory requirements for
+-- specified Vulkan object
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device that owns the buffer.
+--
+-- -   @pInfo@ is a pointer to an instance of the
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkBufferMemoryRequirementsInfo2'
+--     structure containing parameters required for the memory requirements
+--     query.
+--
+-- -   @pMemoryRequirements@ points to an instance of the
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkMemoryRequirements2'
+--     structure in which the memory requirements of the buffer object are
+--     returned.
+--
+-- = Description
+--
+-- Unresolved directive in vkGetBufferMemoryRequirements2.txt -
+-- include::{generated}\/validity\/protos\/vkGetBufferMemoryRequirements2.txt[]
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkBufferMemoryRequirementsInfo2',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkMemoryRequirements2'
 getBufferMemoryRequirements2 :: Device ->  BufferMemoryRequirementsInfo2 ->  IO (MemoryRequirements2)
-getBufferMemoryRequirements2 = \(Device device commandTable) -> \info -> alloca (\pMemoryRequirements -> (\a -> withCStructBufferMemoryRequirementsInfo2 a . flip with) info (\pInfo -> Graphics.Vulkan.C.Dynamic.getBufferMemoryRequirements2 commandTable device pInfo pMemoryRequirements *> ((fromCStructMemoryRequirements2 <=< peek) pMemoryRequirements)))
+getBufferMemoryRequirements2 = \(Device device' commandTable) -> \info' -> alloca (\pMemoryRequirements' -> (\marshalled -> withCStructBufferMemoryRequirementsInfo2 marshalled . flip with) info' (\pInfo' -> vkGetBufferMemoryRequirements2 commandTable device' pInfo' pMemoryRequirements' *> ((fromCStructMemoryRequirements2 <=< peek) pMemoryRequirements')))
 
--- | Wrapper for 'vkGetImageMemoryRequirements2'
+
+-- | vkGetImageMemoryRequirements2 - Returns the memory requirements for
+-- specified Vulkan object
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device that owns the image.
+--
+-- -   @pInfo@ is a pointer to an instance of the
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkImageMemoryRequirementsInfo2'
+--     structure containing parameters required for the memory requirements
+--     query.
+--
+-- -   @pMemoryRequirements@ points to an instance of the
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkMemoryRequirements2'
+--     structure in which the memory requirements of the image object are
+--     returned.
+--
+-- = Description
+--
+-- Unresolved directive in vkGetImageMemoryRequirements2.txt -
+-- include::{generated}\/validity\/protos\/vkGetImageMemoryRequirements2.txt[]
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkImageMemoryRequirementsInfo2',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkMemoryRequirements2'
 getImageMemoryRequirements2 :: Device ->  ImageMemoryRequirementsInfo2 ->  IO (MemoryRequirements2)
-getImageMemoryRequirements2 = \(Device device commandTable) -> \info -> alloca (\pMemoryRequirements -> (\a -> withCStructImageMemoryRequirementsInfo2 a . flip with) info (\pInfo -> Graphics.Vulkan.C.Dynamic.getImageMemoryRequirements2 commandTable device pInfo pMemoryRequirements *> ((fromCStructMemoryRequirements2 <=< peek) pMemoryRequirements)))
+getImageMemoryRequirements2 = \(Device device' commandTable) -> \info' -> alloca (\pMemoryRequirements' -> (\marshalled -> withCStructImageMemoryRequirementsInfo2 marshalled . flip with) info' (\pInfo' -> vkGetImageMemoryRequirements2 commandTable device' pInfo' pMemoryRequirements' *> ((fromCStructMemoryRequirements2 <=< peek) pMemoryRequirements')))
 
--- | Wrapper for 'vkGetImageSparseMemoryRequirements2'
+
+-- | vkGetImageSparseMemoryRequirements2 - Query the memory requirements for
+-- a sparse image
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device that owns the image.
+--
+-- -   @pInfo@ is a pointer to an instance of the
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkImageSparseMemoryRequirementsInfo2'
+--     structure containing parameters required for the memory requirements
+--     query.
+--
+-- -   @pSparseMemoryRequirementCount@ is a pointer to an integer related
+--     to the number of sparse memory requirements available or queried, as
+--     described below.
+--
+-- -   @pSparseMemoryRequirements@ is either @NULL@ or a pointer to an
+--     array of
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkSparseImageMemoryRequirements2'
+--     structures.
+--
+-- = Description
+--
+-- Unresolved directive in vkGetImageSparseMemoryRequirements2.txt -
+-- include::{generated}\/validity\/protos\/vkGetImageSparseMemoryRequirements2.txt[]
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkImageSparseMemoryRequirementsInfo2',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkSparseImageMemoryRequirements2'
 getNumImageSparseMemoryRequirements2 :: Device ->  ImageSparseMemoryRequirementsInfo2 ->  IO (Word32)
-getNumImageSparseMemoryRequirements2 = \(Device device commandTable) -> \info -> alloca (\pSparseMemoryRequirementCount -> (\a -> withCStructImageSparseMemoryRequirementsInfo2 a . flip with) info (\pInfo -> Graphics.Vulkan.C.Dynamic.getImageSparseMemoryRequirements2 commandTable device pInfo pSparseMemoryRequirementCount nullPtr *> (peek pSparseMemoryRequirementCount)))
+getNumImageSparseMemoryRequirements2 = \(Device device' commandTable) -> \info' -> alloca (\pSparseMemoryRequirementCount' -> (\marshalled -> withCStructImageSparseMemoryRequirementsInfo2 marshalled . flip with) info' (\pInfo' -> vkGetImageSparseMemoryRequirements2 commandTable device' pInfo' pSparseMemoryRequirementCount' nullPtr *> (peek pSparseMemoryRequirementCount')))
 
--- | Wrapper for 'vkGetImageSparseMemoryRequirements2'
+-- | vkGetImageSparseMemoryRequirements2 - Query the memory requirements for
+-- a sparse image
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device that owns the image.
+--
+-- -   @pInfo@ is a pointer to an instance of the
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkImageSparseMemoryRequirementsInfo2'
+--     structure containing parameters required for the memory requirements
+--     query.
+--
+-- -   @pSparseMemoryRequirementCount@ is a pointer to an integer related
+--     to the number of sparse memory requirements available or queried, as
+--     described below.
+--
+-- -   @pSparseMemoryRequirements@ is either @NULL@ or a pointer to an
+--     array of
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkSparseImageMemoryRequirements2'
+--     structures.
+--
+-- = Description
+--
+-- Unresolved directive in vkGetImageSparseMemoryRequirements2.txt -
+-- include::{generated}\/validity\/protos\/vkGetImageSparseMemoryRequirements2.txt[]
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkImageSparseMemoryRequirementsInfo2',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkSparseImageMemoryRequirements2'
 getImageSparseMemoryRequirements2 :: Device ->  ImageSparseMemoryRequirementsInfo2 ->  Word32 ->  IO (Vector SparseImageMemoryRequirements2)
-getImageSparseMemoryRequirements2 = \(Device device commandTable) -> \info -> \sparseMemoryRequirementCount -> allocaArray (fromIntegral sparseMemoryRequirementCount) (\pSparseMemoryRequirements -> with sparseMemoryRequirementCount (\pSparseMemoryRequirementCount -> (\a -> withCStructImageSparseMemoryRequirementsInfo2 a . flip with) info (\pInfo -> Graphics.Vulkan.C.Dynamic.getImageSparseMemoryRequirements2 commandTable device pInfo pSparseMemoryRequirementCount pSparseMemoryRequirements *> ((flip Data.Vector.generateM ((\p -> fromCStructSparseImageMemoryRequirements2 <=< peekElemOff p) pSparseMemoryRequirements) =<< (fromIntegral <$> (peek pSparseMemoryRequirementCount)))))))
--- | Call 'getNumImageSparseMemoryRequirements2' to get the number of return values, then use that
--- number to call 'getImageSparseMemoryRequirements2' to get all the values.
+getImageSparseMemoryRequirements2 = \(Device device' commandTable) -> \info' -> \sparseMemoryRequirementCount' -> allocaArray (fromIntegral sparseMemoryRequirementCount') (\pSparseMemoryRequirements' -> with sparseMemoryRequirementCount' (\pSparseMemoryRequirementCount' -> (\marshalled -> withCStructImageSparseMemoryRequirementsInfo2 marshalled . flip with) info' (\pInfo' -> vkGetImageSparseMemoryRequirements2 commandTable device' pInfo' pSparseMemoryRequirementCount' pSparseMemoryRequirements' *> ((flip Data.Vector.generateM ((\p -> fromCStructSparseImageMemoryRequirements2 <=< peekElemOff p) pSparseMemoryRequirements') =<< (fromIntegral <$> (peek pSparseMemoryRequirementCount')))))))
+-- | Returns all the values available from 'getImageSparseMemoryRequirements2'.
 getAllImageSparseMemoryRequirements2 :: Device ->  ImageSparseMemoryRequirementsInfo2 ->  IO (Vector SparseImageMemoryRequirements2)
-getAllImageSparseMemoryRequirements2 device pInfo =
-  getNumImageSparseMemoryRequirements2 device pInfo
-    >>= \num -> getImageSparseMemoryRequirements2 device pInfo num
+getAllImageSparseMemoryRequirements2 device' pInfo' =
+  getNumImageSparseMemoryRequirements2 device' pInfo'
+    >>= \num -> getImageSparseMemoryRequirements2 device' pInfo' num
 

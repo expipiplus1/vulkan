@@ -42,30 +42,32 @@ import Graphics.Vulkan.C.Core10.Pass
 -- = Members
 --
 -- The members of the
--- @VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX@ structure
+-- 'VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX' structure
 -- describe the following implementation-dependent limits:
 --
 -- = Description
 --
--- If the @VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX@
+-- If the 'VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX'
 -- structure is included in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- == Valid Usage (Implicit)
+-- Unresolved directive in
+-- VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX = VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX
-  { -- | @sType@ /must/ be
-  -- @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_ATTRIBUTES_PROPERTIES_NVX@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @perViewPositionAllComponents@ is @VK_TRUE@ if the implementation
-  -- supports per-view position values that differ in components other than
-  -- the X component.
+  , -- | @perViewPositionAllComponents@ is
+  -- 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' if the implementation supports
+  -- per-view position values that differ in components other than the X
+  -- component.
   vkPerViewPositionAllComponents :: VkBool32
   }
   deriving (Eq, Show)
@@ -81,19 +83,23 @@ instance Storable VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX where
                 *> poke (ptr `plusPtr` 16) (vkPerViewPositionAllComponents (poked :: VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX))
 
 instance Zero VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX where
-  zero = VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX zero
+  zero = VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_ATTRIBUTES_PROPERTIES_NVX
                                                                  zero
                                                                  zero
+
 -- No documentation found for TopLevel "VK_NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_EXTENSION_NAME"
 pattern VK_NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_EXTENSION_NAME = "VK_NVX_multiview_per_view_attributes"
+
 -- No documentation found for TopLevel "VK_NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_SPEC_VERSION"
 pattern VK_NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_SPEC_VERSION :: Integral a => a
 pattern VK_NVX_MULTIVIEW_PER_VIEW_ATTRIBUTES_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_ATTRIBUTES_PROPERTIES_NVX"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_ATTRIBUTES_PROPERTIES_NVX :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_ATTRIBUTES_PROPERTIES_NVX = VkStructureType 1000097000
--- | @VK_SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX@ specifies that
+
+-- | 'VK_SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX' specifies that
 -- shaders compiled for this subpass write the attributes for all views in
 -- a single invocation of each vertex processing stage. All pipelines
 -- compiled against a subpass that includes this bit /must/ write per-view
@@ -101,7 +107,8 @@ pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_ATTRIBUTES_PROPERTI
 -- non-per-view (e.g. @Position@) outputs.
 pattern VK_SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX :: VkSubpassDescriptionFlagBits
 pattern VK_SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX = VkSubpassDescriptionFlagBits 0x00000001
--- | @VK_SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX@ specifies that
+
+-- | 'VK_SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX' specifies that
 -- shaders compiled for this subpass use per-view positions which only
 -- differ in value in the x component. Per-view viewport mask /can/ also be
 -- used.

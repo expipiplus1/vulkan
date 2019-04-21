@@ -37,12 +37,13 @@ import Graphics.Vulkan.C.Core10.Core
 -- No documentation found for TopLevel "GgpFrameToken"
 type GgpFrameToken = Word32
   
+
 -- | VkPresentFrameTokenGGP - The Google Games Platform frame token
 --
 -- == Valid Usage
 --
 -- Unresolved directive in VkPresentFrameTokenGGP.txt -
--- include::..\/validity\/structs\/VkPresentFrameTokenGGP.txt[]
+-- include::{generated}\/validity\/structs\/VkPresentFrameTokenGGP.txt[]
 --
 -- = See Also
 --
@@ -52,7 +53,7 @@ data VkPresentFrameTokenGGP = VkPresentFrameTokenGGP
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @frameToken@ /must/ be a valid @GgpFrameToken@
+  , -- | @frameToken@ /must/ be a valid 'GgpFrameToken'
   vkFrameToken :: GgpFrameToken
   }
   deriving (Eq, Show)
@@ -68,15 +69,18 @@ instance Storable VkPresentFrameTokenGGP where
                 *> poke (ptr `plusPtr` 16) (vkFrameToken (poked :: VkPresentFrameTokenGGP))
 
 instance Zero VkPresentFrameTokenGGP where
-  zero = VkPresentFrameTokenGGP zero
+  zero = VkPresentFrameTokenGGP VK_STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP
                                 zero
                                 zero
+
 -- No documentation found for TopLevel "VK_GGP_FRAME_TOKEN_EXTENSION_NAME"
 pattern VK_GGP_FRAME_TOKEN_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_GGP_FRAME_TOKEN_EXTENSION_NAME = "VK_GGP_frame_token"
+
 -- No documentation found for TopLevel "VK_GGP_FRAME_TOKEN_SPEC_VERSION"
 pattern VK_GGP_FRAME_TOKEN_SPEC_VERSION :: Integral a => a
 pattern VK_GGP_FRAME_TOKEN_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP"
 pattern VK_STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP = VkStructureType 1000191000

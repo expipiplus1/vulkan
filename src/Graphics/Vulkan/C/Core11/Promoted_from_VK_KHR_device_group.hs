@@ -21,21 +21,15 @@ module Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group
   , pattern VK_PEER_MEMORY_FEATURE_GENERIC_SRC_BIT
   , pattern VK_PEER_MEMORY_FEATURE_GENERIC_DST_BIT
   , VkPeerMemoryFeatureFlags
-#if defined(EXPOSE_CORE11_COMMANDS)
-  , vkCmdDispatchBase
-#endif
   , FN_vkCmdDispatchBase
   , PFN_vkCmdDispatchBase
-#if defined(EXPOSE_CORE11_COMMANDS)
-  , vkCmdSetDeviceMask
-#endif
+  , vkCmdDispatchBase
   , FN_vkCmdSetDeviceMask
   , PFN_vkCmdSetDeviceMask
-#if defined(EXPOSE_CORE11_COMMANDS)
-  , vkGetDeviceGroupPeerMemoryFeatures
-#endif
+  , vkCmdSetDeviceMask
   , FN_vkGetDeviceGroupPeerMemoryFeatures
   , PFN_vkGetDeviceGroupPeerMemoryFeatures
+  , vkGetDeviceGroupPeerMemoryFeatures
   , pattern VK_DEPENDENCY_DEVICE_GROUP_BIT
   , pattern VK_PIPELINE_CREATE_DISPATCH_BASE
   , pattern VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT
@@ -98,6 +92,9 @@ import Graphics.Vulkan.C.Core10.Pipeline
 import Graphics.Vulkan.C.Core10.Queue
   ( VkCommandBuffer
   )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
+  )
 import Graphics.Vulkan.NamedType
   ( (:::)
   )
@@ -124,9 +121,8 @@ import Graphics.Vulkan.NamedType
 -- -   Each memory allocation bound in this batch /must/ have allocated an
 --     instance for @memoryDeviceIndex@.
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO@
+-- Unresolved directive in VkDeviceGroupBindSparseInfo.txt -
+-- include::{generated}\/validity\/structs\/VkDeviceGroupBindSparseInfo.txt[]
 --
 -- = See Also
 --
@@ -158,10 +154,11 @@ instance Storable VkDeviceGroupBindSparseInfo where
                 *> poke (ptr `plusPtr` 20) (vkMemoryDeviceIndex (poked :: VkDeviceGroupBindSparseInfo))
 
 instance Zero VkDeviceGroupBindSparseInfo where
-  zero = VkDeviceGroupBindSparseInfo zero
+  zero = VkDeviceGroupBindSparseInfo VK_STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO
                                      zero
                                      zero
                                      zero
+
 -- | VkDeviceGroupCommandBufferBeginInfo - Set the initial device mask for a
 -- command buffer
 --
@@ -174,14 +171,16 @@ instance Zero VkDeviceGroupBindSparseInfo where
 -- buffer’s device mask is set to include all physical devices in the
 -- logical device when the command buffer begins recording.
 --
--- == Valid Usage (Implicit)
+-- == Valid Usage
+--
+-- Unresolved directive in VkDeviceGroupCommandBufferBeginInfo.txt -
+-- include::{generated}\/validity\/structs\/VkDeviceGroupCommandBufferBeginInfo.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkDeviceGroupCommandBufferBeginInfo = VkDeviceGroupCommandBufferBeginInfo
-  { -- | @sType@ /must/ be
-  -- @VK_STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -201,9 +200,10 @@ instance Storable VkDeviceGroupCommandBufferBeginInfo where
                 *> poke (ptr `plusPtr` 16) (vkDeviceMask (poked :: VkDeviceGroupCommandBufferBeginInfo))
 
 instance Zero VkDeviceGroupCommandBufferBeginInfo where
-  zero = VkDeviceGroupCommandBufferBeginInfo zero
+  zero = VkDeviceGroupCommandBufferBeginInfo VK_STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO
                                              zero
                                              zero
+
 -- | VkDeviceGroupRenderPassBeginInfo - Set the initial device mask and
 -- render areas for a render pass instance
 --
@@ -226,8 +226,8 @@ instance Zero VkDeviceGroupCommandBufferBeginInfo where
 -- areas serve the same purpose as
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkRenderPassBeginInfo'::@renderArea@,
 -- including controlling the region of attachments that are cleared by
--- @VK_ATTACHMENT_LOAD_OP_CLEAR@ and that are resolved into resolve
--- attachments.
+-- 'Graphics.Vulkan.C.Core10.Pass.VK_ATTACHMENT_LOAD_OP_CLEAR' and that are
+-- resolved into resolve attachments.
 --
 -- If this structure is not present, the render pass instance’s device mask
 -- is the value of 'VkDeviceGroupCommandBufferBeginInfo'::@deviceMask@. If
@@ -237,24 +237,8 @@ instance Zero VkDeviceGroupCommandBufferBeginInfo where
 --
 -- == Valid Usage
 --
--- -   @deviceMask@ /must/ be a valid device mask value
---
--- -   @deviceMask@ /must/ not be zero
---
--- -   @deviceMask@ /must/ be a subset of the command buffer’s initial
---     device mask
---
--- -   @deviceRenderAreaCount@ /must/ either be zero or equal to the number
---     of physical devices in the logical device.
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO@
---
--- -   If @deviceRenderAreaCount@ is not @0@, @pDeviceRenderAreas@ /must/
---     be a valid pointer to an array of @deviceRenderAreaCount@ @VkRect2D@
---     structures
+-- Unresolved directive in VkDeviceGroupRenderPassBeginInfo.txt -
+-- include::{generated}\/validity\/structs\/VkDeviceGroupRenderPassBeginInfo.txt[]
 --
 -- = See Also
 --
@@ -265,10 +249,11 @@ data VkDeviceGroupRenderPassBeginInfo = VkDeviceGroupRenderPassBeginInfo
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @deviceMask@ is the device mask for the render pass instance.
+  , -- | @deviceMask@ /must/ be a subset of the command buffer’s initial device
+  -- mask
   vkDeviceMask :: Word32
-  , -- | @deviceRenderAreaCount@ is the number of elements in the
-  -- @pDeviceRenderAreas@ array.
+  , -- | @deviceRenderAreaCount@ /must/ either be zero or equal to the number of
+  -- physical devices in the logical device.
   vkDeviceRenderAreaCount :: Word32
   , -- | @pDeviceRenderAreas@ is an array of structures of type
   -- 'Graphics.Vulkan.C.Core10.Pipeline.VkRect2D' defining the render area
@@ -292,11 +277,12 @@ instance Storable VkDeviceGroupRenderPassBeginInfo where
                 *> poke (ptr `plusPtr` 24) (vkPDeviceRenderAreas (poked :: VkDeviceGroupRenderPassBeginInfo))
 
 instance Zero VkDeviceGroupRenderPassBeginInfo where
-  zero = VkDeviceGroupRenderPassBeginInfo zero
+  zero = VkDeviceGroupRenderPassBeginInfo VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO
                                           zero
                                           zero
                                           zero
                                           zero
+
 -- | VkDeviceGroupSubmitInfo - Structure indicating which physical devices
 -- execute semaphore operations and command buffers
 --
@@ -322,21 +308,8 @@ instance Zero VkDeviceGroupRenderPassBeginInfo where
 -- -   All elements of @pCommandBufferDeviceMasks@ /must/ be valid device
 --     masks
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO@
---
--- -   If @waitSemaphoreCount@ is not @0@, @pWaitSemaphoreDeviceIndices@
---     /must/ be a valid pointer to an array of @waitSemaphoreCount@
---     @uint32_t@ values
---
--- -   If @commandBufferCount@ is not @0@, @pCommandBufferDeviceMasks@
---     /must/ be a valid pointer to an array of @commandBufferCount@
---     @uint32_t@ values
---
--- -   If @signalSemaphoreCount@ is not @0@,
---     @pSignalSemaphoreDeviceIndices@ /must/ be a valid pointer to an
---     array of @signalSemaphoreCount@ @uint32_t@ values
+-- Unresolved directive in VkDeviceGroupSubmitInfo.txt -
+-- include::{generated}\/validity\/structs\/VkDeviceGroupSubmitInfo.txt[]
 --
 -- = See Also
 --
@@ -395,7 +368,7 @@ instance Storable VkDeviceGroupSubmitInfo where
                 *> poke (ptr `plusPtr` 56) (vkPSignalSemaphoreDeviceIndices (poked :: VkDeviceGroupSubmitInfo))
 
 instance Zero VkDeviceGroupSubmitInfo where
-  zero = VkDeviceGroupSubmitInfo zero
+  zero = VkDeviceGroupSubmitInfo VK_STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO
                                  zero
                                  zero
                                  zero
@@ -403,6 +376,7 @@ instance Zero VkDeviceGroupSubmitInfo where
                                  zero
                                  zero
                                  zero
+
 -- ** VkMemoryAllocateFlagBits
 
 -- | VkMemoryAllocateFlagBits - Bitmask specifying flags for a device memory
@@ -428,41 +402,46 @@ instance Read VkMemoryAllocateFlagBits where
                         )
                     )
 
--- | @VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT@ specifies that memory will be
+-- | 'VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT' specifies that memory will be
 -- allocated for the devices in 'VkMemoryAllocateFlagsInfo'::@deviceMask@.
 pattern VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT :: VkMemoryAllocateFlagBits
 pattern VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT = VkMemoryAllocateFlagBits 0x00000001
+
 -- | VkMemoryAllocateFlags - Bitmask of VkMemoryAllocateFlagBits
 --
 -- = Description
 --
--- @VkMemoryAllocateFlags@ is a bitmask type for setting a mask of zero or
+-- 'VkMemoryAllocateFlags' is a bitmask type for setting a mask of zero or
 -- more 'VkMemoryAllocateFlagBits'.
 --
 -- = See Also
 --
 -- 'VkMemoryAllocateFlagBits', 'VkMemoryAllocateFlagsInfo'
 type VkMemoryAllocateFlags = VkMemoryAllocateFlagBits
+
 -- | VkMemoryAllocateFlagsInfo - Structure controlling how many instances of
 -- memory will be allocated
 --
 -- = Description
 --
--- If @VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT@ is not set, the number of
+-- If 'VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT' is not set, the number of
 -- instances allocated depends on whether
--- @VK_MEMORY_HEAP_MULTI_INSTANCE_BIT@ is set in the memory heap. If
--- @VK_MEMORY_HEAP_MULTI_INSTANCE_BIT@ is set, then memory is allocated for
--- every physical device in the logical device (as if @deviceMask@ has bits
--- set for all device indices). If @VK_MEMORY_HEAP_MULTI_INSTANCE_BIT@ is
--- not set, then a single instance of memory is allocated (as if
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation.VK_MEMORY_HEAP_MULTI_INSTANCE_BIT'
+-- is set in the memory heap. If
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation.VK_MEMORY_HEAP_MULTI_INSTANCE_BIT'
+-- is set, then memory is allocated for every physical device in the
+-- logical device (as if @deviceMask@ has bits set for all device indices).
+-- If
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation.VK_MEMORY_HEAP_MULTI_INSTANCE_BIT'
+-- is not set, then a single instance of memory is allocated (as if
 -- @deviceMask@ is set to one).
 --
 -- On some implementations, allocations from a multi-instance heap /may/
 -- consume memory on all physical devices even if the @deviceMask@ excludes
 -- some devices. If
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation.VkPhysicalDeviceGroupProperties'::@subsetAllocation@
--- is @VK_TRUE@, then memory is only consumed for the devices in the device
--- mask.
+-- is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE', then memory is only consumed
+-- for the devices in the device mask.
 --
 -- __Note__
 --
@@ -472,18 +451,14 @@ type VkMemoryAllocateFlags = VkMemoryAllocateFlagBits
 --
 -- == Valid Usage
 --
--- -   If @VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT@ is set, @deviceMask@ /must/
+-- -   If 'VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT' is set, @deviceMask@ /must/
 --     be a valid device mask.
 --
--- -   If @VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT@ is set, @deviceMask@ /must/
+-- -   If 'VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT' is set, @deviceMask@ /must/
 --     not be zero
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO@
---
--- -   @flags@ /must/ be a valid combination of 'VkMemoryAllocateFlagBits'
---     values
+-- Unresolved directive in VkMemoryAllocateFlagsInfo.txt -
+-- include::{generated}\/validity\/structs\/VkMemoryAllocateFlagsInfo.txt[]
 --
 -- = See Also
 --
@@ -498,7 +473,7 @@ data VkMemoryAllocateFlagsInfo = VkMemoryAllocateFlagsInfo
   vkFlags :: VkMemoryAllocateFlags
   , -- | @deviceMask@ is a mask of physical devices in the logical device,
   -- indicating that memory /must/ be allocated on each device in the mask,
-  -- if @VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT@ is set in @flags@.
+  -- if 'VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT' is set in @flags@.
   vkDeviceMask :: Word32
   }
   deriving (Eq, Show)
@@ -516,10 +491,11 @@ instance Storable VkMemoryAllocateFlagsInfo where
                 *> poke (ptr `plusPtr` 20) (vkDeviceMask (poked :: VkMemoryAllocateFlagsInfo))
 
 instance Zero VkMemoryAllocateFlagsInfo where
-  zero = VkMemoryAllocateFlagsInfo zero
+  zero = VkMemoryAllocateFlagsInfo VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO
                                    zero
                                    zero
                                    zero
+
 -- ** VkPeerMemoryFeatureFlagBits
 
 -- | VkPeerMemoryFeatureFlagBits - Bitmask specifying supported peer memory
@@ -531,9 +507,9 @@ instance Zero VkMemoryAllocateFlagsInfo where
 --
 -- The peer memory features of a memory heap also apply to any accesses
 -- that /may/ be performed during
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transitions>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transitions>.
 --
--- @VK_PEER_MEMORY_FEATURE_COPY_DST_BIT@ /must/ be supported for all host
+-- 'VK_PEER_MEMORY_FEATURE_COPY_DST_BIT' /must/ be supported for all host
 -- local heaps and for at least one device local heap.
 --
 -- If a device does not support a peer memory feature, it is still valid to
@@ -570,7 +546,7 @@ instance Read VkPeerMemoryFeatureFlagBits where
                         )
                     )
 
--- | @VK_PEER_MEMORY_FEATURE_COPY_SRC_BIT@ specifies that the memory /can/ be
+-- | 'VK_PEER_MEMORY_FEATURE_COPY_SRC_BIT' specifies that the memory /can/ be
 -- accessed as the source of a
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdCopyBuffer',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdCopyImage',
@@ -581,7 +557,7 @@ instance Read VkPeerMemoryFeatureFlagBits where
 pattern VK_PEER_MEMORY_FEATURE_COPY_SRC_BIT :: VkPeerMemoryFeatureFlagBits
 pattern VK_PEER_MEMORY_FEATURE_COPY_SRC_BIT = VkPeerMemoryFeatureFlagBits 0x00000001
 
--- | @VK_PEER_MEMORY_FEATURE_COPY_DST_BIT@ specifies that the memory /can/ be
+-- | 'VK_PEER_MEMORY_FEATURE_COPY_DST_BIT' specifies that the memory /can/ be
 -- accessed as the destination of a
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdCopyBuffer',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdCopyImage',
@@ -592,28 +568,29 @@ pattern VK_PEER_MEMORY_FEATURE_COPY_SRC_BIT = VkPeerMemoryFeatureFlagBits 0x0000
 pattern VK_PEER_MEMORY_FEATURE_COPY_DST_BIT :: VkPeerMemoryFeatureFlagBits
 pattern VK_PEER_MEMORY_FEATURE_COPY_DST_BIT = VkPeerMemoryFeatureFlagBits 0x00000002
 
--- | @VK_PEER_MEMORY_FEATURE_GENERIC_SRC_BIT@ specifies that the memory /can/
+-- | 'VK_PEER_MEMORY_FEATURE_GENERIC_SRC_BIT' specifies that the memory /can/
 -- be read as any memory access type.
 pattern VK_PEER_MEMORY_FEATURE_GENERIC_SRC_BIT :: VkPeerMemoryFeatureFlagBits
 pattern VK_PEER_MEMORY_FEATURE_GENERIC_SRC_BIT = VkPeerMemoryFeatureFlagBits 0x00000004
 
--- | @VK_PEER_MEMORY_FEATURE_GENERIC_DST_BIT@ specifies that the memory /can/
+-- | 'VK_PEER_MEMORY_FEATURE_GENERIC_DST_BIT' specifies that the memory /can/
 -- be written as any memory access type. Shader atomics are considered to
 -- be writes.
 pattern VK_PEER_MEMORY_FEATURE_GENERIC_DST_BIT :: VkPeerMemoryFeatureFlagBits
 pattern VK_PEER_MEMORY_FEATURE_GENERIC_DST_BIT = VkPeerMemoryFeatureFlagBits 0x00000008
+
 -- | VkPeerMemoryFeatureFlags - Bitmask of VkPeerMemoryFeatureFlagBits
 --
 -- = Description
 --
--- @VkPeerMemoryFeatureFlags@ is a bitmask type for setting a mask of zero
+-- 'VkPeerMemoryFeatureFlags' is a bitmask type for setting a mask of zero
 -- or more 'VkPeerMemoryFeatureFlagBits'.
 --
 -- = See Also
 --
 -- 'VkPeerMemoryFeatureFlagBits', 'vkGetDeviceGroupPeerMemoryFeatures'
 type VkPeerMemoryFeatureFlags = VkPeerMemoryFeatureFlagBits
-#if defined(EXPOSE_CORE11_COMMANDS)
+
 -- | vkCmdDispatchBase - Dispatch compute work items
 --
 -- = Parameters
@@ -651,85 +628,50 @@ type VkPeerMemoryFeatureFlags = VkPeerMemoryFeatureFlagBits
 --
 -- == Valid Usage
 --
--- -   All valid usage rules from
---     'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDispatch' apply
+-- Unresolved directive in vkCmdDispatchBase.txt -
+-- include::{chapters}\/commonvalidity\/draw_dispatch_common.txt[] *
+-- @baseGroupX@ /must/ be less than
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
+-- * @baseGroupX@ /must/ be less than
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
+-- * @baseGroupZ@ /must/ be less than
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
+-- * @groupCountX@ /must/ be less than or equal to
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
+-- minus @baseGroupX@ * @groupCountY@ /must/ be less than or equal to
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
+-- minus @baseGroupY@ * @groupCountZ@ /must/ be less than or equal to
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
+-- minus @baseGroupZ@ * If any of @baseGroupX@, @baseGroupY@, or
+-- @baseGroupZ@ are not zero, then the bound compute pipeline /must/ have
+-- been created with the 'VK_PIPELINE_CREATE_DISPATCH_BASE' flag.
 --
--- -   @baseGroupX@ /must/ be less than
---     @VkPhysicalDeviceLimits@::@maxComputeWorkGroupCount@[0]
---
--- -   @baseGroupX@ /must/ be less than
---     @VkPhysicalDeviceLimits@::@maxComputeWorkGroupCount@[1]
---
--- -   @baseGroupZ@ /must/ be less than
---     @VkPhysicalDeviceLimits@::@maxComputeWorkGroupCount@[2]
---
--- -   @groupCountX@ /must/ be less than or equal to
---     @VkPhysicalDeviceLimits@::@maxComputeWorkGroupCount@[0] minus
---     @baseGroupX@
---
--- -   @groupCountY@ /must/ be less than or equal to
---     @VkPhysicalDeviceLimits@::@maxComputeWorkGroupCount@[1] minus
---     @baseGroupY@
---
--- -   @groupCountZ@ /must/ be less than or equal to
---     @VkPhysicalDeviceLimits@::@maxComputeWorkGroupCount@[2] minus
---     @baseGroupZ@
---
--- -   If any of @baseGroupX@, @baseGroupY@, or @baseGroupZ@ are not zero,
---     then the bound compute pipeline /must/ have been created with the
---     @VK_PIPELINE_CREATE_DISPATCH_BASE@ flag.
---
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support compute operations
---
--- -   This command /must/ only be called outside of a render pass instance
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Outside         | Compute         |                 |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdDispatchBase.txt -
+-- include::{generated}\/validity\/protos\/vkCmdDispatchBase.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer'
+#if defined(EXPOSE_CORE11_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdDispatchBase" vkCmdDispatchBase :: ("commandBuffer" ::: VkCommandBuffer) -> ("baseGroupX" ::: Word32) -> ("baseGroupY" ::: Word32) -> ("baseGroupZ" ::: Word32) -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ()
-
+#else
+vkCmdDispatchBase :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("baseGroupX" ::: Word32) -> ("baseGroupY" ::: Word32) -> ("baseGroupZ" ::: Word32) -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ()
+vkCmdDispatchBase deviceCmds = mkVkCmdDispatchBase (pVkCmdDispatchBase deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdDispatchBase
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("baseGroupX" ::: Word32) -> ("baseGroupY" ::: Word32) -> ("baseGroupZ" ::: Word32) -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("baseGroupX" ::: Word32) -> ("baseGroupY" ::: Word32) -> ("baseGroupZ" ::: Word32) -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ())
+#endif
+
 type FN_vkCmdDispatchBase = ("commandBuffer" ::: VkCommandBuffer) -> ("baseGroupX" ::: Word32) -> ("baseGroupY" ::: Word32) -> ("baseGroupZ" ::: Word32) -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ()
 type PFN_vkCmdDispatchBase = FunPtr FN_vkCmdDispatchBase
-#if defined(EXPOSE_CORE11_COMMANDS)
+
 -- | vkCmdSetDeviceMask - Modify device mask of a command buffer
 --
 -- = Parameters
@@ -762,61 +704,37 @@ type PFN_vkCmdDispatchBase = FunPtr FN_vkCmdDispatchBase
 --     'VkDeviceGroupCommandBufferBeginInfo'::@deviceMask@ value when the
 --     command buffer began recording.
 --
--- -   If @vkCmdSetDeviceMask@ is called inside a render pass instance,
+-- -   If 'vkCmdSetDeviceMask' is called inside a render pass instance,
 --     @deviceMask@ /must/ not include any set bits that were not in the
 --     'VkDeviceGroupRenderPassBeginInfo'::@deviceMask@ value when the
 --     render pass instance began recording.
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics, compute, or transfer operations
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 | Compute         |                 |
--- > |                 |                 | Transfer        |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdSetDeviceMask.txt -
+-- include::{generated}\/validity\/protos\/vkCmdSetDeviceMask.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer'
+#if defined(EXPOSE_CORE11_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdSetDeviceMask" vkCmdSetDeviceMask :: ("commandBuffer" ::: VkCommandBuffer) -> ("deviceMask" ::: Word32) -> IO ()
-
+#else
+vkCmdSetDeviceMask :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("deviceMask" ::: Word32) -> IO ()
+vkCmdSetDeviceMask deviceCmds = mkVkCmdSetDeviceMask (pVkCmdSetDeviceMask deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdSetDeviceMask
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("deviceMask" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("deviceMask" ::: Word32) -> IO ())
+#endif
+
 type FN_vkCmdSetDeviceMask = ("commandBuffer" ::: VkCommandBuffer) -> ("deviceMask" ::: Word32) -> IO ()
 type PFN_vkCmdSetDeviceMask = FunPtr FN_vkCmdSetDeviceMask
-#if defined(EXPOSE_CORE11_COMMANDS)
+
 -- | vkGetDeviceGroupPeerMemoryFeatures - Query supported peer memory
 -- features of a device
 --
@@ -838,46 +756,67 @@ type PFN_vkCmdSetDeviceMask = FunPtr FN_vkCmdSetDeviceMask
 --     accesses are supported for the combination of heap, local, and
 --     remote devices.
 --
--- == Valid Usage (Implicit)
+-- == Valid Usage
+--
+-- Unresolved directive in vkGetDeviceGroupPeerMemoryFeatures.txt -
+-- include::{generated}\/validity\/protos\/vkGetDeviceGroupPeerMemoryFeatures.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
 -- 'VkPeerMemoryFeatureFlags'
+#if defined(EXPOSE_CORE11_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetDeviceGroupPeerMemoryFeatures" vkGetDeviceGroupPeerMemoryFeatures :: ("device" ::: VkDevice) -> ("heapIndex" ::: Word32) -> ("localDeviceIndex" ::: Word32) -> ("remoteDeviceIndex" ::: Word32) -> ("pPeerMemoryFeatures" ::: Ptr VkPeerMemoryFeatureFlags) -> IO ()
-
+#else
+vkGetDeviceGroupPeerMemoryFeatures :: DeviceCmds -> ("device" ::: VkDevice) -> ("heapIndex" ::: Word32) -> ("localDeviceIndex" ::: Word32) -> ("remoteDeviceIndex" ::: Word32) -> ("pPeerMemoryFeatures" ::: Ptr VkPeerMemoryFeatureFlags) -> IO ()
+vkGetDeviceGroupPeerMemoryFeatures deviceCmds = mkVkGetDeviceGroupPeerMemoryFeatures (pVkGetDeviceGroupPeerMemoryFeatures deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetDeviceGroupPeerMemoryFeatures
+  :: FunPtr (("device" ::: VkDevice) -> ("heapIndex" ::: Word32) -> ("localDeviceIndex" ::: Word32) -> ("remoteDeviceIndex" ::: Word32) -> ("pPeerMemoryFeatures" ::: Ptr VkPeerMemoryFeatureFlags) -> IO ()) -> (("device" ::: VkDevice) -> ("heapIndex" ::: Word32) -> ("localDeviceIndex" ::: Word32) -> ("remoteDeviceIndex" ::: Word32) -> ("pPeerMemoryFeatures" ::: Ptr VkPeerMemoryFeatureFlags) -> IO ())
+#endif
+
 type FN_vkGetDeviceGroupPeerMemoryFeatures = ("device" ::: VkDevice) -> ("heapIndex" ::: Word32) -> ("localDeviceIndex" ::: Word32) -> ("remoteDeviceIndex" ::: Word32) -> ("pPeerMemoryFeatures" ::: Ptr VkPeerMemoryFeatureFlags) -> IO ()
 type PFN_vkGetDeviceGroupPeerMemoryFeatures = FunPtr FN_vkGetDeviceGroupPeerMemoryFeatures
--- | @VK_DEPENDENCY_DEVICE_GROUP_BIT@ specifies that dependencies are
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-device-local-dependencies non-device-local dependency>.
+
+-- | 'VK_DEPENDENCY_DEVICE_GROUP_BIT' specifies that dependencies are
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-device-local-dependencies non-device-local dependency>.
 pattern VK_DEPENDENCY_DEVICE_GROUP_BIT :: VkDependencyFlagBits
 pattern VK_DEPENDENCY_DEVICE_GROUP_BIT = VkDependencyFlagBits 0x00000004
--- | @VK_PIPELINE_CREATE_DISPATCH_BASE@ specifies that a compute pipeline
+
+-- | 'VK_PIPELINE_CREATE_DISPATCH_BASE' specifies that a compute pipeline
 -- /can/ be used with 'vkCmdDispatchBase' with a non-zero base workgroup.
 pattern VK_PIPELINE_CREATE_DISPATCH_BASE :: VkPipelineCreateFlagBits
 pattern VK_PIPELINE_CREATE_DISPATCH_BASE = VkPipelineCreateFlagBits 0x00000010
--- | @VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT@ specifies that any
+
+-- | 'VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT' specifies that any
 -- shader input variables decorated as @ViewIndex@ will be assigned values
 -- as if they were decorated as @DeviceIndex@.
 pattern VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT :: VkPipelineCreateFlagBits
 pattern VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT = VkPipelineCreateFlagBits 0x00000008
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO"
 pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO = VkStructureType 1000060006
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO"
 pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO = VkStructureType 1000060004
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO"
 pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO = VkStructureType 1000060003
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO"
 pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO = VkStructureType 1000060005
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO"
 pattern VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO = VkStructureType 1000060000

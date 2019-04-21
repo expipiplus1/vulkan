@@ -63,21 +63,22 @@ import Graphics.Vulkan.C.Core10.Core
 -- = Description
 --
 -- A queue created without specifying
--- @VkDeviceQueueGlobalPriorityCreateInfoEXT@ will default to
--- @VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT@.
+-- 'VkDeviceQueueGlobalPriorityCreateInfoEXT' will default to
+-- 'VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT'.
 --
--- == Valid Usage (Implicit)
+-- Unresolved directive in VkDeviceQueueGlobalPriorityCreateInfoEXT.txt -
+-- include::{generated}\/validity\/structs\/VkDeviceQueueGlobalPriorityCreateInfoEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkDeviceQueueGlobalPriorityCreateInfoEXT = VkDeviceQueueGlobalPriorityCreateInfoEXT
-  { -- | @sType@ /must/ be
-  -- @VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @globalPriority@ /must/ be a valid 'VkQueueGlobalPriorityEXT' value
+  , -- | @globalPriority@ is the system-wide priority associated to this queue as
+  -- specified by 'VkQueueGlobalPriorityEXT'
   vkGlobalPriority :: VkQueueGlobalPriorityEXT
   }
   deriving (Eq, Show)
@@ -93,9 +94,10 @@ instance Storable VkDeviceQueueGlobalPriorityCreateInfoEXT where
                 *> poke (ptr `plusPtr` 16) (vkGlobalPriority (poked :: VkDeviceQueueGlobalPriorityCreateInfoEXT))
 
 instance Zero VkDeviceQueueGlobalPriorityCreateInfoEXT where
-  zero = VkDeviceQueueGlobalPriorityCreateInfoEXT zero
+  zero = VkDeviceQueueGlobalPriorityCreateInfoEXT VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT
                                                   zero
                                                   zero
+
 -- ** VkQueueGlobalPriorityEXT
 
 -- | VkQueueGlobalPriorityEXT - Values specifying a system-wide queue
@@ -132,32 +134,36 @@ instance Read VkQueueGlobalPriorityEXT where
                         )
                     )
 
--- | @VK_QUEUE_GLOBAL_PRIORITY_LOW_EXT@ is below the system default. Useful
+-- | 'VK_QUEUE_GLOBAL_PRIORITY_LOW_EXT' is below the system default. Useful
 -- for non-interactive tasks.
 pattern VK_QUEUE_GLOBAL_PRIORITY_LOW_EXT :: VkQueueGlobalPriorityEXT
 pattern VK_QUEUE_GLOBAL_PRIORITY_LOW_EXT = VkQueueGlobalPriorityEXT 128
 
--- | @VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT@ is the system default priority.
+-- | 'VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT' is the system default priority.
 pattern VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT :: VkQueueGlobalPriorityEXT
 pattern VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT = VkQueueGlobalPriorityEXT 256
 
--- | @VK_QUEUE_GLOBAL_PRIORITY_HIGH_EXT@ is above the system default.
+-- | 'VK_QUEUE_GLOBAL_PRIORITY_HIGH_EXT' is above the system default.
 pattern VK_QUEUE_GLOBAL_PRIORITY_HIGH_EXT :: VkQueueGlobalPriorityEXT
 pattern VK_QUEUE_GLOBAL_PRIORITY_HIGH_EXT = VkQueueGlobalPriorityEXT 512
 
--- | @VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT@ is the highest priority. Useful
+-- | 'VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT' is the highest priority. Useful
 -- for critical tasks.
 pattern VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT :: VkQueueGlobalPriorityEXT
 pattern VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT = VkQueueGlobalPriorityEXT 1024
+
 -- No documentation found for Nested "VkResult" "VK_ERROR_NOT_PERMITTED_EXT"
 pattern VK_ERROR_NOT_PERMITTED_EXT :: VkResult
 pattern VK_ERROR_NOT_PERMITTED_EXT = VkResult (-1000174001)
+
 -- No documentation found for TopLevel "VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME"
 pattern VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME = "VK_EXT_global_priority"
+
 -- No documentation found for TopLevel "VK_EXT_GLOBAL_PRIORITY_SPEC_VERSION"
 pattern VK_EXT_GLOBAL_PRIORITY_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_GLOBAL_PRIORITY_SPEC_VERSION = 2
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT"
 pattern VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT = VkStructureType 1000174000

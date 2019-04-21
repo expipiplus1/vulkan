@@ -35,9 +35,6 @@ import Foreign.Marshal.Utils
 import Foreign.Ptr
   ( castPtr
   )
-import qualified Graphics.Vulkan.C.Dynamic
-  ( getBufferDeviceAddressEXT
-  )
 
 
 import Graphics.Vulkan.C.Core10.Core
@@ -48,6 +45,7 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address
   , VkBufferDeviceAddressInfoEXT(..)
   , VkPhysicalDeviceBufferDeviceAddressFeaturesEXT(..)
   , VkDeviceAddress
+  , vkGetBufferDeviceAddressEXT
   , pattern VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_CREATE_INFO_EXT
   , pattern VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO_EXT
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT
@@ -77,74 +75,254 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address
   )
 
 
--- No documentation found for TopLevel "BufferDeviceAddressCreateInfoEXT"
+
+-- | VkBufferDeviceAddressCreateInfoEXT - Request a specific address for a
+-- buffer
+--
+-- = Description
+--
+-- If @deviceAddress@ is zero, no specific address is requested.
+--
+-- If @deviceAddress@ is not zero, @deviceAddress@ /must/ be an address
+-- retrieved from an identically created buffer on the same implementation.
+-- The buffer /must/ also be bound to an identically created
+-- 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object.
+--
+-- If this structure is not present, it is as if @deviceAddress@ is zero.
+--
+-- Apps /should/ avoid creating buffers with app-provided addresses and
+-- implementation-provided addresses in the same process, to reduce the
+-- likelihood of
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VK_ERROR_INVALID_DEVICE_ADDRESS_EXT'
+-- errors.
+--
+-- __Note__
+--
+-- The expected usage for this is that a trace capture\/replay tool will
+-- add the
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT'
+-- flag to all buffers that use
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_EXT',
+-- and during capture will save the queried device addresses in the trace.
+-- During replay, the buffers will be created specifying the original
+-- address so any address values stored in the trace data will remain
+-- valid.
+--
+-- Implementations are expected to separate such buffers in the GPU address
+-- space so normal allocations will avoid using these addresses.
+-- Apps\/tools should avoid mixing app-provided and implementation-provided
+-- addresses for buffers created with
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT',
+-- to avoid address space allocation conflicts.
+--
+-- Unresolved directive in VkBufferDeviceAddressCreateInfoEXT.txt -
+-- include::{generated}\/validity\/structs\/VkBufferDeviceAddressCreateInfoEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data BufferDeviceAddressCreateInfoEXT = BufferDeviceAddressCreateInfoEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "BufferDeviceAddressCreateInfoEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "BufferDeviceAddressCreateInfoEXT" "deviceAddress"
-  vkDeviceAddress :: DeviceAddress
+  deviceAddress :: DeviceAddress
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkBufferDeviceAddressCreateInfoEXT' and
+-- marshal a 'BufferDeviceAddressCreateInfoEXT' into it. The 'VkBufferDeviceAddressCreateInfoEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructBufferDeviceAddressCreateInfoEXT :: BufferDeviceAddressCreateInfoEXT -> (VkBufferDeviceAddressCreateInfoEXT -> IO a) -> IO a
-withCStructBufferDeviceAddressCreateInfoEXT from cont = maybeWith withSomeVkStruct (vkPNext (from :: BufferDeviceAddressCreateInfoEXT)) (\pPNext -> cont (VkBufferDeviceAddressCreateInfoEXT VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_CREATE_INFO_EXT pPNext (vkDeviceAddress (from :: BufferDeviceAddressCreateInfoEXT))))
+withCStructBufferDeviceAddressCreateInfoEXT marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: BufferDeviceAddressCreateInfoEXT)) (\pPNext -> cont (VkBufferDeviceAddressCreateInfoEXT VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_CREATE_INFO_EXT pPNext (deviceAddress (marshalled :: BufferDeviceAddressCreateInfoEXT))))
+
+-- | A function to read a 'VkBufferDeviceAddressCreateInfoEXT' and all additional
+-- structures in the pointer chain into a 'BufferDeviceAddressCreateInfoEXT'.
 fromCStructBufferDeviceAddressCreateInfoEXT :: VkBufferDeviceAddressCreateInfoEXT -> IO BufferDeviceAddressCreateInfoEXT
 fromCStructBufferDeviceAddressCreateInfoEXT c = BufferDeviceAddressCreateInfoEXT <$> -- Univalued Member elided
                                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkBufferDeviceAddressCreateInfoEXT)))
                                                                                  <*> pure (vkDeviceAddress (c :: VkBufferDeviceAddressCreateInfoEXT))
+
 instance Zero BufferDeviceAddressCreateInfoEXT where
   zero = BufferDeviceAddressCreateInfoEXT Nothing
                                           zero
--- No documentation found for TopLevel "BufferDeviceAddressInfoEXT"
+
+
+
+-- | VkBufferDeviceAddressInfoEXT - Structure specifying the buffer to query
+-- an address for
+--
+-- == Valid Usage
+--
+-- -   If @buffer@ is non-sparse and was not created with the
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT'
+--     flag, then it /must/ be bound completely and contiguously to a
+--     single 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
+--
+-- -   @buffer@ /must/ have been created with
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_EXT'
+--
+-- Unresolved directive in VkBufferDeviceAddressInfoEXT.txt -
+-- include::{generated}\/validity\/structs\/VkBufferDeviceAddressInfoEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data BufferDeviceAddressInfoEXT = BufferDeviceAddressInfoEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "BufferDeviceAddressInfoEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "BufferDeviceAddressInfoEXT" "buffer"
-  vkBuffer :: Buffer
+  buffer :: Buffer
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkBufferDeviceAddressInfoEXT' and
+-- marshal a 'BufferDeviceAddressInfoEXT' into it. The 'VkBufferDeviceAddressInfoEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructBufferDeviceAddressInfoEXT :: BufferDeviceAddressInfoEXT -> (VkBufferDeviceAddressInfoEXT -> IO a) -> IO a
-withCStructBufferDeviceAddressInfoEXT from cont = maybeWith withSomeVkStruct (vkPNext (from :: BufferDeviceAddressInfoEXT)) (\pPNext -> cont (VkBufferDeviceAddressInfoEXT VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO_EXT pPNext (vkBuffer (from :: BufferDeviceAddressInfoEXT))))
+withCStructBufferDeviceAddressInfoEXT marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: BufferDeviceAddressInfoEXT)) (\pPNext -> cont (VkBufferDeviceAddressInfoEXT VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO_EXT pPNext (buffer (marshalled :: BufferDeviceAddressInfoEXT))))
+
+-- | A function to read a 'VkBufferDeviceAddressInfoEXT' and all additional
+-- structures in the pointer chain into a 'BufferDeviceAddressInfoEXT'.
 fromCStructBufferDeviceAddressInfoEXT :: VkBufferDeviceAddressInfoEXT -> IO BufferDeviceAddressInfoEXT
 fromCStructBufferDeviceAddressInfoEXT c = BufferDeviceAddressInfoEXT <$> -- Univalued Member elided
                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkBufferDeviceAddressInfoEXT)))
                                                                      <*> pure (vkBuffer (c :: VkBufferDeviceAddressInfoEXT))
+
 instance Zero BufferDeviceAddressInfoEXT where
   zero = BufferDeviceAddressInfoEXT Nothing
                                     zero
--- No documentation found for TopLevel "DeviceAddress"
+
+
+-- | VkDeviceAddress - Vulkan device address type
+--
+-- = See Also
+--
+-- No cross-references are available
 type DeviceAddress = VkDeviceAddress
   
+
 type PhysicalDeviceBufferAddressFeaturesEXT = PhysicalDeviceBufferDeviceAddressFeaturesEXT
 -- TODO: Pattern constructor alias)
--- No documentation found for TopLevel "PhysicalDeviceBufferDeviceAddressFeaturesEXT"
+
+
+-- | VkPhysicalDeviceBufferDeviceAddressFeaturesEXT - Structure describing
+-- buffer address features that can be supported by an implementation
+--
+-- = Members
+--
+-- The members of the
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VkPhysicalDeviceBufferDeviceAddressFeaturesEXT'
+-- structure describe the following features:
+--
+-- = Description
+--
+-- __Note__
+--
+-- @bufferDeviceAddressMultiDevice@ exists to allow certain legacy
+-- platforms to be able to support @bufferDeviceAddress@ without needing to
+-- support shared GPU virtual addresses for multi-device configurations.
+--
+-- See
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.vkGetBufferDeviceAddressEXT'
+-- for more information.
+--
+-- If the
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VkPhysicalDeviceBufferDeviceAddressFeaturesEXT'
+-- structure is included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
+-- it is filled with values indicating whether the feature is supported.
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VkPhysicalDeviceBufferDeviceAddressFeaturesEXT'
+-- /can/ also be used in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
+--
+-- Unresolved directive in
+-- VkPhysicalDeviceBufferDeviceAddressFeaturesEXT.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceBufferDeviceAddressFeaturesEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data PhysicalDeviceBufferDeviceAddressFeaturesEXT = PhysicalDeviceBufferDeviceAddressFeaturesEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceBufferDeviceAddressFeaturesEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDeviceBufferDeviceAddressFeaturesEXT" "bufferDeviceAddress"
-  vkBufferDeviceAddress :: Bool
+  bufferDeviceAddress :: Bool
   , -- No documentation found for Nested "PhysicalDeviceBufferDeviceAddressFeaturesEXT" "bufferDeviceAddressCaptureReplay"
-  vkBufferDeviceAddressCaptureReplay :: Bool
+  bufferDeviceAddressCaptureReplay :: Bool
   , -- No documentation found for Nested "PhysicalDeviceBufferDeviceAddressFeaturesEXT" "bufferDeviceAddressMultiDevice"
-  vkBufferDeviceAddressMultiDevice :: Bool
+  bufferDeviceAddressMultiDevice :: Bool
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPhysicalDeviceBufferDeviceAddressFeaturesEXT' and
+-- marshal a 'PhysicalDeviceBufferDeviceAddressFeaturesEXT' into it. The 'VkPhysicalDeviceBufferDeviceAddressFeaturesEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPhysicalDeviceBufferDeviceAddressFeaturesEXT :: PhysicalDeviceBufferDeviceAddressFeaturesEXT -> (VkPhysicalDeviceBufferDeviceAddressFeaturesEXT -> IO a) -> IO a
-withCStructPhysicalDeviceBufferDeviceAddressFeaturesEXT from cont = maybeWith withSomeVkStruct (vkPNext (from :: PhysicalDeviceBufferDeviceAddressFeaturesEXT)) (\pPNext -> cont (VkPhysicalDeviceBufferDeviceAddressFeaturesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT pPNext (boolToBool32 (vkBufferDeviceAddress (from :: PhysicalDeviceBufferDeviceAddressFeaturesEXT))) (boolToBool32 (vkBufferDeviceAddressCaptureReplay (from :: PhysicalDeviceBufferDeviceAddressFeaturesEXT))) (boolToBool32 (vkBufferDeviceAddressMultiDevice (from :: PhysicalDeviceBufferDeviceAddressFeaturesEXT)))))
+withCStructPhysicalDeviceBufferDeviceAddressFeaturesEXT marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PhysicalDeviceBufferDeviceAddressFeaturesEXT)) (\pPNext -> cont (VkPhysicalDeviceBufferDeviceAddressFeaturesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT pPNext (boolToBool32 (bufferDeviceAddress (marshalled :: PhysicalDeviceBufferDeviceAddressFeaturesEXT))) (boolToBool32 (bufferDeviceAddressCaptureReplay (marshalled :: PhysicalDeviceBufferDeviceAddressFeaturesEXT))) (boolToBool32 (bufferDeviceAddressMultiDevice (marshalled :: PhysicalDeviceBufferDeviceAddressFeaturesEXT)))))
+
+-- | A function to read a 'VkPhysicalDeviceBufferDeviceAddressFeaturesEXT' and all additional
+-- structures in the pointer chain into a 'PhysicalDeviceBufferDeviceAddressFeaturesEXT'.
 fromCStructPhysicalDeviceBufferDeviceAddressFeaturesEXT :: VkPhysicalDeviceBufferDeviceAddressFeaturesEXT -> IO PhysicalDeviceBufferDeviceAddressFeaturesEXT
 fromCStructPhysicalDeviceBufferDeviceAddressFeaturesEXT c = PhysicalDeviceBufferDeviceAddressFeaturesEXT <$> -- Univalued Member elided
                                                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceBufferDeviceAddressFeaturesEXT)))
                                                                                                          <*> pure (bool32ToBool (vkBufferDeviceAddress (c :: VkPhysicalDeviceBufferDeviceAddressFeaturesEXT)))
                                                                                                          <*> pure (bool32ToBool (vkBufferDeviceAddressCaptureReplay (c :: VkPhysicalDeviceBufferDeviceAddressFeaturesEXT)))
                                                                                                          <*> pure (bool32ToBool (vkBufferDeviceAddressMultiDevice (c :: VkPhysicalDeviceBufferDeviceAddressFeaturesEXT)))
+
 instance Zero PhysicalDeviceBufferDeviceAddressFeaturesEXT where
   zero = PhysicalDeviceBufferDeviceAddressFeaturesEXT Nothing
                                                       False
                                                       False
                                                       False
 
--- | Wrapper for 'vkGetBufferDeviceAddressEXT'
+
+
+-- | vkGetBufferDeviceAddressEXT - Query an address of a buffer
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device that the buffer was created on.
+--
+-- -   @pInfo@ is a pointer to an instance of the
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VkBufferDeviceAddressInfoEXT'
+--     structure specifying the buffer to retrieve an address for.
+--
+-- = Description
+--
+-- The 64-bit return value is an address of the start of @pInfo@::@buffer@.
+-- The address range starting at this value and whose size is the size of
+-- the buffer /can/ be used in a shader to access the memory bound to that
+-- buffer, using the @SPV_EXT_physical_storage_buffer@ extension and the
+-- @PhysicalStorageBufferEXT@ storage class. For example, this value /can/
+-- be stored in a uniform buffer, and the shader /can/ read the value from
+-- the uniform buffer and use it to do a dependent read\/write to this
+-- buffer. A value of zero is reserved as a “null” pointer and /must/ not
+-- be returned as a valid buffer device address. All loads, stores, and
+-- atomics in a shader through @PhysicalStorageBufferEXT@ pointers /must/
+-- access addresses in the address range of some buffer.
+--
+-- If the buffer was created with a non-zero value of
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VkBufferDeviceAddressCreateInfoEXT'::@deviceAddress@,
+-- the return value will be the same address.
+--
+-- == Valid Usage
+--
+-- -   The
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-bufferDeviceAddress bufferDeviceAddress>
+--     feature /must/ be enabled
+--
+-- -   If @device@ was created with multiple physical devices, then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
+--     feature /must/ be enabled
+--
+-- Unresolved directive in vkGetBufferDeviceAddressEXT.txt -
+-- include::{generated}\/validity\/protos\/vkGetBufferDeviceAddressEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 getBufferDeviceAddressEXT :: Device ->  BufferDeviceAddressInfoEXT ->  IO (VkDeviceAddress)
-getBufferDeviceAddressEXT = \(Device device commandTable) -> \info -> (\a -> withCStructBufferDeviceAddressInfoEXT a . flip with) info (\pInfo -> Graphics.Vulkan.C.Dynamic.getBufferDeviceAddressEXT commandTable device pInfo >>= (\r -> pure r))
+getBufferDeviceAddressEXT = \(Device device' commandTable) -> \info' -> (\marshalled -> withCStructBufferDeviceAddressInfoEXT marshalled . flip with) info' (\pInfo' -> vkGetBufferDeviceAddressEXT commandTable device' pInfo' >>= (\ret -> pure ret))

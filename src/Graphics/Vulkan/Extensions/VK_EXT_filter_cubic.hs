@@ -62,43 +62,98 @@ import Graphics.Vulkan.C.Extensions.VK_IMG_filter_cubic
   )
 
 
--- No documentation found for TopLevel "FilterCubicImageViewImageFormatPropertiesEXT"
+
+-- | VkFilterCubicImageViewImageFormatPropertiesEXT - Structure for querying
+-- cubic filtering capabilities of an image view type
+--
+-- = Description
+--
+-- Unresolved directive in
+-- VkFilterCubicImageViewImageFormatPropertiesEXT.txt -
+-- include::{generated}\/validity\/structs\/VkFilterCubicImageViewImageFormatPropertiesEXT.txt[]
+--
+-- == Valid Usage
+--
+-- -   If the @pNext@ chain of the
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkImageFormatProperties2'
+--     structure contains an instance of
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_filter_cubic.VkFilterCubicImageViewImageFormatPropertiesEXT',
+--     the @pNext@ chain of the
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2'
+--     structure /must/ contain an instance of
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_filter_cubic.VkPhysicalDeviceImageViewImageFormatInfoEXT'
+--     with an @imageViewType@ that is compatible with @imageType@.
+--
+-- = See Also
+--
+-- No cross-references are available
 data FilterCubicImageViewImageFormatPropertiesEXT = FilterCubicImageViewImageFormatPropertiesEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "FilterCubicImageViewImageFormatPropertiesEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "FilterCubicImageViewImageFormatPropertiesEXT" "filterCubic"
-  vkFilterCubic :: Bool
+  filterCubic :: Bool
   , -- No documentation found for Nested "FilterCubicImageViewImageFormatPropertiesEXT" "filterCubicMinmax"
-  vkFilterCubicMinmax :: Bool
+  filterCubicMinmax :: Bool
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkFilterCubicImageViewImageFormatPropertiesEXT' and
+-- marshal a 'FilterCubicImageViewImageFormatPropertiesEXT' into it. The 'VkFilterCubicImageViewImageFormatPropertiesEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructFilterCubicImageViewImageFormatPropertiesEXT :: FilterCubicImageViewImageFormatPropertiesEXT -> (VkFilterCubicImageViewImageFormatPropertiesEXT -> IO a) -> IO a
-withCStructFilterCubicImageViewImageFormatPropertiesEXT from cont = maybeWith withSomeVkStruct (vkPNext (from :: FilterCubicImageViewImageFormatPropertiesEXT)) (\pPNext -> cont (VkFilterCubicImageViewImageFormatPropertiesEXT VK_STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT pPNext (boolToBool32 (vkFilterCubic (from :: FilterCubicImageViewImageFormatPropertiesEXT))) (boolToBool32 (vkFilterCubicMinmax (from :: FilterCubicImageViewImageFormatPropertiesEXT)))))
+withCStructFilterCubicImageViewImageFormatPropertiesEXT marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: FilterCubicImageViewImageFormatPropertiesEXT)) (\pPNext -> cont (VkFilterCubicImageViewImageFormatPropertiesEXT VK_STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT pPNext (boolToBool32 (filterCubic (marshalled :: FilterCubicImageViewImageFormatPropertiesEXT))) (boolToBool32 (filterCubicMinmax (marshalled :: FilterCubicImageViewImageFormatPropertiesEXT)))))
+
+-- | A function to read a 'VkFilterCubicImageViewImageFormatPropertiesEXT' and all additional
+-- structures in the pointer chain into a 'FilterCubicImageViewImageFormatPropertiesEXT'.
 fromCStructFilterCubicImageViewImageFormatPropertiesEXT :: VkFilterCubicImageViewImageFormatPropertiesEXT -> IO FilterCubicImageViewImageFormatPropertiesEXT
 fromCStructFilterCubicImageViewImageFormatPropertiesEXT c = FilterCubicImageViewImageFormatPropertiesEXT <$> -- Univalued Member elided
                                                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkFilterCubicImageViewImageFormatPropertiesEXT)))
                                                                                                          <*> pure (bool32ToBool (vkFilterCubic (c :: VkFilterCubicImageViewImageFormatPropertiesEXT)))
                                                                                                          <*> pure (bool32ToBool (vkFilterCubicMinmax (c :: VkFilterCubicImageViewImageFormatPropertiesEXT)))
+
 instance Zero FilterCubicImageViewImageFormatPropertiesEXT where
   zero = FilterCubicImageViewImageFormatPropertiesEXT Nothing
                                                       False
                                                       False
--- No documentation found for TopLevel "PhysicalDeviceImageViewImageFormatInfoEXT"
+
+
+
+-- | VkPhysicalDeviceImageViewImageFormatInfoEXT - Structure for providing
+-- image view type
+--
+-- = Description
+--
+-- Unresolved directive in VkPhysicalDeviceImageViewImageFormatInfoEXT.txt
+-- -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceImageViewImageFormatInfoEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data PhysicalDeviceImageViewImageFormatInfoEXT = PhysicalDeviceImageViewImageFormatInfoEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceImageViewImageFormatInfoEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDeviceImageViewImageFormatInfoEXT" "imageViewType"
-  vkImageViewType :: ImageViewType
+  imageViewType :: ImageViewType
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPhysicalDeviceImageViewImageFormatInfoEXT' and
+-- marshal a 'PhysicalDeviceImageViewImageFormatInfoEXT' into it. The 'VkPhysicalDeviceImageViewImageFormatInfoEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPhysicalDeviceImageViewImageFormatInfoEXT :: PhysicalDeviceImageViewImageFormatInfoEXT -> (VkPhysicalDeviceImageViewImageFormatInfoEXT -> IO a) -> IO a
-withCStructPhysicalDeviceImageViewImageFormatInfoEXT from cont = maybeWith withSomeVkStruct (vkPNext (from :: PhysicalDeviceImageViewImageFormatInfoEXT)) (\pPNext -> cont (VkPhysicalDeviceImageViewImageFormatInfoEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT pPNext (vkImageViewType (from :: PhysicalDeviceImageViewImageFormatInfoEXT))))
+withCStructPhysicalDeviceImageViewImageFormatInfoEXT marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PhysicalDeviceImageViewImageFormatInfoEXT)) (\pPNext -> cont (VkPhysicalDeviceImageViewImageFormatInfoEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT pPNext (imageViewType (marshalled :: PhysicalDeviceImageViewImageFormatInfoEXT))))
+
+-- | A function to read a 'VkPhysicalDeviceImageViewImageFormatInfoEXT' and all additional
+-- structures in the pointer chain into a 'PhysicalDeviceImageViewImageFormatInfoEXT'.
 fromCStructPhysicalDeviceImageViewImageFormatInfoEXT :: VkPhysicalDeviceImageViewImageFormatInfoEXT -> IO PhysicalDeviceImageViewImageFormatInfoEXT
 fromCStructPhysicalDeviceImageViewImageFormatInfoEXT c = PhysicalDeviceImageViewImageFormatInfoEXT <$> -- Univalued Member elided
                                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceImageViewImageFormatInfoEXT)))
                                                                                                    <*> pure (vkImageViewType (c :: VkPhysicalDeviceImageViewImageFormatInfoEXT))
+
 instance Zero PhysicalDeviceImageViewImageFormatInfoEXT where
   zero = PhysicalDeviceImageViewImageFormatInfoEXT Nothing
                                                    zero
+

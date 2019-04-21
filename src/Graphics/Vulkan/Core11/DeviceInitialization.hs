@@ -21,13 +21,13 @@ import Foreign.Marshal.Alloc
 import Foreign.Storable
   ( peek
   )
-import qualified Graphics.Vulkan.C.Dynamic
-  ( enumerateInstanceVersion
-  )
 
 
 import Graphics.Vulkan.C.Core10.Core
   ( pattern VK_SUCCESS
+  )
+import Graphics.Vulkan.C.Core11.DeviceInitialization
+  ( vkEnumerateInstanceVersion
   )
 import Graphics.Vulkan.Exception
   ( VulkanException(..)
@@ -35,6 +35,22 @@ import Graphics.Vulkan.Exception
 
 
 
--- | Wrapper for 'vkEnumerateInstanceVersion'
+-- | vkEnumerateInstanceVersion - Query instance-level version before
+-- instance creation
+--
+-- = Parameters
+--
+-- -   @pApiVersion@ points to a @uint32_t@, which is the version of Vulkan
+--     supported by instance-level functionality, encoded as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#extendingvulkan-coreversions-versionnumbers>.
+--
+-- = Description
+--
+-- Unresolved directive in vkEnumerateInstanceVersion.txt -
+-- include::{generated}\/validity\/protos\/vkEnumerateInstanceVersion.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 enumerateInstanceVersion :: IO (Word32)
-enumerateInstanceVersion = alloca (\pApiVersion -> Graphics.Vulkan.C.Dynamic.enumerateInstanceVersion pApiVersion >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pApiVersion)))
+enumerateInstanceVersion = alloca (\pApiVersion' -> vkEnumerateInstanceVersion pApiVersion' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (peek pApiVersion')))

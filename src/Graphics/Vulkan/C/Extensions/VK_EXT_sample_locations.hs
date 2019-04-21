@@ -15,16 +15,12 @@ module Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations
   , VkSampleLocationEXT(..)
   , VkSampleLocationsInfoEXT(..)
   , VkSubpassSampleLocationsEXT(..)
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkCmdSetSampleLocationsEXT
-#endif
   , FN_vkCmdSetSampleLocationsEXT
   , PFN_vkCmdSetSampleLocationsEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkGetPhysicalDeviceMultisamplePropertiesEXT
-#endif
+  , vkCmdSetSampleLocationsEXT
   , FN_vkGetPhysicalDeviceMultisamplePropertiesEXT
   , PFN_vkGetPhysicalDeviceMultisamplePropertiesEXT
+  , vkGetPhysicalDeviceMultisamplePropertiesEXT
   , pattern VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT
   , pattern VK_EXT_SAMPLE_LOCATIONS_EXTENSION_NAME
   , pattern VK_EXT_SAMPLE_LOCATIONS_SPEC_VERSION
@@ -77,6 +73,10 @@ import Graphics.Vulkan.C.Core10.Pipeline
 import Graphics.Vulkan.C.Core10.Queue
   ( VkCommandBuffer
   )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
+  , InstanceCmds(..)
+  )
 import Graphics.Vulkan.NamedType
   ( (:::)
   )
@@ -89,10 +89,13 @@ import Graphics.Vulkan.NamedType
 --
 -- If the image referenced by the framebuffer attachment at index
 -- @attachmentIndex@ was not created with
--- @VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT@ then the
+-- 'VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT' then the
 -- values specified in @sampleLocationsInfo@ are ignored.
 --
--- == Valid Usage (Implicit)
+-- == Valid Usage
+--
+-- Unresolved directive in VkAttachmentSampleLocationsEXT.txt -
+-- include::{generated}\/validity\/structs\/VkAttachmentSampleLocationsEXT.txt[]
 --
 -- = See Also
 --
@@ -104,8 +107,10 @@ data VkAttachmentSampleLocationsEXT = VkAttachmentSampleLocationsEXT
   -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkRenderPassBeginInfo'::@renderPass@
   -- was created with
   vkAttachmentIndex :: Word32
-  , -- | @sampleLocationsInfo@ /must/ be a valid @VkSampleLocationsInfoEXT@
-  -- structure
+  , -- | @sampleLocationsInfo@ is the sample locations state to use for the
+  -- layout transition of the given attachment from the initial layout of the
+  -- attachment to the image layout specified for the attachment in the first
+  -- subpass using it.
   vkSampleLocationsInfo :: VkSampleLocationsInfoEXT
   }
   deriving (Eq, Show)
@@ -121,18 +126,22 @@ instance Storable VkAttachmentSampleLocationsEXT where
 instance Zero VkAttachmentSampleLocationsEXT where
   zero = VkAttachmentSampleLocationsEXT zero
                                         zero
+
 -- | VkMultisamplePropertiesEXT - Structure returning information about
 -- sample count specific additional multisampling capabilities
 --
--- == Valid Usage (Implicit)
+-- = Description
+--
+-- Unresolved directive in VkMultisamplePropertiesEXT.txt -
+-- include::{generated}\/validity\/structs\/VkMultisamplePropertiesEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkMultisamplePropertiesEXT = VkMultisamplePropertiesEXT
-  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
   , -- | @maxSampleLocationGridSize@ is the maximum size of the pixel grid in
   -- which sample locations /can/ vary.
@@ -151,32 +160,34 @@ instance Storable VkMultisamplePropertiesEXT where
                 *> poke (ptr `plusPtr` 16) (vkMaxSampleLocationGridSize (poked :: VkMultisamplePropertiesEXT))
 
 instance Zero VkMultisamplePropertiesEXT where
-  zero = VkMultisamplePropertiesEXT zero
+  zero = VkMultisamplePropertiesEXT VK_STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT
                                     zero
                                     zero
+
 -- | VkPhysicalDeviceSampleLocationsPropertiesEXT - Structure describing
 -- sample location limits that can be supported by an implementation
 --
 -- = Members
 --
--- The members of the @VkPhysicalDeviceSampleLocationsPropertiesEXT@
+-- The members of the 'VkPhysicalDeviceSampleLocationsPropertiesEXT'
 -- structure describe the following implementation-dependent limits:
 --
 -- = Description
 --
--- If the @VkPhysicalDeviceSampleLocationsPropertiesEXT@ structure is
+-- If the 'VkPhysicalDeviceSampleLocationsPropertiesEXT' structure is
 -- included in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- == Valid Usage (Implicit)
+-- Unresolved directive in VkPhysicalDeviceSampleLocationsPropertiesEXT.txt
+-- -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceSampleLocationsPropertiesEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkPhysicalDeviceSampleLocationsPropertiesEXT = VkPhysicalDeviceSampleLocationsPropertiesEXT
-  { -- | @sType@ /must/ be
-  -- @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLE_LOCATIONS_PROPERTIES_EXT@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -196,9 +207,10 @@ data VkPhysicalDeviceSampleLocationsPropertiesEXT = VkPhysicalDeviceSampleLocati
   vkSampleLocationSubPixelBits :: Word32
   , -- | @variableSampleLocations@ specifies whether the sample locations used by
   -- all pipelines that will be bound to a command buffer during a subpass
-  -- /must/ match. If set to @VK_TRUE@, the implementation supports variable
-  -- sample locations in a subpass. If set to @VK_FALSE@, then the sample
-  -- locations /must/ stay constant in each subpass.
+  -- /must/ match. If set to 'Graphics.Vulkan.C.Core10.Core.VK_TRUE', the
+  -- implementation supports variable sample locations in a subpass. If set
+  -- to 'Graphics.Vulkan.C.Core10.Core.VK_FALSE', then the sample locations
+  -- /must/ stay constant in each subpass.
   vkVariableSampleLocations :: VkBool32
   }
   deriving (Eq, Show)
@@ -222,34 +234,40 @@ instance Storable VkPhysicalDeviceSampleLocationsPropertiesEXT where
                 *> poke (ptr `plusPtr` 40) (vkVariableSampleLocations (poked :: VkPhysicalDeviceSampleLocationsPropertiesEXT))
 
 instance Zero VkPhysicalDeviceSampleLocationsPropertiesEXT where
-  zero = VkPhysicalDeviceSampleLocationsPropertiesEXT zero
+  zero = VkPhysicalDeviceSampleLocationsPropertiesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLE_LOCATIONS_PROPERTIES_EXT
                                                       zero
                                                       zero
                                                       zero
                                                       zero
                                                       zero
                                                       zero
+
 -- | VkPipelineSampleLocationsStateCreateInfoEXT - Structure specifying
 -- sample locations for a pipeline
 --
--- == Valid Usage (Implicit)
+-- = Description
+--
+-- Unresolved directive in VkPipelineSampleLocationsStateCreateInfoEXT.txt
+-- -
+-- include::{generated}\/validity\/structs\/VkPipelineSampleLocationsStateCreateInfoEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkPipelineSampleLocationsStateCreateInfoEXT = VkPipelineSampleLocationsStateCreateInfoEXT
-  { -- | @sType@ /must/ be
-  -- @VK_STRUCTURE_TYPE_PIPELINE_SAMPLE_LOCATIONS_STATE_CREATE_INFO_EXT@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
   , -- | @sampleLocationsEnable@ controls whether custom sample locations are
-  -- used. If @sampleLocationsEnable@ is @VK_FALSE@, the default sample
-  -- locations are used and the values specified in @sampleLocationsInfo@ are
-  -- ignored.
+  -- used. If @sampleLocationsEnable@ is
+  -- 'Graphics.Vulkan.C.Core10.Core.VK_FALSE', the default sample locations
+  -- are used and the values specified in @sampleLocationsInfo@ are ignored.
   vkSampleLocationsEnable :: VkBool32
-  , -- | @sampleLocationsInfo@ /must/ be a valid @VkSampleLocationsInfoEXT@
-  -- structure
+  , -- | @sampleLocationsInfo@ is the sample locations to use during
+  -- rasterization if @sampleLocationsEnable@ is
+  -- 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' and the graphics pipeline is not
+  -- created with 'VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'.
   vkSampleLocationsInfo :: VkSampleLocationsInfoEXT
   }
   deriving (Eq, Show)
@@ -267,28 +285,19 @@ instance Storable VkPipelineSampleLocationsStateCreateInfoEXT where
                 *> poke (ptr `plusPtr` 24) (vkSampleLocationsInfo (poked :: VkPipelineSampleLocationsStateCreateInfoEXT))
 
 instance Zero VkPipelineSampleLocationsStateCreateInfoEXT where
-  zero = VkPipelineSampleLocationsStateCreateInfoEXT zero
+  zero = VkPipelineSampleLocationsStateCreateInfoEXT VK_STRUCTURE_TYPE_PIPELINE_SAMPLE_LOCATIONS_STATE_CREATE_INFO_EXT
                                                      zero
                                                      zero
                                                      zero
+
 -- | VkRenderPassSampleLocationsBeginInfoEXT - Structure specifying sample
 -- locations to use for the layout transition of custom sample locations
 -- compatible depth\/stencil attachments
 --
--- == Valid Usage (Implicit)
+-- = Description
 --
--- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_RENDER_PASS_SAMPLE_LOCATIONS_BEGIN_INFO_EXT@
---
--- -   If @attachmentInitialSampleLocationsCount@ is not @0@,
---     @pAttachmentInitialSampleLocations@ /must/ be a valid pointer to an
---     array of @attachmentInitialSampleLocationsCount@ valid
---     @VkAttachmentSampleLocationsEXT@ structures
---
--- -   If @postSubpassSampleLocationsCount@ is not @0@,
---     @pPostSubpassSampleLocations@ /must/ be a valid pointer to an array
---     of @postSubpassSampleLocationsCount@ valid
---     @VkSubpassSampleLocationsEXT@ structures
+-- Unresolved directive in VkRenderPassSampleLocationsBeginInfoEXT.txt -
+-- include::{generated}\/validity\/structs\/VkRenderPassSampleLocationsBeginInfoEXT.txt[]
 --
 -- = See Also
 --
@@ -324,11 +333,12 @@ data VkRenderPassSampleLocationsBeginInfoEXT = VkRenderPassSampleLocationsBeginI
   -- subpass or to the final layout of the attachment in case the specified
   -- subpass is the last subpass using that attachment. In addition, if
   -- 'VkPhysicalDeviceSampleLocationsPropertiesEXT'::@variableSampleLocations@
-  -- is @VK_FALSE@, each element of @pPostSubpassSampleLocations@ /must/
-  -- specify the sample location state that matches the sample locations used
-  -- by all pipelines that will be bound to a command buffer during the
-  -- specified subpass. If @variableSampleLocations@ is @VK_TRUE@, the sample
-  -- locations used for rasterization do not depend on
+  -- is 'Graphics.Vulkan.C.Core10.Core.VK_FALSE', each element of
+  -- @pPostSubpassSampleLocations@ /must/ specify the sample location state
+  -- that matches the sample locations used by all pipelines that will be
+  -- bound to a command buffer during the specified subpass. If
+  -- @variableSampleLocations@ is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE',
+  -- the sample locations used for rasterization do not depend on
   -- @pPostSubpassSampleLocations@.
   vkPPostSubpassSampleLocations :: Ptr VkSubpassSampleLocationsEXT
   }
@@ -351,12 +361,13 @@ instance Storable VkRenderPassSampleLocationsBeginInfoEXT where
                 *> poke (ptr `plusPtr` 40) (vkPPostSubpassSampleLocations (poked :: VkRenderPassSampleLocationsBeginInfoEXT))
 
 instance Zero VkRenderPassSampleLocationsBeginInfoEXT where
-  zero = VkRenderPassSampleLocationsBeginInfoEXT zero
+  zero = VkRenderPassSampleLocationsBeginInfoEXT VK_STRUCTURE_TYPE_RENDER_PASS_SAMPLE_LOCATIONS_BEGIN_INFO_EXT
                                                  zero
                                                  zero
                                                  zero
                                                  zero
                                                  zero
+
 -- | VkSampleLocationEXT - Structure specifying the coordinates of a sample
 -- location
 --
@@ -365,13 +376,16 @@ instance Zero VkRenderPassSampleLocationsBeginInfoEXT where
 -- The domain space of the sample location coordinates has an upper-left
 -- origin within the pixel in framebuffer space.
 --
--- The values specified in a @VkSampleLocationEXT@ structure are always
+-- The values specified in a 'VkSampleLocationEXT' structure are always
 -- clamped to the implementation-dependent sample location coordinate range
 -- [@sampleLocationCoordinateRange@[0],@sampleLocationCoordinateRange@[1]]
 -- that /can/ be queried by chaining the
 -- 'VkPhysicalDeviceSampleLocationsPropertiesEXT' structure to the @pNext@
 -- chain of
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2'.
+--
+-- Unresolved directive in VkSampleLocationEXT.txt -
+-- include::{generated}\/validity\/structs\/VkSampleLocationEXT.txt[]
 --
 -- = See Also
 --
@@ -395,6 +409,7 @@ instance Storable VkSampleLocationEXT where
 instance Zero VkSampleLocationEXT where
   zero = VkSampleLocationEXT zero
                              zero
+
 -- | VkSampleLocationsInfoEXT - Structure specifying a set of sample
 -- locations
 --
@@ -404,7 +419,7 @@ instance Zero VkSampleLocationEXT where
 -- be used for rendering or to specify the set of sample locations an image
 -- subresource has been last rendered with for the purposes of layout
 -- transitions of depth\/stencil images created with
--- @VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT@.
+-- 'VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'.
 --
 -- The sample locations in @pSampleLocations@ specify
 -- @sampleLocationsPerPixel@ number of sample locations for each pixel in
@@ -417,27 +432,30 @@ instance Zero VkSampleLocationEXT where
 -- choose the sample locations for the fragment and the contents of
 -- @pSampleLocations@ /may/ be ignored.
 --
--- == Valid Usage (Implicit)
+-- == Valid Usage
+--
+-- Unresolved directive in VkSampleLocationsInfoEXT.txt -
+-- include::{generated}\/validity\/structs\/VkSampleLocationsInfoEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkSampleLocationsInfoEXT = VkSampleLocationsInfoEXT
-  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @sampleLocationsPerPixel@ /must/ be a valid
-  -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkSampleCountFlagBits'
-  -- value
+  , -- | @sampleLocationsPerPixel@ /must/ be a bit value that is set in
+  -- 'VkPhysicalDeviceSampleLocationsPropertiesEXT'::@sampleLocationSampleCounts@
   vkSampleLocationsPerPixel :: VkSampleCountFlagBits
   , -- | @sampleLocationGridSize@ is the size of the sample location grid to
   -- select custom sample locations for.
   vkSampleLocationGridSize :: VkExtent2D
-  , -- | @sampleLocationsCount@ /must/ be greater than @0@
+  , -- | @sampleLocationsCount@ /must/ equal @sampleLocationsPerPixel@ ×
+  -- @sampleLocationGridSize.width@ × @sampleLocationGridSize.height@
   vkSampleLocationsCount :: Word32
-  , -- | @pSampleLocations@ /must/ be a valid pointer to an array of
-  -- @sampleLocationsCount@ @VkSampleLocationEXT@ structures
+  , -- | @pSampleLocations@ is an array of @sampleLocationsCount@
+  -- 'VkSampleLocationEXT' structures.
   vkPSampleLocations :: Ptr VkSampleLocationEXT
   }
   deriving (Eq, Show)
@@ -459,12 +477,13 @@ instance Storable VkSampleLocationsInfoEXT where
                 *> poke (ptr `plusPtr` 32) (vkPSampleLocations (poked :: VkSampleLocationsInfoEXT))
 
 instance Zero VkSampleLocationsInfoEXT where
-  zero = VkSampleLocationsInfoEXT zero
+  zero = VkSampleLocationsInfoEXT VK_STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT
                                   zero
                                   zero
                                   zero
                                   zero
                                   zero
+
 -- | VkSubpassSampleLocationsEXT - Structure specifying the sample locations
 -- state to use for layout transitions of attachments performed after a
 -- given subpass
@@ -473,13 +492,16 @@ instance Zero VkSampleLocationsInfoEXT where
 --
 -- If the image referenced by the depth\/stencil attachment used in the
 -- subpass identified by @subpassIndex@ was not created with
--- @VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT@ or if the
+-- 'VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT' or if the
 -- subpass does not use a depth\/stencil attachment, and
 -- 'VkPhysicalDeviceSampleLocationsPropertiesEXT'::@variableSampleLocations@
--- is @VK_TRUE@ then the values specified in @sampleLocationsInfo@ are
--- ignored.
+-- is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' then the values specified in
+-- @sampleLocationsInfo@ are ignored.
 --
--- == Valid Usage (Implicit)
+-- == Valid Usage
+--
+-- Unresolved directive in VkSubpassSampleLocationsEXT.txt -
+-- include::{generated}\/validity\/structs\/VkSubpassSampleLocationsEXT.txt[]
 --
 -- = See Also
 --
@@ -491,8 +513,10 @@ data VkSubpassSampleLocationsEXT = VkSubpassSampleLocationsEXT
   -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkRenderPassBeginInfo'::@renderPass@
   -- was created with
   vkSubpassIndex :: Word32
-  , -- | @sampleLocationsInfo@ /must/ be a valid @VkSampleLocationsInfoEXT@
-  -- structure
+  , -- | @sampleLocationsInfo@ is the sample locations state to use for the
+  -- layout transition of the depth\/stencil attachment away from the image
+  -- layout the attachment is used with in the subpass specified in
+  -- @subpassIndex@.
   vkSampleLocationsInfo :: VkSampleLocationsInfoEXT
   }
   deriving (Eq, Show)
@@ -508,7 +532,7 @@ instance Storable VkSubpassSampleLocationsEXT where
 instance Zero VkSubpassSampleLocationsEXT where
   zero = VkSubpassSampleLocationsEXT zero
                                      zero
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkCmdSetSampleLocationsEXT - Set the dynamic sample locations state
 --
 -- = Parameters
@@ -521,7 +545,7 @@ instance Zero VkSubpassSampleLocationsEXT where
 -- == Valid Usage
 --
 -- -   The bound graphics pipeline /must/ have been created with the
---     @VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT@ dynamic state enabled
+--     'VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT' dynamic state enabled
 --
 -- -   The @sampleLocationsPerPixel@ member of @pSampleLocationsInfo@
 --     /must/ equal the @rasterizationSamples@ member of the
@@ -530,65 +554,40 @@ instance Zero VkSubpassSampleLocationsEXT where
 --
 -- -   If
 --     'VkPhysicalDeviceSampleLocationsPropertiesEXT'::@variableSampleLocations@
---     is @VK_FALSE@ then the current render pass /must/ have been begun by
---     specifying a 'VkRenderPassSampleLocationsBeginInfoEXT' structure
---     whose @pPostSubpassSampleLocations@ member contains an element with
---     a @subpassIndex@ matching the current subpass index and the
+--     is 'Graphics.Vulkan.C.Core10.Core.VK_FALSE' then the current render
+--     pass /must/ have been begun by specifying a
+--     'VkRenderPassSampleLocationsBeginInfoEXT' structure whose
+--     @pPostSubpassSampleLocations@ member contains an element with a
+--     @subpassIndex@ matching the current subpass index and the
 --     @sampleLocationsInfo@ member of that element /must/ match the sample
 --     locations state pointed to by @pSampleLocationsInfo@
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @pSampleLocationsInfo@ /must/ be a valid pointer to a valid
---     @VkSampleLocationsInfoEXT@ structure
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdSetSampleLocationsEXT.txt -
+-- include::{generated}\/validity\/protos\/vkCmdSetSampleLocationsEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdSetSampleLocationsEXT" vkCmdSetSampleLocationsEXT :: ("commandBuffer" ::: VkCommandBuffer) -> ("pSampleLocationsInfo" ::: Ptr VkSampleLocationsInfoEXT) -> IO ()
-
+#else
+vkCmdSetSampleLocationsEXT :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("pSampleLocationsInfo" ::: Ptr VkSampleLocationsInfoEXT) -> IO ()
+vkCmdSetSampleLocationsEXT deviceCmds = mkVkCmdSetSampleLocationsEXT (pVkCmdSetSampleLocationsEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdSetSampleLocationsEXT
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("pSampleLocationsInfo" ::: Ptr VkSampleLocationsInfoEXT) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("pSampleLocationsInfo" ::: Ptr VkSampleLocationsInfoEXT) -> IO ())
+#endif
+
 type FN_vkCmdSetSampleLocationsEXT = ("commandBuffer" ::: VkCommandBuffer) -> ("pSampleLocationsInfo" ::: Ptr VkSampleLocationsInfoEXT) -> IO ()
 type PFN_vkCmdSetSampleLocationsEXT = FunPtr FN_vkCmdSetSampleLocationsEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkGetPhysicalDeviceMultisamplePropertiesEXT - Report sample count
 -- specific multisampling capabilities of a physical device
 --
@@ -604,50 +603,75 @@ type PFN_vkCmdSetSampleLocationsEXT = FunPtr FN_vkCmdSetSampleLocationsEXT
 --     additional multisampling capabilities specific to the sample count
 --     is returned.
 --
--- == Valid Usage (Implicit)
+-- = Description
+--
+-- Unresolved directive in vkGetPhysicalDeviceMultisamplePropertiesEXT.txt
+-- -
+-- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceMultisamplePropertiesEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetPhysicalDeviceMultisamplePropertiesEXT" vkGetPhysicalDeviceMultisamplePropertiesEXT :: ("physicalDevice" ::: VkPhysicalDevice) -> ("samples" ::: VkSampleCountFlagBits) -> ("pMultisampleProperties" ::: Ptr VkMultisamplePropertiesEXT) -> IO ()
-
+#else
+vkGetPhysicalDeviceMultisamplePropertiesEXT :: InstanceCmds -> ("physicalDevice" ::: VkPhysicalDevice) -> ("samples" ::: VkSampleCountFlagBits) -> ("pMultisampleProperties" ::: Ptr VkMultisamplePropertiesEXT) -> IO ()
+vkGetPhysicalDeviceMultisamplePropertiesEXT deviceCmds = mkVkGetPhysicalDeviceMultisamplePropertiesEXT (pVkGetPhysicalDeviceMultisamplePropertiesEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetPhysicalDeviceMultisamplePropertiesEXT
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("samples" ::: VkSampleCountFlagBits) -> ("pMultisampleProperties" ::: Ptr VkMultisamplePropertiesEXT) -> IO ()) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("samples" ::: VkSampleCountFlagBits) -> ("pMultisampleProperties" ::: Ptr VkMultisamplePropertiesEXT) -> IO ())
+#endif
+
 type FN_vkGetPhysicalDeviceMultisamplePropertiesEXT = ("physicalDevice" ::: VkPhysicalDevice) -> ("samples" ::: VkSampleCountFlagBits) -> ("pMultisampleProperties" ::: Ptr VkMultisamplePropertiesEXT) -> IO ()
 type PFN_vkGetPhysicalDeviceMultisamplePropertiesEXT = FunPtr FN_vkGetPhysicalDeviceMultisamplePropertiesEXT
--- | @VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT@ specifies that the
+
+-- | 'VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT' specifies that the
 -- @sampleLocationsInfo@ state in
 -- 'VkPipelineSampleLocationsStateCreateInfoEXT' will be ignored and /must/
 -- be set dynamically with 'vkCmdSetSampleLocationsEXT' before any draw or
 -- clear commands. Enabling custom sample locations is still indicated by
 -- the @sampleLocationsEnable@ member of
--- @VkPipelineSampleLocationsStateCreateInfoEXT@.
+-- 'VkPipelineSampleLocationsStateCreateInfoEXT'.
 pattern VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT :: VkDynamicState
 pattern VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT = VkDynamicState 1000143000
+
 -- No documentation found for TopLevel "VK_EXT_SAMPLE_LOCATIONS_EXTENSION_NAME"
 pattern VK_EXT_SAMPLE_LOCATIONS_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_SAMPLE_LOCATIONS_EXTENSION_NAME = "VK_EXT_sample_locations"
+
 -- No documentation found for TopLevel "VK_EXT_SAMPLE_LOCATIONS_SPEC_VERSION"
 pattern VK_EXT_SAMPLE_LOCATIONS_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_SAMPLE_LOCATIONS_SPEC_VERSION = 1
--- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT"
+
+-- | 'VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT' specifies
+-- that an image with a depth or depth\/stencil format /can/ be used with
+-- custom sample locations when used as a depth\/stencil attachment.
 pattern VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT = VkImageCreateFlagBits 0x00001000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT"
 pattern VK_STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT = VkStructureType 1000143004
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLE_LOCATIONS_PROPERTIES_EXT"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLE_LOCATIONS_PROPERTIES_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLE_LOCATIONS_PROPERTIES_EXT = VkStructureType 1000143003
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_SAMPLE_LOCATIONS_STATE_CREATE_INFO_EXT"
 pattern VK_STRUCTURE_TYPE_PIPELINE_SAMPLE_LOCATIONS_STATE_CREATE_INFO_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PIPELINE_SAMPLE_LOCATIONS_STATE_CREATE_INFO_EXT = VkStructureType 1000143002
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDER_PASS_SAMPLE_LOCATIONS_BEGIN_INFO_EXT"
 pattern VK_STRUCTURE_TYPE_RENDER_PASS_SAMPLE_LOCATIONS_BEGIN_INFO_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_RENDER_PASS_SAMPLE_LOCATIONS_BEGIN_INFO_EXT = VkStructureType 1000143001
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT"
 pattern VK_STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT = VkStructureType 1000143000

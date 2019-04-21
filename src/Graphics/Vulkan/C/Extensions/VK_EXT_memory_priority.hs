@@ -49,7 +49,7 @@ import Graphics.Vulkan.C.Core10.Core
 -- == Valid Usage
 --
 -- Unresolved directive in VkMemoryPriorityAllocateInfoEXT.txt -
--- include::..\/validity\/structs\/VkMemoryPriorityAllocateInfoEXT.txt[]
+-- include::{generated}\/validity\/structs\/VkMemoryPriorityAllocateInfoEXT.txt[]
 --
 -- = See Also
 --
@@ -75,29 +75,30 @@ instance Storable VkMemoryPriorityAllocateInfoEXT where
                 *> poke (ptr `plusPtr` 16) (vkPriority (poked :: VkMemoryPriorityAllocateInfoEXT))
 
 instance Zero VkMemoryPriorityAllocateInfoEXT where
-  zero = VkMemoryPriorityAllocateInfoEXT zero
+  zero = VkMemoryPriorityAllocateInfoEXT VK_STRUCTURE_TYPE_MEMORY_PRIORITY_ALLOCATE_INFO_EXT
                                          zero
                                          zero
+
 -- | VkPhysicalDeviceMemoryPriorityFeaturesEXT - Structure describing memory
 -- priority features that can be supported by an implementation
 --
 -- = Members
 --
--- The members of the @VkPhysicalDeviceMemoryPriorityFeaturesEXT@ structure
+-- The members of the 'VkPhysicalDeviceMemoryPriorityFeaturesEXT' structure
 -- describe the following features:
 --
 -- = Description
 --
--- If the @VkPhysicalDeviceMemoryPriorityFeaturesEXT@ structure is included
+-- If the 'VkPhysicalDeviceMemoryPriorityFeaturesEXT' structure is included
 -- in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
 -- it is filled with values indicating whether the feature is supported.
--- @VkPhysicalDeviceMemoryPriorityFeaturesEXT@ /can/ also be used in the
+-- 'VkPhysicalDeviceMemoryPriorityFeaturesEXT' /can/ also be used in the
 -- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to
 -- enable features.
 --
 -- Unresolved directive in VkPhysicalDeviceMemoryPriorityFeaturesEXT.txt -
--- include::..\/validity\/structs\/VkPhysicalDeviceMemoryPriorityFeaturesEXT.txt[]
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceMemoryPriorityFeaturesEXT.txt[]
 --
 -- = See Also
 --
@@ -125,18 +126,22 @@ instance Storable VkPhysicalDeviceMemoryPriorityFeaturesEXT where
                 *> poke (ptr `plusPtr` 16) (vkMemoryPriority (poked :: VkPhysicalDeviceMemoryPriorityFeaturesEXT))
 
 instance Zero VkPhysicalDeviceMemoryPriorityFeaturesEXT where
-  zero = VkPhysicalDeviceMemoryPriorityFeaturesEXT zero
+  zero = VkPhysicalDeviceMemoryPriorityFeaturesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PRIORITY_FEATURES_EXT
                                                    zero
                                                    zero
+
 -- No documentation found for TopLevel "VK_EXT_MEMORY_PRIORITY_EXTENSION_NAME"
 pattern VK_EXT_MEMORY_PRIORITY_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_MEMORY_PRIORITY_EXTENSION_NAME = "VK_EXT_memory_priority"
+
 -- No documentation found for TopLevel "VK_EXT_MEMORY_PRIORITY_SPEC_VERSION"
 pattern VK_EXT_MEMORY_PRIORITY_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_MEMORY_PRIORITY_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MEMORY_PRIORITY_ALLOCATE_INFO_EXT"
 pattern VK_STRUCTURE_TYPE_MEMORY_PRIORITY_ALLOCATE_INFO_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_MEMORY_PRIORITY_ALLOCATE_INFO_EXT = VkStructureType 1000238001
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PRIORITY_FEATURES_EXT"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PRIORITY_FEATURES_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PRIORITY_FEATURES_EXT = VkStructureType 1000238000

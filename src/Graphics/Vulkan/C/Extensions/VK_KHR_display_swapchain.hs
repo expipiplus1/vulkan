@@ -8,11 +8,9 @@
 
 module Graphics.Vulkan.C.Extensions.VK_KHR_display_swapchain
   ( VkDisplayPresentInfoKHR(..)
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkCreateSharedSwapchainsKHR
-#endif
   , FN_vkCreateSharedSwapchainsKHR
   , PFN_vkCreateSharedSwapchainsKHR
+  , vkCreateSharedSwapchainsKHR
   , pattern VK_ERROR_INCOMPATIBLE_DISPLAY_KHR
   , pattern VK_KHR_DISPLAY_SWAPCHAIN_EXTENSION_NAME
   , pattern VK_KHR_DISPLAY_SWAPCHAIN_SPEC_VERSION
@@ -49,6 +47,9 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
 import Graphics.Vulkan.C.Core10.Pipeline
   ( VkRect2D(..)
   )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_KHR_swapchain
   ( VkSwapchainCreateInfoKHR(..)
   , VkSwapchainKHR
@@ -75,14 +76,15 @@ import Graphics.Vulkan.NamedType
 --     the @visibleRegion@ parameter of the display mode the swapchain
 --     being presented uses
 --
--- -   If the @persistentContent@ member of the @VkDisplayPropertiesKHR@
---     structure returned by @vkGetPhysicalDeviceDisplayPropertiesKHR@ for
---     the display the present operation targets then @persistent@ /must/
---     be @VK_FALSE@
+-- -   If the @persistentContent@ member of the
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayPropertiesKHR'
+--     structure returned by
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetPhysicalDeviceDisplayPropertiesKHR'
+--     for the display the present operation targets then @persistent@
+--     /must/ be 'Graphics.Vulkan.C.Core10.Core.VK_FALSE'
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR@
+-- Unresolved directive in VkDisplayPresentInfoKHR.txt -
+-- include::{generated}\/validity\/structs\/VkDisplayPresentInfoKHR.txt[]
 --
 -- = See Also
 --
@@ -93,12 +95,12 @@ data VkDisplayPresentInfoKHR = VkDisplayPresentInfoKHR
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
   , -- | @srcRect@ is a rectangular region of pixels to present. It /must/ be a
-  -- subset of the image being presented. If @VkDisplayPresentInfoKHR@ is not
+  -- subset of the image being presented. If 'VkDisplayPresentInfoKHR' is not
   -- specified, this region will be assumed to be the entire presentable
   -- image.
   vkSrcRect :: VkRect2D
   , -- | @dstRect@ is a rectangular region within the visible region of the
-  -- swapchain’s display mode. If @VkDisplayPresentInfoKHR@ is not specified,
+  -- swapchain’s display mode. If 'VkDisplayPresentInfoKHR' is not specified,
   -- this region will be assumed to be the entire visible region of the
   -- visible region of the swapchain’s mode. If the specified rectangle is a
   -- subset of the display mode’s visible region, content from display planes
@@ -108,13 +110,13 @@ data VkDisplayPresentInfoKHR = VkDisplayPresentInfoKHR
   -- rectangle are outside of the display’s visible region, pixels mapping
   -- only to those portions of the rectangle will be discarded.
   vkDstRect :: VkRect2D
-  , -- | @persistent@: If this is @VK_TRUE@, the display engine will enable
-  -- buffered mode on displays that support it. This allows the display
-  -- engine to stop sending content to the display until a new image is
-  -- presented. The display will instead maintain a copy of the last
-  -- presented image. This allows less power to be used, but /may/ increase
-  -- presentation latency. If @VkDisplayPresentInfoKHR@ is not specified,
-  -- persistent mode will not be used.
+  , -- | @persistent@: If this is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE', the
+  -- display engine will enable buffered mode on displays that support it.
+  -- This allows the display engine to stop sending content to the display
+  -- until a new image is presented. The display will instead maintain a copy
+  -- of the last presented image. This allows less power to be used, but
+  -- /may/ increase presentation latency. If 'VkDisplayPresentInfoKHR' is not
+  -- specified, persistent mode will not be used.
   vkPersistent :: VkBool32
   }
   deriving (Eq, Show)
@@ -134,12 +136,12 @@ instance Storable VkDisplayPresentInfoKHR where
                 *> poke (ptr `plusPtr` 48) (vkPersistent (poked :: VkDisplayPresentInfoKHR))
 
 instance Zero VkDisplayPresentInfoKHR where
-  zero = VkDisplayPresentInfoKHR zero
+  zero = VkDisplayPresentInfoKHR VK_STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR
                                  zero
                                  zero
                                  zero
                                  zero
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkCreateSharedSwapchainsKHR - Create multiple swapchains that share
 -- presentable images
 --
@@ -156,7 +158,7 @@ instance Zero VkDisplayPresentInfoKHR where
 -- -   @pAllocator@ is the allocator used for host memory allocated for the
 --     swapchain objects when there is no more specific allocator available
 --     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
 --
 -- -   @pSwapchains@ is a pointer to an array of
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
@@ -164,7 +166,7 @@ instance Zero VkDisplayPresentInfoKHR where
 --
 -- = Description
 --
--- @vkCreateSharedSwapchainsKHR@ is similar to
+-- 'vkCreateSharedSwapchainsKHR' is similar to
 -- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkCreateSwapchainKHR',
 -- except that it takes an array of
 -- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR'
@@ -175,75 +177,53 @@ instance Zero VkDisplayPresentInfoKHR where
 -- displays used by any of the swapchains do not use the same presentable
 -- image layout or are incompatible in a way that prevents sharing images,
 -- swapchain creation will fail with the result code
--- @VK_ERROR_INCOMPATIBLE_DISPLAY_KHR@. If any error occurs, no swapchains
+-- 'VK_ERROR_INCOMPATIBLE_DISPLAY_KHR'. If any error occurs, no swapchains
 -- will be created. Images presented to multiple swapchains /must/ be
 -- re-acquired from all of them before transitioning away from
--- @VK_IMAGE_LAYOUT_PRESENT_SRC_KHR@. After destroying one or more of the
--- swapchains, the remaining swapchains and the presentable images /can/
--- continue to be used.
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VK_IMAGE_LAYOUT_PRESENT_SRC_KHR'.
+-- After destroying one or more of the swapchains, the remaining swapchains
+-- and the presentable images /can/ continue to be used.
 --
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   @pCreateInfos@ /must/ be a valid pointer to an array of
---     @swapchainCount@ valid @VkSwapchainCreateInfoKHR@ structures
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
---
--- -   @pSwapchains@ /must/ be a valid pointer to an array of
---     @swapchainCount@ @VkSwapchainKHR@ handles
---
--- -   @swapchainCount@ /must/ be greater than @0@
---
--- == Host Synchronization
---
--- -   Host access to @pCreateInfos@[].surface /must/ be externally
---     synchronized
---
--- -   Host access to @pCreateInfos@[].oldSwapchain /must/ be externally
---     synchronized
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
---
---     -   @VK_ERROR_INCOMPATIBLE_DISPLAY_KHR@
---
---     -   @VK_ERROR_DEVICE_LOST@
---
---     -   @VK_ERROR_SURFACE_LOST_KHR@
+-- Unresolved directive in vkCreateSharedSwapchainsKHR.txt -
+-- include::{generated}\/validity\/protos\/vkCreateSharedSwapchainsKHR.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCreateSharedSwapchainsKHR" vkCreateSharedSwapchainsKHR :: ("device" ::: VkDevice) -> ("swapchainCount" ::: Word32) -> ("pCreateInfos" ::: Ptr VkSwapchainCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSwapchains" ::: Ptr VkSwapchainKHR) -> IO VkResult
-
+#else
+vkCreateSharedSwapchainsKHR :: DeviceCmds -> ("device" ::: VkDevice) -> ("swapchainCount" ::: Word32) -> ("pCreateInfos" ::: Ptr VkSwapchainCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSwapchains" ::: Ptr VkSwapchainKHR) -> IO VkResult
+vkCreateSharedSwapchainsKHR deviceCmds = mkVkCreateSharedSwapchainsKHR (pVkCreateSharedSwapchainsKHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCreateSharedSwapchainsKHR
+  :: FunPtr (("device" ::: VkDevice) -> ("swapchainCount" ::: Word32) -> ("pCreateInfos" ::: Ptr VkSwapchainCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSwapchains" ::: Ptr VkSwapchainKHR) -> IO VkResult) -> (("device" ::: VkDevice) -> ("swapchainCount" ::: Word32) -> ("pCreateInfos" ::: Ptr VkSwapchainCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSwapchains" ::: Ptr VkSwapchainKHR) -> IO VkResult)
+#endif
+
 type FN_vkCreateSharedSwapchainsKHR = ("device" ::: VkDevice) -> ("swapchainCount" ::: Word32) -> ("pCreateInfos" ::: Ptr VkSwapchainCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSwapchains" ::: Ptr VkSwapchainKHR) -> IO VkResult
 type PFN_vkCreateSharedSwapchainsKHR = FunPtr FN_vkCreateSharedSwapchainsKHR
--- | @VK_ERROR_INCOMPATIBLE_DISPLAY_KHR@ The display used by a swapchain does
+
+-- | 'VK_ERROR_INCOMPATIBLE_DISPLAY_KHR' The display used by a swapchain does
 -- not use the same presentable image layout, or is incompatible in a way
 -- that prevents sharing an image.
 pattern VK_ERROR_INCOMPATIBLE_DISPLAY_KHR :: VkResult
 pattern VK_ERROR_INCOMPATIBLE_DISPLAY_KHR = VkResult (-1000003001)
+
 -- No documentation found for TopLevel "VK_KHR_DISPLAY_SWAPCHAIN_EXTENSION_NAME"
 pattern VK_KHR_DISPLAY_SWAPCHAIN_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_DISPLAY_SWAPCHAIN_EXTENSION_NAME = "VK_KHR_display_swapchain"
+
 -- No documentation found for TopLevel "VK_KHR_DISPLAY_SWAPCHAIN_SPEC_VERSION"
 pattern VK_KHR_DISPLAY_SWAPCHAIN_SPEC_VERSION :: Integral a => a
 pattern VK_KHR_DISPLAY_SWAPCHAIN_SPEC_VERSION = 9
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR"
 pattern VK_STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR = VkStructureType 1000003000

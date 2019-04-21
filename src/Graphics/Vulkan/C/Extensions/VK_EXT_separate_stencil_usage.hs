@@ -56,19 +56,22 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
 -- aspect of the image using
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceImageFormatProperties2'.
 -- When this structure is not present in the @pNext@ chain of
--- @VkPhysicalDeviceImageFormatInfo2@ then the implicit value of
--- @stencilUsage@ matches that of
--- @VkPhysicalDeviceImageFormatInfo2@::@usage@.
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2'
+-- then the implicit value of @stencilUsage@ matches that of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2'::@usage@.
 --
 -- == Valid Usage
 --
 -- -   If @stencilUsage@ includes
---     @VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT@, then bits other than
---     @VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT@, and
---     @VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT@ /must/ not be set
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT',
+--     then bits other than
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT',
+--     and
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
+--     /must/ not be set
 --
 -- Unresolved directive in VkImageStencilUsageCreateInfoEXT.txt -
--- include::..\/validity\/structs\/VkImageStencilUsageCreateInfoEXT.txt[]
+-- include::{generated}\/validity\/structs\/VkImageStencilUsageCreateInfoEXT.txt[]
 --
 -- = See Also
 --
@@ -96,15 +99,18 @@ instance Storable VkImageStencilUsageCreateInfoEXT where
                 *> poke (ptr `plusPtr` 16) (vkStencilUsage (poked :: VkImageStencilUsageCreateInfoEXT))
 
 instance Zero VkImageStencilUsageCreateInfoEXT where
-  zero = VkImageStencilUsageCreateInfoEXT zero
+  zero = VkImageStencilUsageCreateInfoEXT VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO_EXT
                                           zero
                                           zero
+
 -- No documentation found for TopLevel "VK_EXT_SEPARATE_STENCIL_USAGE_EXTENSION_NAME"
 pattern VK_EXT_SEPARATE_STENCIL_USAGE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_SEPARATE_STENCIL_USAGE_EXTENSION_NAME = "VK_EXT_separate_stencil_usage"
+
 -- No documentation found for TopLevel "VK_EXT_SEPARATE_STENCIL_USAGE_SPEC_VERSION"
 pattern VK_EXT_SEPARATE_STENCIL_USAGE_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_SEPARATE_STENCIL_USAGE_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO_EXT"
 pattern VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO_EXT = VkStructureType 1000246000

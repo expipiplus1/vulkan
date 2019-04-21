@@ -75,13 +75,18 @@ import Graphics.Vulkan.Extensions.VK_KHR_push_descriptor
 
 type DescriptorUpdateTemplateCreateInfoKHR = DescriptorUpdateTemplateCreateInfo
 -- TODO: Pattern constructor alias)
+
 type DescriptorUpdateTemplateEntryKHR = DescriptorUpdateTemplateEntry
 -- TODO: Pattern constructor alias)
+
 -- No documentation found for TopLevel "DescriptorUpdateTemplateKHR"
 type DescriptorUpdateTemplateKHR = DescriptorUpdateTemplate
+
 createDescriptorUpdateTemplateKHR :: Device ->  DescriptorUpdateTemplateCreateInfo ->  Maybe AllocationCallbacks ->  IO (DescriptorUpdateTemplate)
 createDescriptorUpdateTemplateKHR = createDescriptorUpdateTemplate
+
 destroyDescriptorUpdateTemplateKHR :: Device ->  DescriptorUpdateTemplate ->  Maybe AllocationCallbacks ->  IO ()
 destroyDescriptorUpdateTemplateKHR = destroyDescriptorUpdateTemplate
+
 updateDescriptorSetWithTemplateKHR :: Device ->  DescriptorSet ->  DescriptorUpdateTemplate ->  Ptr () ->  IO ()
 updateDescriptorSetWithTemplateKHR = updateDescriptorSetWithTemplate

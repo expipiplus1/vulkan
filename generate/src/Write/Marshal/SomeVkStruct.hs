@@ -118,15 +118,26 @@ someVkStructWriteElement getHandle platforms structs
         instances <-
           traverse (writeSomeStructInstances guardMap containsUnion containsDispatchableHandle) structs
         pure $ \_ -> [qci|
+          -- | A class for types which can be marshalled into a C style
+          -- structure.
           class ToCStruct marshalled c | marshalled -> c, c -> marshalled where
+            -- | Allocates a C type structure and all dependencies and passes
+            -- it to a continuation. The space is deallocated when this
+            -- continuation returns and the C type structure must not be
+            -- returned out of it.
             withCStruct :: marshalled -> (c -> IO a) -> IO a
 
+          -- | A class for converting C type structures to the marshalled types
           class FromCStruct marshalled c | marshalled -> c, c -> marshalled where
+            -- | Read a C type structure and dependencies
             fromCStruct :: c -> IO marshalled
 
+          -- | A class for types which can be present in a @pNext@ chain
           class HasNext a where
             getNext :: a -> Maybe SomeVkStruct
 
+          -- | A wrapper for holding any Vulkan struct, this is used to
+          -- implement structure @pNext@ chains.
           data SomeVkStruct where
             SomeVkStruct
               :: (ToCStruct a b, Storable b, Show a, Eq a, Typeable a, HasNext a)
@@ -152,13 +163,19 @@ someVkStructWriteElement getHandle platforms structs
           fromCStructPtrElem :: (Storable c, FromCStruct a c) => Ptr c -> Int -> IO a
           fromCStructPtrElem p o = fromCStruct =<< peekElemOff p o
 
+          -- | Convert a 'SomeVkStruct' to a structure of a known type if
+          -- possible.
           fromSomeVkStruct :: Typeable a => SomeVkStruct -> Maybe a
           fromSomeVkStruct (SomeVkStruct s) = cast s
 
+          -- | Search the whole pointer chain for a structure of a particular
+          -- type and return that if possible
           fromSomeVkStructChain :: Typeable a => SomeVkStruct -> Maybe a
           fromSomeVkStructChain s =
             fromSomeVkStruct s <|> (getNext s >>= fromSomeVkStructChain)
 
+          -- | Allocate space for the value contained in a 'SomeVkStruct' and
+          -- use that in continuation.
           withSomeVkStruct :: SomeVkStruct -> (Ptr () -> IO a) -> IO a
           withSomeVkStruct (SomeVkStruct s) f = withCStructPtr s (f . castPtr)
 

@@ -20,11 +20,9 @@ module Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities
   , pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV
   , pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV
   , VkExternalMemoryHandleTypeFlagsNV
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkGetPhysicalDeviceExternalImageFormatPropertiesNV
-#endif
   , FN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV
   , PFN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV
+  , vkGetPhysicalDeviceExternalImageFormatPropertiesNV
   , pattern VK_NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME
   , pattern VK_NV_EXTERNAL_MEMORY_CAPABILITIES_SPEC_VERSION
   ) where
@@ -70,20 +68,18 @@ import Graphics.Vulkan.C.Core10.Core
   , VkFlags
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
-  ( VkImageFormatProperties(..)
+  ( VkImageCreateFlagBits(..)
+  , VkImageFormatProperties(..)
   , VkImageTiling(..)
   , VkImageType(..)
+  , VkImageUsageFlagBits(..)
   , VkImageCreateFlags
   , VkImageUsageFlags
   , VkPhysicalDevice
   )
-
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-import Graphics.Vulkan.C.Core10.DeviceInitialization
-  ( VkImageCreateFlagBits(..)
-  , VkImageUsageFlagBits(..)
+import Graphics.Vulkan.C.Dynamic
+  ( InstanceCmds(..)
   )
-#endif
 import Graphics.Vulkan.NamedType
   ( (:::)
   )
@@ -91,6 +87,11 @@ import Graphics.Vulkan.NamedType
 
 -- | VkExternalImageFormatPropertiesNV - Structure specifying external image
 -- format properties
+--
+-- = Description
+--
+-- Unresolved directive in VkExternalImageFormatPropertiesNV.txt -
+-- include::{generated}\/validity\/structs\/VkExternalImageFormatPropertiesNV.txt[]
 --
 -- = See Also
 --
@@ -144,6 +145,7 @@ instance Zero VkExternalImageFormatPropertiesNV where
                                            zero
                                            zero
                                            zero
+
 -- ** VkExternalMemoryFeatureFlagBitsNV
 
 -- | VkExternalMemoryFeatureFlagBitsNV - Bitmask specifying external memory
@@ -151,8 +153,8 @@ instance Zero VkExternalImageFormatPropertiesNV where
 --
 -- = See Also
 --
--- UNKNOWN:VkExternalImageFormatPropertiesNV,
--- UNKNOWN:vkGetPhysicalDeviceExternalImageFormatPropertiesNV
+-- 'VkExternalImageFormatPropertiesNV',
+-- 'vkGetPhysicalDeviceExternalImageFormatPropertiesNV'
 newtype VkExternalMemoryFeatureFlagBitsNV = VkExternalMemoryFeatureFlagBitsNV VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -174,33 +176,35 @@ instance Read VkExternalMemoryFeatureFlagBitsNV where
                         )
                     )
 
--- | @VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV@ specifies that
+-- | 'VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV' specifies that
 -- external memory of the specified type /must/ be created as a dedicated
 -- allocation when used in the manner specified.
 pattern VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV :: VkExternalMemoryFeatureFlagBitsNV
 pattern VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV = VkExternalMemoryFeatureFlagBitsNV 0x00000001
 
--- | @VK_EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV@ specifies that the
+-- | 'VK_EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV' specifies that the
 -- implementation supports exporting handles of the specified type.
 pattern VK_EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV :: VkExternalMemoryFeatureFlagBitsNV
 pattern VK_EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV = VkExternalMemoryFeatureFlagBitsNV 0x00000002
 
--- | @VK_EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV@ specifies that the
+-- | 'VK_EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV' specifies that the
 -- implementation supports importing handles of the specified type.
 pattern VK_EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV :: VkExternalMemoryFeatureFlagBitsNV
 pattern VK_EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV = VkExternalMemoryFeatureFlagBitsNV 0x00000004
+
 -- | VkExternalMemoryFeatureFlagsNV - Bitmask of
 -- VkExternalMemoryFeatureFlagBitsNV
 --
 -- = Description
 --
--- @VkExternalMemoryFeatureFlagsNV@ is a bitmask type for setting a mask of
+-- 'VkExternalMemoryFeatureFlagsNV' is a bitmask type for setting a mask of
 -- zero or more 'VkExternalMemoryFeatureFlagBitsNV'.
 --
 -- = See Also
 --
 -- No cross-references are available
 type VkExternalMemoryFeatureFlagsNV = VkExternalMemoryFeatureFlagBitsNV
+
 -- ** VkExternalMemoryHandleTypeFlagBitsNV
 
 -- | VkExternalMemoryHandleTypeFlagBitsNV - Bitmask specifying external
@@ -232,42 +236,43 @@ instance Read VkExternalMemoryHandleTypeFlagBitsNV where
                         )
                     )
 
--- | @VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV@ specifies a handle
+-- | 'VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV' specifies a handle
 -- to memory returned by
 -- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32.vkGetMemoryWin32HandleNV',
 -- or one duplicated from such a handle using @DuplicateHandle()@.
 pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV :: VkExternalMemoryHandleTypeFlagBitsNV
 pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV = VkExternalMemoryHandleTypeFlagBitsNV 0x00000001
 
--- | @VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV@ specifies a
+-- | 'VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV' specifies a
 -- handle to memory returned by
 -- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32.vkGetMemoryWin32HandleNV'.
 pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV :: VkExternalMemoryHandleTypeFlagBitsNV
 pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV = VkExternalMemoryHandleTypeFlagBitsNV 0x00000002
 
--- | @VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV@ specifies a valid NT
+-- | 'VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV' specifies a valid NT
 -- handle to memory returned by @IDXGIResource1::CreateSharedHandle@, or a
 -- handle duplicated from such a handle using @DuplicateHandle()@.
 pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV :: VkExternalMemoryHandleTypeFlagBitsNV
 pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV = VkExternalMemoryHandleTypeFlagBitsNV 0x00000004
 
--- | @VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV@ specifies a
+-- | 'VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV' specifies a
 -- handle to memory returned by @IDXGIResource::GetSharedHandle()@.
 pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV :: VkExternalMemoryHandleTypeFlagBitsNV
 pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV = VkExternalMemoryHandleTypeFlagBitsNV 0x00000008
+
 -- | VkExternalMemoryHandleTypeFlagsNV - Bitmask of
 -- VkExternalMemoryHandleTypeFlagBitsNV
 --
 -- = Description
 --
--- @VkExternalMemoryHandleTypeFlagsNV@ is a bitmask type for setting a mask
+-- 'VkExternalMemoryHandleTypeFlagsNV' is a bitmask type for setting a mask
 -- of zero or more 'VkExternalMemoryHandleTypeFlagBitsNV'.
 --
 -- = See Also
 --
 -- No cross-references are available
 type VkExternalMemoryHandleTypeFlagsNV = VkExternalMemoryHandleTypeFlagBitsNV
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkGetPhysicalDeviceExternalImageFormatPropertiesNV - determine image
 -- capabilities compatible with external memory handle types
 --
@@ -309,33 +314,37 @@ type VkExternalMemoryHandleTypeFlagsNV = VkExternalMemoryHandleTypeFlagBitsNV
 -- Otherwise, they are filled in as described for
 -- 'VkExternalImageFormatPropertiesNV'.
 --
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
---
---     -   @VK_ERROR_FORMAT_NOT_SUPPORTED@
+-- Unresolved directive in
+-- vkGetPhysicalDeviceExternalImageFormatPropertiesNV.txt -
+-- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceExternalImageFormatPropertiesNV.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetPhysicalDeviceExternalImageFormatPropertiesNV" vkGetPhysicalDeviceExternalImageFormatPropertiesNV :: ("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("type" ::: VkImageType) -> ("tiling" ::: VkImageTiling) -> ("usage" ::: VkImageUsageFlags) -> ("flags" ::: VkImageCreateFlags) -> ("externalHandleType" ::: VkExternalMemoryHandleTypeFlagsNV) -> ("pExternalImageFormatProperties" ::: Ptr VkExternalImageFormatPropertiesNV) -> IO VkResult
-
+#else
+vkGetPhysicalDeviceExternalImageFormatPropertiesNV :: InstanceCmds -> ("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("type" ::: VkImageType) -> ("tiling" ::: VkImageTiling) -> ("usage" ::: VkImageUsageFlags) -> ("flags" ::: VkImageCreateFlags) -> ("externalHandleType" ::: VkExternalMemoryHandleTypeFlagsNV) -> ("pExternalImageFormatProperties" ::: Ptr VkExternalImageFormatPropertiesNV) -> IO VkResult
+vkGetPhysicalDeviceExternalImageFormatPropertiesNV deviceCmds = mkVkGetPhysicalDeviceExternalImageFormatPropertiesNV (pVkGetPhysicalDeviceExternalImageFormatPropertiesNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetPhysicalDeviceExternalImageFormatPropertiesNV
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("type" ::: VkImageType) -> ("tiling" ::: VkImageTiling) -> ("usage" ::: VkImageUsageFlags) -> ("flags" ::: VkImageCreateFlags) -> ("externalHandleType" ::: VkExternalMemoryHandleTypeFlagsNV) -> ("pExternalImageFormatProperties" ::: Ptr VkExternalImageFormatPropertiesNV) -> IO VkResult) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("type" ::: VkImageType) -> ("tiling" ::: VkImageTiling) -> ("usage" ::: VkImageUsageFlags) -> ("flags" ::: VkImageCreateFlags) -> ("externalHandleType" ::: VkExternalMemoryHandleTypeFlagsNV) -> ("pExternalImageFormatProperties" ::: Ptr VkExternalImageFormatPropertiesNV) -> IO VkResult)
+#endif
+
 type FN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV = ("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("type" ::: VkImageType) -> ("tiling" ::: VkImageTiling) -> ("usage" ::: VkImageUsageFlags) -> ("flags" ::: VkImageCreateFlags) -> ("externalHandleType" ::: VkExternalMemoryHandleTypeFlagsNV) -> ("pExternalImageFormatProperties" ::: Ptr VkExternalImageFormatPropertiesNV) -> IO VkResult
 type PFN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV = FunPtr FN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV
+
 -- No documentation found for TopLevel "VK_NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME"
 pattern VK_NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME = "VK_NV_external_memory_capabilities"
+
 -- No documentation found for TopLevel "VK_NV_EXTERNAL_MEMORY_CAPABILITIES_SPEC_VERSION"
 pattern VK_NV_EXTERNAL_MEMORY_CAPABILITIES_SPEC_VERSION :: Integral a => a
 pattern VK_NV_EXTERNAL_MEMORY_CAPABILITIES_SPEC_VERSION = 1

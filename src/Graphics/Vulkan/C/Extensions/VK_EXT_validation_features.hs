@@ -100,45 +100,46 @@ instance Read VkValidationFeatureDisableEXT where
                         )
                     )
 
--- | @VK_VALIDATION_FEATURE_DISABLE_ALL_EXT@ specifies that all validation
+-- | 'VK_VALIDATION_FEATURE_DISABLE_ALL_EXT' specifies that all validation
 -- checks are disabled.
 pattern VK_VALIDATION_FEATURE_DISABLE_ALL_EXT :: VkValidationFeatureDisableEXT
 pattern VK_VALIDATION_FEATURE_DISABLE_ALL_EXT = VkValidationFeatureDisableEXT 0
 
--- | @VK_VALIDATION_FEATURE_DISABLE_SHADERS_EXT@ specifies that shader
+-- | 'VK_VALIDATION_FEATURE_DISABLE_SHADERS_EXT' specifies that shader
 -- validation is disabled. This feature is enabled by default.
 pattern VK_VALIDATION_FEATURE_DISABLE_SHADERS_EXT :: VkValidationFeatureDisableEXT
 pattern VK_VALIDATION_FEATURE_DISABLE_SHADERS_EXT = VkValidationFeatureDisableEXT 1
 
--- | @VK_VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT@ specifies that thread
+-- | 'VK_VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT' specifies that thread
 -- safety validation is disabled. This feature is enabled by default.
 pattern VK_VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT :: VkValidationFeatureDisableEXT
 pattern VK_VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT = VkValidationFeatureDisableEXT 2
 
--- | @VK_VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT@ specifies that
+-- | 'VK_VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT' specifies that
 -- stateless parameter validation is disabled. This feature is enabled by
 -- default.
 pattern VK_VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT :: VkValidationFeatureDisableEXT
 pattern VK_VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT = VkValidationFeatureDisableEXT 3
 
--- | @VK_VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT@ specifies that
+-- | 'VK_VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT' specifies that
 -- object lifetime validation is disabled. This feature is enabled by
 -- default.
 pattern VK_VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT :: VkValidationFeatureDisableEXT
 pattern VK_VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT = VkValidationFeatureDisableEXT 4
 
--- | @VK_VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT@ specifies that core
+-- | 'VK_VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT' specifies that core
 -- validation checks are disabled. This feature is enabled by default. If
 -- this feature is disabled, the shader validation and GPU-assisted
 -- validation features are also disabled.
 pattern VK_VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT :: VkValidationFeatureDisableEXT
 pattern VK_VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT = VkValidationFeatureDisableEXT 5
 
--- | @VK_VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT@ specifies that
+-- | 'VK_VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT' specifies that
 -- protection against duplicate non-dispatchable object handles is
 -- disabled. This feature is enabled by default.
 pattern VK_VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT :: VkValidationFeatureDisableEXT
 pattern VK_VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT = VkValidationFeatureDisableEXT 6
+
 -- ** VkValidationFeatureEnableEXT
 
 -- | VkValidationFeatureEnableEXT - Specify validation features to enable
@@ -165,14 +166,14 @@ instance Read VkValidationFeatureEnableEXT where
                         )
                     )
 
--- | @VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT@ specifies that
+-- | 'VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT' specifies that
 -- GPU-assisted validation is enabled. Activating this feature instruments
 -- shader programs to generate additional diagnostic data. This feature is
 -- disabled by default.
 pattern VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT :: VkValidationFeatureEnableEXT
 pattern VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT = VkValidationFeatureEnableEXT 0
 
--- | @VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT@
+-- | 'VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT'
 -- specifies that the validation layers reserve a descriptor set binding
 -- slot for their own use. The layer reports a value for
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxBoundDescriptorSets@
@@ -183,13 +184,14 @@ pattern VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT = VkValidationFeatureEnabl
 -- use this feature.
 pattern VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT :: VkValidationFeatureEnableEXT
 pattern VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT = VkValidationFeatureEnableEXT 1
+
 -- | VkValidationFeaturesEXT - Specify validation features to enable or
 -- disable for a Vulkan instance
 --
 -- = Description
 --
 -- Unresolved directive in VkValidationFeaturesEXT.txt -
--- include::..\/validity\/structs\/VkValidationFeaturesEXT.txt[]
+-- include::{generated}\/validity\/structs\/VkValidationFeaturesEXT.txt[]
 --
 -- = See Also
 --
@@ -231,18 +233,21 @@ instance Storable VkValidationFeaturesEXT where
                 *> poke (ptr `plusPtr` 40) (vkPDisabledValidationFeatures (poked :: VkValidationFeaturesEXT))
 
 instance Zero VkValidationFeaturesEXT where
-  zero = VkValidationFeaturesEXT zero
+  zero = VkValidationFeaturesEXT VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT
                                  zero
                                  zero
                                  zero
                                  zero
                                  zero
+
 -- No documentation found for TopLevel "VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME"
 pattern VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME = "VK_EXT_validation_features"
+
 -- No documentation found for TopLevel "VK_EXT_VALIDATION_FEATURES_SPEC_VERSION"
 pattern VK_EXT_VALIDATION_FEATURES_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_VALIDATION_FEATURES_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT"
 pattern VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT = VkStructureType 1000247000

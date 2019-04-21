@@ -8,16 +8,12 @@
 
 module Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor
   ( VkPhysicalDevicePushDescriptorPropertiesKHR(..)
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkCmdPushDescriptorSetKHR
-#endif
   , FN_vkCmdPushDescriptorSetKHR
   , PFN_vkCmdPushDescriptorSetKHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkCmdPushDescriptorSetWithTemplateKHR
-#endif
+  , vkCmdPushDescriptorSetKHR
   , FN_vkCmdPushDescriptorSetWithTemplateKHR
   , PFN_vkCmdPushDescriptorSetWithTemplateKHR
+  , vkCmdPushDescriptorSetWithTemplateKHR
   , pattern VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR
   , pattern VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR
   , pattern VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME
@@ -63,6 +59,9 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template
   ( VkDescriptorUpdateTemplateType(..)
   , VkDescriptorUpdateTemplate
   )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
+  )
 import Graphics.Vulkan.NamedType
   ( (:::)
   )
@@ -73,30 +72,31 @@ import Graphics.Vulkan.NamedType
 --
 -- = Members
 --
--- The members of the @VkPhysicalDevicePushDescriptorPropertiesKHR@
+-- The members of the 'VkPhysicalDevicePushDescriptorPropertiesKHR'
 -- structure describe the following implementation-dependent limits:
 --
 -- = Description
 --
--- If the @VkPhysicalDevicePushDescriptorPropertiesKHR@ structure is
+-- If the 'VkPhysicalDevicePushDescriptorPropertiesKHR' structure is
 -- included in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- == Valid Usage (Implicit)
+-- Unresolved directive in VkPhysicalDevicePushDescriptorPropertiesKHR.txt
+-- -
+-- include::{generated}\/validity\/structs\/VkPhysicalDevicePushDescriptorPropertiesKHR.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkPhysicalDevicePushDescriptorPropertiesKHR = VkPhysicalDevicePushDescriptorPropertiesKHR
-  { -- | @sType@ /must/ be
-  -- @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
   , -- | @maxPushDescriptors@ is the maximum number of descriptors that /can/ be
   -- used in a descriptor set created with
-  -- @VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR@ set.
+  -- 'VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR' set.
   vkMaxPushDescriptors :: Word32
   }
   deriving (Eq, Show)
@@ -112,10 +112,10 @@ instance Storable VkPhysicalDevicePushDescriptorPropertiesKHR where
                 *> poke (ptr `plusPtr` 16) (vkMaxPushDescriptors (poked :: VkPhysicalDevicePushDescriptorPropertiesKHR))
 
 instance Zero VkPhysicalDevicePushDescriptorPropertiesKHR where
-  zero = VkPhysicalDevicePushDescriptorPropertiesKHR zero
+  zero = VkPhysicalDevicePushDescriptorPropertiesKHR VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR
                                                      zero
                                                      zero
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkCmdPushDescriptorSetKHR - Pushes descriptor updates into a command
 -- buffer
 --
@@ -158,12 +158,12 @@ instance Zero VkPhysicalDevicePushDescriptorPropertiesKHR where
 -- (either compute or graphics, according to the @pipelineBindPoint@) until
 -- the descriptor is overwritten, or else until the set is disturbed as
 -- described in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>.
 -- When the set is disturbed or push descriptors with a different
 -- descriptor set layout are set, all push descriptors are undefined.
 --
 -- Push descriptors that are
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#shaders-staticuse statically used>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#shaders-staticuse statically used>
 -- by a pipeline /must/ not be undefined at the time that a draw or
 -- dispatch command is recorded to execute using that pipeline. This
 -- includes immutable sampler descriptors, which /must/ be pushed before
@@ -182,89 +182,44 @@ instance Zero VkPhysicalDevicePushDescriptorPropertiesKHR where
 -- To push an immutable sampler, use a
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkWriteDescriptorSet' with
 -- @dstBinding@ and @dstArrayElement@ selecting the immutable sampler’s
--- binding. If the descriptor type is @VK_DESCRIPTOR_TYPE_SAMPLER@, the
+-- binding. If the descriptor type is
+-- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLER', the
 -- @pImageInfo@ parameter is ignored and the immutable sampler is taken
 -- from the push descriptor set layout in the pipeline layout. If the
--- descriptor type is @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@, the
--- @sampler@ member of the @pImageInfo@ parameter is ignored and the
+-- descriptor type is
+-- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
+-- the @sampler@ member of the @pImageInfo@ parameter is ignored and the
 -- immutable sampler is taken from the push descriptor set layout in the
 -- pipeline layout.
 --
 -- == Valid Usage
 --
--- -   @pipelineBindPoint@ /must/ be supported by the @commandBuffer@’s
---     parent @VkCommandPool@’s queue family
---
--- -   @set@ /must/ be less than
---     @VkPipelineLayoutCreateInfo@::@setLayoutCount@ provided when
---     @layout@ was created
---
--- -   @set@ /must/ be the unique set number in the pipeline layout that
---     uses a descriptor set layout that was created with
---     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR@
---
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @pipelineBindPoint@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Pass.VkPipelineBindPoint' value
---
--- -   @layout@ /must/ be a valid @VkPipelineLayout@ handle
---
--- -   @pDescriptorWrites@ /must/ be a valid pointer to an array of
---     @descriptorWriteCount@ valid @VkWriteDescriptorSet@ structures
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics, or compute operations
---
--- -   @descriptorWriteCount@ /must/ be greater than @0@
---
--- -   Both of @commandBuffer@, and @layout@ /must/ have been created,
---     allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdPushDescriptorSetKHR.txt -
+-- include::{generated}\/validity\/protos\/vkCmdPushDescriptorSetKHR.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdPushDescriptorSetKHR" vkCmdPushDescriptorSetKHR :: ("commandBuffer" ::: VkCommandBuffer) -> ("pipelineBindPoint" ::: VkPipelineBindPoint) -> ("layout" ::: VkPipelineLayout) -> ("set" ::: Word32) -> ("descriptorWriteCount" ::: Word32) -> ("pDescriptorWrites" ::: Ptr VkWriteDescriptorSet) -> IO ()
-
+#else
+vkCmdPushDescriptorSetKHR :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("pipelineBindPoint" ::: VkPipelineBindPoint) -> ("layout" ::: VkPipelineLayout) -> ("set" ::: Word32) -> ("descriptorWriteCount" ::: Word32) -> ("pDescriptorWrites" ::: Ptr VkWriteDescriptorSet) -> IO ()
+vkCmdPushDescriptorSetKHR deviceCmds = mkVkCmdPushDescriptorSetKHR (pVkCmdPushDescriptorSetKHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdPushDescriptorSetKHR
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("pipelineBindPoint" ::: VkPipelineBindPoint) -> ("layout" ::: VkPipelineLayout) -> ("set" ::: Word32) -> ("descriptorWriteCount" ::: Word32) -> ("pDescriptorWrites" ::: Ptr VkWriteDescriptorSet) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("pipelineBindPoint" ::: VkPipelineBindPoint) -> ("layout" ::: VkPipelineLayout) -> ("set" ::: Word32) -> ("descriptorWriteCount" ::: Word32) -> ("pDescriptorWrites" ::: Ptr VkWriteDescriptorSet) -> IO ())
+#endif
+
 type FN_vkCmdPushDescriptorSetKHR = ("commandBuffer" ::: VkCommandBuffer) -> ("pipelineBindPoint" ::: VkPipelineBindPoint) -> ("layout" ::: VkPipelineLayout) -> ("set" ::: Word32) -> ("descriptorWriteCount" ::: Word32) -> ("pDescriptorWrites" ::: Ptr VkWriteDescriptorSet) -> IO ()
 type PFN_vkCmdPushDescriptorSetKHR = FunPtr FN_vkCmdPushDescriptorSetKHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkCmdPushDescriptorSetWithTemplateKHR - Pushes descriptor updates into a
 -- command buffer using a descriptor update template
 --
@@ -291,7 +246,8 @@ type PFN_vkCmdPushDescriptorSetKHR = FunPtr FN_vkCmdPushDescriptorSetKHR
 --
 -- -   The @pipelineBindPoint@ specified during the creation of the
 --     descriptor update template /must/ be supported by the
---     @commandBuffer@’s parent @VkCommandPool@’s queue family
+--     @commandBuffer@’s parent
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool'’s queue family
 --
 -- -   @pData@ /must/ be a valid pointer to a memory that contains one or
 --     more valid instances of
@@ -301,50 +257,8 @@ type PFN_vkCmdPushDescriptorSetKHR = FunPtr FN_vkCmdPushDescriptorSetKHR
 --     defined by @descriptorUpdateTemplate@ when it was created with
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template.vkCreateDescriptorUpdateTemplateKHR'
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @descriptorUpdateTemplate@ /must/ be a valid
---     @VkDescriptorUpdateTemplate@ handle
---
--- -   @layout@ /must/ be a valid @VkPipelineLayout@ handle
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics, or compute operations
---
--- -   Each of @commandBuffer@, @descriptorUpdateTemplate@, and @layout@
---     /must/ have been created, allocated, or retrieved from the same
---     @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdPushDescriptorSetWithTemplateKHR.txt -
+-- include::{generated}\/validity\/protos\/vkCmdPushDescriptorSetWithTemplateKHR.txt[]
 --
 -- __API example.__
 --
@@ -397,31 +311,46 @@ type PFN_vkCmdPushDescriptorSetKHR = FunPtr FN_vkCmdPushDescriptorSetKHR
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdPushDescriptorSetWithTemplateKHR" vkCmdPushDescriptorSetWithTemplateKHR :: ("commandBuffer" ::: VkCommandBuffer) -> ("descriptorUpdateTemplate" ::: VkDescriptorUpdateTemplate) -> ("layout" ::: VkPipelineLayout) -> ("set" ::: Word32) -> ("pData" ::: Ptr ()) -> IO ()
-
+#else
+vkCmdPushDescriptorSetWithTemplateKHR :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("descriptorUpdateTemplate" ::: VkDescriptorUpdateTemplate) -> ("layout" ::: VkPipelineLayout) -> ("set" ::: Word32) -> ("pData" ::: Ptr ()) -> IO ()
+vkCmdPushDescriptorSetWithTemplateKHR deviceCmds = mkVkCmdPushDescriptorSetWithTemplateKHR (pVkCmdPushDescriptorSetWithTemplateKHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdPushDescriptorSetWithTemplateKHR
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("descriptorUpdateTemplate" ::: VkDescriptorUpdateTemplate) -> ("layout" ::: VkPipelineLayout) -> ("set" ::: Word32) -> ("pData" ::: Ptr ()) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("descriptorUpdateTemplate" ::: VkDescriptorUpdateTemplate) -> ("layout" ::: VkPipelineLayout) -> ("set" ::: Word32) -> ("pData" ::: Ptr ()) -> IO ())
+#endif
+
 type FN_vkCmdPushDescriptorSetWithTemplateKHR = ("commandBuffer" ::: VkCommandBuffer) -> ("descriptorUpdateTemplate" ::: VkDescriptorUpdateTemplate) -> ("layout" ::: VkPipelineLayout) -> ("set" ::: Word32) -> ("pData" ::: Ptr ()) -> IO ()
 type PFN_vkCmdPushDescriptorSetWithTemplateKHR = FunPtr FN_vkCmdPushDescriptorSetWithTemplateKHR
--- | @VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR@ specifies that
+
+-- | 'VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR' specifies that
 -- descriptor sets /must/ not be allocated using this layout, and
 -- descriptors are instead pushed by 'vkCmdPushDescriptorSetKHR'.
 pattern VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR :: VkDescriptorSetLayoutCreateFlagBits
 pattern VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR = VkDescriptorSetLayoutCreateFlagBits 0x00000001
--- | @VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR@ specifies that
+
+-- | 'VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR' specifies that
 -- the descriptor update template will be used for push descriptor updates
 -- only.
 pattern VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR :: VkDescriptorUpdateTemplateType
 pattern VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR = VkDescriptorUpdateTemplateType 1
+
 -- No documentation found for TopLevel "VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME"
 pattern VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME = "VK_KHR_push_descriptor"
+
 -- No documentation found for TopLevel "VK_KHR_PUSH_DESCRIPTOR_SPEC_VERSION"
 pattern VK_KHR_PUSH_DESCRIPTOR_SPEC_VERSION :: Integral a => a
 pattern VK_KHR_PUSH_DESCRIPTOR_SPEC_VERSION = 2
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR = VkStructureType 1000080000

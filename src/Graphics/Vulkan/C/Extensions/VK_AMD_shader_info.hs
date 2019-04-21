@@ -14,11 +14,9 @@ module Graphics.Vulkan.C.Extensions.VK_AMD_shader_info
   , pattern VK_SHADER_INFO_TYPE_DISASSEMBLY_AMD
   , VkShaderResourceUsageAMD(..)
   , VkShaderStatisticsInfoAMD(..)
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkGetShaderInfoAMD
-#endif
   , FN_vkGetShaderInfoAMD
   , PFN_vkGetShaderInfoAMD
+  , vkGetShaderInfoAMD
   , pattern VK_AMD_SHADER_INFO_EXTENSION_NAME
   , pattern VK_AMD_SHADER_INFO_SPEC_VERSION
   ) where
@@ -79,6 +77,9 @@ import Graphics.Vulkan.C.Core10.Pipeline
 import Graphics.Vulkan.C.Core10.PipelineLayout
   ( VkShaderStageFlags
   )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
+  )
 import Graphics.Vulkan.NamedType
   ( (:::)
   )
@@ -112,22 +113,28 @@ instance Read VkShaderInfoTypeAMD where
                         )
                     )
 
--- | @VK_SHADER_INFO_TYPE_STATISTICS_AMD@ specifies that device resources
+-- | 'VK_SHADER_INFO_TYPE_STATISTICS_AMD' specifies that device resources
 -- used by a shader will be queried.
 pattern VK_SHADER_INFO_TYPE_STATISTICS_AMD :: VkShaderInfoTypeAMD
 pattern VK_SHADER_INFO_TYPE_STATISTICS_AMD = VkShaderInfoTypeAMD 0
 
--- | @VK_SHADER_INFO_TYPE_BINARY_AMD@ specifies that implementation-specific
+-- | 'VK_SHADER_INFO_TYPE_BINARY_AMD' specifies that implementation-specific
 -- information will be queried.
 pattern VK_SHADER_INFO_TYPE_BINARY_AMD :: VkShaderInfoTypeAMD
 pattern VK_SHADER_INFO_TYPE_BINARY_AMD = VkShaderInfoTypeAMD 1
 
--- | @VK_SHADER_INFO_TYPE_DISASSEMBLY_AMD@ specifies that human-readable
+-- | 'VK_SHADER_INFO_TYPE_DISASSEMBLY_AMD' specifies that human-readable
 -- dissassembly of a shader.
 pattern VK_SHADER_INFO_TYPE_DISASSEMBLY_AMD :: VkShaderInfoTypeAMD
 pattern VK_SHADER_INFO_TYPE_DISASSEMBLY_AMD = VkShaderInfoTypeAMD 2
+
 -- | VkShaderResourceUsageAMD - Resource usage information about a particular
 -- shader within a pipeline
+--
+-- = Description
+--
+-- Unresolved directive in VkShaderResourceUsageAMD.txt -
+-- include::{generated}\/validity\/structs\/VkShaderResourceUsageAMD.txt[]
 --
 -- = See Also
 --
@@ -171,6 +178,7 @@ instance Zero VkShaderResourceUsageAMD where
                                   zero
                                   zero
                                   zero
+
 -- | VkShaderStatisticsInfoAMD - Statistical information about a particular
 -- shader within a pipeline
 --
@@ -188,6 +196,9 @@ instance Zero VkShaderResourceUsageAMD where
 -- physical registers that is given as a limit to the compiler for register
 -- assignment. These values /may/ further be limited by implementations due
 -- to performance optimizations where register pressure is a bottleneck.
+--
+-- Unresolved directive in VkShaderStatisticsInfoAMD.txt -
+-- include::{generated}\/validity\/structs\/VkShaderStatisticsInfoAMD.txt[]
 --
 -- = See Also
 --
@@ -243,7 +254,7 @@ instance Zero VkShaderStatisticsInfoAMD where
                                    zero
                                    zero
                                    zero
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkGetShaderInfoAMD - Get information about a shader in a pipeline
 --
 -- = Parameters
@@ -273,78 +284,62 @@ instance Zero VkShaderStatisticsInfoAMD where
 --
 -- If @pInfoSize@ is less than the maximum size that /can/ be retrieved by
 -- the pipeline cache, then at most @pInfoSize@ bytes will be written to
--- @pInfo@, and @vkGetShaderInfoAMD@ will return @VK_INCOMPLETE@.
+-- @pInfo@, and 'vkGetShaderInfoAMD' will return
+-- 'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'.
 --
 -- Not all information is available for every shader and implementations
 -- may not support all kinds of information for any shader. When a certain
 -- type of information is unavailable, the function returns
--- @VK_ERROR_FEATURE_NOT_PRESENT@.
+-- 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_FEATURE_NOT_PRESENT'.
 --
 -- If information is successfully and fully queried, the function will
--- return @VK_SUCCESS@.
+-- return 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'.
 --
--- For @infoType@ @VK_SHADER_INFO_TYPE_STATISTICS_AMD@, an instance of
--- @VkShaderStatisticsInfoAMD@ will be written to the buffer pointed to by
+-- For @infoType@ 'VK_SHADER_INFO_TYPE_STATISTICS_AMD', an instance of
+-- 'VkShaderStatisticsInfoAMD' will be written to the buffer pointed to by
 -- @pInfo@. This structure will be populated with statistics regarding the
 -- physical device resources used by that shader along with other
 -- miscellaneous information and is described in further detail below.
 --
--- For @infoType@ @VK_SHADER_INFO_TYPE_DISASSEMBLY_AMD@, @pInfo@ points to
+-- For @infoType@ 'VK_SHADER_INFO_TYPE_DISASSEMBLY_AMD', @pInfo@ points to
 -- a UTF-8 null-terminated string containing human-readable disassembly.
 -- The exact formatting and contents of the disassembly string are
 -- vendor-specific.
 --
 -- The formatting and contents of all other types of information, including
--- @infoType@ @VK_SHADER_INFO_TYPE_BINARY_AMD@, are left to the vendor and
+-- @infoType@ 'VK_SHADER_INFO_TYPE_BINARY_AMD', are left to the vendor and
 -- are not further specified by this extension.
 --
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   @pipeline@ /must/ be a valid @VkPipeline@ handle
---
--- -   @shaderStage@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Pipeline.VkShaderStageFlagBits' value
---
--- -   @infoType@ /must/ be a valid 'VkShaderInfoTypeAMD' value
---
--- -   @pInfoSize@ /must/ be a valid pointer to a @size_t@ value
---
--- -   If the value referenced by @pInfoSize@ is not @0@, and @pInfo@ is
---     not @NULL@, @pInfo@ /must/ be a valid pointer to an array of
---     @pInfoSize@ bytes
---
--- -   @pipeline@ /must/ have been created, allocated, or retrieved from
---     @device@
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
---     -   @VK_INCOMPLETE@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_FEATURE_NOT_PRESENT@
---
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+-- Unresolved directive in vkGetShaderInfoAMD.txt -
+-- include::{generated}\/validity\/protos\/vkGetShaderInfoAMD.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetShaderInfoAMD" vkGetShaderInfoAMD :: ("device" ::: VkDevice) -> ("pipeline" ::: VkPipeline) -> ("shaderStage" ::: VkShaderStageFlagBits) -> ("infoType" ::: VkShaderInfoTypeAMD) -> ("pInfoSize" ::: Ptr CSize) -> ("pInfo" ::: Ptr ()) -> IO VkResult
-
+#else
+vkGetShaderInfoAMD :: DeviceCmds -> ("device" ::: VkDevice) -> ("pipeline" ::: VkPipeline) -> ("shaderStage" ::: VkShaderStageFlagBits) -> ("infoType" ::: VkShaderInfoTypeAMD) -> ("pInfoSize" ::: Ptr CSize) -> ("pInfo" ::: Ptr ()) -> IO VkResult
+vkGetShaderInfoAMD deviceCmds = mkVkGetShaderInfoAMD (pVkGetShaderInfoAMD deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetShaderInfoAMD
+  :: FunPtr (("device" ::: VkDevice) -> ("pipeline" ::: VkPipeline) -> ("shaderStage" ::: VkShaderStageFlagBits) -> ("infoType" ::: VkShaderInfoTypeAMD) -> ("pInfoSize" ::: Ptr CSize) -> ("pInfo" ::: Ptr ()) -> IO VkResult) -> (("device" ::: VkDevice) -> ("pipeline" ::: VkPipeline) -> ("shaderStage" ::: VkShaderStageFlagBits) -> ("infoType" ::: VkShaderInfoTypeAMD) -> ("pInfoSize" ::: Ptr CSize) -> ("pInfo" ::: Ptr ()) -> IO VkResult)
+#endif
+
 type FN_vkGetShaderInfoAMD = ("device" ::: VkDevice) -> ("pipeline" ::: VkPipeline) -> ("shaderStage" ::: VkShaderStageFlagBits) -> ("infoType" ::: VkShaderInfoTypeAMD) -> ("pInfoSize" ::: Ptr CSize) -> ("pInfo" ::: Ptr ()) -> IO VkResult
 type PFN_vkGetShaderInfoAMD = FunPtr FN_vkGetShaderInfoAMD
+
 -- No documentation found for TopLevel "VK_AMD_SHADER_INFO_EXTENSION_NAME"
 pattern VK_AMD_SHADER_INFO_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_AMD_SHADER_INFO_EXTENSION_NAME = "VK_AMD_shader_info"
+
 -- No documentation found for TopLevel "VK_AMD_SHADER_INFO_SPEC_VERSION"
 pattern VK_AMD_SHADER_INFO_SPEC_VERSION :: Integral a => a
 pattern VK_AMD_SHADER_INFO_SPEC_VERSION = 1

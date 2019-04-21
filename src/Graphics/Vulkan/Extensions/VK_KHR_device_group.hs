@@ -109,17 +109,17 @@ import Foreign.Storable
   )
 #endif
 
-#if defined(VK_USE_PLATFORM_WIN32)
-import qualified Graphics.Vulkan.C.Dynamic
-  ( getDeviceGroupSurfacePresentModes2EXT
-  )
-#endif
-
 
 
 #if defined(VK_USE_PLATFORM_WIN32)
 import Graphics.Vulkan.C.Core10.Core
   ( pattern VK_SUCCESS
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32)
+import Graphics.Vulkan.C.Extensions.VK_KHR_device_group
+  ( vkGetDeviceGroupSurfacePresentModes2EXT
   )
 #endif
 import Graphics.Vulkan.Core10.DeviceInitialization
@@ -235,28 +235,68 @@ import Graphics.Vulkan.Extensions.VK_KHR_swapchain
 
 type BindBufferMemoryDeviceGroupInfoKHR = BindBufferMemoryDeviceGroupInfo
 -- TODO: Pattern constructor alias)
+
 type BindImageMemoryDeviceGroupInfoKHR = BindImageMemoryDeviceGroupInfo
 -- TODO: Pattern constructor alias)
+
 type DeviceGroupBindSparseInfoKHR = DeviceGroupBindSparseInfo
 -- TODO: Pattern constructor alias)
+
 type DeviceGroupCommandBufferBeginInfoKHR = DeviceGroupCommandBufferBeginInfo
 -- TODO: Pattern constructor alias)
+
 type DeviceGroupRenderPassBeginInfoKHR = DeviceGroupRenderPassBeginInfo
 -- TODO: Pattern constructor alias)
+
 type DeviceGroupSubmitInfoKHR = DeviceGroupSubmitInfo
 -- TODO: Pattern constructor alias)
+
 type MemoryAllocateFlagsInfoKHR = MemoryAllocateFlagsInfo
 -- TODO: Pattern constructor alias)
+
 cmdDispatchBaseKHR :: CommandBuffer ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  Word32 ->  IO ()
 cmdDispatchBaseKHR = cmdDispatchBase
+
 cmdSetDeviceMaskKHR :: CommandBuffer ->  Word32 ->  IO ()
 cmdSetDeviceMaskKHR = cmdSetDeviceMask
+
 getDeviceGroupPeerMemoryFeaturesKHR :: Device ->  Word32 ->  Word32 ->  Word32 ->  IO (PeerMemoryFeatureFlags)
 getDeviceGroupPeerMemoryFeaturesKHR = getDeviceGroupPeerMemoryFeatures
 
+
 #if defined(VK_USE_PLATFORM_WIN32)
 
--- | Wrapper for 'vkGetDeviceGroupSurfacePresentModes2EXT'
+-- | vkGetDeviceGroupSurfacePresentModes2EXT - Query device group present
+-- capabilities for a surface
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device.
+--
+-- -   @pSurfaceInfo@ points to an instance of the
+--     VkPhysicalDeviceSurfaceInfo2KHR structure, describing the surface
+--     and other fixed parameters that would be consumed by
+--     vkCreateSwapchainKHR.
+--
+-- -   @pModes@ is a pointer to a value of type
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkDeviceGroupPresentModeFlagsKHR'
+--     that is filled with the supported device group present modes for the
+--     surface.
+--
+-- = Description
+--
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_device_group.vkGetDeviceGroupSurfacePresentModes2EXT'
+-- behaves similarly to
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkGetDeviceGroupSurfacePresentModesKHR',
+-- with the ability to specify extended inputs via chained input
+-- structures.
+--
+-- Unresolved directive in vkGetDeviceGroupSurfacePresentModes2EXT.txt -
+-- include::{generated}\/validity\/protos\/vkGetDeviceGroupSurfacePresentModes2EXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 getDeviceGroupSurfacePresentModes2EXT :: Device ->  PhysicalDeviceSurfaceInfo2KHR ->  IO (DeviceGroupPresentModeFlagsKHR)
-getDeviceGroupSurfacePresentModes2EXT = \(Device device commandTable) -> \surfaceInfo -> alloca (\pModes -> (\a -> withCStructPhysicalDeviceSurfaceInfo2KHR a . flip with) surfaceInfo (\pSurfaceInfo -> Graphics.Vulkan.C.Dynamic.getDeviceGroupSurfacePresentModes2EXT commandTable device pSurfaceInfo pModes >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pModes))))
+getDeviceGroupSurfacePresentModes2EXT = \(Device device' commandTable) -> \surfaceInfo' -> alloca (\pModes' -> (\marshalled -> withCStructPhysicalDeviceSurfaceInfo2KHR marshalled . flip with) surfaceInfo' (\pSurfaceInfo' -> vkGetDeviceGroupSurfacePresentModes2EXT commandTable device' pSurfaceInfo' pModes' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (peek pModes'))))
 #endif

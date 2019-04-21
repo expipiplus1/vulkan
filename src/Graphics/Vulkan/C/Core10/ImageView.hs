@@ -29,16 +29,12 @@ module Graphics.Vulkan.C.Core10.ImageView
   , pattern VK_IMAGE_VIEW_TYPE_1D_ARRAY
   , pattern VK_IMAGE_VIEW_TYPE_2D_ARRAY
   , pattern VK_IMAGE_VIEW_TYPE_CUBE_ARRAY
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCreateImageView
-#endif
   , FN_vkCreateImageView
   , PFN_vkCreateImageView
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkDestroyImageView
-#endif
+  , vkCreateImageView
   , FN_vkDestroyImageView
   , PFN_vkDestroyImageView
+  , vkDestroyImageView
   ) where
 
 import Data.Bits
@@ -84,6 +80,7 @@ import Graphics.Vulkan.C.Core10.Core
   , VkStructureType(..)
   , Zero(..)
   , VkFlags
+  , pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkAllocationCallbacks(..)
@@ -95,6 +92,9 @@ import Graphics.Vulkan.C.Core10.MemoryManagement
 import Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement
   ( VkImageAspectFlags
   )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
+  )
 import Graphics.Vulkan.NamedType
   ( (:::)
   )
@@ -102,20 +102,27 @@ import Graphics.Vulkan.NamedType
 
 -- | VkComponentMapping - Structure specifying a color component mapping
 --
--- == Valid Usage (Implicit)
+-- = Description
+--
+-- Unresolved directive in VkComponentMapping.txt -
+-- include::{generated}\/validity\/structs\/VkComponentMapping.txt[]
 --
 -- = See Also
 --
 -- 'VkComponentSwizzle', 'VkImageViewCreateInfo',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'
 data VkComponentMapping = VkComponentMapping
-  { -- | @r@ /must/ be a valid 'VkComponentSwizzle' value
+  { -- | @r@ is a 'VkComponentSwizzle' specifying the component value placed in
+  -- the R component of the output vector.
   vkR :: VkComponentSwizzle
-  , -- | @g@ /must/ be a valid 'VkComponentSwizzle' value
+  , -- | @g@ is a 'VkComponentSwizzle' specifying the component value placed in
+  -- the G component of the output vector.
   vkG :: VkComponentSwizzle
-  , -- | @b@ /must/ be a valid 'VkComponentSwizzle' value
+  , -- | @b@ is a 'VkComponentSwizzle' specifying the component value placed in
+  -- the B component of the output vector.
   vkB :: VkComponentSwizzle
-  , -- | @a@ /must/ be a valid 'VkComponentSwizzle' value
+  , -- | @a@ is a 'VkComponentSwizzle' specifying the component value placed in
+  -- the A component of the output vector.
   vkA :: VkComponentSwizzle
   }
   deriving (Eq, Show)
@@ -137,6 +144,7 @@ instance Zero VkComponentMapping where
                             zero
                             zero
                             zero
+
 -- ** VkComponentSwizzle
 
 -- | VkComponentSwizzle - Specify how a component is swizzled
@@ -149,16 +157,16 @@ instance Zero VkComponentMapping where
 -- > +-----------------------------------+-----------------------------------+
 -- > | Component                         | Identity Mapping                  |
 -- > +===================================+===================================+
--- > | @components.r@                    | @VK_COMPONENT_SWIZZLE_R@          |
+-- > | @components.r@                    | 'VK_COMPONENT_SWIZZLE_R'          |
 -- > +-----------------------------------+-----------------------------------+
--- > | @components.g@                    | @VK_COMPONENT_SWIZZLE_G@          |
+-- > | @components.g@                    | 'VK_COMPONENT_SWIZZLE_G'          |
 -- > +-----------------------------------+-----------------------------------+
--- > | @components.b@                    | @VK_COMPONENT_SWIZZLE_B@          |
+-- > | @components.b@                    | 'VK_COMPONENT_SWIZZLE_B'          |
 -- > +-----------------------------------+-----------------------------------+
--- > | @components.a@                    | @VK_COMPONENT_SWIZZLE_A@          |
+-- > | @components.a@                    | 'VK_COMPONENT_SWIZZLE_A'          |
 -- > +-----------------------------------+-----------------------------------+
 -- >
--- > Component Mappings Equivalent To @VK_COMPONENT_SWIZZLE_IDENTITY@
+-- > Component Mappings Equivalent To 'VK_COMPONENT_SWIZZLE_IDENTITY'
 --
 -- = See Also
 --
@@ -192,42 +200,43 @@ instance Read VkComponentSwizzle where
                         )
                     )
 
--- | @VK_COMPONENT_SWIZZLE_IDENTITY@ specifies that the component is set to
+-- | 'VK_COMPONENT_SWIZZLE_IDENTITY' specifies that the component is set to
 -- the identity swizzle.
 pattern VK_COMPONENT_SWIZZLE_IDENTITY :: VkComponentSwizzle
 pattern VK_COMPONENT_SWIZZLE_IDENTITY = VkComponentSwizzle 0
 
--- | @VK_COMPONENT_SWIZZLE_ZERO@ specifies that the component is set to zero.
+-- | 'VK_COMPONENT_SWIZZLE_ZERO' specifies that the component is set to zero.
 pattern VK_COMPONENT_SWIZZLE_ZERO :: VkComponentSwizzle
 pattern VK_COMPONENT_SWIZZLE_ZERO = VkComponentSwizzle 1
 
--- | @VK_COMPONENT_SWIZZLE_ONE@ specifies that the component is set to either
+-- | 'VK_COMPONENT_SWIZZLE_ONE' specifies that the component is set to either
 -- 1 or 1.0, depending on whether the type of the image view format is
 -- integer or floating-point respectively, as determined by the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-definition Format Definition>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-definition Format Definition>
 -- section for each 'Graphics.Vulkan.C.Core10.Core.VkFormat'.
 pattern VK_COMPONENT_SWIZZLE_ONE :: VkComponentSwizzle
 pattern VK_COMPONENT_SWIZZLE_ONE = VkComponentSwizzle 2
 
--- | @VK_COMPONENT_SWIZZLE_R@ specifies that the component is set to the
+-- | 'VK_COMPONENT_SWIZZLE_R' specifies that the component is set to the
 -- value of the R component of the image.
 pattern VK_COMPONENT_SWIZZLE_R :: VkComponentSwizzle
 pattern VK_COMPONENT_SWIZZLE_R = VkComponentSwizzle 3
 
--- | @VK_COMPONENT_SWIZZLE_G@ specifies that the component is set to the
+-- | 'VK_COMPONENT_SWIZZLE_G' specifies that the component is set to the
 -- value of the G component of the image.
 pattern VK_COMPONENT_SWIZZLE_G :: VkComponentSwizzle
 pattern VK_COMPONENT_SWIZZLE_G = VkComponentSwizzle 4
 
--- | @VK_COMPONENT_SWIZZLE_B@ specifies that the component is set to the
+-- | 'VK_COMPONENT_SWIZZLE_B' specifies that the component is set to the
 -- value of the B component of the image.
 pattern VK_COMPONENT_SWIZZLE_B :: VkComponentSwizzle
 pattern VK_COMPONENT_SWIZZLE_B = VkComponentSwizzle 5
 
--- | @VK_COMPONENT_SWIZZLE_A@ specifies that the component is set to the
+-- | 'VK_COMPONENT_SWIZZLE_A' specifies that the component is set to the
 -- value of the A component of the image.
 pattern VK_COMPONENT_SWIZZLE_A :: VkComponentSwizzle
 pattern VK_COMPONENT_SWIZZLE_A = VkComponentSwizzle 6
+
 -- | VkImageSubresourceRange - Structure specifying an image subresource
 -- range
 --
@@ -237,8 +246,10 @@ pattern VK_COMPONENT_SWIZZLE_A = VkComponentSwizzle 6
 -- image subresources in the image. If an application wants to use all mip
 -- levels or layers in an image after the @baseMipLevel@ or
 -- @baseArrayLayer@, it /can/ set @levelCount@ and @layerCount@ to the
--- special values @VK_REMAINING_MIP_LEVELS@ and @VK_REMAINING_ARRAY_LAYERS@
--- without knowing the exact number of mip levels or layers.
+-- special values
+-- 'Graphics.Vulkan.C.Core10.Constants.VK_REMAINING_MIP_LEVELS' and
+-- 'Graphics.Vulkan.C.Core10.Constants.VK_REMAINING_ARRAY_LAYERS' without
+-- knowing the exact number of mip levels or layers.
 --
 -- For cube and cube array image views, the layers of the image view
 -- starting at @baseArrayLayer@ correspond to faces in the order +X, -X,
@@ -247,29 +258,35 @@ pattern VK_COMPONENT_SWIZZLE_A = VkComponentSwizzle 6
 -- /@layerCount@ \/ 6/, and image array layer (@baseArrayLayer@ + i) is
 -- face index (i mod 6) of cube /i \/ 6/. If the number of layers in the
 -- view, whether set explicitly in @layerCount@ or implied by
--- @VK_REMAINING_ARRAY_LAYERS@, is not a multiple of 6, the last cube map
--- in the array /must/ not be accessed.
+-- 'Graphics.Vulkan.C.Core10.Constants.VK_REMAINING_ARRAY_LAYERS', is not a
+-- multiple of 6, the last cube map in the array /must/ not be accessed.
 --
--- @aspectMask@ /must/ be only @VK_IMAGE_ASPECT_COLOR_BIT@,
--- @VK_IMAGE_ASPECT_DEPTH_BIT@ or @VK_IMAGE_ASPECT_STENCIL_BIT@ if @format@
--- is a color, depth-only or stencil-only format, respectively, except if
--- @format@ is a
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>.
+-- @aspectMask@ /must/ be only
+-- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_COLOR_BIT',
+-- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_DEPTH_BIT'
+-- or
+-- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_STENCIL_BIT'
+-- if @format@ is a color, depth-only or stencil-only format, respectively,
+-- except if @format@ is a
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>.
 -- If using a depth\/stencil format with both depth and stencil components,
--- @aspectMask@ /must/ include at least one of @VK_IMAGE_ASPECT_DEPTH_BIT@
--- and @VK_IMAGE_ASPECT_STENCIL_BIT@, and /can/ include both.
+-- @aspectMask@ /must/ include at least one of
+-- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_DEPTH_BIT'
+-- and
+-- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_STENCIL_BIT',
+-- and /can/ include both.
 --
--- When the @VkImageSubresourceRange@ structure is used to select a subset
+-- When the 'VkImageSubresourceRange' structure is used to select a subset
 -- of the slices of a 3D image’s mip level in order to create a 2D or 2D
 -- array image view of a 3D image created with
--- @VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT@, @baseArrayLayer@ and
--- @layerCount@ specify the first slice index and the number of slices to
--- include in the created image view. Such an image view /can/ be used as a
--- framebuffer attachment that refers only to the specified range of slices
--- of the selected mip level. However, any layout transitions performed on
--- such an attachment view during a render pass instance still apply to the
--- entire subresource referenced which includes all the slices of the
--- selected mip level.
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT',
+-- @baseArrayLayer@ and @layerCount@ specify the first slice index and the
+-- number of slices to include in the created image view. Such an image
+-- view /can/ be used as a framebuffer attachment that refers only to the
+-- specified range of slices of the selected mip level. However, any layout
+-- transitions performed on such an attachment view during a render pass
+-- instance still apply to the entire subresource referenced which includes
+-- all the slices of the selected mip level.
 --
 -- When using an image view of a depth\/stencil image to populate a
 -- descriptor set (e.g. for sampling in the shader, or for use as an input
@@ -285,46 +302,50 @@ pattern VK_COMPONENT_SWIZZLE_A = VkComponentSwizzle 6
 -- remapping from components of the image to components of the vector
 -- returned by shader image instructions. This remapping /must/ be identity
 -- for storage image descriptors, input attachment descriptors, framebuffer
--- attachments, and any @VkImageView@ used with a combined image sampler
+-- attachments, and any 'VkImageView' used with a combined image sampler
 -- that enables
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>.
 --
--- When creating a @VkImageView@, if
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>
+-- When creating a 'VkImageView', if
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>
 -- is enabled in the sampler, the @aspectMask@ of a @subresourceRange@ used
--- by the @VkImageView@ /must/ be @VK_IMAGE_ASPECT_COLOR_BIT@.
+-- by the 'VkImageView' /must/ be
+-- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_COLOR_BIT'.
 --
--- When creating a @VkImageView@, if sampler Y’CBCR conversion is not
+-- When creating a 'VkImageView', if sampler Y’CBCR conversion is not
 -- enabled in the sampler and the image @format@ is
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>,
 -- the image /must/ have been created with
--- @VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT@, and the @aspectMask@ of the
--- @VkImageView@’s @subresourceRange@ /must/ be
--- @VK_IMAGE_ASPECT_PLANE_0_BIT@, @VK_IMAGE_ASPECT_PLANE_1_BIT@ or
--- @VK_IMAGE_ASPECT_PLANE_2_BIT@.
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT',
+-- and the @aspectMask@ of the 'VkImageView'’s @subresourceRange@ /must/ be
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_0_BIT',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_1_BIT'
+-- or
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_2_BIT'.
 --
 -- == Valid Usage
 --
--- -   If @levelCount@ is not @VK_REMAINING_MIP_LEVELS@, it /must/ be
---     greater than @0@
+-- -   If @levelCount@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_REMAINING_MIP_LEVELS', it
+--     /must/ be greater than @0@
 --
--- -   If @layerCount@ is not @VK_REMAINING_ARRAY_LAYERS@, it /must/ be
---     greater than @0@
+-- -   If @layerCount@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_REMAINING_ARRAY_LAYERS', it
+--     /must/ be greater than @0@
 --
--- -   If @aspectMask@ includes @VK_IMAGE_ASPECT_COLOR_BIT@, then it /must/
---     not include any of @VK_IMAGE_ASPECT_PLANE_0_BIT@,
---     @VK_IMAGE_ASPECT_PLANE_1_BIT@, or @VK_IMAGE_ASPECT_PLANE_2_BIT@
+-- -   If @aspectMask@ includes
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_COLOR_BIT',
+--     then it /must/ not include any of
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_0_BIT',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_1_BIT',
+--     or
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_2_BIT'
 --
 -- -   @aspectMask@ /must/ not include
 --     @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any index @i@.
 --
--- == Valid Usage (Implicit)
---
--- -   @aspectMask@ /must/ be a valid combination of
---     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkImageAspectFlagBits'
---     values
---
--- -   @aspectMask@ /must/ not be @0@
+-- Unresolved directive in VkImageSubresourceRange.txt -
+-- include::{generated}\/validity\/structs\/VkImageSubresourceRange.txt[]
 --
 -- = See Also
 --
@@ -371,6 +392,7 @@ instance Zero VkImageSubresourceRange where
                                  zero
                                  zero
                                  zero
+
 -- | Dummy data to tag the 'Ptr' with
 data VkImageView_T
 -- | VkImageView - Opaque handle to an image view object
@@ -381,6 +403,7 @@ data VkImageView_T
 -- 'Graphics.Vulkan.C.Core10.Pass.VkFramebufferCreateInfo',
 -- 'vkCreateImageView', 'vkDestroyImageView'
 type VkImageView = Ptr VkImageView_T
+
 -- ** VkImageViewCreateFlagBits
 
 -- | VkImageViewCreateFlagBits - Bitmask specifying additional parameters of
@@ -409,17 +432,19 @@ instance Read VkImageViewCreateFlagBits where
                     )
 
 
+
 -- | VkImageViewCreateFlags - Reserved for future use
 --
 -- = Description
 --
--- @VkImageViewCreateFlags@ is a bitmask type for setting a mask of zero or
+-- 'VkImageViewCreateFlags' is a bitmask type for setting a mask of zero or
 -- more 'VkImageViewCreateFlagBits'.
 --
 -- = See Also
 --
 -- 'VkImageViewCreateFlagBits', 'VkImageViewCreateInfo'
 type VkImageViewCreateFlags = VkImageViewCreateFlagBits
+
 -- | VkImageViewCreateInfo - Structure specifying parameters of a newly
 -- created image view
 --
@@ -429,17 +454,20 @@ type VkImageViewCreateFlags = VkImageViewCreateFlagBits
 -- particular, image view creation inherits the implicit parameter @usage@
 -- specifying the allowed usages of the image view that, by default, takes
 -- the value of the corresponding @usage@ parameter specified in
--- @VkImageCreateInfo@ at image creation time. If the image was has a
--- depth-stencil format and was created with an instance of
+-- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' at image creation
+-- time. If the image was has a depth-stencil format and was created with
+-- an instance of
 -- 'Graphics.Vulkan.C.Extensions.VK_EXT_separate_stencil_usage.VkImageStencilUsageCreateInfoEXT'
 -- in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo', the usage is
 -- calculated based on the @subresource.aspectMask@ provided: * If
--- @aspectMask@ includes only @VK_IMAGE_ASPECT_STENCIL_BIT@, the implicit
--- @usage@ is equal to
+-- @aspectMask@ includes only
+-- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_STENCIL_BIT',
+-- the implicit @usage@ is equal to
 -- 'Graphics.Vulkan.C.Extensions.VK_EXT_separate_stencil_usage.VkImageStencilUsageCreateInfoEXT'::@stencilUsage@.
--- * If @aspectMask@ includes only @VK_IMAGE_ASPECT_DEPTH_BIT@, the
--- implicit @usage@ is equal to
+-- * If @aspectMask@ includes only
+-- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_DEPTH_BIT',
+-- the implicit @usage@ is equal to
 -- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@stencilUsage@. * If
 -- both aspects are included in @aspectMask@, the implicit @usage@ is equal
 -- to the intersection of slinkVkImageCreateInfo::@usage@ and
@@ -448,14 +476,16 @@ type VkImageViewCreateFlags = VkImageViewCreateFlagBits
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VkImageViewUsageCreateInfo'
 -- structure in the @pNext@ chain.
 --
--- If @image@ was created with the @VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT@
+-- If @image@ was created with the
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT'
 -- flag, and if the @format@ of the image is not
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>,
 -- @format@ /can/ be different from the image’s format, but if @image@ was
--- created without the @VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT@
+-- created without the
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT'
 -- flag and they are not equal they /must/ be /compatible/. Image format
 -- compatibility is defined in the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-compatibility-classes Format Compatibility Classes>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-compatibility-classes Format Compatibility Classes>
 -- section. Views of compatible formats will have the same mapping between
 -- texel coordinates and memory locations irrespective of the @format@,
 -- with only the interpretation of the bit pattern changing.
@@ -469,20 +499,20 @@ type VkImageViewCreateFlags = VkImageViewCreateFlagBits
 -- read through a view with a floating point format. Similarly, a value
 -- written through a signed normalized format that has a bit pattern
 -- exactly equal to -2b /may/ be changed to -2b + 1 as described in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-fixedfpconv Conversion from Normalized Fixed-Point to Floating-Point>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fundamentals-fixedfpconv Conversion from Normalized Fixed-Point to Floating-Point>.
 --
 -- If @image@ was created with the
--- @VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT@ flag, @format@ /must/
--- be /compatible/ with the image’s format as described above, or /must/ be
--- an uncompressed format in which case it /must/ be /size-compatible/ with
--- the image’s format, as defined for
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#copies-images-format-size-compatibility copying data between images>
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT'
+-- flag, @format@ /must/ be /compatible/ with the image’s format as
+-- described above, or /must/ be an uncompressed format in which case it
+-- /must/ be /size-compatible/ with the image’s format, as defined for
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#copies-images-format-size-compatibility copying data between images>
 -- In this case the resulting image view’s texel dimensions equal the
 -- dimensions of the selected mip level divided by the compressed texel
 -- block size and rounded up.
 --
 -- If the image view is to be used with a sampler which supports
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>,
 -- an /identically defined object/ of type
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversion'
 -- to that used to create the sampler /must/ be passed to
@@ -491,33 +521,38 @@ type VkImageViewCreateFlags = VkImageViewCreateFlagBits
 -- added to the @pNext@ chain of 'VkImageViewCreateInfo'.
 --
 -- If the image has a
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
 -- @format@ and @subresourceRange.aspectMask@ is
--- @VK_IMAGE_ASPECT_COLOR_BIT@, @format@ /must/ be identical to the image
--- @format@, and the sampler to be used with the image view /must/ enable
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>.
+-- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_COLOR_BIT',
+-- @format@ /must/ be identical to the image @format@, and the sampler to
+-- be used with the image view /must/ enable
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>.
 --
--- If @image@ was created with the @VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT@ and
--- the image has a
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
+-- If @image@ was created with the
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT'
+-- and the image has a
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
 -- @format@, and if @subresourceRange.aspectMask@ is
--- @VK_IMAGE_ASPECT_PLANE_0_BIT@, @VK_IMAGE_ASPECT_PLANE_1_BIT@, or
--- @VK_IMAGE_ASPECT_PLANE_2_BIT@, @format@ /must/ be
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-compatible-planes compatible>
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_0_BIT',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_1_BIT',
+-- or
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_2_BIT',
+-- @format@ /must/ be
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-compatible-planes compatible>
 -- with the corresponding plane of the image, and the sampler to be used
 -- with the image view /must/ not enable
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>.
 -- The @width@ and @height@ of the single-plane image view /must/ be
 -- derived from the multi-planar image’s dimensions in the manner listed
 -- for
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-compatible-planes plane compatibility>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-compatible-planes plane compatibility>
 -- for the plane.
 --
 -- Any view of an image plane will have the same mapping between texel
 -- coordinates and memory locations as used by the channels of the color
 -- aspect, subject to the formulae relating texel coordinates to
 -- lower-resolution planes as described in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures-chroma-reconstruction Chroma Reconstruction>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures-chroma-reconstruction Chroma Reconstruction>.
 -- That is, if an R or B plane has a reduced resolution relative to the G
 -- plane of the multi-planar image, the image view operates using the
 -- (/uplane/, /vplane/) unnormalized coordinates of the reduced-resolution
@@ -553,124 +588,168 @@ type VkImageViewCreateFlags = VkImageViewCreateFlagBits
 -- > |         | @image@.               |                                   |
 -- > +---------+------------------------+-----------------------------------+
 -- > | __1D,   | @imageType@ =          | @viewType@ =                      |
--- > | 0, 0__  | @VK_IMAGE_TYPE_1D@     | @VK_IMAGE_VIEW_TYPE_1D@           |
--- > |         | @width@ ≥ 1            | @baseArrayLayer@ ≥ 0              |
--- > |         | @height@ = 1           | @layerCount@ = 1                  |
+-- > | 0, 0__  | 'Graphics.Vulkan.C.Cor | 'VK_IMAGE_VIEW_TYPE_1D'           |
+-- > |         | e10.DeviceInitializati | @baseArrayLayer@ ≥ 0              |
+-- > |         | on.VK_IMAGE_TYPE_1D'   | @layerCount@ = 1                  |
+-- > |         | @width@ ≥ 1            |                                   |
+-- > |         | @height@ = 1           |                                   |
 -- > |         | @depth@ = 1            |                                   |
 -- > |         | @arrayLayers@ ≥ 1      |                                   |
 -- > |         | @samples@ = 1          |                                   |
 -- > +---------+------------------------+-----------------------------------+
 -- > | __1D,   | @imageType@ =          | @viewType@ =                      |
--- > | 1, 0__  | @VK_IMAGE_TYPE_1D@     | @VK_IMAGE_VIEW_TYPE_1D_ARRAY@     |
--- > |         | @width@ ≥ 1            | @baseArrayLayer@ ≥ 0              |
--- > |         | @height@ = 1           | @layerCount@ ≥ 1                  |
+-- > | 1, 0__  | 'Graphics.Vulkan.C.Cor | 'VK_IMAGE_VIEW_TYPE_1D_ARRAY'     |
+-- > |         | e10.DeviceInitializati | @baseArrayLayer@ ≥ 0              |
+-- > |         | on.VK_IMAGE_TYPE_1D'   | @layerCount@ ≥ 1                  |
+-- > |         | @width@ ≥ 1            |                                   |
+-- > |         | @height@ = 1           |                                   |
 -- > |         | @depth@ = 1            |                                   |
 -- > |         | @arrayLayers@ ≥ 1      |                                   |
 -- > |         | @samples@ = 1          |                                   |
 -- > +---------+------------------------+-----------------------------------+
 -- > | __2D,   | @imageType@ =          | @viewType@ =                      |
--- > | 0, 0__  | @VK_IMAGE_TYPE_2D@     | @VK_IMAGE_VIEW_TYPE_2D@           |
--- > |         | @width@ ≥ 1            | @baseArrayLayer@ ≥ 0              |
--- > |         | @height@ ≥ 1           | @layerCount@ = 1                  |
+-- > | 0, 0__  | 'Graphics.Vulkan.C.Cor | 'VK_IMAGE_VIEW_TYPE_2D'           |
+-- > |         | e10.DeviceInitializati | @baseArrayLayer@ ≥ 0              |
+-- > |         | on.VK_IMAGE_TYPE_2D'   | @layerCount@ = 1                  |
+-- > |         | @width@ ≥ 1            |                                   |
+-- > |         | @height@ ≥ 1           |                                   |
 -- > |         | @depth@ = 1            |                                   |
 -- > |         | @arrayLayers@ ≥ 1      |                                   |
 -- > |         | @samples@ = 1          |                                   |
 -- > +---------+------------------------+-----------------------------------+
 -- > | __2D,   | @imageType@ =          | @viewType@ =                      |
--- > | 1, 0__  | @VK_IMAGE_TYPE_2D@     | @VK_IMAGE_VIEW_TYPE_2D_ARRAY@     |
--- > |         | @width@ ≥ 1            | @baseArrayLayer@ ≥ 0              |
--- > |         | @height@ ≥ 1           | @layerCount@ ≥ 1                  |
+-- > | 1, 0__  | 'Graphics.Vulkan.C.Cor | 'VK_IMAGE_VIEW_TYPE_2D_ARRAY'     |
+-- > |         | e10.DeviceInitializati | @baseArrayLayer@ ≥ 0              |
+-- > |         | on.VK_IMAGE_TYPE_2D'   | @layerCount@ ≥ 1                  |
+-- > |         | @width@ ≥ 1            |                                   |
+-- > |         | @height@ ≥ 1           |                                   |
 -- > |         | @depth@ = 1            |                                   |
 -- > |         | @arrayLayers@ ≥ 1      |                                   |
 -- > |         | @samples@ = 1          |                                   |
 -- > +---------+------------------------+-----------------------------------+
 -- > | __2D,   | @imageType@ =          | @viewType@ =                      |
--- > | 0, 1__  | @VK_IMAGE_TYPE_2D@     | @VK_IMAGE_VIEW_TYPE_2D@           |
--- > |         | @width@ ≥ 1            | @baseArrayLayer@ ≥ 0              |
--- > |         | @height@ ≥ 1           | @layerCount@ = 1                  |
+-- > | 0, 1__  | 'Graphics.Vulkan.C.Cor | 'VK_IMAGE_VIEW_TYPE_2D'           |
+-- > |         | e10.DeviceInitializati | @baseArrayLayer@ ≥ 0              |
+-- > |         | on.VK_IMAGE_TYPE_2D'   | @layerCount@ = 1                  |
+-- > |         | @width@ ≥ 1            |                                   |
+-- > |         | @height@ ≥ 1           |                                   |
 -- > |         | @depth@ = 1            |                                   |
 -- > |         | @arrayLayers@ ≥ 1      |                                   |
 -- > |         | @samples@ > 1          |                                   |
 -- > +---------+------------------------+-----------------------------------+
 -- > | __2D,   | @imageType@ =          | @viewType@ =                      |
--- > | 1, 1__  | @VK_IMAGE_TYPE_2D@     | @VK_IMAGE_VIEW_TYPE_2D_ARRAY@     |
--- > |         | @width@ ≥ 1            | @baseArrayLayer@ ≥ 0              |
--- > |         | @height@ ≥ 1           | @layerCount@ ≥ 1                  |
+-- > | 1, 1__  | 'Graphics.Vulkan.C.Cor | 'VK_IMAGE_VIEW_TYPE_2D_ARRAY'     |
+-- > |         | e10.DeviceInitializati | @baseArrayLayer@ ≥ 0              |
+-- > |         | on.VK_IMAGE_TYPE_2D'   | @layerCount@ ≥ 1                  |
+-- > |         | @width@ ≥ 1            |                                   |
+-- > |         | @height@ ≥ 1           |                                   |
 -- > |         | @depth@ = 1            |                                   |
 -- > |         | @arrayLayers@ ≥ 1      |                                   |
 -- > |         | @samples@ > 1          |                                   |
 -- > +---------+------------------------+-----------------------------------+
 -- > | __CUBE, | @imageType@ =          | @viewType@ =                      |
--- > | 0, 0__  | @VK_IMAGE_TYPE_2D@     | @VK_IMAGE_VIEW_TYPE_CUBE@         |
--- > |         | @width@ ≥ 1            | @baseArrayLayer@ ≥ 0              |
--- > |         | @height@ = @width@     | @layerCount@ = 6                  |
+-- > | 0, 0__  | 'Graphics.Vulkan.C.Cor | 'VK_IMAGE_VIEW_TYPE_CUBE'         |
+-- > |         | e10.DeviceInitializati | @baseArrayLayer@ ≥ 0              |
+-- > |         | on.VK_IMAGE_TYPE_2D'   | @layerCount@ = 6                  |
+-- > |         | @width@ ≥ 1            |                                   |
+-- > |         | @height@ = @width@     |                                   |
 -- > |         | @depth@ = 1            |                                   |
 -- > |         | @arrayLayers@ ≥ 6      |                                   |
 -- > |         | @samples@ = 1          |                                   |
 -- > |         | @flags@ includes       |                                   |
--- > |         | @VK_IMAGE_CREATE_CUBE_ |                                   |
--- > |         | COMPATIBLE_BIT@        |                                   |
+-- > |         | 'Graphics.Vulkan.C.Cor |                                   |
+-- > |         | e10.DeviceInitializati |                                   |
+-- > |         | on.VK_IMAGE_CREATE_CUB |                                   |
+-- > |         | E_COMPATIBLE_BIT'      |                                   |
 -- > +---------+------------------------+-----------------------------------+
 -- > | __CUBE, | @imageType@ =          | @viewType@ =                      |
--- > | 1, 0__  | @VK_IMAGE_TYPE_2D@     | @VK_IMAGE_VIEW_TYPE_CUBE_ARRAY@   |
--- > |         | @width@ ≥ 1            | @baseArrayLayer@ ≥ 0              |
--- > |         | @height@ = width       | @layerCount@ = 6 × /N/, /N/ ≥ 1   |
+-- > | 1, 0__  | 'Graphics.Vulkan.C.Cor | 'VK_IMAGE_VIEW_TYPE_CUBE_ARRAY'   |
+-- > |         | e10.DeviceInitializati | @baseArrayLayer@ ≥ 0              |
+-- > |         | on.VK_IMAGE_TYPE_2D'   | @layerCount@ = 6 × /N/, /N/ ≥ 1   |
+-- > |         | @width@ ≥ 1            |                                   |
+-- > |         | @height@ = width       |                                   |
 -- > |         | @depth@ = 1            |                                   |
 -- > |         | /N/ ≥ 1                |                                   |
 -- > |         | @arrayLayers@ ≥ 6 ×    |                                   |
 -- > |         | /N/                    |                                   |
 -- > |         | @samples@ = 1          |                                   |
 -- > |         | @flags@ includes       |                                   |
--- > |         | @VK_IMAGE_CREATE_CUBE_ |                                   |
--- > |         | COMPATIBLE_BIT@        |                                   |
+-- > |         | 'Graphics.Vulkan.C.Cor |                                   |
+-- > |         | e10.DeviceInitializati |                                   |
+-- > |         | on.VK_IMAGE_CREATE_CUB |                                   |
+-- > |         | E_COMPATIBLE_BIT'      |                                   |
 -- > +---------+------------------------+-----------------------------------+
 -- > | __3D,   | @imageType@ =          | @viewType@ =                      |
--- > | 0, 0__  | @VK_IMAGE_TYPE_3D@     | @VK_IMAGE_VIEW_TYPE_3D@           |
--- > |         | @width@ ≥ 1            | @baseArrayLayer@ = 0              |
--- > |         | @height@ ≥ 1           | @layerCount@ = 1                  |
+-- > | 0, 0__  | 'Graphics.Vulkan.C.Cor | 'VK_IMAGE_VIEW_TYPE_3D'           |
+-- > |         | e10.DeviceInitializati | @baseArrayLayer@ = 0              |
+-- > |         | on.VK_IMAGE_TYPE_3D'   | @layerCount@ = 1                  |
+-- > |         | @width@ ≥ 1            |                                   |
+-- > |         | @height@ ≥ 1           |                                   |
 -- > |         | @depth@ ≥ 1            |                                   |
 -- > |         | @arrayLayers@ = 1      |                                   |
 -- > |         | @samples@ = 1          |                                   |
 -- > +---------+------------------------+-----------------------------------+
 -- > | __3D,   | @imageType@ =          | @viewType@ =                      |
--- > | 0, 0__  | @VK_IMAGE_TYPE_3D@     | @VK_IMAGE_VIEW_TYPE_2D@           |
--- > |         | @width@ ≥ 1            | @levelCount@ = 1                  |
--- > |         | @height@ ≥ 1           | @baseArrayLayer@ ≥ 0              |
--- > |         | @depth@ ≥ 1            | @layerCount@ = 1                  |
+-- > | 0, 0__  | 'Graphics.Vulkan.C.Cor | 'VK_IMAGE_VIEW_TYPE_2D'           |
+-- > |         | e10.DeviceInitializati | @levelCount@ = 1                  |
+-- > |         | on.VK_IMAGE_TYPE_3D'   | @baseArrayLayer@ ≥ 0              |
+-- > |         | @width@ ≥ 1            | @layerCount@ = 1                  |
+-- > |         | @height@ ≥ 1           |                                   |
+-- > |         | @depth@ ≥ 1            |                                   |
 -- > |         | @arrayLayers@ = 1      |                                   |
 -- > |         | @samples@ = 1          |                                   |
 -- > |         | @flags@ includes       |                                   |
--- > |         | @VK_IMAGE_CREATE_2D_AR |                                   |
--- > |         | RAY_COMPATIBLE_BIT@    |                                   |
+-- > |         | 'Graphics.Vulkan.C.Cor |                                   |
+-- > |         | e11.Promoted_from_VK_K |                                   |
+-- > |         | HR_maintenance1.VK_IMA |                                   |
+-- > |         | GE_CREATE_2D_ARRAY_COM |                                   |
+-- > |         | PATIBLE_BIT'           |                                   |
 -- > |         | @flags@ does not       |                                   |
 -- > |         | include                |                                   |
--- > |         | @VK_IMAGE_CREATE_SPARS |                                   |
--- > |         | E_BINDING_BIT@,        |                                   |
--- > |         | @VK_IMAGE_CREATE_SPARS |                                   |
--- > |         | E_RESIDENCY_BIT@,      |                                   |
+-- > |         | 'Graphics.Vulkan.C.Cor |                                   |
+-- > |         | e10.DeviceInitializati |                                   |
+-- > |         | on.VK_IMAGE_CREATE_SPA |                                   |
+-- > |         | RSE_BINDING_BIT',      |                                   |
+-- > |         | 'Graphics.Vulkan.C.Cor |                                   |
+-- > |         | e10.DeviceInitializati |                                   |
+-- > |         | on.VK_IMAGE_CREATE_SPA |                                   |
+-- > |         | RSE_RESIDENCY_BIT',    |                                   |
 -- > |         | and                    |                                   |
--- > |         | @VK_IMAGE_CREATE_SPARS |                                   |
--- > |         | E_ALIASED_BIT@         |                                   |
+-- > |         | 'Graphics.Vulkan.C.Cor |                                   |
+-- > |         | e10.DeviceInitializati |                                   |
+-- > |         | on.VK_IMAGE_CREATE_SPA |                                   |
+-- > |         | RSE_ALIASED_BIT'       |                                   |
 -- > +---------+------------------------+-----------------------------------+
 -- > | __3D,   | @imageType@ =          | @viewType@ =                      |
--- > | 0, 0__  | @VK_IMAGE_TYPE_3D@     | @VK_IMAGE_VIEW_TYPE_2D_ARRAY@     |
--- > |         | @width@ ≥ 1            | @levelCount@ = 1                  |
--- > |         | @height@ ≥ 1           | @baseArrayLayer@ ≥ 0              |
--- > |         | @depth@ ≥ 1            | @layerCount@ ≥ 1                  |
+-- > | 0, 0__  | 'Graphics.Vulkan.C.Cor | 'VK_IMAGE_VIEW_TYPE_2D_ARRAY'     |
+-- > |         | e10.DeviceInitializati | @levelCount@ = 1                  |
+-- > |         | on.VK_IMAGE_TYPE_3D'   | @baseArrayLayer@ ≥ 0              |
+-- > |         | @width@ ≥ 1            | @layerCount@ ≥ 1                  |
+-- > |         | @height@ ≥ 1           |                                   |
+-- > |         | @depth@ ≥ 1            |                                   |
 -- > |         | @arrayLayers@ = 1      |                                   |
 -- > |         | @samples@ = 1          |                                   |
 -- > |         | @flags@ includes       |                                   |
--- > |         | @VK_IMAGE_CREATE_2D_AR |                                   |
--- > |         | RAY_COMPATIBLE_BIT@    |                                   |
+-- > |         | 'Graphics.Vulkan.C.Cor |                                   |
+-- > |         | e11.Promoted_from_VK_K |                                   |
+-- > |         | HR_maintenance1.VK_IMA |                                   |
+-- > |         | GE_CREATE_2D_ARRAY_COM |                                   |
+-- > |         | PATIBLE_BIT'           |                                   |
 -- > |         | @flags@ does not       |                                   |
 -- > |         | include                |                                   |
--- > |         | @VK_IMAGE_CREATE_SPARS |                                   |
--- > |         | E_BINDING_BIT@,        |                                   |
--- > |         | @VK_IMAGE_CREATE_SPARS |                                   |
--- > |         | E_RESIDENCY_BIT@,      |                                   |
+-- > |         | 'Graphics.Vulkan.C.Cor |                                   |
+-- > |         | e10.DeviceInitializati |                                   |
+-- > |         | on.VK_IMAGE_CREATE_SPA |                                   |
+-- > |         | RSE_BINDING_BIT',      |                                   |
+-- > |         | 'Graphics.Vulkan.C.Cor |                                   |
+-- > |         | e10.DeviceInitializati |                                   |
+-- > |         | on.VK_IMAGE_CREATE_SPA |                                   |
+-- > |         | RSE_RESIDENCY_BIT',    |                                   |
 -- > |         | and                    |                                   |
--- > |         | @VK_IMAGE_CREATE_SPARS |                                   |
--- > |         | E_ALIASED_BIT@         |                                   |
+-- > |         | 'Graphics.Vulkan.C.Cor |                                   |
+-- > |         | e10.DeviceInitializati |                                   |
+-- > |         | on.VK_IMAGE_CREATE_SPA |                                   |
+-- > |         | RSE_ALIASED_BIT'       |                                   |
 -- > +---------+------------------------+-----------------------------------+
 -- >
 -- > Image and image view parameter compatibility requirements
@@ -678,209 +757,244 @@ type VkImageViewCreateFlags = VkImageViewCreateFlagBits
 -- == Valid Usage
 --
 -- -   If @image@ was not created with
---     @VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT@ then @viewType@ /must/ not be
---     @VK_IMAGE_VIEW_TYPE_CUBE@ or @VK_IMAGE_VIEW_TYPE_CUBE_ARRAY@
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT'
+--     then @viewType@ /must/ not be 'VK_IMAGE_VIEW_TYPE_CUBE' or
+--     'VK_IMAGE_VIEW_TYPE_CUBE_ARRAY'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-imageCubeArray image cubemap arrays>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-imageCubeArray image cubemap arrays>
 --     feature is not enabled, @viewType@ /must/ not be
---     @VK_IMAGE_VIEW_TYPE_CUBE_ARRAY@
+--     'VK_IMAGE_VIEW_TYPE_CUBE_ARRAY'
 --
--- -   If @image@ was created with @VK_IMAGE_TYPE_3D@ but without
---     @VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT@ set then @viewType@ /must/
---     not be @VK_IMAGE_VIEW_TYPE_2D@ or @VK_IMAGE_VIEW_TYPE_2D_ARRAY@
+-- -   If @image@ was created with
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_3D' but
+--     without
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT'
+--     set then @viewType@ /must/ not be 'VK_IMAGE_VIEW_TYPE_2D' or
+--     'VK_IMAGE_VIEW_TYPE_2D_ARRAY'
 --
 -- -   @image@ /must/ have been created with a @usage@ value containing at
---     least one of @VK_IMAGE_USAGE_SAMPLED_BIT@,
---     @VK_IMAGE_USAGE_STORAGE_BIT@, @VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT@,
---     @VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT@,
---     @VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT@,
---     @VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV@, or
---     @VK_IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT@
+--     least one of
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_SAMPLED_BIT',
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_STORAGE_BIT',
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT',
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT',
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT',
+--     'Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image.VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV',
+--     or
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT'
 --
 -- -   The
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     of the resultant image view /must/ contain at least one bit.
 --
--- -   If @usage@ contains @VK_IMAGE_USAGE_SAMPLED_BIT@, then the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
+-- -   If @usage@ contains
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_SAMPLED_BIT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     of the resultant image view /must/ contain
---     @VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT@.
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT'.
 --
--- -   If @usage@ contains @VK_IMAGE_USAGE_STORAGE_BIT@, then the image
---     view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain @VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT@.
---
--- -   If @usage@ contains @VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT@, then the
---     image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain @VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT@.
---
--- -   If @usage@ contains @VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT@,
+-- -   If @usage@ contains
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_STORAGE_BIT',
 --     then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain @VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT@.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT'.
 --
--- -   If @usage@ contains @VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT@, then the
---     image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
+-- -   If @usage@ contains
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT',
+--     then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'.
+--
+-- -   If @usage@ contains
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT',
+--     then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'.
+--
+-- -   If @usage@ contains
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT',
+--     then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-view-format-features format features>
 --     /must/ contain at least one of
---     @VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT@ or
---     @VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT@.
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'
+--     or
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT'.
 --
 -- -   @subresourceRange.baseMipLevel@ /must/ be less than the @mipLevels@
 --     specified in 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' when
 --     @image@ was created
 --
--- -   If @subresourceRange.levelCount@ is not @VK_REMAINING_MIP_LEVELS@,
+-- -   If @subresourceRange.levelCount@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_REMAINING_MIP_LEVELS',
 --     @subresourceRange.baseMipLevel@ + @subresourceRange.levelCount@
 --     /must/ be less than or equal to the @mipLevels@ specified in
 --     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' when @image@ was
 --     created
 --
 -- -   If @image@ was created with @usage@ containing
---     @VK_IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT@,
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT',
 --     @subresourceRange.levelCount@ /must/ be @1@
 --
 -- -   If @image@ is not a 3D image created with
---     @VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT@ set, or @viewType@ is not
---     @VK_IMAGE_VIEW_TYPE_2D@ or @VK_IMAGE_VIEW_TYPE_2D_ARRAY@,
---     @subresourceRange@::@baseArrayLayer@ /must/ be less than the
---     @arrayLayers@ specified in
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT'
+--     set, or @viewType@ is not 'VK_IMAGE_VIEW_TYPE_2D' or
+--     'VK_IMAGE_VIEW_TYPE_2D_ARRAY', @subresourceRange@::@baseArrayLayer@
+--     /must/ be less than the @arrayLayers@ specified in
 --     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' when @image@ was
 --     created
 --
 -- -   If @subresourceRange@::@layerCount@ is not
---     @VK_REMAINING_ARRAY_LAYERS@, @image@ is not a 3D image created with
---     @VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT@ set, or @viewType@ is not
---     @VK_IMAGE_VIEW_TYPE_2D@ or @VK_IMAGE_VIEW_TYPE_2D_ARRAY@,
---     @subresourceRange@::@layerCount@ /must/ be non-zero and
---     @subresourceRange@::@baseArrayLayer@ +
+--     'Graphics.Vulkan.C.Core10.Constants.VK_REMAINING_ARRAY_LAYERS',
+--     @image@ is not a 3D image created with
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT'
+--     set, or @viewType@ is not 'VK_IMAGE_VIEW_TYPE_2D' or
+--     'VK_IMAGE_VIEW_TYPE_2D_ARRAY', @subresourceRange@::@layerCount@
+--     /must/ be non-zero and @subresourceRange@::@baseArrayLayer@ +
 --     @subresourceRange@::@layerCount@ /must/ be less than or equal to the
 --     @arrayLayers@ specified in
 --     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' when @image@ was
 --     created
 --
 -- -   If @image@ is a 3D image created with
---     @VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT@ set, and @viewType@ is
---     @VK_IMAGE_VIEW_TYPE_2D@ or @VK_IMAGE_VIEW_TYPE_2D_ARRAY@,
---     @subresourceRange@::@baseArrayLayer@ /must/ be less than the
---     @extent.depth@ specified in
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT'
+--     set, and @viewType@ is 'VK_IMAGE_VIEW_TYPE_2D' or
+--     'VK_IMAGE_VIEW_TYPE_2D_ARRAY', @subresourceRange@::@baseArrayLayer@
+--     /must/ be less than the @extent.depth@ specified in
 --     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' when @image@ was
 --     created
 --
 -- -   If @subresourceRange@::@layerCount@ is not
---     @VK_REMAINING_ARRAY_LAYERS@, @image@ is a 3D image created with
---     @VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT@ set, and @viewType@ is
---     @VK_IMAGE_VIEW_TYPE_2D@ or @VK_IMAGE_VIEW_TYPE_2D_ARRAY@,
---     @subresourceRange@::@layerCount@ /must/ be non-zero and
---     @subresourceRange@::@baseArrayLayer@ +
+--     'Graphics.Vulkan.C.Core10.Constants.VK_REMAINING_ARRAY_LAYERS',
+--     @image@ is a 3D image created with
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT'
+--     set, and @viewType@ is 'VK_IMAGE_VIEW_TYPE_2D' or
+--     'VK_IMAGE_VIEW_TYPE_2D_ARRAY', @subresourceRange@::@layerCount@
+--     /must/ be non-zero and @subresourceRange@::@baseArrayLayer@ +
 --     @subresourceRange@::@layerCount@ /must/ be less than or equal to the
 --     @extent.depth@ specified in
 --     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' when @image@ was
 --     created
 --
--- -   If @image@ was created with the @VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT@
+-- -   If @image@ was created with the
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT'
 --     flag, @format@ /must/ be compatible with the @format@ used to create
 --     @image@, as defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-compatibility-classes Format Compatibility Classes>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-compatibility-classes Format Compatibility Classes>
 --
--- -   If @image@ was created with the @VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT@
+-- -   If @image@ was created with the
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT'
 --     flag, but without the
---     @VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT@ flag, and if the
---     @format@ of the @image@ is not a
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT'
+--     flag, and if the @format@ of the @image@ is not a
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
 --     format, @format@ /must/ be compatible with the @format@ used to
 --     create @image@, as defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-compatibility-classes Format Compatibility Classes>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-compatibility-classes Format Compatibility Classes>
 --
 -- -   If @image@ was created with the
---     @VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT@ flag, @format@
---     /must/ be compatible with, or /must/ be an uncompressed format that
---     is size-compatible with, the @format@ used to create @image@.
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT'
+--     flag, @format@ /must/ be compatible with, or /must/ be an
+--     uncompressed format that is size-compatible with, the @format@ used
+--     to create @image@.
 --
 -- -   If @image@ was created with the
---     @VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT@ flag, the
---     @levelCount@ and @layerCount@ members of @subresourceRange@ /must/
---     both be @1@.
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT'
+--     flag, the @levelCount@ and @layerCount@ members of
+--     @subresourceRange@ /must/ both be @1@.
 --
--- -   If a @VkImageFormatListCreateInfoKHR@ structure was included in the
---     @pNext@ chain of the @VkImageCreateInfo@ struct used when creating
---     @image@ and the @viewFormatCount@ field of
---     @VkImageFormatListCreateInfoKHR@ is not zero then @format@ /must/ be
---     one of the formats in
---     @VkImageFormatListCreateInfoKHR@::@pViewFormats@.
+-- -   If a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_image_format_list.VkImageFormatListCreateInfoKHR'
+--     structure was included in the @pNext@ chain of the
+--     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' struct used when
+--     creating @image@ and the @viewFormatCount@ field of
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_image_format_list.VkImageFormatListCreateInfoKHR'
+--     is not zero then @format@ /must/ be one of the formats in
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_image_format_list.VkImageFormatListCreateInfoKHR'::@pViewFormats@.
 --
--- -   If @image@ was created with the @VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT@
+-- -   If @image@ was created with the
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT'
 --     flag, if the @format@ of the @image@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
 --     format, and if @subresourceRange.aspectMask@ is one of
---     @VK_IMAGE_ASPECT_PLANE_0_BIT@, @VK_IMAGE_ASPECT_PLANE_1_BIT@, or
---     @VK_IMAGE_ASPECT_PLANE_2_BIT@, then @format@ /must/ be compatible
---     with the 'Graphics.Vulkan.C.Core10.Core.VkFormat' for the plane of
---     the @image@ @format@ indicated by @subresourceRange.aspectMask@, as
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_0_BIT',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_1_BIT',
+--     or
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_2_BIT',
+--     then @format@ /must/ be compatible with the
+--     'Graphics.Vulkan.C.Core10.Core.VkFormat' for the plane of the
+--     @image@ @format@ indicated by @subresourceRange.aspectMask@, as
 --     defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-compatible-planes {html_spec_relative}#formats-compatible-planes>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-compatible-planes>
 --
 -- -   If @image@ was not created with the
---     @VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT@ flag, or if the @format@ of the
---     @image@ is a
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT'
+--     flag, or if the @format@ of the @image@ is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
 --     format and if @subresourceRange.aspectMask@ is
---     @VK_IMAGE_ASPECT_COLOR_BIT@, @format@ /must/ be identical to the
---     @format@ used to create @image@
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_COLOR_BIT',
+--     @format@ /must/ be identical to the @format@ used to create @image@
 --
 -- -   If the @pNext@ chain contains an instance of
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionInfo'
 --     with a @conversion@ value other than
 --     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', all members of
---     @components@ /must/ have the value @VK_COMPONENT_SWIZZLE_IDENTITY@.
+--     @components@ /must/ have the value 'VK_COMPONENT_SWIZZLE_IDENTITY'.
 --
 -- -   If @image@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+--     contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
 -- -   @subresourceRange@ and @viewType@ /must/ be compatible with the
 --     image, as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-views-compatibility compatibility table>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-views-compatibility compatibility table>
 --
 -- -   If @image@ has an
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>,
---     @format@ /must/ be @VK_FORMAT_UNDEFINED@.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>,
+--     @format@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_UNDEFINED'.
 --
 -- -   If @image@ has an
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>,
 --     the @pNext@ chain /must/ contain an instance of
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionInfo'
 --     with a @conversion@ object created with the same external format as
 --     @image@.
 --
 -- -   If @image@ has an
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>,
 --     all members of @components@ /must/ be
---     @VK_COMPONENT_SWIZZLE_IDENTITY@.
+--     'VK_COMPONENT_SWIZZLE_IDENTITY'.
 --
 -- -   If @image@ was created with @usage@ containing
---     @VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV@, @viewType@ /must/ be
---     @VK_IMAGE_VIEW_TYPE_2D@ or @VK_IMAGE_VIEW_TYPE_2D_ARRAY@
+--     'Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image.VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV',
+--     @viewType@ /must/ be 'VK_IMAGE_VIEW_TYPE_2D' or
+--     'VK_IMAGE_VIEW_TYPE_2D_ARRAY'
 --
 -- -   If @image@ was created with @usage@ containing
---     @VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV@, @format@ /must/ be
---     @VK_FORMAT_R8_UINT@
+--     'Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image.VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV',
+--     @format@ /must/ be 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8_UINT'
 --
 -- -   If
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-fragmentdensitymapdynamic dynamic fragment density map>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-fragmentdensitymapdynamic dynamic fragment density map>
 --     feature is not enabled, @flags@ /must/ not contain
---     @VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT@
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT'
 --
 -- -   If
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-fragmentdensitymapdynamic dynamic fragment density map>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-fragmentdensitymapdynamic dynamic fragment density map>
 --     feature is not enabled and @image@ was created with @usage@
---     containing @VK_IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT@, @flags@
---     /must/ not contain any of @VK_IMAGE_CREATE_PROTECTED_BIT@,
---     @VK_IMAGE_CREATE_SPARSE_BINDING_BIT@,
---     @VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT@, or
---     @VK_IMAGE_CREATE_SPARSE_ALIASED_BIT@
+--     containing
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT',
+--     @flags@ /must/ not contain any of
+--     'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory.VK_IMAGE_CREATE_PROTECTED_BIT',
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_CREATE_SPARSE_BINDING_BIT',
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT',
+--     or
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_CREATE_SPARSE_ALIASED_BIT'
 --     ifdef::VK_VERSION_1_1,VK_KHR_maintenance2
 --
 -- -   If the @pNext@ chain includes an instance of
@@ -900,7 +1014,8 @@ type VkImageViewCreateFlags = VkImageViewCreateFlagBits
 --     in the @pNext@ chain of
 --     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo', and
 --     @subResourceRange.aspectMask@ includes
---     @VK_IMAGE_ASPECT_STENCIL_BIT@, the @usage@ member of the
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_STENCIL_BIT',
+--     the @usage@ member of the
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VkImageViewUsageCreateInfo'
 --     instance /must/ not include any bits that were not set in the
 --     @usage@ member of the
@@ -914,40 +1029,16 @@ type VkImageViewCreateFlags = VkImageViewCreateFlagBits
 --     in the @pNext@ chain of
 --     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo', and
 --     @subResourceRange.aspectMask@ includes bits other than
---     @VK_IMAGE_ASPECT_STENCIL_BIT@, the @usage@ member of the
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_STENCIL_BIT',
+--     the @usage@ member of the
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VkImageViewUsageCreateInfo'
 --     instance /must/ not include any bits that were not set in the
 --     @usage@ member of the
 --     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' structure used to
 --     create @image@ endif::VK_VERSION_1_1,VK_KHR_maintenance2
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO@
---
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VkImageViewUsageCreateInfo'
---     or
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionInfo'
---
--- -   Each @sType@ member in the @pNext@ chain /must/ be unique
---
--- -   @flags@ /must/ be a valid combination of 'VkImageViewCreateFlagBits'
---     values
---
--- -   @image@ /must/ be a valid @VkImage@ handle
---
--- -   @viewType@ /must/ be a valid 'VkImageViewType' value
---
--- -   @format@ /must/ be a valid 'Graphics.Vulkan.C.Core10.Core.VkFormat'
---     value
---
--- -   @components@ /must/ be a valid @VkComponentMapping@ structure
---
--- -   @subresourceRange@ /must/ be a valid @VkImageSubresourceRange@
---     structure
+-- Unresolved directive in VkImageViewCreateInfo.txt -
+-- include::{generated}\/validity\/structs\/VkImageViewCreateInfo.txt[]
 --
 -- = See Also
 --
@@ -1003,7 +1094,7 @@ instance Storable VkImageViewCreateInfo where
                 *> poke (ptr `plusPtr` 56) (vkSubresourceRange (poked :: VkImageViewCreateInfo))
 
 instance Zero VkImageViewCreateInfo where
-  zero = VkImageViewCreateInfo zero
+  zero = VkImageViewCreateInfo VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO
                                zero
                                zero
                                zero
@@ -1011,6 +1102,7 @@ instance Zero VkImageViewCreateInfo where
                                zero
                                zero
                                zero
+
 -- ** VkImageViewType
 
 -- | VkImageViewType - Image view types
@@ -1020,7 +1112,7 @@ instance Zero VkImageViewCreateInfo where
 -- The exact image view type is partially implicit, based on the image’s
 -- type and sample count, as well as the view creation parameters as
 -- described in the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-views-compatibility image view compatibility table>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-views-compatibility image view compatibility table>
 -- for 'vkCreateImageView'. This table also shows which SPIR-V
 -- @OpTypeImage@ @Dim@ and @Arrayed@ parameters correspond to each image
 -- view type.
@@ -1084,7 +1176,7 @@ pattern VK_IMAGE_VIEW_TYPE_2D_ARRAY = VkImageViewType 5
 -- No documentation found for Nested "VkImageViewType" "VK_IMAGE_VIEW_TYPE_CUBE_ARRAY"
 pattern VK_IMAGE_VIEW_TYPE_CUBE_ARRAY :: VkImageViewType
 pattern VK_IMAGE_VIEW_TYPE_CUBE_ARRAY = VkImageViewType 6
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCreateImageView - Create an image view from an existing image
 --
 -- = Parameters
@@ -1092,53 +1184,46 @@ pattern VK_IMAGE_VIEW_TYPE_CUBE_ARRAY = VkImageViewType 6
 -- -   @device@ is the logical device that creates the image view.
 --
 -- -   @pCreateInfo@ is a pointer to an instance of the
---     @VkImageViewCreateInfo@ structure containing parameters to be used
+--     'VkImageViewCreateInfo' structure containing parameters to be used
 --     to create the image view.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
 -- -   @pView@ points to a 'VkImageView' handle in which the resulting
 --     image view object is returned.
 --
--- == Valid Usage (Implicit)
+-- = Description
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     @VkImageViewCreateInfo@ structure
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
---
--- -   @pView@ /must/ be a valid pointer to a @VkImageView@ handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- Unresolved directive in vkCreateImageView.txt -
+-- include::{generated}\/validity\/protos\/vkCreateImageView.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice', 'VkImageView',
 -- 'VkImageViewCreateInfo'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCreateImageView" vkCreateImageView :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkImageViewCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pView" ::: Ptr VkImageView) -> IO VkResult
-
+#else
+vkCreateImageView :: DeviceCmds -> ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkImageViewCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pView" ::: Ptr VkImageView) -> IO VkResult
+vkCreateImageView deviceCmds = mkVkCreateImageView (pVkCreateImageView deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCreateImageView
+  :: FunPtr (("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkImageViewCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pView" ::: Ptr VkImageView) -> IO VkResult) -> (("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkImageViewCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pView" ::: Ptr VkImageView) -> IO VkResult)
+#endif
+
 type FN_vkCreateImageView = ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkImageViewCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pView" ::: Ptr VkImageView) -> IO VkResult
 type PFN_vkCreateImageView = FunPtr FN_vkCreateImageView
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkDestroyImageView - Destroy an image view object
 --
 -- = Parameters
@@ -1148,7 +1233,7 @@ type PFN_vkCreateImageView = FunPtr FN_vkCreateImageView
 -- -   @imageView@ is the image view to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
 -- == Valid Usage
@@ -1156,40 +1241,39 @@ type PFN_vkCreateImageView = FunPtr FN_vkCreateImageView
 -- -   All submitted commands that refer to @imageView@ /must/ have
 --     completed execution
 --
--- -   If @VkAllocationCallbacks@ were provided when @imageView@ was
---     created, a compatible set of callbacks /must/ be provided here
+-- -   If
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     were provided when @imageView@ was created, a compatible set of
+--     callbacks /must/ be provided here
 --
--- -   If no @VkAllocationCallbacks@ were provided when @imageView@ was
---     created, @pAllocator@ /must/ be @NULL@
+-- -   If no
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     were provided when @imageView@ was created, @pAllocator@ /must/ be
+--     @NULL@
 --
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   If @imageView@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @imageView@
---     /must/ be a valid @VkImageView@ handle
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
---
--- -   If @imageView@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
---
--- == Host Synchronization
---
--- -   Host access to @imageView@ /must/ be externally synchronized
+-- Unresolved directive in vkDestroyImageView.txt -
+-- include::{generated}\/validity\/protos\/vkDestroyImageView.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice', 'VkImageView'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkDestroyImageView" vkDestroyImageView :: ("device" ::: VkDevice) -> ("imageView" ::: VkImageView) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
-
+#else
+vkDestroyImageView :: DeviceCmds -> ("device" ::: VkDevice) -> ("imageView" ::: VkImageView) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+vkDestroyImageView deviceCmds = mkVkDestroyImageView (pVkDestroyImageView deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkDestroyImageView
+  :: FunPtr (("device" ::: VkDevice) -> ("imageView" ::: VkImageView) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()) -> (("device" ::: VkDevice) -> ("imageView" ::: VkImageView) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ())
+#endif
+
 type FN_vkDestroyImageView = ("device" ::: VkDevice) -> ("imageView" ::: VkImageView) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 type PFN_vkDestroyImageView = FunPtr FN_vkDestroyImageView

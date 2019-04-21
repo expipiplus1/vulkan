@@ -39,10 +39,6 @@ import Foreign.Ptr
 import Foreign.Storable
   ( peek
   )
-import qualified Graphics.Vulkan.C.Dynamic
-  ( createXlibSurfaceKHR
-  , getPhysicalDeviceXlibPresentationSupportKHR
-  )
 
 
 import Graphics.Vulkan.C.Core10.Core
@@ -56,6 +52,8 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface
   , VkXlibSurfaceCreateInfoKHR(..)
   , VisualID
   , Window
+  , vkCreateXlibSurfaceKHR
+  , vkGetPhysicalDeviceXlibPresentationSupportKHR
   , pattern VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
@@ -83,37 +81,118 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface
 
 -- No documentation found for TopLevel "XlibSurfaceCreateFlagsKHR"
 type XlibSurfaceCreateFlagsKHR = VkXlibSurfaceCreateFlagsKHR
--- No documentation found for TopLevel "XlibSurfaceCreateInfoKHR"
+
+
+-- | VkXlibSurfaceCreateInfoKHR - Structure specifying parameters of a newly
+-- created Xlib surface object
+--
+-- == Valid Usage
+--
+-- Unresolved directive in VkXlibSurfaceCreateInfoKHR.txt -
+-- include::{generated}\/validity\/structs\/VkXlibSurfaceCreateInfoKHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data XlibSurfaceCreateInfoKHR = XlibSurfaceCreateInfoKHR
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "XlibSurfaceCreateInfoKHR" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "XlibSurfaceCreateInfoKHR" "flags"
-  vkFlags :: XlibSurfaceCreateFlagsKHR
+  flags :: XlibSurfaceCreateFlagsKHR
   , -- No documentation found for Nested "XlibSurfaceCreateInfoKHR" "dpy"
-  vkDpy :: Ptr Display
+  dpy :: Ptr Display
   , -- No documentation found for Nested "XlibSurfaceCreateInfoKHR" "window"
-  vkWindow :: Window
+  window :: Window
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkXlibSurfaceCreateInfoKHR' and
+-- marshal a 'XlibSurfaceCreateInfoKHR' into it. The 'VkXlibSurfaceCreateInfoKHR' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructXlibSurfaceCreateInfoKHR :: XlibSurfaceCreateInfoKHR -> (VkXlibSurfaceCreateInfoKHR -> IO a) -> IO a
-withCStructXlibSurfaceCreateInfoKHR from cont = maybeWith withSomeVkStruct (vkPNext (from :: XlibSurfaceCreateInfoKHR)) (\pPNext -> cont (VkXlibSurfaceCreateInfoKHR VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR pPNext (vkFlags (from :: XlibSurfaceCreateInfoKHR)) (vkDpy (from :: XlibSurfaceCreateInfoKHR)) (vkWindow (from :: XlibSurfaceCreateInfoKHR))))
+withCStructXlibSurfaceCreateInfoKHR marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: XlibSurfaceCreateInfoKHR)) (\pPNext -> cont (VkXlibSurfaceCreateInfoKHR VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR pPNext (flags (marshalled :: XlibSurfaceCreateInfoKHR)) (dpy (marshalled :: XlibSurfaceCreateInfoKHR)) (window (marshalled :: XlibSurfaceCreateInfoKHR))))
+
+-- | A function to read a 'VkXlibSurfaceCreateInfoKHR' and all additional
+-- structures in the pointer chain into a 'XlibSurfaceCreateInfoKHR'.
 fromCStructXlibSurfaceCreateInfoKHR :: VkXlibSurfaceCreateInfoKHR -> IO XlibSurfaceCreateInfoKHR
 fromCStructXlibSurfaceCreateInfoKHR c = XlibSurfaceCreateInfoKHR <$> -- Univalued Member elided
                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkXlibSurfaceCreateInfoKHR)))
                                                                  <*> pure (vkFlags (c :: VkXlibSurfaceCreateInfoKHR))
                                                                  <*> pure (vkDpy (c :: VkXlibSurfaceCreateInfoKHR))
                                                                  <*> pure (vkWindow (c :: VkXlibSurfaceCreateInfoKHR))
+
 instance Zero XlibSurfaceCreateInfoKHR where
   zero = XlibSurfaceCreateInfoKHR Nothing
                                   zero
                                   zero
                                   zero
 
--- | Wrapper for 'vkCreateXlibSurfaceKHR'
-createXlibSurfaceKHR :: Instance ->  XlibSurfaceCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
-createXlibSurfaceKHR = \(Instance instance' commandTable) -> \createInfo -> \allocator -> alloca (\pSurface -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructXlibSurfaceCreateInfoKHR a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createXlibSurfaceKHR commandTable instance' pCreateInfo pAllocator pSurface >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSurface)))))
 
--- | Wrapper for 'vkGetPhysicalDeviceXlibPresentationSupportKHR'
+
+-- | vkCreateXlibSurfaceKHR - Create a
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' object for an
+-- X11 window, using the Xlib client-side library
+--
+-- = Parameters
+--
+-- -   @instance@ is the instance to associate the surface with.
+--
+-- -   @pCreateInfo@ is a pointer to an instance of the
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface.VkXlibSurfaceCreateInfoKHR'
+--     structure containing the parameters affecting the creation of the
+--     surface object.
+--
+-- -   @pAllocator@ is the allocator used for host memory allocated for the
+--     surface object when there is no more specific allocator available
+--     (see
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+--
+-- -   @pSurface@ points to a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
+--     which the created surface object is returned.
+--
+-- = Description
+--
+-- Unresolved directive in vkCreateXlibSurfaceKHR.txt -
+-- include::{generated}\/validity\/protos\/vkCreateXlibSurfaceKHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
+createXlibSurfaceKHR :: Instance ->  XlibSurfaceCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
+createXlibSurfaceKHR = \(Instance instance' commandTable) -> \createInfo' -> \allocator -> alloca (\pSurface' -> maybeWith (\marshalled -> withCStructAllocationCallbacks marshalled . flip with) allocator (\pAllocator -> (\marshalled -> withCStructXlibSurfaceCreateInfoKHR marshalled . flip with) createInfo' (\pCreateInfo' -> vkCreateXlibSurfaceKHR commandTable instance' pCreateInfo' pAllocator pSurface' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (peek pSurface')))))
+
+
+-- | vkGetPhysicalDeviceXlibPresentationSupportKHR - Query physical device
+-- for presentation to X11 server using Xlib
+--
+-- = Parameters
+--
+-- -   @physicalDevice@ is the physical device.
+--
+-- -   @queueFamilyIndex@ is the queue family index.
+--
+-- -   @dpy@ is a pointer to an Xlib
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface.Display'
+--     connection to the server.
+--
+-- -   @visualId@ is an X11 visual
+--     ('Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface.VisualID').
+--
+-- = Description
+--
+-- This platform-specific function /can/ be called prior to creating a
+-- surface.
+--
+-- == Valid Usage
+--
+-- Unresolved directive in
+-- vkGetPhysicalDeviceXlibPresentationSupportKHR.txt -
+-- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceXlibPresentationSupportKHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 getPhysicalDeviceXlibPresentationSupportKHR :: PhysicalDevice ->  Word32 ->  VisualID ->  IO (VkBool32, Display)
-getPhysicalDeviceXlibPresentationSupportKHR = \(PhysicalDevice physicalDevice commandTable) -> \queueFamilyIndex -> \visualID -> alloca (\pDpy -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceXlibPresentationSupportKHR commandTable physicalDevice queueFamilyIndex pDpy visualID >>= (\r -> (,) <$> pure r<*>peek pDpy))
+getPhysicalDeviceXlibPresentationSupportKHR = \(PhysicalDevice physicalDevice' commandTable) -> \queueFamilyIndex' -> \visualID' -> alloca (\pDpy' -> vkGetPhysicalDeviceXlibPresentationSupportKHR commandTable physicalDevice' queueFamilyIndex' pDpy' visualID' >>= (\ret -> (,) <$> pure ret<*>peek pDpy'))

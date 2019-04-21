@@ -6,18 +6,8 @@
 {-# language OverloadedStrings #-}
 
 module Graphics.Vulkan.C.Extensions.VK_AMD_draw_indirect_count
-  ( 
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  vkCmdDrawIndexedIndirectCountAMD
-  , 
-#endif
-  FN_vkCmdDrawIndexedIndirectCountAMD
-  , PFN_vkCmdDrawIndexedIndirectCountAMD
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+  ( vkCmdDrawIndexedIndirectCountAMD
   , vkCmdDrawIndirectCountAMD
-#endif
-  , FN_vkCmdDrawIndirectCountAMD
-  , PFN_vkCmdDrawIndirectCountAMD
   , pattern VK_AMD_DRAW_INDIRECT_COUNT_EXTENSION_NAME
   , pattern VK_AMD_DRAW_INDIRECT_COUNT_SPEC_VERSION
   ) where
@@ -27,9 +17,6 @@ import Data.String
   )
 import Data.Word
   ( Word32
-  )
-import Foreign.Ptr
-  ( FunPtr
   )
 
 
@@ -42,12 +29,18 @@ import Graphics.Vulkan.C.Core10.MemoryManagement
 import Graphics.Vulkan.C.Core10.Queue
   ( VkCommandBuffer
   )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
+  )
+import Graphics.Vulkan.C.Extensions.VK_KHR_draw_indirect_count
+  ( vkCmdDrawIndexedIndirectCountKHR
+  , vkCmdDrawIndirectCountKHR
+  )
 import Graphics.Vulkan.NamedType
   ( (:::)
   )
 
 
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- | vkCmdDrawIndexedIndirectCountAMD - Perform an indexed indirect draw with
 -- the draw count sourced from a buffer
 --
@@ -74,7 +67,7 @@ import Graphics.Vulkan.NamedType
 --
 -- = Description
 --
--- @vkCmdDrawIndexedIndirectCountAMD@ behaves similarly to
+-- 'vkCmdDrawIndexedIndirectCountAMD' behaves similarly to
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDrawIndexedIndirect'
 -- except that the draw count is read by the device from a buffer during
 -- execution. The command will read an unsigned 32-bit integer from
@@ -84,131 +77,165 @@ import Graphics.Vulkan.NamedType
 -- == Valid Usage
 --
 -- -   If @buffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+--     contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
 -- -   @buffer@ /must/ have been created with the
---     @VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT@ bit set
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT'
+--     bit set
 --
 -- -   If @countBuffer@ is non-sparse then it /must/ be bound completely
---     and contiguously to a single @VkDeviceMemory@ object
+--     and contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
 -- -   @countBuffer@ /must/ have been created with the
---     @VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT@ bit set
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT'
+--     bit set
 --
 -- -   @offset@ /must/ be a multiple of @4@
 --
 -- -   @countBufferOffset@ /must/ be a multiple of @4@
 --
 -- -   @stride@ /must/ be a multiple of @4@ and /must/ be greater than or
---     equal to @sizeof@(@VkDrawIndexedIndirectCommand@)
+--     equal to
+--     @sizeof@('Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkDrawIndexedIndirectCommand')
 --
 -- -   If @maxDrawCount@ is greater than or equal to @1@, (@stride@ ×
 --     (@maxDrawCount@ - 1) + @offset@ +
---     @sizeof@(@VkDrawIndexedIndirectCommand@)) /must/ be less than or
---     equal to the size of @buffer@
+--     @sizeof@('Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkDrawIndexedIndirectCommand'))
+--     /must/ be less than or equal to the size of @buffer@
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-drawIndirectFirstInstance drawIndirectFirstInstance>
 --     feature is not enabled, all the @firstInstance@ members of the
---     @VkDrawIndexedIndirectCommand@ structures accessed by this command
---     /must/ be @0@
+--     'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkDrawIndexedIndirectCommand'
+--     structures accessed by this command /must/ be @0@
 --
 -- -   The current render pass /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility compatible>
---     with the @renderPass@ member of the @VkGraphicsPipelineCreateInfo@
---     structure specified when creating the @VkPipeline@ bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@.
+--     with the @renderPass@ member of the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkGraphicsPipelineCreateInfo'
+--     structure specified when creating the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS'.
 --
 -- -   The subpass index of the current render pass /must/ be equal to the
---     @subpass@ member of the @VkGraphicsPipelineCreateInfo@ structure
---     specified when creating the @VkPipeline@ bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@.
+--     @subpass@ member of the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkGraphicsPipelineCreateInfo'
+--     structure specified when creating the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS'.
 --
--- -   For each set /n/ that is statically used by the @VkPipeline@ bound
---     to @VK_PIPELINE_BIND_POINT_GRAPHICS@, a descriptor set /must/ have
---     been bound to /n/ at @VK_PIPELINE_BIND_POINT_GRAPHICS@, with a
---     @VkPipelineLayout@ that is compatible for set /n/, with the
---     @VkPipelineLayout@ used to create the current @VkPipeline@, as
+-- -   For each set /n/ that is statically used by the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS', a
+--     descriptor set /must/ have been bound to /n/ at
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS',
+--     with a 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' that is
+--     compatible for set /n/, with the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' used to create
+--     the current 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline', as
 --     described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
 --
--- -   For each push constant that is statically used by the @VkPipeline@
---     bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@, a push constant value
---     /must/ have been set for @VK_PIPELINE_BIND_POINT_GRAPHICS@, with a
---     @VkPipelineLayout@ that is compatible for push constants, with the
---     @VkPipelineLayout@ used to create the current @VkPipeline@, as
+-- -   For each push constant that is statically used by the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS', a
+--     push constant value /must/ have been set for
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS',
+--     with a 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' that is
+--     compatible for push constants, with the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' used to create
+--     the current 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline', as
 --     described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
 --
 -- -   Descriptors in each bound descriptor set, specified via
---     @vkCmdBindDescriptorSets@, /must/ be valid if they are statically
---     used by the bound @VkPipeline@ object, specified via
---     @vkCmdBindPipeline@
+--     'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindDescriptorSets',
+--     /must/ be valid if they are statically used by the bound
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object, specified via
+--     'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindPipeline'
 --
 -- -   All vertex input bindings accessed via vertex input variables
 --     declared in the vertex shader entry point’s interface /must/ have
 --     valid buffers bound
 --
 -- -   A valid graphics pipeline /must/ be bound to the current command
---     buffer with @VK_PIPELINE_BIND_POINT_GRAPHICS@
+--     buffer with
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS'
 --
--- -   If the @VkPipeline@ object bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@ requires any dynamic state, that
---     state /must/ have been set on the current command buffer
+-- -   If the 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound
+--     to 'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS'
+--     requires any dynamic state, that state /must/ have been set on the
+--     current command buffer
 --
 -- -   If count stored in @countBuffer@ is equal to @1@, (@offset@ +
---     @sizeof@(@VkDrawIndexedIndirectCommand@)) /must/ be less than or
---     equal to the size of @buffer@
+--     @sizeof@('Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkDrawIndexedIndirectCommand'))
+--     /must/ be less than or equal to the size of @buffer@
 --
 -- -   If count stored in @countBuffer@ is greater than @1@, (@stride@ ×
 --     (@drawCount@ - 1) + @offset@ +
---     @sizeof@(@VkDrawIndexedIndirectCommand@)) /must/ be less than or
---     equal to the size of @buffer@
+--     @sizeof@('Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkDrawIndexedIndirectCommand'))
+--     /must/ be less than or equal to the size of @buffer@
 --
 -- -   @drawCount@ /must/ be less than or equal to
---     @VkPhysicalDeviceLimits@::@maxDrawIndirectCount@
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxDrawIndirectCount@
 --
 -- -   Every input attachment used by the current subpass /must/ be bound
 --     to the pipeline via a descriptor set
 --
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ uses
+-- -   If any 'Graphics.Vulkan.C.Core10.Sampler.VkSampler' object that is
+--     accessed from a shader by the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS' uses
 --     unnormalized coordinates, it /must/ not be used to sample from any
---     @VkImage@ with a @VkImageView@ of the type @VK_IMAGE_VIEW_TYPE_3D@,
---     @VK_IMAGE_VIEW_TYPE_CUBE@, @VK_IMAGE_VIEW_TYPE_1D_ARRAY@,
---     @VK_IMAGE_VIEW_TYPE_2D_ARRAY@ or @VK_IMAGE_VIEW_TYPE_CUBE_ARRAY@, in
---     any shader stage
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' with a
+--     'Graphics.Vulkan.C.Core10.ImageView.VkImageView' of the type
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_3D',
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_CUBE',
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_1D_ARRAY',
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_2D_ARRAY' or
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_CUBE_ARRAY',
+--     in any shader stage
 --
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ uses
+-- -   If any 'Graphics.Vulkan.C.Core10.Sampler.VkSampler' object that is
+--     accessed from a shader by the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS' uses
 --     unnormalized coordinates, it /must/ not be used with any of the
 --     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions with
 --     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
 --
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ uses
+-- -   If any 'Graphics.Vulkan.C.Core10.Sampler.VkSampler' object that is
+--     accessed from a shader by the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS' uses
 --     unnormalized coordinates, it /must/ not be used with any of the
 --     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions that
 --     includes a LOD bias or any offset values, in any shader stage
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and any shader stage in the @VkPipeline@
---     object bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ accesses a uniform
---     buffer, it /must/ not access values outside of the range of that
---     buffer specified in the bound descriptor set
+--     feature is not enabled, and any shader stage in the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound to
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS'
+--     accesses a uniform buffer, it /must/ not access values outside of
+--     the range of that buffer specified in the bound descriptor set
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and any shader stage in the @VkPipeline@
---     object bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ accesses a storage
---     buffer, it /must/ not access values outside of the range of that
---     buffer specified in the bound descriptor set
+--     feature is not enabled, and any shader stage in the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound to
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS'
+--     accesses a storage buffer, it /must/ not access values outside of
+--     the range of that buffer specified in the bound descriptor set
 --
--- -   If a @VkImageView@ is sampled with @VK_FILTER_LINEAR@ as a result of
---     this command, then the image view’s
+-- -   If a 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' is sampled
+--     with 'Graphics.Vulkan.C.Core10.Sampler.VK_FILTER_LINEAR' as a result
+--     of this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT@.
+--     /must/ contain
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'.
 --
 -- -   Image subresources used as attachments in the current render pass
 --     /must/ not be accessed in any way other than as an attachment by
@@ -220,75 +247,29 @@ import Graphics.Vulkan.NamedType
 --
 -- -   If the bound graphics pipeline was created with
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkPipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
---     set to @VK_TRUE@ and the current subpass has a depth\/stencil
---     attachment, then that attachment /must/ have been created with the
---     @VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT@ bit set
+--     set to 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' and the current
+--     subpass has a depth\/stencil attachment, then that attachment /must/
+--     have been created with the
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
+--     bit set
 --
 -- -   Any 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' created with
 --     a 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@flags@
---     containing @VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV@ sampled as a
---     result of this command /must/ only be sampled using a
+--     containing
+--     'Graphics.Vulkan.C.Extensions.VK_NV_corner_sampled_image.VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'
+--     sampled as a result of this command /must/ only be sampled using a
 --     'Graphics.Vulkan.C.Core10.Sampler.VkSamplerAddressMode' of
---     @VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE@.
+--     'Graphics.Vulkan.C.Core10.Sampler.VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'.
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @buffer@ /must/ be a valid @VkBuffer@ handle
---
--- -   @countBuffer@ /must/ be a valid @VkBuffer@ handle
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- -   This command /must/ only be called inside of a render pass instance
---
--- -   Each of @buffer@, @commandBuffer@, and @countBuffer@ /must/ have
---     been created, allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Inside          | Graphics        | Graphics        |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdDrawIndexedIndirectCountAMD.txt -
+-- include::..\/validity\/protos\/vkCmdDrawIndexedIndirectCountAMD.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "vkCmdDrawIndexedIndirectCountAMD" vkCmdDrawIndexedIndirectCountAMD :: ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("countBuffer" ::: VkBuffer) -> ("countBufferOffset" ::: VkDeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
+vkCmdDrawIndexedIndirectCountAMD :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("countBuffer" ::: VkBuffer) -> ("countBufferOffset" ::: VkDeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
+vkCmdDrawIndexedIndirectCountAMD = vkCmdDrawIndexedIndirectCountKHR
 
-#endif
-type FN_vkCmdDrawIndexedIndirectCountAMD = ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("countBuffer" ::: VkBuffer) -> ("countBufferOffset" ::: VkDeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
-type PFN_vkCmdDrawIndexedIndirectCountAMD = FunPtr FN_vkCmdDrawIndexedIndirectCountAMD
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 -- | vkCmdDrawIndirectCountAMD - Perform an indirect draw with the draw count
 -- sourced from a buffer
 --
@@ -315,7 +296,7 @@ type PFN_vkCmdDrawIndexedIndirectCountAMD = FunPtr FN_vkCmdDrawIndexedIndirectCo
 --
 -- = Description
 --
--- @vkCmdDrawIndirectCountAMD@ behaves similarly to
+-- 'vkCmdDrawIndirectCountAMD' behaves similarly to
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDrawIndirect'
 -- except that the draw count is read by the device from a buffer during
 -- execution. The command will read an unsigned 32-bit integer from
@@ -325,129 +306,165 @@ type PFN_vkCmdDrawIndexedIndirectCountAMD = FunPtr FN_vkCmdDrawIndexedIndirectCo
 -- == Valid Usage
 --
 -- -   If @buffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+--     contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
 -- -   @buffer@ /must/ have been created with the
---     @VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT@ bit set
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT'
+--     bit set
 --
 -- -   If @countBuffer@ is non-sparse then it /must/ be bound completely
---     and contiguously to a single @VkDeviceMemory@ object
+--     and contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
 -- -   @countBuffer@ /must/ have been created with the
---     @VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT@ bit set
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT'
+--     bit set
 --
 -- -   @offset@ /must/ be a multiple of @4@
 --
 -- -   @countBufferOffset@ /must/ be a multiple of @4@
 --
 -- -   @stride@ /must/ be a multiple of @4@ and /must/ be greater than or
---     equal to @sizeof@(@VkDrawIndirectCommand@)
+--     equal to
+--     @sizeof@('Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkDrawIndirectCommand')
 --
 -- -   If @maxDrawCount@ is greater than or equal to @1@, (@stride@ ×
---     (@maxDrawCount@ - 1) + @offset@ + @sizeof@(@VkDrawIndirectCommand@))
+--     (@maxDrawCount@ - 1) + @offset@ +
+--     @sizeof@('Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkDrawIndirectCommand'))
 --     /must/ be less than or equal to the size of @buffer@
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-drawIndirectFirstInstance drawIndirectFirstInstance>
 --     feature is not enabled, all the @firstInstance@ members of the
---     @VkDrawIndirectCommand@ structures accessed by this command /must/
---     be @0@
+--     'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkDrawIndirectCommand'
+--     structures accessed by this command /must/ be @0@
 --
 -- -   The current render pass /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility compatible>
---     with the @renderPass@ member of the @VkGraphicsPipelineCreateInfo@
---     structure specified when creating the @VkPipeline@ bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@.
+--     with the @renderPass@ member of the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkGraphicsPipelineCreateInfo'
+--     structure specified when creating the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS'.
 --
 -- -   The subpass index of the current render pass /must/ be equal to the
---     @subpass@ member of the @VkGraphicsPipelineCreateInfo@ structure
---     specified when creating the @VkPipeline@ bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@.
+--     @subpass@ member of the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkGraphicsPipelineCreateInfo'
+--     structure specified when creating the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS'.
 --
--- -   For each set /n/ that is statically used by the @VkPipeline@ bound
---     to @VK_PIPELINE_BIND_POINT_GRAPHICS@, a descriptor set /must/ have
---     been bound to /n/ at @VK_PIPELINE_BIND_POINT_GRAPHICS@, with a
---     @VkPipelineLayout@ that is compatible for set /n/, with the
---     @VkPipelineLayout@ used to create the current @VkPipeline@, as
+-- -   For each set /n/ that is statically used by the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS', a
+--     descriptor set /must/ have been bound to /n/ at
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS',
+--     with a 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' that is
+--     compatible for set /n/, with the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' used to create
+--     the current 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline', as
 --     described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
 --
--- -   For each push constant that is statically used by the @VkPipeline@
---     bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@, a push constant value
---     /must/ have been set for @VK_PIPELINE_BIND_POINT_GRAPHICS@, with a
---     @VkPipelineLayout@ that is compatible for push constants, with the
---     @VkPipelineLayout@ used to create the current @VkPipeline@, as
+-- -   For each push constant that is statically used by the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS', a
+--     push constant value /must/ have been set for
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS',
+--     with a 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' that is
+--     compatible for push constants, with the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' used to create
+--     the current 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline', as
 --     described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
 --
 -- -   Descriptors in each bound descriptor set, specified via
---     @vkCmdBindDescriptorSets@, /must/ be valid if they are statically
---     used by the bound @VkPipeline@ object, specified via
---     @vkCmdBindPipeline@
+--     'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindDescriptorSets',
+--     /must/ be valid if they are statically used by the bound
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object, specified via
+--     'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindPipeline'
 --
 -- -   All vertex input bindings accessed via vertex input variables
 --     declared in the vertex shader entry point’s interface /must/ have
 --     valid buffers bound
 --
 -- -   A valid graphics pipeline /must/ be bound to the current command
---     buffer with @VK_PIPELINE_BIND_POINT_GRAPHICS@
+--     buffer with
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS'
 --
--- -   If the @VkPipeline@ object bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@ requires any dynamic state, that
---     state /must/ have been set on the current command buffer
+-- -   If the 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound
+--     to 'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS'
+--     requires any dynamic state, that state /must/ have been set on the
+--     current command buffer
 --
 -- -   If the count stored in @countBuffer@ is equal to @1@, (@offset@ +
---     @sizeof@(@VkDrawIndirectCommand@)) /must/ be less than or equal to
---     the size of @buffer@
+--     @sizeof@('Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkDrawIndirectCommand'))
+--     /must/ be less than or equal to the size of @buffer@
 --
 -- -   If the count stored in @countBuffer@ is greater than @1@, (@stride@
---     × (@drawCount@ - 1) + @offset@ + @sizeof@(@VkDrawIndirectCommand@))
+--     × (@drawCount@ - 1) + @offset@ +
+--     @sizeof@('Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkDrawIndirectCommand'))
 --     /must/ be less than or equal to the size of @buffer@
 --
 -- -   The count stored in @countBuffer@ /must/ be less than or equal to
---     @VkPhysicalDeviceLimits@::@maxDrawIndirectCount@
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxDrawIndirectCount@
 --
 -- -   Every input attachment used by the current subpass /must/ be bound
 --     to the pipeline via a descriptor set
 --
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ uses
+-- -   If any 'Graphics.Vulkan.C.Core10.Sampler.VkSampler' object that is
+--     accessed from a shader by the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS' uses
 --     unnormalized coordinates, it /must/ not be used to sample from any
---     @VkImage@ with a @VkImageView@ of the type @VK_IMAGE_VIEW_TYPE_3D@,
---     @VK_IMAGE_VIEW_TYPE_CUBE@, @VK_IMAGE_VIEW_TYPE_1D_ARRAY@,
---     @VK_IMAGE_VIEW_TYPE_2D_ARRAY@ or @VK_IMAGE_VIEW_TYPE_CUBE_ARRAY@, in
---     any shader stage
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' with a
+--     'Graphics.Vulkan.C.Core10.ImageView.VkImageView' of the type
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_3D',
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_CUBE',
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_1D_ARRAY',
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_2D_ARRAY' or
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_CUBE_ARRAY',
+--     in any shader stage
 --
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ uses
+-- -   If any 'Graphics.Vulkan.C.Core10.Sampler.VkSampler' object that is
+--     accessed from a shader by the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS' uses
 --     unnormalized coordinates, it /must/ not be used with any of the
 --     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions with
 --     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
 --
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ uses
+-- -   If any 'Graphics.Vulkan.C.Core10.Sampler.VkSampler' object that is
+--     accessed from a shader by the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS' uses
 --     unnormalized coordinates, it /must/ not be used with any of the
 --     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions that
 --     includes a LOD bias or any offset values, in any shader stage
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and any shader stage in the @VkPipeline@
---     object bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ accesses a uniform
---     buffer, it /must/ not access values outside of the range of that
---     buffer specified in the bound descriptor set
+--     feature is not enabled, and any shader stage in the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound to
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS'
+--     accesses a uniform buffer, it /must/ not access values outside of
+--     the range of that buffer specified in the bound descriptor set
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and any shader stage in the @VkPipeline@
---     object bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ accesses a storage
---     buffer, it /must/ not access values outside of the range of that
---     buffer specified in the bound descriptor set
+--     feature is not enabled, and any shader stage in the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound to
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS'
+--     accesses a storage buffer, it /must/ not access values outside of
+--     the range of that buffer specified in the bound descriptor set
 --
--- -   If a @VkImageView@ is sampled with @VK_FILTER_LINEAR@ as a result of
---     this command, then the image view’s
+-- -   If a 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' is sampled
+--     with 'Graphics.Vulkan.C.Core10.Sampler.VK_FILTER_LINEAR' as a result
+--     of this command, then the image view’s
 --     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT@.
+--     /must/ contain
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'.
 --
 -- -   Image subresources used as attachments in the current render pass
 --     /must/ not be accessed in any way other than as an attachment by
@@ -459,77 +476,33 @@ type PFN_vkCmdDrawIndexedIndirectCountAMD = FunPtr FN_vkCmdDrawIndexedIndirectCo
 --
 -- -   If the bound graphics pipeline was created with
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkPipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
---     set to @VK_TRUE@ and the current subpass has a depth\/stencil
---     attachment, then that attachment /must/ have been created with the
---     @VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT@ bit set
+--     set to 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' and the current
+--     subpass has a depth\/stencil attachment, then that attachment /must/
+--     have been created with the
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
+--     bit set
 --
 -- -   Any 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' created with
 --     a 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@flags@
---     containing @VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV@ sampled as a
---     result of this command /must/ only be sampled using a
+--     containing
+--     'Graphics.Vulkan.C.Extensions.VK_NV_corner_sampled_image.VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'
+--     sampled as a result of this command /must/ only be sampled using a
 --     'Graphics.Vulkan.C.Core10.Sampler.VkSamplerAddressMode' of
---     @VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE@.
+--     'Graphics.Vulkan.C.Core10.Sampler.VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'.
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @buffer@ /must/ be a valid @VkBuffer@ handle
---
--- -   @countBuffer@ /must/ be a valid @VkBuffer@ handle
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- -   This command /must/ only be called inside of a render pass instance
---
--- -   Each of @buffer@, @commandBuffer@, and @countBuffer@ /must/ have
---     been created, allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Inside          | Graphics        | Graphics        |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdDrawIndirectCountAMD.txt -
+-- include::..\/validity\/protos\/vkCmdDrawIndirectCountAMD.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "vkCmdDrawIndirectCountAMD" vkCmdDrawIndirectCountAMD :: ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("countBuffer" ::: VkBuffer) -> ("countBufferOffset" ::: VkDeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
+vkCmdDrawIndirectCountAMD :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("countBuffer" ::: VkBuffer) -> ("countBufferOffset" ::: VkDeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
+vkCmdDrawIndirectCountAMD = vkCmdDrawIndirectCountKHR
 
-#endif
-type FN_vkCmdDrawIndirectCountAMD = ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("countBuffer" ::: VkBuffer) -> ("countBufferOffset" ::: VkDeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
-type PFN_vkCmdDrawIndirectCountAMD = FunPtr FN_vkCmdDrawIndirectCountAMD
 -- No documentation found for TopLevel "VK_AMD_DRAW_INDIRECT_COUNT_EXTENSION_NAME"
 pattern VK_AMD_DRAW_INDIRECT_COUNT_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_AMD_DRAW_INDIRECT_COUNT_EXTENSION_NAME = "VK_AMD_draw_indirect_count"
+
 -- No documentation found for TopLevel "VK_AMD_DRAW_INDIRECT_COUNT_SPEC_VERSION"
 pattern VK_AMD_DRAW_INDIRECT_COUNT_SPEC_VERSION :: Integral a => a
 pattern VK_AMD_DRAW_INDIRECT_COUNT_SPEC_VERSION = 1

@@ -2,12 +2,15 @@
 {-# language CPP #-}
 {-# language PatternSynonyms #-}
 {-# language DuplicateRecordFields #-}
+{-# language TypeFamilies #-}
 
 module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion
   ( withCStructBindImagePlaneMemoryInfo
   , fromCStructBindImagePlaneMemoryInfo
   , BindImagePlaneMemoryInfo(..)
   , ChromaLocation
+  , pattern CHROMA_LOCATION_COSITED_EVEN
+  , pattern CHROMA_LOCATION_MIDPOINT
   , ChromaLocationKHR
   , withCStructImagePlaneMemoryRequirementsInfo
   , fromCStructImagePlaneMemoryRequirementsInfo
@@ -26,8 +29,15 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion
   , fromCStructSamplerYcbcrConversionInfo
   , SamplerYcbcrConversionInfo(..)
   , SamplerYcbcrModelConversion
+  , pattern SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY
+  , pattern SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY
+  , pattern SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709
+  , pattern SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601
+  , pattern SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020
   , SamplerYcbcrModelConversionKHR
   , SamplerYcbcrRange
+  , pattern SAMPLER_YCBCR_RANGE_ITU_FULL
+  , pattern SAMPLER_YCBCR_RANGE_ITU_NARROW
   , SamplerYcbcrRangeKHR
   , createSamplerYcbcrConversion
   , destroySamplerYcbcrConversion
@@ -110,10 +120,6 @@ import Foreign.Ptr
 import Foreign.Storable
   ( peek
   )
-import qualified Graphics.Vulkan.C.Dynamic
-  ( createSamplerYcbcrConversion
-  , destroySamplerYcbcrConversion
-  )
 
 
 import Graphics.Vulkan.C.Core10.Core
@@ -131,6 +137,17 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion
   , VkSamplerYcbcrModelConversion(..)
   , VkSamplerYcbcrRange(..)
   , VkSamplerYcbcrConversion
+  , vkCreateSamplerYcbcrConversion
+  , vkDestroySamplerYcbcrConversion
+  , pattern VK_CHROMA_LOCATION_COSITED_EVEN
+  , pattern VK_CHROMA_LOCATION_MIDPOINT
+  , pattern VK_SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY
+  , pattern VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020
+  , pattern VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601
+  , pattern VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709
+  , pattern VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY
+  , pattern VK_SAMPLER_YCBCR_RANGE_ITU_FULL
+  , pattern VK_SAMPLER_YCBCR_RANGE_ITU_NARROW
   , pattern VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO
   , pattern VK_STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES
@@ -217,91 +234,375 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion
   )
 
 
--- No documentation found for TopLevel "BindImagePlaneMemoryInfo"
+
+-- | VkBindImagePlaneMemoryInfo - Structure specifying how to bind an image
+-- plane to memory
+--
+-- == Valid Usage
+--
+-- -   If the image’s tiling is
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TILING_LINEAR'
+--     or
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TILING_OPTIMAL',
+--     then @planeAspect@ /must/ be a single valid /format plane/ for the
+--     image. (That is, @planeAspect@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_0_BIT'
+--     or
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_1_BIT'
+--     for “@_2PLANE@” formats and @planeAspect@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_0_BIT',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_1_BIT',
+--     or
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_2_BIT'
+--     for “@_3PLANE@” formats.)
+--
+-- -   If the image’s tiling is
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
+--     then @planeAspect@ /must/ be a single valid /memory plane/ for the
+--     image. (That is, @aspectMask@ /must/ specify a plane index that is
+--     less than the
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkDrmFormatModifierPropertiesEXT drmFormatModifierPlaneCount>
+--     associated with the image’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkImageCreateInfo format>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkImageDrmFormatModifierPropertiesEXT drmFormatModifier>.)
+--
+-- -   A single call to
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.vkBindImageMemory2'
+--     /must/ bind all or none of the planes of an image (i.e. bindings to
+--     all planes of an image /must/ be made in a single
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.vkBindImageMemory2'
+--     call), as separate bindings
+--
+-- Unresolved directive in VkBindImagePlaneMemoryInfo.txt -
+-- include::{generated}\/validity\/structs\/VkBindImagePlaneMemoryInfo.txt[]
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkImageAspectFlagBits',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data BindImagePlaneMemoryInfo = BindImagePlaneMemoryInfo
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "BindImagePlaneMemoryInfo" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "BindImagePlaneMemoryInfo" "planeAspect"
-  vkPlaneAspect :: ImageAspectFlagBits
+  planeAspect :: ImageAspectFlagBits
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkBindImagePlaneMemoryInfo' and
+-- marshal a 'BindImagePlaneMemoryInfo' into it. The 'VkBindImagePlaneMemoryInfo' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructBindImagePlaneMemoryInfo :: BindImagePlaneMemoryInfo -> (VkBindImagePlaneMemoryInfo -> IO a) -> IO a
-withCStructBindImagePlaneMemoryInfo from cont = maybeWith withSomeVkStruct (vkPNext (from :: BindImagePlaneMemoryInfo)) (\pPNext -> cont (VkBindImagePlaneMemoryInfo VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO pPNext (vkPlaneAspect (from :: BindImagePlaneMemoryInfo))))
+withCStructBindImagePlaneMemoryInfo marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: BindImagePlaneMemoryInfo)) (\pPNext -> cont (VkBindImagePlaneMemoryInfo VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO pPNext (planeAspect (marshalled :: BindImagePlaneMemoryInfo))))
+
+-- | A function to read a 'VkBindImagePlaneMemoryInfo' and all additional
+-- structures in the pointer chain into a 'BindImagePlaneMemoryInfo'.
 fromCStructBindImagePlaneMemoryInfo :: VkBindImagePlaneMemoryInfo -> IO BindImagePlaneMemoryInfo
 fromCStructBindImagePlaneMemoryInfo c = BindImagePlaneMemoryInfo <$> -- Univalued Member elided
                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkBindImagePlaneMemoryInfo)))
                                                                  <*> pure (vkPlaneAspect (c :: VkBindImagePlaneMemoryInfo))
+
 instance Zero BindImagePlaneMemoryInfo where
   zero = BindImagePlaneMemoryInfo Nothing
                                   zero
--- No documentation found for TopLevel "ChromaLocation"
+
+
+-- | VkChromaLocation - Position of downsampled chroma samples
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'
 type ChromaLocation = VkChromaLocation
+
+
+-- | 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_CHROMA_LOCATION_COSITED_EVEN'
+-- specifies that downsampled chroma samples are aligned with luma samples
+-- with even coordinates.
+pattern CHROMA_LOCATION_COSITED_EVEN :: (a ~ ChromaLocation) => a
+pattern CHROMA_LOCATION_COSITED_EVEN = VK_CHROMA_LOCATION_COSITED_EVEN
+
+
+-- | 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_CHROMA_LOCATION_MIDPOINT'
+-- specifies that downsampled chroma samples are located half way between
+-- each even luma sample and the nearest higher odd luma sample.
+pattern CHROMA_LOCATION_MIDPOINT :: (a ~ ChromaLocation) => a
+pattern CHROMA_LOCATION_MIDPOINT = VK_CHROMA_LOCATION_MIDPOINT
+
 -- No documentation found for TopLevel "ChromaLocationKHR"
 type ChromaLocationKHR = ChromaLocation
--- No documentation found for TopLevel "ImagePlaneMemoryRequirementsInfo"
+
+
+-- | VkImagePlaneMemoryRequirementsInfo - Structure specifying image plane
+-- for memory requirements
+--
+-- == Valid Usage
+--
+-- -   If the image’s tiling is
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TILING_LINEAR'
+--     or
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TILING_OPTIMAL',
+--     then @planeAspect@ /must/ be a single valid /format plane/ for the
+--     image. (That is, for a two-plane image @planeAspect@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_0_BIT'
+--     or
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_1_BIT',
+--     and for a three-plane image @planeAspect@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_0_BIT',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_1_BIT'
+--     or
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_2_BIT').
+--
+-- -   If the image’s tiling is
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
+--     then @planeAspect@ /must/ be a single valid /memory plane/ for the
+--     image. (That is, @aspectMask@ /must/ specify a plane index that is
+--     less than the
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkDrmFormatModifierPropertiesEXT drmFormatModifierPlaneCount>
+--     associated with the image’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkImageCreateInfo format>
+--     and
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkImageDrmFormatModifierPropertiesEXT drmFormatModifier>.)
+--
+-- Unresolved directive in VkImagePlaneMemoryRequirementsInfo.txt -
+-- include::{generated}\/validity\/structs\/VkImagePlaneMemoryRequirementsInfo.txt[]
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkImageAspectFlagBits',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data ImagePlaneMemoryRequirementsInfo = ImagePlaneMemoryRequirementsInfo
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "ImagePlaneMemoryRequirementsInfo" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "ImagePlaneMemoryRequirementsInfo" "planeAspect"
-  vkPlaneAspect :: ImageAspectFlagBits
+  planeAspect :: ImageAspectFlagBits
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkImagePlaneMemoryRequirementsInfo' and
+-- marshal a 'ImagePlaneMemoryRequirementsInfo' into it. The 'VkImagePlaneMemoryRequirementsInfo' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructImagePlaneMemoryRequirementsInfo :: ImagePlaneMemoryRequirementsInfo -> (VkImagePlaneMemoryRequirementsInfo -> IO a) -> IO a
-withCStructImagePlaneMemoryRequirementsInfo from cont = maybeWith withSomeVkStruct (vkPNext (from :: ImagePlaneMemoryRequirementsInfo)) (\pPNext -> cont (VkImagePlaneMemoryRequirementsInfo VK_STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO pPNext (vkPlaneAspect (from :: ImagePlaneMemoryRequirementsInfo))))
+withCStructImagePlaneMemoryRequirementsInfo marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: ImagePlaneMemoryRequirementsInfo)) (\pPNext -> cont (VkImagePlaneMemoryRequirementsInfo VK_STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO pPNext (planeAspect (marshalled :: ImagePlaneMemoryRequirementsInfo))))
+
+-- | A function to read a 'VkImagePlaneMemoryRequirementsInfo' and all additional
+-- structures in the pointer chain into a 'ImagePlaneMemoryRequirementsInfo'.
 fromCStructImagePlaneMemoryRequirementsInfo :: VkImagePlaneMemoryRequirementsInfo -> IO ImagePlaneMemoryRequirementsInfo
 fromCStructImagePlaneMemoryRequirementsInfo c = ImagePlaneMemoryRequirementsInfo <$> -- Univalued Member elided
                                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkImagePlaneMemoryRequirementsInfo)))
                                                                                  <*> pure (vkPlaneAspect (c :: VkImagePlaneMemoryRequirementsInfo))
+
 instance Zero ImagePlaneMemoryRequirementsInfo where
   zero = ImagePlaneMemoryRequirementsInfo Nothing
                                           zero
--- No documentation found for TopLevel "PhysicalDeviceSamplerYcbcrConversionFeatures"
+
+
+
+-- | VkPhysicalDeviceSamplerYcbcrConversionFeatures - Structure describing
+-- Y’CbCr conversion features that can be supported by an implementation
+--
+-- = Members
+--
+-- The members of the
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkPhysicalDeviceSamplerYcbcrConversionFeatures'
+-- structure describe the following feature:
+--
+-- = Description
+--
+-- Unresolved directive in
+-- VkPhysicalDeviceSamplerYcbcrConversionFeatures.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceSamplerYcbcrConversionFeatures.txt[]
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceSamplerYcbcrConversionFeatures = PhysicalDeviceSamplerYcbcrConversionFeatures
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceSamplerYcbcrConversionFeatures" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDeviceSamplerYcbcrConversionFeatures" "samplerYcbcrConversion"
-  vkSamplerYcbcrConversion :: Bool
+  samplerYcbcrConversion :: Bool
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPhysicalDeviceSamplerYcbcrConversionFeatures' and
+-- marshal a 'PhysicalDeviceSamplerYcbcrConversionFeatures' into it. The 'VkPhysicalDeviceSamplerYcbcrConversionFeatures' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPhysicalDeviceSamplerYcbcrConversionFeatures :: PhysicalDeviceSamplerYcbcrConversionFeatures -> (VkPhysicalDeviceSamplerYcbcrConversionFeatures -> IO a) -> IO a
-withCStructPhysicalDeviceSamplerYcbcrConversionFeatures from cont = maybeWith withSomeVkStruct (vkPNext (from :: PhysicalDeviceSamplerYcbcrConversionFeatures)) (\pPNext -> cont (VkPhysicalDeviceSamplerYcbcrConversionFeatures VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES pPNext (boolToBool32 (vkSamplerYcbcrConversion (from :: PhysicalDeviceSamplerYcbcrConversionFeatures)))))
+withCStructPhysicalDeviceSamplerYcbcrConversionFeatures marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PhysicalDeviceSamplerYcbcrConversionFeatures)) (\pPNext -> cont (VkPhysicalDeviceSamplerYcbcrConversionFeatures VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES pPNext (boolToBool32 (samplerYcbcrConversion (marshalled :: PhysicalDeviceSamplerYcbcrConversionFeatures)))))
+
+-- | A function to read a 'VkPhysicalDeviceSamplerYcbcrConversionFeatures' and all additional
+-- structures in the pointer chain into a 'PhysicalDeviceSamplerYcbcrConversionFeatures'.
 fromCStructPhysicalDeviceSamplerYcbcrConversionFeatures :: VkPhysicalDeviceSamplerYcbcrConversionFeatures -> IO PhysicalDeviceSamplerYcbcrConversionFeatures
 fromCStructPhysicalDeviceSamplerYcbcrConversionFeatures c = PhysicalDeviceSamplerYcbcrConversionFeatures <$> -- Univalued Member elided
                                                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceSamplerYcbcrConversionFeatures)))
                                                                                                          <*> pure (bool32ToBool (vkSamplerYcbcrConversion (c :: VkPhysicalDeviceSamplerYcbcrConversionFeatures)))
+
 instance Zero PhysicalDeviceSamplerYcbcrConversionFeatures where
   zero = PhysicalDeviceSamplerYcbcrConversionFeatures Nothing
                                                       False
--- No documentation found for TopLevel "SamplerYcbcrConversion"
+
+
+-- | VkSamplerYcbcrConversion - Opaque handle to a device-specific sampler
+-- Y’CBCR conversion description
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionInfo',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.vkCreateSamplerYcbcrConversion',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.vkDestroySamplerYcbcrConversion'
 type SamplerYcbcrConversion = VkSamplerYcbcrConversion
--- No documentation found for TopLevel "SamplerYcbcrConversionCreateInfo"
+
+
+-- | VkSamplerYcbcrConversionCreateInfo - Structure specifying the parameters
+-- of the newly created conversion
+--
+-- = Description
+--
+-- __Note__
+--
+-- Setting @forceExplicitReconstruction@ to
+-- 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' /may/ have a performance penalty
+-- on implementations where explicit reconstruction is not the default mode
+-- of operation.
+--
+-- If the @pNext@ chain has an instance of
+-- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkExternalFormatANDROID'
+-- with non-zero @externalFormat@ member, the sampler Y’CBCR conversion
+-- object represents an /external format conversion/, and @format@ /must/
+-- be 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_UNDEFINED'. Such conversions
+-- /must/ only be used to sample image views with a matching
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>.
+-- When creating an external format conversion, the value of @components@
+-- is ignored.
+--
+-- == Valid Usage
+--
+-- -   If an external format conversion is being created, @format@ /must/
+--     be 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_UNDEFINED', otherwise it
+--     /must/ not be 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_UNDEFINED'.
+--
+-- -   @format@ /must/ support
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT'
+--     or
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT'
+--
+-- -   If the format does not support
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT',
+--     @xChromaOffset@ and @yChromaOffset@ /must/ not be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_CHROMA_LOCATION_COSITED_EVEN'
+--
+-- -   If the format does not support
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT',
+--     @xChromaOffset@ and @yChromaOffset@ /must/ not be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_CHROMA_LOCATION_MIDPOINT'
+--
+-- -   @format@ /must/ represent unsigned normalized values (i.e. the
+--     format must be a @UNORM@ format)
+--
+-- -   If the format has a @_422@ or @_420@ suffix, then @components.g@
+--     /must/ be
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_COMPONENT_SWIZZLE_IDENTITY'
+--
+-- -   If the format has a @_422@ or @_420@ suffix, then @components.a@
+--     /must/ be
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_COMPONENT_SWIZZLE_IDENTITY',
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_COMPONENT_SWIZZLE_ONE', or
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_COMPONENT_SWIZZLE_ZERO'
+--
+-- -   If the format has a @_422@ or @_420@ suffix, then @components.r@
+--     /must/ be
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_COMPONENT_SWIZZLE_IDENTITY'
+--     or 'Graphics.Vulkan.C.Core10.ImageView.VK_COMPONENT_SWIZZLE_B'
+--
+-- -   If the format has a @_422@ or @_420@ suffix, then @components.b@
+--     /must/ be
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_COMPONENT_SWIZZLE_IDENTITY'
+--     or 'Graphics.Vulkan.C.Core10.ImageView.VK_COMPONENT_SWIZZLE_R'
+--
+-- -   If the format has a @_422@ or @_420@ suffix, and if either
+--     @components.r@ or @components.b@ is
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_COMPONENT_SWIZZLE_IDENTITY',
+--     both values /must/ be
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_COMPONENT_SWIZZLE_IDENTITY'
+--
+-- -   If @ycbcrModel@ is not
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY',
+--     then @components.r@, @components.g@, and @components.b@ /must/
+--     correspond to channels of the @format@; that is, @components.r@,
+--     @components.g@, and @components.b@ /must/ not be
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_COMPONENT_SWIZZLE_ZERO' or
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_COMPONENT_SWIZZLE_ONE', and
+--     /must/ not correspond to a channel which contains zero or one as a
+--     consequence of
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures-conversion-to-rgba conversion to RGBA>
+--
+-- -   If the format does not support
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT',
+--     @forceExplicitReconstruction@ /must/ be FALSE
+--
+-- -   If the format does not support
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT',
+--     @chromaFilter@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Sampler.VK_FILTER_NEAREST'
+--
+-- Unresolved directive in VkSamplerYcbcrConversionCreateInfo.txt -
+-- include::{generated}\/validity\/structs\/VkSamplerYcbcrConversionCreateInfo.txt[]
+--
+-- If @chromaFilter@ is
+-- 'Graphics.Vulkan.C.Core10.Sampler.VK_FILTER_NEAREST', chroma samples are
+-- reconstructed to luma channel resolution using nearest-neighbour
+-- sampling. Otherwise, chroma samples are reconstructed using
+-- interpolation. More details can be found in
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures-sampler-YCbCr-conversion the description of sampler Y’CBCR conversion>
+-- in the
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures Image Operations>
+-- chapter.
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkChromaLocation',
+-- 'Graphics.Vulkan.C.Core10.ImageView.VkComponentMapping',
+-- 'Graphics.Vulkan.C.Core10.Sampler.VkFilter',
+-- 'Graphics.Vulkan.C.Core10.Core.VkFormat',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrModelConversion',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrRange',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.vkCreateSamplerYcbcrConversion'
 data SamplerYcbcrConversionCreateInfo = SamplerYcbcrConversionCreateInfo
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "SamplerYcbcrConversionCreateInfo" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "SamplerYcbcrConversionCreateInfo" "format"
-  vkFormat :: Format
+  format :: Format
   , -- No documentation found for Nested "SamplerYcbcrConversionCreateInfo" "ycbcrModel"
-  vkYcbcrModel :: SamplerYcbcrModelConversion
+  ycbcrModel :: SamplerYcbcrModelConversion
   , -- No documentation found for Nested "SamplerYcbcrConversionCreateInfo" "ycbcrRange"
-  vkYcbcrRange :: SamplerYcbcrRange
+  ycbcrRange :: SamplerYcbcrRange
   , -- No documentation found for Nested "SamplerYcbcrConversionCreateInfo" "components"
-  vkComponents :: ComponentMapping
+  components :: ComponentMapping
   , -- No documentation found for Nested "SamplerYcbcrConversionCreateInfo" "xChromaOffset"
-  vkXChromaOffset :: ChromaLocation
+  xChromaOffset :: ChromaLocation
   , -- No documentation found for Nested "SamplerYcbcrConversionCreateInfo" "yChromaOffset"
-  vkYChromaOffset :: ChromaLocation
+  yChromaOffset :: ChromaLocation
   , -- No documentation found for Nested "SamplerYcbcrConversionCreateInfo" "chromaFilter"
-  vkChromaFilter :: Filter
+  chromaFilter :: Filter
   , -- No documentation found for Nested "SamplerYcbcrConversionCreateInfo" "forceExplicitReconstruction"
-  vkForceExplicitReconstruction :: Bool
+  forceExplicitReconstruction :: Bool
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkSamplerYcbcrConversionCreateInfo' and
+-- marshal a 'SamplerYcbcrConversionCreateInfo' into it. The 'VkSamplerYcbcrConversionCreateInfo' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructSamplerYcbcrConversionCreateInfo :: SamplerYcbcrConversionCreateInfo -> (VkSamplerYcbcrConversionCreateInfo -> IO a) -> IO a
-withCStructSamplerYcbcrConversionCreateInfo from cont = withCStructComponentMapping (vkComponents (from :: SamplerYcbcrConversionCreateInfo)) (\components -> maybeWith withSomeVkStruct (vkPNext (from :: SamplerYcbcrConversionCreateInfo)) (\pPNext -> cont (VkSamplerYcbcrConversionCreateInfo VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO pPNext (vkFormat (from :: SamplerYcbcrConversionCreateInfo)) (vkYcbcrModel (from :: SamplerYcbcrConversionCreateInfo)) (vkYcbcrRange (from :: SamplerYcbcrConversionCreateInfo)) components (vkXChromaOffset (from :: SamplerYcbcrConversionCreateInfo)) (vkYChromaOffset (from :: SamplerYcbcrConversionCreateInfo)) (vkChromaFilter (from :: SamplerYcbcrConversionCreateInfo)) (boolToBool32 (vkForceExplicitReconstruction (from :: SamplerYcbcrConversionCreateInfo))))))
+withCStructSamplerYcbcrConversionCreateInfo marshalled cont = withCStructComponentMapping (components (marshalled :: SamplerYcbcrConversionCreateInfo)) (\components'' -> maybeWith withSomeVkStruct (next (marshalled :: SamplerYcbcrConversionCreateInfo)) (\pPNext -> cont (VkSamplerYcbcrConversionCreateInfo VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO pPNext (format (marshalled :: SamplerYcbcrConversionCreateInfo)) (ycbcrModel (marshalled :: SamplerYcbcrConversionCreateInfo)) (ycbcrRange (marshalled :: SamplerYcbcrConversionCreateInfo)) components'' (xChromaOffset (marshalled :: SamplerYcbcrConversionCreateInfo)) (yChromaOffset (marshalled :: SamplerYcbcrConversionCreateInfo)) (chromaFilter (marshalled :: SamplerYcbcrConversionCreateInfo)) (boolToBool32 (forceExplicitReconstruction (marshalled :: SamplerYcbcrConversionCreateInfo))))))
+
+-- | A function to read a 'VkSamplerYcbcrConversionCreateInfo' and all additional
+-- structures in the pointer chain into a 'SamplerYcbcrConversionCreateInfo'.
 fromCStructSamplerYcbcrConversionCreateInfo :: VkSamplerYcbcrConversionCreateInfo -> IO SamplerYcbcrConversionCreateInfo
 fromCStructSamplerYcbcrConversionCreateInfo c = SamplerYcbcrConversionCreateInfo <$> -- Univalued Member elided
                                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSamplerYcbcrConversionCreateInfo)))
@@ -313,6 +614,7 @@ fromCStructSamplerYcbcrConversionCreateInfo c = SamplerYcbcrConversionCreateInfo
                                                                                  <*> pure (vkYChromaOffset (c :: VkSamplerYcbcrConversionCreateInfo))
                                                                                  <*> pure (vkChromaFilter (c :: VkSamplerYcbcrConversionCreateInfo))
                                                                                  <*> pure (bool32ToBool (vkForceExplicitReconstruction (c :: VkSamplerYcbcrConversionCreateInfo)))
+
 instance Zero SamplerYcbcrConversionCreateInfo where
   zero = SamplerYcbcrConversionCreateInfo Nothing
                                           zero
@@ -323,59 +625,303 @@ instance Zero SamplerYcbcrConversionCreateInfo where
                                           zero
                                           zero
                                           False
--- No documentation found for TopLevel "SamplerYcbcrConversionImageFormatProperties"
+
+
+
+-- | VkSamplerYcbcrConversionImageFormatProperties - Structure specifying
+-- combined image sampler descriptor count for multi-planar images
+--
+-- = Description
+--
+-- Unresolved directive in
+-- VkSamplerYcbcrConversionImageFormatProperties.txt -
+-- include::{generated}\/validity\/structs\/VkSamplerYcbcrConversionImageFormatProperties.txt[]
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data SamplerYcbcrConversionImageFormatProperties = SamplerYcbcrConversionImageFormatProperties
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "SamplerYcbcrConversionImageFormatProperties" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "SamplerYcbcrConversionImageFormatProperties" "combinedImageSamplerDescriptorCount"
-  vkCombinedImageSamplerDescriptorCount :: Word32
+  combinedImageSamplerDescriptorCount :: Word32
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkSamplerYcbcrConversionImageFormatProperties' and
+-- marshal a 'SamplerYcbcrConversionImageFormatProperties' into it. The 'VkSamplerYcbcrConversionImageFormatProperties' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructSamplerYcbcrConversionImageFormatProperties :: SamplerYcbcrConversionImageFormatProperties -> (VkSamplerYcbcrConversionImageFormatProperties -> IO a) -> IO a
-withCStructSamplerYcbcrConversionImageFormatProperties from cont = maybeWith withSomeVkStruct (vkPNext (from :: SamplerYcbcrConversionImageFormatProperties)) (\pPNext -> cont (VkSamplerYcbcrConversionImageFormatProperties VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES pPNext (vkCombinedImageSamplerDescriptorCount (from :: SamplerYcbcrConversionImageFormatProperties))))
+withCStructSamplerYcbcrConversionImageFormatProperties marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: SamplerYcbcrConversionImageFormatProperties)) (\pPNext -> cont (VkSamplerYcbcrConversionImageFormatProperties VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES pPNext (combinedImageSamplerDescriptorCount (marshalled :: SamplerYcbcrConversionImageFormatProperties))))
+
+-- | A function to read a 'VkSamplerYcbcrConversionImageFormatProperties' and all additional
+-- structures in the pointer chain into a 'SamplerYcbcrConversionImageFormatProperties'.
 fromCStructSamplerYcbcrConversionImageFormatProperties :: VkSamplerYcbcrConversionImageFormatProperties -> IO SamplerYcbcrConversionImageFormatProperties
 fromCStructSamplerYcbcrConversionImageFormatProperties c = SamplerYcbcrConversionImageFormatProperties <$> -- Univalued Member elided
                                                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSamplerYcbcrConversionImageFormatProperties)))
                                                                                                        <*> pure (vkCombinedImageSamplerDescriptorCount (c :: VkSamplerYcbcrConversionImageFormatProperties))
+
 instance Zero SamplerYcbcrConversionImageFormatProperties where
   zero = SamplerYcbcrConversionImageFormatProperties Nothing
                                                      zero
--- No documentation found for TopLevel "SamplerYcbcrConversionInfo"
+
+
+
+-- | VkSamplerYcbcrConversionInfo - Structure specifying Y’CbCr conversion to
+-- a sampler or image view
+--
+-- = Description
+--
+-- Unresolved directive in VkSamplerYcbcrConversionInfo.txt -
+-- include::{generated}\/validity\/structs\/VkSamplerYcbcrConversionInfo.txt[]
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversion',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data SamplerYcbcrConversionInfo = SamplerYcbcrConversionInfo
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "SamplerYcbcrConversionInfo" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "SamplerYcbcrConversionInfo" "conversion"
-  vkConversion :: SamplerYcbcrConversion
+  conversion :: SamplerYcbcrConversion
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkSamplerYcbcrConversionInfo' and
+-- marshal a 'SamplerYcbcrConversionInfo' into it. The 'VkSamplerYcbcrConversionInfo' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructSamplerYcbcrConversionInfo :: SamplerYcbcrConversionInfo -> (VkSamplerYcbcrConversionInfo -> IO a) -> IO a
-withCStructSamplerYcbcrConversionInfo from cont = maybeWith withSomeVkStruct (vkPNext (from :: SamplerYcbcrConversionInfo)) (\pPNext -> cont (VkSamplerYcbcrConversionInfo VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO pPNext (vkConversion (from :: SamplerYcbcrConversionInfo))))
+withCStructSamplerYcbcrConversionInfo marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: SamplerYcbcrConversionInfo)) (\pPNext -> cont (VkSamplerYcbcrConversionInfo VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO pPNext (conversion (marshalled :: SamplerYcbcrConversionInfo))))
+
+-- | A function to read a 'VkSamplerYcbcrConversionInfo' and all additional
+-- structures in the pointer chain into a 'SamplerYcbcrConversionInfo'.
 fromCStructSamplerYcbcrConversionInfo :: VkSamplerYcbcrConversionInfo -> IO SamplerYcbcrConversionInfo
 fromCStructSamplerYcbcrConversionInfo c = SamplerYcbcrConversionInfo <$> -- Univalued Member elided
                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSamplerYcbcrConversionInfo)))
                                                                      <*> pure (vkConversion (c :: VkSamplerYcbcrConversionInfo))
+
 instance Zero SamplerYcbcrConversionInfo where
   zero = SamplerYcbcrConversionInfo Nothing
                                     zero
--- No documentation found for TopLevel "SamplerYcbcrModelConversion"
+
+
+-- | VkSamplerYcbcrModelConversion - Color model component of a color space
+--
+-- = Description
+--
+-- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY'
+--     specifies that the input values to the conversion are unmodified.
+--
+-- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY'
+--     specifies no model conversion but the inputs are range expanded as
+--     for Y’CBCR.
+--
+-- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709'
+--     specifies the color model conversion from Y’CBCR to R’G’B\' defined
+--     in BT.709 and described in the “BT.709 Y’CBCR conversion” section of
+--     the
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#data-format Khronos Data Format Specification>.
+--
+-- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601'
+--     specifies the color model conversion from Y’CBCR to R’G’B\' defined
+--     in BT.601 and described in the “BT.601 Y’CBCR conversion” section of
+--     the
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#data-format Khronos Data Format Specification>.
+--
+-- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020'
+--     specifies the color model conversion from Y’CBCR to R’G’B\' defined
+--     in BT.2020 and described in the “BT.2020 Y’CBCR conversion” section
+--     of the
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#data-format Khronos Data Format Specification>.
+--
+-- In the @VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_*@ color models, for the
+-- input to the sampler Y’CBCR range expansion and model conversion:
+--
+-- -   the Y (Y\' luma) channel corresponds to the G channel of an RGB
+--     image.
+--
+-- -   the CB (CB or “U” blue color difference) channel corresponds to the
+--     B channel of an RGB image.
+--
+-- -   the CR (CR or “V” red color difference) channel corresponds to the R
+--     channel of an RGB image.
+--
+-- -   the alpha channel, if present, is not modified by color model
+--     conversion.
+--
+-- These rules reflect the mapping of channels after the channel swizzle
+-- operation (controlled by
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'::@components@).
+--
+-- __Note__
+--
+-- For example, an “YUVA” 32-bit format comprising four 8-bit channels can
+-- be implemented as
+-- 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8B8A8_UNORM' with a
+-- component mapping:
+--
+-- -   @components.a@ =
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_COMPONENT_SWIZZLE_IDENTITY'
+--
+-- -   @components.r@ =
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_COMPONENT_SWIZZLE_B'
+--
+-- -   @components.g@ =
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_COMPONENT_SWIZZLE_R'
+--
+-- -   @components.b@ =
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_COMPONENT_SWIZZLE_G'
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'
 type SamplerYcbcrModelConversion = VkSamplerYcbcrModelConversion
+
+
+-- No documentation found for Nested "SamplerYcbcrModelConversion" "SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY"
+pattern SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY :: (a ~ SamplerYcbcrModelConversion) => a
+pattern SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY = VK_SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY
+
+
+-- No documentation found for Nested "SamplerYcbcrModelConversion" "SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY"
+pattern SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY :: (a ~ SamplerYcbcrModelConversion) => a
+pattern SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY = VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY
+
+
+-- No documentation found for Nested "SamplerYcbcrModelConversion" "SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709"
+pattern SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709 :: (a ~ SamplerYcbcrModelConversion) => a
+pattern SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709 = VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709
+
+
+-- No documentation found for Nested "SamplerYcbcrModelConversion" "SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601"
+pattern SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601 :: (a ~ SamplerYcbcrModelConversion) => a
+pattern SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601 = VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601
+
+
+-- No documentation found for Nested "SamplerYcbcrModelConversion" "SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020"
+pattern SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020 :: (a ~ SamplerYcbcrModelConversion) => a
+pattern SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020 = VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020
+
 -- No documentation found for TopLevel "SamplerYcbcrModelConversionKHR"
 type SamplerYcbcrModelConversionKHR = SamplerYcbcrModelConversion
--- No documentation found for TopLevel "SamplerYcbcrRange"
+
+-- | VkSamplerYcbcrRange - Range of encoded values in a color space
+--
+-- = Description
+--
+-- The formulae for these conversions is described in the
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures-sampler-YCbCr-conversion-rangeexpand Sampler Y’CBCR Range Expansion>
+-- section of the
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures Image Operations>
+-- chapter.
+--
+-- No range modification takes place if @ycbcrModel@ is
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY';
+-- the @ycbcrRange@ field of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'
+-- is ignored in this case.
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'
 type SamplerYcbcrRange = VkSamplerYcbcrRange
+
+
+-- | 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_SAMPLER_YCBCR_RANGE_ITU_FULL'
+-- specifies that the full range of the encoded values are valid and
+-- interpreted according to the ITU “full range” quantization rules.
+pattern SAMPLER_YCBCR_RANGE_ITU_FULL :: (a ~ SamplerYcbcrRange) => a
+pattern SAMPLER_YCBCR_RANGE_ITU_FULL = VK_SAMPLER_YCBCR_RANGE_ITU_FULL
+
+
+-- | 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_SAMPLER_YCBCR_RANGE_ITU_NARROW'
+-- specifies that headroom and foot room are reserved in the numerical
+-- range of encoded values, and the remaining values are expanded according
+-- to the ITU “narrow range” quantization rules.
+pattern SAMPLER_YCBCR_RANGE_ITU_NARROW :: (a ~ SamplerYcbcrRange) => a
+pattern SAMPLER_YCBCR_RANGE_ITU_NARROW = VK_SAMPLER_YCBCR_RANGE_ITU_NARROW
+
 -- No documentation found for TopLevel "SamplerYcbcrRangeKHR"
 type SamplerYcbcrRangeKHR = SamplerYcbcrRange
 
--- | Wrapper for 'vkCreateSamplerYcbcrConversion'
-createSamplerYcbcrConversion :: Device ->  SamplerYcbcrConversionCreateInfo ->  Maybe AllocationCallbacks ->  IO (SamplerYcbcrConversion)
-createSamplerYcbcrConversion = \(Device device commandTable) -> \createInfo -> \allocator -> alloca (\pYcbcrConversion -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructSamplerYcbcrConversionCreateInfo a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createSamplerYcbcrConversion commandTable device pCreateInfo pAllocator pYcbcrConversion >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pYcbcrConversion)))))
 
--- | Wrapper for 'vkDestroySamplerYcbcrConversion'
+-- | vkCreateSamplerYcbcrConversion - Create a new Ycbcr conversion
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device that creates the sampler Y’CBCR
+--     conversion.
+--
+-- -   @pCreateInfo@ is a pointer to an instance of the
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'
+--     specifying the requested sampler Y’CBCR conversion.
+--
+-- -   @pAllocator@ controls host memory allocation as described in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+--     chapter.
+--
+-- -   @pYcbcrConversion@ points to a
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversion'
+--     handle in which the resulting sampler Y’CBCR conversion is returned.
+--
+-- = Description
+--
+-- The interpretation of the configured sampler Y’CBCR conversion is
+-- described in more detail in
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures-sampler-YCbCr-conversion the description of sampler Y’CBCR conversion>
+-- in the
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures Image Operations>
+-- chapter.
+--
+-- == Valid Usage
+--
+-- -   The
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-sampler-YCbCr-conversion sampler Y’CBCR conversion feature>
+--     /must/ be enabled
+--
+-- Unresolved directive in vkCreateSamplerYcbcrConversion.txt -
+-- include::{generated}\/validity\/protos\/vkCreateSamplerYcbcrConversion.txt[]
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversion',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'
+createSamplerYcbcrConversion :: Device ->  SamplerYcbcrConversionCreateInfo ->  Maybe AllocationCallbacks ->  IO (SamplerYcbcrConversion)
+createSamplerYcbcrConversion = \(Device device' commandTable) -> \createInfo' -> \allocator -> alloca (\pYcbcrConversion' -> maybeWith (\marshalled -> withCStructAllocationCallbacks marshalled . flip with) allocator (\pAllocator -> (\marshalled -> withCStructSamplerYcbcrConversionCreateInfo marshalled . flip with) createInfo' (\pCreateInfo' -> vkCreateSamplerYcbcrConversion commandTable device' pCreateInfo' pAllocator pYcbcrConversion' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (peek pYcbcrConversion')))))
+
+
+-- | vkDestroySamplerYcbcrConversion - Destroy a created Y’CbCr conversion
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device that destroys the Y’CBCR conversion.
+--
+-- -   @ycbcrConversion@ is the conversion to destroy.
+--
+-- -   @pAllocator@ controls host memory allocation as described in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+--     chapter.
+--
+-- = Description
+--
+-- Unresolved directive in vkDestroySamplerYcbcrConversion.txt -
+-- include::{generated}\/validity\/protos\/vkDestroySamplerYcbcrConversion.txt[]
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversion'
 destroySamplerYcbcrConversion :: Device ->  SamplerYcbcrConversion ->  Maybe AllocationCallbacks ->  IO ()
-destroySamplerYcbcrConversion = \(Device device commandTable) -> \ycbcrConversion -> \allocator -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> Graphics.Vulkan.C.Dynamic.destroySamplerYcbcrConversion commandTable device ycbcrConversion pAllocator *> (pure ()))
--- | Wrapper for 'createSamplerYcbcrConversion' and 'destroySamplerYcbcrConversion' using 'bracket'
+destroySamplerYcbcrConversion = \(Device device' commandTable) -> \ycbcrConversion' -> \allocator -> maybeWith (\marshalled -> withCStructAllocationCallbacks marshalled . flip with) allocator (\pAllocator -> vkDestroySamplerYcbcrConversion commandTable device' ycbcrConversion' pAllocator *> (pure ()))
+
+-- | A safe wrapper for 'createSamplerYcbcrConversion' and 'destroySamplerYcbcrConversion' using 'bracket'
+--
+-- The allocated value must not be returned from the provided computation
 withSamplerYcbcrConversion
   :: Device -> SamplerYcbcrConversionCreateInfo -> Maybe (AllocationCallbacks) -> (SamplerYcbcrConversion -> IO a) -> IO a
 withSamplerYcbcrConversion device samplerYcbcrConversionCreateInfo allocationCallbacks = bracket

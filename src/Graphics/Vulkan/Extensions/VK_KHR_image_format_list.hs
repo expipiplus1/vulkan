@@ -59,23 +59,67 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_image_format_list
   )
 
 
--- No documentation found for TopLevel "ImageFormatListCreateInfoKHR"
+
+-- | VkImageFormatListCreateInfoKHR - Specify that an image /can/ be used
+-- with a particular set of formats
+--
+-- = Description
+--
+-- If @viewFormatCount@ is zero, @pViewFormats@ is ignored and the image is
+-- created as if the
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_image_format_list.VkImageFormatListCreateInfoKHR'
+-- structure were not included in the @pNext@ list of
+-- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'.
+--
+-- == Valid Usage
+--
+-- -   If @viewFormatCount@ is not @0@, all of the formats in the
+--     @pViewFormats@ array /must/ be compatible with the format specified
+--     in the @format@ field of
+--     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo', as described in
+--     the
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-compatibility compatibility table>.
+--
+-- -   If 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@flags@ does
+--     not contain
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT',
+--     @viewFormatCount@ /must/ be @0@ or @1@.
+--
+-- -   If @viewFormatCount@ is not @0@,
+--     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@format@ /must/
+--     be in @pViewFormats@.
+--
+-- Unresolved directive in VkImageFormatListCreateInfoKHR.txt -
+-- include::{generated}\/validity\/structs\/VkImageFormatListCreateInfoKHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data ImageFormatListCreateInfoKHR = ImageFormatListCreateInfoKHR
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "ImageFormatListCreateInfoKHR" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   -- Length valued member elided
   , -- No documentation found for Nested "ImageFormatListCreateInfoKHR" "pViewFormats"
-  vkPViewFormats :: Vector Format
+  viewFormats :: Vector Format
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkImageFormatListCreateInfoKHR' and
+-- marshal a 'ImageFormatListCreateInfoKHR' into it. The 'VkImageFormatListCreateInfoKHR' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructImageFormatListCreateInfoKHR :: ImageFormatListCreateInfoKHR -> (VkImageFormatListCreateInfoKHR -> IO a) -> IO a
-withCStructImageFormatListCreateInfoKHR from cont = withVec (&) (vkPViewFormats (from :: ImageFormatListCreateInfoKHR)) (\pViewFormats -> maybeWith withSomeVkStruct (vkPNext (from :: ImageFormatListCreateInfoKHR)) (\pPNext -> cont (VkImageFormatListCreateInfoKHR VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR pPNext (fromIntegral (Data.Vector.length (vkPViewFormats (from :: ImageFormatListCreateInfoKHR)))) pViewFormats)))
+withCStructImageFormatListCreateInfoKHR marshalled cont = withVec (&) (viewFormats (marshalled :: ImageFormatListCreateInfoKHR)) (\pPViewFormats -> maybeWith withSomeVkStruct (next (marshalled :: ImageFormatListCreateInfoKHR)) (\pPNext -> cont (VkImageFormatListCreateInfoKHR VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR pPNext (fromIntegral (Data.Vector.length (viewFormats (marshalled :: ImageFormatListCreateInfoKHR)))) pPViewFormats)))
+
+-- | A function to read a 'VkImageFormatListCreateInfoKHR' and all additional
+-- structures in the pointer chain into a 'ImageFormatListCreateInfoKHR'.
 fromCStructImageFormatListCreateInfoKHR :: VkImageFormatListCreateInfoKHR -> IO ImageFormatListCreateInfoKHR
 fromCStructImageFormatListCreateInfoKHR c = ImageFormatListCreateInfoKHR <$> -- Univalued Member elided
                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkImageFormatListCreateInfoKHR)))
                                                                          -- Length valued member elided
                                                                          <*> (Data.Vector.generateM (fromIntegral (vkViewFormatCount (c :: VkImageFormatListCreateInfoKHR))) (peekElemOff (vkPViewFormats (c :: VkImageFormatListCreateInfoKHR))))
+
 instance Zero ImageFormatListCreateInfoKHR where
   zero = ImageFormatListCreateInfoKHR Nothing
                                       Data.Vector.empty
+

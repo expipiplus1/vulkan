@@ -302,19 +302,27 @@ import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion
 
 type BindImagePlaneMemoryInfoKHR = BindImagePlaneMemoryInfo
 -- TODO: Pattern constructor alias)
+
 type ImagePlaneMemoryRequirementsInfoKHR = ImagePlaneMemoryRequirementsInfo
 -- TODO: Pattern constructor alias)
+
 type PhysicalDeviceSamplerYcbcrConversionFeaturesKHR = PhysicalDeviceSamplerYcbcrConversionFeatures
 -- TODO: Pattern constructor alias)
+
 type SamplerYcbcrConversionCreateInfoKHR = SamplerYcbcrConversionCreateInfo
 -- TODO: Pattern constructor alias)
+
 type SamplerYcbcrConversionImageFormatPropertiesKHR = SamplerYcbcrConversionImageFormatProperties
 -- TODO: Pattern constructor alias)
+
 type SamplerYcbcrConversionInfoKHR = SamplerYcbcrConversionInfo
 -- TODO: Pattern constructor alias)
+
 -- No documentation found for TopLevel "SamplerYcbcrConversionKHR"
 type SamplerYcbcrConversionKHR = SamplerYcbcrConversion
+
 createSamplerYcbcrConversionKHR :: Device ->  SamplerYcbcrConversionCreateInfo ->  Maybe AllocationCallbacks ->  IO (SamplerYcbcrConversion)
 createSamplerYcbcrConversionKHR = createSamplerYcbcrConversion
+
 destroySamplerYcbcrConversionKHR :: Device ->  SamplerYcbcrConversion ->  Maybe AllocationCallbacks ->  IO ()
 destroySamplerYcbcrConversionKHR = destroySamplerYcbcrConversion

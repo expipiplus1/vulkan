@@ -34,5 +34,6 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_dedicated_allocation
 
 type MemoryDedicatedAllocateInfoKHR = MemoryDedicatedAllocateInfo
 -- TODO: Pattern constructor alias)
+
 type MemoryDedicatedRequirementsKHR = MemoryDedicatedRequirements
 -- TODO: Pattern constructor alias)

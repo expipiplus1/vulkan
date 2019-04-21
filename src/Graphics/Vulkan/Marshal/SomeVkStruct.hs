@@ -18,7 +18,7 @@ module Graphics.Vulkan.Marshal.SomeVkStruct
   ( ToCStruct(..)
   , FromCStruct(..)
   , SomeVkStruct(..)
-  , HasPNext(..)
+  , HasNext(..)
   , fromSomeVkStruct
   , fromSomeVkStructChain
   , withSomeVkStruct
@@ -478,18 +478,23 @@ import Graphics.Vulkan.C.Extensions.VK_AMD_texture_gather_bias_lod
 
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
+  ( pattern VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_PROPERTIES_ANDROID
+  , pattern VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_PROPERTIES_ANDROID
+  , pattern VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_USAGE_ANDROID
+  , pattern VK_STRUCTURE_TYPE_EXTERNAL_FORMAT_ANDROID
+  , pattern VK_STRUCTURE_TYPE_IMPORT_ANDROID_HARDWARE_BUFFER_INFO_ANDROID
+  , pattern VK_STRUCTURE_TYPE_MEMORY_GET_ANDROID_HARDWARE_BUFFER_INFO_ANDROID
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
   ( VkAndroidHardwareBufferFormatPropertiesANDROID(..)
   , VkAndroidHardwareBufferPropertiesANDROID(..)
   , VkAndroidHardwareBufferUsageANDROID(..)
   , VkExternalFormatANDROID(..)
   , VkImportAndroidHardwareBufferInfoANDROID(..)
   , VkMemoryGetAndroidHardwareBufferInfoANDROID(..)
-  , pattern VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_PROPERTIES_ANDROID
-  , pattern VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_PROPERTIES_ANDROID
-  , pattern VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_USAGE_ANDROID
-  , pattern VK_STRUCTURE_TYPE_EXTERNAL_FORMAT_ANDROID
-  , pattern VK_STRUCTURE_TYPE_IMPORT_ANDROID_HARDWARE_BUFFER_INFO_ANDROID
-  , pattern VK_STRUCTURE_TYPE_MEMORY_GET_ANDROID_HARDWARE_BUFFER_INFO_ANDROID
   )
 #endif
 import Graphics.Vulkan.C.Extensions.VK_EXT_astc_decode_mode
@@ -616,8 +621,6 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT
   , pattern VK_STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT
   )
-
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
 import Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive
   ( VkSurfaceCapabilitiesFullScreenExclusiveEXT(..)
   , VkSurfaceFullScreenExclusiveInfoEXT(..)
@@ -626,7 +629,6 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive
   , pattern VK_STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_INFO_EXT
   , pattern VK_STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_WIN32_INFO_EXT
   )
-#endif
 import Graphics.Vulkan.C.Extensions.VK_EXT_global_priority
   ( VkDeviceQueueGlobalPriorityCreateInfoEXT(..)
   , pattern VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT
@@ -635,6 +637,10 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_hdr_metadata
   ( VkHdrMetadataEXT(..)
   , VkXYColorEXT(..)
   , pattern VK_STRUCTURE_TYPE_HDR_METADATA_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_headless_surface
+  ( VkHeadlessSurfaceCreateInfoEXT(..)
+  , pattern VK_STRUCTURE_TYPE_HEADLESS_SURFACE_CREATE_INFO_EXT
   )
 import Graphics.Vulkan.C.Extensions.VK_EXT_host_query_reset
   ( VkPhysicalDeviceHostQueryResetFeaturesEXT(..)
@@ -676,8 +682,13 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_memory_priority
 
 #if defined(VK_USE_PLATFORM_METAL_EXT)
 import Graphics.Vulkan.C.Extensions.VK_EXT_metal_surface
+  ( pattern VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_METAL_EXT)
+import Graphics.Vulkan.C.Extensions.VK_EXT_metal_surface
   ( VkMetalSurfaceCreateInfoEXT(..)
-  , pattern VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT
   )
 #endif
 import Graphics.Vulkan.C.Extensions.VK_EXT_pci_bus_info
@@ -756,22 +767,37 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_ycbcr_image_arrays
 
 #if defined(VK_USE_PLATFORM_FUCHSIA)
 import Graphics.Vulkan.C.Extensions.VK_FUCHSIA_imagepipe_surface
+  ( pattern VK_STRUCTURE_TYPE_IMAGEPIPE_SURFACE_CREATE_INFO_FUCHSIA
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_FUCHSIA)
+import Graphics.Vulkan.C.Extensions.VK_FUCHSIA_imagepipe_surface
   ( VkImagePipeSurfaceCreateInfoFUCHSIA(..)
-  , pattern VK_STRUCTURE_TYPE_IMAGEPIPE_SURFACE_CREATE_INFO_FUCHSIA
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
+import Graphics.Vulkan.C.Extensions.VK_GGP_frame_token
+  ( pattern VK_STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP
   )
 #endif
 
 #if defined(VK_USE_PLATFORM_GGP)
 import Graphics.Vulkan.C.Extensions.VK_GGP_frame_token
   ( VkPresentFrameTokenGGP(..)
-  , pattern VK_STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
+import Graphics.Vulkan.C.Extensions.VK_GGP_stream_descriptor_surface
+  ( pattern VK_STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP
   )
 #endif
 
 #if defined(VK_USE_PLATFORM_GGP)
 import Graphics.Vulkan.C.Extensions.VK_GGP_stream_descriptor_surface
   ( VkStreamDescriptorSurfaceCreateInfoGGP(..)
-  , pattern VK_STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP
   )
 #endif
 import Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing
@@ -788,8 +814,13 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_8bit_storage
 
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import Graphics.Vulkan.C.Extensions.VK_KHR_android_surface
+  ( pattern VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import Graphics.Vulkan.C.Extensions.VK_KHR_android_surface
   ( VkAndroidSurfaceCreateInfoKHR(..)
-  , pattern VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR
   )
 #endif
 import Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2
@@ -843,12 +874,17 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
 import Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32
+  ( pattern VK_STRUCTURE_TYPE_EXPORT_FENCE_WIN32_HANDLE_INFO_KHR
+  , pattern VK_STRUCTURE_TYPE_FENCE_GET_WIN32_HANDLE_INFO_KHR
+  , pattern VK_STRUCTURE_TYPE_IMPORT_FENCE_WIN32_HANDLE_INFO_KHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+import Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32
   ( VkExportFenceWin32HandleInfoKHR(..)
   , VkFenceGetWin32HandleInfoKHR(..)
   , VkImportFenceWin32HandleInfoKHR(..)
-  , pattern VK_STRUCTURE_TYPE_EXPORT_FENCE_WIN32_HANDLE_INFO_KHR
-  , pattern VK_STRUCTURE_TYPE_FENCE_GET_WIN32_HANDLE_INFO_KHR
-  , pattern VK_STRUCTURE_TYPE_IMPORT_FENCE_WIN32_HANDLE_INFO_KHR
   )
 #endif
 import Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd
@@ -862,14 +898,19 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
 import Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32
+  ( pattern VK_STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_KHR
+  , pattern VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR
+  , pattern VK_STRUCTURE_TYPE_MEMORY_GET_WIN32_HANDLE_INFO_KHR
+  , pattern VK_STRUCTURE_TYPE_MEMORY_WIN32_HANDLE_PROPERTIES_KHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+import Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32
   ( VkExportMemoryWin32HandleInfoKHR(..)
   , VkImportMemoryWin32HandleInfoKHR(..)
   , VkMemoryGetWin32HandleInfoKHR(..)
   , VkMemoryWin32HandlePropertiesKHR(..)
-  , pattern VK_STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_KHR
-  , pattern VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR
-  , pattern VK_STRUCTURE_TYPE_MEMORY_GET_WIN32_HANDLE_INFO_KHR
-  , pattern VK_STRUCTURE_TYPE_MEMORY_WIN32_HANDLE_PROPERTIES_KHR
   )
 #endif
 import Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd
@@ -881,14 +922,19 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
 import Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32
+  ( pattern VK_STRUCTURE_TYPE_D3D12_FENCE_SUBMIT_INFO_KHR
+  , pattern VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR
+  , pattern VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR
+  , pattern VK_STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+import Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32
   ( VkD3D12FenceSubmitInfoKHR(..)
   , VkExportSemaphoreWin32HandleInfoKHR(..)
   , VkImportSemaphoreWin32HandleInfoKHR(..)
   , VkSemaphoreGetWin32HandleInfoKHR(..)
-  , pattern VK_STRUCTURE_TYPE_D3D12_FENCE_SUBMIT_INFO_KHR
-  , pattern VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR
-  , pattern VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR
-  , pattern VK_STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR
   )
 #endif
 import Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2
@@ -974,57 +1020,97 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_vulkan_memory_model
 
 #if defined(VK_USE_PLATFORM_WAYLAND_KHR)
 import Graphics.Vulkan.C.Extensions.VK_KHR_wayland_surface
+  ( pattern VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_WAYLAND_KHR)
+import Graphics.Vulkan.C.Extensions.VK_KHR_wayland_surface
   ( VkWaylandSurfaceCreateInfoKHR(..)
-  , pattern VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+import Graphics.Vulkan.C.Extensions.VK_KHR_win32_keyed_mutex
+  ( pattern VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR
   )
 #endif
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
 import Graphics.Vulkan.C.Extensions.VK_KHR_win32_keyed_mutex
   ( VkWin32KeyedMutexAcquireReleaseInfoKHR(..)
-  , pattern VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+import Graphics.Vulkan.C.Extensions.VK_KHR_win32_surface
+  ( pattern VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR
   )
 #endif
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
 import Graphics.Vulkan.C.Extensions.VK_KHR_win32_surface
   ( VkWin32SurfaceCreateInfoKHR(..)
-  , pattern VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_XCB_KHR)
+import Graphics.Vulkan.C.Extensions.VK_KHR_xcb_surface
+  ( pattern VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR
   )
 #endif
 
 #if defined(VK_USE_PLATFORM_XCB_KHR)
 import Graphics.Vulkan.C.Extensions.VK_KHR_xcb_surface
   ( VkXcbSurfaceCreateInfoKHR(..)
-  , pattern VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_XLIB_KHR)
+import Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface
+  ( pattern VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR
   )
 #endif
 
 #if defined(VK_USE_PLATFORM_XLIB_KHR)
 import Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface
   ( VkXlibSurfaceCreateInfoKHR(..)
-  , pattern VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_IOS_MVK)
+import Graphics.Vulkan.C.Extensions.VK_MVK_ios_surface
+  ( pattern VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK
   )
 #endif
 
 #if defined(VK_USE_PLATFORM_IOS_MVK)
 import Graphics.Vulkan.C.Extensions.VK_MVK_ios_surface
   ( VkIOSSurfaceCreateInfoMVK(..)
-  , pattern VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_MACOS_MVK)
+import Graphics.Vulkan.C.Extensions.VK_MVK_macos_surface
+  ( pattern VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK
   )
 #endif
 
 #if defined(VK_USE_PLATFORM_MACOS_MVK)
 import Graphics.Vulkan.C.Extensions.VK_MVK_macos_surface
   ( VkMacOSSurfaceCreateInfoMVK(..)
-  , pattern VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_VI_NN)
+import Graphics.Vulkan.C.Extensions.VK_NN_vi_surface
+  ( pattern VK_STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN
   )
 #endif
 
 #if defined(VK_USE_PLATFORM_VI_NN)
 import Graphics.Vulkan.C.Extensions.VK_NN_vi_surface
   ( VkViSurfaceCreateInfoNN(..)
-  , pattern VK_STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN
   )
 #endif
 import Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands
@@ -1108,10 +1194,15 @@ import Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
 import Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32
+  ( pattern VK_STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV
+  , pattern VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+import Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32
   ( VkExportMemoryWin32HandleInfoNV(..)
   , VkImportMemoryWin32HandleInfoNV(..)
-  , pattern VK_STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV
-  , pattern VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV
   )
 #endif
 import Graphics.Vulkan.C.Extensions.VK_NV_fragment_coverage_to_color
@@ -1195,8 +1286,13 @@ import Graphics.Vulkan.C.Extensions.VK_NV_viewport_swizzle
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
 import Graphics.Vulkan.C.Extensions.VK_NV_win32_keyed_mutex
+  ( pattern VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+import Graphics.Vulkan.C.Extensions.VK_NV_win32_keyed_mutex
   ( VkWin32KeyedMutexAcquireReleaseInfoNV(..)
-  , pattern VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV
   )
 #endif
 import Graphics.Vulkan.Core10.Buffer
@@ -1854,24 +1950,34 @@ import Graphics.Vulkan.Extensions.VK_AMD_texture_gather_bias_lod
 
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
+  ( withCStructAndroidHardwareBufferFormatPropertiesANDROID
+  , withCStructAndroidHardwareBufferPropertiesANDROID
+  , withCStructAndroidHardwareBufferUsageANDROID
+  , withCStructExternalFormatANDROID
+  , withCStructImportAndroidHardwareBufferInfoANDROID
+  , withCStructMemoryGetAndroidHardwareBufferInfoANDROID
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
+  ( fromCStructAndroidHardwareBufferFormatPropertiesANDROID
+  , fromCStructAndroidHardwareBufferPropertiesANDROID
+  , fromCStructAndroidHardwareBufferUsageANDROID
+  , fromCStructExternalFormatANDROID
+  , fromCStructImportAndroidHardwareBufferInfoANDROID
+  , fromCStructMemoryGetAndroidHardwareBufferInfoANDROID
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
   ( AndroidHardwareBufferFormatPropertiesANDROID(..)
   , AndroidHardwareBufferPropertiesANDROID(..)
   , AndroidHardwareBufferUsageANDROID(..)
   , ExternalFormatANDROID(..)
   , ImportAndroidHardwareBufferInfoANDROID(..)
   , MemoryGetAndroidHardwareBufferInfoANDROID(..)
-  , fromCStructAndroidHardwareBufferFormatPropertiesANDROID
-  , fromCStructAndroidHardwareBufferPropertiesANDROID
-  , fromCStructAndroidHardwareBufferUsageANDROID
-  , fromCStructExternalFormatANDROID
-  , fromCStructImportAndroidHardwareBufferInfoANDROID
-  , fromCStructMemoryGetAndroidHardwareBufferInfoANDROID
-  , withCStructAndroidHardwareBufferFormatPropertiesANDROID
-  , withCStructAndroidHardwareBufferPropertiesANDROID
-  , withCStructAndroidHardwareBufferUsageANDROID
-  , withCStructExternalFormatANDROID
-  , withCStructImportAndroidHardwareBufferInfoANDROID
-  , withCStructMemoryGetAndroidHardwareBufferInfoANDROID
   )
 #endif
 import Graphics.Vulkan.Extensions.VK_EXT_astc_decode_mode
@@ -2043,8 +2149,6 @@ import Graphics.Vulkan.Extensions.VK_EXT_fragment_density_map
   , withCStructPhysicalDeviceFragmentDensityMapPropertiesEXT
   , withCStructRenderPassFragmentDensityMapCreateInfoEXT
   )
-
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
 import Graphics.Vulkan.Extensions.VK_EXT_full_screen_exclusive
   ( SurfaceCapabilitiesFullScreenExclusiveEXT(..)
   , SurfaceFullScreenExclusiveInfoEXT(..)
@@ -2056,7 +2160,6 @@ import Graphics.Vulkan.Extensions.VK_EXT_full_screen_exclusive
   , withCStructSurfaceFullScreenExclusiveInfoEXT
   , withCStructSurfaceFullScreenExclusiveWin32InfoEXT
   )
-#endif
 import Graphics.Vulkan.Extensions.VK_EXT_global_priority
   ( DeviceQueueGlobalPriorityCreateInfoEXT(..)
   , fromCStructDeviceQueueGlobalPriorityCreateInfoEXT
@@ -2069,6 +2172,11 @@ import Graphics.Vulkan.Extensions.VK_EXT_hdr_metadata
   , fromCStructXYColorEXT
   , withCStructHdrMetadataEXT
   , withCStructXYColorEXT
+  )
+import Graphics.Vulkan.Extensions.VK_EXT_headless_surface
+  ( HeadlessSurfaceCreateInfoEXT(..)
+  , fromCStructHeadlessSurfaceCreateInfoEXT
+  , withCStructHeadlessSurfaceCreateInfoEXT
   )
 import Graphics.Vulkan.Extensions.VK_EXT_host_query_reset
   ( PhysicalDeviceHostQueryResetFeaturesEXT(..)
@@ -2125,9 +2233,19 @@ import Graphics.Vulkan.Extensions.VK_EXT_memory_priority
 
 #if defined(VK_USE_PLATFORM_METAL_EXT)
 import Graphics.Vulkan.Extensions.VK_EXT_metal_surface
+  ( withCStructMetalSurfaceCreateInfoEXT
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_METAL_EXT)
+import Graphics.Vulkan.Extensions.VK_EXT_metal_surface
+  ( fromCStructMetalSurfaceCreateInfoEXT
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_METAL_EXT)
+import Graphics.Vulkan.Extensions.VK_EXT_metal_surface
   ( MetalSurfaceCreateInfoEXT(..)
-  , fromCStructMetalSurfaceCreateInfoEXT
-  , withCStructMetalSurfaceCreateInfoEXT
   )
 #endif
 import Graphics.Vulkan.Extensions.VK_EXT_pci_bus_info
@@ -2238,25 +2356,55 @@ import Graphics.Vulkan.Extensions.VK_EXT_ycbcr_image_arrays
 
 #if defined(VK_USE_PLATFORM_FUCHSIA)
 import Graphics.Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface
+  ( withCStructImagePipeSurfaceCreateInfoFUCHSIA
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_FUCHSIA)
+import Graphics.Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface
+  ( fromCStructImagePipeSurfaceCreateInfoFUCHSIA
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_FUCHSIA)
+import Graphics.Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface
   ( ImagePipeSurfaceCreateInfoFUCHSIA(..)
-  , fromCStructImagePipeSurfaceCreateInfoFUCHSIA
-  , withCStructImagePipeSurfaceCreateInfoFUCHSIA
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
+import Graphics.Vulkan.Extensions.VK_GGP_frame_token
+  ( withCStructPresentFrameTokenGGP
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
+import Graphics.Vulkan.Extensions.VK_GGP_frame_token
+  ( fromCStructPresentFrameTokenGGP
   )
 #endif
 
 #if defined(VK_USE_PLATFORM_GGP)
 import Graphics.Vulkan.Extensions.VK_GGP_frame_token
   ( PresentFrameTokenGGP(..)
-  , fromCStructPresentFrameTokenGGP
-  , withCStructPresentFrameTokenGGP
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
+import Graphics.Vulkan.Extensions.VK_GGP_stream_descriptor_surface
+  ( withCStructStreamDescriptorSurfaceCreateInfoGGP
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
+import Graphics.Vulkan.Extensions.VK_GGP_stream_descriptor_surface
+  ( fromCStructStreamDescriptorSurfaceCreateInfoGGP
   )
 #endif
 
 #if defined(VK_USE_PLATFORM_GGP)
 import Graphics.Vulkan.Extensions.VK_GGP_stream_descriptor_surface
   ( StreamDescriptorSurfaceCreateInfoGGP(..)
-  , fromCStructStreamDescriptorSurfaceCreateInfoGGP
-  , withCStructStreamDescriptorSurfaceCreateInfoGGP
   )
 #endif
 import Graphics.Vulkan.Extensions.VK_GOOGLE_display_timing
@@ -2281,9 +2429,19 @@ import Graphics.Vulkan.Extensions.VK_KHR_8bit_storage
 
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import Graphics.Vulkan.Extensions.VK_KHR_android_surface
+  ( withCStructAndroidSurfaceCreateInfoKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import Graphics.Vulkan.Extensions.VK_KHR_android_surface
+  ( fromCStructAndroidSurfaceCreateInfoKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import Graphics.Vulkan.Extensions.VK_KHR_android_surface
   ( AndroidSurfaceCreateInfoKHR(..)
-  , fromCStructAndroidSurfaceCreateInfoKHR
-  , withCStructAndroidSurfaceCreateInfoKHR
   )
 #endif
 import Graphics.Vulkan.Extensions.VK_KHR_create_renderpass2
@@ -2364,15 +2522,25 @@ import Graphics.Vulkan.Extensions.VK_KHR_external_fence_fd
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
 import Graphics.Vulkan.Extensions.VK_KHR_external_fence_win32
+  ( withCStructExportFenceWin32HandleInfoKHR
+  , withCStructFenceGetWin32HandleInfoKHR
+  , withCStructImportFenceWin32HandleInfoKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+import Graphics.Vulkan.Extensions.VK_KHR_external_fence_win32
+  ( fromCStructExportFenceWin32HandleInfoKHR
+  , fromCStructFenceGetWin32HandleInfoKHR
+  , fromCStructImportFenceWin32HandleInfoKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+import Graphics.Vulkan.Extensions.VK_KHR_external_fence_win32
   ( ExportFenceWin32HandleInfoKHR(..)
   , FenceGetWin32HandleInfoKHR(..)
   , ImportFenceWin32HandleInfoKHR(..)
-  , fromCStructExportFenceWin32HandleInfoKHR
-  , fromCStructFenceGetWin32HandleInfoKHR
-  , fromCStructImportFenceWin32HandleInfoKHR
-  , withCStructExportFenceWin32HandleInfoKHR
-  , withCStructFenceGetWin32HandleInfoKHR
-  , withCStructImportFenceWin32HandleInfoKHR
   )
 #endif
 import Graphics.Vulkan.Extensions.VK_KHR_external_memory_fd
@@ -2389,18 +2557,28 @@ import Graphics.Vulkan.Extensions.VK_KHR_external_memory_fd
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
 import Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32
+  ( withCStructExportMemoryWin32HandleInfoKHR
+  , withCStructImportMemoryWin32HandleInfoKHR
+  , withCStructMemoryGetWin32HandleInfoKHR
+  , withCStructMemoryWin32HandlePropertiesKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+import Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32
+  ( fromCStructExportMemoryWin32HandleInfoKHR
+  , fromCStructImportMemoryWin32HandleInfoKHR
+  , fromCStructMemoryGetWin32HandleInfoKHR
+  , fromCStructMemoryWin32HandlePropertiesKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+import Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32
   ( ExportMemoryWin32HandleInfoKHR(..)
   , ImportMemoryWin32HandleInfoKHR(..)
   , MemoryGetWin32HandleInfoKHR(..)
   , MemoryWin32HandlePropertiesKHR(..)
-  , fromCStructExportMemoryWin32HandleInfoKHR
-  , fromCStructImportMemoryWin32HandleInfoKHR
-  , fromCStructMemoryGetWin32HandleInfoKHR
-  , fromCStructMemoryWin32HandlePropertiesKHR
-  , withCStructExportMemoryWin32HandleInfoKHR
-  , withCStructImportMemoryWin32HandleInfoKHR
-  , withCStructMemoryGetWin32HandleInfoKHR
-  , withCStructMemoryWin32HandlePropertiesKHR
   )
 #endif
 import Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_fd
@@ -2414,18 +2592,28 @@ import Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_fd
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
 import Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_win32
+  ( withCStructD3D12FenceSubmitInfoKHR
+  , withCStructExportSemaphoreWin32HandleInfoKHR
+  , withCStructImportSemaphoreWin32HandleInfoKHR
+  , withCStructSemaphoreGetWin32HandleInfoKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+import Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_win32
+  ( fromCStructD3D12FenceSubmitInfoKHR
+  , fromCStructExportSemaphoreWin32HandleInfoKHR
+  , fromCStructImportSemaphoreWin32HandleInfoKHR
+  , fromCStructSemaphoreGetWin32HandleInfoKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+import Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_win32
   ( D3D12FenceSubmitInfoKHR(..)
   , ExportSemaphoreWin32HandleInfoKHR(..)
   , ImportSemaphoreWin32HandleInfoKHR(..)
   , SemaphoreGetWin32HandleInfoKHR(..)
-  , fromCStructD3D12FenceSubmitInfoKHR
-  , fromCStructExportSemaphoreWin32HandleInfoKHR
-  , fromCStructImportSemaphoreWin32HandleInfoKHR
-  , fromCStructSemaphoreGetWin32HandleInfoKHR
-  , withCStructD3D12FenceSubmitInfoKHR
-  , withCStructExportSemaphoreWin32HandleInfoKHR
-  , withCStructImportSemaphoreWin32HandleInfoKHR
-  , withCStructSemaphoreGetWin32HandleInfoKHR
   )
 #endif
 import Graphics.Vulkan.Extensions.VK_KHR_get_display_properties2
@@ -2544,65 +2732,145 @@ import Graphics.Vulkan.Extensions.VK_KHR_vulkan_memory_model
 
 #if defined(VK_USE_PLATFORM_WAYLAND_KHR)
 import Graphics.Vulkan.Extensions.VK_KHR_wayland_surface
+  ( withCStructWaylandSurfaceCreateInfoKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_WAYLAND_KHR)
+import Graphics.Vulkan.Extensions.VK_KHR_wayland_surface
+  ( fromCStructWaylandSurfaceCreateInfoKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_WAYLAND_KHR)
+import Graphics.Vulkan.Extensions.VK_KHR_wayland_surface
   ( WaylandSurfaceCreateInfoKHR(..)
-  , fromCStructWaylandSurfaceCreateInfoKHR
-  , withCStructWaylandSurfaceCreateInfoKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+import Graphics.Vulkan.Extensions.VK_KHR_win32_keyed_mutex
+  ( withCStructWin32KeyedMutexAcquireReleaseInfoKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+import Graphics.Vulkan.Extensions.VK_KHR_win32_keyed_mutex
+  ( fromCStructWin32KeyedMutexAcquireReleaseInfoKHR
   )
 #endif
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
 import Graphics.Vulkan.Extensions.VK_KHR_win32_keyed_mutex
   ( Win32KeyedMutexAcquireReleaseInfoKHR(..)
-  , fromCStructWin32KeyedMutexAcquireReleaseInfoKHR
-  , withCStructWin32KeyedMutexAcquireReleaseInfoKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+import Graphics.Vulkan.Extensions.VK_KHR_win32_surface
+  ( withCStructWin32SurfaceCreateInfoKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+import Graphics.Vulkan.Extensions.VK_KHR_win32_surface
+  ( fromCStructWin32SurfaceCreateInfoKHR
   )
 #endif
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
 import Graphics.Vulkan.Extensions.VK_KHR_win32_surface
   ( Win32SurfaceCreateInfoKHR(..)
-  , fromCStructWin32SurfaceCreateInfoKHR
-  , withCStructWin32SurfaceCreateInfoKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_XCB_KHR)
+import Graphics.Vulkan.Extensions.VK_KHR_xcb_surface
+  ( withCStructXcbSurfaceCreateInfoKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_XCB_KHR)
+import Graphics.Vulkan.Extensions.VK_KHR_xcb_surface
+  ( fromCStructXcbSurfaceCreateInfoKHR
   )
 #endif
 
 #if defined(VK_USE_PLATFORM_XCB_KHR)
 import Graphics.Vulkan.Extensions.VK_KHR_xcb_surface
   ( XcbSurfaceCreateInfoKHR(..)
-  , fromCStructXcbSurfaceCreateInfoKHR
-  , withCStructXcbSurfaceCreateInfoKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_XLIB_KHR)
+import Graphics.Vulkan.Extensions.VK_KHR_xlib_surface
+  ( withCStructXlibSurfaceCreateInfoKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_XLIB_KHR)
+import Graphics.Vulkan.Extensions.VK_KHR_xlib_surface
+  ( fromCStructXlibSurfaceCreateInfoKHR
   )
 #endif
 
 #if defined(VK_USE_PLATFORM_XLIB_KHR)
 import Graphics.Vulkan.Extensions.VK_KHR_xlib_surface
   ( XlibSurfaceCreateInfoKHR(..)
-  , fromCStructXlibSurfaceCreateInfoKHR
-  , withCStructXlibSurfaceCreateInfoKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_IOS_MVK)
+import Graphics.Vulkan.Extensions.VK_MVK_ios_surface
+  ( withCStructIOSSurfaceCreateInfoMVK
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_IOS_MVK)
+import Graphics.Vulkan.Extensions.VK_MVK_ios_surface
+  ( fromCStructIOSSurfaceCreateInfoMVK
   )
 #endif
 
 #if defined(VK_USE_PLATFORM_IOS_MVK)
 import Graphics.Vulkan.Extensions.VK_MVK_ios_surface
   ( IOSSurfaceCreateInfoMVK(..)
-  , fromCStructIOSSurfaceCreateInfoMVK
-  , withCStructIOSSurfaceCreateInfoMVK
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_MACOS_MVK)
+import Graphics.Vulkan.Extensions.VK_MVK_macos_surface
+  ( withCStructMacOSSurfaceCreateInfoMVK
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_MACOS_MVK)
+import Graphics.Vulkan.Extensions.VK_MVK_macos_surface
+  ( fromCStructMacOSSurfaceCreateInfoMVK
   )
 #endif
 
 #if defined(VK_USE_PLATFORM_MACOS_MVK)
 import Graphics.Vulkan.Extensions.VK_MVK_macos_surface
   ( MacOSSurfaceCreateInfoMVK(..)
-  , fromCStructMacOSSurfaceCreateInfoMVK
-  , withCStructMacOSSurfaceCreateInfoMVK
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_VI_NN)
+import Graphics.Vulkan.Extensions.VK_NN_vi_surface
+  ( withCStructViSurfaceCreateInfoNN
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_VI_NN)
+import Graphics.Vulkan.Extensions.VK_NN_vi_surface
+  ( fromCStructViSurfaceCreateInfoNN
   )
 #endif
 
 #if defined(VK_USE_PLATFORM_VI_NN)
 import Graphics.Vulkan.Extensions.VK_NN_vi_surface
   ( ViSurfaceCreateInfoNN(..)
-  , fromCStructViSurfaceCreateInfoNN
-  , withCStructViSurfaceCreateInfoNN
   )
 #endif
 import Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands
@@ -2727,12 +2995,22 @@ import Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
 import Graphics.Vulkan.Extensions.VK_NV_external_memory_win32
+  ( withCStructExportMemoryWin32HandleInfoNV
+  , withCStructImportMemoryWin32HandleInfoNV
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+import Graphics.Vulkan.Extensions.VK_NV_external_memory_win32
+  ( fromCStructExportMemoryWin32HandleInfoNV
+  , fromCStructImportMemoryWin32HandleInfoNV
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+import Graphics.Vulkan.Extensions.VK_NV_external_memory_win32
   ( ExportMemoryWin32HandleInfoNV(..)
   , ImportMemoryWin32HandleInfoNV(..)
-  , fromCStructExportMemoryWin32HandleInfoNV
-  , fromCStructImportMemoryWin32HandleInfoNV
-  , withCStructExportMemoryWin32HandleInfoNV
-  , withCStructImportMemoryWin32HandleInfoNV
   )
 #endif
 import Graphics.Vulkan.Extensions.VK_NV_fragment_coverage_to_color
@@ -2854,9 +3132,19 @@ import Graphics.Vulkan.Extensions.VK_NV_viewport_swizzle
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
 import Graphics.Vulkan.Extensions.VK_NV_win32_keyed_mutex
+  ( withCStructWin32KeyedMutexAcquireReleaseInfoNV
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+import Graphics.Vulkan.Extensions.VK_NV_win32_keyed_mutex
+  ( fromCStructWin32KeyedMutexAcquireReleaseInfoNV
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_WIN32_KHR)
+import Graphics.Vulkan.Extensions.VK_NV_win32_keyed_mutex
   ( Win32KeyedMutexAcquireReleaseInfoNV(..)
-  , fromCStructWin32KeyedMutexAcquireReleaseInfoNV
-  , withCStructWin32KeyedMutexAcquireReleaseInfoNV
   )
 #endif
 
@@ -2867,27 +3155,27 @@ class ToCStruct marshalled c | marshalled -> c, c -> marshalled where
 class FromCStruct marshalled c | marshalled -> c, c -> marshalled where
   fromCStruct :: c -> IO marshalled
 
-class HasPNext a where
-  getPNext :: a -> Maybe SomeVkStruct
+class HasNext a where
+  getNext :: a -> Maybe SomeVkStruct
 
 data SomeVkStruct where
   SomeVkStruct
-    :: (ToCStruct a b, Storable b, Show a, Eq a, Typeable a, HasPNext a)
+    :: (ToCStruct a b, Storable b, Show a, Eq a, Typeable a, HasNext a)
     => a
     -> SomeVkStruct
 
-instance HasPNext SomeVkStruct where
-  getPNext (SomeVkStruct a) = getPNext a
+instance HasNext SomeVkStruct where
+  getNext (SomeVkStruct s) = getNext s
 
 deriving instance Show SomeVkStruct
 
 instance Eq SomeVkStruct where
-  SomeVkStruct (a :: a) == SomeVkStruct (b :: b) = case eqT @a @b of
+  SomeVkStruct (s1 :: s1) == SomeVkStruct (s2 :: s2) = case eqT @s1 @s2 of
     Nothing   -> False
-    Just Refl -> a == b
+    Just Refl -> s1 == s2
 
 withCStructPtr :: (Storable c, ToCStruct a c) => a -> (Ptr c -> IO b) -> IO b
-withCStructPtr a f = withCStruct a (\c -> alloca (\p -> poke p c *> f p))
+withCStructPtr s f = withCStruct s (\c -> alloca (\p -> poke p c *> f p))
 
 fromCStructPtr :: (Storable c, FromCStruct a c) => Ptr c -> IO a
 fromCStructPtr p = fromCStruct =<< peek p
@@ -2896,14 +3184,14 @@ fromCStructPtrElem :: (Storable c, FromCStruct a c) => Ptr c -> Int -> IO a
 fromCStructPtrElem p o = fromCStruct =<< peekElemOff p o
 
 fromSomeVkStruct :: Typeable a => SomeVkStruct -> Maybe a
-fromSomeVkStruct (SomeVkStruct a) = cast a
+fromSomeVkStruct (SomeVkStruct s) = cast s
 
 fromSomeVkStructChain :: Typeable a => SomeVkStruct -> Maybe a
-fromSomeVkStructChain a =
-  fromSomeVkStruct a <|> (getPNext a >>= fromSomeVkStructChain)
+fromSomeVkStructChain s =
+  fromSomeVkStruct s <|> (getNext s >>= fromSomeVkStructChain)
 
 withSomeVkStruct :: SomeVkStruct -> (Ptr () -> IO a) -> IO a
-withSomeVkStruct (SomeVkStruct a) f = withCStructPtr a (f . castPtr)
+withSomeVkStruct (SomeVkStruct s) f = withCStructPtr s (f . castPtr)
 
 ----------------------------------------------------------------
 -- Instances
@@ -2967,8 +3255,8 @@ instance ToCStruct ApplicationInfo VkApplicationInfo where
   withCStruct = withCStructApplicationInfo
 instance FromCStruct ApplicationInfo VkApplicationInfo where
   fromCStruct = fromCStructApplicationInfo
-instance HasPNext ApplicationInfo where
-  getPNext a = vkPNext (a :: ApplicationInfo)
+instance HasNext ApplicationInfo where
+  getNext s = next (s :: ApplicationInfo)
 instance ToCStruct AllocationCallbacks VkAllocationCallbacks where
   withCStruct = withCStructAllocationCallbacks
 instance FromCStruct AllocationCallbacks VkAllocationCallbacks where
@@ -2978,20 +3266,20 @@ instance ToCStruct DeviceQueueCreateInfo VkDeviceQueueCreateInfo where
   withCStruct = withCStructDeviceQueueCreateInfo
 instance FromCStruct DeviceQueueCreateInfo VkDeviceQueueCreateInfo where
   fromCStruct = fromCStructDeviceQueueCreateInfo
-instance HasPNext DeviceQueueCreateInfo where
-  getPNext a = vkPNext (a :: DeviceQueueCreateInfo)
+instance HasNext DeviceQueueCreateInfo where
+  getNext s = next (s :: DeviceQueueCreateInfo)
 instance ToCStruct DeviceCreateInfo VkDeviceCreateInfo where
   withCStruct = withCStructDeviceCreateInfo
 instance FromCStruct DeviceCreateInfo VkDeviceCreateInfo where
   fromCStruct = fromCStructDeviceCreateInfo
-instance HasPNext DeviceCreateInfo where
-  getPNext a = vkPNext (a :: DeviceCreateInfo)
+instance HasNext DeviceCreateInfo where
+  getNext s = next (s :: DeviceCreateInfo)
 instance ToCStruct InstanceCreateInfo VkInstanceCreateInfo where
   withCStruct = withCStructInstanceCreateInfo
 instance FromCStruct InstanceCreateInfo VkInstanceCreateInfo where
   fromCStruct = fromCStructInstanceCreateInfo
-instance HasPNext InstanceCreateInfo where
-  getPNext a = vkPNext (a :: InstanceCreateInfo)
+instance HasNext InstanceCreateInfo where
+  getNext s = next (s :: InstanceCreateInfo)
 instance ToCStruct QueueFamilyProperties VkQueueFamilyProperties where
   withCStruct = withCStructQueueFamilyProperties
 instance FromCStruct QueueFamilyProperties VkQueueFamilyProperties where
@@ -3006,8 +3294,8 @@ instance ToCStruct MemoryAllocateInfo VkMemoryAllocateInfo where
   withCStruct = withCStructMemoryAllocateInfo
 instance FromCStruct MemoryAllocateInfo VkMemoryAllocateInfo where
   fromCStruct = fromCStructMemoryAllocateInfo
-instance HasPNext MemoryAllocateInfo where
-  getPNext a = vkPNext (a :: MemoryAllocateInfo)
+instance HasNext MemoryAllocateInfo where
+  getNext s = next (s :: MemoryAllocateInfo)
 instance ToCStruct MemoryRequirements VkMemoryRequirements where
   withCStruct = withCStructMemoryRequirements
 instance FromCStruct MemoryRequirements VkMemoryRequirements where
@@ -3037,8 +3325,8 @@ instance ToCStruct MappedMemoryRange VkMappedMemoryRange where
   withCStruct = withCStructMappedMemoryRange
 instance FromCStruct MappedMemoryRange VkMappedMemoryRange where
   fromCStruct = fromCStructMappedMemoryRange
-instance HasPNext MappedMemoryRange where
-  getPNext a = vkPNext (a :: MappedMemoryRange)
+instance HasNext MappedMemoryRange where
+  getNext s = next (s :: MappedMemoryRange)
 instance ToCStruct FormatProperties VkFormatProperties where
   withCStruct = withCStructFormatProperties
 instance FromCStruct FormatProperties VkFormatProperties where
@@ -3063,26 +3351,26 @@ instance ToCStruct WriteDescriptorSet VkWriteDescriptorSet where
   withCStruct = withCStructWriteDescriptorSet
 instance FromCStruct WriteDescriptorSet VkWriteDescriptorSet where
   fromCStruct = fromCStructWriteDescriptorSet
-instance HasPNext WriteDescriptorSet where
-  getPNext a = vkPNext (a :: WriteDescriptorSet)
+instance HasNext WriteDescriptorSet where
+  getNext s = next (s :: WriteDescriptorSet)
 instance ToCStruct CopyDescriptorSet VkCopyDescriptorSet where
   withCStruct = withCStructCopyDescriptorSet
 instance FromCStruct CopyDescriptorSet VkCopyDescriptorSet where
   fromCStruct = fromCStructCopyDescriptorSet
-instance HasPNext CopyDescriptorSet where
-  getPNext a = vkPNext (a :: CopyDescriptorSet)
+instance HasNext CopyDescriptorSet where
+  getNext s = next (s :: CopyDescriptorSet)
 instance ToCStruct BufferCreateInfo VkBufferCreateInfo where
   withCStruct = withCStructBufferCreateInfo
 instance FromCStruct BufferCreateInfo VkBufferCreateInfo where
   fromCStruct = fromCStructBufferCreateInfo
-instance HasPNext BufferCreateInfo where
-  getPNext a = vkPNext (a :: BufferCreateInfo)
+instance HasNext BufferCreateInfo where
+  getNext s = next (s :: BufferCreateInfo)
 instance ToCStruct BufferViewCreateInfo VkBufferViewCreateInfo where
   withCStruct = withCStructBufferViewCreateInfo
 instance FromCStruct BufferViewCreateInfo VkBufferViewCreateInfo where
   fromCStruct = fromCStructBufferViewCreateInfo
-instance HasPNext BufferViewCreateInfo where
-  getPNext a = vkPNext (a :: BufferViewCreateInfo)
+instance HasNext BufferViewCreateInfo where
+  getNext s = next (s :: BufferViewCreateInfo)
 instance ToCStruct ImageSubresource VkImageSubresource where
   withCStruct = withCStructImageSubresource
 instance FromCStruct ImageSubresource VkImageSubresource where
@@ -3102,26 +3390,26 @@ instance ToCStruct MemoryBarrier VkMemoryBarrier where
   withCStruct = withCStructMemoryBarrier
 instance FromCStruct MemoryBarrier VkMemoryBarrier where
   fromCStruct = fromCStructMemoryBarrier
-instance HasPNext MemoryBarrier where
-  getPNext a = vkPNext (a :: MemoryBarrier)
+instance HasNext MemoryBarrier where
+  getNext s = next (s :: MemoryBarrier)
 instance ToCStruct BufferMemoryBarrier VkBufferMemoryBarrier where
   withCStruct = withCStructBufferMemoryBarrier
 instance FromCStruct BufferMemoryBarrier VkBufferMemoryBarrier where
   fromCStruct = fromCStructBufferMemoryBarrier
-instance HasPNext BufferMemoryBarrier where
-  getPNext a = vkPNext (a :: BufferMemoryBarrier)
+instance HasNext BufferMemoryBarrier where
+  getNext s = next (s :: BufferMemoryBarrier)
 instance ToCStruct ImageMemoryBarrier VkImageMemoryBarrier where
   withCStruct = withCStructImageMemoryBarrier
 instance FromCStruct ImageMemoryBarrier VkImageMemoryBarrier where
   fromCStruct = fromCStructImageMemoryBarrier
-instance HasPNext ImageMemoryBarrier where
-  getPNext a = vkPNext (a :: ImageMemoryBarrier)
+instance HasNext ImageMemoryBarrier where
+  getNext s = next (s :: ImageMemoryBarrier)
 instance ToCStruct ImageCreateInfo VkImageCreateInfo where
   withCStruct = withCStructImageCreateInfo
 instance FromCStruct ImageCreateInfo VkImageCreateInfo where
   fromCStruct = fromCStructImageCreateInfo
-instance HasPNext ImageCreateInfo where
-  getPNext a = vkPNext (a :: ImageCreateInfo)
+instance HasNext ImageCreateInfo where
+  getNext s = next (s :: ImageCreateInfo)
 instance ToCStruct SubresourceLayout VkSubresourceLayout where
   withCStruct = withCStructSubresourceLayout
 instance FromCStruct SubresourceLayout VkSubresourceLayout where
@@ -3131,8 +3419,8 @@ instance ToCStruct ImageViewCreateInfo VkImageViewCreateInfo where
   withCStruct = withCStructImageViewCreateInfo
 instance FromCStruct ImageViewCreateInfo VkImageViewCreateInfo where
   fromCStruct = fromCStructImageViewCreateInfo
-instance HasPNext ImageViewCreateInfo where
-  getPNext a = vkPNext (a :: ImageViewCreateInfo)
+instance HasNext ImageViewCreateInfo where
+  getNext s = next (s :: ImageViewCreateInfo)
 instance ToCStruct BufferCopy VkBufferCopy where
   withCStruct = withCStructBufferCopy
 instance FromCStruct BufferCopy VkBufferCopy where
@@ -3167,8 +3455,8 @@ instance ToCStruct BindSparseInfo VkBindSparseInfo where
   withCStruct = withCStructBindSparseInfo
 instance FromCStruct BindSparseInfo VkBindSparseInfo where
   fromCStruct = fromCStructBindSparseInfo
-instance HasPNext BindSparseInfo where
-  getPNext a = vkPNext (a :: BindSparseInfo)
+instance HasNext BindSparseInfo where
+  getNext s = next (s :: BindSparseInfo)
 instance ToCStruct ImageCopy VkImageCopy where
   withCStruct = withCStructImageCopy
 instance FromCStruct ImageCopy VkImageCopy where
@@ -3193,8 +3481,8 @@ instance ToCStruct ShaderModuleCreateInfo VkShaderModuleCreateInfo where
   withCStruct = withCStructShaderModuleCreateInfo
 instance FromCStruct ShaderModuleCreateInfo VkShaderModuleCreateInfo where
   fromCStruct = fromCStructShaderModuleCreateInfo
-instance HasPNext ShaderModuleCreateInfo where
-  getPNext a = vkPNext (a :: ShaderModuleCreateInfo)
+instance HasNext ShaderModuleCreateInfo where
+  getNext s = next (s :: ShaderModuleCreateInfo)
 instance ToCStruct DescriptorSetLayoutBinding VkDescriptorSetLayoutBinding where
   withCStruct = withCStructDescriptorSetLayoutBinding
 instance FromCStruct DescriptorSetLayoutBinding VkDescriptorSetLayoutBinding where
@@ -3204,8 +3492,8 @@ instance ToCStruct DescriptorSetLayoutCreateInfo VkDescriptorSetLayoutCreateInfo
   withCStruct = withCStructDescriptorSetLayoutCreateInfo
 instance FromCStruct DescriptorSetLayoutCreateInfo VkDescriptorSetLayoutCreateInfo where
   fromCStruct = fromCStructDescriptorSetLayoutCreateInfo
-instance HasPNext DescriptorSetLayoutCreateInfo where
-  getPNext a = vkPNext (a :: DescriptorSetLayoutCreateInfo)
+instance HasNext DescriptorSetLayoutCreateInfo where
+  getNext s = next (s :: DescriptorSetLayoutCreateInfo)
 instance ToCStruct DescriptorPoolSize VkDescriptorPoolSize where
   withCStruct = withCStructDescriptorPoolSize
 instance FromCStruct DescriptorPoolSize VkDescriptorPoolSize where
@@ -3215,14 +3503,14 @@ instance ToCStruct DescriptorPoolCreateInfo VkDescriptorPoolCreateInfo where
   withCStruct = withCStructDescriptorPoolCreateInfo
 instance FromCStruct DescriptorPoolCreateInfo VkDescriptorPoolCreateInfo where
   fromCStruct = fromCStructDescriptorPoolCreateInfo
-instance HasPNext DescriptorPoolCreateInfo where
-  getPNext a = vkPNext (a :: DescriptorPoolCreateInfo)
+instance HasNext DescriptorPoolCreateInfo where
+  getNext s = next (s :: DescriptorPoolCreateInfo)
 instance ToCStruct DescriptorSetAllocateInfo VkDescriptorSetAllocateInfo where
   withCStruct = withCStructDescriptorSetAllocateInfo
 instance FromCStruct DescriptorSetAllocateInfo VkDescriptorSetAllocateInfo where
   fromCStruct = fromCStructDescriptorSetAllocateInfo
-instance HasPNext DescriptorSetAllocateInfo where
-  getPNext a = vkPNext (a :: DescriptorSetAllocateInfo)
+instance HasNext DescriptorSetAllocateInfo where
+  getNext s = next (s :: DescriptorSetAllocateInfo)
 instance ToCStruct SpecializationMapEntry VkSpecializationMapEntry where
   withCStruct = withCStructSpecializationMapEntry
 instance FromCStruct SpecializationMapEntry VkSpecializationMapEntry where
@@ -3237,14 +3525,14 @@ instance ToCStruct PipelineShaderStageCreateInfo VkPipelineShaderStageCreateInfo
   withCStruct = withCStructPipelineShaderStageCreateInfo
 instance FromCStruct PipelineShaderStageCreateInfo VkPipelineShaderStageCreateInfo where
   fromCStruct = fromCStructPipelineShaderStageCreateInfo
-instance HasPNext PipelineShaderStageCreateInfo where
-  getPNext a = vkPNext (a :: PipelineShaderStageCreateInfo)
+instance HasNext PipelineShaderStageCreateInfo where
+  getNext s = next (s :: PipelineShaderStageCreateInfo)
 instance ToCStruct ComputePipelineCreateInfo VkComputePipelineCreateInfo where
   withCStruct = withCStructComputePipelineCreateInfo
 instance FromCStruct ComputePipelineCreateInfo VkComputePipelineCreateInfo where
   fromCStruct = fromCStructComputePipelineCreateInfo
-instance HasPNext ComputePipelineCreateInfo where
-  getPNext a = vkPNext (a :: ComputePipelineCreateInfo)
+instance HasNext ComputePipelineCreateInfo where
+  getNext s = next (s :: ComputePipelineCreateInfo)
 instance ToCStruct VertexInputBindingDescription VkVertexInputBindingDescription where
   withCStruct = withCStructVertexInputBindingDescription
 instance FromCStruct VertexInputBindingDescription VkVertexInputBindingDescription where
@@ -3259,38 +3547,38 @@ instance ToCStruct PipelineVertexInputStateCreateInfo VkPipelineVertexInputState
   withCStruct = withCStructPipelineVertexInputStateCreateInfo
 instance FromCStruct PipelineVertexInputStateCreateInfo VkPipelineVertexInputStateCreateInfo where
   fromCStruct = fromCStructPipelineVertexInputStateCreateInfo
-instance HasPNext PipelineVertexInputStateCreateInfo where
-  getPNext a = vkPNext (a :: PipelineVertexInputStateCreateInfo)
+instance HasNext PipelineVertexInputStateCreateInfo where
+  getNext s = next (s :: PipelineVertexInputStateCreateInfo)
 instance ToCStruct PipelineInputAssemblyStateCreateInfo VkPipelineInputAssemblyStateCreateInfo where
   withCStruct = withCStructPipelineInputAssemblyStateCreateInfo
 instance FromCStruct PipelineInputAssemblyStateCreateInfo VkPipelineInputAssemblyStateCreateInfo where
   fromCStruct = fromCStructPipelineInputAssemblyStateCreateInfo
-instance HasPNext PipelineInputAssemblyStateCreateInfo where
-  getPNext a = vkPNext (a :: PipelineInputAssemblyStateCreateInfo)
+instance HasNext PipelineInputAssemblyStateCreateInfo where
+  getNext s = next (s :: PipelineInputAssemblyStateCreateInfo)
 instance ToCStruct PipelineTessellationStateCreateInfo VkPipelineTessellationStateCreateInfo where
   withCStruct = withCStructPipelineTessellationStateCreateInfo
 instance FromCStruct PipelineTessellationStateCreateInfo VkPipelineTessellationStateCreateInfo where
   fromCStruct = fromCStructPipelineTessellationStateCreateInfo
-instance HasPNext PipelineTessellationStateCreateInfo where
-  getPNext a = vkPNext (a :: PipelineTessellationStateCreateInfo)
+instance HasNext PipelineTessellationStateCreateInfo where
+  getNext s = next (s :: PipelineTessellationStateCreateInfo)
 instance ToCStruct PipelineViewportStateCreateInfo VkPipelineViewportStateCreateInfo where
   withCStruct = withCStructPipelineViewportStateCreateInfo
 instance FromCStruct PipelineViewportStateCreateInfo VkPipelineViewportStateCreateInfo where
   fromCStruct = fromCStructPipelineViewportStateCreateInfo
-instance HasPNext PipelineViewportStateCreateInfo where
-  getPNext a = vkPNext (a :: PipelineViewportStateCreateInfo)
+instance HasNext PipelineViewportStateCreateInfo where
+  getNext s = next (s :: PipelineViewportStateCreateInfo)
 instance ToCStruct PipelineRasterizationStateCreateInfo VkPipelineRasterizationStateCreateInfo where
   withCStruct = withCStructPipelineRasterizationStateCreateInfo
 instance FromCStruct PipelineRasterizationStateCreateInfo VkPipelineRasterizationStateCreateInfo where
   fromCStruct = fromCStructPipelineRasterizationStateCreateInfo
-instance HasPNext PipelineRasterizationStateCreateInfo where
-  getPNext a = vkPNext (a :: PipelineRasterizationStateCreateInfo)
+instance HasNext PipelineRasterizationStateCreateInfo where
+  getNext s = next (s :: PipelineRasterizationStateCreateInfo)
 instance ToCStruct PipelineMultisampleStateCreateInfo VkPipelineMultisampleStateCreateInfo where
   withCStruct = withCStructPipelineMultisampleStateCreateInfo
 instance FromCStruct PipelineMultisampleStateCreateInfo VkPipelineMultisampleStateCreateInfo where
   fromCStruct = fromCStructPipelineMultisampleStateCreateInfo
-instance HasPNext PipelineMultisampleStateCreateInfo where
-  getPNext a = vkPNext (a :: PipelineMultisampleStateCreateInfo)
+instance HasNext PipelineMultisampleStateCreateInfo where
+  getNext s = next (s :: PipelineMultisampleStateCreateInfo)
 instance ToCStruct PipelineColorBlendAttachmentState VkPipelineColorBlendAttachmentState where
   withCStruct = withCStructPipelineColorBlendAttachmentState
 instance FromCStruct PipelineColorBlendAttachmentState VkPipelineColorBlendAttachmentState where
@@ -3300,14 +3588,14 @@ instance ToCStruct PipelineColorBlendStateCreateInfo VkPipelineColorBlendStateCr
   withCStruct = withCStructPipelineColorBlendStateCreateInfo
 instance FromCStruct PipelineColorBlendStateCreateInfo VkPipelineColorBlendStateCreateInfo where
   fromCStruct = fromCStructPipelineColorBlendStateCreateInfo
-instance HasPNext PipelineColorBlendStateCreateInfo where
-  getPNext a = vkPNext (a :: PipelineColorBlendStateCreateInfo)
+instance HasNext PipelineColorBlendStateCreateInfo where
+  getNext s = next (s :: PipelineColorBlendStateCreateInfo)
 instance ToCStruct PipelineDynamicStateCreateInfo VkPipelineDynamicStateCreateInfo where
   withCStruct = withCStructPipelineDynamicStateCreateInfo
 instance FromCStruct PipelineDynamicStateCreateInfo VkPipelineDynamicStateCreateInfo where
   fromCStruct = fromCStructPipelineDynamicStateCreateInfo
-instance HasPNext PipelineDynamicStateCreateInfo where
-  getPNext a = vkPNext (a :: PipelineDynamicStateCreateInfo)
+instance HasNext PipelineDynamicStateCreateInfo where
+  getNext s = next (s :: PipelineDynamicStateCreateInfo)
 instance ToCStruct StencilOpState VkStencilOpState where
   withCStruct = withCStructStencilOpState
 instance FromCStruct StencilOpState VkStencilOpState where
@@ -3317,20 +3605,20 @@ instance ToCStruct PipelineDepthStencilStateCreateInfo VkPipelineDepthStencilSta
   withCStruct = withCStructPipelineDepthStencilStateCreateInfo
 instance FromCStruct PipelineDepthStencilStateCreateInfo VkPipelineDepthStencilStateCreateInfo where
   fromCStruct = fromCStructPipelineDepthStencilStateCreateInfo
-instance HasPNext PipelineDepthStencilStateCreateInfo where
-  getPNext a = vkPNext (a :: PipelineDepthStencilStateCreateInfo)
+instance HasNext PipelineDepthStencilStateCreateInfo where
+  getNext s = next (s :: PipelineDepthStencilStateCreateInfo)
 instance ToCStruct GraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo where
   withCStruct = withCStructGraphicsPipelineCreateInfo
 instance FromCStruct GraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo where
   fromCStruct = fromCStructGraphicsPipelineCreateInfo
-instance HasPNext GraphicsPipelineCreateInfo where
-  getPNext a = vkPNext (a :: GraphicsPipelineCreateInfo)
+instance HasNext GraphicsPipelineCreateInfo where
+  getNext s = next (s :: GraphicsPipelineCreateInfo)
 instance ToCStruct PipelineCacheCreateInfo VkPipelineCacheCreateInfo where
   withCStruct = withCStructPipelineCacheCreateInfo
 instance FromCStruct PipelineCacheCreateInfo VkPipelineCacheCreateInfo where
   fromCStruct = fromCStructPipelineCacheCreateInfo
-instance HasPNext PipelineCacheCreateInfo where
-  getPNext a = vkPNext (a :: PipelineCacheCreateInfo)
+instance HasNext PipelineCacheCreateInfo where
+  getNext s = next (s :: PipelineCacheCreateInfo)
 instance ToCStruct PushConstantRange VkPushConstantRange where
   withCStruct = withCStructPushConstantRange
 instance FromCStruct PushConstantRange VkPushConstantRange where
@@ -3340,43 +3628,43 @@ instance ToCStruct PipelineLayoutCreateInfo VkPipelineLayoutCreateInfo where
   withCStruct = withCStructPipelineLayoutCreateInfo
 instance FromCStruct PipelineLayoutCreateInfo VkPipelineLayoutCreateInfo where
   fromCStruct = fromCStructPipelineLayoutCreateInfo
-instance HasPNext PipelineLayoutCreateInfo where
-  getPNext a = vkPNext (a :: PipelineLayoutCreateInfo)
+instance HasNext PipelineLayoutCreateInfo where
+  getNext s = next (s :: PipelineLayoutCreateInfo)
 instance ToCStruct SamplerCreateInfo VkSamplerCreateInfo where
   withCStruct = withCStructSamplerCreateInfo
 instance FromCStruct SamplerCreateInfo VkSamplerCreateInfo where
   fromCStruct = fromCStructSamplerCreateInfo
-instance HasPNext SamplerCreateInfo where
-  getPNext a = vkPNext (a :: SamplerCreateInfo)
+instance HasNext SamplerCreateInfo where
+  getNext s = next (s :: SamplerCreateInfo)
 instance ToCStruct CommandPoolCreateInfo VkCommandPoolCreateInfo where
   withCStruct = withCStructCommandPoolCreateInfo
 instance FromCStruct CommandPoolCreateInfo VkCommandPoolCreateInfo where
   fromCStruct = fromCStructCommandPoolCreateInfo
-instance HasPNext CommandPoolCreateInfo where
-  getPNext a = vkPNext (a :: CommandPoolCreateInfo)
+instance HasNext CommandPoolCreateInfo where
+  getNext s = next (s :: CommandPoolCreateInfo)
 instance ToCStruct CommandBufferAllocateInfo VkCommandBufferAllocateInfo where
   withCStruct = withCStructCommandBufferAllocateInfo
 instance FromCStruct CommandBufferAllocateInfo VkCommandBufferAllocateInfo where
   fromCStruct = fromCStructCommandBufferAllocateInfo
-instance HasPNext CommandBufferAllocateInfo where
-  getPNext a = vkPNext (a :: CommandBufferAllocateInfo)
+instance HasNext CommandBufferAllocateInfo where
+  getNext s = next (s :: CommandBufferAllocateInfo)
 instance ToCStruct CommandBufferInheritanceInfo VkCommandBufferInheritanceInfo where
   withCStruct = withCStructCommandBufferInheritanceInfo
 instance FromCStruct CommandBufferInheritanceInfo VkCommandBufferInheritanceInfo where
   fromCStruct = fromCStructCommandBufferInheritanceInfo
-instance HasPNext CommandBufferInheritanceInfo where
-  getPNext a = vkPNext (a :: CommandBufferInheritanceInfo)
+instance HasNext CommandBufferInheritanceInfo where
+  getNext s = next (s :: CommandBufferInheritanceInfo)
 instance ToCStruct CommandBufferBeginInfo VkCommandBufferBeginInfo where
   withCStruct = withCStructCommandBufferBeginInfo
 instance FromCStruct CommandBufferBeginInfo VkCommandBufferBeginInfo where
   fromCStruct = fromCStructCommandBufferBeginInfo
-instance HasPNext CommandBufferBeginInfo where
-  getPNext a = vkPNext (a :: CommandBufferBeginInfo)
+instance HasNext CommandBufferBeginInfo where
+  getNext s = next (s :: CommandBufferBeginInfo)
 instance ToCStruct RenderPassBeginInfo VkRenderPassBeginInfo where
   withCStruct = withCStructRenderPassBeginInfo
 -- No FromCStruct instance for VkRenderPassBeginInfo as it contains a union type
-instance HasPNext RenderPassBeginInfo where
-  getPNext a = vkPNext (a :: RenderPassBeginInfo)
+instance HasNext RenderPassBeginInfo where
+  getNext s = next (s :: RenderPassBeginInfo)
 instance ToCStruct ClearDepthStencilValue VkClearDepthStencilValue where
   withCStruct = withCStructClearDepthStencilValue
 instance FromCStruct ClearDepthStencilValue VkClearDepthStencilValue where
@@ -3410,20 +3698,20 @@ instance ToCStruct RenderPassCreateInfo VkRenderPassCreateInfo where
   withCStruct = withCStructRenderPassCreateInfo
 instance FromCStruct RenderPassCreateInfo VkRenderPassCreateInfo where
   fromCStruct = fromCStructRenderPassCreateInfo
-instance HasPNext RenderPassCreateInfo where
-  getPNext a = vkPNext (a :: RenderPassCreateInfo)
+instance HasNext RenderPassCreateInfo where
+  getNext s = next (s :: RenderPassCreateInfo)
 instance ToCStruct EventCreateInfo VkEventCreateInfo where
   withCStruct = withCStructEventCreateInfo
 instance FromCStruct EventCreateInfo VkEventCreateInfo where
   fromCStruct = fromCStructEventCreateInfo
-instance HasPNext EventCreateInfo where
-  getPNext a = vkPNext (a :: EventCreateInfo)
+instance HasNext EventCreateInfo where
+  getNext s = next (s :: EventCreateInfo)
 instance ToCStruct FenceCreateInfo VkFenceCreateInfo where
   withCStruct = withCStructFenceCreateInfo
 instance FromCStruct FenceCreateInfo VkFenceCreateInfo where
   fromCStruct = fromCStructFenceCreateInfo
-instance HasPNext FenceCreateInfo where
-  getPNext a = vkPNext (a :: FenceCreateInfo)
+instance HasNext FenceCreateInfo where
+  getNext s = next (s :: FenceCreateInfo)
 instance ToCStruct PhysicalDeviceFeatures VkPhysicalDeviceFeatures where
   withCStruct = withCStructPhysicalDeviceFeatures
 instance FromCStruct PhysicalDeviceFeatures VkPhysicalDeviceFeatures where
@@ -3443,20 +3731,20 @@ instance ToCStruct SemaphoreCreateInfo VkSemaphoreCreateInfo where
   withCStruct = withCStructSemaphoreCreateInfo
 instance FromCStruct SemaphoreCreateInfo VkSemaphoreCreateInfo where
   fromCStruct = fromCStructSemaphoreCreateInfo
-instance HasPNext SemaphoreCreateInfo where
-  getPNext a = vkPNext (a :: SemaphoreCreateInfo)
+instance HasNext SemaphoreCreateInfo where
+  getNext s = next (s :: SemaphoreCreateInfo)
 instance ToCStruct QueryPoolCreateInfo VkQueryPoolCreateInfo where
   withCStruct = withCStructQueryPoolCreateInfo
 instance FromCStruct QueryPoolCreateInfo VkQueryPoolCreateInfo where
   fromCStruct = fromCStructQueryPoolCreateInfo
-instance HasPNext QueryPoolCreateInfo where
-  getPNext a = vkPNext (a :: QueryPoolCreateInfo)
+instance HasNext QueryPoolCreateInfo where
+  getNext s = next (s :: QueryPoolCreateInfo)
 instance ToCStruct FramebufferCreateInfo VkFramebufferCreateInfo where
   withCStruct = withCStructFramebufferCreateInfo
 instance FromCStruct FramebufferCreateInfo VkFramebufferCreateInfo where
   fromCStruct = fromCStructFramebufferCreateInfo
-instance HasPNext FramebufferCreateInfo where
-  getPNext a = vkPNext (a :: FramebufferCreateInfo)
+instance HasNext FramebufferCreateInfo where
+  getNext s = next (s :: FramebufferCreateInfo)
 instance ToCStruct DrawIndirectCommand VkDrawIndirectCommand where
   withCStruct = withCStructDrawIndirectCommand
 instance FromCStruct DrawIndirectCommand VkDrawIndirectCommand where
@@ -3475,8 +3763,8 @@ instance FromCStruct DispatchIndirectCommand VkDispatchIndirectCommand where
 instance ToCStruct SubmitInfo VkSubmitInfo where
   withCStruct = withCStructSubmitInfo
 -- No FromCStruct instance for VkSubmitInfo as it contains a dispatchable handle
-instance HasPNext SubmitInfo where
-  getPNext a = vkPNext (a :: SubmitInfo)
+instance HasNext SubmitInfo where
+  getNext s = next (s :: SubmitInfo)
 instance ToCStruct DisplayPropertiesKHR VkDisplayPropertiesKHR where
   withCStruct = withCStructDisplayPropertiesKHR
 instance FromCStruct DisplayPropertiesKHR VkDisplayPropertiesKHR where
@@ -3501,8 +3789,8 @@ instance ToCStruct DisplayModeCreateInfoKHR VkDisplayModeCreateInfoKHR where
   withCStruct = withCStructDisplayModeCreateInfoKHR
 instance FromCStruct DisplayModeCreateInfoKHR VkDisplayModeCreateInfoKHR where
   fromCStruct = fromCStructDisplayModeCreateInfoKHR
-instance HasPNext DisplayModeCreateInfoKHR where
-  getPNext a = vkPNext (a :: DisplayModeCreateInfoKHR)
+instance HasNext DisplayModeCreateInfoKHR where
+  getNext s = next (s :: DisplayModeCreateInfoKHR)
 instance ToCStruct DisplayPlaneCapabilitiesKHR VkDisplayPlaneCapabilitiesKHR where
   withCStruct = withCStructDisplayPlaneCapabilitiesKHR
 instance FromCStruct DisplayPlaneCapabilitiesKHR VkDisplayPlaneCapabilitiesKHR where
@@ -3512,14 +3800,14 @@ instance ToCStruct DisplaySurfaceCreateInfoKHR VkDisplaySurfaceCreateInfoKHR whe
   withCStruct = withCStructDisplaySurfaceCreateInfoKHR
 instance FromCStruct DisplaySurfaceCreateInfoKHR VkDisplaySurfaceCreateInfoKHR where
   fromCStruct = fromCStructDisplaySurfaceCreateInfoKHR
-instance HasPNext DisplaySurfaceCreateInfoKHR where
-  getPNext a = vkPNext (a :: DisplaySurfaceCreateInfoKHR)
+instance HasNext DisplaySurfaceCreateInfoKHR where
+  getNext s = next (s :: DisplaySurfaceCreateInfoKHR)
 instance ToCStruct DisplayPresentInfoKHR VkDisplayPresentInfoKHR where
   withCStruct = withCStructDisplayPresentInfoKHR
 instance FromCStruct DisplayPresentInfoKHR VkDisplayPresentInfoKHR where
   fromCStruct = fromCStructDisplayPresentInfoKHR
-instance HasPNext DisplayPresentInfoKHR where
-  getPNext a = vkPNext (a :: DisplayPresentInfoKHR)
+instance HasNext DisplayPresentInfoKHR where
+  getNext s = next (s :: DisplayPresentInfoKHR)
 instance ToCStruct SurfaceCapabilitiesKHR VkSurfaceCapabilitiesKHR where
   withCStruct = withCStructSurfaceCapabilitiesKHR
 instance FromCStruct SurfaceCapabilitiesKHR VkSurfaceCapabilitiesKHR where
@@ -3531,8 +3819,8 @@ instance ToCStruct AndroidSurfaceCreateInfoKHR VkAndroidSurfaceCreateInfoKHR whe
   withCStruct = withCStructAndroidSurfaceCreateInfoKHR
 instance FromCStruct AndroidSurfaceCreateInfoKHR VkAndroidSurfaceCreateInfoKHR where
   fromCStruct = fromCStructAndroidSurfaceCreateInfoKHR
-instance HasPNext AndroidSurfaceCreateInfoKHR where
-  getPNext a = vkPNext (a :: AndroidSurfaceCreateInfoKHR)
+instance HasNext AndroidSurfaceCreateInfoKHR where
+  getNext s = next (s :: AndroidSurfaceCreateInfoKHR)
 #endif
 
 #if VK_USE_PLATFORM_VI_NN
@@ -3540,8 +3828,8 @@ instance ToCStruct ViSurfaceCreateInfoNN VkViSurfaceCreateInfoNN where
   withCStruct = withCStructViSurfaceCreateInfoNN
 instance FromCStruct ViSurfaceCreateInfoNN VkViSurfaceCreateInfoNN where
   fromCStruct = fromCStructViSurfaceCreateInfoNN
-instance HasPNext ViSurfaceCreateInfoNN where
-  getPNext a = vkPNext (a :: ViSurfaceCreateInfoNN)
+instance HasNext ViSurfaceCreateInfoNN where
+  getNext s = next (s :: ViSurfaceCreateInfoNN)
 #endif
 
 #if VK_USE_PLATFORM_WAYLAND_KHR
@@ -3549,8 +3837,8 @@ instance ToCStruct WaylandSurfaceCreateInfoKHR VkWaylandSurfaceCreateInfoKHR whe
   withCStruct = withCStructWaylandSurfaceCreateInfoKHR
 instance FromCStruct WaylandSurfaceCreateInfoKHR VkWaylandSurfaceCreateInfoKHR where
   fromCStruct = fromCStructWaylandSurfaceCreateInfoKHR
-instance HasPNext WaylandSurfaceCreateInfoKHR where
-  getPNext a = vkPNext (a :: WaylandSurfaceCreateInfoKHR)
+instance HasNext WaylandSurfaceCreateInfoKHR where
+  getNext s = next (s :: WaylandSurfaceCreateInfoKHR)
 #endif
 
 #if VK_USE_PLATFORM_WIN32_KHR
@@ -3558,8 +3846,8 @@ instance ToCStruct Win32SurfaceCreateInfoKHR VkWin32SurfaceCreateInfoKHR where
   withCStruct = withCStructWin32SurfaceCreateInfoKHR
 instance FromCStruct Win32SurfaceCreateInfoKHR VkWin32SurfaceCreateInfoKHR where
   fromCStruct = fromCStructWin32SurfaceCreateInfoKHR
-instance HasPNext Win32SurfaceCreateInfoKHR where
-  getPNext a = vkPNext (a :: Win32SurfaceCreateInfoKHR)
+instance HasNext Win32SurfaceCreateInfoKHR where
+  getNext s = next (s :: Win32SurfaceCreateInfoKHR)
 #endif
 
 #if VK_USE_PLATFORM_XLIB_KHR
@@ -3567,8 +3855,8 @@ instance ToCStruct XlibSurfaceCreateInfoKHR VkXlibSurfaceCreateInfoKHR where
   withCStruct = withCStructXlibSurfaceCreateInfoKHR
 instance FromCStruct XlibSurfaceCreateInfoKHR VkXlibSurfaceCreateInfoKHR where
   fromCStruct = fromCStructXlibSurfaceCreateInfoKHR
-instance HasPNext XlibSurfaceCreateInfoKHR where
-  getPNext a = vkPNext (a :: XlibSurfaceCreateInfoKHR)
+instance HasNext XlibSurfaceCreateInfoKHR where
+  getNext s = next (s :: XlibSurfaceCreateInfoKHR)
 #endif
 
 #if VK_USE_PLATFORM_XCB_KHR
@@ -3576,8 +3864,8 @@ instance ToCStruct XcbSurfaceCreateInfoKHR VkXcbSurfaceCreateInfoKHR where
   withCStruct = withCStructXcbSurfaceCreateInfoKHR
 instance FromCStruct XcbSurfaceCreateInfoKHR VkXcbSurfaceCreateInfoKHR where
   fromCStruct = fromCStructXcbSurfaceCreateInfoKHR
-instance HasPNext XcbSurfaceCreateInfoKHR where
-  getPNext a = vkPNext (a :: XcbSurfaceCreateInfoKHR)
+instance HasNext XcbSurfaceCreateInfoKHR where
+  getNext s = next (s :: XcbSurfaceCreateInfoKHR)
 #endif
 
 #if VK_USE_PLATFORM_FUCHSIA
@@ -3585,8 +3873,8 @@ instance ToCStruct ImagePipeSurfaceCreateInfoFUCHSIA VkImagePipeSurfaceCreateInf
   withCStruct = withCStructImagePipeSurfaceCreateInfoFUCHSIA
 instance FromCStruct ImagePipeSurfaceCreateInfoFUCHSIA VkImagePipeSurfaceCreateInfoFUCHSIA where
   fromCStruct = fromCStructImagePipeSurfaceCreateInfoFUCHSIA
-instance HasPNext ImagePipeSurfaceCreateInfoFUCHSIA where
-  getPNext a = vkPNext (a :: ImagePipeSurfaceCreateInfoFUCHSIA)
+instance HasNext ImagePipeSurfaceCreateInfoFUCHSIA where
+  getNext s = next (s :: ImagePipeSurfaceCreateInfoFUCHSIA)
 #endif
 
 #if VK_USE_PLATFORM_GGP
@@ -3594,8 +3882,8 @@ instance ToCStruct StreamDescriptorSurfaceCreateInfoGGP VkStreamDescriptorSurfac
   withCStruct = withCStructStreamDescriptorSurfaceCreateInfoGGP
 instance FromCStruct StreamDescriptorSurfaceCreateInfoGGP VkStreamDescriptorSurfaceCreateInfoGGP where
   fromCStruct = fromCStructStreamDescriptorSurfaceCreateInfoGGP
-instance HasPNext StreamDescriptorSurfaceCreateInfoGGP where
-  getPNext a = vkPNext (a :: StreamDescriptorSurfaceCreateInfoGGP)
+instance HasNext StreamDescriptorSurfaceCreateInfoGGP where
+  getNext s = next (s :: StreamDescriptorSurfaceCreateInfoGGP)
 #endif
 instance ToCStruct SurfaceFormatKHR VkSurfaceFormatKHR where
   withCStruct = withCStructSurfaceFormatKHR
@@ -3606,74 +3894,74 @@ instance ToCStruct SwapchainCreateInfoKHR VkSwapchainCreateInfoKHR where
   withCStruct = withCStructSwapchainCreateInfoKHR
 instance FromCStruct SwapchainCreateInfoKHR VkSwapchainCreateInfoKHR where
   fromCStruct = fromCStructSwapchainCreateInfoKHR
-instance HasPNext SwapchainCreateInfoKHR where
-  getPNext a = vkPNext (a :: SwapchainCreateInfoKHR)
+instance HasNext SwapchainCreateInfoKHR where
+  getNext s = next (s :: SwapchainCreateInfoKHR)
 instance ToCStruct PresentInfoKHR VkPresentInfoKHR where
   withCStruct = withCStructPresentInfoKHR
 instance FromCStruct PresentInfoKHR VkPresentInfoKHR where
   fromCStruct = fromCStructPresentInfoKHR
-instance HasPNext PresentInfoKHR where
-  getPNext a = vkPNext (a :: PresentInfoKHR)
+instance HasNext PresentInfoKHR where
+  getNext s = next (s :: PresentInfoKHR)
 instance ToCStruct DebugReportCallbackCreateInfoEXT VkDebugReportCallbackCreateInfoEXT where
   withCStruct = withCStructDebugReportCallbackCreateInfoEXT
 instance FromCStruct DebugReportCallbackCreateInfoEXT VkDebugReportCallbackCreateInfoEXT where
   fromCStruct = fromCStructDebugReportCallbackCreateInfoEXT
-instance HasPNext DebugReportCallbackCreateInfoEXT where
-  getPNext a = vkPNext (a :: DebugReportCallbackCreateInfoEXT)
+instance HasNext DebugReportCallbackCreateInfoEXT where
+  getNext s = next (s :: DebugReportCallbackCreateInfoEXT)
 instance ToCStruct ValidationFlagsEXT VkValidationFlagsEXT where
   withCStruct = withCStructValidationFlagsEXT
 instance FromCStruct ValidationFlagsEXT VkValidationFlagsEXT where
   fromCStruct = fromCStructValidationFlagsEXT
-instance HasPNext ValidationFlagsEXT where
-  getPNext a = vkPNext (a :: ValidationFlagsEXT)
+instance HasNext ValidationFlagsEXT where
+  getNext s = next (s :: ValidationFlagsEXT)
 instance ToCStruct ValidationFeaturesEXT VkValidationFeaturesEXT where
   withCStruct = withCStructValidationFeaturesEXT
 instance FromCStruct ValidationFeaturesEXT VkValidationFeaturesEXT where
   fromCStruct = fromCStructValidationFeaturesEXT
-instance HasPNext ValidationFeaturesEXT where
-  getPNext a = vkPNext (a :: ValidationFeaturesEXT)
+instance HasNext ValidationFeaturesEXT where
+  getNext s = next (s :: ValidationFeaturesEXT)
 instance ToCStruct PipelineRasterizationStateRasterizationOrderAMD VkPipelineRasterizationStateRasterizationOrderAMD where
   withCStruct = withCStructPipelineRasterizationStateRasterizationOrderAMD
 instance FromCStruct PipelineRasterizationStateRasterizationOrderAMD VkPipelineRasterizationStateRasterizationOrderAMD where
   fromCStruct = fromCStructPipelineRasterizationStateRasterizationOrderAMD
-instance HasPNext PipelineRasterizationStateRasterizationOrderAMD where
-  getPNext a = vkPNext (a :: PipelineRasterizationStateRasterizationOrderAMD)
+instance HasNext PipelineRasterizationStateRasterizationOrderAMD where
+  getNext s = next (s :: PipelineRasterizationStateRasterizationOrderAMD)
 instance ToCStruct DebugMarkerObjectNameInfoEXT VkDebugMarkerObjectNameInfoEXT where
   withCStruct = withCStructDebugMarkerObjectNameInfoEXT
 instance FromCStruct DebugMarkerObjectNameInfoEXT VkDebugMarkerObjectNameInfoEXT where
   fromCStruct = fromCStructDebugMarkerObjectNameInfoEXT
-instance HasPNext DebugMarkerObjectNameInfoEXT where
-  getPNext a = vkPNext (a :: DebugMarkerObjectNameInfoEXT)
+instance HasNext DebugMarkerObjectNameInfoEXT where
+  getNext s = next (s :: DebugMarkerObjectNameInfoEXT)
 instance ToCStruct DebugMarkerObjectTagInfoEXT VkDebugMarkerObjectTagInfoEXT where
   withCStruct = withCStructDebugMarkerObjectTagInfoEXT
 instance FromCStruct DebugMarkerObjectTagInfoEXT VkDebugMarkerObjectTagInfoEXT where
   fromCStruct = fromCStructDebugMarkerObjectTagInfoEXT
-instance HasPNext DebugMarkerObjectTagInfoEXT where
-  getPNext a = vkPNext (a :: DebugMarkerObjectTagInfoEXT)
+instance HasNext DebugMarkerObjectTagInfoEXT where
+  getNext s = next (s :: DebugMarkerObjectTagInfoEXT)
 instance ToCStruct DebugMarkerMarkerInfoEXT VkDebugMarkerMarkerInfoEXT where
   withCStruct = withCStructDebugMarkerMarkerInfoEXT
 instance FromCStruct DebugMarkerMarkerInfoEXT VkDebugMarkerMarkerInfoEXT where
   fromCStruct = fromCStructDebugMarkerMarkerInfoEXT
-instance HasPNext DebugMarkerMarkerInfoEXT where
-  getPNext a = vkPNext (a :: DebugMarkerMarkerInfoEXT)
+instance HasNext DebugMarkerMarkerInfoEXT where
+  getNext s = next (s :: DebugMarkerMarkerInfoEXT)
 instance ToCStruct DedicatedAllocationImageCreateInfoNV VkDedicatedAllocationImageCreateInfoNV where
   withCStruct = withCStructDedicatedAllocationImageCreateInfoNV
 instance FromCStruct DedicatedAllocationImageCreateInfoNV VkDedicatedAllocationImageCreateInfoNV where
   fromCStruct = fromCStructDedicatedAllocationImageCreateInfoNV
-instance HasPNext DedicatedAllocationImageCreateInfoNV where
-  getPNext a = vkPNext (a :: DedicatedAllocationImageCreateInfoNV)
+instance HasNext DedicatedAllocationImageCreateInfoNV where
+  getNext s = next (s :: DedicatedAllocationImageCreateInfoNV)
 instance ToCStruct DedicatedAllocationBufferCreateInfoNV VkDedicatedAllocationBufferCreateInfoNV where
   withCStruct = withCStructDedicatedAllocationBufferCreateInfoNV
 instance FromCStruct DedicatedAllocationBufferCreateInfoNV VkDedicatedAllocationBufferCreateInfoNV where
   fromCStruct = fromCStructDedicatedAllocationBufferCreateInfoNV
-instance HasPNext DedicatedAllocationBufferCreateInfoNV where
-  getPNext a = vkPNext (a :: DedicatedAllocationBufferCreateInfoNV)
+instance HasNext DedicatedAllocationBufferCreateInfoNV where
+  getNext s = next (s :: DedicatedAllocationBufferCreateInfoNV)
 instance ToCStruct DedicatedAllocationMemoryAllocateInfoNV VkDedicatedAllocationMemoryAllocateInfoNV where
   withCStruct = withCStructDedicatedAllocationMemoryAllocateInfoNV
 instance FromCStruct DedicatedAllocationMemoryAllocateInfoNV VkDedicatedAllocationMemoryAllocateInfoNV where
   fromCStruct = fromCStructDedicatedAllocationMemoryAllocateInfoNV
-instance HasPNext DedicatedAllocationMemoryAllocateInfoNV where
-  getPNext a = vkPNext (a :: DedicatedAllocationMemoryAllocateInfoNV)
+instance HasNext DedicatedAllocationMemoryAllocateInfoNV where
+  getNext s = next (s :: DedicatedAllocationMemoryAllocateInfoNV)
 instance ToCStruct ExternalImageFormatPropertiesNV VkExternalImageFormatPropertiesNV where
   withCStruct = withCStructExternalImageFormatPropertiesNV
 instance FromCStruct ExternalImageFormatPropertiesNV VkExternalImageFormatPropertiesNV where
@@ -3683,22 +3971,22 @@ instance ToCStruct ExternalMemoryImageCreateInfoNV VkExternalMemoryImageCreateIn
   withCStruct = withCStructExternalMemoryImageCreateInfoNV
 instance FromCStruct ExternalMemoryImageCreateInfoNV VkExternalMemoryImageCreateInfoNV where
   fromCStruct = fromCStructExternalMemoryImageCreateInfoNV
-instance HasPNext ExternalMemoryImageCreateInfoNV where
-  getPNext a = vkPNext (a :: ExternalMemoryImageCreateInfoNV)
+instance HasNext ExternalMemoryImageCreateInfoNV where
+  getNext s = next (s :: ExternalMemoryImageCreateInfoNV)
 instance ToCStruct ExportMemoryAllocateInfoNV VkExportMemoryAllocateInfoNV where
   withCStruct = withCStructExportMemoryAllocateInfoNV
 instance FromCStruct ExportMemoryAllocateInfoNV VkExportMemoryAllocateInfoNV where
   fromCStruct = fromCStructExportMemoryAllocateInfoNV
-instance HasPNext ExportMemoryAllocateInfoNV where
-  getPNext a = vkPNext (a :: ExportMemoryAllocateInfoNV)
+instance HasNext ExportMemoryAllocateInfoNV where
+  getNext s = next (s :: ExportMemoryAllocateInfoNV)
 
 #if VK_USE_PLATFORM_WIN32_KHR
 instance ToCStruct ImportMemoryWin32HandleInfoNV VkImportMemoryWin32HandleInfoNV where
   withCStruct = withCStructImportMemoryWin32HandleInfoNV
 instance FromCStruct ImportMemoryWin32HandleInfoNV VkImportMemoryWin32HandleInfoNV where
   fromCStruct = fromCStructImportMemoryWin32HandleInfoNV
-instance HasPNext ImportMemoryWin32HandleInfoNV where
-  getPNext a = vkPNext (a :: ImportMemoryWin32HandleInfoNV)
+instance HasNext ImportMemoryWin32HandleInfoNV where
+  getNext s = next (s :: ImportMemoryWin32HandleInfoNV)
 #endif
 
 #if VK_USE_PLATFORM_WIN32_KHR
@@ -3706,8 +3994,8 @@ instance ToCStruct ExportMemoryWin32HandleInfoNV VkExportMemoryWin32HandleInfoNV
   withCStruct = withCStructExportMemoryWin32HandleInfoNV
 instance FromCStruct ExportMemoryWin32HandleInfoNV VkExportMemoryWin32HandleInfoNV where
   fromCStruct = fromCStructExportMemoryWin32HandleInfoNV
-instance HasPNext ExportMemoryWin32HandleInfoNV where
-  getPNext a = vkPNext (a :: ExportMemoryWin32HandleInfoNV)
+instance HasNext ExportMemoryWin32HandleInfoNV where
+  getNext s = next (s :: ExportMemoryWin32HandleInfoNV)
 #endif
 
 #if VK_USE_PLATFORM_WIN32_KHR
@@ -3715,21 +4003,21 @@ instance ToCStruct Win32KeyedMutexAcquireReleaseInfoNV VkWin32KeyedMutexAcquireR
   withCStruct = withCStructWin32KeyedMutexAcquireReleaseInfoNV
 instance FromCStruct Win32KeyedMutexAcquireReleaseInfoNV VkWin32KeyedMutexAcquireReleaseInfoNV where
   fromCStruct = fromCStructWin32KeyedMutexAcquireReleaseInfoNV
-instance HasPNext Win32KeyedMutexAcquireReleaseInfoNV where
-  getPNext a = vkPNext (a :: Win32KeyedMutexAcquireReleaseInfoNV)
+instance HasNext Win32KeyedMutexAcquireReleaseInfoNV where
+  getNext s = next (s :: Win32KeyedMutexAcquireReleaseInfoNV)
 #endif
 instance ToCStruct DeviceGeneratedCommandsFeaturesNVX VkDeviceGeneratedCommandsFeaturesNVX where
   withCStruct = withCStructDeviceGeneratedCommandsFeaturesNVX
 instance FromCStruct DeviceGeneratedCommandsFeaturesNVX VkDeviceGeneratedCommandsFeaturesNVX where
   fromCStruct = fromCStructDeviceGeneratedCommandsFeaturesNVX
-instance HasPNext DeviceGeneratedCommandsFeaturesNVX where
-  getPNext a = vkPNext (a :: DeviceGeneratedCommandsFeaturesNVX)
+instance HasNext DeviceGeneratedCommandsFeaturesNVX where
+  getNext s = next (s :: DeviceGeneratedCommandsFeaturesNVX)
 instance ToCStruct DeviceGeneratedCommandsLimitsNVX VkDeviceGeneratedCommandsLimitsNVX where
   withCStruct = withCStructDeviceGeneratedCommandsLimitsNVX
 instance FromCStruct DeviceGeneratedCommandsLimitsNVX VkDeviceGeneratedCommandsLimitsNVX where
   fromCStruct = fromCStructDeviceGeneratedCommandsLimitsNVX
-instance HasPNext DeviceGeneratedCommandsLimitsNVX where
-  getPNext a = vkPNext (a :: DeviceGeneratedCommandsLimitsNVX)
+instance HasNext DeviceGeneratedCommandsLimitsNVX where
+  getNext s = next (s :: DeviceGeneratedCommandsLimitsNVX)
 instance ToCStruct IndirectCommandsTokenNVX VkIndirectCommandsTokenNVX where
   withCStruct = withCStructIndirectCommandsTokenNVX
 instance FromCStruct IndirectCommandsTokenNVX VkIndirectCommandsTokenNVX where
@@ -3744,25 +4032,25 @@ instance ToCStruct IndirectCommandsLayoutCreateInfoNVX VkIndirectCommandsLayoutC
   withCStruct = withCStructIndirectCommandsLayoutCreateInfoNVX
 instance FromCStruct IndirectCommandsLayoutCreateInfoNVX VkIndirectCommandsLayoutCreateInfoNVX where
   fromCStruct = fromCStructIndirectCommandsLayoutCreateInfoNVX
-instance HasPNext IndirectCommandsLayoutCreateInfoNVX where
-  getPNext a = vkPNext (a :: IndirectCommandsLayoutCreateInfoNVX)
+instance HasNext IndirectCommandsLayoutCreateInfoNVX where
+  getNext s = next (s :: IndirectCommandsLayoutCreateInfoNVX)
 instance ToCStruct CmdProcessCommandsInfoNVX VkCmdProcessCommandsInfoNVX where
   withCStruct = withCStructCmdProcessCommandsInfoNVX
 -- No FromCStruct instance for VkCmdProcessCommandsInfoNVX as it contains a dispatchable handle
-instance HasPNext CmdProcessCommandsInfoNVX where
-  getPNext a = vkPNext (a :: CmdProcessCommandsInfoNVX)
+instance HasNext CmdProcessCommandsInfoNVX where
+  getNext s = next (s :: CmdProcessCommandsInfoNVX)
 instance ToCStruct CmdReserveSpaceForCommandsInfoNVX VkCmdReserveSpaceForCommandsInfoNVX where
   withCStruct = withCStructCmdReserveSpaceForCommandsInfoNVX
 instance FromCStruct CmdReserveSpaceForCommandsInfoNVX VkCmdReserveSpaceForCommandsInfoNVX where
   fromCStruct = fromCStructCmdReserveSpaceForCommandsInfoNVX
-instance HasPNext CmdReserveSpaceForCommandsInfoNVX where
-  getPNext a = vkPNext (a :: CmdReserveSpaceForCommandsInfoNVX)
+instance HasNext CmdReserveSpaceForCommandsInfoNVX where
+  getNext s = next (s :: CmdReserveSpaceForCommandsInfoNVX)
 instance ToCStruct ObjectTableCreateInfoNVX VkObjectTableCreateInfoNVX where
   withCStruct = withCStructObjectTableCreateInfoNVX
 instance FromCStruct ObjectTableCreateInfoNVX VkObjectTableCreateInfoNVX where
   fromCStruct = fromCStructObjectTableCreateInfoNVX
-instance HasPNext ObjectTableCreateInfoNVX where
-  getPNext a = vkPNext (a :: ObjectTableCreateInfoNVX)
+instance HasNext ObjectTableCreateInfoNVX where
+  getNext s = next (s :: ObjectTableCreateInfoNVX)
 instance ToCStruct ObjectTableEntryNVX VkObjectTableEntryNVX where
   withCStruct = withCStructObjectTableEntryNVX
 instance FromCStruct ObjectTableEntryNVX VkObjectTableEntryNVX where
@@ -3797,62 +4085,62 @@ instance ToCStruct PhysicalDeviceFeatures2 VkPhysicalDeviceFeatures2 where
   withCStruct = withCStructPhysicalDeviceFeatures2
 instance FromCStruct PhysicalDeviceFeatures2 VkPhysicalDeviceFeatures2 where
   fromCStruct = fromCStructPhysicalDeviceFeatures2
-instance HasPNext PhysicalDeviceFeatures2 where
-  getPNext a = vkPNext (a :: PhysicalDeviceFeatures2)
+instance HasNext PhysicalDeviceFeatures2 where
+  getNext s = next (s :: PhysicalDeviceFeatures2)
 instance ToCStruct PhysicalDeviceProperties2 VkPhysicalDeviceProperties2 where
   withCStruct = withCStructPhysicalDeviceProperties2
 instance FromCStruct PhysicalDeviceProperties2 VkPhysicalDeviceProperties2 where
   fromCStruct = fromCStructPhysicalDeviceProperties2
-instance HasPNext PhysicalDeviceProperties2 where
-  getPNext a = vkPNext (a :: PhysicalDeviceProperties2)
+instance HasNext PhysicalDeviceProperties2 where
+  getNext s = next (s :: PhysicalDeviceProperties2)
 instance ToCStruct FormatProperties2 VkFormatProperties2 where
   withCStruct = withCStructFormatProperties2
 instance FromCStruct FormatProperties2 VkFormatProperties2 where
   fromCStruct = fromCStructFormatProperties2
-instance HasPNext FormatProperties2 where
-  getPNext a = vkPNext (a :: FormatProperties2)
+instance HasNext FormatProperties2 where
+  getNext s = next (s :: FormatProperties2)
 instance ToCStruct ImageFormatProperties2 VkImageFormatProperties2 where
   withCStruct = withCStructImageFormatProperties2
 instance FromCStruct ImageFormatProperties2 VkImageFormatProperties2 where
   fromCStruct = fromCStructImageFormatProperties2
-instance HasPNext ImageFormatProperties2 where
-  getPNext a = vkPNext (a :: ImageFormatProperties2)
+instance HasNext ImageFormatProperties2 where
+  getNext s = next (s :: ImageFormatProperties2)
 instance ToCStruct PhysicalDeviceImageFormatInfo2 VkPhysicalDeviceImageFormatInfo2 where
   withCStruct = withCStructPhysicalDeviceImageFormatInfo2
 instance FromCStruct PhysicalDeviceImageFormatInfo2 VkPhysicalDeviceImageFormatInfo2 where
   fromCStruct = fromCStructPhysicalDeviceImageFormatInfo2
-instance HasPNext PhysicalDeviceImageFormatInfo2 where
-  getPNext a = vkPNext (a :: PhysicalDeviceImageFormatInfo2)
+instance HasNext PhysicalDeviceImageFormatInfo2 where
+  getNext s = next (s :: PhysicalDeviceImageFormatInfo2)
 instance ToCStruct QueueFamilyProperties2 VkQueueFamilyProperties2 where
   withCStruct = withCStructQueueFamilyProperties2
 instance FromCStruct QueueFamilyProperties2 VkQueueFamilyProperties2 where
   fromCStruct = fromCStructQueueFamilyProperties2
-instance HasPNext QueueFamilyProperties2 where
-  getPNext a = vkPNext (a :: QueueFamilyProperties2)
+instance HasNext QueueFamilyProperties2 where
+  getNext s = next (s :: QueueFamilyProperties2)
 instance ToCStruct PhysicalDeviceMemoryProperties2 VkPhysicalDeviceMemoryProperties2 where
   withCStruct = withCStructPhysicalDeviceMemoryProperties2
 instance FromCStruct PhysicalDeviceMemoryProperties2 VkPhysicalDeviceMemoryProperties2 where
   fromCStruct = fromCStructPhysicalDeviceMemoryProperties2
-instance HasPNext PhysicalDeviceMemoryProperties2 where
-  getPNext a = vkPNext (a :: PhysicalDeviceMemoryProperties2)
+instance HasNext PhysicalDeviceMemoryProperties2 where
+  getNext s = next (s :: PhysicalDeviceMemoryProperties2)
 instance ToCStruct SparseImageFormatProperties2 VkSparseImageFormatProperties2 where
   withCStruct = withCStructSparseImageFormatProperties2
 instance FromCStruct SparseImageFormatProperties2 VkSparseImageFormatProperties2 where
   fromCStruct = fromCStructSparseImageFormatProperties2
-instance HasPNext SparseImageFormatProperties2 where
-  getPNext a = vkPNext (a :: SparseImageFormatProperties2)
+instance HasNext SparseImageFormatProperties2 where
+  getNext s = next (s :: SparseImageFormatProperties2)
 instance ToCStruct PhysicalDeviceSparseImageFormatInfo2 VkPhysicalDeviceSparseImageFormatInfo2 where
   withCStruct = withCStructPhysicalDeviceSparseImageFormatInfo2
 instance FromCStruct PhysicalDeviceSparseImageFormatInfo2 VkPhysicalDeviceSparseImageFormatInfo2 where
   fromCStruct = fromCStructPhysicalDeviceSparseImageFormatInfo2
-instance HasPNext PhysicalDeviceSparseImageFormatInfo2 where
-  getPNext a = vkPNext (a :: PhysicalDeviceSparseImageFormatInfo2)
+instance HasNext PhysicalDeviceSparseImageFormatInfo2 where
+  getNext s = next (s :: PhysicalDeviceSparseImageFormatInfo2)
 instance ToCStruct PhysicalDevicePushDescriptorPropertiesKHR VkPhysicalDevicePushDescriptorPropertiesKHR where
   withCStruct = withCStructPhysicalDevicePushDescriptorPropertiesKHR
 instance FromCStruct PhysicalDevicePushDescriptorPropertiesKHR VkPhysicalDevicePushDescriptorPropertiesKHR where
   fromCStruct = fromCStructPhysicalDevicePushDescriptorPropertiesKHR
-instance HasPNext PhysicalDevicePushDescriptorPropertiesKHR where
-  getPNext a = vkPNext (a :: PhysicalDevicePushDescriptorPropertiesKHR)
+instance HasNext PhysicalDevicePushDescriptorPropertiesKHR where
+  getNext s = next (s :: PhysicalDevicePushDescriptorPropertiesKHR)
 instance ToCStruct ConformanceVersionKHR VkConformanceVersionKHR where
   withCStruct = withCStructConformanceVersionKHR
 instance FromCStruct ConformanceVersionKHR VkConformanceVersionKHR where
@@ -3862,14 +4150,14 @@ instance ToCStruct PhysicalDeviceDriverPropertiesKHR VkPhysicalDeviceDriverPrope
   withCStruct = withCStructPhysicalDeviceDriverPropertiesKHR
 instance FromCStruct PhysicalDeviceDriverPropertiesKHR VkPhysicalDeviceDriverPropertiesKHR where
   fromCStruct = fromCStructPhysicalDeviceDriverPropertiesKHR
-instance HasPNext PhysicalDeviceDriverPropertiesKHR where
-  getPNext a = vkPNext (a :: PhysicalDeviceDriverPropertiesKHR)
+instance HasNext PhysicalDeviceDriverPropertiesKHR where
+  getNext s = next (s :: PhysicalDeviceDriverPropertiesKHR)
 instance ToCStruct PresentRegionsKHR VkPresentRegionsKHR where
   withCStruct = withCStructPresentRegionsKHR
 instance FromCStruct PresentRegionsKHR VkPresentRegionsKHR where
   fromCStruct = fromCStructPresentRegionsKHR
-instance HasPNext PresentRegionsKHR where
-  getPNext a = vkPNext (a :: PresentRegionsKHR)
+instance HasNext PresentRegionsKHR where
+  getNext s = next (s :: PresentRegionsKHR)
 instance ToCStruct PresentRegionKHR VkPresentRegionKHR where
   withCStruct = withCStructPresentRegionKHR
 instance FromCStruct PresentRegionKHR VkPresentRegionKHR where
@@ -3884,8 +4172,8 @@ instance ToCStruct PhysicalDeviceVariablePointersFeatures VkPhysicalDeviceVariab
   withCStruct = withCStructPhysicalDeviceVariablePointersFeatures
 instance FromCStruct PhysicalDeviceVariablePointersFeatures VkPhysicalDeviceVariablePointersFeatures where
   fromCStruct = fromCStructPhysicalDeviceVariablePointersFeatures
-instance HasPNext PhysicalDeviceVariablePointersFeatures where
-  getPNext a = vkPNext (a :: PhysicalDeviceVariablePointersFeatures)
+instance HasNext PhysicalDeviceVariablePointersFeatures where
+  getNext s = next (s :: PhysicalDeviceVariablePointersFeatures)
 instance ToCStruct ExternalMemoryProperties VkExternalMemoryProperties where
   withCStruct = withCStructExternalMemoryProperties
 instance FromCStruct ExternalMemoryProperties VkExternalMemoryProperties where
@@ -3895,58 +4183,58 @@ instance ToCStruct PhysicalDeviceExternalImageFormatInfo VkPhysicalDeviceExterna
   withCStruct = withCStructPhysicalDeviceExternalImageFormatInfo
 instance FromCStruct PhysicalDeviceExternalImageFormatInfo VkPhysicalDeviceExternalImageFormatInfo where
   fromCStruct = fromCStructPhysicalDeviceExternalImageFormatInfo
-instance HasPNext PhysicalDeviceExternalImageFormatInfo where
-  getPNext a = vkPNext (a :: PhysicalDeviceExternalImageFormatInfo)
+instance HasNext PhysicalDeviceExternalImageFormatInfo where
+  getNext s = next (s :: PhysicalDeviceExternalImageFormatInfo)
 instance ToCStruct ExternalImageFormatProperties VkExternalImageFormatProperties where
   withCStruct = withCStructExternalImageFormatProperties
 instance FromCStruct ExternalImageFormatProperties VkExternalImageFormatProperties where
   fromCStruct = fromCStructExternalImageFormatProperties
-instance HasPNext ExternalImageFormatProperties where
-  getPNext a = vkPNext (a :: ExternalImageFormatProperties)
+instance HasNext ExternalImageFormatProperties where
+  getNext s = next (s :: ExternalImageFormatProperties)
 instance ToCStruct PhysicalDeviceExternalBufferInfo VkPhysicalDeviceExternalBufferInfo where
   withCStruct = withCStructPhysicalDeviceExternalBufferInfo
 instance FromCStruct PhysicalDeviceExternalBufferInfo VkPhysicalDeviceExternalBufferInfo where
   fromCStruct = fromCStructPhysicalDeviceExternalBufferInfo
-instance HasPNext PhysicalDeviceExternalBufferInfo where
-  getPNext a = vkPNext (a :: PhysicalDeviceExternalBufferInfo)
+instance HasNext PhysicalDeviceExternalBufferInfo where
+  getNext s = next (s :: PhysicalDeviceExternalBufferInfo)
 instance ToCStruct ExternalBufferProperties VkExternalBufferProperties where
   withCStruct = withCStructExternalBufferProperties
 instance FromCStruct ExternalBufferProperties VkExternalBufferProperties where
   fromCStruct = fromCStructExternalBufferProperties
-instance HasPNext ExternalBufferProperties where
-  getPNext a = vkPNext (a :: ExternalBufferProperties)
+instance HasNext ExternalBufferProperties where
+  getNext s = next (s :: ExternalBufferProperties)
 instance ToCStruct PhysicalDeviceIDProperties VkPhysicalDeviceIDProperties where
   withCStruct = withCStructPhysicalDeviceIDProperties
 instance FromCStruct PhysicalDeviceIDProperties VkPhysicalDeviceIDProperties where
   fromCStruct = fromCStructPhysicalDeviceIDProperties
-instance HasPNext PhysicalDeviceIDProperties where
-  getPNext a = vkPNext (a :: PhysicalDeviceIDProperties)
+instance HasNext PhysicalDeviceIDProperties where
+  getNext s = next (s :: PhysicalDeviceIDProperties)
 instance ToCStruct ExternalMemoryImageCreateInfo VkExternalMemoryImageCreateInfo where
   withCStruct = withCStructExternalMemoryImageCreateInfo
 instance FromCStruct ExternalMemoryImageCreateInfo VkExternalMemoryImageCreateInfo where
   fromCStruct = fromCStructExternalMemoryImageCreateInfo
-instance HasPNext ExternalMemoryImageCreateInfo where
-  getPNext a = vkPNext (a :: ExternalMemoryImageCreateInfo)
+instance HasNext ExternalMemoryImageCreateInfo where
+  getNext s = next (s :: ExternalMemoryImageCreateInfo)
 instance ToCStruct ExternalMemoryBufferCreateInfo VkExternalMemoryBufferCreateInfo where
   withCStruct = withCStructExternalMemoryBufferCreateInfo
 instance FromCStruct ExternalMemoryBufferCreateInfo VkExternalMemoryBufferCreateInfo where
   fromCStruct = fromCStructExternalMemoryBufferCreateInfo
-instance HasPNext ExternalMemoryBufferCreateInfo where
-  getPNext a = vkPNext (a :: ExternalMemoryBufferCreateInfo)
+instance HasNext ExternalMemoryBufferCreateInfo where
+  getNext s = next (s :: ExternalMemoryBufferCreateInfo)
 instance ToCStruct ExportMemoryAllocateInfo VkExportMemoryAllocateInfo where
   withCStruct = withCStructExportMemoryAllocateInfo
 instance FromCStruct ExportMemoryAllocateInfo VkExportMemoryAllocateInfo where
   fromCStruct = fromCStructExportMemoryAllocateInfo
-instance HasPNext ExportMemoryAllocateInfo where
-  getPNext a = vkPNext (a :: ExportMemoryAllocateInfo)
+instance HasNext ExportMemoryAllocateInfo where
+  getNext s = next (s :: ExportMemoryAllocateInfo)
 
 #if VK_USE_PLATFORM_WIN32_KHR
 instance ToCStruct ImportMemoryWin32HandleInfoKHR VkImportMemoryWin32HandleInfoKHR where
   withCStruct = withCStructImportMemoryWin32HandleInfoKHR
 instance FromCStruct ImportMemoryWin32HandleInfoKHR VkImportMemoryWin32HandleInfoKHR where
   fromCStruct = fromCStructImportMemoryWin32HandleInfoKHR
-instance HasPNext ImportMemoryWin32HandleInfoKHR where
-  getPNext a = vkPNext (a :: ImportMemoryWin32HandleInfoKHR)
+instance HasNext ImportMemoryWin32HandleInfoKHR where
+  getNext s = next (s :: ImportMemoryWin32HandleInfoKHR)
 #endif
 
 #if VK_USE_PLATFORM_WIN32_KHR
@@ -3954,8 +4242,8 @@ instance ToCStruct ExportMemoryWin32HandleInfoKHR VkExportMemoryWin32HandleInfoK
   withCStruct = withCStructExportMemoryWin32HandleInfoKHR
 instance FromCStruct ExportMemoryWin32HandleInfoKHR VkExportMemoryWin32HandleInfoKHR where
   fromCStruct = fromCStructExportMemoryWin32HandleInfoKHR
-instance HasPNext ExportMemoryWin32HandleInfoKHR where
-  getPNext a = vkPNext (a :: ExportMemoryWin32HandleInfoKHR)
+instance HasNext ExportMemoryWin32HandleInfoKHR where
+  getNext s = next (s :: ExportMemoryWin32HandleInfoKHR)
 #endif
 
 #if VK_USE_PLATFORM_WIN32_KHR
@@ -3963,8 +4251,8 @@ instance ToCStruct MemoryWin32HandlePropertiesKHR VkMemoryWin32HandlePropertiesK
   withCStruct = withCStructMemoryWin32HandlePropertiesKHR
 instance FromCStruct MemoryWin32HandlePropertiesKHR VkMemoryWin32HandlePropertiesKHR where
   fromCStruct = fromCStructMemoryWin32HandlePropertiesKHR
-instance HasPNext MemoryWin32HandlePropertiesKHR where
-  getPNext a = vkPNext (a :: MemoryWin32HandlePropertiesKHR)
+instance HasNext MemoryWin32HandlePropertiesKHR where
+  getNext s = next (s :: MemoryWin32HandlePropertiesKHR)
 #endif
 
 #if VK_USE_PLATFORM_WIN32_KHR
@@ -3972,62 +4260,62 @@ instance ToCStruct MemoryGetWin32HandleInfoKHR VkMemoryGetWin32HandleInfoKHR whe
   withCStruct = withCStructMemoryGetWin32HandleInfoKHR
 instance FromCStruct MemoryGetWin32HandleInfoKHR VkMemoryGetWin32HandleInfoKHR where
   fromCStruct = fromCStructMemoryGetWin32HandleInfoKHR
-instance HasPNext MemoryGetWin32HandleInfoKHR where
-  getPNext a = vkPNext (a :: MemoryGetWin32HandleInfoKHR)
+instance HasNext MemoryGetWin32HandleInfoKHR where
+  getNext s = next (s :: MemoryGetWin32HandleInfoKHR)
 #endif
 instance ToCStruct ImportMemoryFdInfoKHR VkImportMemoryFdInfoKHR where
   withCStruct = withCStructImportMemoryFdInfoKHR
 instance FromCStruct ImportMemoryFdInfoKHR VkImportMemoryFdInfoKHR where
   fromCStruct = fromCStructImportMemoryFdInfoKHR
-instance HasPNext ImportMemoryFdInfoKHR where
-  getPNext a = vkPNext (a :: ImportMemoryFdInfoKHR)
+instance HasNext ImportMemoryFdInfoKHR where
+  getNext s = next (s :: ImportMemoryFdInfoKHR)
 instance ToCStruct MemoryFdPropertiesKHR VkMemoryFdPropertiesKHR where
   withCStruct = withCStructMemoryFdPropertiesKHR
 instance FromCStruct MemoryFdPropertiesKHR VkMemoryFdPropertiesKHR where
   fromCStruct = fromCStructMemoryFdPropertiesKHR
-instance HasPNext MemoryFdPropertiesKHR where
-  getPNext a = vkPNext (a :: MemoryFdPropertiesKHR)
+instance HasNext MemoryFdPropertiesKHR where
+  getNext s = next (s :: MemoryFdPropertiesKHR)
 instance ToCStruct MemoryGetFdInfoKHR VkMemoryGetFdInfoKHR where
   withCStruct = withCStructMemoryGetFdInfoKHR
 instance FromCStruct MemoryGetFdInfoKHR VkMemoryGetFdInfoKHR where
   fromCStruct = fromCStructMemoryGetFdInfoKHR
-instance HasPNext MemoryGetFdInfoKHR where
-  getPNext a = vkPNext (a :: MemoryGetFdInfoKHR)
+instance HasNext MemoryGetFdInfoKHR where
+  getNext s = next (s :: MemoryGetFdInfoKHR)
 
 #if VK_USE_PLATFORM_WIN32_KHR
 instance ToCStruct Win32KeyedMutexAcquireReleaseInfoKHR VkWin32KeyedMutexAcquireReleaseInfoKHR where
   withCStruct = withCStructWin32KeyedMutexAcquireReleaseInfoKHR
 instance FromCStruct Win32KeyedMutexAcquireReleaseInfoKHR VkWin32KeyedMutexAcquireReleaseInfoKHR where
   fromCStruct = fromCStructWin32KeyedMutexAcquireReleaseInfoKHR
-instance HasPNext Win32KeyedMutexAcquireReleaseInfoKHR where
-  getPNext a = vkPNext (a :: Win32KeyedMutexAcquireReleaseInfoKHR)
+instance HasNext Win32KeyedMutexAcquireReleaseInfoKHR where
+  getNext s = next (s :: Win32KeyedMutexAcquireReleaseInfoKHR)
 #endif
 instance ToCStruct PhysicalDeviceExternalSemaphoreInfo VkPhysicalDeviceExternalSemaphoreInfo where
   withCStruct = withCStructPhysicalDeviceExternalSemaphoreInfo
 instance FromCStruct PhysicalDeviceExternalSemaphoreInfo VkPhysicalDeviceExternalSemaphoreInfo where
   fromCStruct = fromCStructPhysicalDeviceExternalSemaphoreInfo
-instance HasPNext PhysicalDeviceExternalSemaphoreInfo where
-  getPNext a = vkPNext (a :: PhysicalDeviceExternalSemaphoreInfo)
+instance HasNext PhysicalDeviceExternalSemaphoreInfo where
+  getNext s = next (s :: PhysicalDeviceExternalSemaphoreInfo)
 instance ToCStruct ExternalSemaphoreProperties VkExternalSemaphoreProperties where
   withCStruct = withCStructExternalSemaphoreProperties
 instance FromCStruct ExternalSemaphoreProperties VkExternalSemaphoreProperties where
   fromCStruct = fromCStructExternalSemaphoreProperties
-instance HasPNext ExternalSemaphoreProperties where
-  getPNext a = vkPNext (a :: ExternalSemaphoreProperties)
+instance HasNext ExternalSemaphoreProperties where
+  getNext s = next (s :: ExternalSemaphoreProperties)
 instance ToCStruct ExportSemaphoreCreateInfo VkExportSemaphoreCreateInfo where
   withCStruct = withCStructExportSemaphoreCreateInfo
 instance FromCStruct ExportSemaphoreCreateInfo VkExportSemaphoreCreateInfo where
   fromCStruct = fromCStructExportSemaphoreCreateInfo
-instance HasPNext ExportSemaphoreCreateInfo where
-  getPNext a = vkPNext (a :: ExportSemaphoreCreateInfo)
+instance HasNext ExportSemaphoreCreateInfo where
+  getNext s = next (s :: ExportSemaphoreCreateInfo)
 
 #if VK_USE_PLATFORM_WIN32_KHR
 instance ToCStruct ImportSemaphoreWin32HandleInfoKHR VkImportSemaphoreWin32HandleInfoKHR where
   withCStruct = withCStructImportSemaphoreWin32HandleInfoKHR
 instance FromCStruct ImportSemaphoreWin32HandleInfoKHR VkImportSemaphoreWin32HandleInfoKHR where
   fromCStruct = fromCStructImportSemaphoreWin32HandleInfoKHR
-instance HasPNext ImportSemaphoreWin32HandleInfoKHR where
-  getPNext a = vkPNext (a :: ImportSemaphoreWin32HandleInfoKHR)
+instance HasNext ImportSemaphoreWin32HandleInfoKHR where
+  getNext s = next (s :: ImportSemaphoreWin32HandleInfoKHR)
 #endif
 
 #if VK_USE_PLATFORM_WIN32_KHR
@@ -4035,8 +4323,8 @@ instance ToCStruct ExportSemaphoreWin32HandleInfoKHR VkExportSemaphoreWin32Handl
   withCStruct = withCStructExportSemaphoreWin32HandleInfoKHR
 instance FromCStruct ExportSemaphoreWin32HandleInfoKHR VkExportSemaphoreWin32HandleInfoKHR where
   fromCStruct = fromCStructExportSemaphoreWin32HandleInfoKHR
-instance HasPNext ExportSemaphoreWin32HandleInfoKHR where
-  getPNext a = vkPNext (a :: ExportSemaphoreWin32HandleInfoKHR)
+instance HasNext ExportSemaphoreWin32HandleInfoKHR where
+  getNext s = next (s :: ExportSemaphoreWin32HandleInfoKHR)
 #endif
 
 #if VK_USE_PLATFORM_WIN32_KHR
@@ -4044,8 +4332,8 @@ instance ToCStruct D3D12FenceSubmitInfoKHR VkD3D12FenceSubmitInfoKHR where
   withCStruct = withCStructD3D12FenceSubmitInfoKHR
 instance FromCStruct D3D12FenceSubmitInfoKHR VkD3D12FenceSubmitInfoKHR where
   fromCStruct = fromCStructD3D12FenceSubmitInfoKHR
-instance HasPNext D3D12FenceSubmitInfoKHR where
-  getPNext a = vkPNext (a :: D3D12FenceSubmitInfoKHR)
+instance HasNext D3D12FenceSubmitInfoKHR where
+  getNext s = next (s :: D3D12FenceSubmitInfoKHR)
 #endif
 
 #if VK_USE_PLATFORM_WIN32_KHR
@@ -4053,47 +4341,47 @@ instance ToCStruct SemaphoreGetWin32HandleInfoKHR VkSemaphoreGetWin32HandleInfoK
   withCStruct = withCStructSemaphoreGetWin32HandleInfoKHR
 instance FromCStruct SemaphoreGetWin32HandleInfoKHR VkSemaphoreGetWin32HandleInfoKHR where
   fromCStruct = fromCStructSemaphoreGetWin32HandleInfoKHR
-instance HasPNext SemaphoreGetWin32HandleInfoKHR where
-  getPNext a = vkPNext (a :: SemaphoreGetWin32HandleInfoKHR)
+instance HasNext SemaphoreGetWin32HandleInfoKHR where
+  getNext s = next (s :: SemaphoreGetWin32HandleInfoKHR)
 #endif
 instance ToCStruct ImportSemaphoreFdInfoKHR VkImportSemaphoreFdInfoKHR where
   withCStruct = withCStructImportSemaphoreFdInfoKHR
 instance FromCStruct ImportSemaphoreFdInfoKHR VkImportSemaphoreFdInfoKHR where
   fromCStruct = fromCStructImportSemaphoreFdInfoKHR
-instance HasPNext ImportSemaphoreFdInfoKHR where
-  getPNext a = vkPNext (a :: ImportSemaphoreFdInfoKHR)
+instance HasNext ImportSemaphoreFdInfoKHR where
+  getNext s = next (s :: ImportSemaphoreFdInfoKHR)
 instance ToCStruct SemaphoreGetFdInfoKHR VkSemaphoreGetFdInfoKHR where
   withCStruct = withCStructSemaphoreGetFdInfoKHR
 instance FromCStruct SemaphoreGetFdInfoKHR VkSemaphoreGetFdInfoKHR where
   fromCStruct = fromCStructSemaphoreGetFdInfoKHR
-instance HasPNext SemaphoreGetFdInfoKHR where
-  getPNext a = vkPNext (a :: SemaphoreGetFdInfoKHR)
+instance HasNext SemaphoreGetFdInfoKHR where
+  getNext s = next (s :: SemaphoreGetFdInfoKHR)
 instance ToCStruct PhysicalDeviceExternalFenceInfo VkPhysicalDeviceExternalFenceInfo where
   withCStruct = withCStructPhysicalDeviceExternalFenceInfo
 instance FromCStruct PhysicalDeviceExternalFenceInfo VkPhysicalDeviceExternalFenceInfo where
   fromCStruct = fromCStructPhysicalDeviceExternalFenceInfo
-instance HasPNext PhysicalDeviceExternalFenceInfo where
-  getPNext a = vkPNext (a :: PhysicalDeviceExternalFenceInfo)
+instance HasNext PhysicalDeviceExternalFenceInfo where
+  getNext s = next (s :: PhysicalDeviceExternalFenceInfo)
 instance ToCStruct ExternalFenceProperties VkExternalFenceProperties where
   withCStruct = withCStructExternalFenceProperties
 instance FromCStruct ExternalFenceProperties VkExternalFenceProperties where
   fromCStruct = fromCStructExternalFenceProperties
-instance HasPNext ExternalFenceProperties where
-  getPNext a = vkPNext (a :: ExternalFenceProperties)
+instance HasNext ExternalFenceProperties where
+  getNext s = next (s :: ExternalFenceProperties)
 instance ToCStruct ExportFenceCreateInfo VkExportFenceCreateInfo where
   withCStruct = withCStructExportFenceCreateInfo
 instance FromCStruct ExportFenceCreateInfo VkExportFenceCreateInfo where
   fromCStruct = fromCStructExportFenceCreateInfo
-instance HasPNext ExportFenceCreateInfo where
-  getPNext a = vkPNext (a :: ExportFenceCreateInfo)
+instance HasNext ExportFenceCreateInfo where
+  getNext s = next (s :: ExportFenceCreateInfo)
 
 #if VK_USE_PLATFORM_WIN32_KHR
 instance ToCStruct ImportFenceWin32HandleInfoKHR VkImportFenceWin32HandleInfoKHR where
   withCStruct = withCStructImportFenceWin32HandleInfoKHR
 instance FromCStruct ImportFenceWin32HandleInfoKHR VkImportFenceWin32HandleInfoKHR where
   fromCStruct = fromCStructImportFenceWin32HandleInfoKHR
-instance HasPNext ImportFenceWin32HandleInfoKHR where
-  getPNext a = vkPNext (a :: ImportFenceWin32HandleInfoKHR)
+instance HasNext ImportFenceWin32HandleInfoKHR where
+  getNext s = next (s :: ImportFenceWin32HandleInfoKHR)
 #endif
 
 #if VK_USE_PLATFORM_WIN32_KHR
@@ -4101,8 +4389,8 @@ instance ToCStruct ExportFenceWin32HandleInfoKHR VkExportFenceWin32HandleInfoKHR
   withCStruct = withCStructExportFenceWin32HandleInfoKHR
 instance FromCStruct ExportFenceWin32HandleInfoKHR VkExportFenceWin32HandleInfoKHR where
   fromCStruct = fromCStructExportFenceWin32HandleInfoKHR
-instance HasPNext ExportFenceWin32HandleInfoKHR where
-  getPNext a = vkPNext (a :: ExportFenceWin32HandleInfoKHR)
+instance HasNext ExportFenceWin32HandleInfoKHR where
+  getNext s = next (s :: ExportFenceWin32HandleInfoKHR)
 #endif
 
 #if VK_USE_PLATFORM_WIN32_KHR
@@ -4110,169 +4398,169 @@ instance ToCStruct FenceGetWin32HandleInfoKHR VkFenceGetWin32HandleInfoKHR where
   withCStruct = withCStructFenceGetWin32HandleInfoKHR
 instance FromCStruct FenceGetWin32HandleInfoKHR VkFenceGetWin32HandleInfoKHR where
   fromCStruct = fromCStructFenceGetWin32HandleInfoKHR
-instance HasPNext FenceGetWin32HandleInfoKHR where
-  getPNext a = vkPNext (a :: FenceGetWin32HandleInfoKHR)
+instance HasNext FenceGetWin32HandleInfoKHR where
+  getNext s = next (s :: FenceGetWin32HandleInfoKHR)
 #endif
 instance ToCStruct ImportFenceFdInfoKHR VkImportFenceFdInfoKHR where
   withCStruct = withCStructImportFenceFdInfoKHR
 instance FromCStruct ImportFenceFdInfoKHR VkImportFenceFdInfoKHR where
   fromCStruct = fromCStructImportFenceFdInfoKHR
-instance HasPNext ImportFenceFdInfoKHR where
-  getPNext a = vkPNext (a :: ImportFenceFdInfoKHR)
+instance HasNext ImportFenceFdInfoKHR where
+  getNext s = next (s :: ImportFenceFdInfoKHR)
 instance ToCStruct FenceGetFdInfoKHR VkFenceGetFdInfoKHR where
   withCStruct = withCStructFenceGetFdInfoKHR
 instance FromCStruct FenceGetFdInfoKHR VkFenceGetFdInfoKHR where
   fromCStruct = fromCStructFenceGetFdInfoKHR
-instance HasPNext FenceGetFdInfoKHR where
-  getPNext a = vkPNext (a :: FenceGetFdInfoKHR)
+instance HasNext FenceGetFdInfoKHR where
+  getNext s = next (s :: FenceGetFdInfoKHR)
 instance ToCStruct PhysicalDeviceMultiviewFeatures VkPhysicalDeviceMultiviewFeatures where
   withCStruct = withCStructPhysicalDeviceMultiviewFeatures
 instance FromCStruct PhysicalDeviceMultiviewFeatures VkPhysicalDeviceMultiviewFeatures where
   fromCStruct = fromCStructPhysicalDeviceMultiviewFeatures
-instance HasPNext PhysicalDeviceMultiviewFeatures where
-  getPNext a = vkPNext (a :: PhysicalDeviceMultiviewFeatures)
+instance HasNext PhysicalDeviceMultiviewFeatures where
+  getNext s = next (s :: PhysicalDeviceMultiviewFeatures)
 instance ToCStruct PhysicalDeviceMultiviewProperties VkPhysicalDeviceMultiviewProperties where
   withCStruct = withCStructPhysicalDeviceMultiviewProperties
 instance FromCStruct PhysicalDeviceMultiviewProperties VkPhysicalDeviceMultiviewProperties where
   fromCStruct = fromCStructPhysicalDeviceMultiviewProperties
-instance HasPNext PhysicalDeviceMultiviewProperties where
-  getPNext a = vkPNext (a :: PhysicalDeviceMultiviewProperties)
+instance HasNext PhysicalDeviceMultiviewProperties where
+  getNext s = next (s :: PhysicalDeviceMultiviewProperties)
 instance ToCStruct RenderPassMultiviewCreateInfo VkRenderPassMultiviewCreateInfo where
   withCStruct = withCStructRenderPassMultiviewCreateInfo
 instance FromCStruct RenderPassMultiviewCreateInfo VkRenderPassMultiviewCreateInfo where
   fromCStruct = fromCStructRenderPassMultiviewCreateInfo
-instance HasPNext RenderPassMultiviewCreateInfo where
-  getPNext a = vkPNext (a :: RenderPassMultiviewCreateInfo)
+instance HasNext RenderPassMultiviewCreateInfo where
+  getNext s = next (s :: RenderPassMultiviewCreateInfo)
 instance ToCStruct SurfaceCapabilities2EXT VkSurfaceCapabilities2EXT where
   withCStruct = withCStructSurfaceCapabilities2EXT
 instance FromCStruct SurfaceCapabilities2EXT VkSurfaceCapabilities2EXT where
   fromCStruct = fromCStructSurfaceCapabilities2EXT
-instance HasPNext SurfaceCapabilities2EXT where
-  getPNext a = vkPNext (a :: SurfaceCapabilities2EXT)
+instance HasNext SurfaceCapabilities2EXT where
+  getNext s = next (s :: SurfaceCapabilities2EXT)
 instance ToCStruct DisplayPowerInfoEXT VkDisplayPowerInfoEXT where
   withCStruct = withCStructDisplayPowerInfoEXT
 instance FromCStruct DisplayPowerInfoEXT VkDisplayPowerInfoEXT where
   fromCStruct = fromCStructDisplayPowerInfoEXT
-instance HasPNext DisplayPowerInfoEXT where
-  getPNext a = vkPNext (a :: DisplayPowerInfoEXT)
+instance HasNext DisplayPowerInfoEXT where
+  getNext s = next (s :: DisplayPowerInfoEXT)
 instance ToCStruct DeviceEventInfoEXT VkDeviceEventInfoEXT where
   withCStruct = withCStructDeviceEventInfoEXT
 instance FromCStruct DeviceEventInfoEXT VkDeviceEventInfoEXT where
   fromCStruct = fromCStructDeviceEventInfoEXT
-instance HasPNext DeviceEventInfoEXT where
-  getPNext a = vkPNext (a :: DeviceEventInfoEXT)
+instance HasNext DeviceEventInfoEXT where
+  getNext s = next (s :: DeviceEventInfoEXT)
 instance ToCStruct DisplayEventInfoEXT VkDisplayEventInfoEXT where
   withCStruct = withCStructDisplayEventInfoEXT
 instance FromCStruct DisplayEventInfoEXT VkDisplayEventInfoEXT where
   fromCStruct = fromCStructDisplayEventInfoEXT
-instance HasPNext DisplayEventInfoEXT where
-  getPNext a = vkPNext (a :: DisplayEventInfoEXT)
+instance HasNext DisplayEventInfoEXT where
+  getNext s = next (s :: DisplayEventInfoEXT)
 instance ToCStruct SwapchainCounterCreateInfoEXT VkSwapchainCounterCreateInfoEXT where
   withCStruct = withCStructSwapchainCounterCreateInfoEXT
 instance FromCStruct SwapchainCounterCreateInfoEXT VkSwapchainCounterCreateInfoEXT where
   fromCStruct = fromCStructSwapchainCounterCreateInfoEXT
-instance HasPNext SwapchainCounterCreateInfoEXT where
-  getPNext a = vkPNext (a :: SwapchainCounterCreateInfoEXT)
+instance HasNext SwapchainCounterCreateInfoEXT where
+  getNext s = next (s :: SwapchainCounterCreateInfoEXT)
 instance ToCStruct PhysicalDeviceGroupProperties VkPhysicalDeviceGroupProperties where
   withCStruct = withCStructPhysicalDeviceGroupProperties
 -- No FromCStruct instance for VkPhysicalDeviceGroupProperties as it contains a dispatchable handle
-instance HasPNext PhysicalDeviceGroupProperties where
-  getPNext a = vkPNext (a :: PhysicalDeviceGroupProperties)
+instance HasNext PhysicalDeviceGroupProperties where
+  getNext s = next (s :: PhysicalDeviceGroupProperties)
 instance ToCStruct MemoryAllocateFlagsInfo VkMemoryAllocateFlagsInfo where
   withCStruct = withCStructMemoryAllocateFlagsInfo
 instance FromCStruct MemoryAllocateFlagsInfo VkMemoryAllocateFlagsInfo where
   fromCStruct = fromCStructMemoryAllocateFlagsInfo
-instance HasPNext MemoryAllocateFlagsInfo where
-  getPNext a = vkPNext (a :: MemoryAllocateFlagsInfo)
+instance HasNext MemoryAllocateFlagsInfo where
+  getNext s = next (s :: MemoryAllocateFlagsInfo)
 instance ToCStruct BindBufferMemoryInfo VkBindBufferMemoryInfo where
   withCStruct = withCStructBindBufferMemoryInfo
 instance FromCStruct BindBufferMemoryInfo VkBindBufferMemoryInfo where
   fromCStruct = fromCStructBindBufferMemoryInfo
-instance HasPNext BindBufferMemoryInfo where
-  getPNext a = vkPNext (a :: BindBufferMemoryInfo)
+instance HasNext BindBufferMemoryInfo where
+  getNext s = next (s :: BindBufferMemoryInfo)
 instance ToCStruct BindBufferMemoryDeviceGroupInfo VkBindBufferMemoryDeviceGroupInfo where
   withCStruct = withCStructBindBufferMemoryDeviceGroupInfo
 instance FromCStruct BindBufferMemoryDeviceGroupInfo VkBindBufferMemoryDeviceGroupInfo where
   fromCStruct = fromCStructBindBufferMemoryDeviceGroupInfo
-instance HasPNext BindBufferMemoryDeviceGroupInfo where
-  getPNext a = vkPNext (a :: BindBufferMemoryDeviceGroupInfo)
+instance HasNext BindBufferMemoryDeviceGroupInfo where
+  getNext s = next (s :: BindBufferMemoryDeviceGroupInfo)
 instance ToCStruct BindImageMemoryInfo VkBindImageMemoryInfo where
   withCStruct = withCStructBindImageMemoryInfo
 instance FromCStruct BindImageMemoryInfo VkBindImageMemoryInfo where
   fromCStruct = fromCStructBindImageMemoryInfo
-instance HasPNext BindImageMemoryInfo where
-  getPNext a = vkPNext (a :: BindImageMemoryInfo)
+instance HasNext BindImageMemoryInfo where
+  getNext s = next (s :: BindImageMemoryInfo)
 instance ToCStruct BindImageMemoryDeviceGroupInfo VkBindImageMemoryDeviceGroupInfo where
   withCStruct = withCStructBindImageMemoryDeviceGroupInfo
 instance FromCStruct BindImageMemoryDeviceGroupInfo VkBindImageMemoryDeviceGroupInfo where
   fromCStruct = fromCStructBindImageMemoryDeviceGroupInfo
-instance HasPNext BindImageMemoryDeviceGroupInfo where
-  getPNext a = vkPNext (a :: BindImageMemoryDeviceGroupInfo)
+instance HasNext BindImageMemoryDeviceGroupInfo where
+  getNext s = next (s :: BindImageMemoryDeviceGroupInfo)
 instance ToCStruct DeviceGroupRenderPassBeginInfo VkDeviceGroupRenderPassBeginInfo where
   withCStruct = withCStructDeviceGroupRenderPassBeginInfo
 instance FromCStruct DeviceGroupRenderPassBeginInfo VkDeviceGroupRenderPassBeginInfo where
   fromCStruct = fromCStructDeviceGroupRenderPassBeginInfo
-instance HasPNext DeviceGroupRenderPassBeginInfo where
-  getPNext a = vkPNext (a :: DeviceGroupRenderPassBeginInfo)
+instance HasNext DeviceGroupRenderPassBeginInfo where
+  getNext s = next (s :: DeviceGroupRenderPassBeginInfo)
 instance ToCStruct DeviceGroupCommandBufferBeginInfo VkDeviceGroupCommandBufferBeginInfo where
   withCStruct = withCStructDeviceGroupCommandBufferBeginInfo
 instance FromCStruct DeviceGroupCommandBufferBeginInfo VkDeviceGroupCommandBufferBeginInfo where
   fromCStruct = fromCStructDeviceGroupCommandBufferBeginInfo
-instance HasPNext DeviceGroupCommandBufferBeginInfo where
-  getPNext a = vkPNext (a :: DeviceGroupCommandBufferBeginInfo)
+instance HasNext DeviceGroupCommandBufferBeginInfo where
+  getNext s = next (s :: DeviceGroupCommandBufferBeginInfo)
 instance ToCStruct DeviceGroupSubmitInfo VkDeviceGroupSubmitInfo where
   withCStruct = withCStructDeviceGroupSubmitInfo
 instance FromCStruct DeviceGroupSubmitInfo VkDeviceGroupSubmitInfo where
   fromCStruct = fromCStructDeviceGroupSubmitInfo
-instance HasPNext DeviceGroupSubmitInfo where
-  getPNext a = vkPNext (a :: DeviceGroupSubmitInfo)
+instance HasNext DeviceGroupSubmitInfo where
+  getNext s = next (s :: DeviceGroupSubmitInfo)
 instance ToCStruct DeviceGroupBindSparseInfo VkDeviceGroupBindSparseInfo where
   withCStruct = withCStructDeviceGroupBindSparseInfo
 instance FromCStruct DeviceGroupBindSparseInfo VkDeviceGroupBindSparseInfo where
   fromCStruct = fromCStructDeviceGroupBindSparseInfo
-instance HasPNext DeviceGroupBindSparseInfo where
-  getPNext a = vkPNext (a :: DeviceGroupBindSparseInfo)
+instance HasNext DeviceGroupBindSparseInfo where
+  getNext s = next (s :: DeviceGroupBindSparseInfo)
 instance ToCStruct DeviceGroupPresentCapabilitiesKHR VkDeviceGroupPresentCapabilitiesKHR where
   withCStruct = withCStructDeviceGroupPresentCapabilitiesKHR
 instance FromCStruct DeviceGroupPresentCapabilitiesKHR VkDeviceGroupPresentCapabilitiesKHR where
   fromCStruct = fromCStructDeviceGroupPresentCapabilitiesKHR
-instance HasPNext DeviceGroupPresentCapabilitiesKHR where
-  getPNext a = vkPNext (a :: DeviceGroupPresentCapabilitiesKHR)
+instance HasNext DeviceGroupPresentCapabilitiesKHR where
+  getNext s = next (s :: DeviceGroupPresentCapabilitiesKHR)
 instance ToCStruct ImageSwapchainCreateInfoKHR VkImageSwapchainCreateInfoKHR where
   withCStruct = withCStructImageSwapchainCreateInfoKHR
 instance FromCStruct ImageSwapchainCreateInfoKHR VkImageSwapchainCreateInfoKHR where
   fromCStruct = fromCStructImageSwapchainCreateInfoKHR
-instance HasPNext ImageSwapchainCreateInfoKHR where
-  getPNext a = vkPNext (a :: ImageSwapchainCreateInfoKHR)
+instance HasNext ImageSwapchainCreateInfoKHR where
+  getNext s = next (s :: ImageSwapchainCreateInfoKHR)
 instance ToCStruct BindImageMemorySwapchainInfoKHR VkBindImageMemorySwapchainInfoKHR where
   withCStruct = withCStructBindImageMemorySwapchainInfoKHR
 instance FromCStruct BindImageMemorySwapchainInfoKHR VkBindImageMemorySwapchainInfoKHR where
   fromCStruct = fromCStructBindImageMemorySwapchainInfoKHR
-instance HasPNext BindImageMemorySwapchainInfoKHR where
-  getPNext a = vkPNext (a :: BindImageMemorySwapchainInfoKHR)
+instance HasNext BindImageMemorySwapchainInfoKHR where
+  getNext s = next (s :: BindImageMemorySwapchainInfoKHR)
 instance ToCStruct AcquireNextImageInfoKHR VkAcquireNextImageInfoKHR where
   withCStruct = withCStructAcquireNextImageInfoKHR
 instance FromCStruct AcquireNextImageInfoKHR VkAcquireNextImageInfoKHR where
   fromCStruct = fromCStructAcquireNextImageInfoKHR
-instance HasPNext AcquireNextImageInfoKHR where
-  getPNext a = vkPNext (a :: AcquireNextImageInfoKHR)
+instance HasNext AcquireNextImageInfoKHR where
+  getNext s = next (s :: AcquireNextImageInfoKHR)
 instance ToCStruct DeviceGroupPresentInfoKHR VkDeviceGroupPresentInfoKHR where
   withCStruct = withCStructDeviceGroupPresentInfoKHR
 instance FromCStruct DeviceGroupPresentInfoKHR VkDeviceGroupPresentInfoKHR where
   fromCStruct = fromCStructDeviceGroupPresentInfoKHR
-instance HasPNext DeviceGroupPresentInfoKHR where
-  getPNext a = vkPNext (a :: DeviceGroupPresentInfoKHR)
+instance HasNext DeviceGroupPresentInfoKHR where
+  getNext s = next (s :: DeviceGroupPresentInfoKHR)
 instance ToCStruct DeviceGroupDeviceCreateInfo VkDeviceGroupDeviceCreateInfo where
   withCStruct = withCStructDeviceGroupDeviceCreateInfo
 -- No FromCStruct instance for VkDeviceGroupDeviceCreateInfo as it contains a dispatchable handle
-instance HasPNext DeviceGroupDeviceCreateInfo where
-  getPNext a = vkPNext (a :: DeviceGroupDeviceCreateInfo)
+instance HasNext DeviceGroupDeviceCreateInfo where
+  getNext s = next (s :: DeviceGroupDeviceCreateInfo)
 instance ToCStruct DeviceGroupSwapchainCreateInfoKHR VkDeviceGroupSwapchainCreateInfoKHR where
   withCStruct = withCStructDeviceGroupSwapchainCreateInfoKHR
 instance FromCStruct DeviceGroupSwapchainCreateInfoKHR VkDeviceGroupSwapchainCreateInfoKHR where
   fromCStruct = fromCStructDeviceGroupSwapchainCreateInfoKHR
-instance HasPNext DeviceGroupSwapchainCreateInfoKHR where
-  getPNext a = vkPNext (a :: DeviceGroupSwapchainCreateInfoKHR)
+instance HasNext DeviceGroupSwapchainCreateInfoKHR where
+  getNext s = next (s :: DeviceGroupSwapchainCreateInfoKHR)
 instance ToCStruct DescriptorUpdateTemplateEntry VkDescriptorUpdateTemplateEntry where
   withCStruct = withCStructDescriptorUpdateTemplateEntry
 instance FromCStruct DescriptorUpdateTemplateEntry VkDescriptorUpdateTemplateEntry where
@@ -4282,8 +4570,8 @@ instance ToCStruct DescriptorUpdateTemplateCreateInfo VkDescriptorUpdateTemplate
   withCStruct = withCStructDescriptorUpdateTemplateCreateInfo
 instance FromCStruct DescriptorUpdateTemplateCreateInfo VkDescriptorUpdateTemplateCreateInfo where
   fromCStruct = fromCStructDescriptorUpdateTemplateCreateInfo
-instance HasPNext DescriptorUpdateTemplateCreateInfo where
-  getPNext a = vkPNext (a :: DescriptorUpdateTemplateCreateInfo)
+instance HasNext DescriptorUpdateTemplateCreateInfo where
+  getNext s = next (s :: DescriptorUpdateTemplateCreateInfo)
 instance ToCStruct XYColorEXT VkXYColorEXT where
   withCStruct = withCStructXYColorEXT
 instance FromCStruct XYColorEXT VkXYColorEXT where
@@ -4293,20 +4581,20 @@ instance ToCStruct HdrMetadataEXT VkHdrMetadataEXT where
   withCStruct = withCStructHdrMetadataEXT
 instance FromCStruct HdrMetadataEXT VkHdrMetadataEXT where
   fromCStruct = fromCStructHdrMetadataEXT
-instance HasPNext HdrMetadataEXT where
-  getPNext a = vkPNext (a :: HdrMetadataEXT)
+instance HasNext HdrMetadataEXT where
+  getNext s = next (s :: HdrMetadataEXT)
 instance ToCStruct DisplayNativeHdrSurfaceCapabilitiesAMD VkDisplayNativeHdrSurfaceCapabilitiesAMD where
   withCStruct = withCStructDisplayNativeHdrSurfaceCapabilitiesAMD
 instance FromCStruct DisplayNativeHdrSurfaceCapabilitiesAMD VkDisplayNativeHdrSurfaceCapabilitiesAMD where
   fromCStruct = fromCStructDisplayNativeHdrSurfaceCapabilitiesAMD
-instance HasPNext DisplayNativeHdrSurfaceCapabilitiesAMD where
-  getPNext a = vkPNext (a :: DisplayNativeHdrSurfaceCapabilitiesAMD)
+instance HasNext DisplayNativeHdrSurfaceCapabilitiesAMD where
+  getNext s = next (s :: DisplayNativeHdrSurfaceCapabilitiesAMD)
 instance ToCStruct SwapchainDisplayNativeHdrCreateInfoAMD VkSwapchainDisplayNativeHdrCreateInfoAMD where
   withCStruct = withCStructSwapchainDisplayNativeHdrCreateInfoAMD
 instance FromCStruct SwapchainDisplayNativeHdrCreateInfoAMD VkSwapchainDisplayNativeHdrCreateInfoAMD where
   fromCStruct = fromCStructSwapchainDisplayNativeHdrCreateInfoAMD
-instance HasPNext SwapchainDisplayNativeHdrCreateInfoAMD where
-  getPNext a = vkPNext (a :: SwapchainDisplayNativeHdrCreateInfoAMD)
+instance HasNext SwapchainDisplayNativeHdrCreateInfoAMD where
+  getNext s = next (s :: SwapchainDisplayNativeHdrCreateInfoAMD)
 instance ToCStruct RefreshCycleDurationGOOGLE VkRefreshCycleDurationGOOGLE where
   withCStruct = withCStructRefreshCycleDurationGOOGLE
 instance FromCStruct RefreshCycleDurationGOOGLE VkRefreshCycleDurationGOOGLE where
@@ -4321,8 +4609,8 @@ instance ToCStruct PresentTimesInfoGOOGLE VkPresentTimesInfoGOOGLE where
   withCStruct = withCStructPresentTimesInfoGOOGLE
 instance FromCStruct PresentTimesInfoGOOGLE VkPresentTimesInfoGOOGLE where
   fromCStruct = fromCStructPresentTimesInfoGOOGLE
-instance HasPNext PresentTimesInfoGOOGLE where
-  getPNext a = vkPNext (a :: PresentTimesInfoGOOGLE)
+instance HasNext PresentTimesInfoGOOGLE where
+  getNext s = next (s :: PresentTimesInfoGOOGLE)
 instance ToCStruct PresentTimeGOOGLE VkPresentTimeGOOGLE where
   withCStruct = withCStructPresentTimeGOOGLE
 instance FromCStruct PresentTimeGOOGLE VkPresentTimeGOOGLE where
@@ -4334,8 +4622,8 @@ instance ToCStruct IOSSurfaceCreateInfoMVK VkIOSSurfaceCreateInfoMVK where
   withCStruct = withCStructIOSSurfaceCreateInfoMVK
 instance FromCStruct IOSSurfaceCreateInfoMVK VkIOSSurfaceCreateInfoMVK where
   fromCStruct = fromCStructIOSSurfaceCreateInfoMVK
-instance HasPNext IOSSurfaceCreateInfoMVK where
-  getPNext a = vkPNext (a :: IOSSurfaceCreateInfoMVK)
+instance HasNext IOSSurfaceCreateInfoMVK where
+  getNext s = next (s :: IOSSurfaceCreateInfoMVK)
 #endif
 
 #if VK_USE_PLATFORM_MACOS_MVK
@@ -4343,8 +4631,8 @@ instance ToCStruct MacOSSurfaceCreateInfoMVK VkMacOSSurfaceCreateInfoMVK where
   withCStruct = withCStructMacOSSurfaceCreateInfoMVK
 instance FromCStruct MacOSSurfaceCreateInfoMVK VkMacOSSurfaceCreateInfoMVK where
   fromCStruct = fromCStructMacOSSurfaceCreateInfoMVK
-instance HasPNext MacOSSurfaceCreateInfoMVK where
-  getPNext a = vkPNext (a :: MacOSSurfaceCreateInfoMVK)
+instance HasNext MacOSSurfaceCreateInfoMVK where
+  getNext s = next (s :: MacOSSurfaceCreateInfoMVK)
 #endif
 
 #if VK_USE_PLATFORM_METAL_EXT
@@ -4352,8 +4640,8 @@ instance ToCStruct MetalSurfaceCreateInfoEXT VkMetalSurfaceCreateInfoEXT where
   withCStruct = withCStructMetalSurfaceCreateInfoEXT
 instance FromCStruct MetalSurfaceCreateInfoEXT VkMetalSurfaceCreateInfoEXT where
   fromCStruct = fromCStructMetalSurfaceCreateInfoEXT
-instance HasPNext MetalSurfaceCreateInfoEXT where
-  getPNext a = vkPNext (a :: MetalSurfaceCreateInfoEXT)
+instance HasNext MetalSurfaceCreateInfoEXT where
+  getNext s = next (s :: MetalSurfaceCreateInfoEXT)
 #endif
 instance ToCStruct ViewportWScalingNV VkViewportWScalingNV where
   withCStruct = withCStructViewportWScalingNV
@@ -4364,8 +4652,8 @@ instance ToCStruct PipelineViewportWScalingStateCreateInfoNV VkPipelineViewportW
   withCStruct = withCStructPipelineViewportWScalingStateCreateInfoNV
 instance FromCStruct PipelineViewportWScalingStateCreateInfoNV VkPipelineViewportWScalingStateCreateInfoNV where
   fromCStruct = fromCStructPipelineViewportWScalingStateCreateInfoNV
-instance HasPNext PipelineViewportWScalingStateCreateInfoNV where
-  getPNext a = vkPNext (a :: PipelineViewportWScalingStateCreateInfoNV)
+instance HasNext PipelineViewportWScalingStateCreateInfoNV where
+  getNext s = next (s :: PipelineViewportWScalingStateCreateInfoNV)
 instance ToCStruct ViewportSwizzleNV VkViewportSwizzleNV where
   withCStruct = withCStructViewportSwizzleNV
 instance FromCStruct ViewportSwizzleNV VkViewportSwizzleNV where
@@ -4375,26 +4663,26 @@ instance ToCStruct PipelineViewportSwizzleStateCreateInfoNV VkPipelineViewportSw
   withCStruct = withCStructPipelineViewportSwizzleStateCreateInfoNV
 instance FromCStruct PipelineViewportSwizzleStateCreateInfoNV VkPipelineViewportSwizzleStateCreateInfoNV where
   fromCStruct = fromCStructPipelineViewportSwizzleStateCreateInfoNV
-instance HasPNext PipelineViewportSwizzleStateCreateInfoNV where
-  getPNext a = vkPNext (a :: PipelineViewportSwizzleStateCreateInfoNV)
+instance HasNext PipelineViewportSwizzleStateCreateInfoNV where
+  getNext s = next (s :: PipelineViewportSwizzleStateCreateInfoNV)
 instance ToCStruct PhysicalDeviceDiscardRectanglePropertiesEXT VkPhysicalDeviceDiscardRectanglePropertiesEXT where
   withCStruct = withCStructPhysicalDeviceDiscardRectanglePropertiesEXT
 instance FromCStruct PhysicalDeviceDiscardRectanglePropertiesEXT VkPhysicalDeviceDiscardRectanglePropertiesEXT where
   fromCStruct = fromCStructPhysicalDeviceDiscardRectanglePropertiesEXT
-instance HasPNext PhysicalDeviceDiscardRectanglePropertiesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceDiscardRectanglePropertiesEXT)
+instance HasNext PhysicalDeviceDiscardRectanglePropertiesEXT where
+  getNext s = next (s :: PhysicalDeviceDiscardRectanglePropertiesEXT)
 instance ToCStruct PipelineDiscardRectangleStateCreateInfoEXT VkPipelineDiscardRectangleStateCreateInfoEXT where
   withCStruct = withCStructPipelineDiscardRectangleStateCreateInfoEXT
 instance FromCStruct PipelineDiscardRectangleStateCreateInfoEXT VkPipelineDiscardRectangleStateCreateInfoEXT where
   fromCStruct = fromCStructPipelineDiscardRectangleStateCreateInfoEXT
-instance HasPNext PipelineDiscardRectangleStateCreateInfoEXT where
-  getPNext a = vkPNext (a :: PipelineDiscardRectangleStateCreateInfoEXT)
+instance HasNext PipelineDiscardRectangleStateCreateInfoEXT where
+  getNext s = next (s :: PipelineDiscardRectangleStateCreateInfoEXT)
 instance ToCStruct PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX where
   withCStruct = withCStructPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX
 instance FromCStruct PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX where
   fromCStruct = fromCStructPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX
-instance HasPNext PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX where
-  getPNext a = vkPNext (a :: PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX)
+instance HasNext PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX where
+  getNext s = next (s :: PhysicalDeviceMultiviewPerViewAttributesPropertiesNVX)
 instance ToCStruct InputAttachmentAspectReference VkInputAttachmentAspectReference where
   withCStruct = withCStructInputAttachmentAspectReference
 instance FromCStruct InputAttachmentAspectReference VkInputAttachmentAspectReference where
@@ -4404,218 +4692,218 @@ instance ToCStruct RenderPassInputAttachmentAspectCreateInfo VkRenderPassInputAt
   withCStruct = withCStructRenderPassInputAttachmentAspectCreateInfo
 instance FromCStruct RenderPassInputAttachmentAspectCreateInfo VkRenderPassInputAttachmentAspectCreateInfo where
   fromCStruct = fromCStructRenderPassInputAttachmentAspectCreateInfo
-instance HasPNext RenderPassInputAttachmentAspectCreateInfo where
-  getPNext a = vkPNext (a :: RenderPassInputAttachmentAspectCreateInfo)
+instance HasNext RenderPassInputAttachmentAspectCreateInfo where
+  getNext s = next (s :: RenderPassInputAttachmentAspectCreateInfo)
 instance ToCStruct PhysicalDeviceSurfaceInfo2KHR VkPhysicalDeviceSurfaceInfo2KHR where
   withCStruct = withCStructPhysicalDeviceSurfaceInfo2KHR
 instance FromCStruct PhysicalDeviceSurfaceInfo2KHR VkPhysicalDeviceSurfaceInfo2KHR where
   fromCStruct = fromCStructPhysicalDeviceSurfaceInfo2KHR
-instance HasPNext PhysicalDeviceSurfaceInfo2KHR where
-  getPNext a = vkPNext (a :: PhysicalDeviceSurfaceInfo2KHR)
+instance HasNext PhysicalDeviceSurfaceInfo2KHR where
+  getNext s = next (s :: PhysicalDeviceSurfaceInfo2KHR)
 instance ToCStruct SurfaceCapabilities2KHR VkSurfaceCapabilities2KHR where
   withCStruct = withCStructSurfaceCapabilities2KHR
 instance FromCStruct SurfaceCapabilities2KHR VkSurfaceCapabilities2KHR where
   fromCStruct = fromCStructSurfaceCapabilities2KHR
-instance HasPNext SurfaceCapabilities2KHR where
-  getPNext a = vkPNext (a :: SurfaceCapabilities2KHR)
+instance HasNext SurfaceCapabilities2KHR where
+  getNext s = next (s :: SurfaceCapabilities2KHR)
 instance ToCStruct SurfaceFormat2KHR VkSurfaceFormat2KHR where
   withCStruct = withCStructSurfaceFormat2KHR
 instance FromCStruct SurfaceFormat2KHR VkSurfaceFormat2KHR where
   fromCStruct = fromCStructSurfaceFormat2KHR
-instance HasPNext SurfaceFormat2KHR where
-  getPNext a = vkPNext (a :: SurfaceFormat2KHR)
+instance HasNext SurfaceFormat2KHR where
+  getNext s = next (s :: SurfaceFormat2KHR)
 instance ToCStruct DisplayProperties2KHR VkDisplayProperties2KHR where
   withCStruct = withCStructDisplayProperties2KHR
 instance FromCStruct DisplayProperties2KHR VkDisplayProperties2KHR where
   fromCStruct = fromCStructDisplayProperties2KHR
-instance HasPNext DisplayProperties2KHR where
-  getPNext a = vkPNext (a :: DisplayProperties2KHR)
+instance HasNext DisplayProperties2KHR where
+  getNext s = next (s :: DisplayProperties2KHR)
 instance ToCStruct DisplayPlaneProperties2KHR VkDisplayPlaneProperties2KHR where
   withCStruct = withCStructDisplayPlaneProperties2KHR
 instance FromCStruct DisplayPlaneProperties2KHR VkDisplayPlaneProperties2KHR where
   fromCStruct = fromCStructDisplayPlaneProperties2KHR
-instance HasPNext DisplayPlaneProperties2KHR where
-  getPNext a = vkPNext (a :: DisplayPlaneProperties2KHR)
+instance HasNext DisplayPlaneProperties2KHR where
+  getNext s = next (s :: DisplayPlaneProperties2KHR)
 instance ToCStruct DisplayModeProperties2KHR VkDisplayModeProperties2KHR where
   withCStruct = withCStructDisplayModeProperties2KHR
 instance FromCStruct DisplayModeProperties2KHR VkDisplayModeProperties2KHR where
   fromCStruct = fromCStructDisplayModeProperties2KHR
-instance HasPNext DisplayModeProperties2KHR where
-  getPNext a = vkPNext (a :: DisplayModeProperties2KHR)
+instance HasNext DisplayModeProperties2KHR where
+  getNext s = next (s :: DisplayModeProperties2KHR)
 instance ToCStruct DisplayPlaneInfo2KHR VkDisplayPlaneInfo2KHR where
   withCStruct = withCStructDisplayPlaneInfo2KHR
 instance FromCStruct DisplayPlaneInfo2KHR VkDisplayPlaneInfo2KHR where
   fromCStruct = fromCStructDisplayPlaneInfo2KHR
-instance HasPNext DisplayPlaneInfo2KHR where
-  getPNext a = vkPNext (a :: DisplayPlaneInfo2KHR)
+instance HasNext DisplayPlaneInfo2KHR where
+  getNext s = next (s :: DisplayPlaneInfo2KHR)
 instance ToCStruct DisplayPlaneCapabilities2KHR VkDisplayPlaneCapabilities2KHR where
   withCStruct = withCStructDisplayPlaneCapabilities2KHR
 instance FromCStruct DisplayPlaneCapabilities2KHR VkDisplayPlaneCapabilities2KHR where
   fromCStruct = fromCStructDisplayPlaneCapabilities2KHR
-instance HasPNext DisplayPlaneCapabilities2KHR where
-  getPNext a = vkPNext (a :: DisplayPlaneCapabilities2KHR)
+instance HasNext DisplayPlaneCapabilities2KHR where
+  getNext s = next (s :: DisplayPlaneCapabilities2KHR)
 instance ToCStruct SharedPresentSurfaceCapabilitiesKHR VkSharedPresentSurfaceCapabilitiesKHR where
   withCStruct = withCStructSharedPresentSurfaceCapabilitiesKHR
 instance FromCStruct SharedPresentSurfaceCapabilitiesKHR VkSharedPresentSurfaceCapabilitiesKHR where
   fromCStruct = fromCStructSharedPresentSurfaceCapabilitiesKHR
-instance HasPNext SharedPresentSurfaceCapabilitiesKHR where
-  getPNext a = vkPNext (a :: SharedPresentSurfaceCapabilitiesKHR)
+instance HasNext SharedPresentSurfaceCapabilitiesKHR where
+  getNext s = next (s :: SharedPresentSurfaceCapabilitiesKHR)
 instance ToCStruct PhysicalDevice16BitStorageFeatures VkPhysicalDevice16BitStorageFeatures where
   withCStruct = withCStructPhysicalDevice16BitStorageFeatures
 instance FromCStruct PhysicalDevice16BitStorageFeatures VkPhysicalDevice16BitStorageFeatures where
   fromCStruct = fromCStructPhysicalDevice16BitStorageFeatures
-instance HasPNext PhysicalDevice16BitStorageFeatures where
-  getPNext a = vkPNext (a :: PhysicalDevice16BitStorageFeatures)
+instance HasNext PhysicalDevice16BitStorageFeatures where
+  getNext s = next (s :: PhysicalDevice16BitStorageFeatures)
 instance ToCStruct PhysicalDeviceSubgroupProperties VkPhysicalDeviceSubgroupProperties where
   withCStruct = withCStructPhysicalDeviceSubgroupProperties
 instance FromCStruct PhysicalDeviceSubgroupProperties VkPhysicalDeviceSubgroupProperties where
   fromCStruct = fromCStructPhysicalDeviceSubgroupProperties
-instance HasPNext PhysicalDeviceSubgroupProperties where
-  getPNext a = vkPNext (a :: PhysicalDeviceSubgroupProperties)
+instance HasNext PhysicalDeviceSubgroupProperties where
+  getNext s = next (s :: PhysicalDeviceSubgroupProperties)
 instance ToCStruct BufferMemoryRequirementsInfo2 VkBufferMemoryRequirementsInfo2 where
   withCStruct = withCStructBufferMemoryRequirementsInfo2
 instance FromCStruct BufferMemoryRequirementsInfo2 VkBufferMemoryRequirementsInfo2 where
   fromCStruct = fromCStructBufferMemoryRequirementsInfo2
-instance HasPNext BufferMemoryRequirementsInfo2 where
-  getPNext a = vkPNext (a :: BufferMemoryRequirementsInfo2)
+instance HasNext BufferMemoryRequirementsInfo2 where
+  getNext s = next (s :: BufferMemoryRequirementsInfo2)
 instance ToCStruct ImageMemoryRequirementsInfo2 VkImageMemoryRequirementsInfo2 where
   withCStruct = withCStructImageMemoryRequirementsInfo2
 instance FromCStruct ImageMemoryRequirementsInfo2 VkImageMemoryRequirementsInfo2 where
   fromCStruct = fromCStructImageMemoryRequirementsInfo2
-instance HasPNext ImageMemoryRequirementsInfo2 where
-  getPNext a = vkPNext (a :: ImageMemoryRequirementsInfo2)
+instance HasNext ImageMemoryRequirementsInfo2 where
+  getNext s = next (s :: ImageMemoryRequirementsInfo2)
 instance ToCStruct ImageSparseMemoryRequirementsInfo2 VkImageSparseMemoryRequirementsInfo2 where
   withCStruct = withCStructImageSparseMemoryRequirementsInfo2
 instance FromCStruct ImageSparseMemoryRequirementsInfo2 VkImageSparseMemoryRequirementsInfo2 where
   fromCStruct = fromCStructImageSparseMemoryRequirementsInfo2
-instance HasPNext ImageSparseMemoryRequirementsInfo2 where
-  getPNext a = vkPNext (a :: ImageSparseMemoryRequirementsInfo2)
+instance HasNext ImageSparseMemoryRequirementsInfo2 where
+  getNext s = next (s :: ImageSparseMemoryRequirementsInfo2)
 instance ToCStruct MemoryRequirements2 VkMemoryRequirements2 where
   withCStruct = withCStructMemoryRequirements2
 instance FromCStruct MemoryRequirements2 VkMemoryRequirements2 where
   fromCStruct = fromCStructMemoryRequirements2
-instance HasPNext MemoryRequirements2 where
-  getPNext a = vkPNext (a :: MemoryRequirements2)
+instance HasNext MemoryRequirements2 where
+  getNext s = next (s :: MemoryRequirements2)
 instance ToCStruct SparseImageMemoryRequirements2 VkSparseImageMemoryRequirements2 where
   withCStruct = withCStructSparseImageMemoryRequirements2
 instance FromCStruct SparseImageMemoryRequirements2 VkSparseImageMemoryRequirements2 where
   fromCStruct = fromCStructSparseImageMemoryRequirements2
-instance HasPNext SparseImageMemoryRequirements2 where
-  getPNext a = vkPNext (a :: SparseImageMemoryRequirements2)
+instance HasNext SparseImageMemoryRequirements2 where
+  getNext s = next (s :: SparseImageMemoryRequirements2)
 instance ToCStruct PhysicalDevicePointClippingProperties VkPhysicalDevicePointClippingProperties where
   withCStruct = withCStructPhysicalDevicePointClippingProperties
 instance FromCStruct PhysicalDevicePointClippingProperties VkPhysicalDevicePointClippingProperties where
   fromCStruct = fromCStructPhysicalDevicePointClippingProperties
-instance HasPNext PhysicalDevicePointClippingProperties where
-  getPNext a = vkPNext (a :: PhysicalDevicePointClippingProperties)
+instance HasNext PhysicalDevicePointClippingProperties where
+  getNext s = next (s :: PhysicalDevicePointClippingProperties)
 instance ToCStruct MemoryDedicatedRequirements VkMemoryDedicatedRequirements where
   withCStruct = withCStructMemoryDedicatedRequirements
 instance FromCStruct MemoryDedicatedRequirements VkMemoryDedicatedRequirements where
   fromCStruct = fromCStructMemoryDedicatedRequirements
-instance HasPNext MemoryDedicatedRequirements where
-  getPNext a = vkPNext (a :: MemoryDedicatedRequirements)
+instance HasNext MemoryDedicatedRequirements where
+  getNext s = next (s :: MemoryDedicatedRequirements)
 instance ToCStruct MemoryDedicatedAllocateInfo VkMemoryDedicatedAllocateInfo where
   withCStruct = withCStructMemoryDedicatedAllocateInfo
 instance FromCStruct MemoryDedicatedAllocateInfo VkMemoryDedicatedAllocateInfo where
   fromCStruct = fromCStructMemoryDedicatedAllocateInfo
-instance HasPNext MemoryDedicatedAllocateInfo where
-  getPNext a = vkPNext (a :: MemoryDedicatedAllocateInfo)
+instance HasNext MemoryDedicatedAllocateInfo where
+  getNext s = next (s :: MemoryDedicatedAllocateInfo)
 instance ToCStruct ImageViewUsageCreateInfo VkImageViewUsageCreateInfo where
   withCStruct = withCStructImageViewUsageCreateInfo
 instance FromCStruct ImageViewUsageCreateInfo VkImageViewUsageCreateInfo where
   fromCStruct = fromCStructImageViewUsageCreateInfo
-instance HasPNext ImageViewUsageCreateInfo where
-  getPNext a = vkPNext (a :: ImageViewUsageCreateInfo)
+instance HasNext ImageViewUsageCreateInfo where
+  getNext s = next (s :: ImageViewUsageCreateInfo)
 instance ToCStruct PipelineTessellationDomainOriginStateCreateInfo VkPipelineTessellationDomainOriginStateCreateInfo where
   withCStruct = withCStructPipelineTessellationDomainOriginStateCreateInfo
 instance FromCStruct PipelineTessellationDomainOriginStateCreateInfo VkPipelineTessellationDomainOriginStateCreateInfo where
   fromCStruct = fromCStructPipelineTessellationDomainOriginStateCreateInfo
-instance HasPNext PipelineTessellationDomainOriginStateCreateInfo where
-  getPNext a = vkPNext (a :: PipelineTessellationDomainOriginStateCreateInfo)
+instance HasNext PipelineTessellationDomainOriginStateCreateInfo where
+  getNext s = next (s :: PipelineTessellationDomainOriginStateCreateInfo)
 instance ToCStruct SamplerYcbcrConversionInfo VkSamplerYcbcrConversionInfo where
   withCStruct = withCStructSamplerYcbcrConversionInfo
 instance FromCStruct SamplerYcbcrConversionInfo VkSamplerYcbcrConversionInfo where
   fromCStruct = fromCStructSamplerYcbcrConversionInfo
-instance HasPNext SamplerYcbcrConversionInfo where
-  getPNext a = vkPNext (a :: SamplerYcbcrConversionInfo)
+instance HasNext SamplerYcbcrConversionInfo where
+  getNext s = next (s :: SamplerYcbcrConversionInfo)
 instance ToCStruct SamplerYcbcrConversionCreateInfo VkSamplerYcbcrConversionCreateInfo where
   withCStruct = withCStructSamplerYcbcrConversionCreateInfo
 instance FromCStruct SamplerYcbcrConversionCreateInfo VkSamplerYcbcrConversionCreateInfo where
   fromCStruct = fromCStructSamplerYcbcrConversionCreateInfo
-instance HasPNext SamplerYcbcrConversionCreateInfo where
-  getPNext a = vkPNext (a :: SamplerYcbcrConversionCreateInfo)
+instance HasNext SamplerYcbcrConversionCreateInfo where
+  getNext s = next (s :: SamplerYcbcrConversionCreateInfo)
 instance ToCStruct BindImagePlaneMemoryInfo VkBindImagePlaneMemoryInfo where
   withCStruct = withCStructBindImagePlaneMemoryInfo
 instance FromCStruct BindImagePlaneMemoryInfo VkBindImagePlaneMemoryInfo where
   fromCStruct = fromCStructBindImagePlaneMemoryInfo
-instance HasPNext BindImagePlaneMemoryInfo where
-  getPNext a = vkPNext (a :: BindImagePlaneMemoryInfo)
+instance HasNext BindImagePlaneMemoryInfo where
+  getNext s = next (s :: BindImagePlaneMemoryInfo)
 instance ToCStruct ImagePlaneMemoryRequirementsInfo VkImagePlaneMemoryRequirementsInfo where
   withCStruct = withCStructImagePlaneMemoryRequirementsInfo
 instance FromCStruct ImagePlaneMemoryRequirementsInfo VkImagePlaneMemoryRequirementsInfo where
   fromCStruct = fromCStructImagePlaneMemoryRequirementsInfo
-instance HasPNext ImagePlaneMemoryRequirementsInfo where
-  getPNext a = vkPNext (a :: ImagePlaneMemoryRequirementsInfo)
+instance HasNext ImagePlaneMemoryRequirementsInfo where
+  getNext s = next (s :: ImagePlaneMemoryRequirementsInfo)
 instance ToCStruct PhysicalDeviceSamplerYcbcrConversionFeatures VkPhysicalDeviceSamplerYcbcrConversionFeatures where
   withCStruct = withCStructPhysicalDeviceSamplerYcbcrConversionFeatures
 instance FromCStruct PhysicalDeviceSamplerYcbcrConversionFeatures VkPhysicalDeviceSamplerYcbcrConversionFeatures where
   fromCStruct = fromCStructPhysicalDeviceSamplerYcbcrConversionFeatures
-instance HasPNext PhysicalDeviceSamplerYcbcrConversionFeatures where
-  getPNext a = vkPNext (a :: PhysicalDeviceSamplerYcbcrConversionFeatures)
+instance HasNext PhysicalDeviceSamplerYcbcrConversionFeatures where
+  getNext s = next (s :: PhysicalDeviceSamplerYcbcrConversionFeatures)
 instance ToCStruct SamplerYcbcrConversionImageFormatProperties VkSamplerYcbcrConversionImageFormatProperties where
   withCStruct = withCStructSamplerYcbcrConversionImageFormatProperties
 instance FromCStruct SamplerYcbcrConversionImageFormatProperties VkSamplerYcbcrConversionImageFormatProperties where
   fromCStruct = fromCStructSamplerYcbcrConversionImageFormatProperties
-instance HasPNext SamplerYcbcrConversionImageFormatProperties where
-  getPNext a = vkPNext (a :: SamplerYcbcrConversionImageFormatProperties)
+instance HasNext SamplerYcbcrConversionImageFormatProperties where
+  getNext s = next (s :: SamplerYcbcrConversionImageFormatProperties)
 instance ToCStruct TextureLODGatherFormatPropertiesAMD VkTextureLODGatherFormatPropertiesAMD where
   withCStruct = withCStructTextureLODGatherFormatPropertiesAMD
 instance FromCStruct TextureLODGatherFormatPropertiesAMD VkTextureLODGatherFormatPropertiesAMD where
   fromCStruct = fromCStructTextureLODGatherFormatPropertiesAMD
-instance HasPNext TextureLODGatherFormatPropertiesAMD where
-  getPNext a = vkPNext (a :: TextureLODGatherFormatPropertiesAMD)
+instance HasNext TextureLODGatherFormatPropertiesAMD where
+  getNext s = next (s :: TextureLODGatherFormatPropertiesAMD)
 instance ToCStruct ConditionalRenderingBeginInfoEXT VkConditionalRenderingBeginInfoEXT where
   withCStruct = withCStructConditionalRenderingBeginInfoEXT
 instance FromCStruct ConditionalRenderingBeginInfoEXT VkConditionalRenderingBeginInfoEXT where
   fromCStruct = fromCStructConditionalRenderingBeginInfoEXT
-instance HasPNext ConditionalRenderingBeginInfoEXT where
-  getPNext a = vkPNext (a :: ConditionalRenderingBeginInfoEXT)
+instance HasNext ConditionalRenderingBeginInfoEXT where
+  getNext s = next (s :: ConditionalRenderingBeginInfoEXT)
 instance ToCStruct ProtectedSubmitInfo VkProtectedSubmitInfo where
   withCStruct = withCStructProtectedSubmitInfo
 instance FromCStruct ProtectedSubmitInfo VkProtectedSubmitInfo where
   fromCStruct = fromCStructProtectedSubmitInfo
-instance HasPNext ProtectedSubmitInfo where
-  getPNext a = vkPNext (a :: ProtectedSubmitInfo)
+instance HasNext ProtectedSubmitInfo where
+  getNext s = next (s :: ProtectedSubmitInfo)
 instance ToCStruct PhysicalDeviceProtectedMemoryFeatures VkPhysicalDeviceProtectedMemoryFeatures where
   withCStruct = withCStructPhysicalDeviceProtectedMemoryFeatures
 instance FromCStruct PhysicalDeviceProtectedMemoryFeatures VkPhysicalDeviceProtectedMemoryFeatures where
   fromCStruct = fromCStructPhysicalDeviceProtectedMemoryFeatures
-instance HasPNext PhysicalDeviceProtectedMemoryFeatures where
-  getPNext a = vkPNext (a :: PhysicalDeviceProtectedMemoryFeatures)
+instance HasNext PhysicalDeviceProtectedMemoryFeatures where
+  getNext s = next (s :: PhysicalDeviceProtectedMemoryFeatures)
 instance ToCStruct PhysicalDeviceProtectedMemoryProperties VkPhysicalDeviceProtectedMemoryProperties where
   withCStruct = withCStructPhysicalDeviceProtectedMemoryProperties
 instance FromCStruct PhysicalDeviceProtectedMemoryProperties VkPhysicalDeviceProtectedMemoryProperties where
   fromCStruct = fromCStructPhysicalDeviceProtectedMemoryProperties
-instance HasPNext PhysicalDeviceProtectedMemoryProperties where
-  getPNext a = vkPNext (a :: PhysicalDeviceProtectedMemoryProperties)
+instance HasNext PhysicalDeviceProtectedMemoryProperties where
+  getNext s = next (s :: PhysicalDeviceProtectedMemoryProperties)
 instance ToCStruct DeviceQueueInfo2 VkDeviceQueueInfo2 where
   withCStruct = withCStructDeviceQueueInfo2
 instance FromCStruct DeviceQueueInfo2 VkDeviceQueueInfo2 where
   fromCStruct = fromCStructDeviceQueueInfo2
-instance HasPNext DeviceQueueInfo2 where
-  getPNext a = vkPNext (a :: DeviceQueueInfo2)
+instance HasNext DeviceQueueInfo2 where
+  getNext s = next (s :: DeviceQueueInfo2)
 instance ToCStruct PipelineCoverageToColorStateCreateInfoNV VkPipelineCoverageToColorStateCreateInfoNV where
   withCStruct = withCStructPipelineCoverageToColorStateCreateInfoNV
 instance FromCStruct PipelineCoverageToColorStateCreateInfoNV VkPipelineCoverageToColorStateCreateInfoNV where
   fromCStruct = fromCStructPipelineCoverageToColorStateCreateInfoNV
-instance HasPNext PipelineCoverageToColorStateCreateInfoNV where
-  getPNext a = vkPNext (a :: PipelineCoverageToColorStateCreateInfoNV)
+instance HasNext PipelineCoverageToColorStateCreateInfoNV where
+  getNext s = next (s :: PipelineCoverageToColorStateCreateInfoNV)
 instance ToCStruct PhysicalDeviceSamplerFilterMinmaxPropertiesEXT VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT where
   withCStruct = withCStructPhysicalDeviceSamplerFilterMinmaxPropertiesEXT
 instance FromCStruct PhysicalDeviceSamplerFilterMinmaxPropertiesEXT VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT where
   fromCStruct = fromCStructPhysicalDeviceSamplerFilterMinmaxPropertiesEXT
-instance HasPNext PhysicalDeviceSamplerFilterMinmaxPropertiesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceSamplerFilterMinmaxPropertiesEXT)
+instance HasNext PhysicalDeviceSamplerFilterMinmaxPropertiesEXT where
+  getNext s = next (s :: PhysicalDeviceSamplerFilterMinmaxPropertiesEXT)
 instance ToCStruct SampleLocationEXT VkSampleLocationEXT where
   withCStruct = withCStructSampleLocationEXT
 instance FromCStruct SampleLocationEXT VkSampleLocationEXT where
@@ -4625,8 +4913,8 @@ instance ToCStruct SampleLocationsInfoEXT VkSampleLocationsInfoEXT where
   withCStruct = withCStructSampleLocationsInfoEXT
 instance FromCStruct SampleLocationsInfoEXT VkSampleLocationsInfoEXT where
   fromCStruct = fromCStructSampleLocationsInfoEXT
-instance HasPNext SampleLocationsInfoEXT where
-  getPNext a = vkPNext (a :: SampleLocationsInfoEXT)
+instance HasNext SampleLocationsInfoEXT where
+  getNext s = next (s :: SampleLocationsInfoEXT)
 instance ToCStruct AttachmentSampleLocationsEXT VkAttachmentSampleLocationsEXT where
   withCStruct = withCStructAttachmentSampleLocationsEXT
 instance FromCStruct AttachmentSampleLocationsEXT VkAttachmentSampleLocationsEXT where
@@ -4641,134 +4929,134 @@ instance ToCStruct RenderPassSampleLocationsBeginInfoEXT VkRenderPassSampleLocat
   withCStruct = withCStructRenderPassSampleLocationsBeginInfoEXT
 instance FromCStruct RenderPassSampleLocationsBeginInfoEXT VkRenderPassSampleLocationsBeginInfoEXT where
   fromCStruct = fromCStructRenderPassSampleLocationsBeginInfoEXT
-instance HasPNext RenderPassSampleLocationsBeginInfoEXT where
-  getPNext a = vkPNext (a :: RenderPassSampleLocationsBeginInfoEXT)
+instance HasNext RenderPassSampleLocationsBeginInfoEXT where
+  getNext s = next (s :: RenderPassSampleLocationsBeginInfoEXT)
 instance ToCStruct PipelineSampleLocationsStateCreateInfoEXT VkPipelineSampleLocationsStateCreateInfoEXT where
   withCStruct = withCStructPipelineSampleLocationsStateCreateInfoEXT
 instance FromCStruct PipelineSampleLocationsStateCreateInfoEXT VkPipelineSampleLocationsStateCreateInfoEXT where
   fromCStruct = fromCStructPipelineSampleLocationsStateCreateInfoEXT
-instance HasPNext PipelineSampleLocationsStateCreateInfoEXT where
-  getPNext a = vkPNext (a :: PipelineSampleLocationsStateCreateInfoEXT)
+instance HasNext PipelineSampleLocationsStateCreateInfoEXT where
+  getNext s = next (s :: PipelineSampleLocationsStateCreateInfoEXT)
 instance ToCStruct PhysicalDeviceSampleLocationsPropertiesEXT VkPhysicalDeviceSampleLocationsPropertiesEXT where
   withCStruct = withCStructPhysicalDeviceSampleLocationsPropertiesEXT
 instance FromCStruct PhysicalDeviceSampleLocationsPropertiesEXT VkPhysicalDeviceSampleLocationsPropertiesEXT where
   fromCStruct = fromCStructPhysicalDeviceSampleLocationsPropertiesEXT
-instance HasPNext PhysicalDeviceSampleLocationsPropertiesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceSampleLocationsPropertiesEXT)
+instance HasNext PhysicalDeviceSampleLocationsPropertiesEXT where
+  getNext s = next (s :: PhysicalDeviceSampleLocationsPropertiesEXT)
 instance ToCStruct MultisamplePropertiesEXT VkMultisamplePropertiesEXT where
   withCStruct = withCStructMultisamplePropertiesEXT
 instance FromCStruct MultisamplePropertiesEXT VkMultisamplePropertiesEXT where
   fromCStruct = fromCStructMultisamplePropertiesEXT
-instance HasPNext MultisamplePropertiesEXT where
-  getPNext a = vkPNext (a :: MultisamplePropertiesEXT)
+instance HasNext MultisamplePropertiesEXT where
+  getNext s = next (s :: MultisamplePropertiesEXT)
 instance ToCStruct SamplerReductionModeCreateInfoEXT VkSamplerReductionModeCreateInfoEXT where
   withCStruct = withCStructSamplerReductionModeCreateInfoEXT
 instance FromCStruct SamplerReductionModeCreateInfoEXT VkSamplerReductionModeCreateInfoEXT where
   fromCStruct = fromCStructSamplerReductionModeCreateInfoEXT
-instance HasPNext SamplerReductionModeCreateInfoEXT where
-  getPNext a = vkPNext (a :: SamplerReductionModeCreateInfoEXT)
+instance HasNext SamplerReductionModeCreateInfoEXT where
+  getNext s = next (s :: SamplerReductionModeCreateInfoEXT)
 instance ToCStruct PhysicalDeviceBlendOperationAdvancedFeaturesEXT VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT where
   withCStruct = withCStructPhysicalDeviceBlendOperationAdvancedFeaturesEXT
 instance FromCStruct PhysicalDeviceBlendOperationAdvancedFeaturesEXT VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT where
   fromCStruct = fromCStructPhysicalDeviceBlendOperationAdvancedFeaturesEXT
-instance HasPNext PhysicalDeviceBlendOperationAdvancedFeaturesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceBlendOperationAdvancedFeaturesEXT)
+instance HasNext PhysicalDeviceBlendOperationAdvancedFeaturesEXT where
+  getNext s = next (s :: PhysicalDeviceBlendOperationAdvancedFeaturesEXT)
 instance ToCStruct PhysicalDeviceBlendOperationAdvancedPropertiesEXT VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT where
   withCStruct = withCStructPhysicalDeviceBlendOperationAdvancedPropertiesEXT
 instance FromCStruct PhysicalDeviceBlendOperationAdvancedPropertiesEXT VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT where
   fromCStruct = fromCStructPhysicalDeviceBlendOperationAdvancedPropertiesEXT
-instance HasPNext PhysicalDeviceBlendOperationAdvancedPropertiesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceBlendOperationAdvancedPropertiesEXT)
+instance HasNext PhysicalDeviceBlendOperationAdvancedPropertiesEXT where
+  getNext s = next (s :: PhysicalDeviceBlendOperationAdvancedPropertiesEXT)
 instance ToCStruct PipelineColorBlendAdvancedStateCreateInfoEXT VkPipelineColorBlendAdvancedStateCreateInfoEXT where
   withCStruct = withCStructPipelineColorBlendAdvancedStateCreateInfoEXT
 instance FromCStruct PipelineColorBlendAdvancedStateCreateInfoEXT VkPipelineColorBlendAdvancedStateCreateInfoEXT where
   fromCStruct = fromCStructPipelineColorBlendAdvancedStateCreateInfoEXT
-instance HasPNext PipelineColorBlendAdvancedStateCreateInfoEXT where
-  getPNext a = vkPNext (a :: PipelineColorBlendAdvancedStateCreateInfoEXT)
+instance HasNext PipelineColorBlendAdvancedStateCreateInfoEXT where
+  getNext s = next (s :: PipelineColorBlendAdvancedStateCreateInfoEXT)
 instance ToCStruct PhysicalDeviceInlineUniformBlockFeaturesEXT VkPhysicalDeviceInlineUniformBlockFeaturesEXT where
   withCStruct = withCStructPhysicalDeviceInlineUniformBlockFeaturesEXT
 instance FromCStruct PhysicalDeviceInlineUniformBlockFeaturesEXT VkPhysicalDeviceInlineUniformBlockFeaturesEXT where
   fromCStruct = fromCStructPhysicalDeviceInlineUniformBlockFeaturesEXT
-instance HasPNext PhysicalDeviceInlineUniformBlockFeaturesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceInlineUniformBlockFeaturesEXT)
+instance HasNext PhysicalDeviceInlineUniformBlockFeaturesEXT where
+  getNext s = next (s :: PhysicalDeviceInlineUniformBlockFeaturesEXT)
 instance ToCStruct PhysicalDeviceInlineUniformBlockPropertiesEXT VkPhysicalDeviceInlineUniformBlockPropertiesEXT where
   withCStruct = withCStructPhysicalDeviceInlineUniformBlockPropertiesEXT
 instance FromCStruct PhysicalDeviceInlineUniformBlockPropertiesEXT VkPhysicalDeviceInlineUniformBlockPropertiesEXT where
   fromCStruct = fromCStructPhysicalDeviceInlineUniformBlockPropertiesEXT
-instance HasPNext PhysicalDeviceInlineUniformBlockPropertiesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceInlineUniformBlockPropertiesEXT)
+instance HasNext PhysicalDeviceInlineUniformBlockPropertiesEXT where
+  getNext s = next (s :: PhysicalDeviceInlineUniformBlockPropertiesEXT)
 instance ToCStruct WriteDescriptorSetInlineUniformBlockEXT VkWriteDescriptorSetInlineUniformBlockEXT where
   withCStruct = withCStructWriteDescriptorSetInlineUniformBlockEXT
 instance FromCStruct WriteDescriptorSetInlineUniformBlockEXT VkWriteDescriptorSetInlineUniformBlockEXT where
   fromCStruct = fromCStructWriteDescriptorSetInlineUniformBlockEXT
-instance HasPNext WriteDescriptorSetInlineUniformBlockEXT where
-  getPNext a = vkPNext (a :: WriteDescriptorSetInlineUniformBlockEXT)
+instance HasNext WriteDescriptorSetInlineUniformBlockEXT where
+  getNext s = next (s :: WriteDescriptorSetInlineUniformBlockEXT)
 instance ToCStruct DescriptorPoolInlineUniformBlockCreateInfoEXT VkDescriptorPoolInlineUniformBlockCreateInfoEXT where
   withCStruct = withCStructDescriptorPoolInlineUniformBlockCreateInfoEXT
 instance FromCStruct DescriptorPoolInlineUniformBlockCreateInfoEXT VkDescriptorPoolInlineUniformBlockCreateInfoEXT where
   fromCStruct = fromCStructDescriptorPoolInlineUniformBlockCreateInfoEXT
-instance HasPNext DescriptorPoolInlineUniformBlockCreateInfoEXT where
-  getPNext a = vkPNext (a :: DescriptorPoolInlineUniformBlockCreateInfoEXT)
+instance HasNext DescriptorPoolInlineUniformBlockCreateInfoEXT where
+  getNext s = next (s :: DescriptorPoolInlineUniformBlockCreateInfoEXT)
 instance ToCStruct PipelineCoverageModulationStateCreateInfoNV VkPipelineCoverageModulationStateCreateInfoNV where
   withCStruct = withCStructPipelineCoverageModulationStateCreateInfoNV
 instance FromCStruct PipelineCoverageModulationStateCreateInfoNV VkPipelineCoverageModulationStateCreateInfoNV where
   fromCStruct = fromCStructPipelineCoverageModulationStateCreateInfoNV
-instance HasPNext PipelineCoverageModulationStateCreateInfoNV where
-  getPNext a = vkPNext (a :: PipelineCoverageModulationStateCreateInfoNV)
+instance HasNext PipelineCoverageModulationStateCreateInfoNV where
+  getNext s = next (s :: PipelineCoverageModulationStateCreateInfoNV)
 instance ToCStruct ImageFormatListCreateInfoKHR VkImageFormatListCreateInfoKHR where
   withCStruct = withCStructImageFormatListCreateInfoKHR
 instance FromCStruct ImageFormatListCreateInfoKHR VkImageFormatListCreateInfoKHR where
   fromCStruct = fromCStructImageFormatListCreateInfoKHR
-instance HasPNext ImageFormatListCreateInfoKHR where
-  getPNext a = vkPNext (a :: ImageFormatListCreateInfoKHR)
+instance HasNext ImageFormatListCreateInfoKHR where
+  getNext s = next (s :: ImageFormatListCreateInfoKHR)
 instance ToCStruct ValidationCacheCreateInfoEXT VkValidationCacheCreateInfoEXT where
   withCStruct = withCStructValidationCacheCreateInfoEXT
 instance FromCStruct ValidationCacheCreateInfoEXT VkValidationCacheCreateInfoEXT where
   fromCStruct = fromCStructValidationCacheCreateInfoEXT
-instance HasPNext ValidationCacheCreateInfoEXT where
-  getPNext a = vkPNext (a :: ValidationCacheCreateInfoEXT)
+instance HasNext ValidationCacheCreateInfoEXT where
+  getNext s = next (s :: ValidationCacheCreateInfoEXT)
 instance ToCStruct ShaderModuleValidationCacheCreateInfoEXT VkShaderModuleValidationCacheCreateInfoEXT where
   withCStruct = withCStructShaderModuleValidationCacheCreateInfoEXT
 instance FromCStruct ShaderModuleValidationCacheCreateInfoEXT VkShaderModuleValidationCacheCreateInfoEXT where
   fromCStruct = fromCStructShaderModuleValidationCacheCreateInfoEXT
-instance HasPNext ShaderModuleValidationCacheCreateInfoEXT where
-  getPNext a = vkPNext (a :: ShaderModuleValidationCacheCreateInfoEXT)
+instance HasNext ShaderModuleValidationCacheCreateInfoEXT where
+  getNext s = next (s :: ShaderModuleValidationCacheCreateInfoEXT)
 instance ToCStruct PhysicalDeviceMaintenance3Properties VkPhysicalDeviceMaintenance3Properties where
   withCStruct = withCStructPhysicalDeviceMaintenance3Properties
 instance FromCStruct PhysicalDeviceMaintenance3Properties VkPhysicalDeviceMaintenance3Properties where
   fromCStruct = fromCStructPhysicalDeviceMaintenance3Properties
-instance HasPNext PhysicalDeviceMaintenance3Properties where
-  getPNext a = vkPNext (a :: PhysicalDeviceMaintenance3Properties)
+instance HasNext PhysicalDeviceMaintenance3Properties where
+  getNext s = next (s :: PhysicalDeviceMaintenance3Properties)
 instance ToCStruct DescriptorSetLayoutSupport VkDescriptorSetLayoutSupport where
   withCStruct = withCStructDescriptorSetLayoutSupport
 instance FromCStruct DescriptorSetLayoutSupport VkDescriptorSetLayoutSupport where
   fromCStruct = fromCStructDescriptorSetLayoutSupport
-instance HasPNext DescriptorSetLayoutSupport where
-  getPNext a = vkPNext (a :: DescriptorSetLayoutSupport)
+instance HasNext DescriptorSetLayoutSupport where
+  getNext s = next (s :: DescriptorSetLayoutSupport)
 instance ToCStruct PhysicalDeviceShaderDrawParametersFeatures VkPhysicalDeviceShaderDrawParametersFeatures where
   withCStruct = withCStructPhysicalDeviceShaderDrawParametersFeatures
 instance FromCStruct PhysicalDeviceShaderDrawParametersFeatures VkPhysicalDeviceShaderDrawParametersFeatures where
   fromCStruct = fromCStructPhysicalDeviceShaderDrawParametersFeatures
-instance HasPNext PhysicalDeviceShaderDrawParametersFeatures where
-  getPNext a = vkPNext (a :: PhysicalDeviceShaderDrawParametersFeatures)
+instance HasNext PhysicalDeviceShaderDrawParametersFeatures where
+  getNext s = next (s :: PhysicalDeviceShaderDrawParametersFeatures)
 instance ToCStruct PhysicalDeviceFloat16Int8FeaturesKHR VkPhysicalDeviceFloat16Int8FeaturesKHR where
   withCStruct = withCStructPhysicalDeviceFloat16Int8FeaturesKHR
 instance FromCStruct PhysicalDeviceFloat16Int8FeaturesKHR VkPhysicalDeviceFloat16Int8FeaturesKHR where
   fromCStruct = fromCStructPhysicalDeviceFloat16Int8FeaturesKHR
-instance HasPNext PhysicalDeviceFloat16Int8FeaturesKHR where
-  getPNext a = vkPNext (a :: PhysicalDeviceFloat16Int8FeaturesKHR)
+instance HasNext PhysicalDeviceFloat16Int8FeaturesKHR where
+  getNext s = next (s :: PhysicalDeviceFloat16Int8FeaturesKHR)
 instance ToCStruct PhysicalDeviceFloatControlsPropertiesKHR VkPhysicalDeviceFloatControlsPropertiesKHR where
   withCStruct = withCStructPhysicalDeviceFloatControlsPropertiesKHR
 instance FromCStruct PhysicalDeviceFloatControlsPropertiesKHR VkPhysicalDeviceFloatControlsPropertiesKHR where
   fromCStruct = fromCStructPhysicalDeviceFloatControlsPropertiesKHR
-instance HasPNext PhysicalDeviceFloatControlsPropertiesKHR where
-  getPNext a = vkPNext (a :: PhysicalDeviceFloatControlsPropertiesKHR)
+instance HasNext PhysicalDeviceFloatControlsPropertiesKHR where
+  getNext s = next (s :: PhysicalDeviceFloatControlsPropertiesKHR)
 instance ToCStruct PhysicalDeviceHostQueryResetFeaturesEXT VkPhysicalDeviceHostQueryResetFeaturesEXT where
   withCStruct = withCStructPhysicalDeviceHostQueryResetFeaturesEXT
 instance FromCStruct PhysicalDeviceHostQueryResetFeaturesEXT VkPhysicalDeviceHostQueryResetFeaturesEXT where
   fromCStruct = fromCStructPhysicalDeviceHostQueryResetFeaturesEXT
-instance HasPNext PhysicalDeviceHostQueryResetFeaturesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceHostQueryResetFeaturesEXT)
+instance HasNext PhysicalDeviceHostQueryResetFeaturesEXT where
+  getNext s = next (s :: PhysicalDeviceHostQueryResetFeaturesEXT)
 instance ToCStruct ShaderResourceUsageAMD VkShaderResourceUsageAMD where
   withCStruct = withCStructShaderResourceUsageAMD
 instance FromCStruct ShaderResourceUsageAMD VkShaderResourceUsageAMD where
@@ -4783,152 +5071,152 @@ instance ToCStruct DeviceQueueGlobalPriorityCreateInfoEXT VkDeviceQueueGlobalPri
   withCStruct = withCStructDeviceQueueGlobalPriorityCreateInfoEXT
 instance FromCStruct DeviceQueueGlobalPriorityCreateInfoEXT VkDeviceQueueGlobalPriorityCreateInfoEXT where
   fromCStruct = fromCStructDeviceQueueGlobalPriorityCreateInfoEXT
-instance HasPNext DeviceQueueGlobalPriorityCreateInfoEXT where
-  getPNext a = vkPNext (a :: DeviceQueueGlobalPriorityCreateInfoEXT)
+instance HasNext DeviceQueueGlobalPriorityCreateInfoEXT where
+  getNext s = next (s :: DeviceQueueGlobalPriorityCreateInfoEXT)
 instance ToCStruct DebugUtilsObjectNameInfoEXT VkDebugUtilsObjectNameInfoEXT where
   withCStruct = withCStructDebugUtilsObjectNameInfoEXT
 instance FromCStruct DebugUtilsObjectNameInfoEXT VkDebugUtilsObjectNameInfoEXT where
   fromCStruct = fromCStructDebugUtilsObjectNameInfoEXT
-instance HasPNext DebugUtilsObjectNameInfoEXT where
-  getPNext a = vkPNext (a :: DebugUtilsObjectNameInfoEXT)
+instance HasNext DebugUtilsObjectNameInfoEXT where
+  getNext s = next (s :: DebugUtilsObjectNameInfoEXT)
 instance ToCStruct DebugUtilsObjectTagInfoEXT VkDebugUtilsObjectTagInfoEXT where
   withCStruct = withCStructDebugUtilsObjectTagInfoEXT
 instance FromCStruct DebugUtilsObjectTagInfoEXT VkDebugUtilsObjectTagInfoEXT where
   fromCStruct = fromCStructDebugUtilsObjectTagInfoEXT
-instance HasPNext DebugUtilsObjectTagInfoEXT where
-  getPNext a = vkPNext (a :: DebugUtilsObjectTagInfoEXT)
+instance HasNext DebugUtilsObjectTagInfoEXT where
+  getNext s = next (s :: DebugUtilsObjectTagInfoEXT)
 instance ToCStruct DebugUtilsLabelEXT VkDebugUtilsLabelEXT where
   withCStruct = withCStructDebugUtilsLabelEXT
 instance FromCStruct DebugUtilsLabelEXT VkDebugUtilsLabelEXT where
   fromCStruct = fromCStructDebugUtilsLabelEXT
-instance HasPNext DebugUtilsLabelEXT where
-  getPNext a = vkPNext (a :: DebugUtilsLabelEXT)
+instance HasNext DebugUtilsLabelEXT where
+  getNext s = next (s :: DebugUtilsLabelEXT)
 instance ToCStruct DebugUtilsMessengerCreateInfoEXT VkDebugUtilsMessengerCreateInfoEXT where
   withCStruct = withCStructDebugUtilsMessengerCreateInfoEXT
 instance FromCStruct DebugUtilsMessengerCreateInfoEXT VkDebugUtilsMessengerCreateInfoEXT where
   fromCStruct = fromCStructDebugUtilsMessengerCreateInfoEXT
-instance HasPNext DebugUtilsMessengerCreateInfoEXT where
-  getPNext a = vkPNext (a :: DebugUtilsMessengerCreateInfoEXT)
+instance HasNext DebugUtilsMessengerCreateInfoEXT where
+  getNext s = next (s :: DebugUtilsMessengerCreateInfoEXT)
 instance ToCStruct DebugUtilsMessengerCallbackDataEXT VkDebugUtilsMessengerCallbackDataEXT where
   withCStruct = withCStructDebugUtilsMessengerCallbackDataEXT
 instance FromCStruct DebugUtilsMessengerCallbackDataEXT VkDebugUtilsMessengerCallbackDataEXT where
   fromCStruct = fromCStructDebugUtilsMessengerCallbackDataEXT
-instance HasPNext DebugUtilsMessengerCallbackDataEXT where
-  getPNext a = vkPNext (a :: DebugUtilsMessengerCallbackDataEXT)
+instance HasNext DebugUtilsMessengerCallbackDataEXT where
+  getNext s = next (s :: DebugUtilsMessengerCallbackDataEXT)
 instance ToCStruct ImportMemoryHostPointerInfoEXT VkImportMemoryHostPointerInfoEXT where
   withCStruct = withCStructImportMemoryHostPointerInfoEXT
 instance FromCStruct ImportMemoryHostPointerInfoEXT VkImportMemoryHostPointerInfoEXT where
   fromCStruct = fromCStructImportMemoryHostPointerInfoEXT
-instance HasPNext ImportMemoryHostPointerInfoEXT where
-  getPNext a = vkPNext (a :: ImportMemoryHostPointerInfoEXT)
+instance HasNext ImportMemoryHostPointerInfoEXT where
+  getNext s = next (s :: ImportMemoryHostPointerInfoEXT)
 instance ToCStruct MemoryHostPointerPropertiesEXT VkMemoryHostPointerPropertiesEXT where
   withCStruct = withCStructMemoryHostPointerPropertiesEXT
 instance FromCStruct MemoryHostPointerPropertiesEXT VkMemoryHostPointerPropertiesEXT where
   fromCStruct = fromCStructMemoryHostPointerPropertiesEXT
-instance HasPNext MemoryHostPointerPropertiesEXT where
-  getPNext a = vkPNext (a :: MemoryHostPointerPropertiesEXT)
+instance HasNext MemoryHostPointerPropertiesEXT where
+  getNext s = next (s :: MemoryHostPointerPropertiesEXT)
 instance ToCStruct PhysicalDeviceExternalMemoryHostPropertiesEXT VkPhysicalDeviceExternalMemoryHostPropertiesEXT where
   withCStruct = withCStructPhysicalDeviceExternalMemoryHostPropertiesEXT
 instance FromCStruct PhysicalDeviceExternalMemoryHostPropertiesEXT VkPhysicalDeviceExternalMemoryHostPropertiesEXT where
   fromCStruct = fromCStructPhysicalDeviceExternalMemoryHostPropertiesEXT
-instance HasPNext PhysicalDeviceExternalMemoryHostPropertiesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceExternalMemoryHostPropertiesEXT)
+instance HasNext PhysicalDeviceExternalMemoryHostPropertiesEXT where
+  getNext s = next (s :: PhysicalDeviceExternalMemoryHostPropertiesEXT)
 instance ToCStruct PhysicalDeviceConservativeRasterizationPropertiesEXT VkPhysicalDeviceConservativeRasterizationPropertiesEXT where
   withCStruct = withCStructPhysicalDeviceConservativeRasterizationPropertiesEXT
 instance FromCStruct PhysicalDeviceConservativeRasterizationPropertiesEXT VkPhysicalDeviceConservativeRasterizationPropertiesEXT where
   fromCStruct = fromCStructPhysicalDeviceConservativeRasterizationPropertiesEXT
-instance HasPNext PhysicalDeviceConservativeRasterizationPropertiesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceConservativeRasterizationPropertiesEXT)
+instance HasNext PhysicalDeviceConservativeRasterizationPropertiesEXT where
+  getNext s = next (s :: PhysicalDeviceConservativeRasterizationPropertiesEXT)
 instance ToCStruct CalibratedTimestampInfoEXT VkCalibratedTimestampInfoEXT where
   withCStruct = withCStructCalibratedTimestampInfoEXT
 instance FromCStruct CalibratedTimestampInfoEXT VkCalibratedTimestampInfoEXT where
   fromCStruct = fromCStructCalibratedTimestampInfoEXT
-instance HasPNext CalibratedTimestampInfoEXT where
-  getPNext a = vkPNext (a :: CalibratedTimestampInfoEXT)
+instance HasNext CalibratedTimestampInfoEXT where
+  getNext s = next (s :: CalibratedTimestampInfoEXT)
 instance ToCStruct PhysicalDeviceShaderCorePropertiesAMD VkPhysicalDeviceShaderCorePropertiesAMD where
   withCStruct = withCStructPhysicalDeviceShaderCorePropertiesAMD
 instance FromCStruct PhysicalDeviceShaderCorePropertiesAMD VkPhysicalDeviceShaderCorePropertiesAMD where
   fromCStruct = fromCStructPhysicalDeviceShaderCorePropertiesAMD
-instance HasPNext PhysicalDeviceShaderCorePropertiesAMD where
-  getPNext a = vkPNext (a :: PhysicalDeviceShaderCorePropertiesAMD)
+instance HasNext PhysicalDeviceShaderCorePropertiesAMD where
+  getNext s = next (s :: PhysicalDeviceShaderCorePropertiesAMD)
 instance ToCStruct PipelineRasterizationConservativeStateCreateInfoEXT VkPipelineRasterizationConservativeStateCreateInfoEXT where
   withCStruct = withCStructPipelineRasterizationConservativeStateCreateInfoEXT
 instance FromCStruct PipelineRasterizationConservativeStateCreateInfoEXT VkPipelineRasterizationConservativeStateCreateInfoEXT where
   fromCStruct = fromCStructPipelineRasterizationConservativeStateCreateInfoEXT
-instance HasPNext PipelineRasterizationConservativeStateCreateInfoEXT where
-  getPNext a = vkPNext (a :: PipelineRasterizationConservativeStateCreateInfoEXT)
+instance HasNext PipelineRasterizationConservativeStateCreateInfoEXT where
+  getNext s = next (s :: PipelineRasterizationConservativeStateCreateInfoEXT)
 instance ToCStruct PhysicalDeviceDescriptorIndexingFeaturesEXT VkPhysicalDeviceDescriptorIndexingFeaturesEXT where
   withCStruct = withCStructPhysicalDeviceDescriptorIndexingFeaturesEXT
 instance FromCStruct PhysicalDeviceDescriptorIndexingFeaturesEXT VkPhysicalDeviceDescriptorIndexingFeaturesEXT where
   fromCStruct = fromCStructPhysicalDeviceDescriptorIndexingFeaturesEXT
-instance HasPNext PhysicalDeviceDescriptorIndexingFeaturesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceDescriptorIndexingFeaturesEXT)
+instance HasNext PhysicalDeviceDescriptorIndexingFeaturesEXT where
+  getNext s = next (s :: PhysicalDeviceDescriptorIndexingFeaturesEXT)
 instance ToCStruct PhysicalDeviceDescriptorIndexingPropertiesEXT VkPhysicalDeviceDescriptorIndexingPropertiesEXT where
   withCStruct = withCStructPhysicalDeviceDescriptorIndexingPropertiesEXT
 instance FromCStruct PhysicalDeviceDescriptorIndexingPropertiesEXT VkPhysicalDeviceDescriptorIndexingPropertiesEXT where
   fromCStruct = fromCStructPhysicalDeviceDescriptorIndexingPropertiesEXT
-instance HasPNext PhysicalDeviceDescriptorIndexingPropertiesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceDescriptorIndexingPropertiesEXT)
+instance HasNext PhysicalDeviceDescriptorIndexingPropertiesEXT where
+  getNext s = next (s :: PhysicalDeviceDescriptorIndexingPropertiesEXT)
 instance ToCStruct DescriptorSetLayoutBindingFlagsCreateInfoEXT VkDescriptorSetLayoutBindingFlagsCreateInfoEXT where
   withCStruct = withCStructDescriptorSetLayoutBindingFlagsCreateInfoEXT
 instance FromCStruct DescriptorSetLayoutBindingFlagsCreateInfoEXT VkDescriptorSetLayoutBindingFlagsCreateInfoEXT where
   fromCStruct = fromCStructDescriptorSetLayoutBindingFlagsCreateInfoEXT
-instance HasPNext DescriptorSetLayoutBindingFlagsCreateInfoEXT where
-  getPNext a = vkPNext (a :: DescriptorSetLayoutBindingFlagsCreateInfoEXT)
+instance HasNext DescriptorSetLayoutBindingFlagsCreateInfoEXT where
+  getNext s = next (s :: DescriptorSetLayoutBindingFlagsCreateInfoEXT)
 instance ToCStruct DescriptorSetVariableDescriptorCountAllocateInfoEXT VkDescriptorSetVariableDescriptorCountAllocateInfoEXT where
   withCStruct = withCStructDescriptorSetVariableDescriptorCountAllocateInfoEXT
 instance FromCStruct DescriptorSetVariableDescriptorCountAllocateInfoEXT VkDescriptorSetVariableDescriptorCountAllocateInfoEXT where
   fromCStruct = fromCStructDescriptorSetVariableDescriptorCountAllocateInfoEXT
-instance HasPNext DescriptorSetVariableDescriptorCountAllocateInfoEXT where
-  getPNext a = vkPNext (a :: DescriptorSetVariableDescriptorCountAllocateInfoEXT)
+instance HasNext DescriptorSetVariableDescriptorCountAllocateInfoEXT where
+  getNext s = next (s :: DescriptorSetVariableDescriptorCountAllocateInfoEXT)
 instance ToCStruct DescriptorSetVariableDescriptorCountLayoutSupportEXT VkDescriptorSetVariableDescriptorCountLayoutSupportEXT where
   withCStruct = withCStructDescriptorSetVariableDescriptorCountLayoutSupportEXT
 instance FromCStruct DescriptorSetVariableDescriptorCountLayoutSupportEXT VkDescriptorSetVariableDescriptorCountLayoutSupportEXT where
   fromCStruct = fromCStructDescriptorSetVariableDescriptorCountLayoutSupportEXT
-instance HasPNext DescriptorSetVariableDescriptorCountLayoutSupportEXT where
-  getPNext a = vkPNext (a :: DescriptorSetVariableDescriptorCountLayoutSupportEXT)
+instance HasNext DescriptorSetVariableDescriptorCountLayoutSupportEXT where
+  getNext s = next (s :: DescriptorSetVariableDescriptorCountLayoutSupportEXT)
 instance ToCStruct AttachmentDescription2KHR VkAttachmentDescription2KHR where
   withCStruct = withCStructAttachmentDescription2KHR
 instance FromCStruct AttachmentDescription2KHR VkAttachmentDescription2KHR where
   fromCStruct = fromCStructAttachmentDescription2KHR
-instance HasPNext AttachmentDescription2KHR where
-  getPNext a = vkPNext (a :: AttachmentDescription2KHR)
+instance HasNext AttachmentDescription2KHR where
+  getNext s = next (s :: AttachmentDescription2KHR)
 instance ToCStruct AttachmentReference2KHR VkAttachmentReference2KHR where
   withCStruct = withCStructAttachmentReference2KHR
 instance FromCStruct AttachmentReference2KHR VkAttachmentReference2KHR where
   fromCStruct = fromCStructAttachmentReference2KHR
-instance HasPNext AttachmentReference2KHR where
-  getPNext a = vkPNext (a :: AttachmentReference2KHR)
+instance HasNext AttachmentReference2KHR where
+  getNext s = next (s :: AttachmentReference2KHR)
 instance ToCStruct SubpassDescription2KHR VkSubpassDescription2KHR where
   withCStruct = withCStructSubpassDescription2KHR
 instance FromCStruct SubpassDescription2KHR VkSubpassDescription2KHR where
   fromCStruct = fromCStructSubpassDescription2KHR
-instance HasPNext SubpassDescription2KHR where
-  getPNext a = vkPNext (a :: SubpassDescription2KHR)
+instance HasNext SubpassDescription2KHR where
+  getNext s = next (s :: SubpassDescription2KHR)
 instance ToCStruct SubpassDependency2KHR VkSubpassDependency2KHR where
   withCStruct = withCStructSubpassDependency2KHR
 instance FromCStruct SubpassDependency2KHR VkSubpassDependency2KHR where
   fromCStruct = fromCStructSubpassDependency2KHR
-instance HasPNext SubpassDependency2KHR where
-  getPNext a = vkPNext (a :: SubpassDependency2KHR)
+instance HasNext SubpassDependency2KHR where
+  getNext s = next (s :: SubpassDependency2KHR)
 instance ToCStruct RenderPassCreateInfo2KHR VkRenderPassCreateInfo2KHR where
   withCStruct = withCStructRenderPassCreateInfo2KHR
 instance FromCStruct RenderPassCreateInfo2KHR VkRenderPassCreateInfo2KHR where
   fromCStruct = fromCStructRenderPassCreateInfo2KHR
-instance HasPNext RenderPassCreateInfo2KHR where
-  getPNext a = vkPNext (a :: RenderPassCreateInfo2KHR)
+instance HasNext RenderPassCreateInfo2KHR where
+  getNext s = next (s :: RenderPassCreateInfo2KHR)
 instance ToCStruct SubpassBeginInfoKHR VkSubpassBeginInfoKHR where
   withCStruct = withCStructSubpassBeginInfoKHR
 instance FromCStruct SubpassBeginInfoKHR VkSubpassBeginInfoKHR where
   fromCStruct = fromCStructSubpassBeginInfoKHR
-instance HasPNext SubpassBeginInfoKHR where
-  getPNext a = vkPNext (a :: SubpassBeginInfoKHR)
+instance HasNext SubpassBeginInfoKHR where
+  getNext s = next (s :: SubpassBeginInfoKHR)
 instance ToCStruct SubpassEndInfoKHR VkSubpassEndInfoKHR where
   withCStruct = withCStructSubpassEndInfoKHR
 instance FromCStruct SubpassEndInfoKHR VkSubpassEndInfoKHR where
   fromCStruct = fromCStructSubpassEndInfoKHR
-instance HasPNext SubpassEndInfoKHR where
-  getPNext a = vkPNext (a :: SubpassEndInfoKHR)
+instance HasNext SubpassEndInfoKHR where
+  getNext s = next (s :: SubpassEndInfoKHR)
 instance ToCStruct VertexInputBindingDivisorDescriptionEXT VkVertexInputBindingDivisorDescriptionEXT where
   withCStruct = withCStructVertexInputBindingDivisorDescriptionEXT
 instance FromCStruct VertexInputBindingDivisorDescriptionEXT VkVertexInputBindingDivisorDescriptionEXT where
@@ -4938,28 +5226,28 @@ instance ToCStruct PipelineVertexInputDivisorStateCreateInfoEXT VkPipelineVertex
   withCStruct = withCStructPipelineVertexInputDivisorStateCreateInfoEXT
 instance FromCStruct PipelineVertexInputDivisorStateCreateInfoEXT VkPipelineVertexInputDivisorStateCreateInfoEXT where
   fromCStruct = fromCStructPipelineVertexInputDivisorStateCreateInfoEXT
-instance HasPNext PipelineVertexInputDivisorStateCreateInfoEXT where
-  getPNext a = vkPNext (a :: PipelineVertexInputDivisorStateCreateInfoEXT)
+instance HasNext PipelineVertexInputDivisorStateCreateInfoEXT where
+  getNext s = next (s :: PipelineVertexInputDivisorStateCreateInfoEXT)
 instance ToCStruct PhysicalDeviceVertexAttributeDivisorPropertiesEXT VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT where
   withCStruct = withCStructPhysicalDeviceVertexAttributeDivisorPropertiesEXT
 instance FromCStruct PhysicalDeviceVertexAttributeDivisorPropertiesEXT VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT where
   fromCStruct = fromCStructPhysicalDeviceVertexAttributeDivisorPropertiesEXT
-instance HasPNext PhysicalDeviceVertexAttributeDivisorPropertiesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceVertexAttributeDivisorPropertiesEXT)
+instance HasNext PhysicalDeviceVertexAttributeDivisorPropertiesEXT where
+  getNext s = next (s :: PhysicalDeviceVertexAttributeDivisorPropertiesEXT)
 instance ToCStruct PhysicalDevicePCIBusInfoPropertiesEXT VkPhysicalDevicePCIBusInfoPropertiesEXT where
   withCStruct = withCStructPhysicalDevicePCIBusInfoPropertiesEXT
 instance FromCStruct PhysicalDevicePCIBusInfoPropertiesEXT VkPhysicalDevicePCIBusInfoPropertiesEXT where
   fromCStruct = fromCStructPhysicalDevicePCIBusInfoPropertiesEXT
-instance HasPNext PhysicalDevicePCIBusInfoPropertiesEXT where
-  getPNext a = vkPNext (a :: PhysicalDevicePCIBusInfoPropertiesEXT)
+instance HasNext PhysicalDevicePCIBusInfoPropertiesEXT where
+  getNext s = next (s :: PhysicalDevicePCIBusInfoPropertiesEXT)
 
 #if VK_USE_PLATFORM_ANDROID_KHR
 instance ToCStruct ImportAndroidHardwareBufferInfoANDROID VkImportAndroidHardwareBufferInfoANDROID where
   withCStruct = withCStructImportAndroidHardwareBufferInfoANDROID
 instance FromCStruct ImportAndroidHardwareBufferInfoANDROID VkImportAndroidHardwareBufferInfoANDROID where
   fromCStruct = fromCStructImportAndroidHardwareBufferInfoANDROID
-instance HasPNext ImportAndroidHardwareBufferInfoANDROID where
-  getPNext a = vkPNext (a :: ImportAndroidHardwareBufferInfoANDROID)
+instance HasNext ImportAndroidHardwareBufferInfoANDROID where
+  getNext s = next (s :: ImportAndroidHardwareBufferInfoANDROID)
 #endif
 
 #if VK_USE_PLATFORM_ANDROID_KHR
@@ -4967,8 +5255,8 @@ instance ToCStruct AndroidHardwareBufferUsageANDROID VkAndroidHardwareBufferUsag
   withCStruct = withCStructAndroidHardwareBufferUsageANDROID
 instance FromCStruct AndroidHardwareBufferUsageANDROID VkAndroidHardwareBufferUsageANDROID where
   fromCStruct = fromCStructAndroidHardwareBufferUsageANDROID
-instance HasPNext AndroidHardwareBufferUsageANDROID where
-  getPNext a = vkPNext (a :: AndroidHardwareBufferUsageANDROID)
+instance HasNext AndroidHardwareBufferUsageANDROID where
+  getNext s = next (s :: AndroidHardwareBufferUsageANDROID)
 #endif
 
 #if VK_USE_PLATFORM_ANDROID_KHR
@@ -4976,8 +5264,8 @@ instance ToCStruct AndroidHardwareBufferPropertiesANDROID VkAndroidHardwareBuffe
   withCStruct = withCStructAndroidHardwareBufferPropertiesANDROID
 instance FromCStruct AndroidHardwareBufferPropertiesANDROID VkAndroidHardwareBufferPropertiesANDROID where
   fromCStruct = fromCStructAndroidHardwareBufferPropertiesANDROID
-instance HasPNext AndroidHardwareBufferPropertiesANDROID where
-  getPNext a = vkPNext (a :: AndroidHardwareBufferPropertiesANDROID)
+instance HasNext AndroidHardwareBufferPropertiesANDROID where
+  getNext s = next (s :: AndroidHardwareBufferPropertiesANDROID)
 #endif
 
 #if VK_USE_PLATFORM_ANDROID_KHR
@@ -4985,8 +5273,8 @@ instance ToCStruct MemoryGetAndroidHardwareBufferInfoANDROID VkMemoryGetAndroidH
   withCStruct = withCStructMemoryGetAndroidHardwareBufferInfoANDROID
 instance FromCStruct MemoryGetAndroidHardwareBufferInfoANDROID VkMemoryGetAndroidHardwareBufferInfoANDROID where
   fromCStruct = fromCStructMemoryGetAndroidHardwareBufferInfoANDROID
-instance HasPNext MemoryGetAndroidHardwareBufferInfoANDROID where
-  getPNext a = vkPNext (a :: MemoryGetAndroidHardwareBufferInfoANDROID)
+instance HasNext MemoryGetAndroidHardwareBufferInfoANDROID where
+  getNext s = next (s :: MemoryGetAndroidHardwareBufferInfoANDROID)
 #endif
 
 #if VK_USE_PLATFORM_ANDROID_KHR
@@ -4994,162 +5282,162 @@ instance ToCStruct AndroidHardwareBufferFormatPropertiesANDROID VkAndroidHardwar
   withCStruct = withCStructAndroidHardwareBufferFormatPropertiesANDROID
 instance FromCStruct AndroidHardwareBufferFormatPropertiesANDROID VkAndroidHardwareBufferFormatPropertiesANDROID where
   fromCStruct = fromCStructAndroidHardwareBufferFormatPropertiesANDROID
-instance HasPNext AndroidHardwareBufferFormatPropertiesANDROID where
-  getPNext a = vkPNext (a :: AndroidHardwareBufferFormatPropertiesANDROID)
+instance HasNext AndroidHardwareBufferFormatPropertiesANDROID where
+  getNext s = next (s :: AndroidHardwareBufferFormatPropertiesANDROID)
 #endif
 instance ToCStruct CommandBufferInheritanceConditionalRenderingInfoEXT VkCommandBufferInheritanceConditionalRenderingInfoEXT where
   withCStruct = withCStructCommandBufferInheritanceConditionalRenderingInfoEXT
 instance FromCStruct CommandBufferInheritanceConditionalRenderingInfoEXT VkCommandBufferInheritanceConditionalRenderingInfoEXT where
   fromCStruct = fromCStructCommandBufferInheritanceConditionalRenderingInfoEXT
-instance HasPNext CommandBufferInheritanceConditionalRenderingInfoEXT where
-  getPNext a = vkPNext (a :: CommandBufferInheritanceConditionalRenderingInfoEXT)
+instance HasNext CommandBufferInheritanceConditionalRenderingInfoEXT where
+  getNext s = next (s :: CommandBufferInheritanceConditionalRenderingInfoEXT)
 
 #if VK_USE_PLATFORM_ANDROID_KHR
 instance ToCStruct ExternalFormatANDROID VkExternalFormatANDROID where
   withCStruct = withCStructExternalFormatANDROID
 instance FromCStruct ExternalFormatANDROID VkExternalFormatANDROID where
   fromCStruct = fromCStructExternalFormatANDROID
-instance HasPNext ExternalFormatANDROID where
-  getPNext a = vkPNext (a :: ExternalFormatANDROID)
+instance HasNext ExternalFormatANDROID where
+  getNext s = next (s :: ExternalFormatANDROID)
 #endif
 instance ToCStruct PhysicalDevice8BitStorageFeaturesKHR VkPhysicalDevice8BitStorageFeaturesKHR where
   withCStruct = withCStructPhysicalDevice8BitStorageFeaturesKHR
 instance FromCStruct PhysicalDevice8BitStorageFeaturesKHR VkPhysicalDevice8BitStorageFeaturesKHR where
   fromCStruct = fromCStructPhysicalDevice8BitStorageFeaturesKHR
-instance HasPNext PhysicalDevice8BitStorageFeaturesKHR where
-  getPNext a = vkPNext (a :: PhysicalDevice8BitStorageFeaturesKHR)
+instance HasNext PhysicalDevice8BitStorageFeaturesKHR where
+  getNext s = next (s :: PhysicalDevice8BitStorageFeaturesKHR)
 instance ToCStruct PhysicalDeviceConditionalRenderingFeaturesEXT VkPhysicalDeviceConditionalRenderingFeaturesEXT where
   withCStruct = withCStructPhysicalDeviceConditionalRenderingFeaturesEXT
 instance FromCStruct PhysicalDeviceConditionalRenderingFeaturesEXT VkPhysicalDeviceConditionalRenderingFeaturesEXT where
   fromCStruct = fromCStructPhysicalDeviceConditionalRenderingFeaturesEXT
-instance HasPNext PhysicalDeviceConditionalRenderingFeaturesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceConditionalRenderingFeaturesEXT)
+instance HasNext PhysicalDeviceConditionalRenderingFeaturesEXT where
+  getNext s = next (s :: PhysicalDeviceConditionalRenderingFeaturesEXT)
 instance ToCStruct PhysicalDeviceVulkanMemoryModelFeaturesKHR VkPhysicalDeviceVulkanMemoryModelFeaturesKHR where
   withCStruct = withCStructPhysicalDeviceVulkanMemoryModelFeaturesKHR
 instance FromCStruct PhysicalDeviceVulkanMemoryModelFeaturesKHR VkPhysicalDeviceVulkanMemoryModelFeaturesKHR where
   fromCStruct = fromCStructPhysicalDeviceVulkanMemoryModelFeaturesKHR
-instance HasPNext PhysicalDeviceVulkanMemoryModelFeaturesKHR where
-  getPNext a = vkPNext (a :: PhysicalDeviceVulkanMemoryModelFeaturesKHR)
+instance HasNext PhysicalDeviceVulkanMemoryModelFeaturesKHR where
+  getNext s = next (s :: PhysicalDeviceVulkanMemoryModelFeaturesKHR)
 instance ToCStruct PhysicalDeviceShaderAtomicInt64FeaturesKHR VkPhysicalDeviceShaderAtomicInt64FeaturesKHR where
   withCStruct = withCStructPhysicalDeviceShaderAtomicInt64FeaturesKHR
 instance FromCStruct PhysicalDeviceShaderAtomicInt64FeaturesKHR VkPhysicalDeviceShaderAtomicInt64FeaturesKHR where
   fromCStruct = fromCStructPhysicalDeviceShaderAtomicInt64FeaturesKHR
-instance HasPNext PhysicalDeviceShaderAtomicInt64FeaturesKHR where
-  getPNext a = vkPNext (a :: PhysicalDeviceShaderAtomicInt64FeaturesKHR)
+instance HasNext PhysicalDeviceShaderAtomicInt64FeaturesKHR where
+  getNext s = next (s :: PhysicalDeviceShaderAtomicInt64FeaturesKHR)
 instance ToCStruct PhysicalDeviceVertexAttributeDivisorFeaturesEXT VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT where
   withCStruct = withCStructPhysicalDeviceVertexAttributeDivisorFeaturesEXT
 instance FromCStruct PhysicalDeviceVertexAttributeDivisorFeaturesEXT VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT where
   fromCStruct = fromCStructPhysicalDeviceVertexAttributeDivisorFeaturesEXT
-instance HasPNext PhysicalDeviceVertexAttributeDivisorFeaturesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceVertexAttributeDivisorFeaturesEXT)
+instance HasNext PhysicalDeviceVertexAttributeDivisorFeaturesEXT where
+  getNext s = next (s :: PhysicalDeviceVertexAttributeDivisorFeaturesEXT)
 instance ToCStruct QueueFamilyCheckpointPropertiesNV VkQueueFamilyCheckpointPropertiesNV where
   withCStruct = withCStructQueueFamilyCheckpointPropertiesNV
 instance FromCStruct QueueFamilyCheckpointPropertiesNV VkQueueFamilyCheckpointPropertiesNV where
   fromCStruct = fromCStructQueueFamilyCheckpointPropertiesNV
-instance HasPNext QueueFamilyCheckpointPropertiesNV where
-  getPNext a = vkPNext (a :: QueueFamilyCheckpointPropertiesNV)
+instance HasNext QueueFamilyCheckpointPropertiesNV where
+  getNext s = next (s :: QueueFamilyCheckpointPropertiesNV)
 instance ToCStruct CheckpointDataNV VkCheckpointDataNV where
   withCStruct = withCStructCheckpointDataNV
 instance FromCStruct CheckpointDataNV VkCheckpointDataNV where
   fromCStruct = fromCStructCheckpointDataNV
-instance HasPNext CheckpointDataNV where
-  getPNext a = vkPNext (a :: CheckpointDataNV)
+instance HasNext CheckpointDataNV where
+  getNext s = next (s :: CheckpointDataNV)
 instance ToCStruct PhysicalDeviceDepthStencilResolvePropertiesKHR VkPhysicalDeviceDepthStencilResolvePropertiesKHR where
   withCStruct = withCStructPhysicalDeviceDepthStencilResolvePropertiesKHR
 instance FromCStruct PhysicalDeviceDepthStencilResolvePropertiesKHR VkPhysicalDeviceDepthStencilResolvePropertiesKHR where
   fromCStruct = fromCStructPhysicalDeviceDepthStencilResolvePropertiesKHR
-instance HasPNext PhysicalDeviceDepthStencilResolvePropertiesKHR where
-  getPNext a = vkPNext (a :: PhysicalDeviceDepthStencilResolvePropertiesKHR)
+instance HasNext PhysicalDeviceDepthStencilResolvePropertiesKHR where
+  getNext s = next (s :: PhysicalDeviceDepthStencilResolvePropertiesKHR)
 instance ToCStruct SubpassDescriptionDepthStencilResolveKHR VkSubpassDescriptionDepthStencilResolveKHR where
   withCStruct = withCStructSubpassDescriptionDepthStencilResolveKHR
 instance FromCStruct SubpassDescriptionDepthStencilResolveKHR VkSubpassDescriptionDepthStencilResolveKHR where
   fromCStruct = fromCStructSubpassDescriptionDepthStencilResolveKHR
-instance HasPNext SubpassDescriptionDepthStencilResolveKHR where
-  getPNext a = vkPNext (a :: SubpassDescriptionDepthStencilResolveKHR)
+instance HasNext SubpassDescriptionDepthStencilResolveKHR where
+  getNext s = next (s :: SubpassDescriptionDepthStencilResolveKHR)
 instance ToCStruct ImageViewASTCDecodeModeEXT VkImageViewASTCDecodeModeEXT where
   withCStruct = withCStructImageViewASTCDecodeModeEXT
 instance FromCStruct ImageViewASTCDecodeModeEXT VkImageViewASTCDecodeModeEXT where
   fromCStruct = fromCStructImageViewASTCDecodeModeEXT
-instance HasPNext ImageViewASTCDecodeModeEXT where
-  getPNext a = vkPNext (a :: ImageViewASTCDecodeModeEXT)
+instance HasNext ImageViewASTCDecodeModeEXT where
+  getNext s = next (s :: ImageViewASTCDecodeModeEXT)
 instance ToCStruct PhysicalDeviceASTCDecodeFeaturesEXT VkPhysicalDeviceASTCDecodeFeaturesEXT where
   withCStruct = withCStructPhysicalDeviceASTCDecodeFeaturesEXT
 instance FromCStruct PhysicalDeviceASTCDecodeFeaturesEXT VkPhysicalDeviceASTCDecodeFeaturesEXT where
   fromCStruct = fromCStructPhysicalDeviceASTCDecodeFeaturesEXT
-instance HasPNext PhysicalDeviceASTCDecodeFeaturesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceASTCDecodeFeaturesEXT)
+instance HasNext PhysicalDeviceASTCDecodeFeaturesEXT where
+  getNext s = next (s :: PhysicalDeviceASTCDecodeFeaturesEXT)
 instance ToCStruct PhysicalDeviceTransformFeedbackFeaturesEXT VkPhysicalDeviceTransformFeedbackFeaturesEXT where
   withCStruct = withCStructPhysicalDeviceTransformFeedbackFeaturesEXT
 instance FromCStruct PhysicalDeviceTransformFeedbackFeaturesEXT VkPhysicalDeviceTransformFeedbackFeaturesEXT where
   fromCStruct = fromCStructPhysicalDeviceTransformFeedbackFeaturesEXT
-instance HasPNext PhysicalDeviceTransformFeedbackFeaturesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceTransformFeedbackFeaturesEXT)
+instance HasNext PhysicalDeviceTransformFeedbackFeaturesEXT where
+  getNext s = next (s :: PhysicalDeviceTransformFeedbackFeaturesEXT)
 instance ToCStruct PhysicalDeviceTransformFeedbackPropertiesEXT VkPhysicalDeviceTransformFeedbackPropertiesEXT where
   withCStruct = withCStructPhysicalDeviceTransformFeedbackPropertiesEXT
 instance FromCStruct PhysicalDeviceTransformFeedbackPropertiesEXT VkPhysicalDeviceTransformFeedbackPropertiesEXT where
   fromCStruct = fromCStructPhysicalDeviceTransformFeedbackPropertiesEXT
-instance HasPNext PhysicalDeviceTransformFeedbackPropertiesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceTransformFeedbackPropertiesEXT)
+instance HasNext PhysicalDeviceTransformFeedbackPropertiesEXT where
+  getNext s = next (s :: PhysicalDeviceTransformFeedbackPropertiesEXT)
 instance ToCStruct PipelineRasterizationStateStreamCreateInfoEXT VkPipelineRasterizationStateStreamCreateInfoEXT where
   withCStruct = withCStructPipelineRasterizationStateStreamCreateInfoEXT
 instance FromCStruct PipelineRasterizationStateStreamCreateInfoEXT VkPipelineRasterizationStateStreamCreateInfoEXT where
   fromCStruct = fromCStructPipelineRasterizationStateStreamCreateInfoEXT
-instance HasPNext PipelineRasterizationStateStreamCreateInfoEXT where
-  getPNext a = vkPNext (a :: PipelineRasterizationStateStreamCreateInfoEXT)
+instance HasNext PipelineRasterizationStateStreamCreateInfoEXT where
+  getNext s = next (s :: PipelineRasterizationStateStreamCreateInfoEXT)
 instance ToCStruct PhysicalDeviceRepresentativeFragmentTestFeaturesNV VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV where
   withCStruct = withCStructPhysicalDeviceRepresentativeFragmentTestFeaturesNV
 instance FromCStruct PhysicalDeviceRepresentativeFragmentTestFeaturesNV VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV where
   fromCStruct = fromCStructPhysicalDeviceRepresentativeFragmentTestFeaturesNV
-instance HasPNext PhysicalDeviceRepresentativeFragmentTestFeaturesNV where
-  getPNext a = vkPNext (a :: PhysicalDeviceRepresentativeFragmentTestFeaturesNV)
+instance HasNext PhysicalDeviceRepresentativeFragmentTestFeaturesNV where
+  getNext s = next (s :: PhysicalDeviceRepresentativeFragmentTestFeaturesNV)
 instance ToCStruct PipelineRepresentativeFragmentTestStateCreateInfoNV VkPipelineRepresentativeFragmentTestStateCreateInfoNV where
   withCStruct = withCStructPipelineRepresentativeFragmentTestStateCreateInfoNV
 instance FromCStruct PipelineRepresentativeFragmentTestStateCreateInfoNV VkPipelineRepresentativeFragmentTestStateCreateInfoNV where
   fromCStruct = fromCStructPipelineRepresentativeFragmentTestStateCreateInfoNV
-instance HasPNext PipelineRepresentativeFragmentTestStateCreateInfoNV where
-  getPNext a = vkPNext (a :: PipelineRepresentativeFragmentTestStateCreateInfoNV)
+instance HasNext PipelineRepresentativeFragmentTestStateCreateInfoNV where
+  getNext s = next (s :: PipelineRepresentativeFragmentTestStateCreateInfoNV)
 instance ToCStruct PhysicalDeviceExclusiveScissorFeaturesNV VkPhysicalDeviceExclusiveScissorFeaturesNV where
   withCStruct = withCStructPhysicalDeviceExclusiveScissorFeaturesNV
 instance FromCStruct PhysicalDeviceExclusiveScissorFeaturesNV VkPhysicalDeviceExclusiveScissorFeaturesNV where
   fromCStruct = fromCStructPhysicalDeviceExclusiveScissorFeaturesNV
-instance HasPNext PhysicalDeviceExclusiveScissorFeaturesNV where
-  getPNext a = vkPNext (a :: PhysicalDeviceExclusiveScissorFeaturesNV)
+instance HasNext PhysicalDeviceExclusiveScissorFeaturesNV where
+  getNext s = next (s :: PhysicalDeviceExclusiveScissorFeaturesNV)
 instance ToCStruct PipelineViewportExclusiveScissorStateCreateInfoNV VkPipelineViewportExclusiveScissorStateCreateInfoNV where
   withCStruct = withCStructPipelineViewportExclusiveScissorStateCreateInfoNV
 instance FromCStruct PipelineViewportExclusiveScissorStateCreateInfoNV VkPipelineViewportExclusiveScissorStateCreateInfoNV where
   fromCStruct = fromCStructPipelineViewportExclusiveScissorStateCreateInfoNV
-instance HasPNext PipelineViewportExclusiveScissorStateCreateInfoNV where
-  getPNext a = vkPNext (a :: PipelineViewportExclusiveScissorStateCreateInfoNV)
+instance HasNext PipelineViewportExclusiveScissorStateCreateInfoNV where
+  getNext s = next (s :: PipelineViewportExclusiveScissorStateCreateInfoNV)
 instance ToCStruct PhysicalDeviceCornerSampledImageFeaturesNV VkPhysicalDeviceCornerSampledImageFeaturesNV where
   withCStruct = withCStructPhysicalDeviceCornerSampledImageFeaturesNV
 instance FromCStruct PhysicalDeviceCornerSampledImageFeaturesNV VkPhysicalDeviceCornerSampledImageFeaturesNV where
   fromCStruct = fromCStructPhysicalDeviceCornerSampledImageFeaturesNV
-instance HasPNext PhysicalDeviceCornerSampledImageFeaturesNV where
-  getPNext a = vkPNext (a :: PhysicalDeviceCornerSampledImageFeaturesNV)
+instance HasNext PhysicalDeviceCornerSampledImageFeaturesNV where
+  getNext s = next (s :: PhysicalDeviceCornerSampledImageFeaturesNV)
 instance ToCStruct PhysicalDeviceComputeShaderDerivativesFeaturesNV VkPhysicalDeviceComputeShaderDerivativesFeaturesNV where
   withCStruct = withCStructPhysicalDeviceComputeShaderDerivativesFeaturesNV
 instance FromCStruct PhysicalDeviceComputeShaderDerivativesFeaturesNV VkPhysicalDeviceComputeShaderDerivativesFeaturesNV where
   fromCStruct = fromCStructPhysicalDeviceComputeShaderDerivativesFeaturesNV
-instance HasPNext PhysicalDeviceComputeShaderDerivativesFeaturesNV where
-  getPNext a = vkPNext (a :: PhysicalDeviceComputeShaderDerivativesFeaturesNV)
+instance HasNext PhysicalDeviceComputeShaderDerivativesFeaturesNV where
+  getNext s = next (s :: PhysicalDeviceComputeShaderDerivativesFeaturesNV)
 instance ToCStruct PhysicalDeviceFragmentShaderBarycentricFeaturesNV VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV where
   withCStruct = withCStructPhysicalDeviceFragmentShaderBarycentricFeaturesNV
 instance FromCStruct PhysicalDeviceFragmentShaderBarycentricFeaturesNV VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV where
   fromCStruct = fromCStructPhysicalDeviceFragmentShaderBarycentricFeaturesNV
-instance HasPNext PhysicalDeviceFragmentShaderBarycentricFeaturesNV where
-  getPNext a = vkPNext (a :: PhysicalDeviceFragmentShaderBarycentricFeaturesNV)
+instance HasNext PhysicalDeviceFragmentShaderBarycentricFeaturesNV where
+  getNext s = next (s :: PhysicalDeviceFragmentShaderBarycentricFeaturesNV)
 instance ToCStruct PhysicalDeviceShaderImageFootprintFeaturesNV VkPhysicalDeviceShaderImageFootprintFeaturesNV where
   withCStruct = withCStructPhysicalDeviceShaderImageFootprintFeaturesNV
 instance FromCStruct PhysicalDeviceShaderImageFootprintFeaturesNV VkPhysicalDeviceShaderImageFootprintFeaturesNV where
   fromCStruct = fromCStructPhysicalDeviceShaderImageFootprintFeaturesNV
-instance HasPNext PhysicalDeviceShaderImageFootprintFeaturesNV where
-  getPNext a = vkPNext (a :: PhysicalDeviceShaderImageFootprintFeaturesNV)
+instance HasNext PhysicalDeviceShaderImageFootprintFeaturesNV where
+  getNext s = next (s :: PhysicalDeviceShaderImageFootprintFeaturesNV)
 instance ToCStruct PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV where
   withCStruct = withCStructPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV
 instance FromCStruct PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV where
   fromCStruct = fromCStructPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV
-instance HasPNext PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV where
-  getPNext a = vkPNext (a :: PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV)
+instance HasNext PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV where
+  getNext s = next (s :: PhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV)
 instance ToCStruct ShadingRatePaletteNV VkShadingRatePaletteNV where
   withCStruct = withCStructShadingRatePaletteNV
 instance FromCStruct ShadingRatePaletteNV VkShadingRatePaletteNV where
@@ -5159,20 +5447,20 @@ instance ToCStruct PipelineViewportShadingRateImageStateCreateInfoNV VkPipelineV
   withCStruct = withCStructPipelineViewportShadingRateImageStateCreateInfoNV
 instance FromCStruct PipelineViewportShadingRateImageStateCreateInfoNV VkPipelineViewportShadingRateImageStateCreateInfoNV where
   fromCStruct = fromCStructPipelineViewportShadingRateImageStateCreateInfoNV
-instance HasPNext PipelineViewportShadingRateImageStateCreateInfoNV where
-  getPNext a = vkPNext (a :: PipelineViewportShadingRateImageStateCreateInfoNV)
+instance HasNext PipelineViewportShadingRateImageStateCreateInfoNV where
+  getNext s = next (s :: PipelineViewportShadingRateImageStateCreateInfoNV)
 instance ToCStruct PhysicalDeviceShadingRateImageFeaturesNV VkPhysicalDeviceShadingRateImageFeaturesNV where
   withCStruct = withCStructPhysicalDeviceShadingRateImageFeaturesNV
 instance FromCStruct PhysicalDeviceShadingRateImageFeaturesNV VkPhysicalDeviceShadingRateImageFeaturesNV where
   fromCStruct = fromCStructPhysicalDeviceShadingRateImageFeaturesNV
-instance HasPNext PhysicalDeviceShadingRateImageFeaturesNV where
-  getPNext a = vkPNext (a :: PhysicalDeviceShadingRateImageFeaturesNV)
+instance HasNext PhysicalDeviceShadingRateImageFeaturesNV where
+  getNext s = next (s :: PhysicalDeviceShadingRateImageFeaturesNV)
 instance ToCStruct PhysicalDeviceShadingRateImagePropertiesNV VkPhysicalDeviceShadingRateImagePropertiesNV where
   withCStruct = withCStructPhysicalDeviceShadingRateImagePropertiesNV
 instance FromCStruct PhysicalDeviceShadingRateImagePropertiesNV VkPhysicalDeviceShadingRateImagePropertiesNV where
   fromCStruct = fromCStructPhysicalDeviceShadingRateImagePropertiesNV
-instance HasPNext PhysicalDeviceShadingRateImagePropertiesNV where
-  getPNext a = vkPNext (a :: PhysicalDeviceShadingRateImagePropertiesNV)
+instance HasNext PhysicalDeviceShadingRateImagePropertiesNV where
+  getNext s = next (s :: PhysicalDeviceShadingRateImagePropertiesNV)
 instance ToCStruct CoarseSampleLocationNV VkCoarseSampleLocationNV where
   withCStruct = withCStructCoarseSampleLocationNV
 instance FromCStruct CoarseSampleLocationNV VkCoarseSampleLocationNV where
@@ -5187,20 +5475,20 @@ instance ToCStruct PipelineViewportCoarseSampleOrderStateCreateInfoNV VkPipeline
   withCStruct = withCStructPipelineViewportCoarseSampleOrderStateCreateInfoNV
 instance FromCStruct PipelineViewportCoarseSampleOrderStateCreateInfoNV VkPipelineViewportCoarseSampleOrderStateCreateInfoNV where
   fromCStruct = fromCStructPipelineViewportCoarseSampleOrderStateCreateInfoNV
-instance HasPNext PipelineViewportCoarseSampleOrderStateCreateInfoNV where
-  getPNext a = vkPNext (a :: PipelineViewportCoarseSampleOrderStateCreateInfoNV)
+instance HasNext PipelineViewportCoarseSampleOrderStateCreateInfoNV where
+  getNext s = next (s :: PipelineViewportCoarseSampleOrderStateCreateInfoNV)
 instance ToCStruct PhysicalDeviceMeshShaderFeaturesNV VkPhysicalDeviceMeshShaderFeaturesNV where
   withCStruct = withCStructPhysicalDeviceMeshShaderFeaturesNV
 instance FromCStruct PhysicalDeviceMeshShaderFeaturesNV VkPhysicalDeviceMeshShaderFeaturesNV where
   fromCStruct = fromCStructPhysicalDeviceMeshShaderFeaturesNV
-instance HasPNext PhysicalDeviceMeshShaderFeaturesNV where
-  getPNext a = vkPNext (a :: PhysicalDeviceMeshShaderFeaturesNV)
+instance HasNext PhysicalDeviceMeshShaderFeaturesNV where
+  getNext s = next (s :: PhysicalDeviceMeshShaderFeaturesNV)
 instance ToCStruct PhysicalDeviceMeshShaderPropertiesNV VkPhysicalDeviceMeshShaderPropertiesNV where
   withCStruct = withCStructPhysicalDeviceMeshShaderPropertiesNV
 instance FromCStruct PhysicalDeviceMeshShaderPropertiesNV VkPhysicalDeviceMeshShaderPropertiesNV where
   fromCStruct = fromCStructPhysicalDeviceMeshShaderPropertiesNV
-instance HasPNext PhysicalDeviceMeshShaderPropertiesNV where
-  getPNext a = vkPNext (a :: PhysicalDeviceMeshShaderPropertiesNV)
+instance HasNext PhysicalDeviceMeshShaderPropertiesNV where
+  getNext s = next (s :: PhysicalDeviceMeshShaderPropertiesNV)
 instance ToCStruct DrawMeshTasksIndirectCommandNV VkDrawMeshTasksIndirectCommandNV where
   withCStruct = withCStructDrawMeshTasksIndirectCommandNV
 instance FromCStruct DrawMeshTasksIndirectCommandNV VkDrawMeshTasksIndirectCommandNV where
@@ -5210,26 +5498,26 @@ instance ToCStruct RayTracingShaderGroupCreateInfoNV VkRayTracingShaderGroupCrea
   withCStruct = withCStructRayTracingShaderGroupCreateInfoNV
 instance FromCStruct RayTracingShaderGroupCreateInfoNV VkRayTracingShaderGroupCreateInfoNV where
   fromCStruct = fromCStructRayTracingShaderGroupCreateInfoNV
-instance HasPNext RayTracingShaderGroupCreateInfoNV where
-  getPNext a = vkPNext (a :: RayTracingShaderGroupCreateInfoNV)
+instance HasNext RayTracingShaderGroupCreateInfoNV where
+  getNext s = next (s :: RayTracingShaderGroupCreateInfoNV)
 instance ToCStruct RayTracingPipelineCreateInfoNV VkRayTracingPipelineCreateInfoNV where
   withCStruct = withCStructRayTracingPipelineCreateInfoNV
 instance FromCStruct RayTracingPipelineCreateInfoNV VkRayTracingPipelineCreateInfoNV where
   fromCStruct = fromCStructRayTracingPipelineCreateInfoNV
-instance HasPNext RayTracingPipelineCreateInfoNV where
-  getPNext a = vkPNext (a :: RayTracingPipelineCreateInfoNV)
+instance HasNext RayTracingPipelineCreateInfoNV where
+  getNext s = next (s :: RayTracingPipelineCreateInfoNV)
 instance ToCStruct GeometryTrianglesNV VkGeometryTrianglesNV where
   withCStruct = withCStructGeometryTrianglesNV
 instance FromCStruct GeometryTrianglesNV VkGeometryTrianglesNV where
   fromCStruct = fromCStructGeometryTrianglesNV
-instance HasPNext GeometryTrianglesNV where
-  getPNext a = vkPNext (a :: GeometryTrianglesNV)
+instance HasNext GeometryTrianglesNV where
+  getNext s = next (s :: GeometryTrianglesNV)
 instance ToCStruct GeometryAABBNV VkGeometryAABBNV where
   withCStruct = withCStructGeometryAABBNV
 instance FromCStruct GeometryAABBNV VkGeometryAABBNV where
   fromCStruct = fromCStructGeometryAABBNV
-instance HasPNext GeometryAABBNV where
-  getPNext a = vkPNext (a :: GeometryAABBNV)
+instance HasNext GeometryAABBNV where
+  getNext s = next (s :: GeometryAABBNV)
 instance ToCStruct GeometryDataNV VkGeometryDataNV where
   withCStruct = withCStructGeometryDataNV
 instance FromCStruct GeometryDataNV VkGeometryDataNV where
@@ -5239,50 +5527,50 @@ instance ToCStruct GeometryNV VkGeometryNV where
   withCStruct = withCStructGeometryNV
 instance FromCStruct GeometryNV VkGeometryNV where
   fromCStruct = fromCStructGeometryNV
-instance HasPNext GeometryNV where
-  getPNext a = vkPNext (a :: GeometryNV)
+instance HasNext GeometryNV where
+  getNext s = next (s :: GeometryNV)
 instance ToCStruct AccelerationStructureInfoNV VkAccelerationStructureInfoNV where
   withCStruct = withCStructAccelerationStructureInfoNV
 instance FromCStruct AccelerationStructureInfoNV VkAccelerationStructureInfoNV where
   fromCStruct = fromCStructAccelerationStructureInfoNV
-instance HasPNext AccelerationStructureInfoNV where
-  getPNext a = vkPNext (a :: AccelerationStructureInfoNV)
+instance HasNext AccelerationStructureInfoNV where
+  getNext s = next (s :: AccelerationStructureInfoNV)
 instance ToCStruct AccelerationStructureCreateInfoNV VkAccelerationStructureCreateInfoNV where
   withCStruct = withCStructAccelerationStructureCreateInfoNV
 instance FromCStruct AccelerationStructureCreateInfoNV VkAccelerationStructureCreateInfoNV where
   fromCStruct = fromCStructAccelerationStructureCreateInfoNV
-instance HasPNext AccelerationStructureCreateInfoNV where
-  getPNext a = vkPNext (a :: AccelerationStructureCreateInfoNV)
+instance HasNext AccelerationStructureCreateInfoNV where
+  getNext s = next (s :: AccelerationStructureCreateInfoNV)
 instance ToCStruct BindAccelerationStructureMemoryInfoNV VkBindAccelerationStructureMemoryInfoNV where
   withCStruct = withCStructBindAccelerationStructureMemoryInfoNV
 instance FromCStruct BindAccelerationStructureMemoryInfoNV VkBindAccelerationStructureMemoryInfoNV where
   fromCStruct = fromCStructBindAccelerationStructureMemoryInfoNV
-instance HasPNext BindAccelerationStructureMemoryInfoNV where
-  getPNext a = vkPNext (a :: BindAccelerationStructureMemoryInfoNV)
+instance HasNext BindAccelerationStructureMemoryInfoNV where
+  getNext s = next (s :: BindAccelerationStructureMemoryInfoNV)
 instance ToCStruct WriteDescriptorSetAccelerationStructureNV VkWriteDescriptorSetAccelerationStructureNV where
   withCStruct = withCStructWriteDescriptorSetAccelerationStructureNV
 instance FromCStruct WriteDescriptorSetAccelerationStructureNV VkWriteDescriptorSetAccelerationStructureNV where
   fromCStruct = fromCStructWriteDescriptorSetAccelerationStructureNV
-instance HasPNext WriteDescriptorSetAccelerationStructureNV where
-  getPNext a = vkPNext (a :: WriteDescriptorSetAccelerationStructureNV)
+instance HasNext WriteDescriptorSetAccelerationStructureNV where
+  getNext s = next (s :: WriteDescriptorSetAccelerationStructureNV)
 instance ToCStruct AccelerationStructureMemoryRequirementsInfoNV VkAccelerationStructureMemoryRequirementsInfoNV where
   withCStruct = withCStructAccelerationStructureMemoryRequirementsInfoNV
 instance FromCStruct AccelerationStructureMemoryRequirementsInfoNV VkAccelerationStructureMemoryRequirementsInfoNV where
   fromCStruct = fromCStructAccelerationStructureMemoryRequirementsInfoNV
-instance HasPNext AccelerationStructureMemoryRequirementsInfoNV where
-  getPNext a = vkPNext (a :: AccelerationStructureMemoryRequirementsInfoNV)
+instance HasNext AccelerationStructureMemoryRequirementsInfoNV where
+  getNext s = next (s :: AccelerationStructureMemoryRequirementsInfoNV)
 instance ToCStruct PhysicalDeviceRayTracingPropertiesNV VkPhysicalDeviceRayTracingPropertiesNV where
   withCStruct = withCStructPhysicalDeviceRayTracingPropertiesNV
 instance FromCStruct PhysicalDeviceRayTracingPropertiesNV VkPhysicalDeviceRayTracingPropertiesNV where
   fromCStruct = fromCStructPhysicalDeviceRayTracingPropertiesNV
-instance HasPNext PhysicalDeviceRayTracingPropertiesNV where
-  getPNext a = vkPNext (a :: PhysicalDeviceRayTracingPropertiesNV)
+instance HasNext PhysicalDeviceRayTracingPropertiesNV where
+  getNext s = next (s :: PhysicalDeviceRayTracingPropertiesNV)
 instance ToCStruct DrmFormatModifierPropertiesListEXT VkDrmFormatModifierPropertiesListEXT where
   withCStruct = withCStructDrmFormatModifierPropertiesListEXT
 instance FromCStruct DrmFormatModifierPropertiesListEXT VkDrmFormatModifierPropertiesListEXT where
   fromCStruct = fromCStructDrmFormatModifierPropertiesListEXT
-instance HasPNext DrmFormatModifierPropertiesListEXT where
-  getPNext a = vkPNext (a :: DrmFormatModifierPropertiesListEXT)
+instance HasNext DrmFormatModifierPropertiesListEXT where
+  getNext s = next (s :: DrmFormatModifierPropertiesListEXT)
 instance ToCStruct DrmFormatModifierPropertiesEXT VkDrmFormatModifierPropertiesEXT where
   withCStruct = withCStructDrmFormatModifierPropertiesEXT
 instance FromCStruct DrmFormatModifierPropertiesEXT VkDrmFormatModifierPropertiesEXT where
@@ -5292,166 +5580,166 @@ instance ToCStruct PhysicalDeviceImageDrmFormatModifierInfoEXT VkPhysicalDeviceI
   withCStruct = withCStructPhysicalDeviceImageDrmFormatModifierInfoEXT
 instance FromCStruct PhysicalDeviceImageDrmFormatModifierInfoEXT VkPhysicalDeviceImageDrmFormatModifierInfoEXT where
   fromCStruct = fromCStructPhysicalDeviceImageDrmFormatModifierInfoEXT
-instance HasPNext PhysicalDeviceImageDrmFormatModifierInfoEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceImageDrmFormatModifierInfoEXT)
+instance HasNext PhysicalDeviceImageDrmFormatModifierInfoEXT where
+  getNext s = next (s :: PhysicalDeviceImageDrmFormatModifierInfoEXT)
 instance ToCStruct ImageDrmFormatModifierListCreateInfoEXT VkImageDrmFormatModifierListCreateInfoEXT where
   withCStruct = withCStructImageDrmFormatModifierListCreateInfoEXT
 instance FromCStruct ImageDrmFormatModifierListCreateInfoEXT VkImageDrmFormatModifierListCreateInfoEXT where
   fromCStruct = fromCStructImageDrmFormatModifierListCreateInfoEXT
-instance HasPNext ImageDrmFormatModifierListCreateInfoEXT where
-  getPNext a = vkPNext (a :: ImageDrmFormatModifierListCreateInfoEXT)
+instance HasNext ImageDrmFormatModifierListCreateInfoEXT where
+  getNext s = next (s :: ImageDrmFormatModifierListCreateInfoEXT)
 instance ToCStruct ImageDrmFormatModifierExplicitCreateInfoEXT VkImageDrmFormatModifierExplicitCreateInfoEXT where
   withCStruct = withCStructImageDrmFormatModifierExplicitCreateInfoEXT
 instance FromCStruct ImageDrmFormatModifierExplicitCreateInfoEXT VkImageDrmFormatModifierExplicitCreateInfoEXT where
   fromCStruct = fromCStructImageDrmFormatModifierExplicitCreateInfoEXT
-instance HasPNext ImageDrmFormatModifierExplicitCreateInfoEXT where
-  getPNext a = vkPNext (a :: ImageDrmFormatModifierExplicitCreateInfoEXT)
+instance HasNext ImageDrmFormatModifierExplicitCreateInfoEXT where
+  getNext s = next (s :: ImageDrmFormatModifierExplicitCreateInfoEXT)
 instance ToCStruct ImageDrmFormatModifierPropertiesEXT VkImageDrmFormatModifierPropertiesEXT where
   withCStruct = withCStructImageDrmFormatModifierPropertiesEXT
 instance FromCStruct ImageDrmFormatModifierPropertiesEXT VkImageDrmFormatModifierPropertiesEXT where
   fromCStruct = fromCStructImageDrmFormatModifierPropertiesEXT
-instance HasPNext ImageDrmFormatModifierPropertiesEXT where
-  getPNext a = vkPNext (a :: ImageDrmFormatModifierPropertiesEXT)
+instance HasNext ImageDrmFormatModifierPropertiesEXT where
+  getNext s = next (s :: ImageDrmFormatModifierPropertiesEXT)
 instance ToCStruct ImageStencilUsageCreateInfoEXT VkImageStencilUsageCreateInfoEXT where
   withCStruct = withCStructImageStencilUsageCreateInfoEXT
 instance FromCStruct ImageStencilUsageCreateInfoEXT VkImageStencilUsageCreateInfoEXT where
   fromCStruct = fromCStructImageStencilUsageCreateInfoEXT
-instance HasPNext ImageStencilUsageCreateInfoEXT where
-  getPNext a = vkPNext (a :: ImageStencilUsageCreateInfoEXT)
+instance HasNext ImageStencilUsageCreateInfoEXT where
+  getNext s = next (s :: ImageStencilUsageCreateInfoEXT)
 instance ToCStruct DeviceMemoryOverallocationCreateInfoAMD VkDeviceMemoryOverallocationCreateInfoAMD where
   withCStruct = withCStructDeviceMemoryOverallocationCreateInfoAMD
 instance FromCStruct DeviceMemoryOverallocationCreateInfoAMD VkDeviceMemoryOverallocationCreateInfoAMD where
   fromCStruct = fromCStructDeviceMemoryOverallocationCreateInfoAMD
-instance HasPNext DeviceMemoryOverallocationCreateInfoAMD where
-  getPNext a = vkPNext (a :: DeviceMemoryOverallocationCreateInfoAMD)
+instance HasNext DeviceMemoryOverallocationCreateInfoAMD where
+  getNext s = next (s :: DeviceMemoryOverallocationCreateInfoAMD)
 instance ToCStruct PhysicalDeviceFragmentDensityMapFeaturesEXT VkPhysicalDeviceFragmentDensityMapFeaturesEXT where
   withCStruct = withCStructPhysicalDeviceFragmentDensityMapFeaturesEXT
 instance FromCStruct PhysicalDeviceFragmentDensityMapFeaturesEXT VkPhysicalDeviceFragmentDensityMapFeaturesEXT where
   fromCStruct = fromCStructPhysicalDeviceFragmentDensityMapFeaturesEXT
-instance HasPNext PhysicalDeviceFragmentDensityMapFeaturesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceFragmentDensityMapFeaturesEXT)
+instance HasNext PhysicalDeviceFragmentDensityMapFeaturesEXT where
+  getNext s = next (s :: PhysicalDeviceFragmentDensityMapFeaturesEXT)
 instance ToCStruct PhysicalDeviceFragmentDensityMapPropertiesEXT VkPhysicalDeviceFragmentDensityMapPropertiesEXT where
   withCStruct = withCStructPhysicalDeviceFragmentDensityMapPropertiesEXT
 instance FromCStruct PhysicalDeviceFragmentDensityMapPropertiesEXT VkPhysicalDeviceFragmentDensityMapPropertiesEXT where
   fromCStruct = fromCStructPhysicalDeviceFragmentDensityMapPropertiesEXT
-instance HasPNext PhysicalDeviceFragmentDensityMapPropertiesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceFragmentDensityMapPropertiesEXT)
+instance HasNext PhysicalDeviceFragmentDensityMapPropertiesEXT where
+  getNext s = next (s :: PhysicalDeviceFragmentDensityMapPropertiesEXT)
 instance ToCStruct RenderPassFragmentDensityMapCreateInfoEXT VkRenderPassFragmentDensityMapCreateInfoEXT where
   withCStruct = withCStructRenderPassFragmentDensityMapCreateInfoEXT
 instance FromCStruct RenderPassFragmentDensityMapCreateInfoEXT VkRenderPassFragmentDensityMapCreateInfoEXT where
   fromCStruct = fromCStructRenderPassFragmentDensityMapCreateInfoEXT
-instance HasPNext RenderPassFragmentDensityMapCreateInfoEXT where
-  getPNext a = vkPNext (a :: RenderPassFragmentDensityMapCreateInfoEXT)
+instance HasNext RenderPassFragmentDensityMapCreateInfoEXT where
+  getNext s = next (s :: RenderPassFragmentDensityMapCreateInfoEXT)
 instance ToCStruct PhysicalDeviceScalarBlockLayoutFeaturesEXT VkPhysicalDeviceScalarBlockLayoutFeaturesEXT where
   withCStruct = withCStructPhysicalDeviceScalarBlockLayoutFeaturesEXT
 instance FromCStruct PhysicalDeviceScalarBlockLayoutFeaturesEXT VkPhysicalDeviceScalarBlockLayoutFeaturesEXT where
   fromCStruct = fromCStructPhysicalDeviceScalarBlockLayoutFeaturesEXT
-instance HasPNext PhysicalDeviceScalarBlockLayoutFeaturesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceScalarBlockLayoutFeaturesEXT)
+instance HasNext PhysicalDeviceScalarBlockLayoutFeaturesEXT where
+  getNext s = next (s :: PhysicalDeviceScalarBlockLayoutFeaturesEXT)
 instance ToCStruct SurfaceProtectedCapabilitiesKHR VkSurfaceProtectedCapabilitiesKHR where
   withCStruct = withCStructSurfaceProtectedCapabilitiesKHR
 instance FromCStruct SurfaceProtectedCapabilitiesKHR VkSurfaceProtectedCapabilitiesKHR where
   fromCStruct = fromCStructSurfaceProtectedCapabilitiesKHR
-instance HasPNext SurfaceProtectedCapabilitiesKHR where
-  getPNext a = vkPNext (a :: SurfaceProtectedCapabilitiesKHR)
+instance HasNext SurfaceProtectedCapabilitiesKHR where
+  getNext s = next (s :: SurfaceProtectedCapabilitiesKHR)
 instance ToCStruct PhysicalDeviceDepthClipEnableFeaturesEXT VkPhysicalDeviceDepthClipEnableFeaturesEXT where
   withCStruct = withCStructPhysicalDeviceDepthClipEnableFeaturesEXT
 instance FromCStruct PhysicalDeviceDepthClipEnableFeaturesEXT VkPhysicalDeviceDepthClipEnableFeaturesEXT where
   fromCStruct = fromCStructPhysicalDeviceDepthClipEnableFeaturesEXT
-instance HasPNext PhysicalDeviceDepthClipEnableFeaturesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceDepthClipEnableFeaturesEXT)
+instance HasNext PhysicalDeviceDepthClipEnableFeaturesEXT where
+  getNext s = next (s :: PhysicalDeviceDepthClipEnableFeaturesEXT)
 instance ToCStruct PipelineRasterizationDepthClipStateCreateInfoEXT VkPipelineRasterizationDepthClipStateCreateInfoEXT where
   withCStruct = withCStructPipelineRasterizationDepthClipStateCreateInfoEXT
 instance FromCStruct PipelineRasterizationDepthClipStateCreateInfoEXT VkPipelineRasterizationDepthClipStateCreateInfoEXT where
   fromCStruct = fromCStructPipelineRasterizationDepthClipStateCreateInfoEXT
-instance HasPNext PipelineRasterizationDepthClipStateCreateInfoEXT where
-  getPNext a = vkPNext (a :: PipelineRasterizationDepthClipStateCreateInfoEXT)
+instance HasNext PipelineRasterizationDepthClipStateCreateInfoEXT where
+  getNext s = next (s :: PipelineRasterizationDepthClipStateCreateInfoEXT)
 instance ToCStruct PhysicalDeviceMemoryBudgetPropertiesEXT VkPhysicalDeviceMemoryBudgetPropertiesEXT where
   withCStruct = withCStructPhysicalDeviceMemoryBudgetPropertiesEXT
 instance FromCStruct PhysicalDeviceMemoryBudgetPropertiesEXT VkPhysicalDeviceMemoryBudgetPropertiesEXT where
   fromCStruct = fromCStructPhysicalDeviceMemoryBudgetPropertiesEXT
-instance HasPNext PhysicalDeviceMemoryBudgetPropertiesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceMemoryBudgetPropertiesEXT)
+instance HasNext PhysicalDeviceMemoryBudgetPropertiesEXT where
+  getNext s = next (s :: PhysicalDeviceMemoryBudgetPropertiesEXT)
 instance ToCStruct PhysicalDeviceMemoryPriorityFeaturesEXT VkPhysicalDeviceMemoryPriorityFeaturesEXT where
   withCStruct = withCStructPhysicalDeviceMemoryPriorityFeaturesEXT
 instance FromCStruct PhysicalDeviceMemoryPriorityFeaturesEXT VkPhysicalDeviceMemoryPriorityFeaturesEXT where
   fromCStruct = fromCStructPhysicalDeviceMemoryPriorityFeaturesEXT
-instance HasPNext PhysicalDeviceMemoryPriorityFeaturesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceMemoryPriorityFeaturesEXT)
+instance HasNext PhysicalDeviceMemoryPriorityFeaturesEXT where
+  getNext s = next (s :: PhysicalDeviceMemoryPriorityFeaturesEXT)
 instance ToCStruct MemoryPriorityAllocateInfoEXT VkMemoryPriorityAllocateInfoEXT where
   withCStruct = withCStructMemoryPriorityAllocateInfoEXT
 instance FromCStruct MemoryPriorityAllocateInfoEXT VkMemoryPriorityAllocateInfoEXT where
   fromCStruct = fromCStructMemoryPriorityAllocateInfoEXT
-instance HasPNext MemoryPriorityAllocateInfoEXT where
-  getPNext a = vkPNext (a :: MemoryPriorityAllocateInfoEXT)
+instance HasNext MemoryPriorityAllocateInfoEXT where
+  getNext s = next (s :: MemoryPriorityAllocateInfoEXT)
 instance ToCStruct PhysicalDeviceBufferDeviceAddressFeaturesEXT VkPhysicalDeviceBufferDeviceAddressFeaturesEXT where
   withCStruct = withCStructPhysicalDeviceBufferDeviceAddressFeaturesEXT
 instance FromCStruct PhysicalDeviceBufferDeviceAddressFeaturesEXT VkPhysicalDeviceBufferDeviceAddressFeaturesEXT where
   fromCStruct = fromCStructPhysicalDeviceBufferDeviceAddressFeaturesEXT
-instance HasPNext PhysicalDeviceBufferDeviceAddressFeaturesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceBufferDeviceAddressFeaturesEXT)
+instance HasNext PhysicalDeviceBufferDeviceAddressFeaturesEXT where
+  getNext s = next (s :: PhysicalDeviceBufferDeviceAddressFeaturesEXT)
 instance ToCStruct BufferDeviceAddressInfoEXT VkBufferDeviceAddressInfoEXT where
   withCStruct = withCStructBufferDeviceAddressInfoEXT
 instance FromCStruct BufferDeviceAddressInfoEXT VkBufferDeviceAddressInfoEXT where
   fromCStruct = fromCStructBufferDeviceAddressInfoEXT
-instance HasPNext BufferDeviceAddressInfoEXT where
-  getPNext a = vkPNext (a :: BufferDeviceAddressInfoEXT)
+instance HasNext BufferDeviceAddressInfoEXT where
+  getNext s = next (s :: BufferDeviceAddressInfoEXT)
 instance ToCStruct BufferDeviceAddressCreateInfoEXT VkBufferDeviceAddressCreateInfoEXT where
   withCStruct = withCStructBufferDeviceAddressCreateInfoEXT
 instance FromCStruct BufferDeviceAddressCreateInfoEXT VkBufferDeviceAddressCreateInfoEXT where
   fromCStruct = fromCStructBufferDeviceAddressCreateInfoEXT
-instance HasPNext BufferDeviceAddressCreateInfoEXT where
-  getPNext a = vkPNext (a :: BufferDeviceAddressCreateInfoEXT)
+instance HasNext BufferDeviceAddressCreateInfoEXT where
+  getNext s = next (s :: BufferDeviceAddressCreateInfoEXT)
 instance ToCStruct PhysicalDeviceImageViewImageFormatInfoEXT VkPhysicalDeviceImageViewImageFormatInfoEXT where
   withCStruct = withCStructPhysicalDeviceImageViewImageFormatInfoEXT
 instance FromCStruct PhysicalDeviceImageViewImageFormatInfoEXT VkPhysicalDeviceImageViewImageFormatInfoEXT where
   fromCStruct = fromCStructPhysicalDeviceImageViewImageFormatInfoEXT
-instance HasPNext PhysicalDeviceImageViewImageFormatInfoEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceImageViewImageFormatInfoEXT)
+instance HasNext PhysicalDeviceImageViewImageFormatInfoEXT where
+  getNext s = next (s :: PhysicalDeviceImageViewImageFormatInfoEXT)
 instance ToCStruct FilterCubicImageViewImageFormatPropertiesEXT VkFilterCubicImageViewImageFormatPropertiesEXT where
   withCStruct = withCStructFilterCubicImageViewImageFormatPropertiesEXT
 instance FromCStruct FilterCubicImageViewImageFormatPropertiesEXT VkFilterCubicImageViewImageFormatPropertiesEXT where
   fromCStruct = fromCStructFilterCubicImageViewImageFormatPropertiesEXT
-instance HasPNext FilterCubicImageViewImageFormatPropertiesEXT where
-  getPNext a = vkPNext (a :: FilterCubicImageViewImageFormatPropertiesEXT)
+instance HasNext FilterCubicImageViewImageFormatPropertiesEXT where
+  getNext s = next (s :: FilterCubicImageViewImageFormatPropertiesEXT)
 instance ToCStruct PhysicalDeviceCooperativeMatrixFeaturesNV VkPhysicalDeviceCooperativeMatrixFeaturesNV where
   withCStruct = withCStructPhysicalDeviceCooperativeMatrixFeaturesNV
 instance FromCStruct PhysicalDeviceCooperativeMatrixFeaturesNV VkPhysicalDeviceCooperativeMatrixFeaturesNV where
   fromCStruct = fromCStructPhysicalDeviceCooperativeMatrixFeaturesNV
-instance HasPNext PhysicalDeviceCooperativeMatrixFeaturesNV where
-  getPNext a = vkPNext (a :: PhysicalDeviceCooperativeMatrixFeaturesNV)
+instance HasNext PhysicalDeviceCooperativeMatrixFeaturesNV where
+  getNext s = next (s :: PhysicalDeviceCooperativeMatrixFeaturesNV)
 instance ToCStruct PhysicalDeviceCooperativeMatrixPropertiesNV VkPhysicalDeviceCooperativeMatrixPropertiesNV where
   withCStruct = withCStructPhysicalDeviceCooperativeMatrixPropertiesNV
 instance FromCStruct PhysicalDeviceCooperativeMatrixPropertiesNV VkPhysicalDeviceCooperativeMatrixPropertiesNV where
   fromCStruct = fromCStructPhysicalDeviceCooperativeMatrixPropertiesNV
-instance HasPNext PhysicalDeviceCooperativeMatrixPropertiesNV where
-  getPNext a = vkPNext (a :: PhysicalDeviceCooperativeMatrixPropertiesNV)
+instance HasNext PhysicalDeviceCooperativeMatrixPropertiesNV where
+  getNext s = next (s :: PhysicalDeviceCooperativeMatrixPropertiesNV)
 instance ToCStruct CooperativeMatrixPropertiesNV VkCooperativeMatrixPropertiesNV where
   withCStruct = withCStructCooperativeMatrixPropertiesNV
 instance FromCStruct CooperativeMatrixPropertiesNV VkCooperativeMatrixPropertiesNV where
   fromCStruct = fromCStructCooperativeMatrixPropertiesNV
-instance HasPNext CooperativeMatrixPropertiesNV where
-  getPNext a = vkPNext (a :: CooperativeMatrixPropertiesNV)
+instance HasNext CooperativeMatrixPropertiesNV where
+  getNext s = next (s :: CooperativeMatrixPropertiesNV)
 instance ToCStruct PhysicalDeviceYcbcrImageArraysFeaturesEXT VkPhysicalDeviceYcbcrImageArraysFeaturesEXT where
   withCStruct = withCStructPhysicalDeviceYcbcrImageArraysFeaturesEXT
 instance FromCStruct PhysicalDeviceYcbcrImageArraysFeaturesEXT VkPhysicalDeviceYcbcrImageArraysFeaturesEXT where
   fromCStruct = fromCStructPhysicalDeviceYcbcrImageArraysFeaturesEXT
-instance HasPNext PhysicalDeviceYcbcrImageArraysFeaturesEXT where
-  getPNext a = vkPNext (a :: PhysicalDeviceYcbcrImageArraysFeaturesEXT)
+instance HasNext PhysicalDeviceYcbcrImageArraysFeaturesEXT where
+  getNext s = next (s :: PhysicalDeviceYcbcrImageArraysFeaturesEXT)
 instance ToCStruct ImageViewHandleInfoNVX VkImageViewHandleInfoNVX where
   withCStruct = withCStructImageViewHandleInfoNVX
 instance FromCStruct ImageViewHandleInfoNVX VkImageViewHandleInfoNVX where
   fromCStruct = fromCStructImageViewHandleInfoNVX
-instance HasPNext ImageViewHandleInfoNVX where
-  getPNext a = vkPNext (a :: ImageViewHandleInfoNVX)
+instance HasNext ImageViewHandleInfoNVX where
+  getNext s = next (s :: ImageViewHandleInfoNVX)
 
 #if VK_USE_PLATFORM_GGP
 instance ToCStruct PresentFrameTokenGGP VkPresentFrameTokenGGP where
   withCStruct = withCStructPresentFrameTokenGGP
 instance FromCStruct PresentFrameTokenGGP VkPresentFrameTokenGGP where
   fromCStruct = fromCStructPresentFrameTokenGGP
-instance HasPNext PresentFrameTokenGGP where
-  getPNext a = vkPNext (a :: PresentFrameTokenGGP)
+instance HasNext PresentFrameTokenGGP where
+  getNext s = next (s :: PresentFrameTokenGGP)
 #endif
 instance ToCStruct PipelineCreationFeedbackEXT VkPipelineCreationFeedbackEXT where
   withCStruct = withCStructPipelineCreationFeedbackEXT
@@ -5462,35 +5750,32 @@ instance ToCStruct PipelineCreationFeedbackCreateInfoEXT VkPipelineCreationFeedb
   withCStruct = withCStructPipelineCreationFeedbackCreateInfoEXT
 instance FromCStruct PipelineCreationFeedbackCreateInfoEXT VkPipelineCreationFeedbackCreateInfoEXT where
   fromCStruct = fromCStructPipelineCreationFeedbackCreateInfoEXT
-instance HasPNext PipelineCreationFeedbackCreateInfoEXT where
-  getPNext a = vkPNext (a :: PipelineCreationFeedbackCreateInfoEXT)
-
-#if VK_USE_PLATFORM_WIN32_KHR
+instance HasNext PipelineCreationFeedbackCreateInfoEXT where
+  getNext s = next (s :: PipelineCreationFeedbackCreateInfoEXT)
 instance ToCStruct SurfaceFullScreenExclusiveInfoEXT VkSurfaceFullScreenExclusiveInfoEXT where
   withCStruct = withCStructSurfaceFullScreenExclusiveInfoEXT
 instance FromCStruct SurfaceFullScreenExclusiveInfoEXT VkSurfaceFullScreenExclusiveInfoEXT where
   fromCStruct = fromCStructSurfaceFullScreenExclusiveInfoEXT
-instance HasPNext SurfaceFullScreenExclusiveInfoEXT where
-  getPNext a = vkPNext (a :: SurfaceFullScreenExclusiveInfoEXT)
-#endif
-
-#if VK_USE_PLATFORM_WIN32_KHR
+instance HasNext SurfaceFullScreenExclusiveInfoEXT where
+  getNext s = next (s :: SurfaceFullScreenExclusiveInfoEXT)
 instance ToCStruct SurfaceFullScreenExclusiveWin32InfoEXT VkSurfaceFullScreenExclusiveWin32InfoEXT where
   withCStruct = withCStructSurfaceFullScreenExclusiveWin32InfoEXT
 instance FromCStruct SurfaceFullScreenExclusiveWin32InfoEXT VkSurfaceFullScreenExclusiveWin32InfoEXT where
   fromCStruct = fromCStructSurfaceFullScreenExclusiveWin32InfoEXT
-instance HasPNext SurfaceFullScreenExclusiveWin32InfoEXT where
-  getPNext a = vkPNext (a :: SurfaceFullScreenExclusiveWin32InfoEXT)
-#endif
-
-#if VK_USE_PLATFORM_WIN32_KHR
+instance HasNext SurfaceFullScreenExclusiveWin32InfoEXT where
+  getNext s = next (s :: SurfaceFullScreenExclusiveWin32InfoEXT)
 instance ToCStruct SurfaceCapabilitiesFullScreenExclusiveEXT VkSurfaceCapabilitiesFullScreenExclusiveEXT where
   withCStruct = withCStructSurfaceCapabilitiesFullScreenExclusiveEXT
 instance FromCStruct SurfaceCapabilitiesFullScreenExclusiveEXT VkSurfaceCapabilitiesFullScreenExclusiveEXT where
   fromCStruct = fromCStructSurfaceCapabilitiesFullScreenExclusiveEXT
-instance HasPNext SurfaceCapabilitiesFullScreenExclusiveEXT where
-  getPNext a = vkPNext (a :: SurfaceCapabilitiesFullScreenExclusiveEXT)
-#endif
+instance HasNext SurfaceCapabilitiesFullScreenExclusiveEXT where
+  getNext s = next (s :: SurfaceCapabilitiesFullScreenExclusiveEXT)
+instance ToCStruct HeadlessSurfaceCreateInfoEXT VkHeadlessSurfaceCreateInfoEXT where
+  withCStruct = withCStructHeadlessSurfaceCreateInfoEXT
+instance FromCStruct HeadlessSurfaceCreateInfoEXT VkHeadlessSurfaceCreateInfoEXT where
+  fromCStruct = fromCStructHeadlessSurfaceCreateInfoEXT
+instance HasNext HeadlessSurfaceCreateInfoEXT where
+  getNext s = next (s :: HeadlessSurfaceCreateInfoEXT)
 instance ToCStruct ClearColorValue VkClearColorValue where
   withCStruct = withCStructClearColorValue
 -- No FromCStruct instance for VkClearColorValue as it contains a union type
@@ -5498,6 +5783,7 @@ instance ToCStruct ClearColorValue VkClearColorValue where
 instance ToCStruct ClearValue VkClearValue where
   withCStruct = withCStructClearValue
 -- No FromCStruct instance for VkClearValue as it contains a union type
+
 
 -- | Read the @sType@ member of a Vulkan struct and marshal the struct into
 -- a 'SomeVkStruct'
@@ -5883,9 +6169,8 @@ peekVkStruct p = do
     VK_STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP -> SomeVkStruct <$> (fromCStructPresentFrameTokenGGP =<< peek (castPtr p :: Ptr VkPresentFrameTokenGGP))
 #endif
     VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO_EXT -> SomeVkStruct <$> (fromCStructPipelineCreationFeedbackCreateInfoEXT =<< peek (castPtr p :: Ptr VkPipelineCreationFeedbackCreateInfoEXT))
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
     VK_STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_INFO_EXT -> SomeVkStruct <$> (fromCStructSurfaceFullScreenExclusiveInfoEXT =<< peek (castPtr p :: Ptr VkSurfaceFullScreenExclusiveInfoEXT))
     VK_STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_WIN32_INFO_EXT -> SomeVkStruct <$> (fromCStructSurfaceFullScreenExclusiveWin32InfoEXT =<< peek (castPtr p :: Ptr VkSurfaceFullScreenExclusiveWin32InfoEXT))
     VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_FULL_SCREEN_EXCLUSIVE_EXT -> SomeVkStruct <$> (fromCStructSurfaceCapabilitiesFullScreenExclusiveEXT =<< peek (castPtr p :: Ptr VkSurfaceCapabilitiesFullScreenExclusiveEXT))
-#endif
+    VK_STRUCTURE_TYPE_HEADLESS_SURFACE_CREATE_INFO_EXT -> SomeVkStruct <$> (fromCStructHeadlessSurfaceCreateInfoEXT =<< peek (castPtr p :: Ptr VkHeadlessSurfaceCreateInfoEXT))
     t -> throwIO (IOError Nothing InvalidArgument "" ("Unknown VkStructureType: " ++ show t) Nothing Nothing)

@@ -82,32 +82,37 @@ instance Read VkValidationCheckEXT where
                         )
                     )
 
--- | @VK_VALIDATION_CHECK_ALL_EXT@ specifies that all validation checks are
+-- | 'VK_VALIDATION_CHECK_ALL_EXT' specifies that all validation checks are
 -- disabled.
 pattern VK_VALIDATION_CHECK_ALL_EXT :: VkValidationCheckEXT
 pattern VK_VALIDATION_CHECK_ALL_EXT = VkValidationCheckEXT 0
 
--- | @VK_VALIDATION_CHECK_SHADERS_EXT@ specifies that shader validation is
+-- | 'VK_VALIDATION_CHECK_SHADERS_EXT' specifies that shader validation is
 -- disabled.
 pattern VK_VALIDATION_CHECK_SHADERS_EXT :: VkValidationCheckEXT
 pattern VK_VALIDATION_CHECK_SHADERS_EXT = VkValidationCheckEXT 1
+
 -- | VkValidationFlagsEXT - Specify validation checks to disable for a Vulkan
 -- instance
 --
--- == Valid Usage (Implicit)
+-- = Description
+--
+-- Unresolved directive in VkValidationFlagsEXT.txt -
+-- include::{generated}\/validity\/structs\/VkValidationFlagsEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkValidationFlagsEXT = VkValidationFlagsEXT
-  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_VALIDATION_FLAGS_EXT@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @disabledValidationCheckCount@ /must/ be greater than @0@
+  , -- | @disabledValidationCheckCount@ is the number of checks to disable.
   vkDisabledValidationCheckCount :: Word32
-  , -- | @pDisabledValidationChecks@ /must/ be a valid pointer to an array of
-  -- @disabledValidationCheckCount@ 'VkValidationCheckEXT' values
+  , -- | @pDisabledValidationChecks@ is a pointer to an array of
+  -- 'VkValidationCheckEXT' values specifying the validation checks to be
+  -- disabled.
   vkPDisabledValidationChecks :: Ptr VkValidationCheckEXT
   }
   deriving (Eq, Show)
@@ -125,16 +130,19 @@ instance Storable VkValidationFlagsEXT where
                 *> poke (ptr `plusPtr` 24) (vkPDisabledValidationChecks (poked :: VkValidationFlagsEXT))
 
 instance Zero VkValidationFlagsEXT where
-  zero = VkValidationFlagsEXT zero
+  zero = VkValidationFlagsEXT VK_STRUCTURE_TYPE_VALIDATION_FLAGS_EXT
                               zero
                               zero
                               zero
+
 -- No documentation found for TopLevel "VK_EXT_VALIDATION_FLAGS_EXTENSION_NAME"
 pattern VK_EXT_VALIDATION_FLAGS_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_VALIDATION_FLAGS_EXTENSION_NAME = "VK_EXT_validation_flags"
+
 -- No documentation found for TopLevel "VK_EXT_VALIDATION_FLAGS_SPEC_VERSION"
 pattern VK_EXT_VALIDATION_FLAGS_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_VALIDATION_FLAGS_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_VALIDATION_FLAGS_EXT"
 pattern VK_STRUCTURE_TYPE_VALIDATION_FLAGS_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_VALIDATION_FLAGS_EXT = VkStructureType 1000061000

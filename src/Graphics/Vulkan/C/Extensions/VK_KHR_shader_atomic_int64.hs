@@ -38,7 +38,7 @@ import Graphics.Vulkan.C.Core10.Core
 --
 -- Unresolved directive in VkPhysicalDeviceShaderAtomicInt64FeaturesKHR.txt
 -- -
--- include::..\/validity\/structs\/VkPhysicalDeviceShaderAtomicInt64FeaturesKHR.txt[]
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceShaderAtomicInt64FeaturesKHR.txt[]
 --
 -- = See Also
 --
@@ -70,16 +70,19 @@ instance Storable VkPhysicalDeviceShaderAtomicInt64FeaturesKHR where
                 *> poke (ptr `plusPtr` 20) (vkShaderSharedInt64Atomics (poked :: VkPhysicalDeviceShaderAtomicInt64FeaturesKHR))
 
 instance Zero VkPhysicalDeviceShaderAtomicInt64FeaturesKHR where
-  zero = VkPhysicalDeviceShaderAtomicInt64FeaturesKHR zero
+  zero = VkPhysicalDeviceShaderAtomicInt64FeaturesKHR VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES_KHR
                                                       zero
                                                       zero
                                                       zero
+
 -- No documentation found for TopLevel "VK_KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME"
 pattern VK_KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME = "VK_KHR_shader_atomic_int64"
+
 -- No documentation found for TopLevel "VK_KHR_SHADER_ATOMIC_INT64_SPEC_VERSION"
 pattern VK_KHR_SHADER_ATOMIC_INT64_SPEC_VERSION :: Integral a => a
 pattern VK_KHR_SHADER_ATOMIC_INT64_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES_KHR"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES_KHR = VkStructureType 1000180000

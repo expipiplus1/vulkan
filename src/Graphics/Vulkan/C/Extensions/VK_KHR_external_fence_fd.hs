@@ -9,16 +9,12 @@
 module Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd
   ( VkFenceGetFdInfoKHR(..)
   , VkImportFenceFdInfoKHR(..)
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkGetFenceFdKHR
-#endif
   , FN_vkGetFenceFdKHR
   , PFN_vkGetFenceFdKHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkImportFenceFdKHR
-#endif
+  , vkGetFenceFdKHR
   , FN_vkImportFenceFdKHR
   , PFN_vkImportFenceFdKHR
+  , vkImportFenceFdKHR
   , pattern VK_KHR_EXTERNAL_FENCE_FD_EXTENSION_NAME
   , pattern VK_KHR_EXTERNAL_FENCE_FD_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_FENCE_GET_FD_INFO_KHR
@@ -59,6 +55,9 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities
   ( VkExternalFenceHandleTypeFlagBits(..)
   )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
+  )
 import Graphics.Vulkan.NamedType
   ( (:::)
   )
@@ -84,29 +83,20 @@ import Graphics.Vulkan.NamedType
 -- -   If @handleType@ refers to a handle type with copy payload
 --     transference semantics, @fence@ /must/ be signaled, or have an
 --     associated
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-fences-signaling fence signal operation>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-fences-signaling fence signal operation>
 --     pending execution.
 --
 -- -   @fence@ /must/ not currently have its payload replaced by an
 --     imported payload as described below in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence Payloads>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence Payloads>
 --     unless that imported payload’s handle type was included in
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceProperties'::@exportFromImportedHandleTypes@
 --     for @handleType@.
 --
 -- -   @handleType@ /must/ be defined as a POSIX file descriptor handle.
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_FENCE_GET_FD_INFO_KHR@
---
--- -   @pNext@ /must/ be @NULL@
---
--- -   @fence@ /must/ be a valid @VkFence@ handle
---
--- -   @handleType@ /must/ be a valid
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceHandleTypeFlagBits'
---     value
+-- Unresolved directive in VkFenceGetFdInfoKHR.txt -
+-- include::{generated}\/validity\/structs\/VkFenceGetFdInfoKHR.txt[]
 --
 -- = See Also
 --
@@ -136,10 +126,11 @@ instance Storable VkFenceGetFdInfoKHR where
                 *> poke (ptr `plusPtr` 24) (vkHandleType (poked :: VkFenceGetFdInfoKHR))
 
 instance Zero VkFenceGetFdInfoKHR where
-  zero = VkFenceGetFdInfoKHR zero
+  zero = VkFenceGetFdInfoKHR VK_STRUCTURE_TYPE_FENCE_GET_FD_INFO_KHR
                              zero
                              zero
                              zero
+
 -- | VkImportFenceFdInfoKHR - (None)
 --
 -- = Description
@@ -149,31 +140,32 @@ instance Zero VkFenceGetFdInfoKHR where
 -- > +-----------------------+-----------------------+-----------------------+
 -- > | Handle Type           | Transference          | Permanence Supported  |
 -- > +=======================+=======================+=======================+
--- > | @VK_EXTERNAL_FENCE_HA | Reference             | Temporary,Permanent   |
--- > | NDLE_TYPE_OPAQUE_FD_B |                       |                       |
--- > | IT@                   |                       |                       |
+-- > | 'Graphics.Vulkan.C.Co | Reference             | Temporary,Permanent   |
+-- > | re11.Promoted_from_VK |                       |                       |
+-- > | _KHR_external_fence_c |                       |                       |
+-- > | apabilities.VK_EXTERN |                       |                       |
+-- > | AL_FENCE_HANDLE_TYPE_ |                       |                       |
+-- > | OPAQUE_FD_BIT'        |                       |                       |
 -- > +-----------------------+-----------------------+-----------------------+
--- > | @VK_EXTERNAL_FENCE_HA | Copy                  | Temporary             |
--- > | NDLE_TYPE_SYNC_FD_BIT |                       |                       |
--- > | @                     |                       |                       |
+-- > | 'Graphics.Vulkan.C.Co | Copy                  | Temporary             |
+-- > | re11.Promoted_from_VK |                       |                       |
+-- > | _KHR_external_fence_c |                       |                       |
+-- > | apabilities.VK_EXTERN |                       |                       |
+-- > | AL_FENCE_HANDLE_TYPE_ |                       |                       |
+-- > | SYNC_FD_BIT'          |                       |                       |
 -- > +-----------------------+-----------------------+-----------------------+
 -- >
 -- > Handle Types Supported by 'VkImportFenceFdInfoKHR'
 --
 -- == Valid Usage
 --
--- -   @handleType@ /must/ be a value included in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-fence-handletypes-fd Handle Types Supported by VkImportFenceFdInfoKHR>
---     table.
---
--- -   @fd@ /must/ obey any requirements listed for @handleType@ in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#external-fence-handle-types-compatibility external fence handle types compatibility>.
---
--- If @handleType@ is @VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT@, the
--- special value @-1@ for @fd@ is treated like a valid sync file descriptor
--- referring to an object that has already signaled. The import operation
--- will succeed and the @VkFence@ will have a temporarily imported payload
--- as if a valid file descriptor had been provided.
+-- If @handleType@ is
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT',
+-- the special value @-1@ for @fd@ is treated like a valid sync file
+-- descriptor referring to an object that has already signaled. The import
+-- operation will succeed and the 'Graphics.Vulkan.C.Core10.Queue.VkFence'
+-- will have a temporarily imported payload as if a valid file descriptor
+-- had been provided.
 --
 -- __Note__
 --
@@ -182,28 +174,12 @@ instance Zero VkFenceGetFdInfoKHR where
 -- convention that an invalid sync file descriptor represents work that has
 -- already completed and does not need to be waited for. It is consistent
 -- with the option for implementations to return a @-1@ file descriptor
--- when exporting a @VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT@ from a
--- @VkFence@ which is signaled.
+-- when exporting a
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT'
+-- from a 'Graphics.Vulkan.C.Core10.Queue.VkFence' which is signaled.
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_IMPORT_FENCE_FD_INFO_KHR@
---
--- -   @pNext@ /must/ be @NULL@
---
--- -   @fence@ /must/ be a valid @VkFence@ handle
---
--- -   @flags@ /must/ be a valid combination of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence.VkFenceImportFlagBits'
---     values
---
--- -   @handleType@ /must/ be a valid
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceHandleTypeFlagBits'
---     value
---
--- == Host Synchronization
---
--- -   Host access to @fence@ /must/ be externally synchronized
+-- Unresolved directive in VkImportFenceFdInfoKHR.txt -
+-- include::{generated}\/validity\/structs\/VkImportFenceFdInfoKHR.txt[]
 --
 -- = See Also
 --
@@ -219,9 +195,12 @@ data VkImportFenceFdInfoKHR = VkImportFenceFdInfoKHR
   -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence.VkFenceImportFlagBits'
   -- specifying additional parameters for the fence payload import operation.
   vkFlags :: VkFenceImportFlags
-  , -- | @handleType@ specifies the type of @fd@.
+  , -- | @handleType@ /must/ be a value included in the
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-fence-handletypes-fd Handle Types Supported by VkImportFenceFdInfoKHR>
+  -- table.
   vkHandleType :: VkExternalFenceHandleTypeFlagBits
-  , -- | @fd@ is the external handle to import.
+  , -- | @fd@ /must/ obey any requirements listed for @handleType@ in
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#external-fence-handle-types-compatibility external fence handle types compatibility>.
   vkFd :: CInt
   }
   deriving (Eq, Show)
@@ -243,13 +222,13 @@ instance Storable VkImportFenceFdInfoKHR where
                 *> poke (ptr `plusPtr` 32) (vkFd (poked :: VkImportFenceFdInfoKHR))
 
 instance Zero VkImportFenceFdInfoKHR where
-  zero = VkImportFenceFdInfoKHR zero
+  zero = VkImportFenceFdInfoKHR VK_STRUCTURE_TYPE_IMPORT_FENCE_FD_INFO_KHR
                                 zero
                                 zero
                                 zero
                                 zero
                                 zero
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkGetFenceFdKHR - Get a POSIX file descriptor handle for a fence
 --
 -- = Parameters
@@ -266,7 +245,7 @@ instance Zero VkImportFenceFdInfoKHR where
 --
 -- = Description
 --
--- Each call to @vkGetFenceFdKHR@ /must/ create a new file descriptor and
+-- Each call to 'vkGetFenceFdKHR' /must/ create a new file descriptor and
 -- transfer ownership of it to the application. To avoid leaking resources,
 -- the application /must/ release ownership of the file descriptor when it
 -- is no longer needed.
@@ -278,9 +257,9 @@ instance Zero VkImportFenceFdInfoKHR where
 -- Vulkan by using the file descriptor to import a fence payload.
 --
 -- If @pGetFdInfo@->@handleType@ is
--- @VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT@ and the fence is signaled at
--- the time @vkGetFenceFdKHR@ is called, @pFd@ /may/ return the value @-1@
--- instead of a valid file descriptor.
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT'
+-- and the fence is signaled at the time 'vkGetFenceFdKHR' is called, @pFd@
+-- /may/ return the value @-1@ instead of a valid file descriptor.
 --
 -- Where supported by the operating system, the implementation /must/ set
 -- the file descriptor to be closed automatically when an @execve@ system
@@ -289,31 +268,34 @@ instance Zero VkImportFenceFdInfoKHR where
 -- Exporting a file descriptor from a fence /may/ have side effects
 -- depending on the transference of the specified handle type, as described
 -- in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence State>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence State>.
 --
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_TOO_MANY_OBJECTS@
---
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+-- Unresolved directive in vkGetFenceFdKHR.txt -
+-- include::{generated}\/validity\/protos\/vkGetFenceFdKHR.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetFenceFdKHR" vkGetFenceFdKHR :: ("device" ::: VkDevice) -> ("pGetFdInfo" ::: Ptr VkFenceGetFdInfoKHR) -> ("pFd" ::: Ptr CInt) -> IO VkResult
-
+#else
+vkGetFenceFdKHR :: DeviceCmds -> ("device" ::: VkDevice) -> ("pGetFdInfo" ::: Ptr VkFenceGetFdInfoKHR) -> ("pFd" ::: Ptr CInt) -> IO VkResult
+vkGetFenceFdKHR deviceCmds = mkVkGetFenceFdKHR (pVkGetFenceFdKHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetFenceFdKHR
+  :: FunPtr (("device" ::: VkDevice) -> ("pGetFdInfo" ::: Ptr VkFenceGetFdInfoKHR) -> ("pFd" ::: Ptr CInt) -> IO VkResult) -> (("device" ::: VkDevice) -> ("pGetFdInfo" ::: Ptr VkFenceGetFdInfoKHR) -> ("pFd" ::: Ptr CInt) -> IO VkResult)
+#endif
+
 type FN_vkGetFenceFdKHR = ("device" ::: VkDevice) -> ("pGetFdInfo" ::: Ptr VkFenceGetFdInfoKHR) -> ("pFd" ::: Ptr CInt) -> IO VkResult
 type PFN_vkGetFenceFdKHR = FunPtr FN_vkGetFenceFdKHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkImportFenceFdKHR - Import a fence from a POSIX file descriptor
 --
 -- = Parameters
@@ -334,37 +316,46 @@ type PFN_vkGetFenceFdKHR = FunPtr FN_vkGetFenceFdKHR
 -- of Vulkan, into the same instance from which it was exported, and
 -- multiple times into a given Vulkan instance.
 --
--- == Return Codes
+-- == Valid Usage
 --
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_INVALID_EXTERNAL_HANDLE@
+-- Unresolved directive in vkImportFenceFdKHR.txt -
+-- include::{generated}\/validity\/protos\/vkImportFenceFdKHR.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkImportFenceFdKHR" vkImportFenceFdKHR :: ("device" ::: VkDevice) -> ("pImportFenceFdInfo" ::: Ptr VkImportFenceFdInfoKHR) -> IO VkResult
-
+#else
+vkImportFenceFdKHR :: DeviceCmds -> ("device" ::: VkDevice) -> ("pImportFenceFdInfo" ::: Ptr VkImportFenceFdInfoKHR) -> IO VkResult
+vkImportFenceFdKHR deviceCmds = mkVkImportFenceFdKHR (pVkImportFenceFdKHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkImportFenceFdKHR
+  :: FunPtr (("device" ::: VkDevice) -> ("pImportFenceFdInfo" ::: Ptr VkImportFenceFdInfoKHR) -> IO VkResult) -> (("device" ::: VkDevice) -> ("pImportFenceFdInfo" ::: Ptr VkImportFenceFdInfoKHR) -> IO VkResult)
+#endif
+
 type FN_vkImportFenceFdKHR = ("device" ::: VkDevice) -> ("pImportFenceFdInfo" ::: Ptr VkImportFenceFdInfoKHR) -> IO VkResult
 type PFN_vkImportFenceFdKHR = FunPtr FN_vkImportFenceFdKHR
+
 -- No documentation found for TopLevel "VK_KHR_EXTERNAL_FENCE_FD_EXTENSION_NAME"
 pattern VK_KHR_EXTERNAL_FENCE_FD_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_EXTERNAL_FENCE_FD_EXTENSION_NAME = "VK_KHR_external_fence_fd"
+
 -- No documentation found for TopLevel "VK_KHR_EXTERNAL_FENCE_FD_SPEC_VERSION"
 pattern VK_KHR_EXTERNAL_FENCE_FD_SPEC_VERSION :: Integral a => a
 pattern VK_KHR_EXTERNAL_FENCE_FD_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_FENCE_GET_FD_INFO_KHR"
 pattern VK_STRUCTURE_TYPE_FENCE_GET_FD_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_FENCE_GET_FD_INFO_KHR = VkStructureType 1000115001
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMPORT_FENCE_FD_INFO_KHR"
 pattern VK_STRUCTURE_TYPE_IMPORT_FENCE_FD_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_IMPORT_FENCE_FD_INFO_KHR = VkStructureType 1000115000

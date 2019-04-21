@@ -44,7 +44,7 @@ import Graphics.Vulkan.C.Core10.Pass
 --
 -- = Members
 --
--- The members of the @VkPhysicalDeviceMultiviewFeatures@ structure
+-- The members of the 'VkPhysicalDeviceMultiviewFeatures' structure
 -- describe the following features:
 --
 -- = Description
@@ -55,23 +55,23 @@ import Graphics.Vulkan.C.Core10.Pass
 --
 -- -   @multiviewGeometryShader@ specifies whether the implementation
 --     supports multiview rendering within a render pass, with
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#geometry geometry shaders>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#geometry geometry shaders>.
 --     If this feature is not enabled, then a pipeline compiled against a
 --     subpass with a non-zero view mask /must/ not include a geometry
 --     shader.
 --
 -- -   @multiviewTessellationShader@ specifies whether the implementation
 --     supports multiview rendering within a render pass, with
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#tessellation tessellation shaders>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#tessellation tessellation shaders>.
 --     If this feature is not enabled, then a pipeline compiled against a
 --     subpass with a non-zero view mask /must/ not include any
 --     tessellation shaders.
 --
--- If the @VkPhysicalDeviceMultiviewFeatures@ structure is included in the
+-- If the 'VkPhysicalDeviceMultiviewFeatures' structure is included in the
 -- @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2',
 -- it is filled with values indicating whether each feature is supported.
--- @VkPhysicalDeviceMultiviewFeatures@ /can/ also be used in the @pNext@
+-- 'VkPhysicalDeviceMultiviewFeatures' /can/ also be used in the @pNext@
 -- chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable
 -- the features.
 --
@@ -83,14 +83,13 @@ import Graphics.Vulkan.C.Core10.Pass
 -- -   If @multiviewTessellationShader@ is enabled then @multiview@ /must/
 --     also be enabled.
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES@
+-- Unresolved directive in VkPhysicalDeviceMultiviewFeatures.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceMultiviewFeatures.txt[]
 --
 -- = See Also
 --
--- @VkBool32@, 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceMultiviewFeatures = VkPhysicalDeviceMultiviewFeatures
   { -- No documentation found for Nested "VkPhysicalDeviceMultiviewFeatures" "sType"
   vkSType :: VkStructureType
@@ -120,34 +119,35 @@ instance Storable VkPhysicalDeviceMultiviewFeatures where
                 *> poke (ptr `plusPtr` 24) (vkMultiviewTessellationShader (poked :: VkPhysicalDeviceMultiviewFeatures))
 
 instance Zero VkPhysicalDeviceMultiviewFeatures where
-  zero = VkPhysicalDeviceMultiviewFeatures zero
+  zero = VkPhysicalDeviceMultiviewFeatures VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES
                                            zero
                                            zero
                                            zero
                                            zero
+
 -- | VkPhysicalDeviceMultiviewProperties - Structure describing multiview
 -- limits that can be supported by an implementation
 --
 -- = Members
 --
--- The members of the @VkPhysicalDeviceMultiviewProperties@ structure
+-- The members of the 'VkPhysicalDeviceMultiviewProperties' structure
 -- describe the following implementation-dependent limits:
 --
 -- = Description
 --
--- If the @VkPhysicalDeviceMultiviewProperties@ structure is included in
+-- If the 'VkPhysicalDeviceMultiviewProperties' structure is included in
 -- the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- == Valid Usage (Implicit)
+-- Unresolved directive in VkPhysicalDeviceMultiviewProperties.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceMultiviewProperties.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceMultiviewProperties = VkPhysicalDeviceMultiviewProperties
-  { -- | @sType@ /must/ be
-  -- @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -174,10 +174,11 @@ instance Storable VkPhysicalDeviceMultiviewProperties where
                 *> poke (ptr `plusPtr` 20) (vkMaxMultiviewInstanceIndex (poked :: VkPhysicalDeviceMultiviewProperties))
 
 instance Zero VkPhysicalDeviceMultiviewProperties where
-  zero = VkPhysicalDeviceMultiviewProperties zero
+  zero = VkPhysicalDeviceMultiviewProperties VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES
                                              zero
                                              zero
                                              zero
+
 -- | VkRenderPassMultiviewCreateInfo - Structure containing multiview info
 -- for all subpasses
 --
@@ -200,11 +201,11 @@ instance Zero VkPhysicalDeviceMultiviewProperties where
 -- additional broadcasting.
 --
 -- Some implementations /may/ not support multiview in conjunction with
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-multiview-gs geometry shaders>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-multiview-gs geometry shaders>
 -- or
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-multiview-tess tessellation shaders>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-multiview-tess tessellation shaders>.
 --
--- When multiview is enabled, the @VK_DEPENDENCY_VIEW_LOCAL_BIT@ bit in a
+-- When multiview is enabled, the 'VK_DEPENDENCY_VIEW_LOCAL_BIT' bit in a
 -- dependency /can/ be used to express a view-local dependency, meaning
 -- that each view in the destination subpass depends on a single view in
 -- the source subpass. Unlike pipeline barriers, a subpass dependency /can/
@@ -234,21 +235,22 @@ instance Zero VkPhysicalDeviceMultiviewProperties where
 --
 -- A multiview subpass /can/ declare that its shaders will write per-view
 -- attributes for all views in a single invocation, by setting the
--- @VK_SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX@ bit in the subpass
--- description. The only supported per-view attributes are position and
--- viewport mask, and per-view position and viewport masks are written to
--- output array variables decorated with @PositionPerViewNV@ and
--- @ViewportMaskPerViewNV@, respectively. If
--- @{html_spec_relative}#VK_NV_viewport_array2@ is not supported and
--- enabled, @ViewportMaskPerViewNV@ /must/ not be used. Values written to
--- elements of @PositionPerViewNV@ and @ViewportMaskPerViewNV@ /must/ not
--- depend on the @ViewIndex@. The shader /must/ also write to an output
--- variable decorated with @Position@, and the value written to @Position@
--- /must/ equal the value written to @PositionPerViewNV@[@ViewIndex@].
--- Similarly, if @ViewportMaskPerViewNV@ is written to then the shader
--- /must/ also write to an output variable decorated with @ViewportMaskNV@,
--- and the value written to @ViewportMaskNV@ /must/ equal the value written
--- to @ViewportMaskPerViewNV@[@ViewIndex@]. Implementations will either use
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_multiview_per_view_attributes.VK_SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX'
+-- bit in the subpass description. The only supported per-view attributes
+-- are position and viewport mask, and per-view position and viewport masks
+-- are written to output array variables decorated with @PositionPerViewNV@
+-- and @ViewportMaskPerViewNV@, respectively. If
+-- @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.1-extensions\/html\/vkspec.html#VK_NV_viewport_array2@
+-- is not supported and enabled, @ViewportMaskPerViewNV@ /must/ not be
+-- used. Values written to elements of @PositionPerViewNV@ and
+-- @ViewportMaskPerViewNV@ /must/ not depend on the @ViewIndex@. The shader
+-- /must/ also write to an output variable decorated with @Position@, and
+-- the value written to @Position@ /must/ equal the value written to
+-- @PositionPerViewNV@[@ViewIndex@]. Similarly, if @ViewportMaskPerViewNV@
+-- is written to then the shader /must/ also write to an output variable
+-- decorated with @ViewportMaskNV@, and the value written to
+-- @ViewportMaskNV@ /must/ equal the value written to
+-- @ViewportMaskPerViewNV@[@ViewIndex@]. Implementations will either use
 -- values taken from @Position@ and @ViewportMaskNV@ and invoke the shader
 -- once for each view, or will use values taken from @PositionPerViewNV@
 -- and @ViewportMaskPerViewNV@ and invoke the shader fewer times. The
@@ -260,31 +262,19 @@ instance Zero VkPhysicalDeviceMultiviewProperties where
 --
 -- Per-view attributes are all-or-nothing for a subpass. That is, all
 -- pipelines compiled against a subpass that includes the
--- @VK_SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX@ bit /must/ write
--- per-view attributes to the @*PerViewNV[]@ shader outputs, in addition to
--- the non-per-view (e.g. @Position@) outputs. Pipelines compiled against a
--- subpass that does not include this bit /must/ not include the
--- @*PerViewNV[]@ outputs in their interfaces.
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_multiview_per_view_attributes.VK_SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX'
+-- bit /must/ write per-view attributes to the @*PerViewNV[]@ shader
+-- outputs, in addition to the non-per-view (e.g. @Position@) outputs.
+-- Pipelines compiled against a subpass that does not include this bit
+-- /must/ not include the @*PerViewNV[]@ outputs in their interfaces.
 --
 -- == Valid Usage
 --
 -- -   Each view index /must/ not be set in more than one element of
 --     @pCorrelationMasks@
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO@
---
--- -   If @subpassCount@ is not @0@, @pViewMasks@ /must/ be a valid pointer
---     to an array of @subpassCount@ @uint32_t@ values
---
--- -   If @dependencyCount@ is not @0@, @pViewOffsets@ /must/ be a valid
---     pointer to an array of @dependencyCount@ @int32_t@ values
---
--- -   If @correlationMaskCount@ is not @0@, @pCorrelationMasks@ /must/ be
---     a valid pointer to an array of @correlationMaskCount@ @uint32_t@
---     values
+-- Unresolved directive in VkRenderPassMultiviewCreateInfo.txt -
+-- include::{generated}\/validity\/structs\/VkRenderPassMultiviewCreateInfo.txt[]
 --
 -- = See Also
 --
@@ -338,7 +328,7 @@ instance Storable VkRenderPassMultiviewCreateInfo where
                 *> poke (ptr `plusPtr` 56) (vkPCorrelationMasks (poked :: VkRenderPassMultiviewCreateInfo))
 
 instance Zero VkRenderPassMultiviewCreateInfo where
-  zero = VkRenderPassMultiviewCreateInfo zero
+  zero = VkRenderPassMultiviewCreateInfo VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO
                                          zero
                                          zero
                                          zero
@@ -346,16 +336,20 @@ instance Zero VkRenderPassMultiviewCreateInfo where
                                          zero
                                          zero
                                          zero
--- | @VK_DEPENDENCY_VIEW_LOCAL_BIT@ specifies that a
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-barriers-subpass-self-dependencies subpass has more than one view>.
+
+-- | 'VK_DEPENDENCY_VIEW_LOCAL_BIT' specifies that a
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-barriers-subpass-self-dependencies subpass has more than one view>.
 pattern VK_DEPENDENCY_VIEW_LOCAL_BIT :: VkDependencyFlagBits
 pattern VK_DEPENDENCY_VIEW_LOCAL_BIT = VkDependencyFlagBits 0x00000002
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES = VkStructureType 1000053001
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES = VkStructureType 1000053002
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO = VkStructureType 1000053000

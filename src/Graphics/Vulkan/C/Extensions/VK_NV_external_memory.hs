@@ -38,19 +38,25 @@ import Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities
 -- | VkExportMemoryAllocateInfoNV - Specify memory handle types that may be
 -- exported
 --
--- == Valid Usage (Implicit)
+-- = Description
+--
+-- Unresolved directive in VkExportMemoryAllocateInfoNV.txt -
+-- include::{generated}\/validity\/structs\/VkExportMemoryAllocateInfoNV.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkExportMemoryAllocateInfoNV = VkExportMemoryAllocateInfoNV
-  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @handleTypes@ /must/ be a valid combination of
+  , -- | @handleTypes@ is a bitmask of
   -- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBitsNV'
-  -- values
+  -- specifying one or more memory handle types that /may/ be exported.
+  -- Multiple handle types /may/ be requested for the same allocation as long
+  -- as they are compatible, as reported by
+  -- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.vkGetPhysicalDeviceExternalImageFormatPropertiesNV'.
   vkHandleTypes :: VkExternalMemoryHandleTypeFlagsNV
   }
   deriving (Eq, Show)
@@ -66,26 +72,29 @@ instance Storable VkExportMemoryAllocateInfoNV where
                 *> poke (ptr `plusPtr` 16) (vkHandleTypes (poked :: VkExportMemoryAllocateInfoNV))
 
 instance Zero VkExportMemoryAllocateInfoNV where
-  zero = VkExportMemoryAllocateInfoNV zero
+  zero = VkExportMemoryAllocateInfoNV VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV
                                       zero
                                       zero
+
 -- | VkExternalMemoryImageCreateInfoNV - Specify that an image may be backed
 -- by external memory
 --
--- == Valid Usage (Implicit)
+-- = Description
+--
+-- Unresolved directive in VkExternalMemoryImageCreateInfoNV.txt -
+-- include::{generated}\/validity\/structs\/VkExternalMemoryImageCreateInfoNV.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkExternalMemoryImageCreateInfoNV = VkExternalMemoryImageCreateInfoNV
-  { -- | @sType@ /must/ be
-  -- @VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @handleTypes@ /must/ be a valid combination of
+  , -- | @handleTypes@ is a bitmask of
   -- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBitsNV'
-  -- values
+  -- specifying one or more external memory handle types.
   vkHandleTypes :: VkExternalMemoryHandleTypeFlagsNV
   }
   deriving (Eq, Show)
@@ -101,18 +110,22 @@ instance Storable VkExternalMemoryImageCreateInfoNV where
                 *> poke (ptr `plusPtr` 16) (vkHandleTypes (poked :: VkExternalMemoryImageCreateInfoNV))
 
 instance Zero VkExternalMemoryImageCreateInfoNV where
-  zero = VkExternalMemoryImageCreateInfoNV zero
+  zero = VkExternalMemoryImageCreateInfoNV VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV
                                            zero
                                            zero
+
 -- No documentation found for TopLevel "VK_NV_EXTERNAL_MEMORY_EXTENSION_NAME"
 pattern VK_NV_EXTERNAL_MEMORY_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_NV_EXTERNAL_MEMORY_EXTENSION_NAME = "VK_NV_external_memory"
+
 -- No documentation found for TopLevel "VK_NV_EXTERNAL_MEMORY_SPEC_VERSION"
 pattern VK_NV_EXTERNAL_MEMORY_SPEC_VERSION :: Integral a => a
 pattern VK_NV_EXTERNAL_MEMORY_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV"
 pattern VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV :: VkStructureType
 pattern VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV = VkStructureType 1000056001
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV"
 pattern VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV :: VkStructureType
 pattern VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV = VkStructureType 1000056000

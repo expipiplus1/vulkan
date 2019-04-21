@@ -14,11 +14,9 @@ module Graphics.Vulkan.C.Extensions.VK_EXT_discard_rectangles
   , VkPhysicalDeviceDiscardRectanglePropertiesEXT(..)
   , VkPipelineDiscardRectangleStateCreateFlagsEXT(..)
   , VkPipelineDiscardRectangleStateCreateInfoEXT(..)
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkCmdSetDiscardRectangleEXT
-#endif
   , FN_vkCmdSetDiscardRectangleEXT
   , PFN_vkCmdSetDiscardRectangleEXT
+  , vkCmdSetDiscardRectangleEXT
   , pattern VK_DYNAMIC_STATE_DISCARD_RECTANGLE_EXT
   , pattern VK_EXT_DISCARD_RECTANGLES_EXTENSION_NAME
   , pattern VK_EXT_DISCARD_RECTANGLES_SPEC_VERSION
@@ -78,6 +76,9 @@ import Graphics.Vulkan.C.Core10.Pipeline
 import Graphics.Vulkan.C.Core10.Queue
   ( VkCommandBuffer
   )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
+  )
 import Graphics.Vulkan.NamedType
   ( (:::)
   )
@@ -109,38 +110,40 @@ instance Read VkDiscardRectangleModeEXT where
                         )
                     )
 
--- | @VK_DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT@ specifies that a fragment
+-- | 'VK_DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT' specifies that a fragment
 -- within any discard rectangle satisfies the test.
 pattern VK_DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT :: VkDiscardRectangleModeEXT
 pattern VK_DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT = VkDiscardRectangleModeEXT 0
 
--- | @VK_DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT@ specifies that a fragment not
+-- | 'VK_DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT' specifies that a fragment not
 -- within any of the discard rectangles satisfies the test.
 pattern VK_DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT :: VkDiscardRectangleModeEXT
 pattern VK_DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT = VkDiscardRectangleModeEXT 1
+
 -- | VkPhysicalDeviceDiscardRectanglePropertiesEXT - Structure describing
 -- discard rectangle limits that can be supported by an implementation
 --
 -- = Members
 --
--- The members of the @VkPhysicalDeviceDiscardRectanglePropertiesEXT@
+-- The members of the 'VkPhysicalDeviceDiscardRectanglePropertiesEXT'
 -- structure describe the following implementation-dependent limits:
 --
 -- = Description
 --
--- If the @VkPhysicalDeviceDiscardRectanglePropertiesEXT@ structure is
+-- If the 'VkPhysicalDeviceDiscardRectanglePropertiesEXT' structure is
 -- included in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- == Valid Usage (Implicit)
+-- Unresolved directive in
+-- VkPhysicalDeviceDiscardRectanglePropertiesEXT.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceDiscardRectanglePropertiesEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkPhysicalDeviceDiscardRectanglePropertiesEXT = VkPhysicalDeviceDiscardRectanglePropertiesEXT
-  { -- | @sType@ /must/ be
-  -- @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DISCARD_RECTANGLE_PROPERTIES_EXT@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -161,16 +164,17 @@ instance Storable VkPhysicalDeviceDiscardRectanglePropertiesEXT where
                 *> poke (ptr `plusPtr` 16) (vkMaxDiscardRectangles (poked :: VkPhysicalDeviceDiscardRectanglePropertiesEXT))
 
 instance Zero VkPhysicalDeviceDiscardRectanglePropertiesEXT where
-  zero = VkPhysicalDeviceDiscardRectanglePropertiesEXT zero
+  zero = VkPhysicalDeviceDiscardRectanglePropertiesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DISCARD_RECTANGLE_PROPERTIES_EXT
                                                        zero
                                                        zero
+
 -- ** VkPipelineDiscardRectangleStateCreateFlagsEXT
 
 -- | VkPipelineDiscardRectangleStateCreateFlagsEXT - Reserved for future use
 --
 -- = Description
 --
--- @VkPipelineDiscardRectangleStateCreateFlagsEXT@ is a bitmask type for
+-- 'VkPipelineDiscardRectangleStateCreateFlagsEXT' is a bitmask type for
 -- setting a mask, but is currently reserved for future use.
 --
 -- = See Also
@@ -194,27 +198,31 @@ instance Read VkPipelineDiscardRectangleStateCreateFlagsEXT where
                     )
 
 
+
 -- | VkPipelineDiscardRectangleStateCreateInfoEXT - Structure specifying
 -- discard rectangle
 --
--- == Valid Usage (Implicit)
+-- == Valid Usage
+--
+-- Unresolved directive in VkPipelineDiscardRectangleStateCreateInfoEXT.txt
+-- -
+-- include::{generated}\/validity\/structs\/VkPipelineDiscardRectangleStateCreateInfoEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkPipelineDiscardRectangleStateCreateInfoEXT = VkPipelineDiscardRectangleStateCreateInfoEXT
-  { -- | @sType@ /must/ be
-  -- @VK_STRUCTURE_TYPE_PIPELINE_DISCARD_RECTANGLE_STATE_CREATE_INFO_EXT@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @flags@ /must/ be @0@
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkPipelineDiscardRectangleStateCreateFlagsEXT
-  , -- | @discardRectangleMode@ /must/ be a valid 'VkDiscardRectangleModeEXT'
-  -- value
+  , -- | @discardRectangleMode@ is the mode used to determine whether fragments
+  -- that lie within the discard rectangle are discarded or not.
   vkDiscardRectangleMode :: VkDiscardRectangleModeEXT
   , -- | @discardRectangleCount@ /must/ be between @0@ and
-  -- @VkPhysicalDeviceDiscardRectanglePropertiesEXT@::@maxDiscardRectangles@,
+  -- 'VkPhysicalDeviceDiscardRectanglePropertiesEXT'::@maxDiscardRectangles@,
   -- inclusive
   vkDiscardRectangleCount :: Word32
   , -- | @pDiscardRectangles@ is a pointer to an array of
@@ -242,13 +250,13 @@ instance Storable VkPipelineDiscardRectangleStateCreateInfoEXT where
                 *> poke (ptr `plusPtr` 32) (vkPDiscardRectangles (poked :: VkPipelineDiscardRectangleStateCreateInfoEXT))
 
 instance Zero VkPipelineDiscardRectangleStateCreateInfoEXT where
-  zero = VkPipelineDiscardRectangleStateCreateInfoEXT zero
+  zero = VkPipelineDiscardRectangleStateCreateInfoEXT VK_STRUCTURE_TYPE_PIPELINE_DISCARD_RECTANGLE_STATE_CREATE_INFO_EXT
                                                       zero
                                                       zero
                                                       zero
                                                       zero
                                                       zero
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkCmdSetDiscardRectangleEXT - Set discard rectangles dynamically
 --
 -- = Parameters
@@ -275,7 +283,7 @@ instance Zero VkPipelineDiscardRectangleStateCreateInfoEXT where
 -- == Valid Usage
 --
 -- -   The bound graphics pipeline /must/ have been created with the
---     @VK_DYNAMIC_STATE_DISCARD_RECTANGLE_EXT@ dynamic state enabled
+--     'VK_DYNAMIC_STATE_DISCARD_RECTANGLE_EXT' dynamic state enabled
 --
 -- -   The sum of @firstDiscardRectangle@ and @discardRectangleCount@
 --     /must/ be less than or equal to
@@ -295,78 +303,55 @@ instance Zero VkPipelineDiscardRectangleStateCreateInfoEXT where
 --     @pDiscardRectangles@ /must/ not cause a signed integer addition
 --     overflow
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @pDiscardRectangles@ /must/ be a valid pointer to an array of
---     @discardRectangleCount@ @VkRect2D@ structures
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- -   @discardRectangleCount@ /must/ be greater than @0@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdSetDiscardRectangleEXT.txt -
+-- include::{generated}\/validity\/protos\/vkCmdSetDiscardRectangleEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdSetDiscardRectangleEXT" vkCmdSetDiscardRectangleEXT :: ("commandBuffer" ::: VkCommandBuffer) -> ("firstDiscardRectangle" ::: Word32) -> ("discardRectangleCount" ::: Word32) -> ("pDiscardRectangles" ::: Ptr VkRect2D) -> IO ()
-
+#else
+vkCmdSetDiscardRectangleEXT :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("firstDiscardRectangle" ::: Word32) -> ("discardRectangleCount" ::: Word32) -> ("pDiscardRectangles" ::: Ptr VkRect2D) -> IO ()
+vkCmdSetDiscardRectangleEXT deviceCmds = mkVkCmdSetDiscardRectangleEXT (pVkCmdSetDiscardRectangleEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdSetDiscardRectangleEXT
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("firstDiscardRectangle" ::: Word32) -> ("discardRectangleCount" ::: Word32) -> ("pDiscardRectangles" ::: Ptr VkRect2D) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("firstDiscardRectangle" ::: Word32) -> ("discardRectangleCount" ::: Word32) -> ("pDiscardRectangles" ::: Ptr VkRect2D) -> IO ())
+#endif
+
 type FN_vkCmdSetDiscardRectangleEXT = ("commandBuffer" ::: VkCommandBuffer) -> ("firstDiscardRectangle" ::: Word32) -> ("discardRectangleCount" ::: Word32) -> ("pDiscardRectangles" ::: Ptr VkRect2D) -> IO ()
 type PFN_vkCmdSetDiscardRectangleEXT = FunPtr FN_vkCmdSetDiscardRectangleEXT
--- | @VK_DYNAMIC_STATE_DISCARD_RECTANGLE_EXT@ specifies that the
+
+-- | 'VK_DYNAMIC_STATE_DISCARD_RECTANGLE_EXT' specifies that the
 -- @pDiscardRectangles@ state in
 -- 'VkPipelineDiscardRectangleStateCreateInfoEXT' will be ignored and
 -- /must/ be set dynamically with 'vkCmdSetDiscardRectangleEXT' before any
 -- draw or clear commands. The 'VkDiscardRectangleModeEXT' and the number
 -- of active discard rectangles is still specified by the
 -- @discardRectangleMode@ and @discardRectangleCount@ members of
--- @VkPipelineDiscardRectangleStateCreateInfoEXT@.
+-- 'VkPipelineDiscardRectangleStateCreateInfoEXT'.
 pattern VK_DYNAMIC_STATE_DISCARD_RECTANGLE_EXT :: VkDynamicState
 pattern VK_DYNAMIC_STATE_DISCARD_RECTANGLE_EXT = VkDynamicState 1000099000
+
 -- No documentation found for TopLevel "VK_EXT_DISCARD_RECTANGLES_EXTENSION_NAME"
 pattern VK_EXT_DISCARD_RECTANGLES_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_DISCARD_RECTANGLES_EXTENSION_NAME = "VK_EXT_discard_rectangles"
+
 -- No documentation found for TopLevel "VK_EXT_DISCARD_RECTANGLES_SPEC_VERSION"
 pattern VK_EXT_DISCARD_RECTANGLES_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_DISCARD_RECTANGLES_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DISCARD_RECTANGLE_PROPERTIES_EXT"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DISCARD_RECTANGLE_PROPERTIES_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DISCARD_RECTANGLE_PROPERTIES_EXT = VkStructureType 1000099000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_DISCARD_RECTANGLE_STATE_CREATE_INFO_EXT"
 pattern VK_STRUCTURE_TYPE_PIPELINE_DISCARD_RECTANGLE_STATE_CREATE_INFO_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PIPELINE_DISCARD_RECTANGLE_STATE_CREATE_INFO_EXT = VkStructureType 1000099001

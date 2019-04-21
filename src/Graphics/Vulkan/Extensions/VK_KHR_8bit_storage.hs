@@ -43,29 +43,49 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_8bit_storage
   )
 
 
--- No documentation found for TopLevel "PhysicalDevice8BitStorageFeaturesKHR"
+
+-- | VkPhysicalDevice8BitStorageFeaturesKHR - Structure describing features
+-- supported by VK_KHR_8bit_storage
+--
+-- = Description
+--
+-- Unresolved directive in VkPhysicalDevice8BitStorageFeaturesKHR.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDevice8BitStorageFeaturesKHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data PhysicalDevice8BitStorageFeaturesKHR = PhysicalDevice8BitStorageFeaturesKHR
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDevice8BitStorageFeaturesKHR" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDevice8BitStorageFeaturesKHR" "storageBuffer8BitAccess"
-  vkStorageBuffer8BitAccess :: Bool
+  storageBuffer8BitAccess :: Bool
   , -- No documentation found for Nested "PhysicalDevice8BitStorageFeaturesKHR" "uniformAndStorageBuffer8BitAccess"
-  vkUniformAndStorageBuffer8BitAccess :: Bool
+  uniformAndStorageBuffer8BitAccess :: Bool
   , -- No documentation found for Nested "PhysicalDevice8BitStorageFeaturesKHR" "storagePushConstant8"
-  vkStoragePushConstant8 :: Bool
+  storagePushConstant8 :: Bool
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPhysicalDevice8BitStorageFeaturesKHR' and
+-- marshal a 'PhysicalDevice8BitStorageFeaturesKHR' into it. The 'VkPhysicalDevice8BitStorageFeaturesKHR' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPhysicalDevice8BitStorageFeaturesKHR :: PhysicalDevice8BitStorageFeaturesKHR -> (VkPhysicalDevice8BitStorageFeaturesKHR -> IO a) -> IO a
-withCStructPhysicalDevice8BitStorageFeaturesKHR from cont = maybeWith withSomeVkStruct (vkPNext (from :: PhysicalDevice8BitStorageFeaturesKHR)) (\pPNext -> cont (VkPhysicalDevice8BitStorageFeaturesKHR VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES_KHR pPNext (boolToBool32 (vkStorageBuffer8BitAccess (from :: PhysicalDevice8BitStorageFeaturesKHR))) (boolToBool32 (vkUniformAndStorageBuffer8BitAccess (from :: PhysicalDevice8BitStorageFeaturesKHR))) (boolToBool32 (vkStoragePushConstant8 (from :: PhysicalDevice8BitStorageFeaturesKHR)))))
+withCStructPhysicalDevice8BitStorageFeaturesKHR marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PhysicalDevice8BitStorageFeaturesKHR)) (\pPNext -> cont (VkPhysicalDevice8BitStorageFeaturesKHR VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES_KHR pPNext (boolToBool32 (storageBuffer8BitAccess (marshalled :: PhysicalDevice8BitStorageFeaturesKHR))) (boolToBool32 (uniformAndStorageBuffer8BitAccess (marshalled :: PhysicalDevice8BitStorageFeaturesKHR))) (boolToBool32 (storagePushConstant8 (marshalled :: PhysicalDevice8BitStorageFeaturesKHR)))))
+
+-- | A function to read a 'VkPhysicalDevice8BitStorageFeaturesKHR' and all additional
+-- structures in the pointer chain into a 'PhysicalDevice8BitStorageFeaturesKHR'.
 fromCStructPhysicalDevice8BitStorageFeaturesKHR :: VkPhysicalDevice8BitStorageFeaturesKHR -> IO PhysicalDevice8BitStorageFeaturesKHR
 fromCStructPhysicalDevice8BitStorageFeaturesKHR c = PhysicalDevice8BitStorageFeaturesKHR <$> -- Univalued Member elided
                                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDevice8BitStorageFeaturesKHR)))
                                                                                          <*> pure (bool32ToBool (vkStorageBuffer8BitAccess (c :: VkPhysicalDevice8BitStorageFeaturesKHR)))
                                                                                          <*> pure (bool32ToBool (vkUniformAndStorageBuffer8BitAccess (c :: VkPhysicalDevice8BitStorageFeaturesKHR)))
                                                                                          <*> pure (bool32ToBool (vkStoragePushConstant8 (c :: VkPhysicalDevice8BitStorageFeaturesKHR)))
+
 instance Zero PhysicalDevice8BitStorageFeaturesKHR where
   zero = PhysicalDevice8BitStorageFeaturesKHR Nothing
                                               False
                                               False
                                               False
+

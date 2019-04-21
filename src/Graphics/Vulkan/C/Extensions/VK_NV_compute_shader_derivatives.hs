@@ -37,26 +37,26 @@ import Graphics.Vulkan.C.Core10.Core
 --
 -- = Members
 --
--- The members of the @VkPhysicalDeviceComputeShaderDerivativesFeaturesNV@
+-- The members of the 'VkPhysicalDeviceComputeShaderDerivativesFeaturesNV'
 -- structure describe the following features:
 --
 -- = Description
 --
 -- See
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#texture-derivatives-compute Compute Shader Derivatives>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#texture-derivatives-compute Compute Shader Derivatives>
 -- for more information.
 --
--- If the @VkPhysicalDeviceComputeShaderDerivativesFeaturesNV@ structure is
+-- If the 'VkPhysicalDeviceComputeShaderDerivativesFeaturesNV' structure is
 -- included in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
 -- it is filled with values indicating whether each feature is supported.
--- @VkPhysicalDeviceComputeShaderDerivativesFeaturesNV@ /can/ also be used
+-- 'VkPhysicalDeviceComputeShaderDerivativesFeaturesNV' /can/ also be used
 -- in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
 --
 -- Unresolved directive in
 -- VkPhysicalDeviceComputeShaderDerivativesFeaturesNV.txt -
--- include::..\/validity\/structs\/VkPhysicalDeviceComputeShaderDerivativesFeaturesNV.txt[]
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceComputeShaderDerivativesFeaturesNV.txt[]
 --
 -- = See Also
 --
@@ -88,16 +88,19 @@ instance Storable VkPhysicalDeviceComputeShaderDerivativesFeaturesNV where
                 *> poke (ptr `plusPtr` 20) (vkComputeDerivativeGroupLinear (poked :: VkPhysicalDeviceComputeShaderDerivativesFeaturesNV))
 
 instance Zero VkPhysicalDeviceComputeShaderDerivativesFeaturesNV where
-  zero = VkPhysicalDeviceComputeShaderDerivativesFeaturesNV zero
+  zero = VkPhysicalDeviceComputeShaderDerivativesFeaturesNV VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_NV
                                                             zero
                                                             zero
                                                             zero
+
 -- No documentation found for TopLevel "VK_NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME"
 pattern VK_NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME = "VK_NV_compute_shader_derivatives"
+
 -- No documentation found for TopLevel "VK_NV_COMPUTE_SHADER_DERIVATIVES_SPEC_VERSION"
 pattern VK_NV_COMPUTE_SHADER_DERIVATIVES_SPEC_VERSION :: Integral a => a
 pattern VK_NV_COMPUTE_SHADER_DERIVATIVES_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_NV"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_NV :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_NV = VkStructureType 1000201000

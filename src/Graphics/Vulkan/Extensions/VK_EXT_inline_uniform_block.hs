@@ -77,65 +77,157 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block
   )
 
 
--- No documentation found for TopLevel "DescriptorPoolInlineUniformBlockCreateInfoEXT"
+
+-- | VkDescriptorPoolInlineUniformBlockCreateInfoEXT - Structure specifying
+-- the maximum number of inline uniform block bindings of a newly created
+-- descriptor pool
+--
+-- = Description
+--
+-- Unresolved directive in
+-- VkDescriptorPoolInlineUniformBlockCreateInfoEXT.txt -
+-- include::{generated}\/validity\/structs\/VkDescriptorPoolInlineUniformBlockCreateInfoEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data DescriptorPoolInlineUniformBlockCreateInfoEXT = DescriptorPoolInlineUniformBlockCreateInfoEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "DescriptorPoolInlineUniformBlockCreateInfoEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "DescriptorPoolInlineUniformBlockCreateInfoEXT" "maxInlineUniformBlockBindings"
-  vkMaxInlineUniformBlockBindings :: Word32
+  maxInlineUniformBlockBindings :: Word32
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkDescriptorPoolInlineUniformBlockCreateInfoEXT' and
+-- marshal a 'DescriptorPoolInlineUniformBlockCreateInfoEXT' into it. The 'VkDescriptorPoolInlineUniformBlockCreateInfoEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructDescriptorPoolInlineUniformBlockCreateInfoEXT :: DescriptorPoolInlineUniformBlockCreateInfoEXT -> (VkDescriptorPoolInlineUniformBlockCreateInfoEXT -> IO a) -> IO a
-withCStructDescriptorPoolInlineUniformBlockCreateInfoEXT from cont = maybeWith withSomeVkStruct (vkPNext (from :: DescriptorPoolInlineUniformBlockCreateInfoEXT)) (\pPNext -> cont (VkDescriptorPoolInlineUniformBlockCreateInfoEXT VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO_EXT pPNext (vkMaxInlineUniformBlockBindings (from :: DescriptorPoolInlineUniformBlockCreateInfoEXT))))
+withCStructDescriptorPoolInlineUniformBlockCreateInfoEXT marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: DescriptorPoolInlineUniformBlockCreateInfoEXT)) (\pPNext -> cont (VkDescriptorPoolInlineUniformBlockCreateInfoEXT VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO_EXT pPNext (maxInlineUniformBlockBindings (marshalled :: DescriptorPoolInlineUniformBlockCreateInfoEXT))))
+
+-- | A function to read a 'VkDescriptorPoolInlineUniformBlockCreateInfoEXT' and all additional
+-- structures in the pointer chain into a 'DescriptorPoolInlineUniformBlockCreateInfoEXT'.
 fromCStructDescriptorPoolInlineUniformBlockCreateInfoEXT :: VkDescriptorPoolInlineUniformBlockCreateInfoEXT -> IO DescriptorPoolInlineUniformBlockCreateInfoEXT
 fromCStructDescriptorPoolInlineUniformBlockCreateInfoEXT c = DescriptorPoolInlineUniformBlockCreateInfoEXT <$> -- Univalued Member elided
                                                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDescriptorPoolInlineUniformBlockCreateInfoEXT)))
                                                                                                            <*> pure (vkMaxInlineUniformBlockBindings (c :: VkDescriptorPoolInlineUniformBlockCreateInfoEXT))
+
 instance Zero DescriptorPoolInlineUniformBlockCreateInfoEXT where
   zero = DescriptorPoolInlineUniformBlockCreateInfoEXT Nothing
                                                        zero
--- No documentation found for TopLevel "PhysicalDeviceInlineUniformBlockFeaturesEXT"
+
+
+
+-- | VkPhysicalDeviceInlineUniformBlockFeaturesEXT - Structure describing
+-- inline uniform block features that can be supported by an implementation
+--
+-- = Members
+--
+-- The members of the
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VkPhysicalDeviceInlineUniformBlockFeaturesEXT'
+-- structure describe the following features:
+--
+-- = Description
+--
+-- If the
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VkPhysicalDeviceInlineUniformBlockFeaturesEXT'
+-- structure is included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2',
+-- it is filled with values indicating whether each feature is supported.
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VkPhysicalDeviceInlineUniformBlockFeaturesEXT'
+-- /can/ also be used in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
+--
+-- Unresolved directive in
+-- VkPhysicalDeviceInlineUniformBlockFeaturesEXT.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceInlineUniformBlockFeaturesEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data PhysicalDeviceInlineUniformBlockFeaturesEXT = PhysicalDeviceInlineUniformBlockFeaturesEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceInlineUniformBlockFeaturesEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDeviceInlineUniformBlockFeaturesEXT" "inlineUniformBlock"
-  vkInlineUniformBlock :: Bool
+  inlineUniformBlock :: Bool
   , -- No documentation found for Nested "PhysicalDeviceInlineUniformBlockFeaturesEXT" "descriptorBindingInlineUniformBlockUpdateAfterBind"
-  vkDescriptorBindingInlineUniformBlockUpdateAfterBind :: Bool
+  descriptorBindingInlineUniformBlockUpdateAfterBind :: Bool
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPhysicalDeviceInlineUniformBlockFeaturesEXT' and
+-- marshal a 'PhysicalDeviceInlineUniformBlockFeaturesEXT' into it. The 'VkPhysicalDeviceInlineUniformBlockFeaturesEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPhysicalDeviceInlineUniformBlockFeaturesEXT :: PhysicalDeviceInlineUniformBlockFeaturesEXT -> (VkPhysicalDeviceInlineUniformBlockFeaturesEXT -> IO a) -> IO a
-withCStructPhysicalDeviceInlineUniformBlockFeaturesEXT from cont = maybeWith withSomeVkStruct (vkPNext (from :: PhysicalDeviceInlineUniformBlockFeaturesEXT)) (\pPNext -> cont (VkPhysicalDeviceInlineUniformBlockFeaturesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES_EXT pPNext (boolToBool32 (vkInlineUniformBlock (from :: PhysicalDeviceInlineUniformBlockFeaturesEXT))) (boolToBool32 (vkDescriptorBindingInlineUniformBlockUpdateAfterBind (from :: PhysicalDeviceInlineUniformBlockFeaturesEXT)))))
+withCStructPhysicalDeviceInlineUniformBlockFeaturesEXT marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PhysicalDeviceInlineUniformBlockFeaturesEXT)) (\pPNext -> cont (VkPhysicalDeviceInlineUniformBlockFeaturesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES_EXT pPNext (boolToBool32 (inlineUniformBlock (marshalled :: PhysicalDeviceInlineUniformBlockFeaturesEXT))) (boolToBool32 (descriptorBindingInlineUniformBlockUpdateAfterBind (marshalled :: PhysicalDeviceInlineUniformBlockFeaturesEXT)))))
+
+-- | A function to read a 'VkPhysicalDeviceInlineUniformBlockFeaturesEXT' and all additional
+-- structures in the pointer chain into a 'PhysicalDeviceInlineUniformBlockFeaturesEXT'.
 fromCStructPhysicalDeviceInlineUniformBlockFeaturesEXT :: VkPhysicalDeviceInlineUniformBlockFeaturesEXT -> IO PhysicalDeviceInlineUniformBlockFeaturesEXT
 fromCStructPhysicalDeviceInlineUniformBlockFeaturesEXT c = PhysicalDeviceInlineUniformBlockFeaturesEXT <$> -- Univalued Member elided
                                                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceInlineUniformBlockFeaturesEXT)))
                                                                                                        <*> pure (bool32ToBool (vkInlineUniformBlock (c :: VkPhysicalDeviceInlineUniformBlockFeaturesEXT)))
                                                                                                        <*> pure (bool32ToBool (vkDescriptorBindingInlineUniformBlockUpdateAfterBind (c :: VkPhysicalDeviceInlineUniformBlockFeaturesEXT)))
+
 instance Zero PhysicalDeviceInlineUniformBlockFeaturesEXT where
   zero = PhysicalDeviceInlineUniformBlockFeaturesEXT Nothing
                                                      False
                                                      False
--- No documentation found for TopLevel "PhysicalDeviceInlineUniformBlockPropertiesEXT"
+
+
+
+-- | VkPhysicalDeviceInlineUniformBlockPropertiesEXT - Structure describing
+-- inline uniform block properties that can be supported by an
+-- implementation
+--
+-- = Members
+--
+-- The members of the
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VkPhysicalDeviceInlineUniformBlockPropertiesEXT'
+-- structure describe the following implementation-dependent limits:
+--
+-- = Description
+--
+-- If the
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VkPhysicalDeviceInlineUniformBlockPropertiesEXT'
+-- structure is included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
+-- it is filled with the implementation-dependent limits.
+--
+-- Unresolved directive in
+-- VkPhysicalDeviceInlineUniformBlockPropertiesEXT.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceInlineUniformBlockPropertiesEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data PhysicalDeviceInlineUniformBlockPropertiesEXT = PhysicalDeviceInlineUniformBlockPropertiesEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceInlineUniformBlockPropertiesEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDeviceInlineUniformBlockPropertiesEXT" "maxInlineUniformBlockSize"
-  vkMaxInlineUniformBlockSize :: Word32
+  maxInlineUniformBlockSize :: Word32
   , -- No documentation found for Nested "PhysicalDeviceInlineUniformBlockPropertiesEXT" "maxPerStageDescriptorInlineUniformBlocks"
-  vkMaxPerStageDescriptorInlineUniformBlocks :: Word32
+  maxPerStageDescriptorInlineUniformBlocks :: Word32
   , -- No documentation found for Nested "PhysicalDeviceInlineUniformBlockPropertiesEXT" "maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks"
-  vkMaxPerStageDescriptorUpdateAfterBindInlineUniformBlocks :: Word32
+  maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks :: Word32
   , -- No documentation found for Nested "PhysicalDeviceInlineUniformBlockPropertiesEXT" "maxDescriptorSetInlineUniformBlocks"
-  vkMaxDescriptorSetInlineUniformBlocks :: Word32
+  maxDescriptorSetInlineUniformBlocks :: Word32
   , -- No documentation found for Nested "PhysicalDeviceInlineUniformBlockPropertiesEXT" "maxDescriptorSetUpdateAfterBindInlineUniformBlocks"
-  vkMaxDescriptorSetUpdateAfterBindInlineUniformBlocks :: Word32
+  maxDescriptorSetUpdateAfterBindInlineUniformBlocks :: Word32
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPhysicalDeviceInlineUniformBlockPropertiesEXT' and
+-- marshal a 'PhysicalDeviceInlineUniformBlockPropertiesEXT' into it. The 'VkPhysicalDeviceInlineUniformBlockPropertiesEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPhysicalDeviceInlineUniformBlockPropertiesEXT :: PhysicalDeviceInlineUniformBlockPropertiesEXT -> (VkPhysicalDeviceInlineUniformBlockPropertiesEXT -> IO a) -> IO a
-withCStructPhysicalDeviceInlineUniformBlockPropertiesEXT from cont = maybeWith withSomeVkStruct (vkPNext (from :: PhysicalDeviceInlineUniformBlockPropertiesEXT)) (\pPNext -> cont (VkPhysicalDeviceInlineUniformBlockPropertiesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES_EXT pPNext (vkMaxInlineUniformBlockSize (from :: PhysicalDeviceInlineUniformBlockPropertiesEXT)) (vkMaxPerStageDescriptorInlineUniformBlocks (from :: PhysicalDeviceInlineUniformBlockPropertiesEXT)) (vkMaxPerStageDescriptorUpdateAfterBindInlineUniformBlocks (from :: PhysicalDeviceInlineUniformBlockPropertiesEXT)) (vkMaxDescriptorSetInlineUniformBlocks (from :: PhysicalDeviceInlineUniformBlockPropertiesEXT)) (vkMaxDescriptorSetUpdateAfterBindInlineUniformBlocks (from :: PhysicalDeviceInlineUniformBlockPropertiesEXT))))
+withCStructPhysicalDeviceInlineUniformBlockPropertiesEXT marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PhysicalDeviceInlineUniformBlockPropertiesEXT)) (\pPNext -> cont (VkPhysicalDeviceInlineUniformBlockPropertiesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES_EXT pPNext (maxInlineUniformBlockSize (marshalled :: PhysicalDeviceInlineUniformBlockPropertiesEXT)) (maxPerStageDescriptorInlineUniformBlocks (marshalled :: PhysicalDeviceInlineUniformBlockPropertiesEXT)) (maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks (marshalled :: PhysicalDeviceInlineUniformBlockPropertiesEXT)) (maxDescriptorSetInlineUniformBlocks (marshalled :: PhysicalDeviceInlineUniformBlockPropertiesEXT)) (maxDescriptorSetUpdateAfterBindInlineUniformBlocks (marshalled :: PhysicalDeviceInlineUniformBlockPropertiesEXT))))
+
+-- | A function to read a 'VkPhysicalDeviceInlineUniformBlockPropertiesEXT' and all additional
+-- structures in the pointer chain into a 'PhysicalDeviceInlineUniformBlockPropertiesEXT'.
 fromCStructPhysicalDeviceInlineUniformBlockPropertiesEXT :: VkPhysicalDeviceInlineUniformBlockPropertiesEXT -> IO PhysicalDeviceInlineUniformBlockPropertiesEXT
 fromCStructPhysicalDeviceInlineUniformBlockPropertiesEXT c = PhysicalDeviceInlineUniformBlockPropertiesEXT <$> -- Univalued Member elided
                                                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceInlineUniformBlockPropertiesEXT)))
@@ -144,6 +236,7 @@ fromCStructPhysicalDeviceInlineUniformBlockPropertiesEXT c = PhysicalDeviceInlin
                                                                                                            <*> pure (vkMaxPerStageDescriptorUpdateAfterBindInlineUniformBlocks (c :: VkPhysicalDeviceInlineUniformBlockPropertiesEXT))
                                                                                                            <*> pure (vkMaxDescriptorSetInlineUniformBlocks (c :: VkPhysicalDeviceInlineUniformBlockPropertiesEXT))
                                                                                                            <*> pure (vkMaxDescriptorSetUpdateAfterBindInlineUniformBlocks (c :: VkPhysicalDeviceInlineUniformBlockPropertiesEXT))
+
 instance Zero PhysicalDeviceInlineUniformBlockPropertiesEXT where
   zero = PhysicalDeviceInlineUniformBlockPropertiesEXT Nothing
                                                        zero
@@ -151,23 +244,45 @@ instance Zero PhysicalDeviceInlineUniformBlockPropertiesEXT where
                                                        zero
                                                        zero
                                                        zero
--- No documentation found for TopLevel "WriteDescriptorSetInlineUniformBlockEXT"
+
+
+
+-- | VkWriteDescriptorSetInlineUniformBlockEXT - Structure specifying inline
+-- uniform block data
+--
+-- == Valid Usage
+--
+-- Unresolved directive in VkWriteDescriptorSetInlineUniformBlockEXT.txt -
+-- include::{generated}\/validity\/structs\/VkWriteDescriptorSetInlineUniformBlockEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data WriteDescriptorSetInlineUniformBlockEXT = WriteDescriptorSetInlineUniformBlockEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "WriteDescriptorSetInlineUniformBlockEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   -- Bytestring length valued member elided
   , -- No documentation found for Nested "WriteDescriptorSetInlineUniformBlockEXT" "pData"
-  vkPData :: ByteString
+  data' :: ByteString
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkWriteDescriptorSetInlineUniformBlockEXT' and
+-- marshal a 'WriteDescriptorSetInlineUniformBlockEXT' into it. The 'VkWriteDescriptorSetInlineUniformBlockEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructWriteDescriptorSetInlineUniformBlockEXT :: WriteDescriptorSetInlineUniformBlockEXT -> (VkWriteDescriptorSetInlineUniformBlockEXT -> IO a) -> IO a
-withCStructWriteDescriptorSetInlineUniformBlockEXT from cont = unsafeUseAsCString (vkPData (from :: WriteDescriptorSetInlineUniformBlockEXT)) (\pData -> maybeWith withSomeVkStruct (vkPNext (from :: WriteDescriptorSetInlineUniformBlockEXT)) (\pPNext -> cont (VkWriteDescriptorSetInlineUniformBlockEXT VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK_EXT pPNext (fromIntegral (Data.ByteString.length (vkPData (from :: WriteDescriptorSetInlineUniformBlockEXT)))) (castPtr pData))))
+withCStructWriteDescriptorSetInlineUniformBlockEXT marshalled cont = unsafeUseAsCString (data' (marshalled :: WriteDescriptorSetInlineUniformBlockEXT)) (\pPData -> maybeWith withSomeVkStruct (next (marshalled :: WriteDescriptorSetInlineUniformBlockEXT)) (\pPNext -> cont (VkWriteDescriptorSetInlineUniformBlockEXT VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK_EXT pPNext (fromIntegral (Data.ByteString.length (data' (marshalled :: WriteDescriptorSetInlineUniformBlockEXT)))) (castPtr pPData))))
+
+-- | A function to read a 'VkWriteDescriptorSetInlineUniformBlockEXT' and all additional
+-- structures in the pointer chain into a 'WriteDescriptorSetInlineUniformBlockEXT'.
 fromCStructWriteDescriptorSetInlineUniformBlockEXT :: VkWriteDescriptorSetInlineUniformBlockEXT -> IO WriteDescriptorSetInlineUniformBlockEXT
 fromCStructWriteDescriptorSetInlineUniformBlockEXT c = WriteDescriptorSetInlineUniformBlockEXT <$> -- Univalued Member elided
                                                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkWriteDescriptorSetInlineUniformBlockEXT)))
                                                                                                -- Bytestring length valued member elided
                                                                                                <*> packCStringLen (castPtr (vkPData (c :: VkWriteDescriptorSetInlineUniformBlockEXT)), fromIntegral (vkDataSize (c :: VkWriteDescriptorSetInlineUniformBlockEXT)))
+
 instance Zero WriteDescriptorSetInlineUniformBlockEXT where
   zero = WriteDescriptorSetInlineUniformBlockEXT Nothing
                                                  Data.ByteString.empty
+

@@ -60,7 +60,7 @@ import Graphics.Vulkan.C.Core10.Core
 -- = Description
 --
 -- Unresolved directive in VkDeviceMemoryOverallocationCreateInfoAMD.txt -
--- include::..\/validity\/structs\/VkDeviceMemoryOverallocationCreateInfoAMD.txt[]
+-- include::{generated}\/validity\/structs\/VkDeviceMemoryOverallocationCreateInfoAMD.txt[]
 --
 -- = See Also
 --
@@ -86,9 +86,10 @@ instance Storable VkDeviceMemoryOverallocationCreateInfoAMD where
                 *> poke (ptr `plusPtr` 16) (vkOverallocationBehavior (poked :: VkDeviceMemoryOverallocationCreateInfoAMD))
 
 instance Zero VkDeviceMemoryOverallocationCreateInfoAMD where
-  zero = VkDeviceMemoryOverallocationCreateInfoAMD zero
+  zero = VkDeviceMemoryOverallocationCreateInfoAMD VK_STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD
                                                    zero
                                                    zero
+
 -- ** VkMemoryOverallocationBehaviorAMD
 
 -- | VkMemoryOverallocationBehaviorAMD - Specify memory overallocation
@@ -118,17 +119,17 @@ instance Read VkMemoryOverallocationBehaviorAMD where
                         )
                     )
 
--- | @VK_MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD@ lets the implementation
+-- | 'VK_MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD' lets the implementation
 -- decide if overallocation should be allowed.
 pattern VK_MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD :: VkMemoryOverallocationBehaviorAMD
 pattern VK_MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD = VkMemoryOverallocationBehaviorAMD 0
 
--- | @VK_MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD@ specifies overallocation
+-- | 'VK_MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD' specifies overallocation
 -- is allowed if platform permits.
 pattern VK_MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD :: VkMemoryOverallocationBehaviorAMD
 pattern VK_MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD = VkMemoryOverallocationBehaviorAMD 1
 
--- | @VK_MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD@ specifies the
+-- | 'VK_MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD' specifies the
 -- application is not allowed to allocate device memory beyond the heap
 -- sizes reported by
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceMemoryProperties'.
@@ -136,12 +137,15 @@ pattern VK_MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD = VkMemoryOverallocationBe
 -- scope of the Vulkan instance are not accounted for.
 pattern VK_MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD :: VkMemoryOverallocationBehaviorAMD
 pattern VK_MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD = VkMemoryOverallocationBehaviorAMD 2
+
 -- No documentation found for TopLevel "VK_AMD_MEMORY_OVERALLOCATION_BEHAVIOR_EXTENSION_NAME"
 pattern VK_AMD_MEMORY_OVERALLOCATION_BEHAVIOR_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_AMD_MEMORY_OVERALLOCATION_BEHAVIOR_EXTENSION_NAME = "VK_AMD_memory_overallocation_behavior"
+
 -- No documentation found for TopLevel "VK_AMD_MEMORY_OVERALLOCATION_BEHAVIOR_SPEC_VERSION"
 pattern VK_AMD_MEMORY_OVERALLOCATION_BEHAVIOR_SPEC_VERSION :: Integral a => a
 pattern VK_AMD_MEMORY_OVERALLOCATION_BEHAVIOR_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD"
 pattern VK_STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD = VkStructureType 1000189000

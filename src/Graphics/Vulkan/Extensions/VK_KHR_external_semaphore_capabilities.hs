@@ -85,7 +85,9 @@ import Graphics.Vulkan.Extensions.VK_KHR_external_memory_capabilities
 
 type ExternalSemaphorePropertiesKHR = ExternalSemaphoreProperties
 -- TODO: Pattern constructor alias)
+
 type PhysicalDeviceExternalSemaphoreInfoKHR = PhysicalDeviceExternalSemaphoreInfo
 -- TODO: Pattern constructor alias)
+
 getPhysicalDeviceExternalSemaphorePropertiesKHR :: PhysicalDevice ->  PhysicalDeviceExternalSemaphoreInfo ->  IO (ExternalSemaphoreProperties)
 getPhysicalDeviceExternalSemaphorePropertiesKHR = getPhysicalDeviceExternalSemaphoreProperties

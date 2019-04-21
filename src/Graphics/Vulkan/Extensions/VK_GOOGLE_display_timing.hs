@@ -65,10 +65,6 @@ import Foreign.Storable
   ( peek
   , peekElemOff
   )
-import qualified Graphics.Vulkan.C.Dynamic
-  ( getPastPresentationTimingGOOGLE
-  , getRefreshCycleDurationGOOGLE
-  )
 
 
 import Graphics.Vulkan.C.Core10.Core
@@ -81,6 +77,8 @@ import Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing
   , VkPresentTimeGOOGLE(..)
   , VkPresentTimesInfoGOOGLE(..)
   , VkRefreshCycleDurationGOOGLE(..)
+  , vkGetPastPresentationTimingGOOGLE
+  , vkGetRefreshCycleDurationGOOGLE
   , pattern VK_STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
@@ -106,98 +104,298 @@ import Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing
   )
 
 
--- No documentation found for TopLevel "PastPresentationTimingGOOGLE"
+
+-- | VkPastPresentationTimingGOOGLE - Structure containing timing information
+-- about a previously-presented image
+--
+-- = Description
+--
+-- The results for a given @swapchain@ and @presentID@ are only returned
+-- once from
+-- 'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.vkGetPastPresentationTimingGOOGLE'.
+--
+-- The application /can/ use the
+-- 'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.VkPastPresentationTimingGOOGLE'
+-- values to occasionally adjust its timing. For example, if
+-- @actualPresentTime@ is later than expected (e.g. one @refreshDuration@
+-- late), the application may increase its target IPD to a higher multiple
+-- of @refreshDuration@ (e.g. decrease its frame rate from 60Hz to 30Hz).
+-- If @actualPresentTime@ and @earliestPresentTime@ are consistently
+-- different, and if @presentMargin@ is consistently large enough, the
+-- application may decrease its target IPD to a smaller multiple of
+-- @refreshDuration@ (e.g. increase its frame rate from 30Hz to 60Hz). If
+-- @actualPresentTime@ and @earliestPresentTime@ are same, and if
+-- @presentMargin@ is consistently high, the application may delay the
+-- start of its input-render-present loop in order to decrease the latency
+-- between user input and the corresponding present (always leaving some
+-- margin in case a new image takes longer to render than the previous
+-- image). An application that desires its target IPD to always be the same
+-- as @refreshDuration@, can also adjust features until @actualPresentTime@
+-- is never late and @presentMargin@ is satisfactory.
+--
+-- = See Also
+--
+-- No cross-references are available
 data PastPresentationTimingGOOGLE = PastPresentationTimingGOOGLE
   { -- No documentation found for Nested "PastPresentationTimingGOOGLE" "presentID"
-  vkPresentID :: Word32
+  presentID :: Word32
   , -- No documentation found for Nested "PastPresentationTimingGOOGLE" "desiredPresentTime"
-  vkDesiredPresentTime :: Word64
+  desiredPresentTime :: Word64
   , -- No documentation found for Nested "PastPresentationTimingGOOGLE" "actualPresentTime"
-  vkActualPresentTime :: Word64
+  actualPresentTime :: Word64
   , -- No documentation found for Nested "PastPresentationTimingGOOGLE" "earliestPresentTime"
-  vkEarliestPresentTime :: Word64
+  earliestPresentTime :: Word64
   , -- No documentation found for Nested "PastPresentationTimingGOOGLE" "presentMargin"
-  vkPresentMargin :: Word64
+  presentMargin :: Word64
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPastPresentationTimingGOOGLE' and
+-- marshal a 'PastPresentationTimingGOOGLE' into it. The 'VkPastPresentationTimingGOOGLE' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPastPresentationTimingGOOGLE :: PastPresentationTimingGOOGLE -> (VkPastPresentationTimingGOOGLE -> IO a) -> IO a
-withCStructPastPresentationTimingGOOGLE from cont = cont (VkPastPresentationTimingGOOGLE (vkPresentID (from :: PastPresentationTimingGOOGLE)) (vkDesiredPresentTime (from :: PastPresentationTimingGOOGLE)) (vkActualPresentTime (from :: PastPresentationTimingGOOGLE)) (vkEarliestPresentTime (from :: PastPresentationTimingGOOGLE)) (vkPresentMargin (from :: PastPresentationTimingGOOGLE)))
+withCStructPastPresentationTimingGOOGLE marshalled cont = cont (VkPastPresentationTimingGOOGLE (presentID (marshalled :: PastPresentationTimingGOOGLE)) (desiredPresentTime (marshalled :: PastPresentationTimingGOOGLE)) (actualPresentTime (marshalled :: PastPresentationTimingGOOGLE)) (earliestPresentTime (marshalled :: PastPresentationTimingGOOGLE)) (presentMargin (marshalled :: PastPresentationTimingGOOGLE)))
+
+-- | A function to read a 'VkPastPresentationTimingGOOGLE' and all additional
+-- structures in the pointer chain into a 'PastPresentationTimingGOOGLE'.
 fromCStructPastPresentationTimingGOOGLE :: VkPastPresentationTimingGOOGLE -> IO PastPresentationTimingGOOGLE
 fromCStructPastPresentationTimingGOOGLE c = PastPresentationTimingGOOGLE <$> pure (vkPresentID (c :: VkPastPresentationTimingGOOGLE))
                                                                          <*> pure (vkDesiredPresentTime (c :: VkPastPresentationTimingGOOGLE))
                                                                          <*> pure (vkActualPresentTime (c :: VkPastPresentationTimingGOOGLE))
                                                                          <*> pure (vkEarliestPresentTime (c :: VkPastPresentationTimingGOOGLE))
                                                                          <*> pure (vkPresentMargin (c :: VkPastPresentationTimingGOOGLE))
+
 instance Zero PastPresentationTimingGOOGLE where
   zero = PastPresentationTimingGOOGLE zero
                                       zero
                                       zero
                                       zero
                                       zero
--- No documentation found for TopLevel "PresentTimeGOOGLE"
+
+
+
+-- | VkPresentTimeGOOGLE - The earliest time image should be presented
+--
+-- = See Also
+--
+-- No cross-references are available
 data PresentTimeGOOGLE = PresentTimeGOOGLE
   { -- No documentation found for Nested "PresentTimeGOOGLE" "presentID"
-  vkPresentID :: Word32
+  presentID :: Word32
   , -- No documentation found for Nested "PresentTimeGOOGLE" "desiredPresentTime"
-  vkDesiredPresentTime :: Word64
+  desiredPresentTime :: Word64
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPresentTimeGOOGLE' and
+-- marshal a 'PresentTimeGOOGLE' into it. The 'VkPresentTimeGOOGLE' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPresentTimeGOOGLE :: PresentTimeGOOGLE -> (VkPresentTimeGOOGLE -> IO a) -> IO a
-withCStructPresentTimeGOOGLE from cont = cont (VkPresentTimeGOOGLE (vkPresentID (from :: PresentTimeGOOGLE)) (vkDesiredPresentTime (from :: PresentTimeGOOGLE)))
+withCStructPresentTimeGOOGLE marshalled cont = cont (VkPresentTimeGOOGLE (presentID (marshalled :: PresentTimeGOOGLE)) (desiredPresentTime (marshalled :: PresentTimeGOOGLE)))
+
+-- | A function to read a 'VkPresentTimeGOOGLE' and all additional
+-- structures in the pointer chain into a 'PresentTimeGOOGLE'.
 fromCStructPresentTimeGOOGLE :: VkPresentTimeGOOGLE -> IO PresentTimeGOOGLE
 fromCStructPresentTimeGOOGLE c = PresentTimeGOOGLE <$> pure (vkPresentID (c :: VkPresentTimeGOOGLE))
                                                    <*> pure (vkDesiredPresentTime (c :: VkPresentTimeGOOGLE))
+
 instance Zero PresentTimeGOOGLE where
   zero = PresentTimeGOOGLE zero
                            zero
--- No documentation found for TopLevel "PresentTimesInfoGOOGLE"
+
+
+
+-- | VkPresentTimesInfoGOOGLE - The earliest time each image should be
+-- presented
+--
+-- == Valid Usage
+--
+-- Unresolved directive in VkPresentTimesInfoGOOGLE.txt -
+-- include::{generated}\/validity\/structs\/VkPresentTimesInfoGOOGLE.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data PresentTimesInfoGOOGLE = PresentTimesInfoGOOGLE
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PresentTimesInfoGOOGLE" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   -- Optional length valued member elided
   , -- No documentation found for Nested "PresentTimesInfoGOOGLE" "pTimes"
-  vkPTimes :: Maybe (Vector PresentTimeGOOGLE)
+  times :: Maybe (Vector PresentTimeGOOGLE)
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPresentTimesInfoGOOGLE' and
+-- marshal a 'PresentTimesInfoGOOGLE' into it. The 'VkPresentTimesInfoGOOGLE' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPresentTimesInfoGOOGLE :: PresentTimesInfoGOOGLE -> (VkPresentTimesInfoGOOGLE -> IO a) -> IO a
-withCStructPresentTimesInfoGOOGLE from cont = maybeWith (withVec withCStructPresentTimeGOOGLE) (vkPTimes (from :: PresentTimesInfoGOOGLE)) (\pTimes -> maybeWith withSomeVkStruct (vkPNext (from :: PresentTimesInfoGOOGLE)) (\pPNext -> cont (VkPresentTimesInfoGOOGLE VK_STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE pPNext (maybe 0 (fromIntegral . Data.Vector.length) (vkPTimes (from :: PresentTimesInfoGOOGLE))) pTimes)))
+withCStructPresentTimesInfoGOOGLE marshalled cont = maybeWith (withVec withCStructPresentTimeGOOGLE) (times (marshalled :: PresentTimesInfoGOOGLE)) (\pPTimes -> maybeWith withSomeVkStruct (next (marshalled :: PresentTimesInfoGOOGLE)) (\pPNext -> cont (VkPresentTimesInfoGOOGLE VK_STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE pPNext (maybe 0 (fromIntegral . Data.Vector.length) (times (marshalled :: PresentTimesInfoGOOGLE))) pPTimes)))
+
+-- | A function to read a 'VkPresentTimesInfoGOOGLE' and all additional
+-- structures in the pointer chain into a 'PresentTimesInfoGOOGLE'.
 fromCStructPresentTimesInfoGOOGLE :: VkPresentTimesInfoGOOGLE -> IO PresentTimesInfoGOOGLE
 fromCStructPresentTimesInfoGOOGLE c = PresentTimesInfoGOOGLE <$> -- Univalued Member elided
                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPresentTimesInfoGOOGLE)))
                                                              -- Optional length valued member elided
                                                              <*> maybePeek (\p -> Data.Vector.generateM (fromIntegral (vkSwapchainCount (c :: VkPresentTimesInfoGOOGLE))) (((fromCStructPresentTimeGOOGLE <=<) . peekElemOff) p)) (vkPTimes (c :: VkPresentTimesInfoGOOGLE))
+
 instance Zero PresentTimesInfoGOOGLE where
   zero = PresentTimesInfoGOOGLE Nothing
                                 Nothing
--- No documentation found for TopLevel "RefreshCycleDurationGOOGLE"
+
+
+
+-- | VkRefreshCycleDurationGOOGLE - Structure containing the RC duration of a
+-- display
+--
+-- = Description
+--
+-- Unresolved directive in VkRefreshCycleDurationGOOGLE.txt -
+-- include::{generated}\/validity\/structs\/VkRefreshCycleDurationGOOGLE.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data RefreshCycleDurationGOOGLE = RefreshCycleDurationGOOGLE
   { -- No documentation found for Nested "RefreshCycleDurationGOOGLE" "refreshDuration"
-  vkRefreshDuration :: Word64
+  refreshDuration :: Word64
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkRefreshCycleDurationGOOGLE' and
+-- marshal a 'RefreshCycleDurationGOOGLE' into it. The 'VkRefreshCycleDurationGOOGLE' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructRefreshCycleDurationGOOGLE :: RefreshCycleDurationGOOGLE -> (VkRefreshCycleDurationGOOGLE -> IO a) -> IO a
-withCStructRefreshCycleDurationGOOGLE from cont = cont (VkRefreshCycleDurationGOOGLE (vkRefreshDuration (from :: RefreshCycleDurationGOOGLE)))
+withCStructRefreshCycleDurationGOOGLE marshalled cont = cont (VkRefreshCycleDurationGOOGLE (refreshDuration (marshalled :: RefreshCycleDurationGOOGLE)))
+
+-- | A function to read a 'VkRefreshCycleDurationGOOGLE' and all additional
+-- structures in the pointer chain into a 'RefreshCycleDurationGOOGLE'.
 fromCStructRefreshCycleDurationGOOGLE :: VkRefreshCycleDurationGOOGLE -> IO RefreshCycleDurationGOOGLE
 fromCStructRefreshCycleDurationGOOGLE c = RefreshCycleDurationGOOGLE <$> pure (vkRefreshDuration (c :: VkRefreshCycleDurationGOOGLE))
+
 instance Zero RefreshCycleDurationGOOGLE where
   zero = RefreshCycleDurationGOOGLE zero
 
--- | Wrapper for 'vkGetPastPresentationTimingGOOGLE'
+
+
+-- | vkGetPastPresentationTimingGOOGLE - Obtain timing of a
+-- previously-presented image
+--
+-- = Parameters
+--
+-- -   @device@ is the device associated with @swapchain@.
+--
+-- -   @swapchain@ is the swapchain to obtain presentation timing
+--     information duration for.
+--
+-- -   @pPresentationTimingCount@ is a pointer to an integer related to the
+--     number of
+--     'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.VkPastPresentationTimingGOOGLE'
+--     structures to query, as described below.
+--
+-- -   @pPresentationTimings@ is either @NULL@ or a pointer to an array of
+--     'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.VkPastPresentationTimingGOOGLE'
+--     structures.
+--
+-- = Description
+--
+-- If @pPresentationTimings@ is @NULL@, then the number of newly-available
+-- timing records for the given @swapchain@ is returned in
+-- @pPresentationTimingCount@. Otherwise, @pPresentationTimingCount@ /must/
+-- point to a variable set by the user to the number of elements in the
+-- @pPresentationTimings@ array, and on return the variable is overwritten
+-- with the number of structures actually written to
+-- @pPresentationTimings@. If the value of @pPresentationTimingCount@ is
+-- less than the number of newly-available timing records, at most
+-- @pPresentationTimingCount@ structures will be written. If
+-- @pPresentationTimingCount@ is smaller than the number of newly-available
+-- timing records for the given @swapchain@,
+-- 'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE' will be returned instead
+-- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS' to indicate that not all
+-- the available values were returned.
+--
+-- Unresolved directive in vkGetPastPresentationTimingGOOGLE.txt -
+-- include::{generated}\/validity\/protos\/vkGetPastPresentationTimingGOOGLE.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 getNumPastPresentationTimingGOOGLE :: Device ->  SwapchainKHR ->  IO (VkResult, Word32)
-getNumPastPresentationTimingGOOGLE = \(Device device commandTable) -> \swapchain -> alloca (\pPresentationTimingCount -> Graphics.Vulkan.C.Dynamic.getPastPresentationTimingGOOGLE commandTable device swapchain pPresentationTimingCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pPresentationTimingCount)))
+getNumPastPresentationTimingGOOGLE = \(Device device' commandTable) -> \swapchain' -> alloca (\pPresentationTimingCount' -> vkGetPastPresentationTimingGOOGLE commandTable device' swapchain' pPresentationTimingCount' nullPtr >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>peek pPresentationTimingCount')))
 
--- | Wrapper for 'vkGetPastPresentationTimingGOOGLE'
+-- | vkGetPastPresentationTimingGOOGLE - Obtain timing of a
+-- previously-presented image
+--
+-- = Parameters
+--
+-- -   @device@ is the device associated with @swapchain@.
+--
+-- -   @swapchain@ is the swapchain to obtain presentation timing
+--     information duration for.
+--
+-- -   @pPresentationTimingCount@ is a pointer to an integer related to the
+--     number of
+--     'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.VkPastPresentationTimingGOOGLE'
+--     structures to query, as described below.
+--
+-- -   @pPresentationTimings@ is either @NULL@ or a pointer to an array of
+--     'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.VkPastPresentationTimingGOOGLE'
+--     structures.
+--
+-- = Description
+--
+-- If @pPresentationTimings@ is @NULL@, then the number of newly-available
+-- timing records for the given @swapchain@ is returned in
+-- @pPresentationTimingCount@. Otherwise, @pPresentationTimingCount@ /must/
+-- point to a variable set by the user to the number of elements in the
+-- @pPresentationTimings@ array, and on return the variable is overwritten
+-- with the number of structures actually written to
+-- @pPresentationTimings@. If the value of @pPresentationTimingCount@ is
+-- less than the number of newly-available timing records, at most
+-- @pPresentationTimingCount@ structures will be written. If
+-- @pPresentationTimingCount@ is smaller than the number of newly-available
+-- timing records for the given @swapchain@,
+-- 'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE' will be returned instead
+-- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS' to indicate that not all
+-- the available values were returned.
+--
+-- Unresolved directive in vkGetPastPresentationTimingGOOGLE.txt -
+-- include::{generated}\/validity\/protos\/vkGetPastPresentationTimingGOOGLE.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 getPastPresentationTimingGOOGLE :: Device ->  SwapchainKHR ->  Word32 ->  IO (VkResult, Vector PastPresentationTimingGOOGLE)
-getPastPresentationTimingGOOGLE = \(Device device commandTable) -> \swapchain -> \presentationTimingCount -> allocaArray (fromIntegral presentationTimingCount) (\pPresentationTimings -> with presentationTimingCount (\pPresentationTimingCount -> Graphics.Vulkan.C.Dynamic.getPastPresentationTimingGOOGLE commandTable device swapchain pPresentationTimingCount pPresentationTimings >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM ((\p -> fromCStructPastPresentationTimingGOOGLE <=< peekElemOff p) pPresentationTimings) =<< (fromIntegral <$> (peek pPresentationTimingCount)))))))
--- | Call 'getNumPastPresentationTimingGOOGLE' to get the number of return values, then use that
--- number to call 'getPastPresentationTimingGOOGLE' to get all the values.
+getPastPresentationTimingGOOGLE = \(Device device' commandTable) -> \swapchain' -> \presentationTimingCount' -> allocaArray (fromIntegral presentationTimingCount') (\pPresentationTimings' -> with presentationTimingCount' (\pPresentationTimingCount' -> vkGetPastPresentationTimingGOOGLE commandTable device' swapchain' pPresentationTimingCount' pPresentationTimings' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>(flip Data.Vector.generateM ((\p -> fromCStructPastPresentationTimingGOOGLE <=< peekElemOff p) pPresentationTimings') =<< (fromIntegral <$> (peek pPresentationTimingCount')))))))
+-- | Returns all the values available from 'getPastPresentationTimingGOOGLE'.
 getAllPastPresentationTimingGOOGLE :: Device ->  SwapchainKHR ->  IO (Vector PastPresentationTimingGOOGLE)
-getAllPastPresentationTimingGOOGLE device swapchain =
-  snd <$> getNumPastPresentationTimingGOOGLE device swapchain
-    >>= \num -> snd <$> getPastPresentationTimingGOOGLE device swapchain num
+getAllPastPresentationTimingGOOGLE device' swapchain' =
+  snd <$> getNumPastPresentationTimingGOOGLE device' swapchain'
+    >>= \num -> snd <$> getPastPresentationTimingGOOGLE device' swapchain' num
 
 
--- | Wrapper for 'vkGetRefreshCycleDurationGOOGLE'
+
+-- | vkGetRefreshCycleDurationGOOGLE - Obtain the RC duration of the PE’s
+-- display
+--
+-- = Parameters
+--
+-- -   @device@ is the device associated with @swapchain@.
+--
+-- -   @swapchain@ is the swapchain to obtain the refresh duration for.
+--
+-- -   @pDisplayTimingProperties@ is a pointer to an instance of the
+--     'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.VkRefreshCycleDurationGOOGLE'
+--     structure.
+--
+-- = Description
+--
+-- Unresolved directive in vkGetRefreshCycleDurationGOOGLE.txt -
+-- include::{generated}\/validity\/protos\/vkGetRefreshCycleDurationGOOGLE.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 getRefreshCycleDurationGOOGLE :: Device ->  SwapchainKHR ->  IO (RefreshCycleDurationGOOGLE)
-getRefreshCycleDurationGOOGLE = \(Device device commandTable) -> \swapchain -> alloca (\pDisplayTimingProperties -> Graphics.Vulkan.C.Dynamic.getRefreshCycleDurationGOOGLE commandTable device swapchain pDisplayTimingProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((fromCStructRefreshCycleDurationGOOGLE <=< peek) pDisplayTimingProperties)))
+getRefreshCycleDurationGOOGLE = \(Device device' commandTable) -> \swapchain' -> alloca (\pDisplayTimingProperties' -> vkGetRefreshCycleDurationGOOGLE commandTable device' swapchain' pDisplayTimingProperties' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((fromCStructRefreshCycleDurationGOOGLE <=< peek) pDisplayTimingProperties')))

@@ -8,16 +8,12 @@
 module Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2
   ( VkBindBufferMemoryInfo(..)
   , VkBindImageMemoryInfo(..)
-#if defined(EXPOSE_CORE11_COMMANDS)
-  , vkBindBufferMemory2
-#endif
   , FN_vkBindBufferMemory2
   , PFN_vkBindBufferMemory2
-#if defined(EXPOSE_CORE11_COMMANDS)
-  , vkBindImageMemory2
-#endif
+  , vkBindBufferMemory2
   , FN_vkBindImageMemory2
   , PFN_vkBindImageMemory2
+  , vkBindImageMemory2
   , pattern VK_IMAGE_CREATE_ALIAS_BIT
   , pattern VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO
   , pattern VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO
@@ -54,6 +50,9 @@ import Graphics.Vulkan.C.Core10.MemoryManagement
   ( VkBuffer
   , VkImage
   )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
+  )
 import Graphics.Vulkan.NamedType
   ( (:::)
   )
@@ -72,17 +71,25 @@ import Graphics.Vulkan.NamedType
 -- -   @memoryOffset@ /must/ be less than the size of @memory@
 --
 -- -   @memory@ /must/ have been allocated using one of the memory types
---     allowed in the @memoryTypeBits@ member of the @VkMemoryRequirements@
---     structure returned from a call to @vkGetBufferMemoryRequirements@
+--     allowed in the @memoryTypeBits@ member of the
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements'
+--     structure returned from a call to
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.vkGetBufferMemoryRequirements'
 --     with @buffer@
 --
 -- -   @memoryOffset@ /must/ be an integer multiple of the @alignment@
---     member of the @VkMemoryRequirements@ structure returned from a call
---     to @vkGetBufferMemoryRequirements@ with @buffer@
+--     member of the
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements'
+--     structure returned from a call to
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.vkGetBufferMemoryRequirements'
+--     with @buffer@
 --
--- -   The @size@ member of the @VkMemoryRequirements@ structure returned
---     from a call to @vkGetBufferMemoryRequirements@ with @buffer@ /must/
---     be less than or equal to the size of @memory@ minus @memoryOffset@
+-- -   The @size@ member of the
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements'
+--     structure returned from a call to
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.vkGetBufferMemoryRequirements'
+--     with @buffer@ /must/ be less than or equal to the size of @memory@
+--     minus @memoryOffset@
 --
 -- -   If @buffer@ requires a dedicated allocation(as reported by
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.vkGetBufferMemoryRequirements2'
@@ -92,8 +99,8 @@ import Graphics.Vulkan.NamedType
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'::@buffer@
 --     equal to @buffer@ and @memoryOffset@ /must/ be zero
 --
--- -   If the @VkMemoryAllocateInfo@ provided when @memory@ was allocated
---     included an instance of
+-- -   If the 'Graphics.Vulkan.C.Core10.Memory.VkMemoryAllocateInfo'
+--     provided when @memory@ was allocated included an instance of
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'
 --     in its @pNext@ chain, and
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'::@buffer@
@@ -104,7 +111,8 @@ import Graphics.Vulkan.NamedType
 --
 -- -   If @buffer@ was created with
 --     'Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationBufferCreateInfoNV'::@dedicatedAllocation@
---     equal to @VK_TRUE@, @memory@ /must/ have been created with
+--     equal to 'Graphics.Vulkan.C.Core10.Core.VK_TRUE', @memory@ /must/
+--     have been created with
 --     'Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationMemoryAllocateInfoNV'::@buffer@
 --     equal to @buffer@ and @memoryOffset@ /must/ be zero
 --
@@ -114,24 +122,14 @@ import Graphics.Vulkan.NamedType
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VkBindBufferMemoryDeviceGroupInfo'::@pDeviceIndices@
 --     /must/ have been allocated
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO@
---
--- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VkBindBufferMemoryDeviceGroupInfo'
---
--- -   @buffer@ /must/ be a valid @VkBuffer@ handle
---
--- -   @memory@ /must/ be a valid @VkDeviceMemory@ handle
---
--- -   Both of @buffer@, and @memory@ /must/ have been created, allocated,
---     or retrieved from the same @VkDevice@
+-- Unresolved directive in VkBindBufferMemoryInfo.txt -
+-- include::{generated}\/validity\/structs\/VkBindBufferMemoryInfo.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',
--- 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory', @VkDeviceSize@,
+-- 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType', 'vkBindBufferMemory2'
 data VkBindBufferMemoryInfo = VkBindBufferMemoryInfo
   { -- | @sType@ is the type of this structure.
@@ -145,8 +143,9 @@ data VkBindBufferMemoryInfo = VkBindBufferMemoryInfo
   vkMemory :: VkDeviceMemory
   , -- | @memoryOffset@ is the start offset of the region of @memory@ which is to
   -- be bound to the buffer. The number of bytes returned in the
-  -- @VkMemoryRequirements@::@size@ member in @memory@, starting from
-  -- @memoryOffset@ bytes, will be bound to the specified buffer.
+  -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements'::@size@
+  -- member in @memory@, starting from @memoryOffset@ bytes, will be bound to
+  -- the specified buffer.
   vkMemoryOffset :: VkDeviceSize
   }
   deriving (Eq, Show)
@@ -166,11 +165,12 @@ instance Storable VkBindBufferMemoryInfo where
                 *> poke (ptr `plusPtr` 32) (vkMemoryOffset (poked :: VkBindBufferMemoryInfo))
 
 instance Zero VkBindBufferMemoryInfo where
-  zero = VkBindBufferMemoryInfo zero
+  zero = VkBindBufferMemoryInfo VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO
                                 zero
                                 zero
                                 zero
                                 zero
+
 -- | VkBindImageMemoryInfo - Structure specifying how to bind an image to
 -- memory
 --
@@ -213,7 +213,8 @@ instance Zero VkBindBufferMemoryInfo where
 -- -   If the @pNext@ chain includes an instance of the
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkBindImagePlaneMemoryInfo'
 --     structure, @image@ /must/ have been created with the
---     @VK_IMAGE_CREATE_DISJOINT_BIT@ bit set.
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_CREATE_DISJOINT_BIT'
+--     bit set.
 --
 -- -   If the @pNext@ chain includes an instance of the
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkBindImagePlaneMemoryInfo'
@@ -264,8 +265,9 @@ instance Zero VkBindBufferMemoryInfo where
 --     equal to @image@ and @memoryOffset@ /must/ be zero
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicated allocation image aliasing>
---     feature is not enabled, and the @VkMemoryAllocateInfo@ provided when
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicated allocation image aliasing>
+--     feature is not enabled, and the
+--     'Graphics.Vulkan.C.Core10.Memory.VkMemoryAllocateInfo' provided when
 --     @memory@ was allocated included an instance of
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'
 --     in its @pNext@ chain, and
@@ -276,8 +278,9 @@ instance Zero VkBindBufferMemoryInfo where
 --     and @memoryOffset@ /must/ be zero.
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicated allocation image aliasing>
---     feature is enabled, and the @VkMemoryAllocateInfo@ provided when
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicated allocation image aliasing>
+--     feature is enabled, and the
+--     'Graphics.Vulkan.C.Core10.Memory.VkMemoryAllocateInfo' provided when
 --     @memory@ was allocated included an instance of
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'
 --     in its @pNext@ chain, and
@@ -286,17 +289,19 @@ instance Zero VkBindBufferMemoryInfo where
 --     @memoryOffset@ /must/ be zero, and @image@ /must/ be either equal to
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'::@image@
 --     or an image that was created using the same parameters in
---     @VkImageCreateInfo@, with the exception that @extent@ and
---     @arrayLayers@ /may/ differ subject to the following restrictions:
---     every dimension in the @extent@ parameter of the image being bound
---     /must/ be equal to or smaller than the original image for which the
---     allocation was created; and the @arrayLayers@ parameter of the image
---     being bound /must/ be equal to or smaller than the original image
---     for which the allocation was created.
+--     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo', with the
+--     exception that @extent@ and @arrayLayers@ /may/ differ subject to
+--     the following restrictions: every dimension in the @extent@
+--     parameter of the image being bound /must/ be equal to or smaller
+--     than the original image for which the allocation was created; and
+--     the @arrayLayers@ parameter of the image being bound /must/ be equal
+--     to or smaller than the original image for which the allocation was
+--     created.
 --
 -- -   If @image@ was created with
 --     'Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationImageCreateInfoNV'::@dedicatedAllocation@
---     equal to @VK_TRUE@, @memory@ /must/ have been created with
+--     equal to 'Graphics.Vulkan.C.Core10.Core.VK_TRUE', @memory@ /must/
+--     have been created with
 --     'Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationMemoryAllocateInfoNV'::@image@
 --     equal to @image@ and @memoryOffset@ /must/ be zero
 --
@@ -311,7 +316,8 @@ instance Zero VkBindBufferMemoryInfo where
 --     and
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VkBindImageMemoryDeviceGroupInfo'::@splitInstanceBindRegionCount@
 --     is not zero, then @image@ /must/ have been created with the
---     @VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT@ bit set
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT'
+--     bit set
 --
 -- -   If the @pNext@ chain includes
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VkBindImageMemoryDeviceGroupInfo',
@@ -342,27 +348,13 @@ instance Zero VkBindBufferMemoryInfo where
 --     @memory@ /must/ be a valid
 --     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' handle
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO@
---
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VkBindImageMemoryDeviceGroupInfo'
---     or
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkBindImagePlaneMemoryInfo'
---
--- -   Each @sType@ member in the @pNext@ chain /must/ be unique
---
--- -   @image@ /must/ be a valid @VkImage@ handle
---
--- -   Both of @image@, and @memory@ that are valid handles /must/ have
---     been created, allocated, or retrieved from the same @VkDevice@
+-- Unresolved directive in VkBindImageMemoryInfo.txt -
+-- include::{generated}\/validity\/structs\/VkBindImageMemoryInfo.txt[]
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory', @VkDeviceSize@,
+-- 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType', 'vkBindImageMemory2'
 data VkBindImageMemoryInfo = VkBindImageMemoryInfo
@@ -377,8 +369,9 @@ data VkBindImageMemoryInfo = VkBindImageMemoryInfo
   vkMemory :: VkDeviceMemory
   , -- | @memoryOffset@ is the start offset of the region of @memory@ which is to
   -- be bound to the image. The number of bytes returned in the
-  -- @VkMemoryRequirements@::@size@ member in @memory@, starting from
-  -- @memoryOffset@ bytes, will be bound to the specified image.
+  -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements'::@size@
+  -- member in @memory@, starting from @memoryOffset@ bytes, will be bound to
+  -- the specified image.
   vkMemoryOffset :: VkDeviceSize
   }
   deriving (Eq, Show)
@@ -398,12 +391,12 @@ instance Storable VkBindImageMemoryInfo where
                 *> poke (ptr `plusPtr` 32) (vkMemoryOffset (poked :: VkBindImageMemoryInfo))
 
 instance Zero VkBindImageMemoryInfo where
-  zero = VkBindImageMemoryInfo zero
+  zero = VkBindImageMemoryInfo VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO
                                zero
                                zero
                                zero
                                zero
-#if defined(EXPOSE_CORE11_COMMANDS)
+
 -- | vkBindBufferMemory2 - Bind device memory to buffer objects
 --
 -- = Parameters
@@ -420,30 +413,33 @@ instance Zero VkBindImageMemoryInfo where
 -- On some implementations, it /may/ be more efficient to batch memory
 -- bindings into a single command.
 --
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- Unresolved directive in vkBindBufferMemory2.txt -
+-- include::{generated}\/validity\/protos\/vkBindBufferMemory2.txt[]
 --
 -- = See Also
 --
 -- 'VkBindBufferMemoryInfo',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
+#if defined(EXPOSE_CORE11_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkBindBufferMemory2" vkBindBufferMemory2 :: ("device" ::: VkDevice) -> ("bindInfoCount" ::: Word32) -> ("pBindInfos" ::: Ptr VkBindBufferMemoryInfo) -> IO VkResult
-
+#else
+vkBindBufferMemory2 :: DeviceCmds -> ("device" ::: VkDevice) -> ("bindInfoCount" ::: Word32) -> ("pBindInfos" ::: Ptr VkBindBufferMemoryInfo) -> IO VkResult
+vkBindBufferMemory2 deviceCmds = mkVkBindBufferMemory2 (pVkBindBufferMemory2 deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkBindBufferMemory2
+  :: FunPtr (("device" ::: VkDevice) -> ("bindInfoCount" ::: Word32) -> ("pBindInfos" ::: Ptr VkBindBufferMemoryInfo) -> IO VkResult) -> (("device" ::: VkDevice) -> ("bindInfoCount" ::: Word32) -> ("pBindInfos" ::: Ptr VkBindBufferMemoryInfo) -> IO VkResult)
+#endif
+
 type FN_vkBindBufferMemory2 = ("device" ::: VkDevice) -> ("bindInfoCount" ::: Word32) -> ("pBindInfos" ::: Ptr VkBindBufferMemoryInfo) -> IO VkResult
 type PFN_vkBindBufferMemory2 = FunPtr FN_vkBindBufferMemory2
-#if defined(EXPOSE_CORE11_COMMANDS)
+
 -- | vkBindImageMemory2 - Bind device memory to image objects
 --
 -- = Parameters
@@ -460,35 +456,57 @@ type PFN_vkBindBufferMemory2 = FunPtr FN_vkBindBufferMemory2
 -- On some implementations, it /may/ be more efficient to batch memory
 -- bindings into a single command.
 --
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- Unresolved directive in vkBindImageMemory2.txt -
+-- include::{generated}\/validity\/protos\/vkBindImageMemory2.txt[]
 --
 -- = See Also
 --
 -- 'VkBindImageMemoryInfo',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
+#if defined(EXPOSE_CORE11_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkBindImageMemory2" vkBindImageMemory2 :: ("device" ::: VkDevice) -> ("bindInfoCount" ::: Word32) -> ("pBindInfos" ::: Ptr VkBindImageMemoryInfo) -> IO VkResult
-
+#else
+vkBindImageMemory2 :: DeviceCmds -> ("device" ::: VkDevice) -> ("bindInfoCount" ::: Word32) -> ("pBindInfos" ::: Ptr VkBindImageMemoryInfo) -> IO VkResult
+vkBindImageMemory2 deviceCmds = mkVkBindImageMemory2 (pVkBindImageMemory2 deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkBindImageMemory2
+  :: FunPtr (("device" ::: VkDevice) -> ("bindInfoCount" ::: Word32) -> ("pBindInfos" ::: Ptr VkBindImageMemoryInfo) -> IO VkResult) -> (("device" ::: VkDevice) -> ("bindInfoCount" ::: Word32) -> ("pBindInfos" ::: Ptr VkBindImageMemoryInfo) -> IO VkResult)
+#endif
+
 type FN_vkBindImageMemory2 = ("device" ::: VkDevice) -> ("bindInfoCount" ::: Word32) -> ("pBindInfos" ::: Ptr VkBindImageMemoryInfo) -> IO VkResult
 type PFN_vkBindImageMemory2 = FunPtr FN_vkBindImageMemory2
--- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_ALIAS_BIT"
+
+-- | 'VK_IMAGE_CREATE_ALIAS_BIT' specifies that two images created with the
+-- same creation parameters and aliased to the same memory /can/ interpret
+-- the contents of the memory consistently with each other, subject to the
+-- rules described in the
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-memory-aliasing Memory Aliasing>
+-- section. This flag further specifies that each plane of a /disjoint/
+-- image /can/ share an in-memory non-linear representation with
+-- single-plane images, and that a single-plane image /can/ share an
+-- in-memory non-linear representation with a plane of a multi-planar
+-- disjoint image, according to the rules in
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-compatible-planes>.
+-- If the @pNext@ chain includes a
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryImageCreateInfo'
+-- or
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory.VkExternalMemoryImageCreateInfoNV'
+-- structure whose @handleTypes@ member is not @0@, it is as if
+-- 'VK_IMAGE_CREATE_ALIAS_BIT' is set.
 pattern VK_IMAGE_CREATE_ALIAS_BIT :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_ALIAS_BIT = VkImageCreateFlagBits 0x00000400
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO"
 pattern VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO = VkStructureType 1000157000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO"
 pattern VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO = VkStructureType 1000157001

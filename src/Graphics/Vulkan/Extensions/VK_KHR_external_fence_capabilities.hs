@@ -81,7 +81,9 @@ import Graphics.Vulkan.Extensions.VK_KHR_external_memory_capabilities
 
 type ExternalFencePropertiesKHR = ExternalFenceProperties
 -- TODO: Pattern constructor alias)
+
 type PhysicalDeviceExternalFenceInfoKHR = PhysicalDeviceExternalFenceInfo
 -- TODO: Pattern constructor alias)
+
 getPhysicalDeviceExternalFencePropertiesKHR :: PhysicalDevice ->  PhysicalDeviceExternalFenceInfo ->  IO (ExternalFenceProperties)
 getPhysicalDeviceExternalFencePropertiesKHR = getPhysicalDeviceExternalFenceProperties

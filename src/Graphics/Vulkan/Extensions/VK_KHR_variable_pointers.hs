@@ -31,5 +31,6 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_variable_pointers
 
 type PhysicalDeviceVariablePointerFeaturesKHR = PhysicalDeviceVariablePointersFeatures
 -- TODO: Pattern constructor alias)
+
 type PhysicalDeviceVariablePointersFeaturesKHR = PhysicalDeviceVariablePointersFeatures
 -- TODO: Pattern constructor alias)

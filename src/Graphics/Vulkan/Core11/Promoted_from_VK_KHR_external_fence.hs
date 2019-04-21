@@ -2,12 +2,14 @@
 {-# language CPP #-}
 {-# language PatternSynonyms #-}
 {-# language DuplicateRecordFields #-}
+{-# language TypeFamilies #-}
 
 module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_fence
   ( withCStructExportFenceCreateInfo
   , fromCStructExportFenceCreateInfo
   , ExportFenceCreateInfo(..)
   , FenceImportFlagBits
+  , pattern FENCE_IMPORT_TEMPORARY_BIT
   , FenceImportFlagBitsKHR
   , FenceImportFlags
   , FenceImportFlagsKHR
@@ -29,6 +31,7 @@ import Graphics.Vulkan.C.Core10.Core
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence
   ( VkExportFenceCreateInfo(..)
   , VkFenceImportFlagBits(..)
+  , pattern VK_FENCE_IMPORT_TEMPORARY_BIT
   , pattern VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_fence_capabilities
@@ -41,29 +44,82 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   )
 
 
--- No documentation found for TopLevel "ExportFenceCreateInfo"
+
+-- | VkExportFenceCreateInfo - Structure specifying handle types that can be
+-- exported from a fence
+--
+-- == Valid Usage
+--
+-- -   The bits in @handleTypes@ must be supported and compatible, as
+--     reported by
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceProperties'.
+--
+-- Unresolved directive in VkExportFenceCreateInfo.txt -
+-- include::{generated}\/validity\/structs\/VkExportFenceCreateInfo.txt[]
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceHandleTypeFlags',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data ExportFenceCreateInfo = ExportFenceCreateInfo
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "ExportFenceCreateInfo" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "ExportFenceCreateInfo" "handleTypes"
-  vkHandleTypes :: ExternalFenceHandleTypeFlags
+  handleTypes :: ExternalFenceHandleTypeFlags
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkExportFenceCreateInfo' and
+-- marshal a 'ExportFenceCreateInfo' into it. The 'VkExportFenceCreateInfo' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructExportFenceCreateInfo :: ExportFenceCreateInfo -> (VkExportFenceCreateInfo -> IO a) -> IO a
-withCStructExportFenceCreateInfo from cont = maybeWith withSomeVkStruct (vkPNext (from :: ExportFenceCreateInfo)) (\pPNext -> cont (VkExportFenceCreateInfo VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO pPNext (vkHandleTypes (from :: ExportFenceCreateInfo))))
+withCStructExportFenceCreateInfo marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: ExportFenceCreateInfo)) (\pPNext -> cont (VkExportFenceCreateInfo VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO pPNext (handleTypes (marshalled :: ExportFenceCreateInfo))))
+
+-- | A function to read a 'VkExportFenceCreateInfo' and all additional
+-- structures in the pointer chain into a 'ExportFenceCreateInfo'.
 fromCStructExportFenceCreateInfo :: VkExportFenceCreateInfo -> IO ExportFenceCreateInfo
 fromCStructExportFenceCreateInfo c = ExportFenceCreateInfo <$> -- Univalued Member elided
                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkExportFenceCreateInfo)))
                                                            <*> pure (vkHandleTypes (c :: VkExportFenceCreateInfo))
+
 instance Zero ExportFenceCreateInfo where
   zero = ExportFenceCreateInfo Nothing
                                zero
--- No documentation found for TopLevel "FenceImportFlagBits"
+
+
+-- | VkFenceImportFlagBits - Bitmask specifying additional parameters of
+-- fence payload import
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence.VkFenceImportFlags'
 type FenceImportFlagBits = VkFenceImportFlagBits
+
+
+-- | 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence.VK_FENCE_IMPORT_TEMPORARY_BIT'
+-- specifies that the fence payload will be imported only temporarily, as
+-- described in
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence Payloads>,
+-- regardless of the permanence of @handleType@.
+pattern FENCE_IMPORT_TEMPORARY_BIT :: (a ~ FenceImportFlagBits) => a
+pattern FENCE_IMPORT_TEMPORARY_BIT = VK_FENCE_IMPORT_TEMPORARY_BIT
+
 -- No documentation found for TopLevel "FenceImportFlagBitsKHR"
 type FenceImportFlagBitsKHR = FenceImportFlagBits
--- No documentation found for TopLevel "FenceImportFlags"
+
+-- | VkFenceImportFlags - Bitmask of VkFenceImportFlagBits
+--
+-- = Description
+--
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence.VkFenceImportFlags'
+-- is a bitmask type for setting a mask of zero or more
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence.VkFenceImportFlagBits'.
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence.VkFenceImportFlagBits'
 type FenceImportFlags = FenceImportFlagBits
+
 -- No documentation found for TopLevel "FenceImportFlagsKHR"
 type FenceImportFlagsKHR = FenceImportFlags

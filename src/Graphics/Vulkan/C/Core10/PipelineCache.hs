@@ -10,26 +10,18 @@ module Graphics.Vulkan.C.Core10.PipelineCache
   ( VkPipelineCache
   , VkPipelineCacheCreateFlags(..)
   , VkPipelineCacheCreateInfo(..)
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCreatePipelineCache
-#endif
   , FN_vkCreatePipelineCache
   , PFN_vkCreatePipelineCache
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkDestroyPipelineCache
-#endif
+  , vkCreatePipelineCache
   , FN_vkDestroyPipelineCache
   , PFN_vkDestroyPipelineCache
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkGetPipelineCacheData
-#endif
+  , vkDestroyPipelineCache
   , FN_vkGetPipelineCacheData
   , PFN_vkGetPipelineCacheData
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkMergePipelineCaches
-#endif
+  , vkGetPipelineCacheData
   , FN_vkMergePipelineCaches
   , PFN_vkMergePipelineCaches
+  , vkMergePipelineCaches
   ) where
 
 import Data.Bits
@@ -74,10 +66,14 @@ import Graphics.Vulkan.C.Core10.Core
   , VkStructureType(..)
   , Zero(..)
   , VkFlags
+  , pattern VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkAllocationCallbacks(..)
   , VkDevice
+  )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -95,13 +91,14 @@ data VkPipelineCache_T
 -- 'vkCreatePipelineCache', 'vkDestroyPipelineCache',
 -- 'vkGetPipelineCacheData', 'vkMergePipelineCaches'
 type VkPipelineCache = Ptr VkPipelineCache_T
+
 -- ** VkPipelineCacheCreateFlags
 
 -- | VkPipelineCacheCreateFlags - Reserved for future use
 --
 -- = Description
 --
--- @VkPipelineCacheCreateFlags@ is a bitmask type for setting a mask, but
+-- 'VkPipelineCacheCreateFlags' is a bitmask type for setting a mask, but
 -- is currently reserved for future use.
 --
 -- = See Also
@@ -125,28 +122,21 @@ instance Read VkPipelineCacheCreateFlags where
                     )
 
 
+
 -- | VkPipelineCacheCreateInfo - Structure specifying parameters of a newly
 -- created pipeline cache
 --
 -- == Valid Usage
 --
 -- -   If @initialDataSize@ is not @0@, it /must/ be equal to the size of
---     @pInitialData@, as returned by @vkGetPipelineCacheData@ when
+--     @pInitialData@, as returned by 'vkGetPipelineCacheData' when
 --     @pInitialData@ was originally retrieved
 --
 -- -   If @initialDataSize@ is not @0@, @pInitialData@ /must/ have been
---     retrieved from a previous call to @vkGetPipelineCacheData@
+--     retrieved from a previous call to 'vkGetPipelineCacheData'
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO@
---
--- -   @pNext@ /must/ be @NULL@
---
--- -   @flags@ /must/ be @0@
---
--- -   If @initialDataSize@ is not @0@, @pInitialData@ /must/ be a valid
---     pointer to an array of @initialDataSize@ bytes
+-- Unresolved directive in VkPipelineCacheCreateInfo.txt -
+-- include::{generated}\/validity\/structs\/VkPipelineCacheCreateInfo.txt[]
 --
 -- = See Also
 --
@@ -185,12 +175,12 @@ instance Storable VkPipelineCacheCreateInfo where
                 *> poke (ptr `plusPtr` 32) (vkPInitialData (poked :: VkPipelineCacheCreateInfo))
 
 instance Zero VkPipelineCacheCreateInfo where
-  zero = VkPipelineCacheCreateInfo zero
+  zero = VkPipelineCacheCreateInfo VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO
                                    zero
                                    zero
                                    zero
                                    zero
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCreatePipelineCache - Creates a new pipeline cache
 --
 -- = Parameters
@@ -203,7 +193,7 @@ instance Zero VkPipelineCacheCreateInfo where
 --     cache object.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
 -- -   @pPipelineCache@ is a pointer to a 'VkPipelineCache' handle in which
@@ -216,13 +206,14 @@ instance Zero VkPipelineCacheCreateInfo where
 -- Applications /can/ track and manage the total host memory size of a
 -- pipeline cache object using the @pAllocator@. Applications /can/ limit
 -- the amount of data retrieved from a pipeline cache object in
--- @vkGetPipelineCacheData@. Implementations /should/ not internally limit
+-- 'vkGetPipelineCacheData'. Implementations /should/ not internally limit
 -- the total number of entries added to a pipeline cache object or the
 -- total host memory consumed.
 --
 -- Once created, a pipeline cache /can/ be passed to the
--- @vkCreateGraphicsPipelines@ and @vkCreateComputePipelines@ commands. If
--- the pipeline cache passed into these commands is not
+-- 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateGraphicsPipelines' and
+-- 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateComputePipelines' commands.
+-- If the pipeline cache passed into these commands is not
 -- 'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', the implementation
 -- will query it for possible reuse opportunities and update it with new
 -- content. The use of the pipeline cache object in these commands is
@@ -234,46 +225,37 @@ instance Zero VkPipelineCacheCreateInfo where
 -- Implementations /should/ make every effort to limit any critical
 -- sections to the actual accesses to the cache, which is expected to be
 -- significantly shorter than the duration of the
--- @vkCreateGraphicsPipelines@ and @vkCreateComputePipelines@ commands.
+-- 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateGraphicsPipelines' and
+-- 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateComputePipelines' commands.
 --
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     @VkPipelineCacheCreateInfo@ structure
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
---
--- -   @pPipelineCache@ /must/ be a valid pointer to a @VkPipelineCache@
---     handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- Unresolved directive in vkCreatePipelineCache.txt -
+-- include::{generated}\/validity\/protos\/vkCreatePipelineCache.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
 -- 'VkPipelineCache', 'VkPipelineCacheCreateInfo'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCreatePipelineCache" vkCreatePipelineCache :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkPipelineCacheCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pPipelineCache" ::: Ptr VkPipelineCache) -> IO VkResult
-
+#else
+vkCreatePipelineCache :: DeviceCmds -> ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkPipelineCacheCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pPipelineCache" ::: Ptr VkPipelineCache) -> IO VkResult
+vkCreatePipelineCache deviceCmds = mkVkCreatePipelineCache (pVkCreatePipelineCache deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCreatePipelineCache
+  :: FunPtr (("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkPipelineCacheCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pPipelineCache" ::: Ptr VkPipelineCache) -> IO VkResult) -> (("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkPipelineCacheCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pPipelineCache" ::: Ptr VkPipelineCache) -> IO VkResult)
+#endif
+
 type FN_vkCreatePipelineCache = ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkPipelineCacheCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pPipelineCache" ::: Ptr VkPipelineCache) -> IO VkResult
 type PFN_vkCreatePipelineCache = FunPtr FN_vkCreatePipelineCache
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkDestroyPipelineCache - Destroy a pipeline cache object
 --
 -- = Parameters
@@ -284,50 +266,49 @@ type PFN_vkCreatePipelineCache = FunPtr FN_vkCreatePipelineCache
 -- -   @pipelineCache@ is the handle of the pipeline cache to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
 -- == Valid Usage
 --
--- -   If @VkAllocationCallbacks@ were provided when @pipelineCache@ was
---     created, a compatible set of callbacks /must/ be provided here
+-- -   If
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     were provided when @pipelineCache@ was created, a compatible set of
+--     callbacks /must/ be provided here
 --
--- -   If no @VkAllocationCallbacks@ were provided when @pipelineCache@ was
---     created, @pAllocator@ /must/ be @NULL@
+-- -   If no
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     were provided when @pipelineCache@ was created, @pAllocator@ /must/
+--     be @NULL@
 --
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   If @pipelineCache@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @pipelineCache@
---     /must/ be a valid @VkPipelineCache@ handle
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
---
--- -   If @pipelineCache@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
---
--- == Host Synchronization
---
--- -   Host access to @pipelineCache@ /must/ be externally synchronized
+-- Unresolved directive in vkDestroyPipelineCache.txt -
+-- include::{generated}\/validity\/protos\/vkDestroyPipelineCache.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
 -- 'VkPipelineCache'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkDestroyPipelineCache" vkDestroyPipelineCache :: ("device" ::: VkDevice) -> ("pipelineCache" ::: VkPipelineCache) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
-
+#else
+vkDestroyPipelineCache :: DeviceCmds -> ("device" ::: VkDevice) -> ("pipelineCache" ::: VkPipelineCache) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+vkDestroyPipelineCache deviceCmds = mkVkDestroyPipelineCache (pVkDestroyPipelineCache deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkDestroyPipelineCache
+  :: FunPtr (("device" ::: VkDevice) -> ("pipelineCache" ::: VkPipelineCache) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()) -> (("device" ::: VkDevice) -> ("pipelineCache" ::: VkPipelineCache) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ())
+#endif
+
 type FN_vkDestroyPipelineCache = ("device" ::: VkDevice) -> ("pipelineCache" ::: VkPipelineCache) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 type PFN_vkDestroyPipelineCache = FunPtr FN_vkDestroyPipelineCache
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkGetPipelineCacheData - Get the data store from a pipeline cache
 --
 -- = Parameters
@@ -352,12 +333,13 @@ type PFN_vkDestroyPipelineCache = FunPtr FN_vkDestroyPipelineCache
 --
 -- If @pDataSize@ is less than the maximum size that /can/ be retrieved by
 -- the pipeline cache, at most @pDataSize@ bytes will be written to
--- @pData@, and @vkGetPipelineCacheData@ will return @VK_INCOMPLETE@. Any
--- data written to @pData@ is valid and /can/ be provided as the
--- @pInitialData@ member of the @VkPipelineCacheCreateInfo@ structure
--- passed to @vkCreatePipelineCache@.
+-- @pData@, and 'vkGetPipelineCacheData' will return
+-- 'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'. Any data written to
+-- @pData@ is valid and /can/ be provided as the @pInitialData@ member of
+-- the 'VkPipelineCacheCreateInfo' structure passed to
+-- 'vkCreatePipelineCache'.
 --
--- Two calls to @vkGetPipelineCacheData@ with the same parameters /must/
+-- Two calls to 'vkGetPipelineCacheData' with the same parameters /must/
 -- retrieve the same data unless a command that modifies the contents of
 -- the cache is called between them.
 --
@@ -386,22 +368,26 @@ type PFN_vkDestroyPipelineCache = FunPtr FN_vkDestroyPipelineCache
 -- > |    |              | least significant byte first                     |
 -- > +----+--------------+--------------------------------------------------+
 -- > | 8  | 4            | a vendor ID equal to                             |
--- > |    |              | @VkPhysicalDeviceProperties@::@vendorID@ written |
--- > |    |              | as a stream of bytes, with the least significant |
--- > |    |              | byte first                                       |
+-- > |    |              | 'Graphics.Vulkan.C.Core10.DeviceInitialization.V |
+-- > |    |              | kPhysicalDeviceProperties'::@vendorID@           |
+-- > |    |              | written as a stream of bytes, with the least     |
+-- > |    |              | significant byte first                           |
 -- > +----+--------------+--------------------------------------------------+
 -- > | 12 | 4            | a device ID equal to                             |
--- > |    |              | @VkPhysicalDeviceProperties@::@deviceID@ written |
--- > |    |              | as a stream of bytes, with the least significant |
--- > |    |              | byte first                                       |
+-- > |    |              | 'Graphics.Vulkan.C.Core10.DeviceInitialization.V |
+-- > |    |              | kPhysicalDeviceProperties'::@deviceID@           |
+-- > |    |              | written as a stream of bytes, with the least     |
+-- > |    |              | significant byte first                           |
 -- > +----+--------------+--------------------------------------------------+
--- > | 16 | @VK_UUID_SIZ | a pipeline cache ID equal to                     |
--- > |    | E@           | @VkPhysicalDeviceProperties@::@pipelineCacheUUID |
--- > |    |              | @                                                |
+-- > | 16 | 'Graphics.Vu | a pipeline cache ID equal to                     |
+-- > |    | lkan.C.Core1 | 'Graphics.Vulkan.C.Core10.DeviceInitialization.V |
+-- > |    | 0.DeviceInit | kPhysicalDeviceProperties'::@pipelineCacheUUID@  |
+-- > |    | ialization.V |                                                  |
+-- > |    | K_UUID_SIZE' |                                                  |
 -- > +----+--------------+--------------------------------------------------+
 -- >
 -- > Layout for pipeline cache header version
--- > @VK_PIPELINE_CACHE_HEADER_VERSION_ONE@
+-- > 'Graphics.Vulkan.C.Core10.Constants.VK_PIPELINE_CACHE_HEADER_VERSION_ONE'
 --
 -- The first four bytes encode the length of the entire pipeline cache
 -- header, in bytes. This value includes all fields in the header including
@@ -416,47 +402,33 @@ type PFN_vkDestroyPipelineCache = FunPtr FN_vkDestroyPipelineCache
 -- nothing will be written to @pData@ and zero will be written to
 -- @pDataSize@.
 --
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   @pipelineCache@ /must/ be a valid @VkPipelineCache@ handle
---
--- -   @pDataSize@ /must/ be a valid pointer to a @size_t@ value
---
--- -   If the value referenced by @pDataSize@ is not @0@, and @pData@ is
---     not @NULL@, @pData@ /must/ be a valid pointer to an array of
---     @pDataSize@ bytes
---
--- -   @pipelineCache@ /must/ have been created, allocated, or retrieved
---     from @device@
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
---     -   @VK_INCOMPLETE@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- Unresolved directive in vkGetPipelineCacheData.txt -
+-- include::{generated}\/validity\/protos\/vkGetPipelineCacheData.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
 -- 'VkPipelineCache'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetPipelineCacheData" vkGetPipelineCacheData :: ("device" ::: VkDevice) -> ("pipelineCache" ::: VkPipelineCache) -> ("pDataSize" ::: Ptr CSize) -> ("pData" ::: Ptr ()) -> IO VkResult
-
+#else
+vkGetPipelineCacheData :: DeviceCmds -> ("device" ::: VkDevice) -> ("pipelineCache" ::: VkPipelineCache) -> ("pDataSize" ::: Ptr CSize) -> ("pData" ::: Ptr ()) -> IO VkResult
+vkGetPipelineCacheData deviceCmds = mkVkGetPipelineCacheData (pVkGetPipelineCacheData deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetPipelineCacheData
+  :: FunPtr (("device" ::: VkDevice) -> ("pipelineCache" ::: VkPipelineCache) -> ("pDataSize" ::: Ptr CSize) -> ("pData" ::: Ptr ()) -> IO VkResult) -> (("device" ::: VkDevice) -> ("pipelineCache" ::: VkPipelineCache) -> ("pDataSize" ::: Ptr CSize) -> ("pData" ::: Ptr ()) -> IO VkResult)
+#endif
+
 type FN_vkGetPipelineCacheData = ("device" ::: VkDevice) -> ("pipelineCache" ::: VkPipelineCache) -> ("pDataSize" ::: Ptr CSize) -> ("pData" ::: Ptr ()) -> IO VkResult
 type PFN_vkGetPipelineCacheData = FunPtr FN_vkGetPipelineCacheData
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkMergePipelineCaches - Combine the data stores of pipeline caches
 --
 -- = Parameters
@@ -482,49 +454,29 @@ type PFN_vkGetPipelineCacheData = FunPtr FN_vkGetPipelineCacheData
 --
 -- == Valid Usage
 --
--- -   @dstCache@ /must/ not appear in the list of source caches
---
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   @dstCache@ /must/ be a valid @VkPipelineCache@ handle
---
--- -   @pSrcCaches@ /must/ be a valid pointer to an array of
---     @srcCacheCount@ valid @VkPipelineCache@ handles
---
--- -   @srcCacheCount@ /must/ be greater than @0@
---
--- -   @dstCache@ /must/ have been created, allocated, or retrieved from
---     @device@
---
--- -   Each element of @pSrcCaches@ /must/ have been created, allocated, or
---     retrieved from @device@
---
--- == Host Synchronization
---
--- -   Host access to @dstCache@ /must/ be externally synchronized
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- Unresolved directive in vkMergePipelineCaches.txt -
+-- include::{generated}\/validity\/protos\/vkMergePipelineCaches.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
 -- 'VkPipelineCache'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkMergePipelineCaches" vkMergePipelineCaches :: ("device" ::: VkDevice) -> ("dstCache" ::: VkPipelineCache) -> ("srcCacheCount" ::: Word32) -> ("pSrcCaches" ::: Ptr VkPipelineCache) -> IO VkResult
-
+#else
+vkMergePipelineCaches :: DeviceCmds -> ("device" ::: VkDevice) -> ("dstCache" ::: VkPipelineCache) -> ("srcCacheCount" ::: Word32) -> ("pSrcCaches" ::: Ptr VkPipelineCache) -> IO VkResult
+vkMergePipelineCaches deviceCmds = mkVkMergePipelineCaches (pVkMergePipelineCaches deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkMergePipelineCaches
+  :: FunPtr (("device" ::: VkDevice) -> ("dstCache" ::: VkPipelineCache) -> ("srcCacheCount" ::: Word32) -> ("pSrcCaches" ::: Ptr VkPipelineCache) -> IO VkResult) -> (("device" ::: VkDevice) -> ("dstCache" ::: VkPipelineCache) -> ("srcCacheCount" ::: Word32) -> ("pSrcCaches" ::: Ptr VkPipelineCache) -> IO VkResult)
+#endif
+
 type FN_vkMergePipelineCaches = ("device" ::: VkDevice) -> ("dstCache" ::: VkPipelineCache) -> ("srcCacheCount" ::: Word32) -> ("pSrcCaches" ::: Ptr VkPipelineCache) -> IO VkResult
 type PFN_vkMergePipelineCaches = FunPtr FN_vkMergePipelineCaches

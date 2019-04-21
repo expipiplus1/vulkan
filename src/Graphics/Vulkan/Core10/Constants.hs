@@ -1,9 +1,11 @@
 {-# language Strict #-}
 {-# language CPP #-}
 {-# language PatternSynonyms #-}
+{-# language TypeFamilies #-}
 
 module Graphics.Vulkan.Core10.Constants
   ( PipelineCacheHeaderVersion
+  , pattern PIPELINE_CACHE_HEADER_VERSION_ONE
   , pattern VK_LOD_CLAMP_NONE
   , pattern VK_REMAINING_MIP_LEVELS
   , pattern VK_REMAINING_ARRAY_LAYERS
@@ -21,6 +23,7 @@ module Graphics.Vulkan.Core10.Constants
 
 import Graphics.Vulkan.C.Core10.Constants
   ( VkPipelineCacheHeaderVersion(..)
+  , pattern VK_PIPELINE_CACHE_HEADER_VERSION_ONE
   )
 import Graphics.Vulkan.C.Core10.Constants
   ( pattern VK_ATTACHMENT_UNUSED
@@ -38,5 +41,16 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- No documentation found for TopLevel "PipelineCacheHeaderVersion"
+-- | VkPipelineCacheHeaderVersion - Encode pipeline cache version
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.PipelineCache.vkCreatePipelineCache',
+-- 'Graphics.Vulkan.C.Core10.PipelineCache.vkGetPipelineCacheData'
 type PipelineCacheHeaderVersion = VkPipelineCacheHeaderVersion
+
+
+-- | 'Graphics.Vulkan.C.Core10.Constants.VK_PIPELINE_CACHE_HEADER_VERSION_ONE'
+-- specifies version one of the pipeline cache.
+pattern PIPELINE_CACHE_HEADER_VERSION_ONE :: (a ~ PipelineCacheHeaderVersion) => a
+pattern PIPELINE_CACHE_HEADER_VERSION_ONE = VK_PIPELINE_CACHE_HEADER_VERSION_ONE

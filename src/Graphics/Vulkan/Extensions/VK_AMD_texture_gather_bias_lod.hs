@@ -43,21 +43,42 @@ import Graphics.Vulkan.C.Extensions.VK_AMD_texture_gather_bias_lod
   )
 
 
--- No documentation found for TopLevel "TextureLODGatherFormatPropertiesAMD"
+
+-- | VkTextureLODGatherFormatPropertiesAMD - Structure informing whether or
+-- not texture gather bias\/LOD functionality is supported for a given
+-- image format and a given physical device.
+--
+-- = Description
+--
+-- Unresolved directive in VkTextureLODGatherFormatPropertiesAMD.txt -
+-- include::{generated}\/validity\/structs\/VkTextureLODGatherFormatPropertiesAMD.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data TextureLODGatherFormatPropertiesAMD = TextureLODGatherFormatPropertiesAMD
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "TextureLODGatherFormatPropertiesAMD" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "TextureLODGatherFormatPropertiesAMD" "supportsTextureGatherLODBiasAMD"
-  vkSupportsTextureGatherLODBiasAMD :: Bool
+  supportsTextureGatherLODBiasAMD :: Bool
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkTextureLODGatherFormatPropertiesAMD' and
+-- marshal a 'TextureLODGatherFormatPropertiesAMD' into it. The 'VkTextureLODGatherFormatPropertiesAMD' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructTextureLODGatherFormatPropertiesAMD :: TextureLODGatherFormatPropertiesAMD -> (VkTextureLODGatherFormatPropertiesAMD -> IO a) -> IO a
-withCStructTextureLODGatherFormatPropertiesAMD from cont = maybeWith withSomeVkStruct (vkPNext (from :: TextureLODGatherFormatPropertiesAMD)) (\pPNext -> cont (VkTextureLODGatherFormatPropertiesAMD VK_STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD pPNext (boolToBool32 (vkSupportsTextureGatherLODBiasAMD (from :: TextureLODGatherFormatPropertiesAMD)))))
+withCStructTextureLODGatherFormatPropertiesAMD marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: TextureLODGatherFormatPropertiesAMD)) (\pPNext -> cont (VkTextureLODGatherFormatPropertiesAMD VK_STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD pPNext (boolToBool32 (supportsTextureGatherLODBiasAMD (marshalled :: TextureLODGatherFormatPropertiesAMD)))))
+
+-- | A function to read a 'VkTextureLODGatherFormatPropertiesAMD' and all additional
+-- structures in the pointer chain into a 'TextureLODGatherFormatPropertiesAMD'.
 fromCStructTextureLODGatherFormatPropertiesAMD :: VkTextureLODGatherFormatPropertiesAMD -> IO TextureLODGatherFormatPropertiesAMD
 fromCStructTextureLODGatherFormatPropertiesAMD c = TextureLODGatherFormatPropertiesAMD <$> -- Univalued Member elided
                                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkTextureLODGatherFormatPropertiesAMD)))
                                                                                        <*> pure (bool32ToBool (vkSupportsTextureGatherLODBiasAMD (c :: VkTextureLODGatherFormatPropertiesAMD)))
+
 instance Zero TextureLODGatherFormatPropertiesAMD where
   zero = TextureLODGatherFormatPropertiesAMD Nothing
                                              False
+

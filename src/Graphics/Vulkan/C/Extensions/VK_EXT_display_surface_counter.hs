@@ -12,11 +12,9 @@ module Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter
   , VkSurfaceCounterFlagBitsEXT(..)
   , pattern VK_SURFACE_COUNTER_VBLANK_EXT
   , VkSurfaceCounterFlagsEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkGetPhysicalDeviceSurfaceCapabilities2EXT
-#endif
   , FN_vkGetPhysicalDeviceSurfaceCapabilities2EXT
   , PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT
+  , vkGetPhysicalDeviceSurfaceCapabilities2EXT
   , pattern VK_EXT_DISPLAY_SURFACE_COUNTER_EXTENSION_NAME
   , pattern VK_EXT_DISPLAY_SURFACE_COUNTER_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES2_EXT
@@ -73,6 +71,9 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
 import Graphics.Vulkan.C.Core10.Pipeline
   ( VkExtent2D(..)
   )
+import Graphics.Vulkan.C.Dynamic
+  ( InstanceCmds(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_KHR_surface
   ( VkSurfaceTransformFlagBitsKHR(..)
   , VkCompositeAlphaFlagsKHR
@@ -89,20 +90,23 @@ import Graphics.Vulkan.NamedType
 --
 -- = Members
 --
--- All members of @VkSurfaceCapabilities2EXT@ are identical to the
+-- All members of 'VkSurfaceCapabilities2EXT' are identical to the
 -- corresponding members of
 -- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceCapabilitiesKHR'
 -- where one exists. The remaining members are:
 --
--- == Valid Usage (Implicit)
+-- == Valid Usage
+--
+-- Unresolved directive in VkSurfaceCapabilities2EXT.txt -
+-- include::{generated}\/validity\/structs\/VkSurfaceCapabilities2EXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkSurfaceCapabilities2EXT = VkSurfaceCapabilities2EXT
-  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
   , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "minImageCount"
   vkMinImageCount :: Word32
@@ -125,8 +129,8 @@ data VkSurfaceCapabilities2EXT = VkSurfaceCapabilities2EXT
   , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "supportedUsageFlags"
   vkSupportedUsageFlags :: VkImageUsageFlags
   , -- | @supportedSurfaceCounters@ /must/ not include
-  -- @VK_SURFACE_COUNTER_VBLANK_EXT@ unless the surface queried is a
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#wsi-display-surfaces display surface>.
+  -- 'VK_SURFACE_COUNTER_VBLANK_EXT' unless the surface queried is a
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#wsi-display-surfaces display surface>.
   vkSupportedSurfaceCounters :: VkSurfaceCounterFlagsEXT
   }
   deriving (Eq, Show)
@@ -162,7 +166,7 @@ instance Storable VkSurfaceCapabilities2EXT where
                 *> poke (ptr `plusPtr` 68) (vkSupportedSurfaceCounters (poked :: VkSurfaceCapabilities2EXT))
 
 instance Zero VkSurfaceCapabilities2EXT where
-  zero = VkSurfaceCapabilities2EXT zero
+  zero = VkSurfaceCapabilities2EXT VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT
                                    zero
                                    zero
                                    zero
@@ -175,6 +179,7 @@ instance Zero VkSurfaceCapabilities2EXT where
                                    zero
                                    zero
                                    zero
+
 -- ** VkSurfaceCounterFlagBitsEXT
 
 -- | VkSurfaceCounterFlagBitsEXT - Surface-relative counter types
@@ -199,23 +204,24 @@ instance Read VkSurfaceCounterFlagBitsEXT where
                         )
                     )
 
--- | @VK_SURFACE_COUNTER_VBLANK_EXT@ specifies a counter incrementing once
+-- | 'VK_SURFACE_COUNTER_VBLANK_EXT' specifies a counter incrementing once
 -- every time a vertical blanking period occurs on the display associated
 -- with the surface.
 pattern VK_SURFACE_COUNTER_VBLANK_EXT :: VkSurfaceCounterFlagBitsEXT
 pattern VK_SURFACE_COUNTER_VBLANK_EXT = VkSurfaceCounterFlagBitsEXT 0x00000001
+
 -- | VkSurfaceCounterFlagsEXT - Bitmask of VkSurfaceCounterFlagBitsEXT
 --
 -- = Description
 --
--- @VkSurfaceCounterFlagsEXT@ is a bitmask type for setting a mask of zero
+-- 'VkSurfaceCounterFlagsEXT' is a bitmask type for setting a mask of zero
 -- or more 'VkSurfaceCounterFlagBitsEXT'.
 --
 -- = See Also
 --
 -- No cross-references are available
 type VkSurfaceCounterFlagsEXT = VkSurfaceCounterFlagBitsEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkGetPhysicalDeviceSurfaceCapabilities2EXT - Query surface capabilities
 --
 -- = Parameters
@@ -232,56 +238,49 @@ type VkSurfaceCounterFlagsEXT = VkSurfaceCounterFlagBitsEXT
 --
 -- = Description
 --
--- @vkGetPhysicalDeviceSurfaceCapabilities2EXT@ behaves similarly to
+-- 'vkGetPhysicalDeviceSurfaceCapabilities2EXT' behaves similarly to
 -- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.vkGetPhysicalDeviceSurfaceCapabilitiesKHR',
 -- with the ability to return extended information by adding extension
 -- structures to the @pNext@ chain of its @pSurfaceCapabilities@ parameter.
 --
--- == Valid Usage (Implicit)
---
--- -   @physicalDevice@ /must/ be a valid @VkPhysicalDevice@ handle
---
--- -   @surface@ /must/ be a valid @VkSurfaceKHR@ handle
---
--- -   @pSurfaceCapabilities@ /must/ be a valid pointer to a
---     @VkSurfaceCapabilities2EXT@ structure
---
--- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
---     allocated, or retrieved from the same @VkInstance@
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
---
---     -   @VK_ERROR_SURFACE_LOST_KHR@
+-- Unresolved directive in vkGetPhysicalDeviceSurfaceCapabilities2EXT.txt -
+-- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceSurfaceCapabilities2EXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetPhysicalDeviceSurfaceCapabilities2EXT" vkGetPhysicalDeviceSurfaceCapabilities2EXT :: ("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilities2EXT) -> IO VkResult
-
+#else
+vkGetPhysicalDeviceSurfaceCapabilities2EXT :: InstanceCmds -> ("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilities2EXT) -> IO VkResult
+vkGetPhysicalDeviceSurfaceCapabilities2EXT deviceCmds = mkVkGetPhysicalDeviceSurfaceCapabilities2EXT (pVkGetPhysicalDeviceSurfaceCapabilities2EXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetPhysicalDeviceSurfaceCapabilities2EXT
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilities2EXT) -> IO VkResult) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilities2EXT) -> IO VkResult)
+#endif
+
 type FN_vkGetPhysicalDeviceSurfaceCapabilities2EXT = ("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilities2EXT) -> IO VkResult
 type PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT = FunPtr FN_vkGetPhysicalDeviceSurfaceCapabilities2EXT
+
 -- No documentation found for TopLevel "VK_EXT_DISPLAY_SURFACE_COUNTER_EXTENSION_NAME"
 pattern VK_EXT_DISPLAY_SURFACE_COUNTER_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_DISPLAY_SURFACE_COUNTER_EXTENSION_NAME = "VK_EXT_display_surface_counter"
+
 -- No documentation found for TopLevel "VK_EXT_DISPLAY_SURFACE_COUNTER_SPEC_VERSION"
 pattern VK_EXT_DISPLAY_SURFACE_COUNTER_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_DISPLAY_SURFACE_COUNTER_SPEC_VERSION = 1
+
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES2_EXT"
 pattern VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES2_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES2_EXT = VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT"
 pattern VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT = VkStructureType 1000090000

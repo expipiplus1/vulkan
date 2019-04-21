@@ -12,26 +12,18 @@ module Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2
   , VkDisplayPlaneInfo2KHR(..)
   , VkDisplayPlaneProperties2KHR(..)
   , VkDisplayProperties2KHR(..)
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkGetDisplayModeProperties2KHR
-#endif
   , FN_vkGetDisplayModeProperties2KHR
   , PFN_vkGetDisplayModeProperties2KHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkGetDisplayPlaneCapabilities2KHR
-#endif
+  , vkGetDisplayModeProperties2KHR
   , FN_vkGetDisplayPlaneCapabilities2KHR
   , PFN_vkGetDisplayPlaneCapabilities2KHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkGetPhysicalDeviceDisplayPlaneProperties2KHR
-#endif
+  , vkGetDisplayPlaneCapabilities2KHR
   , FN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR
   , PFN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkGetPhysicalDeviceDisplayProperties2KHR
-#endif
+  , vkGetPhysicalDeviceDisplayPlaneProperties2KHR
   , FN_vkGetPhysicalDeviceDisplayProperties2KHR
   , PFN_vkGetPhysicalDeviceDisplayProperties2KHR
+  , vkGetPhysicalDeviceDisplayProperties2KHR
   , pattern VK_KHR_GET_DISPLAY_PROPERTIES_2_EXTENSION_NAME
   , pattern VK_KHR_GET_DISPLAY_PROPERTIES_2_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR
@@ -66,6 +58,9 @@ import Graphics.Vulkan.C.Core10.Core
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkPhysicalDevice
   )
+import Graphics.Vulkan.C.Dynamic
+  ( InstanceCmds(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_KHR_display
   ( VkDisplayModePropertiesKHR(..)
   , VkDisplayPlaneCapabilitiesKHR(..)
@@ -85,7 +80,7 @@ import Graphics.Vulkan.NamedType
 -- = Description
 --
 -- Unresolved directive in VkDisplayModeProperties2KHR.txt -
--- include::..\/validity\/structs\/VkDisplayModeProperties2KHR.txt[]
+-- include::{generated}\/validity\/structs\/VkDisplayModeProperties2KHR.txt[]
 --
 -- = See Also
 --
@@ -113,16 +108,17 @@ instance Storable VkDisplayModeProperties2KHR where
                 *> poke (ptr `plusPtr` 16) (vkDisplayModeProperties (poked :: VkDisplayModeProperties2KHR))
 
 instance Zero VkDisplayModeProperties2KHR where
-  zero = VkDisplayModeProperties2KHR zero
+  zero = VkDisplayModeProperties2KHR VK_STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR
                                      zero
                                      zero
+
 -- | VkDisplayPlaneCapabilities2KHR - Structure describing the capabilities
 -- of a mode and plane combination
 --
 -- = Description
 --
 -- Unresolved directive in VkDisplayPlaneCapabilities2KHR.txt -
--- include::..\/validity\/structs\/VkDisplayPlaneCapabilities2KHR.txt[]
+-- include::{generated}\/validity\/structs\/VkDisplayPlaneCapabilities2KHR.txt[]
 --
 -- = See Also
 --
@@ -150,9 +146,10 @@ instance Storable VkDisplayPlaneCapabilities2KHR where
                 *> poke (ptr `plusPtr` 16) (vkCapabilities (poked :: VkDisplayPlaneCapabilities2KHR))
 
 instance Zero VkDisplayPlaneCapabilities2KHR where
-  zero = VkDisplayPlaneCapabilities2KHR zero
+  zero = VkDisplayPlaneCapabilities2KHR VK_STRUCTURE_TYPE_DISPLAY_PLANE_CAPABILITIES_2_KHR
                                         zero
                                         zero
+
 -- | VkDisplayPlaneInfo2KHR - Structure defining the intended configuration
 -- of a display plane
 --
@@ -162,12 +159,12 @@ instance Zero VkDisplayPlaneCapabilities2KHR where
 --
 -- This parameter also implicitly specifies a display.
 --
--- The members of @VkDisplayPlaneInfo2KHR@ correspond to the arguments to
+-- The members of 'VkDisplayPlaneInfo2KHR' correspond to the arguments to
 -- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetDisplayPlaneCapabilitiesKHR',
 -- with @sType@ and @pNext@ added for extensibility.
 --
 -- Unresolved directive in VkDisplayPlaneInfo2KHR.txt -
--- include::..\/validity\/structs\/VkDisplayPlaneInfo2KHR.txt[]
+-- include::{generated}\/validity\/structs\/VkDisplayPlaneInfo2KHR.txt[]
 --
 -- = See Also
 --
@@ -199,17 +196,18 @@ instance Storable VkDisplayPlaneInfo2KHR where
                 *> poke (ptr `plusPtr` 24) (vkPlaneIndex (poked :: VkDisplayPlaneInfo2KHR))
 
 instance Zero VkDisplayPlaneInfo2KHR where
-  zero = VkDisplayPlaneInfo2KHR zero
+  zero = VkDisplayPlaneInfo2KHR VK_STRUCTURE_TYPE_DISPLAY_PLANE_INFO_2_KHR
                                 zero
                                 zero
                                 zero
+
 -- | VkDisplayPlaneProperties2KHR - Structure describing an available display
 -- plane
 --
 -- = Description
 --
 -- Unresolved directive in VkDisplayPlaneProperties2KHR.txt -
--- include::..\/validity\/structs\/VkDisplayPlaneProperties2KHR.txt[]
+-- include::{generated}\/validity\/structs\/VkDisplayPlaneProperties2KHR.txt[]
 --
 -- = See Also
 --
@@ -237,16 +235,17 @@ instance Storable VkDisplayPlaneProperties2KHR where
                 *> poke (ptr `plusPtr` 16) (vkDisplayPlaneProperties (poked :: VkDisplayPlaneProperties2KHR))
 
 instance Zero VkDisplayPlaneProperties2KHR where
-  zero = VkDisplayPlaneProperties2KHR zero
+  zero = VkDisplayPlaneProperties2KHR VK_STRUCTURE_TYPE_DISPLAY_PLANE_PROPERTIES_2_KHR
                                       zero
                                       zero
+
 -- | VkDisplayProperties2KHR - Structure describing an available display
 -- device
 --
 -- = Description
 --
 -- Unresolved directive in VkDisplayProperties2KHR.txt -
--- include::..\/validity\/structs\/VkDisplayProperties2KHR.txt[]
+-- include::{generated}\/validity\/structs\/VkDisplayProperties2KHR.txt[]
 --
 -- = See Also
 --
@@ -274,10 +273,10 @@ instance Storable VkDisplayProperties2KHR where
                 *> poke (ptr `plusPtr` 16) (vkDisplayProperties (poked :: VkDisplayProperties2KHR))
 
 instance Zero VkDisplayProperties2KHR where
-  zero = VkDisplayProperties2KHR zero
+  zero = VkDisplayProperties2KHR VK_STRUCTURE_TYPE_DISPLAY_PROPERTIES_2_KHR
                                  zero
                                  zero
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkGetDisplayModeProperties2KHR - Query information about the available
 -- display modes.
 --
@@ -291,31 +290,41 @@ instance Zero VkDisplayProperties2KHR where
 --     display modes available or queried, as described below.
 --
 -- -   @pProperties@ is either @NULL@ or a pointer to an array of
---     @VkDisplayModeProperties2KHR@ structures.
+--     'VkDisplayModeProperties2KHR' structures.
 --
 -- = Description
 --
--- @vkGetDisplayModeProperties2KHR@ behaves similarly to
+-- 'vkGetDisplayModeProperties2KHR' behaves similarly to
 -- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetDisplayModePropertiesKHR',
 -- with the ability to return extended information via chained output
 -- structures.
 --
 -- Unresolved directive in vkGetDisplayModeProperties2KHR.txt -
--- include::..\/validity\/protos\/vkGetDisplayModeProperties2KHR.txt[]
+-- include::{generated}\/validity\/protos\/vkGetDisplayModeProperties2KHR.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetDisplayModeProperties2KHR" vkGetDisplayModeProperties2KHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("display" ::: VkDisplayKHR) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayModeProperties2KHR) -> IO VkResult
-
+#else
+vkGetDisplayModeProperties2KHR :: InstanceCmds -> ("physicalDevice" ::: VkPhysicalDevice) -> ("display" ::: VkDisplayKHR) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayModeProperties2KHR) -> IO VkResult
+vkGetDisplayModeProperties2KHR deviceCmds = mkVkGetDisplayModeProperties2KHR (pVkGetDisplayModeProperties2KHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetDisplayModeProperties2KHR
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("display" ::: VkDisplayKHR) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayModeProperties2KHR) -> IO VkResult) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("display" ::: VkDisplayKHR) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayModeProperties2KHR) -> IO VkResult)
+#endif
+
 type FN_vkGetDisplayModeProperties2KHR = ("physicalDevice" ::: VkPhysicalDevice) -> ("display" ::: VkDisplayKHR) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayModeProperties2KHR) -> IO VkResult
 type PFN_vkGetDisplayModeProperties2KHR = FunPtr FN_vkGetDisplayModeProperties2KHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkGetDisplayPlaneCapabilities2KHR - Query capabilities of a mode and
 -- plane combination
 --
@@ -332,28 +341,38 @@ type PFN_vkGetDisplayModeProperties2KHR = FunPtr FN_vkGetDisplayModeProperties2K
 --
 -- = Description
 --
--- @vkGetDisplayPlaneCapabilities2KHR@ behaves similarly to
+-- 'vkGetDisplayPlaneCapabilities2KHR' behaves similarly to
 -- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetDisplayPlaneCapabilitiesKHR',
 -- with the ability to specify extended inputs via chained input
 -- structures, and to return extended information via chained output
 -- structures.
 --
 -- Unresolved directive in vkGetDisplayPlaneCapabilities2KHR.txt -
--- include::..\/validity\/protos\/vkGetDisplayPlaneCapabilities2KHR.txt[]
+-- include::{generated}\/validity\/protos\/vkGetDisplayPlaneCapabilities2KHR.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetDisplayPlaneCapabilities2KHR" vkGetDisplayPlaneCapabilities2KHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pDisplayPlaneInfo" ::: Ptr VkDisplayPlaneInfo2KHR) -> ("pCapabilities" ::: Ptr VkDisplayPlaneCapabilities2KHR) -> IO VkResult
-
+#else
+vkGetDisplayPlaneCapabilities2KHR :: InstanceCmds -> ("physicalDevice" ::: VkPhysicalDevice) -> ("pDisplayPlaneInfo" ::: Ptr VkDisplayPlaneInfo2KHR) -> ("pCapabilities" ::: Ptr VkDisplayPlaneCapabilities2KHR) -> IO VkResult
+vkGetDisplayPlaneCapabilities2KHR deviceCmds = mkVkGetDisplayPlaneCapabilities2KHR (pVkGetDisplayPlaneCapabilities2KHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetDisplayPlaneCapabilities2KHR
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pDisplayPlaneInfo" ::: Ptr VkDisplayPlaneInfo2KHR) -> ("pCapabilities" ::: Ptr VkDisplayPlaneCapabilities2KHR) -> IO VkResult) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("pDisplayPlaneInfo" ::: Ptr VkDisplayPlaneInfo2KHR) -> ("pCapabilities" ::: Ptr VkDisplayPlaneCapabilities2KHR) -> IO VkResult)
+#endif
+
 type FN_vkGetDisplayPlaneCapabilities2KHR = ("physicalDevice" ::: VkPhysicalDevice) -> ("pDisplayPlaneInfo" ::: Ptr VkDisplayPlaneInfo2KHR) -> ("pCapabilities" ::: Ptr VkDisplayPlaneCapabilities2KHR) -> IO VkResult
 type PFN_vkGetDisplayPlaneCapabilities2KHR = FunPtr FN_vkGetDisplayPlaneCapabilities2KHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkGetPhysicalDeviceDisplayPlaneProperties2KHR - Query information about
 -- the available display planes.
 --
@@ -365,32 +384,42 @@ type PFN_vkGetDisplayPlaneCapabilities2KHR = FunPtr FN_vkGetDisplayPlaneCapabili
 --     display planes available or queried, as described below.
 --
 -- -   @pProperties@ is either @NULL@ or a pointer to an array of
---     @VkDisplayPlaneProperties2KHR@ structures.
+--     'VkDisplayPlaneProperties2KHR' structures.
 --
 -- = Description
 --
--- @vkGetPhysicalDeviceDisplayPlaneProperties2KHR@ behaves similarly to
+-- 'vkGetPhysicalDeviceDisplayPlaneProperties2KHR' behaves similarly to
 -- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetPhysicalDeviceDisplayPlanePropertiesKHR',
 -- with the ability to return extended information via chained output
 -- structures.
 --
 -- Unresolved directive in
 -- vkGetPhysicalDeviceDisplayPlaneProperties2KHR.txt -
--- include::..\/validity\/protos\/vkGetPhysicalDeviceDisplayPlaneProperties2KHR.txt[]
+-- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceDisplayPlaneProperties2KHR.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetPhysicalDeviceDisplayPlaneProperties2KHR" vkGetPhysicalDeviceDisplayPlaneProperties2KHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayPlaneProperties2KHR) -> IO VkResult
-
+#else
+vkGetPhysicalDeviceDisplayPlaneProperties2KHR :: InstanceCmds -> ("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayPlaneProperties2KHR) -> IO VkResult
+vkGetPhysicalDeviceDisplayPlaneProperties2KHR deviceCmds = mkVkGetPhysicalDeviceDisplayPlaneProperties2KHR (pVkGetPhysicalDeviceDisplayPlaneProperties2KHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetPhysicalDeviceDisplayPlaneProperties2KHR
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayPlaneProperties2KHR) -> IO VkResult) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayPlaneProperties2KHR) -> IO VkResult)
+#endif
+
 type FN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR = ("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayPlaneProperties2KHR) -> IO VkResult
 type PFN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR = FunPtr FN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkGetPhysicalDeviceDisplayProperties2KHR - Query information about the
 -- available displays
 --
@@ -402,48 +431,65 @@ type PFN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR = FunPtr FN_vkGetPhysical
 --     display devices available or queried, as described below.
 --
 -- -   @pProperties@ is either @NULL@ or a pointer to an array of
---     @VkDisplayProperties2KHR@ structures.
+--     'VkDisplayProperties2KHR' structures.
 --
 -- = Description
 --
--- @vkGetPhysicalDeviceDisplayProperties2KHR@ behaves similarly to
+-- 'vkGetPhysicalDeviceDisplayProperties2KHR' behaves similarly to
 -- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetPhysicalDeviceDisplayPropertiesKHR',
 -- with the ability to return extended information via chained output
 -- structures.
 --
 -- Unresolved directive in vkGetPhysicalDeviceDisplayProperties2KHR.txt -
--- include::..\/validity\/protos\/vkGetPhysicalDeviceDisplayProperties2KHR.txt[]
+-- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceDisplayProperties2KHR.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetPhysicalDeviceDisplayProperties2KHR" vkGetPhysicalDeviceDisplayProperties2KHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayProperties2KHR) -> IO VkResult
-
+#else
+vkGetPhysicalDeviceDisplayProperties2KHR :: InstanceCmds -> ("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayProperties2KHR) -> IO VkResult
+vkGetPhysicalDeviceDisplayProperties2KHR deviceCmds = mkVkGetPhysicalDeviceDisplayProperties2KHR (pVkGetPhysicalDeviceDisplayProperties2KHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetPhysicalDeviceDisplayProperties2KHR
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayProperties2KHR) -> IO VkResult) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayProperties2KHR) -> IO VkResult)
+#endif
+
 type FN_vkGetPhysicalDeviceDisplayProperties2KHR = ("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayProperties2KHR) -> IO VkResult
 type PFN_vkGetPhysicalDeviceDisplayProperties2KHR = FunPtr FN_vkGetPhysicalDeviceDisplayProperties2KHR
+
 -- No documentation found for TopLevel "VK_KHR_GET_DISPLAY_PROPERTIES_2_EXTENSION_NAME"
 pattern VK_KHR_GET_DISPLAY_PROPERTIES_2_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_GET_DISPLAY_PROPERTIES_2_EXTENSION_NAME = "VK_KHR_get_display_properties2"
+
 -- No documentation found for TopLevel "VK_KHR_GET_DISPLAY_PROPERTIES_2_SPEC_VERSION"
 pattern VK_KHR_GET_DISPLAY_PROPERTIES_2_SPEC_VERSION :: Integral a => a
 pattern VK_KHR_GET_DISPLAY_PROPERTIES_2_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR"
 pattern VK_STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR = VkStructureType 1000121002
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DISPLAY_PLANE_CAPABILITIES_2_KHR"
 pattern VK_STRUCTURE_TYPE_DISPLAY_PLANE_CAPABILITIES_2_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DISPLAY_PLANE_CAPABILITIES_2_KHR = VkStructureType 1000121004
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DISPLAY_PLANE_INFO_2_KHR"
 pattern VK_STRUCTURE_TYPE_DISPLAY_PLANE_INFO_2_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DISPLAY_PLANE_INFO_2_KHR = VkStructureType 1000121003
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DISPLAY_PLANE_PROPERTIES_2_KHR"
 pattern VK_STRUCTURE_TYPE_DISPLAY_PLANE_PROPERTIES_2_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DISPLAY_PLANE_PROPERTIES_2_KHR = VkStructureType 1000121001
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DISPLAY_PROPERTIES_2_KHR"
 pattern VK_STRUCTURE_TYPE_DISPLAY_PROPERTIES_2_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DISPLAY_PROPERTIES_2_KHR = VkStructureType 1000121000

@@ -9,16 +9,12 @@
 module Graphics.Vulkan.C.Extensions.VK_NV_device_diagnostic_checkpoints
   ( VkCheckpointDataNV(..)
   , VkQueueFamilyCheckpointPropertiesNV(..)
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkCmdSetCheckpointNV
-#endif
   , FN_vkCmdSetCheckpointNV
   , PFN_vkCmdSetCheckpointNV
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkGetQueueCheckpointDataNV
-#endif
+  , vkCmdSetCheckpointNV
   , FN_vkGetQueueCheckpointDataNV
   , PFN_vkGetQueueCheckpointDataNV
+  , vkGetQueueCheckpointDataNV
   , pattern VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME
   , pattern VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_CHECKPOINT_DATA_NV
@@ -52,6 +48,9 @@ import Graphics.Vulkan.C.Core10.Queue
   , VkPipelineStageFlags
   , VkQueue
   )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
+  )
 import Graphics.Vulkan.NamedType
   ( (:::)
   )
@@ -62,7 +61,7 @@ import Graphics.Vulkan.NamedType
 -- = Description
 --
 -- Unresolved directive in VkCheckpointDataNV.txt -
--- include::..\/validity\/structs\/VkCheckpointDataNV.txt[]
+-- include::{generated}\/validity\/structs\/VkCheckpointDataNV.txt[]
 --
 -- Note that the stages at which a checkpoint marker /can/ be executed are
 -- implementation-defined and /can/ be queried by calling
@@ -98,17 +97,18 @@ instance Storable VkCheckpointDataNV where
                 *> poke (ptr `plusPtr` 24) (vkPCheckpointMarker (poked :: VkCheckpointDataNV))
 
 instance Zero VkCheckpointDataNV where
-  zero = VkCheckpointDataNV zero
+  zero = VkCheckpointDataNV VK_STRUCTURE_TYPE_CHECKPOINT_DATA_NV
                             zero
                             zero
                             zero
+
 -- | VkQueueFamilyCheckpointPropertiesNV - return structure for queue family
 -- checkpoint info query
 --
 -- = Description
 --
 -- Unresolved directive in VkQueueFamilyCheckpointPropertiesNV.txt -
--- include::..\/validity\/structs\/VkQueueFamilyCheckpointPropertiesNV.txt[]
+-- include::{generated}\/validity\/structs\/VkQueueFamilyCheckpointPropertiesNV.txt[]
 --
 -- = See Also
 --
@@ -135,10 +135,10 @@ instance Storable VkQueueFamilyCheckpointPropertiesNV where
                 *> poke (ptr `plusPtr` 16) (vkCheckpointExecutionStageMask (poked :: VkQueueFamilyCheckpointPropertiesNV))
 
 instance Zero VkQueueFamilyCheckpointPropertiesNV where
-  zero = VkQueueFamilyCheckpointPropertiesNV zero
+  zero = VkQueueFamilyCheckpointPropertiesNV VK_STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV
                                              zero
                                              zero
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkCmdSetCheckpointNV - insert diagnostic checkpoint in command stream
 --
 -- = Parameters
@@ -151,21 +151,31 @@ instance Zero VkQueueFamilyCheckpointPropertiesNV where
 -- = Description
 --
 -- Unresolved directive in vkCmdSetCheckpointNV.txt -
--- include::..\/validity\/protos\/vkCmdSetCheckpointNV.txt[]
+-- include::{generated}\/validity\/protos\/vkCmdSetCheckpointNV.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdSetCheckpointNV" vkCmdSetCheckpointNV :: ("commandBuffer" ::: VkCommandBuffer) -> ("pCheckpointMarker" ::: Ptr ()) -> IO ()
-
+#else
+vkCmdSetCheckpointNV :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("pCheckpointMarker" ::: Ptr ()) -> IO ()
+vkCmdSetCheckpointNV deviceCmds = mkVkCmdSetCheckpointNV (pVkCmdSetCheckpointNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdSetCheckpointNV
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("pCheckpointMarker" ::: Ptr ()) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("pCheckpointMarker" ::: Ptr ()) -> IO ())
+#endif
+
 type FN_vkCmdSetCheckpointNV = ("commandBuffer" ::: VkCommandBuffer) -> ("pCheckpointMarker" ::: Ptr ()) -> IO ()
 type PFN_vkCmdSetCheckpointNV = FunPtr FN_vkCmdSetCheckpointNV
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkGetQueueCheckpointDataNV - retrieve diagnostic checkpoint data
 --
 -- = Parameters
@@ -178,7 +188,7 @@ type PFN_vkCmdSetCheckpointNV = FunPtr FN_vkCmdSetCheckpointNV
 --     below.
 --
 -- -   @pCheckpointData@ is either @NULL@ or a pointer to an array of
---     @VkCheckpointDataNV@ structures.
+--     'VkCheckpointDataNV' structures.
 --
 -- = Description
 --
@@ -198,29 +208,43 @@ type PFN_vkCmdSetCheckpointNV = FunPtr FN_vkCmdSetCheckpointNV
 -- -   The device that @queue@ belongs to /must/ be in the lost state
 --
 -- Unresolved directive in vkGetQueueCheckpointDataNV.txt -
--- include::..\/validity\/protos\/vkGetQueueCheckpointDataNV.txt[]
+-- include::{generated}\/validity\/protos\/vkGetQueueCheckpointDataNV.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetQueueCheckpointDataNV" vkGetQueueCheckpointDataNV :: ("queue" ::: VkQueue) -> ("pCheckpointDataCount" ::: Ptr Word32) -> ("pCheckpointData" ::: Ptr VkCheckpointDataNV) -> IO ()
-
+#else
+vkGetQueueCheckpointDataNV :: DeviceCmds -> ("queue" ::: VkQueue) -> ("pCheckpointDataCount" ::: Ptr Word32) -> ("pCheckpointData" ::: Ptr VkCheckpointDataNV) -> IO ()
+vkGetQueueCheckpointDataNV deviceCmds = mkVkGetQueueCheckpointDataNV (pVkGetQueueCheckpointDataNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetQueueCheckpointDataNV
+  :: FunPtr (("queue" ::: VkQueue) -> ("pCheckpointDataCount" ::: Ptr Word32) -> ("pCheckpointData" ::: Ptr VkCheckpointDataNV) -> IO ()) -> (("queue" ::: VkQueue) -> ("pCheckpointDataCount" ::: Ptr Word32) -> ("pCheckpointData" ::: Ptr VkCheckpointDataNV) -> IO ())
+#endif
+
 type FN_vkGetQueueCheckpointDataNV = ("queue" ::: VkQueue) -> ("pCheckpointDataCount" ::: Ptr Word32) -> ("pCheckpointData" ::: Ptr VkCheckpointDataNV) -> IO ()
 type PFN_vkGetQueueCheckpointDataNV = FunPtr FN_vkGetQueueCheckpointDataNV
+
 -- No documentation found for TopLevel "VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME"
 pattern VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME = "VK_NV_device_diagnostic_checkpoints"
+
 -- No documentation found for TopLevel "VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_SPEC_VERSION"
 pattern VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_SPEC_VERSION :: Integral a => a
 pattern VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_SPEC_VERSION = 2
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_CHECKPOINT_DATA_NV"
 pattern VK_STRUCTURE_TYPE_CHECKPOINT_DATA_NV :: VkStructureType
 pattern VK_STRUCTURE_TYPE_CHECKPOINT_DATA_NV = VkStructureType 1000206000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV"
 pattern VK_STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV :: VkStructureType
 pattern VK_STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV = VkStructureType 1000206001

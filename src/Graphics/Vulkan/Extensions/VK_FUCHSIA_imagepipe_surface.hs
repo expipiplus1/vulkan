@@ -34,9 +34,6 @@ import Foreign.Ptr
 import Foreign.Storable
   ( peek
   )
-import qualified Graphics.Vulkan.C.Dynamic
-  ( createImagePipeSurfaceFUCHSIA
-  )
 
 
 import Graphics.Vulkan.C.Core10.Core
@@ -47,6 +44,7 @@ import Graphics.Vulkan.C.Extensions.VK_FUCHSIA_imagepipe_surface
   ( VkImagePipeSurfaceCreateFlagsFUCHSIA(..)
   , VkImagePipeSurfaceCreateInfoFUCHSIA(..)
   , Zx_handle_t
+  , vkCreateImagePipeSurfaceFUCHSIA
   , pattern VK_STRUCTURE_TYPE_IMAGEPIPE_SURFACE_CREATE_INFO_FUCHSIA
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
@@ -73,29 +71,80 @@ import Graphics.Vulkan.C.Extensions.VK_FUCHSIA_imagepipe_surface
 
 -- No documentation found for TopLevel "ImagePipeSurfaceCreateFlagsFUCHSIA"
 type ImagePipeSurfaceCreateFlagsFUCHSIA = VkImagePipeSurfaceCreateFlagsFUCHSIA
--- No documentation found for TopLevel "ImagePipeSurfaceCreateInfoFUCHSIA"
+
+
+-- | VkImagePipeSurfaceCreateInfoFUCHSIA - Structure specifying parameters of
+-- a newly created ImagePipe surface object
+--
+-- == Valid Usage
+--
+-- Unresolved directive in VkImagePipeSurfaceCreateInfoFUCHSIA.txt -
+-- include::{generated}\/validity\/structs\/VkImagePipeSurfaceCreateInfoFUCHSIA.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data ImagePipeSurfaceCreateInfoFUCHSIA = ImagePipeSurfaceCreateInfoFUCHSIA
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "ImagePipeSurfaceCreateInfoFUCHSIA" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "ImagePipeSurfaceCreateInfoFUCHSIA" "flags"
-  vkFlags :: ImagePipeSurfaceCreateFlagsFUCHSIA
+  flags :: ImagePipeSurfaceCreateFlagsFUCHSIA
   , -- No documentation found for Nested "ImagePipeSurfaceCreateInfoFUCHSIA" "imagePipeHandle"
-  vkImagePipeHandle :: Zx_handle_t
+  imagePipeHandle :: Zx_handle_t
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkImagePipeSurfaceCreateInfoFUCHSIA' and
+-- marshal a 'ImagePipeSurfaceCreateInfoFUCHSIA' into it. The 'VkImagePipeSurfaceCreateInfoFUCHSIA' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructImagePipeSurfaceCreateInfoFUCHSIA :: ImagePipeSurfaceCreateInfoFUCHSIA -> (VkImagePipeSurfaceCreateInfoFUCHSIA -> IO a) -> IO a
-withCStructImagePipeSurfaceCreateInfoFUCHSIA from cont = maybeWith withSomeVkStruct (vkPNext (from :: ImagePipeSurfaceCreateInfoFUCHSIA)) (\pPNext -> cont (VkImagePipeSurfaceCreateInfoFUCHSIA VK_STRUCTURE_TYPE_IMAGEPIPE_SURFACE_CREATE_INFO_FUCHSIA pPNext (vkFlags (from :: ImagePipeSurfaceCreateInfoFUCHSIA)) (vkImagePipeHandle (from :: ImagePipeSurfaceCreateInfoFUCHSIA))))
+withCStructImagePipeSurfaceCreateInfoFUCHSIA marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: ImagePipeSurfaceCreateInfoFUCHSIA)) (\pPNext -> cont (VkImagePipeSurfaceCreateInfoFUCHSIA VK_STRUCTURE_TYPE_IMAGEPIPE_SURFACE_CREATE_INFO_FUCHSIA pPNext (flags (marshalled :: ImagePipeSurfaceCreateInfoFUCHSIA)) (imagePipeHandle (marshalled :: ImagePipeSurfaceCreateInfoFUCHSIA))))
+
+-- | A function to read a 'VkImagePipeSurfaceCreateInfoFUCHSIA' and all additional
+-- structures in the pointer chain into a 'ImagePipeSurfaceCreateInfoFUCHSIA'.
 fromCStructImagePipeSurfaceCreateInfoFUCHSIA :: VkImagePipeSurfaceCreateInfoFUCHSIA -> IO ImagePipeSurfaceCreateInfoFUCHSIA
 fromCStructImagePipeSurfaceCreateInfoFUCHSIA c = ImagePipeSurfaceCreateInfoFUCHSIA <$> -- Univalued Member elided
                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkImagePipeSurfaceCreateInfoFUCHSIA)))
                                                                                    <*> pure (vkFlags (c :: VkImagePipeSurfaceCreateInfoFUCHSIA))
                                                                                    <*> pure (vkImagePipeHandle (c :: VkImagePipeSurfaceCreateInfoFUCHSIA))
+
 instance Zero ImagePipeSurfaceCreateInfoFUCHSIA where
   zero = ImagePipeSurfaceCreateInfoFUCHSIA Nothing
                                            zero
                                            zero
 
--- | Wrapper for 'vkCreateImagePipeSurfaceFUCHSIA'
+
+
+-- | vkCreateImagePipeSurfaceFUCHSIA - Create a
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' object for a
+-- Fuchsia ImagePipe
+--
+-- = Parameters
+--
+-- -   @instance@ is the instance to associate with the surface.
+--
+-- -   @pCreateInfo@ is a pointer to an instance of the
+--     'Graphics.Vulkan.C.Extensions.VK_FUCHSIA_imagepipe_surface.VkImagePipeSurfaceCreateInfoFUCHSIA'
+--     structure containing parameters affecting the creation of the
+--     surface object.
+--
+-- -   @pAllocator@ is the allocator used for host memory allocated for the
+--     surface object when there is no more specific allocator available
+--     (see
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+--
+-- -   @pSurface@ points to a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
+--     which the created surface object is returned.
+--
+-- = Description
+--
+-- Unresolved directive in vkCreateImagePipeSurfaceFUCHSIA.txt -
+-- include::{generated}\/validity\/protos\/vkCreateImagePipeSurfaceFUCHSIA.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 createImagePipeSurfaceFUCHSIA :: Instance ->  ImagePipeSurfaceCreateInfoFUCHSIA ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
-createImagePipeSurfaceFUCHSIA = \(Instance instance' commandTable) -> \createInfo -> \allocator -> alloca (\pSurface -> maybeWith (\a -> withCStructAllocationCallbacks a . flip with) allocator (\pAllocator -> (\a -> withCStructImagePipeSurfaceCreateInfoFUCHSIA a . flip with) createInfo (\pCreateInfo -> Graphics.Vulkan.C.Dynamic.createImagePipeSurfaceFUCHSIA commandTable instance' pCreateInfo pAllocator pSurface >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pSurface)))))
+createImagePipeSurfaceFUCHSIA = \(Instance instance' commandTable) -> \createInfo' -> \allocator -> alloca (\pSurface' -> maybeWith (\marshalled -> withCStructAllocationCallbacks marshalled . flip with) allocator (\pAllocator -> (\marshalled -> withCStructImagePipeSurfaceCreateInfoFUCHSIA marshalled . flip with) createInfo' (\pCreateInfo' -> vkCreateImagePipeSurfaceFUCHSIA commandTable instance' pCreateInfo' pAllocator pSurface' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (peek pSurface')))))

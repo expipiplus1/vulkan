@@ -98,32 +98,33 @@ instance Read VkCoverageModulationModeNV where
                         )
                     )
 
--- | @VK_COVERAGE_MODULATION_MODE_NONE_NV@ specifies that no components are
+-- | 'VK_COVERAGE_MODULATION_MODE_NONE_NV' specifies that no components are
 -- multiplied by the modulation factor.
 pattern VK_COVERAGE_MODULATION_MODE_NONE_NV :: VkCoverageModulationModeNV
 pattern VK_COVERAGE_MODULATION_MODE_NONE_NV = VkCoverageModulationModeNV 0
 
--- | @VK_COVERAGE_MODULATION_MODE_RGB_NV@ specifies that the red, green, and
+-- | 'VK_COVERAGE_MODULATION_MODE_RGB_NV' specifies that the red, green, and
 -- blue components are multiplied by the modulation factor.
 pattern VK_COVERAGE_MODULATION_MODE_RGB_NV :: VkCoverageModulationModeNV
 pattern VK_COVERAGE_MODULATION_MODE_RGB_NV = VkCoverageModulationModeNV 1
 
--- | @VK_COVERAGE_MODULATION_MODE_ALPHA_NV@ specifies that the alpha
+-- | 'VK_COVERAGE_MODULATION_MODE_ALPHA_NV' specifies that the alpha
 -- component is multiplied by the modulation factor.
 pattern VK_COVERAGE_MODULATION_MODE_ALPHA_NV :: VkCoverageModulationModeNV
 pattern VK_COVERAGE_MODULATION_MODE_ALPHA_NV = VkCoverageModulationModeNV 2
 
--- | @VK_COVERAGE_MODULATION_MODE_RGBA_NV@ specifies that all components are
+-- | 'VK_COVERAGE_MODULATION_MODE_RGBA_NV' specifies that all components are
 -- multiplied by the modulation factor.
 pattern VK_COVERAGE_MODULATION_MODE_RGBA_NV :: VkCoverageModulationModeNV
 pattern VK_COVERAGE_MODULATION_MODE_RGBA_NV = VkCoverageModulationModeNV 3
+
 -- ** VkPipelineCoverageModulationStateCreateFlagsNV
 
 -- | VkPipelineCoverageModulationStateCreateFlagsNV - Reserved for future use
 --
 -- = Description
 --
--- @VkPipelineCoverageModulationStateCreateFlagsNV@ is a bitmask type for
+-- 'VkPipelineCoverageModulationStateCreateFlagsNV' is a bitmask type for
 -- setting a mask, but is currently reserved for future use.
 --
 -- = See Also
@@ -147,16 +148,18 @@ instance Read VkPipelineCoverageModulationStateCreateFlagsNV where
                     )
 
 
+
 -- | VkPipelineCoverageModulationStateCreateInfoNV - Structure specifying
 -- parameters controlling coverage modulation
 --
 -- = Description
 --
--- If @coverageModulationTableEnable@ is @VK_FALSE@, then for each color
--- sample the associated bits of the fragment’s coverage are counted and
--- divided by the number of associated bits to produce a modulation factor
--- R in the range (0,1] (a value of zero would have been killed due to a
--- color coverage of 0). Specifically:
+-- If @coverageModulationTableEnable@ is
+-- 'Graphics.Vulkan.C.Core10.Core.VK_FALSE', then for each color sample the
+-- associated bits of the fragment’s coverage are counted and divided by
+-- the number of associated bits to produce a modulation factor R in the
+-- range (0,1] (a value of zero would have been killed due to a color
+-- coverage of 0). Specifically:
 --
 -- -   N = value of @rasterizationSamples@
 --
@@ -166,9 +169,10 @@ instance Read VkPipelineCoverageModulationStateCreateFlagsNV where
 --
 -- -   R = popcount(associated coverage bits) \/ (N \/ M)
 --
--- If @coverageModulationTableEnable@ is @VK_TRUE@, the value R is computed
--- using a programmable lookup table. The lookup table has N \/ M elements,
--- and the element of the table is selected by:
+-- If @coverageModulationTableEnable@ is
+-- 'Graphics.Vulkan.C.Core10.Core.VK_TRUE', the value R is computed using a
+-- programmable lookup table. The lookup table has N \/ M elements, and the
+-- element of the table is selected by:
 --
 -- -   R = @pCoverageModulationTable@[popcount(associated coverage bits)-1]
 --
@@ -186,26 +190,19 @@ instance Read VkPipelineCoverageModulationStateCreateFlagsNV where
 -- @coverageModulationMode@.
 --
 -- If this structure is not present, it is as if @coverageModulationMode@
--- is @VK_COVERAGE_MODULATION_MODE_NONE_NV@.
+-- is 'VK_COVERAGE_MODULATION_MODE_NONE_NV'.
 --
 -- == Valid Usage
 --
--- -   If @coverageModulationTableEnable@ is @VK_TRUE@,
+-- -   If @coverageModulationTableEnable@ is
+--     'Graphics.Vulkan.C.Core10.Core.VK_TRUE',
 --     @coverageModulationTableCount@ /must/ be equal to the number of
 --     rasterization samples divided by the number of color samples in the
 --     subpass.
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV@
---
--- -   @flags@ /must/ be @0@
---
--- -   @coverageModulationMode@ /must/ be a valid
---     'VkCoverageModulationModeNV' value
---
--- -   @coverageModulationTableCount@ /must/ be greater than @0@
+-- Unresolved directive in
+-- VkPipelineCoverageModulationStateCreateInfoNV.txt -
+-- include::{generated}\/validity\/structs\/VkPipelineCoverageModulationStateCreateInfoNV.txt[]
 --
 -- = See Also
 --
@@ -251,19 +248,22 @@ instance Storable VkPipelineCoverageModulationStateCreateInfoNV where
                 *> poke (ptr `plusPtr` 32) (vkPCoverageModulationTable (poked :: VkPipelineCoverageModulationStateCreateInfoNV))
 
 instance Zero VkPipelineCoverageModulationStateCreateInfoNV where
-  zero = VkPipelineCoverageModulationStateCreateInfoNV zero
+  zero = VkPipelineCoverageModulationStateCreateInfoNV VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV
                                                        zero
                                                        zero
                                                        zero
                                                        zero
                                                        zero
                                                        zero
+
 -- No documentation found for TopLevel "VK_NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME"
 pattern VK_NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME = "VK_NV_framebuffer_mixed_samples"
+
 -- No documentation found for TopLevel "VK_NV_FRAMEBUFFER_MIXED_SAMPLES_SPEC_VERSION"
 pattern VK_NV_FRAMEBUFFER_MIXED_SAMPLES_SPEC_VERSION :: Integral a => a
 pattern VK_NV_FRAMEBUFFER_MIXED_SAMPLES_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV"
 pattern VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV = VkStructureType 1000152000

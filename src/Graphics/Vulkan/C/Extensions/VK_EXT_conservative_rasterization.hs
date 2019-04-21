@@ -95,21 +95,22 @@ instance Read VkConservativeRasterizationModeEXT where
                         )
                     )
 
--- | @VK_CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT@ specifies that
+-- | 'VK_CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT' specifies that
 -- conservative rasterization is disabled and rasterization proceeds as
 -- normal.
 pattern VK_CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT :: VkConservativeRasterizationModeEXT
 pattern VK_CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT = VkConservativeRasterizationModeEXT 0
 
--- | @VK_CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT@ specifies that
+-- | 'VK_CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT' specifies that
 -- conservative rasterization is enabled in overestimation mode.
 pattern VK_CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT :: VkConservativeRasterizationModeEXT
 pattern VK_CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT = VkConservativeRasterizationModeEXT 1
 
--- | @VK_CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT@ specifies that
+-- | 'VK_CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT' specifies that
 -- conservative rasterization is enabled in underestimation mode.
 pattern VK_CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT :: VkConservativeRasterizationModeEXT
 pattern VK_CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT = VkConservativeRasterizationModeEXT 2
+
 -- | VkPhysicalDeviceConservativeRasterizationPropertiesEXT - Structure
 -- describing conservative raster properties that can be supported by an
 -- implementation
@@ -117,24 +118,25 @@ pattern VK_CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT = VkConservativeRas
 -- = Members
 --
 -- The members of the
--- @VkPhysicalDeviceConservativeRasterizationPropertiesEXT@ structure
+-- 'VkPhysicalDeviceConservativeRasterizationPropertiesEXT' structure
 -- describe the following implementation-dependent limits:
 --
 -- = Description
 --
--- If the @VkPhysicalDeviceConservativeRasterizationPropertiesEXT@
+-- If the 'VkPhysicalDeviceConservativeRasterizationPropertiesEXT'
 -- structure is included in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits and properties.
 --
--- == Valid Usage (Implicit)
+-- Unresolved directive in
+-- VkPhysicalDeviceConservativeRasterizationPropertiesEXT.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceConservativeRasterizationPropertiesEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkPhysicalDeviceConservativeRasterizationPropertiesEXT = VkPhysicalDeviceConservativeRasterizationPropertiesEXT
-  { -- | @sType@ /must/ be
-  -- @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CONSERVATIVE_RASTERIZATION_PROPERTIES_EXT@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -162,11 +164,11 @@ data VkPhysicalDeviceConservativeRasterizationPropertiesEXT = VkPhysicalDeviceCo
   -- value in the screen space pixel fixed-point grid.
   vkExtraPrimitiveOverestimationSizeGranularity :: CFloat
   , -- | @primitiveUnderestimation@ is true if the implementation supports the
-  -- @VK_CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT@ conservative
+  -- 'VK_CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT' conservative
   -- rasterization mode in addition to
-  -- @VK_CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT@. Otherwise the
+  -- 'VK_CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT'. Otherwise the
   -- implementation only supports
-  -- @VK_CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT@.
+  -- 'VK_CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT'.
   vkPrimitiveUnderestimation :: VkBool32
   , -- | @conservativePointAndLineRasterization@ is true if the implementation
   -- supports conservative rasterization of point and line primitives as well
@@ -197,12 +199,13 @@ data VkPhysicalDeviceConservativeRasterizationPropertiesEXT = VkPhysicalDeviceCo
   vkFullyCoveredFragmentShaderInputVariable :: VkBool32
   , -- | @conservativeRasterizationPostDepthCoverage@ is true if the
   -- implementation supports conservative rasterization with the
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#shaders-fragment-earlytest-postdepthcoverage PostDepthCoverage>
-  -- execution mode enabled. When supported the @SampleMask@ built-in input
-  -- variable will reflect the coverage after the early per-fragment depth
-  -- and stencil tests are applied even when conservative rasterization is
-  -- enabled. Otherwise
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#shaders-fragment-earlytest-postdepthcoverage PostDepthCoverage>
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#shaders-fragment-earlytest-postdepthcoverage PostDepthCoverage>
+  -- execution mode enabled. When supported the
+  -- 'Graphics.Vulkan.Core10.Pipeline.SampleMask' built-in input variable
+  -- will reflect the coverage after the early per-fragment depth and stencil
+  -- tests are applied even when conservative rasterization is enabled.
+  -- Otherwise
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#shaders-fragment-earlytest-postdepthcoverage PostDepthCoverage>
   -- execution mode /must/ not be used when conservative rasterization is
   -- enabled.
   vkConservativeRasterizationPostDepthCoverage :: VkBool32
@@ -236,7 +239,7 @@ instance Storable VkPhysicalDeviceConservativeRasterizationPropertiesEXT where
                 *> poke (ptr `plusPtr` 48) (vkConservativeRasterizationPostDepthCoverage (poked :: VkPhysicalDeviceConservativeRasterizationPropertiesEXT))
 
 instance Zero VkPhysicalDeviceConservativeRasterizationPropertiesEXT where
-  zero = VkPhysicalDeviceConservativeRasterizationPropertiesEXT zero
+  zero = VkPhysicalDeviceConservativeRasterizationPropertiesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CONSERVATIVE_RASTERIZATION_PROPERTIES_EXT
                                                                 zero
                                                                 zero
                                                                 zero
@@ -247,6 +250,7 @@ instance Zero VkPhysicalDeviceConservativeRasterizationPropertiesEXT where
                                                                 zero
                                                                 zero
                                                                 zero
+
 -- ** VkPipelineRasterizationConservativeStateCreateFlagsEXT
 
 -- | VkPipelineRasterizationConservativeStateCreateFlagsEXT - Reserved for
@@ -254,7 +258,7 @@ instance Zero VkPhysicalDeviceConservativeRasterizationPropertiesEXT where
 --
 -- = Description
 --
--- @VkPipelineRasterizationConservativeStateCreateFlagsEXT@ is a bitmask
+-- 'VkPipelineRasterizationConservativeStateCreateFlagsEXT' is a bitmask
 -- type for setting a mask, but is currently reserved for future use.
 --
 -- = See Also
@@ -278,27 +282,31 @@ instance Read VkPipelineRasterizationConservativeStateCreateFlagsEXT where
                     )
 
 
+
 -- | VkPipelineRasterizationConservativeStateCreateInfoEXT - Structure
 -- specifying conservative raster state
 --
--- == Valid Usage (Implicit)
+-- == Valid Usage
+--
+-- Unresolved directive in
+-- VkPipelineRasterizationConservativeStateCreateInfoEXT.txt -
+-- include::{generated}\/validity\/structs\/VkPipelineRasterizationConservativeStateCreateInfoEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkPipelineRasterizationConservativeStateCreateInfoEXT = VkPipelineRasterizationConservativeStateCreateInfoEXT
-  { -- | @sType@ /must/ be
-  -- @VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @flags@ /must/ be @0@
+  , -- | @flags@ is reserved for future use.
   vkFlags :: VkPipelineRasterizationConservativeStateCreateFlagsEXT
-  , -- | @conservativeRasterizationMode@ /must/ be a valid
-  -- 'VkConservativeRasterizationModeEXT' value
+  , -- | @conservativeRasterizationMode@ is the conservative rasterization mode
+  -- to use.
   vkConservativeRasterizationMode :: VkConservativeRasterizationModeEXT
   , -- | @extraPrimitiveOverestimationSize@ /must/ be in the range of @0.0@ to
-  -- @VkPhysicalDeviceConservativeRasterizationPropertiesEXT@::@maxExtraPrimitiveOverestimationSize@
+  -- 'VkPhysicalDeviceConservativeRasterizationPropertiesEXT'::@maxExtraPrimitiveOverestimationSize@
   -- inclusive
   vkExtraPrimitiveOverestimationSize :: CFloat
   }
@@ -319,20 +327,24 @@ instance Storable VkPipelineRasterizationConservativeStateCreateInfoEXT where
                 *> poke (ptr `plusPtr` 24) (vkExtraPrimitiveOverestimationSize (poked :: VkPipelineRasterizationConservativeStateCreateInfoEXT))
 
 instance Zero VkPipelineRasterizationConservativeStateCreateInfoEXT where
-  zero = VkPipelineRasterizationConservativeStateCreateInfoEXT zero
+  zero = VkPipelineRasterizationConservativeStateCreateInfoEXT VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT
                                                                zero
                                                                zero
                                                                zero
                                                                zero
+
 -- No documentation found for TopLevel "VK_EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME"
 pattern VK_EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME = "VK_EXT_conservative_rasterization"
+
 -- No documentation found for TopLevel "VK_EXT_CONSERVATIVE_RASTERIZATION_SPEC_VERSION"
 pattern VK_EXT_CONSERVATIVE_RASTERIZATION_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_CONSERVATIVE_RASTERIZATION_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CONSERVATIVE_RASTERIZATION_PROPERTIES_EXT"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CONSERVATIVE_RASTERIZATION_PROPERTIES_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CONSERVATIVE_RASTERIZATION_PROPERTIES_EXT = VkStructureType 1000101000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT"
 pattern VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT = VkStructureType 1000101001

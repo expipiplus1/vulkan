@@ -39,7 +39,7 @@ import Graphics.Vulkan.C.Core10.Core
 -- = Description
 --
 -- Unresolved directive in VkPhysicalDevicePCIBusInfoPropertiesEXT.txt -
--- include::..\/validity\/structs\/VkPhysicalDevicePCIBusInfoPropertiesEXT.txt[]
+-- include::{generated}\/validity\/structs\/VkPhysicalDevicePCIBusInfoPropertiesEXT.txt[]
 --
 -- = See Also
 --
@@ -77,18 +77,21 @@ instance Storable VkPhysicalDevicePCIBusInfoPropertiesEXT where
                 *> poke (ptr `plusPtr` 28) (vkPciFunction (poked :: VkPhysicalDevicePCIBusInfoPropertiesEXT))
 
 instance Zero VkPhysicalDevicePCIBusInfoPropertiesEXT where
-  zero = VkPhysicalDevicePCIBusInfoPropertiesEXT zero
+  zero = VkPhysicalDevicePCIBusInfoPropertiesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PCI_BUS_INFO_PROPERTIES_EXT
                                                  zero
                                                  zero
                                                  zero
                                                  zero
                                                  zero
+
 -- No documentation found for TopLevel "VK_EXT_PCI_BUS_INFO_EXTENSION_NAME"
 pattern VK_EXT_PCI_BUS_INFO_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_PCI_BUS_INFO_EXTENSION_NAME = "VK_EXT_pci_bus_info"
+
 -- No documentation found for TopLevel "VK_EXT_PCI_BUS_INFO_SPEC_VERSION"
 pattern VK_EXT_PCI_BUS_INFO_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_PCI_BUS_INFO_SPEC_VERSION = 2
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PCI_BUS_INFO_PROPERTIES_EXT"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PCI_BUS_INFO_PROPERTIES_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PCI_BUS_INFO_PROPERTIES_EXT = VkStructureType 1000212000

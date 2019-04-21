@@ -35,9 +35,6 @@ import Foreign.Marshal.Utils
 import Foreign.Ptr
   ( castPtr
   )
-import qualified Graphics.Vulkan.C.Dynamic
-  ( setHdrMetadataEXT
-  )
 
 
 import Graphics.Vulkan.C.Core10.Core
@@ -46,6 +43,7 @@ import Graphics.Vulkan.C.Core10.Core
 import Graphics.Vulkan.C.Extensions.VK_EXT_hdr_metadata
   ( VkHdrMetadataEXT(..)
   , VkXYColorEXT(..)
+  , vkSetHdrMetadataEXT
   , pattern VK_STRUCTURE_TYPE_HDR_METADATA_EXT
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
@@ -68,31 +66,52 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_hdr_metadata
   )
 
 
--- No documentation found for TopLevel "HdrMetadataEXT"
+
+-- | VkHdrMetadataEXT - structure to specify Hdr metadata
+--
+-- = Description
+--
+-- Unresolved directive in VkHdrMetadataEXT.txt -
+-- include::{generated}\/validity\/structs\/VkHdrMetadataEXT.txt[]
+--
+-- __Note__
+--
+-- The validity and use of this data is outside the scope of Vulkan.
+--
+-- = See Also
+--
+-- No cross-references are available
 data HdrMetadataEXT = HdrMetadataEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "HdrMetadataEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "HdrMetadataEXT" "displayPrimaryRed"
-  vkDisplayPrimaryRed :: XYColorEXT
+  displayPrimaryRed :: XYColorEXT
   , -- No documentation found for Nested "HdrMetadataEXT" "displayPrimaryGreen"
-  vkDisplayPrimaryGreen :: XYColorEXT
+  displayPrimaryGreen :: XYColorEXT
   , -- No documentation found for Nested "HdrMetadataEXT" "displayPrimaryBlue"
-  vkDisplayPrimaryBlue :: XYColorEXT
+  displayPrimaryBlue :: XYColorEXT
   , -- No documentation found for Nested "HdrMetadataEXT" "whitePoint"
-  vkWhitePoint :: XYColorEXT
+  whitePoint :: XYColorEXT
   , -- No documentation found for Nested "HdrMetadataEXT" "maxLuminance"
-  vkMaxLuminance :: CFloat
+  maxLuminance :: CFloat
   , -- No documentation found for Nested "HdrMetadataEXT" "minLuminance"
-  vkMinLuminance :: CFloat
+  minLuminance :: CFloat
   , -- No documentation found for Nested "HdrMetadataEXT" "maxContentLightLevel"
-  vkMaxContentLightLevel :: CFloat
+  maxContentLightLevel :: CFloat
   , -- No documentation found for Nested "HdrMetadataEXT" "maxFrameAverageLightLevel"
-  vkMaxFrameAverageLightLevel :: CFloat
+  maxFrameAverageLightLevel :: CFloat
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkHdrMetadataEXT' and
+-- marshal a 'HdrMetadataEXT' into it. The 'VkHdrMetadataEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructHdrMetadataEXT :: HdrMetadataEXT -> (VkHdrMetadataEXT -> IO a) -> IO a
-withCStructHdrMetadataEXT from cont = withCStructXYColorEXT (vkWhitePoint (from :: HdrMetadataEXT)) (\whitePoint -> withCStructXYColorEXT (vkDisplayPrimaryBlue (from :: HdrMetadataEXT)) (\displayPrimaryBlue -> withCStructXYColorEXT (vkDisplayPrimaryGreen (from :: HdrMetadataEXT)) (\displayPrimaryGreen -> withCStructXYColorEXT (vkDisplayPrimaryRed (from :: HdrMetadataEXT)) (\displayPrimaryRed -> maybeWith withSomeVkStruct (vkPNext (from :: HdrMetadataEXT)) (\pPNext -> cont (VkHdrMetadataEXT VK_STRUCTURE_TYPE_HDR_METADATA_EXT pPNext displayPrimaryRed displayPrimaryGreen displayPrimaryBlue whitePoint (vkMaxLuminance (from :: HdrMetadataEXT)) (vkMinLuminance (from :: HdrMetadataEXT)) (vkMaxContentLightLevel (from :: HdrMetadataEXT)) (vkMaxFrameAverageLightLevel (from :: HdrMetadataEXT))))))))
+withCStructHdrMetadataEXT marshalled cont = withCStructXYColorEXT (whitePoint (marshalled :: HdrMetadataEXT)) (\whitePoint'' -> withCStructXYColorEXT (displayPrimaryBlue (marshalled :: HdrMetadataEXT)) (\displayPrimaryBlue'' -> withCStructXYColorEXT (displayPrimaryGreen (marshalled :: HdrMetadataEXT)) (\displayPrimaryGreen'' -> withCStructXYColorEXT (displayPrimaryRed (marshalled :: HdrMetadataEXT)) (\displayPrimaryRed'' -> maybeWith withSomeVkStruct (next (marshalled :: HdrMetadataEXT)) (\pPNext -> cont (VkHdrMetadataEXT VK_STRUCTURE_TYPE_HDR_METADATA_EXT pPNext displayPrimaryRed'' displayPrimaryGreen'' displayPrimaryBlue'' whitePoint'' (maxLuminance (marshalled :: HdrMetadataEXT)) (minLuminance (marshalled :: HdrMetadataEXT)) (maxContentLightLevel (marshalled :: HdrMetadataEXT)) (maxFrameAverageLightLevel (marshalled :: HdrMetadataEXT))))))))
+
+-- | A function to read a 'VkHdrMetadataEXT' and all additional
+-- structures in the pointer chain into a 'HdrMetadataEXT'.
 fromCStructHdrMetadataEXT :: VkHdrMetadataEXT -> IO HdrMetadataEXT
 fromCStructHdrMetadataEXT c = HdrMetadataEXT <$> -- Univalued Member elided
                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkHdrMetadataEXT)))
@@ -104,6 +123,7 @@ fromCStructHdrMetadataEXT c = HdrMetadataEXT <$> -- Univalued Member elided
                                              <*> pure (vkMinLuminance (c :: VkHdrMetadataEXT))
                                              <*> pure (vkMaxContentLightLevel (c :: VkHdrMetadataEXT))
                                              <*> pure (vkMaxFrameAverageLightLevel (c :: VkHdrMetadataEXT))
+
 instance Zero HdrMetadataEXT where
   zero = HdrMetadataEXT Nothing
                         zero
@@ -114,23 +134,64 @@ instance Zero HdrMetadataEXT where
                         zero
                         zero
                         zero
--- No documentation found for TopLevel "XYColorEXT"
+
+
+
+-- | VkXYColorEXT - structure to specify X,Y chromaticity coordinates
+--
+-- = See Also
+--
+-- No cross-references are available
 data XYColorEXT = XYColorEXT
   { -- No documentation found for Nested "XYColorEXT" "x"
-  vkX :: CFloat
+  x :: CFloat
   , -- No documentation found for Nested "XYColorEXT" "y"
-  vkY :: CFloat
+  y :: CFloat
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkXYColorEXT' and
+-- marshal a 'XYColorEXT' into it. The 'VkXYColorEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructXYColorEXT :: XYColorEXT -> (VkXYColorEXT -> IO a) -> IO a
-withCStructXYColorEXT from cont = cont (VkXYColorEXT (vkX (from :: XYColorEXT)) (vkY (from :: XYColorEXT)))
+withCStructXYColorEXT marshalled cont = cont (VkXYColorEXT (x (marshalled :: XYColorEXT)) (y (marshalled :: XYColorEXT)))
+
+-- | A function to read a 'VkXYColorEXT' and all additional
+-- structures in the pointer chain into a 'XYColorEXT'.
 fromCStructXYColorEXT :: VkXYColorEXT -> IO XYColorEXT
 fromCStructXYColorEXT c = XYColorEXT <$> pure (vkX (c :: VkXYColorEXT))
                                      <*> pure (vkY (c :: VkXYColorEXT))
+
 instance Zero XYColorEXT where
   zero = XYColorEXT zero
                     zero
 
--- | Wrapper for 'vkSetHdrMetadataEXT'
+
+
+-- | vkSetHdrMetadataEXT - function to set Hdr metadata
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device where the swapchain(s) were created.
+--
+-- -   @swapchainCount@ is the number of swapchains included in
+--     @pSwapchains@.
+--
+-- -   @pSwapchains@ is a pointer to the array of @swapchainCount@
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
+--     handles.
+--
+-- -   @pMetadata@ is a pointer to the array of @swapchainCount@
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_hdr_metadata.VkHdrMetadataEXT'
+--     structures.
+--
+-- = Description
+--
+-- Unresolved directive in vkSetHdrMetadataEXT.txt -
+-- include::{generated}\/validity\/protos\/vkSetHdrMetadataEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 setHdrMetadataEXT :: Device ->  Vector SwapchainKHR ->  Vector HdrMetadataEXT ->  IO ()
-setHdrMetadataEXT = \(Device device commandTable) -> \swapchains -> \metadata -> withVec withCStructHdrMetadataEXT metadata (\pMetadata -> withVec (&) swapchains (\pSwapchains -> Graphics.Vulkan.C.Dynamic.setHdrMetadataEXT commandTable device (fromIntegral $ Data.Vector.length swapchains `min` Data.Vector.length metadata) pSwapchains pMetadata *> (pure ())))
+setHdrMetadataEXT = \(Device device' commandTable) -> \swapchains' -> \metadata' -> withVec withCStructHdrMetadataEXT metadata' (\pMetadata' -> withVec (&) swapchains' (\pSwapchains' -> vkSetHdrMetadataEXT commandTable device' (fromIntegral $ Data.Vector.length swapchains' `min` Data.Vector.length metadata') pSwapchains' pMetadata' *> (pure ())))

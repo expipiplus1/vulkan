@@ -42,23 +42,41 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_pci_bus_info
   )
 
 
--- No documentation found for TopLevel "PhysicalDevicePCIBusInfoPropertiesEXT"
+
+-- | VkPhysicalDevicePCIBusInfoPropertiesEXT - Structure containing PCI bus
+-- information of a physical device
+--
+-- = Description
+--
+-- Unresolved directive in VkPhysicalDevicePCIBusInfoPropertiesEXT.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDevicePCIBusInfoPropertiesEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data PhysicalDevicePCIBusInfoPropertiesEXT = PhysicalDevicePCIBusInfoPropertiesEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDevicePCIBusInfoPropertiesEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDevicePCIBusInfoPropertiesEXT" "pciDomain"
-  vkPciDomain :: Word32
+  pciDomain :: Word32
   , -- No documentation found for Nested "PhysicalDevicePCIBusInfoPropertiesEXT" "pciBus"
-  vkPciBus :: Word32
+  pciBus :: Word32
   , -- No documentation found for Nested "PhysicalDevicePCIBusInfoPropertiesEXT" "pciDevice"
-  vkPciDevice :: Word32
+  pciDevice :: Word32
   , -- No documentation found for Nested "PhysicalDevicePCIBusInfoPropertiesEXT" "pciFunction"
-  vkPciFunction :: Word32
+  pciFunction :: Word32
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPhysicalDevicePCIBusInfoPropertiesEXT' and
+-- marshal a 'PhysicalDevicePCIBusInfoPropertiesEXT' into it. The 'VkPhysicalDevicePCIBusInfoPropertiesEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPhysicalDevicePCIBusInfoPropertiesEXT :: PhysicalDevicePCIBusInfoPropertiesEXT -> (VkPhysicalDevicePCIBusInfoPropertiesEXT -> IO a) -> IO a
-withCStructPhysicalDevicePCIBusInfoPropertiesEXT from cont = maybeWith withSomeVkStruct (vkPNext (from :: PhysicalDevicePCIBusInfoPropertiesEXT)) (\pPNext -> cont (VkPhysicalDevicePCIBusInfoPropertiesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PCI_BUS_INFO_PROPERTIES_EXT pPNext (vkPciDomain (from :: PhysicalDevicePCIBusInfoPropertiesEXT)) (vkPciBus (from :: PhysicalDevicePCIBusInfoPropertiesEXT)) (vkPciDevice (from :: PhysicalDevicePCIBusInfoPropertiesEXT)) (vkPciFunction (from :: PhysicalDevicePCIBusInfoPropertiesEXT))))
+withCStructPhysicalDevicePCIBusInfoPropertiesEXT marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PhysicalDevicePCIBusInfoPropertiesEXT)) (\pPNext -> cont (VkPhysicalDevicePCIBusInfoPropertiesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PCI_BUS_INFO_PROPERTIES_EXT pPNext (pciDomain (marshalled :: PhysicalDevicePCIBusInfoPropertiesEXT)) (pciBus (marshalled :: PhysicalDevicePCIBusInfoPropertiesEXT)) (pciDevice (marshalled :: PhysicalDevicePCIBusInfoPropertiesEXT)) (pciFunction (marshalled :: PhysicalDevicePCIBusInfoPropertiesEXT))))
+
+-- | A function to read a 'VkPhysicalDevicePCIBusInfoPropertiesEXT' and all additional
+-- structures in the pointer chain into a 'PhysicalDevicePCIBusInfoPropertiesEXT'.
 fromCStructPhysicalDevicePCIBusInfoPropertiesEXT :: VkPhysicalDevicePCIBusInfoPropertiesEXT -> IO PhysicalDevicePCIBusInfoPropertiesEXT
 fromCStructPhysicalDevicePCIBusInfoPropertiesEXT c = PhysicalDevicePCIBusInfoPropertiesEXT <$> -- Univalued Member elided
                                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDevicePCIBusInfoPropertiesEXT)))
@@ -66,9 +84,11 @@ fromCStructPhysicalDevicePCIBusInfoPropertiesEXT c = PhysicalDevicePCIBusInfoPro
                                                                                            <*> pure (vkPciBus (c :: VkPhysicalDevicePCIBusInfoPropertiesEXT))
                                                                                            <*> pure (vkPciDevice (c :: VkPhysicalDevicePCIBusInfoPropertiesEXT))
                                                                                            <*> pure (vkPciFunction (c :: VkPhysicalDevicePCIBusInfoPropertiesEXT))
+
 instance Zero PhysicalDevicePCIBusInfoPropertiesEXT where
   zero = PhysicalDevicePCIBusInfoPropertiesEXT Nothing
                                                zero
                                                zero
                                                zero
                                                zero
+

@@ -14,13 +14,13 @@ import Control.Exception
 import Control.Monad
   ( when
   )
-import qualified Graphics.Vulkan.C.Dynamic
-  ( releaseDisplayEXT
-  )
 
 
 import Graphics.Vulkan.C.Core10.Core
   ( pattern VK_SUCCESS
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_direct_mode_display
+  ( vkReleaseDisplayEXT
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
   ( PhysicalDevice(..)
@@ -38,6 +38,21 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_direct_mode_display
 
 
 
--- | Wrapper for 'vkReleaseDisplayEXT'
+-- | vkReleaseDisplayEXT - Release access to an acquired VkDisplayKHR
+--
+-- = Parameters
+--
+-- -   @physicalDevice@ The physical device the display is on.
+--
+-- -   @display@ The display to release control of.
+--
+-- = Description
+--
+-- Unresolved directive in vkReleaseDisplayEXT.txt -
+-- include::{generated}\/validity\/protos\/vkReleaseDisplayEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 releaseDisplayEXT :: PhysicalDevice ->  DisplayKHR ->  IO ()
-releaseDisplayEXT = \(PhysicalDevice physicalDevice commandTable) -> \display -> Graphics.Vulkan.C.Dynamic.releaseDisplayEXT commandTable physicalDevice display >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ()))
+releaseDisplayEXT = \(PhysicalDevice physicalDevice' commandTable) -> \display' -> vkReleaseDisplayEXT commandTable physicalDevice' display' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (pure ()))

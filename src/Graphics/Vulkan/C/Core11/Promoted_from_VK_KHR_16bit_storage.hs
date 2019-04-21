@@ -28,14 +28,17 @@ import Graphics.Vulkan.C.Core10.Core
 -- | VkPhysicalDevice16BitStorageFeatures - Structure describing features
 -- supported by VK_KHR_16bit_storage
 --
--- == Valid Usage (Implicit)
+-- = Description
+--
+-- Unresolved directive in VkPhysicalDevice16BitStorageFeatures.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDevice16BitStorageFeatures.txt[]
 --
 -- = See Also
 --
--- @VkBool32@, 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDevice16BitStorageFeatures = VkPhysicalDevice16BitStorageFeatures
-  { -- | @sType@ /must/ be
-  -- @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -90,12 +93,13 @@ instance Storable VkPhysicalDevice16BitStorageFeatures where
                 *> poke (ptr `plusPtr` 28) (vkStorageInputOutput16 (poked :: VkPhysicalDevice16BitStorageFeatures))
 
 instance Zero VkPhysicalDevice16BitStorageFeatures where
-  zero = VkPhysicalDevice16BitStorageFeatures zero
+  zero = VkPhysicalDevice16BitStorageFeatures VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES
                                               zero
                                               zero
                                               zero
                                               zero
                                               zero
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES = VkStructureType 1000083000

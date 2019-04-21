@@ -101,33 +101,48 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2
 
 type FormatProperties2KHR = FormatProperties2
 -- TODO: Pattern constructor alias)
+
 type ImageFormatProperties2KHR = ImageFormatProperties2
 -- TODO: Pattern constructor alias)
+
 type PhysicalDeviceFeatures2KHR = PhysicalDeviceFeatures2
 -- TODO: Pattern constructor alias)
+
 type PhysicalDeviceImageFormatInfo2KHR = PhysicalDeviceImageFormatInfo2
 -- TODO: Pattern constructor alias)
+
 type PhysicalDeviceMemoryProperties2KHR = PhysicalDeviceMemoryProperties2
 -- TODO: Pattern constructor alias)
+
 type PhysicalDeviceProperties2KHR = PhysicalDeviceProperties2
 -- TODO: Pattern constructor alias)
+
 type PhysicalDeviceSparseImageFormatInfo2KHR = PhysicalDeviceSparseImageFormatInfo2
 -- TODO: Pattern constructor alias)
+
 type QueueFamilyProperties2KHR = QueueFamilyProperties2
 -- TODO: Pattern constructor alias)
+
 type SparseImageFormatProperties2KHR = SparseImageFormatProperties2
 -- TODO: Pattern constructor alias)
+
 getPhysicalDeviceFeatures2KHR :: PhysicalDevice ->  IO (PhysicalDeviceFeatures2)
 getPhysicalDeviceFeatures2KHR = getPhysicalDeviceFeatures2
+
 getPhysicalDeviceFormatProperties2KHR :: PhysicalDevice ->  Format ->  IO (FormatProperties2)
 getPhysicalDeviceFormatProperties2KHR = getPhysicalDeviceFormatProperties2
+
 getPhysicalDeviceImageFormatProperties2KHR :: PhysicalDevice ->  PhysicalDeviceImageFormatInfo2 ->  IO (ImageFormatProperties2)
 getPhysicalDeviceImageFormatProperties2KHR = getPhysicalDeviceImageFormatProperties2
+
 getPhysicalDeviceMemoryProperties2KHR :: PhysicalDevice ->  IO (PhysicalDeviceMemoryProperties2)
 getPhysicalDeviceMemoryProperties2KHR = getPhysicalDeviceMemoryProperties2
+
 getPhysicalDeviceProperties2KHR :: PhysicalDevice ->  IO (PhysicalDeviceProperties2)
 getPhysicalDeviceProperties2KHR = getPhysicalDeviceProperties2
+
 getPhysicalDeviceQueueFamilyProperties2KHR :: PhysicalDevice ->  Word32 ->  IO (Vector QueueFamilyProperties2)
 getPhysicalDeviceQueueFamilyProperties2KHR = getPhysicalDeviceQueueFamilyProperties2
+
 getPhysicalDeviceSparseImageFormatProperties2KHR :: PhysicalDevice ->  PhysicalDeviceSparseImageFormatInfo2 ->  Word32 ->  IO (Vector SparseImageFormatProperties2)
 getPhysicalDeviceSparseImageFormatProperties2KHR = getPhysicalDeviceSparseImageFormatProperties2

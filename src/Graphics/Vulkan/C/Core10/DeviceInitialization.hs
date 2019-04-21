@@ -5,6 +5,8 @@
 {-# language PatternSynonyms #-}
 {-# language DuplicateRecordFields #-}
 {-# language GeneralizedNewtypeDeriving #-}
+{-# language MagicHash #-}
+{-# language TypeApplications #-}
 
 module Graphics.Vulkan.C.Core10.DeviceInitialization
   ( PFN_vkAllocationFunction
@@ -118,59 +120,40 @@ module Graphics.Vulkan.C.Core10.DeviceInitialization
   , pattern VK_SYSTEM_ALLOCATION_SCOPE_CACHE
   , pattern VK_SYSTEM_ALLOCATION_SCOPE_DEVICE
   , pattern VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCreateInstance
-#endif
   , FN_vkCreateInstance
   , PFN_vkCreateInstance
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkDestroyInstance
-#endif
+  , vkCreateInstance
   , FN_vkDestroyInstance
   , PFN_vkDestroyInstance
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkEnumeratePhysicalDevices
-#endif
+  , vkDestroyInstance
   , FN_vkEnumeratePhysicalDevices
   , PFN_vkEnumeratePhysicalDevices
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkGetDeviceProcAddr
-#endif
+  , vkEnumeratePhysicalDevices
   , FN_vkGetDeviceProcAddr
   , PFN_vkGetDeviceProcAddr
-  , vkGetInstanceProcAddr
+  , vkGetDeviceProcAddr
+  , vkGetInstanceProcAddr'
   , FN_vkGetInstanceProcAddr
   , PFN_vkGetInstanceProcAddr
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkGetPhysicalDeviceFeatures
-#endif
+  , vkGetInstanceProcAddr
   , FN_vkGetPhysicalDeviceFeatures
   , PFN_vkGetPhysicalDeviceFeatures
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkGetPhysicalDeviceFormatProperties
-#endif
+  , vkGetPhysicalDeviceFeatures
   , FN_vkGetPhysicalDeviceFormatProperties
   , PFN_vkGetPhysicalDeviceFormatProperties
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkGetPhysicalDeviceImageFormatProperties
-#endif
+  , vkGetPhysicalDeviceFormatProperties
   , FN_vkGetPhysicalDeviceImageFormatProperties
   , PFN_vkGetPhysicalDeviceImageFormatProperties
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkGetPhysicalDeviceMemoryProperties
-#endif
+  , vkGetPhysicalDeviceImageFormatProperties
   , FN_vkGetPhysicalDeviceMemoryProperties
   , PFN_vkGetPhysicalDeviceMemoryProperties
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkGetPhysicalDeviceProperties
-#endif
+  , vkGetPhysicalDeviceMemoryProperties
   , FN_vkGetPhysicalDeviceProperties
   , PFN_vkGetPhysicalDeviceProperties
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkGetPhysicalDeviceQueueFamilyProperties
-#endif
+  , vkGetPhysicalDeviceProperties
   , FN_vkGetPhysicalDeviceQueueFamilyProperties
   , PFN_vkGetPhysicalDeviceQueueFamilyProperties
+  , vkGetPhysicalDeviceQueueFamilyProperties
   ) where
 
 import Data.Bits
@@ -196,21 +179,23 @@ import Foreign.C.Types
 import Foreign.Ptr
   ( FunPtr
   , Ptr
+  , castPtrToFunPtr
+  , nullPtr
   , plusPtr
   )
-
-#if !defined(EXPOSE_VKGETINSTANCEPROCADDR)
-import Foreign.Ptr
-  ( nullPtr
-  )
-#endif
 import Foreign.Storable
   ( Storable
   , Storable(..)
   )
+import qualified GHC.Ptr
+  ( Ptr(Ptr)
+  )
 import GHC.Read
   ( choose
   , expectP
+  )
+import System.IO.Unsafe
+  ( unsafeDupablePerformIO
   )
 import Text.ParserCombinators.ReadPrec
   ( (+++)
@@ -233,6 +218,12 @@ import Graphics.Vulkan.C.Core10.Core
   , VkStructureType(..)
   , Zero(..)
   , VkFlags
+  , pattern VK_STRUCTURE_TYPE_APPLICATION_INFO
+  , pattern VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO
+  )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
+  , InstanceCmds(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -255,7 +246,7 @@ import Graphics.Vulkan.NamedType
 --
 -- -   @allocationScope@ is a 'VkSystemAllocationScope' value specifying
 --     the allocation scope of the lifetime of the allocation, as described
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-host-allocation-scope here>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-host-allocation-scope here>.
 --
 -- = Description
 --
@@ -280,19 +271,22 @@ import Graphics.Vulkan.NamedType
 -- If @pfnAllocation@ returns @NULL@, and if the implementation is unable
 -- to continue correct processing of the current command without the
 -- requested allocation, it /must/ treat this as a run-time error, and
--- generate @VK_ERROR_OUT_OF_HOST_MEMORY@ at the appropriate time for the
--- command in which the condition was detected, as described in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Return Codes>.
+-- generate 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY' at
+-- the appropriate time for the command in which the condition was
+-- detected, as described in
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fundamentals-errorcodes Return Codes>.
 --
 -- If the implementation is able to continue correct processing of the
 -- current command without the requested allocation, then it /may/ do so,
--- and /must/ not generate @VK_ERROR_OUT_OF_HOST_MEMORY@ as a result of
--- this failed allocation.
+-- and /must/ not generate
+-- 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY' as a result
+-- of this failed allocation.
 --
 -- = See Also
 --
 -- 'VkAllocationCallbacks'
 type PFN_vkAllocationFunction = Ptr (("pUserData" ::: Ptr ()) -> ("size" ::: CSize) -> ("alignment" ::: CSize) -> ("allocationScope" ::: VkSystemAllocationScope) -> IO (Ptr ()))
+
 -- | PFN_vkFreeFunction - Application-defined memory free function
 --
 -- = Parameters
@@ -314,6 +308,7 @@ type PFN_vkAllocationFunction = Ptr (("pUserData" ::: Ptr ()) -> ("size" ::: CSi
 --
 -- 'VkAllocationCallbacks'
 type PFN_vkFreeFunction = Ptr (("pUserData" ::: Ptr ()) -> ("pMemory" ::: Ptr ()) -> IO ())
+
 -- | PFN_vkInternalAllocationNotification - Application-defined memory
 -- allocation notification function
 --
@@ -330,7 +325,7 @@ type PFN_vkFreeFunction = Ptr (("pUserData" ::: Ptr ()) -> ("pMemory" ::: Ptr ()
 --
 -- -   @allocationScope@ is a 'VkSystemAllocationScope' value specifying
 --     the allocation scope of the lifetime of the allocation, as described
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-host-allocation-scope here>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-host-allocation-scope here>.
 --
 -- = Description
 --
@@ -340,6 +335,7 @@ type PFN_vkFreeFunction = Ptr (("pUserData" ::: Ptr ()) -> ("pMemory" ::: Ptr ()
 --
 -- 'VkAllocationCallbacks'
 type PFN_vkInternalAllocationNotification = Ptr (("pUserData" ::: Ptr ()) -> ("size" ::: CSize) -> ("allocationType" ::: VkInternalAllocationType) -> ("allocationScope" ::: VkSystemAllocationScope) -> IO ())
+
 -- | PFN_vkInternalFreeNotification - Application-defined memory free
 -- notification function
 --
@@ -356,12 +352,13 @@ type PFN_vkInternalAllocationNotification = Ptr (("pUserData" ::: Ptr ()) -> ("s
 --
 -- -   @allocationScope@ is a 'VkSystemAllocationScope' value specifying
 --     the allocation scope of the lifetime of the allocation, as described
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-host-allocation-scope here>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-host-allocation-scope here>.
 --
 -- = See Also
 --
 -- 'VkAllocationCallbacks'
 type PFN_vkInternalFreeNotification = Ptr (("pUserData" ::: Ptr ()) -> ("size" ::: CSize) -> ("allocationType" ::: VkInternalAllocationType) -> ("allocationScope" ::: VkSystemAllocationScope) -> IO ())
+
 -- | PFN_vkReallocationFunction - Application-defined memory reallocation
 -- function
 --
@@ -381,7 +378,7 @@ type PFN_vkInternalFreeNotification = Ptr (("pUserData" ::: Ptr ()) -> ("size" :
 --
 -- -   @allocationScope@ is a 'VkSystemAllocationScope' value specifying
 --     the allocation scope of the lifetime of the allocation, as described
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-host-allocation-scope here>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-host-allocation-scope here>.
 --
 -- = Description
 --
@@ -409,38 +406,44 @@ type PFN_vkInternalFreeNotification = Ptr (("pUserData" ::: Ptr ()) -> ("size" :
 -- /must/ not free the old allocation.
 --
 -- @pfnReallocation@ /must/ follow the same
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkAllocationFunction_return_rules rules for return values as PFN_vkAllocationFunction>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#vkAllocationFunction_return_rules rules for return values as >.
 --
 -- = See Also
 --
 -- 'VkAllocationCallbacks'
 type PFN_vkReallocationFunction = Ptr (("pUserData" ::: Ptr ()) -> ("pOriginal" ::: Ptr ()) -> ("size" ::: CSize) -> ("alignment" ::: CSize) -> ("allocationScope" ::: VkSystemAllocationScope) -> IO (Ptr ()))
+
 -- | PFN_vkVoidFunction - Dummy function pointer type returned by queries
 --
 -- = See Also
 --
 -- 'vkGetDeviceProcAddr', 'vkGetInstanceProcAddr'
 type PFN_vkVoidFunction = Ptr (() -> IO ())
+
 -- No documentation found for TopLevel "VK_MAX_MEMORY_HEAPS"
 type VK_MAX_MEMORY_HEAPS = 16
 -- No documentation found for Nested "Integral a => a" "VK_MAX_MEMORY_HEAPS"
 pattern VK_MAX_MEMORY_HEAPS :: Integral a => a
 pattern VK_MAX_MEMORY_HEAPS = 16
+
 -- No documentation found for TopLevel "VK_MAX_MEMORY_TYPES"
 type VK_MAX_MEMORY_TYPES = 32
 -- No documentation found for Nested "Integral a => a" "VK_MAX_MEMORY_TYPES"
 pattern VK_MAX_MEMORY_TYPES :: Integral a => a
 pattern VK_MAX_MEMORY_TYPES = 32
+
 -- No documentation found for TopLevel "VK_MAX_PHYSICAL_DEVICE_NAME_SIZE"
 type VK_MAX_PHYSICAL_DEVICE_NAME_SIZE = 256
 -- No documentation found for Nested "Integral a => a" "VK_MAX_PHYSICAL_DEVICE_NAME_SIZE"
 pattern VK_MAX_PHYSICAL_DEVICE_NAME_SIZE :: Integral a => a
 pattern VK_MAX_PHYSICAL_DEVICE_NAME_SIZE = 256
+
 -- No documentation found for TopLevel "VK_UUID_SIZE"
 type VK_UUID_SIZE = 16
 -- No documentation found for Nested "Integral a => a" "VK_UUID_SIZE"
 pattern VK_UUID_SIZE :: Integral a => a
 pattern VK_UUID_SIZE = 16
+
 -- | VkAllocationCallbacks - Structure containing callback function pointers
 -- for memory allocation
 --
@@ -457,6 +460,9 @@ pattern VK_UUID_SIZE = 16
 --
 -- -   If either of @pfnInternalAllocation@ or @pfnInternalFree@ is not
 --     @NULL@, both /must/ be valid callbacks
+--
+-- Unresolved directive in VkAllocationCallbacks.txt -
+-- include::{generated}\/validity\/structs\/VkAllocationCallbacks.txt[]
 --
 -- = See Also
 --
@@ -512,7 +518,7 @@ pattern VK_UUID_SIZE = 16
 -- 'Graphics.Vulkan.C.Core10.Memory.vkFreeMemory'
 data VkAllocationCallbacks = VkAllocationCallbacks
   { -- | @pUserData@ is a value to be interpreted by the implementation of the
-  -- callbacks. When any of the callbacks in @VkAllocationCallbacks@ are
+  -- callbacks. When any of the callbacks in 'VkAllocationCallbacks' are
   -- called, the Vulkan implementation will pass this value as the first
   -- parameter to the callback. This value /can/ vary each time an allocator
   -- is passed into a command, even when the same object takes an allocator
@@ -562,19 +568,13 @@ instance Zero VkAllocationCallbacks where
                                zero
                                zero
                                zero
+
 -- | VkApplicationInfo - Structure specifying application info
 --
--- == Valid Usage (Implicit)
+-- = Description
 --
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_APPLICATION_INFO@
---
--- -   @pNext@ /must/ be @NULL@
---
--- -   If @pApplicationName@ is not @NULL@, @pApplicationName@ /must/ be a
---     null-terminated UTF-8 string
---
--- -   If @pEngineName@ is not @NULL@, @pEngineName@ /must/ be a
---     null-terminated UTF-8 string
+-- Unresolved directive in VkApplicationInfo.txt -
+-- include::{generated}\/validity\/structs\/VkApplicationInfo.txt[]
 --
 -- = See Also
 --
@@ -600,14 +600,14 @@ data VkApplicationInfo = VkApplicationInfo
   vkEngineVersion :: Word32
   , -- | @apiVersion@ is the version of the Vulkan API against which the
   -- application expects to run, encoded as described in
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#extendingvulkan-coreversions-versionnumbers {html_spec_relative}#extendingvulkan-coreversions-versionnumbers>.
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#extendingvulkan-coreversions-versionnumbers>.
   -- If @apiVersion@ is 0 the implementation /must/ ignore it, otherwise if
   -- the implementation does not support the requested @apiVersion@, or an
   -- effective substitute for @apiVersion@, it /must/ return
-  -- @VK_ERROR_INCOMPATIBLE_DRIVER@. The patch version number specified in
-  -- @apiVersion@ is ignored when creating an instance object. Only the major
-  -- and minor versions of the instance /must/ match those requested in
-  -- @apiVersion@.
+  -- 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_INCOMPATIBLE_DRIVER'. The patch
+  -- version number specified in @apiVersion@ is ignored when creating an
+  -- instance object. Only the major and minor versions of the instance
+  -- /must/ match those requested in @apiVersion@.
   vkApiVersion :: Word32
   }
   deriving (Eq, Show)
@@ -631,13 +631,14 @@ instance Storable VkApplicationInfo where
                 *> poke (ptr `plusPtr` 44) (vkApiVersion (poked :: VkApplicationInfo))
 
 instance Zero VkApplicationInfo where
-  zero = VkApplicationInfo zero
+  zero = VkApplicationInfo VK_STRUCTURE_TYPE_APPLICATION_INFO
                            zero
                            zero
                            zero
                            zero
                            zero
                            zero
+
 -- | Dummy data to tag the 'Ptr' with
 data VkDevice_T
 -- | VkDevice - Opaque handle to a device object
@@ -731,6 +732,7 @@ data VkDevice_T
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkUpdateDescriptorSets',
 -- 'Graphics.Vulkan.C.Core10.Fence.vkWaitForFences'
 type VkDevice = Ptr VkDevice_T
+
 -- | VkDeviceSize - Vulkan device memory size and offsets
 --
 -- = See Also
@@ -767,7 +769,13 @@ type VkDevice = Ptr VkDevice_T
 -- 'Graphics.Vulkan.C.Core10.Query.vkGetQueryPoolResults',
 -- 'Graphics.Vulkan.C.Core10.Memory.vkMapMemory'
 type VkDeviceSize = Word64
+
 -- | VkExtent3D - Structure specifying a three-dimensional extent
+--
+-- = Description
+--
+-- Unresolved directive in VkExtent3D.txt -
+-- include::{generated}\/validity\/structs\/VkExtent3D.txt[]
 --
 -- = See Also
 --
@@ -803,6 +811,7 @@ instance Zero VkExtent3D where
   zero = VkExtent3D zero
                     zero
                     zero
+
 -- ** VkFormatFeatureFlagBits
 
 -- | VkFormatFeatureFlagBits - Bitmask specifying features supported by a
@@ -812,54 +821,61 @@ instance Zero VkExtent3D where
 --
 -- The following bits /may/ be set in @linearTilingFeatures@,
 -- @optimalTilingFeatures@, and
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkDrmFormatModifierPropertiesEXT drmFormatModifierTilingFeatures>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkDrmFormatModifierPropertiesEXT drmFormatModifierTilingFeatures>,
 -- specifying that the features are supported by
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkImage images>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkImage images>
 -- or
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkImageView image views>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkImageView image views>
 -- created with the queried
 -- 'vkGetPhysicalDeviceFormatProperties'::@format@:
 --
--- -   @VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT@ specifies that an image view
+-- -   'VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT' specifies that an image view
 --     /can/ be
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-sampledimage sampled from>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-sampledimage sampled from>.
 --
--- -   @VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT@ specifies that an image view
+-- -   'VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT' specifies that an image view
 --     /can/ be used as a
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storageimage storage images>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storageimage storage images>.
 --
--- -   @VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT@ specifies that an image
+-- -   'VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT' specifies that an image
 --     view /can/ be used as storage image that supports atomic operations.
 --
--- -   @VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT@ specifies that an image
+-- -   'VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT' specifies that an image
 --     view /can/ be used as a framebuffer color attachment and as an input
 --     attachment.
 --
--- -   @VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT@ specifies that an
+-- -   'VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT' specifies that an
 --     image view /can/ be used as a framebuffer color attachment that
 --     supports blending and as an input attachment.
 --
--- -   @VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT@ specifies that an
+-- -   'VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT' specifies that an
 --     image view /can/ be used as a framebuffer depth\/stencil attachment
 --     and as an input attachment.
 --
--- -   @VK_FORMAT_FEATURE_BLIT_SRC_BIT@ specifies that an image /can/ be
---     used as @srcImage@ for the @vkCmdBlitImage@ command.
+-- -   'VK_FORMAT_FEATURE_BLIT_SRC_BIT' specifies that an image /can/ be
+--     used as @srcImage@ for the
+--     'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBlitImage'
+--     command.
 --
--- -   @VK_FORMAT_FEATURE_BLIT_DST_BIT@ specifies that an image /can/ be
---     used as @dstImage@ for the @vkCmdBlitImage@ command.
+-- -   'VK_FORMAT_FEATURE_BLIT_DST_BIT' specifies that an image /can/ be
+--     used as @dstImage@ for the
+--     'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBlitImage'
+--     command.
 --
--- -   @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT@ specifies that
---     if @VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT@ is also set, an image view
+-- -   'VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT' specifies that
+--     if 'VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT' is also set, an image view
 --     /can/ be used with a sampler that has either of @magFilter@ or
---     @minFilter@ set to @VK_FILTER_LINEAR@, or @mipmapMode@ set to
---     @VK_SAMPLER_MIPMAP_MODE_LINEAR@. If @VK_FORMAT_FEATURE_BLIT_SRC_BIT@
---     is also set, an image can be used as the @srcImage@ to
+--     @minFilter@ set to
+--     'Graphics.Vulkan.C.Core10.Sampler.VK_FILTER_LINEAR', or @mipmapMode@
+--     set to
+--     'Graphics.Vulkan.C.Core10.Sampler.VK_SAMPLER_MIPMAP_MODE_LINEAR'. If
+--     'VK_FORMAT_FEATURE_BLIT_SRC_BIT' is also set, an image can be used
+--     as the @srcImage@ to
 --     'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBlitImage' with
---     a @filter@ of @VK_FILTER_LINEAR@. This bit /must/ only be exposed
---     for formats that also support the
---     @VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT@ or
---     @VK_FORMAT_FEATURE_BLIT_SRC_BIT@.
+--     a @filter@ of 'Graphics.Vulkan.C.Core10.Sampler.VK_FILTER_LINEAR'.
+--     This bit /must/ only be exposed for formats that also support the
+--     'VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT' or
+--     'VK_FORMAT_FEATURE_BLIT_SRC_BIT'.
 --
 --     If the format being queried is a depth\/stencil format, this bit
 --     only specifies that the depth aspect (not the stencil aspect) of an
@@ -874,108 +890,125 @@ instance Zero VkExtent3D where
 --     or a weighted average of, the number of comparison passes or
 --     failures.
 --
--- -   @VK_FORMAT_FEATURE_TRANSFER_SRC_BIT@ specifies that an image /can/
---     be used as a source image for
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#copies copy commands>.
+-- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.VK_FORMAT_FEATURE_TRANSFER_SRC_BIT'
+--     specifies that an image /can/ be used as a source image for
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#copies copy commands>.
 --
--- -   @VK_FORMAT_FEATURE_TRANSFER_DST_BIT@ specifies that an image /can/
---     be used as a destination image for
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#copies copy commands>
+-- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.VK_FORMAT_FEATURE_TRANSFER_DST_BIT'
+--     specifies that an image /can/ be used as a destination image for
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#copies copy commands>
 --     and
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#clears clear commands>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#clears clear commands>.
 --
--- -   @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT@ specifies
---     @VkImage@ /can/ be used as a sampled image with a min or max
+-- -   'Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax.VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT'
+--     specifies 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' /can/
+--     be used as a sampled image with a min or max
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax.VkSamplerReductionModeEXT'.
 --     This bit /must/ only be exposed for formats that also support the
---     @VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT@.
+--     'VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT'.
 --
--- -   @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT@ specifies
---     that @VkImage@ /can/ be used with a sampler that has either of
---     @magFilter@ or @minFilter@ set to @VK_FILTER_CUBIC_EXT@, or be the
---     source image for a blit with @filter@ set to @VK_FILTER_CUBIC_EXT@.
+-- -   'Graphics.Vulkan.C.Extensions.VK_EXT_filter_cubic.VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT'
+--     specifies that 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage'
+--     /can/ be used with a sampler that has either of @magFilter@ or
+--     @minFilter@ set to
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_filter_cubic.VK_FILTER_CUBIC_EXT',
+--     or be the source image for a blit with @filter@ set to
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_filter_cubic.VK_FILTER_CUBIC_EXT'.
 --     This bit /must/ only be exposed for formats that also support the
---     @VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT@. If the format being queried
+--     'VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT'. If the format being queried
 --     is a depth\/stencil format, this only specifies that the depth
 --     aspect is cubic filterable.
 --
--- -   @VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT@ specifies that an
---     application /can/ define a
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>
+-- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT'
+--     specifies that an application /can/ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>
 --     using this format as a source, and that an image of this format
---     /can/ be used with a @VkSamplerYcbcrConversionCreateInfo@
+--     /can/ be used with a
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'
 --     @xChromaOffset@ and\/or @yChromaOffset@ of
---     @VK_CHROMA_LOCATION_MIDPOINT@. Otherwise both @xChromaOffset@ and
---     @yChromaOffset@ /must/ be @VK_CHROMA_LOCATION_COSITED_EVEN@. If a
---     format does not incorporate chroma downsampling (it is not a “422”
---     or “420” format) but the implementation supports sampler Y’CBCR
---     conversion for this format, the implementation /must/ set
---     @VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT@.
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_CHROMA_LOCATION_MIDPOINT'.
+--     Otherwise both @xChromaOffset@ and @yChromaOffset@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_CHROMA_LOCATION_COSITED_EVEN'.
+--     If a format does not incorporate chroma downsampling (it is not a
+--     “422” or “420” format) but the implementation supports sampler
+--     Y’CBCR conversion for this format, the implementation /must/ set
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT'.
 --
--- -   @VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT@ specifies that an
---     application /can/ define a
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>
+-- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT'
+--     specifies that an application /can/ define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>
 --     using this format as a source, and that an image of this format
---     /can/ be used with a @VkSamplerYcbcrConversionCreateInfo@
+--     /can/ be used with a
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'
 --     @xChromaOffset@ and\/or @yChromaOffset@ of
---     @VK_CHROMA_LOCATION_COSITED_EVEN@. Otherwise both @xChromaOffset@
---     and @yChromaOffset@ /must/ be @VK_CHROMA_LOCATION_MIDPOINT@. If
---     neither @VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT@ nor
---     @VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT@ is set, the
---     application /must/ not define a
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_CHROMA_LOCATION_COSITED_EVEN'.
+--     Otherwise both @xChromaOffset@ and @yChromaOffset@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_CHROMA_LOCATION_MIDPOINT'.
+--     If neither
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT'
+--     nor
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT'
+--     is set, the application /must/ not define a
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>
 --     using this format as a source.
 --
--- -   @VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT@
+-- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT'
 --     specifies that the format can do linear sampler filtering
 --     (min\/magFilter) whilst sampler Y’CBCR conversion is enabled.
 --
--- -   @VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT@
+-- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT'
 --     specifies that the format can have different chroma, min, and mag
 --     filters.
 --
--- -   @VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT@
+-- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT'
 --     specifies that reconstruction is explicit, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures-chroma-reconstruction {html_spec_relative}#textures-chroma-reconstruction>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures-chroma-reconstruction>.
 --     If this bit is not present, reconstruction is implicit by default.
 --
--- -   @VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT@
+-- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT'
 --     specifies that reconstruction /can/ be forcibly made explicit by
 --     setting
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'::@forceExplicitReconstruction@
---     to @VK_TRUE@.
+--     to 'Graphics.Vulkan.C.Core10.Core.VK_TRUE'.
 --
--- -   @VK_FORMAT_FEATURE_DISJOINT_BIT@ specifies that a multi-planar image
---     /can/ have the @VK_IMAGE_CREATE_DISJOINT_BIT@ set during image
---     creation. An implementation /must/ not set
---     @VK_FORMAT_FEATURE_DISJOINT_BIT@ for /single-plane formats/.
+-- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_DISJOINT_BIT'
+--     specifies that a multi-planar image /can/ have the
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_CREATE_DISJOINT_BIT'
+--     set during image creation. An implementation /must/ not set
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_DISJOINT_BIT'
+--     for /single-plane formats/.
 --
--- -   @VK_FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT@ specifies that an
---     image view /can/ be used as a
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>.
+-- -   'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT'
+--     specifies that an image view /can/ be used as a
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>.
 --
 -- The following bits /may/ be set in @bufferFeatures@, specifying that the
 -- features are supported by
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkBuffer buffers>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkBuffer buffers>
 -- or
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkBufferView buffer views>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkBufferView buffer views>
 -- created with the queried 'vkGetPhysicalDeviceProperties'::@format@:
 --
--- -   @VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT@ specifies that the
+-- -   'VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT' specifies that the
 --     format /can/ be used to create a buffer view that /can/ be bound to
---     a @VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER@ descriptor.
+--     a
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
+--     descriptor.
 --
--- -   @VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT@ specifies that the
+-- -   'VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT' specifies that the
 --     format /can/ be used to create a buffer view that /can/ be bound to
---     a @VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER@ descriptor.
+--     a
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+--     descriptor.
 --
--- -   @VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT@ specifies that
+-- -   'VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT' specifies that
 --     atomic operations are supported on
---     @VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER@ with this format.
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+--     with this format.
 --
--- -   @VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT@ specifies that the format
+-- -   'VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT' specifies that the format
 --     /can/ be used as a vertex attribute format
---     (@VkVertexInputAttributeDescription@::@format@).
+--     ('Graphics.Vulkan.C.Core10.Pipeline.VkVertexInputAttributeDescription'::@format@).
 --
 -- = See Also
 --
@@ -1055,68 +1088,119 @@ instance Read VkFormatFeatureFlagBits where
                         )
                     )
 
--- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT"
+-- | 'VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT' specifies that an image view /can/
+-- be
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-sampledimage sampled from>.
 pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT = VkFormatFeatureFlagBits 0x00000001
 
--- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT"
+-- | 'VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT' specifies that an image view /can/
+-- be used as a
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storageimage storage images>.
 pattern VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT = VkFormatFeatureFlagBits 0x00000002
 
--- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT"
+-- | 'VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT' specifies that an image
+-- view /can/ be used as storage image that supports atomic operations.
 pattern VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT = VkFormatFeatureFlagBits 0x00000004
 
--- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT"
+-- | 'VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT' specifies that the format
+-- /can/ be used to create a buffer view that /can/ be bound to a
+-- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
+-- descriptor.
 pattern VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT = VkFormatFeatureFlagBits 0x00000008
 
--- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT"
+-- | 'VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT' specifies that the format
+-- /can/ be used to create a buffer view that /can/ be bound to a
+-- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+-- descriptor.
 pattern VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT = VkFormatFeatureFlagBits 0x00000010
 
--- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT"
+-- | 'VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT' specifies that
+-- atomic operations are supported on
+-- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+-- with this format.
 pattern VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT = VkFormatFeatureFlagBits 0x00000020
 
--- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT"
+-- | 'VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT' specifies that the format /can/ be
+-- used as a vertex attribute format
+-- ('Graphics.Vulkan.C.Core10.Pipeline.VkVertexInputAttributeDescription'::@format@).
 pattern VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_VERTEX_BUFFER_BIT = VkFormatFeatureFlagBits 0x00000040
 
--- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT"
+-- | 'VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT' specifies that an image view
+-- /can/ be used as a framebuffer color attachment and as an input
+-- attachment.
 pattern VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT = VkFormatFeatureFlagBits 0x00000080
 
--- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT"
+-- | 'VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT' specifies that an image
+-- view /can/ be used as a framebuffer color attachment that supports
+-- blending and as an input attachment.
 pattern VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT = VkFormatFeatureFlagBits 0x00000100
 
--- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT"
+-- | 'VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT' specifies that an image
+-- view /can/ be used as a framebuffer depth\/stencil attachment and as an
+-- input attachment.
 pattern VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT = VkFormatFeatureFlagBits 0x00000200
 
--- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_BLIT_SRC_BIT"
+-- | 'VK_FORMAT_FEATURE_BLIT_SRC_BIT' specifies that an image /can/ be used
+-- as @srcImage@ for the
+-- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBlitImage' command.
 pattern VK_FORMAT_FEATURE_BLIT_SRC_BIT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_BLIT_SRC_BIT = VkFormatFeatureFlagBits 0x00000400
 
--- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_BLIT_DST_BIT"
+-- | 'VK_FORMAT_FEATURE_BLIT_DST_BIT' specifies that an image /can/ be used
+-- as @dstImage@ for the
+-- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBlitImage' command.
 pattern VK_FORMAT_FEATURE_BLIT_DST_BIT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_BLIT_DST_BIT = VkFormatFeatureFlagBits 0x00000800
 
--- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT"
+-- | 'VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT' specifies that if
+-- 'VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT' is also set, an image view /can/
+-- be used with a sampler that has either of @magFilter@ or @minFilter@ set
+-- to 'Graphics.Vulkan.C.Core10.Sampler.VK_FILTER_LINEAR', or @mipmapMode@
+-- set to 'Graphics.Vulkan.C.Core10.Sampler.VK_SAMPLER_MIPMAP_MODE_LINEAR'.
+-- If 'VK_FORMAT_FEATURE_BLIT_SRC_BIT' is also set, an image can be used as
+-- the @srcImage@ to
+-- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBlitImage' with a
+-- @filter@ of 'Graphics.Vulkan.C.Core10.Sampler.VK_FILTER_LINEAR'. This
+-- bit /must/ only be exposed for formats that also support the
+-- 'VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT' or
+-- 'VK_FORMAT_FEATURE_BLIT_SRC_BIT'.
+--
+-- If the format being queried is a depth\/stencil format, this bit only
+-- specifies that the depth aspect (not the stencil aspect) of an image of
+-- this format supports linear filtering, and that linear filtering of the
+-- depth aspect is supported whether depth compare is enabled in the
+-- sampler or not. If this bit is not present, linear filtering with depth
+-- compare disabled is unsupported and linear filtering with depth compare
+-- enabled is supported, but /may/ compute the filtered value in an
+-- implementation-dependent manner which differs from the normal rules of
+-- linear filtering. The resulting value /must/ be in the range [0,1] and
+-- /should/ be proportional to, or a weighted average of, the number of
+-- comparison passes or failures.
 pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = VkFormatFeatureFlagBits 0x00001000
+
 -- | VkFormatFeatureFlags - Bitmask of VkFormatFeatureFlagBits
 --
 -- = Description
 --
--- @VkFormatFeatureFlags@ is a bitmask type for setting a mask of zero or
+-- 'VkFormatFeatureFlags' is a bitmask type for setting a mask of zero or
 -- more 'VkFormatFeatureFlagBits'.
 --
 -- = See Also
 --
 -- 'VkFormatFeatureFlagBits', 'VkFormatProperties'
 type VkFormatFeatureFlags = VkFormatFeatureFlagBits
+
 -- | VkFormatProperties - Structure specifying image format properties
 --
 -- = Description
@@ -1131,7 +1215,10 @@ type VkFormatFeatureFlags = VkFormatFeatureFlagBits
 --
 -- If @format@ is not a multi-plane format then @linearTilingFeatures@ and
 -- @optimalTilingFeatures@ /must/ not contain
--- @VK_FORMAT_FEATURE_DISJOINT_BIT@.
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_DISJOINT_BIT'.
+--
+-- Unresolved directive in VkFormatProperties.txt -
+-- include::{generated}\/validity\/structs\/VkFormatProperties.txt[]
 --
 -- = See Also
 --
@@ -1141,11 +1228,11 @@ type VkFormatFeatureFlags = VkFormatFeatureFlagBits
 data VkFormatProperties = VkFormatProperties
   { -- | @linearTilingFeatures@ is a bitmask of 'VkFormatFeatureFlagBits'
   -- specifying features supported by images created with a @tiling@
-  -- parameter of @VK_IMAGE_TILING_LINEAR@.
+  -- parameter of 'VK_IMAGE_TILING_LINEAR'.
   vkLinearTilingFeatures :: VkFormatFeatureFlags
   , -- | @optimalTilingFeatures@ is a bitmask of 'VkFormatFeatureFlagBits'
   -- specifying features supported by images created with a @tiling@
-  -- parameter of @VK_IMAGE_TILING_OPTIMAL@.
+  -- parameter of 'VK_IMAGE_TILING_OPTIMAL'.
   vkOptimalTilingFeatures :: VkFormatFeatureFlags
   , -- | @bufferFeatures@ is a bitmask of 'VkFormatFeatureFlagBits' specifying
   -- features supported by buffers.
@@ -1167,6 +1254,7 @@ instance Zero VkFormatProperties where
   zero = VkFormatProperties zero
                             zero
                             zero
+
 -- ** VkImageCreateFlagBits
 
 -- | VkImageCreateFlagBits - Bitmask specifying additional parameters of an
@@ -1174,114 +1262,10 @@ instance Zero VkFormatProperties where
 --
 -- = Description
 --
--- -   @VK_IMAGE_CREATE_SPARSE_BINDING_BIT@ specifies that the image will
---     be backed using sparse memory binding.
---
--- -   @VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT@ specifies that the image
---     /can/ be partially backed using sparse memory binding. Images
---     created with this flag /must/ also be created with the
---     @VK_IMAGE_CREATE_SPARSE_BINDING_BIT@ flag.
---
--- -   @VK_IMAGE_CREATE_SPARSE_ALIASED_BIT@ specifies that the image will
---     be backed using sparse memory binding with memory ranges that might
---     also simultaneously be backing another image (or another portion of
---     the same image). Images created with this flag /must/ also be
---     created with the @VK_IMAGE_CREATE_SPARSE_BINDING_BIT@ flag
---
--- -   @VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT@ specifies that the image /can/
---     be used to create a @VkImageView@ with a different format from the
---     image. For
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
---     formats, @VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT@ specifies that a
---     @VkImageView@ can be created of a /plane/ of the image.
---
--- -   @VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT@ specifies that the image /can/
---     be used to create a @VkImageView@ of type @VK_IMAGE_VIEW_TYPE_CUBE@
---     or @VK_IMAGE_VIEW_TYPE_CUBE_ARRAY@.
---
--- -   @VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT@ specifies that the image
---     /can/ be used to create a @VkImageView@ of type
---     @VK_IMAGE_VIEW_TYPE_2D@ or @VK_IMAGE_VIEW_TYPE_2D_ARRAY@.
---
--- -   @VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT@ specifies that the
---     image /can/ be used with a non-zero value of the
---     @splitInstanceBindRegionCount@ member of a
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VkBindImageMemoryDeviceGroupInfo'
---     structure passed into
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.vkBindImageMemory2'.
---     This flag also has the effect of making the image use the standard
---     sparse image block dimensions.
---
--- -   @VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT@ specifies that the
---     image having a compressed format /can/ be used to create a
---     @VkImageView@ with an uncompressed format where each texel in the
---     image view corresponds to a compressed texel block of the image.
---
--- -   @VK_IMAGE_CREATE_EXTENDED_USAGE_BIT@ specifies that the image /can/
---     be created with usage flags that are not supported for the format
---     the image is created with but are supported for at least one format
---     a @VkImageView@ created from the image /can/ have.
---
--- -   @VK_IMAGE_CREATE_DISJOINT_BIT@ specifies that an image with a
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
---     /must/ have each plane separately bound to memory, rather than
---     having a single memory binding for the whole image; the presence of
---     this bit distinguishes a /disjoint image/ from an image without this
---     bit set.
---
--- -   @VK_IMAGE_CREATE_ALIAS_BIT@ specifies that two images created with
---     the same creation parameters and aliased to the same memory /can/
---     interpret the contents of the memory consistently with each other,
---     subject to the rules described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-memory-aliasing Memory Aliasing>
---     section. This flag further specifies that each plane of a /disjoint/
---     image /can/ share an in-memory non-linear representation with
---     single-plane images, and that a single-plane image /can/ share an
---     in-memory non-linear representation with a plane of a multi-planar
---     disjoint image, according to the rules in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-compatible-planes {html_spec_relative}#formats-compatible-planes>.
---     If the @pNext@ chain includes a
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryImageCreateInfo'
---     or
---     'Graphics.Vulkan.C.Extensions.VK_NV_external_memory.VkExternalMemoryImageCreateInfoNV'
---     structure whose @handleTypes@ member is not @0@, it is as if
---     @VK_IMAGE_CREATE_ALIAS_BIT@ is set.
---
--- -   @VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT@
---     specifies that an image with a depth or depth\/stencil format /can/
---     be used with custom sample locations when used as a depth\/stencil
---     attachment.
---
--- -   @VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV@ specifies that the image is
---     a
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-images-corner-sampled corner-sampled image>.
---
--- -   @VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT@ specifies that an image /can/
---     be in a subsampled format which /may/ be more optimal when written
---     as an attachment by a render pass that has a fragment density map
---     attachment. Accessing a subsampled image has additional
---     considerations:
---
---     -   Image data read as an image sampler is undefined if the sampler
---         was not created with @flags@ containing
---         @VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT@ or was not sampled
---         through the use of a combined image sampler with an immutable
---         sampler in @VkDescriptorSetLayoutBinding@.
---
---     -   Image data read with an input attachment is undefined if the
---         contents were not written as an attachment in an earlier subpass
---         of the same render pass.
---
---     -   Image data read with load operations /may/ be resampled to the
---         fragment density of the render pass.
---
---     -   Image contents outside of the render area become undefined if
---         the image is stored as a render pass attachment.
---
 -- See
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#sparsememory-sparseresourcefeatures Sparse Resource Features>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#sparsememory-sparseresourcefeatures Sparse Resource Features>
 -- and
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#sparsememory-physicalfeatures Sparse Physical Device Features>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#sparsememory-physicalfeatures Sparse Physical Device Features>
 -- for more details.
 --
 -- = See Also
@@ -1334,30 +1318,48 @@ instance Read VkImageCreateFlagBits where
                         )
                     )
 
--- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_SPARSE_BINDING_BIT"
+-- | 'VK_IMAGE_CREATE_SPARSE_BINDING_BIT' specifies that the image will be
+-- backed using sparse memory binding.
 pattern VK_IMAGE_CREATE_SPARSE_BINDING_BIT :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_SPARSE_BINDING_BIT = VkImageCreateFlagBits 0x00000001
 
--- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT"
+-- | 'VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT' specifies that the image /can/ be
+-- partially backed using sparse memory binding. Images created with this
+-- flag /must/ also be created with the
+-- 'VK_IMAGE_CREATE_SPARSE_BINDING_BIT' flag.
 pattern VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT = VkImageCreateFlagBits 0x00000002
 
--- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_SPARSE_ALIASED_BIT"
+-- | 'VK_IMAGE_CREATE_SPARSE_ALIASED_BIT' specifies that the image will be
+-- backed using sparse memory binding with memory ranges that might also
+-- simultaneously be backing another image (or another portion of the same
+-- image). Images created with this flag /must/ also be created with the
+-- 'VK_IMAGE_CREATE_SPARSE_BINDING_BIT' flag
 pattern VK_IMAGE_CREATE_SPARSE_ALIASED_BIT :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_SPARSE_ALIASED_BIT = VkImageCreateFlagBits 0x00000004
 
--- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT"
+-- | 'VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT' specifies that the image /can/ be
+-- used to create a 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' with a
+-- different format from the image. For
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
+-- formats, 'VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT' specifies that a
+-- 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' can be created of a
+-- /plane/ of the image.
 pattern VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT = VkImageCreateFlagBits 0x00000008
 
--- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT"
+-- | 'VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT' specifies that the image /can/ be
+-- used to create a 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' of
+-- type 'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_CUBE' or
+-- 'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_CUBE_ARRAY'.
 pattern VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT = VkImageCreateFlagBits 0x00000010
+
 -- | VkImageCreateFlags - Bitmask of VkImageCreateFlagBits
 --
 -- = Description
 --
--- @VkImageCreateFlags@ is a bitmask type for setting a mask of zero or
+-- 'VkImageCreateFlags' is a bitmask type for setting a mask of zero or
 -- more 'VkImageCreateFlagBits'.
 --
 -- = See Also
@@ -1367,13 +1369,14 @@ pattern VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT = VkImageCreateFlagBits 0x00000010
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2',
 -- 'vkGetPhysicalDeviceImageFormatProperties'
 type VkImageCreateFlags = VkImageCreateFlagBits
+
 -- | VkImageFormatProperties - Structure specifying an image format
 -- properties
 --
 -- = Members
 --
 -- -   @maxExtent@ are the maximum image dimensions. See the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-extentperimagetype Allowed Extent Values>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-extentperimagetype Allowed Extent Values>
 --     section below for how these values are constrained by @type@.
 --
 -- -   @maxMipLevels@ is the maximum number of mipmap levels.
@@ -1382,11 +1385,12 @@ type VkImageCreateFlags = VkImageCreateFlagBits
 --     @maxExtent.height@, and @maxExtent.depth@, except when one of the
 --     following conditions is true, in which case it /may/ instead be @1@:
 --
---     -   @vkGetPhysicalDeviceImageFormatProperties@::@tiling@ was
---         @VK_IMAGE_TILING_LINEAR@
+--     -   'vkGetPhysicalDeviceImageFormatProperties'::@tiling@ was
+--         'VK_IMAGE_TILING_LINEAR'
 --
 --     -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2'::@tiling@
---         was @VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT@
+--         was
+--         'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
 --
 --     -   the
 --         'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2'::@pNext@
@@ -1396,9 +1400,10 @@ type VkImageCreateFlags = VkImageCreateFlagBits
 --         which mipmap image support is not required
 --
 --     -   image @format@ is one of those listed in
---         <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion {html_spec_relative}#formats-requiring-sampler-ycbcr-conversion>
+--         <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>
 --
---     -   @flags@ contains @VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT@
+--     -   @flags@ contains
+--         'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
 --
 -- -   @maxArrayLayers@ is the maximum number of array layers.
 --     @maxArrayLayers@ /must/ be no less than
@@ -1406,20 +1411,21 @@ type VkImageCreateFlags = VkImageCreateFlagBits
 --     the following conditions is true, in which case it /may/ instead be
 --     @1@:
 --
---     -   @tiling@ is @VK_IMAGE_TILING_LINEAR@
+--     -   @tiling@ is 'VK_IMAGE_TILING_LINEAR'
 --
---     -   @tiling@ is @VK_IMAGE_TILING_OPTIMAL@ and @type@ is
---         @VK_IMAGE_TYPE_3D@
+--     -   @tiling@ is 'VK_IMAGE_TILING_OPTIMAL' and @type@ is
+--         'VK_IMAGE_TYPE_3D'
 --
 --     -   @format@ is one of those listed in
---         <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion {html_spec_relative}#formats-requiring-sampler-ycbcr-conversion>
+--         <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>
 --
--- -   If @tiling@ is @VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT@, then
---     @maxArrayLayers@ /must/ not be 0.
+-- -   If @tiling@ is
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
+--     then @maxArrayLayers@ /must/ not be 0.
 --
 -- -   @sampleCounts@ is a bitmask of 'VkSampleCountFlagBits' specifying
 --     all the supported sample counts for this image as described
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-supported-sample-counts below>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-supported-sample-counts below>.
 --
 -- -   @maxResourceSize@ is an upper bound on the total image size in
 --     bytes, inclusive of all image subresources. Implementations /may/
@@ -1435,26 +1441,30 @@ type VkImageCreateFlags = VkImageCreateFlagBits
 -- to compare that size against @maxResourceSize@. If an application
 -- attempts to create an image that exceeds this limit, the creation will
 -- fail and 'Graphics.Vulkan.C.Core10.Image.vkCreateImage' will return
--- @VK_ERROR_OUT_OF_DEVICE_MEMORY@. While the advertised limit /must/ be at
--- least 231, it /may/ not be possible to create an image that approaches
--- that size, particularly for @VK_IMAGE_TYPE_1D@.
+-- 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'. While the
+-- advertised limit /must/ be at least 231, it /may/ not be possible to
+-- create an image that approaches that size, particularly for
+-- 'VK_IMAGE_TYPE_1D'.
 --
 -- If the combination of parameters to
--- @vkGetPhysicalDeviceImageFormatProperties@ is not supported by the
+-- 'vkGetPhysicalDeviceImageFormatProperties' is not supported by the
 -- implementation for use in
 -- 'Graphics.Vulkan.C.Core10.Image.vkCreateImage', then all members of
--- @VkImageFormatProperties@ will be filled with zero.
+-- 'VkImageFormatProperties' will be filled with zero.
 --
 -- __Note__
 --
--- Filling @VkImageFormatProperties@ with zero for unsupported formats is
+-- Filling 'VkImageFormatProperties' with zero for unsupported formats is
 -- an exception to the usual rule that output structures have undefined
 -- contents on error. This exception was unintentional, but is preserved
 -- for backwards compatibility.
 --
+-- Unresolved directive in VkImageFormatProperties.txt -
+-- include::{generated}\/validity\/structs\/VkImageFormatProperties.txt[]
+--
 -- = See Also
 --
--- @VkDeviceSize@, 'VkExtent3D',
+-- 'VkDeviceSize', 'VkExtent3D',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkImageFormatProperties2',
 -- 'VkSampleCountFlags', 'vkGetPhysicalDeviceImageFormatProperties'
 data VkImageFormatProperties = VkImageFormatProperties
@@ -1491,6 +1501,7 @@ instance Zero VkImageFormatProperties where
                                  zero
                                  zero
                                  zero
+
 -- ** VkImageTiling
 
 -- | VkImageTiling - Specifies the tiling arrangement of data in an image
@@ -1525,16 +1536,17 @@ instance Read VkImageTiling where
                         )
                     )
 
--- | @VK_IMAGE_TILING_OPTIMAL@ specifies optimal tiling (texels are laid out
+-- | 'VK_IMAGE_TILING_OPTIMAL' specifies optimal tiling (texels are laid out
 -- in an implementation-dependent arrangement, for more optimal memory
 -- access).
 pattern VK_IMAGE_TILING_OPTIMAL :: VkImageTiling
 pattern VK_IMAGE_TILING_OPTIMAL = VkImageTiling 0
 
--- | @VK_IMAGE_TILING_LINEAR@ specifies linear tiling (texels are laid out in
+-- | 'VK_IMAGE_TILING_LINEAR' specifies linear tiling (texels are laid out in
 -- memory in row-major order, possibly with some padding on each row).
 pattern VK_IMAGE_TILING_LINEAR :: VkImageTiling
 pattern VK_IMAGE_TILING_LINEAR = VkImageTiling 1
+
 -- ** VkImageType
 
 -- | VkImageType - Specifies the type of an image object
@@ -1567,17 +1579,18 @@ instance Read VkImageType where
                         )
                     )
 
--- | @VK_IMAGE_TYPE_1D@ specifies a one-dimensional image.
+-- | 'VK_IMAGE_TYPE_1D' specifies a one-dimensional image.
 pattern VK_IMAGE_TYPE_1D :: VkImageType
 pattern VK_IMAGE_TYPE_1D = VkImageType 0
 
--- | @VK_IMAGE_TYPE_2D@ specifies a two-dimensional image.
+-- | 'VK_IMAGE_TYPE_2D' specifies a two-dimensional image.
 pattern VK_IMAGE_TYPE_2D :: VkImageType
 pattern VK_IMAGE_TYPE_2D = VkImageType 1
 
--- | @VK_IMAGE_TYPE_3D@ specifies a three-dimensional image.
+-- | 'VK_IMAGE_TYPE_3D' specifies a three-dimensional image.
 pattern VK_IMAGE_TYPE_3D :: VkImageType
 pattern VK_IMAGE_TYPE_3D = VkImageType 2
+
 -- ** VkImageUsageFlagBits
 
 -- | VkImageUsageFlagBits - Bitmask specifying intended usage of an image
@@ -1634,64 +1647,75 @@ instance Read VkImageUsageFlagBits where
                         )
                     )
 
--- | @VK_IMAGE_USAGE_TRANSFER_SRC_BIT@ specifies that the image /can/ be used
+-- | 'VK_IMAGE_USAGE_TRANSFER_SRC_BIT' specifies that the image /can/ be used
 -- as the source of a transfer command.
 pattern VK_IMAGE_USAGE_TRANSFER_SRC_BIT :: VkImageUsageFlagBits
 pattern VK_IMAGE_USAGE_TRANSFER_SRC_BIT = VkImageUsageFlagBits 0x00000001
 
--- | @VK_IMAGE_USAGE_TRANSFER_DST_BIT@ specifies that the image /can/ be used
+-- | 'VK_IMAGE_USAGE_TRANSFER_DST_BIT' specifies that the image /can/ be used
 -- as the destination of a transfer command.
 pattern VK_IMAGE_USAGE_TRANSFER_DST_BIT :: VkImageUsageFlagBits
 pattern VK_IMAGE_USAGE_TRANSFER_DST_BIT = VkImageUsageFlagBits 0x00000002
 
--- | @VK_IMAGE_USAGE_SAMPLED_BIT@ specifies that the image /can/ be used to
--- create a @VkImageView@ suitable for occupying a @VkDescriptorSet@ slot
--- either of type @VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE@ or
--- @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@, and be sampled by a shader.
+-- | 'VK_IMAGE_USAGE_SAMPLED_BIT' specifies that the image /can/ be used to
+-- create a 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' suitable for
+-- occupying a 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSet'
+-- slot either of type
+-- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE'
+-- or
+-- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
+-- and be sampled by a shader.
 pattern VK_IMAGE_USAGE_SAMPLED_BIT :: VkImageUsageFlagBits
 pattern VK_IMAGE_USAGE_SAMPLED_BIT = VkImageUsageFlagBits 0x00000004
 
--- | @VK_IMAGE_USAGE_STORAGE_BIT@ specifies that the image /can/ be used to
--- create a @VkImageView@ suitable for occupying a @VkDescriptorSet@ slot
--- of type @VK_DESCRIPTOR_TYPE_STORAGE_IMAGE@.
+-- | 'VK_IMAGE_USAGE_STORAGE_BIT' specifies that the image /can/ be used to
+-- create a 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' suitable for
+-- occupying a 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSet'
+-- slot of type
+-- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE'.
 pattern VK_IMAGE_USAGE_STORAGE_BIT :: VkImageUsageFlagBits
 pattern VK_IMAGE_USAGE_STORAGE_BIT = VkImageUsageFlagBits 0x00000008
 
--- | @VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT@ specifies that the image /can/ be
--- used to create a @VkImageView@ suitable for use as a color or resolve
--- attachment in a @VkFramebuffer@.
+-- | 'VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT' specifies that the image /can/ be
+-- used to create a 'Graphics.Vulkan.C.Core10.ImageView.VkImageView'
+-- suitable for use as a color or resolve attachment in a
+-- 'Graphics.Vulkan.C.Core10.Pass.VkFramebuffer'.
 pattern VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT :: VkImageUsageFlagBits
 pattern VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT = VkImageUsageFlagBits 0x00000010
 
--- | @VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT@ specifies that the image
--- /can/ be used to create a @VkImageView@ suitable for use as a
+-- | 'VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT' specifies that the image
+-- /can/ be used to create a
+-- 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' suitable for use as a
 -- depth\/stencil or depth\/stencil resolve attachment in a
--- @VkFramebuffer@.
+-- 'Graphics.Vulkan.C.Core10.Pass.VkFramebuffer'.
 pattern VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT :: VkImageUsageFlagBits
 pattern VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT = VkImageUsageFlagBits 0x00000020
 
--- | @VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT@ specifies that the memory
+-- | 'VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT' specifies that the memory
 -- bound to this image will have been allocated with the
--- @VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT@ (see
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory {html_spec_relative}#memory>
+-- 'VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT' (see
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory>
 -- for more detail). This bit /can/ be set for any image that /can/ be used
--- to create a @VkImageView@ suitable for use as a color, resolve,
--- depth\/stencil, or input attachment.
+-- to create a 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' suitable
+-- for use as a color, resolve, depth\/stencil, or input attachment.
 pattern VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT :: VkImageUsageFlagBits
 pattern VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT = VkImageUsageFlagBits 0x00000040
 
--- | @VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT@ specifies that the image /can/ be
--- used to create a @VkImageView@ suitable for occupying @VkDescriptorSet@
--- slot of type @VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT@; be read from a
--- shader as an input attachment; and be used as an input attachment in a
--- framebuffer.
+-- | 'VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT' specifies that the image /can/ be
+-- used to create a 'Graphics.Vulkan.C.Core10.ImageView.VkImageView'
+-- suitable for occupying
+-- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSet' slot of type
+-- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT';
+-- be read from a shader as an input attachment; and be used as an input
+-- attachment in a framebuffer.
 pattern VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT :: VkImageUsageFlagBits
 pattern VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = VkImageUsageFlagBits 0x00000080
+
 -- | VkImageUsageFlags - Bitmask of VkImageUsageFlagBits
 --
 -- = Description
 --
--- @VkImageUsageFlags@ is a bitmask type for setting a mask of zero or more
+-- 'VkImageUsageFlags' is a bitmask type for setting a mask of zero or more
 -- 'VkImageUsageFlagBits'.
 --
 -- = See Also
@@ -1704,6 +1728,7 @@ pattern VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = VkImageUsageFlagBits 0x00000080
 -- 'vkGetPhysicalDeviceImageFormatProperties',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.vkGetPhysicalDeviceSparseImageFormatProperties'
 type VkImageUsageFlags = VkImageUsageFlagBits
+
 -- | Dummy data to tag the 'Ptr' with
 data VkInstance_T
 -- | VkInstance - Opaque handle to an instance object
@@ -1714,13 +1739,14 @@ data VkInstance_T
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation.vkEnumeratePhysicalDeviceGroups',
 -- 'vkEnumeratePhysicalDevices', 'vkGetInstanceProcAddr'
 type VkInstance = Ptr VkInstance_T
+
 -- ** VkInstanceCreateFlags
 
 -- | VkInstanceCreateFlags - Reserved for future use
 --
 -- = Description
 --
--- @VkInstanceCreateFlags@ is a bitmask type for setting a mask, but is
+-- 'VkInstanceCreateFlags' is a bitmask type for setting a mask, but is
 -- currently reserved for future use.
 --
 -- = See Also
@@ -1744,27 +1770,14 @@ instance Read VkInstanceCreateFlags where
                     )
 
 
+
 -- | VkInstanceCreateInfo - Structure specifying parameters of a newly
 -- created instance
 --
--- == Valid Usage (Implicit)
+-- = Description
 --
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO@
---
--- -   @pNext@ /must/ be @NULL@
---
--- -   @flags@ /must/ be @0@
---
--- -   If @pApplicationInfo@ is not @NULL@, @pApplicationInfo@ /must/ be a
---     valid pointer to a valid @VkApplicationInfo@ structure
---
--- -   If @enabledLayerCount@ is not @0@, @ppEnabledLayerNames@ /must/ be a
---     valid pointer to an array of @enabledLayerCount@ null-terminated
---     UTF-8 strings
---
--- -   If @enabledExtensionCount@ is not @0@, @ppEnabledExtensionNames@
---     /must/ be a valid pointer to an array of @enabledExtensionCount@
---     null-terminated UTF-8 strings
+-- Unresolved directive in VkInstanceCreateInfo.txt -
+-- include::{generated}\/validity\/structs\/VkInstanceCreateInfo.txt[]
 --
 -- = See Also
 --
@@ -1778,7 +1791,7 @@ data VkInstanceCreateInfo = VkInstanceCreateInfo
   , -- | @flags@ is reserved for future use.
   vkFlags :: VkInstanceCreateFlags
   , -- | @pApplicationInfo@ is @NULL@ or a pointer to an instance of
-  -- @VkApplicationInfo@. If not @NULL@, this information helps
+  -- 'VkApplicationInfo'. If not @NULL@, this information helps
   -- implementations recognize behavior inherent to classes of applications.
   -- 'VkApplicationInfo' is defined in detail below.
   vkPApplicationInfo :: Ptr VkApplicationInfo
@@ -1787,7 +1800,7 @@ data VkInstanceCreateInfo = VkInstanceCreateInfo
   , -- | @ppEnabledLayerNames@ is a pointer to an array of @enabledLayerCount@
   -- null-terminated UTF-8 strings containing the names of layers to enable
   -- for the created instance. See the
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#extendingvulkan-layers {html_spec_relative}#extendingvulkan-layers>
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#extendingvulkan-layers>
   -- section for further details.
   vkPPEnabledLayerNames :: Ptr (Ptr CChar)
   , -- | @enabledExtensionCount@ is the number of global extensions to enable.
@@ -1820,7 +1833,7 @@ instance Storable VkInstanceCreateInfo where
                 *> poke (ptr `plusPtr` 56) (vkPPEnabledExtensionNames (poked :: VkInstanceCreateInfo))
 
 instance Zero VkInstanceCreateInfo where
-  zero = VkInstanceCreateInfo zero
+  zero = VkInstanceCreateInfo VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO
                               zero
                               zero
                               zero
@@ -1828,6 +1841,7 @@ instance Zero VkInstanceCreateInfo where
                               zero
                               zero
                               zero
+
 -- ** VkInternalAllocationType
 
 -- | VkInternalAllocationType - Allocation type
@@ -1852,15 +1866,21 @@ instance Read VkInternalAllocationType where
                         )
                     )
 
--- | @VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE@ specifies that the allocation
+-- | 'VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE' specifies that the allocation
 -- is intended for execution by the host.
 pattern VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE :: VkInternalAllocationType
 pattern VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE = VkInternalAllocationType 0
+
 -- | VkMemoryHeap - Structure specifying a memory heap
+--
+-- = Description
+--
+-- Unresolved directive in VkMemoryHeap.txt -
+-- include::{generated}\/validity\/structs\/VkMemoryHeap.txt[]
 --
 -- = See Also
 --
--- @VkDeviceSize@, 'VkMemoryHeapFlags', 'VkPhysicalDeviceMemoryProperties'
+-- 'VkDeviceSize', 'VkMemoryHeapFlags', 'VkPhysicalDeviceMemoryProperties'
 data VkMemoryHeap = VkMemoryHeap
   { -- | @size@ is the total memory size in bytes in the heap.
   vkSize :: VkDeviceSize
@@ -1881,6 +1901,7 @@ instance Storable VkMemoryHeap where
 instance Zero VkMemoryHeap where
   zero = VkMemoryHeap zero
                       zero
+
 -- ** VkMemoryHeapFlagBits
 
 -- | VkMemoryHeapFlagBits - Bitmask specifying attribute flags for a heap
@@ -1909,23 +1930,25 @@ instance Read VkMemoryHeapFlagBits where
                         )
                     )
 
--- | @VK_MEMORY_HEAP_DEVICE_LOCAL_BIT@ specifies that the heap corresponds to
+-- | 'VK_MEMORY_HEAP_DEVICE_LOCAL_BIT' specifies that the heap corresponds to
 -- device local memory. Device local memory /may/ have different
 -- performance characteristics than host local memory, and /may/ support
 -- different memory property flags.
 pattern VK_MEMORY_HEAP_DEVICE_LOCAL_BIT :: VkMemoryHeapFlagBits
 pattern VK_MEMORY_HEAP_DEVICE_LOCAL_BIT = VkMemoryHeapFlagBits 0x00000001
+
 -- | VkMemoryHeapFlags - Bitmask of VkMemoryHeapFlagBits
 --
 -- = Description
 --
--- @VkMemoryHeapFlags@ is a bitmask type for setting a mask of zero or more
+-- 'VkMemoryHeapFlags' is a bitmask type for setting a mask of zero or more
 -- 'VkMemoryHeapFlagBits'.
 --
 -- = See Also
 --
 -- 'VkMemoryHeap', 'VkMemoryHeapFlagBits'
 type VkMemoryHeapFlags = VkMemoryHeapFlagBits
+
 -- ** VkMemoryPropertyFlagBits
 
 -- | VkMemoryPropertyFlagBits - Bitmask specifying properties for a memory
@@ -1963,20 +1986,20 @@ instance Read VkMemoryPropertyFlagBits where
                         )
                     )
 
--- | @VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT@ bit specifies that memory
+-- | 'VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT' bit specifies that memory
 -- allocated with this type is the most efficient for device access. This
 -- property will be set if and only if the memory type belongs to a heap
--- with the @VK_MEMORY_HEAP_DEVICE_LOCAL_BIT@ set.
+-- with the 'VK_MEMORY_HEAP_DEVICE_LOCAL_BIT' set.
 pattern VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT :: VkMemoryPropertyFlagBits
 pattern VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT = VkMemoryPropertyFlagBits 0x00000001
 
--- | @VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT@ bit specifies that memory
+-- | 'VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT' bit specifies that memory
 -- allocated with this type /can/ be mapped for host access using
 -- 'Graphics.Vulkan.C.Core10.Memory.vkMapMemory'.
 pattern VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT :: VkMemoryPropertyFlagBits
 pattern VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT = VkMemoryPropertyFlagBits 0x00000002
 
--- | @VK_MEMORY_PROPERTY_HOST_COHERENT_BIT@ bit specifies that the host cache
+-- | 'VK_MEMORY_PROPERTY_HOST_COHERENT_BIT' bit specifies that the host cache
 -- management commands
 -- 'Graphics.Vulkan.C.Core10.Memory.vkFlushMappedMemoryRanges' and
 -- 'Graphics.Vulkan.C.Core10.Memory.vkInvalidateMappedMemoryRanges' are not
@@ -1985,34 +2008,41 @@ pattern VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT = VkMemoryPropertyFlagBits 0x0000000
 pattern VK_MEMORY_PROPERTY_HOST_COHERENT_BIT :: VkMemoryPropertyFlagBits
 pattern VK_MEMORY_PROPERTY_HOST_COHERENT_BIT = VkMemoryPropertyFlagBits 0x00000004
 
--- | @VK_MEMORY_PROPERTY_HOST_CACHED_BIT@ bit specifies that memory allocated
+-- | 'VK_MEMORY_PROPERTY_HOST_CACHED_BIT' bit specifies that memory allocated
 -- with this type is cached on the host. Host memory accesses to uncached
 -- memory are slower than to cached memory, however uncached memory is
 -- always host coherent.
 pattern VK_MEMORY_PROPERTY_HOST_CACHED_BIT :: VkMemoryPropertyFlagBits
 pattern VK_MEMORY_PROPERTY_HOST_CACHED_BIT = VkMemoryPropertyFlagBits 0x00000008
 
--- | @VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT@ bit specifies that the memory
+-- | 'VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT' bit specifies that the memory
 -- type only allows device access to the memory. Memory types /must/ not
--- have both @VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT@ and
--- @VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT@ set. Additionally, the object’s
+-- have both 'VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT' and
+-- 'VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT' set. Additionally, the object’s
 -- backing memory /may/ be provided by the implementation lazily as
 -- specified in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-device-lazy_allocation Lazily Allocated Memory>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-device-lazy_allocation Lazily Allocated Memory>.
 pattern VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT :: VkMemoryPropertyFlagBits
 pattern VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = VkMemoryPropertyFlagBits 0x00000010
+
 -- | VkMemoryPropertyFlags - Bitmask of VkMemoryPropertyFlagBits
 --
 -- = Description
 --
--- @VkMemoryPropertyFlags@ is a bitmask type for setting a mask of zero or
+-- 'VkMemoryPropertyFlags' is a bitmask type for setting a mask of zero or
 -- more 'VkMemoryPropertyFlagBits'.
 --
 -- = See Also
 --
 -- 'VkMemoryPropertyFlagBits', 'VkMemoryType'
 type VkMemoryPropertyFlags = VkMemoryPropertyFlagBits
+
 -- | VkMemoryType - Structure specifying memory type
+--
+-- = Description
+--
+-- Unresolved directive in VkMemoryType.txt -
+-- include::{generated}\/validity\/structs\/VkMemoryType.txt[]
 --
 -- = See Also
 --
@@ -2039,6 +2069,7 @@ instance Storable VkMemoryType where
 instance Zero VkMemoryType where
   zero = VkMemoryType zero
                       zero
+
 -- | Dummy data to tag the 'Ptr' with
 data VkPhysicalDevice_T
 -- | VkPhysicalDevice - Opaque handle to a physical device object
@@ -2069,784 +2100,710 @@ data VkPhysicalDevice_T
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.vkGetPhysicalDeviceSparseImageFormatProperties',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceSparseImageFormatProperties2'
 type VkPhysicalDevice = Ptr VkPhysicalDevice_T
+
 -- | VkPhysicalDeviceFeatures - Structure describing the fine-grained
 -- features that can be supported by an implementation
 --
 -- = Members
 --
--- The members of the @VkPhysicalDeviceFeatures@ structure describe the
+-- The members of the 'VkPhysicalDeviceFeatures' structure describe the
 -- following features:
 --
 -- = Description
 --
--- -   @robustBufferAccess@ specifies that accesses to buffers are
---     bounds-checked against the range of the buffer descriptor (as
---     determined by @VkDescriptorBufferInfo@::@range@,
---     @VkBufferViewCreateInfo@::@range@, or the size of the buffer). Out
---     of bounds accesses /must/ not cause application termination, and the
---     effects of shader loads, stores, and atomics /must/ conform to an
---     implementation-dependent behavior as described below.
---
---     -   A buffer access is considered to be out of bounds if any of the
---         following are true:
---
---         -   The pointer was formed by @OpImageTexelPointer@ and the
---             coordinate is less than zero or greater than or equal to the
---             number of whole elements in the bound range.
---
---         -   The pointer was not formed by @OpImageTexelPointer@ and the
---             object pointed to is not wholly contained within the bound
---             range. This includes accesses performed via /variable
---             pointers/ where the buffer descriptor being accessed cannot
---             be statically determined. Uninitialized pointers and
---             pointers equal to @OpConstantNull@ are treated as pointing
---             to a zero-sized object, so all accesses through such
---             pointers are considered to be out of bounds. Buffer accesses
---             through buffer device addresses are not bounds-checked. If
---             the
---             <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-cooperativeMatrixRobustBufferAccess cooperativeMatrixRobustBufferAccess>
---             feature is not enabled, then accesses using
---             @OpCooperativeMatrixLoadNV@ and @OpCooperativeMatrixStoreNV@
---             /may/ not be bounds-checked.
---
---             __Note__
---
---             If a SPIR-V @OpLoad@ instruction loads a structure and the
---             tail end of the structure is out of bounds, then all members
---             of the structure are considered out of bounds even if the
---             members at the end are not statically used.
---
---         -   If any buffer access in a given SPIR-V block is determined
---             to be out of bounds, then any other access of the same type
---             (load, store, or atomic) in the same SPIR-V block that
---             accesses an address less than 16 bytes away from the out of
---             bounds address /may/ also be considered out of bounds.
---
---     -   Out-of-bounds buffer loads will return any of the following
---         values:
---
---         -   Values from anywhere within the memory range(s) bound to the
---             buffer (possibly including bytes of memory past the end of
---             the buffer, up to the end of the bound range).
---
---         -   Zero values, or (0,0,0,x) vectors for vector reads where x
---             is a valid value represented in the type of the vector
---             components and /may/ be any of:
---
---             -   0, 1, or the maximum representable positive integer
---                 value, for signed or unsigned integer components
---
---             -   0.0 or 1.0, for floating-point components
---
---     -   Out-of-bounds writes /may/ modify values within the memory
---         range(s) bound to the buffer, but /must/ not modify any other
---         memory.
---
---     -   Out-of-bounds atomics /may/ modify values within the memory
---         range(s) bound to the buffer, but /must/ not modify any other
---         memory, and return an undefined value.
---
---     -   Vertex input attributes are considered out of bounds if the
---         offset of the attribute in the bound vertex buffer range plus
---         the size of the attribute is greater than either:
---
---         -   @vertexBufferRangeSize@, if @bindingStride@ == 0; or
---
---         -   (@vertexBufferRangeSize@ - (@vertexBufferRangeSize@ %
---             @bindingStride@))
---
---         where @vertexBufferRangeSize@ is the byte size of the memory
---         range bound to the vertex buffer binding and @bindingStride@ is
---         the byte stride of the corresponding vertex input binding.
---         Further, if any vertex input attribute using a specific vertex
---         input binding is out of bounds, then all vertex input attributes
---         using that vertex input binding for that vertex shader
---         invocation are considered out of bounds.
---
---         -   If a vertex input attribute is out of bounds, it will be
---             assigned one of the following values:
---
---             -   Values from anywhere within the memory range(s) bound to
---                 the buffer, converted according to the format of the
---                 attribute.
---
---             -   Zero values, format converted according to the format of
---                 the attribute.
---
---             -   Zero values, or (0,0,0,x) vectors, as described above.
---
---     -   If @robustBufferAccess@ is not enabled, applications /must/ not
---         perform out of bounds accesses.
---
--- -   @fullDrawIndexUint32@ specifies the full 32-bit range of indices is
---     supported for indexed draw calls when using a
---     'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkIndexType' of
---     @VK_INDEX_TYPE_UINT32@. @maxDrawIndexedIndexValue@ is the maximum
---     index value that /may/ be used (aside from the primitive restart
---     index, which is always 232-1 when the
---     'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkIndexType' is
---     @VK_INDEX_TYPE_UINT32@). If this feature is supported,
---     @maxDrawIndexedIndexValue@ /must/ be 232-1; otherwise it /must/ be
---     no smaller than 224-1. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#limits-maxDrawIndexedIndexValue maxDrawIndexedIndexValue>.
---
--- -   @imageCubeArray@ specifies whether image views with a
---     'Graphics.Vulkan.C.Core10.ImageView.VkImageViewType' of
---     @VK_IMAGE_VIEW_TYPE_CUBE_ARRAY@ /can/ be created, and that the
---     corresponding @SampledCubeArray@ and @ImageCubeArray@ SPIR-V
---     capabilities /can/ be used in shader code.
---
--- -   @independentBlend@ specifies whether the
---     @VkPipelineColorBlendAttachmentState@ settings are controlled
---     independently per-attachment. If this feature is not enabled, the
---     @VkPipelineColorBlendAttachmentState@ settings for all color
---     attachments /must/ be identical. Otherwise, a different
---     @VkPipelineColorBlendAttachmentState@ /can/ be provided for each
---     bound color attachment.
---
--- -   @geometryShader@ specifies whether geometry shaders are supported.
---     If this feature is not enabled, the @VK_SHADER_STAGE_GEOMETRY_BIT@
---     and @VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT@ enum values /must/ not
---     be used. This also specifies whether shader modules /can/ declare
---     the @Geometry@ capability.
---
--- -   @tessellationShader@ specifies whether tessellation control and
---     evaluation shaders are supported. If this feature is not enabled,
---     the @VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT@,
---     @VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT@,
---     @VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT@,
---     @VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT@, and
---     @VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO@ enum
---     values /must/ not be used. This also specifies whether shader
---     modules /can/ declare the @Tessellation@ capability.
---
--- -   @sampleRateShading@ specifies whether
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#primsrast-sampleshading Sample Shading>
---     and multisample interpolation are supported. If this feature is not
---     enabled, the @sampleShadingEnable@ member of the
---     @VkPipelineMultisampleStateCreateInfo@ structure /must/ be set to
---     @VK_FALSE@ and the @minSampleShading@ member is ignored. This also
---     specifies whether shader modules /can/ declare the
---     @SampleRateShading@ capability.
---
--- -   @dualSrcBlend@ specifies whether blend operations which take two
---     sources are supported. If this feature is not enabled, the
---     @VK_BLEND_FACTOR_SRC1_COLOR@,
---     @VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR@,
---     @VK_BLEND_FACTOR_SRC1_ALPHA@, and
---     @VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA@ enum values /must/ not be
---     used as source or destination blending factors. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-dsb {html_spec_relative}#framebuffer-dsb>.
---
--- -   @logicOp@ specifies whether logic operations are supported. If this
---     feature is not enabled, the @logicOpEnable@ member of the
---     @VkPipelineColorBlendStateCreateInfo@ structure /must/ be set to
---     @VK_FALSE@, and the @logicOp@ member is ignored.
---
--- -   @multiDrawIndirect@ specifies whether multiple draw indirect is
---     supported. If this feature is not enabled, the @drawCount@ parameter
---     to the @vkCmdDrawIndirect@ and @vkCmdDrawIndexedIndirect@ commands
---     /must/ be 0 or 1. The @maxDrawIndirectCount@ member of the
---     @VkPhysicalDeviceLimits@ structure /must/ also be 1 if this feature
---     is not supported. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#limits-maxDrawIndirectCount maxDrawIndirectCount>.
---
--- -   @drawIndirectFirstInstance@ specifies whether indirect draw calls
---     support the @firstInstance@ parameter. If this feature is not
---     enabled, the @firstInstance@ member of all @VkDrawIndirectCommand@
---     and @VkDrawIndexedIndirectCommand@ structures that are provided to
---     the @vkCmdDrawIndirect@ and @vkCmdDrawIndexedIndirect@ commands
---     /must/ be 0.
---
--- -   @depthClamp@ specifies whether depth clamping is supported. If this
---     feature is not enabled, the @depthClampEnable@ member of the
---     @VkPipelineRasterizationStateCreateInfo@ structure /must/ be set to
---     @VK_FALSE@. Otherwise, setting @depthClampEnable@ to @VK_TRUE@ will
---     enable depth clamping.
---
--- -   @depthBiasClamp@ specifies whether depth bias clamping is supported.
---     If this feature is not enabled, the @depthBiasClamp@ member of the
---     @VkPipelineRasterizationStateCreateInfo@ structure /must/ be set to
---     0.0 unless the @VK_DYNAMIC_STATE_DEPTH_BIAS@ dynamic state is
---     enabled, and the @depthBiasClamp@ parameter to @vkCmdSetDepthBias@
---     /must/ be set to 0.0.
---
--- -   @fillModeNonSolid@ specifies whether point and wireframe fill modes
---     are supported. If this feature is not enabled, the
---     @VK_POLYGON_MODE_POINT@ and @VK_POLYGON_MODE_LINE@ enum values
---     /must/ not be used.
---
--- -   @depthBounds@ specifies whether depth bounds tests are supported. If
---     this feature is not enabled, the @depthBoundsTestEnable@ member of
---     the @VkPipelineDepthStencilStateCreateInfo@ structure /must/ be set
---     to @VK_FALSE@. When @depthBoundsTestEnable@ is set to @VK_FALSE@,
---     the @minDepthBounds@ and @maxDepthBounds@ members of the
---     @VkPipelineDepthStencilStateCreateInfo@ structure are ignored.
---
--- -   @wideLines@ specifies whether lines with width other than 1.0 are
---     supported. If this feature is not enabled, the @lineWidth@ member of
---     the @VkPipelineRasterizationStateCreateInfo@ structure /must/ be set
---     to 1.0 unless the @VK_DYNAMIC_STATE_LINE_WIDTH@ dynamic state is
---     enabled, and the @lineWidth@ parameter to @vkCmdSetLineWidth@ /must/
---     be set to 1.0. When this feature is supported, the range and
---     granularity of supported line widths are indicated by the
---     @lineWidthRange@ and @lineWidthGranularity@ members of the
---     @VkPhysicalDeviceLimits@ structure, respectively.
---
--- -   @largePoints@ specifies whether points with size greater than 1.0
---     are supported. If this feature is not enabled, only a point size of
---     1.0 written by a shader is supported. The range and granularity of
---     supported point sizes are indicated by the @pointSizeRange@ and
---     @pointSizeGranularity@ members of the @VkPhysicalDeviceLimits@
---     structure, respectively.
---
--- -   @alphaToOne@ specifies whether the implementation is able to replace
---     the alpha value of the color fragment output from the fragment
---     shader with the maximum representable alpha value for fixed-point
---     colors or 1.0 for floating-point colors. If this feature is not
---     enabled, then the @alphaToOneEnable@ member of the
---     @VkPipelineMultisampleStateCreateInfo@ structure /must/ be set to
---     @VK_FALSE@. Otherwise setting @alphaToOneEnable@ to @VK_TRUE@ will
---     enable alpha-to-one behavior.
---
--- -   @multiViewport@ specifies whether more than one viewport is
---     supported. If this feature is not enabled:
---
---     -   The @viewportCount@ and @scissorCount@ members of the
---         @VkPipelineViewportStateCreateInfo@ structure /must/ be set to
---         1.
---
---     -   The @firstViewport@ and @viewportCount@ parameters to the
---         @vkCmdSetViewport@ command /must/ be set to 0 and 1,
---         respectively.
---
---     -   The @firstScissor@ and @scissorCount@ parameters to the
---         @vkCmdSetScissor@ command /must/ be set to 0 and 1,
---         respectively.
---
---     -   The @exclusiveScissorCount@ member of the
---         @VkPipelineViewportExclusiveScissorStateCreateInfoNV@ structure
---         /must/ be set to 0 or 1.
---
---     -   The @firstExclusiveScissor@ and @exclusiveScissorCount@
---         parameters to the @vkCmdSetExclusiveScissorNV@ command /must/ be
---         set to 0 and 1, respectively.
---
--- -   @samplerAnisotropy@ specifies whether anisotropic filtering is
---     supported. If this feature is not enabled, the @anisotropyEnable@
---     member of the @VkSamplerCreateInfo@ structure /must/ be @VK_FALSE@.
---
--- -   @textureCompressionETC2@ specifies whether all of the ETC2 and EAC
---     compressed texture formats are supported. If this feature is
---     enabled, then the @VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT@,
---     @VK_FORMAT_FEATURE_BLIT_SRC_BIT@ and
---     @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT@ features /must/
---     be supported in @optimalTilingFeatures@ for the following formats:
---
---     -   @VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK@
---
---     -   @VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK@
---
---     -   @VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK@
---
---     -   @VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK@
---
---     -   @VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK@
---
---     -   @VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK@
---
---     -   @VK_FORMAT_EAC_R11_UNORM_BLOCK@
---
---     -   @VK_FORMAT_EAC_R11_SNORM_BLOCK@
---
---     -   @VK_FORMAT_EAC_R11G11_UNORM_BLOCK@
---
---     -   @VK_FORMAT_EAC_R11G11_SNORM_BLOCK@
---
---     To query for additional properties, or if the feature is not
---     enabled, 'vkGetPhysicalDeviceFormatProperties' and
---     'vkGetPhysicalDeviceImageFormatProperties' /can/ be used to check
---     for supported properties of individual formats as normal.
---
--- -   @textureCompressionASTC_LDR@ specifies whether all of the ASTC LDR
---     compressed texture formats are supported. If this feature is
---     enabled, then the @VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT@,
---     @VK_FORMAT_FEATURE_BLIT_SRC_BIT@ and
---     @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT@ features /must/
---     be supported in @optimalTilingFeatures@ for the following formats:
---
---     -   @VK_FORMAT_ASTC_4x4_UNORM_BLOCK@
---
---     -   @VK_FORMAT_ASTC_4x4_SRGB_BLOCK@
---
---     -   @VK_FORMAT_ASTC_5x4_UNORM_BLOCK@
---
---     -   @VK_FORMAT_ASTC_5x4_SRGB_BLOCK@
---
---     -   @VK_FORMAT_ASTC_5x5_UNORM_BLOCK@
---
---     -   @VK_FORMAT_ASTC_5x5_SRGB_BLOCK@
---
---     -   @VK_FORMAT_ASTC_6x5_UNORM_BLOCK@
---
---     -   @VK_FORMAT_ASTC_6x5_SRGB_BLOCK@
---
---     -   @VK_FORMAT_ASTC_6x6_UNORM_BLOCK@
---
---     -   @VK_FORMAT_ASTC_6x6_SRGB_BLOCK@
---
---     -   @VK_FORMAT_ASTC_8x5_UNORM_BLOCK@
---
---     -   @VK_FORMAT_ASTC_8x5_SRGB_BLOCK@
---
---     -   @VK_FORMAT_ASTC_8x6_UNORM_BLOCK@
---
---     -   @VK_FORMAT_ASTC_8x6_SRGB_BLOCK@
---
---     -   @VK_FORMAT_ASTC_8x8_UNORM_BLOCK@
---
---     -   @VK_FORMAT_ASTC_8x8_SRGB_BLOCK@
---
---     -   @VK_FORMAT_ASTC_10x5_UNORM_BLOCK@
---
---     -   @VK_FORMAT_ASTC_10x5_SRGB_BLOCK@
---
---     -   @VK_FORMAT_ASTC_10x6_UNORM_BLOCK@
---
---     -   @VK_FORMAT_ASTC_10x6_SRGB_BLOCK@
---
---     -   @VK_FORMAT_ASTC_10x8_UNORM_BLOCK@
---
---     -   @VK_FORMAT_ASTC_10x8_SRGB_BLOCK@
---
---     -   @VK_FORMAT_ASTC_10x10_UNORM_BLOCK@
---
---     -   @VK_FORMAT_ASTC_10x10_SRGB_BLOCK@
---
---     -   @VK_FORMAT_ASTC_12x10_UNORM_BLOCK@
---
---     -   @VK_FORMAT_ASTC_12x10_SRGB_BLOCK@
---
---     -   @VK_FORMAT_ASTC_12x12_UNORM_BLOCK@
---
---     -   @VK_FORMAT_ASTC_12x12_SRGB_BLOCK@
---
---     To query for additional properties, or if the feature is not
---     enabled, 'vkGetPhysicalDeviceFormatProperties' and
---     'vkGetPhysicalDeviceImageFormatProperties' /can/ be used to check
---     for supported properties of individual formats as normal.
---
--- -   @textureCompressionBC@ specifies whether all of the BC compressed
---     texture formats are supported. If this feature is enabled, then the
---     @VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT@,
---     @VK_FORMAT_FEATURE_BLIT_SRC_BIT@ and
---     @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT@ features /must/
---     be supported in @optimalTilingFeatures@ for the following formats:
---
---     -   @VK_FORMAT_BC1_RGB_UNORM_BLOCK@
---
---     -   @VK_FORMAT_BC1_RGB_SRGB_BLOCK@
---
---     -   @VK_FORMAT_BC1_RGBA_UNORM_BLOCK@
---
---     -   @VK_FORMAT_BC1_RGBA_SRGB_BLOCK@
---
---     -   @VK_FORMAT_BC2_UNORM_BLOCK@
---
---     -   @VK_FORMAT_BC2_SRGB_BLOCK@
---
---     -   @VK_FORMAT_BC3_UNORM_BLOCK@
---
---     -   @VK_FORMAT_BC3_SRGB_BLOCK@
---
---     -   @VK_FORMAT_BC4_UNORM_BLOCK@
---
---     -   @VK_FORMAT_BC4_SNORM_BLOCK@
---
---     -   @VK_FORMAT_BC5_UNORM_BLOCK@
---
---     -   @VK_FORMAT_BC5_SNORM_BLOCK@
---
---     -   @VK_FORMAT_BC6H_UFLOAT_BLOCK@
---
---     -   @VK_FORMAT_BC6H_SFLOAT_BLOCK@
---
---     -   @VK_FORMAT_BC7_UNORM_BLOCK@
---
---     -   @VK_FORMAT_BC7_SRGB_BLOCK@
---
---     To query for additional properties, or if the feature is not
---     enabled, 'vkGetPhysicalDeviceFormatProperties' and
---     'vkGetPhysicalDeviceImageFormatProperties' /can/ be used to check
---     for supported properties of individual formats as normal.
---
--- -   @occlusionQueryPrecise@ specifies whether occlusion queries
---     returning actual sample counts are supported. Occlusion queries are
---     created in a @VkQueryPool@ by specifying the @queryType@ of
---     @VK_QUERY_TYPE_OCCLUSION@ in the @VkQueryPoolCreateInfo@ structure
---     which is passed to @vkCreateQueryPool@. If this feature is enabled,
---     queries of this type /can/ enable @VK_QUERY_CONTROL_PRECISE_BIT@ in
---     the @flags@ parameter to @vkCmdBeginQuery@. If this feature is not
---     supported, the implementation supports only boolean occlusion
---     queries. When any samples are passed, boolean queries will return a
---     non-zero result value, otherwise a result value of zero is returned.
---     When this feature is enabled and @VK_QUERY_CONTROL_PRECISE_BIT@ is
---     set, occlusion queries will report the actual number of samples
---     passed.
---
--- -   @pipelineStatisticsQuery@ specifies whether the pipeline statistics
---     queries are supported. If this feature is not enabled, queries of
---     type @VK_QUERY_TYPE_PIPELINE_STATISTICS@ /cannot/ be created, and
---     none of the
---     'Graphics.Vulkan.C.Core10.Query.VkQueryPipelineStatisticFlagBits'
---     bits /can/ be set in the @pipelineStatistics@ member of the
---     @VkQueryPoolCreateInfo@ structure.
---
--- -   @vertexPipelineStoresAndAtomics@ specifies whether storage buffers
---     and images support stores and atomic operations in the vertex,
---     tessellation, and geometry shader stages. If this feature is not
---     enabled, all storage image, storage texel buffers, and storage
---     buffer variables used by these stages in shader modules /must/ be
---     decorated with the @NonWritable@ decoration (or the @readonly@
---     memory qualifier in GLSL).
---
--- -   @fragmentStoresAndAtomics@ specifies whether storage buffers and
---     images support stores and atomic operations in the fragment shader
---     stage. If this feature is not enabled, all storage image, storage
---     texel buffers, and storage buffer variables used by the fragment
---     stage in shader modules /must/ be decorated with the @NonWritable@
---     decoration (or the @readonly@ memory qualifier in GLSL).
---
--- -   @shaderTessellationAndGeometryPointSize@ specifies whether the
---     @PointSize@ built-in decoration is available in the tessellation
---     control, tessellation evaluation, and geometry shader stages. If
---     this feature is not enabled, members decorated with the @PointSize@
---     built-in decoration /must/ not be read from or written to and all
---     points written from a tessellation or geometry shader will have a
---     size of 1.0. This also specifies whether shader modules /can/
---     declare the @TessellationPointSize@ capability for tessellation
---     control and evaluation shaders, or if the shader modules /can/
---     declare the @GeometryPointSize@ capability for geometry shaders. An
---     implementation supporting this feature /must/ also support one or
---     both of the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
---     or
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-geometryShader geometryShader>
---     features.
---
--- -   @shaderImageGatherExtended@ specifies whether the extended set of
---     image gather instructions are available in shader code. If this
---     feature is not enabled, the @OpImage@*@Gather@ instructions do not
---     support the @Offset@ and @ConstOffsets@ operands. This also
---     specifies whether shader modules /can/ declare the
---     @ImageGatherExtended@ capability.
---
--- -   @shaderStorageImageExtendedFormats@ specifies whether all the
---     extended storage image formats are available in shader code. If this
---     feature is enabled then the @VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT@
---     feature /must/ be supported in @optimalTilingFeatures@ for all of
---     the extended formats. To query for additional properties, or if the
---     feature is not enabled, 'vkGetPhysicalDeviceFormatProperties' and
---     'vkGetPhysicalDeviceImageFormatProperties' /can/ be used to check
---     for supported properties of individual formats as normal.
---
--- -   @shaderStorageImageMultisample@ specifies whether multisampled
---     storage images are supported. If this feature is not enabled, images
---     that are created with a @usage@ that includes
---     @VK_IMAGE_USAGE_STORAGE_BIT@ /must/ be created with @samples@ equal
---     to @VK_SAMPLE_COUNT_1_BIT@. This also specifies whether shader
---     modules /can/ declare the @StorageImageMultisample@ capability.
---
--- -   @shaderStorageImageReadWithoutFormat@ specifies whether storage
---     images require a format qualifier to be specified when reading from
---     storage images. If this feature is not enabled, the @OpImageRead@
---     instruction /must/ not have an @OpTypeImage@ of @Unknown@. This also
---     specifies whether shader modules /can/ declare the
---     @StorageImageReadWithoutFormat@ capability.
---
--- -   @shaderStorageImageWriteWithoutFormat@ specifies whether storage
---     images require a format qualifier to be specified when writing to
---     storage images. If this feature is not enabled, the @OpImageWrite@
---     instruction /must/ not have an @OpTypeImage@ of @Unknown@. This also
---     specifies whether shader modules /can/ declare the
---     @StorageImageWriteWithoutFormat@ capability.
---
--- -   @shaderUniformBufferArrayDynamicIndexing@ specifies whether arrays
---     of uniform buffers /can/ be indexed by /dynamically uniform/ integer
---     expressions in shader code. If this feature is not enabled,
---     resources with a descriptor type of
---     @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER@ or
---     @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC@ /must/ be indexed only
---     by constant integral expressions when aggregated into arrays in
---     shader code. This also specifies whether shader modules /can/
---     declare the @UniformBufferArrayDynamicIndexing@ capability.
---
--- -   @shaderSampledImageArrayDynamicIndexing@ specifies whether arrays of
---     samplers or sampled images /can/ be indexed by dynamically uniform
---     integer expressions in shader code. If this feature is not enabled,
---     resources with a descriptor type of @VK_DESCRIPTOR_TYPE_SAMPLER@,
---     @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@, or
---     @VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE@ /must/ be indexed only by
---     constant integral expressions when aggregated into arrays in shader
---     code. This also specifies whether shader modules /can/ declare the
---     @SampledImageArrayDynamicIndexing@ capability.
---
--- -   @shaderStorageBufferArrayDynamicIndexing@ specifies whether arrays
---     of storage buffers /can/ be indexed by dynamically uniform integer
---     expressions in shader code. If this feature is not enabled,
---     resources with a descriptor type of
---     @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER@ or
---     @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC@ /must/ be indexed only
---     by constant integral expressions when aggregated into arrays in
---     shader code. This also specifies whether shader modules /can/
---     declare the @StorageBufferArrayDynamicIndexing@ capability.
---
--- -   @shaderStorageImageArrayDynamicIndexing@ specifies whether arrays of
---     storage images /can/ be indexed by dynamically uniform integer
---     expressions in shader code. If this feature is not enabled,
---     resources with a descriptor type of
---     @VK_DESCRIPTOR_TYPE_STORAGE_IMAGE@ /must/ be indexed only by
---     constant integral expressions when aggregated into arrays in shader
---     code. This also specifies whether shader modules /can/ declare the
---     @StorageImageArrayDynamicIndexing@ capability.
---
--- -   @shaderClipDistance@ specifies whether clip distances are supported
---     in shader code. If this feature is not enabled, any members
---     decorated with the @ClipDistance@ built-in decoration /must/ not be
---     read from or written to in shader modules. This also specifies
---     whether shader modules /can/ declare the @ClipDistance@ capability.
---
--- -   @shaderCullDistance@ specifies whether cull distances are supported
---     in shader code. If this feature is not enabled, any members
---     decorated with the @CullDistance@ built-in decoration /must/ not be
---     read from or written to in shader modules. This also specifies
---     whether shader modules /can/ declare the @CullDistance@ capability.
---
--- -   @shaderFloat64@ specifies whether 64-bit floats (doubles) are
---     supported in shader code. If this feature is not enabled, 64-bit
---     floating-point types /must/ not be used in shader code. This also
---     specifies whether shader modules /can/ declare the @Float64@
---     capability.
---
--- -   @shaderInt64@ specifies whether 64-bit integers (signed and
---     unsigned) are supported in shader code. If this feature is not
---     enabled, 64-bit integer types /must/ not be used in shader code.
---     This also specifies whether shader modules /can/ declare the @Int64@
---     capability.
---
--- -   @shaderInt16@ specifies whether 16-bit integers (signed and
---     unsigned) are supported in shader code. If this feature is not
---     enabled, 16-bit integer types /must/ not be used in shader code.
---     This also specifies whether shader modules /can/ declare the @Int16@
---     capability.
---
--- -   @shaderResourceResidency@ specifies whether image operations that
---     return resource residency information are supported in shader code.
---     If this feature is not enabled, the @OpImageSparse@* instructions
---     /must/ not be used in shader code. This also specifies whether
---     shader modules /can/ declare the @SparseResidency@ capability. The
---     feature requires at least one of the @sparseResidency*@ features to
---     be supported.
---
--- -   @shaderResourceMinLod@ specifies whether image operations that
---     specify the minimum resource LOD are supported in shader code. If
---     this feature is not enabled, the @MinLod@ image operand /must/ not
---     be used in shader code. This also specifies whether shader modules
---     /can/ declare the @MinLod@ capability.
---
--- -   @sparseBinding@ specifies whether resource memory /can/ be managed
---     at opaque sparse block level instead of at the object level. If this
---     feature is not enabled, resource memory /must/ be bound only on a
---     per-object basis using the @vkBindBufferMemory@ and
---     @vkBindImageMemory@ commands. In this case, buffers and images
---     /must/ not be created with @VK_BUFFER_CREATE_SPARSE_BINDING_BIT@ and
---     @VK_IMAGE_CREATE_SPARSE_BINDING_BIT@ set in the @flags@ member of
---     the @VkBufferCreateInfo@ and @VkImageCreateInfo@ structures,
---     respectively. Otherwise resource memory /can/ be managed as
---     described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#sparsememory-sparseresourcefeatures Sparse Resource Features>.
---
--- -   @sparseResidencyBuffer@ specifies whether the device /can/ access
---     partially resident buffers. If this feature is not enabled, buffers
---     /must/ not be created with @VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT@
---     set in the @flags@ member of the @VkBufferCreateInfo@ structure.
---
--- -   @sparseResidencyImage2D@ specifies whether the device /can/ access
---     partially resident 2D images with 1 sample per pixel. If this
---     feature is not enabled, images with an @imageType@ of
---     @VK_IMAGE_TYPE_2D@ and @samples@ set to @VK_SAMPLE_COUNT_1_BIT@
---     /must/ not be created with @VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT@
---     set in the @flags@ member of the @VkImageCreateInfo@ structure.
---
--- -   @sparseResidencyImage3D@ specifies whether the device /can/ access
---     partially resident 3D images. If this feature is not enabled, images
---     with an @imageType@ of @VK_IMAGE_TYPE_3D@ /must/ not be created with
---     @VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT@ set in the @flags@ member of
---     the @VkImageCreateInfo@ structure.
---
--- -   @sparseResidency2Samples@ specifies whether the physical device
---     /can/ access partially resident 2D images with 2 samples per pixel.
---     If this feature is not enabled, images with an @imageType@ of
---     @VK_IMAGE_TYPE_2D@ and @samples@ set to @VK_SAMPLE_COUNT_2_BIT@
---     /must/ not be created with @VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT@
---     set in the @flags@ member of the @VkImageCreateInfo@ structure.
---
--- -   @sparseResidency4Samples@ specifies whether the physical device
---     /can/ access partially resident 2D images with 4 samples per pixel.
---     If this feature is not enabled, images with an @imageType@ of
---     @VK_IMAGE_TYPE_2D@ and @samples@ set to @VK_SAMPLE_COUNT_4_BIT@
---     /must/ not be created with @VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT@
---     set in the @flags@ member of the @VkImageCreateInfo@ structure.
---
--- -   @sparseResidency8Samples@ specifies whether the physical device
---     /can/ access partially resident 2D images with 8 samples per pixel.
---     If this feature is not enabled, images with an @imageType@ of
---     @VK_IMAGE_TYPE_2D@ and @samples@ set to @VK_SAMPLE_COUNT_8_BIT@
---     /must/ not be created with @VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT@
---     set in the @flags@ member of the @VkImageCreateInfo@ structure.
---
--- -   @sparseResidency16Samples@ specifies whether the physical device
---     /can/ access partially resident 2D images with 16 samples per pixel.
---     If this feature is not enabled, images with an @imageType@ of
---     @VK_IMAGE_TYPE_2D@ and @samples@ set to @VK_SAMPLE_COUNT_16_BIT@
---     /must/ not be created with @VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT@
---     set in the @flags@ member of the @VkImageCreateInfo@ structure.
---
--- -   @sparseResidencyAliased@ specifies whether the physical device /can/
---     correctly access data aliased into multiple locations. If this
---     feature is not enabled, the @VK_BUFFER_CREATE_SPARSE_ALIASED_BIT@
---     and @VK_IMAGE_CREATE_SPARSE_ALIASED_BIT@ enum values /must/ not be
---     used in @flags@ members of the @VkBufferCreateInfo@ and
---     @VkImageCreateInfo@ structures, respectively.
---
--- -   @variableMultisampleRate@ specifies whether all pipelines that will
---     be bound to a command buffer during a subpass with no attachments
---     /must/ have the same value for
---     @VkPipelineMultisampleStateCreateInfo@::@rasterizationSamples@. If
---     set to @VK_TRUE@, the implementation supports variable multisample
---     rates in a subpass with no attachments. If set to @VK_FALSE@, then
---     all pipelines bound in such a subpass /must/ have the same
---     multisample rate. This has no effect in situations where a subpass
---     uses any attachments.
---
--- -   @inheritedQueries@ specifies whether a secondary command buffer
---     /may/ be executed while a query is active.
+-- Unresolved directive in VkPhysicalDeviceFeatures.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceFeatures.txt[]
 --
 -- = See Also
 --
--- @VkBool32@, 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo',
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2',
 -- 'vkGetPhysicalDeviceFeatures'
 data VkPhysicalDeviceFeatures = VkPhysicalDeviceFeatures
-  { -- No documentation found for Nested "VkPhysicalDeviceFeatures" "robustBufferAccess"
+  { -- | @robustBufferAccess@ specifies that accesses to buffers are
+  -- bounds-checked against the range of the buffer descriptor (as determined
+  -- by
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorBufferInfo'::@range@,
+  -- 'Graphics.Vulkan.C.Core10.BufferView.VkBufferViewCreateInfo'::@range@,
+  -- or the size of the buffer). Out of bounds accesses /must/ not cause
+  -- application termination, and the effects of shader loads, stores, and
+  -- atomics /must/ conform to an implementation-dependent behavior as
+  -- described below.
+  --
+  -- -   A buffer access is considered to be out of bounds if any of the
+  --     following are true:
+  --
+  --     -   The pointer was formed by @OpImageTexelPointer@ and the
+  --         coordinate is less than zero or greater than or equal to the
+  --         number of whole elements in the bound range.
+  --
+  --     -   The pointer was not formed by @OpImageTexelPointer@ and the
+  --         object pointed to is not wholly contained within the bound
+  --         range. This includes accesses performed via /variable pointers/
+  --         where the buffer descriptor being accessed cannot be statically
+  --         determined. Uninitialized pointers and pointers equal to
+  --         @OpConstantNull@ are treated as pointing to a zero-sized object,
+  --         so all accesses through such pointers are considered to be out
+  --         of bounds. Buffer accesses through buffer device addresses are
+  --         not bounds-checked. If the
+  --         <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-cooperativeMatrixRobustBufferAccess cooperativeMatrixRobustBufferAccess>
+  --         feature is not enabled, then accesses using
+  --         @OpCooperativeMatrixLoadNV@ and @OpCooperativeMatrixStoreNV@
+  --         /may/ not be bounds-checked.
+  --
+  --         __Note__
+  --
+  --         If a SPIR-V @OpLoad@ instruction loads a structure and the tail
+  --         end of the structure is out of bounds, then all members of the
+  --         structure are considered out of bounds even if the members at
+  --         the end are not statically used.
+  --
+  --     -   If any buffer access in a given SPIR-V block is determined to be
+  --         out of bounds, then any other access of the same type (load,
+  --         store, or atomic) in the same SPIR-V block that accesses an
+  --         address less than 16 bytes away from the out of bounds address
+  --         /may/ also be considered out of bounds.
+  --
+  -- -   Out-of-bounds buffer loads will return any of the following values:
+  --
+  --     -   Values from anywhere within the memory range(s) bound to the
+  --         buffer (possibly including bytes of memory past the end of the
+  --         buffer, up to the end of the bound range).
+  --
+  --     -   Zero values, or (0,0,0,x) vectors for vector reads where x is a
+  --         valid value represented in the type of the vector components and
+  --         /may/ be any of:
+  --
+  --         -   0, 1, or the maximum representable positive integer value,
+  --             for signed or unsigned integer components
+  --
+  --         -   0.0 or 1.0, for floating-point components
+  --
+  -- -   Out-of-bounds writes /may/ modify values within the memory range(s)
+  --     bound to the buffer, but /must/ not modify any other memory.
+  --
+  -- -   Out-of-bounds atomics /may/ modify values within the memory range(s)
+  --     bound to the buffer, but /must/ not modify any other memory, and
+  --     return an undefined value.
+  --
+  -- -   Vertex input attributes are considered out of bounds if the offset
+  --     of the attribute in the bound vertex buffer range plus the size of
+  --     the attribute is greater than either:
+  --
+  --     -   @vertexBufferRangeSize@, if @bindingStride@ == 0; or
+  --
+  --     -   (@vertexBufferRangeSize@ - (@vertexBufferRangeSize@ %
+  --         @bindingStride@))
+  --
+  --     where @vertexBufferRangeSize@ is the byte size of the memory range
+  --     bound to the vertex buffer binding and @bindingStride@ is the byte
+  --     stride of the corresponding vertex input binding. Further, if any
+  --     vertex input attribute using a specific vertex input binding is out
+  --     of bounds, then all vertex input attributes using that vertex input
+  --     binding for that vertex shader invocation are considered out of
+  --     bounds.
+  --
+  --     -   If a vertex input attribute is out of bounds, it will be
+  --         assigned one of the following values:
+  --
+  --         -   Values from anywhere within the memory range(s) bound to the
+  --             buffer, converted according to the format of the attribute.
+  --
+  --         -   Zero values, format converted according to the format of the
+  --             attribute.
+  --
+  --         -   Zero values, or (0,0,0,x) vectors, as described above.
+  --
+  -- -   If @robustBufferAccess@ is not enabled, applications /must/ not
+  --     perform out of bounds accesses.
+  --
   vkRobustBufferAccess :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "fullDrawIndexUint32"
+  , -- | @fullDrawIndexUint32@ specifies the full 32-bit range of indices is
+  -- supported for indexed draw calls when using a
+  -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkIndexType' of
+  -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VK_INDEX_TYPE_UINT32'.
+  -- @maxDrawIndexedIndexValue@ is the maximum index value that /may/ be used
+  -- (aside from the primitive restart index, which is always 232-1 when the
+  -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkIndexType' is
+  -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VK_INDEX_TYPE_UINT32').
+  -- If this feature is supported, @maxDrawIndexedIndexValue@ /must/ be
+  -- 232-1; otherwise it /must/ be no smaller than 224-1. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#limits-maxDrawIndexedIndexValue maxDrawIndexedIndexValue>.
   vkFullDrawIndexUint32 :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "imageCubeArray"
+  , -- | @imageCubeArray@ specifies whether image views with a
+  -- 'Graphics.Vulkan.C.Core10.ImageView.VkImageViewType' of
+  -- 'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_CUBE_ARRAY' /can/
+  -- be created, and that the corresponding @SampledCubeArray@ and
+  -- @ImageCubeArray@ SPIR-V capabilities /can/ be used in shader code.
   vkImageCubeArray :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "independentBlend"
+  , -- | @independentBlend@ specifies whether the
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineColorBlendAttachmentState'
+  -- settings are controlled independently per-attachment. If this feature is
+  -- not enabled, the
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineColorBlendAttachmentState'
+  -- settings for all color attachments /must/ be identical. Otherwise, a
+  -- different
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineColorBlendAttachmentState'
+  -- /can/ be provided for each bound color attachment.
   vkIndependentBlend :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "geometryShader"
+  , -- | @geometryShader@ specifies whether geometry shaders are supported. If
+  -- this feature is not enabled, the
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VK_SHADER_STAGE_GEOMETRY_BIT' and
+  -- 'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
+  -- enum values /must/ not be used. This also specifies whether shader
+  -- modules /can/ declare the @Geometry@ capability.
   vkGeometryShader :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "tessellationShader"
+  , -- | @tessellationShader@ specifies whether tessellation control and
+  -- evaluation shaders are supported. If this feature is not enabled, the
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT',
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT',
+  -- 'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT',
+  -- 'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT',
+  -- and
+  -- 'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO'
+  -- enum values /must/ not be used. This also specifies whether shader
+  -- modules /can/ declare the @Tessellation@ capability.
   vkTessellationShader :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "sampleRateShading"
+  , -- | @sampleRateShading@ specifies whether
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#primsrast-sampleshading Sample Shading>
+  -- and multisample interpolation are supported. If this feature is not
+  -- enabled, the @sampleShadingEnable@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineMultisampleStateCreateInfo'
+  -- structure /must/ be set to 'Graphics.Vulkan.C.Core10.Core.VK_FALSE' and
+  -- the @minSampleShading@ member is ignored. This also specifies whether
+  -- shader modules /can/ declare the @SampleRateShading@ capability.
   vkSampleRateShading :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "dualSrcBlend"
+  , -- | @dualSrcBlend@ specifies whether blend operations which take two sources
+  -- are supported. If this feature is not enabled, the
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VK_BLEND_FACTOR_SRC1_COLOR',
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VK_BLEND_FACTOR_ONE_MINUS_SRC1_COLOR',
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VK_BLEND_FACTOR_SRC1_ALPHA', and
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VK_BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA'
+  -- enum values /must/ not be used as source or destination blending
+  -- factors. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#framebuffer-dsb>.
   vkDualSrcBlend :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "logicOp"
+  , -- | @logicOp@ specifies whether logic operations are supported. If this
+  -- feature is not enabled, the @logicOpEnable@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineColorBlendStateCreateInfo'
+  -- structure /must/ be set to 'Graphics.Vulkan.C.Core10.Core.VK_FALSE', and
+  -- the @logicOp@ member is ignored.
   vkLogicOp :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "multiDrawIndirect"
+  , -- | @multiDrawIndirect@ specifies whether multiple draw indirect is
+  -- supported. If this feature is not enabled, the @drawCount@ parameter to
+  -- the 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDrawIndirect'
+  -- and
+  -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDrawIndexedIndirect'
+  -- commands /must/ be 0 or 1. The @maxDrawIndirectCount@ member of the
+  -- 'VkPhysicalDeviceLimits' structure /must/ also be 1 if this feature is
+  -- not supported. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#limits-maxDrawIndirectCount maxDrawIndirectCount>.
   vkMultiDrawIndirect :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "drawIndirectFirstInstance"
+  , -- | @drawIndirectFirstInstance@ specifies whether indirect draw calls
+  -- support the @firstInstance@ parameter. If this feature is not enabled,
+  -- the @firstInstance@ member of all
+  -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkDrawIndirectCommand'
+  -- and
+  -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkDrawIndexedIndirectCommand'
+  -- structures that are provided to the
+  -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDrawIndirect' and
+  -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDrawIndexedIndirect'
+  -- commands /must/ be 0.
   vkDrawIndirectFirstInstance :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "depthClamp"
+  , -- | @depthClamp@ specifies whether depth clamping is supported. If this
+  -- feature is not enabled, the @depthClampEnable@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineRasterizationStateCreateInfo'
+  -- structure /must/ be set to 'Graphics.Vulkan.C.Core10.Core.VK_FALSE'.
+  -- Otherwise, setting @depthClampEnable@ to
+  -- 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' will enable depth clamping.
   vkDepthClamp :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "depthBiasClamp"
+  , -- | @depthBiasClamp@ specifies whether depth bias clamping is supported. If
+  -- this feature is not enabled, the @depthBiasClamp@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineRasterizationStateCreateInfo'
+  -- structure /must/ be set to 0.0 unless the
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VK_DYNAMIC_STATE_DEPTH_BIAS' dynamic
+  -- state is enabled, and the @depthBiasClamp@ parameter to
+  -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdSetDepthBias'
+  -- /must/ be set to 0.0.
   vkDepthBiasClamp :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "fillModeNonSolid"
+  , -- | @fillModeNonSolid@ specifies whether point and wireframe fill modes are
+  -- supported. If this feature is not enabled, the
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VK_POLYGON_MODE_POINT' and
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VK_POLYGON_MODE_LINE' enum values
+  -- /must/ not be used.
   vkFillModeNonSolid :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "depthBounds"
+  , -- | @depthBounds@ specifies whether depth bounds tests are supported. If
+  -- this feature is not enabled, the @depthBoundsTestEnable@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineDepthStencilStateCreateInfo'
+  -- structure /must/ be set to 'Graphics.Vulkan.C.Core10.Core.VK_FALSE'.
+  -- When @depthBoundsTestEnable@ is set to
+  -- 'Graphics.Vulkan.C.Core10.Core.VK_FALSE', the @minDepthBounds@ and
+  -- @maxDepthBounds@ members of the
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineDepthStencilStateCreateInfo'
+  -- structure are ignored.
   vkDepthBounds :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "wideLines"
+  , -- | @wideLines@ specifies whether lines with width other than 1.0 are
+  -- supported. If this feature is not enabled, the @lineWidth@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineRasterizationStateCreateInfo'
+  -- structure /must/ be set to 1.0 unless the
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VK_DYNAMIC_STATE_LINE_WIDTH' dynamic
+  -- state is enabled, and the @lineWidth@ parameter to
+  -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdSetLineWidth'
+  -- /must/ be set to 1.0. When this feature is supported, the range and
+  -- granularity of supported line widths are indicated by the
+  -- @lineWidthRange@ and @lineWidthGranularity@ members of the
+  -- 'VkPhysicalDeviceLimits' structure, respectively.
   vkWideLines :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "largePoints"
+  , -- | @largePoints@ specifies whether points with size greater than 1.0 are
+  -- supported. If this feature is not enabled, only a point size of 1.0
+  -- written by a shader is supported. The range and granularity of supported
+  -- point sizes are indicated by the @pointSizeRange@ and
+  -- @pointSizeGranularity@ members of the 'VkPhysicalDeviceLimits'
+  -- structure, respectively.
   vkLargePoints :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "alphaToOne"
+  , -- | @alphaToOne@ specifies whether the implementation is able to replace the
+  -- alpha value of the color fragment output from the fragment shader with
+  -- the maximum representable alpha value for fixed-point colors or 1.0 for
+  -- floating-point colors. If this feature is not enabled, then the
+  -- @alphaToOneEnable@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineMultisampleStateCreateInfo'
+  -- structure /must/ be set to 'Graphics.Vulkan.C.Core10.Core.VK_FALSE'.
+  -- Otherwise setting @alphaToOneEnable@ to
+  -- 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' will enable alpha-to-one
+  -- behavior.
   vkAlphaToOne :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "multiViewport"
+  , -- | @multiViewport@ specifies whether more than one viewport is supported.
+  -- If this feature is not enabled:
+  --
+  -- -   The @viewportCount@ and @scissorCount@ members of the
+  --     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineViewportStateCreateInfo'
+  --     structure /must/ be set to 1.
+  --
+  -- -   The @firstViewport@ and @viewportCount@ parameters to the
+  --     'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdSetViewport'
+  --     command /must/ be set to 0 and 1, respectively.
+  --
+  -- -   The @firstScissor@ and @scissorCount@ parameters to the
+  --     'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdSetScissor'
+  --     command /must/ be set to 0 and 1, respectively.
+  --
+  -- -   The @exclusiveScissorCount@ member of the
+  --     'Graphics.Vulkan.C.Extensions.VK_NV_scissor_exclusive.VkPipelineViewportExclusiveScissorStateCreateInfoNV'
+  --     structure /must/ be set to 0 or 1.
+  --
+  -- -   The @firstExclusiveScissor@ and @exclusiveScissorCount@ parameters
+  --     to the
+  --     'Graphics.Vulkan.C.Extensions.VK_NV_scissor_exclusive.vkCmdSetExclusiveScissorNV'
+  --     command /must/ be set to 0 and 1, respectively.
+  --
   vkMultiViewport :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "samplerAnisotropy"
+  , -- | @samplerAnisotropy@ specifies whether anisotropic filtering is
+  -- supported. If this feature is not enabled, the @anisotropyEnable@ member
+  -- of the 'Graphics.Vulkan.C.Core10.Sampler.VkSamplerCreateInfo' structure
+  -- /must/ be 'Graphics.Vulkan.C.Core10.Core.VK_FALSE'.
   vkSamplerAnisotropy :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "textureCompressionETC2"
+  , -- | @textureCompressionETC2@ specifies whether all of the ETC2 and EAC
+  -- compressed texture formats are supported. If this feature is enabled,
+  -- then the 'VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT',
+  -- 'VK_FORMAT_FEATURE_BLIT_SRC_BIT' and
+  -- 'VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT' features /must/ be
+  -- supported in @optimalTilingFeatures@ for the following formats:
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_EAC_R11_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_EAC_R11_SNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_EAC_R11G11_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_EAC_R11G11_SNORM_BLOCK'
+  --
+  -- To query for additional properties, or if the feature is not enabled,
+  -- 'vkGetPhysicalDeviceFormatProperties' and
+  -- 'vkGetPhysicalDeviceImageFormatProperties' /can/ be used to check for
+  -- supported properties of individual formats as normal.
   vkTextureCompressionETC2 :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "textureCompressionASTC_LDR"
+  , -- | @textureCompressionASTC_LDR@ specifies whether all of the ASTC LDR
+  -- compressed texture formats are supported. If this feature is enabled,
+  -- then the 'VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT',
+  -- 'VK_FORMAT_FEATURE_BLIT_SRC_BIT' and
+  -- 'VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT' features /must/ be
+  -- supported in @optimalTilingFeatures@ for the following formats:
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_4x4_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_4x4_SRGB_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_5x4_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_5x4_SRGB_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_5x5_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_5x5_SRGB_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_6x5_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_6x5_SRGB_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_6x6_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_6x6_SRGB_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_8x5_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_8x5_SRGB_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_8x6_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_8x6_SRGB_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_8x8_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_8x8_SRGB_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_10x5_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_10x5_SRGB_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_10x6_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_10x6_SRGB_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_10x8_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_10x8_SRGB_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_10x10_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_10x10_SRGB_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_12x10_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_12x10_SRGB_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_12x12_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_12x12_SRGB_BLOCK'
+  --
+  -- To query for additional properties, or if the feature is not enabled,
+  -- 'vkGetPhysicalDeviceFormatProperties' and
+  -- 'vkGetPhysicalDeviceImageFormatProperties' /can/ be used to check for
+  -- supported properties of individual formats as normal.
   vkTextureCompressionASTC_LDR :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "textureCompressionBC"
+  , -- | @textureCompressionBC@ specifies whether all of the BC compressed
+  -- texture formats are supported. If this feature is enabled, then the
+  -- 'VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT', 'VK_FORMAT_FEATURE_BLIT_SRC_BIT'
+  -- and 'VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT' features /must/
+  -- be supported in @optimalTilingFeatures@ for the following formats:
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC1_RGB_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC1_RGB_SRGB_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC1_RGBA_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC1_RGBA_SRGB_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC2_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC2_SRGB_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC3_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC3_SRGB_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC4_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC4_SNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC5_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC5_SNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC6H_UFLOAT_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC6H_SFLOAT_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC7_UNORM_BLOCK'
+  --
+  -- -   'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC7_SRGB_BLOCK'
+  --
+  -- To query for additional properties, or if the feature is not enabled,
+  -- 'vkGetPhysicalDeviceFormatProperties' and
+  -- 'vkGetPhysicalDeviceImageFormatProperties' /can/ be used to check for
+  -- supported properties of individual formats as normal.
   vkTextureCompressionBC :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "occlusionQueryPrecise"
+  , -- | @occlusionQueryPrecise@ specifies whether occlusion queries returning
+  -- actual sample counts are supported. Occlusion queries are created in a
+  -- 'Graphics.Vulkan.C.Core10.Query.VkQueryPool' by specifying the
+  -- @queryType@ of 'Graphics.Vulkan.C.Core10.Query.VK_QUERY_TYPE_OCCLUSION'
+  -- in the 'Graphics.Vulkan.C.Core10.Query.VkQueryPoolCreateInfo' structure
+  -- which is passed to 'Graphics.Vulkan.C.Core10.Query.vkCreateQueryPool'.
+  -- If this feature is enabled, queries of this type /can/ enable
+  -- 'Graphics.Vulkan.C.Core10.CommandBuffer.VK_QUERY_CONTROL_PRECISE_BIT' in
+  -- the @flags@ parameter to
+  -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBeginQuery'. If
+  -- this feature is not supported, the implementation supports only boolean
+  -- occlusion queries. When any samples are passed, boolean queries will
+  -- return a non-zero result value, otherwise a result value of zero is
+  -- returned. When this feature is enabled and
+  -- 'Graphics.Vulkan.C.Core10.CommandBuffer.VK_QUERY_CONTROL_PRECISE_BIT' is
+  -- set, occlusion queries will report the actual number of samples passed.
   vkOcclusionQueryPrecise :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "pipelineStatisticsQuery"
+  , -- | @pipelineStatisticsQuery@ specifies whether the pipeline statistics
+  -- queries are supported. If this feature is not enabled, queries of type
+  -- 'Graphics.Vulkan.C.Core10.Query.VK_QUERY_TYPE_PIPELINE_STATISTICS'
+  -- /cannot/ be created, and none of the
+  -- 'Graphics.Vulkan.C.Core10.Query.VkQueryPipelineStatisticFlagBits' bits
+  -- /can/ be set in the @pipelineStatistics@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Query.VkQueryPoolCreateInfo' structure.
   vkPipelineStatisticsQuery :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "vertexPipelineStoresAndAtomics"
+  , -- | @vertexPipelineStoresAndAtomics@ specifies whether storage buffers and
+  -- images support stores and atomic operations in the vertex, tessellation,
+  -- and geometry shader stages. If this feature is not enabled, all storage
+  -- image, storage texel buffers, and storage buffer variables used by these
+  -- stages in shader modules /must/ be decorated with the @NonWritable@
+  -- decoration (or the @readonly@ memory qualifier in GLSL).
   vkVertexPipelineStoresAndAtomics :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "fragmentStoresAndAtomics"
+  , -- | @fragmentStoresAndAtomics@ specifies whether storage buffers and images
+  -- support stores and atomic operations in the fragment shader stage. If
+  -- this feature is not enabled, all storage image, storage texel buffers,
+  -- and storage buffer variables used by the fragment stage in shader
+  -- modules /must/ be decorated with the @NonWritable@ decoration (or the
+  -- @readonly@ memory qualifier in GLSL).
   vkFragmentStoresAndAtomics :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "shaderTessellationAndGeometryPointSize"
+  , -- | @shaderTessellationAndGeometryPointSize@ specifies whether the
+  -- @PointSize@ built-in decoration is available in the tessellation
+  -- control, tessellation evaluation, and geometry shader stages. If this
+  -- feature is not enabled, members decorated with the @PointSize@ built-in
+  -- decoration /must/ not be read from or written to and all points written
+  -- from a tessellation or geometry shader will have a size of 1.0. This
+  -- also specifies whether shader modules /can/ declare the
+  -- @TessellationPointSize@ capability for tessellation control and
+  -- evaluation shaders, or if the shader modules /can/ declare the
+  -- @GeometryPointSize@ capability for geometry shaders. An implementation
+  -- supporting this feature /must/ also support one or both of the
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-tessellationShader tessellationShader>
+  -- or
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-geometryShader geometryShader>
+  -- features.
   vkShaderTessellationAndGeometryPointSize :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "shaderImageGatherExtended"
+  , -- | @shaderImageGatherExtended@ specifies whether the extended set of image
+  -- gather instructions are available in shader code. If this feature is not
+  -- enabled, the @OpImage@*@Gather@ instructions do not support the @Offset@
+  -- and @ConstOffsets@ operands. This also specifies whether shader modules
+  -- /can/ declare the @ImageGatherExtended@ capability.
   vkShaderImageGatherExtended :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "shaderStorageImageExtendedFormats"
+  , -- | @shaderStorageImageExtendedFormats@ specifies whether all the extended
+  -- storage image formats are available in shader code. If this feature is
+  -- enabled then the 'VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT' feature /must/ be
+  -- supported in @optimalTilingFeatures@ for all of the extended formats. To
+  -- query for additional properties, or if the feature is not enabled,
+  -- 'vkGetPhysicalDeviceFormatProperties' and
+  -- 'vkGetPhysicalDeviceImageFormatProperties' /can/ be used to check for
+  -- supported properties of individual formats as normal.
   vkShaderStorageImageExtendedFormats :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "shaderStorageImageMultisample"
+  , -- | @shaderStorageImageMultisample@ specifies whether multisampled storage
+  -- images are supported. If this feature is not enabled, images that are
+  -- created with a @usage@ that includes 'VK_IMAGE_USAGE_STORAGE_BIT' /must/
+  -- be created with @samples@ equal to 'VK_SAMPLE_COUNT_1_BIT'. This also
+  -- specifies whether shader modules /can/ declare the
+  -- @StorageImageMultisample@ capability.
   vkShaderStorageImageMultisample :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "shaderStorageImageReadWithoutFormat"
+  , -- | @shaderStorageImageReadWithoutFormat@ specifies whether storage images
+  -- require a format qualifier to be specified when reading from storage
+  -- images. If this feature is not enabled, the @OpImageRead@ instruction
+  -- /must/ not have an @OpTypeImage@ of @Unknown@. This also specifies
+  -- whether shader modules /can/ declare the @StorageImageReadWithoutFormat@
+  -- capability.
   vkShaderStorageImageReadWithoutFormat :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "shaderStorageImageWriteWithoutFormat"
+  , -- | @shaderStorageImageWriteWithoutFormat@ specifies whether storage images
+  -- require a format qualifier to be specified when writing to storage
+  -- images. If this feature is not enabled, the @OpImageWrite@ instruction
+  -- /must/ not have an @OpTypeImage@ of @Unknown@. This also specifies
+  -- whether shader modules /can/ declare the
+  -- @StorageImageWriteWithoutFormat@ capability.
   vkShaderStorageImageWriteWithoutFormat :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "shaderUniformBufferArrayDynamicIndexing"
+  , -- | @shaderUniformBufferArrayDynamicIndexing@ specifies whether arrays of
+  -- uniform buffers /can/ be indexed by /dynamically uniform/ integer
+  -- expressions in shader code. If this feature is not enabled, resources
+  -- with a descriptor type of
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER'
+  -- or
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
+  -- /must/ be indexed only by constant integral expressions when aggregated
+  -- into arrays in shader code. This also specifies whether shader modules
+  -- /can/ declare the @UniformBufferArrayDynamicIndexing@ capability.
   vkShaderUniformBufferArrayDynamicIndexing :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "shaderSampledImageArrayDynamicIndexing"
+  , -- | @shaderSampledImageArrayDynamicIndexing@ specifies whether arrays of
+  -- samplers or sampled images /can/ be indexed by dynamically uniform
+  -- integer expressions in shader code. If this feature is not enabled,
+  -- resources with a descriptor type of
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLER',
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
+  -- or
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE'
+  -- /must/ be indexed only by constant integral expressions when aggregated
+  -- into arrays in shader code. This also specifies whether shader modules
+  -- /can/ declare the @SampledImageArrayDynamicIndexing@ capability.
   vkShaderSampledImageArrayDynamicIndexing :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "shaderStorageBufferArrayDynamicIndexing"
+  , -- | @shaderStorageBufferArrayDynamicIndexing@ specifies whether arrays of
+  -- storage buffers /can/ be indexed by dynamically uniform integer
+  -- expressions in shader code. If this feature is not enabled, resources
+  -- with a descriptor type of
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER'
+  -- or
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
+  -- /must/ be indexed only by constant integral expressions when aggregated
+  -- into arrays in shader code. This also specifies whether shader modules
+  -- /can/ declare the @StorageBufferArrayDynamicIndexing@ capability.
   vkShaderStorageBufferArrayDynamicIndexing :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "shaderStorageImageArrayDynamicIndexing"
+  , -- | @shaderStorageImageArrayDynamicIndexing@ specifies whether arrays of
+  -- storage images /can/ be indexed by dynamically uniform integer
+  -- expressions in shader code. If this feature is not enabled, resources
+  -- with a descriptor type of
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE'
+  -- /must/ be indexed only by constant integral expressions when aggregated
+  -- into arrays in shader code. This also specifies whether shader modules
+  -- /can/ declare the @StorageImageArrayDynamicIndexing@ capability.
   vkShaderStorageImageArrayDynamicIndexing :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "shaderClipDistance"
+  , -- | @shaderClipDistance@ specifies whether clip distances are supported in
+  -- shader code. If this feature is not enabled, any members decorated with
+  -- the @ClipDistance@ built-in decoration /must/ not be read from or
+  -- written to in shader modules. This also specifies whether shader modules
+  -- /can/ declare the @ClipDistance@ capability.
   vkShaderClipDistance :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "shaderCullDistance"
+  , -- | @shaderCullDistance@ specifies whether cull distances are supported in
+  -- shader code. If this feature is not enabled, any members decorated with
+  -- the @CullDistance@ built-in decoration /must/ not be read from or
+  -- written to in shader modules. This also specifies whether shader modules
+  -- /can/ declare the @CullDistance@ capability.
   vkShaderCullDistance :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "shaderFloat64"
+  , -- | @shaderFloat64@ specifies whether 64-bit floats (doubles) are supported
+  -- in shader code. If this feature is not enabled, 64-bit floating-point
+  -- types /must/ not be used in shader code. This also specifies whether
+  -- shader modules /can/ declare the @Float64@ capability.
   vkShaderFloat64 :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "shaderInt64"
+  , -- | @shaderInt64@ specifies whether 64-bit integers (signed and unsigned)
+  -- are supported in shader code. If this feature is not enabled, 64-bit
+  -- integer types /must/ not be used in shader code. This also specifies
+  -- whether shader modules /can/ declare the @Int64@ capability.
   vkShaderInt64 :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "shaderInt16"
+  , -- | @shaderInt16@ specifies whether 16-bit integers (signed and unsigned)
+  -- are supported in shader code. If this feature is not enabled, 16-bit
+  -- integer types /must/ not be used in shader code. This also specifies
+  -- whether shader modules /can/ declare the @Int16@ capability.
   vkShaderInt16 :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "shaderResourceResidency"
+  , -- | @shaderResourceResidency@ specifies whether image operations that return
+  -- resource residency information are supported in shader code. If this
+  -- feature is not enabled, the @OpImageSparse@* instructions /must/ not be
+  -- used in shader code. This also specifies whether shader modules /can/
+  -- declare the @SparseResidency@ capability. The feature requires at least
+  -- one of the @sparseResidency*@ features to be supported.
   vkShaderResourceResidency :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "shaderResourceMinLod"
+  , -- | @shaderResourceMinLod@ specifies whether image operations that specify
+  -- the minimum resource LOD are supported in shader code. If this feature
+  -- is not enabled, the @MinLod@ image operand /must/ not be used in shader
+  -- code. This also specifies whether shader modules /can/ declare the
+  -- @MinLod@ capability.
   vkShaderResourceMinLod :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "sparseBinding"
+  , -- | @sparseBinding@ specifies whether resource memory /can/ be managed at
+  -- opaque sparse block level instead of at the object level. If this
+  -- feature is not enabled, resource memory /must/ be bound only on a
+  -- per-object basis using the
+  -- 'Graphics.Vulkan.C.Core10.MemoryManagement.vkBindBufferMemory' and
+  -- 'Graphics.Vulkan.C.Core10.MemoryManagement.vkBindImageMemory' commands.
+  -- In this case, buffers and images /must/ not be created with
+  -- 'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_CREATE_SPARSE_BINDING_BIT'
+  -- and 'VK_IMAGE_CREATE_SPARSE_BINDING_BIT' set in the @flags@ member of
+  -- the 'Graphics.Vulkan.C.Core10.Buffer.VkBufferCreateInfo' and
+  -- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' structures,
+  -- respectively. Otherwise resource memory /can/ be managed as described in
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#sparsememory-sparseresourcefeatures Sparse Resource Features>.
   vkSparseBinding :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "sparseResidencyBuffer"
+  , -- | @sparseResidencyBuffer@ specifies whether the device /can/ access
+  -- partially resident buffers. If this feature is not enabled, buffers
+  -- /must/ not be created with
+  -- 'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
+  -- set in the @flags@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Buffer.VkBufferCreateInfo' structure.
   vkSparseResidencyBuffer :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "sparseResidencyImage2D"
+  , -- | @sparseResidencyImage2D@ specifies whether the device /can/ access
+  -- partially resident 2D images with 1 sample per pixel. If this feature is
+  -- not enabled, images with an @imageType@ of 'VK_IMAGE_TYPE_2D' and
+  -- @samples@ set to 'VK_SAMPLE_COUNT_1_BIT' /must/ not be created with
+  -- 'VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT' set in the @flags@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' structure.
   vkSparseResidencyImage2D :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "sparseResidencyImage3D"
+  , -- | @sparseResidencyImage3D@ specifies whether the device /can/ access
+  -- partially resident 3D images. If this feature is not enabled, images
+  -- with an @imageType@ of 'VK_IMAGE_TYPE_3D' /must/ not be created with
+  -- 'VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT' set in the @flags@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' structure.
   vkSparseResidencyImage3D :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "sparseResidency2Samples"
+  , -- | @sparseResidency2Samples@ specifies whether the physical device /can/
+  -- access partially resident 2D images with 2 samples per pixel. If this
+  -- feature is not enabled, images with an @imageType@ of 'VK_IMAGE_TYPE_2D'
+  -- and @samples@ set to 'VK_SAMPLE_COUNT_2_BIT' /must/ not be created with
+  -- 'VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT' set in the @flags@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' structure.
   vkSparseResidency2Samples :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "sparseResidency4Samples"
+  , -- | @sparseResidency4Samples@ specifies whether the physical device /can/
+  -- access partially resident 2D images with 4 samples per pixel. If this
+  -- feature is not enabled, images with an @imageType@ of 'VK_IMAGE_TYPE_2D'
+  -- and @samples@ set to 'VK_SAMPLE_COUNT_4_BIT' /must/ not be created with
+  -- 'VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT' set in the @flags@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' structure.
   vkSparseResidency4Samples :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "sparseResidency8Samples"
+  , -- | @sparseResidency8Samples@ specifies whether the physical device /can/
+  -- access partially resident 2D images with 8 samples per pixel. If this
+  -- feature is not enabled, images with an @imageType@ of 'VK_IMAGE_TYPE_2D'
+  -- and @samples@ set to 'VK_SAMPLE_COUNT_8_BIT' /must/ not be created with
+  -- 'VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT' set in the @flags@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' structure.
   vkSparseResidency8Samples :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "sparseResidency16Samples"
+  , -- | @sparseResidency16Samples@ specifies whether the physical device /can/
+  -- access partially resident 2D images with 16 samples per pixel. If this
+  -- feature is not enabled, images with an @imageType@ of 'VK_IMAGE_TYPE_2D'
+  -- and @samples@ set to 'VK_SAMPLE_COUNT_16_BIT' /must/ not be created with
+  -- 'VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT' set in the @flags@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' structure.
   vkSparseResidency16Samples :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "sparseResidencyAliased"
+  , -- | @sparseResidencyAliased@ specifies whether the physical device /can/
+  -- correctly access data aliased into multiple locations. If this feature
+  -- is not enabled, the
+  -- 'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_CREATE_SPARSE_ALIASED_BIT'
+  -- and 'VK_IMAGE_CREATE_SPARSE_ALIASED_BIT' enum values /must/ not be used
+  -- in @flags@ members of the
+  -- 'Graphics.Vulkan.C.Core10.Buffer.VkBufferCreateInfo' and
+  -- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' structures,
+  -- respectively.
   vkSparseResidencyAliased :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "variableMultisampleRate"
+  , -- | @variableMultisampleRate@ specifies whether all pipelines that will be
+  -- bound to a command buffer during a subpass with no attachments /must/
+  -- have the same value for
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineMultisampleStateCreateInfo'::@rasterizationSamples@.
+  -- If set to 'Graphics.Vulkan.C.Core10.Core.VK_TRUE', the implementation
+  -- supports variable multisample rates in a subpass with no attachments. If
+  -- set to 'Graphics.Vulkan.C.Core10.Core.VK_FALSE', then all pipelines
+  -- bound in such a subpass /must/ have the same multisample rate. This has
+  -- no effect in situations where a subpass uses any attachments.
   vkVariableMultisampleRate :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceFeatures" "inheritedQueries"
+  , -- | @inheritedQueries@ specifies whether a secondary command buffer /may/ be
+  -- executed while a query is active.
   vkInheritedQueries :: VkBool32
   }
   deriving (Eq, Show)
@@ -3021,730 +2978,16 @@ instance Zero VkPhysicalDeviceFeatures where
                                   zero
                                   zero
                                   zero
+
 -- | VkPhysicalDeviceLimits - Structure reporting implementation-dependent
 -- physical device limits
 --
 -- = Members
 --
--- The @VkPhysicalDeviceLimits@ are properties of the physical device.
+-- The 'VkPhysicalDeviceLimits' are properties of the physical device.
 -- These are available in the @limits@ member of the
 -- 'VkPhysicalDeviceProperties' structure which is returned from
 -- 'vkGetPhysicalDeviceProperties'.
---
--- -   @maxImageDimension1D@ is the maximum dimension (@width@) supported
---     for all images created with an @imageType@ of @VK_IMAGE_TYPE_1D@.
---
--- -   @maxImageDimension2D@ is the maximum dimension (@width@ or @height@)
---     supported for all images created with an @imageType@ of
---     @VK_IMAGE_TYPE_2D@ and without @VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT@
---     set in @flags@.
---
--- -   @maxImageDimension3D@ is the maximum dimension (@width@, @height@,
---     or @depth@) supported for all images created with an @imageType@ of
---     @VK_IMAGE_TYPE_3D@.
---
--- -   @maxImageDimensionCube@ is the maximum dimension (@width@ or
---     @height@) supported for all images created with an @imageType@ of
---     @VK_IMAGE_TYPE_2D@ and with @VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT@
---     set in @flags@.
---
--- -   @maxImageArrayLayers@ is the maximum number of layers
---     (@arrayLayers@) for an image.
---
--- -   @maxTexelBufferElements@ is the maximum number of addressable texels
---     for a buffer view created on a buffer which was created with the
---     @VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT@ or
---     @VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT@ set in the @usage@ member
---     of the @VkBufferCreateInfo@ structure.
---
--- -   @maxUniformBufferRange@ is the maximum value that /can/ be specified
---     in the @range@ member of any
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorBufferInfo'
---     structures passed to a call to
---     'Graphics.Vulkan.C.Core10.DescriptorSet.vkUpdateDescriptorSets' for
---     descriptors of type @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER@ or
---     @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC@.
---
--- -   @maxStorageBufferRange@ is the maximum value that /can/ be specified
---     in the @range@ member of any
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorBufferInfo'
---     structures passed to a call to
---     'Graphics.Vulkan.C.Core10.DescriptorSet.vkUpdateDescriptorSets' for
---     descriptors of type @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER@ or
---     @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC@.
---
--- -   @maxPushConstantsSize@ is the maximum size, in bytes, of the pool of
---     push constant memory. For each of the push constant ranges indicated
---     by the @pPushConstantRanges@ member of the
---     @VkPipelineLayoutCreateInfo@ structure, (@offset@ + @size@) /must/
---     be less than or equal to this limit.
---
--- -   @maxMemoryAllocationCount@ is the maximum number of device memory
---     allocations, as created by
---     'Graphics.Vulkan.C.Core10.Memory.vkAllocateMemory', which /can/
---     simultaneously exist.
---
--- -   @maxSamplerAllocationCount@ is the maximum number of sampler
---     objects, as created by
---     'Graphics.Vulkan.C.Core10.Sampler.vkCreateSampler', which /can/
---     simultaneously exist on a device.
---
--- -   @bufferImageGranularity@ is the granularity, in bytes, at which
---     buffer or linear image resources, and optimal image resources /can/
---     be bound to adjacent offsets in the same @VkDeviceMemory@ object
---     without aliasing. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-bufferimagegranularity Buffer-Image Granularity>
---     for more details.
---
--- -   @sparseAddressSpaceSize@ is the total amount of address space
---     available, in bytes, for sparse memory resources. This is an upper
---     bound on the sum of the size of all sparse resources, regardless of
---     whether any memory is bound to them.
---
--- -   @maxBoundDescriptorSets@ is the maximum number of descriptor sets
---     that /can/ be simultaneously used by a pipeline. All @DescriptorSet@
---     decorations in shader modules /must/ have a value less than
---     @maxBoundDescriptorSets@. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-sets {html_spec_relative}#descriptorsets-sets>.
---
--- -   @maxPerStageDescriptorSamplers@ is the maximum number of samplers
---     that /can/ be accessible to a single shader stage in a pipeline
---     layout. Descriptors with a type of @VK_DESCRIPTOR_TYPE_SAMPLER@ or
---     @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@ count against this
---     limit. Only descriptors in descriptor set layouts created without
---     the @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@
---     bit set count against this limit. A descriptor is accessible to a
---     shader stage when the @stageFlags@ member of the
---     @VkDescriptorSetLayoutBinding@ structure has the bit for that shader
---     stage set. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-sampler {html_spec_relative}#descriptorsets-sampler>
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-combinedimagesampler {html_spec_relative}#descriptorsets-combinedimagesampler>.
---
--- -   @maxPerStageDescriptorUniformBuffers@ is the maximum number of
---     uniform buffers that /can/ be accessible to a single shader stage in
---     a pipeline layout. Descriptors with a type of
---     @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER@ or
---     @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC@ count against this
---     limit. Only descriptors in descriptor set layouts created without
---     the @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@
---     bit set count against this limit. A descriptor is accessible to a
---     shader stage when the @stageFlags@ member of the
---     @VkDescriptorSetLayoutBinding@ structure has the bit for that shader
---     stage set. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-uniformbuffer {html_spec_relative}#descriptorsets-uniformbuffer>
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic {html_spec_relative}#descriptorsets-uniformbufferdynamic>.
---
--- -   @maxPerStageDescriptorStorageBuffers@ is the maximum number of
---     storage buffers that /can/ be accessible to a single shader stage in
---     a pipeline layout. Descriptors with a type of
---     @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER@ or
---     @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC@ count against this
---     limit. Only descriptors in descriptor set layouts created without
---     the @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@
---     bit set count against this limit. A descriptor is accessible to a
---     pipeline shader stage when the @stageFlags@ member of the
---     @VkDescriptorSetLayoutBinding@ structure has the bit for that shader
---     stage set. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storagebuffer {html_spec_relative}#descriptorsets-storagebuffer>
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic {html_spec_relative}#descriptorsets-storagebufferdynamic>.
---
--- -   @maxPerStageDescriptorSampledImages@ is the maximum number of
---     sampled images that /can/ be accessible to a single shader stage in
---     a pipeline layout. Descriptors with a type of
---     @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@,
---     @VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE@, or
---     @VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER@ count against this limit.
---     Only descriptors in descriptor set layouts created without the
---     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@ bit
---     set count against this limit. A descriptor is accessible to a
---     pipeline shader stage when the @stageFlags@ member of the
---     @VkDescriptorSetLayoutBinding@ structure has the bit for that shader
---     stage set. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-combinedimagesampler {html_spec_relative}#descriptorsets-combinedimagesampler>,
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-sampledimage {html_spec_relative}#descriptorsets-sampledimage>,
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-uniformtexelbuffer {html_spec_relative}#descriptorsets-uniformtexelbuffer>.
---
--- -   @maxPerStageDescriptorStorageImages@ is the maximum number of
---     storage images that /can/ be accessible to a single shader stage in
---     a pipeline layout. Descriptors with a type of
---     @VK_DESCRIPTOR_TYPE_STORAGE_IMAGE@, or
---     @VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER@ count against this limit.
---     Only descriptors in descriptor set layouts created without the
---     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@ bit
---     set count against this limit. A descriptor is accessible to a
---     pipeline shader stage when the @stageFlags@ member of the
---     @VkDescriptorSetLayoutBinding@ structure has the bit for that shader
---     stage set. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storageimage {html_spec_relative}#descriptorsets-storageimage>,
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer {html_spec_relative}#descriptorsets-storagetexelbuffer>.
---
--- -   @maxPerStageDescriptorInputAttachments@ is the maximum number of
---     input attachments that /can/ be accessible to a single shader stage
---     in a pipeline layout. Descriptors with a type of
---     @VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT@ count against this limit. Only
---     descriptors in descriptor set layouts created without the
---     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@ bit
---     set count against this limit. A descriptor is accessible to a
---     pipeline shader stage when the @stageFlags@ member of the
---     @VkDescriptorSetLayoutBinding@ structure has the bit for that shader
---     stage set. These are only supported for the fragment stage. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-inputattachment {html_spec_relative}#descriptorsets-inputattachment>.
---
--- -   @maxPerStageResources@ is the maximum number of resources that /can/
---     be accessible to a single shader stage in a pipeline layout.
---     Descriptors with a type of
---     @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@,
---     @VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE@,
---     @VK_DESCRIPTOR_TYPE_STORAGE_IMAGE@,
---     @VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER@,
---     @VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER@,
---     @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER@,
---     @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER@,
---     @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC@,
---     @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC@, or
---     @VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT@ count against this limit. Only
---     descriptors in descriptor set layouts created without the
---     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@ bit
---     set count against this limit. For the fragment shader stage the
---     framebuffer color attachments also count against this limit.
---
--- -   @maxDescriptorSetSamplers@ is the maximum number of samplers that
---     /can/ be included in descriptor bindings in a pipeline layout across
---     all pipeline shader stages and descriptor set numbers. Descriptors
---     with a type of @VK_DESCRIPTOR_TYPE_SAMPLER@ or
---     @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@ count against this
---     limit. Only descriptors in descriptor set layouts created without
---     the @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@
---     bit set count against this limit. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-sampler {html_spec_relative}#descriptorsets-sampler>
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-combinedimagesampler {html_spec_relative}#descriptorsets-combinedimagesampler>.
---
--- -   @maxDescriptorSetUniformBuffers@ is the maximum number of uniform
---     buffers that /can/ be included in descriptor bindings in a pipeline
---     layout across all pipeline shader stages and descriptor set numbers.
---     Descriptors with a type of @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER@ or
---     @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC@ count against this
---     limit. Only descriptors in descriptor set layouts created without
---     the @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@
---     bit set count against this limit. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-uniformbuffer {html_spec_relative}#descriptorsets-uniformbuffer>
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic {html_spec_relative}#descriptorsets-uniformbufferdynamic>.
---
--- -   @maxDescriptorSetUniformBuffersDynamic@ is the maximum number of
---     dynamic uniform buffers that /can/ be included in descriptor
---     bindings in a pipeline layout across all pipeline shader stages and
---     descriptor set numbers. Descriptors with a type of
---     @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC@ count against this
---     limit. Only descriptors in descriptor set layouts created without
---     the @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@
---     bit set count against this limit. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic {html_spec_relative}#descriptorsets-uniformbufferdynamic>.
---
--- -   @maxDescriptorSetStorageBuffers@ is the maximum number of storage
---     buffers that /can/ be included in descriptor bindings in a pipeline
---     layout across all pipeline shader stages and descriptor set numbers.
---     Descriptors with a type of @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER@ or
---     @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC@ count against this
---     limit. Only descriptors in descriptor set layouts created without
---     the @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@
---     bit set count against this limit. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storagebuffer {html_spec_relative}#descriptorsets-storagebuffer>
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic {html_spec_relative}#descriptorsets-storagebufferdynamic>.
---
--- -   @maxDescriptorSetStorageBuffersDynamic@ is the maximum number of
---     dynamic storage buffers that /can/ be included in descriptor
---     bindings in a pipeline layout across all pipeline shader stages and
---     descriptor set numbers. Descriptors with a type of
---     @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC@ count against this
---     limit. Only descriptors in descriptor set layouts created without
---     the @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@
---     bit set count against this limit. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic {html_spec_relative}#descriptorsets-storagebufferdynamic>.
---
--- -   @maxDescriptorSetSampledImages@ is the maximum number of sampled
---     images that /can/ be included in descriptor bindings in a pipeline
---     layout across all pipeline shader stages and descriptor set numbers.
---     Descriptors with a type of
---     @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@,
---     @VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE@, or
---     @VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER@ count against this limit.
---     Only descriptors in descriptor set layouts created without the
---     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@ bit
---     set count against this limit. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-combinedimagesampler {html_spec_relative}#descriptorsets-combinedimagesampler>,
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-sampledimage {html_spec_relative}#descriptorsets-sampledimage>,
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-uniformtexelbuffer {html_spec_relative}#descriptorsets-uniformtexelbuffer>.
---
--- -   @maxDescriptorSetStorageImages@ is the maximum number of storage
---     images that /can/ be included in descriptor bindings in a pipeline
---     layout across all pipeline shader stages and descriptor set numbers.
---     Descriptors with a type of @VK_DESCRIPTOR_TYPE_STORAGE_IMAGE@, or
---     @VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER@ count against this limit.
---     Only descriptors in descriptor set layouts created without the
---     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@ bit
---     set count against this limit. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storageimage {html_spec_relative}#descriptorsets-storageimage>,
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer {html_spec_relative}#descriptorsets-storagetexelbuffer>.
---
--- -   @maxDescriptorSetInputAttachments@ is the maximum number of input
---     attachments that /can/ be included in descriptor bindings in a
---     pipeline layout across all pipeline shader stages and descriptor set
---     numbers. Descriptors with a type of
---     @VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT@ count against this limit. Only
---     descriptors in descriptor set layouts created without the
---     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT@ bit
---     set count against this limit. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-inputattachment {html_spec_relative}#descriptorsets-inputattachment>.
---
--- -   @maxVertexInputAttributes@ is the maximum number of vertex input
---     attributes that /can/ be specified for a graphics pipeline. These
---     are described in the array of @VkVertexInputAttributeDescription@
---     structures that are provided at graphics pipeline creation time via
---     the @pVertexAttributeDescriptions@ member of the
---     @VkPipelineVertexInputStateCreateInfo@ structure. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fxvertex-attrib {html_spec_relative}#fxvertex-attrib>
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fxvertex-input {html_spec_relative}#fxvertex-input>.
---
--- -   @maxVertexInputBindings@ is the maximum number of vertex buffers
---     that /can/ be specified for providing vertex attributes to a
---     graphics pipeline. These are described in the array of
---     @VkVertexInputBindingDescription@ structures that are provided at
---     graphics pipeline creation time via the @pVertexBindingDescriptions@
---     member of the @VkPipelineVertexInputStateCreateInfo@ structure. The
---     @binding@ member of @VkVertexInputBindingDescription@ /must/ be less
---     than this limit. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fxvertex-input {html_spec_relative}#fxvertex-input>.
---
--- -   @maxVertexInputAttributeOffset@ is the maximum vertex input
---     attribute offset that /can/ be added to the vertex input binding
---     stride. The @offset@ member of the
---     @VkVertexInputAttributeDescription@ structure /must/ be less than or
---     equal to this limit. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fxvertex-input {html_spec_relative}#fxvertex-input>.
---
--- -   @maxVertexInputBindingStride@ is the maximum vertex input binding
---     stride that /can/ be specified in a vertex input binding. The
---     @stride@ member of the @VkVertexInputBindingDescription@ structure
---     /must/ be less than or equal to this limit. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fxvertex-input {html_spec_relative}#fxvertex-input>.
---
--- -   @maxVertexOutputComponents@ is the maximum number of components of
---     output variables which /can/ be output by a vertex shader. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#shaders-vertex {html_spec_relative}#shaders-vertex>.
---
--- -   @maxTessellationGenerationLevel@ is the maximum tessellation
---     generation level supported by the fixed-function tessellation
---     primitive generator. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#tessellation {html_spec_relative}#tessellation>.
---
--- -   @maxTessellationPatchSize@ is the maximum patch size, in vertices,
---     of patches that /can/ be processed by the tessellation control
---     shader and tessellation primitive generator. The
---     @patchControlPoints@ member of the
---     @VkPipelineTessellationStateCreateInfo@ structure specified at
---     pipeline creation time and the value provided in the
---     @OutputVertices@ execution mode of shader modules /must/ be less
---     than or equal to this limit. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#tessellation {html_spec_relative}#tessellation>.
---
--- -   @maxTessellationControlPerVertexInputComponents@ is the maximum
---     number of components of input variables which /can/ be provided as
---     per-vertex inputs to the tessellation control shader stage.
---
--- -   @maxTessellationControlPerVertexOutputComponents@ is the maximum
---     number of components of per-vertex output variables which /can/ be
---     output from the tessellation control shader stage.
---
--- -   @maxTessellationControlPerPatchOutputComponents@ is the maximum
---     number of components of per-patch output variables which /can/ be
---     output from the tessellation control shader stage.
---
--- -   @maxTessellationControlTotalOutputComponents@ is the maximum total
---     number of components of per-vertex and per-patch output variables
---     which /can/ be output from the tessellation control shader stage.
---
--- -   @maxTessellationEvaluationInputComponents@ is the maximum number of
---     components of input variables which /can/ be provided as per-vertex
---     inputs to the tessellation evaluation shader stage.
---
--- -   @maxTessellationEvaluationOutputComponents@ is the maximum number of
---     components of per-vertex output variables which /can/ be output from
---     the tessellation evaluation shader stage.
---
--- -   @maxGeometryShaderInvocations@ is the maximum invocation count
---     supported for instanced geometry shaders. The value provided in the
---     @Invocations@ execution mode of shader modules /must/ be less than
---     or equal to this limit. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#geometry {html_spec_relative}#geometry>.
---
--- -   @maxGeometryInputComponents@ is the maximum number of components of
---     input variables which /can/ be provided as inputs to the geometry
---     shader stage.
---
--- -   @maxGeometryOutputComponents@ is the maximum number of components of
---     output variables which /can/ be output from the geometry shader
---     stage.
---
--- -   @maxGeometryOutputVertices@ is the maximum number of vertices which
---     /can/ be emitted by any geometry shader.
---
--- -   @maxGeometryTotalOutputComponents@ is the maximum total number of
---     components of output, across all emitted vertices, which /can/ be
---     output from the geometry shader stage.
---
--- -   @maxFragmentInputComponents@ is the maximum number of components of
---     input variables which /can/ be provided as inputs to the fragment
---     shader stage.
---
--- -   @maxFragmentOutputAttachments@ is the maximum number of output
---     attachments which /can/ be written to by the fragment shader stage.
---
--- -   @maxFragmentDualSrcAttachments@ is the maximum number of output
---     attachments which /can/ be written to by the fragment shader stage
---     when blending is enabled and one of the dual source blend modes is
---     in use. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-dsb {html_spec_relative}#framebuffer-dsb>
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-dualSrcBlend dualSrcBlend>.
---
--- -   @maxFragmentCombinedOutputResources@ is the total number of storage
---     buffers, storage images, and output buffers which /can/ be used in
---     the fragment shader stage.
---
--- -   @maxComputeSharedMemorySize@ is the maximum total storage size, in
---     bytes, available for variables declared with the @Workgroup@ storage
---     class in shader modules (or with the @shared@ storage qualifier in
---     GLSL) in the compute shader stage. The amount of storage consumed by
---     the variables declared with the @Workgroup@ storage class is
---     implementation-dependent. However, the amount of storage consumed
---     may not exceed the largest block size that would be obtained if all
---     active variables declared with @Workgroup@ storage class were
---     assigned offsets in an arbitrary order by successively taking the
---     smallest valid offset according to the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#interfaces-resources-layout-std430 Standard Storage Buffer Layout>
---     rules. (This is equivalent to using the GLSL std430 layout rules.)
---
--- -   @maxComputeWorkGroupCount@[3] is the maximum number of local
---     workgroups that /can/ be dispatched by a single dispatch command.
---     These three values represent the maximum number of local workgroups
---     for the X, Y, and Z dimensions, respectively. The workgroup count
---     parameters to the dispatch commands /must/ be less than or equal to
---     the corresponding limit. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#dispatch {html_spec_relative}#dispatch>.
---
--- -   @maxComputeWorkGroupInvocations@ is the maximum total number of
---     compute shader invocations in a single local workgroup. The product
---     of the X, Y, and Z sizes as specified by the @LocalSize@ execution
---     mode in shader modules and by the object decorated by the
---     @WorkgroupSize@ decoration /must/ be less than or equal to this
---     limit.
---
--- -   @maxComputeWorkGroupSize@[3] is the maximum size of a local compute
---     workgroup, per dimension. These three values represent the maximum
---     local workgroup size in the X, Y, and Z dimensions, respectively.
---     The @x@, @y@, and @z@ sizes specified by the @LocalSize@ execution
---     mode and by the object decorated by the @WorkgroupSize@ decoration
---     in shader modules /must/ be less than or equal to the corresponding
---     limit.
---
--- -   @subPixelPrecisionBits@ is the number of bits of subpixel precision
---     in framebuffer coordinates xf and yf. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#primsrast {html_spec_relative}#primsrast>.
---
--- -   @subTexelPrecisionBits@ is the number of bits of precision in the
---     division along an axis of an image used for minification and
---     magnification filters. 2@subTexelPrecisionBits@ is the actual number
---     of divisions along each axis of the image represented. Sub-texel
---     values calculated during image sampling will snap to these locations
---     when generating the filtered results.
---
--- -   @mipmapPrecisionBits@ is the number of bits of division that the LOD
---     calculation for mipmap fetching get snapped to when determining the
---     contribution from each mip level to the mip filtered results.
---     2@mipmapPrecisionBits@ is the actual number of divisions.
---
--- -   @maxDrawIndexedIndexValue@ is the maximum index value that /can/ be
---     used for indexed draw calls when using 32-bit indices. This excludes
---     the primitive restart index value of 0xFFFFFFFF. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-fullDrawIndexUint32 fullDrawIndexUint32>.
---
--- -   @maxDrawIndirectCount@ is the maximum draw count that is supported
---     for indirect draw calls. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-multiDrawIndirect multiDrawIndirect>.
---
--- -   @maxSamplerLodBias@ is the maximum absolute sampler LOD bias. The
---     sum of the @mipLodBias@ member of the @VkSamplerCreateInfo@
---     structure and the @Bias@ operand of image sampling operations in
---     shader modules (or 0 if no @Bias@ operand is provided to an image
---     sampling operation) are clamped to the range
---     [-@maxSamplerLodBias@,+@maxSamplerLodBias@]. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#samplers-mipLodBias {html_spec_relative}#samplers-mipLodBias>.
---
--- -   @maxSamplerAnisotropy@ is the maximum degree of sampler anisotropy.
---     The maximum degree of anisotropic filtering used for an image
---     sampling operation is the minimum of the @maxAnisotropy@ member of
---     the @VkSamplerCreateInfo@ structure and this limit. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#samplers-maxAnisotropy {html_spec_relative}#samplers-maxAnisotropy>.
---
--- -   @maxViewports@ is the maximum number of active viewports. The
---     @viewportCount@ member of the @VkPipelineViewportStateCreateInfo@
---     structure that is provided at pipeline creation /must/ be less than
---     or equal to this limit.
---
--- -   @maxViewportDimensions@[2] are the maximum viewport dimensions in
---     the X (width) and Y (height) dimensions, respectively. The maximum
---     viewport dimensions /must/ be greater than or equal to the largest
---     image which /can/ be created and used as a framebuffer attachment.
---     See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vertexpostproc-viewport Controlling the Viewport>.
---
--- -   @viewportBoundsRange@[2] is the [minimum, maximum] range that the
---     corners of a viewport /must/ be contained in. This range /must/ be
---     at least [-2 × @size@, 2 × @size@ - 1], where @size@ =
---     max(@maxViewportDimensions@[0], @maxViewportDimensions@[1]). See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vertexpostproc-viewport Controlling the Viewport>.
---
---     __Note__
---
---     The intent of the @viewportBoundsRange@ limit is to allow a maximum
---     sized viewport to be arbitrarily shifted relative to the output
---     target as long as at least some portion intersects. This would give
---     a bounds limit of [-@size@ + 1, 2 × @size@ - 1] which would allow
---     all possible non-empty-set intersections of the output target and
---     the viewport. Since these numbers are typically powers of two,
---     picking the signed number range using the smallest possible number
---     of bits ends up with the specified range.
---
--- -   @viewportSubPixelBits@ is the number of bits of subpixel precision
---     for viewport bounds. The subpixel precision that floating-point
---     viewport bounds are interpreted at is given by this limit.
---
--- -   @minMemoryMapAlignment@ is the minimum /required/ alignment, in
---     bytes, of host visible memory allocations within the host address
---     space. When mapping a memory allocation with
---     'Graphics.Vulkan.C.Core10.Memory.vkMapMemory', subtracting @offset@
---     bytes from the returned pointer will always produce an integer
---     multiple of this limit. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-device-hostaccess {html_spec_relative}#memory-device-hostaccess>.
---
--- -   @minTexelBufferOffsetAlignment@ is the minimum /required/ alignment,
---     in bytes, for the @offset@ member of the @VkBufferViewCreateInfo@
---     structure for texel buffers. When a buffer view is created for a
---     buffer which was created with
---     @VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT@ or
---     @VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT@ set in the @usage@ member
---     of the @VkBufferCreateInfo@ structure, the @offset@ /must/ be an
---     integer multiple of this limit.
---
--- -   @minUniformBufferOffsetAlignment@ is the minimum /required/
---     alignment, in bytes, for the @offset@ member of the
---     @VkDescriptorBufferInfo@ structure for uniform buffers. When a
---     descriptor of type @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER@ or
---     @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC@ is updated, the @offset@
---     /must/ be an integer multiple of this limit. Similarly, dynamic
---     offsets for uniform buffers /must/ be multiples of this limit.
---
--- -   @minStorageBufferOffsetAlignment@ is the minimum /required/
---     alignment, in bytes, for the @offset@ member of the
---     @VkDescriptorBufferInfo@ structure for storage buffers. When a
---     descriptor of type @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER@ or
---     @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC@ is updated, the @offset@
---     /must/ be an integer multiple of this limit. Similarly, dynamic
---     offsets for storage buffers /must/ be multiples of this limit.
---
--- -   @minTexelOffset@ is the minimum offset value for the @ConstOffset@
---     image operand of any of the @OpImageSample@* or @OpImageFetch@*
---     image instructions.
---
--- -   @maxTexelOffset@ is the maximum offset value for the @ConstOffset@
---     image operand of any of the @OpImageSample@* or @OpImageFetch@*
---     image instructions.
---
--- -   @minTexelGatherOffset@ is the minimum offset value for the @Offset@
---     or @ConstOffsets@ image operands of any of the @OpImage@*@Gather@
---     image instructions.
---
--- -   @maxTexelGatherOffset@ is the maximum offset value for the @Offset@
---     or @ConstOffsets@ image operands of any of the @OpImage@*@Gather@
---     image instructions.
---
--- -   @minInterpolationOffset@ is the minimum negative offset value for
---     the @offset@ operand of the @InterpolateAtOffset@ extended
---     instruction.
---
--- -   @maxInterpolationOffset@ is the maximum positive offset value for
---     the @offset@ operand of the @InterpolateAtOffset@ extended
---     instruction.
---
--- -   @subPixelInterpolationOffsetBits@ is the number of subpixel
---     fractional bits that the @x@ and @y@ offsets to the
---     @InterpolateAtOffset@ extended instruction /may/ be rounded to as
---     fixed-point values.
---
--- -   @maxFramebufferWidth@ is the maximum width for a framebuffer. The
---     @width@ member of the @VkFramebufferCreateInfo@ structure /must/ be
---     less than or equal to this limit.
---
--- -   @maxFramebufferHeight@ is the maximum height for a framebuffer. The
---     @height@ member of the @VkFramebufferCreateInfo@ structure /must/ be
---     less than or equal to this limit.
---
--- -   @maxFramebufferLayers@ is the maximum layer count for a layered
---     framebuffer. The @layers@ member of the @VkFramebufferCreateInfo@
---     structure /must/ be less than or equal to this limit.
---
--- -   @framebufferColorSampleCounts@ is a bitmask1 of
---     'VkSampleCountFlagBits' indicating the color sample counts that are
---     supported for all framebuffer color attachments with floating- or
---     fixed-point formats. There is no limit that specifies the color
---     sample counts that are supported for all color attachments with
---     integer formats.
---
--- -   @framebufferDepthSampleCounts@ is a bitmask1 of
---     'VkSampleCountFlagBits' indicating the supported depth sample counts
---     for all framebuffer depth\/stencil attachments, when the format
---     includes a depth component.
---
--- -   @framebufferStencilSampleCounts@ is a bitmask1 of
---     'VkSampleCountFlagBits' indicating the supported stencil sample
---     counts for all framebuffer depth\/stencil attachments, when the
---     format includes a stencil component.
---
--- -   @framebufferNoAttachmentsSampleCounts@ is a bitmask1 of
---     'VkSampleCountFlagBits' indicating the supported sample counts for a
---     framebuffer with no attachments.
---
--- -   @maxColorAttachments@ is the maximum number of color attachments
---     that /can/ be used by a subpass in a render pass. The
---     @colorAttachmentCount@ member of the @VkSubpassDescription@
---     structure /must/ be less than or equal to this limit.
---
--- -   @sampledImageColorSampleCounts@ is a bitmask1 of
---     'VkSampleCountFlagBits' indicating the sample counts supported for
---     all 2D images created with @VK_IMAGE_TILING_OPTIMAL@, @usage@
---     containing @VK_IMAGE_USAGE_SAMPLED_BIT@, and a non-integer color
---     format.
---
--- -   @sampledImageIntegerSampleCounts@ is a bitmask1 of
---     'VkSampleCountFlagBits' indicating the sample counts supported for
---     all 2D images created with @VK_IMAGE_TILING_OPTIMAL@, @usage@
---     containing @VK_IMAGE_USAGE_SAMPLED_BIT@, and an integer color
---     format.
---
--- -   @sampledImageDepthSampleCounts@ is a bitmask1 of
---     'VkSampleCountFlagBits' indicating the sample counts supported for
---     all 2D images created with @VK_IMAGE_TILING_OPTIMAL@, @usage@
---     containing @VK_IMAGE_USAGE_SAMPLED_BIT@, and a depth format.
---
--- -   @sampledImageStencilSampleCounts@ is a bitmask1 of
---     'VkSampleCountFlagBits' indicating the sample supported for all 2D
---     images created with @VK_IMAGE_TILING_OPTIMAL@, @usage@ containing
---     @VK_IMAGE_USAGE_SAMPLED_BIT@, and a stencil format.
---
--- -   @storageImageSampleCounts@ is a bitmask1 of 'VkSampleCountFlagBits'
---     indicating the sample counts supported for all 2D images created
---     with @VK_IMAGE_TILING_OPTIMAL@, and @usage@ containing
---     @VK_IMAGE_USAGE_STORAGE_BIT@.
---
--- -   @maxSampleMaskWords@ is the maximum number of array elements of a
---     variable decorated with the @SampleMask@ built-in decoration.
---
--- -   @timestampComputeAndGraphics@ specifies support for timestamps on
---     all graphics and compute queues. If this limit is set to @VK_TRUE@,
---     all queues that advertise the @VK_QUEUE_GRAPHICS_BIT@ or
---     @VK_QUEUE_COMPUTE_BIT@ in the
---     @VkQueueFamilyProperties@::@queueFlags@ support
---     @VkQueueFamilyProperties@::@timestampValidBits@ of at least 36. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-timestamps Timestamp Queries>.
---
--- -   @timestampPeriod@ is the number of nanoseconds /required/ for a
---     timestamp query to be incremented by 1. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-timestamps Timestamp Queries>.
---
--- -   @maxClipDistances@ is the maximum number of clip distances that
---     /can/ be used in a single shader stage. The size of any array
---     declared with the @ClipDistance@ built-in decoration in a shader
---     module /must/ be less than or equal to this limit.
---
--- -   @maxCullDistances@ is the maximum number of cull distances that
---     /can/ be used in a single shader stage. The size of any array
---     declared with the @CullDistance@ built-in decoration in a shader
---     module /must/ be less than or equal to this limit.
---
--- -   @maxCombinedClipAndCullDistances@ is the maximum combined number of
---     clip and cull distances that /can/ be used in a single shader stage.
---     The sum of the sizes of any pair of arrays declared with the
---     @ClipDistance@ and @CullDistance@ built-in decoration used by a
---     single shader stage in a shader module /must/ be less than or equal
---     to this limit.
---
--- -   @discreteQueuePriorities@ is the number of discrete priorities that
---     /can/ be assigned to a queue based on the value of each member of
---     @VkDeviceQueueCreateInfo@::@pQueuePriorities@. This /must/ be at
---     least 2, and levels /must/ be spread evenly over the range, with at
---     least one level at 1.0, and another at 0.0. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-priority {html_spec_relative}#devsandqueues-priority>.
---
--- -   @pointSizeRange@[2] is the range [@minimum@,@maximum@] of supported
---     sizes for points. Values written to variables decorated with the
---     @PointSize@ built-in decoration are clamped to this range.
---
--- -   @lineWidthRange@[2] is the range [@minimum@,@maximum@] of supported
---     widths for lines. Values specified by the @lineWidth@ member of the
---     @VkPipelineRasterizationStateCreateInfo@ or the @lineWidth@
---     parameter to @vkCmdSetLineWidth@ are clamped to this range.
---
--- -   @pointSizeGranularity@ is the granularity of supported point sizes.
---     Not all point sizes in the range defined by @pointSizeRange@ are
---     supported. This limit specifies the granularity (or increment)
---     between successive supported point sizes.
---
--- -   @lineWidthGranularity@ is the granularity of supported line widths.
---     Not all line widths in the range defined by @lineWidthRange@ are
---     supported. This limit specifies the granularity (or increment)
---     between successive supported line widths.
---
--- -   @strictLines@ specifies whether lines are rasterized according to
---     the preferred method of rasterization. If set to @VK_FALSE@, lines
---     /may/ be rasterized under a relaxed set of rules. If set to
---     @VK_TRUE@, lines are rasterized as per the strict definition. See
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#primsrast-lines-basic Basic Line Segment Rasterization>.
---
--- -   @standardSampleLocations@ specifies whether rasterization uses the
---     standard sample locations as documented in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#primsrast-multisampling Multisampling>.
---     If set to @VK_TRUE@, the implementation uses the documented sample
---     locations. If set to @VK_FALSE@, the implementation /may/ use
---     different sample locations.
---
--- -   @optimalBufferCopyOffsetAlignment@ is the optimal buffer offset
---     alignment in bytes for @vkCmdCopyBufferToImage@ and
---     @vkCmdCopyImageToBuffer@. The per texel alignment requirements are
---     enforced, but applications /should/ use the optimal alignment for
---     optimal performance and power use.
---
--- -   @optimalBufferCopyRowPitchAlignment@ is the optimal buffer row pitch
---     alignment in bytes for @vkCmdCopyBufferToImage@ and
---     @vkCmdCopyImageToBuffer@. Row pitch is the number of bytes between
---     texels with the same X coordinate in adjacent rows (Y coordinates
---     differ by one). The per texel alignment requirements are enforced,
---     but applications /should/ use the optimal alignment for optimal
---     performance and power use.
---
--- -   @nonCoherentAtomSize@ is the size and alignment in bytes that bounds
---     concurrent access to
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-device-hostaccess host-mapped device memory>.
 --
 -- = Description
 --
@@ -3754,224 +2997,785 @@ instance Zero VkPhysicalDeviceFeatures where
 --     image type. Individual images /may/ support additional sample
 --     counts, which are queried using
 --     'vkGetPhysicalDeviceImageFormatProperties' as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-supported-sample-counts Supported Sample Counts>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-supported-sample-counts Supported Sample Counts>.
+--
+-- Unresolved directive in VkPhysicalDeviceLimits.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceLimits.txt[]
 --
 -- = See Also
 --
--- @VkBool32@, @VkDeviceSize@, 'VkPhysicalDeviceProperties',
--- 'VkSampleCountFlags'
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32', 'VkDeviceSize',
+-- 'VkPhysicalDeviceProperties', 'VkSampleCountFlags'
 data VkPhysicalDeviceLimits = VkPhysicalDeviceLimits
-  { -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxImageDimension1D"
+  { -- | @maxImageDimension1D@ is the maximum dimension (@width@) supported for
+  -- all images created with an @imageType@ of 'VK_IMAGE_TYPE_1D'.
   vkMaxImageDimension1D :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxImageDimension2D"
+  , -- | @maxImageDimension2D@ is the maximum dimension (@width@ or @height@)
+  -- supported for all images created with an @imageType@ of
+  -- 'VK_IMAGE_TYPE_2D' and without 'VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT' set
+  -- in @flags@.
   vkMaxImageDimension2D :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxImageDimension3D"
+  , -- | @maxImageDimension3D@ is the maximum dimension (@width@, @height@, or
+  -- @depth@) supported for all images created with an @imageType@ of
+  -- 'VK_IMAGE_TYPE_3D'.
   vkMaxImageDimension3D :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxImageDimensionCube"
+  , -- | @maxImageDimensionCube@ is the maximum dimension (@width@ or @height@)
+  -- supported for all images created with an @imageType@ of
+  -- 'VK_IMAGE_TYPE_2D' and with 'VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT' set in
+  -- @flags@.
   vkMaxImageDimensionCube :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxImageArrayLayers"
+  , -- | @maxImageArrayLayers@ is the maximum number of layers (@arrayLayers@)
+  -- for an image.
   vkMaxImageArrayLayers :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxTexelBufferElements"
+  , -- | @maxTexelBufferElements@ is the maximum number of addressable texels for
+  -- a buffer view created on a buffer which was created with the
+  -- 'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT'
+  -- or
+  -- 'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT'
+  -- set in the @usage@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Buffer.VkBufferCreateInfo' structure.
   vkMaxTexelBufferElements :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxUniformBufferRange"
+  , -- | @maxUniformBufferRange@ is the maximum value that /can/ be specified in
+  -- the @range@ member of any
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorBufferInfo'
+  -- structures passed to a call to
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkUpdateDescriptorSets' for
+  -- descriptors of type
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER'
+  -- or
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'.
   vkMaxUniformBufferRange :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxStorageBufferRange"
+  , -- | @maxStorageBufferRange@ is the maximum value that /can/ be specified in
+  -- the @range@ member of any
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorBufferInfo'
+  -- structures passed to a call to
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkUpdateDescriptorSets' for
+  -- descriptors of type
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER'
+  -- or
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'.
   vkMaxStorageBufferRange :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxPushConstantsSize"
+  , -- | @maxPushConstantsSize@ is the maximum size, in bytes, of the pool of
+  -- push constant memory. For each of the push constant ranges indicated by
+  -- the @pPushConstantRanges@ member of the
+  -- 'Graphics.Vulkan.C.Core10.PipelineLayout.VkPipelineLayoutCreateInfo'
+  -- structure, (@offset@ + @size@) /must/ be less than or equal to this
+  -- limit.
   vkMaxPushConstantsSize :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxMemoryAllocationCount"
+  , -- | @maxMemoryAllocationCount@ is the maximum number of device memory
+  -- allocations, as created by
+  -- 'Graphics.Vulkan.C.Core10.Memory.vkAllocateMemory', which /can/
+  -- simultaneously exist.
   vkMaxMemoryAllocationCount :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxSamplerAllocationCount"
+  , -- | @maxSamplerAllocationCount@ is the maximum number of sampler objects, as
+  -- created by 'Graphics.Vulkan.C.Core10.Sampler.vkCreateSampler', which
+  -- /can/ simultaneously exist on a device.
   vkMaxSamplerAllocationCount :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "bufferImageGranularity"
+  , -- | @bufferImageGranularity@ is the granularity, in bytes, at which buffer
+  -- or linear image resources, and optimal image resources /can/ be bound to
+  -- adjacent offsets in the same
+  -- 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object without
+  -- aliasing. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-bufferimagegranularity Buffer-Image Granularity>
+  -- for more details.
   vkBufferImageGranularity :: VkDeviceSize
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "sparseAddressSpaceSize"
+  , -- | @sparseAddressSpaceSize@ is the total amount of address space available,
+  -- in bytes, for sparse memory resources. This is an upper bound on the sum
+  -- of the size of all sparse resources, regardless of whether any memory is
+  -- bound to them.
   vkSparseAddressSpaceSize :: VkDeviceSize
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxBoundDescriptorSets"
+  , -- | @maxBoundDescriptorSets@ is the maximum number of descriptor sets that
+  -- /can/ be simultaneously used by a pipeline. All
+  -- 'Graphics.Vulkan.Core10.DescriptorSet.DescriptorSet' decorations in
+  -- shader modules /must/ have a value less than @maxBoundDescriptorSets@.
+  -- See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-sets>.
   vkMaxBoundDescriptorSets :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxPerStageDescriptorSamplers"
+  , -- | @maxPerStageDescriptorSamplers@ is the maximum number of samplers that
+  -- /can/ be accessible to a single shader stage in a pipeline layout.
+  -- Descriptors with a type of
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLER' or
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
+  -- count against this limit. Only descriptors in descriptor set layouts
+  -- created without the
+  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
+  -- bit set count against this limit. A descriptor is accessible to a shader
+  -- stage when the @stageFlags@ member of the
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutBinding'
+  -- structure has the bit for that shader stage set. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-sampler>
+  -- and
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-combinedimagesampler>.
   vkMaxPerStageDescriptorSamplers :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxPerStageDescriptorUniformBuffers"
+  , -- | @maxPerStageDescriptorUniformBuffers@ is the maximum number of uniform
+  -- buffers that /can/ be accessible to a single shader stage in a pipeline
+  -- layout. Descriptors with a type of
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER'
+  -- or
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
+  -- count against this limit. Only descriptors in descriptor set layouts
+  -- created without the
+  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
+  -- bit set count against this limit. A descriptor is accessible to a shader
+  -- stage when the @stageFlags@ member of the
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutBinding'
+  -- structure has the bit for that shader stage set. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-uniformbuffer>
+  -- and
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic>.
   vkMaxPerStageDescriptorUniformBuffers :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxPerStageDescriptorStorageBuffers"
+  , -- | @maxPerStageDescriptorStorageBuffers@ is the maximum number of storage
+  -- buffers that /can/ be accessible to a single shader stage in a pipeline
+  -- layout. Descriptors with a type of
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER'
+  -- or
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
+  -- count against this limit. Only descriptors in descriptor set layouts
+  -- created without the
+  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
+  -- bit set count against this limit. A descriptor is accessible to a
+  -- pipeline shader stage when the @stageFlags@ member of the
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutBinding'
+  -- structure has the bit for that shader stage set. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storagebuffer>
+  -- and
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic>.
   vkMaxPerStageDescriptorStorageBuffers :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxPerStageDescriptorSampledImages"
+  , -- | @maxPerStageDescriptorSampledImages@ is the maximum number of sampled
+  -- images that /can/ be accessible to a single shader stage in a pipeline
+  -- layout. Descriptors with a type of
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE',
+  -- or
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
+  -- count against this limit. Only descriptors in descriptor set layouts
+  -- created without the
+  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
+  -- bit set count against this limit. A descriptor is accessible to a
+  -- pipeline shader stage when the @stageFlags@ member of the
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutBinding'
+  -- structure has the bit for that shader stage set. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-combinedimagesampler>,
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-sampledimage>,
+  -- and
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-uniformtexelbuffer>.
   vkMaxPerStageDescriptorSampledImages :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxPerStageDescriptorStorageImages"
+  , -- | @maxPerStageDescriptorStorageImages@ is the maximum number of storage
+  -- images that /can/ be accessible to a single shader stage in a pipeline
+  -- layout. Descriptors with a type of
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE',
+  -- or
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+  -- count against this limit. Only descriptors in descriptor set layouts
+  -- created without the
+  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
+  -- bit set count against this limit. A descriptor is accessible to a
+  -- pipeline shader stage when the @stageFlags@ member of the
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutBinding'
+  -- structure has the bit for that shader stage set. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storageimage>,
+  -- and
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer>.
   vkMaxPerStageDescriptorStorageImages :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxPerStageDescriptorInputAttachments"
+  , -- | @maxPerStageDescriptorInputAttachments@ is the maximum number of input
+  -- attachments that /can/ be accessible to a single shader stage in a
+  -- pipeline layout. Descriptors with a type of
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
+  -- count against this limit. Only descriptors in descriptor set layouts
+  -- created without the
+  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
+  -- bit set count against this limit. A descriptor is accessible to a
+  -- pipeline shader stage when the @stageFlags@ member of the
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutBinding'
+  -- structure has the bit for that shader stage set. These are only
+  -- supported for the fragment stage. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-inputattachment>.
   vkMaxPerStageDescriptorInputAttachments :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxPerStageResources"
+  , -- | @maxPerStageResources@ is the maximum number of resources that /can/ be
+  -- accessible to a single shader stage in a pipeline layout. Descriptors
+  -- with a type of
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE',
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE',
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER',
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER',
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER',
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER',
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC',
+  -- or
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
+  -- count against this limit. Only descriptors in descriptor set layouts
+  -- created without the
+  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
+  -- bit set count against this limit. For the fragment shader stage the
+  -- framebuffer color attachments also count against this limit.
   vkMaxPerStageResources :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxDescriptorSetSamplers"
+  , -- | @maxDescriptorSetSamplers@ is the maximum number of samplers that /can/
+  -- be included in descriptor bindings in a pipeline layout across all
+  -- pipeline shader stages and descriptor set numbers. Descriptors with a
+  -- type of
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLER' or
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
+  -- count against this limit. Only descriptors in descriptor set layouts
+  -- created without the
+  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
+  -- bit set count against this limit. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-sampler>
+  -- and
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-combinedimagesampler>.
   vkMaxDescriptorSetSamplers :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxDescriptorSetUniformBuffers"
+  , -- | @maxDescriptorSetUniformBuffers@ is the maximum number of uniform
+  -- buffers that /can/ be included in descriptor bindings in a pipeline
+  -- layout across all pipeline shader stages and descriptor set numbers.
+  -- Descriptors with a type of
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER'
+  -- or
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
+  -- count against this limit. Only descriptors in descriptor set layouts
+  -- created without the
+  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
+  -- bit set count against this limit. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-uniformbuffer>
+  -- and
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic>.
   vkMaxDescriptorSetUniformBuffers :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxDescriptorSetUniformBuffersDynamic"
+  , -- | @maxDescriptorSetUniformBuffersDynamic@ is the maximum number of dynamic
+  -- uniform buffers that /can/ be included in descriptor bindings in a
+  -- pipeline layout across all pipeline shader stages and descriptor set
+  -- numbers. Descriptors with a type of
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
+  -- count against this limit. Only descriptors in descriptor set layouts
+  -- created without the
+  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
+  -- bit set count against this limit. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic>.
   vkMaxDescriptorSetUniformBuffersDynamic :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxDescriptorSetStorageBuffers"
+  , -- | @maxDescriptorSetStorageBuffers@ is the maximum number of storage
+  -- buffers that /can/ be included in descriptor bindings in a pipeline
+  -- layout across all pipeline shader stages and descriptor set numbers.
+  -- Descriptors with a type of
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER'
+  -- or
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
+  -- count against this limit. Only descriptors in descriptor set layouts
+  -- created without the
+  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
+  -- bit set count against this limit. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storagebuffer>
+  -- and
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic>.
   vkMaxDescriptorSetStorageBuffers :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxDescriptorSetStorageBuffersDynamic"
+  , -- | @maxDescriptorSetStorageBuffersDynamic@ is the maximum number of dynamic
+  -- storage buffers that /can/ be included in descriptor bindings in a
+  -- pipeline layout across all pipeline shader stages and descriptor set
+  -- numbers. Descriptors with a type of
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
+  -- count against this limit. Only descriptors in descriptor set layouts
+  -- created without the
+  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
+  -- bit set count against this limit. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic>.
   vkMaxDescriptorSetStorageBuffersDynamic :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxDescriptorSetSampledImages"
+  , -- | @maxDescriptorSetSampledImages@ is the maximum number of sampled images
+  -- that /can/ be included in descriptor bindings in a pipeline layout
+  -- across all pipeline shader stages and descriptor set numbers.
+  -- Descriptors with a type of
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE',
+  -- or
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
+  -- count against this limit. Only descriptors in descriptor set layouts
+  -- created without the
+  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
+  -- bit set count against this limit. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-combinedimagesampler>,
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-sampledimage>,
+  -- and
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-uniformtexelbuffer>.
   vkMaxDescriptorSetSampledImages :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxDescriptorSetStorageImages"
+  , -- | @maxDescriptorSetStorageImages@ is the maximum number of storage images
+  -- that /can/ be included in descriptor bindings in a pipeline layout
+  -- across all pipeline shader stages and descriptor set numbers.
+  -- Descriptors with a type of
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE',
+  -- or
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+  -- count against this limit. Only descriptors in descriptor set layouts
+  -- created without the
+  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
+  -- bit set count against this limit. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storageimage>,
+  -- and
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer>.
   vkMaxDescriptorSetStorageImages :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxDescriptorSetInputAttachments"
+  , -- | @maxDescriptorSetInputAttachments@ is the maximum number of input
+  -- attachments that /can/ be included in descriptor bindings in a pipeline
+  -- layout across all pipeline shader stages and descriptor set numbers.
+  -- Descriptors with a type of
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
+  -- count against this limit. Only descriptors in descriptor set layouts
+  -- created without the
+  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
+  -- bit set count against this limit. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-inputattachment>.
   vkMaxDescriptorSetInputAttachments :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxVertexInputAttributes"
+  , -- | @maxVertexInputAttributes@ is the maximum number of vertex input
+  -- attributes that /can/ be specified for a graphics pipeline. These are
+  -- described in the array of
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkVertexInputAttributeDescription'
+  -- structures that are provided at graphics pipeline creation time via the
+  -- @pVertexAttributeDescriptions@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineVertexInputStateCreateInfo'
+  -- structure. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fxvertex-attrib>
+  -- and
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fxvertex-input>.
   vkMaxVertexInputAttributes :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxVertexInputBindings"
+  , -- | @maxVertexInputBindings@ is the maximum number of vertex buffers that
+  -- /can/ be specified for providing vertex attributes to a graphics
+  -- pipeline. These are described in the array of
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkVertexInputBindingDescription'
+  -- structures that are provided at graphics pipeline creation time via the
+  -- @pVertexBindingDescriptions@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineVertexInputStateCreateInfo'
+  -- structure. The @binding@ member of
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkVertexInputBindingDescription'
+  -- /must/ be less than this limit. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fxvertex-input>.
   vkMaxVertexInputBindings :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxVertexInputAttributeOffset"
+  , -- | @maxVertexInputAttributeOffset@ is the maximum vertex input attribute
+  -- offset that /can/ be added to the vertex input binding stride. The
+  -- @offset@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkVertexInputAttributeDescription'
+  -- structure /must/ be less than or equal to this limit. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fxvertex-input>.
   vkMaxVertexInputAttributeOffset :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxVertexInputBindingStride"
+  , -- | @maxVertexInputBindingStride@ is the maximum vertex input binding stride
+  -- that /can/ be specified in a vertex input binding. The @stride@ member
+  -- of the
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkVertexInputBindingDescription'
+  -- structure /must/ be less than or equal to this limit. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fxvertex-input>.
   vkMaxVertexInputBindingStride :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxVertexOutputComponents"
+  , -- | @maxVertexOutputComponents@ is the maximum number of components of
+  -- output variables which /can/ be output by a vertex shader. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#shaders-vertex>.
   vkMaxVertexOutputComponents :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxTessellationGenerationLevel"
+  , -- | @maxTessellationGenerationLevel@ is the maximum tessellation generation
+  -- level supported by the fixed-function tessellation primitive generator.
+  -- See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#tessellation>.
   vkMaxTessellationGenerationLevel :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxTessellationPatchSize"
+  , -- | @maxTessellationPatchSize@ is the maximum patch size, in vertices, of
+  -- patches that /can/ be processed by the tessellation control shader and
+  -- tessellation primitive generator. The @patchControlPoints@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineTessellationStateCreateInfo'
+  -- structure specified at pipeline creation time and the value provided in
+  -- the @OutputVertices@ execution mode of shader modules /must/ be less
+  -- than or equal to this limit. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#tessellation>.
   vkMaxTessellationPatchSize :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxTessellationControlPerVertexInputComponents"
+  , -- | @maxTessellationControlPerVertexInputComponents@ is the maximum number
+  -- of components of input variables which /can/ be provided as per-vertex
+  -- inputs to the tessellation control shader stage.
   vkMaxTessellationControlPerVertexInputComponents :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxTessellationControlPerVertexOutputComponents"
+  , -- | @maxTessellationControlPerVertexOutputComponents@ is the maximum number
+  -- of components of per-vertex output variables which /can/ be output from
+  -- the tessellation control shader stage.
   vkMaxTessellationControlPerVertexOutputComponents :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxTessellationControlPerPatchOutputComponents"
+  , -- | @maxTessellationControlPerPatchOutputComponents@ is the maximum number
+  -- of components of per-patch output variables which /can/ be output from
+  -- the tessellation control shader stage.
   vkMaxTessellationControlPerPatchOutputComponents :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxTessellationControlTotalOutputComponents"
+  , -- | @maxTessellationControlTotalOutputComponents@ is the maximum total
+  -- number of components of per-vertex and per-patch output variables which
+  -- /can/ be output from the tessellation control shader stage.
   vkMaxTessellationControlTotalOutputComponents :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxTessellationEvaluationInputComponents"
+  , -- | @maxTessellationEvaluationInputComponents@ is the maximum number of
+  -- components of input variables which /can/ be provided as per-vertex
+  -- inputs to the tessellation evaluation shader stage.
   vkMaxTessellationEvaluationInputComponents :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxTessellationEvaluationOutputComponents"
+  , -- | @maxTessellationEvaluationOutputComponents@ is the maximum number of
+  -- components of per-vertex output variables which /can/ be output from the
+  -- tessellation evaluation shader stage.
   vkMaxTessellationEvaluationOutputComponents :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxGeometryShaderInvocations"
+  , -- | @maxGeometryShaderInvocations@ is the maximum invocation count supported
+  -- for instanced geometry shaders. The value provided in the @Invocations@
+  -- execution mode of shader modules /must/ be less than or equal to this
+  -- limit. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#geometry>.
   vkMaxGeometryShaderInvocations :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxGeometryInputComponents"
+  , -- | @maxGeometryInputComponents@ is the maximum number of components of
+  -- input variables which /can/ be provided as inputs to the geometry shader
+  -- stage.
   vkMaxGeometryInputComponents :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxGeometryOutputComponents"
+  , -- | @maxGeometryOutputComponents@ is the maximum number of components of
+  -- output variables which /can/ be output from the geometry shader stage.
   vkMaxGeometryOutputComponents :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxGeometryOutputVertices"
+  , -- | @maxGeometryOutputVertices@ is the maximum number of vertices which
+  -- /can/ be emitted by any geometry shader.
   vkMaxGeometryOutputVertices :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxGeometryTotalOutputComponents"
+  , -- | @maxGeometryTotalOutputComponents@ is the maximum total number of
+  -- components of output, across all emitted vertices, which /can/ be output
+  -- from the geometry shader stage.
   vkMaxGeometryTotalOutputComponents :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxFragmentInputComponents"
+  , -- | @maxFragmentInputComponents@ is the maximum number of components of
+  -- input variables which /can/ be provided as inputs to the fragment shader
+  -- stage.
   vkMaxFragmentInputComponents :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxFragmentOutputAttachments"
+  , -- | @maxFragmentOutputAttachments@ is the maximum number of output
+  -- attachments which /can/ be written to by the fragment shader stage.
   vkMaxFragmentOutputAttachments :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxFragmentDualSrcAttachments"
+  , -- | @maxFragmentDualSrcAttachments@ is the maximum number of output
+  -- attachments which /can/ be written to by the fragment shader stage when
+  -- blending is enabled and one of the dual source blend modes is in use.
+  -- See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#framebuffer-dsb>
+  -- and
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-dualSrcBlend dualSrcBlend>.
   vkMaxFragmentDualSrcAttachments :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxFragmentCombinedOutputResources"
+  , -- | @maxFragmentCombinedOutputResources@ is the total number of storage
+  -- buffers, storage images, and output buffers which /can/ be used in the
+  -- fragment shader stage.
   vkMaxFragmentCombinedOutputResources :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxComputeSharedMemorySize"
+  , -- | @maxComputeSharedMemorySize@ is the maximum total storage size, in
+  -- bytes, available for variables declared with the @Workgroup@ storage
+  -- class in shader modules (or with the @shared@ storage qualifier in GLSL)
+  -- in the compute shader stage. The amount of storage consumed by the
+  -- variables declared with the @Workgroup@ storage class is
+  -- implementation-dependent. However, the amount of storage consumed may
+  -- not exceed the largest block size that would be obtained if all active
+  -- variables declared with @Workgroup@ storage class were assigned offsets
+  -- in an arbitrary order by successively taking the smallest valid offset
+  -- according to the
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#interfaces-resources-layout-std430 Standard Storage Buffer Layout>
+  -- rules. (This is equivalent to using the GLSL std430 layout rules.)
   vkMaxComputeSharedMemorySize :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxComputeWorkGroupCount"
+  , -- | @maxComputeWorkGroupCount@[3] is the maximum number of local workgroups
+  -- that /can/ be dispatched by a single dispatch command. These three
+  -- values represent the maximum number of local workgroups for the X, Y,
+  -- and Z dimensions, respectively. The workgroup count parameters to the
+  -- dispatch commands /must/ be less than or equal to the corresponding
+  -- limit. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#dispatch>.
   vkMaxComputeWorkGroupCount :: Vector 3 Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxComputeWorkGroupInvocations"
+  , -- | @maxComputeWorkGroupInvocations@ is the maximum total number of compute
+  -- shader invocations in a single local workgroup. The product of the X, Y,
+  -- and Z sizes as specified by the @LocalSize@ execution mode in shader
+  -- modules and by the object decorated by the @WorkgroupSize@ decoration
+  -- /must/ be less than or equal to this limit.
   vkMaxComputeWorkGroupInvocations :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxComputeWorkGroupSize"
+  , -- | @maxComputeWorkGroupSize@[3] is the maximum size of a local compute
+  -- workgroup, per dimension. These three values represent the maximum local
+  -- workgroup size in the X, Y, and Z dimensions, respectively. The @x@,
+  -- @y@, and @z@ sizes specified by the @LocalSize@ execution mode and by
+  -- the object decorated by the @WorkgroupSize@ decoration in shader modules
+  -- /must/ be less than or equal to the corresponding limit.
   vkMaxComputeWorkGroupSize :: Vector 3 Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "subPixelPrecisionBits"
+  , -- | @subPixelPrecisionBits@ is the number of bits of subpixel precision in
+  -- framebuffer coordinates xf and yf. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#primsrast>.
   vkSubPixelPrecisionBits :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "subTexelPrecisionBits"
+  , -- | @subTexelPrecisionBits@ is the number of bits of precision in the
+  -- division along an axis of an image used for minification and
+  -- magnification filters. 2@subTexelPrecisionBits@ is the actual number of
+  -- divisions along each axis of the image represented. Sub-texel values
+  -- calculated during image sampling will snap to these locations when
+  -- generating the filtered results.
   vkSubTexelPrecisionBits :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "mipmapPrecisionBits"
+  , -- | @mipmapPrecisionBits@ is the number of bits of division that the LOD
+  -- calculation for mipmap fetching get snapped to when determining the
+  -- contribution from each mip level to the mip filtered results.
+  -- 2@mipmapPrecisionBits@ is the actual number of divisions.
   vkMipmapPrecisionBits :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxDrawIndexedIndexValue"
+  , -- | @maxDrawIndexedIndexValue@ is the maximum index value that /can/ be used
+  -- for indexed draw calls when using 32-bit indices. This excludes the
+  -- primitive restart index value of 0xFFFFFFFF. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-fullDrawIndexUint32 fullDrawIndexUint32>.
   vkMaxDrawIndexedIndexValue :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxDrawIndirectCount"
+  , -- | @maxDrawIndirectCount@ is the maximum draw count that is supported for
+  -- indirect draw calls. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-multiDrawIndirect multiDrawIndirect>.
   vkMaxDrawIndirectCount :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxSamplerLodBias"
+  , -- | @maxSamplerLodBias@ is the maximum absolute sampler LOD bias. The sum of
+  -- the @mipLodBias@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Sampler.VkSamplerCreateInfo' structure and the
+  -- @Bias@ operand of image sampling operations in shader modules (or 0 if
+  -- no @Bias@ operand is provided to an image sampling operation) are
+  -- clamped to the range [-@maxSamplerLodBias@,+@maxSamplerLodBias@]. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#samplers-mipLodBias>.
   vkMaxSamplerLodBias :: CFloat
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxSamplerAnisotropy"
+  , -- | @maxSamplerAnisotropy@ is the maximum degree of sampler anisotropy. The
+  -- maximum degree of anisotropic filtering used for an image sampling
+  -- operation is the minimum of the @maxAnisotropy@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Sampler.VkSamplerCreateInfo' structure and
+  -- this limit. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#samplers-maxAnisotropy>.
   vkMaxSamplerAnisotropy :: CFloat
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxViewports"
+  , -- | @maxViewports@ is the maximum number of active viewports. The
+  -- @viewportCount@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineViewportStateCreateInfo'
+  -- structure that is provided at pipeline creation /must/ be less than or
+  -- equal to this limit.
   vkMaxViewports :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxViewportDimensions"
+  , -- | @maxViewportDimensions@[2] are the maximum viewport dimensions in the X
+  -- (width) and Y (height) dimensions, respectively. The maximum viewport
+  -- dimensions /must/ be greater than or equal to the largest image which
+  -- /can/ be created and used as a framebuffer attachment. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#vertexpostproc-viewport Controlling the Viewport>.
   vkMaxViewportDimensions :: Vector 2 Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "viewportBoundsRange"
+  , -- | @viewportBoundsRange@[2] is the [minimum, maximum] range that the
+  -- corners of a viewport /must/ be contained in. This range /must/ be at
+  -- least [-2 × @size@, 2 × @size@ - 1], where @size@ =
+  -- max(@maxViewportDimensions@[0], @maxViewportDimensions@[1]). See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#vertexpostproc-viewport Controlling the Viewport>.
+  --
+  -- __Note__
+  --
+  -- The intent of the @viewportBoundsRange@ limit is to allow a maximum
+  -- sized viewport to be arbitrarily shifted relative to the output target
+  -- as long as at least some portion intersects. This would give a bounds
+  -- limit of [-@size@ + 1, 2 × @size@ - 1] which would allow all possible
+  -- non-empty-set intersections of the output target and the viewport. Since
+  -- these numbers are typically powers of two, picking the signed number
+  -- range using the smallest possible number of bits ends up with the
+  -- specified range.
   vkViewportBoundsRange :: Vector 2 CFloat
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "viewportSubPixelBits"
+  , -- | @viewportSubPixelBits@ is the number of bits of subpixel precision for
+  -- viewport bounds. The subpixel precision that floating-point viewport
+  -- bounds are interpreted at is given by this limit.
   vkViewportSubPixelBits :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "minMemoryMapAlignment"
+  , -- | @minMemoryMapAlignment@ is the minimum /required/ alignment, in bytes,
+  -- of host visible memory allocations within the host address space. When
+  -- mapping a memory allocation with
+  -- 'Graphics.Vulkan.C.Core10.Memory.vkMapMemory', subtracting @offset@
+  -- bytes from the returned pointer will always produce an integer multiple
+  -- of this limit. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-device-hostaccess>.
   vkMinMemoryMapAlignment :: CSize
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "minTexelBufferOffsetAlignment"
+  , -- | @minTexelBufferOffsetAlignment@ is the minimum /required/ alignment, in
+  -- bytes, for the @offset@ member of the
+  -- 'Graphics.Vulkan.C.Core10.BufferView.VkBufferViewCreateInfo' structure
+  -- for texel buffers. When a buffer view is created for a buffer which was
+  -- created with
+  -- 'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT'
+  -- or
+  -- 'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT'
+  -- set in the @usage@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Buffer.VkBufferCreateInfo' structure, the
+  -- @offset@ /must/ be an integer multiple of this limit.
   vkMinTexelBufferOffsetAlignment :: VkDeviceSize
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "minUniformBufferOffsetAlignment"
+  , -- | @minUniformBufferOffsetAlignment@ is the minimum /required/ alignment,
+  -- in bytes, for the @offset@ member of the
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorBufferInfo'
+  -- structure for uniform buffers. When a descriptor of type
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER'
+  -- or
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
+  -- is updated, the @offset@ /must/ be an integer multiple of this limit.
+  -- Similarly, dynamic offsets for uniform buffers /must/ be multiples of
+  -- this limit.
   vkMinUniformBufferOffsetAlignment :: VkDeviceSize
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "minStorageBufferOffsetAlignment"
+  , -- | @minStorageBufferOffsetAlignment@ is the minimum /required/ alignment,
+  -- in bytes, for the @offset@ member of the
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorBufferInfo'
+  -- structure for storage buffers. When a descriptor of type
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER'
+  -- or
+  -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
+  -- is updated, the @offset@ /must/ be an integer multiple of this limit.
+  -- Similarly, dynamic offsets for storage buffers /must/ be multiples of
+  -- this limit.
   vkMinStorageBufferOffsetAlignment :: VkDeviceSize
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "minTexelOffset"
+  , -- | @minTexelOffset@ is the minimum offset value for the @ConstOffset@ image
+  -- operand of any of the @OpImageSample@* or @OpImageFetch@* image
+  -- instructions.
   vkMinTexelOffset :: Int32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxTexelOffset"
+  , -- | @maxTexelOffset@ is the maximum offset value for the @ConstOffset@ image
+  -- operand of any of the @OpImageSample@* or @OpImageFetch@* image
+  -- instructions.
   vkMaxTexelOffset :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "minTexelGatherOffset"
+  , -- | @minTexelGatherOffset@ is the minimum offset value for the @Offset@ or
+  -- @ConstOffsets@ image operands of any of the @OpImage@*@Gather@ image
+  -- instructions.
   vkMinTexelGatherOffset :: Int32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxTexelGatherOffset"
+  , -- | @maxTexelGatherOffset@ is the maximum offset value for the @Offset@ or
+  -- @ConstOffsets@ image operands of any of the @OpImage@*@Gather@ image
+  -- instructions.
   vkMaxTexelGatherOffset :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "minInterpolationOffset"
+  , -- | @minInterpolationOffset@ is the minimum negative offset value for the
+  -- @offset@ operand of the @InterpolateAtOffset@ extended instruction.
   vkMinInterpolationOffset :: CFloat
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxInterpolationOffset"
+  , -- | @maxInterpolationOffset@ is the maximum positive offset value for the
+  -- @offset@ operand of the @InterpolateAtOffset@ extended instruction.
   vkMaxInterpolationOffset :: CFloat
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "subPixelInterpolationOffsetBits"
+  , -- | @subPixelInterpolationOffsetBits@ is the number of subpixel fractional
+  -- bits that the @x@ and @y@ offsets to the @InterpolateAtOffset@ extended
+  -- instruction /may/ be rounded to as fixed-point values.
   vkSubPixelInterpolationOffsetBits :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxFramebufferWidth"
+  , -- | @maxFramebufferWidth@ is the maximum width for a framebuffer. The
+  -- @width@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Pass.VkFramebufferCreateInfo' structure /must/
+  -- be less than or equal to this limit.
   vkMaxFramebufferWidth :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxFramebufferHeight"
+  , -- | @maxFramebufferHeight@ is the maximum height for a framebuffer. The
+  -- @height@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Pass.VkFramebufferCreateInfo' structure /must/
+  -- be less than or equal to this limit.
   vkMaxFramebufferHeight :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxFramebufferLayers"
+  , -- | @maxFramebufferLayers@ is the maximum layer count for a layered
+  -- framebuffer. The @layers@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Pass.VkFramebufferCreateInfo' structure /must/
+  -- be less than or equal to this limit.
   vkMaxFramebufferLayers :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "framebufferColorSampleCounts"
+  , -- | @framebufferColorSampleCounts@ is a bitmask1 of 'VkSampleCountFlagBits'
+  -- indicating the color sample counts that are supported for all
+  -- framebuffer color attachments with floating- or fixed-point formats.
+  -- There is no limit that specifies the color sample counts that are
+  -- supported for all color attachments with integer formats.
   vkFramebufferColorSampleCounts :: VkSampleCountFlags
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "framebufferDepthSampleCounts"
+  , -- | @framebufferDepthSampleCounts@ is a bitmask1 of 'VkSampleCountFlagBits'
+  -- indicating the supported depth sample counts for all framebuffer
+  -- depth\/stencil attachments, when the format includes a depth component.
   vkFramebufferDepthSampleCounts :: VkSampleCountFlags
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "framebufferStencilSampleCounts"
+  , -- | @framebufferStencilSampleCounts@ is a bitmask1 of
+  -- 'VkSampleCountFlagBits' indicating the supported stencil sample counts
+  -- for all framebuffer depth\/stencil attachments, when the format includes
+  -- a stencil component.
   vkFramebufferStencilSampleCounts :: VkSampleCountFlags
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "framebufferNoAttachmentsSampleCounts"
+  , -- | @framebufferNoAttachmentsSampleCounts@ is a bitmask1 of
+  -- 'VkSampleCountFlagBits' indicating the supported sample counts for a
+  -- framebuffer with no attachments.
   vkFramebufferNoAttachmentsSampleCounts :: VkSampleCountFlags
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxColorAttachments"
+  , -- | @maxColorAttachments@ is the maximum number of color attachments that
+  -- /can/ be used by a subpass in a render pass. The @colorAttachmentCount@
+  -- member of the 'Graphics.Vulkan.C.Core10.Pass.VkSubpassDescription'
+  -- structure /must/ be less than or equal to this limit.
   vkMaxColorAttachments :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "sampledImageColorSampleCounts"
+  , -- | @sampledImageColorSampleCounts@ is a bitmask1 of 'VkSampleCountFlagBits'
+  -- indicating the sample counts supported for all 2D images created with
+  -- 'VK_IMAGE_TILING_OPTIMAL', @usage@ containing
+  -- 'VK_IMAGE_USAGE_SAMPLED_BIT', and a non-integer color format.
   vkSampledImageColorSampleCounts :: VkSampleCountFlags
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "sampledImageIntegerSampleCounts"
+  , -- | @sampledImageIntegerSampleCounts@ is a bitmask1 of
+  -- 'VkSampleCountFlagBits' indicating the sample counts supported for all
+  -- 2D images created with 'VK_IMAGE_TILING_OPTIMAL', @usage@ containing
+  -- 'VK_IMAGE_USAGE_SAMPLED_BIT', and an integer color format.
   vkSampledImageIntegerSampleCounts :: VkSampleCountFlags
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "sampledImageDepthSampleCounts"
+  , -- | @sampledImageDepthSampleCounts@ is a bitmask1 of 'VkSampleCountFlagBits'
+  -- indicating the sample counts supported for all 2D images created with
+  -- 'VK_IMAGE_TILING_OPTIMAL', @usage@ containing
+  -- 'VK_IMAGE_USAGE_SAMPLED_BIT', and a depth format.
   vkSampledImageDepthSampleCounts :: VkSampleCountFlags
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "sampledImageStencilSampleCounts"
+  , -- | @sampledImageStencilSampleCounts@ is a bitmask1 of
+  -- 'VkSampleCountFlagBits' indicating the sample supported for all 2D
+  -- images created with 'VK_IMAGE_TILING_OPTIMAL', @usage@ containing
+  -- 'VK_IMAGE_USAGE_SAMPLED_BIT', and a stencil format.
   vkSampledImageStencilSampleCounts :: VkSampleCountFlags
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "storageImageSampleCounts"
+  , -- | @storageImageSampleCounts@ is a bitmask1 of 'VkSampleCountFlagBits'
+  -- indicating the sample counts supported for all 2D images created with
+  -- 'VK_IMAGE_TILING_OPTIMAL', and @usage@ containing
+  -- 'VK_IMAGE_USAGE_STORAGE_BIT'.
   vkStorageImageSampleCounts :: VkSampleCountFlags
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxSampleMaskWords"
+  , -- | @maxSampleMaskWords@ is the maximum number of array elements of a
+  -- variable decorated with the 'Graphics.Vulkan.Core10.Pipeline.SampleMask'
+  -- built-in decoration.
   vkMaxSampleMaskWords :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "timestampComputeAndGraphics"
+  , -- | @timestampComputeAndGraphics@ specifies support for timestamps on all
+  -- graphics and compute queues. If this limit is set to
+  -- 'Graphics.Vulkan.C.Core10.Core.VK_TRUE', all queues that advertise the
+  -- 'VK_QUEUE_GRAPHICS_BIT' or 'VK_QUEUE_COMPUTE_BIT' in the
+  -- 'VkQueueFamilyProperties'::@queueFlags@ support
+  -- 'VkQueueFamilyProperties'::@timestampValidBits@ of at least 36. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#queries-timestamps Timestamp Queries>.
   vkTimestampComputeAndGraphics :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "timestampPeriod"
+  , -- | @timestampPeriod@ is the number of nanoseconds /required/ for a
+  -- timestamp query to be incremented by 1. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#queries-timestamps Timestamp Queries>.
   vkTimestampPeriod :: CFloat
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxClipDistances"
+  , -- | @maxClipDistances@ is the maximum number of clip distances that /can/ be
+  -- used in a single shader stage. The size of any array declared with the
+  -- @ClipDistance@ built-in decoration in a shader module /must/ be less
+  -- than or equal to this limit.
   vkMaxClipDistances :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxCullDistances"
+  , -- | @maxCullDistances@ is the maximum number of cull distances that /can/ be
+  -- used in a single shader stage. The size of any array declared with the
+  -- @CullDistance@ built-in decoration in a shader module /must/ be less
+  -- than or equal to this limit.
   vkMaxCullDistances :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "maxCombinedClipAndCullDistances"
+  , -- | @maxCombinedClipAndCullDistances@ is the maximum combined number of clip
+  -- and cull distances that /can/ be used in a single shader stage. The sum
+  -- of the sizes of any pair of arrays declared with the @ClipDistance@ and
+  -- @CullDistance@ built-in decoration used by a single shader stage in a
+  -- shader module /must/ be less than or equal to this limit.
   vkMaxCombinedClipAndCullDistances :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "discreteQueuePriorities"
+  , -- | @discreteQueuePriorities@ is the number of discrete priorities that
+  -- /can/ be assigned to a queue based on the value of each member of
+  -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceQueueCreateInfo'::@pQueuePriorities@.
+  -- This /must/ be at least 2, and levels /must/ be spread evenly over the
+  -- range, with at least one level at 1.0, and another at 0.0. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#devsandqueues-priority>.
   vkDiscreteQueuePriorities :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "pointSizeRange"
+  , -- | @pointSizeRange@[2] is the range [@minimum@,@maximum@] of supported
+  -- sizes for points. Values written to variables decorated with the
+  -- @PointSize@ built-in decoration are clamped to this range.
   vkPointSizeRange :: Vector 2 CFloat
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "lineWidthRange"
+  , -- | @lineWidthRange@[2] is the range [@minimum@,@maximum@] of supported
+  -- widths for lines. Values specified by the @lineWidth@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineRasterizationStateCreateInfo'
+  -- or the @lineWidth@ parameter to
+  -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdSetLineWidth' are
+  -- clamped to this range.
   vkLineWidthRange :: Vector 2 CFloat
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "pointSizeGranularity"
+  , -- | @pointSizeGranularity@ is the granularity of supported point sizes. Not
+  -- all point sizes in the range defined by @pointSizeRange@ are supported.
+  -- This limit specifies the granularity (or increment) between successive
+  -- supported point sizes.
   vkPointSizeGranularity :: CFloat
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "lineWidthGranularity"
+  , -- | @lineWidthGranularity@ is the granularity of supported line widths. Not
+  -- all line widths in the range defined by @lineWidthRange@ are supported.
+  -- This limit specifies the granularity (or increment) between successive
+  -- supported line widths.
   vkLineWidthGranularity :: CFloat
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "strictLines"
+  , -- | @strictLines@ specifies whether lines are rasterized according to the
+  -- preferred method of rasterization. If set to
+  -- 'Graphics.Vulkan.C.Core10.Core.VK_FALSE', lines /may/ be rasterized
+  -- under a relaxed set of rules. If set to
+  -- 'Graphics.Vulkan.C.Core10.Core.VK_TRUE', lines are rasterized as per the
+  -- strict definition. See
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#primsrast-lines-basic Basic Line Segment Rasterization>.
   vkStrictLines :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "standardSampleLocations"
+  , -- | @standardSampleLocations@ specifies whether rasterization uses the
+  -- standard sample locations as documented in
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#primsrast-multisampling Multisampling>.
+  -- If set to 'Graphics.Vulkan.C.Core10.Core.VK_TRUE', the implementation
+  -- uses the documented sample locations. If set to
+  -- 'Graphics.Vulkan.C.Core10.Core.VK_FALSE', the implementation /may/ use
+  -- different sample locations.
   vkStandardSampleLocations :: VkBool32
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "optimalBufferCopyOffsetAlignment"
+  , -- | @optimalBufferCopyOffsetAlignment@ is the optimal buffer offset
+  -- alignment in bytes for
+  -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdCopyBufferToImage'
+  -- and
+  -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdCopyImageToBuffer'.
+  -- The per texel alignment requirements are enforced, but applications
+  -- /should/ use the optimal alignment for optimal performance and power
+  -- use.
   vkOptimalBufferCopyOffsetAlignment :: VkDeviceSize
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "optimalBufferCopyRowPitchAlignment"
+  , -- | @optimalBufferCopyRowPitchAlignment@ is the optimal buffer row pitch
+  -- alignment in bytes for
+  -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdCopyBufferToImage'
+  -- and
+  -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdCopyImageToBuffer'.
+  -- Row pitch is the number of bytes between texels with the same X
+  -- coordinate in adjacent rows (Y coordinates differ by one). The per texel
+  -- alignment requirements are enforced, but applications /should/ use the
+  -- optimal alignment for optimal performance and power use.
   vkOptimalBufferCopyRowPitchAlignment :: VkDeviceSize
-  , -- No documentation found for Nested "VkPhysicalDeviceLimits" "nonCoherentAtomSize"
+  , -- | @nonCoherentAtomSize@ is the size and alignment in bytes that bounds
+  -- concurrent access to
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-device-hostaccess host-mapped device memory>.
   vkNonCoherentAtomSize :: VkDeviceSize
   }
   deriving (Eq, Show)
@@ -4299,12 +4103,13 @@ instance Zero VkPhysicalDeviceLimits where
                                 zero
                                 zero
                                 zero
+
 -- | VkPhysicalDeviceMemoryProperties - Structure specifying physical device
 -- memory properties
 --
 -- = Description
 --
--- The @VkPhysicalDeviceMemoryProperties@ structure describes a number of
+-- The 'VkPhysicalDeviceMemoryProperties' structure describes a number of
 -- /memory heaps/ as well as a number of /memory types/ that /can/ be used
 -- to access memory allocated in those heaps. Each heap describes a memory
 -- resource of a particular size, and each memory type describes a set of
@@ -4317,17 +4122,17 @@ instance Zero VkPhysicalDeviceLimits where
 -- a variety of different properties.
 --
 -- The number of memory heaps is given by @memoryHeapCount@ and is less
--- than or equal to @VK_MAX_MEMORY_HEAPS@. Each heap is described by an
+-- than or equal to 'VK_MAX_MEMORY_HEAPS'. Each heap is described by an
 -- element of the @memoryHeaps@ array as a 'VkMemoryHeap' structure. The
 -- number of memory types available across all memory heaps is given by
--- @memoryTypeCount@ and is less than or equal to @VK_MAX_MEMORY_TYPES@.
+-- @memoryTypeCount@ and is less than or equal to 'VK_MAX_MEMORY_TYPES'.
 -- Each memory type is described by an element of the @memoryTypes@ array
 -- as a 'VkMemoryType' structure.
 --
--- At least one heap /must/ include @VK_MEMORY_HEAP_DEVICE_LOCAL_BIT@ in
+-- At least one heap /must/ include 'VK_MEMORY_HEAP_DEVICE_LOCAL_BIT' in
 -- 'VkMemoryHeap'::@flags@. If there are multiple heaps that all have
 -- similar performance characteristics, they /may/ all include
--- @VK_MEMORY_HEAP_DEVICE_LOCAL_BIT@. In a unified memory architecture
+-- 'VK_MEMORY_HEAP_DEVICE_LOCAL_BIT'. In a unified memory architecture
 -- (UMA) system there is often only a single memory heap which is
 -- considered to be equally “local” to the host and to the device, and such
 -- an implementation /must/ advertise the heap as device-local.
@@ -4337,39 +4142,39 @@ instance Zero VkPhysicalDeviceLimits where
 --
 -- -   0
 --
--- -   @VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT@ |
---     @VK_MEMORY_PROPERTY_HOST_COHERENT_BIT@
+-- -   'VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT' |
+--     'VK_MEMORY_PROPERTY_HOST_COHERENT_BIT'
 --
--- -   @VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT@ |
---     @VK_MEMORY_PROPERTY_HOST_CACHED_BIT@
+-- -   'VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT' |
+--     'VK_MEMORY_PROPERTY_HOST_CACHED_BIT'
 --
--- -   @VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT@ |
---     @VK_MEMORY_PROPERTY_HOST_CACHED_BIT@ |
---     @VK_MEMORY_PROPERTY_HOST_COHERENT_BIT@
+-- -   'VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT' |
+--     'VK_MEMORY_PROPERTY_HOST_CACHED_BIT' |
+--     'VK_MEMORY_PROPERTY_HOST_COHERENT_BIT'
 --
--- -   @VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT@
+-- -   'VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT'
 --
--- -   @VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT@ |
---     @VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT@ |
---     @VK_MEMORY_PROPERTY_HOST_COHERENT_BIT@
+-- -   'VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT' |
+--     'VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT' |
+--     'VK_MEMORY_PROPERTY_HOST_COHERENT_BIT'
 --
--- -   @VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT@ |
---     @VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT@ |
---     @VK_MEMORY_PROPERTY_HOST_CACHED_BIT@
+-- -   'VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT' |
+--     'VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT' |
+--     'VK_MEMORY_PROPERTY_HOST_CACHED_BIT'
 --
--- -   @VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT@ |
---     @VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT@ |
---     @VK_MEMORY_PROPERTY_HOST_CACHED_BIT@ |
---     @VK_MEMORY_PROPERTY_HOST_COHERENT_BIT@
+-- -   'VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT' |
+--     'VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT' |
+--     'VK_MEMORY_PROPERTY_HOST_CACHED_BIT' |
+--     'VK_MEMORY_PROPERTY_HOST_COHERENT_BIT'
 --
--- -   @VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT@ |
---     @VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT@
+-- -   'VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT' |
+--     'VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT'
 --
 -- There /must/ be at least one memory type with both the
--- @VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT@ and
--- @VK_MEMORY_PROPERTY_HOST_COHERENT_BIT@ bits set in its @propertyFlags@.
+-- 'VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT' and
+-- 'VK_MEMORY_PROPERTY_HOST_COHERENT_BIT' bits set in its @propertyFlags@.
 -- There /must/ be at least one memory type with the
--- @VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT@ bit set in its @propertyFlags@.
+-- 'VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT' bit set in its @propertyFlags@.
 --
 -- For each pair of elements __X__ and __Y__ returned in @memoryTypes@,
 -- __X__ /must/ be placed at a lower index position than __Y__ if:
@@ -4388,11 +4193,11 @@ instance Zero VkPhysicalDeviceLimits where
 -- the case their @propertyFlags@ members are not in a subset relation.
 -- That potentially allows more than one possible way to order the same set
 -- of memory types. Notice that the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-device-bitmask-list list of all allowed memory property flag combinations>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-device-bitmask-list list of all allowed memory property flag combinations>
 -- is written in a valid order. But if instead
--- @VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT@ was before
--- @VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT@ |
--- @VK_MEMORY_PROPERTY_HOST_COHERENT_BIT@, the list would still be in a
+-- 'VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT' was before
+-- 'VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT' |
+-- 'VK_MEMORY_PROPERTY_HOST_COHERENT_BIT', the list would still be in a
 -- valid order.
 --
 -- This ordering requirement enables applications to use a simple search
@@ -4434,6 +4239,9 @@ instance Zero VkPhysicalDeviceLimits where
 -- >     memoryType =
 -- >         findProperties(&memoryProperties, memoryRequirements.memoryTypeBits, requiredProperties);
 --
+-- Unresolved directive in VkPhysicalDeviceMemoryProperties.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceMemoryProperties.txt[]
+--
 -- = See Also
 --
 -- 'VkMemoryHeap', 'VkMemoryType',
@@ -4473,6 +4281,7 @@ instance Zero VkPhysicalDeviceMemoryProperties where
                                           zero
                                           zero
                                           zero
+
 -- | VkPhysicalDeviceProperties - Structure specifying physical device
 -- properties
 --
@@ -4503,7 +4312,7 @@ instance Zero VkPhysicalDeviceMemoryProperties where
 -- 16 bits of @vendorID@ /must/ contain that PCI vendor ID, and the
 -- remaining bits /must/ be set to zero. Otherwise, the value returned
 -- /must/ be a valid Khronos vendor ID, obtained as described in the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vulkan-styleguide Vulkan Documentation and Extensions: Procedures and Conventions>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#vulkan-styleguide Vulkan Documentation and Extensions: Procedures and Conventions>
 -- document in the section “Registering a Vendor ID with Khronos”. Khronos
 -- vendor IDs are allocated starting at 0x10000, to distinguish them from
 -- the PCI vendor ID namespace. Khronos vendor IDs are symbolically defined
@@ -4526,6 +4335,9 @@ instance Zero VkPhysicalDeviceMemoryProperties where
 -- specific silicon IP GPU version and configuration /should/ use the same
 -- device ID, even if those uses occur in different SoCs.
 --
+-- Unresolved directive in VkPhysicalDeviceProperties.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceProperties.txt[]
+--
 -- = See Also
 --
 -- 'VkPhysicalDeviceLimits',
@@ -4535,7 +4347,7 @@ instance Zero VkPhysicalDeviceMemoryProperties where
 data VkPhysicalDeviceProperties = VkPhysicalDeviceProperties
   { -- | @apiVersion@ is the version of Vulkan supported by the device, encoded
   -- as described in
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#extendingvulkan-coreversions-versionnumbers {html_spec_relative}#extendingvulkan-coreversions-versionnumbers>.
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#extendingvulkan-coreversions-versionnumbers>.
   vkApiVersion :: Word32
   , -- | @driverVersion@ is the vendor-specified version of the driver.
   vkDriverVersion :: Word32
@@ -4550,18 +4362,18 @@ data VkPhysicalDeviceProperties = VkPhysicalDeviceProperties
   , -- | @deviceName@ is a null-terminated UTF-8 string containing the name of
   -- the device.
   vkDeviceName :: Vector VK_MAX_PHYSICAL_DEVICE_NAME_SIZE CChar
-  , -- | @pipelineCacheUUID@ is an array of size @VK_UUID_SIZE@, containing 8-bit
+  , -- | @pipelineCacheUUID@ is an array of size 'VK_UUID_SIZE', containing 8-bit
   -- values that represent a universally unique identifier for the device.
   vkPipelineCacheUUID :: Vector VK_UUID_SIZE Word8
   , -- | @limits@ is the 'VkPhysicalDeviceLimits' structure which specifies
   -- device-specific limits of the physical device. See
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#limits Limits>
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#limits Limits>
   -- for details.
   vkLimits :: VkPhysicalDeviceLimits
   , -- | @sparseProperties@ is the 'VkPhysicalDeviceSparseProperties' structure
   -- which specifies various sparse related properties of the physical
   -- device. See
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#sparsememory-physicalprops Sparse Properties>
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#sparsememory-physicalprops Sparse Properties>
   -- for details.
   vkSparseProperties :: VkPhysicalDeviceSparseProperties
   }
@@ -4599,58 +4411,73 @@ instance Zero VkPhysicalDeviceProperties where
                                     zero
                                     zero
                                     zero
+
 -- | VkPhysicalDeviceSparseProperties - Structure specifying physical device
 -- sparse memory properties
 --
+-- = Description
+--
+-- Unresolved directive in VkPhysicalDeviceSparseProperties.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceSparseProperties.txt[]
+--
 -- = See Also
 --
--- @VkBool32@, 'VkPhysicalDeviceProperties'
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32', 'VkPhysicalDeviceProperties'
 data VkPhysicalDeviceSparseProperties = VkPhysicalDeviceSparseProperties
-  { -- | @residencyStandard2DBlockShape@ is @VK_TRUE@ if the physical device will
+  { -- | @residencyStandard2DBlockShape@ is
+  -- 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' if the physical device will
   -- access all single-sample 2D sparse resources using the standard sparse
   -- image block shapes (based on image format), as described in the
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#sparsememory-sparseblockshapessingle Standard Sparse Image Block Shapes (Single Sample)>
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#sparsememory-sparseblockshapessingle Standard Sparse Image Block Shapes (Single Sample)>
   -- table. If this property is not supported the value returned in the
-  -- @imageGranularity@ member of the @VkSparseImageFormatProperties@
+  -- @imageGranularity@ member of the
+  -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageFormatProperties'
   -- structure for single-sample 2D images is not /required/ to match the
   -- standard sparse image block dimensions listed in the table.
   vkResidencyStandard2DBlockShape :: VkBool32
-  , -- | @residencyStandard2DMultisampleBlockShape@ is @VK_TRUE@ if the physical
-  -- device will access all multisample 2D sparse resources using the
-  -- standard sparse image block shapes (based on image format), as described
-  -- in the
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#sparsememory-sparseblockshapesmsaa Standard Sparse Image Block Shapes (MSAA)>
+  , -- | @residencyStandard2DMultisampleBlockShape@ is
+  -- 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' if the physical device will
+  -- access all multisample 2D sparse resources using the standard sparse
+  -- image block shapes (based on image format), as described in the
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#sparsememory-sparseblockshapesmsaa Standard Sparse Image Block Shapes (MSAA)>
   -- table. If this property is not supported, the value returned in the
-  -- @imageGranularity@ member of the @VkSparseImageFormatProperties@
+  -- @imageGranularity@ member of the
+  -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageFormatProperties'
   -- structure for multisample 2D images is not /required/ to match the
   -- standard sparse image block dimensions listed in the table.
   vkResidencyStandard2DMultisampleBlockShape :: VkBool32
-  , -- | @residencyStandard3DBlockShape@ is @VK_TRUE@ if the physical device will
+  , -- | @residencyStandard3DBlockShape@ is
+  -- 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' if the physical device will
   -- access all 3D sparse resources using the standard sparse image block
   -- shapes (based on image format), as described in the
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#sparsememory-sparseblockshapessingle Standard Sparse Image Block Shapes (Single Sample)>
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#sparsememory-sparseblockshapessingle Standard Sparse Image Block Shapes (Single Sample)>
   -- table. If this property is not supported, the value returned in the
-  -- @imageGranularity@ member of the @VkSparseImageFormatProperties@
+  -- @imageGranularity@ member of the
+  -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageFormatProperties'
   -- structure for 3D images is not /required/ to match the standard sparse
   -- image block dimensions listed in the table.
   vkResidencyStandard3DBlockShape :: VkBool32
-  , -- | @residencyAlignedMipSize@ is @VK_TRUE@ if images with mip level
-  -- dimensions that are not integer multiples of the corresponding
-  -- dimensions of the sparse image block /may/ be placed in the mip tail. If
-  -- this property is not reported, only mip levels with dimensions smaller
-  -- than the @imageGranularity@ member of the
-  -- @VkSparseImageFormatProperties@ structure will be placed in the mip
-  -- tail. If this property is reported the implementation is allowed to
-  -- return @VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT@ in the @flags@
-  -- member of @VkSparseImageFormatProperties@, indicating that mip level
-  -- dimensions that are not integer multiples of the corresponding
-  -- dimensions of the sparse image block will be placed in the mip tail.
+  , -- | @residencyAlignedMipSize@ is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' if
+  -- images with mip level dimensions that are not integer multiples of the
+  -- corresponding dimensions of the sparse image block /may/ be placed in
+  -- the mip tail. If this property is not reported, only mip levels with
+  -- dimensions smaller than the @imageGranularity@ member of the
+  -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageFormatProperties'
+  -- structure will be placed in the mip tail. If this property is reported
+  -- the implementation is allowed to return
+  -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT'
+  -- in the @flags@ member of
+  -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageFormatProperties',
+  -- indicating that mip level dimensions that are not integer multiples of
+  -- the corresponding dimensions of the sparse image block will be placed in
+  -- the mip tail.
   vkResidencyAlignedMipSize :: VkBool32
   , -- | @residencyNonResidentStrict@ specifies whether the physical device /can/
   -- consistently access non-resident regions of a resource. If this property
-  -- is @VK_TRUE@, access to non-resident regions of resources will be
-  -- guaranteed to return values as if the resource were populated with 0;
-  -- writes to non-resident regions will be discarded.
+  -- is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE', access to non-resident
+  -- regions of resources will be guaranteed to return values as if the
+  -- resource were populated with 0; writes to non-resident regions will be
+  -- discarded.
   vkResidencyNonResidentStrict :: VkBool32
   }
   deriving (Eq, Show)
@@ -4675,6 +4502,7 @@ instance Zero VkPhysicalDeviceSparseProperties where
                                           zero
                                           zero
                                           zero
+
 -- ** VkPhysicalDeviceType
 
 -- | VkPhysicalDeviceType - Supported physical device types
@@ -4714,30 +4542,31 @@ instance Read VkPhysicalDeviceType where
                         )
                     )
 
--- | @VK_PHYSICAL_DEVICE_TYPE_OTHER@ - the device does not match any other
+-- | 'VK_PHYSICAL_DEVICE_TYPE_OTHER' - the device does not match any other
 -- available types.
 pattern VK_PHYSICAL_DEVICE_TYPE_OTHER :: VkPhysicalDeviceType
 pattern VK_PHYSICAL_DEVICE_TYPE_OTHER = VkPhysicalDeviceType 0
 
--- | @VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU@ - the device is typically one
+-- | 'VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU' - the device is typically one
 -- embedded in or tightly coupled with the host.
 pattern VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU :: VkPhysicalDeviceType
 pattern VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU = VkPhysicalDeviceType 1
 
--- | @VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU@ - the device is typically a
+-- | 'VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU' - the device is typically a
 -- separate processor connected to the host via an interlink.
 pattern VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU :: VkPhysicalDeviceType
 pattern VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU = VkPhysicalDeviceType 2
 
--- | @VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU@ - the device is typically a
+-- | 'VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU' - the device is typically a
 -- virtual node in a virtualization environment.
 pattern VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU :: VkPhysicalDeviceType
 pattern VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU = VkPhysicalDeviceType 3
 
--- | @VK_PHYSICAL_DEVICE_TYPE_CPU@ - the device is typically running on the
+-- | 'VK_PHYSICAL_DEVICE_TYPE_CPU' - the device is typically running on the
 -- same processors as the host.
 pattern VK_PHYSICAL_DEVICE_TYPE_CPU :: VkPhysicalDeviceType
 pattern VK_PHYSICAL_DEVICE_TYPE_CPU = VkPhysicalDeviceType 4
+
 -- | VkQueueFamilyProperties - Structure providing information about a queue
 -- family
 --
@@ -4798,12 +4627,15 @@ pattern VK_PHYSICAL_DEVICE_TYPE_CPU = VkPhysicalDeviceType 4
 -- families /may/ be (0,0,0).
 --
 -- The
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-device Device Memory>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-device Device Memory>
 -- section describes memory properties queried from the physical device.
 --
 -- For physical device feature queries see the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features Features>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features Features>
 -- chapter.
+--
+-- Unresolved directive in VkQueueFamilyProperties.txt -
+-- include::{generated}\/validity\/structs\/VkQueueFamilyProperties.txt[]
 --
 -- = See Also
 --
@@ -4818,9 +4650,11 @@ data VkQueueFamilyProperties = VkQueueFamilyProperties
   -- family. Each queue family /must/ support at least one queue.
   vkQueueCount :: Word32
   , -- | @timestampValidBits@ is the unsigned integer count of meaningful bits in
-  -- the timestamps written via @vkCmdWriteTimestamp@. The valid range for
-  -- the count is 36..64 bits, or a value of 0, indicating no support for
-  -- timestamps. Bits outside the valid range are guaranteed to be zeros.
+  -- the timestamps written via
+  -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdWriteTimestamp'.
+  -- The valid range for the count is 36..64 bits, or a value of 0,
+  -- indicating no support for timestamps. Bits outside the valid range are
+  -- guaranteed to be zeros.
   vkTimestampValidBits :: Word32
   , -- | @minImageTransferGranularity@ is the minimum granularity supported for
   -- image transfer operations on the queues in this queue family.
@@ -4845,6 +4679,7 @@ instance Zero VkQueueFamilyProperties where
                                  zero
                                  zero
                                  zero
+
 -- ** VkQueueFlagBits
 
 -- | VkQueueFlagBits - Bitmask specifying capabilities of queues in a queue
@@ -4862,12 +4697,12 @@ instance Zero VkQueueFamilyProperties where
 -- All commands that are allowed on a queue that supports transfer
 -- operations are also allowed on a queue that supports either graphics or
 -- compute operations. Thus, if the capabilities of a queue family include
--- @VK_QUEUE_GRAPHICS_BIT@ or @VK_QUEUE_COMPUTE_BIT@, then reporting the
--- @VK_QUEUE_TRANSFER_BIT@ capability separately for that queue family is
+-- 'VK_QUEUE_GRAPHICS_BIT' or 'VK_QUEUE_COMPUTE_BIT', then reporting the
+-- 'VK_QUEUE_TRANSFER_BIT' capability separately for that queue family is
 -- /optional/.
 --
 -- For further details see
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-queues Queues>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#devsandqueues-queues Queues>.
 --
 -- = See Also
 --
@@ -4903,39 +4738,41 @@ instance Read VkQueueFlagBits where
                         )
                     )
 
--- | @VK_QUEUE_GRAPHICS_BIT@ specifies that queues in this queue family
+-- | 'VK_QUEUE_GRAPHICS_BIT' specifies that queues in this queue family
 -- support graphics operations.
 pattern VK_QUEUE_GRAPHICS_BIT :: VkQueueFlagBits
 pattern VK_QUEUE_GRAPHICS_BIT = VkQueueFlagBits 0x00000001
 
--- | @VK_QUEUE_COMPUTE_BIT@ specifies that queues in this queue family
+-- | 'VK_QUEUE_COMPUTE_BIT' specifies that queues in this queue family
 -- support compute operations.
 pattern VK_QUEUE_COMPUTE_BIT :: VkQueueFlagBits
 pattern VK_QUEUE_COMPUTE_BIT = VkQueueFlagBits 0x00000002
 
--- | @VK_QUEUE_TRANSFER_BIT@ specifies that queues in this queue family
+-- | 'VK_QUEUE_TRANSFER_BIT' specifies that queues in this queue family
 -- support transfer operations.
 pattern VK_QUEUE_TRANSFER_BIT :: VkQueueFlagBits
 pattern VK_QUEUE_TRANSFER_BIT = VkQueueFlagBits 0x00000004
 
--- | @VK_QUEUE_SPARSE_BINDING_BIT@ specifies that queues in this queue family
+-- | 'VK_QUEUE_SPARSE_BINDING_BIT' specifies that queues in this queue family
 -- support sparse memory management operations (see
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#sparsememory Sparse Resources>).
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#sparsememory Sparse Resources>).
 -- If any of the sparse resource features are enabled, then at least one
 -- queue family /must/ support this bit.
 pattern VK_QUEUE_SPARSE_BINDING_BIT :: VkQueueFlagBits
 pattern VK_QUEUE_SPARSE_BINDING_BIT = VkQueueFlagBits 0x00000008
+
 -- | VkQueueFlags - Bitmask of VkQueueFlagBits
 --
 -- = Description
 --
--- @VkQueueFlags@ is a bitmask type for setting a mask of zero or more
+-- 'VkQueueFlags' is a bitmask type for setting a mask of zero or more
 -- 'VkQueueFlagBits'.
 --
 -- = See Also
 --
 -- 'VkQueueFamilyProperties', 'VkQueueFlagBits'
 type VkQueueFlags = VkQueueFlagBits
+
 -- ** VkSampleCountFlagBits
 
 -- | VkSampleCountFlagBits - Bitmask specifying sample counts supported for
@@ -4978,38 +4815,39 @@ instance Read VkSampleCountFlagBits where
                         )
                     )
 
--- | @VK_SAMPLE_COUNT_1_BIT@ specifies an image with one sample per pixel.
+-- | 'VK_SAMPLE_COUNT_1_BIT' specifies an image with one sample per pixel.
 pattern VK_SAMPLE_COUNT_1_BIT :: VkSampleCountFlagBits
 pattern VK_SAMPLE_COUNT_1_BIT = VkSampleCountFlagBits 0x00000001
 
--- | @VK_SAMPLE_COUNT_2_BIT@ specifies an image with 2 samples per pixel.
+-- | 'VK_SAMPLE_COUNT_2_BIT' specifies an image with 2 samples per pixel.
 pattern VK_SAMPLE_COUNT_2_BIT :: VkSampleCountFlagBits
 pattern VK_SAMPLE_COUNT_2_BIT = VkSampleCountFlagBits 0x00000002
 
--- | @VK_SAMPLE_COUNT_4_BIT@ specifies an image with 4 samples per pixel.
+-- | 'VK_SAMPLE_COUNT_4_BIT' specifies an image with 4 samples per pixel.
 pattern VK_SAMPLE_COUNT_4_BIT :: VkSampleCountFlagBits
 pattern VK_SAMPLE_COUNT_4_BIT = VkSampleCountFlagBits 0x00000004
 
--- | @VK_SAMPLE_COUNT_8_BIT@ specifies an image with 8 samples per pixel.
+-- | 'VK_SAMPLE_COUNT_8_BIT' specifies an image with 8 samples per pixel.
 pattern VK_SAMPLE_COUNT_8_BIT :: VkSampleCountFlagBits
 pattern VK_SAMPLE_COUNT_8_BIT = VkSampleCountFlagBits 0x00000008
 
--- | @VK_SAMPLE_COUNT_16_BIT@ specifies an image with 16 samples per pixel.
+-- | 'VK_SAMPLE_COUNT_16_BIT' specifies an image with 16 samples per pixel.
 pattern VK_SAMPLE_COUNT_16_BIT :: VkSampleCountFlagBits
 pattern VK_SAMPLE_COUNT_16_BIT = VkSampleCountFlagBits 0x00000010
 
--- | @VK_SAMPLE_COUNT_32_BIT@ specifies an image with 32 samples per pixel.
+-- | 'VK_SAMPLE_COUNT_32_BIT' specifies an image with 32 samples per pixel.
 pattern VK_SAMPLE_COUNT_32_BIT :: VkSampleCountFlagBits
 pattern VK_SAMPLE_COUNT_32_BIT = VkSampleCountFlagBits 0x00000020
 
--- | @VK_SAMPLE_COUNT_64_BIT@ specifies an image with 64 samples per pixel.
+-- | 'VK_SAMPLE_COUNT_64_BIT' specifies an image with 64 samples per pixel.
 pattern VK_SAMPLE_COUNT_64_BIT :: VkSampleCountFlagBits
 pattern VK_SAMPLE_COUNT_64_BIT = VkSampleCountFlagBits 0x00000040
+
 -- | VkSampleCountFlags - Bitmask of VkSampleCountFlagBits
 --
 -- = Description
 --
--- @VkSampleCountFlags@ is a bitmask type for setting a mask of zero or
+-- 'VkSampleCountFlags' is a bitmask type for setting a mask of zero or
 -- more 'VkSampleCountFlagBits'.
 --
 -- = See Also
@@ -5017,33 +4855,36 @@ pattern VK_SAMPLE_COUNT_64_BIT = VkSampleCountFlagBits 0x00000040
 -- 'VkImageFormatProperties', 'VkPhysicalDeviceLimits',
 -- 'VkSampleCountFlagBits'
 type VkSampleCountFlags = VkSampleCountFlagBits
+
 -- ** VkSystemAllocationScope
 
 -- | VkSystemAllocationScope - Allocation scope
 --
 -- = Description
 --
--- -   @VK_SYSTEM_ALLOCATION_SCOPE_COMMAND@ specifies that the allocation
+-- -   'VK_SYSTEM_ALLOCATION_SCOPE_COMMAND' specifies that the allocation
 --     is scoped to the duration of the Vulkan command.
 --
--- -   @VK_SYSTEM_ALLOCATION_SCOPE_OBJECT@ specifies that the allocation is
+-- -   'VK_SYSTEM_ALLOCATION_SCOPE_OBJECT' specifies that the allocation is
 --     scoped to the lifetime of the Vulkan object that is being created or
 --     used.
 --
--- -   @VK_SYSTEM_ALLOCATION_SCOPE_CACHE@ specifies that the allocation is
---     scoped to the lifetime of a @VkPipelineCache@ or
---     @VkValidationCacheEXT@ object.
+-- -   'VK_SYSTEM_ALLOCATION_SCOPE_CACHE' specifies that the allocation is
+--     scoped to the lifetime of a
+--     'Graphics.Vulkan.C.Core10.PipelineCache.VkPipelineCache' or
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkValidationCacheEXT'
+--     object.
 --
--- -   @VK_SYSTEM_ALLOCATION_SCOPE_DEVICE@ specifies that the allocation is
+-- -   'VK_SYSTEM_ALLOCATION_SCOPE_DEVICE' specifies that the allocation is
 --     scoped to the lifetime of the Vulkan device.
 --
--- -   @VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE@ specifies that the allocation
+-- -   'VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE' specifies that the allocation
 --     is scoped to the lifetime of the Vulkan instance.
 --
 -- Most Vulkan commands operate on a single object, or there is a sole
 -- object that is being created or manipulated. When an allocation uses an
--- allocation scope of @VK_SYSTEM_ALLOCATION_SCOPE_OBJECT@ or
--- @VK_SYSTEM_ALLOCATION_SCOPE_CACHE@, the allocation is scoped to the
+-- allocation scope of 'VK_SYSTEM_ALLOCATION_SCOPE_OBJECT' or
+-- 'VK_SYSTEM_ALLOCATION_SCOPE_CACHE', the allocation is scoped to the
 -- object being created or manipulated.
 --
 -- When an implementation requires host memory, it will make callbacks to
@@ -5051,34 +4892,35 @@ type VkSampleCountFlags = VkSampleCountFlagBits
 -- available:
 --
 -- -   If an allocation is scoped to the duration of a command, the
---     allocator will use the @VK_SYSTEM_ALLOCATION_SCOPE_COMMAND@
+--     allocator will use the 'VK_SYSTEM_ALLOCATION_SCOPE_COMMAND'
 --     allocation scope. The most specific allocator available is used: if
 --     the object being created or manipulated has an allocator, that
---     object’s allocator will be used, else if the parent @VkDevice@ has
---     an allocator it will be used, else if the parent @VkInstance@ has an
+--     object’s allocator will be used, else if the parent 'VkDevice' has
+--     an allocator it will be used, else if the parent 'VkInstance' has an
 --     allocator it will be used. Else,
 --
 -- -   If an allocation is associated with an object of type
---     @VkValidationCacheEXT@ or @VkPipelineCache@, the allocator will use
---     the @VK_SYSTEM_ALLOCATION_SCOPE_CACHE@ allocation scope. The most
---     specific allocator available is used (cache, else device, else
---     instance). Else,
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkValidationCacheEXT'
+--     or 'Graphics.Vulkan.C.Core10.PipelineCache.VkPipelineCache', the
+--     allocator will use the 'VK_SYSTEM_ALLOCATION_SCOPE_CACHE' allocation
+--     scope. The most specific allocator available is used (cache, else
+--     device, else instance). Else,
 --
 -- -   If an allocation is scoped to the lifetime of an object, that object
 --     is being created or manipulated by the command, and that object’s
---     type is not @VkDevice@ or @VkInstance@, the allocator will use an
---     allocation scope of @VK_SYSTEM_ALLOCATION_SCOPE_OBJECT@. The most
+--     type is not 'VkDevice' or 'VkInstance', the allocator will use an
+--     allocation scope of 'VK_SYSTEM_ALLOCATION_SCOPE_OBJECT'. The most
 --     specific allocator available is used (object, else device, else
 --     instance). Else,
 --
 -- -   If an allocation is scoped to the lifetime of a device, the
 --     allocator will use an allocation scope of
---     @VK_SYSTEM_ALLOCATION_SCOPE_DEVICE@. The most specific allocator
+--     'VK_SYSTEM_ALLOCATION_SCOPE_DEVICE'. The most specific allocator
 --     available is used (device, else instance). Else,
 --
 -- -   If the allocation is scoped to the lifetime of an instance and the
 --     instance has an allocator, its allocator will be used with an
---     allocation scope of @VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE@.
+--     allocation scope of 'VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE'.
 --
 -- -   Otherwise an implementation will allocate memory through an
 --     alternative mechanism that is unspecified.
@@ -5130,7 +4972,7 @@ pattern VK_SYSTEM_ALLOCATION_SCOPE_DEVICE = VkSystemAllocationScope 3
 -- No documentation found for Nested "VkSystemAllocationScope" "VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE"
 pattern VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE :: VkSystemAllocationScope
 pattern VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE = VkSystemAllocationScope 4
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCreateInstance - Create a new Vulkan instance
 --
 -- = Parameters
@@ -5139,7 +4981,7 @@ pattern VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE = VkSystemAllocationScope 4
 --     controlling creation of the instance.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
 -- -   @pInstance@ points a 'VkInstance' handle in which the resulting
@@ -5147,66 +4989,58 @@ pattern VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE = VkSystemAllocationScope 4
 --
 -- = Description
 --
--- @vkCreateInstance@ verifies that the requested layers exist. If not,
--- @vkCreateInstance@ will return @VK_ERROR_LAYER_NOT_PRESENT@. Next
--- @vkCreateInstance@ verifies that the requested extensions are supported
+-- 'vkCreateInstance' verifies that the requested layers exist. If not,
+-- 'vkCreateInstance' will return
+-- 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_LAYER_NOT_PRESENT'. Next
+-- 'vkCreateInstance' verifies that the requested extensions are supported
 -- (e.g. in the implementation or in any enabled instance layer) and if any
--- requested extension is not supported, @vkCreateInstance@ /must/ return
--- @VK_ERROR_EXTENSION_NOT_PRESENT@. After verifying and enabling the
--- instance layers and extensions the @VkInstance@ object is created and
--- returned to the application. If a requested extension is only supported
--- by a layer, both the layer and the extension need to be specified at
--- @vkCreateInstance@ time for the creation to succeed.
+-- requested extension is not supported, 'vkCreateInstance' /must/ return
+-- 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_EXTENSION_NOT_PRESENT'. After
+-- verifying and enabling the instance layers and extensions the
+-- 'VkInstance' object is created and returned to the application. If a
+-- requested extension is only supported by a layer, both the layer and the
+-- extension need to be specified at 'vkCreateInstance' time for the
+-- creation to succeed.
 --
 -- == Valid Usage
 --
 -- -   All
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#extendingvulkan-extensions-extensiondependencies required extensions>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#extendingvulkan-extensions-extensiondependencies required extensions>
 --     for each extension in the
 --     'VkInstanceCreateInfo'::@ppEnabledExtensionNames@ list /must/ also
 --     be present in that list.
 --
--- == Valid Usage (Implicit)
---
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     @VkInstanceCreateInfo@ structure
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
---
--- -   @pInstance@ /must/ be a valid pointer to a @VkInstance@ handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
---
---     -   @VK_ERROR_INITIALIZATION_FAILED@
---
---     -   @VK_ERROR_LAYER_NOT_PRESENT@
---
---     -   @VK_ERROR_EXTENSION_NOT_PRESENT@
---
---     -   @VK_ERROR_INCOMPATIBLE_DRIVER@
+-- Unresolved directive in vkCreateInstance.txt -
+-- include::{generated}\/validity\/protos\/vkCreateInstance.txt[]
 --
 -- = See Also
 --
 -- 'VkAllocationCallbacks', 'VkInstance', 'VkInstanceCreateInfo'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCreateInstance" vkCreateInstance :: ("pCreateInfo" ::: Ptr VkInstanceCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pInstance" ::: Ptr VkInstance) -> IO VkResult
-
+#else
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCreateInstance
+  :: FunPtr (("pCreateInfo" ::: Ptr VkInstanceCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pInstance" ::: Ptr VkInstance) -> IO VkResult) -> (("pCreateInfo" ::: Ptr VkInstanceCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pInstance" ::: Ptr VkInstance) -> IO VkResult)
+
+vkCreateInstance :: ("pCreateInfo" ::: Ptr VkInstanceCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pInstance" ::: Ptr VkInstance) -> IO VkResult
+vkCreateInstance = mkVkCreateInstance procAddr
+  where
+    procAddr = castPtrToFunPtr @_ @FN_vkCreateInstance $
+      unsafeDupablePerformIO
+        $ vkGetInstanceProcAddr' nullPtr (GHC.Ptr.Ptr "vkCreateInstance\NUL"#)
+#endif
+
 type FN_vkCreateInstance = ("pCreateInfo" ::: Ptr VkInstanceCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pInstance" ::: Ptr VkInstance) -> IO VkResult
 type PFN_vkCreateInstance = FunPtr FN_vkCreateInstance
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkDestroyInstance - Destroy an instance of Vulkan
 --
 -- = Parameters
@@ -5214,7 +5048,7 @@ type PFN_vkCreateInstance = FunPtr FN_vkCreateInstance
 -- -   @instance@ is the handle of the instance to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
 -- == Valid Usage
@@ -5222,37 +5056,38 @@ type PFN_vkCreateInstance = FunPtr FN_vkCreateInstance
 -- -   All child objects created using @instance@ /must/ have been
 --     destroyed prior to destroying @instance@
 --
--- -   If @VkAllocationCallbacks@ were provided when @instance@ was
+-- -   If 'VkAllocationCallbacks' were provided when @instance@ was
 --     created, a compatible set of callbacks /must/ be provided here
 --
--- -   If no @VkAllocationCallbacks@ were provided when @instance@ was
+-- -   If no 'VkAllocationCallbacks' were provided when @instance@ was
 --     created, @pAllocator@ /must/ be @NULL@
 --
--- == Valid Usage (Implicit)
---
--- -   If @instance@ is not @NULL@, @instance@ /must/ be a valid
---     @VkInstance@ handle
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
---
--- == Host Synchronization
---
--- -   Host access to @instance@ /must/ be externally synchronized
+-- Unresolved directive in vkDestroyInstance.txt -
+-- include::{generated}\/validity\/protos\/vkDestroyInstance.txt[]
 --
 -- = See Also
 --
 -- 'VkAllocationCallbacks', 'VkInstance'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkDestroyInstance" vkDestroyInstance :: ("instance" ::: VkInstance) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
-
+#else
+vkDestroyInstance :: InstanceCmds -> ("instance" ::: VkInstance) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+vkDestroyInstance deviceCmds = mkVkDestroyInstance (pVkDestroyInstance deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkDestroyInstance
+  :: FunPtr (("instance" ::: VkInstance) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()) -> (("instance" ::: VkInstance) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ())
+#endif
+
 type FN_vkDestroyInstance = ("instance" ::: VkInstance) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 type PFN_vkDestroyInstance = FunPtr FN_vkDestroyInstance
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkEnumeratePhysicalDevices - Enumerates the physical devices accessible
 -- to a Vulkan instance
 --
@@ -5265,7 +5100,7 @@ type PFN_vkDestroyInstance = FunPtr FN_vkDestroyInstance
 --     number of physical devices available or queried, as described below.
 --
 -- -   @pPhysicalDevices@ is either @NULL@ or a pointer to an array of
---     @VkPhysicalDevice@ handles.
+--     'VkPhysicalDevice' handles.
 --
 -- = Description
 --
@@ -5277,54 +5112,42 @@ type PFN_vkDestroyInstance = FunPtr FN_vkDestroyInstance
 -- @pPhysicalDevices@. If @pPhysicalDeviceCount@ is less than the number of
 -- physical devices available, at most @pPhysicalDeviceCount@ structures
 -- will be written. If @pPhysicalDeviceCount@ is smaller than the number of
--- physical devices available, @VK_INCOMPLETE@ will be returned instead of
--- @VK_SUCCESS@, to indicate that not all the available physical devices
--- were returned.
+-- physical devices available,
+-- 'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE' will be returned instead
+-- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS', to indicate that not all
+-- the available physical devices were returned.
 --
--- == Valid Usage (Implicit)
---
--- -   @instance@ /must/ be a valid @VkInstance@ handle
---
--- -   @pPhysicalDeviceCount@ /must/ be a valid pointer to a @uint32_t@
---     value
---
--- -   If the value referenced by @pPhysicalDeviceCount@ is not @0@, and
---     @pPhysicalDevices@ is not @NULL@, @pPhysicalDevices@ /must/ be a
---     valid pointer to an array of @pPhysicalDeviceCount@
---     @VkPhysicalDevice@ handles
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
---     -   @VK_INCOMPLETE@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
---
---     -   @VK_ERROR_INITIALIZATION_FAILED@
+-- Unresolved directive in vkEnumeratePhysicalDevices.txt -
+-- include::{generated}\/validity\/protos\/vkEnumeratePhysicalDevices.txt[]
 --
 -- = See Also
 --
 -- 'VkInstance', 'VkPhysicalDevice'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkEnumeratePhysicalDevices" vkEnumeratePhysicalDevices :: ("instance" ::: VkInstance) -> ("pPhysicalDeviceCount" ::: Ptr Word32) -> ("pPhysicalDevices" ::: Ptr VkPhysicalDevice) -> IO VkResult
-
+#else
+vkEnumeratePhysicalDevices :: InstanceCmds -> ("instance" ::: VkInstance) -> ("pPhysicalDeviceCount" ::: Ptr Word32) -> ("pPhysicalDevices" ::: Ptr VkPhysicalDevice) -> IO VkResult
+vkEnumeratePhysicalDevices deviceCmds = mkVkEnumeratePhysicalDevices (pVkEnumeratePhysicalDevices deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkEnumeratePhysicalDevices
+  :: FunPtr (("instance" ::: VkInstance) -> ("pPhysicalDeviceCount" ::: Ptr Word32) -> ("pPhysicalDevices" ::: Ptr VkPhysicalDevice) -> IO VkResult) -> (("instance" ::: VkInstance) -> ("pPhysicalDeviceCount" ::: Ptr Word32) -> ("pPhysicalDevices" ::: Ptr VkPhysicalDevice) -> IO VkResult)
+#endif
+
 type FN_vkEnumeratePhysicalDevices = ("instance" ::: VkInstance) -> ("pPhysicalDeviceCount" ::: Ptr Word32) -> ("pPhysicalDevices" ::: Ptr VkPhysicalDevice) -> IO VkResult
 type PFN_vkEnumeratePhysicalDevices = FunPtr FN_vkEnumeratePhysicalDevices
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkGetDeviceProcAddr - Return a function pointer for a command
 --
 -- = Parameters
 --
--- The table below defines the various use cases for @vkGetDeviceProcAddr@
+-- The table below defines the various use cases for 'vkGetDeviceProcAddr'
 -- and expected return value for each case.
 --
 -- = Description
@@ -5355,21 +5178,32 @@ type PFN_vkEnumeratePhysicalDevices = FunPtr FN_vkEnumeratePhysicalDevices
 -- >
 -- > vkGetDeviceProcAddr behavior
 --
--- == Valid Usage (Implicit)
+-- Unresolved directive in vkGetDeviceProcAddr.txt -
+-- include::{generated}\/validity\/protos\/vkGetDeviceProcAddr.txt[]
 --
 -- = See Also
 --
 -- 'PFN_vkVoidFunction', 'VkDevice'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetDeviceProcAddr" vkGetDeviceProcAddr :: ("device" ::: VkDevice) -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction
-
+#else
+vkGetDeviceProcAddr :: DeviceCmds -> ("device" ::: VkDevice) -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction
+vkGetDeviceProcAddr deviceCmds = mkVkGetDeviceProcAddr (pVkGetDeviceProcAddr deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetDeviceProcAddr
+  :: FunPtr (("device" ::: VkDevice) -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction) -> (("device" ::: VkDevice) -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction)
+#endif
+
 type FN_vkGetDeviceProcAddr = ("device" ::: VkDevice) -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction
 type PFN_vkGetDeviceProcAddr = FunPtr FN_vkGetDeviceProcAddr
-#if defined(EXPOSE_VKGETINSTANCEPROCADDR)
+
 -- | vkGetInstanceProcAddr - Return a function pointer for a command
 --
 -- = Parameters
@@ -5382,14 +5216,14 @@ type PFN_vkGetDeviceProcAddr = FunPtr FN_vkGetDeviceProcAddr
 --
 -- = Description
 --
--- @vkGetInstanceProcAddr@ itself is obtained in a platform- and loader-
+-- 'vkGetInstanceProcAddr' itself is obtained in a platform- and loader-
 -- specific manner. Typically, the loader library will export this command
 -- as a function symbol, so applications /can/ link against the loader
 -- library, or load it dynamically and look up the symbol using
 -- platform-specific APIs.
 --
 -- The table below defines the various use cases for
--- @vkGetInstanceProcAddr@ and expected return value (“fp” is “function
+-- 'vkGetInstanceProcAddr' and expected return value (“fp” is “function
 -- pointer”) for each case.
 --
 -- The returned function pointer is of type 'PFN_vkVoidFunction', and must
@@ -5444,28 +5278,38 @@ type PFN_vkGetDeviceProcAddr = FunPtr FN_vkGetDeviceProcAddr
 --     An “available device extension” is a device extension supported by
 --     any physical device enumerated by @instance@.
 --
--- == Valid Usage (Implicit)
---
--- -   If @instance@ is not @NULL@, @instance@ /must/ be a valid
---     @VkInstance@ handle
---
--- -   @pName@ /must/ be a null-terminated UTF-8 string
+-- Unresolved directive in vkGetInstanceProcAddr.txt -
+-- include::{generated}\/validity\/protos\/vkGetInstanceProcAddr.txt[]
 --
 -- = See Also
 --
 -- 'PFN_vkVoidFunction', 'VkInstance'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetInstanceProcAddr" vkGetInstanceProcAddr :: ("instance" ::: VkInstance) -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction
 #else
-vkGetInstanceProcAddr :: ("instance" ::: VkInstance) -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction
-vkGetInstanceProcAddr _ _ = pure nullPtr
+vkGetInstanceProcAddr :: InstanceCmds -> ("instance" ::: VkInstance) -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction
+vkGetInstanceProcAddr deviceCmds = mkVkGetInstanceProcAddr (pVkGetInstanceProcAddr deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetInstanceProcAddr
+  :: FunPtr (("instance" ::: VkInstance) -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction) -> (("instance" ::: VkInstance) -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction)
+#endif
+-- | A version of 'vkGetInstanceProcAddr' which can be called with a
+-- null pointer for the instance.
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "vkGetInstanceProcAddr" vkGetInstanceProcAddr' :: ("instance" ::: VkInstance) -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction
 type FN_vkGetInstanceProcAddr = ("instance" ::: VkInstance) -> ("pName" ::: Ptr CChar) -> IO PFN_vkVoidFunction
 type PFN_vkGetInstanceProcAddr = FunPtr FN_vkGetInstanceProcAddr
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkGetPhysicalDeviceFeatures - Reports capabilities of a physical device
 --
 -- = Parameters
@@ -5475,25 +5319,39 @@ type PFN_vkGetInstanceProcAddr = FunPtr FN_vkGetInstanceProcAddr
 --
 -- -   @pFeatures@ is a pointer to a 'VkPhysicalDeviceFeatures' structure
 --     in which the physical device features are returned. For each
---     feature, a value of @VK_TRUE@ specifies that the feature is
---     supported on this physical device, and @VK_FALSE@ specifies that the
---     feature is not supported.
+--     feature, a value of 'Graphics.Vulkan.C.Core10.Core.VK_TRUE'
+--     specifies that the feature is supported on this physical device, and
+--     'Graphics.Vulkan.C.Core10.Core.VK_FALSE' specifies that the feature
+--     is not supported.
 --
--- == Valid Usage (Implicit)
+-- = Description
+--
+-- Unresolved directive in vkGetPhysicalDeviceFeatures.txt -
+-- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceFeatures.txt[]
 --
 -- = See Also
 --
 -- 'VkPhysicalDevice', 'VkPhysicalDeviceFeatures'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetPhysicalDeviceFeatures" vkGetPhysicalDeviceFeatures :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pFeatures" ::: Ptr VkPhysicalDeviceFeatures) -> IO ()
-
+#else
+vkGetPhysicalDeviceFeatures :: InstanceCmds -> ("physicalDevice" ::: VkPhysicalDevice) -> ("pFeatures" ::: Ptr VkPhysicalDeviceFeatures) -> IO ()
+vkGetPhysicalDeviceFeatures deviceCmds = mkVkGetPhysicalDeviceFeatures (pVkGetPhysicalDeviceFeatures deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetPhysicalDeviceFeatures
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pFeatures" ::: Ptr VkPhysicalDeviceFeatures) -> IO ()) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("pFeatures" ::: Ptr VkPhysicalDeviceFeatures) -> IO ())
+#endif
+
 type FN_vkGetPhysicalDeviceFeatures = ("physicalDevice" ::: VkPhysicalDevice) -> ("pFeatures" ::: Ptr VkPhysicalDeviceFeatures) -> IO ()
 type PFN_vkGetPhysicalDeviceFeatures = FunPtr FN_vkGetPhysicalDeviceFeatures
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkGetPhysicalDeviceFormatProperties - Lists physical device’s format
 -- capabilities
 --
@@ -5507,22 +5365,35 @@ type PFN_vkGetPhysicalDeviceFeatures = FunPtr FN_vkGetPhysicalDeviceFeatures
 -- -   @pFormatProperties@ is a pointer to a 'VkFormatProperties' structure
 --     in which physical device properties for @format@ are returned.
 --
--- == Valid Usage (Implicit)
+-- = Description
+--
+-- Unresolved directive in vkGetPhysicalDeviceFormatProperties.txt -
+-- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceFormatProperties.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Core.VkFormat', 'VkFormatProperties',
 -- 'VkPhysicalDevice'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetPhysicalDeviceFormatProperties" vkGetPhysicalDeviceFormatProperties :: ("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("pFormatProperties" ::: Ptr VkFormatProperties) -> IO ()
-
+#else
+vkGetPhysicalDeviceFormatProperties :: InstanceCmds -> ("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("pFormatProperties" ::: Ptr VkFormatProperties) -> IO ()
+vkGetPhysicalDeviceFormatProperties deviceCmds = mkVkGetPhysicalDeviceFormatProperties (pVkGetPhysicalDeviceFormatProperties deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetPhysicalDeviceFormatProperties
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("pFormatProperties" ::: Ptr VkFormatProperties) -> IO ()) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("pFormatProperties" ::: Ptr VkFormatProperties) -> IO ())
+#endif
+
 type FN_vkGetPhysicalDeviceFormatProperties = ("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("pFormatProperties" ::: Ptr VkFormatProperties) -> IO ()
 type PFN_vkGetPhysicalDeviceFormatProperties = FunPtr FN_vkGetPhysicalDeviceFormatProperties
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkGetPhysicalDeviceImageFormatProperties - Lists physical device’s image
 -- format capabilities
 --
@@ -5560,15 +5431,15 @@ type PFN_vkGetPhysicalDeviceFormatProperties = FunPtr FN_vkGetPhysicalDeviceForm
 -- The @format@, @type@, @tiling@, @usage@, and @flags@ parameters
 -- correspond to parameters that would be consumed by
 -- 'Graphics.Vulkan.C.Core10.Image.vkCreateImage' (as members of
--- @VkImageCreateInfo@).
+-- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo').
 --
 -- If @format@ is not a supported image format, or if the combination of
 -- @format@, @type@, @tiling@, @usage@, and @flags@ is not supported for
--- images, then @vkGetPhysicalDeviceImageFormatProperties@ returns
--- @VK_ERROR_FORMAT_NOT_SUPPORTED@.
+-- images, then 'vkGetPhysicalDeviceImageFormatProperties' returns
+-- 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_FORMAT_NOT_SUPPORTED'.
 --
 -- The limitations on an image format that are reported by
--- @vkGetPhysicalDeviceImageFormatProperties@ have the following property:
+-- 'vkGetPhysicalDeviceImageFormatProperties' have the following property:
 -- if @usage1@ and @usage2@ of type 'VkImageUsageFlags' are such that the
 -- bits set in @usage1@ are a subset of the bits set in @usage2@, and
 -- @flags1@ and @flags2@ of type 'VkImageCreateFlags' are such that the
@@ -5577,33 +5448,36 @@ type PFN_vkGetPhysicalDeviceFormatProperties = FunPtr FN_vkGetPhysicalDeviceForm
 -- limitations for @usage2@ and @flags2@, for all values of @format@,
 -- @type@, and @tiling@.
 --
--- == Return Codes
+-- == Valid Usage
 --
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
---
---     -   @VK_ERROR_FORMAT_NOT_SUPPORTED@
+-- Unresolved directive in vkGetPhysicalDeviceImageFormatProperties.txt -
+-- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceImageFormatProperties.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Core.VkFormat', 'VkImageCreateFlags',
 -- 'VkImageFormatProperties', 'VkImageTiling', 'VkImageType',
 -- 'VkImageUsageFlags', 'VkPhysicalDevice'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetPhysicalDeviceImageFormatProperties" vkGetPhysicalDeviceImageFormatProperties :: ("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("type" ::: VkImageType) -> ("tiling" ::: VkImageTiling) -> ("usage" ::: VkImageUsageFlags) -> ("flags" ::: VkImageCreateFlags) -> ("pImageFormatProperties" ::: Ptr VkImageFormatProperties) -> IO VkResult
-
+#else
+vkGetPhysicalDeviceImageFormatProperties :: InstanceCmds -> ("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("type" ::: VkImageType) -> ("tiling" ::: VkImageTiling) -> ("usage" ::: VkImageUsageFlags) -> ("flags" ::: VkImageCreateFlags) -> ("pImageFormatProperties" ::: Ptr VkImageFormatProperties) -> IO VkResult
+vkGetPhysicalDeviceImageFormatProperties deviceCmds = mkVkGetPhysicalDeviceImageFormatProperties (pVkGetPhysicalDeviceImageFormatProperties deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetPhysicalDeviceImageFormatProperties
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("type" ::: VkImageType) -> ("tiling" ::: VkImageTiling) -> ("usage" ::: VkImageUsageFlags) -> ("flags" ::: VkImageCreateFlags) -> ("pImageFormatProperties" ::: Ptr VkImageFormatProperties) -> IO VkResult) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("type" ::: VkImageType) -> ("tiling" ::: VkImageTiling) -> ("usage" ::: VkImageUsageFlags) -> ("flags" ::: VkImageCreateFlags) -> ("pImageFormatProperties" ::: Ptr VkImageFormatProperties) -> IO VkResult)
+#endif
+
 type FN_vkGetPhysicalDeviceImageFormatProperties = ("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("type" ::: VkImageType) -> ("tiling" ::: VkImageTiling) -> ("usage" ::: VkImageUsageFlags) -> ("flags" ::: VkImageCreateFlags) -> ("pImageFormatProperties" ::: Ptr VkImageFormatProperties) -> IO VkResult
 type PFN_vkGetPhysicalDeviceImageFormatProperties = FunPtr FN_vkGetPhysicalDeviceImageFormatProperties
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkGetPhysicalDeviceMemoryProperties - Reports memory information for the
 -- specified physical device
 --
@@ -5612,24 +5486,37 @@ type PFN_vkGetPhysicalDeviceImageFormatProperties = FunPtr FN_vkGetPhysicalDevic
 -- -   @physicalDevice@ is the handle to the device to query.
 --
 -- -   @pMemoryProperties@ points to an instance of
---     @VkPhysicalDeviceMemoryProperties@ structure in which the properties
+--     'VkPhysicalDeviceMemoryProperties' structure in which the properties
 --     are returned.
 --
--- == Valid Usage (Implicit)
+-- = Description
+--
+-- Unresolved directive in vkGetPhysicalDeviceMemoryProperties.txt -
+-- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceMemoryProperties.txt[]
 --
 -- = See Also
 --
 -- 'VkPhysicalDevice', 'VkPhysicalDeviceMemoryProperties'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetPhysicalDeviceMemoryProperties" vkGetPhysicalDeviceMemoryProperties :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pMemoryProperties" ::: Ptr VkPhysicalDeviceMemoryProperties) -> IO ()
-
+#else
+vkGetPhysicalDeviceMemoryProperties :: InstanceCmds -> ("physicalDevice" ::: VkPhysicalDevice) -> ("pMemoryProperties" ::: Ptr VkPhysicalDeviceMemoryProperties) -> IO ()
+vkGetPhysicalDeviceMemoryProperties deviceCmds = mkVkGetPhysicalDeviceMemoryProperties (pVkGetPhysicalDeviceMemoryProperties deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetPhysicalDeviceMemoryProperties
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pMemoryProperties" ::: Ptr VkPhysicalDeviceMemoryProperties) -> IO ()) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("pMemoryProperties" ::: Ptr VkPhysicalDeviceMemoryProperties) -> IO ())
+#endif
+
 type FN_vkGetPhysicalDeviceMemoryProperties = ("physicalDevice" ::: VkPhysicalDevice) -> ("pMemoryProperties" ::: Ptr VkPhysicalDeviceMemoryProperties) -> IO ()
 type PFN_vkGetPhysicalDeviceMemoryProperties = FunPtr FN_vkGetPhysicalDeviceMemoryProperties
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkGetPhysicalDeviceProperties - Returns properties of a physical device
 --
 -- = Parameters
@@ -5641,21 +5528,34 @@ type PFN_vkGetPhysicalDeviceMemoryProperties = FunPtr FN_vkGetPhysicalDeviceMemo
 --     'VkPhysicalDeviceProperties' structure, that will be filled with
 --     returned information.
 --
--- == Valid Usage (Implicit)
+-- = Description
+--
+-- Unresolved directive in vkGetPhysicalDeviceProperties.txt -
+-- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceProperties.txt[]
 --
 -- = See Also
 --
 -- 'VkPhysicalDevice', 'VkPhysicalDeviceProperties'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetPhysicalDeviceProperties" vkGetPhysicalDeviceProperties :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pProperties" ::: Ptr VkPhysicalDeviceProperties) -> IO ()
-
+#else
+vkGetPhysicalDeviceProperties :: InstanceCmds -> ("physicalDevice" ::: VkPhysicalDevice) -> ("pProperties" ::: Ptr VkPhysicalDeviceProperties) -> IO ()
+vkGetPhysicalDeviceProperties deviceCmds = mkVkGetPhysicalDeviceProperties (pVkGetPhysicalDeviceProperties deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetPhysicalDeviceProperties
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pProperties" ::: Ptr VkPhysicalDeviceProperties) -> IO ()) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("pProperties" ::: Ptr VkPhysicalDeviceProperties) -> IO ())
+#endif
+
 type FN_vkGetPhysicalDeviceProperties = ("physicalDevice" ::: VkPhysicalDevice) -> ("pProperties" ::: Ptr VkPhysicalDeviceProperties) -> IO ()
 type PFN_vkGetPhysicalDeviceProperties = FunPtr FN_vkGetPhysicalDeviceProperties
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkGetPhysicalDeviceQueueFamilyProperties - Reports properties of the
 -- queues of the specified physical device
 --
@@ -5684,27 +5584,28 @@ type PFN_vkGetPhysicalDeviceProperties = FunPtr FN_vkGetPhysicalDeviceProperties
 -- available, at most @pQueueFamilyPropertyCount@ structures will be
 -- written.
 --
--- == Valid Usage (Implicit)
---
--- -   @physicalDevice@ /must/ be a valid @VkPhysicalDevice@ handle
---
--- -   @pQueueFamilyPropertyCount@ /must/ be a valid pointer to a
---     @uint32_t@ value
---
--- -   If the value referenced by @pQueueFamilyPropertyCount@ is not @0@,
---     and @pQueueFamilyProperties@ is not @NULL@, @pQueueFamilyProperties@
---     /must/ be a valid pointer to an array of @pQueueFamilyPropertyCount@
---     @VkQueueFamilyProperties@ structures
+-- Unresolved directive in vkGetPhysicalDeviceQueueFamilyProperties.txt -
+-- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceQueueFamilyProperties.txt[]
 --
 -- = See Also
 --
 -- 'VkPhysicalDevice', 'VkQueueFamilyProperties'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetPhysicalDeviceQueueFamilyProperties" vkGetPhysicalDeviceQueueFamilyProperties :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pQueueFamilyPropertyCount" ::: Ptr Word32) -> ("pQueueFamilyProperties" ::: Ptr VkQueueFamilyProperties) -> IO ()
-
+#else
+vkGetPhysicalDeviceQueueFamilyProperties :: InstanceCmds -> ("physicalDevice" ::: VkPhysicalDevice) -> ("pQueueFamilyPropertyCount" ::: Ptr Word32) -> ("pQueueFamilyProperties" ::: Ptr VkQueueFamilyProperties) -> IO ()
+vkGetPhysicalDeviceQueueFamilyProperties deviceCmds = mkVkGetPhysicalDeviceQueueFamilyProperties (pVkGetPhysicalDeviceQueueFamilyProperties deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetPhysicalDeviceQueueFamilyProperties
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pQueueFamilyPropertyCount" ::: Ptr Word32) -> ("pQueueFamilyProperties" ::: Ptr VkQueueFamilyProperties) -> IO ()) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("pQueueFamilyPropertyCount" ::: Ptr Word32) -> ("pQueueFamilyProperties" ::: Ptr VkQueueFamilyProperties) -> IO ())
+#endif
+
 type FN_vkGetPhysicalDeviceQueueFamilyProperties = ("physicalDevice" ::: VkPhysicalDevice) -> ("pQueueFamilyPropertyCount" ::: Ptr Word32) -> ("pQueueFamilyProperties" ::: Ptr VkQueueFamilyProperties) -> IO ()
 type PFN_vkGetPhysicalDeviceQueueFamilyProperties = FunPtr FN_vkGetPhysicalDeviceQueueFamilyProperties

@@ -48,39 +48,80 @@ import Graphics.Vulkan.C.Extensions.VK_NV_external_memory
   )
 
 
--- No documentation found for TopLevel "ExportMemoryAllocateInfoNV"
+
+-- | VkExportMemoryAllocateInfoNV - Specify memory handle types that may be
+-- exported
+--
+-- = Description
+--
+-- Unresolved directive in VkExportMemoryAllocateInfoNV.txt -
+-- include::{generated}\/validity\/structs\/VkExportMemoryAllocateInfoNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data ExportMemoryAllocateInfoNV = ExportMemoryAllocateInfoNV
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "ExportMemoryAllocateInfoNV" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "ExportMemoryAllocateInfoNV" "handleTypes"
-  vkHandleTypes :: ExternalMemoryHandleTypeFlagsNV
+  handleTypes :: ExternalMemoryHandleTypeFlagsNV
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkExportMemoryAllocateInfoNV' and
+-- marshal a 'ExportMemoryAllocateInfoNV' into it. The 'VkExportMemoryAllocateInfoNV' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructExportMemoryAllocateInfoNV :: ExportMemoryAllocateInfoNV -> (VkExportMemoryAllocateInfoNV -> IO a) -> IO a
-withCStructExportMemoryAllocateInfoNV from cont = maybeWith withSomeVkStruct (vkPNext (from :: ExportMemoryAllocateInfoNV)) (\pPNext -> cont (VkExportMemoryAllocateInfoNV VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV pPNext (vkHandleTypes (from :: ExportMemoryAllocateInfoNV))))
+withCStructExportMemoryAllocateInfoNV marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: ExportMemoryAllocateInfoNV)) (\pPNext -> cont (VkExportMemoryAllocateInfoNV VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV pPNext (handleTypes (marshalled :: ExportMemoryAllocateInfoNV))))
+
+-- | A function to read a 'VkExportMemoryAllocateInfoNV' and all additional
+-- structures in the pointer chain into a 'ExportMemoryAllocateInfoNV'.
 fromCStructExportMemoryAllocateInfoNV :: VkExportMemoryAllocateInfoNV -> IO ExportMemoryAllocateInfoNV
 fromCStructExportMemoryAllocateInfoNV c = ExportMemoryAllocateInfoNV <$> -- Univalued Member elided
                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkExportMemoryAllocateInfoNV)))
                                                                      <*> pure (vkHandleTypes (c :: VkExportMemoryAllocateInfoNV))
+
 instance Zero ExportMemoryAllocateInfoNV where
   zero = ExportMemoryAllocateInfoNV Nothing
                                     zero
--- No documentation found for TopLevel "ExternalMemoryImageCreateInfoNV"
+
+
+
+-- | VkExternalMemoryImageCreateInfoNV - Specify that an image may be backed
+-- by external memory
+--
+-- = Description
+--
+-- Unresolved directive in VkExternalMemoryImageCreateInfoNV.txt -
+-- include::{generated}\/validity\/structs\/VkExternalMemoryImageCreateInfoNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data ExternalMemoryImageCreateInfoNV = ExternalMemoryImageCreateInfoNV
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "ExternalMemoryImageCreateInfoNV" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "ExternalMemoryImageCreateInfoNV" "handleTypes"
-  vkHandleTypes :: ExternalMemoryHandleTypeFlagsNV
+  handleTypes :: ExternalMemoryHandleTypeFlagsNV
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkExternalMemoryImageCreateInfoNV' and
+-- marshal a 'ExternalMemoryImageCreateInfoNV' into it. The 'VkExternalMemoryImageCreateInfoNV' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructExternalMemoryImageCreateInfoNV :: ExternalMemoryImageCreateInfoNV -> (VkExternalMemoryImageCreateInfoNV -> IO a) -> IO a
-withCStructExternalMemoryImageCreateInfoNV from cont = maybeWith withSomeVkStruct (vkPNext (from :: ExternalMemoryImageCreateInfoNV)) (\pPNext -> cont (VkExternalMemoryImageCreateInfoNV VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV pPNext (vkHandleTypes (from :: ExternalMemoryImageCreateInfoNV))))
+withCStructExternalMemoryImageCreateInfoNV marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: ExternalMemoryImageCreateInfoNV)) (\pPNext -> cont (VkExternalMemoryImageCreateInfoNV VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV pPNext (handleTypes (marshalled :: ExternalMemoryImageCreateInfoNV))))
+
+-- | A function to read a 'VkExternalMemoryImageCreateInfoNV' and all additional
+-- structures in the pointer chain into a 'ExternalMemoryImageCreateInfoNV'.
 fromCStructExternalMemoryImageCreateInfoNV :: VkExternalMemoryImageCreateInfoNV -> IO ExternalMemoryImageCreateInfoNV
 fromCStructExternalMemoryImageCreateInfoNV c = ExternalMemoryImageCreateInfoNV <$> -- Univalued Member elided
                                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkExternalMemoryImageCreateInfoNV)))
                                                                                <*> pure (vkHandleTypes (c :: VkExternalMemoryImageCreateInfoNV))
+
 instance Zero ExternalMemoryImageCreateInfoNV where
   zero = ExternalMemoryImageCreateInfoNV Nothing
                                          zero
+

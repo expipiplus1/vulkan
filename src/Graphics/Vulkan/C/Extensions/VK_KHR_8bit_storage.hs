@@ -37,7 +37,7 @@ import Graphics.Vulkan.C.Core10.Core
 -- = Description
 --
 -- Unresolved directive in VkPhysicalDevice8BitStorageFeaturesKHR.txt -
--- include::..\/validity\/structs\/VkPhysicalDevice8BitStorageFeaturesKHR.txt[]
+-- include::{generated}\/validity\/structs\/VkPhysicalDevice8BitStorageFeaturesKHR.txt[]
 --
 -- = See Also
 --
@@ -86,17 +86,20 @@ instance Storable VkPhysicalDevice8BitStorageFeaturesKHR where
                 *> poke (ptr `plusPtr` 24) (vkStoragePushConstant8 (poked :: VkPhysicalDevice8BitStorageFeaturesKHR))
 
 instance Zero VkPhysicalDevice8BitStorageFeaturesKHR where
-  zero = VkPhysicalDevice8BitStorageFeaturesKHR zero
+  zero = VkPhysicalDevice8BitStorageFeaturesKHR VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES_KHR
                                                 zero
                                                 zero
                                                 zero
                                                 zero
+
 -- No documentation found for TopLevel "VK_KHR_8BIT_STORAGE_EXTENSION_NAME"
 pattern VK_KHR_8BIT_STORAGE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_8BIT_STORAGE_EXTENSION_NAME = "VK_KHR_8bit_storage"
+
 -- No documentation found for TopLevel "VK_KHR_8BIT_STORAGE_SPEC_VERSION"
 pattern VK_KHR_8BIT_STORAGE_SPEC_VERSION :: Integral a => a
 pattern VK_KHR_8BIT_STORAGE_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES_KHR"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES_KHR = VkStructureType 1000177000

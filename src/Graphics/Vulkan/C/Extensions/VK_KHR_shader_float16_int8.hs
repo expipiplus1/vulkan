@@ -37,7 +37,7 @@ import Graphics.Vulkan.C.Core10.Core
 -- = Description
 --
 -- Unresolved directive in VkPhysicalDeviceFloat16Int8FeaturesKHR.txt -
--- include::..\/validity\/structs\/VkPhysicalDeviceFloat16Int8FeaturesKHR.txt[]
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceFloat16Int8FeaturesKHR.txt[]
 --
 -- = See Also
 --
@@ -71,16 +71,19 @@ instance Storable VkPhysicalDeviceFloat16Int8FeaturesKHR where
                 *> poke (ptr `plusPtr` 20) (vkShaderInt8 (poked :: VkPhysicalDeviceFloat16Int8FeaturesKHR))
 
 instance Zero VkPhysicalDeviceFloat16Int8FeaturesKHR where
-  zero = VkPhysicalDeviceFloat16Int8FeaturesKHR zero
+  zero = VkPhysicalDeviceFloat16Int8FeaturesKHR VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT16_INT8_FEATURES_KHR
                                                 zero
                                                 zero
                                                 zero
+
 -- No documentation found for TopLevel "VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME"
 pattern VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME = "VK_KHR_shader_float16_int8"
+
 -- No documentation found for TopLevel "VK_KHR_SHADER_FLOAT16_INT8_SPEC_VERSION"
 pattern VK_KHR_SHADER_FLOAT16_INT8_SPEC_VERSION :: Integral a => a
 pattern VK_KHR_SHADER_FLOAT16_INT8_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT16_INT8_FEATURES_KHR"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT16_INT8_FEATURES_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT16_INT8_FEATURES_KHR = VkStructureType 1000082000

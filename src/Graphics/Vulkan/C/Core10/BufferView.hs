@@ -10,16 +10,12 @@ module Graphics.Vulkan.C.Core10.BufferView
   ( VkBufferView
   , VkBufferViewCreateFlags(..)
   , VkBufferViewCreateInfo(..)
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCreateBufferView
-#endif
   , FN_vkCreateBufferView
   , PFN_vkCreateBufferView
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkDestroyBufferView
-#endif
+  , vkCreateBufferView
   , FN_vkDestroyBufferView
   , PFN_vkDestroyBufferView
+  , vkDestroyBufferView
   ) where
 
 import Data.Bits
@@ -59,6 +55,7 @@ import Graphics.Vulkan.C.Core10.Core
   , VkStructureType(..)
   , Zero(..)
   , VkFlags
+  , pattern VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkAllocationCallbacks(..)
@@ -67,6 +64,9 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
   )
 import Graphics.Vulkan.C.Core10.MemoryManagement
   ( VkBuffer
+  )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -82,13 +82,14 @@ data VkBufferView_T
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkWriteDescriptorSet',
 -- 'vkCreateBufferView', 'vkDestroyBufferView'
 type VkBufferView = Ptr VkBufferView_T
+
 -- ** VkBufferViewCreateFlags
 
 -- | VkBufferViewCreateFlags - Reserved for future use
 --
 -- = Description
 --
--- @VkBufferViewCreateFlags@ is a bitmask type for setting a mask, but is
+-- 'VkBufferViewCreateFlags' is a bitmask type for setting a mask, but is
 -- currently reserved for future use.
 --
 -- = See Also
@@ -112,6 +113,7 @@ instance Read VkBufferViewCreateFlags where
                     )
 
 
+
 -- | VkBufferViewCreateInfo - Structure specifying parameters of a newly
 -- created buffer view
 --
@@ -120,62 +122,67 @@ instance Read VkBufferViewCreateFlags where
 -- -   @offset@ /must/ be less than the size of @buffer@
 --
 -- -   @offset@ /must/ be a multiple of
---     @VkPhysicalDeviceLimits@::@minTexelBufferOffsetAlignment@
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@minTexelBufferOffsetAlignment@
 --
--- -   If @range@ is not equal to @VK_WHOLE_SIZE@, @range@ /must/ be
---     greater than @0@
+-- -   If @range@ is not equal to
+--     'Graphics.Vulkan.C.Core10.Constants.VK_WHOLE_SIZE', @range@ /must/
+--     be greater than @0@
 --
--- -   If @range@ is not equal to @VK_WHOLE_SIZE@, @range@ /must/ be an
---     integer multiple of the texel block size of @format@
+-- -   If @range@ is not equal to
+--     'Graphics.Vulkan.C.Core10.Constants.VK_WHOLE_SIZE', @range@ /must/
+--     be an integer multiple of the texel block size of @format@
 --
--- -   If @range@ is not equal to @VK_WHOLE_SIZE@, @range@ divided by the
---     texel block size of @format@, multiplied by the number of texels per
---     texel block for that format (as defined in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-compatibility Compatible Formats>
+-- -   If @range@ is not equal to
+--     'Graphics.Vulkan.C.Core10.Constants.VK_WHOLE_SIZE', @range@ divided
+--     by the texel block size of @format@, multiplied by the number of
+--     texels per texel block for that format (as defined in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-compatibility Compatible Formats>
 --     table), /must/ be less than or equal to
---     @VkPhysicalDeviceLimits@::@maxTexelBufferElements@
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxTexelBufferElements@
 --
--- -   If @range@ is not equal to @VK_WHOLE_SIZE@, the sum of @offset@ and
---     @range@ /must/ be less than or equal to the size of @buffer@
+-- -   If @range@ is not equal to
+--     'Graphics.Vulkan.C.Core10.Constants.VK_WHOLE_SIZE', the sum of
+--     @offset@ and @range@ /must/ be less than or equal to the size of
+--     @buffer@
 --
 -- -   @buffer@ /must/ have been created with a @usage@ value containing at
---     least one of @VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT@ or
---     @VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT@
+--     least one of
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT'
+--     or
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT'
 --
 -- -   If @buffer@ was created with @usage@ containing
---     @VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT@, @format@ /must/ be
---     supported for uniform texel buffers, as specified by the
---     @VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT@ flag in
---     @VkFormatProperties@::@bufferFeatures@ returned by
---     @vkGetPhysicalDeviceFormatProperties@
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT',
+--     @format@ /must/ be supported for uniform texel buffers, as specified
+--     by the
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT'
+--     flag in
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkFormatProperties'::@bufferFeatures@
+--     returned by
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceFormatProperties'
 --
 -- -   If @buffer@ was created with @usage@ containing
---     @VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT@, @format@ /must/ be
---     supported for storage texel buffers, as specified by the
---     @VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT@ flag in
---     @VkFormatProperties@::@bufferFeatures@ returned by
---     @vkGetPhysicalDeviceFormatProperties@
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT',
+--     @format@ /must/ be supported for storage texel buffers, as specified
+--     by the
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT'
+--     flag in
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkFormatProperties'::@bufferFeatures@
+--     returned by
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceFormatProperties'
 --
 -- -   If @buffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+--     contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO@
---
--- -   @pNext@ /must/ be @NULL@
---
--- -   @flags@ /must/ be @0@
---
--- -   @buffer@ /must/ be a valid @VkBuffer@ handle
---
--- -   @format@ /must/ be a valid 'Graphics.Vulkan.C.Core10.Core.VkFormat'
---     value
+-- Unresolved directive in VkBufferViewCreateInfo.txt -
+-- include::{generated}\/validity\/structs\/VkBufferViewCreateInfo.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',
--- 'VkBufferViewCreateFlags', @VkDeviceSize@,
+-- 'VkBufferViewCreateFlags',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
 -- 'Graphics.Vulkan.C.Core10.Core.VkFormat',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType', 'vkCreateBufferView'
 data VkBufferViewCreateInfo = VkBufferViewCreateInfo
@@ -196,10 +203,11 @@ data VkBufferViewCreateInfo = VkBufferViewCreateInfo
   -- to this starting offset.
   vkOffset :: VkDeviceSize
   , -- | @range@ is a size in bytes of the buffer view. If @range@ is equal to
-  -- @VK_WHOLE_SIZE@, the range from @offset@ to the end of the buffer is
-  -- used. If @VK_WHOLE_SIZE@ is used and the remaining size of the buffer is
-  -- not a multiple of the
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#texel-block-size texel block size>
+  -- 'Graphics.Vulkan.C.Core10.Constants.VK_WHOLE_SIZE', the range from
+  -- @offset@ to the end of the buffer is used. If
+  -- 'Graphics.Vulkan.C.Core10.Constants.VK_WHOLE_SIZE' is used and the
+  -- remaining size of the buffer is not a multiple of the
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#texel-block-size texel block size>
   -- of @format@, the nearest smaller multiple is used.
   vkRange :: VkDeviceSize
   }
@@ -224,14 +232,14 @@ instance Storable VkBufferViewCreateInfo where
                 *> poke (ptr `plusPtr` 48) (vkRange (poked :: VkBufferViewCreateInfo))
 
 instance Zero VkBufferViewCreateInfo where
-  zero = VkBufferViewCreateInfo zero
+  zero = VkBufferViewCreateInfo VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO
                                 zero
                                 zero
                                 zero
                                 zero
                                 zero
                                 zero
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCreateBufferView - Create a new buffer view object
 --
 -- = Parameters
@@ -239,53 +247,46 @@ instance Zero VkBufferViewCreateInfo where
 -- -   @device@ is the logical device that creates the buffer view.
 --
 -- -   @pCreateInfo@ is a pointer to an instance of the
---     @VkBufferViewCreateInfo@ structure containing parameters to be used
+--     'VkBufferViewCreateInfo' structure containing parameters to be used
 --     to create the buffer.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
 -- -   @pView@ points to a 'VkBufferView' handle in which the resulting
 --     buffer view object is returned.
 --
--- == Valid Usage (Implicit)
+-- = Description
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     @VkBufferViewCreateInfo@ structure
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
---
--- -   @pView@ /must/ be a valid pointer to a @VkBufferView@ handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- Unresolved directive in vkCreateBufferView.txt -
+-- include::{generated}\/validity\/protos\/vkCreateBufferView.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'VkBufferView', 'VkBufferViewCreateInfo',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCreateBufferView" vkCreateBufferView :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkBufferViewCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pView" ::: Ptr VkBufferView) -> IO VkResult
-
+#else
+vkCreateBufferView :: DeviceCmds -> ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkBufferViewCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pView" ::: Ptr VkBufferView) -> IO VkResult
+vkCreateBufferView deviceCmds = mkVkCreateBufferView (pVkCreateBufferView deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCreateBufferView
+  :: FunPtr (("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkBufferViewCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pView" ::: Ptr VkBufferView) -> IO VkResult) -> (("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkBufferViewCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pView" ::: Ptr VkBufferView) -> IO VkResult)
+#endif
+
 type FN_vkCreateBufferView = ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkBufferViewCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pView" ::: Ptr VkBufferView) -> IO VkResult
 type PFN_vkCreateBufferView = FunPtr FN_vkCreateBufferView
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkDestroyBufferView - Destroy a buffer view object
 --
 -- = Parameters
@@ -295,7 +296,7 @@ type PFN_vkCreateBufferView = FunPtr FN_vkCreateBufferView
 -- -   @bufferView@ is the buffer view to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
 -- == Valid Usage
@@ -303,40 +304,39 @@ type PFN_vkCreateBufferView = FunPtr FN_vkCreateBufferView
 -- -   All submitted commands that refer to @bufferView@ /must/ have
 --     completed execution
 --
--- -   If @VkAllocationCallbacks@ were provided when @bufferView@ was
---     created, a compatible set of callbacks /must/ be provided here
+-- -   If
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     were provided when @bufferView@ was created, a compatible set of
+--     callbacks /must/ be provided here
 --
--- -   If no @VkAllocationCallbacks@ were provided when @bufferView@ was
---     created, @pAllocator@ /must/ be @NULL@
+-- -   If no
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     were provided when @bufferView@ was created, @pAllocator@ /must/ be
+--     @NULL@
 --
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   If @bufferView@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @bufferView@
---     /must/ be a valid @VkBufferView@ handle
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
---
--- -   If @bufferView@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
---
--- == Host Synchronization
---
--- -   Host access to @bufferView@ /must/ be externally synchronized
+-- Unresolved directive in vkDestroyBufferView.txt -
+-- include::{generated}\/validity\/protos\/vkDestroyBufferView.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'VkBufferView', 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkDestroyBufferView" vkDestroyBufferView :: ("device" ::: VkDevice) -> ("bufferView" ::: VkBufferView) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
-
+#else
+vkDestroyBufferView :: DeviceCmds -> ("device" ::: VkDevice) -> ("bufferView" ::: VkBufferView) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+vkDestroyBufferView deviceCmds = mkVkDestroyBufferView (pVkDestroyBufferView deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkDestroyBufferView
+  :: FunPtr (("device" ::: VkDevice) -> ("bufferView" ::: VkBufferView) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()) -> (("device" ::: VkDevice) -> ("bufferView" ::: VkBufferView) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ())
+#endif
+
 type FN_vkDestroyBufferView = ("device" ::: VkDevice) -> ("bufferView" ::: VkBufferView) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 type PFN_vkDestroyBufferView = FunPtr FN_vkDestroyBufferView

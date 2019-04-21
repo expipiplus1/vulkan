@@ -43,13 +43,13 @@ import Graphics.Vulkan.C.Core10.Pipeline
 --
 -- If the @pNext@ list of
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.VkBindBufferMemoryInfo'
--- includes a @VkBindBufferMemoryDeviceGroupInfo@ structure, then that
+-- includes a 'VkBindBufferMemoryDeviceGroupInfo' structure, then that
 -- structure determines how memory is bound to buffers across multiple
 -- devices in a device group.
 --
 -- = Description
 --
--- The @VkBindBufferMemoryDeviceGroupInfo@ structure is defined as:
+-- The 'VkBindBufferMemoryDeviceGroupInfo' structure is defined as:
 --
 -- -   @sType@ is the type of this structure.
 --
@@ -64,15 +64,19 @@ import Graphics.Vulkan.C.Core10.Pipeline
 -- with device index pDeviceIndices[i].
 --
 -- If @deviceIndexCount@ is zero and @memory@ comes from a memory heap with
--- the @VK_MEMORY_HEAP_MULTI_INSTANCE_BIT@ bit set, then it is as if
--- @pDeviceIndices@ contains consecutive indices from zero to the number of
--- physical devices in the logical device, minus one. In other words, by
--- default each physical device attaches to its own instance of @memory@.
+-- the
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation.VK_MEMORY_HEAP_MULTI_INSTANCE_BIT'
+-- bit set, then it is as if @pDeviceIndices@ contains consecutive indices
+-- from zero to the number of physical devices in the logical device, minus
+-- one. In other words, by default each physical device attaches to its own
+-- instance of @memory@.
 --
 -- If @deviceIndexCount@ is zero and @memory@ comes from a memory heap
--- without the @VK_MEMORY_HEAP_MULTI_INSTANCE_BIT@ bit set, then it is as
--- if @pDeviceIndices@ contains an array of zeros. In other words, by
--- default each physical device attaches to instance zero.
+-- without the
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation.VK_MEMORY_HEAP_MULTI_INSTANCE_BIT'
+-- bit set, then it is as if @pDeviceIndices@ contains an array of zeros.
+-- In other words, by default each physical device attaches to instance
+-- zero.
 --
 -- == Valid Usage
 --
@@ -81,13 +85,8 @@ import Graphics.Vulkan.C.Core10.Pipeline
 --
 -- -   All elements of @pDeviceIndices@ /must/ be valid device indices
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO@
---
--- -   If @deviceIndexCount@ is not @0@, @pDeviceIndices@ /must/ be a valid
---     pointer to an array of @deviceIndexCount@ @uint32_t@ values
+-- Unresolved directive in VkBindBufferMemoryDeviceGroupInfo.txt -
+-- include::{generated}\/validity\/structs\/VkBindBufferMemoryDeviceGroupInfo.txt[]
 --
 -- = See Also
 --
@@ -117,10 +116,11 @@ instance Storable VkBindBufferMemoryDeviceGroupInfo where
                 *> poke (ptr `plusPtr` 24) (vkPDeviceIndices (poked :: VkBindBufferMemoryDeviceGroupInfo))
 
 instance Zero VkBindBufferMemoryDeviceGroupInfo where
-  zero = VkBindBufferMemoryDeviceGroupInfo zero
+  zero = VkBindBufferMemoryDeviceGroupInfo VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO
                                            zero
                                            zero
                                            zero
+
 -- | VkBindImageMemoryDeviceGroupInfo - Structure specifying device within a
 -- group to bind to
 --
@@ -128,13 +128,13 @@ instance Zero VkBindBufferMemoryDeviceGroupInfo where
 --
 -- If the @pNext@ list of
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.VkBindImageMemoryInfo'
--- includes a @VkBindImageMemoryDeviceGroupInfo@ structure, then that
+-- includes a 'VkBindImageMemoryDeviceGroupInfo' structure, then that
 -- structure determines how memory is bound to images across multiple
 -- devices in a device group.
 --
 -- = Description
 --
--- The @VkBindImageMemoryDeviceGroupInfo@ structure is defined as:
+-- The 'VkBindImageMemoryDeviceGroupInfo' structure is defined as:
 --
 -- -   @sType@ is the type of this structure.
 --
@@ -170,16 +170,18 @@ instance Zero VkBindBufferMemoryDeviceGroupInfo where
 --
 -- If @splitInstanceBindRegionCount@ and @deviceIndexCount@ are zero and
 -- the memory comes from a memory heap with the
--- @VK_MEMORY_HEAP_MULTI_INSTANCE_BIT@ bit set, then it is as if
--- @pDeviceIndices@ contains consecutive indices from zero to the number of
--- physical devices in the logical device, minus one. In other words, by
--- default each physical device attaches to its own instance of the memory.
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation.VK_MEMORY_HEAP_MULTI_INSTANCE_BIT'
+-- bit set, then it is as if @pDeviceIndices@ contains consecutive indices
+-- from zero to the number of physical devices in the logical device, minus
+-- one. In other words, by default each physical device attaches to its own
+-- instance of the memory.
 --
 -- If @splitInstanceBindRegionCount@ and @deviceIndexCount@ are zero and
 -- the memory comes from a memory heap without the
--- @VK_MEMORY_HEAP_MULTI_INSTANCE_BIT@ bit set, then it is as if
--- @pDeviceIndices@ contains an array of zeros. In other words, by default
--- each physical device attaches to instance zero.
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation.VK_MEMORY_HEAP_MULTI_INSTANCE_BIT'
+-- bit set, then it is as if @pDeviceIndices@ contains an array of zeros.
+-- In other words, by default each physical device attaches to instance
+-- zero.
 --
 -- == Valid Usage
 --
@@ -199,13 +201,13 @@ instance Zero VkBindBufferMemoryDeviceGroupInfo where
 --
 -- -   The @offset.x@ member of any element of @pSplitInstanceBindRegions@
 --     /must/ be a multiple of the sparse image block width
---     (@VkSparseImageFormatProperties@::@imageGranularity.width@) of all
---     non-metadata aspects of the image
+--     ('Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageFormatProperties'::@imageGranularity.width@)
+--     of all non-metadata aspects of the image
 --
 -- -   The @offset.y@ member of any element of @pSplitInstanceBindRegions@
 --     /must/ be a multiple of the sparse image block height
---     (@VkSparseImageFormatProperties@::@imageGranularity.height@) of all
---     non-metadata aspects of the image
+--     ('Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageFormatProperties'::@imageGranularity.height@)
+--     of all non-metadata aspects of the image
 --
 -- -   The @extent.width@ member of any element of
 --     @pSplitInstanceBindRegions@ /must/ either be a multiple of the
@@ -219,17 +221,8 @@ instance Zero VkBindBufferMemoryDeviceGroupInfo where
 --     or else @extent.height@
 --     @offset.y@ /must/ equal the width of the image subresource
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO@
---
--- -   If @deviceIndexCount@ is not @0@, @pDeviceIndices@ /must/ be a valid
---     pointer to an array of @deviceIndexCount@ @uint32_t@ values
---
--- -   If @splitInstanceBindRegionCount@ is not @0@,
---     @pSplitInstanceBindRegions@ /must/ be a valid pointer to an array of
---     @splitInstanceBindRegionCount@ @VkRect2D@ structures
+-- Unresolved directive in VkBindImageMemoryDeviceGroupInfo.txt -
+-- include::{generated}\/validity\/structs\/VkBindImageMemoryDeviceGroupInfo.txt[]
 --
 -- = See Also
 --
@@ -268,18 +261,27 @@ instance Storable VkBindImageMemoryDeviceGroupInfo where
                 *> poke (ptr `plusPtr` 40) (vkPSplitInstanceBindRegions (poked :: VkBindImageMemoryDeviceGroupInfo))
 
 instance Zero VkBindImageMemoryDeviceGroupInfo where
-  zero = VkBindImageMemoryDeviceGroupInfo zero
+  zero = VkBindImageMemoryDeviceGroupInfo VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO
                                           zero
                                           zero
                                           zero
                                           zero
                                           zero
--- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT"
+
+-- | 'VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT' specifies that the
+-- image /can/ be used with a non-zero value of the
+-- @splitInstanceBindRegionCount@ member of a
+-- 'VkBindImageMemoryDeviceGroupInfo' structure passed into
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.vkBindImageMemory2'.
+-- This flag also has the effect of making the image use the standard
+-- sparse image block dimensions.
 pattern VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT = VkImageCreateFlagBits 0x00000040
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO"
 pattern VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO = VkStructureType 1000060013
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO"
 pattern VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO = VkStructureType 1000060014

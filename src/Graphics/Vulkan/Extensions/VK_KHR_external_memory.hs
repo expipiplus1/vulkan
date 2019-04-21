@@ -46,7 +46,9 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_external_memory
 
 type ExportMemoryAllocateInfoKHR = ExportMemoryAllocateInfo
 -- TODO: Pattern constructor alias)
+
 type ExternalMemoryBufferCreateInfoKHR = ExternalMemoryBufferCreateInfo
 -- TODO: Pattern constructor alias)
+
 type ExternalMemoryImageCreateInfoKHR = ExternalMemoryImageCreateInfo
 -- TODO: Pattern constructor alias)

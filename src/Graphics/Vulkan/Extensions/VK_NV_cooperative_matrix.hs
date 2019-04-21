@@ -1,10 +1,22 @@
 {-# language Strict #-}
 {-# language CPP #-}
 {-# language PatternSynonyms #-}
+{-# language TypeFamilies #-}
 {-# language DuplicateRecordFields #-}
 
 module Graphics.Vulkan.Extensions.VK_NV_cooperative_matrix
   ( ComponentTypeNV
+  , pattern COMPONENT_TYPE_FLOAT16_NV
+  , pattern COMPONENT_TYPE_FLOAT32_NV
+  , pattern COMPONENT_TYPE_FLOAT64_NV
+  , pattern COMPONENT_TYPE_SINT8_NV
+  , pattern COMPONENT_TYPE_SINT16_NV
+  , pattern COMPONENT_TYPE_SINT32_NV
+  , pattern COMPONENT_TYPE_SINT64_NV
+  , pattern COMPONENT_TYPE_UINT8_NV
+  , pattern COMPONENT_TYPE_UINT16_NV
+  , pattern COMPONENT_TYPE_UINT32_NV
+  , pattern COMPONENT_TYPE_UINT64_NV
   , withCStructCooperativeMatrixPropertiesNV
   , fromCStructCooperativeMatrixPropertiesNV
   , CooperativeMatrixPropertiesNV(..)
@@ -15,6 +27,10 @@ module Graphics.Vulkan.Extensions.VK_NV_cooperative_matrix
   , fromCStructPhysicalDeviceCooperativeMatrixPropertiesNV
   , PhysicalDeviceCooperativeMatrixPropertiesNV(..)
   , ScopeNV
+  , pattern SCOPE_DEVICE_NV
+  , pattern SCOPE_WORKGROUP_NV
+  , pattern SCOPE_SUBGROUP_NV
+  , pattern SCOPE_QUEUE_FAMILY_NV
   , getNumPhysicalDeviceCooperativeMatrixPropertiesNV
   , getPhysicalDeviceCooperativeMatrixPropertiesNV
   , getAllPhysicalDeviceCooperativeMatrixPropertiesNV
@@ -60,9 +76,6 @@ import Foreign.Storable
   ( peek
   , peekElemOff
   )
-import qualified Graphics.Vulkan.C.Dynamic
-  ( getPhysicalDeviceCooperativeMatrixPropertiesNV
-  )
 
 
 import Graphics.Vulkan.C.Core10.Core
@@ -76,6 +89,22 @@ import Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix
   , VkPhysicalDeviceCooperativeMatrixFeaturesNV(..)
   , VkPhysicalDeviceCooperativeMatrixPropertiesNV(..)
   , VkScopeNV(..)
+  , vkGetPhysicalDeviceCooperativeMatrixPropertiesNV
+  , pattern VK_COMPONENT_TYPE_FLOAT16_NV
+  , pattern VK_COMPONENT_TYPE_FLOAT32_NV
+  , pattern VK_COMPONENT_TYPE_FLOAT64_NV
+  , pattern VK_COMPONENT_TYPE_SINT16_NV
+  , pattern VK_COMPONENT_TYPE_SINT32_NV
+  , pattern VK_COMPONENT_TYPE_SINT64_NV
+  , pattern VK_COMPONENT_TYPE_SINT8_NV
+  , pattern VK_COMPONENT_TYPE_UINT16_NV
+  , pattern VK_COMPONENT_TYPE_UINT32_NV
+  , pattern VK_COMPONENT_TYPE_UINT64_NV
+  , pattern VK_COMPONENT_TYPE_UINT8_NV
+  , pattern VK_SCOPE_DEVICE_NV
+  , pattern VK_SCOPE_QUEUE_FAMILY_NV
+  , pattern VK_SCOPE_SUBGROUP_NV
+  , pattern VK_SCOPE_WORKGROUP_NV
   , pattern VK_STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_NV
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_FEATURES_NV
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_NV
@@ -104,33 +133,129 @@ import Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix
   )
 
 
--- No documentation found for TopLevel "ComponentTypeNV"
+-- | VkComponentTypeNV - Specify SPIR-V cooperative matrix component type
+--
+-- = See Also
+--
+-- No cross-references are available
 type ComponentTypeNV = VkComponentTypeNV
--- No documentation found for TopLevel "CooperativeMatrixPropertiesNV"
+
+
+-- | 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VK_COMPONENT_TYPE_FLOAT16_NV'
+-- corresponds to SPIR-V @OpTypeFloat@ 16.
+pattern COMPONENT_TYPE_FLOAT16_NV :: (a ~ ComponentTypeNV) => a
+pattern COMPONENT_TYPE_FLOAT16_NV = VK_COMPONENT_TYPE_FLOAT16_NV
+
+
+-- | 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VK_COMPONENT_TYPE_FLOAT32_NV'
+-- corresponds to SPIR-V @OpTypeFloat@ 32.
+pattern COMPONENT_TYPE_FLOAT32_NV :: (a ~ ComponentTypeNV) => a
+pattern COMPONENT_TYPE_FLOAT32_NV = VK_COMPONENT_TYPE_FLOAT32_NV
+
+
+-- | 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VK_COMPONENT_TYPE_FLOAT64_NV'
+-- corresponds to SPIR-V @OpTypeFloat@ 64.
+pattern COMPONENT_TYPE_FLOAT64_NV :: (a ~ ComponentTypeNV) => a
+pattern COMPONENT_TYPE_FLOAT64_NV = VK_COMPONENT_TYPE_FLOAT64_NV
+
+
+-- | 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VK_COMPONENT_TYPE_SINT8_NV'
+-- corresponds to SPIR-V @OpTypeInt@ 8 1.
+pattern COMPONENT_TYPE_SINT8_NV :: (a ~ ComponentTypeNV) => a
+pattern COMPONENT_TYPE_SINT8_NV = VK_COMPONENT_TYPE_SINT8_NV
+
+
+-- | 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VK_COMPONENT_TYPE_SINT16_NV'
+-- corresponds to SPIR-V @OpTypeInt@ 16 1.
+pattern COMPONENT_TYPE_SINT16_NV :: (a ~ ComponentTypeNV) => a
+pattern COMPONENT_TYPE_SINT16_NV = VK_COMPONENT_TYPE_SINT16_NV
+
+
+-- | 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VK_COMPONENT_TYPE_SINT32_NV'
+-- corresponds to SPIR-V @OpTypeInt@ 32 1.
+pattern COMPONENT_TYPE_SINT32_NV :: (a ~ ComponentTypeNV) => a
+pattern COMPONENT_TYPE_SINT32_NV = VK_COMPONENT_TYPE_SINT32_NV
+
+
+-- | 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VK_COMPONENT_TYPE_SINT64_NV'
+-- corresponds to SPIR-V @OpTypeInt@ 64 1.
+pattern COMPONENT_TYPE_SINT64_NV :: (a ~ ComponentTypeNV) => a
+pattern COMPONENT_TYPE_SINT64_NV = VK_COMPONENT_TYPE_SINT64_NV
+
+
+-- | 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VK_COMPONENT_TYPE_UINT8_NV'
+-- corresponds to SPIR-V @OpTypeInt@ 8 0.
+pattern COMPONENT_TYPE_UINT8_NV :: (a ~ ComponentTypeNV) => a
+pattern COMPONENT_TYPE_UINT8_NV = VK_COMPONENT_TYPE_UINT8_NV
+
+
+-- | 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VK_COMPONENT_TYPE_UINT16_NV'
+-- corresponds to SPIR-V @OpTypeInt@ 16 0.
+pattern COMPONENT_TYPE_UINT16_NV :: (a ~ ComponentTypeNV) => a
+pattern COMPONENT_TYPE_UINT16_NV = VK_COMPONENT_TYPE_UINT16_NV
+
+
+-- | 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VK_COMPONENT_TYPE_UINT32_NV'
+-- corresponds to SPIR-V @OpTypeInt@ 32 0.
+pattern COMPONENT_TYPE_UINT32_NV :: (a ~ ComponentTypeNV) => a
+pattern COMPONENT_TYPE_UINT32_NV = VK_COMPONENT_TYPE_UINT32_NV
+
+
+-- | 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VK_COMPONENT_TYPE_UINT64_NV'
+-- corresponds to SPIR-V @OpTypeInt@ 64 0.
+pattern COMPONENT_TYPE_UINT64_NV :: (a ~ ComponentTypeNV) => a
+pattern COMPONENT_TYPE_UINT64_NV = VK_COMPONENT_TYPE_UINT64_NV
+
+
+-- | VkCooperativeMatrixPropertiesNV - Structure specifying cooperative
+-- matrix properties
+--
+-- = Description
+--
+-- If some types are preferred over other types (e.g. for performance),
+-- they /should/ appear earlier in the list enumerated by
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.vkGetPhysicalDeviceCooperativeMatrixPropertiesNV'.
+--
+-- At least one entry in the list /must/ have power of two values for all
+-- of @MSize@, @KSize@, and @NSize@.
+--
+-- Unresolved directive in VkCooperativeMatrixPropertiesNV.txt -
+-- include::{generated}\/validity\/structs\/VkCooperativeMatrixPropertiesNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data CooperativeMatrixPropertiesNV = CooperativeMatrixPropertiesNV
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "CooperativeMatrixPropertiesNV" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "CooperativeMatrixPropertiesNV" "MSize"
-  vkMSize :: Word32
+  mSize :: Word32
   , -- No documentation found for Nested "CooperativeMatrixPropertiesNV" "NSize"
-  vkNSize :: Word32
+  nSize :: Word32
   , -- No documentation found for Nested "CooperativeMatrixPropertiesNV" "KSize"
-  vkKSize :: Word32
+  kSize :: Word32
   , -- No documentation found for Nested "CooperativeMatrixPropertiesNV" "AType"
-  vkAType :: ComponentTypeNV
+  aType :: ComponentTypeNV
   , -- No documentation found for Nested "CooperativeMatrixPropertiesNV" "BType"
-  vkBType :: ComponentTypeNV
+  bType :: ComponentTypeNV
   , -- No documentation found for Nested "CooperativeMatrixPropertiesNV" "CType"
-  vkCType :: ComponentTypeNV
+  cType :: ComponentTypeNV
   , -- No documentation found for Nested "CooperativeMatrixPropertiesNV" "DType"
-  vkDType :: ComponentTypeNV
+  dType :: ComponentTypeNV
   , -- No documentation found for Nested "CooperativeMatrixPropertiesNV" "scope"
-  vkScope :: ScopeNV
+  scope :: ScopeNV
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkCooperativeMatrixPropertiesNV' and
+-- marshal a 'CooperativeMatrixPropertiesNV' into it. The 'VkCooperativeMatrixPropertiesNV' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructCooperativeMatrixPropertiesNV :: CooperativeMatrixPropertiesNV -> (VkCooperativeMatrixPropertiesNV -> IO a) -> IO a
-withCStructCooperativeMatrixPropertiesNV from cont = maybeWith withSomeVkStruct (vkPNext (from :: CooperativeMatrixPropertiesNV)) (\pPNext -> cont (VkCooperativeMatrixPropertiesNV VK_STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_NV pPNext (vkMSize (from :: CooperativeMatrixPropertiesNV)) (vkNSize (from :: CooperativeMatrixPropertiesNV)) (vkKSize (from :: CooperativeMatrixPropertiesNV)) (vkAType (from :: CooperativeMatrixPropertiesNV)) (vkBType (from :: CooperativeMatrixPropertiesNV)) (vkCType (from :: CooperativeMatrixPropertiesNV)) (vkDType (from :: CooperativeMatrixPropertiesNV)) (vkScope (from :: CooperativeMatrixPropertiesNV))))
+withCStructCooperativeMatrixPropertiesNV marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: CooperativeMatrixPropertiesNV)) (\pPNext -> cont (VkCooperativeMatrixPropertiesNV VK_STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_NV pPNext (mSize (marshalled :: CooperativeMatrixPropertiesNV)) (nSize (marshalled :: CooperativeMatrixPropertiesNV)) (kSize (marshalled :: CooperativeMatrixPropertiesNV)) (aType (marshalled :: CooperativeMatrixPropertiesNV)) (bType (marshalled :: CooperativeMatrixPropertiesNV)) (cType (marshalled :: CooperativeMatrixPropertiesNV)) (dType (marshalled :: CooperativeMatrixPropertiesNV)) (scope (marshalled :: CooperativeMatrixPropertiesNV))))
+
+-- | A function to read a 'VkCooperativeMatrixPropertiesNV' and all additional
+-- structures in the pointer chain into a 'CooperativeMatrixPropertiesNV'.
 fromCStructCooperativeMatrixPropertiesNV :: VkCooperativeMatrixPropertiesNV -> IO CooperativeMatrixPropertiesNV
 fromCStructCooperativeMatrixPropertiesNV c = CooperativeMatrixPropertiesNV <$> -- Univalued Member elided
                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkCooperativeMatrixPropertiesNV)))
@@ -142,6 +267,7 @@ fromCStructCooperativeMatrixPropertiesNV c = CooperativeMatrixPropertiesNV <$> -
                                                                            <*> pure (vkCType (c :: VkCooperativeMatrixPropertiesNV))
                                                                            <*> pure (vkDType (c :: VkCooperativeMatrixPropertiesNV))
                                                                            <*> pure (vkScope (c :: VkCooperativeMatrixPropertiesNV))
+
 instance Zero CooperativeMatrixPropertiesNV where
   zero = CooperativeMatrixPropertiesNV Nothing
                                        zero
@@ -152,60 +278,236 @@ instance Zero CooperativeMatrixPropertiesNV where
                                        zero
                                        zero
                                        zero
--- No documentation found for TopLevel "PhysicalDeviceCooperativeMatrixFeaturesNV"
+
+
+
+-- | VkPhysicalDeviceCooperativeMatrixFeaturesNV - Structure describing
+-- cooperative matrix features that can be supported by an implementation
+--
+-- = Members
+--
+-- The members of the
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkPhysicalDeviceCooperativeMatrixFeaturesNV'
+-- structure describe the following features:
+--
+-- = Description
+--
+-- If the
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkPhysicalDeviceCooperativeMatrixFeaturesNV'
+-- structure is included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
+-- it is filled with values indicating whether the feature is supported.
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkPhysicalDeviceCooperativeMatrixFeaturesNV'
+-- /can/ also be used in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
+--
+-- Unresolved directive in VkPhysicalDeviceCooperativeMatrixFeaturesNV.txt
+-- -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceCooperativeMatrixFeaturesNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data PhysicalDeviceCooperativeMatrixFeaturesNV = PhysicalDeviceCooperativeMatrixFeaturesNV
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceCooperativeMatrixFeaturesNV" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDeviceCooperativeMatrixFeaturesNV" "cooperativeMatrix"
-  vkCooperativeMatrix :: Bool
+  cooperativeMatrix :: Bool
   , -- No documentation found for Nested "PhysicalDeviceCooperativeMatrixFeaturesNV" "cooperativeMatrixRobustBufferAccess"
-  vkCooperativeMatrixRobustBufferAccess :: Bool
+  cooperativeMatrixRobustBufferAccess :: Bool
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPhysicalDeviceCooperativeMatrixFeaturesNV' and
+-- marshal a 'PhysicalDeviceCooperativeMatrixFeaturesNV' into it. The 'VkPhysicalDeviceCooperativeMatrixFeaturesNV' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPhysicalDeviceCooperativeMatrixFeaturesNV :: PhysicalDeviceCooperativeMatrixFeaturesNV -> (VkPhysicalDeviceCooperativeMatrixFeaturesNV -> IO a) -> IO a
-withCStructPhysicalDeviceCooperativeMatrixFeaturesNV from cont = maybeWith withSomeVkStruct (vkPNext (from :: PhysicalDeviceCooperativeMatrixFeaturesNV)) (\pPNext -> cont (VkPhysicalDeviceCooperativeMatrixFeaturesNV VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_FEATURES_NV pPNext (boolToBool32 (vkCooperativeMatrix (from :: PhysicalDeviceCooperativeMatrixFeaturesNV))) (boolToBool32 (vkCooperativeMatrixRobustBufferAccess (from :: PhysicalDeviceCooperativeMatrixFeaturesNV)))))
+withCStructPhysicalDeviceCooperativeMatrixFeaturesNV marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PhysicalDeviceCooperativeMatrixFeaturesNV)) (\pPNext -> cont (VkPhysicalDeviceCooperativeMatrixFeaturesNV VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_FEATURES_NV pPNext (boolToBool32 (cooperativeMatrix (marshalled :: PhysicalDeviceCooperativeMatrixFeaturesNV))) (boolToBool32 (cooperativeMatrixRobustBufferAccess (marshalled :: PhysicalDeviceCooperativeMatrixFeaturesNV)))))
+
+-- | A function to read a 'VkPhysicalDeviceCooperativeMatrixFeaturesNV' and all additional
+-- structures in the pointer chain into a 'PhysicalDeviceCooperativeMatrixFeaturesNV'.
 fromCStructPhysicalDeviceCooperativeMatrixFeaturesNV :: VkPhysicalDeviceCooperativeMatrixFeaturesNV -> IO PhysicalDeviceCooperativeMatrixFeaturesNV
 fromCStructPhysicalDeviceCooperativeMatrixFeaturesNV c = PhysicalDeviceCooperativeMatrixFeaturesNV <$> -- Univalued Member elided
                                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceCooperativeMatrixFeaturesNV)))
                                                                                                    <*> pure (bool32ToBool (vkCooperativeMatrix (c :: VkPhysicalDeviceCooperativeMatrixFeaturesNV)))
                                                                                                    <*> pure (bool32ToBool (vkCooperativeMatrixRobustBufferAccess (c :: VkPhysicalDeviceCooperativeMatrixFeaturesNV)))
+
 instance Zero PhysicalDeviceCooperativeMatrixFeaturesNV where
   zero = PhysicalDeviceCooperativeMatrixFeaturesNV Nothing
                                                    False
                                                    False
--- No documentation found for TopLevel "PhysicalDeviceCooperativeMatrixPropertiesNV"
+
+
+
+-- | VkPhysicalDeviceCooperativeMatrixPropertiesNV - Structure describing
+-- cooperative matrix properties supported by an implementation
+--
+-- = Members
+--
+-- The members of the
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkPhysicalDeviceCooperativeMatrixPropertiesNV'
+-- structure describe the following implementation-dependent limits:
+--
+-- = Description
+--
+-- If the
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkPhysicalDeviceCooperativeMatrixPropertiesNV'
+-- structure is included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
+-- it is filled with the implementation-dependent limits.
+--
+-- Unresolved directive in
+-- VkPhysicalDeviceCooperativeMatrixPropertiesNV.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceCooperativeMatrixPropertiesNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data PhysicalDeviceCooperativeMatrixPropertiesNV = PhysicalDeviceCooperativeMatrixPropertiesNV
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceCooperativeMatrixPropertiesNV" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDeviceCooperativeMatrixPropertiesNV" "cooperativeMatrixSupportedStages"
-  vkCooperativeMatrixSupportedStages :: ShaderStageFlags
+  cooperativeMatrixSupportedStages :: ShaderStageFlags
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPhysicalDeviceCooperativeMatrixPropertiesNV' and
+-- marshal a 'PhysicalDeviceCooperativeMatrixPropertiesNV' into it. The 'VkPhysicalDeviceCooperativeMatrixPropertiesNV' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPhysicalDeviceCooperativeMatrixPropertiesNV :: PhysicalDeviceCooperativeMatrixPropertiesNV -> (VkPhysicalDeviceCooperativeMatrixPropertiesNV -> IO a) -> IO a
-withCStructPhysicalDeviceCooperativeMatrixPropertiesNV from cont = maybeWith withSomeVkStruct (vkPNext (from :: PhysicalDeviceCooperativeMatrixPropertiesNV)) (\pPNext -> cont (VkPhysicalDeviceCooperativeMatrixPropertiesNV VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_NV pPNext (vkCooperativeMatrixSupportedStages (from :: PhysicalDeviceCooperativeMatrixPropertiesNV))))
+withCStructPhysicalDeviceCooperativeMatrixPropertiesNV marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PhysicalDeviceCooperativeMatrixPropertiesNV)) (\pPNext -> cont (VkPhysicalDeviceCooperativeMatrixPropertiesNV VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_NV pPNext (cooperativeMatrixSupportedStages (marshalled :: PhysicalDeviceCooperativeMatrixPropertiesNV))))
+
+-- | A function to read a 'VkPhysicalDeviceCooperativeMatrixPropertiesNV' and all additional
+-- structures in the pointer chain into a 'PhysicalDeviceCooperativeMatrixPropertiesNV'.
 fromCStructPhysicalDeviceCooperativeMatrixPropertiesNV :: VkPhysicalDeviceCooperativeMatrixPropertiesNV -> IO PhysicalDeviceCooperativeMatrixPropertiesNV
 fromCStructPhysicalDeviceCooperativeMatrixPropertiesNV c = PhysicalDeviceCooperativeMatrixPropertiesNV <$> -- Univalued Member elided
                                                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceCooperativeMatrixPropertiesNV)))
                                                                                                        <*> pure (vkCooperativeMatrixSupportedStages (c :: VkPhysicalDeviceCooperativeMatrixPropertiesNV))
+
 instance Zero PhysicalDeviceCooperativeMatrixPropertiesNV where
   zero = PhysicalDeviceCooperativeMatrixPropertiesNV Nothing
                                                      zero
--- No documentation found for TopLevel "ScopeNV"
+
+
+-- | VkScopeNV - Specify SPIR-V scope
+--
+-- = Description
+--
+-- All enum values match the corresponding SPIR-V value.
+--
+-- = See Also
+--
+-- No cross-references are available
 type ScopeNV = VkScopeNV
 
--- | Wrapper for 'vkGetPhysicalDeviceCooperativeMatrixPropertiesNV'
-getNumPhysicalDeviceCooperativeMatrixPropertiesNV :: PhysicalDevice ->  IO (VkResult, Word32)
-getNumPhysicalDeviceCooperativeMatrixPropertiesNV = \(PhysicalDevice physicalDevice commandTable) -> alloca (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceCooperativeMatrixPropertiesNV commandTable physicalDevice pPropertyCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pPropertyCount)))
 
--- | Wrapper for 'vkGetPhysicalDeviceCooperativeMatrixPropertiesNV'
+-- | 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VK_SCOPE_DEVICE_NV'
+-- corresponds to SPIR-V
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.Device' scope.
+pattern SCOPE_DEVICE_NV :: (a ~ ScopeNV) => a
+pattern SCOPE_DEVICE_NV = VK_SCOPE_DEVICE_NV
+
+
+-- | 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VK_SCOPE_WORKGROUP_NV'
+-- corresponds to SPIR-V @Workgroup@ scope.
+pattern SCOPE_WORKGROUP_NV :: (a ~ ScopeNV) => a
+pattern SCOPE_WORKGROUP_NV = VK_SCOPE_WORKGROUP_NV
+
+
+-- | 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VK_SCOPE_SUBGROUP_NV'
+-- corresponds to SPIR-V @Subgroup@ scope.
+pattern SCOPE_SUBGROUP_NV :: (a ~ ScopeNV) => a
+pattern SCOPE_SUBGROUP_NV = VK_SCOPE_SUBGROUP_NV
+
+
+-- | 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VK_SCOPE_QUEUE_FAMILY_NV'
+-- corresponds to SPIR-V @QueueFamilyKHR@ scope.
+pattern SCOPE_QUEUE_FAMILY_NV :: (a ~ ScopeNV) => a
+pattern SCOPE_QUEUE_FAMILY_NV = VK_SCOPE_QUEUE_FAMILY_NV
+
+
+-- | vkGetPhysicalDeviceCooperativeMatrixPropertiesNV - Returns properties
+-- describing what cooperative matrix types are supported
+--
+-- = Parameters
+--
+-- -   @physicalDevice@ is the physical device.
+--
+-- -   @pPropertyCount@ is a pointer to an integer related to the number of
+--     cooperative matrix properties available or queried.
+--
+-- -   @pProperties@ is either @NULL@ or a pointer to an array of
+--     'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkCooperativeMatrixPropertiesNV'
+--     structures.
+--
+-- = Description
+--
+-- If @pProperties@ is @NULL@, then the number of cooperative matrix
+-- properties available is returned in @pPropertyCount@. Otherwise,
+-- @pPropertyCount@ /must/ point to a variable set by the user to the
+-- number of elements in the @pProperties@ array, and on return the
+-- variable is overwritten with the number of structures actually written
+-- to @pProperties@. If @pPropertyCount@ is less than the number of
+-- cooperative matrix properties available, at most @pPropertyCount@
+-- structures will be written. If @pPropertyCount@ is smaller than the
+-- number of cooperative matrix properties available,
+-- 'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE' will be returned instead
+-- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS', to indicate that not all
+-- the available cooperative matrix properties were returned.
+--
+-- Unresolved directive in
+-- vkGetPhysicalDeviceCooperativeMatrixPropertiesNV.txt -
+-- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceCooperativeMatrixPropertiesNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
+getNumPhysicalDeviceCooperativeMatrixPropertiesNV :: PhysicalDevice ->  IO (VkResult, Word32)
+getNumPhysicalDeviceCooperativeMatrixPropertiesNV = \(PhysicalDevice physicalDevice' commandTable) -> alloca (\pPropertyCount' -> vkGetPhysicalDeviceCooperativeMatrixPropertiesNV commandTable physicalDevice' pPropertyCount' nullPtr >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>peek pPropertyCount')))
+
+-- | vkGetPhysicalDeviceCooperativeMatrixPropertiesNV - Returns properties
+-- describing what cooperative matrix types are supported
+--
+-- = Parameters
+--
+-- -   @physicalDevice@ is the physical device.
+--
+-- -   @pPropertyCount@ is a pointer to an integer related to the number of
+--     cooperative matrix properties available or queried.
+--
+-- -   @pProperties@ is either @NULL@ or a pointer to an array of
+--     'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkCooperativeMatrixPropertiesNV'
+--     structures.
+--
+-- = Description
+--
+-- If @pProperties@ is @NULL@, then the number of cooperative matrix
+-- properties available is returned in @pPropertyCount@. Otherwise,
+-- @pPropertyCount@ /must/ point to a variable set by the user to the
+-- number of elements in the @pProperties@ array, and on return the
+-- variable is overwritten with the number of structures actually written
+-- to @pProperties@. If @pPropertyCount@ is less than the number of
+-- cooperative matrix properties available, at most @pPropertyCount@
+-- structures will be written. If @pPropertyCount@ is smaller than the
+-- number of cooperative matrix properties available,
+-- 'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE' will be returned instead
+-- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS', to indicate that not all
+-- the available cooperative matrix properties were returned.
+--
+-- Unresolved directive in
+-- vkGetPhysicalDeviceCooperativeMatrixPropertiesNV.txt -
+-- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceCooperativeMatrixPropertiesNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 getPhysicalDeviceCooperativeMatrixPropertiesNV :: PhysicalDevice ->  Word32 ->  IO (VkResult, Vector CooperativeMatrixPropertiesNV)
-getPhysicalDeviceCooperativeMatrixPropertiesNV = \(PhysicalDevice physicalDevice commandTable) -> \propertyCount -> allocaArray (fromIntegral propertyCount) (\pProperties -> with propertyCount (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceCooperativeMatrixPropertiesNV commandTable physicalDevice pPropertyCount pProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM ((\p -> fromCStructCooperativeMatrixPropertiesNV <=< peekElemOff p) pProperties) =<< (fromIntegral <$> (peek pPropertyCount)))))))
--- | Call 'getNumPhysicalDeviceCooperativeMatrixPropertiesNV' to get the number of return values, then use that
--- number to call 'getPhysicalDeviceCooperativeMatrixPropertiesNV' to get all the values.
+getPhysicalDeviceCooperativeMatrixPropertiesNV = \(PhysicalDevice physicalDevice' commandTable) -> \propertyCount' -> allocaArray (fromIntegral propertyCount') (\pProperties' -> with propertyCount' (\pPropertyCount' -> vkGetPhysicalDeviceCooperativeMatrixPropertiesNV commandTable physicalDevice' pPropertyCount' pProperties' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>(flip Data.Vector.generateM ((\p -> fromCStructCooperativeMatrixPropertiesNV <=< peekElemOff p) pProperties') =<< (fromIntegral <$> (peek pPropertyCount')))))))
+-- | Returns all the values available from 'getPhysicalDeviceCooperativeMatrixPropertiesNV'.
 getAllPhysicalDeviceCooperativeMatrixPropertiesNV :: PhysicalDevice ->  IO (Vector CooperativeMatrixPropertiesNV)
-getAllPhysicalDeviceCooperativeMatrixPropertiesNV physicalDevice =
-  snd <$> getNumPhysicalDeviceCooperativeMatrixPropertiesNV physicalDevice
-    >>= \num -> snd <$> getPhysicalDeviceCooperativeMatrixPropertiesNV physicalDevice num
+getAllPhysicalDeviceCooperativeMatrixPropertiesNV physicalDevice' =
+  snd <$> getNumPhysicalDeviceCooperativeMatrixPropertiesNV physicalDevice'
+    >>= \num -> snd <$> getPhysicalDeviceCooperativeMatrixPropertiesNV physicalDevice' num
 

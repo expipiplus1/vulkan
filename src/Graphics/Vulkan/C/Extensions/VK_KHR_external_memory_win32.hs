@@ -12,16 +12,12 @@ module Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32
   , VkImportMemoryWin32HandleInfoKHR(..)
   , VkMemoryGetWin32HandleInfoKHR(..)
   , VkMemoryWin32HandlePropertiesKHR(..)
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkGetMemoryWin32HandleKHR
-#endif
   , FN_vkGetMemoryWin32HandleKHR
   , PFN_vkGetMemoryWin32HandleKHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkGetMemoryWin32HandlePropertiesKHR
-#endif
+  , vkGetMemoryWin32HandleKHR
   , FN_vkGetMemoryWin32HandlePropertiesKHR
   , PFN_vkGetMemoryWin32HandlePropertiesKHR
+  , vkGetMemoryWin32HandlePropertiesKHR
   , pattern VK_KHR_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME
   , pattern VK_KHR_EXTERNAL_MEMORY_WIN32_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_KHR
@@ -64,6 +60,9 @@ import Graphics.Vulkan.C.Core10.Memory
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities
   ( VkExternalMemoryHandleTypeFlagBits(..)
   )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32
   ( DWORD
   , HANDLE
@@ -77,6 +76,7 @@ import Graphics.Vulkan.NamedType
 -- No documentation found for TopLevel "LPCWSTR"
 type LPCWSTR = Ptr CWchar
   
+
 -- | VkExportMemoryWin32HandleInfoKHR - Structure specifying additional
 -- attributes of Windows handles exported from a memory
 --
@@ -93,8 +93,8 @@ type LPCWSTR = Ptr CWchar
 --
 -- for handles of the following types:
 --
--- @VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT@
--- @VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT@
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT'
 --
 -- And
 --
@@ -102,8 +102,8 @@ type LPCWSTR = Ptr CWchar
 --
 -- for handles of the following types:
 --
--- @VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT@
--- @VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT@
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT'
 --
 -- [1]
 --     <https://msdn.microsoft.com/en-us/library/windows/desktop/ms686670.aspx>
@@ -112,20 +112,17 @@ type LPCWSTR = Ptr CWchar
 --
 -- -   If
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VkExportMemoryAllocateInfo'::@handleTypes@
---     does not include @VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT@,
---     @VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT@,
---     @VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT@, or
---     @VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT@,
---     @VkExportMemoryWin32HandleInfoKHR@ /must/ not be in the @pNext@
+--     does not include
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT',
+--     or
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT',
+--     'VkExportMemoryWin32HandleInfoKHR' /must/ not be in the @pNext@
 --     chain of 'Graphics.Vulkan.C.Core10.Memory.VkMemoryAllocateInfo'.
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_KHR@
---
--- -   If @pAttributes@ is not @NULL@, @pAttributes@ /must/ be a valid
---     pointer to a valid @SECURITY_ATTRIBUTES@ value
+-- Unresolved directive in VkExportMemoryWin32HandleInfoKHR.txt -
+-- include::{generated}\/validity\/structs\/VkExportMemoryWin32HandleInfoKHR.txt[]
 --
 -- = See Also
 --
@@ -135,10 +132,13 @@ data VkExportMemoryWin32HandleInfoKHR = VkExportMemoryWin32HandleInfoKHR
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @pAttributes@ is a pointer to a Windows @SECURITY_ATTRIBUTES@ structure
-  -- specifying security attributes of the handle.
+  , -- | @pAttributes@ is a pointer to a Windows
+  -- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32.SECURITY_ATTRIBUTES'
+  -- structure specifying security attributes of the handle.
   vkPAttributes :: Ptr SECURITY_ATTRIBUTES
-  , -- | @dwAccess@ is a @DWORD@ specifying access rights of the handle.
+  , -- | @dwAccess@ is a
+  -- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32.DWORD'
+  -- specifying access rights of the handle.
   vkDwAccess :: DWORD
   , -- | @name@ is a NULL-terminated UTF-16 string to associate with the
   -- underlying resource referenced by NT handles exported from the created
@@ -162,11 +162,12 @@ instance Storable VkExportMemoryWin32HandleInfoKHR where
                 *> poke (ptr `plusPtr` 32) (vkName (poked :: VkExportMemoryWin32HandleInfoKHR))
 
 instance Zero VkExportMemoryWin32HandleInfoKHR where
-  zero = VkExportMemoryWin32HandleInfoKHR zero
+  zero = VkExportMemoryWin32HandleInfoKHR VK_STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_KHR
                                           zero
                                           zero
                                           zero
                                           zero
+
 -- | VkImportMemoryWin32HandleInfoKHR - import Win32 memory created on the
 -- same physical device
 --
@@ -180,7 +181,8 @@ instance Zero VkExportMemoryWin32HandleInfoKHR where
 -- Applications /can/ import the same underlying memory into multiple
 -- instances of Vulkan, into the same instance from which it was exported,
 -- and multiple times into a given Vulkan instance. In all cases, each
--- import operation /must/ create a distinct @VkDeviceMemory@ object.
+-- import operation /must/ create a distinct
+-- 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object.
 --
 -- == Valid Usage
 --
@@ -198,11 +200,12 @@ instance Zero VkExportMemoryWin32HandleInfoKHR where
 --     a global share handle.
 --
 -- -   If @handleType@ is not
---     @VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT@,
---     @VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT@,
---     @VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT@, or
---     @VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT@, @name@ /must/
---     be @NULL@.
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT',
+--     or
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT',
+--     @name@ /must/ be @NULL@.
 --
 -- -   If @handleType@ is not @0@ and @handle@ is @NULL@, @name@ /must/
 --     name a valid memory resource of the type specified by @handleType@.
@@ -214,20 +217,14 @@ instance Zero VkExportMemoryWin32HandleInfoKHR where
 --
 -- -   If @handle@ is not @NULL@, it /must/ obey any requirements listed
 --     for @handleType@ in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>.
 --
 -- -   If @name@ is not @NULL@, it /must/ obey any requirements listed for
 --     @handleType@ in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>.
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR@
---
--- -   If @handleType@ is not @0@, @handleType@ /must/ be a valid
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits'
---     value
+-- Unresolved directive in VkImportMemoryWin32HandleInfoKHR.txt -
+-- include::{generated}\/validity\/structs\/VkImportMemoryWin32HandleInfoKHR.txt[]
 --
 -- = See Also
 --
@@ -262,11 +259,12 @@ instance Storable VkImportMemoryWin32HandleInfoKHR where
                 *> poke (ptr `plusPtr` 32) (vkName (poked :: VkImportMemoryWin32HandleInfoKHR))
 
 instance Zero VkImportMemoryWin32HandleInfoKHR where
-  zero = VkImportMemoryWin32HandleInfoKHR zero
+  zero = VkImportMemoryWin32HandleInfoKHR VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR
                                           zero
                                           zero
                                           zero
                                           zero
+
 -- | VkMemoryGetWin32HandleInfoKHR - Structure describing a Win32 handle
 -- semaphore export operation
 --
@@ -291,18 +289,8 @@ instance Zero VkImportMemoryWin32HandleInfoKHR where
 -- -   @handleType@ /must/ be defined as an NT handle or a global share
 --     handle.
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_MEMORY_GET_WIN32_HANDLE_INFO_KHR@
---
--- -   @pNext@ /must/ be @NULL@
---
--- -   @memory@ /must/ be a valid @VkDeviceMemory@ handle
---
--- -   @handleType@ /must/ be a valid
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits'
---     value
+-- Unresolved directive in VkMemoryGetWin32HandleInfoKHR.txt -
+-- include::{generated}\/validity\/structs\/VkMemoryGetWin32HandleInfoKHR.txt[]
 --
 -- = See Also
 --
@@ -332,22 +320,26 @@ instance Storable VkMemoryGetWin32HandleInfoKHR where
                 *> poke (ptr `plusPtr` 24) (vkHandleType (poked :: VkMemoryGetWin32HandleInfoKHR))
 
 instance Zero VkMemoryGetWin32HandleInfoKHR where
-  zero = VkMemoryGetWin32HandleInfoKHR zero
+  zero = VkMemoryGetWin32HandleInfoKHR VK_STRUCTURE_TYPE_MEMORY_GET_WIN32_HANDLE_INFO_KHR
                                        zero
                                        zero
                                        zero
+
 -- | VkMemoryWin32HandlePropertiesKHR - Properties of External Memory Windows
 -- Handles
 --
--- == Valid Usage (Implicit)
+-- = Description
+--
+-- Unresolved directive in VkMemoryWin32HandlePropertiesKHR.txt -
+-- include::{generated}\/validity\/structs\/VkMemoryWin32HandlePropertiesKHR.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkMemoryWin32HandlePropertiesKHR = VkMemoryWin32HandlePropertiesKHR
-  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_MEMORY_WIN32_HANDLE_PROPERTIES_KHR@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
   , -- | @memoryTypeBits@ is a bitmask containing one bit set for every memory
   -- type which the specified windows handle /can/ be imported as.
@@ -366,10 +358,10 @@ instance Storable VkMemoryWin32HandlePropertiesKHR where
                 *> poke (ptr `plusPtr` 16) (vkMemoryTypeBits (poked :: VkMemoryWin32HandlePropertiesKHR))
 
 instance Zero VkMemoryWin32HandlePropertiesKHR where
-  zero = VkMemoryWin32HandlePropertiesKHR zero
+  zero = VkMemoryWin32HandlePropertiesKHR VK_STRUCTURE_TYPE_MEMORY_WIN32_HANDLE_PROPERTIES_KHR
                                           zero
                                           zero
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkGetMemoryWin32HandleKHR - Get a Windows HANDLE for a memory object
 --
 -- = Parameters
@@ -387,33 +379,36 @@ instance Zero VkMemoryWin32HandlePropertiesKHR where
 -- = Description
 --
 -- For handle types defined as NT handles, the handles returned by
--- @vkGetMemoryWin32HandleKHR@ are owned by the application. To avoid
+-- 'vkGetMemoryWin32HandleKHR' are owned by the application. To avoid
 -- leaking resources, the application /must/ release ownership of them
 -- using the @CloseHandle@ system call when they are no longer needed.
 --
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_TOO_MANY_OBJECTS@
---
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+-- Unresolved directive in vkGetMemoryWin32HandleKHR.txt -
+-- include::{generated}\/validity\/protos\/vkGetMemoryWin32HandleKHR.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetMemoryWin32HandleKHR" vkGetMemoryWin32HandleKHR :: ("device" ::: VkDevice) -> ("pGetWin32HandleInfo" ::: Ptr VkMemoryGetWin32HandleInfoKHR) -> ("pHandle" ::: Ptr HANDLE) -> IO VkResult
-
+#else
+vkGetMemoryWin32HandleKHR :: DeviceCmds -> ("device" ::: VkDevice) -> ("pGetWin32HandleInfo" ::: Ptr VkMemoryGetWin32HandleInfoKHR) -> ("pHandle" ::: Ptr HANDLE) -> IO VkResult
+vkGetMemoryWin32HandleKHR deviceCmds = mkVkGetMemoryWin32HandleKHR (pVkGetMemoryWin32HandleKHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetMemoryWin32HandleKHR
+  :: FunPtr (("device" ::: VkDevice) -> ("pGetWin32HandleInfo" ::: Ptr VkMemoryGetWin32HandleInfoKHR) -> ("pHandle" ::: Ptr HANDLE) -> IO VkResult) -> (("device" ::: VkDevice) -> ("pGetWin32HandleInfo" ::: Ptr VkMemoryGetWin32HandleInfoKHR) -> ("pHandle" ::: Ptr HANDLE) -> IO VkResult)
+#endif
+
 type FN_vkGetMemoryWin32HandleKHR = ("device" ::: VkDevice) -> ("pGetWin32HandleInfo" ::: Ptr VkMemoryGetWin32HandleInfoKHR) -> ("pHandle" ::: Ptr HANDLE) -> IO VkResult
 type PFN_vkGetMemoryWin32HandleKHR = FunPtr FN_vkGetMemoryWin32HandleKHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkGetMemoryWin32HandlePropertiesKHR - Get Properties of External Memory
 -- Win32 Handles
 --
@@ -427,41 +422,54 @@ type PFN_vkGetMemoryWin32HandleKHR = FunPtr FN_vkGetMemoryWin32HandleKHR
 --
 -- -   @pMemoryWin32HandleProperties@ will return properties of @handle@.
 --
--- == Return Codes
+-- == Valid Usage
 --
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_INVALID_EXTERNAL_HANDLE@
+-- Unresolved directive in vkGetMemoryWin32HandlePropertiesKHR.txt -
+-- include::{generated}\/validity\/protos\/vkGetMemoryWin32HandlePropertiesKHR.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetMemoryWin32HandlePropertiesKHR" vkGetMemoryWin32HandlePropertiesKHR :: ("device" ::: VkDevice) -> ("handleType" ::: VkExternalMemoryHandleTypeFlagBits) -> ("handle" ::: HANDLE) -> ("pMemoryWin32HandleProperties" ::: Ptr VkMemoryWin32HandlePropertiesKHR) -> IO VkResult
-
+#else
+vkGetMemoryWin32HandlePropertiesKHR :: DeviceCmds -> ("device" ::: VkDevice) -> ("handleType" ::: VkExternalMemoryHandleTypeFlagBits) -> ("handle" ::: HANDLE) -> ("pMemoryWin32HandleProperties" ::: Ptr VkMemoryWin32HandlePropertiesKHR) -> IO VkResult
+vkGetMemoryWin32HandlePropertiesKHR deviceCmds = mkVkGetMemoryWin32HandlePropertiesKHR (pVkGetMemoryWin32HandlePropertiesKHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetMemoryWin32HandlePropertiesKHR
+  :: FunPtr (("device" ::: VkDevice) -> ("handleType" ::: VkExternalMemoryHandleTypeFlagBits) -> ("handle" ::: HANDLE) -> ("pMemoryWin32HandleProperties" ::: Ptr VkMemoryWin32HandlePropertiesKHR) -> IO VkResult) -> (("device" ::: VkDevice) -> ("handleType" ::: VkExternalMemoryHandleTypeFlagBits) -> ("handle" ::: HANDLE) -> ("pMemoryWin32HandleProperties" ::: Ptr VkMemoryWin32HandlePropertiesKHR) -> IO VkResult)
+#endif
+
 type FN_vkGetMemoryWin32HandlePropertiesKHR = ("device" ::: VkDevice) -> ("handleType" ::: VkExternalMemoryHandleTypeFlagBits) -> ("handle" ::: HANDLE) -> ("pMemoryWin32HandleProperties" ::: Ptr VkMemoryWin32HandlePropertiesKHR) -> IO VkResult
 type PFN_vkGetMemoryWin32HandlePropertiesKHR = FunPtr FN_vkGetMemoryWin32HandlePropertiesKHR
+
 -- No documentation found for TopLevel "VK_KHR_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME"
 pattern VK_KHR_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME = "VK_KHR_external_memory_win32"
+
 -- No documentation found for TopLevel "VK_KHR_EXTERNAL_MEMORY_WIN32_SPEC_VERSION"
 pattern VK_KHR_EXTERNAL_MEMORY_WIN32_SPEC_VERSION :: Integral a => a
 pattern VK_KHR_EXTERNAL_MEMORY_WIN32_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_KHR"
 pattern VK_STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_KHR = VkStructureType 1000073001
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR"
 pattern VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR = VkStructureType 1000073000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MEMORY_GET_WIN32_HANDLE_INFO_KHR"
 pattern VK_STRUCTURE_TYPE_MEMORY_GET_WIN32_HANDLE_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_MEMORY_GET_WIN32_HANDLE_INFO_KHR = VkStructureType 1000073003
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MEMORY_WIN32_HANDLE_PROPERTIES_KHR"
 pattern VK_STRUCTURE_TYPE_MEMORY_WIN32_HANDLE_PROPERTIES_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_MEMORY_WIN32_HANDLE_PROPERTIES_KHR = VkStructureType 1000073002

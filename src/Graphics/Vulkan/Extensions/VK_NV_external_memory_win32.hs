@@ -37,9 +37,6 @@ import Foreign.Ptr
 import Foreign.Storable
   ( peek
   )
-import qualified Graphics.Vulkan.C.Dynamic
-  ( getMemoryWin32HandleNV
-  )
 
 
 import Graphics.Vulkan.C.Core10.Core
@@ -52,6 +49,7 @@ import Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32
   , DWORD
   , HANDLE
   , SECURITY_ATTRIBUTES
+  , vkGetMemoryWin32HandleNV
   , pattern VK_STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV
   , pattern VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV
   )
@@ -78,51 +76,136 @@ import Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32
   )
 
 
--- No documentation found for TopLevel "ExportMemoryWin32HandleInfoNV"
+
+-- | VkExportMemoryWin32HandleInfoNV - specify security attributes and access
+-- rights for Win32 memory handles
+--
+-- = Description
+--
+-- If this structure is not present, or if @pAttributes@ is set to @NULL@,
+-- default security descriptor values will be used, and child processes
+-- created by the application will not inherit the handle, as described in
+-- the MSDN documentation for “Synchronization Object Security and Access
+-- Rights”[1]. Further, if the structure is not present, the access rights
+-- will be
+--
+-- > DXGI_SHARED_RESOURCE_READ | DXGI_SHARED_RESOURCE_WRITE
+--
+-- [1]
+-- <https://msdn.microsoft.com/en-us/library/windows/desktop/ms686670.aspx>
+--
+-- Unresolved directive in VkExportMemoryWin32HandleInfoNV.txt -
+-- include::{generated}\/validity\/structs\/VkExportMemoryWin32HandleInfoNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data ExportMemoryWin32HandleInfoNV = ExportMemoryWin32HandleInfoNV
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "ExportMemoryWin32HandleInfoNV" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "ExportMemoryWin32HandleInfoNV" "pAttributes"
-  vkPAttributes :: Ptr SECURITY_ATTRIBUTES
+  attributes :: Ptr SECURITY_ATTRIBUTES
   , -- No documentation found for Nested "ExportMemoryWin32HandleInfoNV" "dwAccess"
-  vkDwAccess :: DWORD
+  dwAccess :: DWORD
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkExportMemoryWin32HandleInfoNV' and
+-- marshal a 'ExportMemoryWin32HandleInfoNV' into it. The 'VkExportMemoryWin32HandleInfoNV' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructExportMemoryWin32HandleInfoNV :: ExportMemoryWin32HandleInfoNV -> (VkExportMemoryWin32HandleInfoNV -> IO a) -> IO a
-withCStructExportMemoryWin32HandleInfoNV from cont = maybeWith withSomeVkStruct (vkPNext (from :: ExportMemoryWin32HandleInfoNV)) (\pPNext -> cont (VkExportMemoryWin32HandleInfoNV VK_STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV pPNext (vkPAttributes (from :: ExportMemoryWin32HandleInfoNV)) (vkDwAccess (from :: ExportMemoryWin32HandleInfoNV))))
+withCStructExportMemoryWin32HandleInfoNV marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: ExportMemoryWin32HandleInfoNV)) (\pPNext -> cont (VkExportMemoryWin32HandleInfoNV VK_STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV pPNext (attributes (marshalled :: ExportMemoryWin32HandleInfoNV)) (dwAccess (marshalled :: ExportMemoryWin32HandleInfoNV))))
+
+-- | A function to read a 'VkExportMemoryWin32HandleInfoNV' and all additional
+-- structures in the pointer chain into a 'ExportMemoryWin32HandleInfoNV'.
 fromCStructExportMemoryWin32HandleInfoNV :: VkExportMemoryWin32HandleInfoNV -> IO ExportMemoryWin32HandleInfoNV
 fromCStructExportMemoryWin32HandleInfoNV c = ExportMemoryWin32HandleInfoNV <$> -- Univalued Member elided
                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkExportMemoryWin32HandleInfoNV)))
                                                                            <*> pure (vkPAttributes (c :: VkExportMemoryWin32HandleInfoNV))
                                                                            <*> pure (vkDwAccess (c :: VkExportMemoryWin32HandleInfoNV))
+
 instance Zero ExportMemoryWin32HandleInfoNV where
   zero = ExportMemoryWin32HandleInfoNV Nothing
                                        zero
                                        zero
--- No documentation found for TopLevel "ImportMemoryWin32HandleInfoNV"
+
+
+
+-- | VkImportMemoryWin32HandleInfoNV - import Win32 memory created on the
+-- same physical device
+--
+-- = Description
+--
+-- If @handleType@ is @0@, this structure is ignored by consumers of the
+-- 'Graphics.Vulkan.C.Core10.Memory.VkMemoryAllocateInfo' structure it is
+-- chained from.
+--
+-- == Valid Usage
+--
+-- Unresolved directive in VkImportMemoryWin32HandleInfoNV.txt -
+-- include::{generated}\/validity\/structs\/VkImportMemoryWin32HandleInfoNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data ImportMemoryWin32HandleInfoNV = ImportMemoryWin32HandleInfoNV
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "ImportMemoryWin32HandleInfoNV" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "ImportMemoryWin32HandleInfoNV" "handleType"
-  vkHandleType :: ExternalMemoryHandleTypeFlagsNV
+  handleType :: ExternalMemoryHandleTypeFlagsNV
   , -- No documentation found for Nested "ImportMemoryWin32HandleInfoNV" "handle"
-  vkHandle :: HANDLE
+  handle :: HANDLE
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkImportMemoryWin32HandleInfoNV' and
+-- marshal a 'ImportMemoryWin32HandleInfoNV' into it. The 'VkImportMemoryWin32HandleInfoNV' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructImportMemoryWin32HandleInfoNV :: ImportMemoryWin32HandleInfoNV -> (VkImportMemoryWin32HandleInfoNV -> IO a) -> IO a
-withCStructImportMemoryWin32HandleInfoNV from cont = maybeWith withSomeVkStruct (vkPNext (from :: ImportMemoryWin32HandleInfoNV)) (\pPNext -> cont (VkImportMemoryWin32HandleInfoNV VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV pPNext (vkHandleType (from :: ImportMemoryWin32HandleInfoNV)) (vkHandle (from :: ImportMemoryWin32HandleInfoNV))))
+withCStructImportMemoryWin32HandleInfoNV marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: ImportMemoryWin32HandleInfoNV)) (\pPNext -> cont (VkImportMemoryWin32HandleInfoNV VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV pPNext (handleType (marshalled :: ImportMemoryWin32HandleInfoNV)) (handle (marshalled :: ImportMemoryWin32HandleInfoNV))))
+
+-- | A function to read a 'VkImportMemoryWin32HandleInfoNV' and all additional
+-- structures in the pointer chain into a 'ImportMemoryWin32HandleInfoNV'.
 fromCStructImportMemoryWin32HandleInfoNV :: VkImportMemoryWin32HandleInfoNV -> IO ImportMemoryWin32HandleInfoNV
 fromCStructImportMemoryWin32HandleInfoNV c = ImportMemoryWin32HandleInfoNV <$> -- Univalued Member elided
                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkImportMemoryWin32HandleInfoNV)))
                                                                            <*> pure (vkHandleType (c :: VkImportMemoryWin32HandleInfoNV))
                                                                            <*> pure (vkHandle (c :: VkImportMemoryWin32HandleInfoNV))
+
 instance Zero ImportMemoryWin32HandleInfoNV where
   zero = ImportMemoryWin32HandleInfoNV Nothing
                                        zero
                                        zero
 
--- | Wrapper for 'vkGetMemoryWin32HandleNV'
+
+
+-- | vkGetMemoryWin32HandleNV - retrieve Win32 handle to a device memory
+-- object
+--
+-- = Parameters
+--
+-- -   @device@ is the logical device that owns the memory.
+--
+-- -   @memory@ is the 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory'
+--     object.
+--
+-- -   @handleType@ is a bitmask of
+--     'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBitsNV'
+--     containing a single bit specifying the type of handle requested.
+--
+-- -   @handle@ points to a Windows
+--     'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32.HANDLE' in
+--     which the handle is returned.
+--
+-- == Valid Usage
+--
+-- Unresolved directive in vkGetMemoryWin32HandleNV.txt -
+-- include::{generated}\/validity\/protos\/vkGetMemoryWin32HandleNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 getMemoryWin32HandleNV :: Device ->  DeviceMemory ->  ExternalMemoryHandleTypeFlagsNV ->  IO (HANDLE)
-getMemoryWin32HandleNV = \(Device device commandTable) -> \memory -> \handleType -> alloca (\pHandle -> Graphics.Vulkan.C.Dynamic.getMemoryWin32HandleNV commandTable device memory handleType pHandle >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (peek pHandle)))
+getMemoryWin32HandleNV = \(Device device' commandTable) -> \memory' -> \handleType' -> alloca (\pHandle' -> vkGetMemoryWin32HandleNV commandTable device' memory' handleType' pHandle' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (peek pHandle')))

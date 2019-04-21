@@ -79,10 +79,6 @@ import Foreign.Storable
   ( peek
   , peekElemOff
   )
-import qualified Graphics.Vulkan.C.Dynamic
-  ( cmdSetSampleLocationsEXT
-  , getPhysicalDeviceMultisamplePropertiesEXT
-  )
 
 
 import Graphics.Vulkan.C.Core10.Core
@@ -97,6 +93,8 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations
   , VkSampleLocationEXT(..)
   , VkSampleLocationsInfoEXT(..)
   , VkSubpassSampleLocationsEXT(..)
+  , vkCmdSetSampleLocationsEXT
+  , vkGetPhysicalDeviceMultisamplePropertiesEXT
   , pattern VK_STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLE_LOCATIONS_PROPERTIES_EXT
   , pattern VK_STRUCTURE_TYPE_PIPELINE_SAMPLE_LOCATIONS_STATE_CREATE_INFO_EXT
@@ -136,68 +134,149 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations
   )
 
 
--- No documentation found for TopLevel "AttachmentSampleLocationsEXT"
+
+-- | VkAttachmentSampleLocationsEXT - Structure specifying the sample
+-- locations state to use in the initial layout transition of attachments
+--
+-- = Description
+--
+-- If the image referenced by the framebuffer attachment at index
+-- @attachmentIndex@ was not created with
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
+-- then the values specified in @sampleLocationsInfo@ are ignored.
+--
+-- == Valid Usage
+--
+-- Unresolved directive in VkAttachmentSampleLocationsEXT.txt -
+-- include::{generated}\/validity\/structs\/VkAttachmentSampleLocationsEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data AttachmentSampleLocationsEXT = AttachmentSampleLocationsEXT
   { -- No documentation found for Nested "AttachmentSampleLocationsEXT" "attachmentIndex"
-  vkAttachmentIndex :: Word32
+  attachmentIndex :: Word32
   , -- No documentation found for Nested "AttachmentSampleLocationsEXT" "sampleLocationsInfo"
-  vkSampleLocationsInfo :: SampleLocationsInfoEXT
+  sampleLocationsInfo :: SampleLocationsInfoEXT
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkAttachmentSampleLocationsEXT' and
+-- marshal a 'AttachmentSampleLocationsEXT' into it. The 'VkAttachmentSampleLocationsEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructAttachmentSampleLocationsEXT :: AttachmentSampleLocationsEXT -> (VkAttachmentSampleLocationsEXT -> IO a) -> IO a
-withCStructAttachmentSampleLocationsEXT from cont = withCStructSampleLocationsInfoEXT (vkSampleLocationsInfo (from :: AttachmentSampleLocationsEXT)) (\sampleLocationsInfo -> cont (VkAttachmentSampleLocationsEXT (vkAttachmentIndex (from :: AttachmentSampleLocationsEXT)) sampleLocationsInfo))
+withCStructAttachmentSampleLocationsEXT marshalled cont = withCStructSampleLocationsInfoEXT (sampleLocationsInfo (marshalled :: AttachmentSampleLocationsEXT)) (\sampleLocationsInfo'' -> cont (VkAttachmentSampleLocationsEXT (attachmentIndex (marshalled :: AttachmentSampleLocationsEXT)) sampleLocationsInfo''))
+
+-- | A function to read a 'VkAttachmentSampleLocationsEXT' and all additional
+-- structures in the pointer chain into a 'AttachmentSampleLocationsEXT'.
 fromCStructAttachmentSampleLocationsEXT :: VkAttachmentSampleLocationsEXT -> IO AttachmentSampleLocationsEXT
 fromCStructAttachmentSampleLocationsEXT c = AttachmentSampleLocationsEXT <$> pure (vkAttachmentIndex (c :: VkAttachmentSampleLocationsEXT))
                                                                          <*> (fromCStructSampleLocationsInfoEXT (vkSampleLocationsInfo (c :: VkAttachmentSampleLocationsEXT)))
+
 instance Zero AttachmentSampleLocationsEXT where
   zero = AttachmentSampleLocationsEXT zero
                                       zero
--- No documentation found for TopLevel "MultisamplePropertiesEXT"
+
+
+
+-- | VkMultisamplePropertiesEXT - Structure returning information about
+-- sample count specific additional multisampling capabilities
+--
+-- = Description
+--
+-- Unresolved directive in VkMultisamplePropertiesEXT.txt -
+-- include::{generated}\/validity\/structs\/VkMultisamplePropertiesEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data MultisamplePropertiesEXT = MultisamplePropertiesEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "MultisamplePropertiesEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "MultisamplePropertiesEXT" "maxSampleLocationGridSize"
-  vkMaxSampleLocationGridSize :: Extent2D
+  maxSampleLocationGridSize :: Extent2D
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkMultisamplePropertiesEXT' and
+-- marshal a 'MultisamplePropertiesEXT' into it. The 'VkMultisamplePropertiesEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructMultisamplePropertiesEXT :: MultisamplePropertiesEXT -> (VkMultisamplePropertiesEXT -> IO a) -> IO a
-withCStructMultisamplePropertiesEXT from cont = withCStructExtent2D (vkMaxSampleLocationGridSize (from :: MultisamplePropertiesEXT)) (\maxSampleLocationGridSize -> maybeWith withSomeVkStruct (vkPNext (from :: MultisamplePropertiesEXT)) (\pPNext -> cont (VkMultisamplePropertiesEXT VK_STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT pPNext maxSampleLocationGridSize)))
+withCStructMultisamplePropertiesEXT marshalled cont = withCStructExtent2D (maxSampleLocationGridSize (marshalled :: MultisamplePropertiesEXT)) (\maxSampleLocationGridSize'' -> maybeWith withSomeVkStruct (next (marshalled :: MultisamplePropertiesEXT)) (\pPNext -> cont (VkMultisamplePropertiesEXT VK_STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT pPNext maxSampleLocationGridSize'')))
+
+-- | A function to read a 'VkMultisamplePropertiesEXT' and all additional
+-- structures in the pointer chain into a 'MultisamplePropertiesEXT'.
 fromCStructMultisamplePropertiesEXT :: VkMultisamplePropertiesEXT -> IO MultisamplePropertiesEXT
 fromCStructMultisamplePropertiesEXT c = MultisamplePropertiesEXT <$> -- Univalued Member elided
                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkMultisamplePropertiesEXT)))
                                                                  <*> (fromCStructExtent2D (vkMaxSampleLocationGridSize (c :: VkMultisamplePropertiesEXT)))
+
 instance Zero MultisamplePropertiesEXT where
   zero = MultisamplePropertiesEXT Nothing
                                   zero
--- No documentation found for TopLevel "PhysicalDeviceSampleLocationsPropertiesEXT"
+
+
+
+-- | VkPhysicalDeviceSampleLocationsPropertiesEXT - Structure describing
+-- sample location limits that can be supported by an implementation
+--
+-- = Members
+--
+-- The members of the
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkPhysicalDeviceSampleLocationsPropertiesEXT'
+-- structure describe the following implementation-dependent limits:
+--
+-- = Description
+--
+-- If the
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkPhysicalDeviceSampleLocationsPropertiesEXT'
+-- structure is included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
+-- it is filled with the implementation-dependent limits.
+--
+-- Unresolved directive in VkPhysicalDeviceSampleLocationsPropertiesEXT.txt
+-- -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceSampleLocationsPropertiesEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data PhysicalDeviceSampleLocationsPropertiesEXT = PhysicalDeviceSampleLocationsPropertiesEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceSampleLocationsPropertiesEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDeviceSampleLocationsPropertiesEXT" "sampleLocationSampleCounts"
-  vkSampleLocationSampleCounts :: SampleCountFlags
+  sampleLocationSampleCounts :: SampleCountFlags
   , -- No documentation found for Nested "PhysicalDeviceSampleLocationsPropertiesEXT" "maxSampleLocationGridSize"
-  vkMaxSampleLocationGridSize :: Extent2D
+  maxSampleLocationGridSize :: Extent2D
   , -- No documentation found for Nested "PhysicalDeviceSampleLocationsPropertiesEXT" "sampleLocationCoordinateRange"
-  vkSampleLocationCoordinateRange :: (CFloat, CFloat)
+  sampleLocationCoordinateRange :: (CFloat, CFloat)
   , -- No documentation found for Nested "PhysicalDeviceSampleLocationsPropertiesEXT" "sampleLocationSubPixelBits"
-  vkSampleLocationSubPixelBits :: Word32
+  sampleLocationSubPixelBits :: Word32
   , -- No documentation found for Nested "PhysicalDeviceSampleLocationsPropertiesEXT" "variableSampleLocations"
-  vkVariableSampleLocations :: Bool
+  variableSampleLocations :: Bool
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPhysicalDeviceSampleLocationsPropertiesEXT' and
+-- marshal a 'PhysicalDeviceSampleLocationsPropertiesEXT' into it. The 'VkPhysicalDeviceSampleLocationsPropertiesEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPhysicalDeviceSampleLocationsPropertiesEXT :: PhysicalDeviceSampleLocationsPropertiesEXT -> (VkPhysicalDeviceSampleLocationsPropertiesEXT -> IO a) -> IO a
-withCStructPhysicalDeviceSampleLocationsPropertiesEXT from cont = withCStructExtent2D (vkMaxSampleLocationGridSize (from :: PhysicalDeviceSampleLocationsPropertiesEXT)) (\maxSampleLocationGridSize -> maybeWith withSomeVkStruct (vkPNext (from :: PhysicalDeviceSampleLocationsPropertiesEXT)) (\pPNext -> cont (VkPhysicalDeviceSampleLocationsPropertiesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLE_LOCATIONS_PROPERTIES_EXT pPNext (vkSampleLocationSampleCounts (from :: PhysicalDeviceSampleLocationsPropertiesEXT)) maxSampleLocationGridSize (fromTuple (vkSampleLocationCoordinateRange (from :: PhysicalDeviceSampleLocationsPropertiesEXT))) (vkSampleLocationSubPixelBits (from :: PhysicalDeviceSampleLocationsPropertiesEXT)) (boolToBool32 (vkVariableSampleLocations (from :: PhysicalDeviceSampleLocationsPropertiesEXT))))))
+withCStructPhysicalDeviceSampleLocationsPropertiesEXT marshalled cont = withCStructExtent2D (maxSampleLocationGridSize (marshalled :: PhysicalDeviceSampleLocationsPropertiesEXT)) (\maxSampleLocationGridSize'' -> maybeWith withSomeVkStruct (next (marshalled :: PhysicalDeviceSampleLocationsPropertiesEXT)) (\pPNext -> cont (VkPhysicalDeviceSampleLocationsPropertiesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLE_LOCATIONS_PROPERTIES_EXT pPNext (sampleLocationSampleCounts (marshalled :: PhysicalDeviceSampleLocationsPropertiesEXT)) maxSampleLocationGridSize'' (fromTuple (sampleLocationCoordinateRange (marshalled :: PhysicalDeviceSampleLocationsPropertiesEXT))) (sampleLocationSubPixelBits (marshalled :: PhysicalDeviceSampleLocationsPropertiesEXT)) (boolToBool32 (variableSampleLocations (marshalled :: PhysicalDeviceSampleLocationsPropertiesEXT))))))
+
+-- | A function to read a 'VkPhysicalDeviceSampleLocationsPropertiesEXT' and all additional
+-- structures in the pointer chain into a 'PhysicalDeviceSampleLocationsPropertiesEXT'.
 fromCStructPhysicalDeviceSampleLocationsPropertiesEXT :: VkPhysicalDeviceSampleLocationsPropertiesEXT -> IO PhysicalDeviceSampleLocationsPropertiesEXT
 fromCStructPhysicalDeviceSampleLocationsPropertiesEXT c = PhysicalDeviceSampleLocationsPropertiesEXT <$> -- Univalued Member elided
                                                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceSampleLocationsPropertiesEXT)))
                                                                                                      <*> pure (vkSampleLocationSampleCounts (c :: VkPhysicalDeviceSampleLocationsPropertiesEXT))
                                                                                                      <*> (fromCStructExtent2D (vkMaxSampleLocationGridSize (c :: VkPhysicalDeviceSampleLocationsPropertiesEXT)))
-                                                                                                     <*> pure (let x = (vkSampleLocationCoordinateRange (c :: VkPhysicalDeviceSampleLocationsPropertiesEXT)) in ( Data.Vector.Storable.Sized.unsafeIndex x 0
-                                                                                                     , Data.Vector.Storable.Sized.unsafeIndex x 1 ))
+                                                                                                     <*> pure (let v = (vkSampleLocationCoordinateRange (c :: VkPhysicalDeviceSampleLocationsPropertiesEXT)) in ( Data.Vector.Storable.Sized.unsafeIndex v 0
+                                                                                                     , Data.Vector.Storable.Sized.unsafeIndex v 1 ))
                                                                                                      <*> pure (vkSampleLocationSubPixelBits (c :: VkPhysicalDeviceSampleLocationsPropertiesEXT))
                                                                                                      <*> pure (bool32ToBool (vkVariableSampleLocations (c :: VkPhysicalDeviceSampleLocationsPropertiesEXT)))
+
 instance Zero PhysicalDeviceSampleLocationsPropertiesEXT where
   zero = PhysicalDeviceSampleLocationsPropertiesEXT Nothing
                                                     zero
@@ -205,43 +284,86 @@ instance Zero PhysicalDeviceSampleLocationsPropertiesEXT where
                                                     (zero, zero)
                                                     zero
                                                     False
--- No documentation found for TopLevel "PipelineSampleLocationsStateCreateInfoEXT"
+
+
+
+-- | VkPipelineSampleLocationsStateCreateInfoEXT - Structure specifying
+-- sample locations for a pipeline
+--
+-- = Description
+--
+-- Unresolved directive in VkPipelineSampleLocationsStateCreateInfoEXT.txt
+-- -
+-- include::{generated}\/validity\/structs\/VkPipelineSampleLocationsStateCreateInfoEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data PipelineSampleLocationsStateCreateInfoEXT = PipelineSampleLocationsStateCreateInfoEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PipelineSampleLocationsStateCreateInfoEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PipelineSampleLocationsStateCreateInfoEXT" "sampleLocationsEnable"
-  vkSampleLocationsEnable :: Bool
+  sampleLocationsEnable :: Bool
   , -- No documentation found for Nested "PipelineSampleLocationsStateCreateInfoEXT" "sampleLocationsInfo"
-  vkSampleLocationsInfo :: SampleLocationsInfoEXT
+  sampleLocationsInfo :: SampleLocationsInfoEXT
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPipelineSampleLocationsStateCreateInfoEXT' and
+-- marshal a 'PipelineSampleLocationsStateCreateInfoEXT' into it. The 'VkPipelineSampleLocationsStateCreateInfoEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPipelineSampleLocationsStateCreateInfoEXT :: PipelineSampleLocationsStateCreateInfoEXT -> (VkPipelineSampleLocationsStateCreateInfoEXT -> IO a) -> IO a
-withCStructPipelineSampleLocationsStateCreateInfoEXT from cont = withCStructSampleLocationsInfoEXT (vkSampleLocationsInfo (from :: PipelineSampleLocationsStateCreateInfoEXT)) (\sampleLocationsInfo -> maybeWith withSomeVkStruct (vkPNext (from :: PipelineSampleLocationsStateCreateInfoEXT)) (\pPNext -> cont (VkPipelineSampleLocationsStateCreateInfoEXT VK_STRUCTURE_TYPE_PIPELINE_SAMPLE_LOCATIONS_STATE_CREATE_INFO_EXT pPNext (boolToBool32 (vkSampleLocationsEnable (from :: PipelineSampleLocationsStateCreateInfoEXT))) sampleLocationsInfo)))
+withCStructPipelineSampleLocationsStateCreateInfoEXT marshalled cont = withCStructSampleLocationsInfoEXT (sampleLocationsInfo (marshalled :: PipelineSampleLocationsStateCreateInfoEXT)) (\sampleLocationsInfo'' -> maybeWith withSomeVkStruct (next (marshalled :: PipelineSampleLocationsStateCreateInfoEXT)) (\pPNext -> cont (VkPipelineSampleLocationsStateCreateInfoEXT VK_STRUCTURE_TYPE_PIPELINE_SAMPLE_LOCATIONS_STATE_CREATE_INFO_EXT pPNext (boolToBool32 (sampleLocationsEnable (marshalled :: PipelineSampleLocationsStateCreateInfoEXT))) sampleLocationsInfo'')))
+
+-- | A function to read a 'VkPipelineSampleLocationsStateCreateInfoEXT' and all additional
+-- structures in the pointer chain into a 'PipelineSampleLocationsStateCreateInfoEXT'.
 fromCStructPipelineSampleLocationsStateCreateInfoEXT :: VkPipelineSampleLocationsStateCreateInfoEXT -> IO PipelineSampleLocationsStateCreateInfoEXT
 fromCStructPipelineSampleLocationsStateCreateInfoEXT c = PipelineSampleLocationsStateCreateInfoEXT <$> -- Univalued Member elided
                                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPipelineSampleLocationsStateCreateInfoEXT)))
                                                                                                    <*> pure (bool32ToBool (vkSampleLocationsEnable (c :: VkPipelineSampleLocationsStateCreateInfoEXT)))
                                                                                                    <*> (fromCStructSampleLocationsInfoEXT (vkSampleLocationsInfo (c :: VkPipelineSampleLocationsStateCreateInfoEXT)))
+
 instance Zero PipelineSampleLocationsStateCreateInfoEXT where
   zero = PipelineSampleLocationsStateCreateInfoEXT Nothing
                                                    False
                                                    zero
--- No documentation found for TopLevel "RenderPassSampleLocationsBeginInfoEXT"
+
+
+
+-- | VkRenderPassSampleLocationsBeginInfoEXT - Structure specifying sample
+-- locations to use for the layout transition of custom sample locations
+-- compatible depth\/stencil attachments
+--
+-- = Description
+--
+-- Unresolved directive in VkRenderPassSampleLocationsBeginInfoEXT.txt -
+-- include::{generated}\/validity\/structs\/VkRenderPassSampleLocationsBeginInfoEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data RenderPassSampleLocationsBeginInfoEXT = RenderPassSampleLocationsBeginInfoEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "RenderPassSampleLocationsBeginInfoEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   -- Length valued member elided
   , -- No documentation found for Nested "RenderPassSampleLocationsBeginInfoEXT" "pAttachmentInitialSampleLocations"
-  vkPAttachmentInitialSampleLocations :: Vector AttachmentSampleLocationsEXT
+  attachmentInitialSampleLocations :: Vector AttachmentSampleLocationsEXT
   -- Length valued member elided
   , -- No documentation found for Nested "RenderPassSampleLocationsBeginInfoEXT" "pPostSubpassSampleLocations"
-  vkPPostSubpassSampleLocations :: Vector SubpassSampleLocationsEXT
+  postSubpassSampleLocations :: Vector SubpassSampleLocationsEXT
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkRenderPassSampleLocationsBeginInfoEXT' and
+-- marshal a 'RenderPassSampleLocationsBeginInfoEXT' into it. The 'VkRenderPassSampleLocationsBeginInfoEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructRenderPassSampleLocationsBeginInfoEXT :: RenderPassSampleLocationsBeginInfoEXT -> (VkRenderPassSampleLocationsBeginInfoEXT -> IO a) -> IO a
-withCStructRenderPassSampleLocationsBeginInfoEXT from cont = withVec withCStructSubpassSampleLocationsEXT (vkPPostSubpassSampleLocations (from :: RenderPassSampleLocationsBeginInfoEXT)) (\pPostSubpassSampleLocations -> withVec withCStructAttachmentSampleLocationsEXT (vkPAttachmentInitialSampleLocations (from :: RenderPassSampleLocationsBeginInfoEXT)) (\pAttachmentInitialSampleLocations -> maybeWith withSomeVkStruct (vkPNext (from :: RenderPassSampleLocationsBeginInfoEXT)) (\pPNext -> cont (VkRenderPassSampleLocationsBeginInfoEXT VK_STRUCTURE_TYPE_RENDER_PASS_SAMPLE_LOCATIONS_BEGIN_INFO_EXT pPNext (fromIntegral (Data.Vector.length (vkPAttachmentInitialSampleLocations (from :: RenderPassSampleLocationsBeginInfoEXT)))) pAttachmentInitialSampleLocations (fromIntegral (Data.Vector.length (vkPPostSubpassSampleLocations (from :: RenderPassSampleLocationsBeginInfoEXT)))) pPostSubpassSampleLocations))))
+withCStructRenderPassSampleLocationsBeginInfoEXT marshalled cont = withVec withCStructSubpassSampleLocationsEXT (postSubpassSampleLocations (marshalled :: RenderPassSampleLocationsBeginInfoEXT)) (\pPPostSubpassSampleLocations -> withVec withCStructAttachmentSampleLocationsEXT (attachmentInitialSampleLocations (marshalled :: RenderPassSampleLocationsBeginInfoEXT)) (\pPAttachmentInitialSampleLocations -> maybeWith withSomeVkStruct (next (marshalled :: RenderPassSampleLocationsBeginInfoEXT)) (\pPNext -> cont (VkRenderPassSampleLocationsBeginInfoEXT VK_STRUCTURE_TYPE_RENDER_PASS_SAMPLE_LOCATIONS_BEGIN_INFO_EXT pPNext (fromIntegral (Data.Vector.length (attachmentInitialSampleLocations (marshalled :: RenderPassSampleLocationsBeginInfoEXT)))) pPAttachmentInitialSampleLocations (fromIntegral (Data.Vector.length (postSubpassSampleLocations (marshalled :: RenderPassSampleLocationsBeginInfoEXT)))) pPPostSubpassSampleLocations))))
+
+-- | A function to read a 'VkRenderPassSampleLocationsBeginInfoEXT' and all additional
+-- structures in the pointer chain into a 'RenderPassSampleLocationsBeginInfoEXT'.
 fromCStructRenderPassSampleLocationsBeginInfoEXT :: VkRenderPassSampleLocationsBeginInfoEXT -> IO RenderPassSampleLocationsBeginInfoEXT
 fromCStructRenderPassSampleLocationsBeginInfoEXT c = RenderPassSampleLocationsBeginInfoEXT <$> -- Univalued Member elided
                                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkRenderPassSampleLocationsBeginInfoEXT)))
@@ -249,42 +371,116 @@ fromCStructRenderPassSampleLocationsBeginInfoEXT c = RenderPassSampleLocationsBe
                                                                                            <*> (Data.Vector.generateM (fromIntegral (vkAttachmentInitialSampleLocationsCount (c :: VkRenderPassSampleLocationsBeginInfoEXT))) (((fromCStructAttachmentSampleLocationsEXT <=<) . peekElemOff) (vkPAttachmentInitialSampleLocations (c :: VkRenderPassSampleLocationsBeginInfoEXT))))
                                                                                            -- Length valued member elided
                                                                                            <*> (Data.Vector.generateM (fromIntegral (vkPostSubpassSampleLocationsCount (c :: VkRenderPassSampleLocationsBeginInfoEXT))) (((fromCStructSubpassSampleLocationsEXT <=<) . peekElemOff) (vkPPostSubpassSampleLocations (c :: VkRenderPassSampleLocationsBeginInfoEXT))))
+
 instance Zero RenderPassSampleLocationsBeginInfoEXT where
   zero = RenderPassSampleLocationsBeginInfoEXT Nothing
                                                Data.Vector.empty
                                                Data.Vector.empty
--- No documentation found for TopLevel "SampleLocationEXT"
+
+
+
+-- | VkSampleLocationEXT - Structure specifying the coordinates of a sample
+-- location
+--
+-- = Description
+--
+-- The domain space of the sample location coordinates has an upper-left
+-- origin within the pixel in framebuffer space.
+--
+-- The values specified in a
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkSampleLocationEXT'
+-- structure are always clamped to the implementation-dependent sample
+-- location coordinate range
+-- [@sampleLocationCoordinateRange@[0],@sampleLocationCoordinateRange@[1]]
+-- that /can/ be queried by chaining the
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkPhysicalDeviceSampleLocationsPropertiesEXT'
+-- structure to the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2'.
+--
+-- Unresolved directive in VkSampleLocationEXT.txt -
+-- include::{generated}\/validity\/structs\/VkSampleLocationEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data SampleLocationEXT = SampleLocationEXT
   { -- No documentation found for Nested "SampleLocationEXT" "x"
-  vkX :: CFloat
+  x :: CFloat
   , -- No documentation found for Nested "SampleLocationEXT" "y"
-  vkY :: CFloat
+  y :: CFloat
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkSampleLocationEXT' and
+-- marshal a 'SampleLocationEXT' into it. The 'VkSampleLocationEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructSampleLocationEXT :: SampleLocationEXT -> (VkSampleLocationEXT -> IO a) -> IO a
-withCStructSampleLocationEXT from cont = cont (VkSampleLocationEXT (vkX (from :: SampleLocationEXT)) (vkY (from :: SampleLocationEXT)))
+withCStructSampleLocationEXT marshalled cont = cont (VkSampleLocationEXT (x (marshalled :: SampleLocationEXT)) (y (marshalled :: SampleLocationEXT)))
+
+-- | A function to read a 'VkSampleLocationEXT' and all additional
+-- structures in the pointer chain into a 'SampleLocationEXT'.
 fromCStructSampleLocationEXT :: VkSampleLocationEXT -> IO SampleLocationEXT
 fromCStructSampleLocationEXT c = SampleLocationEXT <$> pure (vkX (c :: VkSampleLocationEXT))
                                                    <*> pure (vkY (c :: VkSampleLocationEXT))
+
 instance Zero SampleLocationEXT where
   zero = SampleLocationEXT zero
                            zero
--- No documentation found for TopLevel "SampleLocationsInfoEXT"
+
+
+
+-- | VkSampleLocationsInfoEXT - Structure specifying a set of sample
+-- locations
+--
+-- = Description
+--
+-- This structure /can/ be used either to specify the sample locations to
+-- be used for rendering or to specify the set of sample locations an image
+-- subresource has been last rendered with for the purposes of layout
+-- transitions of depth\/stencil images created with
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'.
+--
+-- The sample locations in @pSampleLocations@ specify
+-- @sampleLocationsPerPixel@ number of sample locations for each pixel in
+-- the grid of the size specified in @sampleLocationGridSize@. The sample
+-- location for sample i at the pixel grid location (x,y) is taken from
+-- @pSampleLocations@[(x + y * @sampleLocationGridSize.width@) *
+-- @sampleLocationsPerPixel@ + i].
+--
+-- If the render pass has a fragment density map, the implementation will
+-- choose the sample locations for the fragment and the contents of
+-- @pSampleLocations@ /may/ be ignored.
+--
+-- == Valid Usage
+--
+-- Unresolved directive in VkSampleLocationsInfoEXT.txt -
+-- include::{generated}\/validity\/structs\/VkSampleLocationsInfoEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data SampleLocationsInfoEXT = SampleLocationsInfoEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "SampleLocationsInfoEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "SampleLocationsInfoEXT" "sampleLocationsPerPixel"
-  vkSampleLocationsPerPixel :: SampleCountFlagBits
+  sampleLocationsPerPixel :: SampleCountFlagBits
   , -- No documentation found for Nested "SampleLocationsInfoEXT" "sampleLocationGridSize"
-  vkSampleLocationGridSize :: Extent2D
+  sampleLocationGridSize :: Extent2D
   -- Length valued member elided
   , -- No documentation found for Nested "SampleLocationsInfoEXT" "pSampleLocations"
-  vkPSampleLocations :: Vector SampleLocationEXT
+  sampleLocations :: Vector SampleLocationEXT
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkSampleLocationsInfoEXT' and
+-- marshal a 'SampleLocationsInfoEXT' into it. The 'VkSampleLocationsInfoEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructSampleLocationsInfoEXT :: SampleLocationsInfoEXT -> (VkSampleLocationsInfoEXT -> IO a) -> IO a
-withCStructSampleLocationsInfoEXT from cont = withVec withCStructSampleLocationEXT (vkPSampleLocations (from :: SampleLocationsInfoEXT)) (\pSampleLocations -> withCStructExtent2D (vkSampleLocationGridSize (from :: SampleLocationsInfoEXT)) (\sampleLocationGridSize -> maybeWith withSomeVkStruct (vkPNext (from :: SampleLocationsInfoEXT)) (\pPNext -> cont (VkSampleLocationsInfoEXT VK_STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT pPNext (vkSampleLocationsPerPixel (from :: SampleLocationsInfoEXT)) sampleLocationGridSize (fromIntegral (Data.Vector.length (vkPSampleLocations (from :: SampleLocationsInfoEXT)))) pSampleLocations))))
+withCStructSampleLocationsInfoEXT marshalled cont = withVec withCStructSampleLocationEXT (sampleLocations (marshalled :: SampleLocationsInfoEXT)) (\pPSampleLocations -> withCStructExtent2D (sampleLocationGridSize (marshalled :: SampleLocationsInfoEXT)) (\sampleLocationGridSize'' -> maybeWith withSomeVkStruct (next (marshalled :: SampleLocationsInfoEXT)) (\pPNext -> cont (VkSampleLocationsInfoEXT VK_STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT pPNext (sampleLocationsPerPixel (marshalled :: SampleLocationsInfoEXT)) sampleLocationGridSize'' (fromIntegral (Data.Vector.length (sampleLocations (marshalled :: SampleLocationsInfoEXT)))) pPSampleLocations))))
+
+-- | A function to read a 'VkSampleLocationsInfoEXT' and all additional
+-- structures in the pointer chain into a 'SampleLocationsInfoEXT'.
 fromCStructSampleLocationsInfoEXT :: VkSampleLocationsInfoEXT -> IO SampleLocationsInfoEXT
 fromCStructSampleLocationsInfoEXT c = SampleLocationsInfoEXT <$> -- Univalued Member elided
                                                              maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSampleLocationsInfoEXT)))
@@ -292,32 +488,126 @@ fromCStructSampleLocationsInfoEXT c = SampleLocationsInfoEXT <$> -- Univalued Me
                                                              <*> (fromCStructExtent2D (vkSampleLocationGridSize (c :: VkSampleLocationsInfoEXT)))
                                                              -- Length valued member elided
                                                              <*> (Data.Vector.generateM (fromIntegral (vkSampleLocationsCount (c :: VkSampleLocationsInfoEXT))) (((fromCStructSampleLocationEXT <=<) . peekElemOff) (vkPSampleLocations (c :: VkSampleLocationsInfoEXT))))
+
 instance Zero SampleLocationsInfoEXT where
   zero = SampleLocationsInfoEXT Nothing
                                 zero
                                 zero
                                 Data.Vector.empty
--- No documentation found for TopLevel "SubpassSampleLocationsEXT"
+
+
+
+-- | VkSubpassSampleLocationsEXT - Structure specifying the sample locations
+-- state to use for layout transitions of attachments performed after a
+-- given subpass
+--
+-- = Description
+--
+-- If the image referenced by the depth\/stencil attachment used in the
+-- subpass identified by @subpassIndex@ was not created with
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
+-- or if the subpass does not use a depth\/stencil attachment, and
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkPhysicalDeviceSampleLocationsPropertiesEXT'::@variableSampleLocations@
+-- is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' then the values specified in
+-- @sampleLocationsInfo@ are ignored.
+--
+-- == Valid Usage
+--
+-- Unresolved directive in VkSubpassSampleLocationsEXT.txt -
+-- include::{generated}\/validity\/structs\/VkSubpassSampleLocationsEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data SubpassSampleLocationsEXT = SubpassSampleLocationsEXT
   { -- No documentation found for Nested "SubpassSampleLocationsEXT" "subpassIndex"
-  vkSubpassIndex :: Word32
+  subpassIndex :: Word32
   , -- No documentation found for Nested "SubpassSampleLocationsEXT" "sampleLocationsInfo"
-  vkSampleLocationsInfo :: SampleLocationsInfoEXT
+  sampleLocationsInfo :: SampleLocationsInfoEXT
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkSubpassSampleLocationsEXT' and
+-- marshal a 'SubpassSampleLocationsEXT' into it. The 'VkSubpassSampleLocationsEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructSubpassSampleLocationsEXT :: SubpassSampleLocationsEXT -> (VkSubpassSampleLocationsEXT -> IO a) -> IO a
-withCStructSubpassSampleLocationsEXT from cont = withCStructSampleLocationsInfoEXT (vkSampleLocationsInfo (from :: SubpassSampleLocationsEXT)) (\sampleLocationsInfo -> cont (VkSubpassSampleLocationsEXT (vkSubpassIndex (from :: SubpassSampleLocationsEXT)) sampleLocationsInfo))
+withCStructSubpassSampleLocationsEXT marshalled cont = withCStructSampleLocationsInfoEXT (sampleLocationsInfo (marshalled :: SubpassSampleLocationsEXT)) (\sampleLocationsInfo'' -> cont (VkSubpassSampleLocationsEXT (subpassIndex (marshalled :: SubpassSampleLocationsEXT)) sampleLocationsInfo''))
+
+-- | A function to read a 'VkSubpassSampleLocationsEXT' and all additional
+-- structures in the pointer chain into a 'SubpassSampleLocationsEXT'.
 fromCStructSubpassSampleLocationsEXT :: VkSubpassSampleLocationsEXT -> IO SubpassSampleLocationsEXT
 fromCStructSubpassSampleLocationsEXT c = SubpassSampleLocationsEXT <$> pure (vkSubpassIndex (c :: VkSubpassSampleLocationsEXT))
                                                                    <*> (fromCStructSampleLocationsInfoEXT (vkSampleLocationsInfo (c :: VkSubpassSampleLocationsEXT)))
+
 instance Zero SubpassSampleLocationsEXT where
   zero = SubpassSampleLocationsEXT zero
                                    zero
 
--- | Wrapper for 'vkCmdSetSampleLocationsEXT'
-cmdSetSampleLocationsEXT :: CommandBuffer ->  SampleLocationsInfoEXT ->  IO ()
-cmdSetSampleLocationsEXT = \(CommandBuffer commandBuffer commandTable) -> \sampleLocationsInfo -> (\a -> withCStructSampleLocationsInfoEXT a . flip with) sampleLocationsInfo (\pSampleLocationsInfo -> Graphics.Vulkan.C.Dynamic.cmdSetSampleLocationsEXT commandTable commandBuffer pSampleLocationsInfo *> (pure ()))
 
--- | Wrapper for 'vkGetPhysicalDeviceMultisamplePropertiesEXT'
+
+-- | vkCmdSetSampleLocationsEXT - Set the dynamic sample locations state
+--
+-- = Parameters
+--
+-- -   @commandBuffer@ is the command buffer into which the command will be
+--     recorded.
+--
+-- -   @pSampleLocationsInfo@ is the sample locations state to set.
+--
+-- == Valid Usage
+--
+-- -   The bound graphics pipeline /must/ have been created with the
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     dynamic state enabled
+--
+-- -   The @sampleLocationsPerPixel@ member of @pSampleLocationsInfo@
+--     /must/ equal the @rasterizationSamples@ member of the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineMultisampleStateCreateInfo'
+--     structure the bound graphics pipeline has been created with
+--
+-- -   If
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkPhysicalDeviceSampleLocationsPropertiesEXT'::@variableSampleLocations@
+--     is 'Graphics.Vulkan.C.Core10.Core.VK_FALSE' then the current render
+--     pass /must/ have been begun by specifying a
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkRenderPassSampleLocationsBeginInfoEXT'
+--     structure whose @pPostSubpassSampleLocations@ member contains an
+--     element with a @subpassIndex@ matching the current subpass index and
+--     the @sampleLocationsInfo@ member of that element /must/ match the
+--     sample locations state pointed to by @pSampleLocationsInfo@
+--
+-- Unresolved directive in vkCmdSetSampleLocationsEXT.txt -
+-- include::{generated}\/validity\/protos\/vkCmdSetSampleLocationsEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
+cmdSetSampleLocationsEXT :: CommandBuffer ->  SampleLocationsInfoEXT ->  IO ()
+cmdSetSampleLocationsEXT = \(CommandBuffer commandBuffer' commandTable) -> \sampleLocationsInfo' -> (\marshalled -> withCStructSampleLocationsInfoEXT marshalled . flip with) sampleLocationsInfo' (\pSampleLocationsInfo' -> vkCmdSetSampleLocationsEXT commandTable commandBuffer' pSampleLocationsInfo' *> (pure ()))
+
+
+-- | vkGetPhysicalDeviceMultisamplePropertiesEXT - Report sample count
+-- specific multisampling capabilities of a physical device
+--
+-- = Parameters
+--
+-- -   @physicalDevice@ is the physical device from which to query the
+--     additional multisampling capabilities.
+--
+-- -   @samples@ is the sample count to query the capabilities for.
+--
+-- -   @pMultisampleProperties@ is a pointer to a structure of type
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkMultisamplePropertiesEXT',
+--     in which information about the additional multisampling capabilities
+--     specific to the sample count is returned.
+--
+-- = Description
+--
+-- Unresolved directive in vkGetPhysicalDeviceMultisamplePropertiesEXT.txt
+-- -
+-- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceMultisamplePropertiesEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 getPhysicalDeviceMultisamplePropertiesEXT :: PhysicalDevice ->  SampleCountFlagBits ->  IO (MultisamplePropertiesEXT)
-getPhysicalDeviceMultisamplePropertiesEXT = \(PhysicalDevice physicalDevice commandTable) -> \samples -> alloca (\pMultisampleProperties -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceMultisamplePropertiesEXT commandTable physicalDevice samples pMultisampleProperties *> ((fromCStructMultisamplePropertiesEXT <=< peek) pMultisampleProperties))
+getPhysicalDeviceMultisamplePropertiesEXT = \(PhysicalDevice physicalDevice' commandTable) -> \samples' -> alloca (\pMultisampleProperties' -> vkGetPhysicalDeviceMultisamplePropertiesEXT commandTable physicalDevice' samples' pMultisampleProperties' *> ((fromCStructMultisamplePropertiesEXT <=< peek) pMultisampleProperties'))

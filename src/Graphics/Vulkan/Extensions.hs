@@ -205,9 +205,8 @@ module Graphics.Vulkan.Extensions
   , module Graphics.Vulkan.Extensions.VK_EXT_validation_features
   , module Graphics.Vulkan.Extensions.VK_NV_cooperative_matrix
   , module Graphics.Vulkan.Extensions.VK_EXT_ycbcr_image_arrays
-#if VK_USE_PLATFORM_WIN32_KHR
   , module Graphics.Vulkan.Extensions.VK_EXT_full_screen_exclusive
-#endif
+  , module Graphics.Vulkan.Extensions.VK_EXT_headless_surface
   , module Graphics.Vulkan.Extensions.VK_EXT_host_query_reset
   ) where
 
@@ -416,9 +415,8 @@ import Graphics.Vulkan.Extensions.VK_EXT_separate_stencil_usage
 import Graphics.Vulkan.Extensions.VK_EXT_validation_features
 import Graphics.Vulkan.Extensions.VK_NV_cooperative_matrix
 import Graphics.Vulkan.Extensions.VK_EXT_ycbcr_image_arrays
-#if VK_USE_PLATFORM_WIN32_KHR
 import Graphics.Vulkan.Extensions.VK_EXT_full_screen_exclusive
-#endif
+import Graphics.Vulkan.Extensions.VK_EXT_headless_surface
 import Graphics.Vulkan.Extensions.VK_EXT_host_query_reset
 
 

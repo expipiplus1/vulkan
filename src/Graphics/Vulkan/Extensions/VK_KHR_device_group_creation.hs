@@ -53,7 +53,9 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_device_group_creation
 
 type DeviceGroupDeviceCreateInfoKHR = DeviceGroupDeviceCreateInfo
 -- TODO: Pattern constructor alias)
+
 type PhysicalDeviceGroupPropertiesKHR = PhysicalDeviceGroupProperties
 -- TODO: Pattern constructor alias)
+
 enumeratePhysicalDeviceGroupsKHR :: Instance ->  Word32 ->  IO (VkResult, Vector PhysicalDeviceGroupProperties)
 enumeratePhysicalDeviceGroupsKHR = enumeratePhysicalDeviceGroups

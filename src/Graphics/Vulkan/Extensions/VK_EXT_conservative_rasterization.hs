@@ -1,10 +1,14 @@
 {-# language Strict #-}
 {-# language CPP #-}
 {-# language PatternSynonyms #-}
+{-# language TypeFamilies #-}
 {-# language DuplicateRecordFields #-}
 
 module Graphics.Vulkan.Extensions.VK_EXT_conservative_rasterization
   ( ConservativeRasterizationModeEXT
+  , pattern CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT
+  , pattern CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT
+  , pattern CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT
   , withCStructPhysicalDeviceConservativeRasterizationPropertiesEXT
   , fromCStructPhysicalDeviceConservativeRasterizationPropertiesEXT
   , PhysicalDeviceConservativeRasterizationPropertiesEXT(..)
@@ -38,6 +42,9 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization
   , VkPhysicalDeviceConservativeRasterizationPropertiesEXT(..)
   , VkPipelineRasterizationConservativeStateCreateFlagsEXT(..)
   , VkPipelineRasterizationConservativeStateCreateInfoEXT(..)
+  , pattern VK_CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT
+  , pattern VK_CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT
+  , pattern VK_CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CONSERVATIVE_RASTERIZATION_PROPERTIES_EXT
   , pattern VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT
   )
@@ -56,35 +63,94 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization
   )
 
 
--- No documentation found for TopLevel "ConservativeRasterizationModeEXT"
+-- | VkConservativeRasterizationModeEXT - Specify the conservative
+-- rasterization mode
+--
+-- = See Also
+--
+-- No cross-references are available
 type ConservativeRasterizationModeEXT = VkConservativeRasterizationModeEXT
--- No documentation found for TopLevel "PhysicalDeviceConservativeRasterizationPropertiesEXT"
+
+
+-- | 'Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization.VK_CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT'
+-- specifies that conservative rasterization is disabled and rasterization
+-- proceeds as normal.
+pattern CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT :: (a ~ ConservativeRasterizationModeEXT) => a
+pattern CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT = VK_CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT
+
+
+-- | 'Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization.VK_CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT'
+-- specifies that conservative rasterization is enabled in overestimation
+-- mode.
+pattern CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT :: (a ~ ConservativeRasterizationModeEXT) => a
+pattern CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT = VK_CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT
+
+
+-- | 'Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization.VK_CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT'
+-- specifies that conservative rasterization is enabled in underestimation
+-- mode.
+pattern CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT :: (a ~ ConservativeRasterizationModeEXT) => a
+pattern CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT = VK_CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT
+
+
+-- | VkPhysicalDeviceConservativeRasterizationPropertiesEXT - Structure
+-- describing conservative raster properties that can be supported by an
+-- implementation
+--
+-- = Members
+--
+-- The members of the
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization.VkPhysicalDeviceConservativeRasterizationPropertiesEXT'
+-- structure describe the following implementation-dependent limits:
+--
+-- = Description
+--
+-- If the
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization.VkPhysicalDeviceConservativeRasterizationPropertiesEXT'
+-- structure is included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
+-- it is filled with the implementation-dependent limits and properties.
+--
+-- Unresolved directive in
+-- VkPhysicalDeviceConservativeRasterizationPropertiesEXT.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceConservativeRasterizationPropertiesEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data PhysicalDeviceConservativeRasterizationPropertiesEXT = PhysicalDeviceConservativeRasterizationPropertiesEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceConservativeRasterizationPropertiesEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDeviceConservativeRasterizationPropertiesEXT" "primitiveOverestimationSize"
-  vkPrimitiveOverestimationSize :: CFloat
+  primitiveOverestimationSize :: CFloat
   , -- No documentation found for Nested "PhysicalDeviceConservativeRasterizationPropertiesEXT" "maxExtraPrimitiveOverestimationSize"
-  vkMaxExtraPrimitiveOverestimationSize :: CFloat
+  maxExtraPrimitiveOverestimationSize :: CFloat
   , -- No documentation found for Nested "PhysicalDeviceConservativeRasterizationPropertiesEXT" "extraPrimitiveOverestimationSizeGranularity"
-  vkExtraPrimitiveOverestimationSizeGranularity :: CFloat
+  extraPrimitiveOverestimationSizeGranularity :: CFloat
   , -- No documentation found for Nested "PhysicalDeviceConservativeRasterizationPropertiesEXT" "primitiveUnderestimation"
-  vkPrimitiveUnderestimation :: Bool
+  primitiveUnderestimation :: Bool
   , -- No documentation found for Nested "PhysicalDeviceConservativeRasterizationPropertiesEXT" "conservativePointAndLineRasterization"
-  vkConservativePointAndLineRasterization :: Bool
+  conservativePointAndLineRasterization :: Bool
   , -- No documentation found for Nested "PhysicalDeviceConservativeRasterizationPropertiesEXT" "degenerateTrianglesRasterized"
-  vkDegenerateTrianglesRasterized :: Bool
+  degenerateTrianglesRasterized :: Bool
   , -- No documentation found for Nested "PhysicalDeviceConservativeRasterizationPropertiesEXT" "degenerateLinesRasterized"
-  vkDegenerateLinesRasterized :: Bool
+  degenerateLinesRasterized :: Bool
   , -- No documentation found for Nested "PhysicalDeviceConservativeRasterizationPropertiesEXT" "fullyCoveredFragmentShaderInputVariable"
-  vkFullyCoveredFragmentShaderInputVariable :: Bool
+  fullyCoveredFragmentShaderInputVariable :: Bool
   , -- No documentation found for Nested "PhysicalDeviceConservativeRasterizationPropertiesEXT" "conservativeRasterizationPostDepthCoverage"
-  vkConservativeRasterizationPostDepthCoverage :: Bool
+  conservativeRasterizationPostDepthCoverage :: Bool
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPhysicalDeviceConservativeRasterizationPropertiesEXT' and
+-- marshal a 'PhysicalDeviceConservativeRasterizationPropertiesEXT' into it. The 'VkPhysicalDeviceConservativeRasterizationPropertiesEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPhysicalDeviceConservativeRasterizationPropertiesEXT :: PhysicalDeviceConservativeRasterizationPropertiesEXT -> (VkPhysicalDeviceConservativeRasterizationPropertiesEXT -> IO a) -> IO a
-withCStructPhysicalDeviceConservativeRasterizationPropertiesEXT from cont = maybeWith withSomeVkStruct (vkPNext (from :: PhysicalDeviceConservativeRasterizationPropertiesEXT)) (\pPNext -> cont (VkPhysicalDeviceConservativeRasterizationPropertiesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CONSERVATIVE_RASTERIZATION_PROPERTIES_EXT pPNext (vkPrimitiveOverestimationSize (from :: PhysicalDeviceConservativeRasterizationPropertiesEXT)) (vkMaxExtraPrimitiveOverestimationSize (from :: PhysicalDeviceConservativeRasterizationPropertiesEXT)) (vkExtraPrimitiveOverestimationSizeGranularity (from :: PhysicalDeviceConservativeRasterizationPropertiesEXT)) (boolToBool32 (vkPrimitiveUnderestimation (from :: PhysicalDeviceConservativeRasterizationPropertiesEXT))) (boolToBool32 (vkConservativePointAndLineRasterization (from :: PhysicalDeviceConservativeRasterizationPropertiesEXT))) (boolToBool32 (vkDegenerateTrianglesRasterized (from :: PhysicalDeviceConservativeRasterizationPropertiesEXT))) (boolToBool32 (vkDegenerateLinesRasterized (from :: PhysicalDeviceConservativeRasterizationPropertiesEXT))) (boolToBool32 (vkFullyCoveredFragmentShaderInputVariable (from :: PhysicalDeviceConservativeRasterizationPropertiesEXT))) (boolToBool32 (vkConservativeRasterizationPostDepthCoverage (from :: PhysicalDeviceConservativeRasterizationPropertiesEXT)))))
+withCStructPhysicalDeviceConservativeRasterizationPropertiesEXT marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PhysicalDeviceConservativeRasterizationPropertiesEXT)) (\pPNext -> cont (VkPhysicalDeviceConservativeRasterizationPropertiesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CONSERVATIVE_RASTERIZATION_PROPERTIES_EXT pPNext (primitiveOverestimationSize (marshalled :: PhysicalDeviceConservativeRasterizationPropertiesEXT)) (maxExtraPrimitiveOverestimationSize (marshalled :: PhysicalDeviceConservativeRasterizationPropertiesEXT)) (extraPrimitiveOverestimationSizeGranularity (marshalled :: PhysicalDeviceConservativeRasterizationPropertiesEXT)) (boolToBool32 (primitiveUnderestimation (marshalled :: PhysicalDeviceConservativeRasterizationPropertiesEXT))) (boolToBool32 (conservativePointAndLineRasterization (marshalled :: PhysicalDeviceConservativeRasterizationPropertiesEXT))) (boolToBool32 (degenerateTrianglesRasterized (marshalled :: PhysicalDeviceConservativeRasterizationPropertiesEXT))) (boolToBool32 (degenerateLinesRasterized (marshalled :: PhysicalDeviceConservativeRasterizationPropertiesEXT))) (boolToBool32 (fullyCoveredFragmentShaderInputVariable (marshalled :: PhysicalDeviceConservativeRasterizationPropertiesEXT))) (boolToBool32 (conservativeRasterizationPostDepthCoverage (marshalled :: PhysicalDeviceConservativeRasterizationPropertiesEXT)))))
+
+-- | A function to read a 'VkPhysicalDeviceConservativeRasterizationPropertiesEXT' and all additional
+-- structures in the pointer chain into a 'PhysicalDeviceConservativeRasterizationPropertiesEXT'.
 fromCStructPhysicalDeviceConservativeRasterizationPropertiesEXT :: VkPhysicalDeviceConservativeRasterizationPropertiesEXT -> IO PhysicalDeviceConservativeRasterizationPropertiesEXT
 fromCStructPhysicalDeviceConservativeRasterizationPropertiesEXT c = PhysicalDeviceConservativeRasterizationPropertiesEXT <$> -- Univalued Member elided
                                                                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceConservativeRasterizationPropertiesEXT)))
@@ -97,6 +163,7 @@ fromCStructPhysicalDeviceConservativeRasterizationPropertiesEXT c = PhysicalDevi
                                                                                                                          <*> pure (bool32ToBool (vkDegenerateLinesRasterized (c :: VkPhysicalDeviceConservativeRasterizationPropertiesEXT)))
                                                                                                                          <*> pure (bool32ToBool (vkFullyCoveredFragmentShaderInputVariable (c :: VkPhysicalDeviceConservativeRasterizationPropertiesEXT)))
                                                                                                                          <*> pure (bool32ToBool (vkConservativeRasterizationPostDepthCoverage (c :: VkPhysicalDeviceConservativeRasterizationPropertiesEXT)))
+
 instance Zero PhysicalDeviceConservativeRasterizationPropertiesEXT where
   zero = PhysicalDeviceConservativeRasterizationPropertiesEXT Nothing
                                                               zero
@@ -108,31 +175,66 @@ instance Zero PhysicalDeviceConservativeRasterizationPropertiesEXT where
                                                               False
                                                               False
                                                               False
--- No documentation found for TopLevel "PipelineRasterizationConservativeStateCreateFlagsEXT"
+
+
+-- | VkPipelineRasterizationConservativeStateCreateFlagsEXT - Reserved for
+-- future use
+--
+-- = Description
+--
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization.VkPipelineRasterizationConservativeStateCreateFlagsEXT'
+-- is a bitmask type for setting a mask, but is currently reserved for
+-- future use.
+--
+-- = See Also
+--
+-- No cross-references are available
 type PipelineRasterizationConservativeStateCreateFlagsEXT = VkPipelineRasterizationConservativeStateCreateFlagsEXT
--- No documentation found for TopLevel "PipelineRasterizationConservativeStateCreateInfoEXT"
+
+
+-- | VkPipelineRasterizationConservativeStateCreateInfoEXT - Structure
+-- specifying conservative raster state
+--
+-- == Valid Usage
+--
+-- Unresolved directive in
+-- VkPipelineRasterizationConservativeStateCreateInfoEXT.txt -
+-- include::{generated}\/validity\/structs\/VkPipelineRasterizationConservativeStateCreateInfoEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data PipelineRasterizationConservativeStateCreateInfoEXT = PipelineRasterizationConservativeStateCreateInfoEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PipelineRasterizationConservativeStateCreateInfoEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PipelineRasterizationConservativeStateCreateInfoEXT" "flags"
-  vkFlags :: PipelineRasterizationConservativeStateCreateFlagsEXT
+  flags :: PipelineRasterizationConservativeStateCreateFlagsEXT
   , -- No documentation found for Nested "PipelineRasterizationConservativeStateCreateInfoEXT" "conservativeRasterizationMode"
-  vkConservativeRasterizationMode :: ConservativeRasterizationModeEXT
+  conservativeRasterizationMode :: ConservativeRasterizationModeEXT
   , -- No documentation found for Nested "PipelineRasterizationConservativeStateCreateInfoEXT" "extraPrimitiveOverestimationSize"
-  vkExtraPrimitiveOverestimationSize :: CFloat
+  extraPrimitiveOverestimationSize :: CFloat
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPipelineRasterizationConservativeStateCreateInfoEXT' and
+-- marshal a 'PipelineRasterizationConservativeStateCreateInfoEXT' into it. The 'VkPipelineRasterizationConservativeStateCreateInfoEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPipelineRasterizationConservativeStateCreateInfoEXT :: PipelineRasterizationConservativeStateCreateInfoEXT -> (VkPipelineRasterizationConservativeStateCreateInfoEXT -> IO a) -> IO a
-withCStructPipelineRasterizationConservativeStateCreateInfoEXT from cont = maybeWith withSomeVkStruct (vkPNext (from :: PipelineRasterizationConservativeStateCreateInfoEXT)) (\pPNext -> cont (VkPipelineRasterizationConservativeStateCreateInfoEXT VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT pPNext (vkFlags (from :: PipelineRasterizationConservativeStateCreateInfoEXT)) (vkConservativeRasterizationMode (from :: PipelineRasterizationConservativeStateCreateInfoEXT)) (vkExtraPrimitiveOverestimationSize (from :: PipelineRasterizationConservativeStateCreateInfoEXT))))
+withCStructPipelineRasterizationConservativeStateCreateInfoEXT marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PipelineRasterizationConservativeStateCreateInfoEXT)) (\pPNext -> cont (VkPipelineRasterizationConservativeStateCreateInfoEXT VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT pPNext (flags (marshalled :: PipelineRasterizationConservativeStateCreateInfoEXT)) (conservativeRasterizationMode (marshalled :: PipelineRasterizationConservativeStateCreateInfoEXT)) (extraPrimitiveOverestimationSize (marshalled :: PipelineRasterizationConservativeStateCreateInfoEXT))))
+
+-- | A function to read a 'VkPipelineRasterizationConservativeStateCreateInfoEXT' and all additional
+-- structures in the pointer chain into a 'PipelineRasterizationConservativeStateCreateInfoEXT'.
 fromCStructPipelineRasterizationConservativeStateCreateInfoEXT :: VkPipelineRasterizationConservativeStateCreateInfoEXT -> IO PipelineRasterizationConservativeStateCreateInfoEXT
 fromCStructPipelineRasterizationConservativeStateCreateInfoEXT c = PipelineRasterizationConservativeStateCreateInfoEXT <$> -- Univalued Member elided
                                                                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPipelineRasterizationConservativeStateCreateInfoEXT)))
                                                                                                                        <*> pure (vkFlags (c :: VkPipelineRasterizationConservativeStateCreateInfoEXT))
                                                                                                                        <*> pure (vkConservativeRasterizationMode (c :: VkPipelineRasterizationConservativeStateCreateInfoEXT))
                                                                                                                        <*> pure (vkExtraPrimitiveOverestimationSize (c :: VkPipelineRasterizationConservativeStateCreateInfoEXT))
+
 instance Zero PipelineRasterizationConservativeStateCreateInfoEXT where
   zero = PipelineRasterizationConservativeStateCreateInfoEXT Nothing
                                                              zero
                                                              zero
                                                              zero
+

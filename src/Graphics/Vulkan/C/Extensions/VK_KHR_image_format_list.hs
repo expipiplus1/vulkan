@@ -40,7 +40,7 @@ import Graphics.Vulkan.C.Core10.Core
 -- = Description
 --
 -- If @viewFormatCount@ is zero, @pViewFormats@ is ignored and the image is
--- created as if the @VkImageFormatListCreateInfoKHR@ structure were not
+-- created as if the 'VkImageFormatListCreateInfoKHR' structure were not
 -- included in the @pNext@ list of
 -- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'.
 --
@@ -48,24 +48,22 @@ import Graphics.Vulkan.C.Core10.Core
 --
 -- -   If @viewFormatCount@ is not @0@, all of the formats in the
 --     @pViewFormats@ array /must/ be compatible with the format specified
---     in the @format@ field of @VkImageCreateInfo@, as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-compatibility compatibility table>.
+--     in the @format@ field of
+--     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo', as described in
+--     the
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-compatibility compatibility table>.
 --
--- -   If @VkImageCreateInfo@::@flags@ does not contain
---     @VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT@, @viewFormatCount@ /must/ be
---     @0@ or @1@.
+-- -   If 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@flags@ does
+--     not contain
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT',
+--     @viewFormatCount@ /must/ be @0@ or @1@.
 --
--- -   If @viewFormatCount@ is not @0@, @VkImageCreateInfo@::@format@
---     /must/ be in @pViewFormats@.
+-- -   If @viewFormatCount@ is not @0@,
+--     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@format@ /must/
+--     be in @pViewFormats@.
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR@
---
--- -   If @viewFormatCount@ is not @0@, @pViewFormats@ /must/ be a valid
---     pointer to an array of @viewFormatCount@ valid
---     'Graphics.Vulkan.C.Core10.Core.VkFormat' values
+-- Unresolved directive in VkImageFormatListCreateInfoKHR.txt -
+-- include::{generated}\/validity\/structs\/VkImageFormatListCreateInfoKHR.txt[]
 --
 -- = See Also
 --
@@ -96,16 +94,19 @@ instance Storable VkImageFormatListCreateInfoKHR where
                 *> poke (ptr `plusPtr` 24) (vkPViewFormats (poked :: VkImageFormatListCreateInfoKHR))
 
 instance Zero VkImageFormatListCreateInfoKHR where
-  zero = VkImageFormatListCreateInfoKHR zero
+  zero = VkImageFormatListCreateInfoKHR VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR
                                         zero
                                         zero
                                         zero
+
 -- No documentation found for TopLevel "VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME"
 pattern VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME = "VK_KHR_image_format_list"
+
 -- No documentation found for TopLevel "VK_KHR_IMAGE_FORMAT_LIST_SPEC_VERSION"
 pattern VK_KHR_IMAGE_FORMAT_LIST_SPEC_VERSION :: Integral a => a
 pattern VK_KHR_IMAGE_FORMAT_LIST_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR"
 pattern VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR = VkStructureType 1000147000

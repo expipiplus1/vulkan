@@ -21,4 +21,5 @@ instance Show SomeVkStruct
 instance Eq SomeVkStruct
 
 withSomeVkStruct :: SomeVkStruct -> (Ptr () -> IO a) -> IO a
+
 peekVkStruct :: Ptr SomeVkStruct -> IO SomeVkStruct

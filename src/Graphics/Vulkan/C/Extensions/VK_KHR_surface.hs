@@ -35,31 +35,21 @@ module Graphics.Vulkan.C.Extensions.VK_KHR_surface
   , pattern VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR
   , pattern VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR
   , VkSurfaceTransformFlagsKHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkDestroySurfaceKHR
-#endif
   , FN_vkDestroySurfaceKHR
   , PFN_vkDestroySurfaceKHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkGetPhysicalDeviceSurfaceCapabilitiesKHR
-#endif
+  , vkDestroySurfaceKHR
   , FN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR
   , PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkGetPhysicalDeviceSurfaceFormatsKHR
-#endif
+  , vkGetPhysicalDeviceSurfaceCapabilitiesKHR
   , FN_vkGetPhysicalDeviceSurfaceFormatsKHR
   , PFN_vkGetPhysicalDeviceSurfaceFormatsKHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkGetPhysicalDeviceSurfacePresentModesKHR
-#endif
+  , vkGetPhysicalDeviceSurfaceFormatsKHR
   , FN_vkGetPhysicalDeviceSurfacePresentModesKHR
   , PFN_vkGetPhysicalDeviceSurfacePresentModesKHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkGetPhysicalDeviceSurfaceSupportKHR
-#endif
+  , vkGetPhysicalDeviceSurfacePresentModesKHR
   , FN_vkGetPhysicalDeviceSurfaceSupportKHR
   , PFN_vkGetPhysicalDeviceSurfaceSupportKHR
+  , vkGetPhysicalDeviceSurfaceSupportKHR
   , pattern VK_ERROR_NATIVE_WINDOW_IN_USE_KHR
   , pattern VK_ERROR_SURFACE_LOST_KHR
   , pattern VK_KHR_SURFACE_EXTENSION_NAME
@@ -123,6 +113,9 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
   )
 import Graphics.Vulkan.C.Core10.Pipeline
   ( VkExtent2D(..)
+  )
+import Graphics.Vulkan.C.Dynamic
+  ( InstanceCmds(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -246,10 +239,11 @@ instance Read VkColorSpaceKHR where
                         )
                     )
 
--- | @VK_COLOR_SPACE_SRGB_NONLINEAR_KHR@ specifies support for the sRGB color
+-- | 'VK_COLOR_SPACE_SRGB_NONLINEAR_KHR' specifies support for the sRGB color
 -- space.
 pattern VK_COLOR_SPACE_SRGB_NONLINEAR_KHR :: VkColorSpaceKHR
 pattern VK_COLOR_SPACE_SRGB_NONLINEAR_KHR = VkColorSpaceKHR 0
+
 -- ** VkCompositeAlphaFlagBitsKHR
 
 -- | VkCompositeAlphaFlagBitsKHR - alpha compositing modes supported on a
@@ -285,20 +279,20 @@ instance Read VkCompositeAlphaFlagBitsKHR where
                         )
                     )
 
--- | @VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR@: The alpha channel, if it exists, of
+-- | 'VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR': The alpha channel, if it exists, of
 -- the images is ignored in the compositing process. Instead, the image is
 -- treated as if it has a constant alpha of 1.0.
 pattern VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR :: VkCompositeAlphaFlagBitsKHR
 pattern VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR = VkCompositeAlphaFlagBitsKHR 0x00000001
 
--- | @VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR@: The alpha channel, if it
+-- | 'VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR': The alpha channel, if it
 -- exists, of the images is respected in the compositing process. The
 -- non-alpha channels of the image are expected to already be multiplied by
 -- the alpha channel by the application.
 pattern VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR :: VkCompositeAlphaFlagBitsKHR
 pattern VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR = VkCompositeAlphaFlagBitsKHR 0x00000002
 
--- | @VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR@: The alpha channel, if it
+-- | 'VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR': The alpha channel, if it
 -- exists, of the images is respected in the compositing process. The
 -- non-alpha channels of the image are not expected to already be
 -- multiplied by the alpha channel by the application; instead, the
@@ -307,7 +301,7 @@ pattern VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR = VkCompositeAlphaFlagBitsKHR 
 pattern VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR :: VkCompositeAlphaFlagBitsKHR
 pattern VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR = VkCompositeAlphaFlagBitsKHR 0x00000004
 
--- | @VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR@: The way in which the presentation
+-- | 'VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR': The way in which the presentation
 -- engine treats the alpha channel in the images is unknown to the Vulkan
 -- API. Instead, the application is responsible for setting the composite
 -- alpha blending mode using native window system commands. If the
@@ -315,17 +309,19 @@ pattern VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR = VkCompositeAlphaFlagBitsKHR
 -- commands, then a platform-specific default will be used.
 pattern VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR :: VkCompositeAlphaFlagBitsKHR
 pattern VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR = VkCompositeAlphaFlagBitsKHR 0x00000008
+
 -- | VkCompositeAlphaFlagsKHR - Bitmask of VkCompositeAlphaFlagBitsKHR
 --
 -- = Description
 --
--- @VkCompositeAlphaFlagsKHR@ is a bitmask type for setting a mask of zero
+-- 'VkCompositeAlphaFlagsKHR' is a bitmask type for setting a mask of zero
 -- or more 'VkCompositeAlphaFlagBitsKHR'.
 --
 -- = See Also
 --
 -- No cross-references are available
 type VkCompositeAlphaFlagsKHR = VkCompositeAlphaFlagBitsKHR
+
 -- ** VkPresentModeKHR
 
 -- | VkPresentModeKHR - presentation mode supported for a surface
@@ -341,28 +337,28 @@ type VkCompositeAlphaFlagsKHR = VkCompositeAlphaFlagBitsKHR
 -- > +-----------------------------------+-----------------------------------+
 -- > | Presentation mode                 | Image usage flags                 |
 -- > +===================================+===================================+
--- > | @VK_PRESENT_MODE_IMMEDIATE_KHR@   | 'VkSurfaceCapabilitiesKHR'::@supp |
+-- > | 'VK_PRESENT_MODE_IMMEDIATE_KHR'   | 'VkSurfaceCapabilitiesKHR'::@supp |
 -- > |                                   | ortedUsageFlags@                  |
 -- > +-----------------------------------+-----------------------------------+
--- > | @VK_PRESENT_MODE_MAILBOX_KHR@     | 'VkSurfaceCapabilitiesKHR'::@supp |
+-- > | 'VK_PRESENT_MODE_MAILBOX_KHR'     | 'VkSurfaceCapabilitiesKHR'::@supp |
 -- > |                                   | ortedUsageFlags@                  |
 -- > +-----------------------------------+-----------------------------------+
--- > | @VK_PRESENT_MODE_FIFO_KHR@        | 'VkSurfaceCapabilitiesKHR'::@supp |
+-- > | 'VK_PRESENT_MODE_FIFO_KHR'        | 'VkSurfaceCapabilitiesKHR'::@supp |
 -- > |                                   | ortedUsageFlags@                  |
 -- > +-----------------------------------+-----------------------------------+
--- > | @VK_PRESENT_MODE_FIFO_RELAXED_KHR | 'VkSurfaceCapabilitiesKHR'::@supp |
--- > | @                                 | ortedUsageFlags@                  |
+-- > | 'VK_PRESENT_MODE_FIFO_RELAXED_KHR | 'VkSurfaceCapabilitiesKHR'::@supp |
+-- > | '                                 | ortedUsageFlags@                  |
 -- > +-----------------------------------+-----------------------------------+
--- > | @VK_PRESENT_MODE_SHARED_DEMAND_RE | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > | FRESH_KHR@                        | KHR_shared_presentable_image.VkSh |
--- > |                                   | aredPresentSurfaceCapabilitiesKHR |
--- > |                                   | '::@sharedPresentSupportedUsageFl |
+-- > | 'Graphics.Vulkan.C.Extensions.VK_ | 'Graphics.Vulkan.C.Extensions.VK_ |
+-- > | KHR_shared_presentable_image.VK_P | KHR_shared_presentable_image.VkSh |
+-- > | RESENT_MODE_SHARED_DEMAND_REFRESH | aredPresentSurfaceCapabilitiesKHR |
+-- > | _KHR'                             | '::@sharedPresentSupportedUsageFl |
 -- > |                                   | ags@                              |
 -- > +-----------------------------------+-----------------------------------+
--- > | @VK_PRESENT_MODE_SHARED_CONTINUOU | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > | S_REFRESH_KHR@                    | KHR_shared_presentable_image.VkSh |
--- > |                                   | aredPresentSurfaceCapabilitiesKHR |
--- > |                                   | '::@sharedPresentSupportedUsageFl |
+-- > | 'Graphics.Vulkan.C.Extensions.VK_ | 'Graphics.Vulkan.C.Extensions.VK_ |
+-- > | KHR_shared_presentable_image.VK_P | KHR_shared_presentable_image.VkSh |
+-- > | RESENT_MODE_SHARED_CONTINUOUS_REF | aredPresentSurfaceCapabilitiesKHR |
+-- > | RESH_KHR'                         | '::@sharedPresentSupportedUsageFl |
 -- > |                                   | ags@                              |
 -- > +-----------------------------------+-----------------------------------+
 -- >
@@ -370,10 +366,10 @@ type VkCompositeAlphaFlagsKHR = VkCompositeAlphaFlagBitsKHR
 --
 -- __Note__
 --
--- For reference, the mode indicated by @VK_PRESENT_MODE_FIFO_KHR@ is
+-- For reference, the mode indicated by 'VK_PRESENT_MODE_FIFO_KHR' is
 -- equivalent to the behavior of {wgl|glX|egl}SwapBuffers with a swap
 -- interval of 1, while the mode indicated by
--- @VK_PRESENT_MODE_FIFO_RELAXED_KHR@ is equivalent to the behavior of
+-- 'VK_PRESENT_MODE_FIFO_RELAXED_KHR' is equivalent to the behavior of
 -- {wgl|glX}SwapBuffers with a swap interval of -1 (from the
 -- {WGL|GLX}_EXT_swap_control_tear extensions).
 --
@@ -409,7 +405,7 @@ instance Read VkPresentModeKHR where
                         )
                     )
 
--- | @VK_PRESENT_MODE_IMMEDIATE_KHR@ specifies that the presentation engine
+-- | 'VK_PRESENT_MODE_IMMEDIATE_KHR' specifies that the presentation engine
 -- does not wait for a vertical blanking period to update the current
 -- image, meaning this mode /may/ result in visible tearing. No internal
 -- queuing of presentation requests is needed, as the requests are applied
@@ -417,7 +413,7 @@ instance Read VkPresentModeKHR where
 pattern VK_PRESENT_MODE_IMMEDIATE_KHR :: VkPresentModeKHR
 pattern VK_PRESENT_MODE_IMMEDIATE_KHR = VkPresentModeKHR 0
 
--- | @VK_PRESENT_MODE_MAILBOX_KHR@ specifies that the presentation engine
+-- | 'VK_PRESENT_MODE_MAILBOX_KHR' specifies that the presentation engine
 -- waits for the next vertical blanking period to update the current image.
 -- Tearing /cannot/ be observed. An internal single-entry queue is used to
 -- hold pending presentation requests. If the queue is full when a new
@@ -429,7 +425,7 @@ pattern VK_PRESENT_MODE_IMMEDIATE_KHR = VkPresentModeKHR 0
 pattern VK_PRESENT_MODE_MAILBOX_KHR :: VkPresentModeKHR
 pattern VK_PRESENT_MODE_MAILBOX_KHR = VkPresentModeKHR 1
 
--- | @VK_PRESENT_MODE_FIFO_KHR@ specifies that the presentation engine waits
+-- | 'VK_PRESENT_MODE_FIFO_KHR' specifies that the presentation engine waits
 -- for the next vertical blanking period to update the current image.
 -- Tearing /cannot/ be observed. An internal queue is used to hold pending
 -- presentation requests. New requests are appended to the end of the
@@ -440,7 +436,7 @@ pattern VK_PRESENT_MODE_MAILBOX_KHR = VkPresentModeKHR 1
 pattern VK_PRESENT_MODE_FIFO_KHR :: VkPresentModeKHR
 pattern VK_PRESENT_MODE_FIFO_KHR = VkPresentModeKHR 2
 
--- | @VK_PRESENT_MODE_FIFO_RELAXED_KHR@ specifies that the presentation
+-- | 'VK_PRESENT_MODE_FIFO_RELAXED_KHR' specifies that the presentation
 -- engine generally waits for the next vertical blanking period to update
 -- the current image. If a vertical blanking period has already passed
 -- since the last update of the current image then the presentation engine
@@ -456,6 +452,7 @@ pattern VK_PRESENT_MODE_FIFO_KHR = VkPresentModeKHR 2
 -- queue is non-empty.
 pattern VK_PRESENT_MODE_FIFO_RELAXED_KHR :: VkPresentModeKHR
 pattern VK_PRESENT_MODE_FIFO_RELAXED_KHR = VkPresentModeKHR 3
+
 -- | VkSurfaceCapabilitiesKHR - Structure describing capabilities of a
 -- surface
 --
@@ -464,15 +461,19 @@ pattern VK_PRESENT_MODE_FIFO_RELAXED_KHR = VkPresentModeKHR 3
 -- __Note__
 --
 -- Supported usage flags of a presentable image when using
--- @VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR@ or
--- @VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR@ presentation mode are
--- provided by
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image.VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR'
+-- or
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image.VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR'
+-- presentation mode are provided by
 -- 'Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image.VkSharedPresentSurfaceCapabilitiesKHR'::@sharedPresentSupportedUsageFlags@.
 --
 -- __Note__
 --
 -- Formulas such as min(N, @maxImageCount@) are not correct, since
 -- @maxImageCount@ /may/ be zero.
+--
+-- Unresolved directive in VkSurfaceCapabilitiesKHR.txt -
+-- include::{generated}\/validity\/structs\/VkSurfaceCapabilitiesKHR.txt[]
 --
 -- = See Also
 --
@@ -530,9 +531,10 @@ data VkSurfaceCapabilitiesKHR = VkSurfaceCapabilitiesKHR
   -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageUsageFlagBits'
   -- representing the ways the application /can/ use the presentable images
   -- of a swapchain created with 'VkPresentModeKHR' set to
-  -- @VK_PRESENT_MODE_IMMEDIATE_KHR@, @VK_PRESENT_MODE_MAILBOX_KHR@,
-  -- @VK_PRESENT_MODE_FIFO_KHR@ or @VK_PRESENT_MODE_FIFO_RELAXED_KHR@ for the
-  -- surface on the specified device. @VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT@
+  -- 'VK_PRESENT_MODE_IMMEDIATE_KHR', 'VK_PRESENT_MODE_MAILBOX_KHR',
+  -- 'VK_PRESENT_MODE_FIFO_KHR' or 'VK_PRESENT_MODE_FIFO_RELAXED_KHR' for the
+  -- surface on the specified device.
+  -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
   -- /must/ be included in the set but implementations /may/ support
   -- additional usages.
   vkSupportedUsageFlags :: VkImageUsageFlags
@@ -574,8 +576,14 @@ instance Zero VkSurfaceCapabilitiesKHR where
                                   zero
                                   zero
                                   zero
+
 -- | VkSurfaceFormatKHR - Structure describing a supported swapchain
 -- format-color space pair
+--
+-- = Description
+--
+-- Unresolved directive in VkSurfaceFormatKHR.txt -
+-- include::{generated}\/validity\/structs\/VkSurfaceFormatKHR.txt[]
 --
 -- = See Also
 --
@@ -601,16 +609,17 @@ instance Storable VkSurfaceFormatKHR where
 instance Zero VkSurfaceFormatKHR where
   zero = VkSurfaceFormatKHR zero
                             zero
+
 -- | Dummy data to tag the 'Ptr' with
 data VkSurfaceKHR_T
 -- | VkSurfaceKHR - Opaque handle to a surface object
 --
 -- = Description
 --
--- The @VK_KHR_surface@ extension declares the @VkSurfaceKHR@ object, and
--- provides a function for destroying @VkSurfaceKHR@ objects. Separate
+-- The @VK_KHR_surface@ extension declares the 'VkSurfaceKHR' object, and
+-- provides a function for destroying 'VkSurfaceKHR' objects. Separate
 -- platform-specific extensions each provide a function for creating a
--- @VkSurfaceKHR@ object for the respective platform. From the
+-- 'VkSurfaceKHR' object for the respective platform. From the
 -- application’s perspective this is an opaque handle, just like the
 -- handles of other Vulkan objects.
 --
@@ -618,6 +627,7 @@ data VkSurfaceKHR_T
 --
 -- No cross-references are available
 type VkSurfaceKHR = Ptr VkSurfaceKHR_T
+
 -- ** VkSurfaceTransformFlagBitsKHR
 
 -- | VkSurfaceTransformFlagBitsKHR - presentation transforms supported on a
@@ -659,66 +669,67 @@ instance Read VkSurfaceTransformFlagBitsKHR where
                         )
                     )
 
--- | @VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR@ specifies that image content is
+-- | 'VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR' specifies that image content is
 -- presented without being transformed.
 pattern VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR :: VkSurfaceTransformFlagBitsKHR
 pattern VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x00000001
 
--- | @VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR@ specifies that image content is
+-- | 'VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR' specifies that image content is
 -- rotated 90 degrees clockwise.
 pattern VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR :: VkSurfaceTransformFlagBitsKHR
 pattern VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x00000002
 
--- | @VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR@ specifies that image content
+-- | 'VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR' specifies that image content
 -- is rotated 180 degrees clockwise.
 pattern VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR :: VkSurfaceTransformFlagBitsKHR
 pattern VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x00000004
 
--- | @VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR@ specifies that image content
+-- | 'VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR' specifies that image content
 -- is rotated 270 degrees clockwise.
 pattern VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR :: VkSurfaceTransformFlagBitsKHR
 pattern VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x00000008
 
--- | @VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR@ specifies that image
+-- | 'VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR' specifies that image
 -- content is mirrored horizontally.
 pattern VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR :: VkSurfaceTransformFlagBitsKHR
 pattern VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x00000010
 
--- | @VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR@ specifies
+-- | 'VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR' specifies
 -- that image content is mirrored horizontally, then rotated 90 degrees
 -- clockwise.
 pattern VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR :: VkSurfaceTransformFlagBitsKHR
 pattern VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x00000020
 
--- | @VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR@ specifies
+-- | 'VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR' specifies
 -- that image content is mirrored horizontally, then rotated 180 degrees
 -- clockwise.
 pattern VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR :: VkSurfaceTransformFlagBitsKHR
 pattern VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x00000040
 
--- | @VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR@ specifies
+-- | 'VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR' specifies
 -- that image content is mirrored horizontally, then rotated 270 degrees
 -- clockwise.
 pattern VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR :: VkSurfaceTransformFlagBitsKHR
 pattern VK_SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x00000080
 
--- | @VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR@ specifies that the presentation
+-- | 'VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR' specifies that the presentation
 -- transform is not specified, and is instead determined by
 -- platform-specific considerations and mechanisms outside Vulkan.
 pattern VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR :: VkSurfaceTransformFlagBitsKHR
 pattern VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR = VkSurfaceTransformFlagBitsKHR 0x00000100
+
 -- | VkSurfaceTransformFlagsKHR - Bitmask of VkSurfaceTransformFlagBitsKHR
 --
 -- = Description
 --
--- @VkSurfaceTransformFlagsKHR@ is a bitmask type for setting a mask of
+-- 'VkSurfaceTransformFlagsKHR' is a bitmask type for setting a mask of
 -- zero or more 'VkSurfaceTransformFlagBitsKHR'.
 --
 -- = See Also
 --
 -- No cross-references are available
 type VkSurfaceTransformFlagsKHR = VkSurfaceTransformFlagBitsKHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkDestroySurfaceKHR - Destroy a VkSurfaceKHR object
 --
 -- = Parameters
@@ -730,56 +741,56 @@ type VkSurfaceTransformFlagsKHR = VkSurfaceTransformFlagBitsKHR
 -- -   @pAllocator@ is the allocator used for host memory allocated for the
 --     surface object when there is no more specific allocator available
 --     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
 --
 -- = Description
 --
--- Destroying a @VkSurfaceKHR@ merely severs the connection between Vulkan
+-- Destroying a 'VkSurfaceKHR' merely severs the connection between Vulkan
 -- and the native surface, and does not imply destroying the native
 -- surface, closing a window, or similar behavior.
 --
 -- == Valid Usage
 --
--- -   All @VkSwapchainKHR@ objects created for @surface@ /must/ have been
---     destroyed prior to destroying @surface@
+-- -   All 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
+--     objects created for @surface@ /must/ have been destroyed prior to
+--     destroying @surface@
 --
--- -   If @VkAllocationCallbacks@ were provided when @surface@ was created,
---     a compatible set of callbacks /must/ be provided here
+-- -   If
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     were provided when @surface@ was created, a compatible set of
+--     callbacks /must/ be provided here
 --
--- -   If no @VkAllocationCallbacks@ were provided when @surface@ was
---     created, @pAllocator@ /must/ be @NULL@
+-- -   If no
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     were provided when @surface@ was created, @pAllocator@ /must/ be
+--     @NULL@
 --
--- == Valid Usage (Implicit)
---
--- -   @instance@ /must/ be a valid @VkInstance@ handle
---
--- -   If @surface@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @surface@
---     /must/ be a valid @VkSurfaceKHR@ handle
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
---
--- -   If @surface@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @instance@
---
--- == Host Synchronization
---
--- -   Host access to @surface@ /must/ be externally synchronized
+-- Unresolved directive in vkDestroySurfaceKHR.txt -
+-- include::{generated}\/validity\/protos\/vkDestroySurfaceKHR.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkDestroySurfaceKHR" vkDestroySurfaceKHR :: ("instance" ::: VkInstance) -> ("surface" ::: VkSurfaceKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
-
+#else
+vkDestroySurfaceKHR :: InstanceCmds -> ("instance" ::: VkInstance) -> ("surface" ::: VkSurfaceKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+vkDestroySurfaceKHR deviceCmds = mkVkDestroySurfaceKHR (pVkDestroySurfaceKHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkDestroySurfaceKHR
+  :: FunPtr (("instance" ::: VkInstance) -> ("surface" ::: VkSurfaceKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()) -> (("instance" ::: VkInstance) -> ("surface" ::: VkSurfaceKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ())
+#endif
+
 type FN_vkDestroySurfaceKHR = ("instance" ::: VkInstance) -> ("surface" ::: VkSurfaceKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 type PFN_vkDestroySurfaceKHR = FunPtr FN_vkDestroySurfaceKHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkGetPhysicalDeviceSurfaceCapabilitiesKHR - Query surface capabilities
 --
 -- = Parameters
@@ -794,43 +805,34 @@ type PFN_vkDestroySurfaceKHR = FunPtr FN_vkDestroySurfaceKHR
 --     'VkSurfaceCapabilitiesKHR' structure in which the capabilities are
 --     returned.
 --
--- == Valid Usage (Implicit)
+-- = Description
 --
--- -   @physicalDevice@ /must/ be a valid @VkPhysicalDevice@ handle
---
--- -   @surface@ /must/ be a valid @VkSurfaceKHR@ handle
---
--- -   @pSurfaceCapabilities@ /must/ be a valid pointer to a
---     @VkSurfaceCapabilitiesKHR@ structure
---
--- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
---     allocated, or retrieved from the same @VkInstance@
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
---
---     -   @VK_ERROR_SURFACE_LOST_KHR@
+-- Unresolved directive in vkGetPhysicalDeviceSurfaceCapabilitiesKHR.txt -
+-- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceSurfaceCapabilitiesKHR.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetPhysicalDeviceSurfaceCapabilitiesKHR" vkGetPhysicalDeviceSurfaceCapabilitiesKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilitiesKHR) -> IO VkResult
-
+#else
+vkGetPhysicalDeviceSurfaceCapabilitiesKHR :: InstanceCmds -> ("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilitiesKHR) -> IO VkResult
+vkGetPhysicalDeviceSurfaceCapabilitiesKHR deviceCmds = mkVkGetPhysicalDeviceSurfaceCapabilitiesKHR (pVkGetPhysicalDeviceSurfaceCapabilitiesKHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetPhysicalDeviceSurfaceCapabilitiesKHR
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilitiesKHR) -> IO VkResult) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilitiesKHR) -> IO VkResult)
+#endif
+
 type FN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR = ("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilitiesKHR) -> IO VkResult
 type PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR = FunPtr FN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkGetPhysicalDeviceSurfaceFormatsKHR - Query color formats supported by
 -- surface
 --
@@ -846,7 +848,7 @@ type PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR = FunPtr FN_vkGetPhysicalDevi
 --     number of format pairs available or queried, as described below.
 --
 -- -   @pSurfaceFormats@ is either @NULL@ or a pointer to an array of
---     @VkSurfaceFormatKHR@ structures.
+--     'VkSurfaceFormatKHR' structures.
 --
 -- = Description
 --
@@ -860,54 +862,37 @@ type PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR = FunPtr FN_vkGetPhysicalDevi
 -- @pSurfaceFormatCount@ is less than the number of format pairs supported,
 -- at most @pSurfaceFormatCount@ structures will be written. If
 -- @pSurfaceFormatCount@ is smaller than the number of format pairs
--- supported for the given @surface@, @VK_INCOMPLETE@ will be returned
--- instead of @VK_SUCCESS@ to indicate that not all the available values
--- were returned.
+-- supported for the given @surface@,
+-- 'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE' will be returned instead
+-- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS' to indicate that not all
+-- the available values were returned.
 --
--- == Valid Usage (Implicit)
---
--- -   @physicalDevice@ /must/ be a valid @VkPhysicalDevice@ handle
---
--- -   @surface@ /must/ be a valid @VkSurfaceKHR@ handle
---
--- -   @pSurfaceFormatCount@ /must/ be a valid pointer to a @uint32_t@
---     value
---
--- -   If the value referenced by @pSurfaceFormatCount@ is not @0@, and
---     @pSurfaceFormats@ is not @NULL@, @pSurfaceFormats@ /must/ be a valid
---     pointer to an array of @pSurfaceFormatCount@ @VkSurfaceFormatKHR@
---     structures
---
--- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
---     allocated, or retrieved from the same @VkInstance@
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
---     -   @VK_INCOMPLETE@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
---
---     -   @VK_ERROR_SURFACE_LOST_KHR@
+-- Unresolved directive in vkGetPhysicalDeviceSurfaceFormatsKHR.txt -
+-- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceSurfaceFormatsKHR.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetPhysicalDeviceSurfaceFormatsKHR" vkGetPhysicalDeviceSurfaceFormatsKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pSurfaceFormatCount" ::: Ptr Word32) -> ("pSurfaceFormats" ::: Ptr VkSurfaceFormatKHR) -> IO VkResult
-
+#else
+vkGetPhysicalDeviceSurfaceFormatsKHR :: InstanceCmds -> ("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pSurfaceFormatCount" ::: Ptr Word32) -> ("pSurfaceFormats" ::: Ptr VkSurfaceFormatKHR) -> IO VkResult
+vkGetPhysicalDeviceSurfaceFormatsKHR deviceCmds = mkVkGetPhysicalDeviceSurfaceFormatsKHR (pVkGetPhysicalDeviceSurfaceFormatsKHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetPhysicalDeviceSurfaceFormatsKHR
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pSurfaceFormatCount" ::: Ptr Word32) -> ("pSurfaceFormats" ::: Ptr VkSurfaceFormatKHR) -> IO VkResult) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pSurfaceFormatCount" ::: Ptr Word32) -> ("pSurfaceFormats" ::: Ptr VkSurfaceFormatKHR) -> IO VkResult)
+#endif
+
 type FN_vkGetPhysicalDeviceSurfaceFormatsKHR = ("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pSurfaceFormatCount" ::: Ptr Word32) -> ("pSurfaceFormats" ::: Ptr VkSurfaceFormatKHR) -> IO VkResult
 type PFN_vkGetPhysicalDeviceSurfaceFormatsKHR = FunPtr FN_vkGetPhysicalDeviceSurfaceFormatsKHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkGetPhysicalDeviceSurfacePresentModesKHR - Query supported presentation
 -- modes
 --
@@ -937,51 +922,36 @@ type PFN_vkGetPhysicalDeviceSurfaceFormatsKHR = FunPtr FN_vkGetPhysicalDeviceSur
 -- than the number of presentation modes supported, at most
 -- @pPresentModeCount@ values will be written. If @pPresentModeCount@ is
 -- smaller than the number of presentation modes supported for the given
--- @surface@, @VK_INCOMPLETE@ will be returned instead of @VK_SUCCESS@ to
+-- @surface@, 'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE' will be
+-- returned instead of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS' to
 -- indicate that not all the available values were returned.
 --
--- == Valid Usage (Implicit)
---
--- -   @physicalDevice@ /must/ be a valid @VkPhysicalDevice@ handle
---
--- -   @surface@ /must/ be a valid @VkSurfaceKHR@ handle
---
--- -   @pPresentModeCount@ /must/ be a valid pointer to a @uint32_t@ value
---
--- -   If the value referenced by @pPresentModeCount@ is not @0@, and
---     @pPresentModes@ is not @NULL@, @pPresentModes@ /must/ be a valid
---     pointer to an array of @pPresentModeCount@ 'VkPresentModeKHR' values
---
--- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
---     allocated, or retrieved from the same @VkInstance@
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
---     -   @VK_INCOMPLETE@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
---
---     -   @VK_ERROR_SURFACE_LOST_KHR@
+-- Unresolved directive in vkGetPhysicalDeviceSurfacePresentModesKHR.txt -
+-- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceSurfacePresentModesKHR.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetPhysicalDeviceSurfacePresentModesKHR" vkGetPhysicalDeviceSurfacePresentModesKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pPresentModeCount" ::: Ptr Word32) -> ("pPresentModes" ::: Ptr VkPresentModeKHR) -> IO VkResult
-
+#else
+vkGetPhysicalDeviceSurfacePresentModesKHR :: InstanceCmds -> ("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pPresentModeCount" ::: Ptr Word32) -> ("pPresentModes" ::: Ptr VkPresentModeKHR) -> IO VkResult
+vkGetPhysicalDeviceSurfacePresentModesKHR deviceCmds = mkVkGetPhysicalDeviceSurfacePresentModesKHR (pVkGetPhysicalDeviceSurfacePresentModesKHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetPhysicalDeviceSurfacePresentModesKHR
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pPresentModeCount" ::: Ptr Word32) -> ("pPresentModes" ::: Ptr VkPresentModeKHR) -> IO VkResult) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pPresentModeCount" ::: Ptr Word32) -> ("pPresentModes" ::: Ptr VkPresentModeKHR) -> IO VkResult)
+#endif
+
 type FN_vkGetPhysicalDeviceSurfacePresentModesKHR = ("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pPresentModeCount" ::: Ptr Word32) -> ("pPresentModes" ::: Ptr VkPresentModeKHR) -> IO VkResult
 type PFN_vkGetPhysicalDeviceSurfacePresentModesKHR = FunPtr FN_vkGetPhysicalDeviceSurfacePresentModesKHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkGetPhysicalDeviceSurfaceSupportKHR - Query if presentation is
 -- supported
 --
@@ -993,64 +963,57 @@ type PFN_vkGetPhysicalDeviceSurfacePresentModesKHR = FunPtr FN_vkGetPhysicalDevi
 --
 -- -   @surface@ is the surface.
 --
--- -   @pSupported@ is a pointer to a @VkBool32@, which is set to @VK_TRUE@
---     to indicate support, and @VK_FALSE@ otherwise.
+-- -   @pSupported@ is a pointer to a
+--     'Graphics.Vulkan.C.Core10.Core.VkBool32', which is set to
+--     'Graphics.Vulkan.C.Core10.Core.VK_TRUE' to indicate support, and
+--     'Graphics.Vulkan.C.Core10.Core.VK_FALSE' otherwise.
 --
 -- == Valid Usage
 --
--- -   @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
---     returned by @vkGetPhysicalDeviceQueueFamilyProperties@ for the given
---     @physicalDevice@
---
--- == Valid Usage (Implicit)
---
--- -   @physicalDevice@ /must/ be a valid @VkPhysicalDevice@ handle
---
--- -   @surface@ /must/ be a valid @VkSurfaceKHR@ handle
---
--- -   @pSupported@ /must/ be a valid pointer to a @VkBool32@ value
---
--- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
---     allocated, or retrieved from the same @VkInstance@
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
---
---     -   @VK_ERROR_SURFACE_LOST_KHR@
+-- Unresolved directive in vkGetPhysicalDeviceSurfaceSupportKHR.txt -
+-- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceSurfaceSupportKHR.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetPhysicalDeviceSurfaceSupportKHR" vkGetPhysicalDeviceSurfaceSupportKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("surface" ::: VkSurfaceKHR) -> ("pSupported" ::: Ptr VkBool32) -> IO VkResult
-
+#else
+vkGetPhysicalDeviceSurfaceSupportKHR :: InstanceCmds -> ("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("surface" ::: VkSurfaceKHR) -> ("pSupported" ::: Ptr VkBool32) -> IO VkResult
+vkGetPhysicalDeviceSurfaceSupportKHR deviceCmds = mkVkGetPhysicalDeviceSurfaceSupportKHR (pVkGetPhysicalDeviceSurfaceSupportKHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetPhysicalDeviceSurfaceSupportKHR
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("surface" ::: VkSurfaceKHR) -> ("pSupported" ::: Ptr VkBool32) -> IO VkResult) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("surface" ::: VkSurfaceKHR) -> ("pSupported" ::: Ptr VkBool32) -> IO VkResult)
+#endif
+
 type FN_vkGetPhysicalDeviceSurfaceSupportKHR = ("physicalDevice" ::: VkPhysicalDevice) -> ("queueFamilyIndex" ::: Word32) -> ("surface" ::: VkSurfaceKHR) -> ("pSupported" ::: Ptr VkBool32) -> IO VkResult
 type PFN_vkGetPhysicalDeviceSurfaceSupportKHR = FunPtr FN_vkGetPhysicalDeviceSurfaceSupportKHR
--- | @VK_ERROR_NATIVE_WINDOW_IN_USE_KHR@ The requested window is already in
+
+-- | 'VK_ERROR_NATIVE_WINDOW_IN_USE_KHR' The requested window is already in
 -- use by Vulkan or another API in a manner which prevents it from being
 -- used again.
 pattern VK_ERROR_NATIVE_WINDOW_IN_USE_KHR :: VkResult
 pattern VK_ERROR_NATIVE_WINDOW_IN_USE_KHR = VkResult (-1000000001)
--- | @VK_ERROR_SURFACE_LOST_KHR@ A surface is no longer available.
+
+-- | 'VK_ERROR_SURFACE_LOST_KHR' A surface is no longer available.
 pattern VK_ERROR_SURFACE_LOST_KHR :: VkResult
 pattern VK_ERROR_SURFACE_LOST_KHR = VkResult (-1000000000)
+
 -- No documentation found for TopLevel "VK_KHR_SURFACE_EXTENSION_NAME"
 pattern VK_KHR_SURFACE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_SURFACE_EXTENSION_NAME = "VK_KHR_surface"
+
 -- No documentation found for TopLevel "VK_KHR_SURFACE_SPEC_VERSION"
 pattern VK_KHR_SURFACE_SPEC_VERSION :: Integral a => a
 pattern VK_KHR_SURFACE_SPEC_VERSION = 25
+
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_SURFACE_KHR"
 pattern VK_OBJECT_TYPE_SURFACE_KHR :: VkObjectType
 pattern VK_OBJECT_TYPE_SURFACE_KHR = VkObjectType 1000000000

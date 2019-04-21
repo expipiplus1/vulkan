@@ -83,73 +83,216 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map
   )
 
 
--- No documentation found for TopLevel "PhysicalDeviceFragmentDensityMapFeaturesEXT"
+
+-- | VkPhysicalDeviceFragmentDensityMapFeaturesEXT - Structure describing
+-- fragment density map features that can be supported by an implementation
+--
+-- = Members
+--
+-- The members of the
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VkPhysicalDeviceFragmentDensityMapFeaturesEXT'
+-- structure describe the following features:
+--
+-- = Description
+--
+-- If the
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VkPhysicalDeviceFragmentDensityMapFeaturesEXT'
+-- structure is included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2',
+-- it is filled with values indicating whether each feature is supported.
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VkPhysicalDeviceFragmentDensityMapFeaturesEXT'
+-- /can/ also be used in @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable the
+-- features.
+--
+-- Unresolved directive in
+-- VkPhysicalDeviceFragmentDensityMapFeaturesEXT.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceFragmentDensityMapFeaturesEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data PhysicalDeviceFragmentDensityMapFeaturesEXT = PhysicalDeviceFragmentDensityMapFeaturesEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceFragmentDensityMapFeaturesEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDeviceFragmentDensityMapFeaturesEXT" "fragmentDensityMap"
-  vkFragmentDensityMap :: Bool
+  fragmentDensityMap :: Bool
   , -- No documentation found for Nested "PhysicalDeviceFragmentDensityMapFeaturesEXT" "fragmentDensityMapDynamic"
-  vkFragmentDensityMapDynamic :: Bool
+  fragmentDensityMapDynamic :: Bool
   , -- No documentation found for Nested "PhysicalDeviceFragmentDensityMapFeaturesEXT" "fragmentDensityMapNonSubsampledImages"
-  vkFragmentDensityMapNonSubsampledImages :: Bool
+  fragmentDensityMapNonSubsampledImages :: Bool
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPhysicalDeviceFragmentDensityMapFeaturesEXT' and
+-- marshal a 'PhysicalDeviceFragmentDensityMapFeaturesEXT' into it. The 'VkPhysicalDeviceFragmentDensityMapFeaturesEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPhysicalDeviceFragmentDensityMapFeaturesEXT :: PhysicalDeviceFragmentDensityMapFeaturesEXT -> (VkPhysicalDeviceFragmentDensityMapFeaturesEXT -> IO a) -> IO a
-withCStructPhysicalDeviceFragmentDensityMapFeaturesEXT from cont = maybeWith withSomeVkStruct (vkPNext (from :: PhysicalDeviceFragmentDensityMapFeaturesEXT)) (\pPNext -> cont (VkPhysicalDeviceFragmentDensityMapFeaturesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT pPNext (boolToBool32 (vkFragmentDensityMap (from :: PhysicalDeviceFragmentDensityMapFeaturesEXT))) (boolToBool32 (vkFragmentDensityMapDynamic (from :: PhysicalDeviceFragmentDensityMapFeaturesEXT))) (boolToBool32 (vkFragmentDensityMapNonSubsampledImages (from :: PhysicalDeviceFragmentDensityMapFeaturesEXT)))))
+withCStructPhysicalDeviceFragmentDensityMapFeaturesEXT marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PhysicalDeviceFragmentDensityMapFeaturesEXT)) (\pPNext -> cont (VkPhysicalDeviceFragmentDensityMapFeaturesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT pPNext (boolToBool32 (fragmentDensityMap (marshalled :: PhysicalDeviceFragmentDensityMapFeaturesEXT))) (boolToBool32 (fragmentDensityMapDynamic (marshalled :: PhysicalDeviceFragmentDensityMapFeaturesEXT))) (boolToBool32 (fragmentDensityMapNonSubsampledImages (marshalled :: PhysicalDeviceFragmentDensityMapFeaturesEXT)))))
+
+-- | A function to read a 'VkPhysicalDeviceFragmentDensityMapFeaturesEXT' and all additional
+-- structures in the pointer chain into a 'PhysicalDeviceFragmentDensityMapFeaturesEXT'.
 fromCStructPhysicalDeviceFragmentDensityMapFeaturesEXT :: VkPhysicalDeviceFragmentDensityMapFeaturesEXT -> IO PhysicalDeviceFragmentDensityMapFeaturesEXT
 fromCStructPhysicalDeviceFragmentDensityMapFeaturesEXT c = PhysicalDeviceFragmentDensityMapFeaturesEXT <$> -- Univalued Member elided
                                                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceFragmentDensityMapFeaturesEXT)))
                                                                                                        <*> pure (bool32ToBool (vkFragmentDensityMap (c :: VkPhysicalDeviceFragmentDensityMapFeaturesEXT)))
                                                                                                        <*> pure (bool32ToBool (vkFragmentDensityMapDynamic (c :: VkPhysicalDeviceFragmentDensityMapFeaturesEXT)))
                                                                                                        <*> pure (bool32ToBool (vkFragmentDensityMapNonSubsampledImages (c :: VkPhysicalDeviceFragmentDensityMapFeaturesEXT)))
+
 instance Zero PhysicalDeviceFragmentDensityMapFeaturesEXT where
   zero = PhysicalDeviceFragmentDensityMapFeaturesEXT Nothing
                                                      False
                                                      False
                                                      False
--- No documentation found for TopLevel "PhysicalDeviceFragmentDensityMapPropertiesEXT"
+
+
+
+-- | VkPhysicalDeviceFragmentDensityMapPropertiesEXT - Structure describing
+-- fragment density map properties that can be supported by an
+-- implementation
+--
+-- = Members
+--
+-- The members of the
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VkPhysicalDeviceFragmentDensityMapPropertiesEXT'
+-- structure describe the following implementation-dependent limits:
+--
+-- = Description
+--
+-- Unresolved directive in
+-- VkPhysicalDeviceFragmentDensityMapPropertiesEXT.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceFragmentDensityMapPropertiesEXT.txt[]
+--
+-- If the
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VkPhysicalDeviceFragmentDensityMapPropertiesEXT'
+-- structure is included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2KHR',
+-- it is filled with the implementation-dependent limits and properties.
+--
+-- = See Also
+--
+-- No cross-references are available
 data PhysicalDeviceFragmentDensityMapPropertiesEXT = PhysicalDeviceFragmentDensityMapPropertiesEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceFragmentDensityMapPropertiesEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDeviceFragmentDensityMapPropertiesEXT" "minFragmentDensityTexelSize"
-  vkMinFragmentDensityTexelSize :: Extent2D
+  minFragmentDensityTexelSize :: Extent2D
   , -- No documentation found for Nested "PhysicalDeviceFragmentDensityMapPropertiesEXT" "maxFragmentDensityTexelSize"
-  vkMaxFragmentDensityTexelSize :: Extent2D
+  maxFragmentDensityTexelSize :: Extent2D
   , -- No documentation found for Nested "PhysicalDeviceFragmentDensityMapPropertiesEXT" "fragmentDensityInvocations"
-  vkFragmentDensityInvocations :: Bool
+  fragmentDensityInvocations :: Bool
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPhysicalDeviceFragmentDensityMapPropertiesEXT' and
+-- marshal a 'PhysicalDeviceFragmentDensityMapPropertiesEXT' into it. The 'VkPhysicalDeviceFragmentDensityMapPropertiesEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPhysicalDeviceFragmentDensityMapPropertiesEXT :: PhysicalDeviceFragmentDensityMapPropertiesEXT -> (VkPhysicalDeviceFragmentDensityMapPropertiesEXT -> IO a) -> IO a
-withCStructPhysicalDeviceFragmentDensityMapPropertiesEXT from cont = withCStructExtent2D (vkMaxFragmentDensityTexelSize (from :: PhysicalDeviceFragmentDensityMapPropertiesEXT)) (\maxFragmentDensityTexelSize -> withCStructExtent2D (vkMinFragmentDensityTexelSize (from :: PhysicalDeviceFragmentDensityMapPropertiesEXT)) (\minFragmentDensityTexelSize -> maybeWith withSomeVkStruct (vkPNext (from :: PhysicalDeviceFragmentDensityMapPropertiesEXT)) (\pPNext -> cont (VkPhysicalDeviceFragmentDensityMapPropertiesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT pPNext minFragmentDensityTexelSize maxFragmentDensityTexelSize (boolToBool32 (vkFragmentDensityInvocations (from :: PhysicalDeviceFragmentDensityMapPropertiesEXT)))))))
+withCStructPhysicalDeviceFragmentDensityMapPropertiesEXT marshalled cont = withCStructExtent2D (maxFragmentDensityTexelSize (marshalled :: PhysicalDeviceFragmentDensityMapPropertiesEXT)) (\maxFragmentDensityTexelSize'' -> withCStructExtent2D (minFragmentDensityTexelSize (marshalled :: PhysicalDeviceFragmentDensityMapPropertiesEXT)) (\minFragmentDensityTexelSize'' -> maybeWith withSomeVkStruct (next (marshalled :: PhysicalDeviceFragmentDensityMapPropertiesEXT)) (\pPNext -> cont (VkPhysicalDeviceFragmentDensityMapPropertiesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT pPNext minFragmentDensityTexelSize'' maxFragmentDensityTexelSize'' (boolToBool32 (fragmentDensityInvocations (marshalled :: PhysicalDeviceFragmentDensityMapPropertiesEXT)))))))
+
+-- | A function to read a 'VkPhysicalDeviceFragmentDensityMapPropertiesEXT' and all additional
+-- structures in the pointer chain into a 'PhysicalDeviceFragmentDensityMapPropertiesEXT'.
 fromCStructPhysicalDeviceFragmentDensityMapPropertiesEXT :: VkPhysicalDeviceFragmentDensityMapPropertiesEXT -> IO PhysicalDeviceFragmentDensityMapPropertiesEXT
 fromCStructPhysicalDeviceFragmentDensityMapPropertiesEXT c = PhysicalDeviceFragmentDensityMapPropertiesEXT <$> -- Univalued Member elided
                                                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceFragmentDensityMapPropertiesEXT)))
                                                                                                            <*> (fromCStructExtent2D (vkMinFragmentDensityTexelSize (c :: VkPhysicalDeviceFragmentDensityMapPropertiesEXT)))
                                                                                                            <*> (fromCStructExtent2D (vkMaxFragmentDensityTexelSize (c :: VkPhysicalDeviceFragmentDensityMapPropertiesEXT)))
                                                                                                            <*> pure (bool32ToBool (vkFragmentDensityInvocations (c :: VkPhysicalDeviceFragmentDensityMapPropertiesEXT)))
+
 instance Zero PhysicalDeviceFragmentDensityMapPropertiesEXT where
   zero = PhysicalDeviceFragmentDensityMapPropertiesEXT Nothing
                                                        zero
                                                        zero
                                                        False
--- No documentation found for TopLevel "RenderPassFragmentDensityMapCreateInfoEXT"
+
+
+
+-- | VkRenderPassFragmentDensityMapCreateInfoEXT - Structure containing
+-- fragment density map attachment for render pass
+--
+-- = Description
+--
+-- The fragment density map attachment is read at an
+-- implementation-dependent time either by the host during
+-- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBeginRenderPass' if
+-- the attachment’s image view was not created with @flags@ containing
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT',
+-- or by the device when drawing commands in the renderpass execute
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'.
+--
+-- If this structure is not present, it is as if
+-- @fragmentDensityMapAttachment@ was given as
+-- 'Graphics.Vulkan.C.Core10.Constants.VK_ATTACHMENT_UNUSED'.
+--
+-- == Valid Usage
+--
+-- -   If @fragmentDensityMapAttachment@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_ATTACHMENT_UNUSED',
+--     @fragmentDensityMapAttachment@ /must/ be less than
+--     'Graphics.Vulkan.C.Core10.Pass.VkRenderPassCreateInfo'::@attachmentCount@
+--
+-- -   If @fragmentDensityMapAttachment@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_ATTACHMENT_UNUSED',
+--     @fragmentDensityMapAttachment@ /must/ not be an element of
+--     'Graphics.Vulkan.C.Core10.Pass.VkSubpassDescription'::@pInputAttachments@,
+--     'Graphics.Vulkan.C.Core10.Pass.VkSubpassDescription'::@pColorAttachments@,
+--     'Graphics.Vulkan.C.Core10.Pass.VkSubpassDescription'::@pResolveAttachments@,
+--     'Graphics.Vulkan.C.Core10.Pass.VkSubpassDescription'::@pDepthStencilAttachment@,
+--     or
+--     'Graphics.Vulkan.C.Core10.Pass.VkSubpassDescription'::@pPreserveAttachments@
+--     for any subpass
+--
+-- -   If @fragmentDensityMapAttachment@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_ATTACHMENT_UNUSED', @layout@
+--     /must/ be equal to
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT',
+--     or 'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_GENERAL'
+--
+-- -   If @fragmentDensityMapAttachment@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_ATTACHMENT_UNUSED',
+--     @fragmentDensityMapAttachment@ /must/ reference an attachment with a
+--     @loadOp@ equal to
+--     'Graphics.Vulkan.C.Core10.Pass.VK_ATTACHMENT_LOAD_OP_LOAD' or
+--     'Graphics.Vulkan.C.Core10.Pass.VK_ATTACHMENT_LOAD_OP_DONT_CARE'.
+--
+-- -   If @fragmentDensityMapAttachment@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_ATTACHMENT_UNUSED',
+--     @fragmentDensityMapAttachment@ /must/ reference an attachment with a
+--     @storeOp@ equal to
+--     'Graphics.Vulkan.C.Core10.Pass.VK_ATTACHMENT_STORE_OP_DONT_CARE'.
+--
+-- Unresolved directive in VkRenderPassFragmentDensityMapCreateInfoEXT.txt
+-- -
+-- include::{generated}\/validity\/structs\/VkRenderPassFragmentDensityMapCreateInfoEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data RenderPassFragmentDensityMapCreateInfoEXT = RenderPassFragmentDensityMapCreateInfoEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "RenderPassFragmentDensityMapCreateInfoEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "RenderPassFragmentDensityMapCreateInfoEXT" "fragmentDensityMapAttachment"
-  vkFragmentDensityMapAttachment :: AttachmentReference
+  fragmentDensityMapAttachment :: AttachmentReference
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkRenderPassFragmentDensityMapCreateInfoEXT' and
+-- marshal a 'RenderPassFragmentDensityMapCreateInfoEXT' into it. The 'VkRenderPassFragmentDensityMapCreateInfoEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructRenderPassFragmentDensityMapCreateInfoEXT :: RenderPassFragmentDensityMapCreateInfoEXT -> (VkRenderPassFragmentDensityMapCreateInfoEXT -> IO a) -> IO a
-withCStructRenderPassFragmentDensityMapCreateInfoEXT from cont = withCStructAttachmentReference (vkFragmentDensityMapAttachment (from :: RenderPassFragmentDensityMapCreateInfoEXT)) (\fragmentDensityMapAttachment -> maybeWith withSomeVkStruct (vkPNext (from :: RenderPassFragmentDensityMapCreateInfoEXT)) (\pPNext -> cont (VkRenderPassFragmentDensityMapCreateInfoEXT VK_STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT pPNext fragmentDensityMapAttachment)))
+withCStructRenderPassFragmentDensityMapCreateInfoEXT marshalled cont = withCStructAttachmentReference (fragmentDensityMapAttachment (marshalled :: RenderPassFragmentDensityMapCreateInfoEXT)) (\fragmentDensityMapAttachment'' -> maybeWith withSomeVkStruct (next (marshalled :: RenderPassFragmentDensityMapCreateInfoEXT)) (\pPNext -> cont (VkRenderPassFragmentDensityMapCreateInfoEXT VK_STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT pPNext fragmentDensityMapAttachment'')))
+
+-- | A function to read a 'VkRenderPassFragmentDensityMapCreateInfoEXT' and all additional
+-- structures in the pointer chain into a 'RenderPassFragmentDensityMapCreateInfoEXT'.
 fromCStructRenderPassFragmentDensityMapCreateInfoEXT :: VkRenderPassFragmentDensityMapCreateInfoEXT -> IO RenderPassFragmentDensityMapCreateInfoEXT
 fromCStructRenderPassFragmentDensityMapCreateInfoEXT c = RenderPassFragmentDensityMapCreateInfoEXT <$> -- Univalued Member elided
                                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkRenderPassFragmentDensityMapCreateInfoEXT)))
                                                                                                    <*> (fromCStructAttachmentReference (vkFragmentDensityMapAttachment (c :: VkRenderPassFragmentDensityMapCreateInfoEXT)))
+
 instance Zero RenderPassFragmentDensityMapCreateInfoEXT where
   zero = RenderPassFragmentDensityMapCreateInfoEXT Nothing
                                                    zero
+

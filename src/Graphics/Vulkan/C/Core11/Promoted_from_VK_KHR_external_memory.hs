@@ -48,13 +48,8 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilitie
 --     or
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalBufferProperties'.
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO@
---
--- -   @handleTypes@ /must/ be a valid combination of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits'
---     values
+-- Unresolved directive in VkExportMemoryAllocateInfo.txt -
+-- include::{generated}\/validity\/structs\/VkExportMemoryAllocateInfo.txt[]
 --
 -- = See Also
 --
@@ -85,26 +80,30 @@ instance Storable VkExportMemoryAllocateInfo where
                 *> poke (ptr `plusPtr` 16) (vkHandleTypes (poked :: VkExportMemoryAllocateInfo))
 
 instance Zero VkExportMemoryAllocateInfo where
-  zero = VkExportMemoryAllocateInfo zero
+  zero = VkExportMemoryAllocateInfo VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO
                                     zero
                                     zero
+
 -- | VkExternalMemoryBufferCreateInfo - Specify that a buffer may be backed
 -- by external memory
 --
--- == Valid Usage (Implicit)
+-- = Description
+--
+-- Unresolved directive in VkExternalMemoryBufferCreateInfo.txt -
+-- include::{generated}\/validity\/structs\/VkExternalMemoryBufferCreateInfo.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlags',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkExternalMemoryBufferCreateInfo = VkExternalMemoryBufferCreateInfo
-  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @handleTypes@ /must/ be a valid combination of
+  , -- | @handleTypes@ is a bitmask of
   -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits'
-  -- values
+  -- specifying one or more external memory handle types.
   vkHandleTypes :: VkExternalMemoryHandleTypeFlags
   }
   deriving (Eq, Show)
@@ -120,24 +119,30 @@ instance Storable VkExternalMemoryBufferCreateInfo where
                 *> poke (ptr `plusPtr` 16) (vkHandleTypes (poked :: VkExternalMemoryBufferCreateInfo))
 
 instance Zero VkExternalMemoryBufferCreateInfo where
-  zero = VkExternalMemoryBufferCreateInfo zero
+  zero = VkExternalMemoryBufferCreateInfo VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO
                                           zero
                                           zero
+
 -- | VkExternalMemoryImageCreateInfo - Specify that an image may be backed by
 -- external memory
 --
--- == Valid Usage (Implicit)
+-- = Description
+--
+-- Unresolved directive in VkExternalMemoryImageCreateInfo.txt -
+-- include::{generated}\/validity\/structs\/VkExternalMemoryImageCreateInfo.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlags',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkExternalMemoryImageCreateInfo = VkExternalMemoryImageCreateInfo
-  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @handleTypes@ /must/ not be @0@
+  , -- | @handleTypes@ is a bitmask of
+  -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits'
+  -- specifying one or more external memory handle types.
   vkHandleTypes :: VkExternalMemoryHandleTypeFlags
   }
   deriving (Eq, Show)
@@ -153,22 +158,27 @@ instance Storable VkExternalMemoryImageCreateInfo where
                 *> poke (ptr `plusPtr` 16) (vkHandleTypes (poked :: VkExternalMemoryImageCreateInfo))
 
 instance Zero VkExternalMemoryImageCreateInfo where
-  zero = VkExternalMemoryImageCreateInfo zero
+  zero = VkExternalMemoryImageCreateInfo VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO
                                          zero
                                          zero
--- | @VK_ERROR_INVALID_EXTERNAL_HANDLE@ An external handle is not a valid
+
+-- | 'VK_ERROR_INVALID_EXTERNAL_HANDLE' An external handle is not a valid
 -- handle of the specified type.
 pattern VK_ERROR_INVALID_EXTERNAL_HANDLE :: VkResult
 pattern VK_ERROR_INVALID_EXTERNAL_HANDLE = VkResult (-1000072003)
+
 -- No documentation found for Nested "Word32" "VK_QUEUE_FAMILY_EXTERNAL"
 pattern VK_QUEUE_FAMILY_EXTERNAL :: Word32
 pattern VK_QUEUE_FAMILY_EXTERNAL = 0xfffffffe
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO"
 pattern VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO = VkStructureType 1000072002
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO = VkStructureType 1000072000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO"
 pattern VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO :: VkStructureType
 pattern VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO = VkStructureType 1000072001

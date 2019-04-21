@@ -9,11 +9,9 @@
 module Graphics.Vulkan.C.Extensions.VK_NV_scissor_exclusive
   ( VkPhysicalDeviceExclusiveScissorFeaturesNV(..)
   , VkPipelineViewportExclusiveScissorStateCreateInfoNV(..)
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkCmdSetExclusiveScissorNV
-#endif
   , FN_vkCmdSetExclusiveScissorNV
   , PFN_vkCmdSetExclusiveScissorNV
+  , vkCmdSetExclusiveScissorNV
   , pattern VK_DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV
   , pattern VK_NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME
   , pattern VK_NV_SCISSOR_EXCLUSIVE_SPEC_VERSION
@@ -50,6 +48,9 @@ import Graphics.Vulkan.C.Core10.Pipeline
 import Graphics.Vulkan.C.Core10.Queue
   ( VkCommandBuffer
   )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
+  )
 import Graphics.Vulkan.NamedType
   ( (:::)
   )
@@ -60,25 +61,25 @@ import Graphics.Vulkan.NamedType
 --
 -- = Members
 --
--- The members of the @VkPhysicalDeviceExclusiveScissorFeaturesNV@
+-- The members of the 'VkPhysicalDeviceExclusiveScissorFeaturesNV'
 -- structure describe the following features:
 --
 -- = Description
 --
 -- See
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-exclusive-scissor Exclusive Scissor Test>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fragops-exclusive-scissor Exclusive Scissor Test>
 -- for more information.
 --
--- If the @VkPhysicalDeviceExclusiveScissorFeaturesNV@ structure is
+-- If the 'VkPhysicalDeviceExclusiveScissorFeaturesNV' structure is
 -- included in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
 -- it is filled with values indicating whether the feature is supported.
--- @VkPhysicalDeviceExclusiveScissorFeaturesNV@ /can/ also be used in the
+-- 'VkPhysicalDeviceExclusiveScissorFeaturesNV' /can/ also be used in the
 -- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to
 -- enable the feature.
 --
 -- Unresolved directive in VkPhysicalDeviceExclusiveScissorFeaturesNV.txt -
--- include::..\/validity\/structs\/VkPhysicalDeviceExclusiveScissorFeaturesNV.txt[]
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceExclusiveScissorFeaturesNV.txt[]
 --
 -- = See Also
 --
@@ -105,9 +106,10 @@ instance Storable VkPhysicalDeviceExclusiveScissorFeaturesNV where
                 *> poke (ptr `plusPtr` 16) (vkExclusiveScissor (poked :: VkPhysicalDeviceExclusiveScissorFeaturesNV))
 
 instance Zero VkPhysicalDeviceExclusiveScissorFeaturesNV where
-  zero = VkPhysicalDeviceExclusiveScissorFeaturesNV zero
+  zero = VkPhysicalDeviceExclusiveScissorFeaturesNV VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXCLUSIVE_SCISSOR_FEATURES_NV
                                                     zero
                                                     zero
+
 -- | VkPipelineViewportExclusiveScissorStateCreateInfoNV - Structure
 -- specifying parameters controlling exclusive scissor testing
 --
@@ -119,23 +121,25 @@ instance Zero VkPhysicalDeviceExclusiveScissorFeaturesNV where
 -- == Valid Usage
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-multiViewport multiple viewports>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-multiViewport multiple viewports>
 --     feature is not enabled, @exclusiveScissorCount@ /must/ be @0@ or @1@
 --
 -- -   @exclusiveScissorCount@ /must/ be less than or equal to
---     @VkPhysicalDeviceLimits@::@maxViewports@
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxViewports@
 --
 -- -   @exclusiveScissorCount@ /must/ be @0@ or identical to the
---     @viewportCount@ member of @VkPipelineViewportStateCreateInfo@
+--     @viewportCount@ member of
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineViewportStateCreateInfo'
 --
 -- -   If no element of the @pDynamicStates@ member of @pDynamicState@ is
---     @VK_DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV@ and @exclusiveScissorCount@
+--     'VK_DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV' and @exclusiveScissorCount@
 --     is not @0@, @pExclusiveScissors@ /must/ be a valid pointer to an
---     array of @exclusiveScissorCount@ @VkRect2D@ structures
+--     array of @exclusiveScissorCount@
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkRect2D' structures
 --
 -- Unresolved directive in
 -- VkPipelineViewportExclusiveScissorStateCreateInfoNV.txt -
--- include::..\/validity\/structs\/VkPipelineViewportExclusiveScissorStateCreateInfoNV.txt[]
+-- include::{generated}\/validity\/structs\/VkPipelineViewportExclusiveScissorStateCreateInfoNV.txt[]
 --
 -- = See Also
 --
@@ -169,11 +173,11 @@ instance Storable VkPipelineViewportExclusiveScissorStateCreateInfoNV where
                 *> poke (ptr `plusPtr` 24) (vkPExclusiveScissors (poked :: VkPipelineViewportExclusiveScissorStateCreateInfoNV))
 
 instance Zero VkPipelineViewportExclusiveScissorStateCreateInfoNV where
-  zero = VkPipelineViewportExclusiveScissorStateCreateInfoNV zero
+  zero = VkPipelineViewportExclusiveScissorStateCreateInfoNV VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV
                                                              zero
                                                              zero
                                                              zero
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkCmdSetExclusiveScissorNV - Set the dynamic exclusive scissor
 -- rectangles on a command buffer
 --
@@ -207,25 +211,26 @@ instance Zero VkPipelineViewportExclusiveScissorStateCreateInfoNV where
 -- == Valid Usage
 --
 -- -   The
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-exclusiveScissor exclusive scissor>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-exclusiveScissor exclusive scissor>
 --     feature /must/ be enabled.
 --
 -- -   The bound graphics pipeline /must/ have been created with the
---     @VK_DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV@ dynamic state enabled
+--     'VK_DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV' dynamic state enabled
 --
 -- -   @firstExclusiveScissor@ /must/ be less than
---     @VkPhysicalDeviceLimits@::@maxViewports@
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxViewports@
 --
 -- -   The sum of @firstExclusiveScissor@ and @exclusiveScissorCount@
---     /must/ be between @1@ and @VkPhysicalDeviceLimits@::@maxViewports@,
+--     /must/ be between @1@ and
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxViewports@,
 --     inclusive
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-multiViewport multiple viewports>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-multiViewport multiple viewports>
 --     feature is not enabled, @firstExclusiveScissor@ /must/ be @0@
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-multiViewport multiple viewports>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-multiViewport multiple viewports>
 --     feature is not enabled, @exclusiveScissorCount@ /must/ be @1@
 --
 -- -   The @x@ and @y@ members of @offset@ in each member of
@@ -240,38 +245,53 @@ instance Zero VkPipelineViewportExclusiveScissorStateCreateInfoNV where
 --     overflow
 --
 -- Unresolved directive in vkCmdSetExclusiveScissorNV.txt -
--- include::..\/validity\/protos\/vkCmdSetExclusiveScissorNV.txt[]
+-- include::{generated}\/validity\/protos\/vkCmdSetExclusiveScissorNV.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdSetExclusiveScissorNV" vkCmdSetExclusiveScissorNV :: ("commandBuffer" ::: VkCommandBuffer) -> ("firstExclusiveScissor" ::: Word32) -> ("exclusiveScissorCount" ::: Word32) -> ("pExclusiveScissors" ::: Ptr VkRect2D) -> IO ()
-
+#else
+vkCmdSetExclusiveScissorNV :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("firstExclusiveScissor" ::: Word32) -> ("exclusiveScissorCount" ::: Word32) -> ("pExclusiveScissors" ::: Ptr VkRect2D) -> IO ()
+vkCmdSetExclusiveScissorNV deviceCmds = mkVkCmdSetExclusiveScissorNV (pVkCmdSetExclusiveScissorNV deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdSetExclusiveScissorNV
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("firstExclusiveScissor" ::: Word32) -> ("exclusiveScissorCount" ::: Word32) -> ("pExclusiveScissors" ::: Ptr VkRect2D) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("firstExclusiveScissor" ::: Word32) -> ("exclusiveScissorCount" ::: Word32) -> ("pExclusiveScissors" ::: Ptr VkRect2D) -> IO ())
+#endif
+
 type FN_vkCmdSetExclusiveScissorNV = ("commandBuffer" ::: VkCommandBuffer) -> ("firstExclusiveScissor" ::: Word32) -> ("exclusiveScissorCount" ::: Word32) -> ("pExclusiveScissors" ::: Ptr VkRect2D) -> IO ()
 type PFN_vkCmdSetExclusiveScissorNV = FunPtr FN_vkCmdSetExclusiveScissorNV
--- | @VK_DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV@ specifies that the
+
+-- | 'VK_DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV' specifies that the
 -- @pExclusiveScissors@ state in
--- @VkPipelineViewportExclusiveScissorStateCreateInfoNV@ will be ignored
+-- 'VkPipelineViewportExclusiveScissorStateCreateInfoNV' will be ignored
 -- and /must/ be set dynamically with 'vkCmdSetExclusiveScissorNV' before
 -- any draw commands. The number of exclusive scissor rectangles used by a
 -- pipeline is still specified by the @exclusiveScissorCount@ member of
--- @VkPipelineViewportExclusiveScissorStateCreateInfoNV@.
+-- 'VkPipelineViewportExclusiveScissorStateCreateInfoNV'.
 pattern VK_DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV :: VkDynamicState
 pattern VK_DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV = VkDynamicState 1000205001
+
 -- No documentation found for TopLevel "VK_NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME"
 pattern VK_NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME = "VK_NV_scissor_exclusive"
+
 -- No documentation found for TopLevel "VK_NV_SCISSOR_EXCLUSIVE_SPEC_VERSION"
 pattern VK_NV_SCISSOR_EXCLUSIVE_SPEC_VERSION :: Integral a => a
 pattern VK_NV_SCISSOR_EXCLUSIVE_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXCLUSIVE_SCISSOR_FEATURES_NV"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXCLUSIVE_SCISSOR_FEATURES_NV :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXCLUSIVE_SCISSOR_FEATURES_NV = VkStructureType 1000205002
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV"
 pattern VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV = VkStructureType 1000205000

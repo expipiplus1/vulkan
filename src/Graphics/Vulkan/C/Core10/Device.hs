@@ -12,16 +12,12 @@ module Graphics.Vulkan.C.Core10.Device
   , VkDeviceQueueCreateFlagBits(..)
   , VkDeviceQueueCreateFlags
   , VkDeviceQueueCreateInfo(..)
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCreateDevice
-#endif
   , FN_vkCreateDevice
   , PFN_vkCreateDevice
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkDestroyDevice
-#endif
+  , vkCreateDevice
   , FN_vkDestroyDevice
   , PFN_vkDestroyDevice
+  , vkDestroyDevice
   ) where
 
 import Data.Bits
@@ -67,12 +63,18 @@ import Graphics.Vulkan.C.Core10.Core
   , VkStructureType(..)
   , Zero(..)
   , VkFlags
+  , pattern VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
+  , pattern VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkAllocationCallbacks(..)
   , VkPhysicalDeviceFeatures(..)
   , VkDevice
   , VkPhysicalDevice
+  )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
+  , InstanceCmds(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -85,7 +87,7 @@ import Graphics.Vulkan.NamedType
 --
 -- = Description
 --
--- @VkDeviceCreateFlags@ is a bitmask type for setting a mask, but is
+-- 'VkDeviceCreateFlags' is a bitmask type for setting a mask, but is
 -- currently reserved for future use.
 --
 -- = See Also
@@ -109,6 +111,7 @@ instance Read VkDeviceCreateFlags where
                     )
 
 
+
 -- | VkDeviceCreateInfo - Structure specifying parameters of a newly created
 -- device
 --
@@ -122,45 +125,12 @@ instance Read VkDeviceCreateFlags where
 --     structure, then @pEnabledFeatures@ /must/ be @NULL@
 --
 -- -   @ppEnabledExtensionNames@ /must/ not contain both
---     @{html_spec_relative}#VK_KHR_maintenance1@ and
---     @{html_spec_relative}#VK_AMD_negative_viewport_height@
+--     @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.1-extensions\/html\/vkspec.html#VK_KHR_maintenance1@
+--     and
+--     @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.1-extensions\/html\/vkspec.html#VK_AMD_negative_viewport_height@
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO@
---
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation.VkDeviceGroupDeviceCreateInfo',
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_16bit_storage.VkPhysicalDevice16BitStorageFeatures',
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2',
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_multiview.VkPhysicalDeviceMultiviewFeatures',
---     'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory.VkPhysicalDeviceProtectedMemoryFeatures',
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkPhysicalDeviceSamplerYcbcrConversionFeatures',
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_shader_draw_parameters.VkPhysicalDeviceShaderDrawParametersFeatures',
---     or
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_variable_pointers.VkPhysicalDeviceVariablePointersFeatures'
---
--- -   Each @sType@ member in the @pNext@ chain /must/ be unique
---
--- -   @flags@ /must/ be @0@
---
--- -   @pQueueCreateInfos@ /must/ be a valid pointer to an array of
---     @queueCreateInfoCount@ valid @VkDeviceQueueCreateInfo@ structures
---
--- -   If @enabledLayerCount@ is not @0@, @ppEnabledLayerNames@ /must/ be a
---     valid pointer to an array of @enabledLayerCount@ null-terminated
---     UTF-8 strings
---
--- -   If @enabledExtensionCount@ is not @0@, @ppEnabledExtensionNames@
---     /must/ be a valid pointer to an array of @enabledExtensionCount@
---     null-terminated UTF-8 strings
---
--- -   If @pEnabledFeatures@ is not @NULL@, @pEnabledFeatures@ /must/ be a
---     valid pointer to a valid @VkPhysicalDeviceFeatures@ structure
---
--- -   @queueCreateInfoCount@ /must/ be greater than @0@
+-- Unresolved directive in VkDeviceCreateInfo.txt -
+-- include::{generated}\/validity\/structs\/VkDeviceCreateInfo.txt[]
 --
 -- = See Also
 --
@@ -176,33 +146,33 @@ data VkDeviceCreateInfo = VkDeviceCreateInfo
   vkFlags :: VkDeviceCreateFlags
   , -- | @queueCreateInfoCount@ is the unsigned integer size of the
   -- @pQueueCreateInfos@ array. Refer to the
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-queue-creation Queue Creation>
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#devsandqueues-queue-creation Queue Creation>
   -- section below for further details.
   vkQueueCreateInfoCount :: Word32
   , -- | @pQueueCreateInfos@ is a pointer to an array of
   -- 'VkDeviceQueueCreateInfo' structures describing the queues that are
   -- requested to be created along with the logical device. Refer to the
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-queue-creation Queue Creation>
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#devsandqueues-queue-creation Queue Creation>
   -- section below for further details.
   vkPQueueCreateInfos :: Ptr VkDeviceQueueCreateInfo
   , -- | @enabledLayerCount@ is deprecated and ignored.
   vkEnabledLayerCount :: Word32
   , -- | @ppEnabledLayerNames@ is deprecated and ignored. See
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#extendingvulkan-layers-devicelayerdeprecation {html_spec_relative}#extendingvulkan-layers-devicelayerdeprecation>.
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#extendingvulkan-layers-devicelayerdeprecation>.
   vkPPEnabledLayerNames :: Ptr (Ptr CChar)
   , -- | @enabledExtensionCount@ is the number of device extensions to enable.
   vkEnabledExtensionCount :: Word32
   , -- | @ppEnabledExtensionNames@ is a pointer to an array of
   -- @enabledExtensionCount@ null-terminated UTF-8 strings containing the
   -- names of extensions to enable for the created device. See the
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#extendingvulkan-extensions {html_spec_relative}#extendingvulkan-extensions>
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#extendingvulkan-extensions>
   -- section for further details.
   vkPPEnabledExtensionNames :: Ptr (Ptr CChar)
   , -- | @pEnabledFeatures@ is @NULL@ or a pointer to a
   -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceFeatures'
   -- structure that contains boolean indicators of all the features to be
   -- enabled. Refer to the
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features Features>
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features Features>
   -- section for further details.
   vkPEnabledFeatures :: Ptr VkPhysicalDeviceFeatures
   }
@@ -233,7 +203,7 @@ instance Storable VkDeviceCreateInfo where
                 *> poke (ptr `plusPtr` 64) (vkPEnabledFeatures (poked :: VkDeviceCreateInfo))
 
 instance Zero VkDeviceCreateInfo where
-  zero = VkDeviceCreateInfo zero
+  zero = VkDeviceCreateInfo VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
                             zero
                             zero
                             zero
@@ -243,6 +213,7 @@ instance Zero VkDeviceCreateInfo where
                             zero
                             zero
                             zero
+
 -- ** VkDeviceQueueCreateFlagBits
 
 -- | VkDeviceQueueCreateFlagBits - Bitmask specifying behavior of the queue
@@ -270,11 +241,12 @@ instance Read VkDeviceQueueCreateFlagBits where
                     )
 
 
+
 -- | VkDeviceQueueCreateFlags - Bitmask of VkDeviceQueueCreateFlagBits
 --
 -- = Description
 --
--- @VkDeviceQueueCreateFlags@ is a bitmask type for setting a mask of zero
+-- 'VkDeviceQueueCreateFlags' is a bitmask type for setting a mask of zero
 -- or more 'VkDeviceQueueCreateFlagBits'.
 --
 -- = See Also
@@ -282,35 +254,28 @@ instance Read VkDeviceQueueCreateFlagBits where
 -- 'VkDeviceQueueCreateFlagBits', 'VkDeviceQueueCreateInfo',
 -- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory.VkDeviceQueueInfo2'
 type VkDeviceQueueCreateFlags = VkDeviceQueueCreateFlagBits
+
 -- | VkDeviceQueueCreateInfo - Structure specifying parameters of a newly
 -- created device queue
 --
 -- == Valid Usage
 --
 -- -   @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
---     returned by @vkGetPhysicalDeviceQueueFamilyProperties@
+--     returned by
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceQueueFamilyProperties'
 --
 -- -   @queueCount@ /must/ be less than or equal to the @queueCount@ member
---     of the @VkQueueFamilyProperties@ structure, as returned by
---     @vkGetPhysicalDeviceQueueFamilyProperties@ in the
---     @pQueueFamilyProperties@[@queueFamilyIndex@]
+--     of the
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkQueueFamilyProperties'
+--     structure, as returned by
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceQueueFamilyProperties'
+--     in the @pQueueFamilyProperties@[@queueFamilyIndex@]
 --
 -- -   Each element of @pQueuePriorities@ /must/ be between @0.0@ and @1.0@
 --     inclusive
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO@
---
--- -   @pNext@ /must/ be @NULL@
---
--- -   @flags@ /must/ be a valid combination of
---     'VkDeviceQueueCreateFlagBits' values
---
--- -   @pQueuePriorities@ /must/ be a valid pointer to an array of
---     @queueCount@ @float@ values
---
--- -   @queueCount@ /must/ be greater than @0@
+-- Unresolved directive in VkDeviceQueueCreateInfo.txt -
+-- include::{generated}\/validity\/structs\/VkDeviceQueueCreateInfo.txt[]
 --
 -- = See Also
 --
@@ -326,7 +291,8 @@ data VkDeviceQueueCreateInfo = VkDeviceQueueCreateInfo
   , -- | @queueFamilyIndex@ is an unsigned integer indicating the index of the
   -- queue family to create on this device. This index corresponds to the
   -- index of an element of the @pQueueFamilyProperties@ array that was
-  -- returned by @vkGetPhysicalDeviceQueueFamilyProperties@.
+  -- returned by
+  -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceQueueFamilyProperties'.
   vkQueueFamilyIndex :: Word32
   , -- | @queueCount@ is an unsigned integer specifying the number of queues to
   -- create in the queue family indicated by @queueFamilyIndex@.
@@ -334,7 +300,7 @@ data VkDeviceQueueCreateInfo = VkDeviceQueueCreateInfo
   , -- | @pQueuePriorities@ is an array of @queueCount@ normalized floating point
   -- values, specifying priorities of work that will be submitted to each
   -- created queue. See
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-priority Queue Priority>
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#devsandqueues-priority Queue Priority>
   -- for more information.
   vkPQueuePriorities :: Ptr CFloat
   }
@@ -357,26 +323,28 @@ instance Storable VkDeviceQueueCreateInfo where
                 *> poke (ptr `plusPtr` 32) (vkPQueuePriorities (poked :: VkDeviceQueueCreateInfo))
 
 instance Zero VkDeviceQueueCreateInfo where
-  zero = VkDeviceQueueCreateInfo zero
+  zero = VkDeviceQueueCreateInfo VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO
                                  zero
                                  zero
                                  zero
                                  zero
                                  zero
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCreateDevice - Create a new device instance
 --
 -- = Parameters
 --
 -- -   @physicalDevice@ /must/ be one of the device handles returned from a
---     call to @vkEnumeratePhysicalDevices@ (see
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-physical-device-enumeration Physical Device Enumeration>).
+--     call to
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.vkEnumeratePhysicalDevices'
+--     (see
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#devsandqueues-physical-device-enumeration Physical Device Enumeration>).
 --
 -- -   @pCreateInfo@ is a pointer to a 'VkDeviceCreateInfo' structure
 --     containing information about how to create the device.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
 -- -   @pDevice@ points to a handle in which the created
@@ -385,67 +353,42 @@ instance Zero VkDeviceQueueCreateInfo where
 --
 -- = Description
 --
--- @vkCreateDevice@ verifies that extensions and features requested in the
+-- 'vkCreateDevice' verifies that extensions and features requested in the
 -- @ppEnabledExtensionNames@ and @pEnabledFeatures@ members of
 -- @pCreateInfo@, respectively, are supported by the implementation. If any
--- requested extension is not supported, @vkCreateDevice@ /must/ return
--- @VK_ERROR_EXTENSION_NOT_PRESENT@. If any requested feature is not
--- supported, @vkCreateDevice@ /must/ return
--- @VK_ERROR_FEATURE_NOT_PRESENT@. Support for extensions /can/ be checked
--- before creating a device by querying
+-- requested extension is not supported, 'vkCreateDevice' /must/ return
+-- 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_EXTENSION_NOT_PRESENT'. If any
+-- requested feature is not supported, 'vkCreateDevice' /must/ return
+-- 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_FEATURE_NOT_PRESENT'. Support
+-- for extensions /can/ be checked before creating a device by querying
 -- 'Graphics.Vulkan.C.Core10.ExtensionDiscovery.vkEnumerateDeviceExtensionProperties'.
 -- Support for features /can/ similarly be checked by querying
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceFeatures'.
 --
--- After verifying and enabling the extensions the @VkDevice@ object is
+-- After verifying and enabling the extensions the
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' object is
 -- created and returned to the application. If a requested extension is
 -- only supported by a layer, both the layer and the extension need to be
--- specified at @vkCreateInstance@ time for the creation to succeed.
+-- specified at
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.vkCreateInstance' time
+-- for the creation to succeed.
 --
 -- Multiple logical devices /can/ be created from the same physical device.
 -- Logical device creation /may/ fail due to lack of device-specific
 -- resources (in addition to the other errors). If that occurs,
--- @vkCreateDevice@ will return @VK_ERROR_TOO_MANY_OBJECTS@.
+-- 'vkCreateDevice' will return
+-- 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_TOO_MANY_OBJECTS'.
 --
 -- == Valid Usage
 --
 -- -   All
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#extendingvulkan-extensions-extensiondependencies required extensions>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#extendingvulkan-extensions-extensiondependencies required extensions>
 --     for each extension in the
 --     'VkDeviceCreateInfo'::@ppEnabledExtensionNames@ list /must/ also be
 --     present in that list.
 --
--- == Valid Usage (Implicit)
---
--- -   @physicalDevice@ /must/ be a valid @VkPhysicalDevice@ handle
---
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     @VkDeviceCreateInfo@ structure
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
---
--- -   @pDevice@ /must/ be a valid pointer to a @VkDevice@ handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
---
---     -   @VK_ERROR_INITIALIZATION_FAILED@
---
---     -   @VK_ERROR_EXTENSION_NOT_PRESENT@
---
---     -   @VK_ERROR_FEATURE_NOT_PRESENT@
---
---     -   @VK_ERROR_TOO_MANY_OBJECTS@
---
---     -   @VK_ERROR_DEVICE_LOST@
+-- Unresolved directive in vkCreateDevice.txt -
+-- include::{generated}\/validity\/protos\/vkCreateDevice.txt[]
 --
 -- = See Also
 --
@@ -453,16 +396,26 @@ instance Zero VkDeviceQueueCreateInfo where
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
 -- 'VkDeviceCreateInfo',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCreateDevice" vkCreateDevice :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pCreateInfo" ::: Ptr VkDeviceCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pDevice" ::: Ptr VkDevice) -> IO VkResult
-
+#else
+vkCreateDevice :: InstanceCmds -> ("physicalDevice" ::: VkPhysicalDevice) -> ("pCreateInfo" ::: Ptr VkDeviceCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pDevice" ::: Ptr VkDevice) -> IO VkResult
+vkCreateDevice deviceCmds = mkVkCreateDevice (pVkCreateDevice deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCreateDevice
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pCreateInfo" ::: Ptr VkDeviceCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pDevice" ::: Ptr VkDevice) -> IO VkResult) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("pCreateInfo" ::: Ptr VkDeviceCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pDevice" ::: Ptr VkDevice) -> IO VkResult)
+#endif
+
 type FN_vkCreateDevice = ("physicalDevice" ::: VkPhysicalDevice) -> ("pCreateInfo" ::: Ptr VkDeviceCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pDevice" ::: Ptr VkDevice) -> IO VkResult
 type PFN_vkCreateDevice = FunPtr FN_vkCreateDevice
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkDestroyDevice - Destroy a logical device
 --
 -- = Parameters
@@ -470,7 +423,7 @@ type PFN_vkCreateDevice = FunPtr FN_vkCreateDevice
 -- -   @device@ is the logical device to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
 -- = Description
@@ -485,43 +438,49 @@ type PFN_vkCreateDevice = FunPtr FN_vkCreateDevice
 -- __Note__
 --
 -- The lifetime of each of these objects is bound by the lifetime of the
--- @VkDevice@ object. Therefore, to avoid resource leaks, it is critical
--- that an application explicitly free all of these resources prior to
--- calling @vkDestroyDevice@.
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' object.
+-- Therefore, to avoid resource leaks, it is critical that an application
+-- explicitly free all of these resources prior to calling
+-- 'vkDestroyDevice'.
 --
 -- == Valid Usage
 --
 -- -   All child objects created on @device@ /must/ have been destroyed
 --     prior to destroying @device@
 --
--- -   If @VkAllocationCallbacks@ were provided when @device@ was created,
---     a compatible set of callbacks /must/ be provided here
+-- -   If
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     were provided when @device@ was created, a compatible set of
+--     callbacks /must/ be provided here
 --
--- -   If no @VkAllocationCallbacks@ were provided when @device@ was
---     created, @pAllocator@ /must/ be @NULL@
+-- -   If no
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     were provided when @device@ was created, @pAllocator@ /must/ be
+--     @NULL@
 --
--- == Valid Usage (Implicit)
---
--- -   If @device@ is not @NULL@, @device@ /must/ be a valid @VkDevice@
---     handle
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
---
--- == Host Synchronization
---
--- -   Host access to @device@ /must/ be externally synchronized
+-- Unresolved directive in vkDestroyDevice.txt -
+-- include::{generated}\/validity\/protos\/vkDestroyDevice.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkDestroyDevice" vkDestroyDevice :: ("device" ::: VkDevice) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
-
+#else
+vkDestroyDevice :: DeviceCmds -> ("device" ::: VkDevice) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+vkDestroyDevice deviceCmds = mkVkDestroyDevice (pVkDestroyDevice deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkDestroyDevice
+  :: FunPtr (("device" ::: VkDevice) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()) -> (("device" ::: VkDevice) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ())
+#endif
+
 type FN_vkDestroyDevice = ("device" ::: VkDevice) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 type PFN_vkDestroyDevice = FunPtr FN_vkDestroyDevice

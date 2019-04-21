@@ -65,13 +65,6 @@ import Foreign.Marshal.Utils
 import Foreign.Ptr
   ( castPtr
   )
-import qualified Graphics.Vulkan.C.Dynamic
-  ( cmdDebugMarkerBeginEXT
-  , cmdDebugMarkerEndEXT
-  , cmdDebugMarkerInsertEXT
-  , debugMarkerSetObjectNameEXT
-  , debugMarkerSetObjectTagEXT
-  )
 
 
 import Graphics.Vulkan.C.Core10.Core
@@ -82,6 +75,11 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker
   ( VkDebugMarkerMarkerInfoEXT(..)
   , VkDebugMarkerObjectNameInfoEXT(..)
   , VkDebugMarkerObjectTagInfoEXT(..)
+  , vkCmdDebugMarkerBeginEXT
+  , vkCmdDebugMarkerEndEXT
+  , vkCmdDebugMarkerInsertEXT
+  , vkDebugMarkerSetObjectNameEXT
+  , vkDebugMarkerSetObjectTagEXT
   , pattern VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT
   , pattern VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT
   , pattern VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT
@@ -109,75 +107,149 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker
   )
 
 
--- No documentation found for TopLevel "DebugMarkerMarkerInfoEXT"
+
+-- | VkDebugMarkerMarkerInfoEXT - Specify parameters of a command buffer
+-- marker region
+--
+-- = Description
+--
+-- Unresolved directive in VkDebugMarkerMarkerInfoEXT.txt -
+-- include::{generated}\/validity\/structs\/VkDebugMarkerMarkerInfoEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data DebugMarkerMarkerInfoEXT = DebugMarkerMarkerInfoEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "DebugMarkerMarkerInfoEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "DebugMarkerMarkerInfoEXT" "pMarkerName"
-  vkPMarkerName :: ByteString
+  markerName :: ByteString
   , -- No documentation found for Nested "DebugMarkerMarkerInfoEXT" "color"
-  vkColor :: (CFloat, CFloat, CFloat, CFloat)
+  color :: (CFloat, CFloat, CFloat, CFloat)
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkDebugMarkerMarkerInfoEXT' and
+-- marshal a 'DebugMarkerMarkerInfoEXT' into it. The 'VkDebugMarkerMarkerInfoEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructDebugMarkerMarkerInfoEXT :: DebugMarkerMarkerInfoEXT -> (VkDebugMarkerMarkerInfoEXT -> IO a) -> IO a
-withCStructDebugMarkerMarkerInfoEXT from cont = useAsCString (vkPMarkerName (from :: DebugMarkerMarkerInfoEXT)) (\pMarkerName -> maybeWith withSomeVkStruct (vkPNext (from :: DebugMarkerMarkerInfoEXT)) (\pPNext -> cont (VkDebugMarkerMarkerInfoEXT VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT pPNext pMarkerName (fromTuple (vkColor (from :: DebugMarkerMarkerInfoEXT))))))
+withCStructDebugMarkerMarkerInfoEXT marshalled cont = useAsCString (markerName (marshalled :: DebugMarkerMarkerInfoEXT)) (\pPMarkerName -> maybeWith withSomeVkStruct (next (marshalled :: DebugMarkerMarkerInfoEXT)) (\pPNext -> cont (VkDebugMarkerMarkerInfoEXT VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT pPNext pPMarkerName (fromTuple (color (marshalled :: DebugMarkerMarkerInfoEXT))))))
+
+-- | A function to read a 'VkDebugMarkerMarkerInfoEXT' and all additional
+-- structures in the pointer chain into a 'DebugMarkerMarkerInfoEXT'.
 fromCStructDebugMarkerMarkerInfoEXT :: VkDebugMarkerMarkerInfoEXT -> IO DebugMarkerMarkerInfoEXT
 fromCStructDebugMarkerMarkerInfoEXT c = DebugMarkerMarkerInfoEXT <$> -- Univalued Member elided
                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDebugMarkerMarkerInfoEXT)))
                                                                  <*> packCString (vkPMarkerName (c :: VkDebugMarkerMarkerInfoEXT))
-                                                                 <*> pure (let x = (vkColor (c :: VkDebugMarkerMarkerInfoEXT)) in ( Data.Vector.Storable.Sized.unsafeIndex x 0
-                                                                 , Data.Vector.Storable.Sized.unsafeIndex x 1
-                                                                 , Data.Vector.Storable.Sized.unsafeIndex x 2
-                                                                 , Data.Vector.Storable.Sized.unsafeIndex x 3 ))
+                                                                 <*> pure (let v = (vkColor (c :: VkDebugMarkerMarkerInfoEXT)) in ( Data.Vector.Storable.Sized.unsafeIndex v 0
+                                                                 , Data.Vector.Storable.Sized.unsafeIndex v 1
+                                                                 , Data.Vector.Storable.Sized.unsafeIndex v 2
+                                                                 , Data.Vector.Storable.Sized.unsafeIndex v 3 ))
+
 instance Zero DebugMarkerMarkerInfoEXT where
   zero = DebugMarkerMarkerInfoEXT Nothing
                                   Data.ByteString.empty
                                   (zero, zero, zero, zero)
--- No documentation found for TopLevel "DebugMarkerObjectNameInfoEXT"
+
+
+
+-- | VkDebugMarkerObjectNameInfoEXT - Specify parameters of a name to give to
+-- an object
+--
+-- = Description
+--
+-- Applications /may/ change the name associated with an object simply by
+-- calling
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.vkDebugMarkerSetObjectNameEXT'
+-- again with a new string. To remove a previously set name, @pObjectName@
+-- /should/ be set to an empty string.
+--
+-- == Valid Usage
+--
+-- Unresolved directive in VkDebugMarkerObjectNameInfoEXT.txt -
+-- include::{generated}\/validity\/structs\/VkDebugMarkerObjectNameInfoEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data DebugMarkerObjectNameInfoEXT = DebugMarkerObjectNameInfoEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "DebugMarkerObjectNameInfoEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "DebugMarkerObjectNameInfoEXT" "objectType"
-  vkObjectType :: DebugReportObjectTypeEXT
+  objectType :: DebugReportObjectTypeEXT
   , -- No documentation found for Nested "DebugMarkerObjectNameInfoEXT" "object"
-  vkObject :: Word64
+  object :: Word64
   , -- No documentation found for Nested "DebugMarkerObjectNameInfoEXT" "pObjectName"
-  vkPObjectName :: ByteString
+  objectName :: ByteString
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkDebugMarkerObjectNameInfoEXT' and
+-- marshal a 'DebugMarkerObjectNameInfoEXT' into it. The 'VkDebugMarkerObjectNameInfoEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructDebugMarkerObjectNameInfoEXT :: DebugMarkerObjectNameInfoEXT -> (VkDebugMarkerObjectNameInfoEXT -> IO a) -> IO a
-withCStructDebugMarkerObjectNameInfoEXT from cont = useAsCString (vkPObjectName (from :: DebugMarkerObjectNameInfoEXT)) (\pObjectName -> maybeWith withSomeVkStruct (vkPNext (from :: DebugMarkerObjectNameInfoEXT)) (\pPNext -> cont (VkDebugMarkerObjectNameInfoEXT VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT pPNext (vkObjectType (from :: DebugMarkerObjectNameInfoEXT)) (vkObject (from :: DebugMarkerObjectNameInfoEXT)) pObjectName)))
+withCStructDebugMarkerObjectNameInfoEXT marshalled cont = useAsCString (objectName (marshalled :: DebugMarkerObjectNameInfoEXT)) (\pPObjectName -> maybeWith withSomeVkStruct (next (marshalled :: DebugMarkerObjectNameInfoEXT)) (\pPNext -> cont (VkDebugMarkerObjectNameInfoEXT VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT pPNext (objectType (marshalled :: DebugMarkerObjectNameInfoEXT)) (object (marshalled :: DebugMarkerObjectNameInfoEXT)) pPObjectName)))
+
+-- | A function to read a 'VkDebugMarkerObjectNameInfoEXT' and all additional
+-- structures in the pointer chain into a 'DebugMarkerObjectNameInfoEXT'.
 fromCStructDebugMarkerObjectNameInfoEXT :: VkDebugMarkerObjectNameInfoEXT -> IO DebugMarkerObjectNameInfoEXT
 fromCStructDebugMarkerObjectNameInfoEXT c = DebugMarkerObjectNameInfoEXT <$> -- Univalued Member elided
                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDebugMarkerObjectNameInfoEXT)))
                                                                          <*> pure (vkObjectType (c :: VkDebugMarkerObjectNameInfoEXT))
                                                                          <*> pure (vkObject (c :: VkDebugMarkerObjectNameInfoEXT))
                                                                          <*> packCString (vkPObjectName (c :: VkDebugMarkerObjectNameInfoEXT))
+
 instance Zero DebugMarkerObjectNameInfoEXT where
   zero = DebugMarkerObjectNameInfoEXT Nothing
                                       zero
                                       zero
                                       Data.ByteString.empty
--- No documentation found for TopLevel "DebugMarkerObjectTagInfoEXT"
+
+
+
+-- | VkDebugMarkerObjectTagInfoEXT - Specify parameters of a tag to attach to
+-- an object
+--
+-- = Description
+--
+-- The @tagName@ parameter gives a name or identifier to the type of data
+-- being tagged. This can be used by debugging layers to easily filter for
+-- only data that can be used by that implementation.
+--
+-- == Valid Usage
+--
+-- Unresolved directive in VkDebugMarkerObjectTagInfoEXT.txt -
+-- include::{generated}\/validity\/structs\/VkDebugMarkerObjectTagInfoEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data DebugMarkerObjectTagInfoEXT = DebugMarkerObjectTagInfoEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "DebugMarkerObjectTagInfoEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "DebugMarkerObjectTagInfoEXT" "objectType"
-  vkObjectType :: DebugReportObjectTypeEXT
+  objectType :: DebugReportObjectTypeEXT
   , -- No documentation found for Nested "DebugMarkerObjectTagInfoEXT" "object"
-  vkObject :: Word64
+  object :: Word64
   , -- No documentation found for Nested "DebugMarkerObjectTagInfoEXT" "tagName"
-  vkTagName :: Word64
+  tagName :: Word64
   -- Bytestring length valued member elided
   , -- No documentation found for Nested "DebugMarkerObjectTagInfoEXT" "pTag"
-  vkPTag :: ByteString
+  tag :: ByteString
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkDebugMarkerObjectTagInfoEXT' and
+-- marshal a 'DebugMarkerObjectTagInfoEXT' into it. The 'VkDebugMarkerObjectTagInfoEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructDebugMarkerObjectTagInfoEXT :: DebugMarkerObjectTagInfoEXT -> (VkDebugMarkerObjectTagInfoEXT -> IO a) -> IO a
-withCStructDebugMarkerObjectTagInfoEXT from cont = unsafeUseAsCString (vkPTag (from :: DebugMarkerObjectTagInfoEXT)) (\pTag -> maybeWith withSomeVkStruct (vkPNext (from :: DebugMarkerObjectTagInfoEXT)) (\pPNext -> cont (VkDebugMarkerObjectTagInfoEXT VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT pPNext (vkObjectType (from :: DebugMarkerObjectTagInfoEXT)) (vkObject (from :: DebugMarkerObjectTagInfoEXT)) (vkTagName (from :: DebugMarkerObjectTagInfoEXT)) (fromIntegral (Data.ByteString.length (vkPTag (from :: DebugMarkerObjectTagInfoEXT)))) (castPtr pTag))))
+withCStructDebugMarkerObjectTagInfoEXT marshalled cont = unsafeUseAsCString (tag (marshalled :: DebugMarkerObjectTagInfoEXT)) (\pPTag -> maybeWith withSomeVkStruct (next (marshalled :: DebugMarkerObjectTagInfoEXT)) (\pPNext -> cont (VkDebugMarkerObjectTagInfoEXT VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT pPNext (objectType (marshalled :: DebugMarkerObjectTagInfoEXT)) (object (marshalled :: DebugMarkerObjectTagInfoEXT)) (tagName (marshalled :: DebugMarkerObjectTagInfoEXT)) (fromIntegral (Data.ByteString.length (tag (marshalled :: DebugMarkerObjectTagInfoEXT)))) (castPtr pPTag))))
+
+-- | A function to read a 'VkDebugMarkerObjectTagInfoEXT' and all additional
+-- structures in the pointer chain into a 'DebugMarkerObjectTagInfoEXT'.
 fromCStructDebugMarkerObjectTagInfoEXT :: VkDebugMarkerObjectTagInfoEXT -> IO DebugMarkerObjectTagInfoEXT
 fromCStructDebugMarkerObjectTagInfoEXT c = DebugMarkerObjectTagInfoEXT <$> -- Univalued Member elided
                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDebugMarkerObjectTagInfoEXT)))
@@ -186,6 +258,7 @@ fromCStructDebugMarkerObjectTagInfoEXT c = DebugMarkerObjectTagInfoEXT <$> -- Un
                                                                        <*> pure (vkTagName (c :: VkDebugMarkerObjectTagInfoEXT))
                                                                        -- Bytestring length valued member elided
                                                                        <*> packCStringLen (castPtr (vkPTag (c :: VkDebugMarkerObjectTagInfoEXT)), fromIntegral (vkTagSize (c :: VkDebugMarkerObjectTagInfoEXT)))
+
 instance Zero DebugMarkerObjectTagInfoEXT where
   zero = DebugMarkerObjectTagInfoEXT Nothing
                                      zero
@@ -193,22 +266,138 @@ instance Zero DebugMarkerObjectTagInfoEXT where
                                      zero
                                      Data.ByteString.empty
 
--- | Wrapper for 'vkCmdDebugMarkerBeginEXT'
+
+
+-- | vkCmdDebugMarkerBeginEXT - Open a command buffer marker region
+--
+-- = Parameters
+--
+-- -   @commandBuffer@ is the command buffer into which the command is
+--     recorded.
+--
+-- -   @pMarkerInfo@ is a pointer to an instance of the
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.VkDebugMarkerMarkerInfoEXT'
+--     structure specifying the parameters of the marker region to open.
+--
+-- = Description
+--
+-- Unresolved directive in vkCmdDebugMarkerBeginEXT.txt -
+-- include::{generated}\/validity\/protos\/vkCmdDebugMarkerBeginEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 cmdDebugMarkerBeginEXT :: CommandBuffer ->  DebugMarkerMarkerInfoEXT ->  IO ()
-cmdDebugMarkerBeginEXT = \(CommandBuffer commandBuffer commandTable) -> \markerInfo -> (\a -> withCStructDebugMarkerMarkerInfoEXT a . flip with) markerInfo (\pMarkerInfo -> Graphics.Vulkan.C.Dynamic.cmdDebugMarkerBeginEXT commandTable commandBuffer pMarkerInfo *> (pure ()))
+cmdDebugMarkerBeginEXT = \(CommandBuffer commandBuffer' commandTable) -> \markerInfo' -> (\marshalled -> withCStructDebugMarkerMarkerInfoEXT marshalled . flip with) markerInfo' (\pMarkerInfo' -> vkCmdDebugMarkerBeginEXT commandTable commandBuffer' pMarkerInfo' *> (pure ()))
 
--- | Wrapper for 'vkCmdDebugMarkerEndEXT'
+
+-- | vkCmdDebugMarkerEndEXT - Close a command buffer marker region
+--
+-- = Parameters
+--
+-- -   @commandBuffer@ is the command buffer into which the command is
+--     recorded.
+--
+-- = Description
+--
+-- An application /may/ open a marker region in one command buffer and
+-- close it in another, or otherwise split marker regions across multiple
+-- command buffers or multiple queue submissions. When viewed from the
+-- linear series of submissions to a single queue, the calls to
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.vkCmdDebugMarkerBeginEXT'
+-- and
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.vkCmdDebugMarkerEndEXT'
+-- /must/ be matched and balanced.
+--
+-- == Valid Usage
+--
+-- -   There /must/ be an outstanding
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.vkCmdDebugMarkerBeginEXT'
+--     command prior to the
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.vkCmdDebugMarkerEndEXT'
+--     on the queue that @commandBuffer@ is submitted to
+--
+-- -   If @commandBuffer@ is a secondary command buffer, there /must/ be an
+--     outstanding
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.vkCmdDebugMarkerBeginEXT'
+--     command recorded to @commandBuffer@ that has not previously been
+--     ended by a call to
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.vkCmdDebugMarkerEndEXT'.
+--
+-- Unresolved directive in vkCmdDebugMarkerEndEXT.txt -
+-- include::{generated}\/validity\/protos\/vkCmdDebugMarkerEndEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 cmdDebugMarkerEndEXT :: CommandBuffer ->  IO ()
-cmdDebugMarkerEndEXT = \(CommandBuffer commandBuffer commandTable) -> Graphics.Vulkan.C.Dynamic.cmdDebugMarkerEndEXT commandTable commandBuffer *> (pure ())
+cmdDebugMarkerEndEXT = \(CommandBuffer commandBuffer' commandTable) -> vkCmdDebugMarkerEndEXT commandTable commandBuffer' *> (pure ())
 
--- | Wrapper for 'vkCmdDebugMarkerInsertEXT'
+
+-- | vkCmdDebugMarkerInsertEXT - Insert a marker label into a command buffer
+--
+-- = Parameters
+--
+-- -   @commandBuffer@ is the command buffer into which the command is
+--     recorded.
+--
+-- -   @pMarkerInfo@ is a pointer to an instance of the
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.VkDebugMarkerMarkerInfoEXT'
+--     structure specifying the parameters of the marker to insert.
+--
+-- = Description
+--
+-- Unresolved directive in vkCmdDebugMarkerInsertEXT.txt -
+-- include::{generated}\/validity\/protos\/vkCmdDebugMarkerInsertEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 cmdDebugMarkerInsertEXT :: CommandBuffer ->  DebugMarkerMarkerInfoEXT ->  IO ()
-cmdDebugMarkerInsertEXT = \(CommandBuffer commandBuffer commandTable) -> \markerInfo -> (\a -> withCStructDebugMarkerMarkerInfoEXT a . flip with) markerInfo (\pMarkerInfo -> Graphics.Vulkan.C.Dynamic.cmdDebugMarkerInsertEXT commandTable commandBuffer pMarkerInfo *> (pure ()))
+cmdDebugMarkerInsertEXT = \(CommandBuffer commandBuffer' commandTable) -> \markerInfo' -> (\marshalled -> withCStructDebugMarkerMarkerInfoEXT marshalled . flip with) markerInfo' (\pMarkerInfo' -> vkCmdDebugMarkerInsertEXT commandTable commandBuffer' pMarkerInfo' *> (pure ()))
 
--- | Wrapper for 'vkDebugMarkerSetObjectNameEXT'
+
+-- | vkDebugMarkerSetObjectNameEXT - Give a user-friendly name to an object
+--
+-- = Parameters
+--
+-- -   @device@ is the device that created the object.
+--
+-- -   @pNameInfo@ is a pointer to an instance of the
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.VkDebugMarkerObjectNameInfoEXT'
+--     structure specifying the parameters of the name to set on the
+--     object.
+--
+-- = Description
+--
+-- Unresolved directive in vkDebugMarkerSetObjectNameEXT.txt -
+-- include::{generated}\/validity\/protos\/vkDebugMarkerSetObjectNameEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 debugMarkerSetObjectNameEXT :: Device ->  DebugMarkerObjectNameInfoEXT ->  IO ()
-debugMarkerSetObjectNameEXT = \(Device device commandTable) -> \nameInfo -> (\a -> withCStructDebugMarkerObjectNameInfoEXT a . flip with) nameInfo (\pNameInfo -> Graphics.Vulkan.C.Dynamic.debugMarkerSetObjectNameEXT commandTable device pNameInfo >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))
+debugMarkerSetObjectNameEXT = \(Device device' commandTable) -> \nameInfo' -> (\marshalled -> withCStructDebugMarkerObjectNameInfoEXT marshalled . flip with) nameInfo' (\pNameInfo' -> vkDebugMarkerSetObjectNameEXT commandTable device' pNameInfo' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (pure ())))
 
--- | Wrapper for 'vkDebugMarkerSetObjectTagEXT'
+
+-- | vkDebugMarkerSetObjectTagEXT - Attach arbitrary data to an object
+--
+-- = Parameters
+--
+-- -   @device@ is the device that created the object.
+--
+-- -   @pTagInfo@ is a pointer to an instance of the
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.VkDebugMarkerObjectTagInfoEXT'
+--     structure specifying the parameters of the tag to attach to the
+--     object.
+--
+-- = Description
+--
+-- Unresolved directive in vkDebugMarkerSetObjectTagEXT.txt -
+-- include::{generated}\/validity\/protos\/vkDebugMarkerSetObjectTagEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 debugMarkerSetObjectTagEXT :: Device ->  DebugMarkerObjectTagInfoEXT ->  IO ()
-debugMarkerSetObjectTagEXT = \(Device device commandTable) -> \tagInfo -> (\a -> withCStructDebugMarkerObjectTagInfoEXT a . flip with) tagInfo (\pTagInfo -> Graphics.Vulkan.C.Dynamic.debugMarkerSetObjectTagEXT commandTable device pTagInfo >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure ())))
+debugMarkerSetObjectTagEXT = \(Device device' commandTable) -> \tagInfo' -> (\marshalled -> withCStructDebugMarkerObjectTagInfoEXT marshalled . flip with) tagInfo' (\pTagInfo' -> vkDebugMarkerSetObjectTagEXT commandTable device' pTagInfo' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (pure ())))

@@ -73,12 +73,6 @@ import Foreign.Storable
   ( peek
   , peekElemOff
   )
-import qualified Graphics.Vulkan.C.Dynamic
-  ( getDisplayModeProperties2KHR
-  , getDisplayPlaneCapabilities2KHR
-  , getPhysicalDeviceDisplayPlaneProperties2KHR
-  , getPhysicalDeviceDisplayProperties2KHR
-  )
 
 
 import Graphics.Vulkan.C.Core10.Core
@@ -92,6 +86,10 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2
   , VkDisplayPlaneInfo2KHR(..)
   , VkDisplayPlaneProperties2KHR(..)
   , VkDisplayProperties2KHR(..)
+  , vkGetDisplayModeProperties2KHR
+  , vkGetDisplayPlaneCapabilities2KHR
+  , vkGetPhysicalDeviceDisplayPlaneProperties2KHR
+  , vkGetPhysicalDeviceDisplayProperties2KHR
   , pattern VK_STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR
   , pattern VK_STRUCTURE_TYPE_DISPLAY_PLANE_CAPABILITIES_2_KHR
   , pattern VK_STRUCTURE_TYPE_DISPLAY_PLANE_INFO_2_KHR
@@ -131,146 +129,459 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2
   )
 
 
--- No documentation found for TopLevel "DisplayModeProperties2KHR"
+
+-- | VkDisplayModeProperties2KHR - Structure describing an available display
+-- mode
+--
+-- = Description
+--
+-- Unresolved directive in VkDisplayModeProperties2KHR.txt -
+-- include::{generated}\/validity\/structs\/VkDisplayModeProperties2KHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data DisplayModeProperties2KHR = DisplayModeProperties2KHR
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "DisplayModeProperties2KHR" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "DisplayModeProperties2KHR" "displayModeProperties"
-  vkDisplayModeProperties :: DisplayModePropertiesKHR
+  displayModeProperties :: DisplayModePropertiesKHR
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkDisplayModeProperties2KHR' and
+-- marshal a 'DisplayModeProperties2KHR' into it. The 'VkDisplayModeProperties2KHR' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructDisplayModeProperties2KHR :: DisplayModeProperties2KHR -> (VkDisplayModeProperties2KHR -> IO a) -> IO a
-withCStructDisplayModeProperties2KHR from cont = withCStructDisplayModePropertiesKHR (vkDisplayModeProperties (from :: DisplayModeProperties2KHR)) (\displayModeProperties -> maybeWith withSomeVkStruct (vkPNext (from :: DisplayModeProperties2KHR)) (\pPNext -> cont (VkDisplayModeProperties2KHR VK_STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR pPNext displayModeProperties)))
+withCStructDisplayModeProperties2KHR marshalled cont = withCStructDisplayModePropertiesKHR (displayModeProperties (marshalled :: DisplayModeProperties2KHR)) (\displayModeProperties'' -> maybeWith withSomeVkStruct (next (marshalled :: DisplayModeProperties2KHR)) (\pPNext -> cont (VkDisplayModeProperties2KHR VK_STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR pPNext displayModeProperties'')))
+
+-- | A function to read a 'VkDisplayModeProperties2KHR' and all additional
+-- structures in the pointer chain into a 'DisplayModeProperties2KHR'.
 fromCStructDisplayModeProperties2KHR :: VkDisplayModeProperties2KHR -> IO DisplayModeProperties2KHR
 fromCStructDisplayModeProperties2KHR c = DisplayModeProperties2KHR <$> -- Univalued Member elided
                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDisplayModeProperties2KHR)))
                                                                    <*> (fromCStructDisplayModePropertiesKHR (vkDisplayModeProperties (c :: VkDisplayModeProperties2KHR)))
+
 instance Zero DisplayModeProperties2KHR where
   zero = DisplayModeProperties2KHR Nothing
                                    zero
--- No documentation found for TopLevel "DisplayPlaneCapabilities2KHR"
+
+
+
+-- | VkDisplayPlaneCapabilities2KHR - Structure describing the capabilities
+-- of a mode and plane combination
+--
+-- = Description
+--
+-- Unresolved directive in VkDisplayPlaneCapabilities2KHR.txt -
+-- include::{generated}\/validity\/structs\/VkDisplayPlaneCapabilities2KHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data DisplayPlaneCapabilities2KHR = DisplayPlaneCapabilities2KHR
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "DisplayPlaneCapabilities2KHR" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "DisplayPlaneCapabilities2KHR" "capabilities"
-  vkCapabilities :: DisplayPlaneCapabilitiesKHR
+  capabilities :: DisplayPlaneCapabilitiesKHR
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkDisplayPlaneCapabilities2KHR' and
+-- marshal a 'DisplayPlaneCapabilities2KHR' into it. The 'VkDisplayPlaneCapabilities2KHR' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructDisplayPlaneCapabilities2KHR :: DisplayPlaneCapabilities2KHR -> (VkDisplayPlaneCapabilities2KHR -> IO a) -> IO a
-withCStructDisplayPlaneCapabilities2KHR from cont = withCStructDisplayPlaneCapabilitiesKHR (vkCapabilities (from :: DisplayPlaneCapabilities2KHR)) (\capabilities -> maybeWith withSomeVkStruct (vkPNext (from :: DisplayPlaneCapabilities2KHR)) (\pPNext -> cont (VkDisplayPlaneCapabilities2KHR VK_STRUCTURE_TYPE_DISPLAY_PLANE_CAPABILITIES_2_KHR pPNext capabilities)))
+withCStructDisplayPlaneCapabilities2KHR marshalled cont = withCStructDisplayPlaneCapabilitiesKHR (capabilities (marshalled :: DisplayPlaneCapabilities2KHR)) (\capabilities'' -> maybeWith withSomeVkStruct (next (marshalled :: DisplayPlaneCapabilities2KHR)) (\pPNext -> cont (VkDisplayPlaneCapabilities2KHR VK_STRUCTURE_TYPE_DISPLAY_PLANE_CAPABILITIES_2_KHR pPNext capabilities'')))
+
+-- | A function to read a 'VkDisplayPlaneCapabilities2KHR' and all additional
+-- structures in the pointer chain into a 'DisplayPlaneCapabilities2KHR'.
 fromCStructDisplayPlaneCapabilities2KHR :: VkDisplayPlaneCapabilities2KHR -> IO DisplayPlaneCapabilities2KHR
 fromCStructDisplayPlaneCapabilities2KHR c = DisplayPlaneCapabilities2KHR <$> -- Univalued Member elided
                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDisplayPlaneCapabilities2KHR)))
                                                                          <*> (fromCStructDisplayPlaneCapabilitiesKHR (vkCapabilities (c :: VkDisplayPlaneCapabilities2KHR)))
+
 instance Zero DisplayPlaneCapabilities2KHR where
   zero = DisplayPlaneCapabilities2KHR Nothing
                                       zero
--- No documentation found for TopLevel "DisplayPlaneInfo2KHR"
+
+
+
+-- | VkDisplayPlaneInfo2KHR - Structure defining the intended configuration
+-- of a display plane
+--
+-- = Description
+--
+-- __Note__
+--
+-- This parameter also implicitly specifies a display.
+--
+-- The members of
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.VkDisplayPlaneInfo2KHR'
+-- correspond to the arguments to
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetDisplayPlaneCapabilitiesKHR',
+-- with @sType@ and @pNext@ added for extensibility.
+--
+-- Unresolved directive in VkDisplayPlaneInfo2KHR.txt -
+-- include::{generated}\/validity\/structs\/VkDisplayPlaneInfo2KHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data DisplayPlaneInfo2KHR = DisplayPlaneInfo2KHR
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "DisplayPlaneInfo2KHR" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "DisplayPlaneInfo2KHR" "mode"
-  vkMode :: DisplayModeKHR
+  mode :: DisplayModeKHR
   , -- No documentation found for Nested "DisplayPlaneInfo2KHR" "planeIndex"
-  vkPlaneIndex :: Word32
+  planeIndex :: Word32
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkDisplayPlaneInfo2KHR' and
+-- marshal a 'DisplayPlaneInfo2KHR' into it. The 'VkDisplayPlaneInfo2KHR' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructDisplayPlaneInfo2KHR :: DisplayPlaneInfo2KHR -> (VkDisplayPlaneInfo2KHR -> IO a) -> IO a
-withCStructDisplayPlaneInfo2KHR from cont = maybeWith withSomeVkStruct (vkPNext (from :: DisplayPlaneInfo2KHR)) (\pPNext -> cont (VkDisplayPlaneInfo2KHR VK_STRUCTURE_TYPE_DISPLAY_PLANE_INFO_2_KHR pPNext (vkMode (from :: DisplayPlaneInfo2KHR)) (vkPlaneIndex (from :: DisplayPlaneInfo2KHR))))
+withCStructDisplayPlaneInfo2KHR marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: DisplayPlaneInfo2KHR)) (\pPNext -> cont (VkDisplayPlaneInfo2KHR VK_STRUCTURE_TYPE_DISPLAY_PLANE_INFO_2_KHR pPNext (mode (marshalled :: DisplayPlaneInfo2KHR)) (planeIndex (marshalled :: DisplayPlaneInfo2KHR))))
+
+-- | A function to read a 'VkDisplayPlaneInfo2KHR' and all additional
+-- structures in the pointer chain into a 'DisplayPlaneInfo2KHR'.
 fromCStructDisplayPlaneInfo2KHR :: VkDisplayPlaneInfo2KHR -> IO DisplayPlaneInfo2KHR
 fromCStructDisplayPlaneInfo2KHR c = DisplayPlaneInfo2KHR <$> -- Univalued Member elided
                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDisplayPlaneInfo2KHR)))
                                                          <*> pure (vkMode (c :: VkDisplayPlaneInfo2KHR))
                                                          <*> pure (vkPlaneIndex (c :: VkDisplayPlaneInfo2KHR))
+
 instance Zero DisplayPlaneInfo2KHR where
   zero = DisplayPlaneInfo2KHR Nothing
                               zero
                               zero
--- No documentation found for TopLevel "DisplayPlaneProperties2KHR"
+
+
+
+-- | VkDisplayPlaneProperties2KHR - Structure describing an available display
+-- plane
+--
+-- = Description
+--
+-- Unresolved directive in VkDisplayPlaneProperties2KHR.txt -
+-- include::{generated}\/validity\/structs\/VkDisplayPlaneProperties2KHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data DisplayPlaneProperties2KHR = DisplayPlaneProperties2KHR
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "DisplayPlaneProperties2KHR" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "DisplayPlaneProperties2KHR" "displayPlaneProperties"
-  vkDisplayPlaneProperties :: DisplayPlanePropertiesKHR
+  displayPlaneProperties :: DisplayPlanePropertiesKHR
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkDisplayPlaneProperties2KHR' and
+-- marshal a 'DisplayPlaneProperties2KHR' into it. The 'VkDisplayPlaneProperties2KHR' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructDisplayPlaneProperties2KHR :: DisplayPlaneProperties2KHR -> (VkDisplayPlaneProperties2KHR -> IO a) -> IO a
-withCStructDisplayPlaneProperties2KHR from cont = withCStructDisplayPlanePropertiesKHR (vkDisplayPlaneProperties (from :: DisplayPlaneProperties2KHR)) (\displayPlaneProperties -> maybeWith withSomeVkStruct (vkPNext (from :: DisplayPlaneProperties2KHR)) (\pPNext -> cont (VkDisplayPlaneProperties2KHR VK_STRUCTURE_TYPE_DISPLAY_PLANE_PROPERTIES_2_KHR pPNext displayPlaneProperties)))
+withCStructDisplayPlaneProperties2KHR marshalled cont = withCStructDisplayPlanePropertiesKHR (displayPlaneProperties (marshalled :: DisplayPlaneProperties2KHR)) (\displayPlaneProperties'' -> maybeWith withSomeVkStruct (next (marshalled :: DisplayPlaneProperties2KHR)) (\pPNext -> cont (VkDisplayPlaneProperties2KHR VK_STRUCTURE_TYPE_DISPLAY_PLANE_PROPERTIES_2_KHR pPNext displayPlaneProperties'')))
+
+-- | A function to read a 'VkDisplayPlaneProperties2KHR' and all additional
+-- structures in the pointer chain into a 'DisplayPlaneProperties2KHR'.
 fromCStructDisplayPlaneProperties2KHR :: VkDisplayPlaneProperties2KHR -> IO DisplayPlaneProperties2KHR
 fromCStructDisplayPlaneProperties2KHR c = DisplayPlaneProperties2KHR <$> -- Univalued Member elided
                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDisplayPlaneProperties2KHR)))
                                                                      <*> (fromCStructDisplayPlanePropertiesKHR (vkDisplayPlaneProperties (c :: VkDisplayPlaneProperties2KHR)))
+
 instance Zero DisplayPlaneProperties2KHR where
   zero = DisplayPlaneProperties2KHR Nothing
                                     zero
--- No documentation found for TopLevel "DisplayProperties2KHR"
+
+
+
+-- | VkDisplayProperties2KHR - Structure describing an available display
+-- device
+--
+-- = Description
+--
+-- Unresolved directive in VkDisplayProperties2KHR.txt -
+-- include::{generated}\/validity\/structs\/VkDisplayProperties2KHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data DisplayProperties2KHR = DisplayProperties2KHR
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "DisplayProperties2KHR" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "DisplayProperties2KHR" "displayProperties"
-  vkDisplayProperties :: DisplayPropertiesKHR
+  displayProperties :: DisplayPropertiesKHR
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkDisplayProperties2KHR' and
+-- marshal a 'DisplayProperties2KHR' into it. The 'VkDisplayProperties2KHR' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructDisplayProperties2KHR :: DisplayProperties2KHR -> (VkDisplayProperties2KHR -> IO a) -> IO a
-withCStructDisplayProperties2KHR from cont = withCStructDisplayPropertiesKHR (vkDisplayProperties (from :: DisplayProperties2KHR)) (\displayProperties -> maybeWith withSomeVkStruct (vkPNext (from :: DisplayProperties2KHR)) (\pPNext -> cont (VkDisplayProperties2KHR VK_STRUCTURE_TYPE_DISPLAY_PROPERTIES_2_KHR pPNext displayProperties)))
+withCStructDisplayProperties2KHR marshalled cont = withCStructDisplayPropertiesKHR (displayProperties (marshalled :: DisplayProperties2KHR)) (\displayProperties'' -> maybeWith withSomeVkStruct (next (marshalled :: DisplayProperties2KHR)) (\pPNext -> cont (VkDisplayProperties2KHR VK_STRUCTURE_TYPE_DISPLAY_PROPERTIES_2_KHR pPNext displayProperties'')))
+
+-- | A function to read a 'VkDisplayProperties2KHR' and all additional
+-- structures in the pointer chain into a 'DisplayProperties2KHR'.
 fromCStructDisplayProperties2KHR :: VkDisplayProperties2KHR -> IO DisplayProperties2KHR
 fromCStructDisplayProperties2KHR c = DisplayProperties2KHR <$> -- Univalued Member elided
                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDisplayProperties2KHR)))
                                                            <*> (fromCStructDisplayPropertiesKHR (vkDisplayProperties (c :: VkDisplayProperties2KHR)))
+
 instance Zero DisplayProperties2KHR where
   zero = DisplayProperties2KHR Nothing
                                zero
 
--- | Wrapper for 'vkGetDisplayModeProperties2KHR'
+
+
+-- | vkGetDisplayModeProperties2KHR - Query information about the available
+-- display modes.
+--
+-- = Parameters
+--
+-- -   @physicalDevice@ is the physical device associated with @display@.
+--
+-- -   @display@ is the display to query.
+--
+-- -   @pPropertyCount@ is a pointer to an integer related to the number of
+--     display modes available or queried, as described below.
+--
+-- -   @pProperties@ is either @NULL@ or a pointer to an array of
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.VkDisplayModeProperties2KHR'
+--     structures.
+--
+-- = Description
+--
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.vkGetDisplayModeProperties2KHR'
+-- behaves similarly to
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetDisplayModePropertiesKHR',
+-- with the ability to return extended information via chained output
+-- structures.
+--
+-- Unresolved directive in vkGetDisplayModeProperties2KHR.txt -
+-- include::{generated}\/validity\/protos\/vkGetDisplayModeProperties2KHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 getNumDisplayModeProperties2KHR :: PhysicalDevice ->  DisplayKHR ->  IO (VkResult, Word32)
-getNumDisplayModeProperties2KHR = \(PhysicalDevice physicalDevice commandTable) -> \display -> alloca (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getDisplayModeProperties2KHR commandTable physicalDevice display pPropertyCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pPropertyCount)))
+getNumDisplayModeProperties2KHR = \(PhysicalDevice physicalDevice' commandTable) -> \display' -> alloca (\pPropertyCount' -> vkGetDisplayModeProperties2KHR commandTable physicalDevice' display' pPropertyCount' nullPtr >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>peek pPropertyCount')))
 
--- | Wrapper for 'vkGetDisplayModeProperties2KHR'
+-- | vkGetDisplayModeProperties2KHR - Query information about the available
+-- display modes.
+--
+-- = Parameters
+--
+-- -   @physicalDevice@ is the physical device associated with @display@.
+--
+-- -   @display@ is the display to query.
+--
+-- -   @pPropertyCount@ is a pointer to an integer related to the number of
+--     display modes available or queried, as described below.
+--
+-- -   @pProperties@ is either @NULL@ or a pointer to an array of
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.VkDisplayModeProperties2KHR'
+--     structures.
+--
+-- = Description
+--
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.vkGetDisplayModeProperties2KHR'
+-- behaves similarly to
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetDisplayModePropertiesKHR',
+-- with the ability to return extended information via chained output
+-- structures.
+--
+-- Unresolved directive in vkGetDisplayModeProperties2KHR.txt -
+-- include::{generated}\/validity\/protos\/vkGetDisplayModeProperties2KHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 getDisplayModeProperties2KHR :: PhysicalDevice ->  DisplayKHR ->  Word32 ->  IO (VkResult, Vector DisplayModeProperties2KHR)
-getDisplayModeProperties2KHR = \(PhysicalDevice physicalDevice commandTable) -> \display -> \propertyCount -> allocaArray (fromIntegral propertyCount) (\pProperties -> with propertyCount (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getDisplayModeProperties2KHR commandTable physicalDevice display pPropertyCount pProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM ((\p -> fromCStructDisplayModeProperties2KHR <=< peekElemOff p) pProperties) =<< (fromIntegral <$> (peek pPropertyCount)))))))
--- | Call 'getNumDisplayModeProperties2KHR' to get the number of return values, then use that
--- number to call 'getDisplayModeProperties2KHR' to get all the values.
+getDisplayModeProperties2KHR = \(PhysicalDevice physicalDevice' commandTable) -> \display' -> \propertyCount' -> allocaArray (fromIntegral propertyCount') (\pProperties' -> with propertyCount' (\pPropertyCount' -> vkGetDisplayModeProperties2KHR commandTable physicalDevice' display' pPropertyCount' pProperties' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>(flip Data.Vector.generateM ((\p -> fromCStructDisplayModeProperties2KHR <=< peekElemOff p) pProperties') =<< (fromIntegral <$> (peek pPropertyCount')))))))
+-- | Returns all the values available from 'getDisplayModeProperties2KHR'.
 getAllDisplayModeProperties2KHR :: PhysicalDevice ->  DisplayKHR ->  IO (Vector DisplayModeProperties2KHR)
-getAllDisplayModeProperties2KHR physicalDevice display =
-  snd <$> getNumDisplayModeProperties2KHR physicalDevice display
-    >>= \num -> snd <$> getDisplayModeProperties2KHR physicalDevice display num
+getAllDisplayModeProperties2KHR physicalDevice' display' =
+  snd <$> getNumDisplayModeProperties2KHR physicalDevice' display'
+    >>= \num -> snd <$> getDisplayModeProperties2KHR physicalDevice' display' num
 
 
--- | Wrapper for 'vkGetDisplayPlaneCapabilities2KHR'
+
+-- | vkGetDisplayPlaneCapabilities2KHR - Query capabilities of a mode and
+-- plane combination
+--
+-- = Parameters
+--
+-- -   @physicalDevice@ is the physical device associated with
+--     @pDisplayPlaneInfo@.
+--
+-- -   @pDisplayPlaneInfo@ is a pointer to an instance of the
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.VkDisplayPlaneInfo2KHR'
+--     structure describing the plane and mode.
+--
+-- -   @pCapabilities@ is a pointer to a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.VkDisplayPlaneCapabilities2KHR'
+--     structure in which the capabilities are returned.
+--
+-- = Description
+--
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.vkGetDisplayPlaneCapabilities2KHR'
+-- behaves similarly to
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetDisplayPlaneCapabilitiesKHR',
+-- with the ability to specify extended inputs via chained input
+-- structures, and to return extended information via chained output
+-- structures.
+--
+-- Unresolved directive in vkGetDisplayPlaneCapabilities2KHR.txt -
+-- include::{generated}\/validity\/protos\/vkGetDisplayPlaneCapabilities2KHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 getDisplayPlaneCapabilities2KHR :: PhysicalDevice ->  DisplayPlaneInfo2KHR ->  IO (DisplayPlaneCapabilities2KHR)
-getDisplayPlaneCapabilities2KHR = \(PhysicalDevice physicalDevice commandTable) -> \displayPlaneInfo -> alloca (\pCapabilities -> (\a -> withCStructDisplayPlaneInfo2KHR a . flip with) displayPlaneInfo (\pDisplayPlaneInfo -> Graphics.Vulkan.C.Dynamic.getDisplayPlaneCapabilities2KHR commandTable physicalDevice pDisplayPlaneInfo pCapabilities >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((fromCStructDisplayPlaneCapabilities2KHR <=< peek) pCapabilities))))
+getDisplayPlaneCapabilities2KHR = \(PhysicalDevice physicalDevice' commandTable) -> \displayPlaneInfo' -> alloca (\pCapabilities' -> (\marshalled -> withCStructDisplayPlaneInfo2KHR marshalled . flip with) displayPlaneInfo' (\pDisplayPlaneInfo' -> vkGetDisplayPlaneCapabilities2KHR commandTable physicalDevice' pDisplayPlaneInfo' pCapabilities' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((fromCStructDisplayPlaneCapabilities2KHR <=< peek) pCapabilities'))))
 
--- | Wrapper for 'vkGetPhysicalDeviceDisplayPlaneProperties2KHR'
+
+-- | vkGetPhysicalDeviceDisplayPlaneProperties2KHR - Query information about
+-- the available display planes.
+--
+-- = Parameters
+--
+-- -   @physicalDevice@ is a physical device.
+--
+-- -   @pPropertyCount@ is a pointer to an integer related to the number of
+--     display planes available or queried, as described below.
+--
+-- -   @pProperties@ is either @NULL@ or a pointer to an array of
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.VkDisplayPlaneProperties2KHR'
+--     structures.
+--
+-- = Description
+--
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.vkGetPhysicalDeviceDisplayPlaneProperties2KHR'
+-- behaves similarly to
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetPhysicalDeviceDisplayPlanePropertiesKHR',
+-- with the ability to return extended information via chained output
+-- structures.
+--
+-- Unresolved directive in
+-- vkGetPhysicalDeviceDisplayPlaneProperties2KHR.txt -
+-- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceDisplayPlaneProperties2KHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 getNumPhysicalDeviceDisplayPlaneProperties2KHR :: PhysicalDevice ->  IO (VkResult, Word32)
-getNumPhysicalDeviceDisplayPlaneProperties2KHR = \(PhysicalDevice physicalDevice commandTable) -> alloca (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceDisplayPlaneProperties2KHR commandTable physicalDevice pPropertyCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pPropertyCount)))
+getNumPhysicalDeviceDisplayPlaneProperties2KHR = \(PhysicalDevice physicalDevice' commandTable) -> alloca (\pPropertyCount' -> vkGetPhysicalDeviceDisplayPlaneProperties2KHR commandTable physicalDevice' pPropertyCount' nullPtr >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>peek pPropertyCount')))
 
--- | Wrapper for 'vkGetPhysicalDeviceDisplayPlaneProperties2KHR'
+-- | vkGetPhysicalDeviceDisplayPlaneProperties2KHR - Query information about
+-- the available display planes.
+--
+-- = Parameters
+--
+-- -   @physicalDevice@ is a physical device.
+--
+-- -   @pPropertyCount@ is a pointer to an integer related to the number of
+--     display planes available or queried, as described below.
+--
+-- -   @pProperties@ is either @NULL@ or a pointer to an array of
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.VkDisplayPlaneProperties2KHR'
+--     structures.
+--
+-- = Description
+--
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.vkGetPhysicalDeviceDisplayPlaneProperties2KHR'
+-- behaves similarly to
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetPhysicalDeviceDisplayPlanePropertiesKHR',
+-- with the ability to return extended information via chained output
+-- structures.
+--
+-- Unresolved directive in
+-- vkGetPhysicalDeviceDisplayPlaneProperties2KHR.txt -
+-- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceDisplayPlaneProperties2KHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 getPhysicalDeviceDisplayPlaneProperties2KHR :: PhysicalDevice ->  Word32 ->  IO (VkResult, Vector DisplayPlaneProperties2KHR)
-getPhysicalDeviceDisplayPlaneProperties2KHR = \(PhysicalDevice physicalDevice commandTable) -> \propertyCount -> allocaArray (fromIntegral propertyCount) (\pProperties -> with propertyCount (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceDisplayPlaneProperties2KHR commandTable physicalDevice pPropertyCount pProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM ((\p -> fromCStructDisplayPlaneProperties2KHR <=< peekElemOff p) pProperties) =<< (fromIntegral <$> (peek pPropertyCount)))))))
--- | Call 'getNumPhysicalDeviceDisplayPlaneProperties2KHR' to get the number of return values, then use that
--- number to call 'getPhysicalDeviceDisplayPlaneProperties2KHR' to get all the values.
+getPhysicalDeviceDisplayPlaneProperties2KHR = \(PhysicalDevice physicalDevice' commandTable) -> \propertyCount' -> allocaArray (fromIntegral propertyCount') (\pProperties' -> with propertyCount' (\pPropertyCount' -> vkGetPhysicalDeviceDisplayPlaneProperties2KHR commandTable physicalDevice' pPropertyCount' pProperties' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>(flip Data.Vector.generateM ((\p -> fromCStructDisplayPlaneProperties2KHR <=< peekElemOff p) pProperties') =<< (fromIntegral <$> (peek pPropertyCount')))))))
+-- | Returns all the values available from 'getPhysicalDeviceDisplayPlaneProperties2KHR'.
 getAllPhysicalDeviceDisplayPlaneProperties2KHR :: PhysicalDevice ->  IO (Vector DisplayPlaneProperties2KHR)
-getAllPhysicalDeviceDisplayPlaneProperties2KHR physicalDevice =
-  snd <$> getNumPhysicalDeviceDisplayPlaneProperties2KHR physicalDevice
-    >>= \num -> snd <$> getPhysicalDeviceDisplayPlaneProperties2KHR physicalDevice num
+getAllPhysicalDeviceDisplayPlaneProperties2KHR physicalDevice' =
+  snd <$> getNumPhysicalDeviceDisplayPlaneProperties2KHR physicalDevice'
+    >>= \num -> snd <$> getPhysicalDeviceDisplayPlaneProperties2KHR physicalDevice' num
 
 
--- | Wrapper for 'vkGetPhysicalDeviceDisplayProperties2KHR'
+
+-- | vkGetPhysicalDeviceDisplayProperties2KHR - Query information about the
+-- available displays
+--
+-- = Parameters
+--
+-- -   @physicalDevice@ is a physical device.
+--
+-- -   @pPropertyCount@ is a pointer to an integer related to the number of
+--     display devices available or queried, as described below.
+--
+-- -   @pProperties@ is either @NULL@ or a pointer to an array of
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.VkDisplayProperties2KHR'
+--     structures.
+--
+-- = Description
+--
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.vkGetPhysicalDeviceDisplayProperties2KHR'
+-- behaves similarly to
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetPhysicalDeviceDisplayPropertiesKHR',
+-- with the ability to return extended information via chained output
+-- structures.
+--
+-- Unresolved directive in vkGetPhysicalDeviceDisplayProperties2KHR.txt -
+-- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceDisplayProperties2KHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 getNumPhysicalDeviceDisplayProperties2KHR :: PhysicalDevice ->  IO (VkResult, Word32)
-getNumPhysicalDeviceDisplayProperties2KHR = \(PhysicalDevice physicalDevice commandTable) -> alloca (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceDisplayProperties2KHR commandTable physicalDevice pPropertyCount nullPtr >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>peek pPropertyCount)))
+getNumPhysicalDeviceDisplayProperties2KHR = \(PhysicalDevice physicalDevice' commandTable) -> alloca (\pPropertyCount' -> vkGetPhysicalDeviceDisplayProperties2KHR commandTable physicalDevice' pPropertyCount' nullPtr >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>peek pPropertyCount')))
 
--- | Wrapper for 'vkGetPhysicalDeviceDisplayProperties2KHR'
+-- | vkGetPhysicalDeviceDisplayProperties2KHR - Query information about the
+-- available displays
+--
+-- = Parameters
+--
+-- -   @physicalDevice@ is a physical device.
+--
+-- -   @pPropertyCount@ is a pointer to an integer related to the number of
+--     display devices available or queried, as described below.
+--
+-- -   @pProperties@ is either @NULL@ or a pointer to an array of
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.VkDisplayProperties2KHR'
+--     structures.
+--
+-- = Description
+--
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.vkGetPhysicalDeviceDisplayProperties2KHR'
+-- behaves similarly to
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetPhysicalDeviceDisplayPropertiesKHR',
+-- with the ability to return extended information via chained output
+-- structures.
+--
+-- Unresolved directive in vkGetPhysicalDeviceDisplayProperties2KHR.txt -
+-- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceDisplayProperties2KHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 getPhysicalDeviceDisplayProperties2KHR :: PhysicalDevice ->  Word32 ->  IO (VkResult, Vector DisplayProperties2KHR)
-getPhysicalDeviceDisplayProperties2KHR = \(PhysicalDevice physicalDevice commandTable) -> \propertyCount -> allocaArray (fromIntegral propertyCount) (\pProperties -> with propertyCount (\pPropertyCount -> Graphics.Vulkan.C.Dynamic.getPhysicalDeviceDisplayProperties2KHR commandTable physicalDevice pPropertyCount pProperties >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> ((,) <$> pure r<*>(flip Data.Vector.generateM ((\p -> fromCStructDisplayProperties2KHR <=< peekElemOff p) pProperties) =<< (fromIntegral <$> (peek pPropertyCount)))))))
--- | Call 'getNumPhysicalDeviceDisplayProperties2KHR' to get the number of return values, then use that
--- number to call 'getPhysicalDeviceDisplayProperties2KHR' to get all the values.
+getPhysicalDeviceDisplayProperties2KHR = \(PhysicalDevice physicalDevice' commandTable) -> \propertyCount' -> allocaArray (fromIntegral propertyCount') (\pProperties' -> with propertyCount' (\pPropertyCount' -> vkGetPhysicalDeviceDisplayProperties2KHR commandTable physicalDevice' pPropertyCount' pProperties' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>(flip Data.Vector.generateM ((\p -> fromCStructDisplayProperties2KHR <=< peekElemOff p) pProperties') =<< (fromIntegral <$> (peek pPropertyCount')))))))
+-- | Returns all the values available from 'getPhysicalDeviceDisplayProperties2KHR'.
 getAllPhysicalDeviceDisplayProperties2KHR :: PhysicalDevice ->  IO (Vector DisplayProperties2KHR)
-getAllPhysicalDeviceDisplayProperties2KHR physicalDevice =
-  snd <$> getNumPhysicalDeviceDisplayProperties2KHR physicalDevice
-    >>= \num -> snd <$> getPhysicalDeviceDisplayProperties2KHR physicalDevice num
+getAllPhysicalDeviceDisplayProperties2KHR physicalDevice' =
+  snd <$> getNumPhysicalDeviceDisplayProperties2KHR physicalDevice'
+    >>= \num -> snd <$> getPhysicalDeviceDisplayProperties2KHR physicalDevice' num
 

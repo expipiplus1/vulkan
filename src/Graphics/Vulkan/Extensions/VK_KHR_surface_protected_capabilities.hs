@@ -43,21 +43,41 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_surface_protected_capabilities
   )
 
 
--- No documentation found for TopLevel "SurfaceProtectedCapabilitiesKHR"
+
+-- | VkSurfaceProtectedCapabilitiesKHR - Structure describing capability of a
+-- surface to be protected
+--
+-- = Description
+--
+-- Unresolved directive in VkSurfaceProtectedCapabilitiesKHR.txt -
+-- include::{generated}\/validity\/structs\/VkSurfaceProtectedCapabilitiesKHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data SurfaceProtectedCapabilitiesKHR = SurfaceProtectedCapabilitiesKHR
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "SurfaceProtectedCapabilitiesKHR" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "SurfaceProtectedCapabilitiesKHR" "supportsProtected"
-  vkSupportsProtected :: Bool
+  supportsProtected :: Bool
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkSurfaceProtectedCapabilitiesKHR' and
+-- marshal a 'SurfaceProtectedCapabilitiesKHR' into it. The 'VkSurfaceProtectedCapabilitiesKHR' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructSurfaceProtectedCapabilitiesKHR :: SurfaceProtectedCapabilitiesKHR -> (VkSurfaceProtectedCapabilitiesKHR -> IO a) -> IO a
-withCStructSurfaceProtectedCapabilitiesKHR from cont = maybeWith withSomeVkStruct (vkPNext (from :: SurfaceProtectedCapabilitiesKHR)) (\pPNext -> cont (VkSurfaceProtectedCapabilitiesKHR VK_STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR pPNext (boolToBool32 (vkSupportsProtected (from :: SurfaceProtectedCapabilitiesKHR)))))
+withCStructSurfaceProtectedCapabilitiesKHR marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: SurfaceProtectedCapabilitiesKHR)) (\pPNext -> cont (VkSurfaceProtectedCapabilitiesKHR VK_STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR pPNext (boolToBool32 (supportsProtected (marshalled :: SurfaceProtectedCapabilitiesKHR)))))
+
+-- | A function to read a 'VkSurfaceProtectedCapabilitiesKHR' and all additional
+-- structures in the pointer chain into a 'SurfaceProtectedCapabilitiesKHR'.
 fromCStructSurfaceProtectedCapabilitiesKHR :: VkSurfaceProtectedCapabilitiesKHR -> IO SurfaceProtectedCapabilitiesKHR
 fromCStructSurfaceProtectedCapabilitiesKHR c = SurfaceProtectedCapabilitiesKHR <$> -- Univalued Member elided
                                                                                maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSurfaceProtectedCapabilitiesKHR)))
                                                                                <*> pure (bool32ToBool (vkSupportsProtected (c :: VkSurfaceProtectedCapabilitiesKHR)))
+
 instance Zero SurfaceProtectedCapabilitiesKHR where
   zero = SurfaceProtectedCapabilitiesKHR Nothing
                                          False
+

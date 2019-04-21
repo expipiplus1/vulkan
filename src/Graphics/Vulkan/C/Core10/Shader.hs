@@ -10,16 +10,12 @@ module Graphics.Vulkan.C.Core10.Shader
   ( VkShaderModule
   , VkShaderModuleCreateFlags(..)
   , VkShaderModuleCreateInfo(..)
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCreateShaderModule
-#endif
   , FN_vkCreateShaderModule
   , PFN_vkCreateShaderModule
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkDestroyShaderModule
-#endif
+  , vkCreateShaderModule
   , FN_vkDestroyShaderModule
   , PFN_vkDestroyShaderModule
+  , vkDestroyShaderModule
   ) where
 
 import Data.Bits
@@ -64,10 +60,14 @@ import Graphics.Vulkan.C.Core10.Core
   , VkStructureType(..)
   , Zero(..)
   , VkFlags
+  , pattern VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkAllocationCallbacks(..)
   , VkDevice
+  )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -83,13 +83,14 @@ data VkShaderModule_T
 -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineShaderStageCreateInfo',
 -- 'vkCreateShaderModule', 'vkDestroyShaderModule'
 type VkShaderModule = Ptr VkShaderModule_T
+
 -- ** VkShaderModuleCreateFlags
 
 -- | VkShaderModuleCreateFlags - Reserved for future use
 --
 -- = Description
 --
--- @VkShaderModuleCreateFlags@ is a bitmask type for setting a mask, but is
+-- 'VkShaderModuleCreateFlags' is a bitmask type for setting a mask, but is
 -- currently reserved for future use.
 --
 -- = See Also
@@ -113,6 +114,7 @@ instance Read VkShaderModuleCreateFlags where
                     )
 
 
+
 -- | VkShaderModuleCreateInfo - Structure specifying parameters of a newly
 -- created shader module
 --
@@ -125,15 +127,15 @@ instance Read VkShaderModuleCreateFlags where
 --
 -- -   @pCode@ /must/ point to either valid SPIR-V code, formatted and
 --     packed as described by the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#spirv-spec Khronos SPIR-V Specification>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#spirv-spec Khronos SPIR-V Specification>
 --     or valid GLSL code which /must/ be written to the
 --     @GL_KHR_vulkan_glsl@ extension specification
 --
 -- -   If @pCode@ points to SPIR-V code, that code /must/ adhere to the
 --     validation rules described by the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#spirvenv-module-validation Validation Rules within a Module>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#spirvenv-module-validation Validation Rules within a Module>
 --     section of the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#spirvenv-capabilities SPIR-V Environment>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#spirvenv-capabilities SPIR-V Environment>
 --     appendix
 --
 -- -   If @pCode@ points to GLSL code, it /must/ be valid GLSL code written
@@ -143,26 +145,18 @@ instance Read VkShaderModuleCreateFlags where
 --
 -- -   @pCode@ /must/ not declare any capability that is not supported by
 --     the API, as described by the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#spirvenv-module-validation Capabilities>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#spirvenv-module-validation Capabilities>
 --     section of the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#spirvenv-capabilities SPIR-V Environment>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#spirvenv-capabilities SPIR-V Environment>
 --     appendix
 --
 -- -   If @pCode@ declares any of the capabilities listed as /optional/ in
 --     the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#spirvenv-capabilities-table SPIR-V Environment>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#spirvenv-capabilities-table SPIR-V Environment>
 --     appendix, the corresponding feature(s) /must/ be enabled.
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO@
---
--- -   @pNext@ /must/ be @NULL@
---
--- -   @flags@ /must/ be @0@
---
--- -   @pCode@ /must/ be a valid pointer to an array of
---     \(\textrm{codeSize} \over 4\) @uint32_t@ values
+-- Unresolved directive in VkShaderModuleCreateInfo.txt -
+-- include::{generated}\/validity\/structs\/VkShaderModuleCreateInfo.txt[]
 --
 -- = See Also
 --
@@ -199,12 +193,12 @@ instance Storable VkShaderModuleCreateInfo where
                 *> poke (ptr `plusPtr` 32) (vkPCode (poked :: VkShaderModuleCreateInfo))
 
 instance Zero VkShaderModuleCreateInfo where
-  zero = VkShaderModuleCreateInfo zero
+  zero = VkShaderModuleCreateInfo VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO
                                   zero
                                   zero
                                   zero
                                   zero
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCreateShaderModule - Creates a new shader module object
 --
 -- = Parameters
@@ -212,10 +206,10 @@ instance Zero VkShaderModuleCreateInfo where
 -- -   @device@ is the logical device that creates the shader module.
 --
 -- -   @pCreateInfo@ is a pointer to an instance of the
---     @VkShaderModuleCreateInfo@ structure.
+--     'VkShaderModuleCreateInfo' structure.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
 -- -   @pShaderModule@ points to a 'VkShaderModule' handle in which the
@@ -225,52 +219,45 @@ instance Zero VkShaderModuleCreateInfo where
 --
 -- Once a shader module has been created, any entry points it contains
 -- /can/ be used in pipeline shader stages as described in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#pipelines-compute Compute Pipelines>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#pipelines-compute Compute Pipelines>
 -- and
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#pipelines-graphics Graphics Pipelines>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#pipelines-graphics Graphics Pipelines>.
 --
--- If the shader stage fails to compile @VK_ERROR_INVALID_SHADER_NV@ will
--- be generated and the compile log will be reported back to the
--- application by @{html_spec_relative}#VK_EXT_debug_report@ if enabled.
+-- If the shader stage fails to compile
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_glsl_shader.VK_ERROR_INVALID_SHADER_NV'
+-- will be generated and the compile log will be reported back to the
+-- application by
+-- @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.1-extensions\/html\/vkspec.html#VK_EXT_debug_report@
+-- if enabled.
 --
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     @VkShaderModuleCreateInfo@ structure
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
---
--- -   @pShaderModule@ /must/ be a valid pointer to a @VkShaderModule@
---     handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- Unresolved directive in vkCreateShaderModule.txt -
+-- include::{generated}\/validity\/protos\/vkCreateShaderModule.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
 -- 'VkShaderModule', 'VkShaderModuleCreateInfo'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCreateShaderModule" vkCreateShaderModule :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkShaderModuleCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pShaderModule" ::: Ptr VkShaderModule) -> IO VkResult
-
+#else
+vkCreateShaderModule :: DeviceCmds -> ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkShaderModuleCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pShaderModule" ::: Ptr VkShaderModule) -> IO VkResult
+vkCreateShaderModule deviceCmds = mkVkCreateShaderModule (pVkCreateShaderModule deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCreateShaderModule
+  :: FunPtr (("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkShaderModuleCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pShaderModule" ::: Ptr VkShaderModule) -> IO VkResult) -> (("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkShaderModuleCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pShaderModule" ::: Ptr VkShaderModule) -> IO VkResult)
+#endif
+
 type FN_vkCreateShaderModule = ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkShaderModuleCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pShaderModule" ::: Ptr VkShaderModule) -> IO VkResult
 type PFN_vkCreateShaderModule = FunPtr FN_vkCreateShaderModule
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkDestroyShaderModule - Destroy a shader module
 --
 -- = Parameters
@@ -280,7 +267,7 @@ type PFN_vkCreateShaderModule = FunPtr FN_vkCreateShaderModule
 -- -   @shaderModule@ is the handle of the shader module to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
 -- = Description
@@ -290,41 +277,40 @@ type PFN_vkCreateShaderModule = FunPtr FN_vkCreateShaderModule
 --
 -- == Valid Usage
 --
--- -   If @VkAllocationCallbacks@ were provided when @shaderModule@ was
---     created, a compatible set of callbacks /must/ be provided here
+-- -   If
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     were provided when @shaderModule@ was created, a compatible set of
+--     callbacks /must/ be provided here
 --
--- -   If no @VkAllocationCallbacks@ were provided when @shaderModule@ was
---     created, @pAllocator@ /must/ be @NULL@
+-- -   If no
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     were provided when @shaderModule@ was created, @pAllocator@ /must/
+--     be @NULL@
 --
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   If @shaderModule@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @shaderModule@
---     /must/ be a valid @VkShaderModule@ handle
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
---
--- -   If @shaderModule@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
---
--- == Host Synchronization
---
--- -   Host access to @shaderModule@ /must/ be externally synchronized
+-- Unresolved directive in vkDestroyShaderModule.txt -
+-- include::{generated}\/validity\/protos\/vkDestroyShaderModule.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
 -- 'VkShaderModule'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkDestroyShaderModule" vkDestroyShaderModule :: ("device" ::: VkDevice) -> ("shaderModule" ::: VkShaderModule) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
-
+#else
+vkDestroyShaderModule :: DeviceCmds -> ("device" ::: VkDevice) -> ("shaderModule" ::: VkShaderModule) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+vkDestroyShaderModule deviceCmds = mkVkDestroyShaderModule (pVkDestroyShaderModule deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkDestroyShaderModule
+  :: FunPtr (("device" ::: VkDevice) -> ("shaderModule" ::: VkShaderModule) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()) -> (("device" ::: VkDevice) -> ("shaderModule" ::: VkShaderModule) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ())
+#endif
+
 type FN_vkDestroyShaderModule = ("device" ::: VkDevice) -> ("shaderModule" ::: VkShaderModule) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 type PFN_vkDestroyShaderModule = FunPtr FN_vkDestroyShaderModule

@@ -14,26 +14,18 @@ module Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache
   , VkValidationCacheEXT
   , VkValidationCacheHeaderVersionEXT(..)
   , pattern VK_VALIDATION_CACHE_HEADER_VERSION_ONE_EXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkCreateValidationCacheEXT
-#endif
   , FN_vkCreateValidationCacheEXT
   , PFN_vkCreateValidationCacheEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkDestroyValidationCacheEXT
-#endif
+  , vkCreateValidationCacheEXT
   , FN_vkDestroyValidationCacheEXT
   , PFN_vkDestroyValidationCacheEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkGetValidationCacheDataEXT
-#endif
+  , vkDestroyValidationCacheEXT
   , FN_vkGetValidationCacheDataEXT
   , PFN_vkGetValidationCacheDataEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkMergeValidationCachesEXT
-#endif
+  , vkGetValidationCacheDataEXT
   , FN_vkMergeValidationCachesEXT
   , PFN_vkMergeValidationCachesEXT
+  , vkMergeValidationCachesEXT
   , pattern VK_EXT_VALIDATION_CACHE_EXTENSION_NAME
   , pattern VK_EXT_VALIDATION_CACHE_SPEC_VERSION
   , pattern VK_OBJECT_TYPE_VALIDATION_CACHE_EXT
@@ -95,6 +87,9 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkAllocationCallbacks(..)
   , VkDevice
   )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
+  )
 import Graphics.Vulkan.NamedType
   ( (:::)
   )
@@ -103,18 +98,24 @@ import Graphics.Vulkan.NamedType
 -- | VkShaderModuleValidationCacheCreateInfoEXT - Specify validation cache to
 -- use during shader module creation
 --
--- == Valid Usage (Implicit)
+-- = Description
+--
+-- Unresolved directive in VkShaderModuleValidationCacheCreateInfoEXT.txt -
+-- include::{generated}\/validity\/structs\/VkShaderModuleValidationCacheCreateInfoEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkShaderModuleValidationCacheCreateInfoEXT = VkShaderModuleValidationCacheCreateInfoEXT
-  { -- | @sType@ /must/ be
-  -- @VK_STRUCTURE_TYPE_SHADER_MODULE_VALIDATION_CACHE_CREATE_INFO_EXT@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @validationCache@ /must/ be a valid @VkValidationCacheEXT@ handle
+  , -- | @validationCache@ is the validation cache object from which the results
+  -- of prior validation attempts will be written, and to which new
+  -- validation results for this
+  -- 'Graphics.Vulkan.C.Core10.Shader.VkShaderModule' will be written (if not
+  -- already present).
   vkValidationCache :: VkValidationCacheEXT
   }
   deriving (Eq, Show)
@@ -130,16 +131,17 @@ instance Storable VkShaderModuleValidationCacheCreateInfoEXT where
                 *> poke (ptr `plusPtr` 16) (vkValidationCache (poked :: VkShaderModuleValidationCacheCreateInfoEXT))
 
 instance Zero VkShaderModuleValidationCacheCreateInfoEXT where
-  zero = VkShaderModuleValidationCacheCreateInfoEXT zero
+  zero = VkShaderModuleValidationCacheCreateInfoEXT VK_STRUCTURE_TYPE_SHADER_MODULE_VALIDATION_CACHE_CREATE_INFO_EXT
                                                     zero
                                                     zero
+
 -- ** VkValidationCacheCreateFlagsEXT
 
 -- | VkValidationCacheCreateFlagsEXT - Reserved for future use
 --
 -- = Description
 --
--- @VkValidationCacheCreateFlagsEXT@ is a bitmask type for setting a mask,
+-- 'VkValidationCacheCreateFlagsEXT' is a bitmask type for setting a mask,
 -- but is currently reserved for future use.
 --
 -- = See Also
@@ -163,29 +165,21 @@ instance Read VkValidationCacheCreateFlagsEXT where
                     )
 
 
+
 -- | VkValidationCacheCreateInfoEXT - Structure specifying parameters of a
 -- newly created validation cache
 --
 -- == Valid Usage
 --
 -- -   If @initialDataSize@ is not @0@, it /must/ be equal to the size of
---     @pInitialData@, as returned by @vkGetValidationCacheDataEXT@ when
+--     @pInitialData@, as returned by 'vkGetValidationCacheDataEXT' when
 --     @pInitialData@ was originally retrieved
 --
 -- -   If @initialDataSize@ is not @0@, @pInitialData@ /must/ have been
---     retrieved from a previous call to @vkGetValidationCacheDataEXT@
+--     retrieved from a previous call to 'vkGetValidationCacheDataEXT'
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT@
---
--- -   @pNext@ /must/ be @NULL@
---
--- -   @flags@ /must/ be @0@
---
--- -   If @initialDataSize@ is not @0@, @pInitialData@ /must/ be a valid
---     pointer to an array of @initialDataSize@ bytes
+-- Unresolved directive in VkValidationCacheCreateInfoEXT.txt -
+-- include::{generated}\/validity\/structs\/VkValidationCacheCreateInfoEXT.txt[]
 --
 -- = See Also
 --
@@ -223,11 +217,12 @@ instance Storable VkValidationCacheCreateInfoEXT where
                 *> poke (ptr `plusPtr` 32) (vkPInitialData (poked :: VkValidationCacheCreateInfoEXT))
 
 instance Zero VkValidationCacheCreateInfoEXT where
-  zero = VkValidationCacheCreateInfoEXT zero
+  zero = VkValidationCacheCreateInfoEXT VK_STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT
                                         zero
                                         zero
                                         zero
                                         zero
+
 -- | Dummy data to tag the 'Ptr' with
 data VkValidationCacheEXT_T
 -- | VkValidationCacheEXT - Opaque handle to a validation cache object
@@ -236,13 +231,14 @@ data VkValidationCacheEXT_T
 --
 -- No cross-references are available
 type VkValidationCacheEXT = Ptr VkValidationCacheEXT_T
+
 -- ** VkValidationCacheHeaderVersionEXT
 
 -- | VkValidationCacheHeaderVersionEXT - Encode validation cache version
 --
 -- = See Also
 --
--- UNKNOWN:vkCreateValidationCacheEXT, UNKNOWN:vkGetValidationCacheDataEXT
+-- 'vkCreateValidationCacheEXT', 'vkGetValidationCacheDataEXT'
 newtype VkValidationCacheHeaderVersionEXT = VkValidationCacheHeaderVersionEXT Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -260,11 +256,11 @@ instance Read VkValidationCacheHeaderVersionEXT where
                         )
                     )
 
--- | @VK_VALIDATION_CACHE_HEADER_VERSION_ONE_EXT@ specifies version one of
+-- | 'VK_VALIDATION_CACHE_HEADER_VERSION_ONE_EXT' specifies version one of
 -- the validation cache.
 pattern VK_VALIDATION_CACHE_HEADER_VERSION_ONE_EXT :: VkValidationCacheHeaderVersionEXT
 pattern VK_VALIDATION_CACHE_HEADER_VERSION_ONE_EXT = VkValidationCacheHeaderVersionEXT 1
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkCreateValidationCacheEXT - Creates a new validation cache
 --
 -- = Parameters
@@ -277,7 +273,7 @@ pattern VK_VALIDATION_CACHE_HEADER_VERSION_ONE_EXT = VkValidationCacheHeaderVers
 --     cache object.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
 -- -   @pValidationCache@ is a pointer to a 'VkValidationCacheEXT' handle
@@ -290,15 +286,17 @@ pattern VK_VALIDATION_CACHE_HEADER_VERSION_ONE_EXT = VkValidationCacheHeaderVers
 -- Applications /can/ track and manage the total host memory size of a
 -- validation cache object using the @pAllocator@. Applications /can/ limit
 -- the amount of data retrieved from a validation cache object in
--- @vkGetValidationCacheDataEXT@. Implementations /should/ not internally
+-- 'vkGetValidationCacheDataEXT'. Implementations /should/ not internally
 -- limit the total number of entries added to a validation cache object or
 -- the total host memory consumed.
 --
 -- Once created, a validation cache /can/ be passed to the
--- @vkCreateShaderModule@ command as part of the @VkShaderModuleCreateInfo@
--- @pNext@ chain. If a @VkShaderModuleValidationCacheCreateInfoEXT@ object
--- is part of the @VkShaderModuleCreateInfo@::@pNext@ chain, and its
--- @validationCache@ field is not
+-- 'Graphics.Vulkan.C.Core10.Shader.vkCreateShaderModule' command as part
+-- of the 'Graphics.Vulkan.C.Core10.Shader.VkShaderModuleCreateInfo'
+-- @pNext@ chain. If a 'VkShaderModuleValidationCacheCreateInfoEXT' object
+-- is part of the
+-- 'Graphics.Vulkan.C.Core10.Shader.VkShaderModuleCreateInfo'::@pNext@
+-- chain, and its @validationCache@ field is not
 -- 'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', the implementation
 -- will query it for possible reuse opportunities and update it with new
 -- content. The use of the validation cache object in these commands is
@@ -309,43 +307,35 @@ pattern VK_VALIDATION_CACHE_HEADER_VERSION_ONE_EXT = VkValidationCacheHeaderVers
 --
 -- Implementations /should/ make every effort to limit any critical
 -- sections to the actual accesses to the cache, which is expected to be
--- significantly shorter than the duration of the @vkCreateShaderModule@
--- command.
+-- significantly shorter than the duration of the
+-- 'Graphics.Vulkan.C.Core10.Shader.vkCreateShaderModule' command.
 --
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     @VkValidationCacheCreateInfoEXT@ structure
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
---
--- -   @pValidationCache@ /must/ be a valid pointer to a
---     @VkValidationCacheEXT@ handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+-- Unresolved directive in vkCreateValidationCacheEXT.txt -
+-- include::{generated}\/validity\/protos\/vkCreateValidationCacheEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCreateValidationCacheEXT" vkCreateValidationCacheEXT :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkValidationCacheCreateInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pValidationCache" ::: Ptr VkValidationCacheEXT) -> IO VkResult
-
+#else
+vkCreateValidationCacheEXT :: DeviceCmds -> ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkValidationCacheCreateInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pValidationCache" ::: Ptr VkValidationCacheEXT) -> IO VkResult
+vkCreateValidationCacheEXT deviceCmds = mkVkCreateValidationCacheEXT (pVkCreateValidationCacheEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCreateValidationCacheEXT
+  :: FunPtr (("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkValidationCacheCreateInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pValidationCache" ::: Ptr VkValidationCacheEXT) -> IO VkResult) -> (("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkValidationCacheCreateInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pValidationCache" ::: Ptr VkValidationCacheEXT) -> IO VkResult)
+#endif
+
 type FN_vkCreateValidationCacheEXT = ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkValidationCacheCreateInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pValidationCache" ::: Ptr VkValidationCacheEXT) -> IO VkResult
 type PFN_vkCreateValidationCacheEXT = FunPtr FN_vkCreateValidationCacheEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkDestroyValidationCacheEXT - Destroy a validation cache object
 --
 -- = Parameters
@@ -356,48 +346,47 @@ type PFN_vkCreateValidationCacheEXT = FunPtr FN_vkCreateValidationCacheEXT
 -- -   @validationCache@ is the handle of the validation cache to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
 -- == Valid Usage
 --
--- -   If @VkAllocationCallbacks@ were provided when @validationCache@ was
---     created, a compatible set of callbacks /must/ be provided here
+-- -   If
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     were provided when @validationCache@ was created, a compatible set
+--     of callbacks /must/ be provided here
 --
--- -   If no @VkAllocationCallbacks@ were provided when @validationCache@
---     was created, @pAllocator@ /must/ be @NULL@
+-- -   If no
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     were provided when @validationCache@ was created, @pAllocator@
+--     /must/ be @NULL@
 --
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   If @validationCache@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE',
---     @validationCache@ /must/ be a valid @VkValidationCacheEXT@ handle
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
---
--- -   If @validationCache@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
---
--- == Host Synchronization
---
--- -   Host access to @validationCache@ /must/ be externally synchronized
+-- Unresolved directive in vkDestroyValidationCacheEXT.txt -
+-- include::{generated}\/validity\/protos\/vkDestroyValidationCacheEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkDestroyValidationCacheEXT" vkDestroyValidationCacheEXT :: ("device" ::: VkDevice) -> ("validationCache" ::: VkValidationCacheEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
-
+#else
+vkDestroyValidationCacheEXT :: DeviceCmds -> ("device" ::: VkDevice) -> ("validationCache" ::: VkValidationCacheEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+vkDestroyValidationCacheEXT deviceCmds = mkVkDestroyValidationCacheEXT (pVkDestroyValidationCacheEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkDestroyValidationCacheEXT
+  :: FunPtr (("device" ::: VkDevice) -> ("validationCache" ::: VkValidationCacheEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()) -> (("device" ::: VkDevice) -> ("validationCache" ::: VkValidationCacheEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ())
+#endif
+
 type FN_vkDestroyValidationCacheEXT = ("device" ::: VkDevice) -> ("validationCache" ::: VkValidationCacheEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
 type PFN_vkDestroyValidationCacheEXT = FunPtr FN_vkDestroyValidationCacheEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkGetValidationCacheDataEXT - Get the data store from a validation cache
 --
 -- = Parameters
@@ -422,12 +411,13 @@ type PFN_vkDestroyValidationCacheEXT = FunPtr FN_vkDestroyValidationCacheEXT
 --
 -- If @pDataSize@ is less than the maximum size that /can/ be retrieved by
 -- the validation cache, at most @pDataSize@ bytes will be written to
--- @pData@, and @vkGetValidationCacheDataEXT@ will return @VK_INCOMPLETE@.
--- Any data written to @pData@ is valid and /can/ be provided as the
--- @pInitialData@ member of the @VkValidationCacheCreateInfoEXT@ structure
--- passed to @vkCreateValidationCacheEXT@.
+-- @pData@, and 'vkGetValidationCacheDataEXT' will return
+-- 'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'. Any data written to
+-- @pData@ is valid and /can/ be provided as the @pInitialData@ member of
+-- the 'VkValidationCacheCreateInfoEXT' structure passed to
+-- 'vkCreateValidationCacheEXT'.
 --
--- Two calls to @vkGetValidationCacheDataEXT@ with the same parameters
+-- Two calls to 'vkGetValidationCacheDataEXT' with the same parameters
 -- /must/ retrieve the same data unless a command that modifies the
 -- contents of the cache is called between them.
 --
@@ -453,14 +443,15 @@ type PFN_vkDestroyValidationCacheEXT = FunPtr FN_vkDestroyValidationCacheEXT
 -- > |    |              | written as a stream of bytes, with the least     |
 -- > |    |              | significant byte first                           |
 -- > +----+--------------+--------------------------------------------------+
--- > | 8  | @VK_UUID_SIZ | a layer commit ID expressed as a UUID, which     |
--- > |    | E@           | uniquely identifies the version of the           |
--- > |    |              | validation layers used to generate these         |
--- > |    |              | validation results                               |
+-- > | 8  | 'Graphics.Vu | a layer commit ID expressed as a UUID, which     |
+-- > |    | lkan.C.Core1 | uniquely identifies the version of the           |
+-- > |    | 0.DeviceInit | validation layers used to generate these         |
+-- > |    | ialization.V | validation results                               |
+-- > |    | K_UUID_SIZE' |                                                  |
 -- > +----+--------------+--------------------------------------------------+
 -- >
 -- > Layout for validation cache header version
--- > @VK_VALIDATION_CACHE_HEADER_VERSION_ONE_EXT@
+-- > 'VK_VALIDATION_CACHE_HEADER_VERSION_ONE_EXT'
 --
 -- The first four bytes encode the length of the entire validation cache
 -- header, in bytes. This value includes all fields in the header including
@@ -475,46 +466,32 @@ type PFN_vkDestroyValidationCacheEXT = FunPtr FN_vkDestroyValidationCacheEXT
 -- nothing will be written to @pData@ and zero will be written to
 -- @pDataSize@.
 --
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   @validationCache@ /must/ be a valid @VkValidationCacheEXT@ handle
---
--- -   @pDataSize@ /must/ be a valid pointer to a @size_t@ value
---
--- -   If the value referenced by @pDataSize@ is not @0@, and @pData@ is
---     not @NULL@, @pData@ /must/ be a valid pointer to an array of
---     @pDataSize@ bytes
---
--- -   @validationCache@ /must/ have been created, allocated, or retrieved
---     from @device@
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
---     -   @VK_INCOMPLETE@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- Unresolved directive in vkGetValidationCacheDataEXT.txt -
+-- include::{generated}\/validity\/protos\/vkGetValidationCacheDataEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetValidationCacheDataEXT" vkGetValidationCacheDataEXT :: ("device" ::: VkDevice) -> ("validationCache" ::: VkValidationCacheEXT) -> ("pDataSize" ::: Ptr CSize) -> ("pData" ::: Ptr ()) -> IO VkResult
-
+#else
+vkGetValidationCacheDataEXT :: DeviceCmds -> ("device" ::: VkDevice) -> ("validationCache" ::: VkValidationCacheEXT) -> ("pDataSize" ::: Ptr CSize) -> ("pData" ::: Ptr ()) -> IO VkResult
+vkGetValidationCacheDataEXT deviceCmds = mkVkGetValidationCacheDataEXT (pVkGetValidationCacheDataEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetValidationCacheDataEXT
+  :: FunPtr (("device" ::: VkDevice) -> ("validationCache" ::: VkValidationCacheEXT) -> ("pDataSize" ::: Ptr CSize) -> ("pData" ::: Ptr ()) -> IO VkResult) -> (("device" ::: VkDevice) -> ("validationCache" ::: VkValidationCacheEXT) -> ("pDataSize" ::: Ptr CSize) -> ("pData" ::: Ptr ()) -> IO VkResult)
+#endif
+
 type FN_vkGetValidationCacheDataEXT = ("device" ::: VkDevice) -> ("validationCache" ::: VkValidationCacheEXT) -> ("pDataSize" ::: Ptr CSize) -> ("pData" ::: Ptr ()) -> IO VkResult
 type PFN_vkGetValidationCacheDataEXT = FunPtr FN_vkGetValidationCacheDataEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkMergeValidationCachesEXT - Combine the data stores of validation
 -- caches
 --
@@ -542,63 +519,48 @@ type PFN_vkGetValidationCacheDataEXT = FunPtr FN_vkGetValidationCacheDataEXT
 --
 -- == Valid Usage
 --
--- -   @dstCache@ /must/ not appear in the list of source caches
---
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   @dstCache@ /must/ be a valid @VkValidationCacheEXT@ handle
---
--- -   @pSrcCaches@ /must/ be a valid pointer to an array of
---     @srcCacheCount@ valid @VkValidationCacheEXT@ handles
---
--- -   @srcCacheCount@ /must/ be greater than @0@
---
--- -   @dstCache@ /must/ have been created, allocated, or retrieved from
---     @device@
---
--- -   Each element of @pSrcCaches@ /must/ have been created, allocated, or
---     retrieved from @device@
---
--- == Host Synchronization
---
--- -   Host access to @dstCache@ /must/ be externally synchronized
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- Unresolved directive in vkMergeValidationCachesEXT.txt -
+-- include::{generated}\/validity\/protos\/vkMergeValidationCachesEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkMergeValidationCachesEXT" vkMergeValidationCachesEXT :: ("device" ::: VkDevice) -> ("dstCache" ::: VkValidationCacheEXT) -> ("srcCacheCount" ::: Word32) -> ("pSrcCaches" ::: Ptr VkValidationCacheEXT) -> IO VkResult
-
+#else
+vkMergeValidationCachesEXT :: DeviceCmds -> ("device" ::: VkDevice) -> ("dstCache" ::: VkValidationCacheEXT) -> ("srcCacheCount" ::: Word32) -> ("pSrcCaches" ::: Ptr VkValidationCacheEXT) -> IO VkResult
+vkMergeValidationCachesEXT deviceCmds = mkVkMergeValidationCachesEXT (pVkMergeValidationCachesEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkMergeValidationCachesEXT
+  :: FunPtr (("device" ::: VkDevice) -> ("dstCache" ::: VkValidationCacheEXT) -> ("srcCacheCount" ::: Word32) -> ("pSrcCaches" ::: Ptr VkValidationCacheEXT) -> IO VkResult) -> (("device" ::: VkDevice) -> ("dstCache" ::: VkValidationCacheEXT) -> ("srcCacheCount" ::: Word32) -> ("pSrcCaches" ::: Ptr VkValidationCacheEXT) -> IO VkResult)
+#endif
+
 type FN_vkMergeValidationCachesEXT = ("device" ::: VkDevice) -> ("dstCache" ::: VkValidationCacheEXT) -> ("srcCacheCount" ::: Word32) -> ("pSrcCaches" ::: Ptr VkValidationCacheEXT) -> IO VkResult
 type PFN_vkMergeValidationCachesEXT = FunPtr FN_vkMergeValidationCachesEXT
+
 -- No documentation found for TopLevel "VK_EXT_VALIDATION_CACHE_EXTENSION_NAME"
 pattern VK_EXT_VALIDATION_CACHE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_VALIDATION_CACHE_EXTENSION_NAME = "VK_EXT_validation_cache"
+
 -- No documentation found for TopLevel "VK_EXT_VALIDATION_CACHE_SPEC_VERSION"
 pattern VK_EXT_VALIDATION_CACHE_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_VALIDATION_CACHE_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_VALIDATION_CACHE_EXT"
 pattern VK_OBJECT_TYPE_VALIDATION_CACHE_EXT :: VkObjectType
 pattern VK_OBJECT_TYPE_VALIDATION_CACHE_EXT = VkObjectType 1000160000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SHADER_MODULE_VALIDATION_CACHE_CREATE_INFO_EXT"
 pattern VK_STRUCTURE_TYPE_SHADER_MODULE_VALIDATION_CACHE_CREATE_INFO_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_SHADER_MODULE_VALIDATION_CACHE_CREATE_INFO_EXT = VkStructureType 1000160001
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT"
 pattern VK_STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT = VkStructureType 1000160000

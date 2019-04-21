@@ -37,226 +37,138 @@ module Graphics.Vulkan.C.Core10.CommandBufferBuilding
   , VkSubpassContents(..)
   , pattern VK_SUBPASS_CONTENTS_INLINE
   , pattern VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdBeginQuery
-#endif
   , FN_vkCmdBeginQuery
   , PFN_vkCmdBeginQuery
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdBeginRenderPass
-#endif
+  , vkCmdBeginQuery
   , FN_vkCmdBeginRenderPass
   , PFN_vkCmdBeginRenderPass
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdBindDescriptorSets
-#endif
+  , vkCmdBeginRenderPass
   , FN_vkCmdBindDescriptorSets
   , PFN_vkCmdBindDescriptorSets
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdBindIndexBuffer
-#endif
+  , vkCmdBindDescriptorSets
   , FN_vkCmdBindIndexBuffer
   , PFN_vkCmdBindIndexBuffer
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdBindPipeline
-#endif
+  , vkCmdBindIndexBuffer
   , FN_vkCmdBindPipeline
   , PFN_vkCmdBindPipeline
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdBindVertexBuffers
-#endif
+  , vkCmdBindPipeline
   , FN_vkCmdBindVertexBuffers
   , PFN_vkCmdBindVertexBuffers
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdBlitImage
-#endif
+  , vkCmdBindVertexBuffers
   , FN_vkCmdBlitImage
   , PFN_vkCmdBlitImage
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdClearAttachments
-#endif
+  , vkCmdBlitImage
   , FN_vkCmdClearAttachments
   , PFN_vkCmdClearAttachments
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdClearColorImage
-#endif
+  , vkCmdClearAttachments
   , FN_vkCmdClearColorImage
   , PFN_vkCmdClearColorImage
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdClearDepthStencilImage
-#endif
+  , vkCmdClearColorImage
   , FN_vkCmdClearDepthStencilImage
   , PFN_vkCmdClearDepthStencilImage
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdCopyBuffer
-#endif
+  , vkCmdClearDepthStencilImage
   , FN_vkCmdCopyBuffer
   , PFN_vkCmdCopyBuffer
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdCopyBufferToImage
-#endif
+  , vkCmdCopyBuffer
   , FN_vkCmdCopyBufferToImage
   , PFN_vkCmdCopyBufferToImage
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdCopyImage
-#endif
+  , vkCmdCopyBufferToImage
   , FN_vkCmdCopyImage
   , PFN_vkCmdCopyImage
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdCopyImageToBuffer
-#endif
+  , vkCmdCopyImage
   , FN_vkCmdCopyImageToBuffer
   , PFN_vkCmdCopyImageToBuffer
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdCopyQueryPoolResults
-#endif
+  , vkCmdCopyImageToBuffer
   , FN_vkCmdCopyQueryPoolResults
   , PFN_vkCmdCopyQueryPoolResults
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdDispatch
-#endif
+  , vkCmdCopyQueryPoolResults
   , FN_vkCmdDispatch
   , PFN_vkCmdDispatch
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdDispatchIndirect
-#endif
+  , vkCmdDispatch
   , FN_vkCmdDispatchIndirect
   , PFN_vkCmdDispatchIndirect
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdDraw
-#endif
+  , vkCmdDispatchIndirect
   , FN_vkCmdDraw
   , PFN_vkCmdDraw
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdDrawIndexed
-#endif
+  , vkCmdDraw
   , FN_vkCmdDrawIndexed
   , PFN_vkCmdDrawIndexed
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdDrawIndexedIndirect
-#endif
+  , vkCmdDrawIndexed
   , FN_vkCmdDrawIndexedIndirect
   , PFN_vkCmdDrawIndexedIndirect
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdDrawIndirect
-#endif
+  , vkCmdDrawIndexedIndirect
   , FN_vkCmdDrawIndirect
   , PFN_vkCmdDrawIndirect
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdEndQuery
-#endif
+  , vkCmdDrawIndirect
   , FN_vkCmdEndQuery
   , PFN_vkCmdEndQuery
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdEndRenderPass
-#endif
+  , vkCmdEndQuery
   , FN_vkCmdEndRenderPass
   , PFN_vkCmdEndRenderPass
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdExecuteCommands
-#endif
+  , vkCmdEndRenderPass
   , FN_vkCmdExecuteCommands
   , PFN_vkCmdExecuteCommands
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdFillBuffer
-#endif
+  , vkCmdExecuteCommands
   , FN_vkCmdFillBuffer
   , PFN_vkCmdFillBuffer
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdNextSubpass
-#endif
+  , vkCmdFillBuffer
   , FN_vkCmdNextSubpass
   , PFN_vkCmdNextSubpass
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdPipelineBarrier
-#endif
+  , vkCmdNextSubpass
   , FN_vkCmdPipelineBarrier
   , PFN_vkCmdPipelineBarrier
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdPushConstants
-#endif
+  , vkCmdPipelineBarrier
   , FN_vkCmdPushConstants
   , PFN_vkCmdPushConstants
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdResetEvent
-#endif
+  , vkCmdPushConstants
   , FN_vkCmdResetEvent
   , PFN_vkCmdResetEvent
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdResetQueryPool
-#endif
+  , vkCmdResetEvent
   , FN_vkCmdResetQueryPool
   , PFN_vkCmdResetQueryPool
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdResolveImage
-#endif
+  , vkCmdResetQueryPool
   , FN_vkCmdResolveImage
   , PFN_vkCmdResolveImage
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdSetBlendConstants
-#endif
+  , vkCmdResolveImage
   , FN_vkCmdSetBlendConstants
   , PFN_vkCmdSetBlendConstants
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdSetDepthBias
-#endif
+  , vkCmdSetBlendConstants
   , FN_vkCmdSetDepthBias
   , PFN_vkCmdSetDepthBias
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdSetDepthBounds
-#endif
+  , vkCmdSetDepthBias
   , FN_vkCmdSetDepthBounds
   , PFN_vkCmdSetDepthBounds
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdSetEvent
-#endif
+  , vkCmdSetDepthBounds
   , FN_vkCmdSetEvent
   , PFN_vkCmdSetEvent
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdSetLineWidth
-#endif
+  , vkCmdSetEvent
   , FN_vkCmdSetLineWidth
   , PFN_vkCmdSetLineWidth
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdSetScissor
-#endif
+  , vkCmdSetLineWidth
   , FN_vkCmdSetScissor
   , PFN_vkCmdSetScissor
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdSetStencilCompareMask
-#endif
+  , vkCmdSetScissor
   , FN_vkCmdSetStencilCompareMask
   , PFN_vkCmdSetStencilCompareMask
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdSetStencilReference
-#endif
+  , vkCmdSetStencilCompareMask
   , FN_vkCmdSetStencilReference
   , PFN_vkCmdSetStencilReference
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdSetStencilWriteMask
-#endif
+  , vkCmdSetStencilReference
   , FN_vkCmdSetStencilWriteMask
   , PFN_vkCmdSetStencilWriteMask
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdSetViewport
-#endif
+  , vkCmdSetStencilWriteMask
   , FN_vkCmdSetViewport
   , PFN_vkCmdSetViewport
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdUpdateBuffer
-#endif
+  , vkCmdSetViewport
   , FN_vkCmdUpdateBuffer
   , PFN_vkCmdUpdateBuffer
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdWaitEvents
-#endif
+  , vkCmdUpdateBuffer
   , FN_vkCmdWaitEvents
   , PFN_vkCmdWaitEvents
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkCmdWriteTimestamp
-#endif
+  , vkCmdWaitEvents
   , FN_vkCmdWriteTimestamp
   , PFN_vkCmdWriteTimestamp
+  , vkCmdWriteTimestamp
   ) where
 
 import Data.Bits
@@ -304,18 +216,17 @@ import Text.Read.Lex
 
 
 import Graphics.Vulkan.C.Core10.CommandBuffer
-  ( VkQueryControlFlags
-  )
-
-#if defined(EXPOSE_CORE10_COMMANDS)
-import Graphics.Vulkan.C.Core10.CommandBuffer
   ( VkQueryControlFlagBits(..)
+  , VkQueryControlFlags
   )
-#endif
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
   , Zero(..)
   , VkFlags
+  , pattern VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER
+  , pattern VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER
+  , pattern VK_STRUCTURE_TYPE_MEMORY_BARRIER
+  , pattern VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO
   )
 import Graphics.Vulkan.C.Core10.DescriptorSet
   ( VkDescriptorSet
@@ -338,43 +249,28 @@ import Graphics.Vulkan.C.Core10.MemoryManagement
   , VkImage
   )
 import Graphics.Vulkan.C.Core10.Pass
-  ( VkPipelineBindPoint(..)
+  ( VkDependencyFlagBits(..)
+  , VkPipelineBindPoint(..)
   , VkAccessFlags
   , VkDependencyFlags
   , VkFramebuffer
   )
-
-#if defined(EXPOSE_CORE10_COMMANDS)
-import Graphics.Vulkan.C.Core10.Pass
-  ( VkDependencyFlagBits(..)
-  )
-#endif
 import Graphics.Vulkan.C.Core10.Pipeline
   ( VkRect2D(..)
+  , VkShaderStageFlagBits(..)
   , VkViewport(..)
   , VkPipeline
   , VkPipelineLayout
   , VkRenderPass
   )
-
-#if defined(EXPOSE_CORE10_COMMANDS)
-import Graphics.Vulkan.C.Core10.Pipeline
-  ( VkShaderStageFlagBits(..)
-  )
-#endif
 import Graphics.Vulkan.C.Core10.PipelineLayout
   ( VkShaderStageFlags
   )
 import Graphics.Vulkan.C.Core10.Query
-  ( VkQueryPool
+  ( VkQueryResultFlagBits(..)
+  , VkQueryPool
   , VkQueryResultFlags
   )
-
-#if defined(EXPOSE_CORE10_COMMANDS)
-import Graphics.Vulkan.C.Core10.Query
-  ( VkQueryResultFlagBits(..)
-  )
-#endif
 import Graphics.Vulkan.C.Core10.Queue
   ( VkPipelineStageFlagBits(..)
   , VkCommandBuffer
@@ -387,6 +283,9 @@ import Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement
   ( VkOffset3D(..)
   , VkImageAspectFlags
   )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
+  )
 import Graphics.Vulkan.NamedType
   ( (:::)
   )
@@ -398,9 +297,13 @@ import Graphics.Vulkan.NamedType
 --
 -- -   The @size@ /must/ be greater than @0@
 --
+-- Unresolved directive in VkBufferCopy.txt -
+-- include::{generated}\/validity\/structs\/VkBufferCopy.txt[]
+--
 -- = See Also
 --
--- @VkDeviceSize@, 'vkCmdCopyBuffer'
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
+-- 'vkCmdCopyBuffer'
 data VkBufferCopy = VkBufferCopy
   { -- | @srcOffset@ is the starting offset in bytes from the start of
   -- @srcBuffer@.
@@ -427,6 +330,7 @@ instance Zero VkBufferCopy where
   zero = VkBufferCopy zero
                       zero
                       zero
+
 -- | VkBufferImageCopy - Structure specifying a buffer image copy operation
 --
 -- = Description
@@ -436,21 +340,27 @@ instance Zero VkBufferCopy where
 -- the depth or stencil data. Specifically:
 --
 -- -   data copied to or from the stencil aspect of any depth\/stencil
---     format is tightly packed with one @VK_FORMAT_S8_UINT@ value per
---     texel.
---
--- -   data copied to or from the depth aspect of a @VK_FORMAT_D16_UNORM@
---     or @VK_FORMAT_D16_UNORM_S8_UINT@ format is tightly packed with one
---     @VK_FORMAT_D16_UNORM@ value per texel.
---
--- -   data copied to or from the depth aspect of a @VK_FORMAT_D32_SFLOAT@
---     or @VK_FORMAT_D32_SFLOAT_S8_UINT@ format is tightly packed with one
---     @VK_FORMAT_D32_SFLOAT@ value per texel.
+--     format is tightly packed with one
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_S8_UINT' value per texel.
 --
 -- -   data copied to or from the depth aspect of a
---     @VK_FORMAT_X8_D24_UNORM_PACK32@ or @VK_FORMAT_D24_UNORM_S8_UINT@
---     format is packed with one 32-bit word per texel with the D24 value
---     in the LSBs of the word, and undefined values in the eight MSBs.
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_D16_UNORM' or
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_D16_UNORM_S8_UINT' format
+--     is tightly packed with one
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_D16_UNORM' value per texel.
+--
+-- -   data copied to or from the depth aspect of a
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_D32_SFLOAT' or
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_D32_SFLOAT_S8_UINT' format
+--     is tightly packed with one
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_D32_SFLOAT' value per
+--     texel.
+--
+-- -   data copied to or from the depth aspect of a
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_X8_D24_UNORM_PACK32' or
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_D24_UNORM_S8_UINT' format
+--     is packed with one 32-bit word per texel with the D24 value in the
+--     LSBs of the word, and undefined values in the eight MSBs.
 --
 -- __Note__
 --
@@ -469,18 +379,21 @@ instance Zero VkBufferCopy where
 --
 -- == Valid Usage
 --
--- -   If the calling command’s @VkImage@ parameter’s format is not a
---     depth\/stencil format or a
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+-- -   If the calling command’s
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' parameter’s
+--     format is not a depth\/stencil format or a
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     then @bufferOffset@ /must/ be a multiple of the format’s texel block
 --     size.
 --
--- -   If the calling command’s @VkImage@ parameter’s format is a
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+-- -   If the calling command’s
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' parameter’s
+--     format is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     then @bufferOffset@ /must/ be a multiple of the element size of the
 --     compatible format for the format and the @aspectMask@ of the
 --     @imageSubresource@ as defined in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-compatible-planes {html_spec_relative}#formats-compatible-planes>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-compatible-planes>
 --
 -- -   @bufferOffset@ /must/ be a multiple of @4@
 --
@@ -494,16 +407,17 @@ instance Zero VkBufferCopy where
 --     both be greater than or equal to @0@ and less than or equal to the
 --     image subresource width where this refers to the width of the
 --     /plane/ of the image involved in the copy in the case of a
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
 --
 -- -   @imageOffset.y@ and (imageExtent.height + @imageOffset.y@) /must/
 --     both be greater than or equal to @0@ and less than or equal to the
 --     image subresource height where this refers to the height of the
 --     /plane/ of the image involved in the copy in the case of a
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
 --
 -- -   If the calling command’s @srcImage@ ('vkCmdCopyImageToBuffer') or
---     @dstImage@ ('vkCmdCopyBufferToImage') is of type @VK_IMAGE_TYPE_1D@,
+--     @dstImage@ ('vkCmdCopyBufferToImage') is of type
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_1D',
 --     then @imageOffset.y@ /must/ be @0@ and @imageExtent.height@ /must/
 --     be @1@.
 --
@@ -512,71 +426,90 @@ instance Zero VkBufferCopy where
 --     image subresource depth
 --
 -- -   If the calling command’s @srcImage@ ('vkCmdCopyImageToBuffer') or
---     @dstImage@ ('vkCmdCopyBufferToImage') is of type @VK_IMAGE_TYPE_1D@
---     or @VK_IMAGE_TYPE_2D@, then @imageOffset.z@ /must/ be @0@ and
---     @imageExtent.depth@ /must/ be @1@
+--     @dstImage@ ('vkCmdCopyBufferToImage') is of type
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_1D' or
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_2D',
+--     then @imageOffset.z@ /must/ be @0@ and @imageExtent.depth@ /must/ be
+--     @1@
 --
--- -   If the calling command’s @VkImage@ parameter is a compressed image,
---     or a /single-plane/, “@_422@” image format, @bufferRowLength@ /must/
---     be a multiple of the compressed texel block width
+-- -   If the calling command’s
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' parameter is a
+--     compressed image, or a /single-plane/, “@_422@” image format,
+--     @bufferRowLength@ /must/ be a multiple of the compressed texel block
+--     width
 --
--- -   If the calling command’s @VkImage@ parameter is a compressed image,
---     or a /single-plane/, “@_422@” image format, @bufferImageHeight@
---     /must/ be a multiple of the compressed texel block height
+-- -   If the calling command’s
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' parameter is a
+--     compressed image, or a /single-plane/, “@_422@” image format,
+--     @bufferImageHeight@ /must/ be a multiple of the compressed texel
+--     block height
 --
--- -   If the calling command’s @VkImage@ parameter is a compressed image,
---     or a /single-plane/, “@_422@” image format, all members of
---     @imageOffset@ /must/ be a multiple of the corresponding dimensions
---     of the compressed texel block
+-- -   If the calling command’s
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' parameter is a
+--     compressed image, or a /single-plane/, “@_422@” image format, all
+--     members of @imageOffset@ /must/ be a multiple of the corresponding
+--     dimensions of the compressed texel block
 --
--- -   If the calling command’s @VkImage@ parameter is a compressed image,
---     or a /single-plane/, “@_422@” image format, @bufferOffset@ /must/ be
---     a multiple of the compressed texel block size in bytes
+-- -   If the calling command’s
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' parameter is a
+--     compressed image, or a /single-plane/, “@_422@” image format,
+--     @bufferOffset@ /must/ be a multiple of the compressed texel block
+--     size in bytes
 --
--- -   If the calling command’s @VkImage@ parameter is a compressed image,
---     or a /single-plane/, “@_422@” image format, @imageExtent.width@
---     /must/ be a multiple of the compressed texel block width or
---     (@imageExtent.width@ + @imageOffset.x@) /must/ equal the image
---     subresource width
+-- -   If the calling command’s
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' parameter is a
+--     compressed image, or a /single-plane/, “@_422@” image format,
+--     @imageExtent.width@ /must/ be a multiple of the compressed texel
+--     block width or (@imageExtent.width@ + @imageOffset.x@) /must/ equal
+--     the image subresource width
 --
--- -   If the calling command’s @VkImage@ parameter is a compressed image,
---     or a /single-plane/, “@_422@” image format, @imageExtent.height@
---     /must/ be a multiple of the compressed texel block height or
---     (@imageExtent.height@ + @imageOffset.y@) /must/ equal the image
---     subresource height
+-- -   If the calling command’s
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' parameter is a
+--     compressed image, or a /single-plane/, “@_422@” image format,
+--     @imageExtent.height@ /must/ be a multiple of the compressed texel
+--     block height or (@imageExtent.height@ + @imageOffset.y@) /must/
+--     equal the image subresource height
 --
--- -   If the calling command’s @VkImage@ parameter is a compressed image,
---     or a /single-plane/, “@_422@” image format, @imageExtent.depth@
---     /must/ be a multiple of the compressed texel block depth or
---     (@imageExtent.depth@ + @imageOffset.z@) /must/ equal the image
---     subresource depth
+-- -   If the calling command’s
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' parameter is a
+--     compressed image, or a /single-plane/, “@_422@” image format,
+--     @imageExtent.depth@ /must/ be a multiple of the compressed texel
+--     block depth or (@imageExtent.depth@ + @imageOffset.z@) /must/ equal
+--     the image subresource depth
 --
 -- -   The @aspectMask@ member of @imageSubresource@ /must/ specify aspects
---     present in the calling command’s @VkImage@ parameter
+--     present in the calling command’s
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' parameter
 --
--- -   If the calling command’s @VkImage@ parameter’s format is a
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+-- -   If the calling command’s
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' parameter’s
+--     format is a
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     then the @aspectMask@ member of @imageSubresource@ /must/ be
---     @VK_IMAGE_ASPECT_PLANE_0_BIT@, @VK_IMAGE_ASPECT_PLANE_1_BIT@, or
---     @VK_IMAGE_ASPECT_PLANE_2_BIT@ (with @VK_IMAGE_ASPECT_PLANE_2_BIT@
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_0_BIT',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_1_BIT',
+--     or
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_2_BIT'
+--     (with
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_2_BIT'
 --     valid only for image formats with three planes)
 --
 -- -   The @aspectMask@ member of @imageSubresource@ /must/ only have a
 --     single bit set
 --
--- -   If the calling command’s @VkImage@ parameter is of
+-- -   If the calling command’s
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' parameter is of
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageType'
---     @VK_IMAGE_TYPE_3D@, the @baseArrayLayer@ and @layerCount@ members of
---     @imageSubresource@ /must/ be @0@ and @1@, respectively
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_3D',
+--     the @baseArrayLayer@ and @layerCount@ members of @imageSubresource@
+--     /must/ be @0@ and @1@, respectively
 --
--- == Valid Usage (Implicit)
---
--- -   @imageSubresource@ /must/ be a valid @VkImageSubresourceLayers@
---     structure
+-- Unresolved directive in VkBufferImageCopy.txt -
+-- include::{generated}\/validity\/structs\/VkBufferImageCopy.txt[]
 --
 -- = See Also
 --
--- @VkDeviceSize@,
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkExtent3D',
 -- 'VkImageSubresourceLayers',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkOffset3D',
@@ -629,41 +562,43 @@ instance Zero VkBufferImageCopy where
                            zero
                            zero
                            zero
+
 -- | VkBufferMemoryBarrier - Structure specifying a buffer memory barrier
 --
 -- = Description
 --
 -- The first
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- is limited to access to memory through the specified buffer range, via
 -- access types in the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-masks source access mask>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-access-masks source access mask>
 -- specified by @srcAccessMask@. If @srcAccessMask@ includes
--- @VK_ACCESS_HOST_WRITE_BIT@, memory writes performed by that access type
--- are also made visible, as that access type is not performed through a
--- resource.
+-- 'Graphics.Vulkan.C.Core10.Pass.VK_ACCESS_HOST_WRITE_BIT', memory writes
+-- performed by that access type are also made visible, as that access type
+-- is not performed through a resource.
 --
 -- The second
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- is limited to access to memory through the specified buffer range, via
 -- access types in the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-masks destination access mask>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-access-masks destination access mask>.
 -- specified by @dstAccessMask@. If @dstAccessMask@ includes
--- @VK_ACCESS_HOST_WRITE_BIT@ or @VK_ACCESS_HOST_READ_BIT@, available
+-- 'Graphics.Vulkan.C.Core10.Pass.VK_ACCESS_HOST_WRITE_BIT' or
+-- 'Graphics.Vulkan.C.Core10.Pass.VK_ACCESS_HOST_READ_BIT', available
 -- memory writes are also made visible to accesses of those types, as those
 -- access types are not performed through a resource.
 --
 -- If @srcQueueFamilyIndex@ is not equal to @dstQueueFamilyIndex@, and
 -- @srcQueueFamilyIndex@ is equal to the current queue family, then the
 -- memory barrier defines a
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-queue-transfers-release queue family release operation>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-queue-transfers-release queue family release operation>
 -- for the specified buffer range, and the second access scope includes no
 -- access, as if @dstAccessMask@ was @0@.
 --
 -- If @dstQueueFamilyIndex@ is not equal to @srcQueueFamilyIndex@, and
 -- @dstQueueFamilyIndex@ is equal to the current queue family, then the
 -- memory barrier defines a
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-queue-transfers-acquire queue family acquire operation>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-queue-transfers-acquire queue family acquire operation>
 -- for the specified buffer range, and the first access scope includes no
 -- access, as if @srcAccessMask@ was @0@.
 --
@@ -671,69 +606,71 @@ instance Zero VkBufferImageCopy where
 --
 -- -   @offset@ /must/ be less than the size of @buffer@
 --
--- -   If @size@ is not equal to @VK_WHOLE_SIZE@, @size@ /must/ be greater
---     than @0@
+-- -   If @size@ is not equal to
+--     'Graphics.Vulkan.C.Core10.Constants.VK_WHOLE_SIZE', @size@ /must/ be
+--     greater than @0@
 --
--- -   If @size@ is not equal to @VK_WHOLE_SIZE@, @size@ /must/ be less
---     than or equal to than the size of @buffer@ minus @offset@
---
--- -   If @buffer@ was created with a sharing mode of
---     @VK_SHARING_MODE_CONCURRENT@, at least one of @srcQueueFamilyIndex@
---     and @dstQueueFamilyIndex@ /must/ be @VK_QUEUE_FAMILY_IGNORED@
+-- -   If @size@ is not equal to
+--     'Graphics.Vulkan.C.Core10.Constants.VK_WHOLE_SIZE', @size@ /must/ be
+--     less than or equal to than the size of @buffer@ minus @offset@
 --
 -- -   If @buffer@ was created with a sharing mode of
---     @VK_SHARING_MODE_CONCURRENT@, and one of @srcQueueFamilyIndex@ and
---     @dstQueueFamilyIndex@ is @VK_QUEUE_FAMILY_IGNORED@, the other /must/
---     be @VK_QUEUE_FAMILY_IGNORED@ or a special queue family reserved for
---     external memory ownership transfers, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-queue-transfers {html_spec_relative}#synchronization-queue-transfers>.
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_SHARING_MODE_CONCURRENT', at
+--     least one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ /must/
+--     be 'Graphics.Vulkan.C.Core10.Constants.VK_QUEUE_FAMILY_IGNORED'
 --
 -- -   If @buffer@ was created with a sharing mode of
---     @VK_SHARING_MODE_EXCLUSIVE@ and @srcQueueFamilyIndex@ is
---     @VK_QUEUE_FAMILY_IGNORED@, @dstQueueFamilyIndex@ /must/ also be
---     @VK_QUEUE_FAMILY_IGNORED@
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_SHARING_MODE_CONCURRENT', and
+--     one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ is
+--     'Graphics.Vulkan.C.Core10.Constants.VK_QUEUE_FAMILY_IGNORED', the
+--     other /must/ be
+--     'Graphics.Vulkan.C.Core10.Constants.VK_QUEUE_FAMILY_IGNORED' or a
+--     special queue family reserved for external memory ownership
+--     transfers, as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-queue-transfers>.
 --
 -- -   If @buffer@ was created with a sharing mode of
---     @VK_SHARING_MODE_EXCLUSIVE@ and @srcQueueFamilyIndex@ is not
---     @VK_QUEUE_FAMILY_IGNORED@, it /must/ be a valid queue family or a
---     special queue family reserved for external memory transfers, as
---     described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-queue-transfers {html_spec_relative}#synchronization-queue-transfers>.
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_SHARING_MODE_EXCLUSIVE' and
+--     @srcQueueFamilyIndex@ is
+--     'Graphics.Vulkan.C.Core10.Constants.VK_QUEUE_FAMILY_IGNORED',
+--     @dstQueueFamilyIndex@ /must/ also be
+--     'Graphics.Vulkan.C.Core10.Constants.VK_QUEUE_FAMILY_IGNORED'
 --
 -- -   If @buffer@ was created with a sharing mode of
---     @VK_SHARING_MODE_EXCLUSIVE@ and @dstQueueFamilyIndex@ is not
---     @VK_QUEUE_FAMILY_IGNORED@, it /must/ be a valid queue family or a
---     special queue family reserved for external memory transfers, as
---     described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-queue-transfers {html_spec_relative}#synchronization-queue-transfers>.
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_SHARING_MODE_EXCLUSIVE' and
+--     @srcQueueFamilyIndex@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_QUEUE_FAMILY_IGNORED', it
+--     /must/ be a valid queue family or a special queue family reserved
+--     for external memory transfers, as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-queue-transfers>.
 --
 -- -   If @buffer@ was created with a sharing mode of
---     @VK_SHARING_MODE_EXCLUSIVE@, and @srcQueueFamilyIndex@ and
---     @dstQueueFamilyIndex@ are not @VK_QUEUE_FAMILY_IGNORED@, at least
---     one of them /must/ be the same as the family of the queue that will
---     execute this barrier
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_SHARING_MODE_EXCLUSIVE' and
+--     @dstQueueFamilyIndex@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_QUEUE_FAMILY_IGNORED', it
+--     /must/ be a valid queue family or a special queue family reserved
+--     for external memory transfers, as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-queue-transfers>.
+--
+-- -   If @buffer@ was created with a sharing mode of
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_SHARING_MODE_EXCLUSIVE', and
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_QUEUE_FAMILY_IGNORED', at
+--     least one of them /must/ be the same as the family of the queue that
+--     will execute this barrier
 --
 -- -   If @buffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+--     contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER@
---
--- -   @pNext@ /must/ be @NULL@
---
--- -   @srcAccessMask@ /must/ be a valid combination of
---     'Graphics.Vulkan.C.Core10.Pass.VkAccessFlagBits' values
---
--- -   @dstAccessMask@ /must/ be a valid combination of
---     'Graphics.Vulkan.C.Core10.Pass.VkAccessFlagBits' values
---
--- -   @buffer@ /must/ be a valid @VkBuffer@ handle
+-- Unresolved directive in VkBufferMemoryBarrier.txt -
+-- include::{generated}\/validity\/structs\/VkBufferMemoryBarrier.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Pass.VkAccessFlags',
--- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer', @VkDeviceSize@,
+-- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType', 'vkCmdPipelineBarrier',
 -- 'vkCmdWaitEvents'
 data VkBufferMemoryBarrier = VkBufferMemoryBarrier
@@ -743,17 +680,17 @@ data VkBufferMemoryBarrier = VkBufferMemoryBarrier
   vkPNext :: Ptr ()
   , -- | @srcAccessMask@ is a bitmask of
   -- 'Graphics.Vulkan.C.Core10.Pass.VkAccessFlagBits' specifying a
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-masks source access mask>.
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-access-masks source access mask>.
   vkSrcAccessMask :: VkAccessFlags
   , -- | @dstAccessMask@ is a bitmask of
   -- 'Graphics.Vulkan.C.Core10.Pass.VkAccessFlagBits' specifying a
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-masks destination access mask>.
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-access-masks destination access mask>.
   vkDstAccessMask :: VkAccessFlags
   , -- | @srcQueueFamilyIndex@ is the source queue family for a
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>.
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>.
   vkSrcQueueFamilyIndex :: Word32
   , -- | @dstQueueFamilyIndex@ is the destination queue family for a
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>.
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>.
   vkDstQueueFamilyIndex :: Word32
   , -- | @buffer@ is a handle to the buffer whose backing memory is affected by
   -- the barrier.
@@ -763,8 +700,8 @@ data VkBufferMemoryBarrier = VkBufferMemoryBarrier
   -- 'Graphics.Vulkan.C.Core10.MemoryManagement.vkBindBufferMemory').
   vkOffset :: VkDeviceSize
   , -- | @size@ is a size in bytes of the affected area of backing memory for
-  -- @buffer@, or @VK_WHOLE_SIZE@ to use the range from @offset@ to the end
-  -- of the buffer.
+  -- @buffer@, or 'Graphics.Vulkan.C.Core10.Constants.VK_WHOLE_SIZE' to use
+  -- the range from @offset@ to the end of the buffer.
   vkSize :: VkDeviceSize
   }
   deriving (Eq, Show)
@@ -792,7 +729,7 @@ instance Storable VkBufferMemoryBarrier where
                 *> poke (ptr `plusPtr` 48) (vkSize (poked :: VkBufferMemoryBarrier))
 
 instance Zero VkBufferMemoryBarrier where
-  zero = VkBufferMemoryBarrier zero
+  zero = VkBufferMemoryBarrier VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER
                                zero
                                zero
                                zero
@@ -801,42 +738,43 @@ instance Zero VkBufferMemoryBarrier where
                                zero
                                zero
                                zero
+
 -- | VkClearAttachment - Structure specifying a clear attachment
 --
 -- = Description
 --
--- No memory barriers are needed between @vkCmdClearAttachments@ and
+-- No memory barriers are needed between 'vkCmdClearAttachments' and
 -- preceding or subsequent draw or attachment clear commands in the same
 -- subpass.
 --
--- The @vkCmdClearAttachments@ command is not affected by the bound
+-- The 'vkCmdClearAttachments' command is not affected by the bound
 -- pipeline state.
 --
 -- Attachments /can/ also be cleared at the beginning of a render pass
 -- instance by setting @loadOp@ (or @stencilLoadOp@) of
 -- 'Graphics.Vulkan.C.Core10.Pass.VkAttachmentDescription' to
--- @VK_ATTACHMENT_LOAD_OP_CLEAR@, as described for
--- 'Graphics.Vulkan.C.Core10.Pass.vkCreateRenderPass'.
+-- 'Graphics.Vulkan.C.Core10.Pass.VK_ATTACHMENT_LOAD_OP_CLEAR', as
+-- described for 'Graphics.Vulkan.C.Core10.Pass.vkCreateRenderPass'.
 --
 -- == Valid Usage
 --
--- -   If @aspectMask@ includes @VK_IMAGE_ASPECT_COLOR_BIT@, it /must/ not
---     include @VK_IMAGE_ASPECT_DEPTH_BIT@ or @VK_IMAGE_ASPECT_STENCIL_BIT@
+-- -   If @aspectMask@ includes
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_COLOR_BIT',
+--     it /must/ not include
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_DEPTH_BIT'
+--     or
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_STENCIL_BIT'
 --
--- -   @aspectMask@ /must/ not include @VK_IMAGE_ASPECT_METADATA_BIT@
+-- -   @aspectMask@ /must/ not include
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_METADATA_BIT'
 --
 -- -   @aspectMask@ /must/ not include
 --     @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any index @i@.
 --
--- -   @clearValue@ /must/ be a valid @VkClearValue@ union
+-- -   @clearValue@ /must/ be a valid 'VkClearValue' union
 --
--- == Valid Usage (Implicit)
---
--- -   @aspectMask@ /must/ be a valid combination of
---     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkImageAspectFlagBits'
---     values
---
--- -   @aspectMask@ /must/ not be @0@
+-- Unresolved directive in VkClearAttachment.txt -
+-- include::{generated}\/validity\/structs\/VkClearAttachment.txt[]
 --
 -- = See Also
 --
@@ -847,15 +785,16 @@ data VkClearAttachment = VkClearAttachment
   { -- | @aspectMask@ is a mask selecting the color, depth and\/or stencil
   -- aspects of the attachment to be cleared.
   vkAspectMask :: VkImageAspectFlags
-  , -- | @colorAttachment@ is only meaningful if @VK_IMAGE_ASPECT_COLOR_BIT@ is
-  -- set in @aspectMask@, in which case it is an index to the
+  , -- | @colorAttachment@ is only meaningful if
+  -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_COLOR_BIT'
+  -- is set in @aspectMask@, in which case it is an index to the
   -- @pColorAttachments@ array in the
   -- 'Graphics.Vulkan.C.Core10.Pass.VkSubpassDescription' structure of the
   -- current subpass which selects the color attachment to clear.
   vkColorAttachment :: Word32
   , -- | @clearValue@ is the color or depth\/stencil value to clear the
   -- attachment to, as described in
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#clears-values Clear Values>
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#clears-values Clear Values>
   -- below.
   vkClearValue :: VkClearValue
   }
@@ -875,6 +814,7 @@ instance Zero VkClearAttachment where
   zero = VkClearAttachment zero
                            zero
                            zero
+
 -- | VkClearColorValue - Structure specifying a clear color value
 --
 -- = Description
@@ -884,6 +824,9 @@ instance Zero VkClearAttachment where
 --
 -- If the image has more than one sample, the same value is written to all
 -- samples for any pixels being cleared.
+--
+-- Unresolved directive in VkClearColorValue.txt -
+-- include::{generated}\/validity\/structs\/VkClearColorValue.txt[]
 --
 -- = See Also
 --
@@ -909,14 +852,19 @@ instance Storable VkClearColorValue where
 
 instance Zero VkClearColorValue where
   zero = VkFloat32 zero
+
 -- | VkClearDepthStencilValue - Structure specifying a clear depth stencil
 -- value
 --
 -- == Valid Usage
 --
--- -   Unless the @{html_spec_relative}#VK_EXT_depth_range_unrestricted@
+-- -   Unless the
+--     @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.1-extensions\/html\/vkspec.html#VK_EXT_depth_range_unrestricted@
 --     extension is enabled @depth@ /must/ be between @0.0@ and @1.0@,
 --     inclusive
+--
+-- Unresolved directive in VkClearDepthStencilValue.txt -
+-- include::{generated}\/validity\/structs\/VkClearDepthStencilValue.txt[]
 --
 -- = See Also
 --
@@ -945,12 +893,16 @@ instance Storable VkClearDepthStencilValue where
 instance Zero VkClearDepthStencilValue where
   zero = VkClearDepthStencilValue zero
                                   zero
+
 -- | VkClearRect - Structure specifying a clear rectangle
 --
 -- = Description
 --
 -- The layers [@baseArrayLayer@, @baseArrayLayer@ + @layerCount@) counting
 -- from the base layer of the attachment image view are cleared.
+--
+-- Unresolved directive in VkClearRect.txt -
+-- include::{generated}\/validity\/structs\/VkClearRect.txt[]
 --
 -- = See Also
 --
@@ -979,6 +931,7 @@ instance Zero VkClearRect where
   zero = VkClearRect zero
                      zero
                      zero
+
 -- | VkClearValue - Structure specifying a clear value
 --
 -- = Description
@@ -986,6 +939,9 @@ instance Zero VkClearRect where
 -- This union is used where part of the API requires either color or
 -- depth\/stencil clear values, depending on the attachment, and defines
 -- the initial clear values in the 'VkRenderPassBeginInfo' structure.
+--
+-- Unresolved directive in VkClearValue.txt -
+-- include::{generated}\/validity\/structs\/VkClearValue.txt[]
 --
 -- = See Also
 --
@@ -1009,28 +965,32 @@ instance Storable VkClearValue where
 
 instance Zero VkClearValue where
   zero = VkColor zero
+
 -- | VkDispatchIndirectCommand - Structure specifying a dispatch indirect
 -- command
 --
 -- = Description
 --
--- The members of @VkDispatchIndirectCommand@ have the same meaning as the
+-- The members of 'VkDispatchIndirectCommand' have the same meaning as the
 -- corresponding parameters of 'vkCmdDispatch'.
 --
 -- == Valid Usage
+--
+-- Unresolved directive in VkDispatchIndirectCommand.txt -
+-- include::{generated}\/validity\/structs\/VkDispatchIndirectCommand.txt[]
 --
 -- = See Also
 --
 -- 'vkCmdDispatchIndirect'
 data VkDispatchIndirectCommand = VkDispatchIndirectCommand
   { -- | @x@ /must/ be less than or equal to
-  -- @VkPhysicalDeviceLimits@::@maxComputeWorkGroupCount@[0]
+  -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
   vkX :: Word32
   , -- | @y@ /must/ be less than or equal to
-  -- @VkPhysicalDeviceLimits@::@maxComputeWorkGroupCount@[1]
+  -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
   vkY :: Word32
   , -- | @z@ /must/ be less than or equal to
-  -- @VkPhysicalDeviceLimits@::@maxComputeWorkGroupCount@[2]
+  -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
   vkZ :: Word32
   }
   deriving (Eq, Show)
@@ -1049,12 +1009,13 @@ instance Zero VkDispatchIndirectCommand where
   zero = VkDispatchIndirectCommand zero
                                    zero
                                    zero
+
 -- | VkDrawIndexedIndirectCommand - Structure specifying a draw indexed
 -- indirect command
 --
 -- = Description
 --
--- The members of @VkDrawIndexedIndirectCommand@ have the same meaning as
+-- The members of 'VkDrawIndexedIndirectCommand' have the same meaning as
 -- the similarly named parameters of 'vkCmdDrawIndexed'.
 --
 -- == Valid Usage
@@ -1062,17 +1023,20 @@ instance Zero VkDispatchIndirectCommand where
 -- -   For a given vertex buffer binding, any attribute data fetched /must/
 --     be entirely contained within the corresponding vertex buffer
 --     binding, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fxvertex-input {html_spec_relative}#fxvertex-input>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fxvertex-input>
 --
 -- -   (@indexSize@ * (@firstIndex@ + @indexCount@) + @offset@) /must/ be
 --     less than or equal to the size of the bound index buffer, with
 --     @indexSize@ being based on the type specified by @indexType@, where
 --     the index buffer, @indexType@, and @offset@ are specified via
---     @vkCmdBindIndexBuffer@
+--     'vkCmdBindIndexBuffer'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-drawIndirectFirstInstance drawIndirectFirstInstance>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-drawIndirectFirstInstance drawIndirectFirstInstance>
 --     feature is not enabled, @firstInstance@ /must/ be @0@
+--
+-- Unresolved directive in VkDrawIndexedIndirectCommand.txt -
+-- include::{generated}\/validity\/structs\/VkDrawIndexedIndirectCommand.txt[]
 --
 -- = See Also
 --
@@ -1112,11 +1076,12 @@ instance Zero VkDrawIndexedIndirectCommand where
                                       zero
                                       zero
                                       zero
+
 -- | VkDrawIndirectCommand - Structure specifying a draw indirect command
 --
 -- = Description
 --
--- The members of @VkDrawIndirectCommand@ have the same meaning as the
+-- The members of 'VkDrawIndirectCommand' have the same meaning as the
 -- similarly named parameters of 'vkCmdDraw'.
 --
 -- == Valid Usage
@@ -1124,11 +1089,14 @@ instance Zero VkDrawIndexedIndirectCommand where
 -- -   For a given vertex buffer binding, any attribute data fetched /must/
 --     be entirely contained within the corresponding vertex buffer
 --     binding, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fxvertex-input {html_spec_relative}#fxvertex-input>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fxvertex-input>
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-drawIndirectFirstInstance drawIndirectFirstInstance>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-drawIndirectFirstInstance drawIndirectFirstInstance>
 --     feature is not enabled, @firstInstance@ /must/ be @0@
+--
+-- Unresolved directive in VkDrawIndirectCommand.txt -
+-- include::{generated}\/validity\/structs\/VkDrawIndirectCommand.txt[]
 --
 -- = See Also
 --
@@ -1162,6 +1130,7 @@ instance Zero VkDrawIndirectCommand where
                                zero
                                zero
                                zero
+
 -- | VkImageBlit - Structure specifying an image blit operation
 --
 -- = Description
@@ -1180,8 +1149,9 @@ instance Zero VkDrawIndirectCommand where
 -- -   If either of the calling command’s @srcImage@ or @dstImage@
 --     parameters are of
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageType'
---     @VK_IMAGE_TYPE_3D@, the @baseArrayLayer@ and @layerCount@ members of
---     both @srcSubresource@ and @dstSubresource@ /must/ be @0@ and @1@,
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_3D',
+--     the @baseArrayLayer@ and @layerCount@ members of both
+--     @srcSubresource@ and @dstSubresource@ /must/ be @0@ and @1@,
 --     respectively
 --
 -- -   The @aspectMask@ member of @srcSubresource@ /must/ specify aspects
@@ -1198,7 +1168,8 @@ instance Zero VkDrawIndirectCommand where
 --     than or equal to @0@ and less than or equal to the source image
 --     subresource height
 --
--- -   If the calling command’s @srcImage@ is of type @VK_IMAGE_TYPE_1D@,
+-- -   If the calling command’s @srcImage@ is of type
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_1D',
 --     then @srcOffset@[0].y /must/ be @0@ and @srcOffset@[1].y /must/ be
 --     @1@.
 --
@@ -1206,9 +1177,11 @@ instance Zero VkDrawIndirectCommand where
 --     than or equal to @0@ and less than or equal to the source image
 --     subresource depth
 --
--- -   If the calling command’s @srcImage@ is of type @VK_IMAGE_TYPE_1D@ or
---     @VK_IMAGE_TYPE_2D@, then @srcOffset@[0].z /must/ be @0@ and
---     @srcOffset@[1].z /must/ be @1@.
+-- -   If the calling command’s @srcImage@ is of type
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_1D' or
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_2D',
+--     then @srcOffset@[0].z /must/ be @0@ and @srcOffset@[1].z /must/ be
+--     @1@.
 --
 -- -   @dstOffset@[0].@x@ and @dstOffset@[1].@x@ /must/ both be greater
 --     than or equal to @0@ and less than or equal to the destination image
@@ -1218,7 +1191,8 @@ instance Zero VkDrawIndirectCommand where
 --     than or equal to @0@ and less than or equal to the destination image
 --     subresource height
 --
--- -   If the calling command’s @dstImage@ is of type @VK_IMAGE_TYPE_1D@,
+-- -   If the calling command’s @dstImage@ is of type
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_1D',
 --     then @dstOffset@[0].y /must/ be @0@ and @dstOffset@[1].y /must/ be
 --     @1@.
 --
@@ -1226,17 +1200,14 @@ instance Zero VkDrawIndirectCommand where
 --     than or equal to @0@ and less than or equal to the destination image
 --     subresource depth
 --
--- -   If the calling command’s @dstImage@ is of type @VK_IMAGE_TYPE_1D@ or
---     @VK_IMAGE_TYPE_2D@, then @dstOffset@[0].z /must/ be @0@ and
---     @dstOffset@[1].z /must/ be @1@.
+-- -   If the calling command’s @dstImage@ is of type
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_1D' or
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_2D',
+--     then @dstOffset@[0].z /must/ be @0@ and @dstOffset@[1].z /must/ be
+--     @1@.
 --
--- == Valid Usage (Implicit)
---
--- -   @srcSubresource@ /must/ be a valid @VkImageSubresourceLayers@
---     structure
---
--- -   @dstSubresource@ /must/ be a valid @VkImageSubresourceLayers@
---     structure
+-- Unresolved directive in VkImageBlit.txt -
+-- include::{generated}\/validity\/structs\/VkImageBlit.txt[]
 --
 -- = See Also
 --
@@ -1278,22 +1249,25 @@ instance Zero VkImageBlit where
                      zero
                      zero
                      zero
+
 -- | VkImageCopy - Structure specifying an image copy operation
 --
 -- = Description
 --
--- For @VK_IMAGE_TYPE_3D@ images, copies are performed slice by slice
--- starting with the @z@ member of the @srcOffset@ or @dstOffset@, and
--- copying @depth@ slices. For images with multiple layers, copies are
--- performed layer by layer starting with the @baseArrayLayer@ member of
--- the @srcSubresource@ or @dstSubresource@ and copying @layerCount@
--- layers. Image data /can/ be copied between images with different image
--- types. If one image is @VK_IMAGE_TYPE_3D@ and the other image is
--- @VK_IMAGE_TYPE_2D@ with multiple layers, then each slice is copied to or
--- from a different layer.
+-- For 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_3D'
+-- images, copies are performed slice by slice starting with the @z@ member
+-- of the @srcOffset@ or @dstOffset@, and copying @depth@ slices. For
+-- images with multiple layers, copies are performed layer by layer
+-- starting with the @baseArrayLayer@ member of the @srcSubresource@ or
+-- @dstSubresource@ and copying @layerCount@ layers. Image data /can/ be
+-- copied between images with different image types. If one image is
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_3D' and the
+-- other image is
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_2D' with
+-- multiple layers, then each slice is copied to or from a different layer.
 --
 -- Copies involving a
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>
 -- specify the region to be copied in terms of the /plane/ to be copied,
 -- not the coordinates of the multi-planar image. This means that copies
 -- accessing the R\/B planes of “@_422@” format images /must/ fit the
@@ -1306,45 +1280,55 @@ instance Zero VkImageBlit where
 --
 -- -   If neither the calling command’s @srcImage@ nor the calling
 --     command’s @dstImage@ has a
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>
 --     then the @aspectMask@ member of @srcSubresource@ and
 --     @dstSubresource@ /must/ match
 --
 -- -   If the calling command’s @srcImage@ has a
 --     'Graphics.Vulkan.C.Core10.Core.VkFormat' with
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion two planes>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion two planes>
 --     then the @srcSubresource@ @aspectMask@ /must/ be
---     @VK_IMAGE_ASPECT_PLANE_0_BIT@ or @VK_IMAGE_ASPECT_PLANE_1_BIT@
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_0_BIT'
+--     or
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_1_BIT'
 --
 -- -   If the calling command’s @srcImage@ has a
 --     'Graphics.Vulkan.C.Core10.Core.VkFormat' with
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion three planes>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion three planes>
 --     then the @srcSubresource@ @aspectMask@ /must/ be
---     @VK_IMAGE_ASPECT_PLANE_0_BIT@, @VK_IMAGE_ASPECT_PLANE_1_BIT@, or
---     @VK_IMAGE_ASPECT_PLANE_2_BIT@
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_0_BIT',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_1_BIT',
+--     or
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_2_BIT'
 --
 -- -   If the calling command’s @dstImage@ has a
 --     'Graphics.Vulkan.C.Core10.Core.VkFormat' with
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion two planes>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion two planes>
 --     then the @dstSubresource@ @aspectMask@ /must/ be
---     @VK_IMAGE_ASPECT_PLANE_0_BIT@ or @VK_IMAGE_ASPECT_PLANE_1_BIT@
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_0_BIT'
+--     or
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_1_BIT'
 --
 -- -   If the calling command’s @dstImage@ has a
 --     'Graphics.Vulkan.C.Core10.Core.VkFormat' with
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion three planes>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion three planes>
 --     then the @dstSubresource@ @aspectMask@ /must/ be
---     @VK_IMAGE_ASPECT_PLANE_0_BIT@, @VK_IMAGE_ASPECT_PLANE_1_BIT@, or
---     @VK_IMAGE_ASPECT_PLANE_2_BIT@
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_0_BIT',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_1_BIT',
+--     or
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_2_BIT'
 --
 -- -   If the calling command’s @srcImage@ has a
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>
 --     and the @dstImage@ does not have a multi-planar image format, the
---     @dstSubresource@ @aspectMask@ /must/ be @VK_IMAGE_ASPECT_COLOR_BIT@
+--     @dstSubresource@ @aspectMask@ /must/ be
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_COLOR_BIT'
 --
 -- -   If the calling command’s @dstImage@ has a
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>
 --     and the @srcImage@ does not have a multi-planar image format, the
---     @srcSubresource@ @aspectMask@ /must/ be @VK_IMAGE_ASPECT_COLOR_BIT@
+--     @srcSubresource@ @aspectMask@ /must/ be
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_COLOR_BIT'
 --
 -- -   The number of slices of the @extent@ (for 3D) or layers of the
 --     @srcSubresource@ (for non-3D) /must/ match the number of slices of
@@ -1353,8 +1337,9 @@ instance Zero VkImageBlit where
 -- -   If either of the calling command’s @srcImage@ or @dstImage@
 --     parameters are of
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageType'
---     @VK_IMAGE_TYPE_3D@, the @baseArrayLayer@ and @layerCount@ members of
---     the corresponding subresource /must/ be @0@ and @1@, respectively
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_3D',
+--     the @baseArrayLayer@ and @layerCount@ members of the corresponding
+--     subresource /must/ be @0@ and @1@, respectively
 --
 -- -   The @aspectMask@ member of @srcSubresource@ /must/ specify aspects
 --     present in the calling command’s @srcImage@
@@ -1370,36 +1355,46 @@ instance Zero VkImageBlit where
 --     greater than or equal to @0@ and less than or equal to the source
 --     image subresource height
 --
--- -   If the calling command’s @srcImage@ is of type @VK_IMAGE_TYPE_1D@,
+-- -   If the calling command’s @srcImage@ is of type
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_1D',
 --     then @srcOffset.y@ /must/ be @0@ and @extent.height@ /must/ be @1@.
 --
 -- -   @srcOffset.z@ and (@extent.depth@ + @srcOffset.z@) /must/ both be
 --     greater than or equal to @0@ and less than or equal to the source
 --     image subresource depth
 --
--- -   If the calling command’s @srcImage@ is of type @VK_IMAGE_TYPE_1D@,
+-- -   If the calling command’s @srcImage@ is of type
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_1D',
 --     then @srcOffset.z@ /must/ be @0@ and @extent.depth@ /must/ be @1@.
 --
--- -   If the calling command’s @dstImage@ is of type @VK_IMAGE_TYPE_1D@,
+-- -   If the calling command’s @dstImage@ is of type
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_1D',
 --     then @dstOffset.z@ /must/ be @0@ and @extent.depth@ /must/ be @1@.
 --
--- -   If the calling command’s @srcImage@ is of type @VK_IMAGE_TYPE_2D@,
+-- -   If the calling command’s @srcImage@ is of type
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_2D',
 --     then @srcOffset.z@ /must/ be @0@.
 --
--- -   If the calling command’s @dstImage@ is of type @VK_IMAGE_TYPE_2D@,
+-- -   If the calling command’s @dstImage@ is of type
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_2D',
 --     then @dstOffset.z@ /must/ be @0@.
 --
--- -   If both @srcImage@ and @dstImage@ are of type @VK_IMAGE_TYPE_2D@
+-- -   If both @srcImage@ and @dstImage@ are of type
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_2D'
 --     then @extent.depth@ /must/ be @1@.
 --
--- -   If the calling command’s @srcImage@ is of type @VK_IMAGE_TYPE_2D@,
---     and the @dstImage@ is of type @VK_IMAGE_TYPE_3D@, then
---     @extent.depth@ /must/ equal to the @layerCount@ member of
+-- -   If the calling command’s @srcImage@ is of type
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_2D',
+--     and the @dstImage@ is of type
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_3D',
+--     then @extent.depth@ /must/ equal to the @layerCount@ member of
 --     @srcSubresource@.
 --
--- -   If the calling command’s @dstImage@ is of type @VK_IMAGE_TYPE_2D@,
---     and the @srcImage@ is of type @VK_IMAGE_TYPE_3D@, then
---     @extent.depth@ /must/ equal to the @layerCount@ member of
+-- -   If the calling command’s @dstImage@ is of type
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_2D',
+--     and the @srcImage@ is of type
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_3D',
+--     then @extent.depth@ /must/ equal to the @layerCount@ member of
 --     @dstSubresource@.
 --
 -- -   @dstOffset.x@ and (@extent.width@ + @dstOffset.x@) /must/ both be
@@ -1410,7 +1405,8 @@ instance Zero VkImageBlit where
 --     greater than or equal to @0@ and less than or equal to the
 --     destination image subresource height
 --
--- -   If the calling command’s @dstImage@ is of type @VK_IMAGE_TYPE_1D@,
+-- -   If the calling command’s @dstImage@ is of type
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_1D',
 --     then @dstOffset.y@ /must/ be @0@ and @extent.height@ /must/ be @1@.
 --
 -- -   @dstOffset.z@ and (@extent.depth@ + @dstOffset.z@) /must/ both be
@@ -1457,13 +1453,8 @@ instance Zero VkImageBlit where
 --     multiple of the compressed texel block depth or (@extent.depth@ +
 --     @dstOffset.z@) /must/ equal the destination image subresource depth
 --
--- == Valid Usage (Implicit)
---
--- -   @srcSubresource@ /must/ be a valid @VkImageSubresourceLayers@
---     structure
---
--- -   @dstSubresource@ /must/ be a valid @VkImageSubresourceLayers@
---     structure
+-- Unresolved directive in VkImageCopy.txt -
+-- include::{generated}\/validity\/structs\/VkImageCopy.txt[]
 --
 -- = See Also
 --
@@ -1509,133 +1500,155 @@ instance Zero VkImageCopy where
                      zero
                      zero
                      zero
+
 -- | VkImageMemoryBarrier - Structure specifying the parameters of an image
 -- memory barrier
 --
 -- = Description
 --
 -- The first
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- is limited to access to memory through the specified image subresource
 -- range, via access types in the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-masks source access mask>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-access-masks source access mask>
 -- specified by @srcAccessMask@. If @srcAccessMask@ includes
--- @VK_ACCESS_HOST_WRITE_BIT@, memory writes performed by that access type
--- are also made visible, as that access type is not performed through a
--- resource.
+-- 'Graphics.Vulkan.C.Core10.Pass.VK_ACCESS_HOST_WRITE_BIT', memory writes
+-- performed by that access type are also made visible, as that access type
+-- is not performed through a resource.
 --
 -- The second
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- is limited to access to memory through the specified image subresource
 -- range, via access types in the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-masks destination access mask>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-access-masks destination access mask>
 -- specified by @dstAccessMask@. If @dstAccessMask@ includes
--- @VK_ACCESS_HOST_WRITE_BIT@ or @VK_ACCESS_HOST_READ_BIT@, available
+-- 'Graphics.Vulkan.C.Core10.Pass.VK_ACCESS_HOST_WRITE_BIT' or
+-- 'Graphics.Vulkan.C.Core10.Pass.VK_ACCESS_HOST_READ_BIT', available
 -- memory writes are also made visible to accesses of those types, as those
 -- access types are not performed through a resource.
 --
 -- If @srcQueueFamilyIndex@ is not equal to @dstQueueFamilyIndex@, and
 -- @srcQueueFamilyIndex@ is equal to the current queue family, then the
 -- memory barrier defines a
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-queue-transfers-release queue family release operation>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-queue-transfers-release queue family release operation>
 -- for the specified image subresource range, and the second access scope
 -- includes no access, as if @dstAccessMask@ was @0@.
 --
 -- If @dstQueueFamilyIndex@ is not equal to @srcQueueFamilyIndex@, and
 -- @dstQueueFamilyIndex@ is equal to the current queue family, then the
 -- memory barrier defines a
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-queue-transfers-acquire queue family acquire operation>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-queue-transfers-acquire queue family acquire operation>
 -- for the specified image subresource range, and the first access scope
 -- includes no access, as if @srcAccessMask@ was @0@.
 --
 -- If @oldLayout@ is not equal to @newLayout@, then the memory barrier
 -- defines an
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>
 -- for the specified image subresource range.
 --
 -- Layout transitions that are performed via image memory barriers execute
 -- in their entirety in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-submission-order submission order>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-submission-order submission order>,
 -- relative to other image layout transitions submitted to the same queue,
 -- including those performed by
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass render passes>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#renderpass render passes>.
 -- In effect there is an implicit execution dependency from each such
 -- layout transition to all layout transitions previously submitted to the
 -- same queue.
 --
 -- The image layout of each image subresource of a depth\/stencil image
--- created with @VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT@
+-- created with
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 -- is dependent on the last sample locations used to render to the image
 -- subresource as a depth\/stencil attachment, thus when the @image@ member
--- of an @VkImageMemoryBarrier@ is an image created with this flag the
+-- of an 'VkImageMemoryBarrier' is an image created with this flag the
 -- application /can/ chain a
 -- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkSampleLocationsInfoEXT'
--- structure to the @pNext@ chain of @VkImageMemoryBarrier@ to specify the
+-- structure to the @pNext@ chain of 'VkImageMemoryBarrier' to specify the
 -- sample locations to use during the image layout transition.
 --
--- If the @VkSampleLocationsInfoEXT@ structure in the @pNext@ chain of
--- @VkImageMemoryBarrier@ does not match the sample location state last
--- used to render to the image subresource range specified by
--- @subresourceRange@ or if no @VkSampleLocationsInfoEXT@ structure is in
--- the @pNext@ chain of @VkImageMemoryBarrier@ then the contents of the
--- given image subresource range becomes undefined as if @oldLayout@ would
--- equal @VK_IMAGE_LAYOUT_UNDEFINED@.
+-- If the
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkSampleLocationsInfoEXT'
+-- structure in the @pNext@ chain of 'VkImageMemoryBarrier' does not match
+-- the sample location state last used to render to the image subresource
+-- range specified by @subresourceRange@ or if no
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkSampleLocationsInfoEXT'
+-- structure is in the @pNext@ chain of 'VkImageMemoryBarrier' then the
+-- contents of the given image subresource range becomes undefined as if
+-- @oldLayout@ would equal
+-- 'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_UNDEFINED'.
 --
 -- If @image@ has a multi-planar format and the image is /disjoint/, then
--- including @VK_IMAGE_ASPECT_COLOR_BIT@ in the @aspectMask@ member of
--- @subresourceRange@ is equivalent to including
--- @VK_IMAGE_ASPECT_PLANE_0_BIT@, @VK_IMAGE_ASPECT_PLANE_1_BIT@, and (for
--- three-plane formats only) @VK_IMAGE_ASPECT_PLANE_2_BIT@.
+-- including
+-- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_COLOR_BIT'
+-- in the @aspectMask@ member of @subresourceRange@ is equivalent to
+-- including
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_0_BIT',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_1_BIT',
+-- and (for three-plane formats only)
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_2_BIT'.
 --
 -- == Valid Usage
 --
--- -   @oldLayout@ /must/ be @VK_IMAGE_LAYOUT_UNDEFINED@ or the current
---     layout of the image subresources affected by the barrier
+-- -   @oldLayout@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_UNDEFINED' or the
+--     current layout of the image subresources affected by the barrier
 --
--- -   @newLayout@ /must/ not be @VK_IMAGE_LAYOUT_UNDEFINED@ or
---     @VK_IMAGE_LAYOUT_PREINITIALIZED@
---
--- -   If @image@ was created with a sharing mode of
---     @VK_SHARING_MODE_CONCURRENT@, at least one of @srcQueueFamilyIndex@
---     and @dstQueueFamilyIndex@ /must/ be @VK_QUEUE_FAMILY_IGNORED@
+-- -   @newLayout@ /must/ not be
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_UNDEFINED' or
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_PREINITIALIZED'
 --
 -- -   If @image@ was created with a sharing mode of
---     @VK_SHARING_MODE_CONCURRENT@, and one of @srcQueueFamilyIndex@ and
---     @dstQueueFamilyIndex@ is @VK_QUEUE_FAMILY_IGNORED@, the other /must/
---     be @VK_QUEUE_FAMILY_IGNORED@ or a special queue family reserved for
---     external memory transfers, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-queue-transfers {html_spec_relative}#synchronization-queue-transfers>.
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_SHARING_MODE_CONCURRENT', at
+--     least one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ /must/
+--     be 'Graphics.Vulkan.C.Core10.Constants.VK_QUEUE_FAMILY_IGNORED'
 --
 -- -   If @image@ was created with a sharing mode of
---     @VK_SHARING_MODE_EXCLUSIVE@ and @srcQueueFamilyIndex@ is
---     @VK_QUEUE_FAMILY_IGNORED@, @dstQueueFamilyIndex@ /must/ also be
---     @VK_QUEUE_FAMILY_IGNORED@.
---
--- -   If @image@ was created with a sharing mode of
---     @VK_SHARING_MODE_EXCLUSIVE@ and @srcQueueFamilyIndex@ is not
---     @VK_QUEUE_FAMILY_IGNORED@, it /must/ be a valid queue family or a
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_SHARING_MODE_CONCURRENT', and
+--     one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ is
+--     'Graphics.Vulkan.C.Core10.Constants.VK_QUEUE_FAMILY_IGNORED', the
+--     other /must/ be
+--     'Graphics.Vulkan.C.Core10.Constants.VK_QUEUE_FAMILY_IGNORED' or a
 --     special queue family reserved for external memory transfers, as
 --     described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-queue-transfers {html_spec_relative}#synchronization-queue-transfers>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-queue-transfers>.
 --
 -- -   If @image@ was created with a sharing mode of
---     @VK_SHARING_MODE_EXCLUSIVE@ and @dstQueueFamilyIndex@ is not
---     @VK_QUEUE_FAMILY_IGNORED@, it /must/ be a valid queue family or a
---     special queue family reserved for external memory transfers, as
---     described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-queue-transfers {html_spec_relative}#synchronization-queue-transfers>.
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_SHARING_MODE_EXCLUSIVE' and
+--     @srcQueueFamilyIndex@ is
+--     'Graphics.Vulkan.C.Core10.Constants.VK_QUEUE_FAMILY_IGNORED',
+--     @dstQueueFamilyIndex@ /must/ also be
+--     'Graphics.Vulkan.C.Core10.Constants.VK_QUEUE_FAMILY_IGNORED'.
 --
 -- -   If @image@ was created with a sharing mode of
---     @VK_SHARING_MODE_EXCLUSIVE@, and @srcQueueFamilyIndex@ and
---     @dstQueueFamilyIndex@ are not @VK_QUEUE_FAMILY_IGNORED@, at least
---     one of them /must/ be the same as the family of the queue that will
---     execute this barrier
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_SHARING_MODE_EXCLUSIVE' and
+--     @srcQueueFamilyIndex@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_QUEUE_FAMILY_IGNORED', it
+--     /must/ be a valid queue family or a special queue family reserved
+--     for external memory transfers, as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-queue-transfers>.
+--
+-- -   If @image@ was created with a sharing mode of
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_SHARING_MODE_EXCLUSIVE' and
+--     @dstQueueFamilyIndex@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_QUEUE_FAMILY_IGNORED', it
+--     /must/ be a valid queue family or a special queue family reserved
+--     for external memory transfers, as described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-queue-transfers>.
+--
+-- -   If @image@ was created with a sharing mode of
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_SHARING_MODE_EXCLUSIVE', and
+--     @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_QUEUE_FAMILY_IGNORED', at
+--     least one of them /must/ be the same as the family of the queue that
+--     will execute this barrier
 --
 -- -   @subresourceRange.baseMipLevel@ /must/ be less than the @mipLevels@
 --     specified in 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' when
 --     @image@ was created
 --
--- -   If @subresourceRange.levelCount@ is not @VK_REMAINING_MIP_LEVELS@,
+-- -   If @subresourceRange.levelCount@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_REMAINING_MIP_LEVELS',
 --     @subresourceRange.baseMipLevel@ + @subresourceRange.levelCount@
 --     /must/ be less than or equal to the @mipLevels@ specified in
 --     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' when @image@ was
@@ -1646,7 +1659,8 @@ instance Zero VkImageCopy where
 --     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' when @image@ was
 --     created
 --
--- -   If @subresourceRange.layerCount@ is not @VK_REMAINING_ARRAY_LAYERS@,
+-- -   If @subresourceRange.layerCount@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_REMAINING_ARRAY_LAYERS',
 --     @subresourceRange.baseArrayLayer@ + @subresourceRange.layerCount@
 --     /must/ be less than or equal to the @arrayLayers@ specified in
 --     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' when @image@ was
@@ -1654,89 +1668,91 @@ instance Zero VkImageCopy where
 --
 -- -   If @image@ has a depth\/stencil format with both depth and stencil
 --     components, then the @aspectMask@ member of @subresourceRange@
---     /must/ include both @VK_IMAGE_ASPECT_DEPTH_BIT@ and
---     @VK_IMAGE_ASPECT_STENCIL_BIT@
+--     /must/ include both
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_DEPTH_BIT'
+--     and
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_STENCIL_BIT'
 --
 -- -   If @image@ has a single-plane color format or is not /disjoint/,
 --     then the @aspectMask@ member of @subresourceRange@ /must/ be
---     @VK_IMAGE_ASPECT_COLOR_BIT@
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_COLOR_BIT'
 --
 -- -   If @image@ has a multi-planar format and the image is /disjoint/,
 --     then the @aspectMask@ member of @subresourceRange@ /must/ include
---     either at least one of @VK_IMAGE_ASPECT_PLANE_0_BIT@,
---     @VK_IMAGE_ASPECT_PLANE_1_BIT@, and @VK_IMAGE_ASPECT_PLANE_2_BIT@; or
---     /must/ include @VK_IMAGE_ASPECT_COLOR_BIT@
+--     either at least one of
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_0_BIT',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_1_BIT',
+--     and
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_2_BIT';
+--     or /must/ include
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_COLOR_BIT'
 --
 -- -   If @image@ has a multi-planar format with only two planes, then the
 --     @aspectMask@ member of @subresourceRange@ /must/ not include
---     @VK_IMAGE_ASPECT_PLANE_2_BIT@
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_2_BIT'
 --
 -- -   If either @oldLayout@ or @newLayout@ is
---     @VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL@ then @image@ /must/ have
---     been created with @VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT@ set
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL'
+--     then @image@ /must/ have been created with
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
+--     set
 --
 -- -   If either @oldLayout@ or @newLayout@ is
---     @VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL@ then @image@
---     /must/ have been created with
---     @VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT@ set
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL'
+--     then @image@ /must/ have been created with
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--     set
 --
 -- -   If either @oldLayout@ or @newLayout@ is
---     @VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL@ then @image@
---     /must/ have been created with
---     @VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT@ set
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL'
+--     then @image@ /must/ have been created with
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--     set
 --
 -- -   If either @oldLayout@ or @newLayout@ is
---     @VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL@ then
---     @image@ /must/ have been created with
---     @VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT@ set
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL'
+--     then @image@ /must/ have been created with
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--     set
 --
 -- -   If either @oldLayout@ or @newLayout@ is
---     @VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL@ then
---     @image@ /must/ have been created with
---     @VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT@ set
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL'
+--     then @image@ /must/ have been created with
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
+--     set
 --
 -- -   If either @oldLayout@ or @newLayout@ is
---     @VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL@ then @image@ /must/ have
---     been created with @VK_IMAGE_USAGE_SAMPLED_BIT@ or
---     @VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT@ set
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL'
+--     then @image@ /must/ have been created with
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_SAMPLED_BIT'
+--     or
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
+--     set
 --
 -- -   If either @oldLayout@ or @newLayout@ is
---     @VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL@ then @image@ /must/ have been
---     created with @VK_IMAGE_USAGE_TRANSFER_SRC_BIT@ set
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL'
+--     then @image@ /must/ have been created with
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_TRANSFER_SRC_BIT'
+--     set
 --
 -- -   If either @oldLayout@ or @newLayout@ is
---     @VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL@ then @image@ /must/ have been
---     created with @VK_IMAGE_USAGE_TRANSFER_DST_BIT@ set
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL'
+--     then @image@ /must/ have been created with
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_TRANSFER_DST_BIT'
+--     set
 --
 -- -   If @image@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+--     contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
 -- -   If either @oldLayout@ or @newLayout@ is
---     @VK_IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV@ then @image@ /must/ have
---     been created with @VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV@ set
+--     'Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image.VK_IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV'
+--     then @image@ /must/ have been created with
+--     'Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image.VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV'
+--     set
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER@
---
--- -   @pNext@ /must/ be @NULL@
---
--- -   @srcAccessMask@ /must/ be a valid combination of
---     'Graphics.Vulkan.C.Core10.Pass.VkAccessFlagBits' values
---
--- -   @dstAccessMask@ /must/ be a valid combination of
---     'Graphics.Vulkan.C.Core10.Pass.VkAccessFlagBits' values
---
--- -   @oldLayout@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Image.VkImageLayout' value
---
--- -   @newLayout@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Image.VkImageLayout' value
---
--- -   @image@ /must/ be a valid @VkImage@ handle
---
--- -   @subresourceRange@ /must/ be a valid @VkImageSubresourceRange@
---     structure
+-- Unresolved directive in VkImageMemoryBarrier.txt -
+-- include::{generated}\/validity\/structs\/VkImageMemoryBarrier.txt[]
 --
 -- = See Also
 --
@@ -1753,28 +1769,28 @@ data VkImageMemoryBarrier = VkImageMemoryBarrier
   vkPNext :: Ptr ()
   , -- | @srcAccessMask@ is a bitmask of
   -- 'Graphics.Vulkan.C.Core10.Pass.VkAccessFlagBits' specifying a
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-masks source access mask>.
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-access-masks source access mask>.
   vkSrcAccessMask :: VkAccessFlags
   , -- | @dstAccessMask@ is a bitmask of
   -- 'Graphics.Vulkan.C.Core10.Pass.VkAccessFlagBits' specifying a
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-masks destination access mask>.
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-access-masks destination access mask>.
   vkDstAccessMask :: VkAccessFlags
   , -- | @oldLayout@ is the old layout in an
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>.
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>.
   vkOldLayout :: VkImageLayout
   , -- | @newLayout@ is the new layout in an
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>.
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-image-layout-transitions image layout transition>.
   vkNewLayout :: VkImageLayout
   , -- | @srcQueueFamilyIndex@ is the source queue family for a
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>.
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>.
   vkSrcQueueFamilyIndex :: Word32
   , -- | @dstQueueFamilyIndex@ is the destination queue family for a
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>.
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>.
   vkDstQueueFamilyIndex :: Word32
   , -- | @image@ is a handle to the image affected by this barrier.
   vkImage :: VkImage
   , -- | @subresourceRange@ describes the
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-views image subresource range>
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-views image subresource range>
   -- within @image@ that is affected by this barrier.
   vkSubresourceRange :: VkImageSubresourceRange
   }
@@ -1805,7 +1821,7 @@ instance Storable VkImageMemoryBarrier where
                 *> poke (ptr `plusPtr` 48) (vkSubresourceRange (poked :: VkImageMemoryBarrier))
 
 instance Zero VkImageMemoryBarrier where
-  zero = VkImageMemoryBarrier zero
+  zero = VkImageMemoryBarrier VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER
                               zero
                               zero
                               zero
@@ -1815,12 +1831,14 @@ instance Zero VkImageMemoryBarrier where
                               zero
                               zero
                               zero
+
 -- | VkImageResolve - Structure specifying an image resolve operation
 --
 -- == Valid Usage
 --
 -- -   The @aspectMask@ member of @srcSubresource@ and @dstSubresource@
---     /must/ only contain @VK_IMAGE_ASPECT_COLOR_BIT@
+--     /must/ only contain
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_COLOR_BIT'
 --
 -- -   The @layerCount@ member of @srcSubresource@ and @dstSubresource@
 --     /must/ match
@@ -1828,8 +1846,9 @@ instance Zero VkImageMemoryBarrier where
 -- -   If either of the calling command’s @srcImage@ or @dstImage@
 --     parameters are of
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageType'
---     @VK_IMAGE_TYPE_3D@, the @baseArrayLayer@ and @layerCount@ members of
---     both @srcSubresource@ and @dstSubresource@ /must/ be @0@ and @1@,
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_3D',
+--     the @baseArrayLayer@ and @layerCount@ members of both
+--     @srcSubresource@ and @dstSubresource@ /must/ be @0@ and @1@,
 --     respectively
 --
 -- -   @srcOffset.x@ and (@extent.width@ + @srcOffset.x@) /must/ both be
@@ -1840,16 +1859,18 @@ instance Zero VkImageMemoryBarrier where
 --     greater than or equal to @0@ and less than or equal to the source
 --     image subresource height
 --
--- -   If the calling command’s @srcImage@ is of type @VK_IMAGE_TYPE_1D@,
+-- -   If the calling command’s @srcImage@ is of type
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_1D',
 --     then @srcOffset.y@ /must/ be @0@ and @extent.height@ /must/ be @1@.
 --
 -- -   @srcOffset.z@ and (@extent.depth@ + @srcOffset.z@) /must/ both be
 --     greater than or equal to @0@ and less than or equal to the source
 --     image subresource depth
 --
--- -   If the calling command’s @srcImage@ is of type @VK_IMAGE_TYPE_1D@ or
---     @VK_IMAGE_TYPE_2D@, then @srcOffset.z@ /must/ be @0@ and
---     @extent.depth@ /must/ be @1@.
+-- -   If the calling command’s @srcImage@ is of type
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_1D' or
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_2D',
+--     then @srcOffset.z@ /must/ be @0@ and @extent.depth@ /must/ be @1@.
 --
 -- -   @dstOffset.x@ and (@extent.width@ + @dstOffset.x@) /must/ both be
 --     greater than or equal to @0@ and less than or equal to the
@@ -1859,24 +1880,21 @@ instance Zero VkImageMemoryBarrier where
 --     greater than or equal to @0@ and less than or equal to the
 --     destination image subresource height
 --
--- -   If the calling command’s @dstImage@ is of type @VK_IMAGE_TYPE_1D@,
+-- -   If the calling command’s @dstImage@ is of type
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_1D',
 --     then @dstOffset.y@ /must/ be @0@ and @extent.height@ /must/ be @1@.
 --
 -- -   @dstOffset.z@ and (@extent.depth@ + @dstOffset.z@) /must/ both be
 --     greater than or equal to @0@ and less than or equal to the
 --     destination image subresource depth
 --
--- -   If the calling command’s @dstImage@ is of type @VK_IMAGE_TYPE_1D@ or
---     @VK_IMAGE_TYPE_2D@, then @dstOffset.z@ /must/ be @0@ and
---     @extent.depth@ /must/ be @1@.
+-- -   If the calling command’s @dstImage@ is of type
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_1D' or
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_2D',
+--     then @dstOffset.z@ /must/ be @0@ and @extent.depth@ /must/ be @1@.
 --
--- == Valid Usage (Implicit)
---
--- -   @srcSubresource@ /must/ be a valid @VkImageSubresourceLayers@
---     structure
---
--- -   @dstSubresource@ /must/ be a valid @VkImageSubresourceLayers@
---     structure
+-- Unresolved directive in VkImageResolve.txt -
+-- include::{generated}\/validity\/structs\/VkImageResolve.txt[]
 --
 -- = See Also
 --
@@ -1923,29 +1941,29 @@ instance Zero VkImageResolve where
                         zero
                         zero
                         zero
+
 -- | VkImageSubresourceLayers - Structure specifying an image subresource
 -- layers
 --
 -- == Valid Usage
 --
--- -   If @aspectMask@ contains @VK_IMAGE_ASPECT_COLOR_BIT@, it /must/ not
---     contain either of @VK_IMAGE_ASPECT_DEPTH_BIT@ or
---     @VK_IMAGE_ASPECT_STENCIL_BIT@
+-- -   If @aspectMask@ contains
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_COLOR_BIT',
+--     it /must/ not contain either of
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_DEPTH_BIT'
+--     or
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_STENCIL_BIT'
 --
--- -   @aspectMask@ /must/ not contain @VK_IMAGE_ASPECT_METADATA_BIT@
+-- -   @aspectMask@ /must/ not contain
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_METADATA_BIT'
 --
 -- -   @aspectMask@ /must/ not include
 --     @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ for any index @i@.
 --
 -- -   @layerCount@ /must/ be greater than 0
 --
--- == Valid Usage (Implicit)
---
--- -   @aspectMask@ /must/ be a valid combination of
---     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkImageAspectFlagBits'
---     values
---
--- -   @aspectMask@ /must/ not be @0@
+-- Unresolved directive in VkImageSubresourceLayers.txt -
+-- include::{generated}\/validity\/structs\/VkImageSubresourceLayers.txt[]
 --
 -- = See Also
 --
@@ -1984,6 +2002,7 @@ instance Zero VkImageSubresourceLayers where
                                   zero
                                   zero
                                   zero
+
 -- ** VkIndexType
 
 -- | VkIndexType - Type of index buffer indices
@@ -2014,32 +2033,34 @@ instance Read VkIndexType where
                         )
                     )
 
--- | @VK_INDEX_TYPE_UINT16@ specifies that indices are 16-bit unsigned
+-- | 'VK_INDEX_TYPE_UINT16' specifies that indices are 16-bit unsigned
 -- integer values.
 pattern VK_INDEX_TYPE_UINT16 :: VkIndexType
 pattern VK_INDEX_TYPE_UINT16 = VkIndexType 0
 
--- | @VK_INDEX_TYPE_UINT32@ specifies that indices are 32-bit unsigned
+-- | 'VK_INDEX_TYPE_UINT32' specifies that indices are 32-bit unsigned
 -- integer values.
 pattern VK_INDEX_TYPE_UINT32 :: VkIndexType
 pattern VK_INDEX_TYPE_UINT32 = VkIndexType 1
+
 -- | VkMemoryBarrier - Structure specifying a global memory barrier
 --
 -- = Description
 --
 -- The first
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- is limited to access types in the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-masks source access mask>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-access-masks source access mask>
 -- specified by @srcAccessMask@.
 --
 -- The second
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- is limited to access types in the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-masks destination access mask>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-access-masks destination access mask>
 -- specified by @dstAccessMask@.
 --
--- == Valid Usage (Implicit)
+-- Unresolved directive in VkMemoryBarrier.txt -
+-- include::{generated}\/validity\/structs\/VkMemoryBarrier.txt[]
 --
 -- = See Also
 --
@@ -2047,15 +2068,17 @@ pattern VK_INDEX_TYPE_UINT32 = VkIndexType 1
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType', 'vkCmdPipelineBarrier',
 -- 'vkCmdWaitEvents'
 data VkMemoryBarrier = VkMemoryBarrier
-  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_MEMORY_BARRIER@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @srcAccessMask@ /must/ be a valid combination of
-  -- 'Graphics.Vulkan.C.Core10.Pass.VkAccessFlagBits' values
+  , -- | @srcAccessMask@ is a bitmask of
+  -- 'Graphics.Vulkan.C.Core10.Pass.VkAccessFlagBits' specifying a
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-access-masks source access mask>.
   vkSrcAccessMask :: VkAccessFlags
-  , -- | @dstAccessMask@ /must/ be a valid combination of
-  -- 'Graphics.Vulkan.C.Core10.Pass.VkAccessFlagBits' values
+  , -- | @dstAccessMask@ is a bitmask of
+  -- 'Graphics.Vulkan.C.Core10.Pass.VkAccessFlagBits' specifying a
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-access-masks destination access mask>.
   vkDstAccessMask :: VkAccessFlags
   }
   deriving (Eq, Show)
@@ -2073,10 +2096,11 @@ instance Storable VkMemoryBarrier where
                 *> poke (ptr `plusPtr` 20) (vkDstAccessMask (poked :: VkMemoryBarrier))
 
 instance Zero VkMemoryBarrier where
-  zero = VkMemoryBarrier zero
+  zero = VkMemoryBarrier VK_STRUCTURE_TYPE_MEMORY_BARRIER
                          zero
                          zero
                          zero
+
 -- | VkRenderPassBeginInfo - Structure specifying render pass begin info
 --
 -- = Description
@@ -2101,32 +2125,8 @@ instance Zero VkMemoryBarrier where
 --
 -- == Valid Usage
 --
--- -   @clearValueCount@ /must/ be greater than the largest attachment
---     index in @renderPass@ that specifies a @loadOp@ (or @stencilLoadOp@,
---     if the attachment has a depth\/stencil format) of
---     @VK_ATTACHMENT_LOAD_OP_CLEAR@
---
--- -   @renderPass@ /must/ be
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility compatible>
---     with the @renderPass@ member of the @VkFramebufferCreateInfo@
---     structure specified when creating @framebuffer@.
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO@
---
--- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.VkDeviceGroupRenderPassBeginInfo'
---
--- -   @renderPass@ /must/ be a valid @VkRenderPass@ handle
---
--- -   @framebuffer@ /must/ be a valid @VkFramebuffer@ handle
---
--- -   If @clearValueCount@ is not @0@, @pClearValues@ /must/ be a valid
---     pointer to an array of @clearValueCount@ @VkClearValue@ unions
---
--- -   Both of @framebuffer@, and @renderPass@ /must/ have been created,
---     allocated, or retrieved from the same @VkDevice@
+-- Unresolved directive in VkRenderPassBeginInfo.txt -
+-- include::{generated}\/validity\/structs\/VkRenderPassBeginInfo.txt[]
 --
 -- = See Also
 --
@@ -2139,7 +2139,11 @@ data VkRenderPassBeginInfo = VkRenderPassBeginInfo
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @renderPass@ is the render pass to begin an instance of.
+  , -- | @renderPass@ /must/ be
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#renderpass-compatibility compatible>
+  -- with the @renderPass@ member of the
+  -- 'Graphics.Vulkan.C.Core10.Pass.VkFramebufferCreateInfo' structure
+  -- specified when creating @framebuffer@.
   vkRenderPass :: VkRenderPass
   , -- | @framebuffer@ is the framebuffer containing the attachments that are
   -- used with the render pass.
@@ -2147,15 +2151,19 @@ data VkRenderPassBeginInfo = VkRenderPassBeginInfo
   , -- | @renderArea@ is the render area that is affected by the render pass
   -- instance, and is described in more detail below.
   vkRenderArea :: VkRect2D
-  , -- | @clearValueCount@ is the number of elements in @pClearValues@.
+  , -- | @clearValueCount@ /must/ be greater than the largest attachment index in
+  -- @renderPass@ that specifies a @loadOp@ (or @stencilLoadOp@, if the
+  -- attachment has a depth\/stencil format) of
+  -- 'Graphics.Vulkan.C.Core10.Pass.VK_ATTACHMENT_LOAD_OP_CLEAR'
   vkClearValueCount :: Word32
   , -- | @pClearValues@ is an array of 'VkClearValue' structures that contains
   -- clear values for each attachment, if the attachment uses a @loadOp@
-  -- value of @VK_ATTACHMENT_LOAD_OP_CLEAR@ or if the attachment has a
-  -- depth\/stencil format and uses a @stencilLoadOp@ value of
-  -- @VK_ATTACHMENT_LOAD_OP_CLEAR@. The array is indexed by attachment
-  -- number. Only elements corresponding to cleared attachments are used.
-  -- Other elements of @pClearValues@ are ignored.
+  -- value of 'Graphics.Vulkan.C.Core10.Pass.VK_ATTACHMENT_LOAD_OP_CLEAR' or
+  -- if the attachment has a depth\/stencil format and uses a @stencilLoadOp@
+  -- value of 'Graphics.Vulkan.C.Core10.Pass.VK_ATTACHMENT_LOAD_OP_CLEAR'.
+  -- The array is indexed by attachment number. Only elements corresponding
+  -- to cleared attachments are used. Other elements of @pClearValues@ are
+  -- ignored.
   vkPClearValues :: Ptr VkClearValue
   }
   deriving (Eq, Show)
@@ -2179,13 +2187,14 @@ instance Storable VkRenderPassBeginInfo where
                 *> poke (ptr `plusPtr` 56) (vkPClearValues (poked :: VkRenderPassBeginInfo))
 
 instance Zero VkRenderPassBeginInfo where
-  zero = VkRenderPassBeginInfo zero
+  zero = VkRenderPassBeginInfo VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO
                                zero
                                zero
                                zero
                                zero
                                zero
                                zero
+
 -- ** VkStencilFaceFlagBits
 
 -- | VkStencilFaceFlagBits - Bitmask specifying sets of stencil state for
@@ -2215,26 +2224,27 @@ instance Read VkStencilFaceFlagBits where
                         )
                     )
 
--- | @VK_STENCIL_FACE_FRONT_BIT@ specifies that only the front set of stencil
+-- | 'VK_STENCIL_FACE_FRONT_BIT' specifies that only the front set of stencil
 -- state is updated.
 pattern VK_STENCIL_FACE_FRONT_BIT :: VkStencilFaceFlagBits
 pattern VK_STENCIL_FACE_FRONT_BIT = VkStencilFaceFlagBits 0x00000001
 
--- | @VK_STENCIL_FACE_BACK_BIT@ specifies that only the back set of stencil
+-- | 'VK_STENCIL_FACE_BACK_BIT' specifies that only the back set of stencil
 -- state is updated.
 pattern VK_STENCIL_FACE_BACK_BIT :: VkStencilFaceFlagBits
 pattern VK_STENCIL_FACE_BACK_BIT = VkStencilFaceFlagBits 0x00000002
 
--- | @VK_STENCIL_FRONT_AND_BACK@ is the combination of
--- @VK_STENCIL_FACE_FRONT_BIT@ and @VK_STENCIL_FACE_BACK_BIT@, and
+-- | 'VK_STENCIL_FRONT_AND_BACK' is the combination of
+-- 'VK_STENCIL_FACE_FRONT_BIT' and 'VK_STENCIL_FACE_BACK_BIT', and
 -- specifies that both sets of stencil state are updated.
 pattern VK_STENCIL_FRONT_AND_BACK :: VkStencilFaceFlagBits
 pattern VK_STENCIL_FRONT_AND_BACK = VkStencilFaceFlagBits 0x00000003
+
 -- | VkStencilFaceFlags - Bitmask of VkStencilFaceFlagBits
 --
 -- = Description
 --
--- @VkStencilFaceFlags@ is a bitmask type for setting a mask of zero or
+-- 'VkStencilFaceFlags' is a bitmask type for setting a mask of zero or
 -- more 'VkStencilFaceFlagBits'.
 --
 -- = See Also
@@ -2242,6 +2252,7 @@ pattern VK_STENCIL_FRONT_AND_BACK = VkStencilFaceFlagBits 0x00000003
 -- 'VkStencilFaceFlagBits', 'vkCmdSetStencilCompareMask',
 -- 'vkCmdSetStencilReference', 'vkCmdSetStencilWriteMask'
 type VkStencilFaceFlags = VkStencilFaceFlagBits
+
 -- ** VkSubpassContents
 
 -- | VkSubpassContents - Specify how commands in the first subpass of a
@@ -2269,20 +2280,20 @@ instance Read VkSubpassContents where
                         )
                     )
 
--- | @VK_SUBPASS_CONTENTS_INLINE@ specifies that the contents of the subpass
+-- | 'VK_SUBPASS_CONTENTS_INLINE' specifies that the contents of the subpass
 -- will be recorded inline in the primary command buffer, and secondary
 -- command buffers /must/ not be executed within the subpass.
 pattern VK_SUBPASS_CONTENTS_INLINE :: VkSubpassContents
 pattern VK_SUBPASS_CONTENTS_INLINE = VkSubpassContents 0
 
--- | @VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS@ specifies that the
+-- | 'VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS' specifies that the
 -- contents are recorded in secondary command buffers that will be called
 -- from the primary command buffer, and 'vkCmdExecuteCommands' is the only
 -- valid command on the command buffer until 'vkCmdNextSubpass' or
 -- 'vkCmdEndRenderPass'.
 pattern VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS :: VkSubpassContents
 pattern VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS = VkSubpassContents 1
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdBeginQuery - Begin a query
 --
 -- = Parameters
@@ -2303,11 +2314,13 @@ pattern VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS = VkSubpassContents 1
 --
 -- = Description
 --
--- If the @queryType@ of the pool is @VK_QUERY_TYPE_OCCLUSION@ and @flags@
--- contains @VK_QUERY_CONTROL_PRECISE_BIT@, an implementation /must/ return
--- a result that matches the actual number of samples passed. This is
--- described in more detail in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-occlusion Occlusion Queries>.
+-- If the @queryType@ of the pool is
+-- 'Graphics.Vulkan.C.Core10.Query.VK_QUERY_TYPE_OCCLUSION' and @flags@
+-- contains
+-- 'Graphics.Vulkan.C.Core10.CommandBuffer.VK_QUERY_CONTROL_PRECISE_BIT',
+-- an implementation /must/ return a result that matches the actual number
+-- of samples passed. This is described in more detail in
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#queries-occlusion Occlusion Queries>.
 --
 -- After beginning a query, that query is considered /active/ within the
 -- command buffer it was called in until that same query is ended. Queries
@@ -2318,110 +2331,85 @@ pattern VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS = VkSubpassContents 1
 --
 -- -   @queryPool@ /must/ have been created with a @queryType@ that differs
 --     from that of any queries that are
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-active active>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#queries-operation-active active>
 --     within @commandBuffer@
 --
 -- -   All queries used by the command /must/ be unavailable
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-occlusionQueryPrecise precise occlusion queries>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-occlusionQueryPrecise precise occlusion queries>
 --     feature is not enabled, or the @queryType@ used to create
---     @queryPool@ was not @VK_QUERY_TYPE_OCCLUSION@, @flags@ /must/ not
---     contain @VK_QUERY_CONTROL_PRECISE_BIT@
+--     @queryPool@ was not
+--     'Graphics.Vulkan.C.Core10.Query.VK_QUERY_TYPE_OCCLUSION', @flags@
+--     /must/ not contain
+--     'Graphics.Vulkan.C.Core10.CommandBuffer.VK_QUERY_CONTROL_PRECISE_BIT'
 --
 -- -   @query@ /must/ be less than the number of queries in @queryPool@
 --
 -- -   If the @queryType@ used to create @queryPool@ was
---     @VK_QUERY_TYPE_OCCLUSION@, the @VkCommandPool@ that @commandBuffer@
---     was allocated from /must/ support graphics operations
+--     'Graphics.Vulkan.C.Core10.Query.VK_QUERY_TYPE_OCCLUSION', the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
 --
 -- -   If the @queryType@ used to create @queryPool@ was
---     @VK_QUERY_TYPE_PIPELINE_STATISTICS@ and any of the
---     @pipelineStatistics@ indicate graphics operations, the
---     @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
+--     'Graphics.Vulkan.C.Core10.Query.VK_QUERY_TYPE_PIPELINE_STATISTICS'
+--     and any of the @pipelineStatistics@ indicate graphics operations,
+--     the 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
 --
 -- -   If the @queryType@ used to create @queryPool@ was
---     @VK_QUERY_TYPE_PIPELINE_STATISTICS@ and any of the
---     @pipelineStatistics@ indicate compute operations, the
---     @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support compute operations
+--     'Graphics.Vulkan.C.Core10.Query.VK_QUERY_TYPE_PIPELINE_STATISTICS'
+--     and any of the @pipelineStatistics@ indicate compute operations, the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support compute operations
 --
--- -   If @vkCmdBeginQuery@ is called within a render pass instance, the
+-- -   If 'vkCmdBeginQuery' is called within a render pass instance, the
 --     sum of @query@ and the number of bits set in the current subpass’s
 --     view mask /must/ be less than or equal to the number of queries in
 --     @queryPool@
 --
 -- -   If the @queryType@ used to create @queryPool@ was
---     @VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT@ the @VkCommandPool@
---     that @commandBuffer@ was allocated from /must/ support graphics
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT'
+--     the 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics
 --     operations
 --
 -- -   If the @queryType@ used to create @queryPool@ was
---     @VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT@ then
---     @VkPhysicalDeviceTransformFeedbackPropertiesEXT@::@transformFeedbackQueries@
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT'
+--     then
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.VkPhysicalDeviceTransformFeedbackPropertiesEXT'::@transformFeedbackQueries@
 --     /must/ be supported
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @queryPool@ /must/ be a valid @VkQueryPool@ handle
---
--- -   @flags@ /must/ be a valid combination of
---     'Graphics.Vulkan.C.Core10.CommandBuffer.VkQueryControlFlagBits'
---     values
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics, or compute operations
---
--- -   Both of @commandBuffer@, and @queryPool@ /must/ have been created,
---     allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdBeginQuery.txt -
+-- include::{generated}\/validity\/protos\/vkCmdBeginQuery.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkQueryControlFlags',
 -- 'Graphics.Vulkan.C.Core10.Query.VkQueryPool'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdBeginQuery" vkCmdBeginQuery :: ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("flags" ::: VkQueryControlFlags) -> IO ()
-
+#else
+vkCmdBeginQuery :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("flags" ::: VkQueryControlFlags) -> IO ()
+vkCmdBeginQuery deviceCmds = mkVkCmdBeginQuery (pVkCmdBeginQuery deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdBeginQuery
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("flags" ::: VkQueryControlFlags) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("flags" ::: VkQueryControlFlags) -> IO ())
+#endif
+
 type FN_vkCmdBeginQuery = ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> ("flags" ::: VkQueryControlFlags) -> IO ()
 type PFN_vkCmdBeginQuery = FunPtr FN_vkCmdBeginQuery
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdBeginRenderPass - Begin a new render pass
 --
 -- = Parameters
@@ -2444,66 +2432,78 @@ type PFN_vkCmdBeginQuery = FunPtr FN_vkCmdBeginQuery
 -- == Valid Usage
 --
 -- -   If any of the @initialLayout@ or @finalLayout@ member of the
---     @VkAttachmentDescription@ structures or the @layout@ member of the
---     @VkAttachmentReference@ structures specified when creating the
---     render pass specified in the @renderPass@ member of
---     @pRenderPassBegin@ is @VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL@
+--     'Graphics.Vulkan.C.Core10.Pass.VkAttachmentDescription' structures
+--     or the @layout@ member of the
+--     'Graphics.Vulkan.C.Core10.Pass.VkAttachmentReference' structures
+--     specified when creating the render pass specified in the
+--     @renderPass@ member of @pRenderPassBegin@ is
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL'
 --     then the corresponding attachment image view of the framebuffer
 --     specified in the @framebuffer@ member of @pRenderPassBegin@ /must/
 --     have been created with a @usage@ value including
---     @VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT@
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
 --
 -- -   If any of the @initialLayout@ or @finalLayout@ member of the
---     @VkAttachmentDescription@ structures or the @layout@ member of the
---     @VkAttachmentReference@ structures specified when creating the
---     render pass specified in the @renderPass@ member of
---     @pRenderPassBegin@ is
---     @VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL@,
---     @VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL@,
---     @VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL@, or
---     @VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL@ then the
---     corresponding attachment image view of the framebuffer specified in
---     the @framebuffer@ member of @pRenderPassBegin@ /must/ have been
---     created with a @usage@ value including
---     @VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT@
---
--- -   If any of the @initialLayout@ or @finalLayout@ member of the
---     @VkAttachmentDescription@ structures or the @layout@ member of the
---     @VkAttachmentReference@ structures specified when creating the
---     render pass specified in the @renderPass@ member of
---     @pRenderPassBegin@ is @VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL@
+--     'Graphics.Vulkan.C.Core10.Pass.VkAttachmentDescription' structures
+--     or the @layout@ member of the
+--     'Graphics.Vulkan.C.Core10.Pass.VkAttachmentReference' structures
+--     specified when creating the render pass specified in the
+--     @renderPass@ member of @pRenderPassBegin@ is
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL',
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL',
+--     or
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL'
 --     then the corresponding attachment image view of the framebuffer
 --     specified in the @framebuffer@ member of @pRenderPassBegin@ /must/
 --     have been created with a @usage@ value including
---     @VK_IMAGE_USAGE_SAMPLED_BIT@ or
---     @VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT@
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- -   If any of the @initialLayout@ or @finalLayout@ member of the
---     @VkAttachmentDescription@ structures or the @layout@ member of the
---     @VkAttachmentReference@ structures specified when creating the
---     render pass specified in the @renderPass@ member of
---     @pRenderPassBegin@ is @VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL@ then
---     the corresponding attachment image view of the framebuffer specified
---     in the @framebuffer@ member of @pRenderPassBegin@ /must/ have been
---     created with a @usage@ value including
---     @VK_IMAGE_USAGE_TRANSFER_SRC_BIT@
+--     'Graphics.Vulkan.C.Core10.Pass.VkAttachmentDescription' structures
+--     or the @layout@ member of the
+--     'Graphics.Vulkan.C.Core10.Pass.VkAttachmentReference' structures
+--     specified when creating the render pass specified in the
+--     @renderPass@ member of @pRenderPassBegin@ is
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL'
+--     then the corresponding attachment image view of the framebuffer
+--     specified in the @framebuffer@ member of @pRenderPassBegin@ /must/
+--     have been created with a @usage@ value including
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_SAMPLED_BIT'
+--     or
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
 --
 -- -   If any of the @initialLayout@ or @finalLayout@ member of the
---     @VkAttachmentDescription@ structures or the @layout@ member of the
---     @VkAttachmentReference@ structures specified when creating the
---     render pass specified in the @renderPass@ member of
---     @pRenderPassBegin@ is @VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL@ then
---     the corresponding attachment image view of the framebuffer specified
---     in the @framebuffer@ member of @pRenderPassBegin@ /must/ have been
---     created with a @usage@ value including
---     @VK_IMAGE_USAGE_TRANSFER_DST_BIT@
+--     'Graphics.Vulkan.C.Core10.Pass.VkAttachmentDescription' structures
+--     or the @layout@ member of the
+--     'Graphics.Vulkan.C.Core10.Pass.VkAttachmentReference' structures
+--     specified when creating the render pass specified in the
+--     @renderPass@ member of @pRenderPassBegin@ is
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL'
+--     then the corresponding attachment image view of the framebuffer
+--     specified in the @framebuffer@ member of @pRenderPassBegin@ /must/
+--     have been created with a @usage@ value including
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_TRANSFER_SRC_BIT'
+--
+-- -   If any of the @initialLayout@ or @finalLayout@ member of the
+--     'Graphics.Vulkan.C.Core10.Pass.VkAttachmentDescription' structures
+--     or the @layout@ member of the
+--     'Graphics.Vulkan.C.Core10.Pass.VkAttachmentReference' structures
+--     specified when creating the render pass specified in the
+--     @renderPass@ member of @pRenderPassBegin@ is
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL'
+--     then the corresponding attachment image view of the framebuffer
+--     specified in the @framebuffer@ member of @pRenderPassBegin@ /must/
+--     have been created with a @usage@ value including
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_TRANSFER_DST_BIT'
 --
 -- -   If any of the @initialLayout@ members of the
---     @VkAttachmentDescription@ structures specified when creating the
---     render pass specified in the @renderPass@ member of
---     @pRenderPassBegin@ is not @VK_IMAGE_LAYOUT_UNDEFINED@, then each
---     such @initialLayout@ /must/ be equal to the current layout of the
---     corresponding attachment image subresource of the framebuffer
+--     'Graphics.Vulkan.C.Core10.Pass.VkAttachmentDescription' structures
+--     specified when creating the render pass specified in the
+--     @renderPass@ member of @pRenderPassBegin@ is not
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_UNDEFINED', then
+--     each such @initialLayout@ /must/ be equal to the current layout of
+--     the corresponding attachment image subresource of the framebuffer
 --     specified in the @framebuffer@ member of @pRenderPassBegin@
 --
 -- -   The @srcStageMask@ and @dstStageMask@ members of any element of the
@@ -2518,66 +2518,37 @@ type PFN_vkCmdBeginQuery = FunPtr FN_vkCmdBeginQuery
 --     is bound to memory locations that are also bound to another
 --     attachment used by @renderPass@, and if at least one of those uses
 --     causes either attachment to be written to, both attachments /must/
---     have had the @VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT@ set
+--     have had the
+--     'Graphics.Vulkan.C.Core10.Pass.VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT'
+--     set
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @pRenderPassBegin@ /must/ be a valid pointer to a valid
---     @VkRenderPassBeginInfo@ structure
---
--- -   @contents@ /must/ be a valid 'VkSubpassContents' value
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- -   This command /must/ only be called outside of a render pass instance
---
--- -   @commandBuffer@ /must/ be a primary @VkCommandBuffer@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Outside         | Graphics        | Graphics        |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdBeginRenderPass.txt -
+-- include::{generated}\/validity\/protos\/vkCmdBeginRenderPass.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
 -- 'VkRenderPassBeginInfo', 'VkSubpassContents'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdBeginRenderPass" vkCmdBeginRenderPass :: ("commandBuffer" ::: VkCommandBuffer) -> ("pRenderPassBegin" ::: Ptr VkRenderPassBeginInfo) -> ("contents" ::: VkSubpassContents) -> IO ()
-
+#else
+vkCmdBeginRenderPass :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("pRenderPassBegin" ::: Ptr VkRenderPassBeginInfo) -> ("contents" ::: VkSubpassContents) -> IO ()
+vkCmdBeginRenderPass deviceCmds = mkVkCmdBeginRenderPass (pVkCmdBeginRenderPass deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdBeginRenderPass
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("pRenderPassBegin" ::: Ptr VkRenderPassBeginInfo) -> ("contents" ::: VkSubpassContents) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("pRenderPassBegin" ::: Ptr VkRenderPassBeginInfo) -> ("contents" ::: VkSubpassContents) -> IO ())
+#endif
+
 type FN_vkCmdBeginRenderPass = ("commandBuffer" ::: VkCommandBuffer) -> ("pRenderPassBegin" ::: Ptr VkRenderPassBeginInfo) -> ("contents" ::: VkSubpassContents) -> IO ()
 type PFN_vkCmdBeginRenderPass = FunPtr FN_vkCmdBeginRenderPass
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdBindDescriptorSets - Binds descriptor sets to a command buffer
 --
 -- = Parameters
@@ -2612,7 +2583,7 @@ type PFN_vkCmdBeginRenderPass = FunPtr FN_vkCmdBeginRenderPass
 --
 -- = Description
 --
--- @vkCmdBindDescriptorSets@ causes the sets numbered [@firstSet@..
+-- 'vkCmdBindDescriptorSets' causes the sets numbered [@firstSet@..
 -- @firstSet@+@descriptorSetCount@-1] to use the bindings stored in
 -- @pDescriptorSets@[0..@descriptorSetCount@-1] for subsequent rendering
 -- commands (either compute or graphics, according to the
@@ -2622,7 +2593,7 @@ type PFN_vkCmdBeginRenderPass = FunPtr FN_vkCmdBeginRenderPass
 -- Once bound, a descriptor set affects rendering of subsequent graphics or
 -- compute commands in the command buffer until a different set is bound to
 -- the same set number, or else until the set is disturbed as described in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>.
 --
 -- A compatible descriptor set /must/ be bound for all set numbers that any
 -- shaders in a pipeline access, at the time that a draw or dispatch
@@ -2651,17 +2622,17 @@ type PFN_vkCmdBeginRenderPass = FunPtr FN_vkCmdBeginRenderPass
 -- layout specified by @layout@. The layout used to program the bindings
 -- /must/ also be compatible with the pipeline used in subsequent graphics
 -- or compute commands, as defined in the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>
 -- section.
 --
--- The descriptor set contents bound by a call to @vkCmdBindDescriptorSets@
+-- The descriptor set contents bound by a call to 'vkCmdBindDescriptorSets'
 -- /may/ be consumed at the following times:
 --
 -- -   For descriptor bindings created with the
---     @VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT@ bit set, the
---     contents /may/ be consumed when the command buffer is submitted to a
---     queue, or during shader execution of the resulting draws and
---     dispatches, or any time in between. Otherwise,
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT'
+--     bit set, the contents /may/ be consumed when the command buffer is
+--     submitted to a queue, or during shader execution of the resulting
+--     draws and dispatches, or any time in between. Otherwise,
 --
 -- -   during host execution of the command, or during shader execution of
 --     the resulting draws and dispatches, or any time in between.
@@ -2672,94 +2643,49 @@ type PFN_vkCmdBeginRenderPass = FunPtr FN_vkCmdBeginRenderPass
 -- on the queue.
 --
 -- The contents of @pDynamicOffsets@ are consumed immediately during
--- execution of @vkCmdBindDescriptorSets@. Once all pending uses have
+-- execution of 'vkCmdBindDescriptorSets'. Once all pending uses have
 -- completed, it is legal to update and reuse a descriptor set.
 --
 -- == Valid Usage
 --
 -- -   Each element of @pDescriptorSets@ /must/ have been allocated with a
---     @VkDescriptorSetLayout@ that matches (is the same as, or identically
---     defined as) the @VkDescriptorSetLayout@ at set /n/ in @layout@,
---     where /n/ is the sum of @firstSet@ and the index into
---     @pDescriptorSets@
+--     'Graphics.Vulkan.C.Core10.PipelineLayout.VkDescriptorSetLayout' that
+--     matches (is the same as, or identically defined as) the
+--     'Graphics.Vulkan.C.Core10.PipelineLayout.VkDescriptorSetLayout' at
+--     set /n/ in @layout@, where /n/ is the sum of @firstSet@ and the
+--     index into @pDescriptorSets@
 --
 -- -   @dynamicOffsetCount@ /must/ be equal to the total number of dynamic
 --     descriptors in @pDescriptorSets@
 --
 -- -   The sum of @firstSet@ and @descriptorSetCount@ /must/ be less than
---     or equal to @VkPipelineLayoutCreateInfo@::@setLayoutCount@ provided
---     when @layout@ was created
+--     or equal to
+--     'Graphics.Vulkan.C.Core10.PipelineLayout.VkPipelineLayoutCreateInfo'::@setLayoutCount@
+--     provided when @layout@ was created
 --
 -- -   @pipelineBindPoint@ /must/ be supported by the @commandBuffer@’s
---     parent @VkCommandPool@’s queue family
+--     parent 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool'’s queue
+--     family
 --
 -- -   Each element of @pDynamicOffsets@ which corresponds to a descriptor
---     binding with type @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC@ /must/
---     be a multiple of
---     @VkPhysicalDeviceLimits@::@minUniformBufferOffsetAlignment@
+--     binding with type
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
+--     /must/ be a multiple of
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@minUniformBufferOffsetAlignment@
 --
 -- -   Each element of @pDynamicOffsets@ which corresponds to a descriptor
---     binding with type @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC@ /must/
---     be a multiple of
---     @VkPhysicalDeviceLimits@::@minStorageBufferOffsetAlignment@
+--     binding with type
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
+--     /must/ be a multiple of
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@minStorageBufferOffsetAlignment@
 --
 -- -   For each dynamic uniform or storage buffer binding in
 --     @pDescriptorSets@, the sum of the effective offset, as defined
 --     above, and the range of the binding /must/ be less than or equal to
 --     the size of the buffer
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @pipelineBindPoint@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Pass.VkPipelineBindPoint' value
---
--- -   @layout@ /must/ be a valid @VkPipelineLayout@ handle
---
--- -   @pDescriptorSets@ /must/ be a valid pointer to an array of
---     @descriptorSetCount@ valid @VkDescriptorSet@ handles
---
--- -   If @dynamicOffsetCount@ is not @0@, @pDynamicOffsets@ /must/ be a
---     valid pointer to an array of @dynamicOffsetCount@ @uint32_t@ values
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics, or compute operations
---
--- -   @descriptorSetCount@ /must/ be greater than @0@
---
--- -   Each of @commandBuffer@, @layout@, and the elements of
---     @pDescriptorSets@ /must/ have been created, allocated, or retrieved
---     from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdBindDescriptorSets.txt -
+-- include::{generated}\/validity\/protos\/vkCmdBindDescriptorSets.txt[]
 --
 -- = See Also
 --
@@ -2767,16 +2693,26 @@ type PFN_vkCmdBeginRenderPass = FunPtr FN_vkCmdBeginRenderPass
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSet',
 -- 'Graphics.Vulkan.C.Core10.Pass.VkPipelineBindPoint',
 -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdBindDescriptorSets" vkCmdBindDescriptorSets :: ("commandBuffer" ::: VkCommandBuffer) -> ("pipelineBindPoint" ::: VkPipelineBindPoint) -> ("layout" ::: VkPipelineLayout) -> ("firstSet" ::: Word32) -> ("descriptorSetCount" ::: Word32) -> ("pDescriptorSets" ::: Ptr VkDescriptorSet) -> ("dynamicOffsetCount" ::: Word32) -> ("pDynamicOffsets" ::: Ptr Word32) -> IO ()
-
+#else
+vkCmdBindDescriptorSets :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("pipelineBindPoint" ::: VkPipelineBindPoint) -> ("layout" ::: VkPipelineLayout) -> ("firstSet" ::: Word32) -> ("descriptorSetCount" ::: Word32) -> ("pDescriptorSets" ::: Ptr VkDescriptorSet) -> ("dynamicOffsetCount" ::: Word32) -> ("pDynamicOffsets" ::: Ptr Word32) -> IO ()
+vkCmdBindDescriptorSets deviceCmds = mkVkCmdBindDescriptorSets (pVkCmdBindDescriptorSets deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdBindDescriptorSets
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("pipelineBindPoint" ::: VkPipelineBindPoint) -> ("layout" ::: VkPipelineLayout) -> ("firstSet" ::: Word32) -> ("descriptorSetCount" ::: Word32) -> ("pDescriptorSets" ::: Ptr VkDescriptorSet) -> ("dynamicOffsetCount" ::: Word32) -> ("pDynamicOffsets" ::: Ptr Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("pipelineBindPoint" ::: VkPipelineBindPoint) -> ("layout" ::: VkPipelineLayout) -> ("firstSet" ::: Word32) -> ("descriptorSetCount" ::: Word32) -> ("pDescriptorSets" ::: Ptr VkDescriptorSet) -> ("dynamicOffsetCount" ::: Word32) -> ("pDynamicOffsets" ::: Ptr Word32) -> IO ())
+#endif
+
 type FN_vkCmdBindDescriptorSets = ("commandBuffer" ::: VkCommandBuffer) -> ("pipelineBindPoint" ::: VkPipelineBindPoint) -> ("layout" ::: VkPipelineLayout) -> ("firstSet" ::: Word32) -> ("descriptorSetCount" ::: Word32) -> ("pDescriptorSets" ::: Ptr VkDescriptorSet) -> ("dynamicOffsetCount" ::: Word32) -> ("pDynamicOffsets" ::: Ptr Word32) -> IO ()
 type PFN_vkCmdBindDescriptorSets = FunPtr FN_vkCmdBindDescriptorSets
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdBindIndexBuffer - Bind an index buffer to a command buffer
 --
 -- = Parameters
@@ -2796,76 +2732,51 @@ type PFN_vkCmdBindDescriptorSets = FunPtr FN_vkCmdBindDescriptorSets
 --
 -- -   @offset@ /must/ be less than the size of @buffer@
 --
--- -   The sum of @offset@ and the address of the range of @VkDeviceMemory@
---     object that is backing @buffer@, /must/ be a multiple of the type
---     indicated by @indexType@
+-- -   The sum of @offset@ and the address of the range of
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object that is
+--     backing @buffer@, /must/ be a multiple of the type indicated by
+--     @indexType@
 --
 -- -   @buffer@ /must/ have been created with the
---     @VK_BUFFER_USAGE_INDEX_BUFFER_BIT@ flag
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_INDEX_BUFFER_BIT'
+--     flag
 --
 -- -   If @buffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+--     contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
--- -   @indexType@ /must/ not be @VK_INDEX_TYPE_NONE_NV@.
+-- -   @indexType@ /must/ not be
+--     'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VK_INDEX_TYPE_NONE_NV'.
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @buffer@ /must/ be a valid @VkBuffer@ handle
---
--- -   @indexType@ /must/ be a valid 'VkIndexType' value
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- -   Both of @buffer@, and @commandBuffer@ /must/ have been created,
---     allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdBindIndexBuffer.txt -
+-- include::{generated}\/validity\/protos\/vkCmdBindIndexBuffer.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',
--- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer', @VkDeviceSize@,
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
 -- 'VkIndexType'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdBindIndexBuffer" vkCmdBindIndexBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("indexType" ::: VkIndexType) -> IO ()
-
+#else
+vkCmdBindIndexBuffer :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("indexType" ::: VkIndexType) -> IO ()
+vkCmdBindIndexBuffer deviceCmds = mkVkCmdBindIndexBuffer (pVkCmdBindIndexBuffer deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdBindIndexBuffer
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("indexType" ::: VkIndexType) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("indexType" ::: VkIndexType) -> IO ())
+#endif
+
 type FN_vkCmdBindIndexBuffer = ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("indexType" ::: VkIndexType) -> IO ()
 type PFN_vkCmdBindIndexBuffer = FunPtr FN_vkCmdBindIndexBuffer
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdBindPipeline - Bind a pipeline object to a command buffer
 --
 -- = Parameters
@@ -2884,34 +2795,42 @@ type PFN_vkCmdBindIndexBuffer = FunPtr FN_vkCmdBindIndexBuffer
 --
 -- Once bound, a pipeline binding affects subsequent graphics or compute
 -- commands in the command buffer until a different pipeline is bound to
--- the bind point. The pipeline bound to @VK_PIPELINE_BIND_POINT_COMPUTE@
--- controls the behavior of 'vkCmdDispatch' and 'vkCmdDispatchIndirect'.
--- The pipeline bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ controls the
--- behavior of all
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#drawing drawing commands>.
--- The pipeline bound to @VK_PIPELINE_BIND_POINT_RAY_TRACING_NV@ controls
--- the behavior of
+-- the bind point. The pipeline bound to
+-- 'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_COMPUTE' controls
+-- the behavior of 'vkCmdDispatch' and 'vkCmdDispatchIndirect'. The
+-- pipeline bound to
+-- 'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS' controls
+-- the behavior of all
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#drawing drawing commands>.
+-- The pipeline bound to
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VK_PIPELINE_BIND_POINT_RAY_TRACING_NV'
+-- controls the behavior of
 -- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCmdTraceRaysNV'. No
 -- other commands are affected by the pipeline state.
 --
 -- == Valid Usage
 --
--- -   If @pipelineBindPoint@ is @VK_PIPELINE_BIND_POINT_COMPUTE@, the
---     @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support compute operations
+-- -   If @pipelineBindPoint@ is
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_COMPUTE', the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support compute operations
 --
--- -   If @pipelineBindPoint@ is @VK_PIPELINE_BIND_POINT_GRAPHICS@, the
---     @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
+-- -   If @pipelineBindPoint@ is
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS', the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
 --
--- -   If @pipelineBindPoint@ is @VK_PIPELINE_BIND_POINT_COMPUTE@,
+-- -   If @pipelineBindPoint@ is
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_COMPUTE',
 --     @pipeline@ /must/ be a compute pipeline
 --
--- -   If @pipelineBindPoint@ is @VK_PIPELINE_BIND_POINT_GRAPHICS@,
+-- -   If @pipelineBindPoint@ is
+--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS',
 --     @pipeline@ /must/ be a graphics pipeline
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-variableMultisampleRate variable multisample rate>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-variableMultisampleRate variable multisample rate>
 --     feature is not supported, @pipeline@ is a graphics pipeline, the
 --     current subpass has no attachments, and this is not the first call
 --     to this function with a graphics pipeline after transitioning to the
@@ -2920,11 +2839,14 @@ type PFN_vkCmdBindIndexBuffer = FunPtr FN_vkCmdBindIndexBuffer
 --
 -- -   If
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkPhysicalDeviceSampleLocationsPropertiesEXT'::@variableSampleLocations@
---     is @VK_FALSE@, and @pipeline@ is a graphics pipeline created with a
+--     is 'Graphics.Vulkan.C.Core10.Core.VK_FALSE', and @pipeline@ is a
+--     graphics pipeline created with a
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkPipelineSampleLocationsStateCreateInfoEXT'
---     structure having its @sampleLocationsEnable@ member set to @VK_TRUE@
---     but without @VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT@ enabled then the
---     current render pass instance /must/ have been begun by specifying a
+--     structure having its @sampleLocationsEnable@ member set to
+--     'Graphics.Vulkan.C.Core10.Core.VK_TRUE' but without
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT'
+--     enabled then the current render pass instance /must/ have been begun
+--     by specifying a
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkRenderPassSampleLocationsBeginInfoEXT'
 --     structure whose @pPostSubpassSampleLocations@ member contains an
 --     element with a @subpassIndex@ matching the current subpass index and
@@ -2936,72 +2858,43 @@ type PFN_vkCmdBindIndexBuffer = FunPtr FN_vkCmdBindIndexBuffer
 -- -   This command /must/ not be recorded when transform feedback is
 --     active
 --
--- -   If @pipelineBindPoint@ is @VK_PIPELINE_BIND_POINT_RAY_TRACING_NV@,
---     the @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support compute operations
+-- -   If @pipelineBindPoint@ is
+--     'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VK_PIPELINE_BIND_POINT_RAY_TRACING_NV',
+--     the 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support compute operations
 --
--- -   If @pipelineBindPoint@ is @VK_PIPELINE_BIND_POINT_RAY_TRACING_NV@,
+-- -   If @pipelineBindPoint@ is
+--     'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VK_PIPELINE_BIND_POINT_RAY_TRACING_NV',
 --     the @pipeline@ /must/ be a ray tracing pipeline
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @pipelineBindPoint@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Pass.VkPipelineBindPoint' value
---
--- -   @pipeline@ /must/ be a valid @VkPipeline@ handle
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics, or compute operations
---
--- -   Both of @commandBuffer@, and @pipeline@ /must/ have been created,
---     allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdBindPipeline.txt -
+-- include::{generated}\/validity\/protos\/vkCmdBindPipeline.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline',
 -- 'Graphics.Vulkan.C.Core10.Pass.VkPipelineBindPoint'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdBindPipeline" vkCmdBindPipeline :: ("commandBuffer" ::: VkCommandBuffer) -> ("pipelineBindPoint" ::: VkPipelineBindPoint) -> ("pipeline" ::: VkPipeline) -> IO ()
-
+#else
+vkCmdBindPipeline :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("pipelineBindPoint" ::: VkPipelineBindPoint) -> ("pipeline" ::: VkPipeline) -> IO ()
+vkCmdBindPipeline deviceCmds = mkVkCmdBindPipeline (pVkCmdBindPipeline deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdBindPipeline
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("pipelineBindPoint" ::: VkPipelineBindPoint) -> ("pipeline" ::: VkPipeline) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("pipelineBindPoint" ::: VkPipelineBindPoint) -> ("pipeline" ::: VkPipeline) -> IO ())
+#endif
+
 type FN_vkCmdBindPipeline = ("commandBuffer" ::: VkCommandBuffer) -> ("pipelineBindPoint" ::: VkPipelineBindPoint) -> ("pipeline" ::: VkPipeline) -> IO ()
 type PFN_vkCmdBindPipeline = FunPtr FN_vkCmdBindPipeline
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdBindVertexBuffers - Bind vertex buffers to a command buffer
 --
 -- = Parameters
@@ -3032,81 +2925,51 @@ type PFN_vkCmdBindPipeline = FunPtr FN_vkCmdBindPipeline
 -- == Valid Usage
 --
 -- -   @firstBinding@ /must/ be less than
---     @VkPhysicalDeviceLimits@::@maxVertexInputBindings@
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxVertexInputBindings@
 --
 -- -   The sum of @firstBinding@ and @bindingCount@ /must/ be less than or
---     equal to @VkPhysicalDeviceLimits@::@maxVertexInputBindings@
+--     equal to
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxVertexInputBindings@
 --
 -- -   All elements of @pOffsets@ /must/ be less than the size of the
 --     corresponding element in @pBuffers@
 --
 -- -   All elements of @pBuffers@ /must/ have been created with the
---     @VK_BUFFER_USAGE_VERTEX_BUFFER_BIT@ flag
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_VERTEX_BUFFER_BIT'
+--     flag
 --
 -- -   Each element of @pBuffers@ that is non-sparse /must/ be bound
---     completely and contiguously to a single @VkDeviceMemory@ object
+--     completely and contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @pBuffers@ /must/ be a valid pointer to an array of @bindingCount@
---     valid @VkBuffer@ handles
---
--- -   @pOffsets@ /must/ be a valid pointer to an array of @bindingCount@
---     @VkDeviceSize@ values
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- -   @bindingCount@ /must/ be greater than @0@
---
--- -   Both of @commandBuffer@, and the elements of @pBuffers@ /must/ have
---     been created, allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdBindVertexBuffers.txt -
+-- include::{generated}\/validity\/protos\/vkCmdBindVertexBuffers.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',
--- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer', @VkDeviceSize@
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdBindVertexBuffers" vkCmdBindVertexBuffers :: ("commandBuffer" ::: VkCommandBuffer) -> ("firstBinding" ::: Word32) -> ("bindingCount" ::: Word32) -> ("pBuffers" ::: Ptr VkBuffer) -> ("pOffsets" ::: Ptr VkDeviceSize) -> IO ()
-
+#else
+vkCmdBindVertexBuffers :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("firstBinding" ::: Word32) -> ("bindingCount" ::: Word32) -> ("pBuffers" ::: Ptr VkBuffer) -> ("pOffsets" ::: Ptr VkDeviceSize) -> IO ()
+vkCmdBindVertexBuffers deviceCmds = mkVkCmdBindVertexBuffers (pVkCmdBindVertexBuffers deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdBindVertexBuffers
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("firstBinding" ::: Word32) -> ("bindingCount" ::: Word32) -> ("pBuffers" ::: Ptr VkBuffer) -> ("pOffsets" ::: Ptr VkDeviceSize) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("firstBinding" ::: Word32) -> ("bindingCount" ::: Word32) -> ("pBuffers" ::: Ptr VkBuffer) -> ("pOffsets" ::: Ptr VkDeviceSize) -> IO ())
+#endif
+
 type FN_vkCmdBindVertexBuffers = ("commandBuffer" ::: VkCommandBuffer) -> ("firstBinding" ::: Word32) -> ("bindingCount" ::: Word32) -> ("pBuffers" ::: Ptr VkBuffer) -> ("pOffsets" ::: Ptr VkDeviceSize) -> IO ()
 type PFN_vkCmdBindVertexBuffers = FunPtr FN_vkCmdBindVertexBuffers
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdBlitImage - Copy regions of an image, potentially performing format
 -- conversion,
 --
@@ -3135,7 +2998,7 @@ type PFN_vkCmdBindVertexBuffers = FunPtr FN_vkCmdBindVertexBuffers
 --
 -- = Description
 --
--- @vkCmdBlitImage@ /must/ not be used for multisampled source or
+-- 'vkCmdBlitImage' /must/ not be used for multisampled source or
 -- destination images. Use 'vkCmdResolveImage' for this purpose.
 --
 -- As the sizes of the source and destination extents /can/ differ in any
@@ -3145,7 +3008,7 @@ type PFN_vkCmdBindVertexBuffers = FunPtr FN_vkCmdBindVertexBuffers
 -- -   For each destination texel, the integer coordinate of that texel is
 --     converted to an unnormalized texture coordinate, using the effective
 --     inverse of the equations described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures-unnormalized-to-integer unnormalized to integer conversion>:
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures-unnormalized-to-integer unnormalized to integer conversion>:
 --
 --     -   ubase = i + ½
 --
@@ -3195,12 +3058,13 @@ type PFN_vkCmdBindVertexBuffers = FunPtr FN_vkCmdBindVertexBuffers
 --
 -- These coordinates are used to sample from the source image, as described
 -- in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#textures Image Operations chapter>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures Image Operations chapter>,
 -- with the filter mode equal to that of @filter@, a mipmap mode of
--- @VK_SAMPLER_MIPMAP_MODE_NEAREST@ and an address mode of
--- @VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE@. Implementations /must/ clamp at
--- the edge of the source image, and /may/ additionally clamp to the edge
--- of the source region.
+-- 'Graphics.Vulkan.C.Core10.Sampler.VK_SAMPLER_MIPMAP_MODE_NEAREST' and an
+-- address mode of
+-- 'Graphics.Vulkan.C.Core10.Sampler.VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'.
+-- Implementations /must/ clamp at the edge of the source image, and /may/
+-- additionally clamp to the edge of the source region.
 --
 -- __Note__
 --
@@ -3219,12 +3083,13 @@ type PFN_vkCmdBindVertexBuffers = FunPtr FN_vkCmdBindVertexBuffers
 -- slices in the destination region bounded by @dstOffsets@[0].@z@ and
 -- @dstOffsets@[1].@z@. For each destination slice, a source __z__
 -- coordinate is linearly interpolated between @srcOffsets@[0].@z@ and
--- @srcOffsets@[1].@z@. If the @filter@ parameter is @VK_FILTER_LINEAR@
--- then the value sampled from the source image is taken by doing linear
--- filtering using the interpolated __z__ coordinate. If @filter@ parameter
--- is @VK_FILTER_NEAREST@ then the value sampled from the source image is
--- taken from the single nearest slice, with an implementation-dependent
--- arithmetic rounding mode.
+-- @srcOffsets@[1].@z@. If the @filter@ parameter is
+-- 'Graphics.Vulkan.C.Core10.Sampler.VK_FILTER_LINEAR' then the value
+-- sampled from the source image is taken by doing linear filtering using
+-- the interpolated __z__ coordinate. If @filter@ parameter is
+-- 'Graphics.Vulkan.C.Core10.Sampler.VK_FILTER_NEAREST' then the value
+-- sampled from the source image is taken from the single nearest slice,
+-- with an implementation-dependent arithmetic rounding mode.
 --
 -- The following filtering and conversion rules apply:
 --
@@ -3262,47 +3127,60 @@ type PFN_vkCmdBindVertexBuffers = FunPtr FN_vkCmdBindVertexBuffers
 --     be sampled during the blit operation
 --
 -- -   The
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-format-features format features>
---     of @srcImage@ /must/ contain @VK_FORMAT_FEATURE_BLIT_SRC_BIT@.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @srcImage@ /must/ contain
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_BLIT_SRC_BIT'.
 --
 -- -   @srcImage@ /must/ not use a format listed in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion {html_spec_relative}#formats-requiring-sampler-ycbcr-conversion>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>
 --
 -- -   @srcImage@ /must/ have been created with
---     @VK_IMAGE_USAGE_TRANSFER_SRC_BIT@ usage flag
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_TRANSFER_SRC_BIT'
+--     usage flag
 --
 -- -   If @srcImage@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+--     contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
 -- -   @srcImageLayout@ /must/ specify the layout of the image subresources
 --     of @srcImage@ specified in @pRegions@ at the time this command is
---     executed on a @VkDevice@
+--     executed on a
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
--- -   @srcImageLayout@ /must/ be @VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR@,
---     @VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL@ or @VK_IMAGE_LAYOUT_GENERAL@
+-- -   @srcImageLayout@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image.VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR',
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL'
+--     or 'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_GENERAL'
 --
 -- -   The
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-format-features format features>
---     of @dstImage@ /must/ contain @VK_FORMAT_FEATURE_BLIT_DST_BIT@.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @dstImage@ /must/ contain
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_BLIT_DST_BIT'.
 --
 -- -   @dstImage@ /must/ not use a format listed in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion {html_spec_relative}#formats-requiring-sampler-ycbcr-conversion>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>
 --
 -- -   @dstImage@ /must/ have been created with
---     @VK_IMAGE_USAGE_TRANSFER_DST_BIT@ usage flag
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_TRANSFER_DST_BIT'
+--     usage flag
 --
 -- -   If @dstImage@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+--     contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
 -- -   @dstImageLayout@ /must/ specify the layout of the image subresources
 --     of @dstImage@ specified in @pRegions@ at the time this command is
---     executed on a @VkDevice@
+--     executed on a
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
--- -   @dstImageLayout@ /must/ be @VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR@,
---     @VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL@ or @VK_IMAGE_LAYOUT_GENERAL@
+-- -   @dstImageLayout@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image.VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR',
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL'
+--     or 'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_GENERAL'
 --
 -- -   The sample count of @srcImage@ and @dstImage@ /must/ both be equal
---     to @VK_SAMPLE_COUNT_1_BIT@
+--     to
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_SAMPLE_COUNT_1_BIT'
 --
 -- -   If either of @srcImage@ or @dstImage@ was created with a signed
 --     integer 'Graphics.Vulkan.C.Core10.Core.VkFormat', the other /must/
@@ -3318,27 +3196,32 @@ type PFN_vkCmdBindVertexBuffers = FunPtr FN_vkCmdBindVertexBuffers
 --     depth\/stencil format, the other /must/ have exactly the same format
 --
 -- -   If @srcImage@ was created with a depth\/stencil format, @filter@
---     /must/ be @VK_FILTER_NEAREST@
+--     /must/ be 'Graphics.Vulkan.C.Core10.Sampler.VK_FILTER_NEAREST'
 --
 -- -   @srcImage@ /must/ have been created with a @samples@ value of
---     @VK_SAMPLE_COUNT_1_BIT@
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_SAMPLE_COUNT_1_BIT'
 --
 -- -   @dstImage@ /must/ have been created with a @samples@ value of
---     @VK_SAMPLE_COUNT_1_BIT@
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_SAMPLE_COUNT_1_BIT'
 --
--- -   If @filter@ is @VK_FILTER_LINEAR@, then the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-format-features format features>
+-- -   If @filter@ is 'Graphics.Vulkan.C.Core10.Sampler.VK_FILTER_LINEAR',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-format-features format features>
 --     of @srcImage@ /must/ contain
---     @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT@.
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'.
 --
--- -   If @filter@ is @VK_FILTER_CUBIC_EXT@, then the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-format-features format features>
+-- -   If @filter@ is
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_filter_cubic.VK_FILTER_CUBIC_EXT',
+--     then the
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-format-features format features>
 --     of @srcImage@ /must/ contain
---     @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT@.
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_filter_cubic.VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT'.
 --
--- -   If @filter@ is @VK_FILTER_CUBIC_EXT@, @srcImage@ /must/ have a
+-- -   If @filter@ is
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_filter_cubic.VK_FILTER_CUBIC_EXT',
+--     @srcImage@ /must/ have a
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageType' of
---     @VK_IMAGE_TYPE_2D@
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_2D'
 --
 -- -   The @srcSubresource.mipLevel@ member of each element of @pRegions@
 --     /must/ be less than the @mipLevels@ specified in
@@ -3363,66 +3246,11 @@ type PFN_vkCmdBindVertexBuffers = FunPtr FN_vkCmdBindVertexBuffers
 --     was created
 --
 -- -   @dstImage@ and @srcImage@ /must/ not have been created with @flags@
---     containing @VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT@
+--     containing
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @srcImage@ /must/ be a valid @VkImage@ handle
---
--- -   @srcImageLayout@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Image.VkImageLayout' value
---
--- -   @dstImage@ /must/ be a valid @VkImage@ handle
---
--- -   @dstImageLayout@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Image.VkImageLayout' value
---
--- -   @pRegions@ /must/ be a valid pointer to an array of @regionCount@
---     valid @VkImageBlit@ structures
---
--- -   @filter@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Sampler.VkFilter' value
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- -   This command /must/ only be called outside of a render pass instance
---
--- -   @regionCount@ /must/ be greater than @0@
---
--- -   Each of @commandBuffer@, @dstImage@, and @srcImage@ /must/ have been
---     created, allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Outside         | Graphics        | Transfer        |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdBlitImage.txt -
+-- include::{generated}\/validity\/protos\/vkCmdBlitImage.txt[]
 --
 -- = See Also
 --
@@ -3430,16 +3258,26 @@ type PFN_vkCmdBindVertexBuffers = FunPtr FN_vkCmdBindVertexBuffers
 -- 'Graphics.Vulkan.C.Core10.Sampler.VkFilter',
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage', 'VkImageBlit',
 -- 'Graphics.Vulkan.C.Core10.Image.VkImageLayout'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdBlitImage" vkCmdBlitImage :: ("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkImageBlit) -> ("filter" ::: VkFilter) -> IO ()
-
+#else
+vkCmdBlitImage :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkImageBlit) -> ("filter" ::: VkFilter) -> IO ()
+vkCmdBlitImage deviceCmds = mkVkCmdBlitImage (pVkCmdBlitImage deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdBlitImage
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkImageBlit) -> ("filter" ::: VkFilter) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkImageBlit) -> ("filter" ::: VkFilter) -> IO ())
+#endif
+
 type FN_vkCmdBlitImage = ("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkImageBlit) -> ("filter" ::: VkFilter) -> IO ()
 type PFN_vkCmdBlitImage = FunPtr FN_vkCmdBlitImage
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdClearAttachments - Clear regions within bound framebuffer
 -- attachments
 --
@@ -3454,8 +3292,8 @@ type PFN_vkCmdBlitImage = FunPtr FN_vkCmdBlitImage
 -- -   @pAttachments@ is a pointer to an array of 'VkClearAttachment'
 --     structures defining the attachments to clear and the clear values to
 --     use. If any attachment to be cleared in the current subpass is
---     @VK_ATTACHMENT_UNUSED@, then the clear has no effect on that
---     attachment.
+--     'Graphics.Vulkan.C.Core10.Constants.VK_ATTACHMENT_UNUSED', then the
+--     clear has no effect on that attachment.
 --
 -- -   @rectCount@ is the number of entries in the @pRects@ array.
 --
@@ -3464,51 +3302,59 @@ type PFN_vkCmdBlitImage = FunPtr FN_vkCmdBlitImage
 --
 -- = Description
 --
--- @vkCmdClearAttachments@ /can/ clear multiple regions of each attachment
+-- 'vkCmdClearAttachments' /can/ clear multiple regions of each attachment
 -- used in the current subpass of a render pass instance. This command
 -- /must/ be called only inside a render pass instance, and implicitly
 -- selects the images to clear based on the current framebuffer attachments
 -- and the command parameters.
 --
 -- If the render pass has a
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>,
 -- clears follow the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragmentdensitymapops operations of fragment density maps>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fragmentdensitymapops operations of fragment density maps>
 -- as if each clear region was a primitive which generates fragments. The
 -- clear color is applied to all pixels inside each fragment’s area
 -- regardless if the pixels lie outside of the clear region. Clears /may/
 -- have a different set of supported fragment areas than draws.
 --
 -- Unlike other
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#clears clear commands>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#clears clear commands>,
 -- 'vkCmdClearAttachments' executes as a drawing command, rather than a
 -- transfer command, with writes performed by it executing in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#primrast-order rasterization order>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#primrast-order rasterization order>.
 -- Clears to color attachments are executed as color attachment writes, by
--- the @VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT@ stage. Clears to
--- depth\/stencil attachments are executed as
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-depth depth writes>
+-- the
+-- 'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT'
+-- stage. Clears to depth\/stencil attachments are executed as
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fragops-depth depth writes>
 -- and
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fragops-stencil writes>
--- by the @VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT@ and
--- @VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT@ stages.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fragops-stencil writes>
+-- by the
+-- 'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT'
+-- and
+-- 'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT'
+-- stages.
 --
 -- == Valid Usage
 --
 -- -   If the @aspectMask@ member of any element of @pAttachments@ contains
---     @VK_IMAGE_ASPECT_COLOR_BIT@, then the @colorAttachment@ member of
---     that element /must/ either refer to a color attachment which is
---     @VK_ATTACHMENT_UNUSED@, or /must/ be a valid color attachment.
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_COLOR_BIT',
+--     then the @colorAttachment@ member of that element /must/ either
+--     refer to a color attachment which is
+--     'Graphics.Vulkan.C.Core10.Constants.VK_ATTACHMENT_UNUSED', or /must/
+--     be a valid color attachment.
 --
 -- -   If the @aspectMask@ member of any element of @pAttachments@ contains
---     @VK_IMAGE_ASPECT_DEPTH_BIT@, then the current subpass\'
---     depth\/stencil attachment /must/ either be @VK_ATTACHMENT_UNUSED@,
---     or /must/ have a depth component
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_DEPTH_BIT',
+--     then the current subpass\' depth\/stencil attachment /must/ either
+--     be 'Graphics.Vulkan.C.Core10.Constants.VK_ATTACHMENT_UNUSED', or
+--     /must/ have a depth component
 --
 -- -   If the @aspectMask@ member of any element of @pAttachments@ contains
---     @VK_IMAGE_ASPECT_STENCIL_BIT@, then the current subpass\'
---     depth\/stencil attachment /must/ either be @VK_ATTACHMENT_UNUSED@,
---     or /must/ have a stencil component
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_STENCIL_BIT',
+--     then the current subpass\' depth\/stencil attachment /must/ either
+--     be 'Graphics.Vulkan.C.Core10.Constants.VK_ATTACHMENT_UNUSED', or
+--     /must/ have a stencil component
 --
 -- -   The @rect@ member of each element of @pRects@ /must/ have an
 --     @extent.width@ greater than @0@
@@ -3529,68 +3375,33 @@ type PFN_vkCmdBlitImage = FunPtr FN_vkCmdBlitImage
 -- -   If the render pass instance this is recorded in uses multiview, then
 --     @baseArrayLayer@ /must/ be zero and @layerCount@ /must/ be one.
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @pAttachments@ /must/ be a valid pointer to an array of
---     @attachmentCount@ valid @VkClearAttachment@ structures
---
--- -   @pRects@ /must/ be a valid pointer to an array of @rectCount@
---     @VkClearRect@ structures
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- -   This command /must/ only be called inside of a render pass instance
---
--- -   @attachmentCount@ /must/ be greater than @0@
---
--- -   @rectCount@ /must/ be greater than @0@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Inside          | Graphics        | Graphics        |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdClearAttachments.txt -
+-- include::{generated}\/validity\/protos\/vkCmdClearAttachments.txt[]
 --
 -- = See Also
 --
 -- 'VkClearAttachment', 'VkClearRect',
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdClearAttachments" vkCmdClearAttachments :: ("commandBuffer" ::: VkCommandBuffer) -> ("attachmentCount" ::: Word32) -> ("pAttachments" ::: Ptr VkClearAttachment) -> ("rectCount" ::: Word32) -> ("pRects" ::: Ptr VkClearRect) -> IO ()
-
+#else
+vkCmdClearAttachments :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("attachmentCount" ::: Word32) -> ("pAttachments" ::: Ptr VkClearAttachment) -> ("rectCount" ::: Word32) -> ("pRects" ::: Ptr VkClearRect) -> IO ()
+vkCmdClearAttachments deviceCmds = mkVkCmdClearAttachments (pVkCmdClearAttachments deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdClearAttachments
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("attachmentCount" ::: Word32) -> ("pAttachments" ::: Ptr VkClearAttachment) -> ("rectCount" ::: Word32) -> ("pRects" ::: Ptr VkClearRect) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("attachmentCount" ::: Word32) -> ("pAttachments" ::: Ptr VkClearAttachment) -> ("rectCount" ::: Word32) -> ("pRects" ::: Ptr VkClearRect) -> IO ())
+#endif
+
 type FN_vkCmdClearAttachments = ("commandBuffer" ::: VkCommandBuffer) -> ("attachmentCount" ::: Word32) -> ("pAttachments" ::: Ptr VkClearAttachment) -> ("rectCount" ::: Word32) -> ("pRects" ::: Ptr VkClearRect) -> IO ()
 type PFN_vkCmdClearAttachments = FunPtr FN_vkCmdClearAttachments
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdClearColorImage - Clear regions of a color image
 --
 -- = Parameters
@@ -3602,13 +3413,14 @@ type PFN_vkCmdClearAttachments = FunPtr FN_vkCmdClearAttachments
 --
 -- -   @imageLayout@ specifies the current layout of the image subresource
 --     ranges to be cleared, and /must/ be
---     @VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR@, @VK_IMAGE_LAYOUT_GENERAL@ or
---     @VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL@.
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image.VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR',
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_GENERAL' or
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL'.
 --
 -- -   @pColor@ is a pointer to a 'VkClearColorValue' structure that
 --     contains the values the image subresource ranges will be cleared to
 --     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#clears-values {html_spec_relative}#clears-values>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#clears-values>
 --     below).
 --
 -- -   @rangeCount@ is the number of image subresource range structures in
@@ -3618,7 +3430,7 @@ type PFN_vkCmdClearAttachments = FunPtr FN_vkCmdClearAttachments
 --     'Graphics.Vulkan.C.Core10.ImageView.VkImageSubresourceRange'
 --     structures that describe a range of mipmap levels, array layers, and
 --     aspects to be cleared, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-views Image Views>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-views Image Views>.
 --
 -- = Description
 --
@@ -3628,29 +3440,36 @@ type PFN_vkCmdClearAttachments = FunPtr FN_vkCmdClearAttachments
 -- == Valid Usage
 --
 -- -   The
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-format-features format features>
---     of @image@ /must/ contain @VK_FORMAT_FEATURE_TRANSFER_DST_BIT@.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @image@ /must/ contain
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.VK_FORMAT_FEATURE_TRANSFER_DST_BIT'.
 --
 -- -   @image@ /must/ have been created with
---     @VK_IMAGE_USAGE_TRANSFER_DST_BIT@ usage flag
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_TRANSFER_DST_BIT'
+--     usage flag
 --
 -- -   @image@ /must/ not use a format listed in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion {html_spec_relative}#formats-requiring-sampler-ycbcr-conversion>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>
 --
 -- -   If @image@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+--     contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
 -- -   @imageLayout@ /must/ specify the layout of the image subresource
 --     ranges of @image@ specified in @pRanges@ at the time this command is
---     executed on a @VkDevice@
+--     executed on a
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
--- -   @imageLayout@ /must/ be @VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL@,
---     @VK_IMAGE_LAYOUT_GENERAL@, or @VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR@
+-- -   @imageLayout@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL',
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_GENERAL', or
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image.VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR'
 --
 -- -   The
 --     'Graphics.Vulkan.C.Core10.ImageView.VkImageSubresourceRange'::@aspectMask@
 --     members of the elements of the @pRanges@ array /must/ each only
---     include @VK_IMAGE_ASPECT_COLOR_BIT@
+--     include
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_COLOR_BIT'
 --
 -- -   The
 --     'Graphics.Vulkan.C.Core10.ImageView.VkImageSubresourceRange'::@baseMipLevel@
@@ -3662,10 +3481,10 @@ type PFN_vkCmdClearAttachments = FunPtr FN_vkCmdClearAttachments
 -- -   For each
 --     'Graphics.Vulkan.C.Core10.ImageView.VkImageSubresourceRange' element
 --     of @pRanges@, if the @levelCount@ member is not
---     @VK_REMAINING_MIP_LEVELS@, then @baseMipLevel@ + @levelCount@ /must/
---     be less than the @mipLevels@ specified in
---     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' when @image@ was
---     created
+--     'Graphics.Vulkan.C.Core10.Constants.VK_REMAINING_MIP_LEVELS', then
+--     @baseMipLevel@ + @levelCount@ /must/ be less than the @mipLevels@
+--     specified in 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' when
+--     @image@ was created
 --
 -- -   The
 --     'Graphics.Vulkan.C.Core10.ImageView.VkImageSubresourceRange'::@baseArrayLayer@
@@ -3677,66 +3496,16 @@ type PFN_vkCmdClearAttachments = FunPtr FN_vkCmdClearAttachments
 -- -   For each
 --     'Graphics.Vulkan.C.Core10.ImageView.VkImageSubresourceRange' element
 --     of @pRanges@, if the @layerCount@ member is not
---     @VK_REMAINING_ARRAY_LAYERS@, then @baseArrayLayer@ + @layerCount@
---     /must/ be less than the @arrayLayers@ specified in
+--     'Graphics.Vulkan.C.Core10.Constants.VK_REMAINING_ARRAY_LAYERS', then
+--     @baseArrayLayer@ + @layerCount@ /must/ be less than the
+--     @arrayLayers@ specified in
 --     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' when @image@ was
 --     created
 --
 -- -   @image@ /must/ not have a compressed or depth\/stencil format
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @image@ /must/ be a valid @VkImage@ handle
---
--- -   @imageLayout@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Image.VkImageLayout' value
---
--- -   @pColor@ /must/ be a valid pointer to a valid @VkClearColorValue@
---     union
---
--- -   @pRanges@ /must/ be a valid pointer to an array of @rangeCount@
---     valid @VkImageSubresourceRange@ structures
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics, or compute operations
---
--- -   This command /must/ only be called outside of a render pass instance
---
--- -   @rangeCount@ /must/ be greater than @0@
---
--- -   Both of @commandBuffer@, and @image@ /must/ have been created,
---     allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Outside         | Graphics        | Transfer        |
--- > | Secondary       |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdClearColorImage.txt -
+-- include::{generated}\/validity\/protos\/vkCmdClearColorImage.txt[]
 --
 -- = See Also
 --
@@ -3744,16 +3513,26 @@ type PFN_vkCmdClearAttachments = FunPtr FN_vkCmdClearAttachments
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage',
 -- 'Graphics.Vulkan.C.Core10.Image.VkImageLayout',
 -- 'Graphics.Vulkan.C.Core10.ImageView.VkImageSubresourceRange'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdClearColorImage" vkCmdClearColorImage :: ("commandBuffer" ::: VkCommandBuffer) -> ("image" ::: VkImage) -> ("imageLayout" ::: VkImageLayout) -> ("pColor" ::: Ptr VkClearColorValue) -> ("rangeCount" ::: Word32) -> ("pRanges" ::: Ptr VkImageSubresourceRange) -> IO ()
-
+#else
+vkCmdClearColorImage :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("image" ::: VkImage) -> ("imageLayout" ::: VkImageLayout) -> ("pColor" ::: Ptr VkClearColorValue) -> ("rangeCount" ::: Word32) -> ("pRanges" ::: Ptr VkImageSubresourceRange) -> IO ()
+vkCmdClearColorImage deviceCmds = mkVkCmdClearColorImage (pVkCmdClearColorImage deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdClearColorImage
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("image" ::: VkImage) -> ("imageLayout" ::: VkImageLayout) -> ("pColor" ::: Ptr VkClearColorValue) -> ("rangeCount" ::: Word32) -> ("pRanges" ::: Ptr VkImageSubresourceRange) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("image" ::: VkImage) -> ("imageLayout" ::: VkImageLayout) -> ("pColor" ::: Ptr VkClearColorValue) -> ("rangeCount" ::: Word32) -> ("pRanges" ::: Ptr VkImageSubresourceRange) -> IO ())
+#endif
+
 type FN_vkCmdClearColorImage = ("commandBuffer" ::: VkCommandBuffer) -> ("image" ::: VkImage) -> ("imageLayout" ::: VkImageLayout) -> ("pColor" ::: Ptr VkClearColorValue) -> ("rangeCount" ::: Word32) -> ("pRanges" ::: Ptr VkImageSubresourceRange) -> IO ()
 type PFN_vkCmdClearColorImage = FunPtr FN_vkCmdClearColorImage
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdClearDepthStencilImage - Fill regions of a combined depth\/stencil
 -- image
 --
@@ -3765,13 +3544,14 @@ type PFN_vkCmdClearColorImage = FunPtr FN_vkCmdClearColorImage
 -- -   @image@ is the image to be cleared.
 --
 -- -   @imageLayout@ specifies the current layout of the image subresource
---     ranges to be cleared, and /must/ be @VK_IMAGE_LAYOUT_GENERAL@ or
---     @VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL@.
+--     ranges to be cleared, and /must/ be
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_GENERAL' or
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL'.
 --
 -- -   @pDepthStencil@ is a pointer to a 'VkClearDepthStencilValue'
 --     structure that contains the values the depth and stencil image
 --     subresource ranges will be cleared to (see
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#clears-values {html_spec_relative}#clears-values>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#clears-values>
 --     below).
 --
 -- -   @rangeCount@ is the number of image subresource range structures in
@@ -3781,55 +3561,66 @@ type PFN_vkCmdClearColorImage = FunPtr FN_vkCmdClearColorImage
 --     'Graphics.Vulkan.C.Core10.ImageView.VkImageSubresourceRange'
 --     structures that describe a range of mipmap levels, array layers, and
 --     aspects to be cleared, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-views Image Views>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-views Image Views>.
 --
 -- == Valid Usage
 --
 -- -   The
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-format-features format features>
---     of @image@ /must/ contain @VK_FORMAT_FEATURE_TRANSFER_DST_BIT@.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @image@ /must/ contain
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.VK_FORMAT_FEATURE_TRANSFER_DST_BIT'.
 --
 -- -   If any element of @pRanges.aspect@ includes
---     @VK_IMAGE_ASPECT_STENCIL_BIT@, and @image@ was created with
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkImageStencilUsageCreateInfoEXT separate stencil usage>,
---     @VK_IMAGE_USAGE_TRANSFER_DST_BIT@ /must/ have been included in the
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_STENCIL_BIT',
+--     and @image@ was created with
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkImageStencilUsageCreateInfoEXT separate stencil usage>,
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_TRANSFER_DST_BIT'
+--     /must/ have been included in the
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_separate_stencil_usage.VkImageStencilUsageCreateInfoEXT'::@stencilUsage@
 --     used to create @image@
 --
 -- -   If any element of @pRanges.aspect@ includes
---     @VK_IMAGE_ASPECT_STENCIL_BIT@, and @image@ was not created with
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkImageStencilUsageCreateInfoEXT separate stencil usage>,
---     @VK_IMAGE_USAGE_TRANSFER_DST_BIT@ /must/ have been included in the
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_STENCIL_BIT',
+--     and @image@ was not created with
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkImageStencilUsageCreateInfoEXT separate stencil usage>,
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_TRANSFER_DST_BIT'
+--     /must/ have been included in the
 --     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@usage@ used to
 --     create @image@
 --
 -- -   If any element of @pRanges.aspect@ includes
---     @VK_IMAGE_ASPECT_DEPTH_BIT@, @VK_IMAGE_USAGE_TRANSFER_DST_BIT@
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_DEPTH_BIT',
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_TRANSFER_DST_BIT'
 --     /must/ have been included in the
 --     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@usage@ used to
 --     create @image@
 --
 -- -   If @image@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+--     contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
 -- -   @imageLayout@ /must/ specify the layout of the image subresource
 --     ranges of @image@ specified in @pRanges@ at the time this command is
---     executed on a @VkDevice@
+--     executed on a
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
 -- -   @imageLayout@ /must/ be either of
---     @VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL@ or @VK_IMAGE_LAYOUT_GENERAL@
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL'
+--     or 'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_GENERAL'
 --
 -- -   The
 --     'Graphics.Vulkan.C.Core10.ImageView.VkImageSubresourceRange'::@aspectMask@
 --     members of the elements of the @pRanges@ array /must/ each only
---     include @VK_IMAGE_ASPECT_DEPTH_BIT@ if the image format has a depth
---     component
+--     include
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_DEPTH_BIT'
+--     if the image format has a depth component
 --
 -- -   The
 --     'Graphics.Vulkan.C.Core10.ImageView.VkImageSubresourceRange'::@aspectMask@
 --     members of the elements of the @pRanges@ array /must/ each only
---     include @VK_IMAGE_ASPECT_STENCIL_BIT@ if the image format has a
---     stencil component
+--     include
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_STENCIL_BIT'
+--     if the image format has a stencil component
 --
 -- -   The
 --     'Graphics.Vulkan.C.Core10.ImageView.VkImageSubresourceRange'::@baseMipLevel@
@@ -3841,10 +3632,10 @@ type PFN_vkCmdClearColorImage = FunPtr FN_vkCmdClearColorImage
 -- -   For each
 --     'Graphics.Vulkan.C.Core10.ImageView.VkImageSubresourceRange' element
 --     of @pRanges@, if the @levelCount@ member is not
---     @VK_REMAINING_MIP_LEVELS@, then @baseMipLevel@ + @levelCount@ /must/
---     be less than the @mipLevels@ specified in
---     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' when @image@ was
---     created
+--     'Graphics.Vulkan.C.Core10.Constants.VK_REMAINING_MIP_LEVELS', then
+--     @baseMipLevel@ + @levelCount@ /must/ be less than the @mipLevels@
+--     specified in 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' when
+--     @image@ was created
 --
 -- -   The
 --     'Graphics.Vulkan.C.Core10.ImageView.VkImageSubresourceRange'::@baseArrayLayer@
@@ -3856,66 +3647,16 @@ type PFN_vkCmdClearColorImage = FunPtr FN_vkCmdClearColorImage
 -- -   For each
 --     'Graphics.Vulkan.C.Core10.ImageView.VkImageSubresourceRange' element
 --     of @pRanges@, if the @layerCount@ member is not
---     @VK_REMAINING_ARRAY_LAYERS@, then @baseArrayLayer@ + @layerCount@
---     /must/ be less than the @arrayLayers@ specified in
+--     'Graphics.Vulkan.C.Core10.Constants.VK_REMAINING_ARRAY_LAYERS', then
+--     @baseArrayLayer@ + @layerCount@ /must/ be less than the
+--     @arrayLayers@ specified in
 --     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' when @image@ was
 --     created
 --
 -- -   @image@ /must/ have a depth\/stencil format
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @image@ /must/ be a valid @VkImage@ handle
---
--- -   @imageLayout@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Image.VkImageLayout' value
---
--- -   @pDepthStencil@ /must/ be a valid pointer to a valid
---     @VkClearDepthStencilValue@ structure
---
--- -   @pRanges@ /must/ be a valid pointer to an array of @rangeCount@
---     valid @VkImageSubresourceRange@ structures
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- -   This command /must/ only be called outside of a render pass instance
---
--- -   @rangeCount@ /must/ be greater than @0@
---
--- -   Both of @commandBuffer@, and @image@ /must/ have been created,
---     allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Outside         | Graphics        | Transfer        |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdClearDepthStencilImage.txt -
+-- include::{generated}\/validity\/protos\/vkCmdClearDepthStencilImage.txt[]
 --
 -- = See Also
 --
@@ -3924,16 +3665,26 @@ type PFN_vkCmdClearColorImage = FunPtr FN_vkCmdClearColorImage
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage',
 -- 'Graphics.Vulkan.C.Core10.Image.VkImageLayout',
 -- 'Graphics.Vulkan.C.Core10.ImageView.VkImageSubresourceRange'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdClearDepthStencilImage" vkCmdClearDepthStencilImage :: ("commandBuffer" ::: VkCommandBuffer) -> ("image" ::: VkImage) -> ("imageLayout" ::: VkImageLayout) -> ("pDepthStencil" ::: Ptr VkClearDepthStencilValue) -> ("rangeCount" ::: Word32) -> ("pRanges" ::: Ptr VkImageSubresourceRange) -> IO ()
-
+#else
+vkCmdClearDepthStencilImage :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("image" ::: VkImage) -> ("imageLayout" ::: VkImageLayout) -> ("pDepthStencil" ::: Ptr VkClearDepthStencilValue) -> ("rangeCount" ::: Word32) -> ("pRanges" ::: Ptr VkImageSubresourceRange) -> IO ()
+vkCmdClearDepthStencilImage deviceCmds = mkVkCmdClearDepthStencilImage (pVkCmdClearDepthStencilImage deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdClearDepthStencilImage
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("image" ::: VkImage) -> ("imageLayout" ::: VkImageLayout) -> ("pDepthStencil" ::: Ptr VkClearDepthStencilValue) -> ("rangeCount" ::: Word32) -> ("pRanges" ::: Ptr VkImageSubresourceRange) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("image" ::: VkImage) -> ("imageLayout" ::: VkImageLayout) -> ("pDepthStencil" ::: Ptr VkClearDepthStencilValue) -> ("rangeCount" ::: Word32) -> ("pRanges" ::: Ptr VkImageSubresourceRange) -> IO ())
+#endif
+
 type FN_vkCmdClearDepthStencilImage = ("commandBuffer" ::: VkCommandBuffer) -> ("image" ::: VkImage) -> ("imageLayout" ::: VkImageLayout) -> ("pDepthStencil" ::: Ptr VkClearDepthStencilValue) -> ("rangeCount" ::: Word32) -> ("pRanges" ::: Ptr VkImageSubresourceRange) -> IO ()
 type PFN_vkCmdClearDepthStencilImage = FunPtr FN_vkCmdClearDepthStencilImage
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdCopyBuffer - Copy data between buffer regions
 --
 -- = Parameters
@@ -3976,82 +3727,48 @@ type PFN_vkCmdClearDepthStencilImage = FunPtr FN_vkCmdClearDepthStencilImage
 --     in memory
 --
 -- -   @srcBuffer@ /must/ have been created with
---     @VK_BUFFER_USAGE_TRANSFER_SRC_BIT@ usage flag
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_TRANSFER_SRC_BIT'
+--     usage flag
 --
 -- -   If @srcBuffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+--     contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
 -- -   @dstBuffer@ /must/ have been created with
---     @VK_BUFFER_USAGE_TRANSFER_DST_BIT@ usage flag
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_TRANSFER_DST_BIT'
+--     usage flag
 --
 -- -   If @dstBuffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+--     contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @srcBuffer@ /must/ be a valid @VkBuffer@ handle
---
--- -   @dstBuffer@ /must/ be a valid @VkBuffer@ handle
---
--- -   @pRegions@ /must/ be a valid pointer to an array of @regionCount@
---     valid @VkBufferCopy@ structures
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support transfer, graphics, or compute operations
---
--- -   This command /must/ only be called outside of a render pass instance
---
--- -   @regionCount@ /must/ be greater than @0@
---
--- -   Each of @commandBuffer@, @dstBuffer@, and @srcBuffer@ /must/ have
---     been created, allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Outside         | Transfer        | Transfer        |
--- > | Secondary       |                 | Graphics        |                 |
--- > |                 |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdCopyBuffer.txt -
+-- include::{generated}\/validity\/protos\/vkCmdCopyBuffer.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer', 'VkBufferCopy',
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdCopyBuffer" vkCmdCopyBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> ("srcBuffer" ::: VkBuffer) -> ("dstBuffer" ::: VkBuffer) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkBufferCopy) -> IO ()
-
+#else
+vkCmdCopyBuffer :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("srcBuffer" ::: VkBuffer) -> ("dstBuffer" ::: VkBuffer) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkBufferCopy) -> IO ()
+vkCmdCopyBuffer deviceCmds = mkVkCmdCopyBuffer (pVkCmdCopyBuffer deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdCopyBuffer
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("srcBuffer" ::: VkBuffer) -> ("dstBuffer" ::: VkBuffer) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkBufferCopy) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("srcBuffer" ::: VkBuffer) -> ("dstBuffer" ::: VkBuffer) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkBufferCopy) -> IO ())
+#endif
+
 type FN_vkCmdCopyBuffer = ("commandBuffer" ::: VkCommandBuffer) -> ("srcBuffer" ::: VkBuffer) -> ("dstBuffer" ::: VkBuffer) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkBufferCopy) -> IO ()
 type PFN_vkCmdCopyBuffer = FunPtr FN_vkCmdCopyBuffer
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdCopyBufferToImage - Copy data from a buffer into an image
 --
 -- = Parameters
@@ -4077,15 +3794,18 @@ type PFN_vkCmdCopyBuffer = FunPtr FN_vkCmdCopyBuffer
 -- source buffer to the specified region of the destination image.
 --
 -- If the format of @dstImage@ is a
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>),
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>),
 -- regions of each plane to be a target of a copy /must/ be specified
 -- separately using the @pRegions@ member of the 'VkBufferImageCopy'
 -- structure. In this case, the @aspectMask@ of @imageSubresource@ /must/
--- be @VK_IMAGE_ASPECT_PLANE_0_BIT@, @VK_IMAGE_ASPECT_PLANE_1_BIT@, or
--- @VK_IMAGE_ASPECT_PLANE_2_BIT@. For the purposes of
--- @vkCmdCopyBufferToImage@, each plane of a multi-planar image is treated
--- as having the format listed in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-compatible-planes {html_spec_relative}#formats-compatible-planes>
+-- be
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_0_BIT',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_1_BIT',
+-- or
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_2_BIT'.
+-- For the purposes of 'vkCmdCopyBufferToImage', each plane of a
+-- multi-planar image is treated as having the format listed in
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-compatible-planes>
 -- for the plane identified by the @aspectMask@ of the corresponding
 -- subresource. This applies both to
 -- 'Graphics.Vulkan.C.Core10.Core.VkFormat' and to coordinates used in the
@@ -4096,13 +3816,13 @@ type PFN_vkCmdCopyBuffer = FunPtr FN_vkCmdCopyBuffer
 --
 -- -   @srcBuffer@ /must/ be large enough to contain all buffer locations
 --     that are accessed according to
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#copies-buffers-images-addressing Buffer and Image Addressing>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#copies-buffers-images-addressing Buffer and Image Addressing>,
 --     for each element of @pRegions@
 --
 -- -   The image region specified by each element of @pRegions@ /must/ be a
 --     region that is contained within @dstImage@ if the @dstImage@’s
 --     'Graphics.Vulkan.C.Core10.Core.VkFormat' is not a
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     and /must/ be a region that is contained within the plane being
 --     copied to if the @dstImage@’s
 --     'Graphics.Vulkan.C.Core10.Core.VkFormat' is a multi-planar format
@@ -4112,30 +3832,38 @@ type PFN_vkCmdCopyBuffer = FunPtr FN_vkCmdCopyBuffer
 --     in memory
 --
 -- -   @srcBuffer@ /must/ have been created with
---     @VK_BUFFER_USAGE_TRANSFER_SRC_BIT@ usage flag
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_TRANSFER_SRC_BIT'
+--     usage flag
 --
 -- -   The
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-format-features format features>
---     of @dstImage@ /must/ contain @VK_FORMAT_FEATURE_TRANSFER_DST_BIT@.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @dstImage@ /must/ contain
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.VK_FORMAT_FEATURE_TRANSFER_DST_BIT'.
 --
 -- -   If @srcBuffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+--     contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
 -- -   @dstImage@ /must/ have been created with
---     @VK_IMAGE_USAGE_TRANSFER_DST_BIT@ usage flag
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_TRANSFER_DST_BIT'
+--     usage flag
 --
 -- -   If @dstImage@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+--     contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
 -- -   @dstImage@ /must/ have a sample count equal to
---     @VK_SAMPLE_COUNT_1_BIT@
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_SAMPLE_COUNT_1_BIT'
 --
 -- -   @dstImageLayout@ /must/ specify the layout of the image subresources
 --     of @dstImage@ specified in @pRegions@ at the time this command is
---     executed on a @VkDevice@
+--     executed on a
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
--- -   @dstImageLayout@ /must/ be @VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL@,
---     @VK_IMAGE_LAYOUT_GENERAL@, or @VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR@
+-- -   @dstImageLayout@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL',
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_GENERAL', or
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image.VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR'
 --
 -- -   The @imageSubresource.mipLevel@ member of each element of @pRegions@
 --     /must/ be less than the @mipLevels@ specified in
@@ -4155,61 +3883,10 @@ type PFN_vkCmdCopyBuffer = FunPtr FN_vkCmdCopyBuffer
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkQueueFamilyProperties'
 --
 -- -   @dstImage@ /must/ not have been created with @flags@ containing
---     @VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT@
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @srcBuffer@ /must/ be a valid @VkBuffer@ handle
---
--- -   @dstImage@ /must/ be a valid @VkImage@ handle
---
--- -   @dstImageLayout@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Image.VkImageLayout' value
---
--- -   @pRegions@ /must/ be a valid pointer to an array of @regionCount@
---     valid @VkBufferImageCopy@ structures
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support transfer, graphics, or compute operations
---
--- -   This command /must/ only be called outside of a render pass instance
---
--- -   @regionCount@ /must/ be greater than @0@
---
--- -   Each of @commandBuffer@, @dstImage@, and @srcBuffer@ /must/ have
---     been created, allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Outside         | Transfer        | Transfer        |
--- > | Secondary       |                 | Graphics        |                 |
--- > |                 |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdCopyBufferToImage.txt -
+-- include::{generated}\/validity\/protos\/vkCmdCopyBufferToImage.txt[]
 --
 -- = See Also
 --
@@ -4217,16 +3894,26 @@ type PFN_vkCmdCopyBuffer = FunPtr FN_vkCmdCopyBuffer
 -- 'VkBufferImageCopy', 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage',
 -- 'Graphics.Vulkan.C.Core10.Image.VkImageLayout'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdCopyBufferToImage" vkCmdCopyBufferToImage :: ("commandBuffer" ::: VkCommandBuffer) -> ("srcBuffer" ::: VkBuffer) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkBufferImageCopy) -> IO ()
-
+#else
+vkCmdCopyBufferToImage :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("srcBuffer" ::: VkBuffer) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkBufferImageCopy) -> IO ()
+vkCmdCopyBufferToImage deviceCmds = mkVkCmdCopyBufferToImage (pVkCmdCopyBufferToImage deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdCopyBufferToImage
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("srcBuffer" ::: VkBuffer) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkBufferImageCopy) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("srcBuffer" ::: VkBuffer) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkBufferImageCopy) -> IO ())
+#endif
+
 type FN_vkCmdCopyBufferToImage = ("commandBuffer" ::: VkCommandBuffer) -> ("srcBuffer" ::: VkBuffer) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkBufferImageCopy) -> IO ()
 type PFN_vkCmdCopyBufferToImage = FunPtr FN_vkCmdCopyBufferToImage
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdCopyImage - Copy data between images
 --
 -- = Parameters
@@ -4257,20 +3944,22 @@ type PFN_vkCmdCopyBufferToImage = FunPtr FN_vkCmdCopyBufferToImage
 --
 -- The formats of @srcImage@ and @dstImage@ /must/ be compatible. Formats
 -- are compatible if they share the same class, as shown in the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-compatibility Compatible Formats>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-compatibility Compatible Formats>
 -- table. Depth\/stencil formats /must/ match exactly.
 --
 -- If the format of @srcImage@ or @dstImage@ is a
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
 -- regions of each plane to be copied /must/ be specified separately using
 -- the @srcSubresource@ and @dstSubresource@ members of the 'VkImageCopy'
 -- structure. In this case, the @aspectMask@ of the @srcSubresource@ or
 -- @dstSubresource@ that refers to the multi-planar image /must/ be
--- @VK_IMAGE_ASPECT_PLANE_0_BIT@, @VK_IMAGE_ASPECT_PLANE_1_BIT@, or
--- @VK_IMAGE_ASPECT_PLANE_2_BIT@. For the purposes of @vkCmdCopyImage@,
--- each plane of a multi-planar image is treated as having the format
--- listed in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-compatible-planes {html_spec_relative}#formats-compatible-planes>
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_0_BIT',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_1_BIT',
+-- or
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_2_BIT'.
+-- For the purposes of 'vkCmdCopyImage', each plane of a multi-planar image
+-- is treated as having the format listed in
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-compatible-planes>
 -- for the plane identified by the @aspectMask@ of the corresponding
 -- subresource. This applies both to
 -- 'Graphics.Vulkan.C.Core10.Core.VkFormat' and to coordinates used in the
@@ -4279,14 +3968,19 @@ type PFN_vkCmdCopyBufferToImage = FunPtr FN_vkCmdCopyBufferToImage
 --
 -- __Note__
 --
--- For example, the @VK_IMAGE_ASPECT_PLANE_1_BIT@ plane of a
--- @VK_FORMAT_G8_B8R8_2PLANE_420_UNORM@ image is compatible with an image
--- of format @VK_FORMAT_R8G8_UNORM@ and (less usefully) with the
--- @VK_IMAGE_ASPECT_PLANE_0_BIT@ plane of an image of format
--- @VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16@, as each texel is
--- 2 bytes in size.
+-- For example, the
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_1_BIT'
+-- plane of a
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_G8_B8R8_2PLANE_420_UNORM'
+-- image is compatible with an image of format
+-- 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8_UNORM' and (less usefully)
+-- with the
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_0_BIT'
+-- plane of an image of format
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16',
+-- as each texel is 2 bytes in size.
 --
--- @vkCmdCopyImage@ allows copying between /size-compatible/ compressed and
+-- 'vkCmdCopyImage' allows copying between /size-compatible/ compressed and
 -- uncompressed internal formats. Formats are size-compatible if the texel
 -- block size of the uncompressed format is equal to the texel block size
 -- of the compressed format. Such a copy does not perform on-the-fly
@@ -4352,11 +4046,11 @@ type PFN_vkCmdCopyBufferToImage = FunPtr FN_vkCmdCopyBufferToImage
 -- copy.
 --
 -- “@_422@” image formats that are not
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
 -- are treated as having a 2×1 compressed texel block for the purposes of
 -- these rules.
 --
--- @vkCmdCopyImage@ /can/ be used to copy image data between multisample
+-- 'vkCmdCopyImage' /can/ be used to copy image data between multisample
 -- images, but both images /must/ have the same number of samples.
 --
 -- == Valid Usage
@@ -4364,7 +4058,7 @@ type PFN_vkCmdCopyBufferToImage = FunPtr FN_vkCmdCopyBufferToImage
 -- -   The source region specified by each element of @pRegions@ /must/ be
 --     a region that is contained within @srcImage@ if the @srcImage@’s
 --     'Graphics.Vulkan.C.Core10.Core.VkFormat' is not a
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     and /must/ be a region that is contained within the plane being
 --     copied if the @srcImage@’s 'Graphics.Vulkan.C.Core10.Core.VkFormat'
 --     is a multi-planar format
@@ -4372,7 +4066,7 @@ type PFN_vkCmdCopyBufferToImage = FunPtr FN_vkCmdCopyBufferToImage
 -- -   The destination region specified by each element of @pRegions@
 --     /must/ be a region that is contained within @dstImage@ if the
 --     @dstImage@’s 'Graphics.Vulkan.C.Core10.Core.VkFormat' is not a
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     and /must/ be a region that is contained within the plane being
 --     copied to if the @dstImage@’s
 --     'Graphics.Vulkan.C.Core10.Core.VkFormat' is a multi-planar format
@@ -4382,61 +4076,76 @@ type PFN_vkCmdCopyBufferToImage = FunPtr FN_vkCmdCopyBufferToImage
 --     in memory
 --
 -- -   The
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-format-features format features>
---     of @srcImage@ /must/ contain @VK_FORMAT_FEATURE_TRANSFER_SRC_BIT@.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @srcImage@ /must/ contain
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.VK_FORMAT_FEATURE_TRANSFER_SRC_BIT'.
 --
 -- -   @srcImage@ /must/ have been created with
---     @VK_IMAGE_USAGE_TRANSFER_SRC_BIT@ usage flag
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_TRANSFER_SRC_BIT'
+--     usage flag
 --
 -- -   If @srcImage@ is non-sparse then the image or /disjoint/ plane to be
 --     copied /must/ be bound completely and contiguously to a single
---     @VkDeviceMemory@ object
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
 -- -   @srcImageLayout@ /must/ specify the layout of the image subresources
 --     of @srcImage@ specified in @pRegions@ at the time this command is
---     executed on a @VkDevice@
+--     executed on a
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
--- -   @srcImageLayout@ /must/ be @VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL@,
---     @VK_IMAGE_LAYOUT_GENERAL@, or @VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR@
+-- -   @srcImageLayout@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL',
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_GENERAL', or
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image.VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR'
 --
 -- -   The
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-format-features format features>
---     of @dstImage@ /must/ contain @VK_FORMAT_FEATURE_TRANSFER_DST_BIT@.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @dstImage@ /must/ contain
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.VK_FORMAT_FEATURE_TRANSFER_DST_BIT'.
 --
 -- -   @dstImage@ /must/ have been created with
---     @VK_IMAGE_USAGE_TRANSFER_DST_BIT@ usage flag
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_TRANSFER_DST_BIT'
+--     usage flag
 --
 -- -   If @dstImage@ is non-sparse then the image or /disjoint/ plane that
 --     is the destination of the copy /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+--     contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
 -- -   @dstImageLayout@ /must/ specify the layout of the image subresources
 --     of @dstImage@ specified in @pRegions@ at the time this command is
---     executed on a @VkDevice@
+--     executed on a
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
--- -   @dstImageLayout@ /must/ be @VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL@,
---     @VK_IMAGE_LAYOUT_GENERAL@, or @VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR@
+-- -   @dstImageLayout@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL',
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_GENERAL', or
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image.VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR'
 --
 -- -   If the 'Graphics.Vulkan.C.Core10.Core.VkFormat' of each of
 --     @srcImage@ and @dstImage@ is not a
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     the 'Graphics.Vulkan.C.Core10.Core.VkFormat' of each of @srcImage@
 --     and @dstImage@ /must/ be compatible, as defined
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#copies-images-format-compatibility above>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#copies-images-format-compatibility above>
 --
 -- -   In a copy to or from a plane of a
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image>,
 --     the 'Graphics.Vulkan.C.Core10.Core.VkFormat' of the image and plane
 --     /must/ be compatible according to
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-compatible-planes the description of compatible planes>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-compatible-planes the description of compatible planes>
 --     for the plane being copied
 --
 -- -   When a copy is performed to or from an image with a
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     the @aspectMask@ of the @srcSubresource@ and\/or @dstSubresource@
 --     that refers to the multi-planar image /must/ be
---     @VK_IMAGE_ASPECT_PLANE_0_BIT@, @VK_IMAGE_ASPECT_PLANE_1_BIT@, or
---     @VK_IMAGE_ASPECT_PLANE_2_BIT@ (with @VK_IMAGE_ASPECT_PLANE_2_BIT@
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_0_BIT',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_1_BIT',
+--     or
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_2_BIT'
+--     (with
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_2_BIT'
 --     valid only for a 'Graphics.Vulkan.C.Core10.Core.VkFormat' with three
 --     planes)
 --
@@ -4475,80 +4184,37 @@ type PFN_vkCmdCopyBufferToImage = FunPtr FN_vkCmdCopyBufferToImage
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkQueueFamilyProperties'
 --
 -- -   @dstImage@ and @srcImage@ /must/ not have been created with @flags@
---     containing @VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT@
+--     containing
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @srcImage@ /must/ be a valid @VkImage@ handle
---
--- -   @srcImageLayout@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Image.VkImageLayout' value
---
--- -   @dstImage@ /must/ be a valid @VkImage@ handle
---
--- -   @dstImageLayout@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Image.VkImageLayout' value
---
--- -   @pRegions@ /must/ be a valid pointer to an array of @regionCount@
---     valid @VkImageCopy@ structures
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support transfer, graphics, or compute operations
---
--- -   This command /must/ only be called outside of a render pass instance
---
--- -   @regionCount@ /must/ be greater than @0@
---
--- -   Each of @commandBuffer@, @dstImage@, and @srcImage@ /must/ have been
---     created, allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Outside         | Transfer        | Transfer        |
--- > | Secondary       |                 | Graphics        |                 |
--- > |                 |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdCopyImage.txt -
+-- include::{generated}\/validity\/protos\/vkCmdCopyImage.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage', 'VkImageCopy',
 -- 'Graphics.Vulkan.C.Core10.Image.VkImageLayout'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdCopyImage" vkCmdCopyImage :: ("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkImageCopy) -> IO ()
-
+#else
+vkCmdCopyImage :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkImageCopy) -> IO ()
+vkCmdCopyImage deviceCmds = mkVkCmdCopyImage (pVkCmdCopyImage deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdCopyImage
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkImageCopy) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkImageCopy) -> IO ())
+#endif
+
 type FN_vkCmdCopyImage = ("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkImageCopy) -> IO ()
 type PFN_vkCmdCopyImage = FunPtr FN_vkCmdCopyImage
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdCopyImageToBuffer - Copy image data into a buffer
 --
 -- = Parameters
@@ -4574,15 +4240,18 @@ type PFN_vkCmdCopyImage = FunPtr FN_vkCmdCopyImage
 -- source image to the specified region of the destination buffer.
 --
 -- If the 'Graphics.Vulkan.C.Core10.Core.VkFormat' of @srcImage@ is a
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar image format>,
 -- regions of each plane to be a source of a copy /must/ be specified
 -- separately using the @pRegions@ member of the 'VkBufferImageCopy'
 -- structure. In this case, the @aspectMask@ of @imageSubresource@ /must/
--- be @VK_IMAGE_ASPECT_PLANE_0_BIT@, @VK_IMAGE_ASPECT_PLANE_1_BIT@, or
--- @VK_IMAGE_ASPECT_PLANE_2_BIT@. For the purposes of
--- @vkCmdCopyBufferToImage@, each plane of a multi-planar image is treated
--- as having the format listed in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-compatible-planes {html_spec_relative}#formats-compatible-planes>
+-- be
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_0_BIT',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_1_BIT',
+-- or
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_2_BIT'.
+-- For the purposes of 'vkCmdCopyBufferToImage', each plane of a
+-- multi-planar image is treated as having the format listed in
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-compatible-planes>
 -- for the plane identified by the @aspectMask@ of the corresponding
 -- subresource. This applies both to
 -- 'Graphics.Vulkan.C.Core10.Core.VkFormat' and to coordinates used in the
@@ -4594,14 +4263,14 @@ type PFN_vkCmdCopyImage = FunPtr FN_vkCmdCopyImage
 -- -   The image region specified by each element of @pRegions@ /must/ be a
 --     region that is contained within @srcImage@ if the @srcImage@’s
 --     'Graphics.Vulkan.C.Core10.Core.VkFormat' is not a
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     and /must/ be a region that is contained within the plane being
 --     copied if the @srcImage@’s 'Graphics.Vulkan.C.Core10.Core.VkFormat'
 --     is a multi-planar format
 --
 -- -   @dstBuffer@ /must/ be large enough to contain all buffer locations
 --     that are accessed according to
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#copies-buffers-images-addressing Buffer and Image Addressing>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#copies-buffers-images-addressing Buffer and Image Addressing>,
 --     for each element of @pRegions@
 --
 -- -   The union of all source regions, and the union of all destination
@@ -4609,30 +4278,38 @@ type PFN_vkCmdCopyImage = FunPtr FN_vkCmdCopyImage
 --     in memory
 --
 -- -   The
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-format-features format features>
---     of @srcImage@ /must/ contain @VK_FORMAT_FEATURE_TRANSFER_SRC_BIT@.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-format-features format features>
+--     of @srcImage@ /must/ contain
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.VK_FORMAT_FEATURE_TRANSFER_SRC_BIT'.
 --
 -- -   @srcImage@ /must/ have been created with
---     @VK_IMAGE_USAGE_TRANSFER_SRC_BIT@ usage flag
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_TRANSFER_SRC_BIT'
+--     usage flag
 --
 -- -   If @srcImage@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+--     contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
 -- -   @srcImage@ /must/ have a sample count equal to
---     @VK_SAMPLE_COUNT_1_BIT@
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_SAMPLE_COUNT_1_BIT'
 --
 -- -   @srcImageLayout@ /must/ specify the layout of the image subresources
 --     of @srcImage@ specified in @pRegions@ at the time this command is
---     executed on a @VkDevice@
+--     executed on a
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
--- -   @srcImageLayout@ /must/ be @VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR@,
---     @VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL@ or @VK_IMAGE_LAYOUT_GENERAL@
+-- -   @srcImageLayout@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image.VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR',
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL'
+--     or 'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_GENERAL'
 --
 -- -   @dstBuffer@ /must/ have been created with
---     @VK_BUFFER_USAGE_TRANSFER_DST_BIT@ usage flag
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_TRANSFER_DST_BIT'
+--     usage flag
 --
 -- -   If @dstBuffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+--     contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
 -- -   The @imageSubresource.mipLevel@ member of each element of @pRegions@
 --     /must/ be less than the @mipLevels@ specified in
@@ -4652,61 +4329,10 @@ type PFN_vkCmdCopyImage = FunPtr FN_vkCmdCopyImage
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkQueueFamilyProperties'
 --
 -- -   @srcImage@ /must/ not have been created with @flags@ containing
---     @VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT@
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @srcImage@ /must/ be a valid @VkImage@ handle
---
--- -   @srcImageLayout@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Image.VkImageLayout' value
---
--- -   @dstBuffer@ /must/ be a valid @VkBuffer@ handle
---
--- -   @pRegions@ /must/ be a valid pointer to an array of @regionCount@
---     valid @VkBufferImageCopy@ structures
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support transfer, graphics, or compute operations
---
--- -   This command /must/ only be called outside of a render pass instance
---
--- -   @regionCount@ /must/ be greater than @0@
---
--- -   Each of @commandBuffer@, @dstBuffer@, and @srcImage@ /must/ have
---     been created, allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Outside         | Transfer        | Transfer        |
--- > | Secondary       |                 | Graphics        |                 |
--- > |                 |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdCopyImageToBuffer.txt -
+-- include::{generated}\/validity\/protos\/vkCmdCopyImageToBuffer.txt[]
 --
 -- = See Also
 --
@@ -4714,16 +4340,26 @@ type PFN_vkCmdCopyImage = FunPtr FN_vkCmdCopyImage
 -- 'VkBufferImageCopy', 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage',
 -- 'Graphics.Vulkan.C.Core10.Image.VkImageLayout'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdCopyImageToBuffer" vkCmdCopyImageToBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstBuffer" ::: VkBuffer) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkBufferImageCopy) -> IO ()
-
+#else
+vkCmdCopyImageToBuffer :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstBuffer" ::: VkBuffer) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkBufferImageCopy) -> IO ()
+vkCmdCopyImageToBuffer deviceCmds = mkVkCmdCopyImageToBuffer (pVkCmdCopyImageToBuffer deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdCopyImageToBuffer
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstBuffer" ::: VkBuffer) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkBufferImageCopy) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstBuffer" ::: VkBuffer) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkBufferImageCopy) -> IO ())
+#endif
+
 type FN_vkCmdCopyImageToBuffer = ("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstBuffer" ::: VkBuffer) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkBufferImageCopy) -> IO ()
 type PFN_vkCmdCopyImageToBuffer = FunPtr FN_vkCmdCopyImageToBuffer
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdCopyQueryPoolResults - Copy the results of queries in a query pool
 -- to a buffer object
 --
@@ -4757,15 +4393,15 @@ type PFN_vkCmdCopyImageToBuffer = FunPtr FN_vkCmdCopyImageToBuffer
 --
 -- = Description
 --
--- @vkCmdCopyQueryPoolResults@ is guaranteed to see the effect of previous
--- uses of @vkCmdResetQueryPool@ in the same queue, without any additional
+-- 'vkCmdCopyQueryPoolResults' is guaranteed to see the effect of previous
+-- uses of 'vkCmdResetQueryPool' in the same queue, without any additional
 -- synchronization. Thus, the results will always reflect the most recent
 -- use of the query.
 --
 -- @flags@ has the same possible values described above for the @flags@
 -- parameter of 'Graphics.Vulkan.C.Core10.Query.vkGetQueryPoolResults', but
 -- the different style of execution causes some subtle behavioral
--- differences. Because @vkCmdCopyQueryPoolResults@ executes in order with
+-- differences. Because 'vkCmdCopyQueryPoolResults' executes in order with
 -- respect to other query commands, there is less ambiguity about which use
 -- of a query is being requested.
 --
@@ -4773,37 +4409,43 @@ type PFN_vkCmdCopyImageToBuffer = FunPtr FN_vkCmdCopyImageToBuffer
 -- available state are written as 32-bit unsigned integer values, and
 -- nothing is written for queries in the unavailable state.
 --
--- If @VK_QUERY_RESULT_64_BIT@ is set, the results are written as an array
--- of 64-bit unsigned integer values as described for
--- 'Graphics.Vulkan.C.Core10.Query.vkGetQueryPoolResults'.
+-- If 'Graphics.Vulkan.C.Core10.Query.VK_QUERY_RESULT_64_BIT' is set, the
+-- results are written as an array of 64-bit unsigned integer values as
+-- described for 'Graphics.Vulkan.C.Core10.Query.vkGetQueryPoolResults'.
 --
--- If @VK_QUERY_RESULT_WAIT_BIT@ is set, the implementation will wait for
--- each query’s status to be in the available state before retrieving the
--- numerical results for that query. This is guaranteed to reflect the most
--- recent use of the query on the same queue, assuming that the query is
--- not being simultaneously used by other queues. If the query does not
--- become available in a finite amount of time (e.g. due to not issuing a
--- query since the last reset), a @VK_ERROR_DEVICE_LOST@ error /may/ occur.
+-- If 'Graphics.Vulkan.C.Core10.Query.VK_QUERY_RESULT_WAIT_BIT' is set, the
+-- implementation will wait for each query’s status to be in the available
+-- state before retrieving the numerical results for that query. This is
+-- guaranteed to reflect the most recent use of the query on the same
+-- queue, assuming that the query is not being simultaneously used by other
+-- queues. If the query does not become available in a finite amount of
+-- time (e.g. due to not issuing a query since the last reset), a
+-- 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_DEVICE_LOST' error /may/ occur.
 --
--- Similarly, if @VK_QUERY_RESULT_WITH_AVAILABILITY_BIT@ is set and
--- @VK_QUERY_RESULT_WAIT_BIT@ is not set, the availability is guaranteed to
--- reflect the most recent use of the query on the same queue, assuming
--- that the query is not being simultaneously used by other queues. As with
--- @vkGetQueryPoolResults@, implementations /must/ guarantee that if they
--- return a non-zero availability value, then the numerical results are
--- valid.
+-- Similarly, if
+-- 'Graphics.Vulkan.C.Core10.Query.VK_QUERY_RESULT_WITH_AVAILABILITY_BIT'
+-- is set and 'Graphics.Vulkan.C.Core10.Query.VK_QUERY_RESULT_WAIT_BIT' is
+-- not set, the availability is guaranteed to reflect the most recent use
+-- of the query on the same queue, assuming that the query is not being
+-- simultaneously used by other queues. As with
+-- 'Graphics.Vulkan.C.Core10.Query.vkGetQueryPoolResults', implementations
+-- /must/ guarantee that if they return a non-zero availability value, then
+-- the numerical results are valid.
 --
--- If @VK_QUERY_RESULT_PARTIAL_BIT@ is set, @VK_QUERY_RESULT_WAIT_BIT@ is
--- not set, and the query’s status is unavailable, an intermediate result
--- value between zero and the final result value is written for that query.
+-- If 'Graphics.Vulkan.C.Core10.Query.VK_QUERY_RESULT_PARTIAL_BIT' is set,
+-- 'Graphics.Vulkan.C.Core10.Query.VK_QUERY_RESULT_WAIT_BIT' is not set,
+-- and the query’s status is unavailable, an intermediate result value
+-- between zero and the final result value is written for that query.
 --
--- @VK_QUERY_RESULT_PARTIAL_BIT@ /must/ not be used if the pool’s
--- @queryType@ is @VK_QUERY_TYPE_TIMESTAMP@.
+-- 'Graphics.Vulkan.C.Core10.Query.VK_QUERY_RESULT_PARTIAL_BIT' /must/ not
+-- be used if the pool’s @queryType@ is
+-- 'Graphics.Vulkan.C.Core10.Query.VK_QUERY_TYPE_TIMESTAMP'.
 --
--- @vkCmdCopyQueryPoolResults@ is considered to be a transfer operation,
+-- 'vkCmdCopyQueryPoolResults' is considered to be a transfer operation,
 -- and its writes to buffer memory /must/ be synchronized using
--- @VK_PIPELINE_STAGE_TRANSFER_BIT@ and @VK_ACCESS_TRANSFER_WRITE_BIT@
--- before using the results.
+-- 'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_TRANSFER_BIT' and
+-- 'Graphics.Vulkan.C.Core10.Pass.VK_ACCESS_TRANSFER_WRITE_BIT' before
+-- using the results.
 --
 -- == Valid Usage
 --
@@ -4815,90 +4457,60 @@ type PFN_vkCmdCopyImageToBuffer = FunPtr FN_vkCmdCopyImageToBuffer
 -- -   The sum of @firstQuery@ and @queryCount@ /must/ be less than or
 --     equal to the number of queries in @queryPool@
 --
--- -   If @VK_QUERY_RESULT_64_BIT@ is not set in @flags@ then @dstOffset@
---     and @stride@ /must/ be multiples of @4@
+-- -   If 'Graphics.Vulkan.C.Core10.Query.VK_QUERY_RESULT_64_BIT' is not
+--     set in @flags@ then @dstOffset@ and @stride@ /must/ be multiples of
+--     @4@
 --
--- -   If @VK_QUERY_RESULT_64_BIT@ is set in @flags@ then @dstOffset@ and
---     @stride@ /must/ be multiples of @8@
+-- -   If 'Graphics.Vulkan.C.Core10.Query.VK_QUERY_RESULT_64_BIT' is set in
+--     @flags@ then @dstOffset@ and @stride@ /must/ be multiples of @8@
 --
 -- -   @dstBuffer@ /must/ have enough storage, from @dstOffset@, to contain
 --     the result of each query, as described
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-memorylayout here>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#queries-operation-memorylayout here>
 --
 -- -   @dstBuffer@ /must/ have been created with
---     @VK_BUFFER_USAGE_TRANSFER_DST_BIT@ usage flag
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_TRANSFER_DST_BIT'
+--     usage flag
 --
 -- -   If @dstBuffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+--     contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
 -- -   If the @queryType@ used to create @queryPool@ was
---     @VK_QUERY_TYPE_TIMESTAMP@, @flags@ /must/ not contain
---     @VK_QUERY_RESULT_PARTIAL_BIT@
+--     'Graphics.Vulkan.C.Core10.Query.VK_QUERY_TYPE_TIMESTAMP', @flags@
+--     /must/ not contain
+--     'Graphics.Vulkan.C.Core10.Query.VK_QUERY_RESULT_PARTIAL_BIT'
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @queryPool@ /must/ be a valid @VkQueryPool@ handle
---
--- -   @dstBuffer@ /must/ be a valid @VkBuffer@ handle
---
--- -   @flags@ /must/ be a valid combination of
---     'Graphics.Vulkan.C.Core10.Query.VkQueryResultFlagBits' values
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics, or compute operations
---
--- -   This command /must/ only be called outside of a render pass instance
---
--- -   Each of @commandBuffer@, @dstBuffer@, and @queryPool@ /must/ have
---     been created, allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Outside         | Graphics        | Transfer        |
--- > | Secondary       |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdCopyQueryPoolResults.txt -
+-- include::{generated}\/validity\/protos\/vkCmdCopyQueryPoolResults.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',
--- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer', @VkDeviceSize@,
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
 -- 'Graphics.Vulkan.C.Core10.Query.VkQueryPool',
 -- 'Graphics.Vulkan.C.Core10.Query.VkQueryResultFlags'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdCopyQueryPoolResults" vkCmdCopyQueryPoolResults :: ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("stride" ::: VkDeviceSize) -> ("flags" ::: VkQueryResultFlags) -> IO ()
-
+#else
+vkCmdCopyQueryPoolResults :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("stride" ::: VkDeviceSize) -> ("flags" ::: VkQueryResultFlags) -> IO ()
+vkCmdCopyQueryPoolResults deviceCmds = mkVkCmdCopyQueryPoolResults (pVkCmdCopyQueryPoolResults deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdCopyQueryPoolResults
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("stride" ::: VkDeviceSize) -> ("flags" ::: VkQueryResultFlags) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("stride" ::: VkDeviceSize) -> ("flags" ::: VkQueryResultFlags) -> IO ())
+#endif
+
 type FN_vkCmdCopyQueryPoolResults = ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("stride" ::: VkDeviceSize) -> ("flags" ::: VkQueryResultFlags) -> IO ()
 type PFN_vkCmdCopyQueryPoolResults = FunPtr FN_vkCmdCopyQueryPoolResults
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdDispatch - Dispatch compute work items
 --
 -- = Parameters
@@ -4923,158 +4535,43 @@ type PFN_vkCmdCopyQueryPoolResults = FunPtr FN_vkCmdCopyQueryPoolResults
 --
 -- == Valid Usage
 --
--- -   @groupCountX@ /must/ be less than or equal to
---     @VkPhysicalDeviceLimits@::@maxComputeWorkGroupCount@[0]
+-- Unresolved directive in vkCmdDispatch.txt -
+-- include::{chapters}\/commonvalidity\/draw_dispatch_common.txt[]
+-- Unresolved directive in vkCmdDispatch.txt -
+-- include::{chapters}\/commonvalidity\/draw_dispatch_nonindirect_common.txt[]
+-- * @groupCountX@ /must/ be less than or equal to
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
+-- * @groupCountY@ /must/ be less than or equal to
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
+-- * @groupCountZ@ /must/ be less than or equal to
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
 --
--- -   @groupCountY@ /must/ be less than or equal to
---     @VkPhysicalDeviceLimits@::@maxComputeWorkGroupCount@[1]
---
--- -   @groupCountZ@ /must/ be less than or equal to
---     @VkPhysicalDeviceLimits@::@maxComputeWorkGroupCount@[2]
---
--- -   For each set /n/ that is statically used by the @VkPipeline@ bound
---     to @VK_PIPELINE_BIND_POINT_COMPUTE@, a descriptor set /must/ have
---     been bound to /n/ at @VK_PIPELINE_BIND_POINT_COMPUTE@, with a
---     @VkPipelineLayout@ that is compatible for set /n/, with the
---     @VkPipelineLayout@ used to create the current @VkPipeline@, as
---     described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
---
--- -   Descriptors in each bound descriptor set, specified via
---     @vkCmdBindDescriptorSets@, /must/ be valid if they are statically
---     used by the bound @VkPipeline@ object, specified via
---     @vkCmdBindPipeline@
---
--- -   A valid compute pipeline /must/ be bound to the current command
---     buffer with @VK_PIPELINE_BIND_POINT_COMPUTE@
---
--- -   For each push constant that is statically used by the @VkPipeline@
---     bound to @VK_PIPELINE_BIND_POINT_COMPUTE@, a push constant value
---     /must/ have been set for @VK_PIPELINE_BIND_POINT_COMPUTE@, with a
---     @VkPipelineLayout@ that is compatible for push constants with the
---     one used to create the current @VkPipeline@, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_COMPUTE@ uses
---     unnormalized coordinates, it /must/ not be used to sample from any
---     @VkImage@ with a @VkImageView@ of the type @VK_IMAGE_VIEW_TYPE_3D@,
---     @VK_IMAGE_VIEW_TYPE_CUBE@, @VK_IMAGE_VIEW_TYPE_1D_ARRAY@,
---     @VK_IMAGE_VIEW_TYPE_2D_ARRAY@ or @VK_IMAGE_VIEW_TYPE_CUBE_ARRAY@, in
---     any shader stage
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_COMPUTE@ uses
---     unnormalized coordinates, it /must/ not be used with any of the
---     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions with
---     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_COMPUTE@ uses
---     unnormalized coordinates, it /must/ not be used with any of the
---     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions that
---     includes a LOD bias or any offset values, in any shader stage
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and any shader stage in the @VkPipeline@
---     object bound to @VK_PIPELINE_BIND_POINT_COMPUTE@ accesses a uniform
---     buffer, it /must/ not access values outside of the range of that
---     buffer specified in the bound descriptor set
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and any shader stage in the @VkPipeline@
---     object bound to @VK_PIPELINE_BIND_POINT_COMPUTE@ accesses a storage
---     buffer, it /must/ not access values outside of the range of that
---     buffer specified in the bound descriptor set
---
--- -   If a @VkImageView@ is sampled with @VK_FILTER_LINEAR@ as a result of
---     this command, then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT@.
---
--- -   If a @VkImageView@ is sampled with @VK_FILTER_CUBIC_EXT@ as a result
---     of this command, then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain
---     @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT@.
---
--- -   Any 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' being sampled
---     with @VK_FILTER_CUBIC_EXT@ as a result of this command /must/ have a
---     'Graphics.Vulkan.C.Core10.ImageView.VkImageViewType' and format that
---     supports cubic filtering, as specified by
---     @VkFilterCubicImageViewImageFormatPropertiesEXT@::@filterCubic@
---     returned by @vkGetPhysicalDeviceImageFormatProperties2@
---
--- -   Any 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' being sampled
---     with @VK_FILTER_CUBIC_EXT@ with a reduction mode of either
---     @VK_SAMPLER_REDUCTION_MODE_MIN_EXT@ or
---     @VK_SAMPLER_REDUCTION_MODE_MAX_EXT@ as a result of this command
---     /must/ have a 'Graphics.Vulkan.C.Core10.ImageView.VkImageViewType'
---     and format that supports cubic filtering together with minmax
---     filtering, as specified by
---     @VkFilterCubicImageViewImageFormatPropertiesEXT@::@filterCubicMinmax@
---     returned by @vkGetPhysicalDeviceImageFormatProperties2@
---
--- -   Any 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' created with
---     a 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@flags@
---     containing @VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV@ sampled as a
---     result of this command /must/ only be sampled using a
---     'Graphics.Vulkan.C.Core10.Sampler.VkSamplerAddressMode' of
---     @VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE@.
---
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support compute operations
---
--- -   This command /must/ only be called outside of a render pass instance
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Outside         | Compute         | Compute         |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdDispatch.txt -
+-- include::{generated}\/validity\/protos\/vkCmdDispatch.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdDispatch" vkCmdDispatch :: ("commandBuffer" ::: VkCommandBuffer) -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ()
-
+#else
+vkCmdDispatch :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ()
+vkCmdDispatch deviceCmds = mkVkCmdDispatch (pVkCmdDispatch deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdDispatch
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ())
+#endif
+
 type FN_vkCmdDispatch = ("commandBuffer" ::: VkCommandBuffer) -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ()
 type PFN_vkCmdDispatch = FunPtr FN_vkCmdDispatch
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdDispatchIndirect - Dispatch compute work items using indirect
 -- parameters
 --
@@ -5089,7 +4586,7 @@ type PFN_vkCmdDispatch = FunPtr FN_vkCmdDispatch
 --
 -- = Description
 --
--- @vkCmdDispatchIndirect@ behaves similarly to 'vkCmdDispatch' except that
+-- 'vkCmdDispatchIndirect' behaves similarly to 'vkCmdDispatch' except that
 -- the parameters are read by the device from a buffer during execution.
 -- The parameters of the dispatch are encoded in a
 -- 'VkDispatchIndirectCommand' structure taken from @buffer@ starting at
@@ -5097,166 +4594,41 @@ type PFN_vkCmdDispatch = FunPtr FN_vkCmdDispatch
 --
 -- == Valid Usage
 --
--- -   If @buffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+-- Unresolved directive in vkCmdDispatchIndirect.txt -
+-- include::{chapters}\/commonvalidity\/draw_dispatch_common.txt[]
+-- Unresolved directive in vkCmdDispatchIndirect.txt -
+-- include::{chapters}\/commonvalidity\/draw_dispatch_indirect_common.txt[]
+-- * The sum of @offset@ and the size of 'VkDispatchIndirectCommand' /must/
+-- be less than or equal to the size of @buffer@
 --
--- -   For each set /n/ that is statically used by the @VkPipeline@ bound
---     to @VK_PIPELINE_BIND_POINT_COMPUTE@, a descriptor set /must/ have
---     been bound to /n/ at @VK_PIPELINE_BIND_POINT_COMPUTE@, with a
---     @VkPipelineLayout@ that is compatible for set /n/, with the
---     @VkPipelineLayout@ used to create the current @VkPipeline@, as
---     described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
---
--- -   Descriptors in each bound descriptor set, specified via
---     @vkCmdBindDescriptorSets@, /must/ be valid if they are statically
---     used by the bound @VkPipeline@ object, specified via
---     @vkCmdBindPipeline@
---
--- -   A valid compute pipeline /must/ be bound to the current command
---     buffer with @VK_PIPELINE_BIND_POINT_COMPUTE@
---
--- -   @buffer@ /must/ have been created with the
---     @VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT@ bit set
---
--- -   @offset@ /must/ be a multiple of @4@
---
--- -   The sum of @offset@ and the size of @VkDispatchIndirectCommand@
---     /must/ be less than or equal to the size of @buffer@
---
--- -   For each push constant that is statically used by the @VkPipeline@
---     bound to @VK_PIPELINE_BIND_POINT_COMPUTE@, a push constant value
---     /must/ have been set for @VK_PIPELINE_BIND_POINT_COMPUTE@, with a
---     @VkPipelineLayout@ that is compatible for push constants with the
---     one used to create the current @VkPipeline@, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_COMPUTE@ uses
---     unnormalized coordinates, it /must/ not be used to sample from any
---     @VkImage@ with a @VkImageView@ of the type @VK_IMAGE_VIEW_TYPE_3D@,
---     @VK_IMAGE_VIEW_TYPE_CUBE@, @VK_IMAGE_VIEW_TYPE_1D_ARRAY@,
---     @VK_IMAGE_VIEW_TYPE_2D_ARRAY@ or @VK_IMAGE_VIEW_TYPE_CUBE_ARRAY@, in
---     any shader stage
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_COMPUTE@ uses
---     unnormalized coordinates, it /must/ not be used with any of the
---     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions with
---     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_COMPUTE@ uses
---     unnormalized coordinates, it /must/ not be used with any of the
---     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions that
---     includes a LOD bias or any offset values, in any shader stage
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and any shader stage in the @VkPipeline@
---     object bound to @VK_PIPELINE_BIND_POINT_COMPUTE@ accesses a uniform
---     buffer, it /must/ not access values outside of the range of that
---     buffer specified in the bound descriptor set
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and any shader stage in the @VkPipeline@
---     object bound to @VK_PIPELINE_BIND_POINT_COMPUTE@ accesses a storage
---     buffer, it /must/ not access values outside of the range of that
---     buffer specified in the bound descriptor set
---
--- -   If a @VkImageView@ is sampled with @VK_FILTER_LINEAR@ as a result of
---     this command, then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT@.
---
--- -   If a @VkImageView@ is sampled with @VK_FILTER_CUBIC_EXT@ as a result
---     of this command, then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain
---     @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT@.
---
--- -   Any 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' being sampled
---     with @VK_FILTER_CUBIC_EXT@ as a result of this command /must/ have a
---     'Graphics.Vulkan.C.Core10.ImageView.VkImageViewType' and format that
---     supports cubic filtering, as specified by
---     @VkFilterCubicImageViewImageFormatPropertiesEXT@::@filterCubic@
---     returned by @vkGetPhysicalDeviceImageFormatProperties2@
---
--- -   Any 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' being sampled
---     with @VK_FILTER_CUBIC_EXT@ with a reduction mode of either
---     @VK_SAMPLER_REDUCTION_MODE_MIN_EXT@ or
---     @VK_SAMPLER_REDUCTION_MODE_MAX_EXT@ as a result of this command
---     /must/ have a 'Graphics.Vulkan.C.Core10.ImageView.VkImageViewType'
---     and format that supports cubic filtering together with minmax
---     filtering, as specified by
---     @VkFilterCubicImageViewImageFormatPropertiesEXT@::@filterCubicMinmax@
---     returned by @vkGetPhysicalDeviceImageFormatProperties2@
---
--- -   Any 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' created with
---     a 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@flags@
---     containing @VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV@ sampled as a
---     result of this command /must/ only be sampled using a
---     'Graphics.Vulkan.C.Core10.Sampler.VkSamplerAddressMode' of
---     @VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE@.
---
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @buffer@ /must/ be a valid @VkBuffer@ handle
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support compute operations
---
--- -   This command /must/ only be called outside of a render pass instance
---
--- -   Both of @buffer@, and @commandBuffer@ /must/ have been created,
---     allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Outside         | Compute         | Compute         |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdDispatchIndirect.txt -
+-- include::{generated}\/validity\/protos\/vkCmdDispatchIndirect.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',
--- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer', @VkDeviceSize@
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdDispatchIndirect" vkCmdDispatchIndirect :: ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> IO ()
-
+#else
+vkCmdDispatchIndirect :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> IO ()
+vkCmdDispatchIndirect deviceCmds = mkVkCmdDispatchIndirect (pVkCmdDispatchIndirect deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdDispatchIndirect
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> IO ())
+#endif
+
 type FN_vkCmdDispatchIndirect = ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> IO ()
 type PFN_vkCmdDispatchIndirect = FunPtr FN_vkCmdDispatchIndirect
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdDraw - Draw primitives
 --
 -- = Parameters
@@ -5283,191 +4655,39 @@ type PFN_vkCmdDispatchIndirect = FunPtr FN_vkCmdDispatchIndirect
 --
 -- == Valid Usage
 --
--- -   The current render pass /must/ be
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility compatible>
---     with the @renderPass@ member of the @VkGraphicsPipelineCreateInfo@
---     structure specified when creating the @VkPipeline@ bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@.
+-- Unresolved directive in vkCmdDraw.txt -
+-- include::{chapters}\/commonvalidity\/draw_common.txt[] Unresolved
+-- directive in vkCmdDraw.txt -
+-- include::{chapters}\/commonvalidity\/draw_dispatch_nonindirect_common.txt[]
+-- Unresolved directive in vkCmdDraw.txt -
+-- include::{chapters}\/commonvalidity\/draw_vertex_binding.txt[]
 --
--- -   The subpass index of the current render pass /must/ be equal to the
---     @subpass@ member of the @VkGraphicsPipelineCreateInfo@ structure
---     specified when creating the @VkPipeline@ bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@.
---
--- -   For each set /n/ that is statically used by the @VkPipeline@ bound
---     to @VK_PIPELINE_BIND_POINT_GRAPHICS@, a descriptor set /must/ have
---     been bound to /n/ at @VK_PIPELINE_BIND_POINT_GRAPHICS@, with a
---     @VkPipelineLayout@ that is compatible for set /n/, with the
---     @VkPipelineLayout@ used to create the current @VkPipeline@, as
---     described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
---
--- -   For each push constant that is statically used by the @VkPipeline@
---     bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@, a push constant value
---     /must/ have been set for @VK_PIPELINE_BIND_POINT_GRAPHICS@, with a
---     @VkPipelineLayout@ that is compatible for push constants, with the
---     @VkPipelineLayout@ used to create the current @VkPipeline@, as
---     described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
---
--- -   Descriptors in each bound descriptor set, specified via
---     @vkCmdBindDescriptorSets@, /must/ be valid if they are statically
---     used by the bound @VkPipeline@ object, specified via
---     @vkCmdBindPipeline@
---
--- -   All vertex input bindings accessed via vertex input variables
---     declared in the vertex shader entry point’s interface /must/ have
---     valid buffers bound
---
--- -   For a given vertex buffer binding, any attribute data fetched /must/
---     be entirely contained within the corresponding vertex buffer
---     binding, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fxvertex-input {html_spec_relative}#fxvertex-input>
---
--- -   A valid graphics pipeline /must/ be bound to the current command
---     buffer with @VK_PIPELINE_BIND_POINT_GRAPHICS@
---
--- -   If the @VkPipeline@ object bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@ requires any dynamic state, that
---     state /must/ have been set on the current command buffer
---
--- -   Every input attachment used by the current subpass /must/ be bound
---     to the pipeline via a descriptor set
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ uses
---     unnormalized coordinates, it /must/ not be used to sample from any
---     @VkImage@ with a @VkImageView@ of the type @VK_IMAGE_VIEW_TYPE_3D@,
---     @VK_IMAGE_VIEW_TYPE_CUBE@, @VK_IMAGE_VIEW_TYPE_1D_ARRAY@,
---     @VK_IMAGE_VIEW_TYPE_2D_ARRAY@ or @VK_IMAGE_VIEW_TYPE_CUBE_ARRAY@, in
---     any shader stage
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ uses
---     unnormalized coordinates, it /must/ not be used with any of the
---     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions with
---     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ uses
---     unnormalized coordinates, it /must/ not be used with any of the
---     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions that
---     includes a LOD bias or any offset values, in any shader stage
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and any shader stage in the @VkPipeline@
---     object bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ accesses a uniform
---     buffer, it /must/ not access values outside of the range of that
---     buffer specified in the bound descriptor set
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and any shader stage in the @VkPipeline@
---     object bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ accesses a storage
---     buffer, it /must/ not access values outside of the range of that
---     buffer specified in the bound descriptor set
---
--- -   Image subresources used as attachments in the current render pass
---     /must/ not be accessed in any way other than as an attachment by
---     this command.
---
--- -   If a @VkImageView@ is sampled with @VK_FILTER_LINEAR@ as a result of
---     this command, then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT@.
---
--- -   If a @VkImageView@ is sampled with @VK_FILTER_CUBIC_EXT@ as a result
---     of this command, then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain
---     @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT@
---
--- -   Any 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' being sampled
---     with @VK_FILTER_CUBIC_EXT@ as a result of this command /must/ have a
---     'Graphics.Vulkan.C.Core10.ImageView.VkImageViewType' and format that
---     supports cubic filtering, as specified by
---     @VkFilterCubicImageViewImageFormatPropertiesEXT@::@filterCubic@
---     returned by @vkGetPhysicalDeviceImageFormatProperties2@
---
--- -   Any 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' being sampled
---     with @VK_FILTER_CUBIC_EXT@ with a reduction mode of either
---     @VK_SAMPLER_REDUCTION_MODE_MIN_EXT@ or
---     @VK_SAMPLER_REDUCTION_MODE_MAX_EXT@ as a result of this command
---     /must/ have a 'Graphics.Vulkan.C.Core10.ImageView.VkImageViewType'
---     and format that supports cubic filtering together with minmax
---     filtering, as specified by
---     @VkFilterCubicImageViewImageFormatPropertiesEXT@::@filterCubicMinmax@
---     returned by @vkGetPhysicalDeviceImageFormatProperties2@
---
--- -   If the draw is recorded in a render pass instance with multiview
---     enabled, the maximum instance index /must/ be less than or equal to
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_multiview.VkPhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@.
---
--- -   If the bound graphics pipeline was created with
---     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkPipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
---     set to @VK_TRUE@ and the current subpass has a depth\/stencil
---     attachment, then that attachment /must/ have been created with the
---     @VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT@ bit set
---
--- -   Any 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' created with
---     a 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@flags@
---     containing @VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV@ sampled as a
---     result of this command /must/ only be sampled using a
---     'Graphics.Vulkan.C.Core10.Sampler.VkSamplerAddressMode' of
---     @VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE@.
---
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- -   This command /must/ only be called inside of a render pass instance
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Inside          | Graphics        | Graphics        |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdDraw.txt -
+-- include::{generated}\/validity\/protos\/vkCmdDraw.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdDraw" vkCmdDraw :: ("commandBuffer" ::: VkCommandBuffer) -> ("vertexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstVertex" ::: Word32) -> ("firstInstance" ::: Word32) -> IO ()
-
+#else
+vkCmdDraw :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("vertexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstVertex" ::: Word32) -> ("firstInstance" ::: Word32) -> IO ()
+vkCmdDraw deviceCmds = mkVkCmdDraw (pVkCmdDraw deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdDraw
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("vertexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstVertex" ::: Word32) -> ("firstInstance" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("vertexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstVertex" ::: Word32) -> ("firstInstance" ::: Word32) -> IO ())
+#endif
+
 type FN_vkCmdDraw = ("commandBuffer" ::: VkCommandBuffer) -> ("vertexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstVertex" ::: Word32) -> ("firstInstance" ::: Word32) -> IO ()
 type PFN_vkCmdDraw = FunPtr FN_vkCmdDraw
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdDrawIndexed - Issue an indexed draw into a command buffer
 --
 -- = Parameters
@@ -5497,11 +4717,11 @@ type PFN_vkCmdDraw = FunPtr FN_vkCmdDraw
 --
 -- The first vertex index is at an offset of @firstIndex@ * @indexSize@ +
 -- @offset@ within the bound index buffer, where @offset@ is the offset
--- specified by @vkCmdBindIndexBuffer@ and @indexSize@ is the byte size of
+-- specified by 'vkCmdBindIndexBuffer' and @indexSize@ is the byte size of
 -- the type specified by @indexType@. Subsequent index values are retrieved
 -- from consecutive locations in the index buffer. Indices are first
 -- compared to the primitive restart value, then zero extended to 32 bits
--- (if the @indexType@ is @VK_INDEX_TYPE_UINT16@) and have @vertexOffset@
+-- (if the @indexType@ is 'VK_INDEX_TYPE_UINT16') and have @vertexOffset@
 -- added to them, before being supplied as the @vertexIndex@ value.
 --
 -- The primitives are drawn @instanceCount@ times with @instanceIndex@
@@ -5510,197 +4730,44 @@ type PFN_vkCmdDraw = FunPtr FN_vkCmdDraw
 --
 -- == Valid Usage
 --
--- -   The current render pass /must/ be
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility compatible>
---     with the @renderPass@ member of the @VkGraphicsPipelineCreateInfo@
---     structure specified when creating the @VkPipeline@ bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@.
+-- Unresolved directive in vkCmdDrawIndexed.txt -
+-- include::{chapters}\/commonvalidity\/draw_common.txt[] Unresolved
+-- directive in vkCmdDrawIndexed.txt -
+-- include::{chapters}\/commonvalidity\/draw_dispatch_nonindirect_common.txt[]
+-- Unresolved directive in vkCmdDrawIndexed.txt -
+-- include::{chapters}\/commonvalidity\/draw_vertex_binding.txt[] *
+-- (@indexSize@ * (@firstIndex@ + @indexCount@) + @offset@) /must/ be less
+-- than or equal to the size of the bound index buffer, with @indexSize@
+-- being based on the type specified by @indexType@, where the index
+-- buffer, @indexType@, and @offset@ are specified via
+-- 'vkCmdBindIndexBuffer'
 --
--- -   The subpass index of the current render pass /must/ be equal to the
---     @subpass@ member of the @VkGraphicsPipelineCreateInfo@ structure
---     specified when creating the @VkPipeline@ bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@.
---
--- -   For each set /n/ that is statically used by the @VkPipeline@ bound
---     to @VK_PIPELINE_BIND_POINT_GRAPHICS@, a descriptor set /must/ have
---     been bound to /n/ at @VK_PIPELINE_BIND_POINT_GRAPHICS@, with a
---     @VkPipelineLayout@ that is compatible for set /n/, with the
---     @VkPipelineLayout@ used to create the current @VkPipeline@, as
---     described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
---
--- -   For each push constant that is statically used by the @VkPipeline@
---     bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@, a push constant value
---     /must/ have been set for @VK_PIPELINE_BIND_POINT_GRAPHICS@, with a
---     @VkPipelineLayout@ that is compatible for push constants, with the
---     @VkPipelineLayout@ used to create the current @VkPipeline@, as
---     described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
---
--- -   Descriptors in each bound descriptor set, specified via
---     @vkCmdBindDescriptorSets@, /must/ be valid if they are statically
---     used by the bound @VkPipeline@ object, specified via
---     @vkCmdBindPipeline@
---
--- -   All vertex input bindings accessed via vertex input variables
---     declared in the vertex shader entry point’s interface /must/ have
---     valid buffers bound
---
--- -   For a given vertex buffer binding, any attribute data fetched /must/
---     be entirely contained within the corresponding vertex buffer
---     binding, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fxvertex-input {html_spec_relative}#fxvertex-input>
---
--- -   A valid graphics pipeline /must/ be bound to the current command
---     buffer with @VK_PIPELINE_BIND_POINT_GRAPHICS@
---
--- -   If the @VkPipeline@ object bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@ requires any dynamic state, that
---     state /must/ have been set on the current command buffer
---
--- -   (@indexSize@ * (@firstIndex@ + @indexCount@) + @offset@) /must/ be
---     less than or equal to the size of the bound index buffer, with
---     @indexSize@ being based on the type specified by @indexType@, where
---     the index buffer, @indexType@, and @offset@ are specified via
---     @vkCmdBindIndexBuffer@
---
--- -   Every input attachment used by the current subpass /must/ be bound
---     to the pipeline via a descriptor set
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ uses
---     unnormalized coordinates, it /must/ not be used to sample from any
---     @VkImage@ with a @VkImageView@ of the type @VK_IMAGE_VIEW_TYPE_3D@,
---     @VK_IMAGE_VIEW_TYPE_CUBE@, @VK_IMAGE_VIEW_TYPE_1D_ARRAY@,
---     @VK_IMAGE_VIEW_TYPE_2D_ARRAY@ or @VK_IMAGE_VIEW_TYPE_CUBE_ARRAY@, in
---     any shader stage
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ uses
---     unnormalized coordinates, it /must/ not be used with any of the
---     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions with
---     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ uses
---     unnormalized coordinates, it /must/ not be used with any of the
---     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions that
---     includes a LOD bias or any offset values, in any shader stage
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and any shader stage in the @VkPipeline@
---     object bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ accesses a uniform
---     buffer, it /must/ not access values outside of the range of that
---     buffer specified in the bound descriptor set
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and any shader stage in the @VkPipeline@
---     object bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ accesses a storage
---     buffer, it /must/ not access values outside of the range of that
---     buffer specified in the bound descriptor set
---
--- -   If a @VkImageView@ is sampled with @VK_FILTER_LINEAR@ as a result of
---     this command, then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT@.
---
--- -   Image subresources used as attachments in the current render pass
---     /must/ not be accessed in any way other than as an attachment by
---     this command.
---
--- -   If a @VkImageView@ is sampled with @VK_FILTER_CUBIC_EXT@ as a result
---     of this command, then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain
---     @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT@
---
--- -   Any 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' being sampled
---     with @VK_FILTER_CUBIC_EXT@ as a result of this command /must/ have a
---     'Graphics.Vulkan.C.Core10.ImageView.VkImageViewType' and format that
---     supports cubic filtering, as specified by
---     @VkFilterCubicImageViewImageFormatPropertiesEXT@::@filterCubic@
---     returned by @vkGetPhysicalDeviceImageFormatProperties2@
---
--- -   Any 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' being sampled
---     with @VK_FILTER_CUBIC_EXT@ with a reduction mode of either
---     @VK_SAMPLER_REDUCTION_MODE_MIN_EXT@ or
---     @VK_SAMPLER_REDUCTION_MODE_MAX_EXT@ as a result of this command
---     /must/ have a 'Graphics.Vulkan.C.Core10.ImageView.VkImageViewType'
---     and format that supports cubic filtering together with minmax
---     filtering, as specified by
---     @VkFilterCubicImageViewImageFormatPropertiesEXT@::@filterCubicMinmax@
---     returned by @vkGetPhysicalDeviceImageFormatProperties2@
---
--- -   If the draw is recorded in a render pass instance with multiview
---     enabled, the maximum instance index /must/ be less than or equal to
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_multiview.VkPhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@.
---
--- -   If the bound graphics pipeline was created with
---     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkPipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
---     set to @VK_TRUE@ and the current subpass has a depth\/stencil
---     attachment, then that attachment /must/ have been created with the
---     @VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT@ bit set
---
--- -   Any 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' created with
---     a 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@flags@
---     containing @VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV@ sampled as a
---     result of this command /must/ only be sampled using a
---     'Graphics.Vulkan.C.Core10.Sampler.VkSamplerAddressMode' of
---     @VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE@.
---
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- -   This command /must/ only be called inside of a render pass instance
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Inside          | Graphics        | Graphics        |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdDrawIndexed.txt -
+-- include::{generated}\/validity\/protos\/vkCmdDrawIndexed.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdDrawIndexed" vkCmdDrawIndexed :: ("commandBuffer" ::: VkCommandBuffer) -> ("indexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstIndex" ::: Word32) -> ("vertexOffset" ::: Int32) -> ("firstInstance" ::: Word32) -> IO ()
-
+#else
+vkCmdDrawIndexed :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("indexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstIndex" ::: Word32) -> ("vertexOffset" ::: Int32) -> ("firstInstance" ::: Word32) -> IO ()
+vkCmdDrawIndexed deviceCmds = mkVkCmdDrawIndexed (pVkCmdDrawIndexed deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdDrawIndexed
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("indexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstIndex" ::: Word32) -> ("vertexOffset" ::: Int32) -> ("firstInstance" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("indexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstIndex" ::: Word32) -> ("vertexOffset" ::: Int32) -> ("firstInstance" ::: Word32) -> IO ())
+#endif
+
 type FN_vkCmdDrawIndexed = ("commandBuffer" ::: VkCommandBuffer) -> ("indexCount" ::: Word32) -> ("instanceCount" ::: Word32) -> ("firstIndex" ::: Word32) -> ("vertexOffset" ::: Int32) -> ("firstInstance" ::: Word32) -> IO ()
 type PFN_vkCmdDrawIndexed = FunPtr FN_vkCmdDrawIndexed
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdDrawIndexedIndirect - Perform an indexed indirect draw
 --
 -- = Parameters
@@ -5719,7 +4786,7 @@ type PFN_vkCmdDrawIndexed = FunPtr FN_vkCmdDrawIndexed
 --
 -- = Description
 --
--- @vkCmdDrawIndexedIndirect@ behaves similarly to 'vkCmdDrawIndexed'
+-- 'vkCmdDrawIndexedIndirect' behaves similarly to 'vkCmdDrawIndexed'
 -- except that the parameters are read by the device from a buffer during
 -- execution. @drawCount@ draws are executed by the command, with
 -- parameters taken from @buffer@ starting at @offset@ and increasing by
@@ -5729,225 +4796,55 @@ type PFN_vkCmdDrawIndexed = FunPtr FN_vkCmdDrawIndexed
 --
 -- == Valid Usage
 --
--- -   If @buffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+-- Unresolved directive in vkCmdDrawIndexedIndirect.txt -
+-- include::{chapters}\/commonvalidity\/draw_common.txt[] Unresolved
+-- directive in vkCmdDrawIndexedIndirect.txt -
+-- include::{chapters}\/commonvalidity\/draw_vertex_binding.txt[]
+-- Unresolved directive in vkCmdDrawIndexedIndirect.txt -
+-- include::{chapters}\/commonvalidity\/draw_dispatch_indirect_common.txt[]
+-- Unresolved directive in vkCmdDrawIndexedIndirect.txt -
+-- include::{chapters}\/commonvalidity\/draw_indirect_drawcount.txt[] * If
+-- @drawCount@ is greater than @1@, @stride@ /must/ be a multiple of @4@
+-- and /must/ be greater than or equal to
+-- @sizeof@('VkDrawIndexedIndirectCommand') * If the
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-drawIndirectFirstInstance drawIndirectFirstInstance>
+-- feature is not enabled, all the @firstInstance@ members of the
+-- 'VkDrawIndexedIndirectCommand' structures accessed by this command
+-- /must/ be @0@ * If @drawCount@ is equal to @1@, (@offset@ +
+-- @sizeof@('VkDrawIndexedIndirectCommand')) /must/ be less than or equal
+-- to the size of @buffer@ * If @drawCount@ is greater than @1@, (@stride@
+-- × (@drawCount@ - 1) + @offset@ +
+-- @sizeof@('VkDrawIndexedIndirectCommand')) /must/ be less than or equal
+-- to the size of @buffer@
 --
--- -   @buffer@ /must/ have been created with the
---     @VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT@ bit set
---
--- -   @offset@ /must/ be a multiple of @4@
---
--- -   If @drawCount@ is greater than @1@, @stride@ /must/ be a multiple of
---     @4@ and /must/ be greater than or equal to
---     @sizeof@(@VkDrawIndexedIndirectCommand@)
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-multiDrawIndirect multi-draw indirect>
---     feature is not enabled, @drawCount@ /must/ be @0@ or @1@
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-drawIndirectFirstInstance drawIndirectFirstInstance>
---     feature is not enabled, all the @firstInstance@ members of the
---     @VkDrawIndexedIndirectCommand@ structures accessed by this command
---     /must/ be @0@
---
--- -   The current render pass /must/ be
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility compatible>
---     with the @renderPass@ member of the @VkGraphicsPipelineCreateInfo@
---     structure specified when creating the @VkPipeline@ bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@.
---
--- -   The subpass index of the current render pass /must/ be equal to the
---     @subpass@ member of the @VkGraphicsPipelineCreateInfo@ structure
---     specified when creating the @VkPipeline@ bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@.
---
--- -   For each set /n/ that is statically used by the @VkPipeline@ bound
---     to @VK_PIPELINE_BIND_POINT_GRAPHICS@, a descriptor set /must/ have
---     been bound to /n/ at @VK_PIPELINE_BIND_POINT_GRAPHICS@, with a
---     @VkPipelineLayout@ that is compatible for set /n/, with the
---     @VkPipelineLayout@ used to create the current @VkPipeline@, as
---     described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
---
--- -   For each push constant that is statically used by the @VkPipeline@
---     bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@, a push constant value
---     /must/ have been set for @VK_PIPELINE_BIND_POINT_GRAPHICS@, with a
---     @VkPipelineLayout@ that is compatible for push constants, with the
---     @VkPipelineLayout@ used to create the current @VkPipeline@, as
---     described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
---
--- -   Descriptors in each bound descriptor set, specified via
---     @vkCmdBindDescriptorSets@, /must/ be valid if they are statically
---     used by the bound @VkPipeline@ object, specified via
---     @vkCmdBindPipeline@
---
--- -   All vertex input bindings accessed via vertex input variables
---     declared in the vertex shader entry point’s interface /must/ have
---     valid buffers bound
---
--- -   A valid graphics pipeline /must/ be bound to the current command
---     buffer with @VK_PIPELINE_BIND_POINT_GRAPHICS@
---
--- -   If the @VkPipeline@ object bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@ requires any dynamic state, that
---     state /must/ have been set on the current command buffer
---
--- -   If @drawCount@ is equal to @1@, (@offset@ +
---     @sizeof@(@VkDrawIndexedIndirectCommand@)) /must/ be less than or
---     equal to the size of @buffer@
---
--- -   If @drawCount@ is greater than @1@, (@stride@ × (@drawCount@ - 1) +
---     @offset@ + @sizeof@(@VkDrawIndexedIndirectCommand@)) /must/ be less
---     than or equal to the size of @buffer@
---
--- -   @drawCount@ /must/ be less than or equal to
---     @VkPhysicalDeviceLimits@::@maxDrawIndirectCount@
---
--- -   Every input attachment used by the current subpass /must/ be bound
---     to the pipeline via a descriptor set
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ uses
---     unnormalized coordinates, it /must/ not be used to sample from any
---     @VkImage@ with a @VkImageView@ of the type @VK_IMAGE_VIEW_TYPE_3D@,
---     @VK_IMAGE_VIEW_TYPE_CUBE@, @VK_IMAGE_VIEW_TYPE_1D_ARRAY@,
---     @VK_IMAGE_VIEW_TYPE_2D_ARRAY@ or @VK_IMAGE_VIEW_TYPE_CUBE_ARRAY@, in
---     any shader stage
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ uses
---     unnormalized coordinates, it /must/ not be used with any of the
---     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions with
---     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ uses
---     unnormalized coordinates, it /must/ not be used with any of the
---     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions that
---     includes a LOD bias or any offset values, in any shader stage
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and any shader stage in the @VkPipeline@
---     object bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ accesses a uniform
---     buffer, it /must/ not access values outside of the range of that
---     buffer specified in the bound descriptor set
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and any shader stage in the @VkPipeline@
---     object bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ accesses a storage
---     buffer, it /must/ not access values outside of the range of that
---     buffer specified in the bound descriptor set
---
--- -   If a @VkImageView@ is sampled with @VK_FILTER_LINEAR@ as a result of
---     this command, then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT@.
---
--- -   Image subresources used as attachments in the current render pass
---     /must/ not be accessed in any way other than as an attachment by
---     this command.
---
--- -   If a @VkImageView@ is sampled with @VK_FILTER_CUBIC_EXT@ as a result
---     of this command, then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain
---     @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT@
---
--- -   Any 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' being sampled
---     with @VK_FILTER_CUBIC_EXT@ as a result of this command /must/ have a
---     'Graphics.Vulkan.C.Core10.ImageView.VkImageViewType' and format that
---     supports cubic filtering, as specified by
---     @VkFilterCubicImageViewImageFormatPropertiesEXT@::@filterCubic@
---     returned by @vkGetPhysicalDeviceImageFormatProperties2@
---
--- -   Any 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' being sampled
---     with @VK_FILTER_CUBIC_EXT@ with a reduction mode of either
---     @VK_SAMPLER_REDUCTION_MODE_MIN_EXT@ or
---     @VK_SAMPLER_REDUCTION_MODE_MAX_EXT@ as a result of this command
---     /must/ have a 'Graphics.Vulkan.C.Core10.ImageView.VkImageViewType'
---     and format that supports cubic filtering together with minmax
---     filtering, as specified by
---     @VkFilterCubicImageViewImageFormatPropertiesEXT@::@filterCubicMinmax@
---     returned by @vkGetPhysicalDeviceImageFormatProperties2@
---
--- -   If the draw is recorded in a render pass instance with multiview
---     enabled, the maximum instance index /must/ be less than or equal to
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_multiview.VkPhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@.
---
--- -   If the bound graphics pipeline was created with
---     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkPipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
---     set to @VK_TRUE@ and the current subpass has a depth\/stencil
---     attachment, then that attachment /must/ have been created with the
---     @VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT@ bit set
---
--- -   Any 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' created with
---     a 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@flags@
---     containing @VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV@ sampled as a
---     result of this command /must/ only be sampled using a
---     'Graphics.Vulkan.C.Core10.Sampler.VkSamplerAddressMode' of
---     @VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE@.
---
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @buffer@ /must/ be a valid @VkBuffer@ handle
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- -   This command /must/ only be called inside of a render pass instance
---
--- -   Both of @buffer@, and @commandBuffer@ /must/ have been created,
---     allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Inside          | Graphics        | Graphics        |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdDrawIndexedIndirect.txt -
+-- include::{generated}\/validity\/protos\/vkCmdDrawIndexedIndirect.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',
--- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer', @VkDeviceSize@
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdDrawIndexedIndirect" vkCmdDrawIndexedIndirect :: ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
-
+#else
+vkCmdDrawIndexedIndirect :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
+vkCmdDrawIndexedIndirect deviceCmds = mkVkCmdDrawIndexedIndirect (pVkCmdDrawIndexedIndirect deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdDrawIndexedIndirect
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ())
+#endif
+
 type FN_vkCmdDrawIndexedIndirect = ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
 type PFN_vkCmdDrawIndexedIndirect = FunPtr FN_vkCmdDrawIndexedIndirect
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdDrawIndirect - Issue an indirect draw into a command buffer
 --
 -- = Parameters
@@ -5966,7 +4863,7 @@ type PFN_vkCmdDrawIndexedIndirect = FunPtr FN_vkCmdDrawIndexedIndirect
 --
 -- = Description
 --
--- @vkCmdDrawIndirect@ behaves similarly to 'vkCmdDraw' except that the
+-- 'vkCmdDrawIndirect' behaves similarly to 'vkCmdDraw' except that the
 -- parameters are read by the device from a buffer during execution.
 -- @drawCount@ draws are executed by the command, with parameters taken
 -- from @buffer@ starting at @offset@ and increasing by @stride@ bytes for
@@ -5976,225 +4873,55 @@ type PFN_vkCmdDrawIndexedIndirect = FunPtr FN_vkCmdDrawIndexedIndirect
 --
 -- == Valid Usage
 --
--- -   If @buffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+-- Unresolved directive in vkCmdDrawIndirect.txt -
+-- include::{chapters}\/commonvalidity\/draw_common.txt[] Unresolved
+-- directive in vkCmdDrawIndirect.txt -
+-- include::{chapters}\/commonvalidity\/draw_vertex_binding.txt[]
+-- Unresolved directive in vkCmdDrawIndirect.txt -
+-- include::{chapters}\/commonvalidity\/draw_dispatch_indirect_common.txt[]
+-- Unresolved directive in vkCmdDrawIndirect.txt -
+-- include::{chapters}\/commonvalidity\/draw_indirect_drawcount.txt[] * If
+-- the
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-drawIndirectFirstInstance drawIndirectFirstInstance>
+-- feature is not enabled, all the @firstInstance@ members of the
+-- 'VkDrawIndirectCommand' structures accessed by this command /must/ be
+-- @0@ * If @drawCount@ is greater than @1@, @stride@ /must/ be a multiple
+-- of @4@ and /must/ be greater than or equal to
+-- @sizeof@('VkDrawIndirectCommand') * If @drawCount@ is equal to @1@,
+-- (@offset@ + @sizeof@('VkDrawIndirectCommand')) /must/ be less than or
+-- equal to the size of @buffer@ * If @drawCount@ is greater than @1@,
+-- (@stride@ × (@drawCount@ - 1) + @offset@ +
+-- @sizeof@('VkDrawIndirectCommand')) /must/ be less than or equal to the
+-- size of @buffer@
 --
--- -   @buffer@ /must/ have been created with the
---     @VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT@ bit set
---
--- -   @offset@ /must/ be a multiple of @4@
---
--- -   If @drawCount@ is greater than @1@, @stride@ /must/ be a multiple of
---     @4@ and /must/ be greater than or equal to
---     @sizeof@(@VkDrawIndirectCommand@)
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-multiDrawIndirect multi-draw indirect>
---     feature is not enabled, @drawCount@ /must/ be @0@ or @1@
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-drawIndirectFirstInstance drawIndirectFirstInstance>
---     feature is not enabled, all the @firstInstance@ members of the
---     @VkDrawIndirectCommand@ structures accessed by this command /must/
---     be @0@
---
--- -   The current render pass /must/ be
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility compatible>
---     with the @renderPass@ member of the @VkGraphicsPipelineCreateInfo@
---     structure specified when creating the @VkPipeline@ bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@.
---
--- -   The subpass index of the current render pass /must/ be equal to the
---     @subpass@ member of the @VkGraphicsPipelineCreateInfo@ structure
---     specified when creating the @VkPipeline@ bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@.
---
--- -   For each set /n/ that is statically used by the @VkPipeline@ bound
---     to @VK_PIPELINE_BIND_POINT_GRAPHICS@, a descriptor set /must/ have
---     been bound to /n/ at @VK_PIPELINE_BIND_POINT_GRAPHICS@, with a
---     @VkPipelineLayout@ that is compatible for set /n/, with the
---     @VkPipelineLayout@ used to create the current @VkPipeline@, as
---     described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
---
--- -   For each push constant that is statically used by the @VkPipeline@
---     bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@, a push constant value
---     /must/ have been set for @VK_PIPELINE_BIND_POINT_GRAPHICS@, with a
---     @VkPipelineLayout@ that is compatible for push constants, with the
---     @VkPipelineLayout@ used to create the current @VkPipeline@, as
---     described in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility {html_spec_relative}#descriptorsets-compatibility>
---
--- -   Descriptors in each bound descriptor set, specified via
---     @vkCmdBindDescriptorSets@, /must/ be valid if they are statically
---     used by the bound @VkPipeline@ object, specified via
---     @vkCmdBindPipeline@
---
--- -   All vertex input bindings accessed via vertex input variables
---     declared in the vertex shader entry point’s interface /must/ have
---     valid buffers bound
---
--- -   A valid graphics pipeline /must/ be bound to the current command
---     buffer with @VK_PIPELINE_BIND_POINT_GRAPHICS@
---
--- -   If the @VkPipeline@ object bound to
---     @VK_PIPELINE_BIND_POINT_GRAPHICS@ requires any dynamic state, that
---     state /must/ have been set on the current command buffer
---
--- -   If @drawCount@ is equal to @1@, (@offset@ +
---     @sizeof@('VkDrawIndirectCommand')) /must/ be less than or equal to
---     the size of @buffer@
---
--- -   If @drawCount@ is greater than @1@, (@stride@ × (@drawCount@ - 1) +
---     @offset@ + @sizeof@('VkDrawIndirectCommand')) /must/ be less than or
---     equal to the size of @buffer@
---
--- -   @drawCount@ /must/ be less than or equal to
---     @VkPhysicalDeviceLimits@::@maxDrawIndirectCount@
---
--- -   Every input attachment used by the current subpass /must/ be bound
---     to the pipeline via a descriptor set
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ uses
---     unnormalized coordinates, it /must/ not be used to sample from any
---     @VkImage@ with a @VkImageView@ of the type @VK_IMAGE_VIEW_TYPE_3D@,
---     @VK_IMAGE_VIEW_TYPE_CUBE@, @VK_IMAGE_VIEW_TYPE_1D_ARRAY@,
---     @VK_IMAGE_VIEW_TYPE_2D_ARRAY@ or @VK_IMAGE_VIEW_TYPE_CUBE_ARRAY@, in
---     any shader stage
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ uses
---     unnormalized coordinates, it /must/ not be used with any of the
---     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions with
---     @ImplicitLod@, @Dref@ or @Proj@ in their name, in any shader stage
---
--- -   If any @VkSampler@ object that is accessed from a shader by the
---     @VkPipeline@ bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ uses
---     unnormalized coordinates, it /must/ not be used with any of the
---     SPIR-V @OpImageSample*@ or @OpImageSparseSample*@ instructions that
---     includes a LOD bias or any offset values, in any shader stage
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and any shader stage in the @VkPipeline@
---     object bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ accesses a uniform
---     buffer, it /must/ not access values outside of the range of that
---     buffer specified in the bound descriptor set
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
---     feature is not enabled, and any shader stage in the @VkPipeline@
---     object bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@ accesses a storage
---     buffer, it /must/ not access values outside of the range of that
---     buffer specified in the bound descriptor set
---
--- -   If a @VkImageView@ is sampled with @VK_FILTER_LINEAR@ as a result of
---     this command, then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT@.
---
--- -   Image subresources used as attachments in the current render pass
---     /must/ not be accessed in any way other than as an attachment by
---     this command.
---
--- -   If a @VkImageView@ is sampled with @VK_FILTER_CUBIC_EXT@ as a result
---     of this command, then the image view’s
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
---     /must/ contain
---     @VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT@
---
--- -   Any 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' being sampled
---     with @VK_FILTER_CUBIC_EXT@ as a result of this command /must/ have a
---     'Graphics.Vulkan.C.Core10.ImageView.VkImageViewType' and format that
---     supports cubic filtering, as specified by
---     @VkFilterCubicImageViewImageFormatPropertiesEXT@::@filterCubic@
---     returned by @vkGetPhysicalDeviceImageFormatProperties2@
---
--- -   Any 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' being sampled
---     with @VK_FILTER_CUBIC_EXT@ with a reduction mode of either
---     @VK_SAMPLER_REDUCTION_MODE_MIN_EXT@ or
---     @VK_SAMPLER_REDUCTION_MODE_MAX_EXT@ as a result of this command
---     /must/ have a 'Graphics.Vulkan.C.Core10.ImageView.VkImageViewType'
---     and format that supports cubic filtering together with minmax
---     filtering, as specified by
---     @VkFilterCubicImageViewImageFormatPropertiesEXT@::@filterCubicMinmax@
---     returned by @vkGetPhysicalDeviceImageFormatProperties2@
---
--- -   If the draw is recorded in a render pass instance with multiview
---     enabled, the maximum instance index /must/ be less than or equal to
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_multiview.VkPhysicalDeviceMultiviewProperties'::@maxMultiviewInstanceIndex@.
---
--- -   If the bound graphics pipeline was created with
---     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkPipelineSampleLocationsStateCreateInfoEXT'::@sampleLocationsEnable@
---     set to @VK_TRUE@ and the current subpass has a depth\/stencil
---     attachment, then that attachment /must/ have been created with the
---     @VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT@ bit set
---
--- -   Any 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' created with
---     a 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@flags@
---     containing @VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV@ sampled as a
---     result of this command /must/ only be sampled using a
---     'Graphics.Vulkan.C.Core10.Sampler.VkSamplerAddressMode' of
---     @VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE@.
---
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @buffer@ /must/ be a valid @VkBuffer@ handle
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- -   This command /must/ only be called inside of a render pass instance
---
--- -   Both of @buffer@, and @commandBuffer@ /must/ have been created,
---     allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Inside          | Graphics        | Graphics        |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdDrawIndirect.txt -
+-- include::{generated}\/validity\/protos\/vkCmdDrawIndirect.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',
--- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer', @VkDeviceSize@
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdDrawIndirect" vkCmdDrawIndirect :: ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
-
+#else
+vkCmdDrawIndirect :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
+vkCmdDrawIndirect deviceCmds = mkVkCmdDrawIndirect (pVkCmdDrawIndirect deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdDrawIndirect
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ())
+#endif
+
 type FN_vkCmdDrawIndirect = ("commandBuffer" ::: VkCommandBuffer) -> ("buffer" ::: VkBuffer) -> ("offset" ::: VkDeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
 type PFN_vkCmdDrawIndirect = FunPtr FN_vkCmdDrawIndirect
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdEndQuery - Ends a query
 --
 -- = Parameters
@@ -6224,70 +4951,42 @@ type PFN_vkCmdDrawIndirect = FunPtr FN_vkCmdDrawIndirect
 -- == Valid Usage
 --
 -- -   All queries used by the command /must/ be
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-active active>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#queries-operation-active active>
 --
 -- -   @query@ /must/ be less than the number of queries in @queryPool@
 --
--- -   If @vkCmdEndQuery@ is called within a render pass instance, the sum
+-- -   If 'vkCmdEndQuery' is called within a render pass instance, the sum
 --     of @query@ and the number of bits set in the current subpass’s view
 --     mask /must/ be less than or equal to the number of queries in
 --     @queryPool@
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @queryPool@ /must/ be a valid @VkQueryPool@ handle
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics, or compute operations
---
--- -   Both of @commandBuffer@, and @queryPool@ /must/ have been created,
---     allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdEndQuery.txt -
+-- include::{generated}\/validity\/protos\/vkCmdEndQuery.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.C.Core10.Query.VkQueryPool'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdEndQuery" vkCmdEndQuery :: ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> IO ()
-
+#else
+vkCmdEndQuery :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> IO ()
+vkCmdEndQuery deviceCmds = mkVkCmdEndQuery (pVkCmdEndQuery deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdEndQuery
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> IO ())
+#endif
+
 type FN_vkCmdEndQuery = ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> IO ()
 type PFN_vkCmdEndQuery = FunPtr FN_vkCmdEndQuery
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdEndRenderPass - End the current render pass
 --
 -- = Parameters
@@ -6308,58 +5007,32 @@ type PFN_vkCmdEndQuery = FunPtr FN_vkCmdEndQuery
 -- -   This command /must/ not be recorded when transform feedback is
 --     active
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- -   This command /must/ only be called inside of a render pass instance
---
--- -   @commandBuffer@ /must/ be a primary @VkCommandBuffer@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Inside          | Graphics        | Graphics        |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdEndRenderPass.txt -
+-- include::{generated}\/validity\/protos\/vkCmdEndRenderPass.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdEndRenderPass" vkCmdEndRenderPass :: ("commandBuffer" ::: VkCommandBuffer) -> IO ()
-
+#else
+vkCmdEndRenderPass :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> IO ()
+vkCmdEndRenderPass deviceCmds = mkVkCmdEndRenderPass (pVkCmdEndRenderPass deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdEndRenderPass
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> IO ())
+#endif
+
 type FN_vkCmdEndRenderPass = ("commandBuffer" ::: VkCommandBuffer) -> IO ()
 type PFN_vkCmdEndRenderPass = FunPtr FN_vkCmdEndRenderPass
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdExecuteCommands - Execute a secondary command buffer from a primary
 -- command buffer
 --
@@ -6377,173 +5050,154 @@ type PFN_vkCmdEndRenderPass = FunPtr FN_vkCmdEndRenderPass
 -- = Description
 --
 -- If any element of @pCommandBuffers@ was not recorded with the
--- @VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT@ flag, and it was recorded
--- into any other primary command buffer which is currently in the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle executable or recording state>,
+-- 'Graphics.Vulkan.C.Core10.CommandBuffer.VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT'
+-- flag, and it was recorded into any other primary command buffer which is
+-- currently in the
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#commandbuffers-lifecycle executable or recording state>,
 -- that primary command buffer becomes
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle invalid>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#commandbuffers-lifecycle invalid>.
 --
 -- == Valid Usage
 --
 -- -   @commandBuffer@ /must/ have been allocated with a @level@ of
---     @VK_COMMAND_BUFFER_LEVEL_PRIMARY@
+--     'Graphics.Vulkan.C.Core10.CommandBuffer.VK_COMMAND_BUFFER_LEVEL_PRIMARY'
 --
 -- -   Each element of @pCommandBuffers@ /must/ have been allocated with a
---     @level@ of @VK_COMMAND_BUFFER_LEVEL_SECONDARY@
+--     @level@ of
+--     'Graphics.Vulkan.C.Core10.CommandBuffer.VK_COMMAND_BUFFER_LEVEL_SECONDARY'
 --
 -- -   Each element of @pCommandBuffers@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle pending or executable state>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#commandbuffers-lifecycle pending or executable state>.
 --
 -- -   If any element of @pCommandBuffers@ was not recorded with the
---     @VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT@ flag, and it was
---     recorded into any other primary command buffer, that primary command
---     buffer /must/ not be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
+--     'Graphics.Vulkan.C.Core10.CommandBuffer.VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT'
+--     flag, and it was recorded into any other primary command buffer,
+--     that primary command buffer /must/ not be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
 -- -   If any element of @pCommandBuffers@ was not recorded with the
---     @VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT@ flag, it /must/ not
---     be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>.
+--     'Graphics.Vulkan.C.Core10.CommandBuffer.VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT'
+--     flag, it /must/ not be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>.
 --
 -- -   If any element of @pCommandBuffers@ was not recorded with the
---     @VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT@ flag, it /must/ not
---     have already been recorded to @commandBuffer@.
+--     'Graphics.Vulkan.C.Core10.CommandBuffer.VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT'
+--     flag, it /must/ not have already been recorded to @commandBuffer@.
 --
 -- -   If any element of @pCommandBuffers@ was not recorded with the
---     @VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT@ flag, it /must/ not
---     appear more than once in @pCommandBuffers@.
+--     'Graphics.Vulkan.C.Core10.CommandBuffer.VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT'
+--     flag, it /must/ not appear more than once in @pCommandBuffers@.
 --
 -- -   Each element of @pCommandBuffers@ /must/ have been allocated from a
---     @VkCommandPool@ that was created for the same queue family as the
---     @VkCommandPool@ from which @commandBuffer@ was allocated
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that was
+--     created for the same queue family as the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' from which
+--     @commandBuffer@ was allocated
 --
--- -   If @vkCmdExecuteCommands@ is being called within a render pass
+-- -   If 'vkCmdExecuteCommands' is being called within a render pass
 --     instance, that render pass instance /must/ have been begun with the
---     @contents@ parameter of @vkCmdBeginRenderPass@ set to
---     @VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS@
+--     @contents@ parameter of 'vkCmdBeginRenderPass' set to
+--     'VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS'
 --
--- -   If @vkCmdExecuteCommands@ is being called within a render pass
+-- -   If 'vkCmdExecuteCommands' is being called within a render pass
 --     instance, each element of @pCommandBuffers@ /must/ have been
---     recorded with the @VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT@
+--     recorded with the
+--     'Graphics.Vulkan.C.Core10.CommandBuffer.VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT'
 --
--- -   If @vkCmdExecuteCommands@ is being called within a render pass
+-- -   If 'vkCmdExecuteCommands' is being called within a render pass
 --     instance, each element of @pCommandBuffers@ /must/ have been
---     recorded with @VkCommandBufferInheritanceInfo@::@subpass@ set to the
---     index of the subpass which the given command buffer will be executed
---     in
+--     recorded with
+--     'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferInheritanceInfo'::@subpass@
+--     set to the index of the subpass which the given command buffer will
+--     be executed in
 --
--- -   If @vkCmdExecuteCommands@ is being called within a render pass
+-- -   If 'vkCmdExecuteCommands' is being called within a render pass
 --     instance, the render passes specified in the
 --     @pBeginInfo@::@pInheritanceInfo@::@renderPass@ members of the
 --     'Graphics.Vulkan.C.Core10.CommandBuffer.vkBeginCommandBuffer'
 --     commands used to begin recording each element of @pCommandBuffers@
 --     /must/ be
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility compatible>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#renderpass-compatibility compatible>
 --     with the current render pass.
 --
--- -   If @vkCmdExecuteCommands@ is being called within a render pass
+-- -   If 'vkCmdExecuteCommands' is being called within a render pass
 --     instance, and any element of @pCommandBuffers@ was recorded with
---     @VkCommandBufferInheritanceInfo@::@framebuffer@ not equal to
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', that
---     @VkFramebuffer@ /must/ match the @VkFramebuffer@ used in the current
+--     'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferInheritanceInfo'::@framebuffer@
+--     not equal to 'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE',
+--     that 'Graphics.Vulkan.C.Core10.Pass.VkFramebuffer' /must/ match the
+--     'Graphics.Vulkan.C.Core10.Pass.VkFramebuffer' used in the current
 --     render pass instance
 --
--- -   If @vkCmdExecuteCommands@ is not being called within a render pass
+-- -   If 'vkCmdExecuteCommands' is not being called within a render pass
 --     instance, each element of @pCommandBuffers@ /must/ not have been
---     recorded with the @VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT@
+--     recorded with the
+--     'Graphics.Vulkan.C.Core10.CommandBuffer.VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-inheritedQueries inherited queries>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-inheritedQueries inherited queries>
 --     feature is not enabled, @commandBuffer@ /must/ not have any queries
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-active active>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#queries-operation-active active>
 --
--- -   If @commandBuffer@ has a @VK_QUERY_TYPE_OCCLUSION@ query
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-active active>,
+-- -   If @commandBuffer@ has a
+--     'Graphics.Vulkan.C.Core10.Query.VK_QUERY_TYPE_OCCLUSION' query
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#queries-operation-active active>,
 --     then each element of @pCommandBuffers@ /must/ have been recorded
---     with @VkCommandBufferInheritanceInfo@::@occlusionQueryEnable@ set to
---     @VK_TRUE@
+--     with
+--     'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferInheritanceInfo'::@occlusionQueryEnable@
+--     set to 'Graphics.Vulkan.C.Core10.Core.VK_TRUE'
 --
--- -   If @commandBuffer@ has a @VK_QUERY_TYPE_OCCLUSION@ query
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-active active>,
+-- -   If @commandBuffer@ has a
+--     'Graphics.Vulkan.C.Core10.Query.VK_QUERY_TYPE_OCCLUSION' query
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#queries-operation-active active>,
 --     then each element of @pCommandBuffers@ /must/ have been recorded
---     with @VkCommandBufferInheritanceInfo@::@queryFlags@ having all bits
---     set that are set for the query
+--     with
+--     'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferInheritanceInfo'::@queryFlags@
+--     having all bits set that are set for the query
 --
--- -   If @commandBuffer@ has a @VK_QUERY_TYPE_PIPELINE_STATISTICS@ query
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-active active>,
+-- -   If @commandBuffer@ has a
+--     'Graphics.Vulkan.C.Core10.Query.VK_QUERY_TYPE_PIPELINE_STATISTICS'
+--     query
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#queries-operation-active active>,
 --     then each element of @pCommandBuffers@ /must/ have been recorded
---     with @VkCommandBufferInheritanceInfo@::@pipelineStatistics@ having
---     all bits set that are set in the @VkQueryPool@ the query uses
+--     with
+--     'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferInheritanceInfo'::@pipelineStatistics@
+--     having all bits set that are set in the
+--     'Graphics.Vulkan.C.Core10.Query.VkQueryPool' the query uses
 --
 -- -   Each element of @pCommandBuffers@ /must/ not begin any query types
 --     that are
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-active active>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#queries-operation-active active>
 --     in @commandBuffer@
 --
 -- -   This command /must/ not be recorded when transform feedback is
 --     active
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @pCommandBuffers@ /must/ be a valid pointer to an array of
---     @commandBufferCount@ valid @VkCommandBuffer@ handles
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support transfer, graphics, or compute operations
---
--- -   @commandBuffer@ /must/ be a primary @VkCommandBuffer@
---
--- -   @commandBufferCount@ /must/ be greater than @0@
---
--- -   Both of @commandBuffer@, and the elements of @pCommandBuffers@
---     /must/ have been created, allocated, or retrieved from the same
---     @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Transfer        |                 |
--- > |                 |                 | Graphics        |                 |
--- > |                 |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdExecuteCommands.txt -
+-- include::{generated}\/validity\/protos\/vkCmdExecuteCommands.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdExecuteCommands" vkCmdExecuteCommands :: ("commandBuffer" ::: VkCommandBuffer) -> ("commandBufferCount" ::: Word32) -> ("pCommandBuffers" ::: Ptr VkCommandBuffer) -> IO ()
-
+#else
+vkCmdExecuteCommands :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("commandBufferCount" ::: Word32) -> ("pCommandBuffers" ::: Ptr VkCommandBuffer) -> IO ()
+vkCmdExecuteCommands deviceCmds = mkVkCmdExecuteCommands (pVkCmdExecuteCommands deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdExecuteCommands
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("commandBufferCount" ::: Word32) -> ("pCommandBuffers" ::: Ptr VkCommandBuffer) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("commandBufferCount" ::: Word32) -> ("pCommandBuffers" ::: Ptr VkCommandBuffer) -> IO ())
+#endif
+
 type FN_vkCmdExecuteCommands = ("commandBuffer" ::: VkCommandBuffer) -> ("commandBufferCount" ::: Word32) -> ("pCommandBuffers" ::: Ptr VkCommandBuffer) -> IO ()
 type PFN_vkCmdExecuteCommands = FunPtr FN_vkCmdExecuteCommands
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdFillBuffer - Fill a region of a buffer with a fixed value
 --
 -- = Parameters
@@ -6557,10 +5211,11 @@ type PFN_vkCmdExecuteCommands = FunPtr FN_vkCmdExecuteCommands
 --     filling, and /must/ be a multiple of 4.
 --
 -- -   @size@ is the number of bytes to fill, and /must/ be either a
---     multiple of 4, or @VK_WHOLE_SIZE@ to fill the range from @offset@ to
---     the end of the buffer. If @VK_WHOLE_SIZE@ is used and the remaining
---     size of the buffer is not a multiple of 4, then the nearest smaller
---     multiple is used.
+--     multiple of 4, or 'Graphics.Vulkan.C.Core10.Constants.VK_WHOLE_SIZE'
+--     to fill the range from @offset@ to the end of the buffer. If
+--     'Graphics.Vulkan.C.Core10.Constants.VK_WHOLE_SIZE' is used and the
+--     remaining size of the buffer is not a multiple of 4, then the
+--     nearest smaller multiple is used.
 --
 -- -   @data@ is the 4-byte word written repeatedly to the buffer to fill
 --     @size@ bytes of data. The data word is written to memory according
@@ -6568,10 +5223,12 @@ type PFN_vkCmdExecuteCommands = FunPtr FN_vkCmdExecuteCommands
 --
 -- = Description
 --
--- @vkCmdFillBuffer@ is treated as “transfer” operation for the purposes of
--- synchronization barriers. The @VK_BUFFER_USAGE_TRANSFER_DST_BIT@ /must/
--- be specified in @usage@ of @VkBufferCreateInfo@ in order for the buffer
--- to be compatible with @vkCmdFillBuffer@.
+-- 'vkCmdFillBuffer' is treated as “transfer” operation for the purposes of
+-- synchronization barriers. The
+-- 'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_TRANSFER_DST_BIT'
+-- /must/ be specified in @usage@ of
+-- 'Graphics.Vulkan.C.Core10.Buffer.VkBufferCreateInfo' in order for the
+-- buffer to be compatible with 'vkCmdFillBuffer'.
 --
 -- == Valid Usage
 --
@@ -6579,78 +5236,54 @@ type PFN_vkCmdExecuteCommands = FunPtr FN_vkCmdExecuteCommands
 --
 -- -   @dstOffset@ /must/ be a multiple of @4@
 --
--- -   If @size@ is not equal to @VK_WHOLE_SIZE@, @size@ /must/ be greater
---     than @0@
+-- -   If @size@ is not equal to
+--     'Graphics.Vulkan.C.Core10.Constants.VK_WHOLE_SIZE', @size@ /must/ be
+--     greater than @0@
 --
--- -   If @size@ is not equal to @VK_WHOLE_SIZE@, @size@ /must/ be less
---     than or equal to the size of @dstBuffer@ minus @dstOffset@
+-- -   If @size@ is not equal to
+--     'Graphics.Vulkan.C.Core10.Constants.VK_WHOLE_SIZE', @size@ /must/ be
+--     less than or equal to the size of @dstBuffer@ minus @dstOffset@
 --
--- -   If @size@ is not equal to @VK_WHOLE_SIZE@, @size@ /must/ be a
---     multiple of @4@
+-- -   If @size@ is not equal to
+--     'Graphics.Vulkan.C.Core10.Constants.VK_WHOLE_SIZE', @size@ /must/ be
+--     a multiple of @4@
 --
 -- -   @dstBuffer@ /must/ have been created with
---     @VK_BUFFER_USAGE_TRANSFER_DST_BIT@ usage flag
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_TRANSFER_DST_BIT'
+--     usage flag
 --
 -- -   If @dstBuffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+--     contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @dstBuffer@ /must/ be a valid @VkBuffer@ handle
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics or compute operations
---
--- -   This command /must/ only be called outside of a render pass instance
---
--- -   Both of @commandBuffer@, and @dstBuffer@ /must/ have been created,
---     allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Outside         | Graphics        | Transfer        |
--- > | Secondary       |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdFillBuffer.txt -
+-- include::{generated}\/validity\/protos\/vkCmdFillBuffer.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',
--- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer', @VkDeviceSize@
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdFillBuffer" vkCmdFillBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("size" ::: VkDeviceSize) -> ("data" ::: Word32) -> IO ()
-
+#else
+vkCmdFillBuffer :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("size" ::: VkDeviceSize) -> ("data" ::: Word32) -> IO ()
+vkCmdFillBuffer deviceCmds = mkVkCmdFillBuffer (pVkCmdFillBuffer deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdFillBuffer
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("size" ::: VkDeviceSize) -> ("data" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("size" ::: VkDeviceSize) -> ("data" ::: Word32) -> IO ())
+#endif
+
 type FN_vkCmdFillBuffer = ("commandBuffer" ::: VkCommandBuffer) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("size" ::: VkDeviceSize) -> ("data" ::: Word32) -> IO ()
 type PFN_vkCmdFillBuffer = FunPtr FN_vkCmdFillBuffer
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdNextSubpass - Transition to the next subpass of a render pass
 --
 -- = Parameters
@@ -6665,21 +5298,23 @@ type PFN_vkCmdFillBuffer = FunPtr FN_vkCmdFillBuffer
 -- = Description
 --
 -- The subpass index for a render pass begins at zero when
--- @vkCmdBeginRenderPass@ is recorded, and increments each time
--- @vkCmdNextSubpass@ is recorded.
+-- 'vkCmdBeginRenderPass' is recorded, and increments each time
+-- 'vkCmdNextSubpass' is recorded.
 --
 -- Moving to the next subpass automatically performs any multisample
 -- resolve operations in the subpass being ended. End-of-subpass
 -- multisample resolves are treated as color attachment writes for the
 -- purposes of synchronization. This applies to resolve operations for both
 -- color and depth\/stencil attachments. That is, they are considered to
--- execute in the @VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT@ pipeline
--- stage and their writes are synchronized with
--- @VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT@. Synchronization between
--- rendering within a subpass and any resolve operations at the end of the
--- subpass occurs automatically, without need for explicit dependencies or
--- pipeline barriers. However, if the resolve attachment is also used in a
--- different subpass, an explicit dependency is needed.
+-- execute in the
+-- 'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT'
+-- pipeline stage and their writes are synchronized with
+-- 'Graphics.Vulkan.C.Core10.Pass.VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT'.
+-- Synchronization between rendering within a subpass and any resolve
+-- operations at the end of the subpass occurs automatically, without need
+-- for explicit dependencies or pipeline barriers. However, if the resolve
+-- attachment is also used in a different subpass, an explicit dependency
+-- is needed.
 --
 -- After transitioning to the next subpass, the application /can/ record
 -- the commands for that subpass.
@@ -6692,60 +5327,32 @@ type PFN_vkCmdFillBuffer = FunPtr FN_vkCmdFillBuffer
 -- -   This command /must/ not be recorded when transform feedback is
 --     active
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @contents@ /must/ be a valid 'VkSubpassContents' value
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- -   This command /must/ only be called inside of a render pass instance
---
--- -   @commandBuffer@ /must/ be a primary @VkCommandBuffer@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Inside          | Graphics        | Graphics        |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdNextSubpass.txt -
+-- include::{generated}\/validity\/protos\/vkCmdNextSubpass.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer', 'VkSubpassContents'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdNextSubpass" vkCmdNextSubpass :: ("commandBuffer" ::: VkCommandBuffer) -> ("contents" ::: VkSubpassContents) -> IO ()
-
+#else
+vkCmdNextSubpass :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("contents" ::: VkSubpassContents) -> IO ()
+vkCmdNextSubpass deviceCmds = mkVkCmdNextSubpass (pVkCmdNextSubpass deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdNextSubpass
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("contents" ::: VkSubpassContents) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("contents" ::: VkSubpassContents) -> IO ())
+#endif
+
 type FN_vkCmdNextSubpass = ("commandBuffer" ::: VkCommandBuffer) -> ("contents" ::: VkSubpassContents) -> IO ()
 type PFN_vkCmdNextSubpass = FunPtr FN_vkCmdNextSubpass
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdPipelineBarrier - Insert a memory dependency
 --
 -- = Parameters
@@ -6756,12 +5363,12 @@ type PFN_vkCmdNextSubpass = FunPtr FN_vkCmdNextSubpass
 -- -   @srcStageMask@ is a bitmask of
 --     'Graphics.Vulkan.C.Core10.Queue.VkPipelineStageFlagBits' specifying
 --     the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks source stage mask>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-masks source stage mask>.
 --
 -- -   @dstStageMask@ is a bitmask of
 --     'Graphics.Vulkan.C.Core10.Queue.VkPipelineStageFlagBits' specifying
 --     the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks destination stage mask>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-masks destination stage mask>.
 --
 -- -   @dependencyFlags@ is a bitmask of
 --     'Graphics.Vulkan.C.Core10.Pass.VkDependencyFlagBits' specifying how
@@ -6792,241 +5399,190 @@ type PFN_vkCmdNextSubpass = FunPtr FN_vkCmdNextSubpass
 --
 -- If 'vkCmdPipelineBarrier' was recorded outside a render pass instance,
 -- the first
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
 -- includes all commands that occur earlier in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-submission-order submission order>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-submission-order submission order>.
 -- If 'vkCmdPipelineBarrier' was recorded inside a render pass instance,
 -- the first synchronization scope includes only commands that occur
 -- earlier in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-submission-order submission order>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-submission-order submission order>
 -- within the same subpass. In either case, the first synchronization scope
 -- is limited to operations on the pipeline stages determined by the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks source stage mask>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-masks source stage mask>
 -- specified by @srcStageMask@.
 --
 -- If 'vkCmdPipelineBarrier' was recorded outside a render pass instance,
 -- the second
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
 -- includes all commands that occur later in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-submission-order submission order>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-submission-order submission order>.
 -- If 'vkCmdPipelineBarrier' was recorded inside a render pass instance,
 -- the second synchronization scope includes only commands that occur later
 -- in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-submission-order submission order>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-submission-order submission order>
 -- within the same subpass. In either case, the second synchronization
 -- scope is limited to operations on the pipeline stages determined by the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks destination stage mask>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-masks destination stage mask>
 -- specified by @dstStageMask@.
 --
 -- The first
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- is limited to access in the pipeline stages determined by the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks source stage mask>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-masks source stage mask>
 -- specified by @srcStageMask@. Within that, the first access scope only
 -- includes the first access scopes defined by elements of the
 -- @pMemoryBarriers@, @pBufferMemoryBarriers@ and @pImageMemoryBarriers@
 -- arrays, which each define a set of
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-memory-barriers memory barriers>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-memory-barriers memory barriers>.
 -- If no memory barriers are specified, then the first access scope
 -- includes no accesses.
 --
 -- The second
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- is limited to access in the pipeline stages determined by the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks destination stage mask>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-masks destination stage mask>
 -- specified by @dstStageMask@. Within that, the second access scope only
 -- includes the second access scopes defined by elements of the
 -- @pMemoryBarriers@, @pBufferMemoryBarriers@ and @pImageMemoryBarriers@
 -- arrays, which each define a set of
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-memory-barriers memory barriers>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-memory-barriers memory barriers>.
 -- If no memory barriers are specified, then the second access scope
 -- includes no accesses.
 --
--- If @dependencyFlags@ includes @VK_DEPENDENCY_BY_REGION_BIT@, then any
+-- If @dependencyFlags@ includes
+-- 'Graphics.Vulkan.C.Core10.Pass.VK_DEPENDENCY_BY_REGION_BIT', then any
 -- dependency between
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-framebuffer-regions framebuffer-space>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-framebuffer-regions framebuffer-space>
 -- pipeline stages is
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-framebuffer-regions framebuffer-local>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-framebuffer-regions framebuffer-local>
 -- - otherwise it is
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-framebuffer-regions framebuffer-global>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-framebuffer-regions framebuffer-global>.
 --
 -- == Valid Usage
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-geometryShader geometry shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-geometryShader geometry shaders>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
---     @VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT@
+--     'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-geometryShader geometry shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-geometryShader geometry shaders>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
---     @VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT@
+--     'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
---     @VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT@ or
---     @VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT@
+--     'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT'
+--     or
+--     'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
---     @VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT@ or
---     @VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT@
+--     'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT'
+--     or
+--     'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
 --
--- -   If @vkCmdPipelineBarrier@ is called within a render pass instance,
+-- -   If 'vkCmdPipelineBarrier' is called within a render pass instance,
 --     the render pass /must/ have been created with at least one
---     @VkSubpassDependency@ instance in
---     @VkRenderPassCreateInfo@::@pDependencies@ that expresses a
---     dependency from the current subpass to itself, and for which
---     @srcStageMask@ contains a subset of the bit values in
---     @VkSubpassDependency@::@srcStageMask@, @dstStageMask@ contains a
---     subset of the bit values in @VkSubpassDependency@::@dstStageMask@,
+--     'Graphics.Vulkan.C.Core10.Pass.VkSubpassDependency' instance in
+--     'Graphics.Vulkan.C.Core10.Pass.VkRenderPassCreateInfo'::@pDependencies@
+--     that expresses a dependency from the current subpass to itself, and
+--     for which @srcStageMask@ contains a subset of the bit values in
+--     'Graphics.Vulkan.C.Core10.Pass.VkSubpassDependency'::@srcStageMask@,
+--     @dstStageMask@ contains a subset of the bit values in
+--     'Graphics.Vulkan.C.Core10.Pass.VkSubpassDependency'::@dstStageMask@,
 --     @dependencyFlags@ is equal to
---     @VkSubpassDependency@::@dependencyFlags@, @srcAccessMask@ member of
---     each element of @pMemoryBarriers@ and @pImageMemoryBarriers@
---     contains a subset of the bit values in
---     @VkSubpassDependency@::@srcAccessMask@, and @dstAccessMask@ member
---     of each element of @pMemoryBarriers@ and @pImageMemoryBarriers@
---     contains a subset of the bit values in
---     @VkSubpassDependency@::@dstAccessMask@
+--     'Graphics.Vulkan.C.Core10.Pass.VkSubpassDependency'::@dependencyFlags@,
+--     @srcAccessMask@ member of each element of @pMemoryBarriers@ and
+--     @pImageMemoryBarriers@ contains a subset of the bit values in
+--     'Graphics.Vulkan.C.Core10.Pass.VkSubpassDependency'::@srcAccessMask@,
+--     and @dstAccessMask@ member of each element of @pMemoryBarriers@ and
+--     @pImageMemoryBarriers@ contains a subset of the bit values in
+--     'Graphics.Vulkan.C.Core10.Pass.VkSubpassDependency'::@dstAccessMask@
 --
--- -   If @vkCmdPipelineBarrier@ is called within a render pass instance,
+-- -   If 'vkCmdPipelineBarrier' is called within a render pass instance,
 --     @bufferMemoryBarrierCount@ /must/ be @0@
 --
--- -   If @vkCmdPipelineBarrier@ is called within a render pass instance,
+-- -   If 'vkCmdPipelineBarrier' is called within a render pass instance,
 --     the @image@ member of any element of @pImageMemoryBarriers@ /must/
 --     be equal to one of the elements of @pAttachments@ that the current
 --     @framebuffer@ was created with, that is also referred to by one of
 --     the elements of the @pColorAttachments@, @pResolveAttachments@ or
---     @pDepthStencilAttachment@ members of the @VkSubpassDescription@
---     instance or by the @pDepthStencilResolveAttachment@ member of the
---     @VkSubpassDescriptionDepthStencilResolveKHR@ structure that the
---     current subpass was created with
+--     @pDepthStencilAttachment@ members of the
+--     'Graphics.Vulkan.C.Core10.Pass.VkSubpassDescription' instance or by
+--     the @pDepthStencilResolveAttachment@ member of the
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VkSubpassDescriptionDepthStencilResolveKHR'
+--     structure that the current subpass was created with
 --
--- -   If @vkCmdPipelineBarrier@ is called within a render pass instance,
+-- -   If 'vkCmdPipelineBarrier' is called within a render pass instance,
 --     the @oldLayout@ and @newLayout@ members of any element of
 --     @pImageMemoryBarriers@ /must/ be equal to the @layout@ member of an
 --     element of the @pColorAttachments@, @pResolveAttachments@ or
---     @pDepthStencilAttachment@ members of the @VkSubpassDescription@
---     instance or by the @pDepthStencilResolveAttachment@ member of the
---     @VkSubpassDescriptionDepthStencilResolveKHR@ structure that the
---     current subpass was created with, that refers to the same @image@
+--     @pDepthStencilAttachment@ members of the
+--     'Graphics.Vulkan.C.Core10.Pass.VkSubpassDescription' instance or by
+--     the @pDepthStencilResolveAttachment@ member of the
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VkSubpassDescriptionDepthStencilResolveKHR'
+--     structure that the current subpass was created with, that refers to
+--     the same @image@
 --
--- -   If @vkCmdPipelineBarrier@ is called within a render pass instance,
+-- -   If 'vkCmdPipelineBarrier' is called within a render pass instance,
 --     the @oldLayout@ and @newLayout@ members of an element of
 --     @pImageMemoryBarriers@ /must/ be equal
 --
--- -   If @vkCmdPipelineBarrier@ is called within a render pass instance,
+-- -   If 'vkCmdPipelineBarrier' is called within a render pass instance,
 --     the @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ members of any
 --     element of @pImageMemoryBarriers@ /must/ be
---     @VK_QUEUE_FAMILY_IGNORED@
+--     'Graphics.Vulkan.C.Core10.Constants.VK_QUEUE_FAMILY_IGNORED'
 --
 -- -   Any pipeline stage included in @srcStageMask@ or @dstStageMask@
 --     /must/ be supported by the capabilities of the queue family
 --     specified by the @queueFamilyIndex@ member of the
 --     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPoolCreateInfo'
---     structure that was used to create the @VkCommandPool@ that
+--     structure that was used to create the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
 --     @commandBuffer@ was allocated from, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>.
 --
 -- -   Each element of @pMemoryBarriers@, @pBufferMemoryBarriers@ and
 --     @pImageMemoryBarriers@ /must/ not have any access flag included in
 --     its @srcAccessMask@ member if that bit is not supported by any of
 --     the pipeline stages in @srcStageMask@, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>.
 --
 -- -   Each element of @pMemoryBarriers@, @pBufferMemoryBarriers@ and
 --     @pImageMemoryBarriers@ /must/ not have any access flag included in
 --     its @dstAccessMask@ member if that bit is not supported by any of
 --     the pipeline stages in @dstStageMask@, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>.
 --
--- -   If @vkCmdPipelineBarrier@ is called outside of a render pass
+-- -   If 'vkCmdPipelineBarrier' is called outside of a render pass
 --     instance, @dependencyFlags@ /must/ not include
---     @VK_DEPENDENCY_VIEW_LOCAL_BIT@
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_multiview.VK_DEPENDENCY_VIEW_LOCAL_BIT'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-meshShader mesh shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-meshShader mesh shaders>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
---     @VK_PIPELINE_STAGE_MESH_SHADER_BIT_NV@
+--     'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.VK_PIPELINE_STAGE_MESH_SHADER_BIT_NV'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-taskShader task shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-taskShader task shaders>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
---     @VK_PIPELINE_STAGE_TASK_SHADER_BIT_NV@
+--     'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.VK_PIPELINE_STAGE_TASK_SHADER_BIT_NV'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-meshShader mesh shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-meshShader mesh shaders>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
---     @VK_PIPELINE_STAGE_MESH_SHADER_BIT_NV@
+--     'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.VK_PIPELINE_STAGE_MESH_SHADER_BIT_NV'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-taskShader task shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-taskShader task shaders>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
---     @VK_PIPELINE_STAGE_TASK_SHADER_BIT_NV@
+--     'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.VK_PIPELINE_STAGE_TASK_SHADER_BIT_NV'
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @srcStageMask@ /must/ be a valid combination of
---     'Graphics.Vulkan.C.Core10.Queue.VkPipelineStageFlagBits' values
---
--- -   @srcStageMask@ /must/ not be @0@
---
--- -   @dstStageMask@ /must/ be a valid combination of
---     'Graphics.Vulkan.C.Core10.Queue.VkPipelineStageFlagBits' values
---
--- -   @dstStageMask@ /must/ not be @0@
---
--- -   @dependencyFlags@ /must/ be a valid combination of
---     'Graphics.Vulkan.C.Core10.Pass.VkDependencyFlagBits' values
---
--- -   If @memoryBarrierCount@ is not @0@, @pMemoryBarriers@ /must/ be a
---     valid pointer to an array of @memoryBarrierCount@ valid
---     @VkMemoryBarrier@ structures
---
--- -   If @bufferMemoryBarrierCount@ is not @0@, @pBufferMemoryBarriers@
---     /must/ be a valid pointer to an array of @bufferMemoryBarrierCount@
---     valid @VkBufferMemoryBarrier@ structures
---
--- -   If @imageMemoryBarrierCount@ is not @0@, @pImageMemoryBarriers@
---     /must/ be a valid pointer to an array of @imageMemoryBarrierCount@
---     valid @VkImageMemoryBarrier@ structures
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support transfer, graphics, or compute operations
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Transfer        |                 |
--- > | Secondary       |                 | Graphics        |                 |
--- > |                 |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdPipelineBarrier.txt -
+-- include::{generated}\/validity\/protos\/vkCmdPipelineBarrier.txt[]
 --
 -- = See Also
 --
@@ -7035,16 +5591,26 @@ type PFN_vkCmdNextSubpass = FunPtr FN_vkCmdNextSubpass
 -- 'Graphics.Vulkan.C.Core10.Pass.VkDependencyFlags',
 -- 'VkImageMemoryBarrier', 'VkMemoryBarrier',
 -- 'Graphics.Vulkan.C.Core10.Queue.VkPipelineStageFlags'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdPipelineBarrier" vkCmdPipelineBarrier :: ("commandBuffer" ::: VkCommandBuffer) -> ("srcStageMask" ::: VkPipelineStageFlags) -> ("dstStageMask" ::: VkPipelineStageFlags) -> ("dependencyFlags" ::: VkDependencyFlags) -> ("memoryBarrierCount" ::: Word32) -> ("pMemoryBarriers" ::: Ptr VkMemoryBarrier) -> ("bufferMemoryBarrierCount" ::: Word32) -> ("pBufferMemoryBarriers" ::: Ptr VkBufferMemoryBarrier) -> ("imageMemoryBarrierCount" ::: Word32) -> ("pImageMemoryBarriers" ::: Ptr VkImageMemoryBarrier) -> IO ()
-
+#else
+vkCmdPipelineBarrier :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("srcStageMask" ::: VkPipelineStageFlags) -> ("dstStageMask" ::: VkPipelineStageFlags) -> ("dependencyFlags" ::: VkDependencyFlags) -> ("memoryBarrierCount" ::: Word32) -> ("pMemoryBarriers" ::: Ptr VkMemoryBarrier) -> ("bufferMemoryBarrierCount" ::: Word32) -> ("pBufferMemoryBarriers" ::: Ptr VkBufferMemoryBarrier) -> ("imageMemoryBarrierCount" ::: Word32) -> ("pImageMemoryBarriers" ::: Ptr VkImageMemoryBarrier) -> IO ()
+vkCmdPipelineBarrier deviceCmds = mkVkCmdPipelineBarrier (pVkCmdPipelineBarrier deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdPipelineBarrier
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("srcStageMask" ::: VkPipelineStageFlags) -> ("dstStageMask" ::: VkPipelineStageFlags) -> ("dependencyFlags" ::: VkDependencyFlags) -> ("memoryBarrierCount" ::: Word32) -> ("pMemoryBarriers" ::: Ptr VkMemoryBarrier) -> ("bufferMemoryBarrierCount" ::: Word32) -> ("pBufferMemoryBarriers" ::: Ptr VkBufferMemoryBarrier) -> ("imageMemoryBarrierCount" ::: Word32) -> ("pImageMemoryBarriers" ::: Ptr VkImageMemoryBarrier) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("srcStageMask" ::: VkPipelineStageFlags) -> ("dstStageMask" ::: VkPipelineStageFlags) -> ("dependencyFlags" ::: VkDependencyFlags) -> ("memoryBarrierCount" ::: Word32) -> ("pMemoryBarriers" ::: Ptr VkMemoryBarrier) -> ("bufferMemoryBarrierCount" ::: Word32) -> ("pBufferMemoryBarriers" ::: Ptr VkBufferMemoryBarrier) -> ("imageMemoryBarrierCount" ::: Word32) -> ("pImageMemoryBarriers" ::: Ptr VkImageMemoryBarrier) -> IO ())
+#endif
+
 type FN_vkCmdPipelineBarrier = ("commandBuffer" ::: VkCommandBuffer) -> ("srcStageMask" ::: VkPipelineStageFlags) -> ("dstStageMask" ::: VkPipelineStageFlags) -> ("dependencyFlags" ::: VkDependencyFlags) -> ("memoryBarrierCount" ::: Word32) -> ("pMemoryBarriers" ::: Ptr VkMemoryBarrier) -> ("bufferMemoryBarrierCount" ::: Word32) -> ("pBufferMemoryBarriers" ::: Ptr VkBufferMemoryBarrier) -> ("imageMemoryBarrierCount" ::: Word32) -> ("pImageMemoryBarriers" ::: Ptr VkImageMemoryBarrier) -> IO ()
 type PFN_vkCmdPipelineBarrier = FunPtr FN_vkCmdPipelineBarrier
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdPushConstants - Update the values of push constants
 --
 -- = Parameters
@@ -7094,76 +5660,40 @@ type PFN_vkCmdPipelineBarrier = FunPtr FN_vkCmdPipelineBarrier
 -- -   @size@ /must/ be a multiple of @4@
 --
 -- -   @offset@ /must/ be less than
---     @VkPhysicalDeviceLimits@::@maxPushConstantsSize@
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxPushConstantsSize@
 --
 -- -   @size@ /must/ be less than or equal to
---     @VkPhysicalDeviceLimits@::@maxPushConstantsSize@ minus @offset@
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxPushConstantsSize@
+--     minus @offset@
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @layout@ /must/ be a valid @VkPipelineLayout@ handle
---
--- -   @stageFlags@ /must/ be a valid combination of
---     'Graphics.Vulkan.C.Core10.Pipeline.VkShaderStageFlagBits' values
---
--- -   @stageFlags@ /must/ not be @0@
---
--- -   @pValues@ /must/ be a valid pointer to an array of @size@ bytes
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics, or compute operations
---
--- -   @size@ /must/ be greater than @0@
---
--- -   Both of @commandBuffer@, and @layout@ /must/ have been created,
---     allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdPushConstants.txt -
+-- include::{generated}\/validity\/protos\/vkCmdPushConstants.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout',
 -- 'Graphics.Vulkan.C.Core10.PipelineLayout.VkShaderStageFlags'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdPushConstants" vkCmdPushConstants :: ("commandBuffer" ::: VkCommandBuffer) -> ("layout" ::: VkPipelineLayout) -> ("stageFlags" ::: VkShaderStageFlags) -> ("offset" ::: Word32) -> ("size" ::: Word32) -> ("pValues" ::: Ptr ()) -> IO ()
-
+#else
+vkCmdPushConstants :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("layout" ::: VkPipelineLayout) -> ("stageFlags" ::: VkShaderStageFlags) -> ("offset" ::: Word32) -> ("size" ::: Word32) -> ("pValues" ::: Ptr ()) -> IO ()
+vkCmdPushConstants deviceCmds = mkVkCmdPushConstants (pVkCmdPushConstants deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdPushConstants
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("layout" ::: VkPipelineLayout) -> ("stageFlags" ::: VkShaderStageFlags) -> ("offset" ::: Word32) -> ("size" ::: Word32) -> ("pValues" ::: Ptr ()) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("layout" ::: VkPipelineLayout) -> ("stageFlags" ::: VkShaderStageFlags) -> ("offset" ::: Word32) -> ("size" ::: Word32) -> ("pValues" ::: Ptr ()) -> IO ())
+#endif
+
 type FN_vkCmdPushConstants = ("commandBuffer" ::: VkCommandBuffer) -> ("layout" ::: VkPipelineLayout) -> ("stageFlags" ::: VkShaderStageFlags) -> ("offset" ::: Word32) -> ("size" ::: Word32) -> ("pValues" ::: Ptr ()) -> IO ()
 type PFN_vkCmdPushConstants = FunPtr FN_vkCmdPushConstants
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdResetEvent - Reset an event object to non-signaled state
 --
 -- = Parameters
@@ -7176,7 +5706,7 @@ type PFN_vkCmdPushConstants = FunPtr FN_vkCmdPushConstants
 -- -   @stageMask@ is a bitmask of
 --     'Graphics.Vulkan.C.Core10.Queue.VkPipelineStageFlagBits' specifying
 --     the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages source stage mask>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages source stage mask>
 --     used to determine when the @event@ is unsignaled.
 --
 -- = Description
@@ -7186,16 +5716,16 @@ type PFN_vkCmdPushConstants = FunPtr FN_vkCmdPushConstants
 -- event unsignal operation which resets the event to the unsignaled state.
 --
 -- The first
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
 -- includes all commands that occur earlier in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-submission-order submission order>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-submission-order submission order>.
 -- The synchronization scope is limited to operations on the pipeline
 -- stages determined by the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks source stage mask>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-masks source stage mask>
 -- specified by @stageMask@.
 --
 -- The second
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
 -- includes only the event unsignal operation.
 --
 -- If @event@ is already in the unsignaled state when 'vkCmdResetEvent' is
@@ -7204,98 +5734,65 @@ type PFN_vkCmdPushConstants = FunPtr FN_vkCmdPushConstants
 --
 -- == Valid Usage
 --
--- -   @stageMask@ /must/ not include @VK_PIPELINE_STAGE_HOST_BIT@
+-- -   @stageMask@ /must/ not include
+--     'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_HOST_BIT'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-geometryShader geometry shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-geometryShader geometry shaders>
 --     feature is not enabled, @stageMask@ /must/ not contain
---     @VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT@
+--     'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
 --     feature is not enabled, @stageMask@ /must/ not contain
---     @VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT@ or
---     @VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT@
+--     'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT'
+--     or
+--     'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
 --
 -- -   When this command executes, @event@ /must/ not be waited on by a
---     @vkCmdWaitEvents@ command that is currently executing
+--     'vkCmdWaitEvents' command that is currently executing
 --
 -- -   @commandBuffer@’s current device mask /must/ include exactly one
 --     physical device.
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-meshShader mesh shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-meshShader mesh shaders>
 --     feature is not enabled, @stageMask@ /must/ not contain
---     @VK_PIPELINE_STAGE_MESH_SHADER_BIT_NV@
+--     'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.VK_PIPELINE_STAGE_MESH_SHADER_BIT_NV'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-taskShader task shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-taskShader task shaders>
 --     feature is not enabled, @stageMask@ /must/ not contain
---     @VK_PIPELINE_STAGE_TASK_SHADER_BIT_NV@
+--     'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.VK_PIPELINE_STAGE_TASK_SHADER_BIT_NV'
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @event@ /must/ be a valid @VkEvent@ handle
---
--- -   @stageMask@ /must/ be a valid combination of
---     'Graphics.Vulkan.C.Core10.Queue.VkPipelineStageFlagBits' values
---
--- -   @stageMask@ /must/ not be @0@
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics, or compute operations
---
--- -   This command /must/ only be called outside of a render pass instance
---
--- -   Both of @commandBuffer@, and @event@ /must/ have been created,
---     allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Outside         | Graphics        |                 |
--- > | Secondary       |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdResetEvent.txt -
+-- include::{generated}\/validity\/protos\/vkCmdResetEvent.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.C.Core10.Event.VkEvent',
 -- 'Graphics.Vulkan.C.Core10.Queue.VkPipelineStageFlags'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdResetEvent" vkCmdResetEvent :: ("commandBuffer" ::: VkCommandBuffer) -> ("event" ::: VkEvent) -> ("stageMask" ::: VkPipelineStageFlags) -> IO ()
-
+#else
+vkCmdResetEvent :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("event" ::: VkEvent) -> ("stageMask" ::: VkPipelineStageFlags) -> IO ()
+vkCmdResetEvent deviceCmds = mkVkCmdResetEvent (pVkCmdResetEvent deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdResetEvent
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("event" ::: VkEvent) -> ("stageMask" ::: VkPipelineStageFlags) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("event" ::: VkEvent) -> ("stageMask" ::: VkPipelineStageFlags) -> IO ())
+#endif
+
 type FN_vkCmdResetEvent = ("commandBuffer" ::: VkCommandBuffer) -> ("event" ::: VkEvent) -> ("stageMask" ::: VkPipelineStageFlags) -> IO ()
 type PFN_vkCmdResetEvent = FunPtr FN_vkCmdResetEvent
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdResetQueryPool - Reset queries in a query pool
 --
 -- = Parameters
@@ -7323,63 +5820,33 @@ type PFN_vkCmdResetEvent = FunPtr FN_vkCmdResetEvent
 -- -   The sum of @firstQuery@ and @queryCount@ /must/ be less than or
 --     equal to the number of queries in @queryPool@
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @queryPool@ /must/ be a valid @VkQueryPool@ handle
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics, or compute operations
---
--- -   This command /must/ only be called outside of a render pass instance
---
--- -   Both of @commandBuffer@, and @queryPool@ /must/ have been created,
---     allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Outside         | Graphics        |                 |
--- > | Secondary       |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdResetQueryPool.txt -
+-- include::{generated}\/validity\/protos\/vkCmdResetQueryPool.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.C.Core10.Query.VkQueryPool'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdResetQueryPool" vkCmdResetQueryPool :: ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> IO ()
-
+#else
+vkCmdResetQueryPool :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> IO ()
+vkCmdResetQueryPool deviceCmds = mkVkCmdResetQueryPool (pVkCmdResetQueryPool deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdResetQueryPool
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> IO ())
+#endif
+
 type FN_vkCmdResetQueryPool = ("commandBuffer" ::: VkCommandBuffer) -> ("queryPool" ::: VkQueryPool) -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> IO ()
 type PFN_vkCmdResetQueryPool = FunPtr FN_vkCmdResetQueryPool
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdResolveImage - Resolve regions of an image
 --
 -- = Parameters
@@ -7433,35 +5900,44 @@ type PFN_vkCmdResetQueryPool = FunPtr FN_vkCmdResetQueryPool
 --     in memory
 --
 -- -   If @srcImage@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+--     contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
 -- -   @srcImage@ /must/ have a sample count equal to any valid sample
---     count value other than @VK_SAMPLE_COUNT_1_BIT@
+--     count value other than
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_SAMPLE_COUNT_1_BIT'
 --
 -- -   If @dstImage@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+--     contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
 -- -   @dstImage@ /must/ have a sample count equal to
---     @VK_SAMPLE_COUNT_1_BIT@
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_SAMPLE_COUNT_1_BIT'
 --
 -- -   @srcImageLayout@ /must/ specify the layout of the image subresources
 --     of @srcImage@ specified in @pRegions@ at the time this command is
---     executed on a @VkDevice@
+--     executed on a
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
--- -   @srcImageLayout@ /must/ be @VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR@,
---     @VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL@ or @VK_IMAGE_LAYOUT_GENERAL@
+-- -   @srcImageLayout@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image.VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR',
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL'
+--     or 'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_GENERAL'
 --
 -- -   @dstImageLayout@ /must/ specify the layout of the image subresources
 --     of @dstImage@ specified in @pRegions@ at the time this command is
---     executed on a @VkDevice@
+--     executed on a
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
--- -   @dstImageLayout@ /must/ be @VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR@,
---     @VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL@ or @VK_IMAGE_LAYOUT_GENERAL@
+-- -   @dstImageLayout@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image.VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR',
+--     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL'
+--     or 'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_GENERAL'
 --
 -- -   The
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-format-features format features>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-format-features format features>
 --     of @dstImage@ /must/ contain
---     @VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT@.
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT'.
 --
 -- -   @srcImage@ and @dstImage@ /must/ have been created with the same
 --     image format
@@ -7489,79 +5965,37 @@ type PFN_vkCmdResetQueryPool = FunPtr FN_vkCmdResetQueryPool
 --     was created
 --
 -- -   @dstImage@ and @srcImage@ /must/ not have been created with @flags@
---     containing @VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT@
+--     containing
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @srcImage@ /must/ be a valid @VkImage@ handle
---
--- -   @srcImageLayout@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Image.VkImageLayout' value
---
--- -   @dstImage@ /must/ be a valid @VkImage@ handle
---
--- -   @dstImageLayout@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Image.VkImageLayout' value
---
--- -   @pRegions@ /must/ be a valid pointer to an array of @regionCount@
---     valid @VkImageResolve@ structures
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- -   This command /must/ only be called outside of a render pass instance
---
--- -   @regionCount@ /must/ be greater than @0@
---
--- -   Each of @commandBuffer@, @dstImage@, and @srcImage@ /must/ have been
---     created, allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Outside         | Graphics        | Transfer        |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdResolveImage.txt -
+-- include::{generated}\/validity\/protos\/vkCmdResolveImage.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage',
 -- 'Graphics.Vulkan.C.Core10.Image.VkImageLayout', 'VkImageResolve'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdResolveImage" vkCmdResolveImage :: ("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkImageResolve) -> IO ()
-
+#else
+vkCmdResolveImage :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkImageResolve) -> IO ()
+vkCmdResolveImage deviceCmds = mkVkCmdResolveImage (pVkCmdResolveImage deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdResolveImage
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkImageResolve) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkImageResolve) -> IO ())
+#endif
+
 type FN_vkCmdResolveImage = ("commandBuffer" ::: VkCommandBuffer) -> ("srcImage" ::: VkImage) -> ("srcImageLayout" ::: VkImageLayout) -> ("dstImage" ::: VkImage) -> ("dstImageLayout" ::: VkImageLayout) -> ("regionCount" ::: Word32) -> ("pRegions" ::: Ptr VkImageResolve) -> IO ()
 type PFN_vkCmdResolveImage = FunPtr FN_vkCmdResolveImage
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdSetBlendConstants - Set the values of blend constants
 --
 -- = Parameters
@@ -7572,62 +6006,40 @@ type PFN_vkCmdResolveImage = FunPtr FN_vkCmdResolveImage
 -- -   @blendConstants@ is an array of four values specifying the R, G, B,
 --     and A components of the blend constant color used in blending,
 --     depending on the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#framebuffer-blendfactors blend factor>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#framebuffer-blendfactors blend factor>.
 --
 -- == Valid Usage
 --
 -- -   The bound graphics pipeline /must/ have been created with the
---     @VK_DYNAMIC_STATE_BLEND_CONSTANTS@ dynamic state enabled
+--     'Graphics.Vulkan.C.Core10.Pipeline.VK_DYNAMIC_STATE_BLEND_CONSTANTS'
+--     dynamic state enabled
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdSetBlendConstants.txt -
+-- include::{generated}\/validity\/protos\/vkCmdSetBlendConstants.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdSetBlendConstants" vkCmdSetBlendConstants :: ("commandBuffer" ::: VkCommandBuffer) -> ("blendConstants" ::: Ptr CFloat) -> IO ()
-
+#else
+vkCmdSetBlendConstants :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("blendConstants" ::: Ptr CFloat) -> IO ()
+vkCmdSetBlendConstants deviceCmds = mkVkCmdSetBlendConstants (pVkCmdSetBlendConstants deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdSetBlendConstants
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("blendConstants" ::: Ptr CFloat) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("blendConstants" ::: Ptr CFloat) -> IO ())
+#endif
+
 type FN_vkCmdSetBlendConstants = ("commandBuffer" ::: VkCommandBuffer) -> ("blendConstants" ::: Ptr CFloat) -> IO ()
 type PFN_vkCmdSetBlendConstants = FunPtr FN_vkCmdSetBlendConstants
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdSetDepthBias - Set the depth bias dynamic state
 --
 -- = Parameters
@@ -7646,8 +6058,8 @@ type PFN_vkCmdSetBlendConstants = FunPtr FN_vkCmdSetBlendConstants
 --
 -- = Description
 --
--- If @depthBiasEnable@ is @VK_FALSE@, no depth bias is applied and the
--- fragment’s depth values are unchanged.
+-- If @depthBiasEnable@ is 'Graphics.Vulkan.C.Core10.Core.VK_FALSE', no
+-- depth bias is applied and the fragment’s depth values are unchanged.
 --
 -- @depthBiasSlopeFactor@ scales the maximum depth slope of the polygon,
 -- and @depthBiasConstantFactor@ scales an implementation-dependent
@@ -7688,9 +6100,10 @@ type PFN_vkCmdSetBlendConstants = FunPtr FN_vkCmdSetBlendConstants
 -- -   r = 2e-n
 --
 -- If a triangle is rasterized using the
--- @VK_POLYGON_MODE_FILL_RECTANGLE_NV@ polygon mode, then this minimum
--- resolvable difference /may/ not be resolvable for samples outside of the
--- triangle, where the depth is extrapolated.
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_fill_rectangle.VK_POLYGON_MODE_FILL_RECTANGLE_NV'
+-- polygon mode, then this minimum resolvable difference /may/ not be
+-- resolvable for samples outside of the triangle, where the depth is
+-- extrapolated.
 --
 -- If no depth buffer is present, r is undefined.
 --
@@ -7712,68 +6125,47 @@ type PFN_vkCmdSetBlendConstants = FunPtr FN_vkCmdSetBlendConstants
 --
 -- For fixed-point depth buffers, fragment depth values are always limited
 -- to the range [0,1] by clamping after depth bias addition is performed.
--- Unless the @{html_spec_relative}#VK_EXT_depth_range_unrestricted@
+-- Unless the
+-- @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.1-extensions\/html\/vkspec.html#VK_EXT_depth_range_unrestricted@
 -- extension is enabled, fragment depth values are clamped even when the
 -- depth buffer uses a floating-point representation.
 --
 -- == Valid Usage
 --
 -- -   The bound graphics pipeline /must/ have been created with the
---     @VK_DYNAMIC_STATE_DEPTH_BIAS@ dynamic state enabled
+--     'Graphics.Vulkan.C.Core10.Pipeline.VK_DYNAMIC_STATE_DEPTH_BIAS'
+--     dynamic state enabled
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-depthBiasClamp depth bias clamping>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-depthBiasClamp depth bias clamping>
 --     feature is not enabled, @depthBiasClamp@ /must/ be @0.0@
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdSetDepthBias.txt -
+-- include::{generated}\/validity\/protos\/vkCmdSetDepthBias.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdSetDepthBias" vkCmdSetDepthBias :: ("commandBuffer" ::: VkCommandBuffer) -> ("depthBiasConstantFactor" ::: CFloat) -> ("depthBiasClamp" ::: CFloat) -> ("depthBiasSlopeFactor" ::: CFloat) -> IO ()
-
+#else
+vkCmdSetDepthBias :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("depthBiasConstantFactor" ::: CFloat) -> ("depthBiasClamp" ::: CFloat) -> ("depthBiasSlopeFactor" ::: CFloat) -> IO ()
+vkCmdSetDepthBias deviceCmds = mkVkCmdSetDepthBias (pVkCmdSetDepthBias deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdSetDepthBias
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("depthBiasConstantFactor" ::: CFloat) -> ("depthBiasClamp" ::: CFloat) -> ("depthBiasSlopeFactor" ::: CFloat) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("depthBiasConstantFactor" ::: CFloat) -> ("depthBiasClamp" ::: CFloat) -> ("depthBiasSlopeFactor" ::: CFloat) -> IO ())
+#endif
+
 type FN_vkCmdSetDepthBias = ("commandBuffer" ::: VkCommandBuffer) -> ("depthBiasConstantFactor" ::: CFloat) -> ("depthBiasClamp" ::: CFloat) -> ("depthBiasSlopeFactor" ::: CFloat) -> IO ()
 type PFN_vkCmdSetDepthBias = FunPtr FN_vkCmdSetDepthBias
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdSetDepthBounds - Set the depth bounds test values for a command
 -- buffer
 --
@@ -7790,65 +6182,45 @@ type PFN_vkCmdSetDepthBias = FunPtr FN_vkCmdSetDepthBias
 -- == Valid Usage
 --
 -- -   The bound graphics pipeline /must/ have been created with the
---     @VK_DYNAMIC_STATE_DEPTH_BOUNDS@ dynamic state enabled
+--     'Graphics.Vulkan.C.Core10.Pipeline.VK_DYNAMIC_STATE_DEPTH_BOUNDS'
+--     dynamic state enabled
 --
--- -   Unless the @{html_spec_relative}#VK_EXT_depth_range_unrestricted@
+-- -   Unless the
+--     @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.1-extensions\/html\/vkspec.html#VK_EXT_depth_range_unrestricted@
 --     extension is enabled @minDepthBounds@ /must/ be between @0.0@ and
 --     @1.0@, inclusive
 --
--- -   Unless the @{html_spec_relative}#VK_EXT_depth_range_unrestricted@
+-- -   Unless the
+--     @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.1-extensions\/html\/vkspec.html#VK_EXT_depth_range_unrestricted@
 --     extension is enabled @maxDepthBounds@ /must/ be between @0.0@ and
 --     @1.0@, inclusive
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdSetDepthBounds.txt -
+-- include::{generated}\/validity\/protos\/vkCmdSetDepthBounds.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdSetDepthBounds" vkCmdSetDepthBounds :: ("commandBuffer" ::: VkCommandBuffer) -> ("minDepthBounds" ::: CFloat) -> ("maxDepthBounds" ::: CFloat) -> IO ()
-
+#else
+vkCmdSetDepthBounds :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("minDepthBounds" ::: CFloat) -> ("maxDepthBounds" ::: CFloat) -> IO ()
+vkCmdSetDepthBounds deviceCmds = mkVkCmdSetDepthBounds (pVkCmdSetDepthBounds deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdSetDepthBounds
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("minDepthBounds" ::: CFloat) -> ("maxDepthBounds" ::: CFloat) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("minDepthBounds" ::: CFloat) -> ("maxDepthBounds" ::: CFloat) -> IO ())
+#endif
+
 type FN_vkCmdSetDepthBounds = ("commandBuffer" ::: VkCommandBuffer) -> ("minDepthBounds" ::: CFloat) -> ("maxDepthBounds" ::: CFloat) -> IO ()
 type PFN_vkCmdSetDepthBounds = FunPtr FN_vkCmdSetDepthBounds
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdSetEvent - Set an event object to signaled state
 --
 -- = Parameters
@@ -7859,7 +6231,7 @@ type PFN_vkCmdSetDepthBounds = FunPtr FN_vkCmdSetDepthBounds
 -- -   @event@ is the event that will be signaled.
 --
 -- -   @stageMask@ specifies the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages source stage mask>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages source stage mask>
 --     used to determine when the @event@ is signaled.
 --
 -- = Description
@@ -7869,16 +6241,16 @@ type PFN_vkCmdSetDepthBounds = FunPtr FN_vkCmdSetDepthBounds
 -- event signal operation which sets the event to the signaled state.
 --
 -- The first
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
 -- includes all commands that occur earlier in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-submission-order submission order>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-submission-order submission order>.
 -- The synchronization scope is limited to operations on the pipeline
 -- stages determined by the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks source stage mask>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-masks source stage mask>
 -- specified by @stageMask@.
 --
 -- The second
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
 -- includes only the event signal operation.
 --
 -- If @event@ is already in the signaled state when 'vkCmdSetEvent' is
@@ -7887,95 +6259,62 @@ type PFN_vkCmdSetDepthBounds = FunPtr FN_vkCmdSetDepthBounds
 --
 -- == Valid Usage
 --
--- -   @stageMask@ /must/ not include @VK_PIPELINE_STAGE_HOST_BIT@
+-- -   @stageMask@ /must/ not include
+--     'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_HOST_BIT'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-geometryShader geometry shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-geometryShader geometry shaders>
 --     feature is not enabled, @stageMask@ /must/ not contain
---     @VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT@
+--     'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
 --     feature is not enabled, @stageMask@ /must/ not contain
---     @VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT@ or
---     @VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT@
+--     'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT'
+--     or
+--     'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
 --
 -- -   @commandBuffer@’s current device mask /must/ include exactly one
 --     physical device.
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-meshShader mesh shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-meshShader mesh shaders>
 --     feature is not enabled, @stageMask@ /must/ not contain
---     @VK_PIPELINE_STAGE_MESH_SHADER_BIT_NV@
+--     'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.VK_PIPELINE_STAGE_MESH_SHADER_BIT_NV'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-taskShader task shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-taskShader task shaders>
 --     feature is not enabled, @stageMask@ /must/ not contain
---     @VK_PIPELINE_STAGE_TASK_SHADER_BIT_NV@
+--     'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.VK_PIPELINE_STAGE_TASK_SHADER_BIT_NV'
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @event@ /must/ be a valid @VkEvent@ handle
---
--- -   @stageMask@ /must/ be a valid combination of
---     'Graphics.Vulkan.C.Core10.Queue.VkPipelineStageFlagBits' values
---
--- -   @stageMask@ /must/ not be @0@
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics, or compute operations
---
--- -   This command /must/ only be called outside of a render pass instance
---
--- -   Both of @commandBuffer@, and @event@ /must/ have been created,
---     allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Outside         | Graphics        |                 |
--- > | Secondary       |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdSetEvent.txt -
+-- include::{generated}\/validity\/protos\/vkCmdSetEvent.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.C.Core10.Event.VkEvent',
 -- 'Graphics.Vulkan.C.Core10.Queue.VkPipelineStageFlags'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdSetEvent" vkCmdSetEvent :: ("commandBuffer" ::: VkCommandBuffer) -> ("event" ::: VkEvent) -> ("stageMask" ::: VkPipelineStageFlags) -> IO ()
-
+#else
+vkCmdSetEvent :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("event" ::: VkEvent) -> ("stageMask" ::: VkPipelineStageFlags) -> IO ()
+vkCmdSetEvent deviceCmds = mkVkCmdSetEvent (pVkCmdSetEvent deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdSetEvent
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("event" ::: VkEvent) -> ("stageMask" ::: VkPipelineStageFlags) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("event" ::: VkEvent) -> ("stageMask" ::: VkPipelineStageFlags) -> IO ())
+#endif
+
 type FN_vkCmdSetEvent = ("commandBuffer" ::: VkCommandBuffer) -> ("event" ::: VkEvent) -> ("stageMask" ::: VkPipelineStageFlags) -> IO ()
 type PFN_vkCmdSetEvent = FunPtr FN_vkCmdSetEvent
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdSetLineWidth - Set the dynamic line width state
 --
 -- = Parameters
@@ -7988,61 +6327,39 @@ type PFN_vkCmdSetEvent = FunPtr FN_vkCmdSetEvent
 -- == Valid Usage
 --
 -- -   The bound graphics pipeline /must/ have been created with the
---     @VK_DYNAMIC_STATE_LINE_WIDTH@ dynamic state enabled
+--     'Graphics.Vulkan.C.Core10.Pipeline.VK_DYNAMIC_STATE_LINE_WIDTH'
+--     dynamic state enabled
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-wideLines wide lines>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-wideLines wide lines>
 --     feature is not enabled, @lineWidth@ /must/ be @1.0@
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdSetLineWidth.txt -
+-- include::{generated}\/validity\/protos\/vkCmdSetLineWidth.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdSetLineWidth" vkCmdSetLineWidth :: ("commandBuffer" ::: VkCommandBuffer) -> ("lineWidth" ::: CFloat) -> IO ()
-
+#else
+vkCmdSetLineWidth :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("lineWidth" ::: CFloat) -> IO ()
+vkCmdSetLineWidth deviceCmds = mkVkCmdSetLineWidth (pVkCmdSetLineWidth deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdSetLineWidth
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("lineWidth" ::: CFloat) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("lineWidth" ::: CFloat) -> IO ())
+#endif
+
 type FN_vkCmdSetLineWidth = ("commandBuffer" ::: VkCommandBuffer) -> ("lineWidth" ::: CFloat) -> IO ()
 type PFN_vkCmdSetLineWidth = FunPtr FN_vkCmdSetLineWidth
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdSetScissor - Set the dynamic scissor rectangles on a command buffer
 --
 -- = Parameters
@@ -8075,20 +6392,23 @@ type PFN_vkCmdSetLineWidth = FunPtr FN_vkCmdSetLineWidth
 -- == Valid Usage
 --
 -- -   The bound graphics pipeline /must/ have been created with the
---     @VK_DYNAMIC_STATE_SCISSOR@ dynamic state enabled
+--     'Graphics.Vulkan.C.Core10.Pipeline.VK_DYNAMIC_STATE_SCISSOR' dynamic
+--     state enabled
 --
 -- -   @firstScissor@ /must/ be less than
---     @VkPhysicalDeviceLimits@::@maxViewports@
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxViewports@
 --
 -- -   The sum of @firstScissor@ and @scissorCount@ /must/ be between @1@
---     and @VkPhysicalDeviceLimits@::@maxViewports@, inclusive
+--     and
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxViewports@,
+--     inclusive
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-multiViewport multiple viewports>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-multiViewport multiple viewports>
 --     feature is not enabled, @firstScissor@ /must/ be @0@
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-multiViewport multiple viewports>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-multiViewport multiple viewports>
 --     feature is not enabled, @scissorCount@ /must/ be @1@
 --
 -- -   The @x@ and @y@ members of @offset@ /must/ be greater than or equal
@@ -8100,61 +6420,33 @@ type PFN_vkCmdSetLineWidth = FunPtr FN_vkCmdSetLineWidth
 -- -   Evaluation of (@offset.y@ + @extent.height@) /must/ not cause a
 --     signed integer addition overflow
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @pScissors@ /must/ be a valid pointer to an array of @scissorCount@
---     @VkRect2D@ structures
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- -   @scissorCount@ /must/ be greater than @0@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdSetScissor.txt -
+-- include::{generated}\/validity\/protos\/vkCmdSetScissor.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.C.Core10.Pipeline.VkRect2D'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdSetScissor" vkCmdSetScissor :: ("commandBuffer" ::: VkCommandBuffer) -> ("firstScissor" ::: Word32) -> ("scissorCount" ::: Word32) -> ("pScissors" ::: Ptr VkRect2D) -> IO ()
-
+#else
+vkCmdSetScissor :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("firstScissor" ::: Word32) -> ("scissorCount" ::: Word32) -> ("pScissors" ::: Ptr VkRect2D) -> IO ()
+vkCmdSetScissor deviceCmds = mkVkCmdSetScissor (pVkCmdSetScissor deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdSetScissor
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("firstScissor" ::: Word32) -> ("scissorCount" ::: Word32) -> ("pScissors" ::: Ptr VkRect2D) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("firstScissor" ::: Word32) -> ("scissorCount" ::: Word32) -> ("pScissors" ::: Ptr VkRect2D) -> IO ())
+#endif
+
 type FN_vkCmdSetScissor = ("commandBuffer" ::: VkCommandBuffer) -> ("firstScissor" ::: Word32) -> ("scissorCount" ::: Word32) -> ("pScissors" ::: Ptr VkRect2D) -> IO ()
 type PFN_vkCmdSetScissor = FunPtr FN_vkCmdSetScissor
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdSetStencilCompareMask - Set the stencil compare mask dynamic state
 --
 -- = Parameters
@@ -8170,62 +6462,35 @@ type PFN_vkCmdSetScissor = FunPtr FN_vkCmdSetScissor
 -- == Valid Usage
 --
 -- -   The bound graphics pipeline /must/ have been created with the
---     @VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK@ dynamic state enabled
+--     'Graphics.Vulkan.C.Core10.Pipeline.VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK'
+--     dynamic state enabled
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @faceMask@ /must/ be a valid combination of 'VkStencilFaceFlagBits'
---     values
---
--- -   @faceMask@ /must/ not be @0@
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdSetStencilCompareMask.txt -
+-- include::{generated}\/validity\/protos\/vkCmdSetStencilCompareMask.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer', 'VkStencilFaceFlags'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdSetStencilCompareMask" vkCmdSetStencilCompareMask :: ("commandBuffer" ::: VkCommandBuffer) -> ("faceMask" ::: VkStencilFaceFlags) -> ("compareMask" ::: Word32) -> IO ()
-
+#else
+vkCmdSetStencilCompareMask :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("faceMask" ::: VkStencilFaceFlags) -> ("compareMask" ::: Word32) -> IO ()
+vkCmdSetStencilCompareMask deviceCmds = mkVkCmdSetStencilCompareMask (pVkCmdSetStencilCompareMask deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdSetStencilCompareMask
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("faceMask" ::: VkStencilFaceFlags) -> ("compareMask" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("faceMask" ::: VkStencilFaceFlags) -> ("compareMask" ::: Word32) -> IO ())
+#endif
+
 type FN_vkCmdSetStencilCompareMask = ("commandBuffer" ::: VkCommandBuffer) -> ("faceMask" ::: VkStencilFaceFlags) -> ("compareMask" ::: Word32) -> IO ()
 type PFN_vkCmdSetStencilCompareMask = FunPtr FN_vkCmdSetStencilCompareMask
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdSetStencilReference - Set the stencil reference dynamic state
 --
 -- = Parameters
@@ -8242,62 +6507,35 @@ type PFN_vkCmdSetStencilCompareMask = FunPtr FN_vkCmdSetStencilCompareMask
 -- == Valid Usage
 --
 -- -   The bound graphics pipeline /must/ have been created with the
---     @VK_DYNAMIC_STATE_STENCIL_REFERENCE@ dynamic state enabled
+--     'Graphics.Vulkan.C.Core10.Pipeline.VK_DYNAMIC_STATE_STENCIL_REFERENCE'
+--     dynamic state enabled
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @faceMask@ /must/ be a valid combination of 'VkStencilFaceFlagBits'
---     values
---
--- -   @faceMask@ /must/ not be @0@
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdSetStencilReference.txt -
+-- include::{generated}\/validity\/protos\/vkCmdSetStencilReference.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer', 'VkStencilFaceFlags'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdSetStencilReference" vkCmdSetStencilReference :: ("commandBuffer" ::: VkCommandBuffer) -> ("faceMask" ::: VkStencilFaceFlags) -> ("reference" ::: Word32) -> IO ()
-
+#else
+vkCmdSetStencilReference :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("faceMask" ::: VkStencilFaceFlags) -> ("reference" ::: Word32) -> IO ()
+vkCmdSetStencilReference deviceCmds = mkVkCmdSetStencilReference (pVkCmdSetStencilReference deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdSetStencilReference
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("faceMask" ::: VkStencilFaceFlags) -> ("reference" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("faceMask" ::: VkStencilFaceFlags) -> ("reference" ::: Word32) -> IO ())
+#endif
+
 type FN_vkCmdSetStencilReference = ("commandBuffer" ::: VkCommandBuffer) -> ("faceMask" ::: VkStencilFaceFlags) -> ("reference" ::: Word32) -> IO ()
 type PFN_vkCmdSetStencilReference = FunPtr FN_vkCmdSetStencilReference
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdSetStencilWriteMask - Set the stencil write mask dynamic state
 --
 -- = Parameters
@@ -8314,62 +6552,35 @@ type PFN_vkCmdSetStencilReference = FunPtr FN_vkCmdSetStencilReference
 -- == Valid Usage
 --
 -- -   The bound graphics pipeline /must/ have been created with the
---     @VK_DYNAMIC_STATE_STENCIL_WRITE_MASK@ dynamic state enabled
+--     'Graphics.Vulkan.C.Core10.Pipeline.VK_DYNAMIC_STATE_STENCIL_WRITE_MASK'
+--     dynamic state enabled
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @faceMask@ /must/ be a valid combination of 'VkStencilFaceFlagBits'
---     values
---
--- -   @faceMask@ /must/ not be @0@
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdSetStencilWriteMask.txt -
+-- include::{generated}\/validity\/protos\/vkCmdSetStencilWriteMask.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer', 'VkStencilFaceFlags'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdSetStencilWriteMask" vkCmdSetStencilWriteMask :: ("commandBuffer" ::: VkCommandBuffer) -> ("faceMask" ::: VkStencilFaceFlags) -> ("writeMask" ::: Word32) -> IO ()
-
+#else
+vkCmdSetStencilWriteMask :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("faceMask" ::: VkStencilFaceFlags) -> ("writeMask" ::: Word32) -> IO ()
+vkCmdSetStencilWriteMask deviceCmds = mkVkCmdSetStencilWriteMask (pVkCmdSetStencilWriteMask deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdSetStencilWriteMask
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("faceMask" ::: VkStencilFaceFlags) -> ("writeMask" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("faceMask" ::: VkStencilFaceFlags) -> ("writeMask" ::: Word32) -> IO ())
+#endif
+
 type FN_vkCmdSetStencilWriteMask = ("commandBuffer" ::: VkCommandBuffer) -> ("faceMask" ::: VkStencilFaceFlags) -> ("writeMask" ::: Word32) -> IO ()
 type PFN_vkCmdSetStencilWriteMask = FunPtr FN_vkCmdSetStencilWriteMask
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdSetViewport - Set the viewport on a command buffer
 --
 -- = Parameters
@@ -8396,77 +6607,52 @@ type PFN_vkCmdSetStencilWriteMask = FunPtr FN_vkCmdSetStencilWriteMask
 -- == Valid Usage
 --
 -- -   The bound graphics pipeline /must/ have been created with the
---     @VK_DYNAMIC_STATE_VIEWPORT@ dynamic state enabled
+--     'Graphics.Vulkan.C.Core10.Pipeline.VK_DYNAMIC_STATE_VIEWPORT'
+--     dynamic state enabled
 --
 -- -   @firstViewport@ /must/ be less than
---     @VkPhysicalDeviceLimits@::@maxViewports@
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxViewports@
 --
 -- -   The sum of @firstViewport@ and @viewportCount@ /must/ be between @1@
---     and @VkPhysicalDeviceLimits@::@maxViewports@, inclusive
+--     and
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxViewports@,
+--     inclusive
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-multiViewport multiple viewports>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-multiViewport multiple viewports>
 --     feature is not enabled, @firstViewport@ /must/ be @0@
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-multiViewport multiple viewports>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-multiViewport multiple viewports>
 --     feature is not enabled, @viewportCount@ /must/ be @1@
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @pViewports@ /must/ be a valid pointer to an array of
---     @viewportCount@ valid @VkViewport@ structures
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics operations
---
--- -   @viewportCount@ /must/ be greater than @0@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 |                 |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdSetViewport.txt -
+-- include::{generated}\/validity\/protos\/vkCmdSetViewport.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.C.Core10.Pipeline.VkViewport'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdSetViewport" vkCmdSetViewport :: ("commandBuffer" ::: VkCommandBuffer) -> ("firstViewport" ::: Word32) -> ("viewportCount" ::: Word32) -> ("pViewports" ::: Ptr VkViewport) -> IO ()
-
+#else
+vkCmdSetViewport :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("firstViewport" ::: Word32) -> ("viewportCount" ::: Word32) -> ("pViewports" ::: Ptr VkViewport) -> IO ()
+vkCmdSetViewport deviceCmds = mkVkCmdSetViewport (pVkCmdSetViewport deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdSetViewport
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("firstViewport" ::: Word32) -> ("viewportCount" ::: Word32) -> ("pViewports" ::: Ptr VkViewport) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("firstViewport" ::: Word32) -> ("viewportCount" ::: Word32) -> ("pViewports" ::: Ptr VkViewport) -> IO ())
+#endif
+
 type FN_vkCmdSetViewport = ("commandBuffer" ::: VkCommandBuffer) -> ("firstViewport" ::: Word32) -> ("viewportCount" ::: Word32) -> ("pViewports" ::: Ptr VkViewport) -> IO ()
 type PFN_vkCmdSetViewport = FunPtr FN_vkCmdSetViewport
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdUpdateBuffer - Update a buffer’s contents from host memory
 --
 -- = Parameters
@@ -8489,34 +6675,35 @@ type PFN_vkCmdSetViewport = FunPtr FN_vkCmdSetViewport
 --
 -- @dataSize@ /must/ be less than or equal to 65536 bytes. For larger
 -- updates, applications /can/ use buffer to buffer
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#copies-buffers copies>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#copies-buffers copies>.
 --
 -- __Note__
 --
--- Buffer updates performed with @vkCmdUpdateBuffer@ first copy the data
+-- Buffer updates performed with 'vkCmdUpdateBuffer' first copy the data
 -- into command buffer memory when the command is recorded (which requires
 -- additional storage and may incur an additional allocation), and then
 -- copy the data from the command buffer into @dstBuffer@ when the command
 -- is executed on a device.
 --
 -- The additional cost of this functionality compared to
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#copies-buffers buffer to buffer copies>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#copies-buffers buffer to buffer copies>
 -- means it is only recommended for very small amounts of data, and is why
 -- it is limited to only 65536 bytes.
 --
 -- Applications /can/ work around this by issuing multiple
--- @vkCmdUpdateBuffer@ commands to different ranges of the same buffer, but
+-- 'vkCmdUpdateBuffer' commands to different ranges of the same buffer, but
 -- it is strongly recommended that they /should/ not.
 --
 -- The source data is copied from the user pointer to the command buffer
 -- when the command is called.
 --
--- @vkCmdUpdateBuffer@ is only allowed outside of a render pass. This
+-- 'vkCmdUpdateBuffer' is only allowed outside of a render pass. This
 -- command is treated as “transfer” operation, for the purposes of
--- synchronization barriers. The @VK_BUFFER_USAGE_TRANSFER_DST_BIT@ /must/
--- be specified in @usage@ of
+-- synchronization barriers. The
+-- 'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_TRANSFER_DST_BIT'
+-- /must/ be specified in @usage@ of
 -- 'Graphics.Vulkan.C.Core10.Buffer.VkBufferCreateInfo' in order for the
--- buffer to be compatible with @vkCmdUpdateBuffer@.
+-- buffer to be compatible with 'vkCmdUpdateBuffer'.
 --
 -- == Valid Usage
 --
@@ -8526,10 +6713,12 @@ type PFN_vkCmdSetViewport = FunPtr FN_vkCmdSetViewport
 --     minus @dstOffset@
 --
 -- -   @dstBuffer@ /must/ have been created with
---     @VK_BUFFER_USAGE_TRANSFER_DST_BIT@ usage flag
+--     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_TRANSFER_DST_BIT'
+--     usage flag
 --
 -- -   If @dstBuffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+--     contiguously to a single
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
 -- -   @dstOffset@ /must/ be a multiple of @4@
 --
@@ -8537,68 +6726,34 @@ type PFN_vkCmdSetViewport = FunPtr FN_vkCmdSetViewport
 --
 -- -   @dataSize@ /must/ be a multiple of @4@
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @dstBuffer@ /must/ be a valid @VkBuffer@ handle
---
--- -   @pData@ /must/ be a valid pointer to an array of @dataSize@ bytes
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support transfer, graphics, or compute operations
---
--- -   This command /must/ only be called outside of a render pass instance
---
--- -   @dataSize@ /must/ be greater than @0@
---
--- -   Both of @commandBuffer@, and @dstBuffer@ /must/ have been created,
---     allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Outside         | Transfer        | Transfer        |
--- > | Secondary       |                 | Graphics        |                 |
--- > |                 |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdUpdateBuffer.txt -
+-- include::{generated}\/validity\/protos\/vkCmdUpdateBuffer.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',
--- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer', @VkDeviceSize@
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdUpdateBuffer" vkCmdUpdateBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("dataSize" ::: VkDeviceSize) -> ("pData" ::: Ptr ()) -> IO ()
-
+#else
+vkCmdUpdateBuffer :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("dataSize" ::: VkDeviceSize) -> ("pData" ::: Ptr ()) -> IO ()
+vkCmdUpdateBuffer deviceCmds = mkVkCmdUpdateBuffer (pVkCmdUpdateBuffer deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdUpdateBuffer
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("dataSize" ::: VkDeviceSize) -> ("pData" ::: Ptr ()) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("dataSize" ::: VkDeviceSize) -> ("pData" ::: Ptr ()) -> IO ())
+#endif
+
 type FN_vkCmdUpdateBuffer = ("commandBuffer" ::: VkCommandBuffer) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("dataSize" ::: VkDeviceSize) -> ("pData" ::: Ptr ()) -> IO ()
 type PFN_vkCmdUpdateBuffer = FunPtr FN_vkCmdUpdateBuffer
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdWaitEvents - Wait for one or more events and insert a set of memory
 --
 -- = Parameters
@@ -8613,12 +6768,12 @@ type PFN_vkCmdUpdateBuffer = FunPtr FN_vkCmdUpdateBuffer
 -- -   @srcStageMask@ is a bitmask of
 --     'Graphics.Vulkan.C.Core10.Queue.VkPipelineStageFlagBits' specifying
 --     the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages source stage mask>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages source stage mask>.
 --
 -- -   @dstStageMask@ is a bitmask of
 --     'Graphics.Vulkan.C.Core10.Queue.VkPipelineStageFlagBits' specifying
 --     the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages destination stage mask>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages destination stage mask>.
 --
 -- -   @memoryBarrierCount@ is the length of the @pMemoryBarriers@ array.
 --
@@ -8639,57 +6794,58 @@ type PFN_vkCmdUpdateBuffer = FunPtr FN_vkCmdUpdateBuffer
 --
 -- = Description
 --
--- When @vkCmdWaitEvents@ is submitted to a queue, it defines a memory
+-- When 'vkCmdWaitEvents' is submitted to a queue, it defines a memory
 -- dependency between prior event signal operations on the same queue or
--- the host, and subsequent commands. @vkCmdWaitEvents@ /must/ not be used
+-- the host, and subsequent commands. 'vkCmdWaitEvents' /must/ not be used
 -- to wait on event signal operations occurring on other queues.
 --
 -- The first synchronization scope only includes event signal operations
 -- that operate on members of @pEvents@, and the operations that
 -- happened-before the event signal operations. Event signal operations
 -- performed by 'vkCmdSetEvent' that occur earlier in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-submission-order submission order>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-submission-order submission order>
 -- are included in the first synchronization scope, if the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-order logically latest>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-order logically latest>
 -- pipeline stage in their @stageMask@ parameter is
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-order logically earlier>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-order logically earlier>
 -- than or equal to the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-order logically latest>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-order logically latest>
 -- pipeline stage in @srcStageMask@. Event signal operations performed by
 -- 'Graphics.Vulkan.C.Core10.Event.vkSetEvent' are only included in the
--- first synchronization scope if @VK_PIPELINE_STAGE_HOST_BIT@ is included
+-- first synchronization scope if
+-- 'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_HOST_BIT' is included
 -- in @srcStageMask@.
 --
 -- The second
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-dependencies-scopes synchronization scope>
 -- includes all commands that occur later in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-submission-order submission order>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-submission-order submission order>.
 -- The second synchronization scope is limited to operations on the
 -- pipeline stages determined by the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks destination stage mask>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-masks destination stage mask>
 -- specified by @dstStageMask@.
 --
 -- The first
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- is limited to access in the pipeline stages determined by the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks source stage mask>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-masks source stage mask>
 -- specified by @srcStageMask@. Within that, the first access scope only
 -- includes the first access scopes defined by elements of the
 -- @pMemoryBarriers@, @pBufferMemoryBarriers@ and @pImageMemoryBarriers@
 -- arrays, which each define a set of
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-memory-barriers memory barriers>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-memory-barriers memory barriers>.
 -- If no memory barriers are specified, then the first access scope
 -- includes no accesses.
 --
 -- The second
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-dependencies-access-scopes access scope>
 -- is limited to access in the pipeline stages determined by the
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-masks destination stage mask>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-masks destination stage mask>
 -- specified by @dstStageMask@. Within that, the second access scope only
 -- includes the second access scopes defined by elements of the
 -- @pMemoryBarriers@, @pBufferMemoryBarriers@ and @pImageMemoryBarriers@
 -- arrays, which each define a set of
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-memory-barriers memory barriers>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-memory-barriers memory barriers>.
 -- If no memory barriers are specified, then the second access scope
 -- includes no accesses.
 --
@@ -8711,145 +6867,87 @@ type PFN_vkCmdUpdateBuffer = FunPtr FN_vkCmdUpdateBuffer
 -- == Valid Usage
 --
 -- -   @srcStageMask@ /must/ be the bitwise OR of the @stageMask@ parameter
---     used in previous calls to @vkCmdSetEvent@ with any of the members of
---     @pEvents@ and @VK_PIPELINE_STAGE_HOST_BIT@ if any of the members of
---     @pEvents@ was set using @vkSetEvent@
+--     used in previous calls to 'vkCmdSetEvent' with any of the members of
+--     @pEvents@ and
+--     'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_HOST_BIT' if any
+--     of the members of @pEvents@ was set using
+--     'Graphics.Vulkan.C.Core10.Event.vkSetEvent'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-geometryShader geometry shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-geometryShader geometry shaders>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
---     @VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT@
+--     'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-geometryShader geometry shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-geometryShader geometry shaders>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
---     @VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT@
+--     'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
---     @VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT@ or
---     @VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT@
+--     'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT'
+--     or
+--     'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-tessellationShader tessellation shaders>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
---     @VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT@ or
---     @VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT@
+--     'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT'
+--     or
+--     'Graphics.Vulkan.C.Core10.Queue.VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT'
 --
 -- -   If @pEvents@ includes one or more events that will be signaled by
---     @vkSetEvent@ after @commandBuffer@ has been submitted to a queue,
---     then @vkCmdWaitEvents@ /must/ not be called inside a render pass
---     instance
+--     'Graphics.Vulkan.C.Core10.Event.vkSetEvent' after @commandBuffer@
+--     has been submitted to a queue, then 'vkCmdWaitEvents' /must/ not be
+--     called inside a render pass instance
 --
 -- -   Any pipeline stage included in @srcStageMask@ or @dstStageMask@
 --     /must/ be supported by the capabilities of the queue family
 --     specified by the @queueFamilyIndex@ member of the
 --     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPoolCreateInfo'
---     structure that was used to create the @VkCommandPool@ that
+--     structure that was used to create the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
 --     @commandBuffer@ was allocated from, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>.
 --
 -- -   Each element of @pMemoryBarriers@, @pBufferMemoryBarriers@ or
 --     @pImageMemoryBarriers@ /must/ not have any access flag included in
 --     its @srcAccessMask@ member if that bit is not supported by any of
 --     the pipeline stages in @srcStageMask@, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>.
 --
 -- -   Each element of @pMemoryBarriers@, @pBufferMemoryBarriers@ or
 --     @pImageMemoryBarriers@ /must/ not have any access flag included in
 --     its @dstAccessMask@ member if that bit is not supported by any of
 --     the pipeline stages in @dstStageMask@, as specified in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>.
 --
 -- -   @commandBuffer@’s current device mask /must/ include exactly one
 --     physical device.
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-meshShader mesh shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-meshShader mesh shaders>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
---     @VK_PIPELINE_STAGE_MESH_SHADER_BIT_NV@
+--     'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.VK_PIPELINE_STAGE_MESH_SHADER_BIT_NV'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-taskShader task shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-taskShader task shaders>
 --     feature is not enabled, @srcStageMask@ /must/ not contain
---     @VK_PIPELINE_STAGE_TASK_SHADER_BIT_NV@
+--     'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.VK_PIPELINE_STAGE_TASK_SHADER_BIT_NV'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-meshShader mesh shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-meshShader mesh shaders>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
---     @VK_PIPELINE_STAGE_MESH_SHADER_BIT_NV@
+--     'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.VK_PIPELINE_STAGE_MESH_SHADER_BIT_NV'
 --
 -- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-taskShader task shaders>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-taskShader task shaders>
 --     feature is not enabled, @dstStageMask@ /must/ not contain
---     @VK_PIPELINE_STAGE_TASK_SHADER_BIT_NV@
+--     'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.VK_PIPELINE_STAGE_TASK_SHADER_BIT_NV'
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @pEvents@ /must/ be a valid pointer to an array of @eventCount@
---     valid @VkEvent@ handles
---
--- -   @srcStageMask@ /must/ be a valid combination of
---     'Graphics.Vulkan.C.Core10.Queue.VkPipelineStageFlagBits' values
---
--- -   @srcStageMask@ /must/ not be @0@
---
--- -   @dstStageMask@ /must/ be a valid combination of
---     'Graphics.Vulkan.C.Core10.Queue.VkPipelineStageFlagBits' values
---
--- -   @dstStageMask@ /must/ not be @0@
---
--- -   If @memoryBarrierCount@ is not @0@, @pMemoryBarriers@ /must/ be a
---     valid pointer to an array of @memoryBarrierCount@ valid
---     @VkMemoryBarrier@ structures
---
--- -   If @bufferMemoryBarrierCount@ is not @0@, @pBufferMemoryBarriers@
---     /must/ be a valid pointer to an array of @bufferMemoryBarrierCount@
---     valid @VkBufferMemoryBarrier@ structures
---
--- -   If @imageMemoryBarrierCount@ is not @0@, @pImageMemoryBarriers@
---     /must/ be a valid pointer to an array of @imageMemoryBarrierCount@
---     valid @VkImageMemoryBarrier@ structures
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics, or compute operations
---
--- -   @eventCount@ /must/ be greater than @0@
---
--- -   Both of @commandBuffer@, and the elements of @pEvents@ /must/ have
---     been created, allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Graphics        |                 |
--- > | Secondary       |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdWaitEvents.txt -
+-- include::{generated}\/validity\/protos\/vkCmdWaitEvents.txt[]
 --
 -- = See Also
 --
@@ -8857,16 +6955,26 @@ type PFN_vkCmdUpdateBuffer = FunPtr FN_vkCmdUpdateBuffer
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.C.Core10.Event.VkEvent', 'VkImageMemoryBarrier',
 -- 'VkMemoryBarrier', 'Graphics.Vulkan.C.Core10.Queue.VkPipelineStageFlags'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdWaitEvents" vkCmdWaitEvents :: ("commandBuffer" ::: VkCommandBuffer) -> ("eventCount" ::: Word32) -> ("pEvents" ::: Ptr VkEvent) -> ("srcStageMask" ::: VkPipelineStageFlags) -> ("dstStageMask" ::: VkPipelineStageFlags) -> ("memoryBarrierCount" ::: Word32) -> ("pMemoryBarriers" ::: Ptr VkMemoryBarrier) -> ("bufferMemoryBarrierCount" ::: Word32) -> ("pBufferMemoryBarriers" ::: Ptr VkBufferMemoryBarrier) -> ("imageMemoryBarrierCount" ::: Word32) -> ("pImageMemoryBarriers" ::: Ptr VkImageMemoryBarrier) -> IO ()
-
+#else
+vkCmdWaitEvents :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("eventCount" ::: Word32) -> ("pEvents" ::: Ptr VkEvent) -> ("srcStageMask" ::: VkPipelineStageFlags) -> ("dstStageMask" ::: VkPipelineStageFlags) -> ("memoryBarrierCount" ::: Word32) -> ("pMemoryBarriers" ::: Ptr VkMemoryBarrier) -> ("bufferMemoryBarrierCount" ::: Word32) -> ("pBufferMemoryBarriers" ::: Ptr VkBufferMemoryBarrier) -> ("imageMemoryBarrierCount" ::: Word32) -> ("pImageMemoryBarriers" ::: Ptr VkImageMemoryBarrier) -> IO ()
+vkCmdWaitEvents deviceCmds = mkVkCmdWaitEvents (pVkCmdWaitEvents deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdWaitEvents
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("eventCount" ::: Word32) -> ("pEvents" ::: Ptr VkEvent) -> ("srcStageMask" ::: VkPipelineStageFlags) -> ("dstStageMask" ::: VkPipelineStageFlags) -> ("memoryBarrierCount" ::: Word32) -> ("pMemoryBarriers" ::: Ptr VkMemoryBarrier) -> ("bufferMemoryBarrierCount" ::: Word32) -> ("pBufferMemoryBarriers" ::: Ptr VkBufferMemoryBarrier) -> ("imageMemoryBarrierCount" ::: Word32) -> ("pImageMemoryBarriers" ::: Ptr VkImageMemoryBarrier) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("eventCount" ::: Word32) -> ("pEvents" ::: Ptr VkEvent) -> ("srcStageMask" ::: VkPipelineStageFlags) -> ("dstStageMask" ::: VkPipelineStageFlags) -> ("memoryBarrierCount" ::: Word32) -> ("pMemoryBarriers" ::: Ptr VkMemoryBarrier) -> ("bufferMemoryBarrierCount" ::: Word32) -> ("pBufferMemoryBarriers" ::: Ptr VkBufferMemoryBarrier) -> ("imageMemoryBarrierCount" ::: Word32) -> ("pImageMemoryBarriers" ::: Ptr VkImageMemoryBarrier) -> IO ())
+#endif
+
 type FN_vkCmdWaitEvents = ("commandBuffer" ::: VkCommandBuffer) -> ("eventCount" ::: Word32) -> ("pEvents" ::: Ptr VkEvent) -> ("srcStageMask" ::: VkPipelineStageFlags) -> ("dstStageMask" ::: VkPipelineStageFlags) -> ("memoryBarrierCount" ::: Word32) -> ("pMemoryBarriers" ::: Ptr VkMemoryBarrier) -> ("bufferMemoryBarrierCount" ::: Word32) -> ("pBufferMemoryBarriers" ::: Ptr VkBufferMemoryBarrier) -> ("imageMemoryBarrierCount" ::: Word32) -> ("pImageMemoryBarriers" ::: Ptr VkImageMemoryBarrier) -> IO ()
 type PFN_vkCmdWaitEvents = FunPtr FN_vkCmdWaitEvents
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkCmdWriteTimestamp - Write a device timestamp into a query object
 --
 -- = Parameters
@@ -8885,7 +6993,7 @@ type PFN_vkCmdWaitEvents = FunPtr FN_vkCmdWaitEvents
 --
 -- = Description
 --
--- @vkCmdWriteTimestamp@ latches the value of the timer when all previous
+-- 'vkCmdWriteTimestamp' latches the value of the timer when all previous
 -- commands have completed executing as far as the specified pipeline
 -- stage, and writes the timestamp value to memory. When the timestamp
 -- value is written, the availability status of the query is set to
@@ -8905,7 +7013,7 @@ type PFN_vkCmdWaitEvents = FunPtr FN_vkCmdWaitEvents
 -- queries, the query /must/ be reset using 'vkCmdResetQueryPool' before
 -- requesting the timestamp value be written to it.
 --
--- While @vkCmdWriteTimestamp@ /can/ be called inside or outside of a
+-- While 'vkCmdWriteTimestamp' /can/ be called inside or outside of a
 -- render pass instance, 'vkCmdCopyQueryPoolResults' /must/ only be called
 -- outside of a render pass instance.
 --
@@ -8917,7 +7025,7 @@ type PFN_vkCmdWaitEvents = FunPtr FN_vkCmdWaitEvents
 -- An example of such a comparison is determining the execution time of a
 -- sequence of commands.
 --
--- If @vkCmdWriteTimestamp@ is called while executing a render pass
+-- If 'vkCmdWriteTimestamp' is called while executing a render pass
 -- instance that has multiview enabled, the timestamp uses N consecutive
 -- query indices in the query pool (starting at @query@) where N is the
 -- number of bits set in the view mask of the subpass the command is
@@ -8942,7 +7050,7 @@ type PFN_vkCmdWaitEvents = FunPtr FN_vkCmdWaitEvents
 -- == Valid Usage
 --
 -- -   @queryPool@ /must/ have been created with a @queryType@ of
---     @VK_QUERY_TYPE_TIMESTAMP@
+--     'Graphics.Vulkan.C.Core10.Query.VK_QUERY_TYPE_TIMESTAMP'
 --
 -- -   The query identified by @queryPool@ and @query@ /must/ be
 --     /unavailable/
@@ -8952,67 +7060,35 @@ type PFN_vkCmdWaitEvents = FunPtr FN_vkCmdWaitEvents
 --
 -- -   All queries used by the command /must/ be unavailable
 --
--- -   If @vkCmdWriteTimestamp@ is called within a render pass instance,
+-- -   If 'vkCmdWriteTimestamp' is called within a render pass instance,
 --     the sum of @query@ and the number of bits set in the current
 --     subpass’s view mask /must/ be less than or equal to the number of
 --     queries in @queryPool@
 --
--- == Valid Usage (Implicit)
---
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
---
--- -   @pipelineStage@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Queue.VkPipelineStageFlagBits' value
---
--- -   @queryPool@ /must/ be a valid @VkQueryPool@ handle
---
--- -   @commandBuffer@ /must/ be in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support transfer, graphics, or compute operations
---
--- -   Both of @commandBuffer@, and @queryPool@ /must/ have been created,
---     allocated, or retrieved from the same @VkDevice@
---
--- == Host Synchronization
---
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
---
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
---
--- == Command Properties
---
--- \'
---
--- > +-----------------+-----------------+-----------------+-----------------+
--- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
--- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
--- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
--- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
--- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
--- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
--- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
--- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
--- > | s>              |                 |                 | eline Type>     |
--- > +=================+=================+=================+=================+
--- > | Primary         | Both            | Transfer        | Transfer        |
--- > | Secondary       |                 | Graphics        |                 |
--- > |                 |                 | Compute         |                 |
--- > +-----------------+-----------------+-----------------+-----------------+
+-- Unresolved directive in vkCmdWriteTimestamp.txt -
+-- include::{generated}\/validity\/protos\/vkCmdWriteTimestamp.txt[]
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
 -- 'Graphics.Vulkan.C.Core10.Queue.VkPipelineStageFlagBits',
 -- 'Graphics.Vulkan.C.Core10.Query.VkQueryPool'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCmdWriteTimestamp" vkCmdWriteTimestamp :: ("commandBuffer" ::: VkCommandBuffer) -> ("pipelineStage" ::: VkPipelineStageFlagBits) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> IO ()
-
+#else
+vkCmdWriteTimestamp :: DeviceCmds -> ("commandBuffer" ::: VkCommandBuffer) -> ("pipelineStage" ::: VkPipelineStageFlagBits) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> IO ()
+vkCmdWriteTimestamp deviceCmds = mkVkCmdWriteTimestamp (pVkCmdWriteTimestamp deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCmdWriteTimestamp
+  :: FunPtr (("commandBuffer" ::: VkCommandBuffer) -> ("pipelineStage" ::: VkPipelineStageFlagBits) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> IO ()) -> (("commandBuffer" ::: VkCommandBuffer) -> ("pipelineStage" ::: VkPipelineStageFlagBits) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> IO ())
+#endif
+
 type FN_vkCmdWriteTimestamp = ("commandBuffer" ::: VkCommandBuffer) -> ("pipelineStage" ::: VkPipelineStageFlagBits) -> ("queryPool" ::: VkQueryPool) -> ("query" ::: Word32) -> IO ()
 type PFN_vkCmdWriteTimestamp = FunPtr FN_vkCmdWriteTimestamp

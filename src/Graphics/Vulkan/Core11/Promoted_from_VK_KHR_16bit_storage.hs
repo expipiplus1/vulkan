@@ -37,23 +37,42 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   )
 
 
--- No documentation found for TopLevel "PhysicalDevice16BitStorageFeatures"
+
+-- | VkPhysicalDevice16BitStorageFeatures - Structure describing features
+-- supported by VK_KHR_16bit_storage
+--
+-- = Description
+--
+-- Unresolved directive in VkPhysicalDevice16BitStorageFeatures.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDevice16BitStorageFeatures.txt[]
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDevice16BitStorageFeatures = PhysicalDevice16BitStorageFeatures
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDevice16BitStorageFeatures" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDevice16BitStorageFeatures" "storageBuffer16BitAccess"
-  vkStorageBuffer16BitAccess :: Bool
+  storageBuffer16BitAccess :: Bool
   , -- No documentation found for Nested "PhysicalDevice16BitStorageFeatures" "uniformAndStorageBuffer16BitAccess"
-  vkUniformAndStorageBuffer16BitAccess :: Bool
+  uniformAndStorageBuffer16BitAccess :: Bool
   , -- No documentation found for Nested "PhysicalDevice16BitStorageFeatures" "storagePushConstant16"
-  vkStoragePushConstant16 :: Bool
+  storagePushConstant16 :: Bool
   , -- No documentation found for Nested "PhysicalDevice16BitStorageFeatures" "storageInputOutput16"
-  vkStorageInputOutput16 :: Bool
+  storageInputOutput16 :: Bool
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPhysicalDevice16BitStorageFeatures' and
+-- marshal a 'PhysicalDevice16BitStorageFeatures' into it. The 'VkPhysicalDevice16BitStorageFeatures' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPhysicalDevice16BitStorageFeatures :: PhysicalDevice16BitStorageFeatures -> (VkPhysicalDevice16BitStorageFeatures -> IO a) -> IO a
-withCStructPhysicalDevice16BitStorageFeatures from cont = maybeWith withSomeVkStruct (vkPNext (from :: PhysicalDevice16BitStorageFeatures)) (\pPNext -> cont (VkPhysicalDevice16BitStorageFeatures VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES pPNext (boolToBool32 (vkStorageBuffer16BitAccess (from :: PhysicalDevice16BitStorageFeatures))) (boolToBool32 (vkUniformAndStorageBuffer16BitAccess (from :: PhysicalDevice16BitStorageFeatures))) (boolToBool32 (vkStoragePushConstant16 (from :: PhysicalDevice16BitStorageFeatures))) (boolToBool32 (vkStorageInputOutput16 (from :: PhysicalDevice16BitStorageFeatures)))))
+withCStructPhysicalDevice16BitStorageFeatures marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PhysicalDevice16BitStorageFeatures)) (\pPNext -> cont (VkPhysicalDevice16BitStorageFeatures VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES pPNext (boolToBool32 (storageBuffer16BitAccess (marshalled :: PhysicalDevice16BitStorageFeatures))) (boolToBool32 (uniformAndStorageBuffer16BitAccess (marshalled :: PhysicalDevice16BitStorageFeatures))) (boolToBool32 (storagePushConstant16 (marshalled :: PhysicalDevice16BitStorageFeatures))) (boolToBool32 (storageInputOutput16 (marshalled :: PhysicalDevice16BitStorageFeatures)))))
+
+-- | A function to read a 'VkPhysicalDevice16BitStorageFeatures' and all additional
+-- structures in the pointer chain into a 'PhysicalDevice16BitStorageFeatures'.
 fromCStructPhysicalDevice16BitStorageFeatures :: VkPhysicalDevice16BitStorageFeatures -> IO PhysicalDevice16BitStorageFeatures
 fromCStructPhysicalDevice16BitStorageFeatures c = PhysicalDevice16BitStorageFeatures <$> -- Univalued Member elided
                                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDevice16BitStorageFeatures)))
@@ -61,9 +80,11 @@ fromCStructPhysicalDevice16BitStorageFeatures c = PhysicalDevice16BitStorageFeat
                                                                                      <*> pure (bool32ToBool (vkUniformAndStorageBuffer16BitAccess (c :: VkPhysicalDevice16BitStorageFeatures)))
                                                                                      <*> pure (bool32ToBool (vkStoragePushConstant16 (c :: VkPhysicalDevice16BitStorageFeatures)))
                                                                                      <*> pure (bool32ToBool (vkStorageInputOutput16 (c :: VkPhysicalDevice16BitStorageFeatures)))
+
 instance Zero PhysicalDevice16BitStorageFeatures where
   zero = PhysicalDevice16BitStorageFeatures Nothing
                                             False
                                             False
                                             False
                                             False
+

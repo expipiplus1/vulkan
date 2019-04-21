@@ -86,11 +86,15 @@ import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance2
 
 type ImageViewUsageCreateInfoKHR = ImageViewUsageCreateInfo
 -- TODO: Pattern constructor alias)
+
 type InputAttachmentAspectReferenceKHR = InputAttachmentAspectReference
 -- TODO: Pattern constructor alias)
+
 type PhysicalDevicePointClippingPropertiesKHR = PhysicalDevicePointClippingProperties
 -- TODO: Pattern constructor alias)
+
 type PipelineTessellationDomainOriginStateCreateInfoKHR = PipelineTessellationDomainOriginStateCreateInfo
 -- TODO: Pattern constructor alias)
+
 type RenderPassInputAttachmentAspectCreateInfoKHR = RenderPassInputAttachmentAspectCreateInfo
 -- TODO: Pattern constructor alias)

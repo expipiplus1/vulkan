@@ -47,9 +47,12 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_bind_memory2
 
 type BindBufferMemoryInfoKHR = BindBufferMemoryInfo
 -- TODO: Pattern constructor alias)
+
 type BindImageMemoryInfoKHR = BindImageMemoryInfo
 -- TODO: Pattern constructor alias)
+
 bindBufferMemory2KHR :: Device ->  Vector BindBufferMemoryInfo ->  IO ()
 bindBufferMemory2KHR = bindBufferMemory2
+
 bindImageMemory2KHR :: Device ->  Vector BindImageMemoryInfo ->  IO ()
 bindImageMemory2KHR = bindImageMemory2

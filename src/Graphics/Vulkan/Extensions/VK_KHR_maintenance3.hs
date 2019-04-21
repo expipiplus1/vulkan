@@ -42,7 +42,9 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_maintenance3
 
 type DescriptorSetLayoutSupportKHR = DescriptorSetLayoutSupport
 -- TODO: Pattern constructor alias)
+
 type PhysicalDeviceMaintenance3PropertiesKHR = PhysicalDeviceMaintenance3Properties
 -- TODO: Pattern constructor alias)
+
 getDescriptorSetLayoutSupportKHR :: Device ->  DescriptorSetLayoutCreateInfo ->  IO (DescriptorSetLayoutSupport)
 getDescriptorSetLayoutSupportKHR = getDescriptorSetLayoutSupport

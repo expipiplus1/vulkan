@@ -11,16 +11,12 @@ module Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32
   , VkExportSemaphoreWin32HandleInfoKHR(..)
   , VkImportSemaphoreWin32HandleInfoKHR(..)
   , VkSemaphoreGetWin32HandleInfoKHR(..)
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkGetSemaphoreWin32HandleKHR
-#endif
   , FN_vkGetSemaphoreWin32HandleKHR
   , PFN_vkGetSemaphoreWin32HandleKHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkImportSemaphoreWin32HandleKHR
-#endif
+  , vkGetSemaphoreWin32HandleKHR
   , FN_vkImportSemaphoreWin32HandleKHR
   , PFN_vkImportSemaphoreWin32HandleKHR
+  , vkImportSemaphoreWin32HandleKHR
   , pattern VK_KHR_EXTERNAL_SEMAPHORE_WIN32_EXTENSION_NAME
   , pattern VK_KHR_EXTERNAL_SEMAPHORE_WIN32_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_D3D12_FENCE_SUBMIT_INFO_KHR
@@ -64,6 +60,9 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities
   ( VkExternalSemaphoreHandleTypeFlagBits(..)
   )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32
   ( LPCWSTR
   )
@@ -87,32 +86,14 @@ import Graphics.Vulkan.NamedType
 -- 'Graphics.Vulkan.C.Core10.Queue.VkSubmitInfo'::@pSignalSemaphores@
 -- corresponding to an entry in @pWaitSemaphoreValues@ or
 -- @pSignalSemaphoreValues@ respectively does not currently have a
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores-payloads payload>
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-semaphores-payloads payload>
 -- referring to a Direct3D 12 fence, the implementation /must/ ignore the
 -- value in the @pWaitSemaphoreValues@ or @pSignalSemaphoreValues@ entry.
 --
 -- == Valid Usage
 --
--- -   @waitSemaphoreValuesCount@ /must/ be the same value as
---     @VkSubmitInfo@::@waitSemaphoreCount@, where @VkSubmitInfo@ is in the
---     @pNext@ chain of this @VkD3D12FenceSubmitInfoKHR@ structure.
---
--- -   @signalSemaphoreValuesCount@ /must/ be the same value as
---     @VkSubmitInfo@::@signalSemaphoreCount@, where @VkSubmitInfo@ is in
---     the @pNext@ chain of this @VkD3D12FenceSubmitInfoKHR@ structure.
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_D3D12_FENCE_SUBMIT_INFO_KHR@
---
--- -   If @waitSemaphoreValuesCount@ is not @0@, and @pWaitSemaphoreValues@
---     is not @NULL@, @pWaitSemaphoreValues@ /must/ be a valid pointer to
---     an array of @waitSemaphoreValuesCount@ @uint64_t@ values
---
--- -   If @signalSemaphoreValuesCount@ is not @0@, and
---     @pSignalSemaphoreValues@ is not @NULL@, @pSignalSemaphoreValues@
---     /must/ be a valid pointer to an array of
---     @signalSemaphoreValuesCount@ @uint64_t@ values
+-- Unresolved directive in VkD3D12FenceSubmitInfoKHR.txt -
+-- include::{generated}\/validity\/structs\/VkD3D12FenceSubmitInfoKHR.txt[]
 --
 -- = See Also
 --
@@ -122,16 +103,20 @@ data VkD3D12FenceSubmitInfoKHR = VkD3D12FenceSubmitInfoKHR
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @waitSemaphoreValuesCount@ is the number of semaphore wait values
-  -- specified in @pWaitSemaphoreValues@.
+  , -- | @waitSemaphoreValuesCount@ /must/ be the same value as
+  -- 'Graphics.Vulkan.C.Core10.Queue.VkSubmitInfo'::@waitSemaphoreCount@,
+  -- where 'Graphics.Vulkan.C.Core10.Queue.VkSubmitInfo' is in the @pNext@
+  -- chain of this 'VkD3D12FenceSubmitInfoKHR' structure.
   vkWaitSemaphoreValuesCount :: Word32
   , -- | @pWaitSemaphoreValues@ is an array of length @waitSemaphoreValuesCount@
   -- containing values for the corresponding semaphores in
   -- 'Graphics.Vulkan.C.Core10.Queue.VkSubmitInfo'::@pWaitSemaphores@ to wait
   -- for.
   vkPWaitSemaphoreValues :: Ptr Word64
-  , -- | @signalSemaphoreValuesCount@ is the number of semaphore signal values
-  -- specified in @pSignalSemaphoreValues@.
+  , -- | @signalSemaphoreValuesCount@ /must/ be the same value as
+  -- 'Graphics.Vulkan.C.Core10.Queue.VkSubmitInfo'::@signalSemaphoreCount@,
+  -- where 'Graphics.Vulkan.C.Core10.Queue.VkSubmitInfo' is in the @pNext@
+  -- chain of this 'VkD3D12FenceSubmitInfoKHR' structure.
   vkSignalSemaphoreValuesCount :: Word32
   , -- | @pSignalSemaphoreValues@ is an array of length
   -- @signalSemaphoreValuesCount@ containing values for the corresponding
@@ -159,12 +144,13 @@ instance Storable VkD3D12FenceSubmitInfoKHR where
                 *> poke (ptr `plusPtr` 40) (vkPSignalSemaphoreValues (poked :: VkD3D12FenceSubmitInfoKHR))
 
 instance Zero VkD3D12FenceSubmitInfoKHR where
-  zero = VkD3D12FenceSubmitInfoKHR zero
+  zero = VkD3D12FenceSubmitInfoKHR VK_STRUCTURE_TYPE_D3D12_FENCE_SUBMIT_INFO_KHR
                                    zero
                                    zero
                                    zero
                                    zero
                                    zero
+
 -- | VkExportSemaphoreWin32HandleInfoKHR - Structure specifying additional
 -- attributes of Windows handles exported from a semaphore
 --
@@ -181,7 +167,7 @@ instance Zero VkD3D12FenceSubmitInfoKHR where
 --
 -- for handles of the following types:
 --
--- @VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT@
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT'
 --
 -- And
 --
@@ -189,7 +175,7 @@ instance Zero VkD3D12FenceSubmitInfoKHR where
 --
 -- for handles of the following types:
 --
--- @VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT@
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT'
 --
 -- [1]
 --     <https://msdn.microsoft.com/en-us/library/windows/desktop/ms686670.aspx>
@@ -199,19 +185,15 @@ instance Zero VkD3D12FenceSubmitInfoKHR where
 -- -   If
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore.VkExportSemaphoreCreateInfo'::@handleTypes@
 --     does not include
---     @VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT@ or
---     @VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT@,
---     @VkExportSemaphoreWin32HandleInfoKHR@ /must/ not be in the @pNext@
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT'
+--     or
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT',
+--     'VkExportSemaphoreWin32HandleInfoKHR' /must/ not be in the @pNext@
 --     chain of
 --     'Graphics.Vulkan.C.Core10.QueueSemaphore.VkSemaphoreCreateInfo'.
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR@
---
--- -   If @pAttributes@ is not @NULL@, @pAttributes@ /must/ be a valid
---     pointer to a valid @SECURITY_ATTRIBUTES@ value
+-- Unresolved directive in VkExportSemaphoreWin32HandleInfoKHR.txt -
+-- include::{generated}\/validity\/structs\/VkExportSemaphoreWin32HandleInfoKHR.txt[]
 --
 -- = See Also
 --
@@ -221,10 +203,13 @@ data VkExportSemaphoreWin32HandleInfoKHR = VkExportSemaphoreWin32HandleInfoKHR
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @pAttributes@ is a pointer to a Windows @SECURITY_ATTRIBUTES@ structure
-  -- specifying security attributes of the handle.
+  , -- | @pAttributes@ is a pointer to a Windows
+  -- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32.SECURITY_ATTRIBUTES'
+  -- structure specifying security attributes of the handle.
   vkPAttributes :: Ptr SECURITY_ATTRIBUTES
-  , -- | @dwAccess@ is a @DWORD@ specifying access rights of the handle.
+  , -- | @dwAccess@ is a
+  -- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32.DWORD'
+  -- specifying access rights of the handle.
   vkDwAccess :: DWORD
   , -- | @name@ is a NULL-terminated UTF-16 string to associate with the
   -- underlying synchronization primitive referenced by NT handles exported
@@ -248,11 +233,12 @@ instance Storable VkExportSemaphoreWin32HandleInfoKHR where
                 *> poke (ptr `plusPtr` 32) (vkName (poked :: VkExportSemaphoreWin32HandleInfoKHR))
 
 instance Zero VkExportSemaphoreWin32HandleInfoKHR where
-  zero = VkExportSemaphoreWin32HandleInfoKHR zero
+  zero = VkExportSemaphoreWin32HandleInfoKHR VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR
                                              zero
                                              zero
                                              zero
                                              zero
+
 -- | VkImportSemaphoreWin32HandleInfoKHR - Structure specifying Windows
 -- handle to import to a semaphore
 --
@@ -263,17 +249,29 @@ instance Zero VkExportSemaphoreWin32HandleInfoKHR where
 -- > +-----------------------+-----------------------+-----------------------+
 -- > | Handle Type           | Transference          | Permanence Supported  |
 -- > +=======================+=======================+=======================+
--- > | @VK_EXTERNAL_SEMAPHOR | Reference             | Temporary,Permanent   |
--- > | E_HANDLE_TYPE_OPAQUE_ |                       |                       |
--- > | WIN32_BIT@            |                       |                       |
+-- > | 'Graphics.Vulkan.C.Co | Reference             | Temporary,Permanent   |
+-- > | re11.Promoted_from_VK |                       |                       |
+-- > | _KHR_external_semapho |                       |                       |
+-- > | re_capabilities.VK_EX |                       |                       |
+-- > | TERNAL_SEMAPHORE_HAND |                       |                       |
+-- > | LE_TYPE_OPAQUE_WIN32_ |                       |                       |
+-- > | BIT'                  |                       |                       |
 -- > +-----------------------+-----------------------+-----------------------+
--- > | @VK_EXTERNAL_SEMAPHOR | Reference             | Temporary,Permanent   |
--- > | E_HANDLE_TYPE_OPAQUE_ |                       |                       |
--- > | WIN32_KMT_BIT@        |                       |                       |
+-- > | 'Graphics.Vulkan.C.Co | Reference             | Temporary,Permanent   |
+-- > | re11.Promoted_from_VK |                       |                       |
+-- > | _KHR_external_semapho |                       |                       |
+-- > | re_capabilities.VK_EX |                       |                       |
+-- > | TERNAL_SEMAPHORE_HAND |                       |                       |
+-- > | LE_TYPE_OPAQUE_WIN32_ |                       |                       |
+-- > | KMT_BIT'              |                       |                       |
 -- > +-----------------------+-----------------------+-----------------------+
--- > | @VK_EXTERNAL_SEMAPHOR | Reference             | Temporary,Permanent   |
--- > | E_HANDLE_TYPE_D3D12_F |                       |                       |
--- > | ENCE_BIT@             |                       |                       |
+-- > | 'Graphics.Vulkan.C.Co | Reference             | Temporary,Permanent   |
+-- > | re11.Promoted_from_VK |                       |                       |
+-- > | _KHR_external_semapho |                       |                       |
+-- > | re_capabilities.VK_EX |                       |                       |
+-- > | TERNAL_SEMAPHORE_HAND |                       |                       |
+-- > | LE_TYPE_D3D12_FENCE_B |                       |                       |
+-- > | IT'                   |                       |                       |
 -- > +-----------------------+-----------------------+-----------------------+
 -- >
 -- > Handle Types Supported by 'VkImportSemaphoreWin32HandleInfoKHR'
@@ -281,13 +279,14 @@ instance Zero VkExportSemaphoreWin32HandleInfoKHR where
 -- == Valid Usage
 --
 -- -   @handleType@ /must/ be a value included in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphore-handletypes-win32 Handle Types Supported by VkImportSemaphoreWin32HandleInfoKHR>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-semaphore-handletypes-win32 Handle Types Supported by VkImportSemaphoreWin32HandleInfoKHR>
 --     table.
 --
 -- -   If @handleType@ is not
---     @VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT@ or
---     @VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT@, @name@ /must/
---     be @NULL@.
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT'
+--     or
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT',
+--     @name@ /must/ be @NULL@.
 --
 -- -   If @handleType@ is not @0@ and @handle@ is @NULL@, @name@ /must/
 --     name a valid synchronization primitive of the type specified by
@@ -300,32 +299,14 @@ instance Zero VkExportSemaphoreWin32HandleInfoKHR where
 --
 -- -   If @handle@ is not @NULL@, it /must/ obey any requirements listed
 --     for @handleType@ in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility external semaphore handle types compatibility>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility external semaphore handle types compatibility>.
 --
 -- -   If @name@ is not @NULL@, it /must/ obey any requirements listed for
 --     @handleType@ in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility external semaphore handle types compatibility>.
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility external semaphore handle types compatibility>.
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR@
---
--- -   @pNext@ /must/ be @NULL@
---
--- -   @semaphore@ /must/ be a valid @VkSemaphore@ handle
---
--- -   @flags@ /must/ be a valid combination of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore.VkSemaphoreImportFlagBits'
---     values
---
--- -   If @handleType@ is not @0@, @handleType@ /must/ be a valid
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreHandleTypeFlagBits'
---     value
---
--- == Host Synchronization
---
--- -   Host access to @semaphore@ /must/ be externally synchronized
+-- Unresolved directive in VkImportSemaphoreWin32HandleInfoKHR.txt -
+-- include::{generated}\/validity\/structs\/VkImportSemaphoreWin32HandleInfoKHR.txt[]
 --
 -- = See Also
 --
@@ -371,13 +352,14 @@ instance Storable VkImportSemaphoreWin32HandleInfoKHR where
                 *> poke (ptr `plusPtr` 40) (vkName (poked :: VkImportSemaphoreWin32HandleInfoKHR))
 
 instance Zero VkImportSemaphoreWin32HandleInfoKHR where
-  zero = VkImportSemaphoreWin32HandleInfoKHR zero
+  zero = VkImportSemaphoreWin32HandleInfoKHR VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR
                                              zero
                                              zero
                                              zero
                                              zero
                                              zero
                                              zero
+
 -- | VkSemaphoreGetWin32HandleInfoKHR - Structure describing a Win32 handle
 -- semaphore export operation
 --
@@ -401,37 +383,27 @@ instance Zero VkImportSemaphoreWin32HandleInfoKHR where
 --
 -- -   @semaphore@ /must/ not currently have its payload replaced by an
 --     imported payload as described below in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>
 --     unless that imported payload’s handle type was included in
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreProperties'::@exportFromImportedHandleTypes@
 --     for @handleType@.
 --
 -- -   If @handleType@ refers to a handle type with copy payload
 --     transference semantics, as defined below in
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>,
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>,
 --     there /must/ be no queue waiting on @semaphore@.
 --
 -- -   If @handleType@ refers to a handle type with copy payload
 --     transference semantics, @semaphore@ /must/ be signaled, or have an
 --     associated
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
 --     pending execution.
 --
 -- -   @handleType@ /must/ be defined as an NT handle or a global share
 --     handle.
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR@
---
--- -   @pNext@ /must/ be @NULL@
---
--- -   @semaphore@ /must/ be a valid @VkSemaphore@ handle
---
--- -   @handleType@ /must/ be a valid
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreHandleTypeFlagBits'
---     value
+-- Unresolved directive in VkSemaphoreGetWin32HandleInfoKHR.txt -
+-- include::{generated}\/validity\/structs\/VkSemaphoreGetWin32HandleInfoKHR.txt[]
 --
 -- = See Also
 --
@@ -461,11 +433,11 @@ instance Storable VkSemaphoreGetWin32HandleInfoKHR where
                 *> poke (ptr `plusPtr` 24) (vkHandleType (poked :: VkSemaphoreGetWin32HandleInfoKHR))
 
 instance Zero VkSemaphoreGetWin32HandleInfoKHR where
-  zero = VkSemaphoreGetWin32HandleInfoKHR zero
+  zero = VkSemaphoreGetWin32HandleInfoKHR VK_STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR
                                           zero
                                           zero
                                           zero
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkGetSemaphoreWin32HandleKHR - Get a Windows HANDLE for a semaphore
 --
 -- = Parameters
@@ -483,38 +455,41 @@ instance Zero VkSemaphoreGetWin32HandleInfoKHR where
 -- = Description
 --
 -- For handle types defined as NT handles, the handles returned by
--- @vkGetSemaphoreWin32HandleKHR@ are owned by the application. To avoid
+-- 'vkGetSemaphoreWin32HandleKHR' are owned by the application. To avoid
 -- leaking resources, the application /must/ release ownership of them
 -- using the @CloseHandle@ system call when they are no longer needed.
 --
 -- Exporting a Windows handle from a semaphore /may/ have side effects
 -- depending on the transference of the specified handle type, as described
 -- in
--- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>.
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>.
 --
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_TOO_MANY_OBJECTS@
---
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+-- Unresolved directive in vkGetSemaphoreWin32HandleKHR.txt -
+-- include::{generated}\/validity\/protos\/vkGetSemaphoreWin32HandleKHR.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetSemaphoreWin32HandleKHR" vkGetSemaphoreWin32HandleKHR :: ("device" ::: VkDevice) -> ("pGetWin32HandleInfo" ::: Ptr VkSemaphoreGetWin32HandleInfoKHR) -> ("pHandle" ::: Ptr HANDLE) -> IO VkResult
-
+#else
+vkGetSemaphoreWin32HandleKHR :: DeviceCmds -> ("device" ::: VkDevice) -> ("pGetWin32HandleInfo" ::: Ptr VkSemaphoreGetWin32HandleInfoKHR) -> ("pHandle" ::: Ptr HANDLE) -> IO VkResult
+vkGetSemaphoreWin32HandleKHR deviceCmds = mkVkGetSemaphoreWin32HandleKHR (pVkGetSemaphoreWin32HandleKHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetSemaphoreWin32HandleKHR
+  :: FunPtr (("device" ::: VkDevice) -> ("pGetWin32HandleInfo" ::: Ptr VkSemaphoreGetWin32HandleInfoKHR) -> ("pHandle" ::: Ptr HANDLE) -> IO VkResult) -> (("device" ::: VkDevice) -> ("pGetWin32HandleInfo" ::: Ptr VkSemaphoreGetWin32HandleInfoKHR) -> ("pHandle" ::: Ptr HANDLE) -> IO VkResult)
+#endif
+
 type FN_vkGetSemaphoreWin32HandleKHR = ("device" ::: VkDevice) -> ("pGetWin32HandleInfo" ::: Ptr VkSemaphoreGetWin32HandleInfoKHR) -> ("pHandle" ::: Ptr HANDLE) -> IO VkResult
 type PFN_vkGetSemaphoreWin32HandleKHR = FunPtr FN_vkGetSemaphoreWin32HandleKHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkImportSemaphoreWin32HandleKHR - Import a semaphore from a Windows
 -- HANDLE
 --
@@ -537,43 +512,52 @@ type PFN_vkGetSemaphoreWin32HandleKHR = FunPtr FN_vkGetSemaphoreWin32HandleKHR
 -- instances of Vulkan, into the same instance from which it was exported,
 -- and multiple times into a given Vulkan instance.
 --
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_INVALID_EXTERNAL_HANDLE@
+-- Unresolved directive in vkImportSemaphoreWin32HandleKHR.txt -
+-- include::{generated}\/validity\/protos\/vkImportSemaphoreWin32HandleKHR.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkImportSemaphoreWin32HandleKHR" vkImportSemaphoreWin32HandleKHR :: ("device" ::: VkDevice) -> ("pImportSemaphoreWin32HandleInfo" ::: Ptr VkImportSemaphoreWin32HandleInfoKHR) -> IO VkResult
-
+#else
+vkImportSemaphoreWin32HandleKHR :: DeviceCmds -> ("device" ::: VkDevice) -> ("pImportSemaphoreWin32HandleInfo" ::: Ptr VkImportSemaphoreWin32HandleInfoKHR) -> IO VkResult
+vkImportSemaphoreWin32HandleKHR deviceCmds = mkVkImportSemaphoreWin32HandleKHR (pVkImportSemaphoreWin32HandleKHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkImportSemaphoreWin32HandleKHR
+  :: FunPtr (("device" ::: VkDevice) -> ("pImportSemaphoreWin32HandleInfo" ::: Ptr VkImportSemaphoreWin32HandleInfoKHR) -> IO VkResult) -> (("device" ::: VkDevice) -> ("pImportSemaphoreWin32HandleInfo" ::: Ptr VkImportSemaphoreWin32HandleInfoKHR) -> IO VkResult)
+#endif
+
 type FN_vkImportSemaphoreWin32HandleKHR = ("device" ::: VkDevice) -> ("pImportSemaphoreWin32HandleInfo" ::: Ptr VkImportSemaphoreWin32HandleInfoKHR) -> IO VkResult
 type PFN_vkImportSemaphoreWin32HandleKHR = FunPtr FN_vkImportSemaphoreWin32HandleKHR
+
 -- No documentation found for TopLevel "VK_KHR_EXTERNAL_SEMAPHORE_WIN32_EXTENSION_NAME"
 pattern VK_KHR_EXTERNAL_SEMAPHORE_WIN32_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_EXTERNAL_SEMAPHORE_WIN32_EXTENSION_NAME = "VK_KHR_external_semaphore_win32"
+
 -- No documentation found for TopLevel "VK_KHR_EXTERNAL_SEMAPHORE_WIN32_SPEC_VERSION"
 pattern VK_KHR_EXTERNAL_SEMAPHORE_WIN32_SPEC_VERSION :: Integral a => a
 pattern VK_KHR_EXTERNAL_SEMAPHORE_WIN32_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_D3D12_FENCE_SUBMIT_INFO_KHR"
 pattern VK_STRUCTURE_TYPE_D3D12_FENCE_SUBMIT_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_D3D12_FENCE_SUBMIT_INFO_KHR = VkStructureType 1000078002
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR"
 pattern VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR = VkStructureType 1000078001
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR"
 pattern VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR = VkStructureType 1000078000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR"
 pattern VK_STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR = VkStructureType 1000078003

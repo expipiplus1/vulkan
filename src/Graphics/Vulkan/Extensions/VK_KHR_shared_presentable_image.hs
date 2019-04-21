@@ -29,9 +29,6 @@ import Foreign.Marshal.Utils
 import Foreign.Ptr
   ( castPtr
   )
-import qualified Graphics.Vulkan.C.Dynamic
-  ( getSwapchainStatusKHR
-  )
 
 
 import Graphics.Vulkan.C.Core10.Core
@@ -41,6 +38,7 @@ import Graphics.Vulkan.C.Core10.Core
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image
   ( VkSharedPresentSurfaceCapabilitiesKHR(..)
+  , vkGetSwapchainStatusKHR
   , pattern VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_KHR
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
@@ -67,25 +65,61 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image
   )
 
 
--- No documentation found for TopLevel "SharedPresentSurfaceCapabilitiesKHR"
+
+-- | VkSharedPresentSurfaceCapabilitiesKHR - structure describing
+-- capabilities of a surface for shared presentation
+--
+-- = Description
+--
+-- Unresolved directive in VkSharedPresentSurfaceCapabilitiesKHR.txt -
+-- include::{generated}\/validity\/structs\/VkSharedPresentSurfaceCapabilitiesKHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data SharedPresentSurfaceCapabilitiesKHR = SharedPresentSurfaceCapabilitiesKHR
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "SharedPresentSurfaceCapabilitiesKHR" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "SharedPresentSurfaceCapabilitiesKHR" "sharedPresentSupportedUsageFlags"
-  vkSharedPresentSupportedUsageFlags :: ImageUsageFlags
+  sharedPresentSupportedUsageFlags :: ImageUsageFlags
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkSharedPresentSurfaceCapabilitiesKHR' and
+-- marshal a 'SharedPresentSurfaceCapabilitiesKHR' into it. The 'VkSharedPresentSurfaceCapabilitiesKHR' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructSharedPresentSurfaceCapabilitiesKHR :: SharedPresentSurfaceCapabilitiesKHR -> (VkSharedPresentSurfaceCapabilitiesKHR -> IO a) -> IO a
-withCStructSharedPresentSurfaceCapabilitiesKHR from cont = maybeWith withSomeVkStruct (vkPNext (from :: SharedPresentSurfaceCapabilitiesKHR)) (\pPNext -> cont (VkSharedPresentSurfaceCapabilitiesKHR VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_KHR pPNext (vkSharedPresentSupportedUsageFlags (from :: SharedPresentSurfaceCapabilitiesKHR))))
+withCStructSharedPresentSurfaceCapabilitiesKHR marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: SharedPresentSurfaceCapabilitiesKHR)) (\pPNext -> cont (VkSharedPresentSurfaceCapabilitiesKHR VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_KHR pPNext (sharedPresentSupportedUsageFlags (marshalled :: SharedPresentSurfaceCapabilitiesKHR))))
+
+-- | A function to read a 'VkSharedPresentSurfaceCapabilitiesKHR' and all additional
+-- structures in the pointer chain into a 'SharedPresentSurfaceCapabilitiesKHR'.
 fromCStructSharedPresentSurfaceCapabilitiesKHR :: VkSharedPresentSurfaceCapabilitiesKHR -> IO SharedPresentSurfaceCapabilitiesKHR
 fromCStructSharedPresentSurfaceCapabilitiesKHR c = SharedPresentSurfaceCapabilitiesKHR <$> -- Univalued Member elided
                                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkSharedPresentSurfaceCapabilitiesKHR)))
                                                                                        <*> pure (vkSharedPresentSupportedUsageFlags (c :: VkSharedPresentSurfaceCapabilitiesKHR))
+
 instance Zero SharedPresentSurfaceCapabilitiesKHR where
   zero = SharedPresentSurfaceCapabilitiesKHR Nothing
                                              zero
 
--- | Wrapper for 'vkGetSwapchainStatusKHR'
+
+
+-- | vkGetSwapchainStatusKHR - Get a swapchain’s status
+--
+-- = Parameters
+--
+-- -   @device@ is the device associated with @swapchain@.
+--
+-- -   @swapchain@ is the swapchain to query.
+--
+-- = Description
+--
+-- Unresolved directive in vkGetSwapchainStatusKHR.txt -
+-- include::{generated}\/validity\/protos\/vkGetSwapchainStatusKHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 getSwapchainStatusKHR :: Device ->  SwapchainKHR ->  IO (VkResult)
-getSwapchainStatusKHR = \(Device device commandTable) -> \swapchain -> Graphics.Vulkan.C.Dynamic.getSwapchainStatusKHR commandTable device swapchain >>= (\r -> when (r < VK_SUCCESS) (throwIO (VulkanException r)) *> (pure r))
+getSwapchainStatusKHR = \(Device device' commandTable) -> \swapchain' -> vkGetSwapchainStatusKHR commandTable device' swapchain' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (pure ret))

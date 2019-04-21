@@ -2,12 +2,21 @@
 {-# language CPP #-}
 {-# language PatternSynonyms #-}
 {-# language DuplicateRecordFields #-}
+{-# language TypeFamilies #-}
 
 module Graphics.Vulkan.Core11.Promoted_From_VK_KHR_subgroup
   ( withCStructPhysicalDeviceSubgroupProperties
   , fromCStructPhysicalDeviceSubgroupProperties
   , PhysicalDeviceSubgroupProperties(..)
   , SubgroupFeatureFlagBits
+  , pattern SUBGROUP_FEATURE_BASIC_BIT
+  , pattern SUBGROUP_FEATURE_VOTE_BIT
+  , pattern SUBGROUP_FEATURE_ARITHMETIC_BIT
+  , pattern SUBGROUP_FEATURE_BALLOT_BIT
+  , pattern SUBGROUP_FEATURE_SHUFFLE_BIT
+  , pattern SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT
+  , pattern SUBGROUP_FEATURE_CLUSTERED_BIT
+  , pattern SUBGROUP_FEATURE_QUAD_BIT
   , SubgroupFeatureFlags
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES
   ) where
@@ -31,6 +40,14 @@ import Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup
   ( VkPhysicalDeviceSubgroupProperties(..)
   , VkSubgroupFeatureFlagBits(..)
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES
+  , pattern VK_SUBGROUP_FEATURE_ARITHMETIC_BIT
+  , pattern VK_SUBGROUP_FEATURE_BALLOT_BIT
+  , pattern VK_SUBGROUP_FEATURE_BASIC_BIT
+  , pattern VK_SUBGROUP_FEATURE_CLUSTERED_BIT
+  , pattern VK_SUBGROUP_FEATURE_QUAD_BIT
+  , pattern VK_SUBGROUP_FEATURE_SHUFFLE_BIT
+  , pattern VK_SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT
+  , pattern VK_SUBGROUP_FEATURE_VOTE_BIT
   )
 import Graphics.Vulkan.Core10.Core
   ( bool32ToBool
@@ -46,23 +63,56 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   )
 
 
--- No documentation found for TopLevel "PhysicalDeviceSubgroupProperties"
+
+-- | VkPhysicalDeviceSubgroupProperties - Structure describing subgroup
+-- support for an implementation
+--
+-- = Members
+--
+-- The members of the
+-- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VkPhysicalDeviceSubgroupProperties'
+-- structure describe the following implementation-dependent limits:
+--
+-- = Description
+--
+-- If the
+-- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VkPhysicalDeviceSubgroupProperties'
+-- structure is included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
+-- it is filled with the implementation-dependent limits.
+--
+-- Unresolved directive in VkPhysicalDeviceSubgroupProperties.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceSubgroupProperties.txt[]
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.PipelineLayout.VkShaderStageFlags',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VkSubgroupFeatureFlags'
 data PhysicalDeviceSubgroupProperties = PhysicalDeviceSubgroupProperties
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceSubgroupProperties" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDeviceSubgroupProperties" "subgroupSize"
-  vkSubgroupSize :: Word32
+  subgroupSize :: Word32
   , -- No documentation found for Nested "PhysicalDeviceSubgroupProperties" "supportedStages"
-  vkSupportedStages :: ShaderStageFlags
+  supportedStages :: ShaderStageFlags
   , -- No documentation found for Nested "PhysicalDeviceSubgroupProperties" "supportedOperations"
-  vkSupportedOperations :: SubgroupFeatureFlags
+  supportedOperations :: SubgroupFeatureFlags
   , -- No documentation found for Nested "PhysicalDeviceSubgroupProperties" "quadOperationsInAllStages"
-  vkQuadOperationsInAllStages :: Bool
+  quadOperationsInAllStages :: Bool
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPhysicalDeviceSubgroupProperties' and
+-- marshal a 'PhysicalDeviceSubgroupProperties' into it. The 'VkPhysicalDeviceSubgroupProperties' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPhysicalDeviceSubgroupProperties :: PhysicalDeviceSubgroupProperties -> (VkPhysicalDeviceSubgroupProperties -> IO a) -> IO a
-withCStructPhysicalDeviceSubgroupProperties from cont = maybeWith withSomeVkStruct (vkPNext (from :: PhysicalDeviceSubgroupProperties)) (\pPNext -> cont (VkPhysicalDeviceSubgroupProperties VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES pPNext (vkSubgroupSize (from :: PhysicalDeviceSubgroupProperties)) (vkSupportedStages (from :: PhysicalDeviceSubgroupProperties)) (vkSupportedOperations (from :: PhysicalDeviceSubgroupProperties)) (boolToBool32 (vkQuadOperationsInAllStages (from :: PhysicalDeviceSubgroupProperties)))))
+withCStructPhysicalDeviceSubgroupProperties marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PhysicalDeviceSubgroupProperties)) (\pPNext -> cont (VkPhysicalDeviceSubgroupProperties VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES pPNext (subgroupSize (marshalled :: PhysicalDeviceSubgroupProperties)) (supportedStages (marshalled :: PhysicalDeviceSubgroupProperties)) (supportedOperations (marshalled :: PhysicalDeviceSubgroupProperties)) (boolToBool32 (quadOperationsInAllStages (marshalled :: PhysicalDeviceSubgroupProperties)))))
+
+-- | A function to read a 'VkPhysicalDeviceSubgroupProperties' and all additional
+-- structures in the pointer chain into a 'PhysicalDeviceSubgroupProperties'.
 fromCStructPhysicalDeviceSubgroupProperties :: VkPhysicalDeviceSubgroupProperties -> IO PhysicalDeviceSubgroupProperties
 fromCStructPhysicalDeviceSubgroupProperties c = PhysicalDeviceSubgroupProperties <$> -- Univalued Member elided
                                                                                  maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceSubgroupProperties)))
@@ -70,13 +120,89 @@ fromCStructPhysicalDeviceSubgroupProperties c = PhysicalDeviceSubgroupProperties
                                                                                  <*> pure (vkSupportedStages (c :: VkPhysicalDeviceSubgroupProperties))
                                                                                  <*> pure (vkSupportedOperations (c :: VkPhysicalDeviceSubgroupProperties))
                                                                                  <*> pure (bool32ToBool (vkQuadOperationsInAllStages (c :: VkPhysicalDeviceSubgroupProperties)))
+
 instance Zero PhysicalDeviceSubgroupProperties where
   zero = PhysicalDeviceSubgroupProperties Nothing
                                           zero
                                           zero
                                           zero
                                           False
--- No documentation found for TopLevel "SubgroupFeatureFlagBits"
+
+
+-- | VkSubgroupFeatureFlagBits - Enum describing what subgroup operations are
+-- supported
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VkSubgroupFeatureFlags'
 type SubgroupFeatureFlagBits = VkSubgroupFeatureFlagBits
--- No documentation found for TopLevel "SubgroupFeatureFlags"
+
+
+-- | 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VK_SUBGROUP_FEATURE_BASIC_BIT'
+-- specifies the device will accept SPIR-V shader modules that contain the
+-- @GroupNonUniform@ capability.
+pattern SUBGROUP_FEATURE_BASIC_BIT :: (a ~ SubgroupFeatureFlagBits) => a
+pattern SUBGROUP_FEATURE_BASIC_BIT = VK_SUBGROUP_FEATURE_BASIC_BIT
+
+
+-- | 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VK_SUBGROUP_FEATURE_VOTE_BIT'
+-- specifies the device will accept SPIR-V shader modules that contain the
+-- @GroupNonUniformVote@ capability.
+pattern SUBGROUP_FEATURE_VOTE_BIT :: (a ~ SubgroupFeatureFlagBits) => a
+pattern SUBGROUP_FEATURE_VOTE_BIT = VK_SUBGROUP_FEATURE_VOTE_BIT
+
+
+-- | 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VK_SUBGROUP_FEATURE_ARITHMETIC_BIT'
+-- specifies the device will accept SPIR-V shader modules that contain the
+-- @GroupNonUniformArithmetic@ capability.
+pattern SUBGROUP_FEATURE_ARITHMETIC_BIT :: (a ~ SubgroupFeatureFlagBits) => a
+pattern SUBGROUP_FEATURE_ARITHMETIC_BIT = VK_SUBGROUP_FEATURE_ARITHMETIC_BIT
+
+
+-- | 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VK_SUBGROUP_FEATURE_BALLOT_BIT'
+-- specifies the device will accept SPIR-V shader modules that contain the
+-- @GroupNonUniformBallot@ capability.
+pattern SUBGROUP_FEATURE_BALLOT_BIT :: (a ~ SubgroupFeatureFlagBits) => a
+pattern SUBGROUP_FEATURE_BALLOT_BIT = VK_SUBGROUP_FEATURE_BALLOT_BIT
+
+
+-- | 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VK_SUBGROUP_FEATURE_SHUFFLE_BIT'
+-- specifies the device will accept SPIR-V shader modules that contain the
+-- @GroupNonUniformShuffle@ capability.
+pattern SUBGROUP_FEATURE_SHUFFLE_BIT :: (a ~ SubgroupFeatureFlagBits) => a
+pattern SUBGROUP_FEATURE_SHUFFLE_BIT = VK_SUBGROUP_FEATURE_SHUFFLE_BIT
+
+
+-- | 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VK_SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT'
+-- specifies the device will accept SPIR-V shader modules that contain the
+-- @GroupNonUniformShuffleRelative@ capability.
+pattern SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT :: (a ~ SubgroupFeatureFlagBits) => a
+pattern SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT = VK_SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT
+
+
+-- | 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VK_SUBGROUP_FEATURE_CLUSTERED_BIT'
+-- specifies the device will accept SPIR-V shader modules that contain the
+-- @GroupNonUniformClustered@ capability.
+pattern SUBGROUP_FEATURE_CLUSTERED_BIT :: (a ~ SubgroupFeatureFlagBits) => a
+pattern SUBGROUP_FEATURE_CLUSTERED_BIT = VK_SUBGROUP_FEATURE_CLUSTERED_BIT
+
+
+-- | 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VK_SUBGROUP_FEATURE_QUAD_BIT'
+-- specifies the device will accept SPIR-V shader modules that contain the
+-- @GroupNonUniformQuad@ capability.
+pattern SUBGROUP_FEATURE_QUAD_BIT :: (a ~ SubgroupFeatureFlagBits) => a
+pattern SUBGROUP_FEATURE_QUAD_BIT = VK_SUBGROUP_FEATURE_QUAD_BIT
+
+-- | VkSubgroupFeatureFlags - Bitmask of VkSubgroupFeatureFlagBits
+--
+-- = Description
+--
+-- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VkSubgroupFeatureFlags'
+-- is a bitmask type for setting a mask of zero or more
+-- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VkSubgroupFeatureFlagBits'.
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VkPhysicalDeviceSubgroupProperties',
+-- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VkSubgroupFeatureFlagBits'
 type SubgroupFeatureFlags = SubgroupFeatureFlagBits

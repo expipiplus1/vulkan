@@ -11,11 +11,9 @@ module Graphics.Vulkan.C.Extensions.VK_FUCHSIA_imagepipe_surface
   ( VkImagePipeSurfaceCreateFlagsFUCHSIA(..)
   , VkImagePipeSurfaceCreateInfoFUCHSIA(..)
   , Zx_handle_t
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkCreateImagePipeSurfaceFUCHSIA
-#endif
   , FN_vkCreateImagePipeSurfaceFUCHSIA
   , PFN_vkCreateImagePipeSurfaceFUCHSIA
+  , vkCreateImagePipeSurfaceFUCHSIA
   , pattern VK_FUCHSIA_IMAGEPIPE_SURFACE_EXTENSION_NAME
   , pattern VK_FUCHSIA_IMAGEPIPE_SURFACE_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_IMAGEPIPE_SURFACE_CREATE_INFO_FUCHSIA
@@ -68,6 +66,9 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkAllocationCallbacks(..)
   , VkInstance
   )
+import Graphics.Vulkan.C.Dynamic
+  ( InstanceCmds(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_KHR_surface
   ( VkSurfaceKHR
   )
@@ -97,13 +98,14 @@ instance Read VkImagePipeSurfaceCreateFlagsFUCHSIA where
                     )
 
 
+
 -- | VkImagePipeSurfaceCreateInfoFUCHSIA - Structure specifying parameters of
 -- a newly created ImagePipe surface object
 --
 -- == Valid Usage
 --
 -- Unresolved directive in VkImagePipeSurfaceCreateInfoFUCHSIA.txt -
--- include::..\/validity\/structs\/VkImagePipeSurfaceCreateInfoFUCHSIA.txt[]
+-- include::{generated}\/validity\/structs\/VkImagePipeSurfaceCreateInfoFUCHSIA.txt[]
 --
 -- = See Also
 --
@@ -133,14 +135,15 @@ instance Storable VkImagePipeSurfaceCreateInfoFUCHSIA where
                 *> poke (ptr `plusPtr` 20) (vkImagePipeHandle (poked :: VkImagePipeSurfaceCreateInfoFUCHSIA))
 
 instance Zero VkImagePipeSurfaceCreateInfoFUCHSIA where
-  zero = VkImagePipeSurfaceCreateInfoFUCHSIA zero
+  zero = VkImagePipeSurfaceCreateInfoFUCHSIA VK_STRUCTURE_TYPE_IMAGEPIPE_SURFACE_CREATE_INFO_FUCHSIA
                                              zero
                                              zero
                                              zero
+
 -- No documentation found for TopLevel "Zx_handle_t"
 type Zx_handle_t = Word32
   
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkCreateImagePipeSurfaceFUCHSIA - Create a
 -- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' object for a
 -- Fuchsia ImagePipe
@@ -156,7 +159,7 @@ type Zx_handle_t = Word32
 -- -   @pAllocator@ is the allocator used for host memory allocated for the
 --     surface object when there is no more specific allocator available
 --     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
 --
 -- -   @pSurface@ points to a
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
@@ -165,26 +168,39 @@ type Zx_handle_t = Word32
 -- = Description
 --
 -- Unresolved directive in vkCreateImagePipeSurfaceFUCHSIA.txt -
--- include::..\/validity\/protos\/vkCreateImagePipeSurfaceFUCHSIA.txt[]
+-- include::{generated}\/validity\/protos\/vkCreateImagePipeSurfaceFUCHSIA.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCreateImagePipeSurfaceFUCHSIA" vkCreateImagePipeSurfaceFUCHSIA :: ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkImagePipeSurfaceCreateInfoFUCHSIA) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
-
+#else
+vkCreateImagePipeSurfaceFUCHSIA :: InstanceCmds -> ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkImagePipeSurfaceCreateInfoFUCHSIA) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
+vkCreateImagePipeSurfaceFUCHSIA deviceCmds = mkVkCreateImagePipeSurfaceFUCHSIA (pVkCreateImagePipeSurfaceFUCHSIA deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCreateImagePipeSurfaceFUCHSIA
+  :: FunPtr (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkImagePipeSurfaceCreateInfoFUCHSIA) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult) -> (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkImagePipeSurfaceCreateInfoFUCHSIA) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult)
+#endif
+
 type FN_vkCreateImagePipeSurfaceFUCHSIA = ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkImagePipeSurfaceCreateInfoFUCHSIA) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
 type PFN_vkCreateImagePipeSurfaceFUCHSIA = FunPtr FN_vkCreateImagePipeSurfaceFUCHSIA
+
 -- No documentation found for TopLevel "VK_FUCHSIA_IMAGEPIPE_SURFACE_EXTENSION_NAME"
 pattern VK_FUCHSIA_IMAGEPIPE_SURFACE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_FUCHSIA_IMAGEPIPE_SURFACE_EXTENSION_NAME = "VK_FUCHSIA_imagepipe_surface"
+
 -- No documentation found for TopLevel "VK_FUCHSIA_IMAGEPIPE_SURFACE_SPEC_VERSION"
 pattern VK_FUCHSIA_IMAGEPIPE_SURFACE_SPEC_VERSION :: Integral a => a
 pattern VK_FUCHSIA_IMAGEPIPE_SURFACE_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMAGEPIPE_SURFACE_CREATE_INFO_FUCHSIA"
 pattern VK_STRUCTURE_TYPE_IMAGEPIPE_SURFACE_CREATE_INFO_FUCHSIA :: VkStructureType
 pattern VK_STRUCTURE_TYPE_IMAGEPIPE_SURFACE_CREATE_INFO_FUCHSIA = VkStructureType 1000214000

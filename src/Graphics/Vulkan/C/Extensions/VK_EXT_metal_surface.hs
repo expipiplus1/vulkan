@@ -11,11 +11,9 @@ module Graphics.Vulkan.C.Extensions.VK_EXT_metal_surface
   ( CAMetalLayer
   , VkMetalSurfaceCreateFlagsEXT(..)
   , VkMetalSurfaceCreateInfoEXT(..)
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkCreateMetalSurfaceEXT
-#endif
   , FN_vkCreateMetalSurfaceEXT
   , PFN_vkCreateMetalSurfaceEXT
+  , vkCreateMetalSurfaceEXT
   , pattern VK_EXT_METAL_SURFACE_EXTENSION_NAME
   , pattern VK_EXT_METAL_SURFACE_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT
@@ -65,6 +63,9 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkAllocationCallbacks(..)
   , VkInstance
   )
+import Graphics.Vulkan.C.Dynamic
+  ( InstanceCmds(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_KHR_surface
   ( VkSurfaceKHR
   )
@@ -75,6 +76,7 @@ import Graphics.Vulkan.NamedType
 
 -- | Opaque data
 data CAMetalLayer
+
 -- ** VkMetalSurfaceCreateFlagsEXT
 
 -- No documentation found for TopLevel "VkMetalSurfaceCreateFlagsEXT"
@@ -96,13 +98,14 @@ instance Read VkMetalSurfaceCreateFlagsEXT where
                     )
 
 
+
 -- | VkMetalSurfaceCreateInfoEXT - Structure specifying parameters of a newly
 -- created Metal surface object
 --
 -- == Valid Usage
 --
 -- Unresolved directive in VkMetalSurfaceCreateInfoEXT.txt -
--- include::..\/validity\/structs\/VkMetalSurfaceCreateInfoEXT.txt[]
+-- include::{generated}\/validity\/structs\/VkMetalSurfaceCreateInfoEXT.txt[]
 --
 -- = See Also
 --
@@ -133,11 +136,11 @@ instance Storable VkMetalSurfaceCreateInfoEXT where
                 *> poke (ptr `plusPtr` 24) (vkPLayer (poked :: VkMetalSurfaceCreateInfoEXT))
 
 instance Zero VkMetalSurfaceCreateInfoEXT where
-  zero = VkMetalSurfaceCreateInfoEXT zero
+  zero = VkMetalSurfaceCreateInfoEXT VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT
                                      zero
                                      zero
                                      zero
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkCreateMetalSurfaceEXT - Create a VkSurfaceKHR object for CAMetalLayer
 --
 -- = Parameters
@@ -151,34 +154,48 @@ instance Zero VkMetalSurfaceCreateInfoEXT where
 -- -   @pAllocator@ is the allocator used for host memory allocated for the
 --     surface object when there is no more specific allocator available
 --     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
 --
--- -   @pSurface@ points to a @VkSurfaceKHR@ handle in which the created
---     surface object is returned.
+-- -   @pSurface@ points to a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
+--     which the created surface object is returned.
 --
 -- = Description
 --
 -- Unresolved directive in vkCreateMetalSurfaceEXT.txt -
--- include::..\/validity\/protos\/vkCreateMetalSurfaceEXT.txt[]
+-- include::{generated}\/validity\/protos\/vkCreateMetalSurfaceEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkCreateMetalSurfaceEXT" vkCreateMetalSurfaceEXT :: ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkMetalSurfaceCreateInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
-
+#else
+vkCreateMetalSurfaceEXT :: InstanceCmds -> ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkMetalSurfaceCreateInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
+vkCreateMetalSurfaceEXT deviceCmds = mkVkCreateMetalSurfaceEXT (pVkCreateMetalSurfaceEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkCreateMetalSurfaceEXT
+  :: FunPtr (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkMetalSurfaceCreateInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult) -> (("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkMetalSurfaceCreateInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult)
+#endif
+
 type FN_vkCreateMetalSurfaceEXT = ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkMetalSurfaceCreateInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
 type PFN_vkCreateMetalSurfaceEXT = FunPtr FN_vkCreateMetalSurfaceEXT
+
 -- No documentation found for TopLevel "VK_EXT_METAL_SURFACE_EXTENSION_NAME"
 pattern VK_EXT_METAL_SURFACE_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_METAL_SURFACE_EXTENSION_NAME = "VK_EXT_metal_surface"
+
 -- No documentation found for TopLevel "VK_EXT_METAL_SURFACE_SPEC_VERSION"
 pattern VK_EXT_METAL_SURFACE_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_METAL_SURFACE_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT"
 pattern VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT = VkStructureType 1000217000

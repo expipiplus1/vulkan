@@ -10,16 +10,12 @@ module Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2
   ( VkPhysicalDeviceSurfaceInfo2KHR(..)
   , VkSurfaceCapabilities2KHR(..)
   , VkSurfaceFormat2KHR(..)
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkGetPhysicalDeviceSurfaceCapabilities2KHR
-#endif
   , FN_vkGetPhysicalDeviceSurfaceCapabilities2KHR
   , PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkGetPhysicalDeviceSurfaceFormats2KHR
-#endif
+  , vkGetPhysicalDeviceSurfaceCapabilities2KHR
   , FN_vkGetPhysicalDeviceSurfaceFormats2KHR
   , PFN_vkGetPhysicalDeviceSurfaceFormats2KHR
+  , vkGetPhysicalDeviceSurfaceFormats2KHR
   , pattern VK_KHR_GET_SURFACE_CAPABILITIES_2_EXTENSION_NAME
   , pattern VK_KHR_GET_SURFACE_CAPABILITIES_2_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR
@@ -52,6 +48,9 @@ import Graphics.Vulkan.C.Core10.Core
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkPhysicalDevice
   )
+import Graphics.Vulkan.C.Dynamic
+  ( InstanceCmds(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_KHR_surface
   ( VkSurfaceCapabilitiesKHR(..)
   , VkSurfaceFormatKHR(..)
@@ -67,7 +66,7 @@ import Graphics.Vulkan.NamedType
 --
 -- = Description
 --
--- The members of @VkPhysicalDeviceSurfaceInfo2KHR@ correspond to the
+-- The members of 'VkPhysicalDeviceSurfaceInfo2KHR' correspond to the
 -- arguments to
 -- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.vkGetPhysicalDeviceSurfaceCapabilitiesKHR',
 -- with @sType@ and @pNext@ added for extensibility.
@@ -92,21 +91,15 @@ import Graphics.Vulkan.NamedType
 -- -   If the @pNext@ chain includes an instance of
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.VkSurfaceFullScreenExclusiveInfoEXT'
 --     with its @fullScreenExclusive@ member set to
---     @VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT@, and @surface@
---     was created using
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT',
+--     and @surface@ was created using
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_win32_surface.vkCreateWin32SurfaceKHR',
 --     an instance of
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.VkSurfaceFullScreenExclusiveWin32InfoEXT'
 --     /must/ be present in the @pNext@ chain
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR@
---
--- -   @pNext@ /must/ be @NULL@
---
--- -   @surface@ /must/ be a valid @VkSurfaceKHR@ handle
+-- Unresolved directive in VkPhysicalDeviceSurfaceInfo2KHR.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceSurfaceInfo2KHR.txt[]
 --
 -- = See Also
 --
@@ -132,22 +125,25 @@ instance Storable VkPhysicalDeviceSurfaceInfo2KHR where
                 *> poke (ptr `plusPtr` 16) (vkSurface (poked :: VkPhysicalDeviceSurfaceInfo2KHR))
 
 instance Zero VkPhysicalDeviceSurfaceInfo2KHR where
-  zero = VkPhysicalDeviceSurfaceInfo2KHR zero
+  zero = VkPhysicalDeviceSurfaceInfo2KHR VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR
                                          zero
                                          zero
+
 -- | VkSurfaceCapabilities2KHR - Structure describing capabilities of a
 -- surface
 --
--- == Valid Usage (Implicit)
+-- = Description
+--
+-- Unresolved directive in VkSurfaceCapabilities2KHR.txt -
+-- include::{generated}\/validity\/structs\/VkSurfaceCapabilities2KHR.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkSurfaceCapabilities2KHR = VkSurfaceCapabilities2KHR
-  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
-  -- 'Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image.VkSharedPresentSurfaceCapabilitiesKHR'
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
   , -- | @surfaceCapabilities@ is a structure of type
   -- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceCapabilitiesKHR'
@@ -167,21 +163,25 @@ instance Storable VkSurfaceCapabilities2KHR where
                 *> poke (ptr `plusPtr` 16) (vkSurfaceCapabilities (poked :: VkSurfaceCapabilities2KHR))
 
 instance Zero VkSurfaceCapabilities2KHR where
-  zero = VkSurfaceCapabilities2KHR zero
+  zero = VkSurfaceCapabilities2KHR VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR
                                    zero
                                    zero
+
 -- | VkSurfaceFormat2KHR - Structure describing a supported swapchain format
 -- tuple
 --
--- == Valid Usage (Implicit)
+-- = Description
+--
+-- Unresolved directive in VkSurfaceFormat2KHR.txt -
+-- include::{generated}\/validity\/structs\/VkSurfaceFormat2KHR.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkSurfaceFormat2KHR = VkSurfaceFormat2KHR
-  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
   , -- | @surfaceFormat@ is an instance of
   -- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceFormatKHR'
@@ -202,10 +202,10 @@ instance Storable VkSurfaceFormat2KHR where
                 *> poke (ptr `plusPtr` 16) (vkSurfaceFormat (poked :: VkSurfaceFormat2KHR))
 
 instance Zero VkSurfaceFormat2KHR where
-  zero = VkSurfaceFormat2KHR zero
+  zero = VkSurfaceFormat2KHR VK_STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR
                              zero
                              zero
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkGetPhysicalDeviceSurfaceCapabilities2KHR - Reports capabilities of a
 -- surface on a physical device
 --
@@ -226,7 +226,7 @@ instance Zero VkSurfaceFormat2KHR where
 --
 -- = Description
 --
--- @vkGetPhysicalDeviceSurfaceCapabilities2KHR@ behaves similarly to
+-- 'vkGetPhysicalDeviceSurfaceCapabilities2KHR' behaves similarly to
 -- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.vkGetPhysicalDeviceSurfaceCapabilitiesKHR',
 -- with the ability to specify extended inputs via chained input
 -- structures, and to return extended information via chained output
@@ -241,41 +241,32 @@ instance Zero VkSurfaceFormat2KHR where
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.VkSurfaceFullScreenExclusiveWin32InfoEXT'
 --     /must/ be included in the @pNext@ chain of @pSurfaceInfo@.
 --
--- == Valid Usage (Implicit)
---
--- -   @physicalDevice@ /must/ be a valid @VkPhysicalDevice@ handle
---
--- -   @pSurfaceInfo@ /must/ be a valid pointer to a valid
---     @VkPhysicalDeviceSurfaceInfo2KHR@ structure
---
--- -   @pSurfaceCapabilities@ /must/ be a valid pointer to a
---     @VkSurfaceCapabilities2KHR@ structure
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
---
---     -   @VK_ERROR_SURFACE_LOST_KHR@
+-- Unresolved directive in vkGetPhysicalDeviceSurfaceCapabilities2KHR.txt -
+-- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceSurfaceCapabilities2KHR.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetPhysicalDeviceSurfaceCapabilities2KHR" vkGetPhysicalDeviceSurfaceCapabilities2KHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilities2KHR) -> IO VkResult
-
+#else
+vkGetPhysicalDeviceSurfaceCapabilities2KHR :: InstanceCmds -> ("physicalDevice" ::: VkPhysicalDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilities2KHR) -> IO VkResult
+vkGetPhysicalDeviceSurfaceCapabilities2KHR deviceCmds = mkVkGetPhysicalDeviceSurfaceCapabilities2KHR (pVkGetPhysicalDeviceSurfaceCapabilities2KHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetPhysicalDeviceSurfaceCapabilities2KHR
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilities2KHR) -> IO VkResult) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilities2KHR) -> IO VkResult)
+#endif
+
 type FN_vkGetPhysicalDeviceSurfaceCapabilities2KHR = ("physicalDevice" ::: VkPhysicalDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilities2KHR) -> IO VkResult
 type PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR = FunPtr FN_vkGetPhysicalDeviceSurfaceCapabilities2KHR
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkGetPhysicalDeviceSurfaceFormats2KHR - Query color formats supported by
 -- surface
 --
@@ -309,62 +300,52 @@ type PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR = FunPtr FN_vkGetPhysicalDev
 -- supported, at most @pSurfaceFormatCount@ structures will be written. If
 -- @pSurfaceFormatCount@ is smaller than the number of format tuples
 -- supported for the surface parameters described in @pSurfaceInfo@,
--- @VK_INCOMPLETE@ will be returned instead of @VK_SUCCESS@ to indicate
--- that not all the available values were returned.
+-- 'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE' will be returned instead
+-- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS' to indicate that not all
+-- the available values were returned.
 --
--- == Valid Usage (Implicit)
---
--- -   @physicalDevice@ /must/ be a valid @VkPhysicalDevice@ handle
---
--- -   @pSurfaceInfo@ /must/ be a valid pointer to a valid
---     @VkPhysicalDeviceSurfaceInfo2KHR@ structure
---
--- -   @pSurfaceFormatCount@ /must/ be a valid pointer to a @uint32_t@
---     value
---
--- -   If the value referenced by @pSurfaceFormatCount@ is not @0@, and
---     @pSurfaceFormats@ is not @NULL@, @pSurfaceFormats@ /must/ be a valid
---     pointer to an array of @pSurfaceFormatCount@ @VkSurfaceFormat2KHR@
---     structures
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
---     -   @VK_INCOMPLETE@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
---
---     -   @VK_ERROR_SURFACE_LOST_KHR@
+-- Unresolved directive in vkGetPhysicalDeviceSurfaceFormats2KHR.txt -
+-- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceSurfaceFormats2KHR.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetPhysicalDeviceSurfaceFormats2KHR" vkGetPhysicalDeviceSurfaceFormats2KHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pSurfaceFormatCount" ::: Ptr Word32) -> ("pSurfaceFormats" ::: Ptr VkSurfaceFormat2KHR) -> IO VkResult
-
+#else
+vkGetPhysicalDeviceSurfaceFormats2KHR :: InstanceCmds -> ("physicalDevice" ::: VkPhysicalDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pSurfaceFormatCount" ::: Ptr Word32) -> ("pSurfaceFormats" ::: Ptr VkSurfaceFormat2KHR) -> IO VkResult
+vkGetPhysicalDeviceSurfaceFormats2KHR deviceCmds = mkVkGetPhysicalDeviceSurfaceFormats2KHR (pVkGetPhysicalDeviceSurfaceFormats2KHR deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetPhysicalDeviceSurfaceFormats2KHR
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pSurfaceFormatCount" ::: Ptr Word32) -> ("pSurfaceFormats" ::: Ptr VkSurfaceFormat2KHR) -> IO VkResult) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pSurfaceFormatCount" ::: Ptr Word32) -> ("pSurfaceFormats" ::: Ptr VkSurfaceFormat2KHR) -> IO VkResult)
+#endif
+
 type FN_vkGetPhysicalDeviceSurfaceFormats2KHR = ("physicalDevice" ::: VkPhysicalDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pSurfaceFormatCount" ::: Ptr Word32) -> ("pSurfaceFormats" ::: Ptr VkSurfaceFormat2KHR) -> IO VkResult
 type PFN_vkGetPhysicalDeviceSurfaceFormats2KHR = FunPtr FN_vkGetPhysicalDeviceSurfaceFormats2KHR
+
 -- No documentation found for TopLevel "VK_KHR_GET_SURFACE_CAPABILITIES_2_EXTENSION_NAME"
 pattern VK_KHR_GET_SURFACE_CAPABILITIES_2_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_GET_SURFACE_CAPABILITIES_2_EXTENSION_NAME = "VK_KHR_get_surface_capabilities2"
+
 -- No documentation found for TopLevel "VK_KHR_GET_SURFACE_CAPABILITIES_2_SPEC_VERSION"
 pattern VK_KHR_GET_SURFACE_CAPABILITIES_2_SPEC_VERSION :: Integral a => a
 pattern VK_KHR_GET_SURFACE_CAPABILITIES_2_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR = VkStructureType 1000119000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR"
 pattern VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR = VkStructureType 1000119001
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR"
 pattern VK_STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR = VkStructureType 1000119002

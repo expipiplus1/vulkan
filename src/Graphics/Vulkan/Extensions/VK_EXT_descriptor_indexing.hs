@@ -1,10 +1,15 @@
 {-# language Strict #-}
 {-# language CPP #-}
 {-# language PatternSynonyms #-}
+{-# language TypeFamilies #-}
 {-# language DuplicateRecordFields #-}
 
 module Graphics.Vulkan.Extensions.VK_EXT_descriptor_indexing
   ( DescriptorBindingFlagBitsEXT
+  , pattern DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT
+  , pattern DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT_EXT
+  , pattern DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT
+  , pattern DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT
   , DescriptorBindingFlagsEXT
   , withCStructDescriptorSetLayoutBindingFlagsCreateInfoEXT
   , fromCStructDescriptorSetLayoutBindingFlagsCreateInfoEXT
@@ -72,6 +77,10 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing
   , VkDescriptorSetVariableDescriptorCountLayoutSupportEXT(..)
   , VkPhysicalDeviceDescriptorIndexingFeaturesEXT(..)
   , VkPhysicalDeviceDescriptorIndexingPropertiesEXT(..)
+  , pattern VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT
+  , pattern VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT
+  , pattern VK_DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT_EXT
+  , pattern VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT
   , pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO_EXT
   , pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO_EXT
   , pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT_EXT
@@ -99,117 +108,463 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing
   )
 
 
--- No documentation found for TopLevel "DescriptorBindingFlagBitsEXT"
+-- | VkDescriptorBindingFlagBitsEXT - Bitmask specifying descriptor set
+-- layout binding properties
+--
+-- = Description
+--
+-- __Note__
+--
+-- Note that while
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT'
+-- and
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT_EXT'
+-- both involve updates to descriptor sets after they are bound,
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT_EXT'
+-- is a weaker requirement since it is only about descriptors that are not
+-- used, whereas
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT'
+-- requires the implementation to observe updates to descriptors that are
+-- used.
+--
+-- = See Also
+--
+-- No cross-references are available
 type DescriptorBindingFlagBitsEXT = VkDescriptorBindingFlagBitsEXT
--- No documentation found for TopLevel "DescriptorBindingFlagsEXT"
+
+
+-- | 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT'
+-- indicates that if descriptors in this binding are updated between when
+-- the descriptor set is bound in a command buffer and when that command
+-- buffer is submitted to a queue, then the submission will use the most
+-- recently set descriptors for this binding and the updates do not
+-- invalidate the command buffer. Descriptor bindings created with this
+-- flag are also partially exempt from the external synchronization
+-- requirement in
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template.vkUpdateDescriptorSetWithTemplateKHR'
+-- and 'Graphics.Vulkan.C.Core10.DescriptorSet.vkUpdateDescriptorSets'.
+-- They /can/ be updated concurrently with the set being bound to a command
+-- buffer in another thread, but not concurrently with the set being reset
+-- or freed.
+pattern DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT :: (a ~ DescriptorBindingFlagBitsEXT) => a
+pattern DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT = VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT
+
+
+-- | 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT_EXT'
+-- indicates that descriptors in this binding /can/ be updated after a
+-- command buffer has bound this descriptor set, or while a command buffer
+-- that uses this descriptor set is pending execution, as long as the
+-- descriptors that are updated are not used by those command buffers. If
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT'
+-- is also set, then descriptors /can/ be updated as long as they are not
+-- dynamically used by any shader invocations. If
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT'
+-- is not set, then descriptors /can/ be updated as long as they are not
+-- statically used by any shader invocations.
+pattern DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT_EXT :: (a ~ DescriptorBindingFlagBitsEXT) => a
+pattern DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT_EXT = VK_DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT_EXT
+
+
+-- | 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT'
+-- indicates that descriptors in this binding that are not /dynamically
+-- used/ need not contain valid descriptors at the time the descriptors are
+-- consumed. A descriptor is dynamically used if any shader invocation
+-- executes an instruction that performs any memory access using the
+-- descriptor.
+pattern DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT :: (a ~ DescriptorBindingFlagBitsEXT) => a
+pattern DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT = VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT
+
+
+-- | 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT'
+-- indicates that this descriptor binding has a variable size that will be
+-- specified when a descriptor set is allocated using this layout. The
+-- value of @descriptorCount@ is treated as an upper bound on the size of
+-- the binding. This /must/ only be used for the last binding in the
+-- descriptor set layout (i.e. the binding with the largest value of
+-- @binding@). For the purposes of counting against limits such as
+-- @maxDescriptorSet@* and @maxPerStageDescriptor@*, the full value of
+-- @descriptorCount@ is counted , except for descriptor bindings with a
+-- descriptor type of
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+-- where @descriptorCount@ specifies the upper bound on the byte size of
+-- the binding, thus it counts against the
+-- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#limits-maxInlineUniformBlockSize maxInlineUniformBlockSize>
+-- limit instead. .
+pattern DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT :: (a ~ DescriptorBindingFlagBitsEXT) => a
+pattern DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT = VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT
+
+-- | VkDescriptorBindingFlagsEXT - Bitmask of VkDescriptorBindingFlagBitsEXT
+--
+-- = Description
+--
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkDescriptorBindingFlagsEXT'
+-- is a bitmask type for setting a mask of zero or more
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkDescriptorBindingFlagBitsEXT'.
+--
+-- = See Also
+--
+-- No cross-references are available
 type DescriptorBindingFlagsEXT = DescriptorBindingFlagBitsEXT
--- No documentation found for TopLevel "DescriptorSetLayoutBindingFlagsCreateInfoEXT"
+
+
+-- | VkDescriptorSetLayoutBindingFlagsCreateInfoEXT - Structure specifying
+-- creation flags for descriptor set layout bindings
+--
+-- = Description
+--
+-- If @bindingCount@ is zero or if this structure is not in the @pNext@
+-- chain, the
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkDescriptorBindingFlagsEXT'
+-- for each descriptor set layout binding is considered to be zero.
+-- Otherwise, the descriptor set layout binding at
+-- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutCreateInfo'::@pBindings@[i]
+-- uses the flags in @pBindingFlags@[i].
+--
+-- == Valid Usage
+--
+-- -   If @bindingCount@ is not zero, @bindingCount@ /must/ equal
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutCreateInfo'::@bindingCount@
+--
+-- -   If
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutCreateInfo'::@flags@
+--     includes
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',
+--     then all elements of @pBindingFlags@ /must/ not include
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT_EXT',
+--     or
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT'
+--
+-- -   If an element of @pBindingFlags@ includes
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT',
+--     then all other elements of
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutCreateInfo'::@pBindings@
+--     /must/ have a smaller value of @binding@
+--
+-- -   If
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingFeaturesEXT'::@descriptorBindingUniformBufferUpdateAfterBind@
+--     is not enabled, all bindings with descriptor type
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER'
+--     /must/ not use
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT'
+--
+-- -   If
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingFeaturesEXT'::@descriptorBindingSampledImageUpdateAfterBind@
+--     is not enabled, all bindings with descriptor type
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLER',
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
+--     or
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE'
+--     /must/ not use
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT'
+--
+-- -   If
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingFeaturesEXT'::@descriptorBindingStorageImageUpdateAfterBind@
+--     is not enabled, all bindings with descriptor type
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE'
+--     /must/ not use
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT'
+--
+-- -   If
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingFeaturesEXT'::@descriptorBindingStorageBufferUpdateAfterBind@
+--     is not enabled, all bindings with descriptor type
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER'
+--     /must/ not use
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT'
+--
+-- -   If
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingFeaturesEXT'::@descriptorBindingUniformTexelBufferUpdateAfterBind@
+--     is not enabled, all bindings with descriptor type
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
+--     /must/ not use
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT'
+--
+-- -   If
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingFeaturesEXT'::@descriptorBindingStorageTexelBufferUpdateAfterBind@
+--     is not enabled, all bindings with descriptor type
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+--     /must/ not use
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT'
+--
+-- -   If
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VkPhysicalDeviceInlineUniformBlockFeaturesEXT'::@descriptorBindingInlineUniformBlockUpdateAfterBind@
+--     is not enabled, all bindings with descriptor type
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+--     /must/ not use
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT'
+--
+-- -   All bindings with descriptor type
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
+--     or
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
+--     /must/ not use
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT'
+--
+-- -   If
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingFeaturesEXT'::@descriptorBindingUpdateUnusedWhilePending@
+--     is not enabled, all elements of @pBindingFlags@ /must/ not include
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT_EXT'
+--
+-- -   If
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingFeaturesEXT'::@descriptorBindingPartiallyBound@
+--     is not enabled, all elements of @pBindingFlags@ /must/ not include
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT'
+--
+-- -   If
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingFeaturesEXT'::@descriptorBindingVariableDescriptorCount@
+--     is not enabled, all elements of @pBindingFlags@ /must/ not include
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT'
+--
+-- -   If an element of @pBindingFlags@ includes
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT',
+--     that element’s @descriptorType@ /must/ not be
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
+--     or
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
+--
+-- Unresolved directive in
+-- VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.txt -
+-- include::{generated}\/validity\/structs\/VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data DescriptorSetLayoutBindingFlagsCreateInfoEXT = DescriptorSetLayoutBindingFlagsCreateInfoEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "DescriptorSetLayoutBindingFlagsCreateInfoEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   -- Optional length valued member elided
   , -- No documentation found for Nested "DescriptorSetLayoutBindingFlagsCreateInfoEXT" "pBindingFlags"
-  vkPBindingFlags :: Maybe (Vector DescriptorBindingFlagsEXT)
+  bindingFlags :: Maybe (Vector DescriptorBindingFlagsEXT)
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkDescriptorSetLayoutBindingFlagsCreateInfoEXT' and
+-- marshal a 'DescriptorSetLayoutBindingFlagsCreateInfoEXT' into it. The 'VkDescriptorSetLayoutBindingFlagsCreateInfoEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructDescriptorSetLayoutBindingFlagsCreateInfoEXT :: DescriptorSetLayoutBindingFlagsCreateInfoEXT -> (VkDescriptorSetLayoutBindingFlagsCreateInfoEXT -> IO a) -> IO a
-withCStructDescriptorSetLayoutBindingFlagsCreateInfoEXT from cont = maybeWith (withVec (&)) (vkPBindingFlags (from :: DescriptorSetLayoutBindingFlagsCreateInfoEXT)) (\pBindingFlags -> maybeWith withSomeVkStruct (vkPNext (from :: DescriptorSetLayoutBindingFlagsCreateInfoEXT)) (\pPNext -> cont (VkDescriptorSetLayoutBindingFlagsCreateInfoEXT VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO_EXT pPNext (maybe 0 (fromIntegral . Data.Vector.length) (vkPBindingFlags (from :: DescriptorSetLayoutBindingFlagsCreateInfoEXT))) pBindingFlags)))
+withCStructDescriptorSetLayoutBindingFlagsCreateInfoEXT marshalled cont = maybeWith (withVec (&)) (bindingFlags (marshalled :: DescriptorSetLayoutBindingFlagsCreateInfoEXT)) (\pPBindingFlags -> maybeWith withSomeVkStruct (next (marshalled :: DescriptorSetLayoutBindingFlagsCreateInfoEXT)) (\pPNext -> cont (VkDescriptorSetLayoutBindingFlagsCreateInfoEXT VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO_EXT pPNext (maybe 0 (fromIntegral . Data.Vector.length) (bindingFlags (marshalled :: DescriptorSetLayoutBindingFlagsCreateInfoEXT))) pPBindingFlags)))
+
+-- | A function to read a 'VkDescriptorSetLayoutBindingFlagsCreateInfoEXT' and all additional
+-- structures in the pointer chain into a 'DescriptorSetLayoutBindingFlagsCreateInfoEXT'.
 fromCStructDescriptorSetLayoutBindingFlagsCreateInfoEXT :: VkDescriptorSetLayoutBindingFlagsCreateInfoEXT -> IO DescriptorSetLayoutBindingFlagsCreateInfoEXT
 fromCStructDescriptorSetLayoutBindingFlagsCreateInfoEXT c = DescriptorSetLayoutBindingFlagsCreateInfoEXT <$> -- Univalued Member elided
                                                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDescriptorSetLayoutBindingFlagsCreateInfoEXT)))
                                                                                                          -- Optional length valued member elided
                                                                                                          <*> maybePeek (\p -> Data.Vector.generateM (fromIntegral (vkBindingCount (c :: VkDescriptorSetLayoutBindingFlagsCreateInfoEXT))) (peekElemOff p)) (vkPBindingFlags (c :: VkDescriptorSetLayoutBindingFlagsCreateInfoEXT))
+
 instance Zero DescriptorSetLayoutBindingFlagsCreateInfoEXT where
   zero = DescriptorSetLayoutBindingFlagsCreateInfoEXT Nothing
                                                       Nothing
--- No documentation found for TopLevel "DescriptorSetVariableDescriptorCountAllocateInfoEXT"
+
+
+
+-- | VkDescriptorSetVariableDescriptorCountAllocateInfoEXT - Structure
+-- specifying additional allocation parameters for descriptor sets
+--
+-- = Description
+--
+-- If @descriptorSetCount@ is zero or this structure is not included in the
+-- @pNext@ chain, then the variable lengths are considered to be zero.
+-- Otherwise, @pDescriptorCounts@[i] is the number of descriptors in the
+-- variable count descriptor binding in the corresponding descriptor set
+-- layout. If the variable count descriptor binding in the corresponding
+-- descriptor set layout has a descriptor type of
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+-- then @pDescriptorCounts@[i] specifies the binding’s capacity in bytes.
+-- If
+-- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetAllocateInfo'::@pSetLayouts@[i]
+-- does not include a variable count descriptor binding, then
+-- @pDescriptorCounts@[i] is ignored.
+--
+-- == Valid Usage
+--
+-- -   If @descriptorSetCount@ is not zero, @descriptorSetCount@ /must/
+--     equal
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetAllocateInfo'::@descriptorSetCount@
+--
+-- -   If
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetAllocateInfo'::@pSetLayouts@[i]
+--     has a variable descriptor count binding, then @pDescriptorCounts@[i]
+--     /must/ be less than or equal to the descriptor count specified for
+--     that binding when the descriptor set layout was created.
+--
+-- Unresolved directive in
+-- VkDescriptorSetVariableDescriptorCountAllocateInfoEXT.txt -
+-- include::{generated}\/validity\/structs\/VkDescriptorSetVariableDescriptorCountAllocateInfoEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data DescriptorSetVariableDescriptorCountAllocateInfoEXT = DescriptorSetVariableDescriptorCountAllocateInfoEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "DescriptorSetVariableDescriptorCountAllocateInfoEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   -- Length valued member elided
   , -- No documentation found for Nested "DescriptorSetVariableDescriptorCountAllocateInfoEXT" "pDescriptorCounts"
-  vkPDescriptorCounts :: Vector Word32
+  descriptorCounts :: Vector Word32
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkDescriptorSetVariableDescriptorCountAllocateInfoEXT' and
+-- marshal a 'DescriptorSetVariableDescriptorCountAllocateInfoEXT' into it. The 'VkDescriptorSetVariableDescriptorCountAllocateInfoEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructDescriptorSetVariableDescriptorCountAllocateInfoEXT :: DescriptorSetVariableDescriptorCountAllocateInfoEXT -> (VkDescriptorSetVariableDescriptorCountAllocateInfoEXT -> IO a) -> IO a
-withCStructDescriptorSetVariableDescriptorCountAllocateInfoEXT from cont = withVec (&) (vkPDescriptorCounts (from :: DescriptorSetVariableDescriptorCountAllocateInfoEXT)) (\pDescriptorCounts -> maybeWith withSomeVkStruct (vkPNext (from :: DescriptorSetVariableDescriptorCountAllocateInfoEXT)) (\pPNext -> cont (VkDescriptorSetVariableDescriptorCountAllocateInfoEXT VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO_EXT pPNext (fromIntegral (Data.Vector.length (vkPDescriptorCounts (from :: DescriptorSetVariableDescriptorCountAllocateInfoEXT)))) pDescriptorCounts)))
+withCStructDescriptorSetVariableDescriptorCountAllocateInfoEXT marshalled cont = withVec (&) (descriptorCounts (marshalled :: DescriptorSetVariableDescriptorCountAllocateInfoEXT)) (\pPDescriptorCounts -> maybeWith withSomeVkStruct (next (marshalled :: DescriptorSetVariableDescriptorCountAllocateInfoEXT)) (\pPNext -> cont (VkDescriptorSetVariableDescriptorCountAllocateInfoEXT VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO_EXT pPNext (fromIntegral (Data.Vector.length (descriptorCounts (marshalled :: DescriptorSetVariableDescriptorCountAllocateInfoEXT)))) pPDescriptorCounts)))
+
+-- | A function to read a 'VkDescriptorSetVariableDescriptorCountAllocateInfoEXT' and all additional
+-- structures in the pointer chain into a 'DescriptorSetVariableDescriptorCountAllocateInfoEXT'.
 fromCStructDescriptorSetVariableDescriptorCountAllocateInfoEXT :: VkDescriptorSetVariableDescriptorCountAllocateInfoEXT -> IO DescriptorSetVariableDescriptorCountAllocateInfoEXT
 fromCStructDescriptorSetVariableDescriptorCountAllocateInfoEXT c = DescriptorSetVariableDescriptorCountAllocateInfoEXT <$> -- Univalued Member elided
                                                                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDescriptorSetVariableDescriptorCountAllocateInfoEXT)))
                                                                                                                        -- Length valued member elided
                                                                                                                        <*> (Data.Vector.generateM (fromIntegral (vkDescriptorSetCount (c :: VkDescriptorSetVariableDescriptorCountAllocateInfoEXT))) (peekElemOff (vkPDescriptorCounts (c :: VkDescriptorSetVariableDescriptorCountAllocateInfoEXT))))
+
 instance Zero DescriptorSetVariableDescriptorCountAllocateInfoEXT where
   zero = DescriptorSetVariableDescriptorCountAllocateInfoEXT Nothing
                                                              Data.Vector.empty
--- No documentation found for TopLevel "DescriptorSetVariableDescriptorCountLayoutSupportEXT"
+
+
+
+-- | VkDescriptorSetVariableDescriptorCountLayoutSupportEXT - Structure
+-- returning information about whether a descriptor set layout can be
+-- supported
+--
+-- = Description
+--
+-- If the create info includes a variable-sized descriptor, then
+-- @supported@ is determined assuming the requested size of the
+-- variable-sized descriptor, and @maxVariableDescriptorCount@ is set to
+-- the maximum size of that descriptor that /can/ be successfully created
+-- (which is greater than or equal to the requested size passed in). If the
+-- create info does not include a variable-sized descriptor or if the
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingFeaturesEXT'::@descriptorBindingVariableDescriptorCount@
+-- feature is not enabled, then @maxVariableDescriptorCount@ is set to
+-- zero. For the purposes of this command, a variable-sized descriptor
+-- binding with a @descriptorCount@ of zero is treated as if the
+-- @descriptorCount@ is one, and thus the binding is not ignored and the
+-- maximum descriptor count will be returned. If the layout is not
+-- supported, then the value written to @maxVariableDescriptorCount@ is
+-- undefined.
+--
+-- Unresolved directive in
+-- VkDescriptorSetVariableDescriptorCountLayoutSupportEXT.txt -
+-- include::{generated}\/validity\/structs\/VkDescriptorSetVariableDescriptorCountLayoutSupportEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data DescriptorSetVariableDescriptorCountLayoutSupportEXT = DescriptorSetVariableDescriptorCountLayoutSupportEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "DescriptorSetVariableDescriptorCountLayoutSupportEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "DescriptorSetVariableDescriptorCountLayoutSupportEXT" "maxVariableDescriptorCount"
-  vkMaxVariableDescriptorCount :: Word32
+  maxVariableDescriptorCount :: Word32
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkDescriptorSetVariableDescriptorCountLayoutSupportEXT' and
+-- marshal a 'DescriptorSetVariableDescriptorCountLayoutSupportEXT' into it. The 'VkDescriptorSetVariableDescriptorCountLayoutSupportEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructDescriptorSetVariableDescriptorCountLayoutSupportEXT :: DescriptorSetVariableDescriptorCountLayoutSupportEXT -> (VkDescriptorSetVariableDescriptorCountLayoutSupportEXT -> IO a) -> IO a
-withCStructDescriptorSetVariableDescriptorCountLayoutSupportEXT from cont = maybeWith withSomeVkStruct (vkPNext (from :: DescriptorSetVariableDescriptorCountLayoutSupportEXT)) (\pPNext -> cont (VkDescriptorSetVariableDescriptorCountLayoutSupportEXT VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT_EXT pPNext (vkMaxVariableDescriptorCount (from :: DescriptorSetVariableDescriptorCountLayoutSupportEXT))))
+withCStructDescriptorSetVariableDescriptorCountLayoutSupportEXT marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: DescriptorSetVariableDescriptorCountLayoutSupportEXT)) (\pPNext -> cont (VkDescriptorSetVariableDescriptorCountLayoutSupportEXT VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT_EXT pPNext (maxVariableDescriptorCount (marshalled :: DescriptorSetVariableDescriptorCountLayoutSupportEXT))))
+
+-- | A function to read a 'VkDescriptorSetVariableDescriptorCountLayoutSupportEXT' and all additional
+-- structures in the pointer chain into a 'DescriptorSetVariableDescriptorCountLayoutSupportEXT'.
 fromCStructDescriptorSetVariableDescriptorCountLayoutSupportEXT :: VkDescriptorSetVariableDescriptorCountLayoutSupportEXT -> IO DescriptorSetVariableDescriptorCountLayoutSupportEXT
 fromCStructDescriptorSetVariableDescriptorCountLayoutSupportEXT c = DescriptorSetVariableDescriptorCountLayoutSupportEXT <$> -- Univalued Member elided
                                                                                                                          maybePeek peekVkStruct (castPtr (vkPNext (c :: VkDescriptorSetVariableDescriptorCountLayoutSupportEXT)))
                                                                                                                          <*> pure (vkMaxVariableDescriptorCount (c :: VkDescriptorSetVariableDescriptorCountLayoutSupportEXT))
+
 instance Zero DescriptorSetVariableDescriptorCountLayoutSupportEXT where
   zero = DescriptorSetVariableDescriptorCountLayoutSupportEXT Nothing
                                                               zero
--- No documentation found for TopLevel "PhysicalDeviceDescriptorIndexingFeaturesEXT"
+
+
+
+-- | VkPhysicalDeviceDescriptorIndexingFeaturesEXT - Structure describing
+-- descriptor indexing features that can be supported by an implementation
+--
+-- = Members
+--
+-- The members of the
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingFeaturesEXT'
+-- structure describe the following features:
+--
+-- = Description
+--
+-- If the
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingFeaturesEXT'
+-- structure is included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
+-- it is filled with values indicating whether each feature is supported.
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingFeaturesEXT'
+-- /can/ also be used in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
+--
+-- Unresolved directive in
+-- VkPhysicalDeviceDescriptorIndexingFeaturesEXT.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceDescriptorIndexingFeaturesEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data PhysicalDeviceDescriptorIndexingFeaturesEXT = PhysicalDeviceDescriptorIndexingFeaturesEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingFeaturesEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingFeaturesEXT" "shaderInputAttachmentArrayDynamicIndexing"
-  vkShaderInputAttachmentArrayDynamicIndexing :: Bool
+  shaderInputAttachmentArrayDynamicIndexing :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingFeaturesEXT" "shaderUniformTexelBufferArrayDynamicIndexing"
-  vkShaderUniformTexelBufferArrayDynamicIndexing :: Bool
+  shaderUniformTexelBufferArrayDynamicIndexing :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingFeaturesEXT" "shaderStorageTexelBufferArrayDynamicIndexing"
-  vkShaderStorageTexelBufferArrayDynamicIndexing :: Bool
+  shaderStorageTexelBufferArrayDynamicIndexing :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingFeaturesEXT" "shaderUniformBufferArrayNonUniformIndexing"
-  vkShaderUniformBufferArrayNonUniformIndexing :: Bool
+  shaderUniformBufferArrayNonUniformIndexing :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingFeaturesEXT" "shaderSampledImageArrayNonUniformIndexing"
-  vkShaderSampledImageArrayNonUniformIndexing :: Bool
+  shaderSampledImageArrayNonUniformIndexing :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingFeaturesEXT" "shaderStorageBufferArrayNonUniformIndexing"
-  vkShaderStorageBufferArrayNonUniformIndexing :: Bool
+  shaderStorageBufferArrayNonUniformIndexing :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingFeaturesEXT" "shaderStorageImageArrayNonUniformIndexing"
-  vkShaderStorageImageArrayNonUniformIndexing :: Bool
+  shaderStorageImageArrayNonUniformIndexing :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingFeaturesEXT" "shaderInputAttachmentArrayNonUniformIndexing"
-  vkShaderInputAttachmentArrayNonUniformIndexing :: Bool
+  shaderInputAttachmentArrayNonUniformIndexing :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingFeaturesEXT" "shaderUniformTexelBufferArrayNonUniformIndexing"
-  vkShaderUniformTexelBufferArrayNonUniformIndexing :: Bool
+  shaderUniformTexelBufferArrayNonUniformIndexing :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingFeaturesEXT" "shaderStorageTexelBufferArrayNonUniformIndexing"
-  vkShaderStorageTexelBufferArrayNonUniformIndexing :: Bool
+  shaderStorageTexelBufferArrayNonUniformIndexing :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingFeaturesEXT" "descriptorBindingUniformBufferUpdateAfterBind"
-  vkDescriptorBindingUniformBufferUpdateAfterBind :: Bool
+  descriptorBindingUniformBufferUpdateAfterBind :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingFeaturesEXT" "descriptorBindingSampledImageUpdateAfterBind"
-  vkDescriptorBindingSampledImageUpdateAfterBind :: Bool
+  descriptorBindingSampledImageUpdateAfterBind :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingFeaturesEXT" "descriptorBindingStorageImageUpdateAfterBind"
-  vkDescriptorBindingStorageImageUpdateAfterBind :: Bool
+  descriptorBindingStorageImageUpdateAfterBind :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingFeaturesEXT" "descriptorBindingStorageBufferUpdateAfterBind"
-  vkDescriptorBindingStorageBufferUpdateAfterBind :: Bool
+  descriptorBindingStorageBufferUpdateAfterBind :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingFeaturesEXT" "descriptorBindingUniformTexelBufferUpdateAfterBind"
-  vkDescriptorBindingUniformTexelBufferUpdateAfterBind :: Bool
+  descriptorBindingUniformTexelBufferUpdateAfterBind :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingFeaturesEXT" "descriptorBindingStorageTexelBufferUpdateAfterBind"
-  vkDescriptorBindingStorageTexelBufferUpdateAfterBind :: Bool
+  descriptorBindingStorageTexelBufferUpdateAfterBind :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingFeaturesEXT" "descriptorBindingUpdateUnusedWhilePending"
-  vkDescriptorBindingUpdateUnusedWhilePending :: Bool
+  descriptorBindingUpdateUnusedWhilePending :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingFeaturesEXT" "descriptorBindingPartiallyBound"
-  vkDescriptorBindingPartiallyBound :: Bool
+  descriptorBindingPartiallyBound :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingFeaturesEXT" "descriptorBindingVariableDescriptorCount"
-  vkDescriptorBindingVariableDescriptorCount :: Bool
+  descriptorBindingVariableDescriptorCount :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingFeaturesEXT" "runtimeDescriptorArray"
-  vkRuntimeDescriptorArray :: Bool
+  runtimeDescriptorArray :: Bool
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPhysicalDeviceDescriptorIndexingFeaturesEXT' and
+-- marshal a 'PhysicalDeviceDescriptorIndexingFeaturesEXT' into it. The 'VkPhysicalDeviceDescriptorIndexingFeaturesEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPhysicalDeviceDescriptorIndexingFeaturesEXT :: PhysicalDeviceDescriptorIndexingFeaturesEXT -> (VkPhysicalDeviceDescriptorIndexingFeaturesEXT -> IO a) -> IO a
-withCStructPhysicalDeviceDescriptorIndexingFeaturesEXT from cont = maybeWith withSomeVkStruct (vkPNext (from :: PhysicalDeviceDescriptorIndexingFeaturesEXT)) (\pPNext -> cont (VkPhysicalDeviceDescriptorIndexingFeaturesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT pPNext (boolToBool32 (vkShaderInputAttachmentArrayDynamicIndexing (from :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (vkShaderUniformTexelBufferArrayDynamicIndexing (from :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (vkShaderStorageTexelBufferArrayDynamicIndexing (from :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (vkShaderUniformBufferArrayNonUniformIndexing (from :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (vkShaderSampledImageArrayNonUniformIndexing (from :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (vkShaderStorageBufferArrayNonUniformIndexing (from :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (vkShaderStorageImageArrayNonUniformIndexing (from :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (vkShaderInputAttachmentArrayNonUniformIndexing (from :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (vkShaderUniformTexelBufferArrayNonUniformIndexing (from :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (vkShaderStorageTexelBufferArrayNonUniformIndexing (from :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (vkDescriptorBindingUniformBufferUpdateAfterBind (from :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (vkDescriptorBindingSampledImageUpdateAfterBind (from :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (vkDescriptorBindingStorageImageUpdateAfterBind (from :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (vkDescriptorBindingStorageBufferUpdateAfterBind (from :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (vkDescriptorBindingUniformTexelBufferUpdateAfterBind (from :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (vkDescriptorBindingStorageTexelBufferUpdateAfterBind (from :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (vkDescriptorBindingUpdateUnusedWhilePending (from :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (vkDescriptorBindingPartiallyBound (from :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (vkDescriptorBindingVariableDescriptorCount (from :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (vkRuntimeDescriptorArray (from :: PhysicalDeviceDescriptorIndexingFeaturesEXT)))))
+withCStructPhysicalDeviceDescriptorIndexingFeaturesEXT marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PhysicalDeviceDescriptorIndexingFeaturesEXT)) (\pPNext -> cont (VkPhysicalDeviceDescriptorIndexingFeaturesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT pPNext (boolToBool32 (shaderInputAttachmentArrayDynamicIndexing (marshalled :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (shaderUniformTexelBufferArrayDynamicIndexing (marshalled :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (shaderStorageTexelBufferArrayDynamicIndexing (marshalled :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (shaderUniformBufferArrayNonUniformIndexing (marshalled :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (shaderSampledImageArrayNonUniformIndexing (marshalled :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (shaderStorageBufferArrayNonUniformIndexing (marshalled :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (shaderStorageImageArrayNonUniformIndexing (marshalled :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (shaderInputAttachmentArrayNonUniformIndexing (marshalled :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (shaderUniformTexelBufferArrayNonUniformIndexing (marshalled :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (shaderStorageTexelBufferArrayNonUniformIndexing (marshalled :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (descriptorBindingUniformBufferUpdateAfterBind (marshalled :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (descriptorBindingSampledImageUpdateAfterBind (marshalled :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (descriptorBindingStorageImageUpdateAfterBind (marshalled :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (descriptorBindingStorageBufferUpdateAfterBind (marshalled :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (descriptorBindingUniformTexelBufferUpdateAfterBind (marshalled :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (descriptorBindingStorageTexelBufferUpdateAfterBind (marshalled :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (descriptorBindingUpdateUnusedWhilePending (marshalled :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (descriptorBindingPartiallyBound (marshalled :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (descriptorBindingVariableDescriptorCount (marshalled :: PhysicalDeviceDescriptorIndexingFeaturesEXT))) (boolToBool32 (runtimeDescriptorArray (marshalled :: PhysicalDeviceDescriptorIndexingFeaturesEXT)))))
+
+-- | A function to read a 'VkPhysicalDeviceDescriptorIndexingFeaturesEXT' and all additional
+-- structures in the pointer chain into a 'PhysicalDeviceDescriptorIndexingFeaturesEXT'.
 fromCStructPhysicalDeviceDescriptorIndexingFeaturesEXT :: VkPhysicalDeviceDescriptorIndexingFeaturesEXT -> IO PhysicalDeviceDescriptorIndexingFeaturesEXT
 fromCStructPhysicalDeviceDescriptorIndexingFeaturesEXT c = PhysicalDeviceDescriptorIndexingFeaturesEXT <$> -- Univalued Member elided
                                                                                                        maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceDescriptorIndexingFeaturesEXT)))
@@ -233,6 +588,7 @@ fromCStructPhysicalDeviceDescriptorIndexingFeaturesEXT c = PhysicalDeviceDescrip
                                                                                                        <*> pure (bool32ToBool (vkDescriptorBindingPartiallyBound (c :: VkPhysicalDeviceDescriptorIndexingFeaturesEXT)))
                                                                                                        <*> pure (bool32ToBool (vkDescriptorBindingVariableDescriptorCount (c :: VkPhysicalDeviceDescriptorIndexingFeaturesEXT)))
                                                                                                        <*> pure (bool32ToBool (vkRuntimeDescriptorArray (c :: VkPhysicalDeviceDescriptorIndexingFeaturesEXT)))
+
 instance Zero PhysicalDeviceDescriptorIndexingFeaturesEXT where
   zero = PhysicalDeviceDescriptorIndexingFeaturesEXT Nothing
                                                      False
@@ -255,61 +611,95 @@ instance Zero PhysicalDeviceDescriptorIndexingFeaturesEXT where
                                                      False
                                                      False
                                                      False
--- No documentation found for TopLevel "PhysicalDeviceDescriptorIndexingPropertiesEXT"
+
+
+
+-- | VkPhysicalDeviceDescriptorIndexingPropertiesEXT - Structure describing
+-- descriptor indexing properties that can be supported by an
+-- implementation
+--
+-- = Members
+--
+-- The members of the
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingPropertiesEXT'
+-- structure describe the following implementation-dependent limits:
+--
+-- = Description
+--
+-- If the
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingPropertiesEXT'
+-- structure is included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
+-- it is filled with the implementation-dependent limits.
+--
+-- Unresolved directive in
+-- VkPhysicalDeviceDescriptorIndexingPropertiesEXT.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceDescriptorIndexingPropertiesEXT.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data PhysicalDeviceDescriptorIndexingPropertiesEXT = PhysicalDeviceDescriptorIndexingPropertiesEXT
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingPropertiesEXT" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingPropertiesEXT" "maxUpdateAfterBindDescriptorsInAllPools"
-  vkMaxUpdateAfterBindDescriptorsInAllPools :: Word32
+  maxUpdateAfterBindDescriptorsInAllPools :: Word32
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingPropertiesEXT" "shaderUniformBufferArrayNonUniformIndexingNative"
-  vkShaderUniformBufferArrayNonUniformIndexingNative :: Bool
+  shaderUniformBufferArrayNonUniformIndexingNative :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingPropertiesEXT" "shaderSampledImageArrayNonUniformIndexingNative"
-  vkShaderSampledImageArrayNonUniformIndexingNative :: Bool
+  shaderSampledImageArrayNonUniformIndexingNative :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingPropertiesEXT" "shaderStorageBufferArrayNonUniformIndexingNative"
-  vkShaderStorageBufferArrayNonUniformIndexingNative :: Bool
+  shaderStorageBufferArrayNonUniformIndexingNative :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingPropertiesEXT" "shaderStorageImageArrayNonUniformIndexingNative"
-  vkShaderStorageImageArrayNonUniformIndexingNative :: Bool
+  shaderStorageImageArrayNonUniformIndexingNative :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingPropertiesEXT" "shaderInputAttachmentArrayNonUniformIndexingNative"
-  vkShaderInputAttachmentArrayNonUniformIndexingNative :: Bool
+  shaderInputAttachmentArrayNonUniformIndexingNative :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingPropertiesEXT" "robustBufferAccessUpdateAfterBind"
-  vkRobustBufferAccessUpdateAfterBind :: Bool
+  robustBufferAccessUpdateAfterBind :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingPropertiesEXT" "quadDivergentImplicitLod"
-  vkQuadDivergentImplicitLod :: Bool
+  quadDivergentImplicitLod :: Bool
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingPropertiesEXT" "maxPerStageDescriptorUpdateAfterBindSamplers"
-  vkMaxPerStageDescriptorUpdateAfterBindSamplers :: Word32
+  maxPerStageDescriptorUpdateAfterBindSamplers :: Word32
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingPropertiesEXT" "maxPerStageDescriptorUpdateAfterBindUniformBuffers"
-  vkMaxPerStageDescriptorUpdateAfterBindUniformBuffers :: Word32
+  maxPerStageDescriptorUpdateAfterBindUniformBuffers :: Word32
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingPropertiesEXT" "maxPerStageDescriptorUpdateAfterBindStorageBuffers"
-  vkMaxPerStageDescriptorUpdateAfterBindStorageBuffers :: Word32
+  maxPerStageDescriptorUpdateAfterBindStorageBuffers :: Word32
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingPropertiesEXT" "maxPerStageDescriptorUpdateAfterBindSampledImages"
-  vkMaxPerStageDescriptorUpdateAfterBindSampledImages :: Word32
+  maxPerStageDescriptorUpdateAfterBindSampledImages :: Word32
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingPropertiesEXT" "maxPerStageDescriptorUpdateAfterBindStorageImages"
-  vkMaxPerStageDescriptorUpdateAfterBindStorageImages :: Word32
+  maxPerStageDescriptorUpdateAfterBindStorageImages :: Word32
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingPropertiesEXT" "maxPerStageDescriptorUpdateAfterBindInputAttachments"
-  vkMaxPerStageDescriptorUpdateAfterBindInputAttachments :: Word32
+  maxPerStageDescriptorUpdateAfterBindInputAttachments :: Word32
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingPropertiesEXT" "maxPerStageUpdateAfterBindResources"
-  vkMaxPerStageUpdateAfterBindResources :: Word32
+  maxPerStageUpdateAfterBindResources :: Word32
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingPropertiesEXT" "maxDescriptorSetUpdateAfterBindSamplers"
-  vkMaxDescriptorSetUpdateAfterBindSamplers :: Word32
+  maxDescriptorSetUpdateAfterBindSamplers :: Word32
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingPropertiesEXT" "maxDescriptorSetUpdateAfterBindUniformBuffers"
-  vkMaxDescriptorSetUpdateAfterBindUniformBuffers :: Word32
+  maxDescriptorSetUpdateAfterBindUniformBuffers :: Word32
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingPropertiesEXT" "maxDescriptorSetUpdateAfterBindUniformBuffersDynamic"
-  vkMaxDescriptorSetUpdateAfterBindUniformBuffersDynamic :: Word32
+  maxDescriptorSetUpdateAfterBindUniformBuffersDynamic :: Word32
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingPropertiesEXT" "maxDescriptorSetUpdateAfterBindStorageBuffers"
-  vkMaxDescriptorSetUpdateAfterBindStorageBuffers :: Word32
+  maxDescriptorSetUpdateAfterBindStorageBuffers :: Word32
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingPropertiesEXT" "maxDescriptorSetUpdateAfterBindStorageBuffersDynamic"
-  vkMaxDescriptorSetUpdateAfterBindStorageBuffersDynamic :: Word32
+  maxDescriptorSetUpdateAfterBindStorageBuffersDynamic :: Word32
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingPropertiesEXT" "maxDescriptorSetUpdateAfterBindSampledImages"
-  vkMaxDescriptorSetUpdateAfterBindSampledImages :: Word32
+  maxDescriptorSetUpdateAfterBindSampledImages :: Word32
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingPropertiesEXT" "maxDescriptorSetUpdateAfterBindStorageImages"
-  vkMaxDescriptorSetUpdateAfterBindStorageImages :: Word32
+  maxDescriptorSetUpdateAfterBindStorageImages :: Word32
   , -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingPropertiesEXT" "maxDescriptorSetUpdateAfterBindInputAttachments"
-  vkMaxDescriptorSetUpdateAfterBindInputAttachments :: Word32
+  maxDescriptorSetUpdateAfterBindInputAttachments :: Word32
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPhysicalDeviceDescriptorIndexingPropertiesEXT' and
+-- marshal a 'PhysicalDeviceDescriptorIndexingPropertiesEXT' into it. The 'VkPhysicalDeviceDescriptorIndexingPropertiesEXT' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPhysicalDeviceDescriptorIndexingPropertiesEXT :: PhysicalDeviceDescriptorIndexingPropertiesEXT -> (VkPhysicalDeviceDescriptorIndexingPropertiesEXT -> IO a) -> IO a
-withCStructPhysicalDeviceDescriptorIndexingPropertiesEXT from cont = maybeWith withSomeVkStruct (vkPNext (from :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (\pPNext -> cont (VkPhysicalDeviceDescriptorIndexingPropertiesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES_EXT pPNext (vkMaxUpdateAfterBindDescriptorsInAllPools (from :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (boolToBool32 (vkShaderUniformBufferArrayNonUniformIndexingNative (from :: PhysicalDeviceDescriptorIndexingPropertiesEXT))) (boolToBool32 (vkShaderSampledImageArrayNonUniformIndexingNative (from :: PhysicalDeviceDescriptorIndexingPropertiesEXT))) (boolToBool32 (vkShaderStorageBufferArrayNonUniformIndexingNative (from :: PhysicalDeviceDescriptorIndexingPropertiesEXT))) (boolToBool32 (vkShaderStorageImageArrayNonUniformIndexingNative (from :: PhysicalDeviceDescriptorIndexingPropertiesEXT))) (boolToBool32 (vkShaderInputAttachmentArrayNonUniformIndexingNative (from :: PhysicalDeviceDescriptorIndexingPropertiesEXT))) (boolToBool32 (vkRobustBufferAccessUpdateAfterBind (from :: PhysicalDeviceDescriptorIndexingPropertiesEXT))) (boolToBool32 (vkQuadDivergentImplicitLod (from :: PhysicalDeviceDescriptorIndexingPropertiesEXT))) (vkMaxPerStageDescriptorUpdateAfterBindSamplers (from :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (vkMaxPerStageDescriptorUpdateAfterBindUniformBuffers (from :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (vkMaxPerStageDescriptorUpdateAfterBindStorageBuffers (from :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (vkMaxPerStageDescriptorUpdateAfterBindSampledImages (from :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (vkMaxPerStageDescriptorUpdateAfterBindStorageImages (from :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (vkMaxPerStageDescriptorUpdateAfterBindInputAttachments (from :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (vkMaxPerStageUpdateAfterBindResources (from :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (vkMaxDescriptorSetUpdateAfterBindSamplers (from :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (vkMaxDescriptorSetUpdateAfterBindUniformBuffers (from :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (vkMaxDescriptorSetUpdateAfterBindUniformBuffersDynamic (from :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (vkMaxDescriptorSetUpdateAfterBindStorageBuffers (from :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (vkMaxDescriptorSetUpdateAfterBindStorageBuffersDynamic (from :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (vkMaxDescriptorSetUpdateAfterBindSampledImages (from :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (vkMaxDescriptorSetUpdateAfterBindStorageImages (from :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (vkMaxDescriptorSetUpdateAfterBindInputAttachments (from :: PhysicalDeviceDescriptorIndexingPropertiesEXT))))
+withCStructPhysicalDeviceDescriptorIndexingPropertiesEXT marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (\pPNext -> cont (VkPhysicalDeviceDescriptorIndexingPropertiesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES_EXT pPNext (maxUpdateAfterBindDescriptorsInAllPools (marshalled :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (boolToBool32 (shaderUniformBufferArrayNonUniformIndexingNative (marshalled :: PhysicalDeviceDescriptorIndexingPropertiesEXT))) (boolToBool32 (shaderSampledImageArrayNonUniformIndexingNative (marshalled :: PhysicalDeviceDescriptorIndexingPropertiesEXT))) (boolToBool32 (shaderStorageBufferArrayNonUniformIndexingNative (marshalled :: PhysicalDeviceDescriptorIndexingPropertiesEXT))) (boolToBool32 (shaderStorageImageArrayNonUniformIndexingNative (marshalled :: PhysicalDeviceDescriptorIndexingPropertiesEXT))) (boolToBool32 (shaderInputAttachmentArrayNonUniformIndexingNative (marshalled :: PhysicalDeviceDescriptorIndexingPropertiesEXT))) (boolToBool32 (robustBufferAccessUpdateAfterBind (marshalled :: PhysicalDeviceDescriptorIndexingPropertiesEXT))) (boolToBool32 (quadDivergentImplicitLod (marshalled :: PhysicalDeviceDescriptorIndexingPropertiesEXT))) (maxPerStageDescriptorUpdateAfterBindSamplers (marshalled :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (maxPerStageDescriptorUpdateAfterBindUniformBuffers (marshalled :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (maxPerStageDescriptorUpdateAfterBindStorageBuffers (marshalled :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (maxPerStageDescriptorUpdateAfterBindSampledImages (marshalled :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (maxPerStageDescriptorUpdateAfterBindStorageImages (marshalled :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (maxPerStageDescriptorUpdateAfterBindInputAttachments (marshalled :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (maxPerStageUpdateAfterBindResources (marshalled :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (maxDescriptorSetUpdateAfterBindSamplers (marshalled :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (maxDescriptorSetUpdateAfterBindUniformBuffers (marshalled :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (maxDescriptorSetUpdateAfterBindUniformBuffersDynamic (marshalled :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (maxDescriptorSetUpdateAfterBindStorageBuffers (marshalled :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (maxDescriptorSetUpdateAfterBindStorageBuffersDynamic (marshalled :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (maxDescriptorSetUpdateAfterBindSampledImages (marshalled :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (maxDescriptorSetUpdateAfterBindStorageImages (marshalled :: PhysicalDeviceDescriptorIndexingPropertiesEXT)) (maxDescriptorSetUpdateAfterBindInputAttachments (marshalled :: PhysicalDeviceDescriptorIndexingPropertiesEXT))))
+
+-- | A function to read a 'VkPhysicalDeviceDescriptorIndexingPropertiesEXT' and all additional
+-- structures in the pointer chain into a 'PhysicalDeviceDescriptorIndexingPropertiesEXT'.
 fromCStructPhysicalDeviceDescriptorIndexingPropertiesEXT :: VkPhysicalDeviceDescriptorIndexingPropertiesEXT -> IO PhysicalDeviceDescriptorIndexingPropertiesEXT
 fromCStructPhysicalDeviceDescriptorIndexingPropertiesEXT c = PhysicalDeviceDescriptorIndexingPropertiesEXT <$> -- Univalued Member elided
                                                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceDescriptorIndexingPropertiesEXT)))
@@ -336,6 +726,7 @@ fromCStructPhysicalDeviceDescriptorIndexingPropertiesEXT c = PhysicalDeviceDescr
                                                                                                            <*> pure (vkMaxDescriptorSetUpdateAfterBindSampledImages (c :: VkPhysicalDeviceDescriptorIndexingPropertiesEXT))
                                                                                                            <*> pure (vkMaxDescriptorSetUpdateAfterBindStorageImages (c :: VkPhysicalDeviceDescriptorIndexingPropertiesEXT))
                                                                                                            <*> pure (vkMaxDescriptorSetUpdateAfterBindInputAttachments (c :: VkPhysicalDeviceDescriptorIndexingPropertiesEXT))
+
 instance Zero PhysicalDeviceDescriptorIndexingPropertiesEXT where
   zero = PhysicalDeviceDescriptorIndexingPropertiesEXT Nothing
                                                        zero
@@ -361,3 +752,4 @@ instance Zero PhysicalDeviceDescriptorIndexingPropertiesEXT where
                                                        zero
                                                        zero
                                                        zero
+

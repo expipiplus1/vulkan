@@ -4,21 +4,19 @@
 {-# language DataKinds #-}
 {-# language DuplicateRecordFields #-}
 {-# language TypeOperators #-}
+{-# language MagicHash #-}
+{-# language TypeApplications #-}
 
 module Graphics.Vulkan.C.Core10.ExtensionDiscovery
   ( VK_MAX_EXTENSION_NAME_SIZE
   , pattern VK_MAX_EXTENSION_NAME_SIZE
   , VkExtensionProperties(..)
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkEnumerateDeviceExtensionProperties
-#endif
   , FN_vkEnumerateDeviceExtensionProperties
   , PFN_vkEnumerateDeviceExtensionProperties
-#if defined(EXPOSE_CORE10_COMMANDS)
-  , vkEnumerateInstanceExtensionProperties
-#endif
+  , vkEnumerateDeviceExtensionProperties
   , FN_vkEnumerateInstanceExtensionProperties
   , PFN_vkEnumerateInstanceExtensionProperties
+  , vkEnumerateInstanceExtensionProperties
   ) where
 
 import Data.Vector.Storable.Sized
@@ -33,11 +31,19 @@ import Foreign.C.Types
 import Foreign.Ptr
   ( FunPtr
   , Ptr
+  , castPtrToFunPtr
+  , nullPtr
   , plusPtr
   )
 import Foreign.Storable
   ( Storable
   , Storable(..)
+  )
+import qualified GHC.Ptr
+  ( Ptr(Ptr)
+  )
+import System.IO.Unsafe
+  ( unsafeDupablePerformIO
   )
 
 
@@ -47,6 +53,10 @@ import Graphics.Vulkan.C.Core10.Core
   )
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkPhysicalDevice
+  , vkGetInstanceProcAddr'
+  )
+import Graphics.Vulkan.C.Dynamic
+  ( InstanceCmds(..)
   )
 import Graphics.Vulkan.NamedType
   ( (:::)
@@ -58,7 +68,13 @@ type VK_MAX_EXTENSION_NAME_SIZE = 256
 -- No documentation found for Nested "Integral a => a" "VK_MAX_EXTENSION_NAME_SIZE"
 pattern VK_MAX_EXTENSION_NAME_SIZE :: Integral a => a
 pattern VK_MAX_EXTENSION_NAME_SIZE = 256
+
 -- | VkExtensionProperties - Structure specifying an extension properties
+--
+-- = Description
+--
+-- Unresolved directive in VkExtensionProperties.txt -
+-- include::{generated}\/validity\/structs\/VkExtensionProperties.txt[]
 --
 -- = See Also
 --
@@ -85,7 +101,7 @@ instance Storable VkExtensionProperties where
 instance Zero VkExtensionProperties where
   zero = VkExtensionProperties zero
                                zero
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkEnumerateDeviceExtensionProperties - Returns properties of available
 -- physical device extensions
 --
@@ -116,47 +132,33 @@ instance Zero VkExtensionProperties where
 -- be enabled together due to behavioral differences, or any extension that
 -- cannot be enabled against the advertised version.
 --
--- == Valid Usage (Implicit)
---
--- -   @physicalDevice@ /must/ be a valid @VkPhysicalDevice@ handle
---
--- -   If @pLayerName@ is not @NULL@, @pLayerName@ /must/ be a
---     null-terminated UTF-8 string
---
--- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
---
--- -   If the value referenced by @pPropertyCount@ is not @0@, and
---     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
---     to an array of @pPropertyCount@ @VkExtensionProperties@ structures
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
---     -   @VK_INCOMPLETE@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
---
---     -   @VK_ERROR_LAYER_NOT_PRESENT@
+-- Unresolved directive in vkEnumerateDeviceExtensionProperties.txt -
+-- include::{generated}\/validity\/protos\/vkEnumerateDeviceExtensionProperties.txt[]
 --
 -- = See Also
 --
 -- 'VkExtensionProperties',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkEnumerateDeviceExtensionProperties" vkEnumerateDeviceExtensionProperties :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pLayerName" ::: Ptr CChar) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkExtensionProperties) -> IO VkResult
-
+#else
+vkEnumerateDeviceExtensionProperties :: InstanceCmds -> ("physicalDevice" ::: VkPhysicalDevice) -> ("pLayerName" ::: Ptr CChar) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkExtensionProperties) -> IO VkResult
+vkEnumerateDeviceExtensionProperties deviceCmds = mkVkEnumerateDeviceExtensionProperties (pVkEnumerateDeviceExtensionProperties deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkEnumerateDeviceExtensionProperties
+  :: FunPtr (("physicalDevice" ::: VkPhysicalDevice) -> ("pLayerName" ::: Ptr CChar) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkExtensionProperties) -> IO VkResult) -> (("physicalDevice" ::: VkPhysicalDevice) -> ("pLayerName" ::: Ptr CChar) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkExtensionProperties) -> IO VkResult)
+#endif
+
 type FN_vkEnumerateDeviceExtensionProperties = ("physicalDevice" ::: VkPhysicalDevice) -> ("pLayerName" ::: Ptr CChar) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkExtensionProperties) -> IO VkResult
 type PFN_vkEnumerateDeviceExtensionProperties = FunPtr FN_vkEnumerateDeviceExtensionProperties
-#if defined(EXPOSE_CORE10_COMMANDS)
+
 -- | vkEnumerateInstanceExtensionProperties - Returns up to requested number
 -- of global extension properties
 --
@@ -186,8 +188,9 @@ type PFN_vkEnumerateDeviceExtensionProperties = FunPtr FN_vkEnumerateDeviceExten
 -- @pPropertyCount@ is less than the number of extension properties
 -- available, at most @pPropertyCount@ structures will be written. If
 -- @pPropertyCount@ is smaller than the number of extensions available,
--- @VK_INCOMPLETE@ will be returned instead of @VK_SUCCESS@, to indicate
--- that not all the available properties were returned.
+-- 'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE' will be returned instead
+-- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS', to indicate that not all
+-- the available properties were returned.
 --
 -- Because the list of available layers may change externally between calls
 -- to 'vkEnumerateInstanceExtensionProperties', two calls may retrieve
@@ -200,40 +203,33 @@ type PFN_vkEnumerateDeviceExtensionProperties = FunPtr FN_vkEnumerateDeviceExten
 -- be enabled together due to behavioral differences, or any extension that
 -- cannot be enabled against the advertised version.
 --
--- == Valid Usage (Implicit)
---
--- -   If @pLayerName@ is not @NULL@, @pLayerName@ /must/ be a
---     null-terminated UTF-8 string
---
--- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
---
--- -   If the value referenced by @pPropertyCount@ is not @0@, and
---     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
---     to an array of @pPropertyCount@ @VkExtensionProperties@ structures
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
---     -   @VK_INCOMPLETE@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
---
---     -   @VK_ERROR_LAYER_NOT_PRESENT@
+-- Unresolved directive in vkEnumerateInstanceExtensionProperties.txt -
+-- include::{generated}\/validity\/protos\/vkEnumerateInstanceExtensionProperties.txt[]
 --
 -- = See Also
 --
 -- 'VkExtensionProperties'
+#if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkEnumerateInstanceExtensionProperties" vkEnumerateInstanceExtensionProperties :: ("pLayerName" ::: Ptr CChar) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkExtensionProperties) -> IO VkResult
-
+#else
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkEnumerateInstanceExtensionProperties
+  :: FunPtr (("pLayerName" ::: Ptr CChar) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkExtensionProperties) -> IO VkResult) -> (("pLayerName" ::: Ptr CChar) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkExtensionProperties) -> IO VkResult)
+
+vkEnumerateInstanceExtensionProperties :: ("pLayerName" ::: Ptr CChar) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkExtensionProperties) -> IO VkResult
+vkEnumerateInstanceExtensionProperties = mkVkEnumerateInstanceExtensionProperties procAddr
+  where
+    procAddr = castPtrToFunPtr @_ @FN_vkEnumerateInstanceExtensionProperties $
+      unsafeDupablePerformIO
+        $ vkGetInstanceProcAddr' nullPtr (GHC.Ptr.Ptr "vkEnumerateInstanceExtensionProperties\NUL"#)
+#endif
+
 type FN_vkEnumerateInstanceExtensionProperties = ("pLayerName" ::: Ptr CChar) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkExtensionProperties) -> IO VkResult
 type PFN_vkEnumerateInstanceExtensionProperties = FunPtr FN_vkEnumerateInstanceExtensionProperties

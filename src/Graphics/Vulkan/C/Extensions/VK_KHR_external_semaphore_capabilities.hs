@@ -14,9 +14,7 @@ module Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_capabilities
   , pattern VkExternalSemaphorePropertiesKHR
   , VkPhysicalDeviceExternalSemaphoreInfoKHR
   , pattern VkPhysicalDeviceExternalSemaphoreInfoKHR
-#if defined(EXPOSE_CORE11_COMMANDS)
   , vkGetPhysicalDeviceExternalSemaphorePropertiesKHR
-#endif
   , pattern VK_EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT_KHR
   , pattern VK_EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT_KHR
   , pattern VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT_KHR
@@ -52,12 +50,9 @@ import Foreign.Ptr
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
   )
-
-#if defined(EXPOSE_CORE11_COMMANDS)
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkPhysicalDevice
   )
-#endif
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities
   ( VkExternalSemaphoreFeatureFlagBits(..)
   , VkExternalSemaphoreHandleTypeFlagBits(..)
@@ -65,6 +60,7 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabili
   , VkPhysicalDeviceExternalSemaphoreInfo(..)
   , VkExternalSemaphoreFeatureFlags
   , VkExternalSemaphoreHandleTypeFlags
+  , vkGetPhysicalDeviceExternalSemaphoreProperties
   , pattern VK_EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT
   , pattern VK_EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT
   , pattern VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT
@@ -75,12 +71,9 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabili
   , pattern VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO
   )
-
-#if defined(EXPOSE_CORE11_COMMANDS)
-import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities
-  ( vkGetPhysicalDeviceExternalSemaphoreProperties
+import Graphics.Vulkan.C.Dynamic
+  ( InstanceCmds(..)
   )
-#endif
 import Graphics.Vulkan.NamedType
   ( (:::)
   )
@@ -92,12 +85,16 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_capabilities
 
 -- No documentation found for TopLevel "VkExternalSemaphoreFeatureFlagBitsKHR"
 type VkExternalSemaphoreFeatureFlagBitsKHR = VkExternalSemaphoreFeatureFlagBits
+
 -- No documentation found for TopLevel "VkExternalSemaphoreFeatureFlagsKHR"
 type VkExternalSemaphoreFeatureFlagsKHR = VkExternalSemaphoreFeatureFlags
+
 -- No documentation found for TopLevel "VkExternalSemaphoreHandleTypeFlagBitsKHR"
 type VkExternalSemaphoreHandleTypeFlagBitsKHR = VkExternalSemaphoreHandleTypeFlagBits
+
 -- No documentation found for TopLevel "VkExternalSemaphoreHandleTypeFlagsKHR"
 type VkExternalSemaphoreHandleTypeFlagsKHR = VkExternalSemaphoreHandleTypeFlags
+
 -- No documentation found for TopLevel "VkExternalSemaphorePropertiesKHR"
 type VkExternalSemaphorePropertiesKHR = VkExternalSemaphoreProperties
 
@@ -105,6 +102,7 @@ type VkExternalSemaphorePropertiesKHR = VkExternalSemaphoreProperties
 -- No documentation found for TopLevel "VkExternalSemaphorePropertiesKHR"
 pattern VkExternalSemaphorePropertiesKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("exportFromImportedHandleTypes" ::: VkExternalSemaphoreHandleTypeFlags) -> ("compatibleHandleTypes" ::: VkExternalSemaphoreHandleTypeFlags) -> ("externalSemaphoreFeatures" ::: VkExternalSemaphoreFeatureFlags) -> VkExternalSemaphorePropertiesKHR
 pattern VkExternalSemaphorePropertiesKHR vkSType vkPNext vkExportFromImportedHandleTypes vkCompatibleHandleTypes vkExternalSemaphoreFeatures = VkExternalSemaphoreProperties vkSType vkPNext vkExportFromImportedHandleTypes vkCompatibleHandleTypes vkExternalSemaphoreFeatures
+
 -- No documentation found for TopLevel "VkPhysicalDeviceExternalSemaphoreInfoKHR"
 type VkPhysicalDeviceExternalSemaphoreInfoKHR = VkPhysicalDeviceExternalSemaphoreInfo
 
@@ -113,41 +111,50 @@ type VkPhysicalDeviceExternalSemaphoreInfoKHR = VkPhysicalDeviceExternalSemaphor
 pattern VkPhysicalDeviceExternalSemaphoreInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("handleType" ::: VkExternalSemaphoreHandleTypeFlagBits) -> VkPhysicalDeviceExternalSemaphoreInfoKHR
 pattern VkPhysicalDeviceExternalSemaphoreInfoKHR vkSType vkPNext vkHandleType = VkPhysicalDeviceExternalSemaphoreInfo vkSType vkPNext vkHandleType
 
-#if defined(EXPOSE_CORE11_COMMANDS)
 -- No documentation found for TopLevel "vkGetPhysicalDeviceExternalSemaphorePropertiesKHR"
-vkGetPhysicalDeviceExternalSemaphorePropertiesKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pExternalSemaphoreInfo" ::: Ptr VkPhysicalDeviceExternalSemaphoreInfo) -> ("pExternalSemaphoreProperties" ::: Ptr VkExternalSemaphoreProperties) -> IO ()
+vkGetPhysicalDeviceExternalSemaphorePropertiesKHR :: InstanceCmds -> ("physicalDevice" ::: VkPhysicalDevice) -> ("pExternalSemaphoreInfo" ::: Ptr VkPhysicalDeviceExternalSemaphoreInfo) -> ("pExternalSemaphoreProperties" ::: Ptr VkExternalSemaphoreProperties) -> IO ()
 vkGetPhysicalDeviceExternalSemaphorePropertiesKHR = vkGetPhysicalDeviceExternalSemaphoreProperties
-#endif
+
 -- No documentation found for TopLevel "VK_EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT_KHR"
 pattern VK_EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT_KHR :: VkExternalSemaphoreFeatureFlagBits
 pattern VK_EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT_KHR = VK_EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT
+
 -- No documentation found for TopLevel "VK_EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT_KHR"
 pattern VK_EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT_KHR :: VkExternalSemaphoreFeatureFlagBits
 pattern VK_EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT_KHR = VK_EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT
+
 -- No documentation found for TopLevel "VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT_KHR"
 pattern VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT_KHR :: VkExternalSemaphoreHandleTypeFlagBits
 pattern VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT_KHR = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT
+
 -- No documentation found for TopLevel "VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT_KHR"
 pattern VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT_KHR :: VkExternalSemaphoreHandleTypeFlagBits
 pattern VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT_KHR = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT
+
 -- No documentation found for TopLevel "VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT_KHR"
 pattern VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT_KHR :: VkExternalSemaphoreHandleTypeFlagBits
 pattern VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT_KHR = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT
+
 -- No documentation found for TopLevel "VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_KHR"
 pattern VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_KHR :: VkExternalSemaphoreHandleTypeFlagBits
 pattern VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_KHR = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
+
 -- No documentation found for TopLevel "VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT_KHR"
 pattern VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT_KHR :: VkExternalSemaphoreHandleTypeFlagBits
 pattern VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT_KHR = VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT
+
 -- No documentation found for TopLevel "VK_KHR_EXTERNAL_SEMAPHORE_CAPABILITIES_EXTENSION_NAME"
 pattern VK_KHR_EXTERNAL_SEMAPHORE_CAPABILITIES_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_EXTERNAL_SEMAPHORE_CAPABILITIES_EXTENSION_NAME = "VK_KHR_external_semaphore_capabilities"
+
 -- No documentation found for TopLevel "VK_KHR_EXTERNAL_SEMAPHORE_CAPABILITIES_SPEC_VERSION"
 pattern VK_KHR_EXTERNAL_SEMAPHORE_CAPABILITIES_SPEC_VERSION :: Integral a => a
 pattern VK_KHR_EXTERNAL_SEMAPHORE_CAPABILITIES_SPEC_VERSION = 1
+
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES_KHR"
 pattern VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES_KHR = VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES
+
 -- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO_KHR"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO_KHR = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO

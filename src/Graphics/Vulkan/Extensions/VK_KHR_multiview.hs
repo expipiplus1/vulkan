@@ -44,7 +44,9 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_multiview
 
 type PhysicalDeviceMultiviewFeaturesKHR = PhysicalDeviceMultiviewFeatures
 -- TODO: Pattern constructor alias)
+
 type PhysicalDeviceMultiviewPropertiesKHR = PhysicalDeviceMultiviewProperties
 -- TODO: Pattern constructor alias)
+
 type RenderPassMultiviewCreateInfoKHR = RenderPassMultiviewCreateInfo
 -- TODO: Pattern constructor alias)

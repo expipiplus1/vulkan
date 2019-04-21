@@ -42,43 +42,73 @@ import Graphics.Vulkan.C.Extensions.VK_AMD_shader_core_properties
   )
 
 
--- No documentation found for TopLevel "PhysicalDeviceShaderCorePropertiesAMD"
+
+-- | VkPhysicalDeviceShaderCorePropertiesAMD - Structure describing shader
+-- core properties that can be supported by an implementation
+--
+-- = Members
+--
+-- The members of the
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_shader_core_properties.VkPhysicalDeviceShaderCorePropertiesAMD'
+-- structure describe the following implementation-dependent limits:
+--
+-- = Description
+--
+-- If the
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_shader_core_properties.VkPhysicalDeviceShaderCorePropertiesAMD'
+-- structure is included in the @pNext@ chain of
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
+-- it is filled with the implementation-dependent limits.
+--
+-- Unresolved directive in VkPhysicalDeviceShaderCorePropertiesAMD.txt -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceShaderCorePropertiesAMD.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data PhysicalDeviceShaderCorePropertiesAMD = PhysicalDeviceShaderCorePropertiesAMD
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceShaderCorePropertiesAMD" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDeviceShaderCorePropertiesAMD" "shaderEngineCount"
-  vkShaderEngineCount :: Word32
+  shaderEngineCount :: Word32
   , -- No documentation found for Nested "PhysicalDeviceShaderCorePropertiesAMD" "shaderArraysPerEngineCount"
-  vkShaderArraysPerEngineCount :: Word32
+  shaderArraysPerEngineCount :: Word32
   , -- No documentation found for Nested "PhysicalDeviceShaderCorePropertiesAMD" "computeUnitsPerShaderArray"
-  vkComputeUnitsPerShaderArray :: Word32
+  computeUnitsPerShaderArray :: Word32
   , -- No documentation found for Nested "PhysicalDeviceShaderCorePropertiesAMD" "simdPerComputeUnit"
-  vkSimdPerComputeUnit :: Word32
+  simdPerComputeUnit :: Word32
   , -- No documentation found for Nested "PhysicalDeviceShaderCorePropertiesAMD" "wavefrontsPerSimd"
-  vkWavefrontsPerSimd :: Word32
+  wavefrontsPerSimd :: Word32
   , -- No documentation found for Nested "PhysicalDeviceShaderCorePropertiesAMD" "wavefrontSize"
-  vkWavefrontSize :: Word32
+  wavefrontSize :: Word32
   , -- No documentation found for Nested "PhysicalDeviceShaderCorePropertiesAMD" "sgprsPerSimd"
-  vkSgprsPerSimd :: Word32
+  sgprsPerSimd :: Word32
   , -- No documentation found for Nested "PhysicalDeviceShaderCorePropertiesAMD" "minSgprAllocation"
-  vkMinSgprAllocation :: Word32
+  minSgprAllocation :: Word32
   , -- No documentation found for Nested "PhysicalDeviceShaderCorePropertiesAMD" "maxSgprAllocation"
-  vkMaxSgprAllocation :: Word32
+  maxSgprAllocation :: Word32
   , -- No documentation found for Nested "PhysicalDeviceShaderCorePropertiesAMD" "sgprAllocationGranularity"
-  vkSgprAllocationGranularity :: Word32
+  sgprAllocationGranularity :: Word32
   , -- No documentation found for Nested "PhysicalDeviceShaderCorePropertiesAMD" "vgprsPerSimd"
-  vkVgprsPerSimd :: Word32
+  vgprsPerSimd :: Word32
   , -- No documentation found for Nested "PhysicalDeviceShaderCorePropertiesAMD" "minVgprAllocation"
-  vkMinVgprAllocation :: Word32
+  minVgprAllocation :: Word32
   , -- No documentation found for Nested "PhysicalDeviceShaderCorePropertiesAMD" "maxVgprAllocation"
-  vkMaxVgprAllocation :: Word32
+  maxVgprAllocation :: Word32
   , -- No documentation found for Nested "PhysicalDeviceShaderCorePropertiesAMD" "vgprAllocationGranularity"
-  vkVgprAllocationGranularity :: Word32
+  vgprAllocationGranularity :: Word32
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPhysicalDeviceShaderCorePropertiesAMD' and
+-- marshal a 'PhysicalDeviceShaderCorePropertiesAMD' into it. The 'VkPhysicalDeviceShaderCorePropertiesAMD' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPhysicalDeviceShaderCorePropertiesAMD :: PhysicalDeviceShaderCorePropertiesAMD -> (VkPhysicalDeviceShaderCorePropertiesAMD -> IO a) -> IO a
-withCStructPhysicalDeviceShaderCorePropertiesAMD from cont = maybeWith withSomeVkStruct (vkPNext (from :: PhysicalDeviceShaderCorePropertiesAMD)) (\pPNext -> cont (VkPhysicalDeviceShaderCorePropertiesAMD VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD pPNext (vkShaderEngineCount (from :: PhysicalDeviceShaderCorePropertiesAMD)) (vkShaderArraysPerEngineCount (from :: PhysicalDeviceShaderCorePropertiesAMD)) (vkComputeUnitsPerShaderArray (from :: PhysicalDeviceShaderCorePropertiesAMD)) (vkSimdPerComputeUnit (from :: PhysicalDeviceShaderCorePropertiesAMD)) (vkWavefrontsPerSimd (from :: PhysicalDeviceShaderCorePropertiesAMD)) (vkWavefrontSize (from :: PhysicalDeviceShaderCorePropertiesAMD)) (vkSgprsPerSimd (from :: PhysicalDeviceShaderCorePropertiesAMD)) (vkMinSgprAllocation (from :: PhysicalDeviceShaderCorePropertiesAMD)) (vkMaxSgprAllocation (from :: PhysicalDeviceShaderCorePropertiesAMD)) (vkSgprAllocationGranularity (from :: PhysicalDeviceShaderCorePropertiesAMD)) (vkVgprsPerSimd (from :: PhysicalDeviceShaderCorePropertiesAMD)) (vkMinVgprAllocation (from :: PhysicalDeviceShaderCorePropertiesAMD)) (vkMaxVgprAllocation (from :: PhysicalDeviceShaderCorePropertiesAMD)) (vkVgprAllocationGranularity (from :: PhysicalDeviceShaderCorePropertiesAMD))))
+withCStructPhysicalDeviceShaderCorePropertiesAMD marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PhysicalDeviceShaderCorePropertiesAMD)) (\pPNext -> cont (VkPhysicalDeviceShaderCorePropertiesAMD VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD pPNext (shaderEngineCount (marshalled :: PhysicalDeviceShaderCorePropertiesAMD)) (shaderArraysPerEngineCount (marshalled :: PhysicalDeviceShaderCorePropertiesAMD)) (computeUnitsPerShaderArray (marshalled :: PhysicalDeviceShaderCorePropertiesAMD)) (simdPerComputeUnit (marshalled :: PhysicalDeviceShaderCorePropertiesAMD)) (wavefrontsPerSimd (marshalled :: PhysicalDeviceShaderCorePropertiesAMD)) (wavefrontSize (marshalled :: PhysicalDeviceShaderCorePropertiesAMD)) (sgprsPerSimd (marshalled :: PhysicalDeviceShaderCorePropertiesAMD)) (minSgprAllocation (marshalled :: PhysicalDeviceShaderCorePropertiesAMD)) (maxSgprAllocation (marshalled :: PhysicalDeviceShaderCorePropertiesAMD)) (sgprAllocationGranularity (marshalled :: PhysicalDeviceShaderCorePropertiesAMD)) (vgprsPerSimd (marshalled :: PhysicalDeviceShaderCorePropertiesAMD)) (minVgprAllocation (marshalled :: PhysicalDeviceShaderCorePropertiesAMD)) (maxVgprAllocation (marshalled :: PhysicalDeviceShaderCorePropertiesAMD)) (vgprAllocationGranularity (marshalled :: PhysicalDeviceShaderCorePropertiesAMD))))
+
+-- | A function to read a 'VkPhysicalDeviceShaderCorePropertiesAMD' and all additional
+-- structures in the pointer chain into a 'PhysicalDeviceShaderCorePropertiesAMD'.
 fromCStructPhysicalDeviceShaderCorePropertiesAMD :: VkPhysicalDeviceShaderCorePropertiesAMD -> IO PhysicalDeviceShaderCorePropertiesAMD
 fromCStructPhysicalDeviceShaderCorePropertiesAMD c = PhysicalDeviceShaderCorePropertiesAMD <$> -- Univalued Member elided
                                                                                            maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceShaderCorePropertiesAMD)))
@@ -96,6 +126,7 @@ fromCStructPhysicalDeviceShaderCorePropertiesAMD c = PhysicalDeviceShaderCorePro
                                                                                            <*> pure (vkMinVgprAllocation (c :: VkPhysicalDeviceShaderCorePropertiesAMD))
                                                                                            <*> pure (vkMaxVgprAllocation (c :: VkPhysicalDeviceShaderCorePropertiesAMD))
                                                                                            <*> pure (vkVgprAllocationGranularity (c :: VkPhysicalDeviceShaderCorePropertiesAMD))
+
 instance Zero PhysicalDeviceShaderCorePropertiesAMD where
   zero = PhysicalDeviceShaderCorePropertiesAMD Nothing
                                                zero
@@ -112,3 +143,4 @@ instance Zero PhysicalDeviceShaderCorePropertiesAMD where
                                                zero
                                                zero
                                                zero
+

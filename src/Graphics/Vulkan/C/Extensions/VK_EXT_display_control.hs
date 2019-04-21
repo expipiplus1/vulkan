@@ -20,26 +20,18 @@ module Graphics.Vulkan.C.Extensions.VK_EXT_display_control
   , pattern VK_DISPLAY_POWER_STATE_SUSPEND_EXT
   , pattern VK_DISPLAY_POWER_STATE_ON_EXT
   , VkSwapchainCounterCreateInfoEXT(..)
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkDisplayPowerControlEXT
-#endif
   , FN_vkDisplayPowerControlEXT
   , PFN_vkDisplayPowerControlEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkGetSwapchainCounterEXT
-#endif
+  , vkDisplayPowerControlEXT
   , FN_vkGetSwapchainCounterEXT
   , PFN_vkGetSwapchainCounterEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkRegisterDeviceEventEXT
-#endif
+  , vkGetSwapchainCounterEXT
   , FN_vkRegisterDeviceEventEXT
   , PFN_vkRegisterDeviceEventEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
-  , vkRegisterDisplayEventEXT
-#endif
+  , vkRegisterDeviceEventEXT
   , FN_vkRegisterDisplayEventEXT
   , PFN_vkRegisterDisplayEventEXT
+  , vkRegisterDisplayEventEXT
   , pattern VK_EXT_DISPLAY_CONTROL_EXTENSION_NAME
   , pattern VK_EXT_DISPLAY_CONTROL_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_DEVICE_EVENT_INFO_EXT
@@ -96,6 +88,9 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
 import Graphics.Vulkan.C.Core10.Queue
   ( VkFence
   )
+import Graphics.Vulkan.C.Dynamic
+  ( DeviceCmds(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter
   ( VkSurfaceCounterFlagBitsEXT(..)
   , VkSurfaceCounterFlagsEXT
@@ -113,17 +108,20 @@ import Graphics.Vulkan.NamedType
 
 -- | VkDeviceEventInfoEXT - Describe a device event to create
 --
--- == Valid Usage (Implicit)
+-- = Description
+--
+-- Unresolved directive in VkDeviceEventInfoEXT.txt -
+-- include::{generated}\/validity\/structs\/VkDeviceEventInfoEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkDeviceEventInfoEXT = VkDeviceEventInfoEXT
-  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_DEVICE_EVENT_INFO_EXT@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @deviceEvent@ /must/ be a valid 'VkDeviceEventTypeEXT' value
+  , -- No documentation found for Nested "VkDeviceEventInfoEXT" "deviceEvent"
   vkDeviceEvent :: VkDeviceEventTypeEXT
   }
   deriving (Eq, Show)
@@ -139,9 +137,10 @@ instance Storable VkDeviceEventInfoEXT where
                 *> poke (ptr `plusPtr` 16) (vkDeviceEvent (poked :: VkDeviceEventInfoEXT))
 
 instance Zero VkDeviceEventInfoEXT where
-  zero = VkDeviceEventInfoEXT zero
+  zero = VkDeviceEventInfoEXT VK_STRUCTURE_TYPE_DEVICE_EVENT_INFO_EXT
                               zero
                               zero
+
 -- ** VkDeviceEventTypeEXT
 
 -- | VkDeviceEventTypeEXT - Events that can occur on a device object
@@ -166,25 +165,30 @@ instance Read VkDeviceEventTypeEXT where
                         )
                     )
 
--- | @VK_DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT@ specifies that the fence is
+-- | 'VK_DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT' specifies that the fence is
 -- signaled when a display is plugged into or unplugged from the specified
 -- device. Applications /can/ use this notification to determine when they
 -- need to re-enumerate the available displays on a device.
 pattern VK_DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT :: VkDeviceEventTypeEXT
 pattern VK_DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT = VkDeviceEventTypeEXT 0
+
 -- | VkDisplayEventInfoEXT - Describe a display event to create
 --
--- == Valid Usage (Implicit)
+-- = Description
+--
+-- Unresolved directive in VkDisplayEventInfoEXT.txt -
+-- include::{generated}\/validity\/structs\/VkDisplayEventInfoEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkDisplayEventInfoEXT = VkDisplayEventInfoEXT
-  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_DISPLAY_EVENT_INFO_EXT@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @displayEvent@ /must/ be a valid 'VkDisplayEventTypeEXT' value
+  , -- | @displayEvent@ is a 'VkDisplayEventTypeEXT' specifying when the fence
+  -- will be signaled.
   vkDisplayEvent :: VkDisplayEventTypeEXT
   }
   deriving (Eq, Show)
@@ -200,9 +204,10 @@ instance Storable VkDisplayEventInfoEXT where
                 *> poke (ptr `plusPtr` 16) (vkDisplayEvent (poked :: VkDisplayEventInfoEXT))
 
 instance Zero VkDisplayEventInfoEXT where
-  zero = VkDisplayEventInfoEXT zero
+  zero = VkDisplayEventInfoEXT VK_STRUCTURE_TYPE_DISPLAY_EVENT_INFO_EXT
                                zero
                                zero
+
 -- ** VkDisplayEventTypeEXT
 
 -- | VkDisplayEventTypeEXT - Events that can occur on a display object
@@ -227,24 +232,29 @@ instance Read VkDisplayEventTypeEXT where
                         )
                     )
 
--- | @VK_DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT@ specifies that the fence is
+-- | 'VK_DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT' specifies that the fence is
 -- signaled when the first pixel of the next display refresh cycle leaves
 -- the display engine for the display.
 pattern VK_DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT :: VkDisplayEventTypeEXT
 pattern VK_DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT = VkDisplayEventTypeEXT 0
+
 -- | VkDisplayPowerInfoEXT - Describe the power state of a display
 --
--- == Valid Usage (Implicit)
+-- = Description
+--
+-- Unresolved directive in VkDisplayPowerInfoEXT.txt -
+-- include::{generated}\/validity\/structs\/VkDisplayPowerInfoEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
 data VkDisplayPowerInfoEXT = VkDisplayPowerInfoEXT
-  { -- | @sType@ /must/ be @VK_STRUCTURE_TYPE_DISPLAY_POWER_INFO_EXT@
+  { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @powerState@ /must/ be a valid 'VkDisplayPowerStateEXT' value
+  , -- | @powerState@ is a 'VkDisplayPowerStateEXT' value specifying the new
+  -- power state of the display.
   vkPowerState :: VkDisplayPowerStateEXT
   }
   deriving (Eq, Show)
@@ -260,9 +270,10 @@ instance Storable VkDisplayPowerInfoEXT where
                 *> poke (ptr `plusPtr` 16) (vkPowerState (poked :: VkDisplayPowerInfoEXT))
 
 instance Zero VkDisplayPowerInfoEXT where
-  zero = VkDisplayPowerInfoEXT zero
+  zero = VkDisplayPowerInfoEXT VK_STRUCTURE_TYPE_DISPLAY_POWER_INFO_EXT
                                zero
                                zero
+
 -- ** VkDisplayPowerStateEXT
 
 -- | VkDisplayPowerStateEXT - Possible power states for a display
@@ -291,23 +302,24 @@ instance Read VkDisplayPowerStateEXT where
                         )
                     )
 
--- | @VK_DISPLAY_POWER_STATE_OFF_EXT@ specifies that the display is powered
+-- | 'VK_DISPLAY_POWER_STATE_OFF_EXT' specifies that the display is powered
 -- down.
 pattern VK_DISPLAY_POWER_STATE_OFF_EXT :: VkDisplayPowerStateEXT
 pattern VK_DISPLAY_POWER_STATE_OFF_EXT = VkDisplayPowerStateEXT 0
 
--- | @VK_DISPLAY_POWER_STATE_SUSPEND_EXT@ specifies that the display is put
+-- | 'VK_DISPLAY_POWER_STATE_SUSPEND_EXT' specifies that the display is put
 -- into a low power mode, from which it /may/ be able to transition back to
--- @VK_DISPLAY_POWER_STATE_ON_EXT@ more quickly than if it were in
--- @VK_DISPLAY_POWER_STATE_OFF_EXT@. This state /may/ be the same as
--- @VK_DISPLAY_POWER_STATE_OFF_EXT@.
+-- 'VK_DISPLAY_POWER_STATE_ON_EXT' more quickly than if it were in
+-- 'VK_DISPLAY_POWER_STATE_OFF_EXT'. This state /may/ be the same as
+-- 'VK_DISPLAY_POWER_STATE_OFF_EXT'.
 pattern VK_DISPLAY_POWER_STATE_SUSPEND_EXT :: VkDisplayPowerStateEXT
 pattern VK_DISPLAY_POWER_STATE_SUSPEND_EXT = VkDisplayPowerStateEXT 1
 
--- | @VK_DISPLAY_POWER_STATE_ON_EXT@ specifies that the display is powered
+-- | 'VK_DISPLAY_POWER_STATE_ON_EXT' specifies that the display is powered
 -- on.
 pattern VK_DISPLAY_POWER_STATE_ON_EXT :: VkDisplayPowerStateEXT
 pattern VK_DISPLAY_POWER_STATE_ON_EXT = VkDisplayPowerStateEXT 2
+
 -- | VkSwapchainCounterCreateInfoEXT - Specify the surface counters desired
 --
 -- == Valid Usage
@@ -317,14 +329,8 @@ pattern VK_DISPLAY_POWER_STATE_ON_EXT = VkDisplayPowerStateEXT 2
 --     as reported by
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter.vkGetPhysicalDeviceSurfaceCapabilities2EXT'.
 --
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_SWAPCHAIN_COUNTER_CREATE_INFO_EXT@
---
--- -   @surfaceCounters@ /must/ be a valid combination of
---     'Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter.VkSurfaceCounterFlagBitsEXT'
---     values
+-- Unresolved directive in VkSwapchainCounterCreateInfoEXT.txt -
+-- include::{generated}\/validity\/structs\/VkSwapchainCounterCreateInfoEXT.txt[]
 --
 -- = See Also
 --
@@ -352,10 +358,10 @@ instance Storable VkSwapchainCounterCreateInfoEXT where
                 *> poke (ptr `plusPtr` 16) (vkSurfaceCounters (poked :: VkSwapchainCounterCreateInfoEXT))
 
 instance Zero VkSwapchainCounterCreateInfoEXT where
-  zero = VkSwapchainCounterCreateInfoEXT zero
+  zero = VkSwapchainCounterCreateInfoEXT VK_STRUCTURE_TYPE_SWAPCHAIN_COUNTER_CREATE_INFO_EXT
                                          zero
                                          zero
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkDisplayPowerControlEXT - Set the power state of a display
 --
 -- = Parameters
@@ -367,24 +373,34 @@ instance Zero VkSwapchainCounterCreateInfoEXT where
 -- -   @pDisplayPowerInfo@ is an instance of 'VkDisplayPowerInfoEXT'
 --     specifying the new power state of @display@.
 --
--- == Return Codes
+-- = Description
 --
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
+-- Unresolved directive in vkDisplayPowerControlEXT.txt -
+-- include::{generated}\/validity\/protos\/vkDisplayPowerControlEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkDisplayPowerControlEXT" vkDisplayPowerControlEXT :: ("device" ::: VkDevice) -> ("display" ::: VkDisplayKHR) -> ("pDisplayPowerInfo" ::: Ptr VkDisplayPowerInfoEXT) -> IO VkResult
-
+#else
+vkDisplayPowerControlEXT :: DeviceCmds -> ("device" ::: VkDevice) -> ("display" ::: VkDisplayKHR) -> ("pDisplayPowerInfo" ::: Ptr VkDisplayPowerInfoEXT) -> IO VkResult
+vkDisplayPowerControlEXT deviceCmds = mkVkDisplayPowerControlEXT (pVkDisplayPowerControlEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkDisplayPowerControlEXT
+  :: FunPtr (("device" ::: VkDevice) -> ("display" ::: VkDisplayKHR) -> ("pDisplayPowerInfo" ::: Ptr VkDisplayPowerInfoEXT) -> IO VkResult) -> (("device" ::: VkDevice) -> ("display" ::: VkDisplayKHR) -> ("pDisplayPowerInfo" ::: Ptr VkDisplayPowerInfoEXT) -> IO VkResult)
+#endif
+
 type FN_vkDisplayPowerControlEXT = ("device" ::: VkDevice) -> ("display" ::: VkDisplayKHR) -> ("pDisplayPowerInfo" ::: Ptr VkDisplayPowerInfoEXT) -> IO VkResult
 type PFN_vkDisplayPowerControlEXT = FunPtr FN_vkDisplayPowerControlEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkGetSwapchainCounterEXT - Query the current value of a surface counter
 --
 -- = Parameters
@@ -402,51 +418,40 @@ type PFN_vkDisplayPowerControlEXT = FunPtr FN_vkDisplayPowerControlEXT
 -- = Description
 --
 -- If a counter is not available because the swapchain is out of date, the
--- implementation /may/ return @VK_ERROR_OUT_OF_DATE_KHR@.
+-- implementation /may/ return
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VK_ERROR_OUT_OF_DATE_KHR'.
 --
 -- == Valid Usage
 --
 -- -   One or more present commands on @swapchain@ /must/ have been
 --     processed by the presentation engine.
 --
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   @swapchain@ /must/ be a valid @VkSwapchainKHR@ handle
---
--- -   @counter@ /must/ be a valid
---     'Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter.VkSurfaceCounterFlagBitsEXT'
---     value
---
--- -   @pCounterValue@ /must/ be a valid pointer to a @uint64_t@ value
---
--- -   Both of @device@, and @swapchain@ /must/ have been created,
---     allocated, or retrieved from the same @VkInstance@
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   @VK_ERROR_DEVICE_LOST@
---
---     -   @VK_ERROR_OUT_OF_DATE_KHR@
+-- Unresolved directive in vkGetSwapchainCounterEXT.txt -
+-- include::{generated}\/validity\/protos\/vkGetSwapchainCounterEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkGetSwapchainCounterEXT" vkGetSwapchainCounterEXT :: ("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> ("counter" ::: VkSurfaceCounterFlagBitsEXT) -> ("pCounterValue" ::: Ptr Word64) -> IO VkResult
-
+#else
+vkGetSwapchainCounterEXT :: DeviceCmds -> ("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> ("counter" ::: VkSurfaceCounterFlagBitsEXT) -> ("pCounterValue" ::: Ptr Word64) -> IO VkResult
+vkGetSwapchainCounterEXT deviceCmds = mkVkGetSwapchainCounterEXT (pVkGetSwapchainCounterEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkGetSwapchainCounterEXT
+  :: FunPtr (("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> ("counter" ::: VkSurfaceCounterFlagBitsEXT) -> ("pCounterValue" ::: Ptr Word64) -> IO VkResult) -> (("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> ("counter" ::: VkSurfaceCounterFlagBitsEXT) -> ("pCounterValue" ::: Ptr Word64) -> IO VkResult)
+#endif
+
 type FN_vkGetSwapchainCounterEXT = ("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> ("counter" ::: VkSurfaceCounterFlagBitsEXT) -> ("pCounterValue" ::: Ptr Word64) -> IO VkResult
 type PFN_vkGetSwapchainCounterEXT = FunPtr FN_vkGetSwapchainCounterEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkRegisterDeviceEventEXT - Signal a fence when a device event occurs
 --
 -- = Parameters
@@ -458,42 +463,40 @@ type PFN_vkGetSwapchainCounterEXT = FunPtr FN_vkGetSwapchainCounterEXT
 --     the application.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
 -- -   @pFence@ points to a handle in which the resulting fence object is
 --     returned.
 --
--- == Valid Usage (Implicit)
+-- = Description
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   @pDeviceEventInfo@ /must/ be a valid pointer to a valid
---     @VkDeviceEventInfoEXT@ structure
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
---
--- -   @pFence@ /must/ be a valid pointer to a @VkFence@ handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
+-- Unresolved directive in vkRegisterDeviceEventEXT.txt -
+-- include::{generated}\/validity\/protos\/vkRegisterDeviceEventEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkRegisterDeviceEventEXT" vkRegisterDeviceEventEXT :: ("device" ::: VkDevice) -> ("pDeviceEventInfo" ::: Ptr VkDeviceEventInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pFence" ::: Ptr VkFence) -> IO VkResult
-
+#else
+vkRegisterDeviceEventEXT :: DeviceCmds -> ("device" ::: VkDevice) -> ("pDeviceEventInfo" ::: Ptr VkDeviceEventInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pFence" ::: Ptr VkFence) -> IO VkResult
+vkRegisterDeviceEventEXT deviceCmds = mkVkRegisterDeviceEventEXT (pVkRegisterDeviceEventEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkRegisterDeviceEventEXT
+  :: FunPtr (("device" ::: VkDevice) -> ("pDeviceEventInfo" ::: Ptr VkDeviceEventInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pFence" ::: Ptr VkFence) -> IO VkResult) -> (("device" ::: VkDevice) -> ("pDeviceEventInfo" ::: Ptr VkDeviceEventInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pFence" ::: Ptr VkFence) -> IO VkResult)
+#endif
+
 type FN_vkRegisterDeviceEventEXT = ("device" ::: VkDevice) -> ("pDeviceEventInfo" ::: Ptr VkDeviceEventInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pFence" ::: Ptr VkFence) -> IO VkResult
 type PFN_vkRegisterDeviceEventEXT = FunPtr FN_vkRegisterDeviceEventEXT
-#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
+
 -- | vkRegisterDisplayEventEXT - Signal a fence when a display event occurs
 --
 -- = Parameters
@@ -507,58 +510,60 @@ type PFN_vkRegisterDeviceEventEXT = FunPtr FN_vkRegisterDeviceEventEXT
 --     to the application.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
 -- -   @pFence@ points to a handle in which the resulting fence object is
 --     returned.
 --
--- == Valid Usage (Implicit)
+-- = Description
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   @display@ /must/ be a valid @VkDisplayKHR@ handle
---
--- -   @pDisplayEventInfo@ /must/ be a valid pointer to a valid
---     @VkDisplayEventInfoEXT@ structure
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
---
--- -   @pFence@ /must/ be a valid pointer to a @VkFence@ handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   @VK_SUCCESS@
+-- Unresolved directive in vkRegisterDisplayEventEXT.txt -
+-- include::{generated}\/validity\/protos\/vkRegisterDisplayEventEXT.txt[]
 --
 -- = See Also
 --
 -- No cross-references are available
+#if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
   "vkRegisterDisplayEventEXT" vkRegisterDisplayEventEXT :: ("device" ::: VkDevice) -> ("display" ::: VkDisplayKHR) -> ("pDisplayEventInfo" ::: Ptr VkDisplayEventInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pFence" ::: Ptr VkFence) -> IO VkResult
-
+#else
+vkRegisterDisplayEventEXT :: DeviceCmds -> ("device" ::: VkDevice) -> ("display" ::: VkDisplayKHR) -> ("pDisplayEventInfo" ::: Ptr VkDisplayEventInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pFence" ::: Ptr VkFence) -> IO VkResult
+vkRegisterDisplayEventEXT deviceCmds = mkVkRegisterDisplayEventEXT (pVkRegisterDisplayEventEXT deviceCmds)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
+  "dynamic" mkVkRegisterDisplayEventEXT
+  :: FunPtr (("device" ::: VkDevice) -> ("display" ::: VkDisplayKHR) -> ("pDisplayEventInfo" ::: Ptr VkDisplayEventInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pFence" ::: Ptr VkFence) -> IO VkResult) -> (("device" ::: VkDevice) -> ("display" ::: VkDisplayKHR) -> ("pDisplayEventInfo" ::: Ptr VkDisplayEventInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pFence" ::: Ptr VkFence) -> IO VkResult)
+#endif
+
 type FN_vkRegisterDisplayEventEXT = ("device" ::: VkDevice) -> ("display" ::: VkDisplayKHR) -> ("pDisplayEventInfo" ::: Ptr VkDisplayEventInfoEXT) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pFence" ::: Ptr VkFence) -> IO VkResult
 type PFN_vkRegisterDisplayEventEXT = FunPtr FN_vkRegisterDisplayEventEXT
+
 -- No documentation found for TopLevel "VK_EXT_DISPLAY_CONTROL_EXTENSION_NAME"
 pattern VK_EXT_DISPLAY_CONTROL_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_DISPLAY_CONTROL_EXTENSION_NAME = "VK_EXT_display_control"
+
 -- No documentation found for TopLevel "VK_EXT_DISPLAY_CONTROL_SPEC_VERSION"
 pattern VK_EXT_DISPLAY_CONTROL_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_DISPLAY_CONTROL_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_EVENT_INFO_EXT"
 pattern VK_STRUCTURE_TYPE_DEVICE_EVENT_INFO_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DEVICE_EVENT_INFO_EXT = VkStructureType 1000091001
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DISPLAY_EVENT_INFO_EXT"
 pattern VK_STRUCTURE_TYPE_DISPLAY_EVENT_INFO_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DISPLAY_EVENT_INFO_EXT = VkStructureType 1000091002
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DISPLAY_POWER_INFO_EXT"
 pattern VK_STRUCTURE_TYPE_DISPLAY_POWER_INFO_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_DISPLAY_POWER_INFO_EXT = VkStructureType 1000091000
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SWAPCHAIN_COUNTER_CREATE_INFO_EXT"
 pattern VK_STRUCTURE_TYPE_SWAPCHAIN_COUNTER_CREATE_INFO_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_SWAPCHAIN_COUNTER_CREATE_INFO_EXT = VkStructureType 1000091003

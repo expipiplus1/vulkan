@@ -57,7 +57,7 @@ import Graphics.Vulkan.C.Extensions.VK_IMG_filter_cubic
 --
 -- Unresolved directive in
 -- VkFilterCubicImageViewImageFormatPropertiesEXT.txt -
--- include::..\/validity\/structs\/VkFilterCubicImageViewImageFormatPropertiesEXT.txt[]
+-- include::{generated}\/validity\/structs\/VkFilterCubicImageViewImageFormatPropertiesEXT.txt[]
 --
 -- == Valid Usage
 --
@@ -103,10 +103,11 @@ instance Storable VkFilterCubicImageViewImageFormatPropertiesEXT where
                 *> poke (ptr `plusPtr` 20) (vkFilterCubicMinmax (poked :: VkFilterCubicImageViewImageFormatPropertiesEXT))
 
 instance Zero VkFilterCubicImageViewImageFormatPropertiesEXT where
-  zero = VkFilterCubicImageViewImageFormatPropertiesEXT zero
+  zero = VkFilterCubicImageViewImageFormatPropertiesEXT VK_STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT
                                                         zero
                                                         zero
                                                         zero
+
 -- | VkPhysicalDeviceImageViewImageFormatInfoEXT - Structure for providing
 -- image view type
 --
@@ -114,7 +115,7 @@ instance Zero VkFilterCubicImageViewImageFormatPropertiesEXT where
 --
 -- Unresolved directive in VkPhysicalDeviceImageViewImageFormatInfoEXT.txt
 -- -
--- include::..\/validity\/structs\/VkPhysicalDeviceImageViewImageFormatInfoEXT.txt[]
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceImageViewImageFormatInfoEXT.txt[]
 --
 -- = See Also
 --
@@ -142,24 +143,30 @@ instance Storable VkPhysicalDeviceImageViewImageFormatInfoEXT where
                 *> poke (ptr `plusPtr` 16) (vkImageViewType (poked :: VkPhysicalDeviceImageViewImageFormatInfoEXT))
 
 instance Zero VkPhysicalDeviceImageViewImageFormatInfoEXT where
-  zero = VkPhysicalDeviceImageViewImageFormatInfoEXT zero
+  zero = VkPhysicalDeviceImageViewImageFormatInfoEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT
                                                      zero
                                                      zero
+
 -- No documentation found for TopLevel "VK_EXT_FILTER_CUBIC_EXTENSION_NAME"
 pattern VK_EXT_FILTER_CUBIC_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_FILTER_CUBIC_EXTENSION_NAME = "VK_EXT_filter_cubic"
+
 -- No documentation found for TopLevel "VK_EXT_FILTER_CUBIC_SPEC_VERSION"
 pattern VK_EXT_FILTER_CUBIC_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_FILTER_CUBIC_SPEC_VERSION = 1
+
 -- No documentation found for TopLevel "VK_FILTER_CUBIC_EXT"
 pattern VK_FILTER_CUBIC_EXT :: VkFilter
 pattern VK_FILTER_CUBIC_EXT = VK_FILTER_CUBIC_IMG
+
 -- No documentation found for TopLevel "VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT"
 pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT = VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT"
 pattern VK_STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT = VkStructureType 1000170001
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT = VkStructureType 1000170000

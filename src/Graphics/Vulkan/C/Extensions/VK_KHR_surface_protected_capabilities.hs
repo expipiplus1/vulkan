@@ -37,7 +37,7 @@ import Graphics.Vulkan.C.Core10.Core
 -- = Description
 --
 -- Unresolved directive in VkSurfaceProtectedCapabilitiesKHR.txt -
--- include::..\/validity\/structs\/VkSurfaceProtectedCapabilitiesKHR.txt[]
+-- include::{generated}\/validity\/structs\/VkSurfaceProtectedCapabilitiesKHR.txt[]
 --
 -- = See Also
 --
@@ -50,9 +50,10 @@ data VkSurfaceProtectedCapabilitiesKHR = VkSurfaceProtectedCapabilitiesKHR
   , -- | @supportsProtected@ specifies whether a protected swapchain created from
   -- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkPhysicalDeviceSurfaceInfo2KHR'::@surface@
   -- for a particular windowing system /can/ be displayed on screen or not.
-  -- If @supportsProtected@ is @VK_TRUE@, then creation of swapchains with
-  -- the @VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR@ flag set /must/ be supported
-  -- for @surface@.
+  -- If @supportsProtected@ is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE', then
+  -- creation of swapchains with the
+  -- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR'
+  -- flag set /must/ be supported for @surface@.
   vkSupportsProtected :: VkBool32
   }
   deriving (Eq, Show)
@@ -68,15 +69,18 @@ instance Storable VkSurfaceProtectedCapabilitiesKHR where
                 *> poke (ptr `plusPtr` 16) (vkSupportsProtected (poked :: VkSurfaceProtectedCapabilitiesKHR))
 
 instance Zero VkSurfaceProtectedCapabilitiesKHR where
-  zero = VkSurfaceProtectedCapabilitiesKHR zero
+  zero = VkSurfaceProtectedCapabilitiesKHR VK_STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR
                                            zero
                                            zero
+
 -- No documentation found for TopLevel "VK_KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME"
 pattern VK_KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME = "VK_KHR_surface_protected_capabilities"
+
 -- No documentation found for TopLevel "VK_KHR_SURFACE_PROTECTED_CAPABILITIES_SPEC_VERSION"
 pattern VK_KHR_SURFACE_PROTECTED_CAPABILITIES_SPEC_VERSION :: Integral a => a
 pattern VK_KHR_SURFACE_PROTECTED_CAPABILITIES_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR"
 pattern VK_STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR :: VkStructureType
 pattern VK_STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR = VkStructureType 1000239000

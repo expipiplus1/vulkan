@@ -43,29 +43,50 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_vulkan_memory_model
   )
 
 
--- No documentation found for TopLevel "PhysicalDeviceVulkanMemoryModelFeaturesKHR"
+
+-- | VkPhysicalDeviceVulkanMemoryModelFeaturesKHR - Structure describing
+-- features supported by VK_KHR_vulkan_memory_model
+--
+-- = Description
+--
+-- Unresolved directive in VkPhysicalDeviceVulkanMemoryModelFeaturesKHR.txt
+-- -
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceVulkanMemoryModelFeaturesKHR.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data PhysicalDeviceVulkanMemoryModelFeaturesKHR = PhysicalDeviceVulkanMemoryModelFeaturesKHR
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceVulkanMemoryModelFeaturesKHR" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDeviceVulkanMemoryModelFeaturesKHR" "vulkanMemoryModel"
-  vkVulkanMemoryModel :: Bool
+  vulkanMemoryModel :: Bool
   , -- No documentation found for Nested "PhysicalDeviceVulkanMemoryModelFeaturesKHR" "vulkanMemoryModelDeviceScope"
-  vkVulkanMemoryModelDeviceScope :: Bool
+  vulkanMemoryModelDeviceScope :: Bool
   , -- No documentation found for Nested "PhysicalDeviceVulkanMemoryModelFeaturesKHR" "vulkanMemoryModelAvailabilityVisibilityChains"
-  vkVulkanMemoryModelAvailabilityVisibilityChains :: Bool
+  vulkanMemoryModelAvailabilityVisibilityChains :: Bool
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPhysicalDeviceVulkanMemoryModelFeaturesKHR' and
+-- marshal a 'PhysicalDeviceVulkanMemoryModelFeaturesKHR' into it. The 'VkPhysicalDeviceVulkanMemoryModelFeaturesKHR' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPhysicalDeviceVulkanMemoryModelFeaturesKHR :: PhysicalDeviceVulkanMemoryModelFeaturesKHR -> (VkPhysicalDeviceVulkanMemoryModelFeaturesKHR -> IO a) -> IO a
-withCStructPhysicalDeviceVulkanMemoryModelFeaturesKHR from cont = maybeWith withSomeVkStruct (vkPNext (from :: PhysicalDeviceVulkanMemoryModelFeaturesKHR)) (\pPNext -> cont (VkPhysicalDeviceVulkanMemoryModelFeaturesKHR VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES_KHR pPNext (boolToBool32 (vkVulkanMemoryModel (from :: PhysicalDeviceVulkanMemoryModelFeaturesKHR))) (boolToBool32 (vkVulkanMemoryModelDeviceScope (from :: PhysicalDeviceVulkanMemoryModelFeaturesKHR))) (boolToBool32 (vkVulkanMemoryModelAvailabilityVisibilityChains (from :: PhysicalDeviceVulkanMemoryModelFeaturesKHR)))))
+withCStructPhysicalDeviceVulkanMemoryModelFeaturesKHR marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PhysicalDeviceVulkanMemoryModelFeaturesKHR)) (\pPNext -> cont (VkPhysicalDeviceVulkanMemoryModelFeaturesKHR VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES_KHR pPNext (boolToBool32 (vulkanMemoryModel (marshalled :: PhysicalDeviceVulkanMemoryModelFeaturesKHR))) (boolToBool32 (vulkanMemoryModelDeviceScope (marshalled :: PhysicalDeviceVulkanMemoryModelFeaturesKHR))) (boolToBool32 (vulkanMemoryModelAvailabilityVisibilityChains (marshalled :: PhysicalDeviceVulkanMemoryModelFeaturesKHR)))))
+
+-- | A function to read a 'VkPhysicalDeviceVulkanMemoryModelFeaturesKHR' and all additional
+-- structures in the pointer chain into a 'PhysicalDeviceVulkanMemoryModelFeaturesKHR'.
 fromCStructPhysicalDeviceVulkanMemoryModelFeaturesKHR :: VkPhysicalDeviceVulkanMemoryModelFeaturesKHR -> IO PhysicalDeviceVulkanMemoryModelFeaturesKHR
 fromCStructPhysicalDeviceVulkanMemoryModelFeaturesKHR c = PhysicalDeviceVulkanMemoryModelFeaturesKHR <$> -- Univalued Member elided
                                                                                                      maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceVulkanMemoryModelFeaturesKHR)))
                                                                                                      <*> pure (bool32ToBool (vkVulkanMemoryModel (c :: VkPhysicalDeviceVulkanMemoryModelFeaturesKHR)))
                                                                                                      <*> pure (bool32ToBool (vkVulkanMemoryModelDeviceScope (c :: VkPhysicalDeviceVulkanMemoryModelFeaturesKHR)))
                                                                                                      <*> pure (bool32ToBool (vkVulkanMemoryModelAvailabilityVisibilityChains (c :: VkPhysicalDeviceVulkanMemoryModelFeaturesKHR)))
+
 instance Zero PhysicalDeviceVulkanMemoryModelFeaturesKHR where
   zero = PhysicalDeviceVulkanMemoryModelFeaturesKHR Nothing
                                                     False
                                                     False
                                                     False
+

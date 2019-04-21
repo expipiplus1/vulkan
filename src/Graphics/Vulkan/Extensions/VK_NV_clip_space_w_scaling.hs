@@ -46,9 +46,6 @@ import Foreign.Ptr
 import Foreign.Storable
   ( peekElemOff
   )
-import qualified Graphics.Vulkan.C.Dynamic
-  ( cmdSetViewportWScalingNV
-  )
 
 
 import Graphics.Vulkan.C.Core10.Core
@@ -57,6 +54,7 @@ import Graphics.Vulkan.C.Core10.Core
 import Graphics.Vulkan.C.Extensions.VK_NV_clip_space_w_scaling
   ( VkPipelineViewportWScalingStateCreateInfoNV(..)
   , VkViewportWScalingNV(..)
+  , vkCmdSetViewportWScalingNV
   , pattern VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV
   )
 import Graphics.Vulkan.Core10.Core
@@ -81,47 +79,132 @@ import Graphics.Vulkan.C.Extensions.VK_NV_clip_space_w_scaling
   )
 
 
--- No documentation found for TopLevel "PipelineViewportWScalingStateCreateInfoNV"
+
+-- | VkPipelineViewportWScalingStateCreateInfoNV - Structure specifying
+-- parameters of a newly created pipeline viewport W scaling state
+--
+-- = Description
+--
+-- Unresolved directive in VkPipelineViewportWScalingStateCreateInfoNV.txt
+-- -
+-- include::{generated}\/validity\/structs\/VkPipelineViewportWScalingStateCreateInfoNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data PipelineViewportWScalingStateCreateInfoNV = PipelineViewportWScalingStateCreateInfoNV
-  { -- Univalued Member elided
+  { -- Univalued member elided
   -- No documentation found for Nested "PipelineViewportWScalingStateCreateInfoNV" "pNext"
-  vkPNext :: Maybe SomeVkStruct
+  next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PipelineViewportWScalingStateCreateInfoNV" "viewportWScalingEnable"
-  vkViewportWScalingEnable :: Bool
+  viewportWScalingEnable :: Bool
   -- Optional length valued member elided
   , -- No documentation found for Nested "PipelineViewportWScalingStateCreateInfoNV" "pViewportWScalings"
-  vkPViewportWScalings :: Maybe (Vector ViewportWScalingNV)
+  viewportWScalings :: Maybe (Vector ViewportWScalingNV)
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkPipelineViewportWScalingStateCreateInfoNV' and
+-- marshal a 'PipelineViewportWScalingStateCreateInfoNV' into it. The 'VkPipelineViewportWScalingStateCreateInfoNV' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructPipelineViewportWScalingStateCreateInfoNV :: PipelineViewportWScalingStateCreateInfoNV -> (VkPipelineViewportWScalingStateCreateInfoNV -> IO a) -> IO a
-withCStructPipelineViewportWScalingStateCreateInfoNV from cont = maybeWith (withVec withCStructViewportWScalingNV) (vkPViewportWScalings (from :: PipelineViewportWScalingStateCreateInfoNV)) (\pViewportWScalings -> maybeWith withSomeVkStruct (vkPNext (from :: PipelineViewportWScalingStateCreateInfoNV)) (\pPNext -> cont (VkPipelineViewportWScalingStateCreateInfoNV VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV pPNext (boolToBool32 (vkViewportWScalingEnable (from :: PipelineViewportWScalingStateCreateInfoNV))) (maybe 0 (fromIntegral . Data.Vector.length) (vkPViewportWScalings (from :: PipelineViewportWScalingStateCreateInfoNV))) pViewportWScalings)))
+withCStructPipelineViewportWScalingStateCreateInfoNV marshalled cont = maybeWith (withVec withCStructViewportWScalingNV) (viewportWScalings (marshalled :: PipelineViewportWScalingStateCreateInfoNV)) (\pPViewportWScalings -> maybeWith withSomeVkStruct (next (marshalled :: PipelineViewportWScalingStateCreateInfoNV)) (\pPNext -> cont (VkPipelineViewportWScalingStateCreateInfoNV VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV pPNext (boolToBool32 (viewportWScalingEnable (marshalled :: PipelineViewportWScalingStateCreateInfoNV))) (maybe 0 (fromIntegral . Data.Vector.length) (viewportWScalings (marshalled :: PipelineViewportWScalingStateCreateInfoNV))) pPViewportWScalings)))
+
+-- | A function to read a 'VkPipelineViewportWScalingStateCreateInfoNV' and all additional
+-- structures in the pointer chain into a 'PipelineViewportWScalingStateCreateInfoNV'.
 fromCStructPipelineViewportWScalingStateCreateInfoNV :: VkPipelineViewportWScalingStateCreateInfoNV -> IO PipelineViewportWScalingStateCreateInfoNV
 fromCStructPipelineViewportWScalingStateCreateInfoNV c = PipelineViewportWScalingStateCreateInfoNV <$> -- Univalued Member elided
                                                                                                    maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPipelineViewportWScalingStateCreateInfoNV)))
                                                                                                    <*> pure (bool32ToBool (vkViewportWScalingEnable (c :: VkPipelineViewportWScalingStateCreateInfoNV)))
                                                                                                    -- Optional length valued member elided
                                                                                                    <*> maybePeek (\p -> Data.Vector.generateM (fromIntegral (vkViewportCount (c :: VkPipelineViewportWScalingStateCreateInfoNV))) (((fromCStructViewportWScalingNV <=<) . peekElemOff) p)) (vkPViewportWScalings (c :: VkPipelineViewportWScalingStateCreateInfoNV))
+
 instance Zero PipelineViewportWScalingStateCreateInfoNV where
   zero = PipelineViewportWScalingStateCreateInfoNV Nothing
                                                    False
                                                    Nothing
--- No documentation found for TopLevel "ViewportWScalingNV"
+
+
+
+-- | VkViewportWScalingNV - Structure specifying a viewport
+--
+-- = Description
+--
+-- Unresolved directive in VkViewportWScalingNV.txt -
+-- include::{generated}\/validity\/structs\/VkViewportWScalingNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 data ViewportWScalingNV = ViewportWScalingNV
   { -- No documentation found for Nested "ViewportWScalingNV" "xcoeff"
-  vkXcoeff :: CFloat
+  xcoeff :: CFloat
   , -- No documentation found for Nested "ViewportWScalingNV" "ycoeff"
-  vkYcoeff :: CFloat
+  ycoeff :: CFloat
   }
   deriving (Show, Eq)
+
+-- | A function to temporarily allocate memory for a 'VkViewportWScalingNV' and
+-- marshal a 'ViewportWScalingNV' into it. The 'VkViewportWScalingNV' is only valid inside
+-- the provided computation and must not be returned out of it.
 withCStructViewportWScalingNV :: ViewportWScalingNV -> (VkViewportWScalingNV -> IO a) -> IO a
-withCStructViewportWScalingNV from cont = cont (VkViewportWScalingNV (vkXcoeff (from :: ViewportWScalingNV)) (vkYcoeff (from :: ViewportWScalingNV)))
+withCStructViewportWScalingNV marshalled cont = cont (VkViewportWScalingNV (xcoeff (marshalled :: ViewportWScalingNV)) (ycoeff (marshalled :: ViewportWScalingNV)))
+
+-- | A function to read a 'VkViewportWScalingNV' and all additional
+-- structures in the pointer chain into a 'ViewportWScalingNV'.
 fromCStructViewportWScalingNV :: VkViewportWScalingNV -> IO ViewportWScalingNV
 fromCStructViewportWScalingNV c = ViewportWScalingNV <$> pure (vkXcoeff (c :: VkViewportWScalingNV))
                                                      <*> pure (vkYcoeff (c :: VkViewportWScalingNV))
+
 instance Zero ViewportWScalingNV where
   zero = ViewportWScalingNV zero
                             zero
 
--- | Wrapper for 'vkCmdSetViewportWScalingNV'
+
+
+-- | vkCmdSetViewportWScalingNV - Set the viewport W scaling on a command
+-- buffer
+--
+-- = Parameters
+--
+-- -   @commandBuffer@ is the command buffer into which the command will be
+--     recorded.
+--
+-- -   @firstViewport@ is the index of the first viewport whose parameters
+--     are updated by the command.
+--
+-- -   @viewportCount@ is the number of viewports whose parameters are
+--     updated by the command.
+--
+-- -   @pViewportWScalings@ is a pointer to an array of
+--     'Graphics.Vulkan.C.Extensions.VK_NV_clip_space_w_scaling.VkViewportWScalingNV'
+--     structures specifying viewport parameters.
+--
+-- = Description
+--
+-- The viewport parameters taken from element i of @pViewportWScalings@
+-- replace the current state for the viewport index @firstViewport@ + i,
+-- for i in [0, @viewportCount@).
+--
+-- == Valid Usage
+--
+-- -   The bound graphics pipeline /must/ have been created with the
+--     'Graphics.Vulkan.C.Extensions.VK_NV_clip_space_w_scaling.VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV'
+--     dynamic state enabled
+--
+-- -   @firstViewport@ /must/ be less than
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxViewports@
+--
+-- -   The sum of @firstViewport@ and @viewportCount@ /must/ be between @1@
+--     and
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxViewports@,
+--     inclusive
+--
+-- Unresolved directive in vkCmdSetViewportWScalingNV.txt -
+-- include::{generated}\/validity\/protos\/vkCmdSetViewportWScalingNV.txt[]
+--
+-- = See Also
+--
+-- No cross-references are available
 cmdSetViewportWScalingNV :: CommandBuffer ->  Word32 ->  Vector ViewportWScalingNV ->  IO ()
-cmdSetViewportWScalingNV = \(CommandBuffer commandBuffer commandTable) -> \firstViewport -> \viewportWScalings -> withVec withCStructViewportWScalingNV viewportWScalings (\pViewportWScalings -> Graphics.Vulkan.C.Dynamic.cmdSetViewportWScalingNV commandTable commandBuffer firstViewport (fromIntegral $ Data.Vector.length viewportWScalings) pViewportWScalings *> (pure ()))
+cmdSetViewportWScalingNV = \(CommandBuffer commandBuffer' commandTable) -> \firstViewport' -> \viewportWScalings' -> withVec withCStructViewportWScalingNV viewportWScalings' (\pViewportWScalings' -> vkCmdSetViewportWScalingNV commandTable commandBuffer' firstViewport' (fromIntegral $ Data.Vector.length viewportWScalings') pViewportWScalings' *> (pure ()))

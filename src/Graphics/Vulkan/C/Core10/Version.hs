@@ -60,6 +60,7 @@ _VK_VERSION_MINOR v = v `shiftR` 12 .&. 0x3ff
 -- No cross-references are available
 _VK_VERSION_PATCH :: Word32 -> Word32
 _VK_VERSION_PATCH v = v .&. 0xfff
+
 -- | VK_API_VERSION_1_0 - Return API version number for Vulkan 1.0
 --
 -- = See Also
@@ -68,10 +69,11 @@ _VK_VERSION_PATCH v = v .&. 0xfff
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceProperties'
 pattern VK_API_VERSION_1_0 :: Word32
 pattern VK_API_VERSION_1_0 = VK_MAKE_VERSION 1 0 0
+
 -- | VK_HEADER_VERSION - Vulkan header file version number
 --
 -- = See Also
 --
 -- No cross-references are available
 pattern VK_HEADER_VERSION :: Integral a => a
-pattern VK_HEADER_VERSION = 106
+pattern VK_HEADER_VERSION = 107

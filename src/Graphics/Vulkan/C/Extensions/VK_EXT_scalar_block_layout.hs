@@ -36,22 +36,22 @@ import Graphics.Vulkan.C.Core10.Core
 --
 -- = Members
 --
--- The members of the @VkPhysicalDeviceScalarBlockLayoutFeaturesEXT@
+-- The members of the 'VkPhysicalDeviceScalarBlockLayoutFeaturesEXT'
 -- structure describe the following features:
 --
 -- = Description
 --
--- If the @VkPhysicalDeviceScalarBlockLayoutFeaturesEXT@ structure is
+-- If the 'VkPhysicalDeviceScalarBlockLayoutFeaturesEXT' structure is
 -- included in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
 -- it is filled with values indicating whether the feature is supported.
--- @VkPhysicalDeviceScalarBlockLayoutFeaturesEXT@ /can/ also be used in the
+-- 'VkPhysicalDeviceScalarBlockLayoutFeaturesEXT' /can/ also be used in the
 -- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to
 -- enable this feature.
 --
 -- Unresolved directive in VkPhysicalDeviceScalarBlockLayoutFeaturesEXT.txt
 -- -
--- include::..\/validity\/structs\/VkPhysicalDeviceScalarBlockLayoutFeaturesEXT.txt[]
+-- include::{generated}\/validity\/structs\/VkPhysicalDeviceScalarBlockLayoutFeaturesEXT.txt[]
 --
 -- = See Also
 --
@@ -63,7 +63,7 @@ data VkPhysicalDeviceScalarBlockLayoutFeaturesEXT = VkPhysicalDeviceScalarBlockL
   vkPNext :: Ptr ()
   , -- | @scalarBlockLayout@ indicates that the implementation supports the
   -- layout of resource blocks in shaders using
-  -- <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#interfaces-scalar-block-layout scalar alignment>.
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#interfaces-scalar-block-layout scalar alignment>.
   vkScalarBlockLayout :: VkBool32
   }
   deriving (Eq, Show)
@@ -79,15 +79,18 @@ instance Storable VkPhysicalDeviceScalarBlockLayoutFeaturesEXT where
                 *> poke (ptr `plusPtr` 16) (vkScalarBlockLayout (poked :: VkPhysicalDeviceScalarBlockLayoutFeaturesEXT))
 
 instance Zero VkPhysicalDeviceScalarBlockLayoutFeaturesEXT where
-  zero = VkPhysicalDeviceScalarBlockLayoutFeaturesEXT zero
+  zero = VkPhysicalDeviceScalarBlockLayoutFeaturesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES_EXT
                                                       zero
                                                       zero
+
 -- No documentation found for TopLevel "VK_EXT_SCALAR_BLOCK_LAYOUT_EXTENSION_NAME"
 pattern VK_EXT_SCALAR_BLOCK_LAYOUT_EXTENSION_NAME :: (Eq a ,IsString a) => a
 pattern VK_EXT_SCALAR_BLOCK_LAYOUT_EXTENSION_NAME = "VK_EXT_scalar_block_layout"
+
 -- No documentation found for TopLevel "VK_EXT_SCALAR_BLOCK_LAYOUT_SPEC_VERSION"
 pattern VK_EXT_SCALAR_BLOCK_LAYOUT_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_SCALAR_BLOCK_LAYOUT_SPEC_VERSION = 1
+
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES_EXT"
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES_EXT :: VkStructureType
 pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES_EXT = VkStructureType 1000221000
