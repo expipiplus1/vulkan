@@ -19,5 +19,5 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_AMD_rasterization_order
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_rasterization_order.VkPipelineRasterizationStateRasterizationOrderAMD'
 type RasterizationOrderAMD = VkRasterizationOrderAMD

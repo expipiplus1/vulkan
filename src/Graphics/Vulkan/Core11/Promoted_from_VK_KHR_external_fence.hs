@@ -13,7 +13,7 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_fence
   , FenceImportFlagBitsKHR
   , FenceImportFlags
   , FenceImportFlagsKHR
-  , pattern VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO
+  , pattern STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO
   ) where
 
 import Foreign.Marshal.Utils
@@ -42,6 +42,9 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO
+  )
 
 
 
@@ -54,8 +57,14 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
 --     reported by
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceProperties'.
 --
--- Unresolved directive in VkExportFenceCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkExportFenceCreateInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence.VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO'
+--
+-- -   @handleTypes@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceHandleTypeFlagBits'
+--     values
 --
 -- = See Also
 --
@@ -97,6 +106,9 @@ instance Zero ExportFenceCreateInfo where
 type FenceImportFlagBits = VkFenceImportFlagBits
 
 
+{-# complete FENCE_IMPORT_TEMPORARY_BIT :: FenceImportFlagBits #-}
+
+
 -- | 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence.VK_FENCE_IMPORT_TEMPORARY_BIT'
 -- specifies that the fence payload will be imported only temporarily, as
 -- described in
@@ -118,7 +130,9 @@ type FenceImportFlagBitsKHR = FenceImportFlagBits
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence.VkFenceImportFlagBits'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence.VkFenceImportFlagBits',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd.VkImportFenceFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.VkImportFenceWin32HandleInfoKHR'
 type FenceImportFlags = FenceImportFlagBits
 
 -- No documentation found for TopLevel "FenceImportFlagsKHR"

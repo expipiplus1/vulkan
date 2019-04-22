@@ -7,11 +7,14 @@ module Graphics.Vulkan.Extensions.VK_EXT_pci_bus_info
   ( withCStructPhysicalDevicePCIBusInfoPropertiesEXT
   , fromCStructPhysicalDevicePCIBusInfoPropertiesEXT
   , PhysicalDevicePCIBusInfoPropertiesEXT(..)
-  , pattern VK_EXT_PCI_BUS_INFO_SPEC_VERSION
-  , pattern VK_EXT_PCI_BUS_INFO_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PCI_BUS_INFO_PROPERTIES_EXT
+  , pattern EXT_PCI_BUS_INFO_EXTENSION_NAME
+  , pattern EXT_PCI_BUS_INFO_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PCI_BUS_INFO_PROPERTIES_EXT
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Data.Word
   ( Word32
   )
@@ -29,6 +32,8 @@ import Graphics.Vulkan.C.Core10.Core
   )
 import Graphics.Vulkan.C.Extensions.VK_EXT_pci_bus_info
   ( VkPhysicalDevicePCIBusInfoPropertiesEXT(..)
+  , pattern VK_EXT_PCI_BUS_INFO_EXTENSION_NAME
+  , pattern VK_EXT_PCI_BUS_INFO_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PCI_BUS_INFO_PROPERTIES_EXT
   )
 import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
@@ -36,9 +41,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_pci_bus_info
-  ( pattern VK_EXT_PCI_BUS_INFO_EXTENSION_NAME
-  , pattern VK_EXT_PCI_BUS_INFO_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PCI_BUS_INFO_PROPERTIES_EXT
   )
 
 
@@ -46,14 +50,11 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_pci_bus_info
 -- | VkPhysicalDevicePCIBusInfoPropertiesEXT - Structure containing PCI bus
 -- information of a physical device
 --
--- = Description
---
--- Unresolved directive in VkPhysicalDevicePCIBusInfoPropertiesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDevicePCIBusInfoPropertiesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDevicePCIBusInfoPropertiesEXT = PhysicalDevicePCIBusInfoPropertiesEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDevicePCIBusInfoPropertiesEXT" "pNext"
@@ -92,3 +93,11 @@ instance Zero PhysicalDevicePCIBusInfoPropertiesEXT where
                                                zero
                                                zero
 
+
+-- No documentation found for TopLevel "VK_EXT_PCI_BUS_INFO_EXTENSION_NAME"
+pattern EXT_PCI_BUS_INFO_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_PCI_BUS_INFO_EXTENSION_NAME = VK_EXT_PCI_BUS_INFO_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_PCI_BUS_INFO_SPEC_VERSION"
+pattern EXT_PCI_BUS_INFO_SPEC_VERSION :: Integral a => a
+pattern EXT_PCI_BUS_INFO_SPEC_VERSION = VK_EXT_PCI_BUS_INFO_SPEC_VERSION

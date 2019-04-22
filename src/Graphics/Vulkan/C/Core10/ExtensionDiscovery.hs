@@ -71,11 +71,6 @@ pattern VK_MAX_EXTENSION_NAME_SIZE = 256
 
 -- | VkExtensionProperties - Structure specifying an extension properties
 --
--- = Description
---
--- Unresolved directive in VkExtensionProperties.txt -
--- include::{generated}\/validity\/structs\/VkExtensionProperties.txt[]
---
 -- = See Also
 --
 -- 'vkEnumerateDeviceExtensionProperties',
@@ -132,8 +127,34 @@ instance Zero VkExtensionProperties where
 -- be enabled together due to behavioral differences, or any extension that
 -- cannot be enabled against the advertised version.
 --
--- Unresolved directive in vkEnumerateDeviceExtensionProperties.txt -
--- include::{generated}\/validity\/protos\/vkEnumerateDeviceExtensionProperties.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   If @pLayerName@ is not @NULL@, @pLayerName@ /must/ be a
+--     null-terminated UTF-8 string
+--
+-- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
+--
+-- -   If the value referenced by @pPropertyCount@ is not @0@, and
+--     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
+--     to an array of @pPropertyCount@ 'VkExtensionProperties' structures
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_LAYER_NOT_PRESENT'
 --
 -- = See Also
 --
@@ -203,8 +224,30 @@ type PFN_vkEnumerateDeviceExtensionProperties = FunPtr FN_vkEnumerateDeviceExten
 -- be enabled together due to behavioral differences, or any extension that
 -- cannot be enabled against the advertised version.
 --
--- Unresolved directive in vkEnumerateInstanceExtensionProperties.txt -
--- include::{generated}\/validity\/protos\/vkEnumerateInstanceExtensionProperties.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   If @pLayerName@ is not @NULL@, @pLayerName@ /must/ be a
+--     null-terminated UTF-8 string
+--
+-- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
+--
+-- -   If the value referenced by @pPropertyCount@ is not @0@, and
+--     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
+--     to an array of @pPropertyCount@ 'VkExtensionProperties' structures
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_LAYER_NOT_PRESENT'
 --
 -- = See Also
 --

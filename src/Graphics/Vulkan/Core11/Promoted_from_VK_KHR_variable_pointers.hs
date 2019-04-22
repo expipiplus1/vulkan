@@ -8,8 +8,8 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_variable_pointers
   , withCStructPhysicalDeviceVariablePointersFeatures
   , fromCStructPhysicalDeviceVariablePointersFeatures
   , PhysicalDeviceVariablePointersFeatures(..)
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES
   ) where
 
 import Foreign.Marshal.Utils
@@ -22,7 +22,8 @@ import Foreign.Ptr
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( Zero(..)
+  ( VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_variable_pointers
   ( VkPhysicalDeviceVariablePointersFeatures(..)
@@ -31,14 +32,12 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_variable_pointers
 import Graphics.Vulkan.Core10.Core
   ( bool32ToBool
   , boolToBool32
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES
   )
 import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   ( SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
-  )
-import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_variable_pointers
-  ( pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES
   )
 
 
@@ -83,8 +82,10 @@ type PhysicalDeviceVariablePointerFeatures = PhysicalDeviceVariablePointersFeatu
 -- -   If @variablePointers@ is enabled then
 --     @variablePointersStorageBuffer@ /must/ also be enabled.
 --
--- Unresolved directive in VkPhysicalDeviceVariablePointersFeatures.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceVariablePointersFeatures.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_variable_pointers.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES'
 --
 -- = See Also
 --
@@ -120,3 +121,7 @@ instance Zero PhysicalDeviceVariablePointersFeatures where
                                                 False
                                                 False
 
+
+-- No documentation found for TopLevel "STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES :: VkStructureType
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES = STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTERS_FEATURES

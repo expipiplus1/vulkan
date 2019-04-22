@@ -10,12 +10,15 @@ module Graphics.Vulkan.Extensions.VK_EXT_astc_decode_mode
   , withCStructPhysicalDeviceASTCDecodeFeaturesEXT
   , fromCStructPhysicalDeviceASTCDecodeFeaturesEXT
   , PhysicalDeviceASTCDecodeFeaturesEXT(..)
-  , pattern VK_EXT_ASTC_DECODE_MODE_SPEC_VERSION
-  , pattern VK_EXT_ASTC_DECODE_MODE_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_ASTC_DECODE_MODE_EXT
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT
+  , pattern EXT_ASTC_DECODE_MODE_EXTENSION_NAME
+  , pattern EXT_ASTC_DECODE_MODE_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_IMAGE_VIEW_ASTC_DECODE_MODE_EXT
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Foreign.Marshal.Utils
   ( maybePeek
   , maybeWith
@@ -31,6 +34,8 @@ import Graphics.Vulkan.C.Core10.Core
 import Graphics.Vulkan.C.Extensions.VK_EXT_astc_decode_mode
   ( VkImageViewASTCDecodeModeEXT(..)
   , VkPhysicalDeviceASTCDecodeFeaturesEXT(..)
+  , pattern VK_EXT_ASTC_DECODE_MODE_EXTENSION_NAME
+  , pattern VK_EXT_ASTC_DECODE_MODE_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_ASTC_DECODE_MODE_EXT
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT
   )
@@ -44,9 +49,9 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_astc_decode_mode
-  ( pattern VK_EXT_ASTC_DECODE_MODE_EXTENSION_NAME
-  , pattern VK_EXT_ASTC_DECODE_MODE_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_IMAGE_VIEW_ASTC_DECODE_MODE_EXT
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT
   )
 
 
@@ -102,12 +107,18 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_astc_decode_mode
 --
 -- If @format@ uses sRGB encoding then the @decodeMode@ has no effect.
 --
--- Unresolved directive in VkImageViewASTCDecodeModeEXT.txt -
--- include::{generated}\/validity\/structs\/VkImageViewASTCDecodeModeEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_astc_decode_mode.VK_STRUCTURE_TYPE_IMAGE_VIEW_ASTC_DECODE_MODE_EXT'
+--
+-- -   @decodeMode@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Core.VkFormat' value
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkFormat',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data ImageViewASTCDecodeModeEXT = ImageViewASTCDecodeModeEXT
   { -- Univalued member elided
   -- No documentation found for Nested "ImageViewASTCDecodeModeEXT" "pNext"
@@ -156,12 +167,12 @@ instance Zero ImageViewASTCDecodeModeEXT where
 -- /can/ also be used in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core10.Device.vkCreateDevice' to enable features.
 --
--- Unresolved directive in VkPhysicalDeviceASTCDecodeFeaturesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceASTCDecodeFeaturesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceASTCDecodeFeaturesEXT = PhysicalDeviceASTCDecodeFeaturesEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceASTCDecodeFeaturesEXT" "pNext"
@@ -188,3 +199,11 @@ instance Zero PhysicalDeviceASTCDecodeFeaturesEXT where
   zero = PhysicalDeviceASTCDecodeFeaturesEXT Nothing
                                              False
 
+
+-- No documentation found for TopLevel "VK_EXT_ASTC_DECODE_MODE_EXTENSION_NAME"
+pattern EXT_ASTC_DECODE_MODE_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_ASTC_DECODE_MODE_EXTENSION_NAME = VK_EXT_ASTC_DECODE_MODE_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_ASTC_DECODE_MODE_SPEC_VERSION"
+pattern EXT_ASTC_DECODE_MODE_SPEC_VERSION :: Integral a => a
+pattern EXT_ASTC_DECODE_MODE_SPEC_VERSION = VK_EXT_ASTC_DECODE_MODE_SPEC_VERSION

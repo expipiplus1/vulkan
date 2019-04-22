@@ -23,11 +23,9 @@ module Graphics.Vulkan.Extensions.VK_KHR_driver_properties
   , withCStructPhysicalDeviceDriverPropertiesKHR
   , fromCStructPhysicalDeviceDriverPropertiesKHR
   , PhysicalDeviceDriverPropertiesKHR(..)
-  , pattern VK_KHR_DRIVER_PROPERTIES_SPEC_VERSION
-  , pattern VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR
-  , pattern VK_MAX_DRIVER_NAME_SIZE_KHR
-  , pattern VK_MAX_DRIVER_INFO_SIZE_KHR
+  , pattern KHR_DRIVER_PROPERTIES_EXTENSION_NAME
+  , pattern KHR_DRIVER_PROPERTIES_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR
   ) where
 
 import Data.ByteString
@@ -36,6 +34,9 @@ import Data.ByteString
   )
 import qualified Data.ByteString
   ( empty
+  )
+import Data.String
+  ( IsString
   )
 import qualified Data.Vector.Storable
   ( unsafeWith
@@ -73,6 +74,8 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_driver_properties
   , pattern VK_DRIVER_ID_MESA_RADV_KHR
   , pattern VK_DRIVER_ID_NVIDIA_PROPRIETARY_KHR
   , pattern VK_DRIVER_ID_QUALCOMM_PROPRIETARY_KHR
+  , pattern VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME
+  , pattern VK_KHR_DRIVER_PROPERTIES_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR
   )
 import Graphics.Vulkan.Marshal.Utils
@@ -83,11 +86,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_KHR_driver_properties
-  ( pattern VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME
-  , pattern VK_KHR_DRIVER_PROPERTIES_SPEC_VERSION
-  , pattern VK_MAX_DRIVER_INFO_SIZE_KHR
-  , pattern VK_MAX_DRIVER_NAME_SIZE_KHR
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR
   )
 
 
@@ -95,14 +95,9 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_driver_properties
 -- | VkConformanceVersionKHR - Structure containing the conformance test
 -- suite version the implementation is compliant with
 --
--- = Description
---
--- Unresolved directive in VkConformanceVersionKHR.txt -
--- include::{generated}\/validity\/structs\/VkConformanceVersionKHR.txt[]
---
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_driver_properties.VkPhysicalDeviceDriverPropertiesKHR'
 data ConformanceVersionKHR = ConformanceVersionKHR
   { -- No documentation found for Nested "ConformanceVersionKHR" "major"
   major :: Word8
@@ -155,8 +150,11 @@ instance Zero ConformanceVersionKHR where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_driver_properties.VkPhysicalDeviceDriverPropertiesKHR'
 type DriverIdKHR = VkDriverIdKHR
+
+
+{-# complete DRIVER_ID_AMD_PROPRIETARY_KHR, DRIVER_ID_AMD_OPEN_SOURCE_KHR, DRIVER_ID_MESA_RADV_KHR, DRIVER_ID_NVIDIA_PROPRIETARY_KHR, DRIVER_ID_INTEL_PROPRIETARY_WINDOWS_KHR, DRIVER_ID_INTEL_OPEN_SOURCE_MESA_KHR, DRIVER_ID_IMAGINATION_PROPRIETARY_KHR, DRIVER_ID_QUALCOMM_PROPRIETARY_KHR, DRIVER_ID_ARM_PROPRIETARY_KHR, DRIVER_ID_GOOGLE_PASTEL_KHR, DRIVER_ID_GGP_PROPRIETARY_KHR :: DriverIdKHR #-}
 
 
 -- No documentation found for Nested "DriverIdKHR" "DRIVER_ID_AMD_PROPRIETARY_KHR"
@@ -222,12 +220,13 @@ pattern DRIVER_ID_GGP_PROPRIETARY_KHR = VK_DRIVER_ID_GGP_PROPRIETARY_KHR
 -- @driverID@ /must/ be immutable for a given driver across instances,
 -- processes, driver versions, and system reboots.
 --
--- Unresolved directive in VkPhysicalDeviceDriverPropertiesKHR.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceDriverPropertiesKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_driver_properties.VkConformanceVersionKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_driver_properties.VkDriverIdKHR',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceDriverPropertiesKHR = PhysicalDeviceDriverPropertiesKHR
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceDriverPropertiesKHR" "pNext"
@@ -266,3 +265,11 @@ instance Zero PhysicalDeviceDriverPropertiesKHR where
                                            Data.ByteString.empty
                                            zero
 
+
+-- No documentation found for TopLevel "VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME"
+pattern KHR_DRIVER_PROPERTIES_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern KHR_DRIVER_PROPERTIES_EXTENSION_NAME = VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_KHR_DRIVER_PROPERTIES_SPEC_VERSION"
+pattern KHR_DRIVER_PROPERTIES_SPEC_VERSION :: Integral a => a
+pattern KHR_DRIVER_PROPERTIES_SPEC_VERSION = VK_KHR_DRIVER_PROPERTIES_SPEC_VERSION

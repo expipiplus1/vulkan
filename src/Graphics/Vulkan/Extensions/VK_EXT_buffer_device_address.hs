@@ -16,17 +16,20 @@ module Graphics.Vulkan.Extensions.VK_EXT_buffer_device_address
   , fromCStructPhysicalDeviceBufferDeviceAddressFeaturesEXT
   , PhysicalDeviceBufferDeviceAddressFeaturesEXT(..)
   , getBufferDeviceAddressEXT
-  , pattern VK_EXT_BUFFER_DEVICE_ADDRESS_SPEC_VERSION
-  , pattern VK_EXT_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_ADDRESS_FEATURES_EXT
-  , pattern VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO_EXT
-  , pattern VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_CREATE_INFO_EXT
-  , pattern VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_EXT
-  , pattern VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT
-  , pattern VK_ERROR_INVALID_DEVICE_ADDRESS_EXT
+  , pattern EXT_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
+  , pattern EXT_BUFFER_DEVICE_ADDRESS_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_ADDRESS_FEATURES_EXT
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT
+  , pattern STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO_EXT
+  , pattern STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_CREATE_INFO_EXT
+  , pattern BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_EXT
+  , pattern BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT
+  , pattern ERROR_INVALID_DEVICE_ADDRESS_EXT
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Foreign.Marshal.Utils
   ( maybePeek
   , maybeWith
@@ -38,7 +41,8 @@ import Foreign.Ptr
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( Zero(..)
+  ( VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address
   ( VkBufferDeviceAddressCreateInfoEXT(..)
@@ -46,6 +50,8 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address
   , VkPhysicalDeviceBufferDeviceAddressFeaturesEXT(..)
   , VkDeviceAddress
   , vkGetBufferDeviceAddressEXT
+  , pattern VK_EXT_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
+  , pattern VK_EXT_BUFFER_DEVICE_ADDRESS_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_CREATE_INFO_EXT
   , pattern VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO_EXT
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT
@@ -53,6 +59,7 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address
 import Graphics.Vulkan.Core10.Core
   ( bool32ToBool
   , boolToBool32
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
   ( Device(..)
@@ -65,13 +72,14 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address
-  ( pattern VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT
-  , pattern VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_EXT
-  , pattern VK_ERROR_INVALID_DEVICE_ADDRESS_EXT
-  , pattern VK_EXT_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
-  , pattern VK_EXT_BUFFER_DEVICE_ADDRESS_SPEC_VERSION
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_ADDRESS_FEATURES_EXT
+import Graphics.Vulkan.Core10.Buffer
+  ( pattern BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT
+  , pattern BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_EXT
+  )
+import Graphics.Vulkan.Core10.Core
+  ( pattern ERROR_INVALID_DEVICE_ADDRESS_EXT
+  , pattern STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_CREATE_INFO_EXT
+  , pattern STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO_EXT
   )
 
 
@@ -115,12 +123,12 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address
 -- 'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT',
 -- to avoid address space allocation conflicts.
 --
--- Unresolved directive in VkBufferDeviceAddressCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkBufferDeviceAddressCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VkDeviceAddress',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data BufferDeviceAddressCreateInfoEXT = BufferDeviceAddressCreateInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "BufferDeviceAddressCreateInfoEXT" "pNext"
@@ -162,12 +170,21 @@ instance Zero BufferDeviceAddressCreateInfoEXT where
 -- -   @buffer@ /must/ have been created with
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_EXT'
 --
--- Unresolved directive in VkBufferDeviceAddressInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkBufferDeviceAddressInfoEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO_EXT'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @buffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.vkGetBufferDeviceAddressEXT'
 data BufferDeviceAddressInfoEXT = BufferDeviceAddressInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "BufferDeviceAddressInfoEXT" "pNext"
@@ -199,7 +216,7 @@ instance Zero BufferDeviceAddressInfoEXT where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VkBufferDeviceAddressCreateInfoEXT'
 type DeviceAddress = VkDeviceAddress
   
 
@@ -237,13 +254,12 @@ type PhysicalDeviceBufferAddressFeaturesEXT = PhysicalDeviceBufferDeviceAddressF
 -- /can/ also be used in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
 --
--- Unresolved directive in
--- VkPhysicalDeviceBufferDeviceAddressFeaturesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceBufferDeviceAddressFeaturesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceBufferDeviceAddressFeaturesEXT = PhysicalDeviceBufferDeviceAddressFeaturesEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceBufferDeviceAddressFeaturesEXT" "pNext"
@@ -318,11 +334,30 @@ instance Zero PhysicalDeviceBufferDeviceAddressFeaturesEXT where
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
 --     feature /must/ be enabled
 --
--- Unresolved directive in vkGetBufferDeviceAddressEXT.txt -
--- include::{generated}\/validity\/protos\/vkGetBufferDeviceAddressEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VkBufferDeviceAddressInfoEXT'
+--     structure
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VkBufferDeviceAddressInfoEXT',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 getBufferDeviceAddressEXT :: Device ->  BufferDeviceAddressInfoEXT ->  IO (VkDeviceAddress)
 getBufferDeviceAddressEXT = \(Device device' commandTable) -> \info' -> (\marshalled -> withCStructBufferDeviceAddressInfoEXT marshalled . flip with) info' (\pInfo' -> vkGetBufferDeviceAddressEXT commandTable device' pInfo' >>= (\ret -> pure ret))
+
+-- No documentation found for TopLevel "VK_EXT_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME"
+pattern EXT_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME = VK_EXT_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_BUFFER_DEVICE_ADDRESS_SPEC_VERSION"
+pattern EXT_BUFFER_DEVICE_ADDRESS_SPEC_VERSION :: Integral a => a
+pattern EXT_BUFFER_DEVICE_ADDRESS_SPEC_VERSION = VK_EXT_BUFFER_DEVICE_ADDRESS_SPEC_VERSION
+
+-- No documentation found for TopLevel "STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_ADDRESS_FEATURES_EXT"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_ADDRESS_FEATURES_EXT :: VkStructureType
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_ADDRESS_FEATURES_EXT = STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT

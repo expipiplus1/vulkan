@@ -19,5 +19,5 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.VkSurfaceFullScreenExclusiveInfoEXT'
 type FullScreenExclusiveEXT = VkFullScreenExclusiveEXT

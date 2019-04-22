@@ -83,21 +83,18 @@ import Graphics.Vulkan.NamedType
 -- | VkCalibratedTimestampInfoEXT - Structure specifying the input parameters
 -- of a calibrated timestamp query
 --
--- == Valid Usage
---
--- Unresolved directive in VkCalibratedTimestampInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkCalibratedTimestampInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType', 'VkTimeDomainEXT',
+-- 'vkGetCalibratedTimestampsEXT'
 data VkCalibratedTimestampInfoEXT = VkCalibratedTimestampInfoEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_EXT'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- | @timeDomain@ /must/ be one of the 'VkTimeDomainEXT' values returned by
-  -- 'vkGetPhysicalDeviceCalibrateableTimeDomainsEXT'
+  , -- | @timeDomain@ /must/ be a valid 'VkTimeDomainEXT' value
   vkTimeDomain :: VkTimeDomainEXT
   }
   deriving (Eq, Show)
@@ -123,7 +120,8 @@ instance Zero VkCalibratedTimestampInfoEXT where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkCalibratedTimestampInfoEXT',
+-- 'vkGetPhysicalDeviceCalibrateableTimeDomainsEXT'
 newtype VkTimeDomainEXT = VkTimeDomainEXT Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -212,12 +210,20 @@ pattern VK_TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT = VkTimeDomainEXT 3
 -- enough to fit any particular purpose so applications are expected to
 -- re-calibrate the timestamps on a regular basis.
 --
--- Unresolved directive in vkGetCalibratedTimestampsEXT.txt -
--- include::{generated}\/validity\/protos\/vkGetCalibratedTimestampsEXT.txt[]
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkCalibratedTimestampInfoEXT',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -270,13 +276,34 @@ type PFN_vkGetCalibratedTimestampsEXT = FunPtr FN_vkGetCalibratedTimestampsEXT
 -- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS' to indicate that not all
 -- the available values were returned.
 --
--- Unresolved directive in
--- vkGetPhysicalDeviceCalibrateableTimeDomainsEXT.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceCalibrateableTimeDomainsEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @pTimeDomainCount@ /must/ be a valid pointer to a @uint32_t@ value
+--
+-- -   If the value referenced by @pTimeDomainCount@ is not @0@, and
+--     @pTimeDomains@ is not @NULL@, @pTimeDomains@ /must/ be a valid
+--     pointer to an array of @pTimeDomainCount@ 'VkTimeDomainEXT' values
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice',
+-- 'VkTimeDomainEXT'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -298,7 +325,7 @@ type FN_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT = ("physicalDevice" ::: V
 type PFN_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT = FunPtr FN_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT
 
 -- No documentation found for TopLevel "VK_EXT_CALIBRATED_TIMESTAMPS_EXTENSION_NAME"
-pattern VK_EXT_CALIBRATED_TIMESTAMPS_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_CALIBRATED_TIMESTAMPS_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_CALIBRATED_TIMESTAMPS_EXTENSION_NAME = "VK_EXT_calibrated_timestamps"
 
 -- No documentation found for TopLevel "VK_EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION"

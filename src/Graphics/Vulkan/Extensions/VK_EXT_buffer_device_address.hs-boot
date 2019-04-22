@@ -18,6 +18,6 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VkBufferDeviceAddressCreateInfoEXT'
 type DeviceAddress = VkDeviceAddress
   

@@ -10,12 +10,15 @@ module Graphics.Vulkan.Extensions.VK_NV_external_memory
   , withCStructExternalMemoryImageCreateInfoNV
   , fromCStructExternalMemoryImageCreateInfoNV
   , ExternalMemoryImageCreateInfoNV(..)
-  , pattern VK_NV_EXTERNAL_MEMORY_SPEC_VERSION
-  , pattern VK_NV_EXTERNAL_MEMORY_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV
-  , pattern VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV
+  , pattern NV_EXTERNAL_MEMORY_EXTENSION_NAME
+  , pattern NV_EXTERNAL_MEMORY_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV
+  , pattern STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Foreign.Marshal.Utils
   ( maybePeek
   , maybeWith
@@ -31,6 +34,8 @@ import Graphics.Vulkan.C.Core10.Core
 import Graphics.Vulkan.C.Extensions.VK_NV_external_memory
   ( VkExportMemoryAllocateInfoNV(..)
   , VkExternalMemoryImageCreateInfoNV(..)
+  , pattern VK_NV_EXTERNAL_MEMORY_EXTENSION_NAME
+  , pattern VK_NV_EXTERNAL_MEMORY_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV
   , pattern VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV
   )
@@ -42,9 +47,9 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_NV_external_memory
-  ( pattern VK_NV_EXTERNAL_MEMORY_EXTENSION_NAME
-  , pattern VK_NV_EXTERNAL_MEMORY_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV
+  , pattern STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV
   )
 
 
@@ -52,14 +57,12 @@ import Graphics.Vulkan.C.Extensions.VK_NV_external_memory
 -- | VkExportMemoryAllocateInfoNV - Specify memory handle types that may be
 -- exported
 --
--- = Description
---
--- Unresolved directive in VkExportMemoryAllocateInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkExportMemoryAllocateInfoNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryHandleTypeFlagsNV',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data ExportMemoryAllocateInfoNV = ExportMemoryAllocateInfoNV
   { -- Univalued member elided
   -- No documentation found for Nested "ExportMemoryAllocateInfoNV" "pNext"
@@ -91,14 +94,12 @@ instance Zero ExportMemoryAllocateInfoNV where
 -- | VkExternalMemoryImageCreateInfoNV - Specify that an image may be backed
 -- by external memory
 --
--- = Description
---
--- Unresolved directive in VkExternalMemoryImageCreateInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkExternalMemoryImageCreateInfoNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryHandleTypeFlagsNV',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data ExternalMemoryImageCreateInfoNV = ExternalMemoryImageCreateInfoNV
   { -- Univalued member elided
   -- No documentation found for Nested "ExternalMemoryImageCreateInfoNV" "pNext"
@@ -125,3 +126,11 @@ instance Zero ExternalMemoryImageCreateInfoNV where
   zero = ExternalMemoryImageCreateInfoNV Nothing
                                          zero
 
+
+-- No documentation found for TopLevel "VK_NV_EXTERNAL_MEMORY_EXTENSION_NAME"
+pattern NV_EXTERNAL_MEMORY_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern NV_EXTERNAL_MEMORY_EXTENSION_NAME = VK_NV_EXTERNAL_MEMORY_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_NV_EXTERNAL_MEMORY_SPEC_VERSION"
+pattern NV_EXTERNAL_MEMORY_SPEC_VERSION :: Integral a => a
+pattern NV_EXTERNAL_MEMORY_SPEC_VERSION = VK_NV_EXTERNAL_MEMORY_SPEC_VERSION

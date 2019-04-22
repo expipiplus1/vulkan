@@ -26,7 +26,7 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_viewport_swizzle
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_viewport_swizzle.VkPipelineViewportSwizzleStateCreateInfoNV'
 type PipelineViewportSwizzleStateCreateFlagsNV = VkPipelineViewportSwizzleStateCreateFlagsNV
 
 -- | VkViewportCoordinateSwizzleNV - Specify how a viewport coordinate is
@@ -39,5 +39,5 @@ type PipelineViewportSwizzleStateCreateFlagsNV = VkPipelineViewportSwizzleStateC
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_viewport_swizzle.VkViewportSwizzleNV'
 type ViewportCoordinateSwizzleNV = VkViewportCoordinateSwizzleNV

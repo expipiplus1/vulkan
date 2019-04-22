@@ -17,7 +17,7 @@ import Data.String
 
 
 -- No documentation found for TopLevel "VK_NV_VIEWPORT_ARRAY2_EXTENSION_NAME"
-pattern VK_NV_VIEWPORT_ARRAY2_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_NV_VIEWPORT_ARRAY2_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_NV_VIEWPORT_ARRAY2_EXTENSION_NAME = "VK_NV_viewport_array2"
 
 -- No documentation found for TopLevel "VK_NV_VIEWPORT_ARRAY2_SPEC_VERSION"

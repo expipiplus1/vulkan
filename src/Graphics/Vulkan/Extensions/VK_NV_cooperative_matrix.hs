@@ -34,11 +34,11 @@ module Graphics.Vulkan.Extensions.VK_NV_cooperative_matrix
   , getNumPhysicalDeviceCooperativeMatrixPropertiesNV
   , getPhysicalDeviceCooperativeMatrixPropertiesNV
   , getAllPhysicalDeviceCooperativeMatrixPropertiesNV
-  , pattern VK_NV_COOPERATIVE_MATRIX_SPEC_VERSION
-  , pattern VK_NV_COOPERATIVE_MATRIX_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_FEATURES_NV
-  , pattern VK_STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_NV
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_NV
+  , pattern NV_COOPERATIVE_MATRIX_EXTENSION_NAME
+  , pattern NV_COOPERATIVE_MATRIX_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_FEATURES_NV
+  , pattern STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_NV
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_NV
   ) where
 
 import Control.Exception
@@ -47,6 +47,9 @@ import Control.Exception
 import Control.Monad
   ( (<=<)
   , when
+  )
+import Data.String
+  ( IsString
   )
 import Data.Vector
   ( Vector
@@ -101,6 +104,8 @@ import Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix
   , pattern VK_COMPONENT_TYPE_UINT32_NV
   , pattern VK_COMPONENT_TYPE_UINT64_NV
   , pattern VK_COMPONENT_TYPE_UINT8_NV
+  , pattern VK_NV_COOPERATIVE_MATRIX_EXTENSION_NAME
+  , pattern VK_NV_COOPERATIVE_MATRIX_SPEC_VERSION
   , pattern VK_SCOPE_DEVICE_NV
   , pattern VK_SCOPE_QUEUE_FAMILY_NV
   , pattern VK_SCOPE_SUBGROUP_NV
@@ -127,9 +132,10 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix
-  ( pattern VK_NV_COOPERATIVE_MATRIX_EXTENSION_NAME
-  , pattern VK_NV_COOPERATIVE_MATRIX_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_NV
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_FEATURES_NV
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_NV
   )
 
 
@@ -137,8 +143,11 @@ import Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkCooperativeMatrixPropertiesNV'
 type ComponentTypeNV = VkComponentTypeNV
+
+
+{-# complete COMPONENT_TYPE_FLOAT16_NV, COMPONENT_TYPE_FLOAT32_NV, COMPONENT_TYPE_FLOAT64_NV, COMPONENT_TYPE_SINT8_NV, COMPONENT_TYPE_SINT16_NV, COMPONENT_TYPE_SINT32_NV, COMPONENT_TYPE_SINT64_NV, COMPONENT_TYPE_UINT8_NV, COMPONENT_TYPE_UINT16_NV, COMPONENT_TYPE_UINT32_NV, COMPONENT_TYPE_UINT64_NV :: ComponentTypeNV #-}
 
 
 -- | 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VK_COMPONENT_TYPE_FLOAT16_NV'
@@ -219,12 +228,14 @@ pattern COMPONENT_TYPE_UINT64_NV = VK_COMPONENT_TYPE_UINT64_NV
 -- At least one entry in the list /must/ have power of two values for all
 -- of @MSize@, @KSize@, and @NSize@.
 --
--- Unresolved directive in VkCooperativeMatrixPropertiesNV.txt -
--- include::{generated}\/validity\/structs\/VkCooperativeMatrixPropertiesNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkComponentTypeNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkScopeNV',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.vkGetPhysicalDeviceCooperativeMatrixPropertiesNV'
 data CooperativeMatrixPropertiesNV = CooperativeMatrixPropertiesNV
   { -- Univalued member elided
   -- No documentation found for Nested "CooperativeMatrixPropertiesNV" "pNext"
@@ -301,13 +312,12 @@ instance Zero CooperativeMatrixPropertiesNV where
 -- /can/ also be used in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
 --
--- Unresolved directive in VkPhysicalDeviceCooperativeMatrixFeaturesNV.txt
--- -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceCooperativeMatrixFeaturesNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceCooperativeMatrixFeaturesNV = PhysicalDeviceCooperativeMatrixFeaturesNV
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceCooperativeMatrixFeaturesNV" "pNext"
@@ -357,13 +367,12 @@ instance Zero PhysicalDeviceCooperativeMatrixFeaturesNV where
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- Unresolved directive in
--- VkPhysicalDeviceCooperativeMatrixPropertiesNV.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceCooperativeMatrixPropertiesNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.PipelineLayout.VkShaderStageFlags',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceCooperativeMatrixPropertiesNV = PhysicalDeviceCooperativeMatrixPropertiesNV
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceCooperativeMatrixPropertiesNV" "pNext"
@@ -399,8 +408,11 @@ instance Zero PhysicalDeviceCooperativeMatrixPropertiesNV where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkCooperativeMatrixPropertiesNV'
 type ScopeNV = VkScopeNV
+
+
+{-# complete SCOPE_DEVICE_NV, SCOPE_WORKGROUP_NV, SCOPE_SUBGROUP_NV, SCOPE_QUEUE_FAMILY_NV :: ScopeNV #-}
 
 
 -- | 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VK_SCOPE_DEVICE_NV'
@@ -457,13 +469,36 @@ pattern SCOPE_QUEUE_FAMILY_NV = VK_SCOPE_QUEUE_FAMILY_NV
 -- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS', to indicate that not all
 -- the available cooperative matrix properties were returned.
 --
--- Unresolved directive in
--- vkGetPhysicalDeviceCooperativeMatrixPropertiesNV.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceCooperativeMatrixPropertiesNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
+--
+-- -   If the value referenced by @pPropertyCount@ is not @0@, and
+--     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
+--     to an array of @pPropertyCount@
+--     'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkCooperativeMatrixPropertiesNV'
+--     structures
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkCooperativeMatrixPropertiesNV',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
 getNumPhysicalDeviceCooperativeMatrixPropertiesNV :: PhysicalDevice ->  IO (VkResult, Word32)
 getNumPhysicalDeviceCooperativeMatrixPropertiesNV = \(PhysicalDevice physicalDevice' commandTable) -> alloca (\pPropertyCount' -> vkGetPhysicalDeviceCooperativeMatrixPropertiesNV commandTable physicalDevice' pPropertyCount' nullPtr >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>peek pPropertyCount')))
 
@@ -496,13 +531,36 @@ getNumPhysicalDeviceCooperativeMatrixPropertiesNV = \(PhysicalDevice physicalDev
 -- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS', to indicate that not all
 -- the available cooperative matrix properties were returned.
 --
--- Unresolved directive in
--- vkGetPhysicalDeviceCooperativeMatrixPropertiesNV.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceCooperativeMatrixPropertiesNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
+--
+-- -   If the value referenced by @pPropertyCount@ is not @0@, and
+--     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
+--     to an array of @pPropertyCount@
+--     'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkCooperativeMatrixPropertiesNV'
+--     structures
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkCooperativeMatrixPropertiesNV',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
 getPhysicalDeviceCooperativeMatrixPropertiesNV :: PhysicalDevice ->  Word32 ->  IO (VkResult, Vector CooperativeMatrixPropertiesNV)
 getPhysicalDeviceCooperativeMatrixPropertiesNV = \(PhysicalDevice physicalDevice' commandTable) -> \propertyCount' -> allocaArray (fromIntegral propertyCount') (\pProperties' -> with propertyCount' (\pPropertyCount' -> vkGetPhysicalDeviceCooperativeMatrixPropertiesNV commandTable physicalDevice' pPropertyCount' pProperties' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>(flip Data.Vector.generateM ((\p -> fromCStructCooperativeMatrixPropertiesNV <=< peekElemOff p) pProperties') =<< (fromIntegral <$> (peek pPropertyCount')))))))
 -- | Returns all the values available from 'getPhysicalDeviceCooperativeMatrixPropertiesNV'.
@@ -511,3 +569,11 @@ getAllPhysicalDeviceCooperativeMatrixPropertiesNV physicalDevice' =
   snd <$> getNumPhysicalDeviceCooperativeMatrixPropertiesNV physicalDevice'
     >>= \num -> snd <$> getPhysicalDeviceCooperativeMatrixPropertiesNV physicalDevice' num
 
+
+-- No documentation found for TopLevel "VK_NV_COOPERATIVE_MATRIX_EXTENSION_NAME"
+pattern NV_COOPERATIVE_MATRIX_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern NV_COOPERATIVE_MATRIX_EXTENSION_NAME = VK_NV_COOPERATIVE_MATRIX_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_NV_COOPERATIVE_MATRIX_SPEC_VERSION"
+pattern NV_COOPERATIVE_MATRIX_SPEC_VERSION :: Integral a => a
+pattern NV_COOPERATIVE_MATRIX_SPEC_VERSION = VK_NV_COOPERATIVE_MATRIX_SPEC_VERSION

@@ -18,14 +18,17 @@ module Graphics.Vulkan.Extensions.VK_KHR_depth_stencil_resolve
   , withCStructSubpassDescriptionDepthStencilResolveKHR
   , fromCStructSubpassDescriptionDepthStencilResolveKHR
   , SubpassDescriptionDepthStencilResolveKHR(..)
-  , pattern VK_KHR_DEPTH_STENCIL_RESOLVE_SPEC_VERSION
-  , pattern VK_KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES_KHR
-  , pattern VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE_KHR
+  , pattern KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME
+  , pattern KHR_DEPTH_STENCIL_RESOLVE_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES_KHR
+  , pattern STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE_KHR
   ) where
 
 import Control.Monad
   ( (<=<)
+  )
+import Data.String
+  ( IsString
   )
 import Foreign.Marshal.Utils
   ( maybePeek
@@ -47,6 +50,8 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve
   ( VkPhysicalDeviceDepthStencilResolvePropertiesKHR(..)
   , VkResolveModeFlagBitsKHR(..)
   , VkSubpassDescriptionDepthStencilResolveKHR(..)
+  , pattern VK_KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME
+  , pattern VK_KHR_DEPTH_STENCIL_RESOLVE_SPEC_VERSION
   , pattern VK_RESOLVE_MODE_AVERAGE_BIT_KHR
   , pattern VK_RESOLVE_MODE_MAX_BIT_KHR
   , pattern VK_RESOLVE_MODE_MIN_BIT_KHR
@@ -69,9 +74,9 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve
-  ( pattern VK_KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME
-  , pattern VK_KHR_DEPTH_STENCIL_RESOLVE_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES_KHR
+  , pattern STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE_KHR
   )
 
 
@@ -86,15 +91,13 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve
 -- 'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VkPhysicalDeviceDepthStencilResolvePropertiesKHR'
 -- structure describe the following implementation-dependent limits:
 --
--- = Description
---
--- Unresolved directive in
--- VkPhysicalDeviceDepthStencilResolvePropertiesKHR.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceDepthStencilResolvePropertiesKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VkResolveModeFlagsKHR',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceDepthStencilResolvePropertiesKHR = PhysicalDeviceDepthStencilResolvePropertiesKHR
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceDepthStencilResolvePropertiesKHR" "pNext"
@@ -139,8 +142,12 @@ instance Zero PhysicalDeviceDepthStencilResolvePropertiesKHR where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VkResolveModeFlagsKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VkSubpassDescriptionDepthStencilResolveKHR'
 type ResolveModeFlagBitsKHR = VkResolveModeFlagBitsKHR
+
+
+{-# complete RESOLVE_MODE_SAMPLE_ZERO_BIT_KHR, RESOLVE_MODE_AVERAGE_BIT_KHR, RESOLVE_MODE_MIN_BIT_KHR, RESOLVE_MODE_MAX_BIT_KHR, RESOLVE_MODE_NONE_KHR :: ResolveModeFlagBitsKHR #-}
 
 
 -- | 'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VK_RESOLVE_MODE_SAMPLE_ZERO_BIT_KHR'
@@ -186,7 +193,8 @@ pattern RESOLVE_MODE_NONE_KHR = VK_RESOLVE_MODE_NONE_KHR
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VkPhysicalDeviceDepthStencilResolvePropertiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VkResolveModeFlagBitsKHR'
 type ResolveModeFlagsKHR = ResolveModeFlagBitsKHR
 
 
@@ -262,12 +270,30 @@ type ResolveModeFlagsKHR = ResolveModeFlagBitsKHR
 --     one of them /must/ be
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VK_RESOLVE_MODE_NONE_KHR'
 --
--- Unresolved directive in VkSubpassDescriptionDepthStencilResolveKHR.txt -
--- include::{generated}\/validity\/structs\/VkSubpassDescriptionDepthStencilResolveKHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE_KHR'
+--
+-- -   @depthResolveMode@ /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VkResolveModeFlagBitsKHR'
+--     value
+--
+-- -   @stencilResolveMode@ /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VkResolveModeFlagBitsKHR'
+--     value
+--
+-- -   If @pDepthStencilResolveAttachment@ is not @NULL@,
+--     @pDepthStencilResolveAttachment@ /must/ be a valid pointer to a
+--     valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkAttachmentReference2KHR'
+--     structure
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkAttachmentReference2KHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VkResolveModeFlagBitsKHR',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data SubpassDescriptionDepthStencilResolveKHR = SubpassDescriptionDepthStencilResolveKHR
   { -- Univalued member elided
   -- No documentation found for Nested "SubpassDescriptionDepthStencilResolveKHR" "pNext"
@@ -302,3 +328,11 @@ instance Zero SubpassDescriptionDepthStencilResolveKHR where
                                                   zero
                                                   Nothing
 
+
+-- No documentation found for TopLevel "VK_KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME"
+pattern KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME = VK_KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_KHR_DEPTH_STENCIL_RESOLVE_SPEC_VERSION"
+pattern KHR_DEPTH_STENCIL_RESOLVE_SPEC_VERSION :: Integral a => a
+pattern KHR_DEPTH_STENCIL_RESOLVE_SPEC_VERSION = VK_KHR_DEPTH_STENCIL_RESOLVE_SPEC_VERSION

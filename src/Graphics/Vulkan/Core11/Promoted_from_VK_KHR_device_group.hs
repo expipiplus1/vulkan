@@ -36,14 +36,14 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group
   , cmdDispatchBase
   , cmdSetDeviceMask
   , getDeviceGroupPeerMemoryFeatures
-  , pattern VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO
-  , pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO
-  , pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO
-  , pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO
-  , pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO
-  , pattern VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT
-  , pattern VK_PIPELINE_CREATE_DISPATCH_BASE
-  , pattern VK_DEPENDENCY_DEVICE_GROUP_BIT
+  , pattern STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO
+  , pattern STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO
+  , pattern STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO
+  , pattern STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO
+  , pattern STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO
+  , pattern PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT
+  , pattern PIPELINE_CREATE_DISPATCH_BASE
+  , pattern DEPENDENCY_DEVICE_GROUP_BIT
   ) where
 
 import Control.Monad
@@ -123,10 +123,19 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group
-  ( pattern VK_DEPENDENCY_DEVICE_GROUP_BIT
-  , pattern VK_PIPELINE_CREATE_DISPATCH_BASE
-  , pattern VK_PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO
+  , pattern STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO
+  , pattern STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO
+  , pattern STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO
+  , pattern STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO
+  )
+import Graphics.Vulkan.Core10.Pass
+  ( pattern DEPENDENCY_DEVICE_GROUP_BIT
+  )
+import Graphics.Vulkan.Core10.Pipeline
+  ( pattern PIPELINE_CREATE_DISPATCH_BASE
+  , pattern PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT
   )
 
 
@@ -152,8 +161,10 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group
 -- -   Each memory allocation bound in this batch /must/ have allocated an
 --     instance for @memoryDeviceIndex@.
 --
--- Unresolved directive in VkDeviceGroupBindSparseInfo.txt -
--- include::{generated}\/validity\/structs\/VkDeviceGroupBindSparseInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.VK_STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO'
 --
 -- = See Also
 --
@@ -202,10 +213,7 @@ instance Zero DeviceGroupBindSparseInfo where
 -- buffer’s device mask is set to include all physical devices in the
 -- logical device when the command buffer begins recording.
 --
--- == Valid Usage
---
--- Unresolved directive in VkDeviceGroupCommandBufferBeginInfo.txt -
--- include::{generated}\/validity\/structs\/VkDeviceGroupCommandBufferBeginInfo.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -272,8 +280,24 @@ instance Zero DeviceGroupCommandBufferBeginInfo where
 --
 -- == Valid Usage
 --
--- Unresolved directive in VkDeviceGroupRenderPassBeginInfo.txt -
--- include::{generated}\/validity\/structs\/VkDeviceGroupRenderPassBeginInfo.txt[]
+-- -   @deviceMask@ /must/ be a valid device mask value
+--
+-- -   @deviceMask@ /must/ not be zero
+--
+-- -   @deviceMask@ /must/ be a subset of the command buffer’s initial
+--     device mask
+--
+-- -   @deviceRenderAreaCount@ /must/ either be zero or equal to the number
+--     of physical devices in the logical device.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.VK_STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO'
+--
+-- -   If @deviceRenderAreaCount@ is not @0@, @pDeviceRenderAreas@ /must/
+--     be a valid pointer to an array of @deviceRenderAreaCount@
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkRect2D' structures
 --
 -- = See Also
 --
@@ -338,8 +362,22 @@ instance Zero DeviceGroupRenderPassBeginInfo where
 -- -   All elements of @pCommandBufferDeviceMasks@ /must/ be valid device
 --     masks
 --
--- Unresolved directive in VkDeviceGroupSubmitInfo.txt -
--- include::{generated}\/validity\/structs\/VkDeviceGroupSubmitInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.VK_STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO'
+--
+-- -   If @waitSemaphoreCount@ is not @0@, @pWaitSemaphoreDeviceIndices@
+--     /must/ be a valid pointer to an array of @waitSemaphoreCount@
+--     @uint32_t@ values
+--
+-- -   If @commandBufferCount@ is not @0@, @pCommandBufferDeviceMasks@
+--     /must/ be a valid pointer to an array of @commandBufferCount@
+--     @uint32_t@ values
+--
+-- -   If @signalSemaphoreCount@ is not @0@,
+--     @pSignalSemaphoreDeviceIndices@ /must/ be a valid pointer to an
+--     array of @signalSemaphoreCount@ @uint32_t@ values
 --
 -- = See Also
 --
@@ -392,6 +430,9 @@ instance Zero DeviceGroupSubmitInfo where
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.VkMemoryAllocateFlags'
 type MemoryAllocateFlagBits = VkMemoryAllocateFlagBits
+
+
+{-# complete MEMORY_ALLOCATE_DEVICE_MASK_BIT :: MemoryAllocateFlagBits #-}
 
 
 -- | 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT'
@@ -459,8 +500,14 @@ type MemoryAllocateFlags = MemoryAllocateFlagBits
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.VK_MEMORY_ALLOCATE_DEVICE_MASK_BIT'
 --     is set, @deviceMask@ /must/ not be zero
 --
--- Unresolved directive in VkMemoryAllocateFlagsInfo.txt -
--- include::{generated}\/validity\/structs\/VkMemoryAllocateFlagsInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO'
+--
+-- -   @flags@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.VkMemoryAllocateFlagBits'
+--     values
 --
 -- = See Also
 --
@@ -529,6 +576,9 @@ type MemoryAllocateFlagsKHR = MemoryAllocateFlags
 type PeerMemoryFeatureFlagBits = VkPeerMemoryFeatureFlagBits
 
 
+{-# complete PEER_MEMORY_FEATURE_COPY_SRC_BIT, PEER_MEMORY_FEATURE_COPY_DST_BIT, PEER_MEMORY_FEATURE_GENERIC_SRC_BIT, PEER_MEMORY_FEATURE_GENERIC_DST_BIT :: PeerMemoryFeatureFlagBits #-}
+
+
 -- | 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.VK_PEER_MEMORY_FEATURE_COPY_SRC_BIT'
 -- specifies that the memory /can/ be accessed as the source of a
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdCopyBuffer',
@@ -579,7 +629,8 @@ type PeerMemoryFeatureFlagBitsKHR = PeerMemoryFeatureFlagBits
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.VkPeerMemoryFeatureFlagBits',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.vkGetDeviceGroupPeerMemoryFeatures'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.vkGetDeviceGroupPeerMemoryFeatures',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_device_group.vkGetDeviceGroupPeerMemoryFeaturesKHR'
 type PeerMemoryFeatureFlags = PeerMemoryFeatureFlagBits
 
 -- No documentation found for TopLevel "PeerMemoryFeatureFlagsKHR"
@@ -623,28 +674,167 @@ type PeerMemoryFeatureFlagsKHR = PeerMemoryFeatureFlags
 --
 -- == Valid Usage
 --
--- Unresolved directive in vkCmdDispatchBase.txt -
--- include::{chapters}\/commonvalidity\/draw_dispatch_common.txt[] *
--- @baseGroupX@ /must/ be less than
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
--- * @baseGroupX@ /must/ be less than
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
--- * @baseGroupZ@ /must/ be less than
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
--- * @groupCountX@ /must/ be less than or equal to
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
--- minus @baseGroupX@ * @groupCountY@ /must/ be less than or equal to
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
--- minus @baseGroupY@ * @groupCountZ@ /must/ be less than or equal to
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
--- minus @baseGroupZ@ * If any of @baseGroupX@, @baseGroupY@, or
--- @baseGroupZ@ are not zero, then the bound compute pipeline /must/ have
--- been created with the
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.VK_PIPELINE_CREATE_DISPATCH_BASE'
--- flag.
+-- -   If a 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' is sampled
+--     with 'Graphics.Vulkan.C.Core10.Sampler.VK_FILTER_LINEAR' as a result
+--     of this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
 --
--- Unresolved directive in vkCmdDispatchBase.txt -
--- include::{generated}\/validity\/protos\/vkCmdDispatchBase.txt[]
+-- -   If a 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' is accessed
+--     using atomic operations as a result of this command, then the image
+--     view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT'
+--
+-- -   For each set /n/ that is statically used by the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to the pipeline
+--     bind point used by this command, a descriptor set /must/ have been
+--     bound to /n/ at the same pipeline bind point, with a
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' that is
+--     compatible for set /n/, with the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' used to create
+--     the current 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline', as
+--     described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility ???>
+--
+-- -   For each push constant that is statically used by the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to the pipeline
+--     bind point used by this command, a push constant value /must/ have
+--     been set for the same pipeline bind point, with a
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' that is
+--     compatible for push constants, with the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' used to create
+--     the current 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline', as
+--     described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility ???>
+--
+-- -   Descriptors in each bound descriptor set, specified via
+--     'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindDescriptorSets',
+--     /must/ be valid if they are statically used by the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to the pipeline
+--     bind point used by this command
+--
+-- -   A valid pipeline /must/ be bound to the pipeline bind point used by
+--     this command
+--
+-- -   If the 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound
+--     to the pipeline bind point used by this command requires any dynamic
+--     state, that state /must/ have been set for @commandBuffer@
+--
+-- -   If the 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound
+--     to the pipeline bind point used by this command accesses a
+--     'Graphics.Vulkan.C.Core10.Sampler.VkSampler' object that uses
+--     unnormalized coordinates, that sampler /must/ not be used to sample
+--     from any 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' with a
+--     'Graphics.Vulkan.C.Core10.ImageView.VkImageView' of the type
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_3D',
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_CUBE',
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_1D_ARRAY',
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_2D_ARRAY' or
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_CUBE_ARRAY',
+--     in any shader stage
+--
+-- -   If the 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound
+--     to the pipeline bind point used by this command accesses a
+--     'Graphics.Vulkan.C.Core10.Sampler.VkSampler' object that uses
+--     unnormalized coordinates, that sampler /must/ not be used with any
+--     of the SPIR-V @OpImageSample*@ or @OpImageSparseSample*@
+--     instructions with @ImplicitLod@, @Dref@ or @Proj@ in their name, in
+--     any shader stage
+--
+-- -   If the 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound
+--     to the pipeline bind point used by this command accesses a
+--     'Graphics.Vulkan.C.Core10.Sampler.VkSampler' object that uses
+--     unnormalized coordinates, that sampler /must/ not be used with any
+--     of the SPIR-V @OpImageSample*@ or @OpImageSparseSample*@
+--     instructions that includes a LOD bias or any offset values, in any
+--     shader stage
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
+--     feature is not enabled, and if the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound to the
+--     pipeline bind point used by this command accesses a uniform buffer,
+--     it /must/ not access values outside of the range of the buffer as
+--     specified in the descriptor set bound to the same pipeline bind
+--     point
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
+--     feature is not enabled, and if the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound to the
+--     pipeline bind point used by this command accesses a storage buffer,
+--     it /must/ not access values outside of the range of the buffer as
+--     specified in the descriptor set bound to the same pipeline bind
+--     point
+--
+-- -   @baseGroupX@ /must/ be less than
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
+--
+-- -   @baseGroupX@ /must/ be less than
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
+--
+-- -   @baseGroupZ@ /must/ be less than
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
+--
+-- -   @groupCountX@ /must/ be less than or equal to
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
+--     minus @baseGroupX@
+--
+-- -   @groupCountY@ /must/ be less than or equal to
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
+--     minus @baseGroupY@
+--
+-- -   @groupCountZ@ /must/ be less than or equal to
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
+--     minus @baseGroupZ@
+--
+-- -   If any of @baseGroupX@, @baseGroupY@, or @baseGroupZ@ are not zero,
+--     then the bound compute pipeline /must/ have been created with the
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.VK_PIPELINE_CREATE_DISPATCH_BASE'
+--     flag.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support compute operations
+--
+-- -   This command /must/ only be called outside of a render pass instance
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Outside         | Compute         |                 |
+-- > | Secondary       |                 |                 |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
 --
 -- = See Also
 --
@@ -692,8 +882,45 @@ cmdDispatchBase = \(CommandBuffer commandBuffer' commandTable) -> \baseGroupX' -
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.VkDeviceGroupRenderPassBeginInfo'::@deviceMask@
 --     value when the render pass instance began recording.
 --
--- Unresolved directive in vkCmdSetDeviceMask.txt -
--- include::{generated}\/validity\/protos\/vkCmdSetDeviceMask.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics, compute,
+--     or transfer operations
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Both            | Graphics        |                 |
+-- > | Secondary       |                 | Compute         |                 |
+-- > |                 |                 | Transfer        |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
 --
 -- = See Also
 --
@@ -723,10 +950,7 @@ cmdSetDeviceMask = \(CommandBuffer commandBuffer' commandTable) -> \deviceMask' 
 --     indicating which types of memory accesses are supported for the
 --     combination of heap, local, and remote devices.
 --
--- == Valid Usage
---
--- Unresolved directive in vkGetDeviceGroupPeerMemoryFeatures.txt -
--- include::{generated}\/validity\/protos\/vkGetDeviceGroupPeerMemoryFeatures.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --

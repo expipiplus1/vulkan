@@ -44,7 +44,8 @@ data VkSurfaceCounterFlagBitsEXT
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkSurfaceCapabilities2EXT', 'VkSurfaceCounterFlagBitsEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.VkSwapchainCounterCreateInfoEXT'
 type VkSurfaceCounterFlagsEXT = VkSurfaceCounterFlagBitsEXT
 
 type FN_vkGetPhysicalDeviceSurfaceCapabilities2EXT = ("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilities2EXT) -> IO VkResult

@@ -59,7 +59,7 @@ type VkSemaphoreImportFlagBitsKHR = VkSemaphoreImportFlagBits
 type VkSemaphoreImportFlagsKHR = VkSemaphoreImportFlags
 
 -- No documentation found for TopLevel "VK_KHR_EXTERNAL_SEMAPHORE_EXTENSION_NAME"
-pattern VK_KHR_EXTERNAL_SEMAPHORE_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_EXTERNAL_SEMAPHORE_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_EXTERNAL_SEMAPHORE_EXTENSION_NAME = "VK_KHR_external_semaphore"
 
 -- No documentation found for TopLevel "VK_KHR_EXTERNAL_SEMAPHORE_SPEC_VERSION"

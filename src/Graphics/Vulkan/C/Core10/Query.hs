@@ -305,11 +305,15 @@ data VkQueryPool_T
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBeginQuery',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdBeginQueryIndexedEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdCopyQueryPoolResults',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdEndQuery',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdEndQueryIndexedEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdResetQueryPool',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCmdWriteAccelerationStructuresPropertiesNV',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdWriteTimestamp',
--- 'vkCreateQueryPool', 'vkDestroyQueryPool', 'vkGetQueryPoolResults'
+-- 'vkCreateQueryPool', 'vkDestroyQueryPool', 'vkGetQueryPoolResults',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_host_query_reset.vkResetQueryPoolEXT'
 type VkQueryPool = Ptr VkQueryPool_T
 
 -- ** VkQueryPoolCreateFlags
@@ -362,8 +366,16 @@ instance Read VkQueryPoolCreateFlags where
 --     @pipelineStatistics@ /must/ be a valid combination of
 --     'VkQueryPipelineStatisticFlagBits' values
 --
--- Unresolved directive in VkQueryPoolCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkQueryPoolCreateInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @flags@ /must/ be @0@
+--
+-- -   @queryType@ /must/ be a valid 'VkQueryType' value
 --
 -- = See Also
 --
@@ -486,7 +498,8 @@ type VkQueryResultFlags = VkQueryResultFlagBits
 --
 -- = See Also
 --
--- 'VkQueryPoolCreateInfo'
+-- 'VkQueryPoolCreateInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCmdWriteAccelerationStructuresPropertiesNV'
 newtype VkQueryType = VkQueryType Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -550,10 +563,30 @@ pattern VK_QUERY_TYPE_TIMESTAMP = VkQueryType 2
 -- -   @pQueryPool@ is a pointer to a 'VkQueryPool' handle in which the
 --     resulting query pool object is returned.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCreateQueryPool.txt -
--- include::{generated}\/validity\/protos\/vkCreateQueryPool.txt[]
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'VkQueryPoolCreateInfo' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pQueryPool@ /must/ be a valid pointer to a 'VkQueryPool' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -607,8 +640,26 @@ type PFN_vkCreateQueryPool = FunPtr FN_vkCreateQueryPool
 --     were provided when @queryPool@ was created, @pAllocator@ /must/ be
 --     @NULL@
 --
--- Unresolved directive in vkDestroyQueryPool.txt -
--- include::{generated}\/validity\/protos\/vkDestroyQueryPool.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   If @queryPool@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @queryPool@
+--     /must/ be a valid 'VkQueryPool' handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   If @queryPool@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @queryPool@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -766,8 +817,36 @@ type PFN_vkDestroyQueryPool = FunPtr FN_vkDestroyQueryPool
 --     'VK_QUERY_TYPE_TIMESTAMP', @flags@ /must/ not contain
 --     'VK_QUERY_RESULT_PARTIAL_BIT'
 --
--- Unresolved directive in vkGetQueryPoolResults.txt -
--- include::{generated}\/validity\/protos\/vkGetQueryPoolResults.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @queryPool@ /must/ be a valid 'VkQueryPool' handle
+--
+-- -   @pData@ /must/ be a valid pointer to an array of @dataSize@ bytes
+--
+-- -   @flags@ /must/ be a valid combination of 'VkQueryResultFlagBits'
+--     values
+--
+-- -   @dataSize@ /must/ be greater than @0@
+--
+-- -   @queryPool@ /must/ have been created, allocated, or retrieved from
+--     @device@
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_NOT_READY'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_DEVICE_LOST'
 --
 -- = See Also
 --

@@ -89,12 +89,17 @@ data SECURITY_ATTRIBUTES
 -- [1]
 -- <https://msdn.microsoft.com/en-us/library/windows/desktop/ms686670.aspx>
 --
--- Unresolved directive in VkExportMemoryWin32HandleInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkExportMemoryWin32HandleInfoNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV'
+--
+-- -   If @pAttributes@ is not @NULL@, @pAttributes@ /must/ be a valid
+--     pointer to a valid 'SECURITY_ATTRIBUTES' value
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkExportMemoryWin32HandleInfoNV = VkExportMemoryWin32HandleInfoNV
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -135,20 +140,20 @@ instance Zero VkExportMemoryWin32HandleInfoNV where
 -- 'Graphics.Vulkan.C.Core10.Memory.VkMemoryAllocateInfo' structure it is
 -- chained from.
 --
--- == Valid Usage
---
--- Unresolved directive in VkImportMemoryWin32HandleInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkImportMemoryWin32HandleInfoNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryHandleTypeFlagsNV',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkImportMemoryWin32HandleInfoNV = VkImportMemoryWin32HandleInfoNV
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @handleType@ /must/ not have more than one bit set.
+  , -- | @handleType@ /must/ be a valid combination of
+  -- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBitsNV'
+  -- values
   vkHandleType :: VkExternalMemoryHandleTypeFlagsNV
   , -- | @handle@ /must/ be a valid handle to memory, obtained as specified by
   -- @handleType@.
@@ -191,14 +196,21 @@ instance Zero VkImportMemoryWin32HandleInfoNV where
 -- -   @handle@ points to a Windows 'HANDLE' in which the handle is
 --     returned.
 --
--- == Valid Usage
+-- == Return Codes
 --
--- Unresolved directive in vkGetMemoryWin32HandleNV.txt -
--- include::{generated}\/validity\/protos\/vkGetMemoryWin32HandleNV.txt[]
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_TOO_MANY_OBJECTS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryHandleTypeFlagsNV'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -220,7 +232,7 @@ type FN_vkGetMemoryWin32HandleNV = ("device" ::: VkDevice) -> ("memory" ::: VkDe
 type PFN_vkGetMemoryWin32HandleNV = FunPtr FN_vkGetMemoryWin32HandleNV
 
 -- No documentation found for TopLevel "VK_NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME"
-pattern VK_NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME = "VK_NV_external_memory_win32"
 
 -- No documentation found for TopLevel "VK_NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION"

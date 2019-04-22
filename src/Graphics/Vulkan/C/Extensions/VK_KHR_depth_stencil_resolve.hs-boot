@@ -28,7 +28,8 @@ data VkResolveModeFlagBitsKHR
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkPhysicalDeviceDepthStencilResolvePropertiesKHR',
+-- 'VkResolveModeFlagBitsKHR'
 type VkResolveModeFlagsKHR = VkResolveModeFlagBitsKHR
 
 data VkSubpassDescriptionDepthStencilResolveKHR

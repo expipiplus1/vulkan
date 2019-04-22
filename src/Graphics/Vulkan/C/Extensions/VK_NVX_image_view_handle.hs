@@ -88,12 +88,34 @@ import Graphics.Vulkan.NamedType
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_STORAGE_BIT'
 --     usage bit set
 --
--- Unresolved directive in VkImageViewHandleInfoNVX.txt -
--- include::{generated}\/validity\/structs\/VkImageViewHandleInfoNVX.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be 'VK_STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @imageView@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.ImageView.VkImageView' handle
+--
+-- -   @descriptorType@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorType' value
+--
+-- -   If @sampler@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @sampler@
+--     /must/ be a valid 'Graphics.Vulkan.C.Core10.Sampler.VkSampler'
+--     handle
+--
+-- -   Both of @imageView@, and @sampler@ that are valid handles /must/
+--     have been created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorType',
+-- 'Graphics.Vulkan.C.Core10.ImageView.VkImageView',
+-- 'Graphics.Vulkan.C.Core10.Sampler.VkSampler',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkGetImageViewHandleNVX'
 data VkImageViewHandleInfoNVX = VkImageViewHandleInfoNVX
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -139,14 +161,12 @@ instance Zero VkImageViewHandleInfoNVX where
 --
 -- -   @pInfo@ describes the image view to query and type of handle.
 --
--- = Description
---
--- Unresolved directive in vkGetImageViewHandleNVX.txt -
--- include::{generated}\/validity\/protos\/vkGetImageViewHandleNVX.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'VkImageViewHandleInfoNVX'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -168,7 +188,7 @@ type FN_vkGetImageViewHandleNVX = ("device" ::: VkDevice) -> ("pInfo" ::: Ptr Vk
 type PFN_vkGetImageViewHandleNVX = FunPtr FN_vkGetImageViewHandleNVX
 
 -- No documentation found for TopLevel "VK_NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME"
-pattern VK_NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME = "VK_NVX_image_view_handle"
 
 -- No documentation found for TopLevel "VK_NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION"

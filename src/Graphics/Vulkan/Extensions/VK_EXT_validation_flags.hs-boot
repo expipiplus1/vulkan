@@ -18,5 +18,5 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_validation_flags
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_flags.VkValidationFlagsEXT'
 type ValidationCheckEXT = VkValidationCheckEXT

@@ -10,12 +10,15 @@ module Graphics.Vulkan.Extensions.VK_EXT_memory_priority
   , withCStructPhysicalDeviceMemoryPriorityFeaturesEXT
   , fromCStructPhysicalDeviceMemoryPriorityFeaturesEXT
   , PhysicalDeviceMemoryPriorityFeaturesEXT(..)
-  , pattern VK_EXT_MEMORY_PRIORITY_SPEC_VERSION
-  , pattern VK_EXT_MEMORY_PRIORITY_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PRIORITY_FEATURES_EXT
-  , pattern VK_STRUCTURE_TYPE_MEMORY_PRIORITY_ALLOCATE_INFO_EXT
+  , pattern EXT_MEMORY_PRIORITY_EXTENSION_NAME
+  , pattern EXT_MEMORY_PRIORITY_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PRIORITY_FEATURES_EXT
+  , pattern STRUCTURE_TYPE_MEMORY_PRIORITY_ALLOCATE_INFO_EXT
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Foreign.C.Types
   ( CFloat(..)
   )
@@ -34,6 +37,8 @@ import Graphics.Vulkan.C.Core10.Core
 import Graphics.Vulkan.C.Extensions.VK_EXT_memory_priority
   ( VkMemoryPriorityAllocateInfoEXT(..)
   , VkPhysicalDeviceMemoryPriorityFeaturesEXT(..)
+  , pattern VK_EXT_MEMORY_PRIORITY_EXTENSION_NAME
+  , pattern VK_EXT_MEMORY_PRIORITY_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_MEMORY_PRIORITY_ALLOCATE_INFO_EXT
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PRIORITY_FEATURES_EXT
   )
@@ -46,9 +51,9 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_memory_priority
-  ( pattern VK_EXT_MEMORY_PRIORITY_EXTENSION_NAME
-  , pattern VK_EXT_MEMORY_PRIORITY_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_MEMORY_PRIORITY_ALLOCATE_INFO_EXT
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PRIORITY_FEATURES_EXT
   )
 
 
@@ -63,14 +68,11 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_memory_priority
 -- If this structure is not included, it is as if the @priority@ value were
 -- @0.5@.
 --
--- == Valid Usage
---
--- Unresolved directive in VkMemoryPriorityAllocateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkMemoryPriorityAllocateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data MemoryPriorityAllocateInfoEXT = MemoryPriorityAllocateInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "MemoryPriorityAllocateInfoEXT" "pNext"
@@ -119,12 +121,12 @@ instance Zero MemoryPriorityAllocateInfoEXT where
 -- /can/ also be used in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
 --
--- Unresolved directive in VkPhysicalDeviceMemoryPriorityFeaturesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceMemoryPriorityFeaturesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceMemoryPriorityFeaturesEXT = PhysicalDeviceMemoryPriorityFeaturesEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceMemoryPriorityFeaturesEXT" "pNext"
@@ -151,3 +153,11 @@ instance Zero PhysicalDeviceMemoryPriorityFeaturesEXT where
   zero = PhysicalDeviceMemoryPriorityFeaturesEXT Nothing
                                                  False
 
+
+-- No documentation found for TopLevel "VK_EXT_MEMORY_PRIORITY_EXTENSION_NAME"
+pattern EXT_MEMORY_PRIORITY_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_MEMORY_PRIORITY_EXTENSION_NAME = VK_EXT_MEMORY_PRIORITY_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_MEMORY_PRIORITY_SPEC_VERSION"
+pattern EXT_MEMORY_PRIORITY_SPEC_VERSION :: Integral a => a
+pattern EXT_MEMORY_PRIORITY_SPEC_VERSION = VK_EXT_MEMORY_PRIORITY_SPEC_VERSION

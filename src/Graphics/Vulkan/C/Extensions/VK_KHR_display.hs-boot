@@ -64,7 +64,16 @@ data VkDisplayKHR_T
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDisplayPlanePropertiesKHR', 'VkDisplayPropertiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_acquire_xlib_display.vkAcquireXlibDisplayEXT',
+-- 'vkCreateDisplayModeKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.vkDisplayPowerControlEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.vkGetDisplayModeProperties2KHR',
+-- 'vkGetDisplayModePropertiesKHR',
+-- 'vkGetDisplayPlaneSupportedDisplaysKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_acquire_xlib_display.vkGetRandROutputDisplayEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.vkRegisterDisplayEventEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_direct_mode_display.vkReleaseDisplayEXT'
 type VkDisplayKHR = Ptr VkDisplayKHR_T
 
 data VkDisplayModeCreateFlagsKHR
@@ -77,7 +86,10 @@ data VkDisplayModeKHR_T
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDisplayModePropertiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.VkDisplayPlaneInfo2KHR',
+-- 'VkDisplaySurfaceCreateInfoKHR', 'vkCreateDisplayModeKHR',
+-- 'vkGetDisplayPlaneCapabilitiesKHR'
 type VkDisplayModeKHR = Ptr VkDisplayModeKHR_T
 
 data VkDisplayModeParametersKHR
@@ -95,7 +107,7 @@ data VkDisplayPlaneAlphaFlagBitsKHR
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDisplayPlaneAlphaFlagBitsKHR', 'VkDisplayPlaneCapabilitiesKHR'
 type VkDisplayPlaneAlphaFlagsKHR = VkDisplayPlaneAlphaFlagBitsKHR
 
 data VkDisplayPlaneCapabilitiesKHR

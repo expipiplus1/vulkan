@@ -113,7 +113,7 @@ type HMONITOR = Ptr ()
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkSurfaceFullScreenExclusiveInfoEXT'
 newtype VkFullScreenExclusiveEXT = VkFullScreenExclusiveEXT Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -182,15 +182,15 @@ pattern VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT = VkFullScreenExclus
 -- @fullScreenExclusiveSupported@ is
 -- 'Graphics.Vulkan.C.Core10.Core.VK_FALSE'.
 --
--- Unresolved directive in VkSurfaceCapabilitiesFullScreenExclusiveEXT.txt
--- -
--- include::{generated}\/validity\/structs\/VkSurfaceCapabilitiesFullScreenExclusiveEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkSurfaceCapabilitiesFullScreenExclusiveEXT = VkSurfaceCapabilitiesFullScreenExclusiveEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_FULL_SCREEN_EXCLUSIVE_EXT'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -222,19 +222,19 @@ instance Zero VkSurfaceCapabilitiesFullScreenExclusiveEXT where
 -- If this structure is not present, @fullScreenExclusive@ is considered to
 -- be 'VK_FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT'.
 --
--- Unresolved directive in VkSurfaceFullScreenExclusiveInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkSurfaceFullScreenExclusiveInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkFullScreenExclusiveEXT',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkSurfaceFullScreenExclusiveInfoEXT = VkSurfaceFullScreenExclusiveInfoEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_INFO_EXT'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @fullScreenExclusive@ is a 'VkFullScreenExclusiveEXT' value specifying
-  -- the preferred full-screen transition behavior.
+  , -- | @fullScreenExclusive@ /must/ be a valid 'VkFullScreenExclusiveEXT' value
   vkFullScreenExclusive :: VkFullScreenExclusiveEXT
   }
   deriving (Eq, Show)
@@ -274,16 +274,14 @@ instance Zero VkSurfaceFullScreenExclusiveInfoEXT where
 -- APIs. Such changes /may/ alter the surface capabilities reported for the
 -- created surface.
 --
--- == Valid Usage
---
--- Unresolved directive in VkSurfaceFullScreenExclusiveWin32InfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkSurfaceFullScreenExclusiveWin32InfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkSurfaceFullScreenExclusiveWin32InfoEXT = VkSurfaceFullScreenExclusiveWin32InfoEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_WIN32_INFO_EXT'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -319,6 +317,14 @@ instance Zero VkSurfaceFullScreenExclusiveWin32InfoEXT where
 --
 -- == Valid Usage
 --
+-- -   @swapchain@ /must/ not be in the retired state
+--
+-- -   @swapchain@ /must/ be a swapchain created with an instance of
+--     'VkSurfaceFullScreenExclusiveInfoEXT', with @fullScreenExclusive@
+--     set to 'VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT'
+--
+-- -   @swapchain@ /must/ not currently have exclusive full-screen access
+--
 -- A return value of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS' indicates
 -- that the @swapchain@ successfully acquired exclusive full-screen access.
 -- The swapchain will retain this exclusivity until either the application
@@ -336,12 +342,37 @@ instance Zero VkSurfaceFullScreenExclusiveWin32InfoEXT where
 -- 'VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT' has been returned by a
 -- swapchain command.
 --
--- Unresolved directive in vkAcquireFullScreenExclusiveModeEXT.txt -
--- include::{generated}\/validity\/protos\/vkAcquireFullScreenExclusiveModeEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @swapchain@ /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
+--     handle
+--
+-- -   Both of @device@, and @swapchain@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance'
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_INITIALIZATION_FAILED'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_SURFACE_LOST_KHR'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -391,12 +422,43 @@ type PFN_vkAcquireFullScreenExclusiveModeEXT = FunPtr FN_vkAcquireFullScreenExcl
 -- with the ability to specify extended inputs via chained input
 -- structures.
 --
--- Unresolved directive in vkGetPhysicalDeviceSurfacePresentModes2EXT.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceSurfacePresentModes2EXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @pSurfaceInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkPhysicalDeviceSurfaceInfo2KHR'
+--     structure
+--
+-- -   @pPresentModeCount@ /must/ be a valid pointer to a @uint32_t@ value
+--
+-- -   If the value referenced by @pPresentModeCount@ is not @0@, and
+--     @pPresentModes@ is not @NULL@, @pPresentModes@ /must/ be a valid
+--     pointer to an array of @pPresentModeCount@
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkPresentModeKHR'
+--     values
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_SURFACE_LOST_KHR'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkPhysicalDeviceSurfaceInfo2KHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkPresentModeKHR'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -440,7 +502,8 @@ type PFN_vkGetPhysicalDeviceSurfacePresentModes2EXT = FunPtr FN_vkGetPhysicalDev
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -461,16 +524,12 @@ foreign import ccall
 type FN_vkReleaseFullScreenExclusiveModeEXT = ("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> IO VkResult
 type PFN_vkReleaseFullScreenExclusiveModeEXT = FunPtr FN_vkReleaseFullScreenExclusiveModeEXT
 
--- | 'VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT' An operation on a
--- swapchain created with
--- 'VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT' failed as it did
--- not have exlusive full-screen access. This /may/ occur due to
--- implementation-dependent reasons, outside of the application’s control.
+-- No documentation found for Nested "VkResult" "VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT"
 pattern VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT :: VkResult
 pattern VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT = VkResult (-1000255000)
 
 -- No documentation found for TopLevel "VK_EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME"
-pattern VK_EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME = "VK_EXT_full_screen_exclusive"
 
 -- No documentation found for TopLevel "VK_EXT_FULL_SCREEN_EXCLUSIVE_SPEC_VERSION"

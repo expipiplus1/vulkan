@@ -86,8 +86,15 @@ import Graphics.Vulkan.NamedType
 --     of 'Graphics.Vulkan.C.Core10.Device.vkCreateDevice' /must/ be an
 --     element of @pPhysicalDevices@.
 --
--- Unresolved directive in VkDeviceGroupDeviceCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkDeviceGroupDeviceCreateInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO'
+--
+-- -   If @physicalDeviceCount@ is not @0@, @pPhysicalDevices@ /must/ be a
+--     valid pointer to an array of @physicalDeviceCount@ valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handles
 --
 -- = See Also
 --
@@ -128,21 +135,19 @@ instance Zero VkDeviceGroupDeviceCreateInfo where
 -- | VkPhysicalDeviceGroupProperties - Structure specifying physical device
 -- group properties
 --
--- = Description
---
--- Unresolved directive in VkPhysicalDeviceGroupProperties.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceGroupProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkEnumeratePhysicalDeviceGroups'
+-- 'vkEnumeratePhysicalDeviceGroups',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_device_group_creation.vkEnumeratePhysicalDeviceGroupsKHR'
 data VkPhysicalDeviceGroupProperties = VkPhysicalDeviceGroupProperties
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
   , -- | @physicalDeviceCount@ is the number of physical devices in the group.
   vkPhysicalDeviceCount :: Word32
@@ -215,8 +220,33 @@ instance Zero VkPhysicalDeviceGroupProperties where
 --
 -- Every physical device /must/ be in exactly one device group.
 --
--- Unresolved directive in vkEnumeratePhysicalDeviceGroups.txt -
--- include::{generated}\/validity\/protos\/vkEnumeratePhysicalDeviceGroups.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @pPhysicalDeviceGroupCount@ /must/ be a valid pointer to a
+--     @uint32_t@ value
+--
+-- -   If the value referenced by @pPhysicalDeviceGroupCount@ is not @0@,
+--     and @pPhysicalDeviceGroupProperties@ is not @NULL@,
+--     @pPhysicalDeviceGroupProperties@ /must/ be a valid pointer to an
+--     array of @pPhysicalDeviceGroupCount@
+--     'VkPhysicalDeviceGroupProperties' structures
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_INITIALIZATION_FAILED'
 --
 -- = See Also
 --
@@ -248,11 +278,7 @@ type VK_MAX_DEVICE_GROUP_SIZE = 32
 pattern VK_MAX_DEVICE_GROUP_SIZE :: Integral a => a
 pattern VK_MAX_DEVICE_GROUP_SIZE = 32
 
--- | 'VK_MEMORY_HEAP_MULTI_INSTANCE_BIT' specifies that in a logical device
--- representing more than one physical device, there is a per-physical
--- device instance of the heap memory. By default, an allocation from such
--- a heap will be replicated to each physical device’s instance of the
--- heap.
+-- No documentation found for Nested "VkMemoryHeapFlagBits" "VK_MEMORY_HEAP_MULTI_INSTANCE_BIT"
 pattern VK_MEMORY_HEAP_MULTI_INSTANCE_BIT :: VkMemoryHeapFlagBits
 pattern VK_MEMORY_HEAP_MULTI_INSTANCE_BIT = VkMemoryHeapFlagBits 0x00000002
 

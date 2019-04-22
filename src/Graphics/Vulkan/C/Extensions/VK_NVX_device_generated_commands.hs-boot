@@ -88,7 +88,9 @@ data VkIndirectCommandsLayoutNVX_T
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkCmdProcessCommandsInfoNVX', 'VkCmdReserveSpaceForCommandsInfoNVX',
+-- 'vkCreateIndirectCommandsLayoutNVX',
+-- 'vkDestroyIndirectCommandsLayoutNVX'
 type VkIndirectCommandsLayoutNVX = Ptr VkIndirectCommandsLayoutNVX_T
 
 data VkIndirectCommandsLayoutTokenNVX
@@ -105,7 +107,8 @@ data VkIndirectCommandsLayoutUsageFlagBitsNVX
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkIndirectCommandsLayoutCreateInfoNVX',
+-- 'VkIndirectCommandsLayoutUsageFlagBitsNVX'
 type VkIndirectCommandsLayoutUsageFlagsNVX = VkIndirectCommandsLayoutUsageFlagBitsNVX
 
 data VkIndirectCommandsTokenNVX
@@ -125,7 +128,10 @@ data VkObjectEntryUsageFlagBitsNVX
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkObjectEntryUsageFlagBitsNVX', 'VkObjectTableCreateInfoNVX',
+-- 'VkObjectTableDescriptorSetEntryNVX', 'VkObjectTableEntryNVX',
+-- 'VkObjectTableIndexBufferEntryNVX', 'VkObjectTablePipelineEntryNVX',
+-- 'VkObjectTablePushConstantEntryNVX', 'VkObjectTableVertexBufferEntryNVX'
 type VkObjectEntryUsageFlagsNVX = VkObjectEntryUsageFlagBitsNVX
 
 data VkObjectTableCreateInfoNVX
@@ -142,7 +148,9 @@ data VkObjectTableNVX_T
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkCmdProcessCommandsInfoNVX', 'VkCmdReserveSpaceForCommandsInfoNVX',
+-- 'vkCreateObjectTableNVX', 'vkDestroyObjectTableNVX',
+-- 'vkRegisterObjectsNVX', 'vkUnregisterObjectsNVX'
 type VkObjectTableNVX = Ptr VkObjectTableNVX_T
 
 data VkObjectTablePipelineEntryNVX

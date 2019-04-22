@@ -52,16 +52,23 @@ data VkDeviceMemory_T
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkBindAccelerationStructureMemoryInfoNV',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.VkBindBufferMemoryInfo',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.VkBindImageMemoryInfo',
 -- 'VkMappedMemoryRange',
+-- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkMemoryGetAndroidHardwareBufferInfoANDROID',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd.VkMemoryGetFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32.VkMemoryGetWin32HandleInfoKHR',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageMemoryBind',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseMemoryBind',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_win32_keyed_mutex.VkWin32KeyedMutexAcquireReleaseInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_win32_keyed_mutex.VkWin32KeyedMutexAcquireReleaseInfoNV',
 -- 'vkAllocateMemory',
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.vkBindBufferMemory',
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.vkBindImageMemory',
--- 'vkFreeMemory', 'vkGetDeviceMemoryCommitment', 'vkMapMemory',
--- 'vkUnmapMemory'
+-- 'vkFreeMemory', 'vkGetDeviceMemoryCommitment',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32.vkGetMemoryWin32HandleNV',
+-- 'vkMapMemory', 'vkUnmapMemory'
 type VkDeviceMemory = Ptr VkDeviceMemory_T
 
 data VkMappedMemoryRange

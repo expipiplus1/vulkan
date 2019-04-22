@@ -8,11 +8,14 @@ module Graphics.Vulkan.Extensions.VK_EXT_host_query_reset
   , fromCStructPhysicalDeviceHostQueryResetFeaturesEXT
   , PhysicalDeviceHostQueryResetFeaturesEXT(..)
   , resetQueryPoolEXT
-  , pattern VK_EXT_HOST_QUERY_RESET_SPEC_VERSION
-  , pattern VK_EXT_HOST_QUERY_RESET_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES_EXT
+  , pattern EXT_HOST_QUERY_RESET_EXTENSION_NAME
+  , pattern EXT_HOST_QUERY_RESET_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES_EXT
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Data.Word
   ( Word32
   )
@@ -31,6 +34,8 @@ import Graphics.Vulkan.C.Core10.Core
 import Graphics.Vulkan.C.Extensions.VK_EXT_host_query_reset
   ( VkPhysicalDeviceHostQueryResetFeaturesEXT(..)
   , vkResetQueryPoolEXT
+  , pattern VK_EXT_HOST_QUERY_RESET_EXTENSION_NAME
+  , pattern VK_EXT_HOST_QUERY_RESET_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES_EXT
   )
 import Graphics.Vulkan.Core10.Core
@@ -48,9 +53,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_host_query_reset
-  ( pattern VK_EXT_HOST_QUERY_RESET_EXTENSION_NAME
-  , pattern VK_EXT_HOST_QUERY_RESET_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES_EXT
   )
 
 
@@ -75,12 +79,12 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_host_query_reset
 -- /can/ also be used in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
 --
--- Unresolved directive in VkPhysicalDeviceHostQueryResetFeaturesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceHostQueryResetFeaturesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceHostQueryResetFeaturesEXT = PhysicalDeviceHostQueryResetFeaturesEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceHostQueryResetFeaturesEXT" "pNext"
@@ -137,11 +141,28 @@ instance Zero PhysicalDeviceHostQueryResetFeaturesEXT where
 -- -   The sum of @firstQuery@ and @queryCount@ /must/ be less than or
 --     equal to the number of queries in @queryPool@
 --
--- Unresolved directive in vkResetQueryPoolEXT.txt -
--- include::{generated}\/validity\/protos\/vkResetQueryPoolEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @queryPool@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Query.VkQueryPool' handle
+--
+-- -   @queryPool@ /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Core10.Query.VkQueryPool'
 resetQueryPoolEXT :: Device ->  QueryPool ->  Word32 ->  Word32 ->  IO ()
 resetQueryPoolEXT = \(Device device' commandTable) -> \queryPool' -> \firstQuery' -> \queryCount' -> vkResetQueryPoolEXT commandTable device' queryPool' firstQuery' queryCount' *> (pure ())
+
+-- No documentation found for TopLevel "VK_EXT_HOST_QUERY_RESET_EXTENSION_NAME"
+pattern EXT_HOST_QUERY_RESET_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_HOST_QUERY_RESET_EXTENSION_NAME = VK_EXT_HOST_QUERY_RESET_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_HOST_QUERY_RESET_SPEC_VERSION"
+pattern EXT_HOST_QUERY_RESET_SPEC_VERSION :: Integral a => a
+pattern EXT_HOST_QUERY_RESET_SPEC_VERSION = VK_EXT_HOST_QUERY_RESET_SPEC_VERSION

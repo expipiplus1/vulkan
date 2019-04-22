@@ -7,9 +7,9 @@ module Graphics.Vulkan.Extensions.VK_KHR_win32_keyed_mutex
   ( withCStructWin32KeyedMutexAcquireReleaseInfoKHR
   , fromCStructWin32KeyedMutexAcquireReleaseInfoKHR
   , Win32KeyedMutexAcquireReleaseInfoKHR(..)
-  , pattern VK_KHR_WIN32_KEYED_MUTEX_SPEC_VERSION
-  , pattern VK_KHR_WIN32_KEYED_MUTEX_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR
+  , pattern KHR_WIN32_KEYED_MUTEX_EXTENSION_NAME
+  , pattern KHR_WIN32_KEYED_MUTEX_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR
   ) where
 
 import Data.Function
@@ -17,6 +17,9 @@ import Data.Function
   )
 import Data.List
   ( minimum
+  )
+import Data.String
+  ( IsString
   )
 import Data.Vector
   ( Vector
@@ -47,6 +50,8 @@ import Graphics.Vulkan.C.Core10.Core
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_win32_keyed_mutex
   ( VkWin32KeyedMutexAcquireReleaseInfoKHR(..)
+  , pattern VK_KHR_WIN32_KEYED_MUTEX_EXTENSION_NAME
+  , pattern VK_KHR_WIN32_KEYED_MUTEX_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR
   )
 import Graphics.Vulkan.Core10.Memory
@@ -60,9 +65,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_KHR_win32_keyed_mutex
-  ( pattern VK_KHR_WIN32_KEYED_MUTEX_EXTENSION_NAME
-  , pattern VK_KHR_WIN32_KEYED_MUTEX_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR
   )
 
 
@@ -80,12 +84,37 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_win32_keyed_mutex
 --     or
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT'.
 --
--- Unresolved directive in VkWin32KeyedMutexAcquireReleaseInfoKHR.txt -
--- include::{generated}\/validity\/structs\/VkWin32KeyedMutexAcquireReleaseInfoKHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_win32_keyed_mutex.VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR'
+--
+-- -   If @acquireCount@ is not @0@, @pAcquireSyncs@ /must/ be a valid
+--     pointer to an array of @acquireCount@ valid
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' handles
+--
+-- -   If @acquireCount@ is not @0@, @pAcquireKeys@ /must/ be a valid
+--     pointer to an array of @acquireCount@ @uint64_t@ values
+--
+-- -   If @acquireCount@ is not @0@, @pAcquireTimeouts@ /must/ be a valid
+--     pointer to an array of @acquireCount@ @uint32_t@ values
+--
+-- -   If @releaseCount@ is not @0@, @pReleaseSyncs@ /must/ be a valid
+--     pointer to an array of @releaseCount@ valid
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' handles
+--
+-- -   If @releaseCount@ is not @0@, @pReleaseKeys@ /must/ be a valid
+--     pointer to an array of @releaseCount@ @uint64_t@ values
+--
+-- -   Both of the elements of @pAcquireSyncs@, and the elements of
+--     @pReleaseSyncs@ that are valid handles /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data Win32KeyedMutexAcquireReleaseInfoKHR = Win32KeyedMutexAcquireReleaseInfoKHR
   { -- Univalued member elided
   -- No documentation found for Nested "Win32KeyedMutexAcquireReleaseInfoKHR" "pNext"
@@ -132,3 +161,11 @@ instance Zero Win32KeyedMutexAcquireReleaseInfoKHR where
                                               Data.Vector.empty
                                               Data.Vector.empty
 
+
+-- No documentation found for TopLevel "VK_KHR_WIN32_KEYED_MUTEX_EXTENSION_NAME"
+pattern KHR_WIN32_KEYED_MUTEX_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern KHR_WIN32_KEYED_MUTEX_EXTENSION_NAME = VK_KHR_WIN32_KEYED_MUTEX_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_KHR_WIN32_KEYED_MUTEX_SPEC_VERSION"
+pattern KHR_WIN32_KEYED_MUTEX_SPEC_VERSION :: Integral a => a
+pattern KHR_WIN32_KEYED_MUTEX_SPEC_VERSION = VK_KHR_WIN32_KEYED_MUTEX_SPEC_VERSION

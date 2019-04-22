@@ -33,10 +33,16 @@ module Graphics.Vulkan.Core10.Query
   , pattern QUERY_TYPE_OCCLUSION
   , pattern QUERY_TYPE_PIPELINE_STATISTICS
   , pattern QUERY_TYPE_TIMESTAMP
+  , pattern QUERY_TYPE_RESERVED_8
+  , pattern QUERY_TYPE_RESERVED_4
+  , pattern QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT
+  , pattern QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV
   , createQueryPool
   , destroyQueryPool
   , getQueryPoolResults
   , withQueryPool
+  , pattern VK_QUERY_TYPE_RESERVED_4
+  , pattern VK_QUERY_TYPE_RESERVED_8
   ) where
 
 import Control.Exception
@@ -110,6 +116,12 @@ import Graphics.Vulkan.C.Core10.Query
   , pattern VK_QUERY_TYPE_PIPELINE_STATISTICS
   , pattern VK_QUERY_TYPE_TIMESTAMP
   )
+import Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback
+  ( pattern VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing
+  ( pattern VK_QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV
+  )
 import Graphics.Vulkan.Core10.DeviceInitialization
   ( AllocationCallbacks(..)
   , Device(..)
@@ -158,6 +170,9 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
 --
 -- 'Graphics.Vulkan.C.Core10.Query.VkQueryPipelineStatisticFlags'
 type QueryPipelineStatisticFlagBits = VkQueryPipelineStatisticFlagBits
+
+
+{-# complete QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT, QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT, QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT, QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT, QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT, QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT, QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT, QUERY_PIPELINE_STATISTIC_FRAGMENT_SHADER_INVOCATIONS_BIT, QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT, QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT, QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT :: QueryPipelineStatisticFlagBits #-}
 
 
 -- | 'Graphics.Vulkan.C.Core10.Query.VK_QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT'
@@ -302,13 +317,17 @@ type QueryPipelineStatisticFlags = QueryPipelineStatisticFlagBits
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBeginQuery',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdBeginQueryIndexedEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdCopyQueryPoolResults',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdEndQuery',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdEndQueryIndexedEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdResetQueryPool',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCmdWriteAccelerationStructuresPropertiesNV',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdWriteTimestamp',
 -- 'Graphics.Vulkan.C.Core10.Query.vkCreateQueryPool',
 -- 'Graphics.Vulkan.C.Core10.Query.vkDestroyQueryPool',
--- 'Graphics.Vulkan.C.Core10.Query.vkGetQueryPoolResults'
+-- 'Graphics.Vulkan.C.Core10.Query.vkGetQueryPoolResults',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_host_query_reset.vkResetQueryPoolEXT'
 type QueryPool = VkQueryPool
 
 -- | VkQueryPoolCreateFlags - Reserved for future use
@@ -322,6 +341,9 @@ type QueryPool = VkQueryPool
 --
 -- 'Graphics.Vulkan.C.Core10.Query.VkQueryPoolCreateInfo'
 type QueryPoolCreateFlags = VkQueryPoolCreateFlags
+
+
+-- No complete pragma for QueryPoolCreateFlags as it has no patterns
 
 
 -- | VkQueryPoolCreateInfo - Structure specifying parameters of a newly
@@ -345,8 +367,17 @@ type QueryPoolCreateFlags = VkQueryPoolCreateFlags
 --     'Graphics.Vulkan.C.Core10.Query.VkQueryPipelineStatisticFlagBits'
 --     values
 --
--- Unresolved directive in VkQueryPoolCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkQueryPoolCreateInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @flags@ /must/ be @0@
+--
+-- -   @queryType@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Query.VkQueryType' value
 --
 -- = See Also
 --
@@ -403,6 +434,9 @@ instance Zero QueryPoolCreateInfo where
 type QueryResultFlagBits = VkQueryResultFlagBits
 
 
+{-# complete QUERY_RESULT_64_BIT, QUERY_RESULT_WAIT_BIT, QUERY_RESULT_WITH_AVAILABILITY_BIT, QUERY_RESULT_PARTIAL_BIT :: QueryResultFlagBits #-}
+
+
 -- | 'Graphics.Vulkan.C.Core10.Query.VK_QUERY_RESULT_64_BIT' specifies the
 -- results will be written as an array of 64-bit unsigned integer values.
 -- If this bit is not set, the results will be written as an array of
@@ -448,8 +482,12 @@ type QueryResultFlags = QueryResultFlagBits
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.C.Core10.Query.VkQueryPoolCreateInfo'
+-- 'Graphics.Vulkan.C.Core10.Query.VkQueryPoolCreateInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCmdWriteAccelerationStructuresPropertiesNV'
 type QueryType = VkQueryType
+
+
+{-# complete QUERY_TYPE_OCCLUSION, QUERY_TYPE_PIPELINE_STATISTICS, QUERY_TYPE_TIMESTAMP, QUERY_TYPE_RESERVED_8, QUERY_TYPE_RESERVED_4, QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT, QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV :: QueryType #-}
 
 
 -- | 'Graphics.Vulkan.C.Core10.Query.VK_QUERY_TYPE_OCCLUSION' specifies an
@@ -471,6 +509,26 @@ pattern QUERY_TYPE_TIMESTAMP :: (a ~ QueryType) => a
 pattern QUERY_TYPE_TIMESTAMP = VK_QUERY_TYPE_TIMESTAMP
 
 
+-- No documentation found for Nested "QueryType" "QUERY_TYPE_RESERVED_8"
+pattern QUERY_TYPE_RESERVED_8 :: (a ~ QueryType) => a
+pattern QUERY_TYPE_RESERVED_8 = VK_QUERY_TYPE_RESERVED_8
+
+
+-- No documentation found for Nested "QueryType" "QUERY_TYPE_RESERVED_4"
+pattern QUERY_TYPE_RESERVED_4 :: (a ~ QueryType) => a
+pattern QUERY_TYPE_RESERVED_4 = VK_QUERY_TYPE_RESERVED_4
+
+
+-- No documentation found for Nested "QueryType" "QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT"
+pattern QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT :: (a ~ QueryType) => a
+pattern QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT = VK_QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT
+
+
+-- No documentation found for Nested "QueryType" "QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV"
+pattern QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV :: (a ~ QueryType) => a
+pattern QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV = VK_QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV
+
+
 -- | vkCreateQueryPool - Create a new query pool object
 --
 -- = Parameters
@@ -489,10 +547,31 @@ pattern QUERY_TYPE_TIMESTAMP = VK_QUERY_TYPE_TIMESTAMP
 --     'Graphics.Vulkan.C.Core10.Query.VkQueryPool' handle in which the
 --     resulting query pool object is returned.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCreateQueryPool.txt -
--- include::{generated}\/validity\/protos\/vkCreateQueryPool.txt[]
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Core10.Query.VkQueryPoolCreateInfo' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pQueryPool@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Core10.Query.VkQueryPool' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -531,8 +610,27 @@ createQueryPool = \(Device device' commandTable) -> \createInfo' -> \allocator -
 --     were provided when @queryPool@ was created, @pAllocator@ /must/ be
 --     @NULL@
 --
--- Unresolved directive in vkDestroyQueryPool.txt -
--- include::{generated}\/validity\/protos\/vkDestroyQueryPool.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   If @queryPool@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @queryPool@
+--     /must/ be a valid 'Graphics.Vulkan.C.Core10.Query.VkQueryPool'
+--     handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   If @queryPool@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @queryPool@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -691,8 +789,37 @@ destroyQueryPool = \(Device device' commandTable) -> \queryPool' -> \allocator -
 --     /must/ not contain
 --     'Graphics.Vulkan.C.Core10.Query.VK_QUERY_RESULT_PARTIAL_BIT'
 --
--- Unresolved directive in vkGetQueryPoolResults.txt -
--- include::{generated}\/validity\/protos\/vkGetQueryPoolResults.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @queryPool@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Query.VkQueryPool' handle
+--
+-- -   @pData@ /must/ be a valid pointer to an array of @dataSize@ bytes
+--
+-- -   @flags@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core10.Query.VkQueryResultFlagBits' values
+--
+-- -   @dataSize@ /must/ be greater than @0@
+--
+-- -   @queryPool@ /must/ have been created, allocated, or retrieved from
+--     @device@
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_NOT_READY'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_DEVICE_LOST'
 --
 -- = See Also
 --
@@ -711,3 +838,11 @@ withQueryPool
 withQueryPool device queryPoolCreateInfo allocationCallbacks = bracket
   (createQueryPool device queryPoolCreateInfo allocationCallbacks)
   (\o -> destroyQueryPool device o allocationCallbacks)
+
+-- No documentation found for Nested "VkQueryType" "VK_QUERY_TYPE_RESERVED_4"
+pattern VK_QUERY_TYPE_RESERVED_4 :: VkQueryType
+pattern VK_QUERY_TYPE_RESERVED_4 = VkQueryType 1000024004
+
+-- No documentation found for Nested "VkQueryType" "VK_QUERY_TYPE_RESERVED_8"
+pattern VK_QUERY_TYPE_RESERVED_8 :: VkQueryType
+pattern VK_QUERY_TYPE_RESERVED_8 = VkQueryType 1000023008

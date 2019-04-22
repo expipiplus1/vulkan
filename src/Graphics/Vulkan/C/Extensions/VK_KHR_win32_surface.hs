@@ -116,20 +116,18 @@ instance Read VkWin32SurfaceCreateFlagsKHR where
 -- | VkWin32SurfaceCreateInfoKHR - Structure specifying parameters of a newly
 -- created Win32 surface object
 --
--- == Valid Usage
---
--- Unresolved directive in VkWin32SurfaceCreateInfoKHR.txt -
--- include::{generated}\/validity\/structs\/VkWin32SurfaceCreateInfoKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'VkWin32SurfaceCreateFlagsKHR', 'vkCreateWin32SurfaceKHR'
 data VkWin32SurfaceCreateInfoKHR = VkWin32SurfaceCreateInfoKHR
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- | @flags@ is reserved for future use.
+  , -- | @flags@ /must/ be @0@
   vkFlags :: VkWin32SurfaceCreateFlagsKHR
   , -- | @hinstance@ /must/ be a valid Win32 'HINSTANCE'.
   vkHinstance :: HINSTANCE
@@ -180,14 +178,38 @@ instance Zero VkWin32SurfaceCreateInfoKHR where
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
 --     which the created surface object is returned.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCreateWin32SurfaceKHR.txt -
--- include::{generated}\/validity\/protos\/vkCreateWin32SurfaceKHR.txt[]
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'VkWin32SurfaceCreateInfoKHR' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pSurface@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR',
+-- 'VkWin32SurfaceCreateInfoKHR'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -222,15 +244,11 @@ type PFN_vkCreateWin32SurfaceKHR = FunPtr FN_vkCreateWin32SurfaceKHR
 -- This platform-specific function /can/ be called prior to creating a
 -- surface.
 --
--- == Valid Usage
---
--- Unresolved directive in
--- vkGetPhysicalDeviceWin32PresentationSupportKHR.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceWin32PresentationSupportKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -252,7 +270,7 @@ type FN_vkGetPhysicalDeviceWin32PresentationSupportKHR = ("physicalDevice" ::: V
 type PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR = FunPtr FN_vkGetPhysicalDeviceWin32PresentationSupportKHR
 
 -- No documentation found for TopLevel "VK_KHR_WIN32_SURFACE_EXTENSION_NAME"
-pattern VK_KHR_WIN32_SURFACE_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_WIN32_SURFACE_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_WIN32_SURFACE_EXTENSION_NAME = "VK_KHR_win32_surface"
 
 -- No documentation found for TopLevel "VK_KHR_WIN32_SURFACE_SPEC_VERSION"

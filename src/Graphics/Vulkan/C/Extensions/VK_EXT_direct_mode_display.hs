@@ -46,14 +46,15 @@ import Graphics.Vulkan.NamedType
 --
 -- -   @display@ The display to release control of.
 --
--- = Description
+-- == Return Codes
 --
--- Unresolved directive in vkReleaseDisplayEXT.txt -
--- include::{generated}\/validity\/protos\/vkReleaseDisplayEXT.txt[]
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayKHR',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -75,7 +76,7 @@ type FN_vkReleaseDisplayEXT = ("physicalDevice" ::: VkPhysicalDevice) -> ("displ
 type PFN_vkReleaseDisplayEXT = FunPtr FN_vkReleaseDisplayEXT
 
 -- No documentation found for TopLevel "VK_EXT_DIRECT_MODE_DISPLAY_EXTENSION_NAME"
-pattern VK_EXT_DIRECT_MODE_DISPLAY_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_DIRECT_MODE_DISPLAY_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_DIRECT_MODE_DISPLAY_EXTENSION_NAME = "VK_EXT_direct_mode_display"
 
 -- No documentation found for TopLevel "VK_EXT_DIRECT_MODE_DISPLAY_SPEC_VERSION"

@@ -16,12 +16,15 @@ module Graphics.Vulkan.Extensions.VK_EXT_conservative_rasterization
   , withCStructPipelineRasterizationConservativeStateCreateInfoEXT
   , fromCStructPipelineRasterizationConservativeStateCreateInfoEXT
   , PipelineRasterizationConservativeStateCreateInfoEXT(..)
-  , pattern VK_EXT_CONSERVATIVE_RASTERIZATION_SPEC_VERSION
-  , pattern VK_EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CONSERVATIVE_RASTERIZATION_PROPERTIES_EXT
-  , pattern VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT
+  , pattern EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME
+  , pattern EXT_CONSERVATIVE_RASTERIZATION_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_CONSERVATIVE_RASTERIZATION_PROPERTIES_EXT
+  , pattern STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Foreign.C.Types
   ( CFloat(..)
   )
@@ -45,6 +48,8 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization
   , pattern VK_CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT
   , pattern VK_CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT
   , pattern VK_CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT
+  , pattern VK_EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME
+  , pattern VK_EXT_CONSERVATIVE_RASTERIZATION_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CONSERVATIVE_RASTERIZATION_PROPERTIES_EXT
   , pattern VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT
   )
@@ -57,9 +62,9 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization
-  ( pattern VK_EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME
-  , pattern VK_EXT_CONSERVATIVE_RASTERIZATION_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_CONSERVATIVE_RASTERIZATION_PROPERTIES_EXT
+  , pattern STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT
   )
 
 
@@ -68,8 +73,11 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization.VkPipelineRasterizationConservativeStateCreateInfoEXT'
 type ConservativeRasterizationModeEXT = VkConservativeRasterizationModeEXT
+
+
+{-# complete CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT, CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT, CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT :: ConservativeRasterizationModeEXT #-}
 
 
 -- | 'Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization.VK_CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT'
@@ -111,13 +119,12 @@ pattern CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT = VK_CONSERVATIVE_RAST
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits and properties.
 --
--- Unresolved directive in
--- VkPhysicalDeviceConservativeRasterizationPropertiesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceConservativeRasterizationPropertiesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceConservativeRasterizationPropertiesEXT = PhysicalDeviceConservativeRasterizationPropertiesEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceConservativeRasterizationPropertiesEXT" "pNext"
@@ -188,22 +195,23 @@ instance Zero PhysicalDeviceConservativeRasterizationPropertiesEXT where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization.VkPipelineRasterizationConservativeStateCreateInfoEXT'
 type PipelineRasterizationConservativeStateCreateFlagsEXT = VkPipelineRasterizationConservativeStateCreateFlagsEXT
+
+
+-- No complete pragma for PipelineRasterizationConservativeStateCreateFlagsEXT as it has no patterns
 
 
 -- | VkPipelineRasterizationConservativeStateCreateInfoEXT - Structure
 -- specifying conservative raster state
 --
--- == Valid Usage
---
--- Unresolved directive in
--- VkPipelineRasterizationConservativeStateCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkPipelineRasterizationConservativeStateCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization.VkConservativeRasterizationModeEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization.VkPipelineRasterizationConservativeStateCreateFlagsEXT',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PipelineRasterizationConservativeStateCreateInfoEXT = PipelineRasterizationConservativeStateCreateInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PipelineRasterizationConservativeStateCreateInfoEXT" "pNext"
@@ -238,3 +246,11 @@ instance Zero PipelineRasterizationConservativeStateCreateInfoEXT where
                                                              zero
                                                              zero
 
+
+-- No documentation found for TopLevel "VK_EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME"
+pattern EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME = VK_EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_CONSERVATIVE_RASTERIZATION_SPEC_VERSION"
+pattern EXT_CONSERVATIVE_RASTERIZATION_SPEC_VERSION :: Integral a => a
+pattern EXT_CONSERVATIVE_RASTERIZATION_SPEC_VERSION = VK_EXT_CONSERVATIVE_RASTERIZATION_SPEC_VERSION

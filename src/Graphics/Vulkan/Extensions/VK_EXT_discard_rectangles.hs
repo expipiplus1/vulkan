@@ -16,11 +16,11 @@ module Graphics.Vulkan.Extensions.VK_EXT_discard_rectangles
   , fromCStructPipelineDiscardRectangleStateCreateInfoEXT
   , PipelineDiscardRectangleStateCreateInfoEXT(..)
   , cmdSetDiscardRectangleEXT
-  , pattern VK_EXT_DISCARD_RECTANGLES_SPEC_VERSION
-  , pattern VK_EXT_DISCARD_RECTANGLES_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DISCARD_RECTANGLE_PROPERTIES_EXT
-  , pattern VK_STRUCTURE_TYPE_PIPELINE_DISCARD_RECTANGLE_STATE_CREATE_INFO_EXT
-  , pattern VK_DYNAMIC_STATE_DISCARD_RECTANGLE_EXT
+  , pattern EXT_DISCARD_RECTANGLES_EXTENSION_NAME
+  , pattern EXT_DISCARD_RECTANGLES_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DISCARD_RECTANGLE_PROPERTIES_EXT
+  , pattern STRUCTURE_TYPE_PIPELINE_DISCARD_RECTANGLE_STATE_CREATE_INFO_EXT
+  , pattern DYNAMIC_STATE_DISCARD_RECTANGLE_EXT
   ) where
 
 import Control.Monad
@@ -28,6 +28,9 @@ import Control.Monad
   )
 import Data.Maybe
   ( maybe
+  )
+import Data.String
+  ( IsString
   )
 import Data.Vector
   ( Vector
@@ -62,6 +65,8 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_discard_rectangles
   , vkCmdSetDiscardRectangleEXT
   , pattern VK_DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT
   , pattern VK_DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT
+  , pattern VK_EXT_DISCARD_RECTANGLES_EXTENSION_NAME
+  , pattern VK_EXT_DISCARD_RECTANGLES_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DISCARD_RECTANGLE_PROPERTIES_EXT
   , pattern VK_STRUCTURE_TYPE_PIPELINE_DISCARD_RECTANGLE_STATE_CREATE_INFO_EXT
   )
@@ -81,10 +86,12 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_discard_rectangles
-  ( pattern VK_DYNAMIC_STATE_DISCARD_RECTANGLE_EXT
-  , pattern VK_EXT_DISCARD_RECTANGLES_EXTENSION_NAME
-  , pattern VK_EXT_DISCARD_RECTANGLES_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DISCARD_RECTANGLE_PROPERTIES_EXT
+  , pattern STRUCTURE_TYPE_PIPELINE_DISCARD_RECTANGLE_STATE_CREATE_INFO_EXT
+  )
+import Graphics.Vulkan.Core10.Pipeline
+  ( pattern DYNAMIC_STATE_DISCARD_RECTANGLE_EXT
   )
 
 
@@ -92,8 +99,11 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_discard_rectangles
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_discard_rectangles.VkPipelineDiscardRectangleStateCreateInfoEXT'
 type DiscardRectangleModeEXT = VkDiscardRectangleModeEXT
+
+
+{-# complete DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT, DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT :: DiscardRectangleModeEXT #-}
 
 
 -- | 'Graphics.Vulkan.C.Extensions.VK_EXT_discard_rectangles.VK_DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT'
@@ -127,13 +137,11 @@ pattern DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT = VK_DISCARD_RECTANGLE_MODE_EXCLUSI
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- Unresolved directive in
--- VkPhysicalDeviceDiscardRectanglePropertiesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceDiscardRectanglePropertiesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceDiscardRectanglePropertiesEXT = PhysicalDeviceDiscardRectanglePropertiesEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceDiscardRectanglePropertiesEXT" "pNext"
@@ -171,22 +179,24 @@ instance Zero PhysicalDeviceDiscardRectanglePropertiesEXT where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_discard_rectangles.VkPipelineDiscardRectangleStateCreateInfoEXT'
 type PipelineDiscardRectangleStateCreateFlagsEXT = VkPipelineDiscardRectangleStateCreateFlagsEXT
+
+
+-- No complete pragma for PipelineDiscardRectangleStateCreateFlagsEXT as it has no patterns
 
 
 -- | VkPipelineDiscardRectangleStateCreateInfoEXT - Structure specifying
 -- discard rectangle
 --
--- == Valid Usage
---
--- Unresolved directive in VkPipelineDiscardRectangleStateCreateInfoEXT.txt
--- -
--- include::{generated}\/validity\/structs\/VkPipelineDiscardRectangleStateCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_discard_rectangles.VkDiscardRectangleModeEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_discard_rectangles.VkPipelineDiscardRectangleStateCreateFlagsEXT',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkRect2D',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PipelineDiscardRectangleStateCreateInfoEXT = PipelineDiscardRectangleStateCreateInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PipelineDiscardRectangleStateCreateInfoEXT" "pNext"
@@ -272,11 +282,62 @@ instance Zero PipelineDiscardRectangleStateCreateInfoEXT where
 --     @pDiscardRectangles@ /must/ not cause a signed integer addition
 --     overflow
 --
--- Unresolved directive in vkCmdSetDiscardRectangleEXT.txt -
--- include::{generated}\/validity\/protos\/vkCmdSetDiscardRectangleEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @pDiscardRectangles@ /must/ be a valid pointer to an array of
+--     @discardRectangleCount@ 'Graphics.Vulkan.C.Core10.Pipeline.VkRect2D'
+--     structures
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
+--
+-- -   @discardRectangleCount@ /must/ be greater than @0@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Both            | Graphics        |                 |
+-- > | Secondary       |                 |                 |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkRect2D'
 cmdSetDiscardRectangleEXT :: CommandBuffer ->  Word32 ->  Vector Rect2D ->  IO ()
 cmdSetDiscardRectangleEXT = \(CommandBuffer commandBuffer' commandTable) -> \firstDiscardRectangle' -> \discardRectangles' -> withVec withCStructRect2D discardRectangles' (\pDiscardRectangles' -> vkCmdSetDiscardRectangleEXT commandTable commandBuffer' firstDiscardRectangle' (fromIntegral $ Data.Vector.length discardRectangles') pDiscardRectangles' *> (pure ()))
+
+-- No documentation found for TopLevel "VK_EXT_DISCARD_RECTANGLES_EXTENSION_NAME"
+pattern EXT_DISCARD_RECTANGLES_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_DISCARD_RECTANGLES_EXTENSION_NAME = VK_EXT_DISCARD_RECTANGLES_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_DISCARD_RECTANGLES_SPEC_VERSION"
+pattern EXT_DISCARD_RECTANGLES_SPEC_VERSION :: Integral a => a
+pattern EXT_DISCARD_RECTANGLES_SPEC_VERSION = VK_EXT_DISCARD_RECTANGLES_SPEC_VERSION

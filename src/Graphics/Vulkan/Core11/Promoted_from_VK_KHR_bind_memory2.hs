@@ -12,9 +12,9 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_bind_memory2
   , BindImageMemoryInfo(..)
   , bindBufferMemory2
   , bindImageMemory2
-  , pattern VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO
-  , pattern VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO
-  , pattern VK_IMAGE_CREATE_ALIAS_BIT
+  , pattern STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO
+  , pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO
+  , pattern IMAGE_CREATE_ALIAS_BIT
   ) where
 
 import Control.Exception
@@ -72,8 +72,12 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2
-  ( pattern VK_IMAGE_CREATE_ALIAS_BIT
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO
+  , pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO
+  )
+import Graphics.Vulkan.Core10.DeviceInitialization
+  ( pattern IMAGE_CREATE_ALIAS_BIT
   )
 
 
@@ -111,39 +115,23 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2
 --     with @buffer@ /must/ be less than or equal to the size of @memory@
 --     minus @memoryOffset@
 --
--- -   If @buffer@ requires a dedicated allocation(as reported by
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.vkGetBufferMemoryRequirements2'
---     in
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedRequirements'::requiresDedicatedAllocation
---     for @buffer@), @memory@ /must/ have been created with
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'::@buffer@
---     equal to @buffer@ and @memoryOffset@ /must/ be zero
+-- == Valid Usage (Implicit)
 --
--- -   If the 'Graphics.Vulkan.C.Core10.Memory.VkMemoryAllocateInfo'
---     provided when @memory@ was allocated included an instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'
---     in its @pNext@ chain, and
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'::@buffer@
---     was not 'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', then
---     @buffer@ /must/ equal
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'::@buffer@
---     and @memoryOffset@ /must/ be zero.
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO'
 --
--- -   If @buffer@ was created with
---     'Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationBufferCreateInfoNV'::@dedicatedAllocation@
---     equal to 'Graphics.Vulkan.C.Core10.Core.VK_TRUE', @memory@ /must/
---     have been created with
---     'Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationMemoryAllocateInfoNV'::@buffer@
---     equal to @buffer@ and @memoryOffset@ /must/ be zero
+-- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VkBindBufferMemoryDeviceGroupInfo'
 --
--- -   If the @pNext@ chain includes
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VkBindBufferMemoryDeviceGroupInfo',
---     all instances of @memory@ specified by
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VkBindBufferMemoryDeviceGroupInfo'::@pDeviceIndices@
---     /must/ have been allocated
+-- -   @buffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle
 --
--- Unresolved directive in VkBindBufferMemoryInfo.txt -
--- include::{generated}\/validity\/structs\/VkBindBufferMemoryInfo.txt[]
+-- -   @memory@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' handle
+--
+-- -   Both of @buffer@, and @memory@ /must/ have been created, allocated,
+--     or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
 -- = See Also
 --
@@ -151,7 +139,8 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2
 -- 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.vkBindBufferMemory2'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.vkBindBufferMemory2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_bind_memory2.vkBindBufferMemory2KHR'
 data BindBufferMemoryInfo = BindBufferMemoryInfo
   { -- Univalued member elided
   -- No documentation found for Nested "BindBufferMemoryInfo" "pNext"
@@ -200,173 +189,51 @@ instance Zero BindBufferMemoryInfo where
 --
 -- -   @memoryOffset@ /must/ be less than the size of @memory@
 --
--- -   If the @pNext@ chain does not include an instance of the
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkBindImagePlaneMemoryInfo'
---     structure, @memory@ /must/ have been allocated using one of the
---     memory types allowed in the @memoryTypeBits@ member of the
+-- -   @memory@ /must/ have been allocated using one of the memory types
+--     allowed in the @memoryTypeBits@ member of the
 --     'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements'
 --     structure returned from a call to
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.vkGetImageMemoryRequirements2'
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.vkGetImageMemoryRequirements'
 --     with @image@
 --
--- -   If the @pNext@ chain does not include an instance of the
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkBindImagePlaneMemoryInfo'
---     structure, @memoryOffset@ /must/ be an integer multiple of the
---     @alignment@ member of the
+-- -   @memoryOffset@ /must/ be an integer multiple of the @alignment@
+--     member of the
 --     'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements'
 --     structure returned from a call to
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.vkGetImageMemoryRequirements2'
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.vkGetImageMemoryRequirements'
 --     with @image@
 --
--- -   If the @pNext@ chain does not include an instance of the
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkBindImagePlaneMemoryInfo'
---     structure, the difference of the size of @memory@ and @memoryOffset@
---     /must/ be greater than or equal to the @size@ member of the
+-- -   The difference of the size of @memory@ and @memoryOffset@ /must/ be
+--     greater than or equal to the @size@ member of the
 --     'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements'
 --     structure returned from a call to
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.vkGetImageMemoryRequirements2'
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.vkGetImageMemoryRequirements'
 --     with the same @image@
 --
--- -   If the @pNext@ chain includes an instance of the
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkBindImagePlaneMemoryInfo'
---     structure, @image@ /must/ have been created with the
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_CREATE_DISJOINT_BIT'
---     bit set.
---
--- -   If the @pNext@ chain includes an instance of the
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkBindImagePlaneMemoryInfo'
---     structure, @memory@ /must/ have been allocated using one of the
---     memory types allowed in the @memoryTypeBits@ member of the
---     'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements'
---     structure returned from a call to
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.vkGetImageMemoryRequirements2'
---     with @image@ and the correct @planeAspect@ for this plane in the
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkImagePlaneMemoryRequirementsInfo'
---     structure attached to the
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkImageMemoryRequirementsInfo2'’s
---     @pNext@ chain
---
--- -   If the @pNext@ chain includes an instance of the
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkBindImagePlaneMemoryInfo'
---     structure, @memoryOffset@ /must/ be an integer multiple of the
---     @alignment@ member of the
---     'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements'
---     structure returned from a call to
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.vkGetImageMemoryRequirements2'
---     with @image@ and the correct @planeAspect@ for this plane in the
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkImagePlaneMemoryRequirementsInfo'
---     structure attached to the
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkImageMemoryRequirementsInfo2'’s
---     @pNext@ chain
---
--- -   If the @pNext@ chain includes an instance of the
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkBindImagePlaneMemoryInfo'
---     structure, the difference of the size of @memory@ and @memoryOffset@
---     /must/ be greater than or equal to the @size@ member of the
---     'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements'
---     structure returned from a call to
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.vkGetImageMemoryRequirements2'
---     with the same @image@ and the correct @planeAspect@ for this plane
---     in the
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkImagePlaneMemoryRequirementsInfo'
---     structure attached to the
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkImageMemoryRequirementsInfo2'’s
---     @pNext@ chain
---
--- -   If @image@ requires a dedicated allocation (as reported by
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.vkGetImageMemoryRequirements2'
---     in
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedRequirements'::requiresDedicatedAllocation
---     for @image@), @memory@ /must/ have been created with
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'::@image@
---     equal to @image@ and @memoryOffset@ /must/ be zero
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicated allocation image aliasing>
---     feature is not enabled, and the
---     'Graphics.Vulkan.C.Core10.Memory.VkMemoryAllocateInfo' provided when
---     @memory@ was allocated included an instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'
---     in its @pNext@ chain, and
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'::@image@
---     was not 'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', then
---     @image@ /must/ equal
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'::@image@
---     and @memoryOffset@ /must/ be zero.
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicated allocation image aliasing>
---     feature is enabled, and the
---     'Graphics.Vulkan.C.Core10.Memory.VkMemoryAllocateInfo' provided when
---     @memory@ was allocated included an instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'
---     in its @pNext@ chain, and
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'::@image@
---     was not 'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', then
---     @memoryOffset@ /must/ be zero, and @image@ /must/ be either equal to
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'::@image@
---     or an image that was created using the same parameters in
---     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo', with the
---     exception that @extent@ and @arrayLayers@ /may/ differ subject to
---     the following restrictions: every dimension in the @extent@
---     parameter of the image being bound /must/ be equal to or smaller
---     than the original image for which the allocation was created; and
---     the @arrayLayers@ parameter of the image being bound /must/ be equal
---     to or smaller than the original image for which the allocation was
---     created.
---
--- -   If @image@ was created with
---     'Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationImageCreateInfoNV'::@dedicatedAllocation@
---     equal to 'Graphics.Vulkan.C.Core10.Core.VK_TRUE', @memory@ /must/
---     have been created with
---     'Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationMemoryAllocateInfoNV'::@image@
---     equal to @image@ and @memoryOffset@ /must/ be zero
---
--- -   If the @pNext@ chain includes
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VkBindImageMemoryDeviceGroupInfo',
---     all instances of @memory@ specified by
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VkBindImageMemoryDeviceGroupInfo'::@pDeviceIndices@
---     /must/ have been allocated
---
--- -   If the @pNext@ chain includes
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VkBindImageMemoryDeviceGroupInfo',
---     and
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VkBindImageMemoryDeviceGroupInfo'::@splitInstanceBindRegionCount@
---     is not zero, then @image@ /must/ have been created with the
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT'
---     bit set
---
--- -   If the @pNext@ chain includes
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VkBindImageMemoryDeviceGroupInfo',
---     all elements of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VkBindImageMemoryDeviceGroupInfo'::@pSplitInstanceBindRegions@
---     /must/ be valid rectangles contained within the dimensions of
---     @image@
---
--- -   If the @pNext@ chain includes
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VkBindImageMemoryDeviceGroupInfo',
---     the union of the areas of all elements of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VkBindImageMemoryDeviceGroupInfo'::@pSplitInstanceBindRegions@
---     that correspond to the same instance of @image@ /must/ cover the
---     entire image.
---
--- -   If @image@ was created with a valid swapchain handle in
---     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkImageSwapchainCreateInfoKHR'::@swapchain@,
---     then the @pNext@ chain /must/ include a valid instance of
---     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkBindImageMemorySwapchainInfoKHR'
---
--- -   If the @pNext@ chain includes an instance of
---     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkBindImageMemorySwapchainInfoKHR',
---     @memory@ /must/ be
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE'
---
--- -   If the @pNext@ chain does not include an instance of
---     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkBindImageMemorySwapchainInfoKHR',
---     @memory@ /must/ be a valid
+-- -   @memory@ /must/ be a valid
 --     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' handle
 --
--- Unresolved directive in VkBindImageMemoryInfo.txt -
--- include::{generated}\/validity\/structs\/VkBindImageMemoryInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO'
+--
+-- -   Each @pNext@ member of any structure (including this one) in the
+--     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
+--     instance of
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VkBindImageMemoryDeviceGroupInfo',
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkBindImageMemorySwapchainInfoKHR',
+--     or
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkBindImagePlaneMemoryInfo'
+--
+-- -   Each @sType@ member in the @pNext@ chain /must/ be unique
+--
+-- -   @image@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' handle
+--
+-- -   Both of @image@, and @memory@ that are valid handles /must/ have
+--     been created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
 -- = See Also
 --
@@ -374,7 +241,8 @@ instance Zero BindBufferMemoryInfo where
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.vkBindImageMemory2'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.vkBindImageMemory2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_bind_memory2.vkBindImageMemory2KHR'
 data BindImageMemoryInfo = BindImageMemoryInfo
   { -- Univalued member elided
   -- No documentation found for Nested "BindImageMemoryInfo" "pNext"
@@ -428,8 +296,15 @@ instance Zero BindImageMemoryInfo where
 -- On some implementations, it /may/ be more efficient to batch memory
 -- bindings into a single command.
 --
--- Unresolved directive in vkBindBufferMemory2.txt -
--- include::{generated}\/validity\/protos\/vkBindBufferMemory2.txt[]
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -456,8 +331,15 @@ bindBufferMemory2 = \(Device device' commandTable) -> \bindInfos' -> withVec wit
 -- On some implementations, it /may/ be more efficient to batch memory
 -- bindings into a single command.
 --
--- Unresolved directive in vkBindImageMemory2.txt -
--- include::{generated}\/validity\/protos\/vkBindImageMemory2.txt[]
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --

@@ -22,19 +22,19 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_display_control
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.VkDeviceEventInfoEXT'
 type DeviceEventTypeEXT = VkDeviceEventTypeEXT
 
 -- | VkDisplayEventTypeEXT - Events that can occur on a display object
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.VkDisplayEventInfoEXT'
 type DisplayEventTypeEXT = VkDisplayEventTypeEXT
 
 -- | VkDisplayPowerStateEXT - Possible power states for a display
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.VkDisplayPowerInfoEXT'
 type DisplayPowerStateEXT = VkDisplayPowerStateEXT

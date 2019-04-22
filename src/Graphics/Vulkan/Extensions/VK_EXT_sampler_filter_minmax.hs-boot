@@ -18,5 +18,5 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax.VkSamplerReductionModeCreateInfoEXT'
 type SamplerReductionModeEXT = VkSamplerReductionModeEXT

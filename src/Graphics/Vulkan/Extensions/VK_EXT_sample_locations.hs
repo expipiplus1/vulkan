@@ -30,19 +30,22 @@ module Graphics.Vulkan.Extensions.VK_EXT_sample_locations
   , SubpassSampleLocationsEXT(..)
   , cmdSetSampleLocationsEXT
   , getPhysicalDeviceMultisamplePropertiesEXT
-  , pattern VK_EXT_SAMPLE_LOCATIONS_SPEC_VERSION
-  , pattern VK_EXT_SAMPLE_LOCATIONS_EXTENSION_NAME
-  , pattern VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT
-  , pattern VK_STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT
-  , pattern VK_STRUCTURE_TYPE_RENDER_PASS_SAMPLE_LOCATIONS_BEGIN_INFO_EXT
-  , pattern VK_STRUCTURE_TYPE_PIPELINE_SAMPLE_LOCATIONS_STATE_CREATE_INFO_EXT
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLE_LOCATIONS_PROPERTIES_EXT
-  , pattern VK_STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT
-  , pattern VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT
+  , pattern EXT_SAMPLE_LOCATIONS_EXTENSION_NAME
+  , pattern EXT_SAMPLE_LOCATIONS_SPEC_VERSION
+  , pattern IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT
+  , pattern STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT
+  , pattern STRUCTURE_TYPE_RENDER_PASS_SAMPLE_LOCATIONS_BEGIN_INFO_EXT
+  , pattern STRUCTURE_TYPE_PIPELINE_SAMPLE_LOCATIONS_STATE_CREATE_INFO_EXT
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLE_LOCATIONS_PROPERTIES_EXT
+  , pattern STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT
+  , pattern DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT
   ) where
 
 import Control.Monad
   ( (<=<)
+  )
+import Data.String
+  ( IsString
   )
 import Data.Vector
   ( Vector
@@ -95,6 +98,8 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations
   , VkSubpassSampleLocationsEXT(..)
   , vkCmdSetSampleLocationsEXT
   , vkGetPhysicalDeviceMultisamplePropertiesEXT
+  , pattern VK_EXT_SAMPLE_LOCATIONS_EXTENSION_NAME
+  , pattern VK_EXT_SAMPLE_LOCATIONS_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLE_LOCATIONS_PROPERTIES_EXT
   , pattern VK_STRUCTURE_TYPE_PIPELINE_SAMPLE_LOCATIONS_STATE_CREATE_INFO_EXT
@@ -126,11 +131,18 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations
-  ( pattern VK_DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT
-  , pattern VK_EXT_SAMPLE_LOCATIONS_EXTENSION_NAME
-  , pattern VK_EXT_SAMPLE_LOCATIONS_SPEC_VERSION
-  , pattern VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLE_LOCATIONS_PROPERTIES_EXT
+  , pattern STRUCTURE_TYPE_PIPELINE_SAMPLE_LOCATIONS_STATE_CREATE_INFO_EXT
+  , pattern STRUCTURE_TYPE_RENDER_PASS_SAMPLE_LOCATIONS_BEGIN_INFO_EXT
+  , pattern STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT
+  )
+import Graphics.Vulkan.Core10.DeviceInitialization
+  ( pattern IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT
+  )
+import Graphics.Vulkan.Core10.Pipeline
+  ( pattern DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT
   )
 
 
@@ -145,14 +157,12 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations
 -- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 -- then the values specified in @sampleLocationsInfo@ are ignored.
 --
--- == Valid Usage
---
--- Unresolved directive in VkAttachmentSampleLocationsEXT.txt -
--- include::{generated}\/validity\/structs\/VkAttachmentSampleLocationsEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkRenderPassSampleLocationsBeginInfoEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkSampleLocationsInfoEXT'
 data AttachmentSampleLocationsEXT = AttachmentSampleLocationsEXT
   { -- No documentation found for Nested "AttachmentSampleLocationsEXT" "attachmentIndex"
   attachmentIndex :: Word32
@@ -182,14 +192,13 @@ instance Zero AttachmentSampleLocationsEXT where
 -- | VkMultisamplePropertiesEXT - Structure returning information about
 -- sample count specific additional multisampling capabilities
 --
--- = Description
---
--- Unresolved directive in VkMultisamplePropertiesEXT.txt -
--- include::{generated}\/validity\/structs\/VkMultisamplePropertiesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkExtent2D',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.vkGetPhysicalDeviceMultisamplePropertiesEXT'
 data MultisamplePropertiesEXT = MultisamplePropertiesEXT
   { -- Univalued member elided
   -- No documentation found for Nested "MultisamplePropertiesEXT" "pNext"
@@ -235,13 +244,14 @@ instance Zero MultisamplePropertiesEXT where
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- Unresolved directive in VkPhysicalDeviceSampleLocationsPropertiesEXT.txt
--- -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceSampleLocationsPropertiesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkExtent2D',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkSampleCountFlags',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceSampleLocationsPropertiesEXT = PhysicalDeviceSampleLocationsPropertiesEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceSampleLocationsPropertiesEXT" "pNext"
@@ -290,15 +300,13 @@ instance Zero PhysicalDeviceSampleLocationsPropertiesEXT where
 -- | VkPipelineSampleLocationsStateCreateInfoEXT - Structure specifying
 -- sample locations for a pipeline
 --
--- = Description
---
--- Unresolved directive in VkPipelineSampleLocationsStateCreateInfoEXT.txt
--- -
--- include::{generated}\/validity\/structs\/VkPipelineSampleLocationsStateCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkSampleLocationsInfoEXT',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PipelineSampleLocationsStateCreateInfoEXT = PipelineSampleLocationsStateCreateInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PipelineSampleLocationsStateCreateInfoEXT" "pNext"
@@ -335,14 +343,28 @@ instance Zero PipelineSampleLocationsStateCreateInfoEXT where
 -- locations to use for the layout transition of custom sample locations
 -- compatible depth\/stencil attachments
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in VkRenderPassSampleLocationsBeginInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkRenderPassSampleLocationsBeginInfoEXT.txt[]
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VK_STRUCTURE_TYPE_RENDER_PASS_SAMPLE_LOCATIONS_BEGIN_INFO_EXT'
+--
+-- -   If @attachmentInitialSampleLocationsCount@ is not @0@,
+--     @pAttachmentInitialSampleLocations@ /must/ be a valid pointer to an
+--     array of @attachmentInitialSampleLocationsCount@ valid
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkAttachmentSampleLocationsEXT'
+--     structures
+--
+-- -   If @postSubpassSampleLocationsCount@ is not @0@,
+--     @pPostSubpassSampleLocations@ /must/ be a valid pointer to an array
+--     of @postSubpassSampleLocationsCount@ valid
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkSubpassSampleLocationsEXT'
+--     structures
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkAttachmentSampleLocationsEXT',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkSubpassSampleLocationsEXT'
 data RenderPassSampleLocationsBeginInfoEXT = RenderPassSampleLocationsBeginInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "RenderPassSampleLocationsBeginInfoEXT" "pNext"
@@ -397,12 +419,9 @@ instance Zero RenderPassSampleLocationsBeginInfoEXT where
 -- structure to the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2'.
 --
--- Unresolved directive in VkSampleLocationEXT.txt -
--- include::{generated}\/validity\/structs\/VkSampleLocationEXT.txt[]
---
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkSampleLocationsInfoEXT'
 data SampleLocationEXT = SampleLocationEXT
   { -- No documentation found for Nested "SampleLocationEXT" "x"
   x :: CFloat
@@ -447,18 +466,39 @@ instance Zero SampleLocationEXT where
 -- @pSampleLocations@[(x + y * @sampleLocationGridSize.width@) *
 -- @sampleLocationsPerPixel@ + i].
 --
--- If the render pass has a fragment density map, the implementation will
--- choose the sample locations for the fragment and the contents of
--- @pSampleLocations@ /may/ be ignored.
---
 -- == Valid Usage
 --
--- Unresolved directive in VkSampleLocationsInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkSampleLocationsInfoEXT.txt[]
+-- -   @sampleLocationsPerPixel@ /must/ be a bit value that is set in
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkPhysicalDeviceSampleLocationsPropertiesEXT'::@sampleLocationSampleCounts@
+--
+-- -   @sampleLocationsCount@ /must/ equal @sampleLocationsPerPixel@ ×
+--     @sampleLocationGridSize.width@ × @sampleLocationGridSize.height@
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VK_STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT'
+--
+-- -   If @sampleLocationsPerPixel@ is not @0@, @sampleLocationsPerPixel@
+--     /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkSampleCountFlagBits'
+--     value
+--
+-- -   If @sampleLocationsCount@ is not @0@, @pSampleLocations@ /must/ be a
+--     valid pointer to an array of @sampleLocationsCount@
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkSampleLocationEXT'
+--     structures
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkAttachmentSampleLocationsEXT',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkExtent2D',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkPipelineSampleLocationsStateCreateInfoEXT',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkSampleCountFlagBits',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkSampleLocationEXT',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkSubpassSampleLocationsEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.vkCmdSetSampleLocationsEXT'
 data SampleLocationsInfoEXT = SampleLocationsInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "SampleLocationsInfoEXT" "pNext"
@@ -511,14 +551,12 @@ instance Zero SampleLocationsInfoEXT where
 -- is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' then the values specified in
 -- @sampleLocationsInfo@ are ignored.
 --
--- == Valid Usage
---
--- Unresolved directive in VkSubpassSampleLocationsEXT.txt -
--- include::{generated}\/validity\/structs\/VkSubpassSampleLocationsEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkRenderPassSampleLocationsBeginInfoEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkSampleLocationsInfoEXT'
 data SubpassSampleLocationsEXT = SubpassSampleLocationsEXT
   { -- No documentation found for Nested "SubpassSampleLocationsEXT" "subpassIndex"
   subpassIndex :: Word32
@@ -575,12 +613,53 @@ instance Zero SubpassSampleLocationsEXT where
 --     the @sampleLocationsInfo@ member of that element /must/ match the
 --     sample locations state pointed to by @pSampleLocationsInfo@
 --
--- Unresolved directive in vkCmdSetSampleLocationsEXT.txt -
--- include::{generated}\/validity\/protos\/vkCmdSetSampleLocationsEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @pSampleLocationsInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkSampleLocationsInfoEXT'
+--     structure
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Both            | Graphics        |                 |
+-- > | Secondary       |                 |                 |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkSampleLocationsInfoEXT'
 cmdSetSampleLocationsEXT :: CommandBuffer ->  SampleLocationsInfoEXT ->  IO ()
 cmdSetSampleLocationsEXT = \(CommandBuffer commandBuffer' commandTable) -> \sampleLocationsInfo' -> (\marshalled -> withCStructSampleLocationsInfoEXT marshalled . flip with) sampleLocationsInfo' (\pSampleLocationsInfo' -> vkCmdSetSampleLocationsEXT commandTable commandBuffer' pSampleLocationsInfo' *> (pure ()))
 
@@ -600,14 +679,20 @@ cmdSetSampleLocationsEXT = \(CommandBuffer commandBuffer' commandTable) -> \samp
 --     in which information about the additional multisampling capabilities
 --     specific to the sample count is returned.
 --
--- = Description
---
--- Unresolved directive in vkGetPhysicalDeviceMultisamplePropertiesEXT.txt
--- -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceMultisamplePropertiesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkMultisamplePropertiesEXT',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkSampleCountFlagBits'
 getPhysicalDeviceMultisamplePropertiesEXT :: PhysicalDevice ->  SampleCountFlagBits ->  IO (MultisamplePropertiesEXT)
 getPhysicalDeviceMultisamplePropertiesEXT = \(PhysicalDevice physicalDevice' commandTable) -> \samples' -> alloca (\pMultisampleProperties' -> vkGetPhysicalDeviceMultisamplePropertiesEXT commandTable physicalDevice' samples' pMultisampleProperties' *> ((fromCStructMultisamplePropertiesEXT <=< peek) pMultisampleProperties'))
+
+-- No documentation found for TopLevel "VK_EXT_SAMPLE_LOCATIONS_EXTENSION_NAME"
+pattern EXT_SAMPLE_LOCATIONS_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_SAMPLE_LOCATIONS_EXTENSION_NAME = VK_EXT_SAMPLE_LOCATIONS_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_SAMPLE_LOCATIONS_SPEC_VERSION"
+pattern EXT_SAMPLE_LOCATIONS_SPEC_VERSION :: Integral a => a
+pattern EXT_SAMPLE_LOCATIONS_SPEC_VERSION = VK_EXT_SAMPLE_LOCATIONS_SPEC_VERSION

@@ -95,7 +95,7 @@ import {-# source #-} Graphics.Vulkan.C.Core10.Queue
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDebugUtilsMessengerCreateInfoEXT'
 type PFN_vkDebugUtilsMessengerCallbackEXT = Ptr (("messageSeverity" ::: VkDebugUtilsMessageSeverityFlagBitsEXT) -> ("messageTypes" ::: VkDebugUtilsMessageTypeFlagsEXT) -> ("pCallbackData" ::: Ptr VkDebugUtilsMessengerCallbackDataEXT) -> ("pUserData" ::: Ptr ()) -> IO VkBool32)
 
 data VkDebugUtilsLabelEXT
@@ -112,7 +112,8 @@ data VkDebugUtilsMessageSeverityFlagBitsEXT
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDebugUtilsMessageSeverityFlagBitsEXT',
+-- 'VkDebugUtilsMessengerCreateInfoEXT'
 type VkDebugUtilsMessageSeverityFlagsEXT = VkDebugUtilsMessageSeverityFlagBitsEXT
 
 data VkDebugUtilsMessageTypeFlagBitsEXT
@@ -127,7 +128,8 @@ data VkDebugUtilsMessageTypeFlagBitsEXT
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDebugUtilsMessageTypeFlagBitsEXT',
+-- 'VkDebugUtilsMessengerCreateInfoEXT', 'vkSubmitDebugUtilsMessageEXT'
 type VkDebugUtilsMessageTypeFlagsEXT = VkDebugUtilsMessageTypeFlagBitsEXT
 
 data VkDebugUtilsMessengerCallbackDataEXT
@@ -154,7 +156,7 @@ data VkDebugUtilsMessengerEXT_T
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'vkCreateDebugUtilsMessengerEXT', 'vkDestroyDebugUtilsMessengerEXT'
 type VkDebugUtilsMessengerEXT = Ptr VkDebugUtilsMessengerEXT_T
 
 data VkDebugUtilsObjectNameInfoEXT

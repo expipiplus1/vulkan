@@ -18,12 +18,12 @@ module Graphics.Vulkan.Extensions.VK_EXT_debug_marker
   , cmdDebugMarkerInsertEXT
   , debugMarkerSetObjectNameEXT
   , debugMarkerSetObjectTagEXT
-  , pattern VK_EXT_DEBUG_MARKER_SPEC_VERSION
-  , pattern VK_EXT_DEBUG_MARKER_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT
-  , pattern VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT
-  , pattern VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT
+  , pattern EXT_DEBUG_MARKER_EXTENSION_NAME
+  , pattern EXT_DEBUG_MARKER_SPEC_VERSION
   , DebugReportObjectTypeEXT
+  , pattern STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT
+  , pattern STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT
+  , pattern STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT
   ) where
 
 import Control.Exception
@@ -44,6 +44,9 @@ import qualified Data.ByteString
   )
 import Data.ByteString.Unsafe
   ( unsafeUseAsCString
+  )
+import Data.String
+  ( IsString
   )
 import Data.Vector.Generic.Sized
   ( fromTuple
@@ -80,6 +83,8 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker
   , vkCmdDebugMarkerInsertEXT
   , vkDebugMarkerSetObjectNameEXT
   , vkDebugMarkerSetObjectTagEXT
+  , pattern VK_EXT_DEBUG_MARKER_EXTENSION_NAME
+  , pattern VK_EXT_DEBUG_MARKER_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT
   , pattern VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT
   , pattern VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT
@@ -101,9 +106,10 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker
-  ( pattern VK_EXT_DEBUG_MARKER_EXTENSION_NAME
-  , pattern VK_EXT_DEBUG_MARKER_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT
+  , pattern STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT
+  , pattern STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT
   )
 
 
@@ -111,14 +117,13 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker
 -- | VkDebugMarkerMarkerInfoEXT - Specify parameters of a command buffer
 -- marker region
 --
--- = Description
---
--- Unresolved directive in VkDebugMarkerMarkerInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkDebugMarkerMarkerInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.vkCmdDebugMarkerBeginEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.vkCmdDebugMarkerInsertEXT'
 data DebugMarkerMarkerInfoEXT = DebugMarkerMarkerInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "DebugMarkerMarkerInfoEXT" "pNext"
@@ -165,14 +170,13 @@ instance Zero DebugMarkerMarkerInfoEXT where
 -- again with a new string. To remove a previously set name, @pObjectName@
 -- /should/ be set to an empty string.
 --
--- == Valid Usage
---
--- Unresolved directive in VkDebugMarkerObjectNameInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkDebugMarkerObjectNameInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VkDebugReportObjectTypeEXT',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.vkDebugMarkerSetObjectNameEXT'
 data DebugMarkerObjectNameInfoEXT = DebugMarkerObjectNameInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "DebugMarkerObjectNameInfoEXT" "pNext"
@@ -218,14 +222,13 @@ instance Zero DebugMarkerObjectNameInfoEXT where
 -- being tagged. This can be used by debugging layers to easily filter for
 -- only data that can be used by that implementation.
 --
--- == Valid Usage
---
--- Unresolved directive in VkDebugMarkerObjectTagInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkDebugMarkerObjectTagInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VkDebugReportObjectTypeEXT',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.vkDebugMarkerSetObjectTagEXT'
 data DebugMarkerObjectTagInfoEXT = DebugMarkerObjectTagInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "DebugMarkerObjectTagInfoEXT" "pNext"
@@ -279,14 +282,51 @@ instance Zero DebugMarkerObjectTagInfoEXT where
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.VkDebugMarkerMarkerInfoEXT'
 --     structure specifying the parameters of the marker region to open.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCmdDebugMarkerBeginEXT.txt -
--- include::{generated}\/validity\/protos\/vkCmdDebugMarkerBeginEXT.txt[]
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @pMarkerInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.VkDebugMarkerMarkerInfoEXT'
+--     structure
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics, or
+--     compute operations
+--
+-- == Host Synchronization
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Both            | Graphics        |                 |
+-- > | Secondary       |                 | Compute         |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.VkDebugMarkerMarkerInfoEXT'
 cmdDebugMarkerBeginEXT :: CommandBuffer ->  DebugMarkerMarkerInfoEXT ->  IO ()
 cmdDebugMarkerBeginEXT = \(CommandBuffer commandBuffer' commandTable) -> \markerInfo' -> (\marshalled -> withCStructDebugMarkerMarkerInfoEXT marshalled . flip with) markerInfo' (\pMarkerInfo' -> vkCmdDebugMarkerBeginEXT commandTable commandBuffer' pMarkerInfo' *> (pure ()))
 
@@ -324,12 +364,46 @@ cmdDebugMarkerBeginEXT = \(CommandBuffer commandBuffer' commandTable) -> \marker
 --     ended by a call to
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.vkCmdDebugMarkerEndEXT'.
 --
--- Unresolved directive in vkCmdDebugMarkerEndEXT.txt -
--- include::{generated}\/validity\/protos\/vkCmdDebugMarkerEndEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics, or
+--     compute operations
+--
+-- == Host Synchronization
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Both            | Graphics        |                 |
+-- > | Secondary       |                 | Compute         |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer'
 cmdDebugMarkerEndEXT :: CommandBuffer ->  IO ()
 cmdDebugMarkerEndEXT = \(CommandBuffer commandBuffer' commandTable) -> vkCmdDebugMarkerEndEXT commandTable commandBuffer' *> (pure ())
 
@@ -345,14 +419,51 @@ cmdDebugMarkerEndEXT = \(CommandBuffer commandBuffer' commandTable) -> vkCmdDebu
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.VkDebugMarkerMarkerInfoEXT'
 --     structure specifying the parameters of the marker to insert.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCmdDebugMarkerInsertEXT.txt -
--- include::{generated}\/validity\/protos\/vkCmdDebugMarkerInsertEXT.txt[]
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @pMarkerInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.VkDebugMarkerMarkerInfoEXT'
+--     structure
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics, or
+--     compute operations
+--
+-- == Host Synchronization
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Both            | Graphics        |                 |
+-- > | Secondary       |                 | Compute         |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.VkDebugMarkerMarkerInfoEXT'
 cmdDebugMarkerInsertEXT :: CommandBuffer ->  DebugMarkerMarkerInfoEXT ->  IO ()
 cmdDebugMarkerInsertEXT = \(CommandBuffer commandBuffer' commandTable) -> \markerInfo' -> (\marshalled -> withCStructDebugMarkerMarkerInfoEXT marshalled . flip with) markerInfo' (\pMarkerInfo' -> vkCmdDebugMarkerInsertEXT commandTable commandBuffer' pMarkerInfo' *> (pure ()))
 
@@ -368,14 +479,33 @@ cmdDebugMarkerInsertEXT = \(CommandBuffer commandBuffer' commandTable) -> \marke
 --     structure specifying the parameters of the name to set on the
 --     object.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkDebugMarkerSetObjectNameEXT.txt -
--- include::{generated}\/validity\/protos\/vkDebugMarkerSetObjectNameEXT.txt[]
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pNameInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.VkDebugMarkerObjectNameInfoEXT'
+--     structure
+--
+-- == Host Synchronization
+--
+-- -   Host access to @pNameInfo.object@ /must/ be externally synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.VkDebugMarkerObjectNameInfoEXT',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 debugMarkerSetObjectNameEXT :: Device ->  DebugMarkerObjectNameInfoEXT ->  IO ()
 debugMarkerSetObjectNameEXT = \(Device device' commandTable) -> \nameInfo' -> (\marshalled -> withCStructDebugMarkerObjectNameInfoEXT marshalled . flip with) nameInfo' (\pNameInfo' -> vkDebugMarkerSetObjectNameEXT commandTable device' pNameInfo' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (pure ())))
 
@@ -391,13 +521,40 @@ debugMarkerSetObjectNameEXT = \(Device device' commandTable) -> \nameInfo' -> (\
 --     structure specifying the parameters of the tag to attach to the
 --     object.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkDebugMarkerSetObjectTagEXT.txt -
--- include::{generated}\/validity\/protos\/vkDebugMarkerSetObjectTagEXT.txt[]
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pTagInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.VkDebugMarkerObjectTagInfoEXT'
+--     structure
+--
+-- == Host Synchronization
+--
+-- -   Host access to @pTagInfo.object@ /must/ be externally synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.VkDebugMarkerObjectTagInfoEXT',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 debugMarkerSetObjectTagEXT :: Device ->  DebugMarkerObjectTagInfoEXT ->  IO ()
 debugMarkerSetObjectTagEXT = \(Device device' commandTable) -> \tagInfo' -> (\marshalled -> withCStructDebugMarkerObjectTagInfoEXT marshalled . flip with) tagInfo' (\pTagInfo' -> vkDebugMarkerSetObjectTagEXT commandTable device' pTagInfo' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (pure ())))
+
+-- No documentation found for TopLevel "VK_EXT_DEBUG_MARKER_EXTENSION_NAME"
+pattern EXT_DEBUG_MARKER_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_DEBUG_MARKER_EXTENSION_NAME = VK_EXT_DEBUG_MARKER_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_DEBUG_MARKER_SPEC_VERSION"
+pattern EXT_DEBUG_MARKER_SPEC_VERSION :: Integral a => a
+pattern EXT_DEBUG_MARKER_SPEC_VERSION = VK_EXT_DEBUG_MARKER_SPEC_VERSION

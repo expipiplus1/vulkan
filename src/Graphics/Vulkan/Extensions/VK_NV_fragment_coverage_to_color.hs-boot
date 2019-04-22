@@ -24,5 +24,5 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_fragment_coverage_to_co
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_fragment_coverage_to_color.VkPipelineCoverageToColorStateCreateInfoNV'
 type PipelineCoverageToColorStateCreateFlagsNV = VkPipelineCoverageToColorStateCreateFlagsNV

@@ -38,7 +38,7 @@ data VkBufferDeviceAddressInfoEXT
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkBufferDeviceAddressCreateInfoEXT'
 type VkDeviceAddress = Word64
 
 -- No documentation found for TopLevel "VkPhysicalDeviceBufferAddressFeaturesEXT"

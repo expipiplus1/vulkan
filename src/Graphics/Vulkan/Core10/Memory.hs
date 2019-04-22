@@ -98,16 +98,23 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkBindAccelerationStructureMemoryInfoNV',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.VkBindBufferMemoryInfo',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.VkBindImageMemoryInfo',
 -- 'Graphics.Vulkan.C.Core10.Memory.VkMappedMemoryRange',
+-- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkMemoryGetAndroidHardwareBufferInfoANDROID',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd.VkMemoryGetFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32.VkMemoryGetWin32HandleInfoKHR',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageMemoryBind',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseMemoryBind',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_win32_keyed_mutex.VkWin32KeyedMutexAcquireReleaseInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_win32_keyed_mutex.VkWin32KeyedMutexAcquireReleaseInfoNV',
 -- 'Graphics.Vulkan.C.Core10.Memory.vkAllocateMemory',
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.vkBindBufferMemory',
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.vkBindImageMemory',
 -- 'Graphics.Vulkan.C.Core10.Memory.vkFreeMemory',
 -- 'Graphics.Vulkan.C.Core10.Memory.vkGetDeviceMemoryCommitment',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32.vkGetMemoryWin32HandleNV',
 -- 'Graphics.Vulkan.C.Core10.Memory.vkMapMemory',
 -- 'Graphics.Vulkan.C.Core10.Memory.vkUnmapMemory'
 type DeviceMemory = VkDeviceMemory
@@ -143,8 +150,15 @@ type DeviceMemory = VkDeviceMemory
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@nonCoherentAtomSize@,
 --     or @offset@ plus @size@ /must/ equal the size of @memory@.
 --
--- Unresolved directive in VkMappedMemoryRange.txt -
--- include::{generated}\/validity\/structs\/VkMappedMemoryRange.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @memory@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' handle
 --
 -- = See Also
 --
@@ -192,263 +206,34 @@ instance Zero MappedMemoryRange where
 -- | VkMemoryAllocateInfo - Structure containing parameters of a memory
 -- allocation
 --
--- = Description
---
--- An instance of the
--- 'Graphics.Vulkan.C.Core10.Memory.VkMemoryAllocateInfo' structure defines
--- a memory import operation if the @pNext@ chain contains an instance of
--- one of the following structures:
---
--- -   'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32.VkImportMemoryWin32HandleInfoKHR'
---     with non-zero @handleType@ value
---
--- -   'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd.VkImportMemoryFdInfoKHR'
---     with a non-zero @handleType@ value
---
--- -   'Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_host.VkImportMemoryHostPointerInfoEXT'
---     with a non-zero @handleType@ value
---
--- -   'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkImportAndroidHardwareBufferInfoANDROID'
---     with a non-@NULL@ @buffer@ value
---
--- Importing memory /must/ not modify the content of the memory.
--- Implementations /must/ ensure that importing memory does not enable the
--- importing Vulkan instance to access any memory or resources in other
--- Vulkan instances other than that corresponding to the memory object
--- imported. Implementations /must/ also ensure accessing imported memory
--- which has not been initialized does not allow the importing Vulkan
--- instance to obtain data from the exporting Vulkan instance or
--- vice-versa.
---
--- __Note__
---
--- How exported and imported memory is isolated is left to the
--- implementation, but applications should be aware that such isolation
--- /may/ prevent implementations from placing multiple exportable memory
--- objects in the same physical or virtual page. Hence, applications
--- /should/ avoid creating many small external memory objects whenever
--- possible.
---
--- When performing a memory import operation, it is the responsibility of
--- the application to ensure the external handles meet all valid usage
--- requirements. However, implementations /must/ perform sufficient
--- validation of external handles to ensure that the operation results in a
--- valid memory object which will not cause program termination, device
--- loss, queue stalls, or corruption of other resources when used as
--- allowed according to its allocation parameters. If the external handle
--- provided does not meet these requirements, the implementation /must/
--- fail the memory import operation with the error code
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VK_ERROR_INVALID_EXTERNAL_HANDLE'.
---
 -- == Valid Usage
 --
--- -   If the @pNext@ chain contains an instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VkExportMemoryAllocateInfo',
---     and any of the handle types specified in
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VkExportMemoryAllocateInfo'::@handleTypes@
---     require a dedicated allocation, as reported by
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceImageFormatProperties2'
---     in
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalImageFormatProperties'::@externalMemoryProperties@::@externalMemoryFeatures@
---     or
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalBufferProperties'::@externalMemoryProperties@::@externalMemoryFeatures@,
---     the @pNext@ chain must contain an instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'
---     or
---     'Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationMemoryAllocateInfoNV'
---     with either its @image@ or @buffer@ field set to a value other than
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE'.
+-- -   @allocationSize@ /must/ be greater than @0@
 --
--- -   If the @pNext@ chain contains an instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VkExportMemoryAllocateInfo',
---     it /must/ not contain an instance of
---     'Graphics.Vulkan.C.Extensions.VK_NV_external_memory.VkExportMemoryAllocateInfoNV'
---     or
---     'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32.VkExportMemoryWin32HandleInfoNV'.
+-- == Valid Usage (Implicit)
 --
--- -   If the @pNext@ chain contains an instance of
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO'
+--
+-- -   Each @pNext@ member of any structure (including this one) in the
+--     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
+--     instance of
+--     'Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationMemoryAllocateInfoNV',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VkExportMemoryAllocateInfo',
+--     'Graphics.Vulkan.C.Extensions.VK_NV_external_memory.VkExportMemoryAllocateInfoNV',
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32.VkExportMemoryWin32HandleInfoKHR',
+--     'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32.VkExportMemoryWin32HandleInfoNV',
+--     'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkImportAndroidHardwareBufferInfoANDROID',
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd.VkImportMemoryFdInfoKHR',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_host.VkImportMemoryHostPointerInfoEXT',
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32.VkImportMemoryWin32HandleInfoKHR',
---     it /must/ not contain an instance of
---     'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32.VkImportMemoryWin32HandleInfoNV'.
---
--- -   If the parameters define an import operation, the external handle
---     specified was created by the Vulkan API, and the external handle
---     type is
---     'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT_KHR',
---     then the values of @allocationSize@ and @memoryTypeIndex@ /must/
---     match those specified when the memory object being imported was
---     created.
---
--- -   If the parameters define an import operation and the external handle
---     specified was created by the Vulkan API, the device mask specified
---     by
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.VkMemoryAllocateFlagsInfo'
---     /must/ match that specified when the memory object being imported
---     was allocated.
---
--- -   If the parameters define an import operation and the external handle
---     specified was created by the Vulkan API, the list of physical
---     devices that comprise the logical device passed to
---     'Graphics.Vulkan.C.Core10.Memory.vkAllocateMemory' /must/ match the
---     list of physical devices that comprise the logical device on which
---     the memory was originally allocated.
---
--- -   If the parameters define an import operation and the external handle
---     is an NT handle or a global share handle created outside of the
---     Vulkan API, the value of @memoryTypeIndex@ /must/ be one of those
---     returned by
---     'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32.vkGetMemoryWin32HandlePropertiesKHR'.
---
--- -   If the parameters define an import operation, the external handle
---     was created by the Vulkan API, and the external handle type is
---     'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_KHR'
+--     'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32.VkImportMemoryWin32HandleInfoNV',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.VkMemoryAllocateFlagsInfo',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo',
 --     or
---     'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_KHR',
---     then the values of @allocationSize@ and @memoryTypeIndex@ /must/
---     match those specified when the memory object being imported was
---     created.
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_memory_priority.VkMemoryPriorityAllocateInfoEXT'
 --
--- -   If the parameters define an import operation and the external handle
---     type is
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT',
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT',
---     or
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT',
---     @allocationSize@ /must/ match the size reported in the memory
---     requirements of the @image@ or @buffer@ member of the instance of
---     'Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationMemoryAllocateInfoNV'
---     included in the @pNext@ chain.
---
--- -   If the parameters define an import operation and the external handle
---     type is
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT',
---     @allocationSize@ /must/ match the size specified when creating the
---     Direct3D 12 heap from which the external handle was extracted.
---
--- -   If the parameters define an import operation and the external handle
---     is a POSIX file descriptor created outside of the Vulkan API, the
---     value of @memoryTypeIndex@ /must/ be one of those returned by
---     'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd.vkGetMemoryFdPropertiesKHR'.
---
--- -   If the parameters define an import operation and the external handle
---     is a host pointer, the value of @memoryTypeIndex@ /must/ be one of
---     those returned by
---     'Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_host.vkGetMemoryHostPointerPropertiesEXT'
---
--- -   If the parameters define an import operation and the external handle
---     is a host pointer, @allocationSize@ /must/ be an integer multiple of
---     'Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_host.VkPhysicalDeviceExternalMemoryHostPropertiesEXT'::@minImportedHostPointerAlignment@
---
--- -   If the parameters define an import operation and the external handle
---     type is
---     'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID',
---     @allocationSize@ /must/ be the size returned by
---     'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.vkGetAndroidHardwareBufferPropertiesANDROID'
---     for the Android hardware buffer.
---
--- -   If the parameters define an import operation and the external handle
---     type is
---     'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID',
---     and the @pNext@ chain does not contain an instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'
---     or
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'::@image@
---     is 'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', the Android
---     hardware buffer /must/ have a @AHardwareBuffer_Desc@::@format@ of
---     @AHARDWAREBUFFER_FORMAT_BLOB@ and a @AHardwareBuffer_Desc@::@usage@
---     that includes @AHARDWAREBUFFER_USAGE_GPU_DATA_BUFFER@.
---
--- -   If the parameters define an import operation and the external handle
---     type is
---     'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID',
---     @memoryTypeIndex@ /must/ be one of those returned by
---     'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.vkGetAndroidHardwareBufferPropertiesANDROID'
---     for the Android hardware buffer.
---
--- -   If the parameters do not define an import operation, and the @pNext@
---     chain contains an instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VkExportMemoryAllocateInfo'
---     with
---     'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
---     included in its @handleTypes@ member, and the @pNext@ contains an
---     instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'
---     with @image@ not equal to
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', then
---     @allocationSize@ /must/ be @0@, otherwise @allocationSize@ /must/ be
---     greater than @0@.
---
--- -   If the parameters define an import operation, the external handle is
---     an Android hardware buffer, and the @pNext@ chain includes an
---     instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'
---     with @image@ that is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', the Android
---     hardware buffer’s
---     'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AHardwareBuffer'::@usage@
---     /must/ include at least one of
---     @AHARDWAREBUFFER_USAGE_GPU_COLOR_OUTPUT@ or
---     @AHARDWAREBUFFER_USAGE_GPU_SAMPLED_IMAGE@.
---
--- -   If the parameters define an import operation, the external handle is
---     an Android hardware buffer, and the @pNext@ chain includes an
---     instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'
---     with @image@ that is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', the format of
---     @image@ /must/ be
---     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_UNDEFINED' or the format
---     returned by
---     'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.vkGetAndroidHardwareBufferPropertiesANDROID'
---     in
---     'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkAndroidHardwareBufferFormatPropertiesANDROID'::@format@
---     for the Android hardware buffer.
---
--- -   If the parameters define an import operation, the external handle is
---     an Android hardware buffer, and the @pNext@ chain includes an
---     instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'
---     with @image@ that is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', the width,
---     height, and array layer dimensions of @image@ and the Android
---     hardware buffer’s @AHardwareBuffer_Desc@ /must/ be identical.
---
--- -   If the parameters define an import operation, the external handle is
---     an Android hardware buffer, and the @pNext@ chain includes an
---     instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'
---     with @image@ that is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', and the Android
---     hardware buffer’s
---     'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AHardwareBuffer'::@usage@
---     includes @AHARDWAREBUFFER_USAGE_GPU_MIPMAP_COMPLETE@, the @image@
---     /must/ have a complete mipmap chain.
---
--- -   If the parameters define an import operation, the external handle is
---     an Android hardware buffer, and the @pNext@ chain includes an
---     instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'
---     with @image@ that is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', and the Android
---     hardware buffer’s
---     'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AHardwareBuffer'::@usage@
---     does not include @AHARDWAREBUFFER_USAGE_GPU_MIPMAP_COMPLETE@, the
---     @image@ /must/ have exactly one mipmap level.
---
--- -   If the parameters define an import operation, the external handle is
---     an Android hardware buffer, and the @pNext@ chain includes an
---     instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'
---     with @image@ that is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', each bit set in
---     the usage of @image@ /must/ be listed in
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-external-android-hardware-buffer-usage AHardwareBuffer Usage Equivalence>,
---     and if there is a corresponding @AHARDWAREBUFFER_USAGE@ bit listed
---     that bit /must/ be included in the Android hardware buffer’s
---     @AHardwareBuffer_Desc@::@usage@.
---
--- Unresolved directive in VkMemoryAllocateInfo.txt -
--- include::{generated}\/validity\/structs\/VkMemoryAllocateInfo.txt[]
+-- -   Each @sType@ member in the @pNext@ chain /must/ be unique
 --
 -- = See Also
 --
@@ -497,6 +282,9 @@ instance Zero MemoryAllocateInfo where
 --
 -- 'Graphics.Vulkan.C.Core10.Memory.vkMapMemory'
 type MemoryMapFlags = VkMemoryMapFlags
+
+
+-- No complete pragma for MemoryMapFlags as it has no patterns
 
 
 -- | vkAllocateMemory - Allocate device memory
@@ -549,21 +337,55 @@ type MemoryMapFlags = VkMemoryMapFlags
 -- allocations with a size greater than or equal to 4GB. Such a limit is
 -- implementation-dependent, and if such a failure occurs then the error
 -- 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY' /must/ be
--- returned. This limit is advertised in
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance3.VkPhysicalDeviceMaintenance3Properties'::@maxMemoryAllocationSize@.
---
--- The cumulative memory size allocated to a heap /can/ be limited by the
--- size of the specified heap. In such cases, allocated memory is tracked
--- on a per-device and per-heap basis. Some platforms allow overallocation
--- into other heaps. The overallocation behavior /can/ be specified through
--- the
--- @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.1-extensions\/html\/vkspec.html#VK_AMD_memory_overallocation_behavior@
--- extension.
+-- returned.
 --
 -- == Valid Usage
 --
--- Unresolved directive in vkAllocateMemory.txt -
--- include::{generated}\/validity\/protos\/vkAllocateMemory.txt[]
+-- -   @pAllocateInfo@->@allocationSize@ /must/ be less than or equal to
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceMemoryProperties'::@memoryHeaps@[@pAllocateInfo@->@memoryTypeIndex@].@size@
+--     as returned by
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceMemoryProperties'
+--     for the
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     that @device@ was created from.
+--
+-- -   @pAllocateInfo@->@memoryTypeIndex@ /must/ be less than
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceMemoryProperties'::@memoryTypeCount@
+--     as returned by
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceMemoryProperties'
+--     for the
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     that @device@ was created from.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pAllocateInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Core10.Memory.VkMemoryAllocateInfo' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pMemory@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_TOO_MANY_OBJECTS'
+--
+--     -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VK_ERROR_INVALID_EXTERNAL_HANDLE'
 --
 -- = See Also
 --
@@ -617,8 +439,15 @@ allocateMemory = \(Device device' commandTable) -> \allocateInfo' -> \allocator 
 -- the memory is unmapped (or freed), and the virtual address range is
 -- subsequently reused for a different mapping (or memory allocation).
 --
--- Unresolved directive in vkFlushMappedMemoryRanges.txt -
--- include::{generated}\/validity\/protos\/vkFlushMappedMemoryRanges.txt[]
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -673,8 +502,26 @@ flushMappedMemoryRanges = \(Device device' commandTable) -> \memoryRanges' -> wi
 -- -   All submitted commands that refer to @memory@ (via images or
 --     buffers) /must/ have completed execution
 --
--- Unresolved directive in vkFreeMemory.txt -
--- include::{generated}\/validity\/protos\/vkFreeMemory.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   If @memory@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @memory@ /must/
+--     be a valid 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   If @memory@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @memory@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -708,10 +555,7 @@ freeMemory = \(Device device' commandTable) -> \memory' -> \allocator -> maybeWi
 -- heapIndex indicated by the memory type that the memory object was
 -- created with.
 --
--- == Valid Usage
---
--- Unresolved directive in vkGetDeviceMemoryCommitment.txt -
--- include::{generated}\/validity\/protos\/vkGetDeviceMemoryCommitment.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -759,8 +603,15 @@ getDeviceMemoryCommitment = \(Device device' commandTable) -> \memory' -> alloca
 -- memory, and device writes that have not been invalidated /must/ be made
 -- visible before the host reads or overwrites them.
 --
--- Unresolved directive in vkInvalidateMappedMemoryRanges.txt -
--- include::{generated}\/validity\/protos\/vkInvalidateMappedMemoryRanges.txt[]
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -859,10 +710,36 @@ invalidateMappedMemoryRanges = \(Device device' commandTable) -> \memoryRanges' 
 -- -   @memory@ /must/ have been created with a memory type that reports
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT'
 --
--- -   @memory@ /must/ not have been allocated with multiple instances.
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkMapMemory.txt -
--- include::{generated}\/validity\/protos\/vkMapMemory.txt[]
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @memory@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' handle
+--
+-- -   @flags@ /must/ be @0@
+--
+-- -   @ppData@ /must/ be a valid pointer to a pointer value
+--
+-- -   @memory@ /must/ have been created, allocated, or retrieved from
+--     @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @memory@ /must/ be externally synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_MEMORY_MAP_FAILED'
 --
 -- = See Also
 --
@@ -884,8 +761,22 @@ mapMemory = \(Device device' commandTable) -> \memory' -> \offset' -> \size' -> 
 --
 -- == Valid Usage
 --
--- Unresolved directive in vkUnmapMemory.txt -
--- include::{generated}\/validity\/protos\/vkUnmapMemory.txt[]
+-- -   @memory@ /must/ be currently host mapped
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @memory@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' handle
+--
+-- -   @memory@ /must/ have been created, allocated, or retrieved from
+--     @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @memory@ /must/ be externally synchronized
 --
 -- = See Also
 --

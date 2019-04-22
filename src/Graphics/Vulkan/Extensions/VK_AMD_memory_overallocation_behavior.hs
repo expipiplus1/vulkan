@@ -12,11 +12,14 @@ module Graphics.Vulkan.Extensions.VK_AMD_memory_overallocation_behavior
   , pattern MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD
   , pattern MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD
   , pattern MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD
-  , pattern VK_AMD_MEMORY_OVERALLOCATION_BEHAVIOR_SPEC_VERSION
-  , pattern VK_AMD_MEMORY_OVERALLOCATION_BEHAVIOR_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD
+  , pattern AMD_MEMORY_OVERALLOCATION_BEHAVIOR_EXTENSION_NAME
+  , pattern AMD_MEMORY_OVERALLOCATION_BEHAVIOR_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Foreign.Marshal.Utils
   ( maybePeek
   , maybeWith
@@ -32,6 +35,8 @@ import Graphics.Vulkan.C.Core10.Core
 import Graphics.Vulkan.C.Extensions.VK_AMD_memory_overallocation_behavior
   ( VkDeviceMemoryOverallocationCreateInfoAMD(..)
   , VkMemoryOverallocationBehaviorAMD(..)
+  , pattern VK_AMD_MEMORY_OVERALLOCATION_BEHAVIOR_EXTENSION_NAME
+  , pattern VK_AMD_MEMORY_OVERALLOCATION_BEHAVIOR_SPEC_VERSION
   , pattern VK_MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD
   , pattern VK_MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD
   , pattern VK_MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD
@@ -42,9 +47,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_AMD_memory_overallocation_behavior
-  ( pattern VK_AMD_MEMORY_OVERALLOCATION_BEHAVIOR_EXTENSION_NAME
-  , pattern VK_AMD_MEMORY_OVERALLOCATION_BEHAVIOR_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD
   )
 
 
@@ -52,14 +56,12 @@ import Graphics.Vulkan.C.Extensions.VK_AMD_memory_overallocation_behavior
 -- | VkDeviceMemoryOverallocationCreateInfoAMD - Specify memory
 -- overallocation behavior for a Vulkan device
 --
--- = Description
---
--- Unresolved directive in VkDeviceMemoryOverallocationCreateInfoAMD.txt -
--- include::{generated}\/validity\/structs\/VkDeviceMemoryOverallocationCreateInfoAMD.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_memory_overallocation_behavior.VkMemoryOverallocationBehaviorAMD',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data DeviceMemoryOverallocationCreateInfoAMD = DeviceMemoryOverallocationCreateInfoAMD
   { -- Univalued member elided
   -- No documentation found for Nested "DeviceMemoryOverallocationCreateInfoAMD" "pNext"
@@ -92,8 +94,11 @@ instance Zero DeviceMemoryOverallocationCreateInfoAMD where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_memory_overallocation_behavior.VkDeviceMemoryOverallocationCreateInfoAMD'
 type MemoryOverallocationBehaviorAMD = VkMemoryOverallocationBehaviorAMD
+
+
+{-# complete MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD, MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD, MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD :: MemoryOverallocationBehaviorAMD #-}
 
 
 -- | 'Graphics.Vulkan.C.Extensions.VK_AMD_memory_overallocation_behavior.VK_MEMORY_OVERALLOCATION_BEHAVIOR_DEFAULT_AMD'
@@ -116,3 +121,11 @@ pattern MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD = VK_MEMORY_OVERALLOCATION_BE
 -- scope of the Vulkan instance are not accounted for.
 pattern MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD :: (a ~ MemoryOverallocationBehaviorAMD) => a
 pattern MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD = VK_MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD
+
+-- No documentation found for TopLevel "VK_AMD_MEMORY_OVERALLOCATION_BEHAVIOR_EXTENSION_NAME"
+pattern AMD_MEMORY_OVERALLOCATION_BEHAVIOR_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern AMD_MEMORY_OVERALLOCATION_BEHAVIOR_EXTENSION_NAME = VK_AMD_MEMORY_OVERALLOCATION_BEHAVIOR_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_AMD_MEMORY_OVERALLOCATION_BEHAVIOR_SPEC_VERSION"
+pattern AMD_MEMORY_OVERALLOCATION_BEHAVIOR_SPEC_VERSION :: Integral a => a
+pattern AMD_MEMORY_OVERALLOCATION_BEHAVIOR_SPEC_VERSION = VK_AMD_MEMORY_OVERALLOCATION_BEHAVIOR_SPEC_VERSION

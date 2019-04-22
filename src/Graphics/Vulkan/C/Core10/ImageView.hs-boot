@@ -50,6 +50,8 @@ data VkImageView_T
 --
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorImageInfo',
 -- 'Graphics.Vulkan.C.Core10.Pass.VkFramebufferCreateInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_image_view_handle.VkImageViewHandleInfoNVX',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image.vkCmdBindShadingRateImageNV',
 -- 'vkCreateImageView', 'vkDestroyImageView'
 type VkImageView = Ptr VkImageView_T
 

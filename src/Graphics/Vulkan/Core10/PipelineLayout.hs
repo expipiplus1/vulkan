@@ -117,6 +117,9 @@ type DescriptorSetLayout = VkDescriptorSetLayout
 type PipelineLayoutCreateFlags = VkPipelineLayoutCreateFlags
 
 
+-- No complete pragma for PipelineLayoutCreateFlags as it has no patterns
+
+
 -- | VkPipelineLayoutCreateInfo - Structure specifying the parameters of a
 -- newly created pipeline layout object
 --
@@ -125,137 +128,54 @@ type PipelineLayoutCreateFlags = VkPipelineLayoutCreateFlags
 -- -   @setLayoutCount@ /must/ be less than or equal to
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxBoundDescriptorSets@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
---     bit set with a @descriptorType@ of
+-- -   The total number of descriptors of the type
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLER'
 --     and
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
---     accessible to any given shader stage across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
+--     accessible to any shader stage across all elements of @pSetLayouts@
+--     /must/ be less than or equal to
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxPerStageDescriptorSamplers@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
---     bit set with a @descriptorType@ of
+-- -   The total number of descriptors of the type
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER'
 --     and
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
---     accessible to any given shader stage across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
+--     accessible to any shader stage across all elements of @pSetLayouts@
+--     /must/ be less than or equal to
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxPerStageDescriptorUniformBuffers@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
---     bit set with a @descriptorType@ of
+-- -   The total number of descriptors of the type
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER'
 --     and
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
---     accessible to any given shader stage across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
+--     accessible to any shader stage across all elements of @pSetLayouts@
+--     /must/ be less than or equal to
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxPerStageDescriptorStorageBuffers@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
---     bit set with a @descriptorType@ of
+-- -   The total number of descriptors of the type
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE',
 --     and
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
---     accessible to any given shader stage across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
+--     accessible to any shader stage across all elements of @pSetLayouts@
+--     /must/ be less than or equal to
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxPerStageDescriptorSampledImages@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
---     bit set with a @descriptorType@ of
+-- -   The total number of descriptors of the type
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     and
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
---     accessible to any given shader stage across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
+--     accessible to any shader stage across all elements of @pSetLayouts@
+--     /must/ be less than or equal to
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxPerStageDescriptorStorageImages@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
---     bit set with a @descriptorType@ of
+-- -   The total number of descriptors of the type
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
 --     accessible to any given shader stage across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxPerStageDescriptorInputAttachments@
 --
--- -   The total number of bindings in descriptor set layouts created
---     without the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
---     bit set with a @descriptorType@ of
---     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
---     accessible to any given shader stage across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VkPhysicalDeviceInlineUniformBlockPropertiesEXT'::@maxPerStageDescriptorInlineUniformBlocks@
---
--- -   The total number of descriptors with a @descriptorType@ of
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLER'
---     and
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
---     accessible to any given shader stage across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingPropertiesEXT'::@maxPerStageDescriptorUpdateAfterBindSamplers@
---
--- -   The total number of descriptors with a @descriptorType@ of
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER'
---     and
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
---     accessible to any given shader stage across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingPropertiesEXT'::@maxPerStageDescriptorUpdateAfterBindUniformBuffers@
---
--- -   The total number of descriptors with a @descriptorType@ of
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER'
---     and
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
---     accessible to any given shader stage across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingPropertiesEXT'::@maxPerStageDescriptorUpdateAfterBindStorageBuffers@
---
--- -   The total number of descriptors with a @descriptorType@ of
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE',
---     and
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
---     accessible to any given shader stage across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingPropertiesEXT'::@maxPerStageDescriptorUpdateAfterBindSampledImages@
---
--- -   The total number of descriptors with a @descriptorType@ of
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE',
---     and
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
---     accessible to any given shader stage across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingPropertiesEXT'::@maxPerStageDescriptorUpdateAfterBindStorageImages@
---
--- -   The total number of descriptors with a @descriptorType@ of
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
---     accessible to any given shader stage across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingPropertiesEXT'::@maxPerStageDescriptorUpdateAfterBindInputAttachments@
---
--- -   The total number of bindings with a @descriptorType@ of
---     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
---     accessible to any given shader stage across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VkPhysicalDeviceInlineUniformBlockPropertiesEXT'::@maxPerStageDescriptorUpdateAfterBindInlineUniformBlocks@
---
--- -   The total number of descriptors in descriptor set layouts created
---     without the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
---     bit set with a @descriptorType@ of
+-- -   The total number of descriptors of the type
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLER'
 --     and
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
@@ -263,46 +183,31 @@ type PipelineLayoutCreateFlags = VkPipelineLayoutCreateFlags
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxDescriptorSetSamplers@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
---     bit set with a @descriptorType@ of
+-- -   The total number of descriptors of the type
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxDescriptorSetUniformBuffers@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
---     bit set with a @descriptorType@ of
+-- -   The total number of descriptors of the type
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxDescriptorSetUniformBuffersDynamic@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
---     bit set with a @descriptorType@ of
+-- -   The total number of descriptors of the type
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxDescriptorSetStorageBuffers@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
---     bit set with a @descriptorType@ of
+-- -   The total number of descriptors of the type
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxDescriptorSetStorageBuffersDynamic@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
---     bit set with a @descriptorType@ of
+-- -   The total number of descriptors of the type
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE',
 --     and
@@ -311,10 +216,7 @@ type PipelineLayoutCreateFlags = VkPipelineLayoutCreateFlags
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxDescriptorSetSampledImages@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
---     bit set with a @descriptorType@ of
+-- -   The total number of descriptors of the type
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     and
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
@@ -322,101 +224,33 @@ type PipelineLayoutCreateFlags = VkPipelineLayoutCreateFlags
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxDescriptorSetStorageImages@
 --
--- -   The total number of descriptors in descriptor set layouts created
---     without the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
---     bit set with a @descriptorType@ of
+-- -   The total number of descriptors of the type
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxDescriptorSetInputAttachments@
 --
--- -   The total number of bindings in descriptor set layouts created
---     without the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
---     bit set with a @descriptorType@ of
---     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
---     accessible across all shader stages and across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VkPhysicalDeviceInlineUniformBlockPropertiesEXT'::@maxDescriptorSetInlineUniformBlocks@
---
--- -   The total number of descriptors of the type
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLER'
---     and
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
---     accessible across all shader stages and across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingPropertiesEXT'::@maxDescriptorSetUpdateAfterBindSamplers@
---
--- -   The total number of descriptors of the type
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER'
---     accessible across all shader stages and across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingPropertiesEXT'::@maxDescriptorSetUpdateAfterBindUniformBuffers@
---
--- -   The total number of descriptors of the type
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
---     accessible across all shader stages and across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingPropertiesEXT'::@maxDescriptorSetUpdateAfterBindUniformBuffersDynamic@
---
--- -   The total number of descriptors of the type
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER'
---     accessible across all shader stages and across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingPropertiesEXT'::@maxDescriptorSetUpdateAfterBindStorageBuffers@
---
--- -   The total number of descriptors of the type
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
---     accessible across all shader stages and across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingPropertiesEXT'::@maxDescriptorSetUpdateAfterBindStorageBuffersDynamic@
---
--- -   The total number of descriptors of the type
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE',
---     and
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
---     accessible across all shader stages and across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingPropertiesEXT'::@maxDescriptorSetUpdateAfterBindSampledImages@
---
--- -   The total number of descriptors of the type
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE',
---     and
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
---     accessible across all shader stages and across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingPropertiesEXT'::@maxDescriptorSetUpdateAfterBindStorageImages@
---
--- -   The total number of descriptors of the type
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
---     accessible across all shader stages and across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingPropertiesEXT'::@maxDescriptorSetUpdateAfterBindInputAttachments@
---
--- -   The total number of bindings with a @descriptorType@ of
---     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
---     accessible across all shader stages and across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VkPhysicalDeviceInlineUniformBlockPropertiesEXT'::@maxDescriptorSetUpdateAfterBindInlineUniformBlocks@
---
 -- -   Any two elements of @pPushConstantRanges@ /must/ not include the
 --     same stage in @stageFlags@
 --
--- -   @pSetLayouts@ /must/ not contain more than one descriptor set layout
---     that was created with
---     'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
---     set
+-- == Valid Usage (Implicit)
 --
--- -   The total number of bindings with a @descriptorType@ of
---     'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV'
---     accessible across all shader stages and across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkPhysicalDeviceRayTracingPropertiesNV'::@maxDescriptorSetAccelerationStructures@
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO'
 --
--- Unresolved directive in VkPipelineLayoutCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkPipelineLayoutCreateInfo.txt[]
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @flags@ /must/ be @0@
+--
+-- -   If @setLayoutCount@ is not @0@, @pSetLayouts@ /must/ be a valid
+--     pointer to an array of @setLayoutCount@ valid
+--     'Graphics.Vulkan.C.Core10.PipelineLayout.VkDescriptorSetLayout'
+--     handles
+--
+-- -   If @pushConstantRangeCount@ is not @0@, @pPushConstantRanges@ /must/
+--     be a valid pointer to an array of @pushConstantRangeCount@ valid
+--     'Graphics.Vulkan.C.Core10.PipelineLayout.VkPushConstantRange'
+--     structures
 --
 -- = See Also
 --
@@ -467,10 +301,7 @@ instance Zero PipelineLayoutCreateInfo where
 
 -- | VkPushConstantRange - Structure specifying a push constant range
 --
--- == Valid Usage
---
--- Unresolved directive in VkPushConstantRange.txt -
--- include::{generated}\/validity\/structs\/VkPushConstantRange.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -516,9 +347,12 @@ instance Zero PushConstantRange where
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutBinding',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkObjectTablePushConstantEntryNVX',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkPhysicalDeviceCooperativeMatrixPropertiesNV',
 -- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VkPhysicalDeviceSubgroupProperties',
 -- 'Graphics.Vulkan.C.Core10.PipelineLayout.VkPushConstantRange',
 -- 'Graphics.Vulkan.C.Core10.Pipeline.VkShaderStageFlagBits',
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_shader_info.VkShaderStatisticsInfoAMD',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdPushConstants'
 type ShaderStageFlags = ShaderStageFlagBits
 
@@ -541,10 +375,32 @@ type ShaderStageFlags = ShaderStageFlagBits
 --     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' handle in which
 --     the resulting pipeline layout object is returned.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCreatePipelineLayout.txt -
--- include::{generated}\/validity\/protos\/vkCreatePipelineLayout.txt[]
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Core10.PipelineLayout.VkPipelineLayoutCreateInfo'
+--     structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pPipelineLayout@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -587,8 +443,27 @@ createPipelineLayout = \(Device device' commandTable) -> \createInfo' -> \alloca
 --     'Graphics.Vulkan.C.Core10.PipelineLayout.vkDestroyPipelineLayout' is
 --     called
 --
--- Unresolved directive in vkDestroyPipelineLayout.txt -
--- include::{generated}\/validity\/protos\/vkDestroyPipelineLayout.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   If @pipelineLayout@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE',
+--     @pipelineLayout@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   If @pipelineLayout@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @pipelineLayout@ /must/ be externally synchronized
 --
 -- = See Also
 --

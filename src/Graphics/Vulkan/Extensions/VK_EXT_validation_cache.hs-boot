@@ -28,14 +28,18 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkValidationCacheCreateInfoEXT'
 type ValidationCacheCreateFlagsEXT = VkValidationCacheCreateFlagsEXT
 
 -- | VkValidationCacheEXT - Opaque handle to a validation cache object
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkShaderModuleValidationCacheCreateInfoEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkCreateValidationCacheEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkDestroyValidationCacheEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkGetValidationCacheDataEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkMergeValidationCachesEXT'
 type ValidationCacheEXT = VkValidationCacheEXT
 
 -- | VkValidationCacheHeaderVersionEXT - Encode validation cache version

@@ -88,14 +88,11 @@ import Graphics.Vulkan.NamedType
 -- | VkExternalImageFormatPropertiesNV - Structure specifying external image
 -- format properties
 --
--- = Description
---
--- Unresolved directive in VkExternalImageFormatPropertiesNV.txt -
--- include::{generated}\/validity\/structs\/VkExternalImageFormatPropertiesNV.txt[]
---
 -- = See Also
 --
--- No cross-references are available
+-- 'VkExternalMemoryFeatureFlagsNV', 'VkExternalMemoryHandleTypeFlagsNV',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageFormatProperties',
+-- 'vkGetPhysicalDeviceExternalImageFormatPropertiesNV'
 data VkExternalImageFormatPropertiesNV = VkExternalImageFormatPropertiesNV
   { -- | @imageFormatProperties@ will be filled in as when calling
   -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceImageFormatProperties',
@@ -153,7 +150,7 @@ instance Zero VkExternalImageFormatPropertiesNV where
 --
 -- = See Also
 --
--- 'VkExternalImageFormatPropertiesNV',
+-- 'VkExternalImageFormatPropertiesNV', 'VkExternalMemoryFeatureFlagsNV',
 -- 'vkGetPhysicalDeviceExternalImageFormatPropertiesNV'
 newtype VkExternalMemoryFeatureFlagBitsNV = VkExternalMemoryFeatureFlagBitsNV VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
@@ -202,7 +199,7 @@ pattern VK_EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV = VkExternalMemoryFeatureFl
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkExternalImageFormatPropertiesNV', 'VkExternalMemoryFeatureFlagBitsNV'
 type VkExternalMemoryFeatureFlagsNV = VkExternalMemoryFeatureFlagBitsNV
 
 -- ** VkExternalMemoryHandleTypeFlagBitsNV
@@ -212,7 +209,7 @@ type VkExternalMemoryFeatureFlagsNV = VkExternalMemoryFeatureFlagBitsNV
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkExternalMemoryHandleTypeFlagsNV'
 newtype VkExternalMemoryHandleTypeFlagBitsNV = VkExternalMemoryHandleTypeFlagBitsNV VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -270,7 +267,13 @@ pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV = VkExternalMemory
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory.VkExportMemoryAllocateInfoNV',
+-- 'VkExternalImageFormatPropertiesNV',
+-- 'VkExternalMemoryHandleTypeFlagBitsNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory.VkExternalMemoryImageCreateInfoNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32.VkImportMemoryWin32HandleInfoNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32.vkGetMemoryWin32HandleNV',
+-- 'vkGetPhysicalDeviceExternalImageFormatPropertiesNV'
 type VkExternalMemoryHandleTypeFlagsNV = VkExternalMemoryHandleTypeFlagBitsNV
 
 -- | vkGetPhysicalDeviceExternalImageFormatPropertiesNV - determine image
@@ -314,13 +317,28 @@ type VkExternalMemoryHandleTypeFlagsNV = VkExternalMemoryHandleTypeFlagBitsNV
 -- Otherwise, they are filled in as described for
 -- 'VkExternalImageFormatPropertiesNV'.
 --
--- Unresolved directive in
--- vkGetPhysicalDeviceExternalImageFormatPropertiesNV.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceExternalImageFormatPropertiesNV.txt[]
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_FORMAT_NOT_SUPPORTED'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkExternalImageFormatPropertiesNV',
+-- 'VkExternalMemoryHandleTypeFlagsNV',
+-- 'Graphics.Vulkan.C.Core10.Core.VkFormat',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageCreateFlags',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageTiling',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageType',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageUsageFlags',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -342,7 +360,7 @@ type FN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV = ("physicalDevice" :
 type PFN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV = FunPtr FN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV
 
 -- No documentation found for TopLevel "VK_NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME"
-pattern VK_NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME = "VK_NV_external_memory_capabilities"
 
 -- No documentation found for TopLevel "VK_NV_EXTERNAL_MEMORY_CAPABILITIES_SPEC_VERSION"

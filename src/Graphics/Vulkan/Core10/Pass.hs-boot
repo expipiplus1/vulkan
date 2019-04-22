@@ -67,17 +67,8 @@ import {-# source #-} Graphics.Vulkan.C.Core10.Pass
 -- > | _ACCESS_VERTEX_ATTRIBUTE_READ_BIT | K_PIPELINE_STAGE_VERTEX_INPUT_BIT |
 -- > | '                                 | '                                 |
 -- > +-----------------------------------+-----------------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Pass.VK | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > | _ACCESS_UNIFORM_READ_BIT'         | NV_mesh_shader.VK_PIPELINE_STAGE_ |
--- > |                                   | TASK_SHADER_BIT_NV',              |
--- > |                                   | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > |                                   | NV_mesh_shader.VK_PIPELINE_STAGE_ |
--- > |                                   | MESH_SHADER_BIT_NV',              |
--- > |                                   | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > |                                   | NV_ray_tracing.VK_PIPELINE_STAGE_ |
--- > |                                   | RAY_TRACING_SHADER_BIT_NV',       |
--- > |                                   | 'Graphics.Vulkan.C.Core10.Queue.V |
--- > |                                   | K_PIPELINE_STAGE_VERTEX_SHADER_BI |
+-- > | 'Graphics.Vulkan.C.Core10.Pass.VK | 'Graphics.Vulkan.C.Core10.Queue.V |
+-- > | _ACCESS_UNIFORM_READ_BIT'         | K_PIPELINE_STAGE_VERTEX_SHADER_BI |
 -- > |                                   | T',                               |
 -- > |                                   | 'Graphics.Vulkan.C.Core10.Queue.V |
 -- > |                                   | K_PIPELINE_STAGE_TESSELLATION_CON |
@@ -96,17 +87,8 @@ import {-# source #-} Graphics.Vulkan.C.Core10.Pass
 -- > |                                   | K_PIPELINE_STAGE_COMPUTE_SHADER_B |
 -- > |                                   | IT'                               |
 -- > +-----------------------------------+-----------------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Pass.VK | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > | _ACCESS_SHADER_READ_BIT'          | NV_mesh_shader.VK_PIPELINE_STAGE_ |
--- > |                                   | TASK_SHADER_BIT_NV',              |
--- > |                                   | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > |                                   | NV_mesh_shader.VK_PIPELINE_STAGE_ |
--- > |                                   | MESH_SHADER_BIT_NV',              |
--- > |                                   | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > |                                   | NV_ray_tracing.VK_PIPELINE_STAGE_ |
--- > |                                   | RAY_TRACING_SHADER_BIT_NV',       |
--- > |                                   | 'Graphics.Vulkan.C.Core10.Queue.V |
--- > |                                   | K_PIPELINE_STAGE_VERTEX_SHADER_BI |
+-- > | 'Graphics.Vulkan.C.Core10.Pass.VK | 'Graphics.Vulkan.C.Core10.Queue.V |
+-- > | _ACCESS_SHADER_READ_BIT'          | K_PIPELINE_STAGE_VERTEX_SHADER_BI |
 -- > |                                   | T',                               |
 -- > |                                   | 'Graphics.Vulkan.C.Core10.Queue.V |
 -- > |                                   | K_PIPELINE_STAGE_TESSELLATION_CON |
@@ -125,17 +107,8 @@ import {-# source #-} Graphics.Vulkan.C.Core10.Pass
 -- > |                                   | K_PIPELINE_STAGE_COMPUTE_SHADER_B |
 -- > |                                   | IT'                               |
 -- > +-----------------------------------+-----------------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Pass.VK | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > | _ACCESS_SHADER_WRITE_BIT'         | NV_mesh_shader.VK_PIPELINE_STAGE_ |
--- > |                                   | TASK_SHADER_BIT_NV',              |
--- > |                                   | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > |                                   | NV_mesh_shader.VK_PIPELINE_STAGE_ |
--- > |                                   | MESH_SHADER_BIT_NV',              |
--- > |                                   | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > |                                   | NV_ray_tracing.VK_PIPELINE_STAGE_ |
--- > |                                   | RAY_TRACING_SHADER_BIT_NV',       |
--- > |                                   | 'Graphics.Vulkan.C.Core10.Queue.V |
--- > |                                   | K_PIPELINE_STAGE_VERTEX_SHADER_BI |
+-- > | 'Graphics.Vulkan.C.Core10.Pass.VK | 'Graphics.Vulkan.C.Core10.Queue.V |
+-- > | _ACCESS_SHADER_WRITE_BIT'         | K_PIPELINE_STAGE_VERTEX_SHADER_BI |
 -- > |                                   | T',                               |
 -- > |                                   | 'Graphics.Vulkan.C.Core10.Queue.V |
 -- > |                                   | K_PIPELINE_STAGE_TESSELLATION_CON |
@@ -200,64 +173,6 @@ import {-# source #-} Graphics.Vulkan.C.Core10.Pass
 -- > | 'Graphics.Vulkan.C.Core10.Pass.VK | N\/A                              |
 -- > | _ACCESS_MEMORY_WRITE_BIT'         |                                   |
 -- > +-----------------------------------+-----------------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_ | 'Graphics.Vulkan.C.Core10.Queue.V |
--- > | EXT_blend_operation_advanced.VK_A | K_PIPELINE_STAGE_COLOR_ATTACHMENT |
--- > | CCESS_COLOR_ATTACHMENT_READ_NONCO | _OUTPUT_BIT'                      |
--- > | HERENT_BIT_EXT'                   |                                   |
--- > +-----------------------------------+-----------------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_ | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > | NVX_device_generated_commands.VK_ | NVX_device_generated_commands.VK_ |
--- > | ACCESS_COMMAND_PROCESS_READ_BIT_N | PIPELINE_STAGE_COMMAND_PROCESS_BI |
--- > | VX'                               | T_NVX'                            |
--- > +-----------------------------------+-----------------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_ | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > | NVX_device_generated_commands.VK_ | NVX_device_generated_commands.VK_ |
--- > | ACCESS_COMMAND_PROCESS_WRITE_BIT_ | PIPELINE_STAGE_COMMAND_PROCESS_BI |
--- > | NVX'                              | T_NVX'                            |
--- > +-----------------------------------+-----------------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_ | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > | EXT_conditional_rendering.VK_ACCE | EXT_conditional_rendering.VK_PIPE |
--- > | SS_CONDITIONAL_RENDERING_READ_BIT | LINE_STAGE_CONDITIONAL_RENDERING_ |
--- > | _EXT'                             | BIT_EXT'                          |
--- > +-----------------------------------+-----------------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_ | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > | NV_shading_rate_image.VK_ACCESS_S | NV_shading_rate_image.VK_PIPELINE |
--- > | HADING_RATE_IMAGE_READ_BIT_NV'    | _STAGE_SHADING_RATE_IMAGE_BIT_NV' |
--- > +-----------------------------------+-----------------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_ | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > | EXT_transform_feedback.VK_ACCESS_ | EXT_transform_feedback.VK_PIPELIN |
--- > | TRANSFORM_FEEDBACK_WRITE_BIT_EXT' | E_STAGE_TRANSFORM_FEEDBACK_BIT_EX |
--- > |                                   | T'                                |
--- > +-----------------------------------+-----------------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_ | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > | EXT_transform_feedback.VK_ACCESS_ | EXT_transform_feedback.VK_PIPELIN |
--- > | TRANSFORM_FEEDBACK_COUNTER_WRITE_ | E_STAGE_TRANSFORM_FEEDBACK_BIT_EX |
--- > | BIT_EXT'                          | T'                                |
--- > +-----------------------------------+-----------------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_ | 'Graphics.Vulkan.C.Core10.Queue.V |
--- > | EXT_transform_feedback.VK_ACCESS_ | K_PIPELINE_STAGE_DRAW_INDIRECT_BI |
--- > | TRANSFORM_FEEDBACK_COUNTER_READ_B | T'                                |
--- > | IT_EXT'                           |                                   |
--- > +-----------------------------------+-----------------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_ | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > | NV_ray_tracing.VK_ACCESS_ACCELERA | NV_ray_tracing.VK_PIPELINE_STAGE_ |
--- > | TION_STRUCTURE_READ_BIT_NV'       | RAY_TRACING_SHADER_BIT_NV',       |
--- > |                                   | or                                |
--- > |                                   | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > |                                   | NV_ray_tracing.VK_PIPELINE_STAGE_ |
--- > |                                   | ACCELERATION_STRUCTURE_BUILD_BIT_ |
--- > |                                   | NV'                               |
--- > +-----------------------------------+-----------------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_ | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > | NV_ray_tracing.VK_ACCESS_ACCELERA | NV_ray_tracing.VK_PIPELINE_STAGE_ |
--- > | TION_STRUCTURE_WRITE_BIT_NV'      | ACCELERATION_STRUCTURE_BUILD_BIT_ |
--- > |                                   | NV'                               |
--- > +-----------------------------------+-----------------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_ | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > | EXT_fragment_density_map.VK_ACCES | EXT_fragment_density_map.VK_PIPEL |
--- > | S_FRAGMENT_DENSITY_MAP_READ_BIT_E | INE_STAGE_FRAGMENT_DENSITY_PROCES |
--- > | XT'                               | S_BIT_EXT'                        |
--- > +-----------------------------------+-----------------------------------+
 -- >
 -- > Supported access types
 --
@@ -307,7 +222,8 @@ type AccessFlagBits = VkAccessFlagBits
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkBufferMemoryBarrier',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkImageMemoryBarrier',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkMemoryBarrier',
--- 'Graphics.Vulkan.C.Core10.Pass.VkSubpassDependency'
+-- 'Graphics.Vulkan.C.Core10.Pass.VkSubpassDependency',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkSubpassDependency2KHR'
 type AccessFlags = AccessFlagBits
 
 -- | VkAttachmentDescriptionFlagBits - Bitmask specifying additional
@@ -330,6 +246,7 @@ type AttachmentDescriptionFlagBits = VkAttachmentDescriptionFlagBits
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Pass.VkAttachmentDescription',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkAttachmentDescription2KHR',
 -- 'Graphics.Vulkan.C.Core10.Pass.VkAttachmentDescriptionFlagBits'
 type AttachmentDescriptionFlags = AttachmentDescriptionFlagBits
 
@@ -338,7 +255,8 @@ type AttachmentDescriptionFlags = AttachmentDescriptionFlagBits
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.C.Core10.Pass.VkAttachmentDescription'
+-- 'Graphics.Vulkan.C.Core10.Pass.VkAttachmentDescription',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkAttachmentDescription2KHR'
 type AttachmentLoadOp = VkAttachmentLoadOp
 
 -- | VkAttachmentStoreOp - Specify how contents of an attachment are treated
@@ -346,7 +264,8 @@ type AttachmentLoadOp = VkAttachmentLoadOp
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.C.Core10.Pass.VkAttachmentDescription'
+-- 'Graphics.Vulkan.C.Core10.Pass.VkAttachmentDescription',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkAttachmentDescription2KHR'
 type AttachmentStoreOp = VkAttachmentStoreOp
 
 -- | VkDependencyFlagBits - Bitmask specifying how execution and memory
@@ -369,6 +288,7 @@ type DependencyFlagBits = VkDependencyFlagBits
 --
 -- 'Graphics.Vulkan.C.Core10.Pass.VkDependencyFlagBits',
 -- 'Graphics.Vulkan.C.Core10.Pass.VkSubpassDependency',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkSubpassDependency2KHR',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdPipelineBarrier'
 type DependencyFlags = DependencyFlagBits
 
@@ -400,9 +320,12 @@ type FramebufferCreateFlags = VkFramebufferCreateFlags
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplateCreateInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkIndirectCommandsLayoutCreateInfoNVX',
 -- 'Graphics.Vulkan.C.Core10.Pass.VkSubpassDescription',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkSubpassDescription2KHR',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindDescriptorSets',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindPipeline'
+-- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindPipeline',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.vkCmdPushDescriptorSetKHR'
 type PipelineBindPoint = VkPipelineBindPoint
 
 -- | VkRenderPassCreateFlags - Reserved for future use
@@ -414,10 +337,18 @@ type PipelineBindPoint = VkPipelineBindPoint
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.C.Core10.Pass.VkRenderPassCreateInfo'
+-- 'Graphics.Vulkan.C.Core10.Pass.VkRenderPassCreateInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkRenderPassCreateInfo2KHR'
 type RenderPassCreateFlags = VkRenderPassCreateFlags
 
 -- | VkSubpassDescriptionFlagBits - Bitmask specifying usage of a subpass
+--
+-- = Description
+--
+-- __Note__
+--
+-- All bits for this type are defined by extensions, and none of those
+-- extensions are enabled in this build of the specification.
 --
 -- = See Also
 --
@@ -435,5 +366,6 @@ type SubpassDescriptionFlagBits = VkSubpassDescriptionFlagBits
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Pass.VkSubpassDescription',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkSubpassDescription2KHR',
 -- 'Graphics.Vulkan.C.Core10.Pass.VkSubpassDescriptionFlagBits'
 type SubpassDescriptionFlags = SubpassDescriptionFlagBits

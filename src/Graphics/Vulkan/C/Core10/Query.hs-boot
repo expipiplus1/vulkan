@@ -68,11 +68,15 @@ data VkQueryPool_T
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBeginQuery',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdBeginQueryIndexedEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdCopyQueryPoolResults',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdEndQuery',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdEndQueryIndexedEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdResetQueryPool',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCmdWriteAccelerationStructuresPropertiesNV',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdWriteTimestamp',
--- 'vkCreateQueryPool', 'vkDestroyQueryPool', 'vkGetQueryPoolResults'
+-- 'vkCreateQueryPool', 'vkDestroyQueryPool', 'vkGetQueryPoolResults',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_host_query_reset.vkResetQueryPoolEXT'
 type VkQueryPool = Ptr VkQueryPool_T
 
 data VkQueryPoolCreateFlags

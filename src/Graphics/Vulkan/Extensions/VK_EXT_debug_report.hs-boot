@@ -24,7 +24,8 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_debug_report
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.vkCreateDebugReportCallbackEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.vkDestroyDebugReportCallbackEXT'
 type DebugReportCallbackEXT = VkDebugReportCallbackEXT
 
 -- | VkDebugReportFlagBitsEXT - Bitmask specifying events which cause a debug
@@ -32,7 +33,7 @@ type DebugReportCallbackEXT = VkDebugReportCallbackEXT
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VkDebugReportFlagsEXT'
 type DebugReportFlagBitsEXT = VkDebugReportFlagBitsEXT
 
 -- | VkDebugReportFlagsEXT - Bitmask of VkDebugReportFlagBitsEXT
@@ -45,7 +46,9 @@ type DebugReportFlagBitsEXT = VkDebugReportFlagBitsEXT
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VkDebugReportCallbackCreateInfoEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VkDebugReportFlagBitsEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.vkDebugReportMessageEXT'
 type DebugReportFlagsEXT = DebugReportFlagBitsEXT
 
 -- | VkDebugReportObjectTypeEXT - Specify the type of an object handle
@@ -163,40 +166,8 @@ type DebugReportFlagsEXT = DebugReportFlagBitsEXT
 -- > | MMAND_POOL_EXT'                          | l'                        |
 -- > +------------------------------------------+---------------------------+
 -- > | 'Graphics.Vulkan.C.Extensions.VK_EXT_deb | 'Graphics.Vulkan.C.Extens |
--- > | ug_report.VK_DEBUG_REPORT_OBJECT_TYPE_SU | ions.VK_KHR_surface.VkSur |
--- > | RFACE_KHR_EXT'                           | faceKHR'                  |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_EXT_deb | 'Graphics.Vulkan.C.Extens |
--- > | ug_report.VK_DEBUG_REPORT_OBJECT_TYPE_SW | ions.VK_KHR_swapchain.VkS |
--- > | APCHAIN_KHR_EXT'                         | wapchainKHR'              |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_EXT_deb | 'Graphics.Vulkan.C.Extens |
 -- > | ug_report.VK_DEBUG_REPORT_OBJECT_TYPE_DE | ions.VK_EXT_debug_report. |
 -- > | BUG_REPORT_CALLBACK_EXT_EXT'             | VkDebugReportCallbackEXT' |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_EXT_deb | 'Graphics.Vulkan.C.Extens |
--- > | ug_report.VK_DEBUG_REPORT_OBJECT_TYPE_DI | ions.VK_KHR_display.VkDis |
--- > | SPLAY_KHR_EXT'                           | playKHR'                  |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_EXT_deb | 'Graphics.Vulkan.C.Extens |
--- > | ug_report.VK_DEBUG_REPORT_OBJECT_TYPE_DI | ions.VK_KHR_display.VkDis |
--- > | SPLAY_MODE_KHR_EXT'                      | playModeKHR'              |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_EXT_deb | 'Graphics.Vulkan.C.Extens |
--- > | ug_report.VK_DEBUG_REPORT_OBJECT_TYPE_OB | ions.VK_NVX_device_genera |
--- > | JECT_TABLE_NVX_EXT'                      | ted_commands.VkObjectTabl |
--- > |                                          | eNVX'                     |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_EXT_deb | 'Graphics.Vulkan.C.Extens |
--- > | ug_report.VK_DEBUG_REPORT_OBJECT_TYPE_IN | ions.VK_NVX_device_genera |
--- > | DIRECT_COMMANDS_LAYOUT_NVX_EXT'          | ted_commands.VkIndirectCo |
--- > |                                          | mmandsLayoutNVX'          |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_KHR_des | 'Graphics.Vulkan.C.Core11 |
--- > | criptor_update_template.VK_DEBUG_REPORT_ | .Promoted_from_VK_KHR_des |
--- > | OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_K | criptor_update_template.V |
--- > | HR_EXT'                                  | kDescriptorUpdateTemplate |
--- > |                                          | '                         |
 -- > +------------------------------------------+---------------------------+
 -- >
 -- > VkDebugReportObjectTypeEXT and Vulkan Handle Relationship
@@ -210,5 +181,7 @@ type DebugReportFlagsEXT = DebugReportFlagBitsEXT
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.VkDebugMarkerObjectNameInfoEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.VkDebugMarkerObjectTagInfoEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.vkDebugReportMessageEXT'
 type DebugReportObjectTypeEXT = VkDebugReportObjectTypeEXT

@@ -175,8 +175,20 @@ instance Read VkBufferViewCreateFlags where
 --     contiguously to a single
 --     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
 --
--- Unresolved directive in VkBufferViewCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkBufferViewCreateInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @flags@ /must/ be @0@
+--
+-- -   @buffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle
+--
+-- -   @format@ /must/ be a valid 'Graphics.Vulkan.C.Core10.Core.VkFormat'
+--     value
 --
 -- = See Also
 --
@@ -257,10 +269,30 @@ instance Zero VkBufferViewCreateInfo where
 -- -   @pView@ points to a 'VkBufferView' handle in which the resulting
 --     buffer view object is returned.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCreateBufferView.txt -
--- include::{generated}\/validity\/protos\/vkCreateBufferView.txt[]
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'VkBufferViewCreateInfo' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pView@ /must/ be a valid pointer to a 'VkBufferView' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -314,8 +346,26 @@ type PFN_vkCreateBufferView = FunPtr FN_vkCreateBufferView
 --     were provided when @bufferView@ was created, @pAllocator@ /must/ be
 --     @NULL@
 --
--- Unresolved directive in vkDestroyBufferView.txt -
--- include::{generated}\/validity\/protos\/vkDestroyBufferView.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   If @bufferView@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @bufferView@
+--     /must/ be a valid 'VkBufferView' handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   If @bufferView@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @bufferView@ /must/ be externally synchronized
 --
 -- = See Also
 --

@@ -74,17 +74,15 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2
 -- The members of the 'VkPhysicalDeviceDepthStencilResolvePropertiesKHR'
 -- structure describe the following implementation-dependent limits:
 --
--- = Description
---
--- Unresolved directive in
--- VkPhysicalDeviceDepthStencilResolvePropertiesKHR.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceDepthStencilResolvePropertiesKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32', 'VkResolveModeFlagsKHR',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceDepthStencilResolvePropertiesKHR = VkPhysicalDeviceDepthStencilResolvePropertiesKHR
-  { -- No documentation found for Nested "VkPhysicalDeviceDepthStencilResolvePropertiesKHR" "sType"
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES_KHR'
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceDepthStencilResolvePropertiesKHR" "pNext"
   vkPNext :: Ptr ()
@@ -143,7 +141,7 @@ instance Zero VkPhysicalDeviceDepthStencilResolvePropertiesKHR where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkResolveModeFlagsKHR', 'VkSubpassDescriptionDepthStencilResolveKHR'
 newtype VkResolveModeFlagBitsKHR = VkResolveModeFlagBitsKHR VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -202,7 +200,8 @@ pattern VK_RESOLVE_MODE_NONE_KHR = VkResolveModeFlagBitsKHR 0x00000000
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkPhysicalDeviceDepthStencilResolvePropertiesKHR',
+-- 'VkResolveModeFlagBitsKHR'
 type VkResolveModeFlagsKHR = VkResolveModeFlagBitsKHR
 
 -- | VkSubpassDescriptionDepthStencilResolveKHR - Structure specifying
@@ -274,12 +273,28 @@ type VkResolveModeFlagsKHR = VkResolveModeFlagBitsKHR
 --     @depthResolveMode@ and @stencilResolveMode@ /must/ be identical or
 --     one of them /must/ be 'VK_RESOLVE_MODE_NONE_KHR'
 --
--- Unresolved directive in VkSubpassDescriptionDepthStencilResolveKHR.txt -
--- include::{generated}\/validity\/structs\/VkSubpassDescriptionDepthStencilResolveKHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE_KHR'
+--
+-- -   @depthResolveMode@ /must/ be a valid 'VkResolveModeFlagBitsKHR'
+--     value
+--
+-- -   @stencilResolveMode@ /must/ be a valid 'VkResolveModeFlagBitsKHR'
+--     value
+--
+-- -   If @pDepthStencilResolveAttachment@ is not @NULL@,
+--     @pDepthStencilResolveAttachment@ /must/ be a valid pointer to a
+--     valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkAttachmentReference2KHR'
+--     structure
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkAttachmentReference2KHR',
+-- 'VkResolveModeFlagBitsKHR',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkSubpassDescriptionDepthStencilResolveKHR = VkSubpassDescriptionDepthStencilResolveKHR
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -320,7 +335,7 @@ instance Zero VkSubpassDescriptionDepthStencilResolveKHR where
                                                     zero
 
 -- No documentation found for TopLevel "VK_KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME"
-pattern VK_KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME = "VK_KHR_depth_stencil_resolve"
 
 -- No documentation found for TopLevel "VK_KHR_DEPTH_STENCIL_RESOLVE_SPEC_VERSION"

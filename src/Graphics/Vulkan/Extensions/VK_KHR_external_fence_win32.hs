@@ -15,11 +15,11 @@ module Graphics.Vulkan.Extensions.VK_KHR_external_fence_win32
   , ImportFenceWin32HandleInfoKHR(..)
   , getFenceWin32HandleKHR
   , importFenceWin32HandleKHR
-  , pattern VK_KHR_EXTERNAL_FENCE_WIN32_SPEC_VERSION
-  , pattern VK_KHR_EXTERNAL_FENCE_WIN32_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_IMPORT_FENCE_WIN32_HANDLE_INFO_KHR
-  , pattern VK_STRUCTURE_TYPE_EXPORT_FENCE_WIN32_HANDLE_INFO_KHR
-  , pattern VK_STRUCTURE_TYPE_FENCE_GET_WIN32_HANDLE_INFO_KHR
+  , pattern KHR_EXTERNAL_FENCE_WIN32_EXTENSION_NAME
+  , pattern KHR_EXTERNAL_FENCE_WIN32_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_IMPORT_FENCE_WIN32_HANDLE_INFO_KHR
+  , pattern STRUCTURE_TYPE_EXPORT_FENCE_WIN32_HANDLE_INFO_KHR
+  , pattern STRUCTURE_TYPE_FENCE_GET_WIN32_HANDLE_INFO_KHR
   ) where
 
 import Control.Exception
@@ -27,6 +27,9 @@ import Control.Exception
   )
 import Control.Monad
   ( when
+  )
+import Data.String
+  ( IsString
   )
 import Foreign.Marshal.Alloc
   ( alloca
@@ -55,6 +58,8 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32
   , VkImportFenceWin32HandleInfoKHR(..)
   , vkGetFenceWin32HandleKHR
   , vkImportFenceWin32HandleKHR
+  , pattern VK_KHR_EXTERNAL_FENCE_WIN32_EXTENSION_NAME
+  , pattern VK_KHR_EXTERNAL_FENCE_WIN32_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_EXPORT_FENCE_WIN32_HANDLE_INFO_KHR
   , pattern VK_STRUCTURE_TYPE_FENCE_GET_WIN32_HANDLE_INFO_KHR
   , pattern VK_STRUCTURE_TYPE_IMPORT_FENCE_WIN32_HANDLE_INFO_KHR
@@ -87,9 +92,10 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32
-  ( pattern VK_KHR_EXTERNAL_FENCE_WIN32_EXTENSION_NAME
-  , pattern VK_KHR_EXTERNAL_FENCE_WIN32_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_EXPORT_FENCE_WIN32_HANDLE_INFO_KHR
+  , pattern STRUCTURE_TYPE_FENCE_GET_WIN32_HANDLE_INFO_KHR
+  , pattern STRUCTURE_TYPE_IMPORT_FENCE_WIN32_HANDLE_INFO_KHR
   )
 
 
@@ -125,12 +131,19 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32
 --     /must/ not be in the @pNext@ chain of
 --     'Graphics.Vulkan.C.Core10.Fence.VkFenceCreateInfo'.
 --
--- Unresolved directive in VkExportFenceWin32HandleInfoKHR.txt -
--- include::{generated}\/validity\/structs\/VkExportFenceWin32HandleInfoKHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.VK_STRUCTURE_TYPE_EXPORT_FENCE_WIN32_HANDLE_INFO_KHR'
+--
+-- -   If @pAttributes@ is not @NULL@, @pAttributes@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32.SECURITY_ATTRIBUTES'
+--     value
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data ExportFenceWin32HandleInfoKHR = ExportFenceWin32HandleInfoKHR
   { -- Univalued member elided
   -- No documentation found for Nested "ExportFenceWin32HandleInfoKHR" "pNext"
@@ -205,12 +218,26 @@ instance Zero ExportFenceWin32HandleInfoKHR where
 -- -   @handleType@ /must/ be defined as an NT handle or a global share
 --     handle.
 --
--- Unresolved directive in VkFenceGetWin32HandleInfoKHR.txt -
--- include::{generated}\/validity\/structs\/VkFenceGetWin32HandleInfoKHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.VK_STRUCTURE_TYPE_FENCE_GET_WIN32_HANDLE_INFO_KHR'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @fence@ /must/ be a valid 'Graphics.Vulkan.C.Core10.Queue.VkFence'
+--     handle
+--
+-- -   @handleType@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceHandleTypeFlagBits'
+--     value
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceHandleTypeFlagBits',
+-- 'Graphics.Vulkan.C.Core10.Queue.VkFence',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.vkGetFenceWin32HandleKHR'
 data FenceGetWin32HandleInfoKHR = FenceGetWin32HandleInfoKHR
   { -- Univalued member elided
   -- No documentation found for Nested "FenceGetWin32HandleInfoKHR" "pNext"
@@ -297,12 +324,35 @@ instance Zero FenceGetWin32HandleInfoKHR where
 --     @handleType@ in
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#external-fence-handle-types-compatibility external fence handle types compatibility>.
 --
--- Unresolved directive in VkImportFenceWin32HandleInfoKHR.txt -
--- include::{generated}\/validity\/structs\/VkImportFenceWin32HandleInfoKHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.VK_STRUCTURE_TYPE_IMPORT_FENCE_WIN32_HANDLE_INFO_KHR'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @fence@ /must/ be a valid 'Graphics.Vulkan.C.Core10.Queue.VkFence'
+--     handle
+--
+-- -   @flags@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence.VkFenceImportFlagBits'
+--     values
+--
+-- -   If @handleType@ is not @0@, @handleType@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceHandleTypeFlagBits'
+--     value
+--
+-- == Host Synchronization
+--
+-- -   Host access to @fence@ /must/ be externally synchronized
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceHandleTypeFlagBits',
+-- 'Graphics.Vulkan.C.Core10.Queue.VkFence',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence.VkFenceImportFlags',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.vkImportFenceWin32HandleKHR'
 data ImportFenceWin32HandleInfoKHR = ImportFenceWin32HandleInfoKHR
   { -- Univalued member elided
   -- No documentation found for Nested "ImportFenceWin32HandleInfoKHR" "pNext"
@@ -374,12 +424,20 @@ instance Zero ImportFenceWin32HandleInfoKHR where
 -- in
 -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence Payloads>.
 --
--- Unresolved directive in vkGetFenceWin32HandleKHR.txt -
--- include::{generated}\/validity\/protos\/vkGetFenceWin32HandleKHR.txt[]
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_TOO_MANY_OBJECTS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.VkFenceGetWin32HandleInfoKHR'
 getFenceWin32HandleKHR :: Device ->  FenceGetWin32HandleInfoKHR ->  IO (HANDLE)
 getFenceWin32HandleKHR = \(Device device' commandTable) -> \getWin32HandleInfo' -> alloca (\pHandle' -> (\marshalled -> withCStructFenceGetWin32HandleInfoKHR marshalled . flip with) getWin32HandleInfo' (\pGetWin32HandleInfo' -> vkGetFenceWin32HandleKHR commandTable device' pGetWin32HandleInfo' pHandle' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (peek pHandle'))))
 
@@ -405,11 +463,27 @@ getFenceWin32HandleKHR = \(Device device' commandTable) -> \getWin32HandleInfo' 
 -- of Vulkan, into the same instance from which it was exported, and
 -- multiple times into a given Vulkan instance.
 --
--- Unresolved directive in vkImportFenceWin32HandleKHR.txt -
--- include::{generated}\/validity\/protos\/vkImportFenceWin32HandleKHR.txt[]
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VK_ERROR_INVALID_EXTERNAL_HANDLE'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.VkImportFenceWin32HandleInfoKHR'
 importFenceWin32HandleKHR :: Device ->  ImportFenceWin32HandleInfoKHR ->  IO ()
 importFenceWin32HandleKHR = \(Device device' commandTable) -> \importFenceWin32HandleInfo' -> (\marshalled -> withCStructImportFenceWin32HandleInfoKHR marshalled . flip with) importFenceWin32HandleInfo' (\pImportFenceWin32HandleInfo' -> vkImportFenceWin32HandleKHR commandTable device' pImportFenceWin32HandleInfo' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (pure ())))
+
+-- No documentation found for TopLevel "VK_KHR_EXTERNAL_FENCE_WIN32_EXTENSION_NAME"
+pattern KHR_EXTERNAL_FENCE_WIN32_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern KHR_EXTERNAL_FENCE_WIN32_EXTENSION_NAME = VK_KHR_EXTERNAL_FENCE_WIN32_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_KHR_EXTERNAL_FENCE_WIN32_SPEC_VERSION"
+pattern KHR_EXTERNAL_FENCE_WIN32_SPEC_VERSION :: Integral a => a
+pattern KHR_EXTERNAL_FENCE_WIN32_SPEC_VERSION = VK_KHR_EXTERNAL_FENCE_WIN32_SPEC_VERSION

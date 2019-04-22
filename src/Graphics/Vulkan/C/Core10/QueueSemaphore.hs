@@ -104,10 +104,21 @@ instance Read VkSemaphoreCreateFlags where
 -- | VkSemaphoreCreateInfo - Structure specifying parameters of a newly
 -- created semaphore
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in VkSemaphoreCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkSemaphoreCreateInfo.txt[]
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO'
+--
+-- -   Each @pNext@ member of any structure (including this one) in the
+--     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
+--     instance of
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore.VkExportSemaphoreCreateInfo'
+--     or
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32.VkExportSemaphoreWin32HandleInfoKHR'
+--
+-- -   Each @sType@ member in the @pNext@ chain /must/ be unique
+--
+-- -   @flags@ /must/ be @0@
 --
 -- = See Also
 --
@@ -159,8 +170,31 @@ instance Zero VkSemaphoreCreateInfo where
 --
 -- When created, the semaphore is in the unsignaled state.
 --
--- Unresolved directive in vkCreateSemaphore.txt -
--- include::{generated}\/validity\/protos\/vkCreateSemaphore.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'VkSemaphoreCreateInfo' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pSemaphore@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Core10.Queue.VkSemaphore' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -214,8 +248,27 @@ type PFN_vkCreateSemaphore = FunPtr FN_vkCreateSemaphore
 --     were provided when @semaphore@ was created, @pAllocator@ /must/ be
 --     @NULL@
 --
--- Unresolved directive in vkDestroySemaphore.txt -
--- include::{generated}\/validity\/protos\/vkDestroySemaphore.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   If @semaphore@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @semaphore@
+--     /must/ be a valid 'Graphics.Vulkan.C.Core10.Queue.VkSemaphore'
+--     handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   If @semaphore@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @semaphore@ /must/ be externally synchronized
 --
 -- = See Also
 --

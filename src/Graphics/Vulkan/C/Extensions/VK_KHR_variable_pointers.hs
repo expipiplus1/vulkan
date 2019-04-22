@@ -55,7 +55,7 @@ pattern VkPhysicalDeviceVariablePointersFeaturesKHR :: ("sType" ::: VkStructureT
 pattern VkPhysicalDeviceVariablePointersFeaturesKHR vkSType vkPNext vkVariablePointersStorageBuffer vkVariablePointers = VkPhysicalDeviceVariablePointersFeatures vkSType vkPNext vkVariablePointersStorageBuffer vkVariablePointers
 
 -- No documentation found for TopLevel "VK_KHR_VARIABLE_POINTERS_EXTENSION_NAME"
-pattern VK_KHR_VARIABLE_POINTERS_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_VARIABLE_POINTERS_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_VARIABLE_POINTERS_EXTENSION_NAME = "VK_KHR_variable_pointers"
 
 -- No documentation found for TopLevel "VK_KHR_VARIABLE_POINTERS_SPEC_VERSION"

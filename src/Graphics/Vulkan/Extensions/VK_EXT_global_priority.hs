@@ -13,12 +13,15 @@ module Graphics.Vulkan.Extensions.VK_EXT_global_priority
   , pattern QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT
   , pattern QUEUE_GLOBAL_PRIORITY_HIGH_EXT
   , pattern QUEUE_GLOBAL_PRIORITY_REALTIME_EXT
-  , pattern VK_EXT_GLOBAL_PRIORITY_SPEC_VERSION
-  , pattern VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT
-  , pattern VK_ERROR_NOT_PERMITTED_EXT
+  , pattern EXT_GLOBAL_PRIORITY_EXTENSION_NAME
+  , pattern EXT_GLOBAL_PRIORITY_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT
+  , pattern ERROR_NOT_PERMITTED_EXT
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Foreign.Marshal.Utils
   ( maybePeek
   , maybeWith
@@ -34,6 +37,8 @@ import Graphics.Vulkan.C.Core10.Core
 import Graphics.Vulkan.C.Extensions.VK_EXT_global_priority
   ( VkDeviceQueueGlobalPriorityCreateInfoEXT(..)
   , VkQueueGlobalPriorityEXT(..)
+  , pattern VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME
+  , pattern VK_EXT_GLOBAL_PRIORITY_SPEC_VERSION
   , pattern VK_QUEUE_GLOBAL_PRIORITY_HIGH_EXT
   , pattern VK_QUEUE_GLOBAL_PRIORITY_LOW_EXT
   , pattern VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT
@@ -45,10 +50,9 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_global_priority
-  ( pattern VK_ERROR_NOT_PERMITTED_EXT
-  , pattern VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME
-  , pattern VK_EXT_GLOBAL_PRIORITY_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern ERROR_NOT_PERMITTED_EXT
+  , pattern STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT
   )
 
 
@@ -63,12 +67,12 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_global_priority
 -- will default to
 -- 'Graphics.Vulkan.C.Extensions.VK_EXT_global_priority.VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT'.
 --
--- Unresolved directive in VkDeviceQueueGlobalPriorityCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkDeviceQueueGlobalPriorityCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_global_priority.VkQueueGlobalPriorityEXT',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data DeviceQueueGlobalPriorityCreateInfoEXT = DeviceQueueGlobalPriorityCreateInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "DeviceQueueGlobalPriorityCreateInfoEXT" "pNext"
@@ -106,8 +110,11 @@ instance Zero DeviceQueueGlobalPriorityCreateInfoEXT where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_global_priority.VkDeviceQueueGlobalPriorityCreateInfoEXT'
 type QueueGlobalPriorityEXT = VkQueueGlobalPriorityEXT
+
+
+{-# complete QUEUE_GLOBAL_PRIORITY_LOW_EXT, QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT, QUEUE_GLOBAL_PRIORITY_HIGH_EXT, QUEUE_GLOBAL_PRIORITY_REALTIME_EXT :: QueueGlobalPriorityEXT #-}
 
 
 -- | 'Graphics.Vulkan.C.Extensions.VK_EXT_global_priority.VK_QUEUE_GLOBAL_PRIORITY_LOW_EXT'
@@ -132,3 +139,11 @@ pattern QUEUE_GLOBAL_PRIORITY_HIGH_EXT = VK_QUEUE_GLOBAL_PRIORITY_HIGH_EXT
 -- is the highest priority. Useful for critical tasks.
 pattern QUEUE_GLOBAL_PRIORITY_REALTIME_EXT :: (a ~ QueueGlobalPriorityEXT) => a
 pattern QUEUE_GLOBAL_PRIORITY_REALTIME_EXT = VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT
+
+-- No documentation found for TopLevel "VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME"
+pattern EXT_GLOBAL_PRIORITY_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_GLOBAL_PRIORITY_EXTENSION_NAME = VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_GLOBAL_PRIORITY_SPEC_VERSION"
+pattern EXT_GLOBAL_PRIORITY_SPEC_VERSION :: Integral a => a
+pattern EXT_GLOBAL_PRIORITY_SPEC_VERSION = VK_EXT_GLOBAL_PRIORITY_SPEC_VERSION

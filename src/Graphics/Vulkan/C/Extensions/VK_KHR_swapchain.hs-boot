@@ -94,7 +94,11 @@ data VkDeviceGroupPresentModeFlagBitsKHR
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDeviceGroupPresentCapabilitiesKHR',
+-- 'VkDeviceGroupPresentModeFlagBitsKHR',
+-- 'VkDeviceGroupSwapchainCreateInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_device_group.vkGetDeviceGroupSurfacePresentModes2EXT',
+-- 'vkGetDeviceGroupSurfacePresentModesKHR'
 type VkDeviceGroupPresentModeFlagsKHR = VkDeviceGroupPresentModeFlagBitsKHR
 
 data VkDeviceGroupSwapchainCreateInfoKHR
@@ -114,7 +118,7 @@ data VkSwapchainCreateFlagBitsKHR
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkSwapchainCreateFlagBitsKHR', 'VkSwapchainCreateInfoKHR'
 type VkSwapchainCreateFlagsKHR = VkSwapchainCreateFlagBitsKHR
 
 data VkSwapchainCreateInfoKHR
@@ -177,7 +181,21 @@ data VkSwapchainKHR_T
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkAcquireNextImageInfoKHR', 'VkBindImageMemorySwapchainInfoKHR',
+-- 'VkImageSwapchainCreateInfoKHR', 'VkPresentInfoKHR',
+-- 'VkSwapchainCreateInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.vkAcquireFullScreenExclusiveModeEXT',
+-- 'vkAcquireNextImageKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display_swapchain.vkCreateSharedSwapchainsKHR',
+-- 'vkCreateSwapchainKHR', 'vkDestroySwapchainKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.vkGetPastPresentationTimingGOOGLE',
+-- 'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.vkGetRefreshCycleDurationGOOGLE',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.vkGetSwapchainCounterEXT',
+-- 'vkGetSwapchainImagesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image.vkGetSwapchainStatusKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.vkReleaseFullScreenExclusiveModeEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_hdr_metadata.vkSetHdrMetadataEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_display_native_hdr.vkSetLocalDimmingAMD'
 type VkSwapchainKHR = Ptr VkSwapchainKHR_T
 
 type FN_vkAcquireNextImage2KHR = ("device" ::: VkDevice) -> ("pAcquireInfo" ::: Ptr VkAcquireNextImageInfoKHR) -> ("pImageIndex" ::: Ptr Word32) -> IO VkResult

@@ -19,13 +19,16 @@ module Graphics.Vulkan.Extensions.VK_EXT_validation_features
   , withCStructValidationFeaturesEXT
   , fromCStructValidationFeaturesEXT
   , ValidationFeaturesEXT(..)
-  , pattern VK_EXT_VALIDATION_FEATURES_SPEC_VERSION
-  , pattern VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT
+  , pattern EXT_VALIDATION_FEATURES_EXTENSION_NAME
+  , pattern EXT_VALIDATION_FEATURES_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_VALIDATION_FEATURES_EXT
   ) where
 
 import Data.Function
   ( (&)
+  )
+import Data.String
+  ( IsString
   )
 import Data.Vector
   ( Vector
@@ -54,6 +57,8 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_validation_features
   ( VkValidationFeatureDisableEXT(..)
   , VkValidationFeatureEnableEXT(..)
   , VkValidationFeaturesEXT(..)
+  , pattern VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME
+  , pattern VK_EXT_VALIDATION_FEATURES_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT
   , pattern VK_VALIDATION_FEATURE_DISABLE_ALL_EXT
   , pattern VK_VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT
@@ -73,9 +78,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_validation_features
-  ( pattern VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME
-  , pattern VK_EXT_VALIDATION_FEATURES_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_VALIDATION_FEATURES_EXT
   )
 
 
@@ -83,8 +87,11 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_validation_features
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VkValidationFeaturesEXT'
 type ValidationFeatureDisableEXT = VkValidationFeatureDisableEXT
+
+
+{-# complete VALIDATION_FEATURE_DISABLE_ALL_EXT, VALIDATION_FEATURE_DISABLE_SHADERS_EXT, VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT, VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT, VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT, VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT, VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT :: ValidationFeatureDisableEXT #-}
 
 
 -- | 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VK_VALIDATION_FEATURE_DISABLE_ALL_EXT'
@@ -139,8 +146,11 @@ pattern VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT = VK_VALIDATION_FEATURE_DI
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VkValidationFeaturesEXT'
 type ValidationFeatureEnableEXT = VkValidationFeatureEnableEXT
+
+
+{-# complete VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT, VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT :: ValidationFeatureEnableEXT #-}
 
 
 -- | 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT'
@@ -167,14 +177,28 @@ pattern VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT = VK_VAL
 -- | VkValidationFeaturesEXT - Specify validation features to enable or
 -- disable for a Vulkan instance
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in VkValidationFeaturesEXT.txt -
--- include::{generated}\/validity\/structs\/VkValidationFeaturesEXT.txt[]
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT'
+--
+-- -   If @enabledValidationFeatureCount@ is not @0@,
+--     @pEnabledValidationFeatures@ /must/ be a valid pointer to an array
+--     of @enabledValidationFeatureCount@ valid
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VkValidationFeatureEnableEXT'
+--     values
+--
+-- -   If @disabledValidationFeatureCount@ is not @0@,
+--     @pDisabledValidationFeatures@ /must/ be a valid pointer to an array
+--     of @disabledValidationFeatureCount@ valid
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VkValidationFeatureDisableEXT'
+--     values
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VkValidationFeatureDisableEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VkValidationFeatureEnableEXT'
 data ValidationFeaturesEXT = ValidationFeaturesEXT
   { -- Univalued member elided
   -- No documentation found for Nested "ValidationFeaturesEXT" "pNext"
@@ -209,3 +233,11 @@ instance Zero ValidationFeaturesEXT where
                                Data.Vector.empty
                                Data.Vector.empty
 
+
+-- No documentation found for TopLevel "VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME"
+pattern EXT_VALIDATION_FEATURES_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_VALIDATION_FEATURES_EXTENSION_NAME = VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_VALIDATION_FEATURES_SPEC_VERSION"
+pattern EXT_VALIDATION_FEATURES_SPEC_VERSION :: Integral a => a
+pattern EXT_VALIDATION_FEATURES_SPEC_VERSION = VK_EXT_VALIDATION_FEATURES_SPEC_VERSION

@@ -8,10 +8,10 @@ module Graphics.Vulkan.Extensions.VK_KHR_display_swapchain
   , fromCStructDisplayPresentInfoKHR
   , DisplayPresentInfoKHR(..)
   , createSharedSwapchainsKHR
-  , pattern VK_KHR_DISPLAY_SWAPCHAIN_SPEC_VERSION
-  , pattern VK_KHR_DISPLAY_SWAPCHAIN_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR
-  , pattern VK_ERROR_INCOMPATIBLE_DISPLAY_KHR
+  , pattern KHR_DISPLAY_SWAPCHAIN_EXTENSION_NAME
+  , pattern KHR_DISPLAY_SWAPCHAIN_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR
+  , pattern ERROR_INCOMPATIBLE_DISPLAY_KHR
   ) where
 
 import Control.Exception
@@ -19,6 +19,9 @@ import Control.Exception
   )
 import Control.Monad
   ( when
+  )
+import Data.String
+  ( IsString
   )
 import Data.Vector
   ( Vector
@@ -50,6 +53,8 @@ import Graphics.Vulkan.C.Core10.Core
 import Graphics.Vulkan.C.Extensions.VK_KHR_display_swapchain
   ( VkDisplayPresentInfoKHR(..)
   , vkCreateSharedSwapchainsKHR
+  , pattern VK_KHR_DISPLAY_SWAPCHAIN_EXTENSION_NAME
+  , pattern VK_KHR_DISPLAY_SWAPCHAIN_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR
   )
 import Graphics.Vulkan.Core10.Core
@@ -82,10 +87,9 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_KHR_display_swapchain
-  ( pattern VK_ERROR_INCOMPATIBLE_DISPLAY_KHR
-  , pattern VK_KHR_DISPLAY_SWAPCHAIN_EXTENSION_NAME
-  , pattern VK_KHR_DISPLAY_SWAPCHAIN_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern ERROR_INCOMPATIBLE_DISPLAY_KHR
+  , pattern STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR
   )
 
 
@@ -114,12 +118,16 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_display_swapchain
 --     for the display the present operation targets then @persistent@
 --     /must/ be 'Graphics.Vulkan.C.Core10.Core.VK_FALSE'
 --
--- Unresolved directive in VkDisplayPresentInfoKHR.txt -
--- include::{generated}\/validity\/structs\/VkDisplayPresentInfoKHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_display_swapchain.VK_STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkRect2D',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data DisplayPresentInfoKHR = DisplayPresentInfoKHR
   { -- Univalued member elided
   -- No documentation found for Nested "DisplayPresentInfoKHR" "pNext"
@@ -200,11 +208,65 @@ instance Zero DisplayPresentInfoKHR where
 -- After destroying one or more of the swapchains, the remaining swapchains
 -- and the presentable images /can/ continue to be used.
 --
--- Unresolved directive in vkCreateSharedSwapchainsKHR.txt -
--- include::{generated}\/validity\/protos\/vkCreateSharedSwapchainsKHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pCreateInfos@ /must/ be a valid pointer to an array of
+--     @swapchainCount@ valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR'
+--     structures
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pSwapchains@ /must/ be a valid pointer to an array of
+--     @swapchainCount@
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
+--     handles
+--
+-- -   @swapchainCount@ /must/ be greater than @0@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @pCreateInfos@[].surface /must/ be externally
+--     synchronized
+--
+-- -   Host access to @pCreateInfos@[].oldSwapchain /must/ be externally
+--     synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_display_swapchain.VK_ERROR_INCOMPATIBLE_DISPLAY_KHR'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_DEVICE_LOST'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_SURFACE_LOST_KHR'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
 createSharedSwapchainsKHR :: Device ->  Vector SwapchainCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO (Vector SwapchainKHR)
 createSharedSwapchainsKHR = \(Device device' commandTable) -> \createInfos' -> \allocator -> allocaArray ((Data.Vector.length createInfos')) (\pSwapchains' -> maybeWith (\marshalled -> withCStructAllocationCallbacks marshalled . flip with) allocator (\pAllocator -> withVec withCStructSwapchainCreateInfoKHR createInfos' (\pCreateInfos' -> vkCreateSharedSwapchainsKHR commandTable device' (fromIntegral $ Data.Vector.length createInfos') pCreateInfos' pAllocator pSwapchains' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((Data.Vector.generateM ((Data.Vector.length createInfos')) (peekElemOff pSwapchains')))))))
+
+-- No documentation found for TopLevel "VK_KHR_DISPLAY_SWAPCHAIN_EXTENSION_NAME"
+pattern KHR_DISPLAY_SWAPCHAIN_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern KHR_DISPLAY_SWAPCHAIN_EXTENSION_NAME = VK_KHR_DISPLAY_SWAPCHAIN_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_KHR_DISPLAY_SWAPCHAIN_SPEC_VERSION"
+pattern KHR_DISPLAY_SWAPCHAIN_SPEC_VERSION :: Integral a => a
+pattern KHR_DISPLAY_SWAPCHAIN_SPEC_VERSION = VK_KHR_DISPLAY_SWAPCHAIN_SPEC_VERSION

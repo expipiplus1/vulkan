@@ -9,6 +9,8 @@ module Graphics.Vulkan.Core10.Buffer
   , pattern BUFFER_CREATE_SPARSE_BINDING_BIT
   , pattern BUFFER_CREATE_SPARSE_RESIDENCY_BIT
   , pattern BUFFER_CREATE_SPARSE_ALIASED_BIT
+  , pattern BUFFER_CREATE_PROTECTED_BIT
+  , pattern BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT
   , BufferCreateFlags
   , withCStructBufferCreateInfo
   , fromCStructBufferCreateInfo
@@ -23,6 +25,15 @@ module Graphics.Vulkan.Core10.Buffer
   , pattern BUFFER_USAGE_INDEX_BUFFER_BIT
   , pattern BUFFER_USAGE_VERTEX_BUFFER_BIT
   , pattern BUFFER_USAGE_INDIRECT_BUFFER_BIT
+  , pattern BUFFER_USAGE_RESERVED_15_BIT_KHR
+  , pattern BUFFER_USAGE_RESERVED_16_BIT_KHR
+  , pattern BUFFER_USAGE_RESERVED_13_BIT_KHR
+  , pattern BUFFER_USAGE_RESERVED_14_BIT_KHR
+  , pattern BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT
+  , pattern BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT
+  , pattern BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT
+  , pattern BUFFER_USAGE_RAY_TRACING_BIT_NV
+  , pattern BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_EXT
   , BufferUsageFlags
   , SharingMode
   , pattern SHARING_MODE_EXCLUSIVE
@@ -30,6 +41,10 @@ module Graphics.Vulkan.Core10.Buffer
   , createBuffer
   , destroyBuffer
   , withBuffer
+  , pattern VK_BUFFER_USAGE_RESERVED_13_BIT_KHR
+  , pattern VK_BUFFER_USAGE_RESERVED_14_BIT_KHR
+  , pattern VK_BUFFER_USAGE_RESERVED_15_BIT_KHR
+  , pattern VK_BUFFER_USAGE_RESERVED_16_BIT_KHR
   ) where
 
 import Control.Exception
@@ -97,6 +112,23 @@ import Graphics.Vulkan.C.Core10.Core
   , pattern VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO
   , pattern VK_SUCCESS
   )
+import Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory
+  ( pattern VK_BUFFER_CREATE_PROTECTED_BIT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address
+  ( pattern VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT
+  , pattern VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_conditional_rendering
+  ( pattern VK_BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback
+  ( pattern VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT
+  , pattern VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing
+  ( pattern VK_BUFFER_USAGE_RAY_TRACING_BIT_NV
+  )
 import Graphics.Vulkan.Core10.DeviceInitialization
   ( AllocationCallbacks(..)
   , Device(..)
@@ -136,6 +168,9 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
 type BufferCreateFlagBits = VkBufferCreateFlagBits
 
 
+{-# complete BUFFER_CREATE_SPARSE_BINDING_BIT, BUFFER_CREATE_SPARSE_RESIDENCY_BIT, BUFFER_CREATE_SPARSE_ALIASED_BIT, BUFFER_CREATE_PROTECTED_BIT, BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT :: BufferCreateFlagBits #-}
+
+
 -- | 'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_CREATE_SPARSE_BINDING_BIT'
 -- specifies that the buffer will be backed using sparse memory binding.
 pattern BUFFER_CREATE_SPARSE_BINDING_BIT :: (a ~ BufferCreateFlagBits) => a
@@ -160,6 +195,16 @@ pattern BUFFER_CREATE_SPARSE_RESIDENCY_BIT = VK_BUFFER_CREATE_SPARSE_RESIDENCY_B
 -- flag.
 pattern BUFFER_CREATE_SPARSE_ALIASED_BIT :: (a ~ BufferCreateFlagBits) => a
 pattern BUFFER_CREATE_SPARSE_ALIASED_BIT = VK_BUFFER_CREATE_SPARSE_ALIASED_BIT
+
+
+-- No documentation found for Nested "BufferCreateFlagBits" "BUFFER_CREATE_PROTECTED_BIT"
+pattern BUFFER_CREATE_PROTECTED_BIT :: (a ~ BufferCreateFlagBits) => a
+pattern BUFFER_CREATE_PROTECTED_BIT = VK_BUFFER_CREATE_PROTECTED_BIT
+
+
+-- No documentation found for Nested "BufferCreateFlagBits" "BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT"
+pattern BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT :: (a ~ BufferCreateFlagBits) => a
+pattern BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT = VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT
 
 -- | VkBufferCreateFlags - Bitmask of VkBufferCreateFlagBits
 --
@@ -196,10 +241,8 @@ type BufferCreateFlags = BufferCreateFlagBits
 -- -   If @sharingMode@ is
 --     'Graphics.Vulkan.C.Core10.Buffer.VK_SHARING_MODE_CONCURRENT', each
 --     element of @pQueueFamilyIndices@ /must/ be unique and /must/ be less
---     than @pQueueFamilyPropertyCount@ returned by either
+--     than @pQueueFamilyPropertyCount@ returned by
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceQueueFamilyProperties'
---     or
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceQueueFamilyProperties2'
 --     for the @physicalDevice@ that was used to create @device@
 --
 -- -   If the
@@ -224,45 +267,31 @@ type BufferCreateFlags = BufferCreateFlagBits
 --     it /must/ also contain
 --     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_CREATE_SPARSE_BINDING_BIT'
 --
--- -   If the @pNext@ chain contains an instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryBufferCreateInfo',
---     its @handleTypes@ member /must/ only contain bits that are also in
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalBufferProperties'::@externalMemoryProperties.compatibleHandleTypes@,
---     as returned by
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.vkGetPhysicalDeviceExternalBufferProperties'
---     with @pExternalBufferInfo@->@handleType@ equal to any one of the
---     handle types specified in
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryBufferCreateInfo'::@handleTypes@
+-- == Valid Usage (Implicit)
 --
--- -   If the @pNext@ chain contains an instance of
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO'
+--
+-- -   Each @pNext@ member of any structure (including this one) in the
+--     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
+--     instance of
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VkBufferDeviceAddressCreateInfoEXT',
 --     'Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationBufferCreateInfoNV',
---     and the @dedicatedAllocation@ member of the chained structure is
---     'Graphics.Vulkan.C.Core10.Core.VK_TRUE', then @flags@ /must/ not
---     include
---     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_CREATE_SPARSE_BINDING_BIT',
---     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT',
 --     or
---     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_CREATE_SPARSE_ALIASED_BIT'
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryBufferCreateInfo'
 --
--- -   If
---     'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VkBufferDeviceAddressCreateInfoEXT'::@deviceAddress@
---     is not zero, @flags@ /must/ include
---     'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT'
+-- -   Each @sType@ member in the @pNext@ chain /must/ be unique
 --
--- -   If @flags@ includes
---     'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT',
---     the
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-bufferDeviceAddressCaptureReplay bufferDeviceAddressCaptureReplay>
---     feature /must/ be enabled
+-- -   @flags@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core10.Buffer.VkBufferCreateFlagBits' values
 --
--- -   If @usage@ includes
---     'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_EXT',
---     the
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-bufferDeviceAddress bufferDeviceAddress>
---     feature /must/ be enabled
+-- -   @usage@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core10.Buffer.VkBufferUsageFlagBits' values
 --
--- Unresolved directive in VkBufferCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkBufferCreateInfo.txt[]
+-- -   @usage@ /must/ not be @0@
+--
+-- -   @sharingMode@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Buffer.VkSharingMode' value
 --
 -- = See Also
 --
@@ -323,6 +352,9 @@ instance Zero BufferCreateInfo where
 --
 -- 'Graphics.Vulkan.C.Core10.Buffer.VkBufferUsageFlags'
 type BufferUsageFlagBits = VkBufferUsageFlagBits
+
+
+{-# complete BUFFER_USAGE_TRANSFER_SRC_BIT, BUFFER_USAGE_TRANSFER_DST_BIT, BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT, BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT, BUFFER_USAGE_UNIFORM_BUFFER_BIT, BUFFER_USAGE_STORAGE_BUFFER_BIT, BUFFER_USAGE_INDEX_BUFFER_BIT, BUFFER_USAGE_VERTEX_BUFFER_BIT, BUFFER_USAGE_INDIRECT_BUFFER_BIT, BUFFER_USAGE_RESERVED_15_BIT_KHR, BUFFER_USAGE_RESERVED_16_BIT_KHR, BUFFER_USAGE_RESERVED_13_BIT_KHR, BUFFER_USAGE_RESERVED_14_BIT_KHR, BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT, BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT, BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT, BUFFER_USAGE_RAY_TRACING_BIT_NV, BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_EXT :: BufferUsageFlagBits #-}
 
 
 -- | 'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_TRANSFER_SRC_BIT'
@@ -405,16 +437,55 @@ pattern BUFFER_USAGE_VERTEX_BUFFER_BIT = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT
 -- parameter to
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDrawIndirect',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDrawIndexedIndirect',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.vkCmdDrawMeshTasksIndirectNV',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.vkCmdDrawMeshTasksIndirectCountNV',
 -- or
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDispatchIndirect'.
--- It is also suitable for passing as the @buffer@ member of
--- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkIndirectCommandsTokenNVX',
--- or @sequencesCountBuffer@ or @sequencesIndexBuffer@ member of
--- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkCmdProcessCommandsInfoNVX'
 pattern BUFFER_USAGE_INDIRECT_BUFFER_BIT :: (a ~ BufferUsageFlagBits) => a
 pattern BUFFER_USAGE_INDIRECT_BUFFER_BIT = VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT
+
+
+-- No documentation found for Nested "BufferUsageFlagBits" "BUFFER_USAGE_RESERVED_15_BIT_KHR"
+pattern BUFFER_USAGE_RESERVED_15_BIT_KHR :: (a ~ BufferUsageFlagBits) => a
+pattern BUFFER_USAGE_RESERVED_15_BIT_KHR = VK_BUFFER_USAGE_RESERVED_15_BIT_KHR
+
+
+-- No documentation found for Nested "BufferUsageFlagBits" "BUFFER_USAGE_RESERVED_16_BIT_KHR"
+pattern BUFFER_USAGE_RESERVED_16_BIT_KHR :: (a ~ BufferUsageFlagBits) => a
+pattern BUFFER_USAGE_RESERVED_16_BIT_KHR = VK_BUFFER_USAGE_RESERVED_16_BIT_KHR
+
+
+-- No documentation found for Nested "BufferUsageFlagBits" "BUFFER_USAGE_RESERVED_13_BIT_KHR"
+pattern BUFFER_USAGE_RESERVED_13_BIT_KHR :: (a ~ BufferUsageFlagBits) => a
+pattern BUFFER_USAGE_RESERVED_13_BIT_KHR = VK_BUFFER_USAGE_RESERVED_13_BIT_KHR
+
+
+-- No documentation found for Nested "BufferUsageFlagBits" "BUFFER_USAGE_RESERVED_14_BIT_KHR"
+pattern BUFFER_USAGE_RESERVED_14_BIT_KHR :: (a ~ BufferUsageFlagBits) => a
+pattern BUFFER_USAGE_RESERVED_14_BIT_KHR = VK_BUFFER_USAGE_RESERVED_14_BIT_KHR
+
+
+-- No documentation found for Nested "BufferUsageFlagBits" "BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT"
+pattern BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT :: (a ~ BufferUsageFlagBits) => a
+pattern BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT = VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_BUFFER_BIT_EXT
+
+
+-- No documentation found for Nested "BufferUsageFlagBits" "BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT"
+pattern BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT :: (a ~ BufferUsageFlagBits) => a
+pattern BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT = VK_BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT
+
+
+-- No documentation found for Nested "BufferUsageFlagBits" "BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT"
+pattern BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT :: (a ~ BufferUsageFlagBits) => a
+pattern BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT = VK_BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT
+
+
+-- No documentation found for Nested "BufferUsageFlagBits" "BUFFER_USAGE_RAY_TRACING_BIT_NV"
+pattern BUFFER_USAGE_RAY_TRACING_BIT_NV :: (a ~ BufferUsageFlagBits) => a
+pattern BUFFER_USAGE_RAY_TRACING_BIT_NV = VK_BUFFER_USAGE_RAY_TRACING_BIT_NV
+
+
+-- No documentation found for Nested "BufferUsageFlagBits" "BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_EXT"
+pattern BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_EXT :: (a ~ BufferUsageFlagBits) => a
+pattern BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_EXT = VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_EXT
 
 -- | VkBufferUsageFlags - Bitmask of VkBufferUsageFlagBits
 --
@@ -477,8 +548,13 @@ type BufferUsageFlags = BufferUsageFlagBits
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Buffer.VkBufferCreateInfo',
--- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'
+-- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VkPhysicalDeviceImageDrmFormatModifierInfoEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR'
 type SharingMode = VkSharingMode
+
+
+{-# complete SHARING_MODE_EXCLUSIVE, SHARING_MODE_CONCURRENT :: SharingMode #-}
 
 
 -- | 'Graphics.Vulkan.C.Core10.Buffer.VK_SHARING_MODE_EXCLUSIVE' specifies
@@ -522,8 +598,33 @@ pattern SHARING_MODE_CONCURRENT = VK_SHARING_MODE_CONCURRENT
 --     valid sparse resources on the device to exceed
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@sparseAddressSpaceSize@
 --
--- Unresolved directive in vkCreateBuffer.txt -
--- include::{generated}\/validity\/protos\/vkCreateBuffer.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Core10.Buffer.VkBufferCreateInfo' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pBuffer@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VK_ERROR_INVALID_DEVICE_ADDRESS_EXT'
 --
 -- = See Also
 --
@@ -563,8 +664,27 @@ createBuffer = \(Device device' commandTable) -> \createInfo' -> \allocator -> a
 --     were provided when @buffer@ was created, @pAllocator@ /must/ be
 --     @NULL@
 --
--- Unresolved directive in vkDestroyBuffer.txt -
--- include::{generated}\/validity\/protos\/vkDestroyBuffer.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   If @buffer@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @buffer@ /must/
+--     be a valid 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer'
+--     handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   If @buffer@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @buffer@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -582,3 +702,19 @@ withBuffer
 withBuffer device bufferCreateInfo allocationCallbacks = bracket
   (createBuffer device bufferCreateInfo allocationCallbacks)
   (\o -> destroyBuffer device o allocationCallbacks)
+
+-- No documentation found for Nested "VkBufferUsageFlagBits" "VK_BUFFER_USAGE_RESERVED_13_BIT_KHR"
+pattern VK_BUFFER_USAGE_RESERVED_13_BIT_KHR :: VkBufferUsageFlagBits
+pattern VK_BUFFER_USAGE_RESERVED_13_BIT_KHR = VkBufferUsageFlagBits 0x00002000
+
+-- No documentation found for Nested "VkBufferUsageFlagBits" "VK_BUFFER_USAGE_RESERVED_14_BIT_KHR"
+pattern VK_BUFFER_USAGE_RESERVED_14_BIT_KHR :: VkBufferUsageFlagBits
+pattern VK_BUFFER_USAGE_RESERVED_14_BIT_KHR = VkBufferUsageFlagBits 0x00004000
+
+-- No documentation found for Nested "VkBufferUsageFlagBits" "VK_BUFFER_USAGE_RESERVED_15_BIT_KHR"
+pattern VK_BUFFER_USAGE_RESERVED_15_BIT_KHR :: VkBufferUsageFlagBits
+pattern VK_BUFFER_USAGE_RESERVED_15_BIT_KHR = VkBufferUsageFlagBits 0x00008000
+
+-- No documentation found for Nested "VkBufferUsageFlagBits" "VK_BUFFER_USAGE_RESERVED_16_BIT_KHR"
+pattern VK_BUFFER_USAGE_RESERVED_16_BIT_KHR :: VkBufferUsageFlagBits
+pattern VK_BUFFER_USAGE_RESERVED_16_BIT_KHR = VkBufferUsageFlagBits 0x00010000

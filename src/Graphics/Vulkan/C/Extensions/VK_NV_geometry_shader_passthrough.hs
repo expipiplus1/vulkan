@@ -17,7 +17,7 @@ import Data.String
 
 
 -- No documentation found for TopLevel "VK_NV_GEOMETRY_SHADER_PASSTHROUGH_EXTENSION_NAME"
-pattern VK_NV_GEOMETRY_SHADER_PASSTHROUGH_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_NV_GEOMETRY_SHADER_PASSTHROUGH_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_NV_GEOMETRY_SHADER_PASSTHROUGH_EXTENSION_NAME = "VK_NV_geometry_shader_passthrough"
 
 -- No documentation found for TopLevel "VK_NV_GEOMETRY_SHADER_PASSTHROUGH_SPEC_VERSION"

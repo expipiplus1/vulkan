@@ -54,15 +54,15 @@ import Graphics.Vulkan.C.Core10.Core
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable the
 -- feature.
 --
--- Unresolved directive in
--- VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV = VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV
-  { -- No documentation found for Nested "VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV" "sType"
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_REPRESENTATIVE_FRAGMENT_TEST_FEATURES_NV'
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV" "pNext"
   vkPNext :: Ptr ()
@@ -102,15 +102,15 @@ instance Zero VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV where
 -- are not enabled in the active fragment shader, the representative
 -- fragment shader test has no effect, even if enabled.
 --
--- Unresolved directive in
--- VkPipelineRepresentativeFragmentTestStateCreateInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkPipelineRepresentativeFragmentTestStateCreateInfoNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPipelineRepresentativeFragmentTestStateCreateInfoNV = VkPipelineRepresentativeFragmentTestStateCreateInfoNV
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PIPELINE_REPRESENTATIVE_FRAGMENT_TEST_STATE_CREATE_INFO_NV'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -136,7 +136,7 @@ instance Zero VkPipelineRepresentativeFragmentTestStateCreateInfoNV where
                                                                zero
 
 -- No documentation found for TopLevel "VK_NV_REPRESENTATIVE_FRAGMENT_TEST_EXTENSION_NAME"
-pattern VK_NV_REPRESENTATIVE_FRAGMENT_TEST_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_NV_REPRESENTATIVE_FRAGMENT_TEST_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_NV_REPRESENTATIVE_FRAGMENT_TEST_EXTENSION_NAME = "VK_NV_representative_fragment_test"
 
 -- No documentation found for TopLevel "VK_NV_REPRESENTATIVE_FRAGMENT_TEST_SPEC_VERSION"

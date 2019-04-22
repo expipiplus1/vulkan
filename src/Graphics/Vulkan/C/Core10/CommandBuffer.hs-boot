@@ -100,7 +100,8 @@ data VkQueryControlFlagBits
 -- = See Also
 --
 -- 'VkCommandBufferInheritanceInfo', 'VkQueryControlFlagBits',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBeginQuery'
+-- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBeginQuery',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdBeginQueryIndexedEXT'
 type VkQueryControlFlags = VkQueryControlFlagBits
 
 type FN_vkAllocateCommandBuffers = ("device" ::: VkDevice) -> ("pAllocateInfo" ::: Ptr VkCommandBufferAllocateInfo) -> ("pCommandBuffers" ::: Ptr VkCommandBuffer) -> IO VkResult

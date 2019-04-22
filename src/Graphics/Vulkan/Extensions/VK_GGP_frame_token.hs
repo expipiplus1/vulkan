@@ -7,11 +7,14 @@ module Graphics.Vulkan.Extensions.VK_GGP_frame_token
   ( withCStructPresentFrameTokenGGP
   , fromCStructPresentFrameTokenGGP
   , PresentFrameTokenGGP(..)
-  , pattern VK_GGP_FRAME_TOKEN_SPEC_VERSION
-  , pattern VK_GGP_FRAME_TOKEN_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP
+  , pattern GGP_FRAME_TOKEN_EXTENSION_NAME
+  , pattern GGP_FRAME_TOKEN_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Foreign.Marshal.Utils
   ( maybePeek
   , maybeWith
@@ -27,6 +30,8 @@ import Graphics.Vulkan.C.Core10.Core
 import Graphics.Vulkan.C.Extensions.VK_GGP_frame_token
   ( VkPresentFrameTokenGGP(..)
   , GgpFrameToken
+  , pattern VK_GGP_FRAME_TOKEN_EXTENSION_NAME
+  , pattern VK_GGP_FRAME_TOKEN_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP
   )
 import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
@@ -34,23 +39,19 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_GGP_frame_token
-  ( pattern VK_GGP_FRAME_TOKEN_EXTENSION_NAME
-  , pattern VK_GGP_FRAME_TOKEN_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP
   )
 
 
 
 -- | VkPresentFrameTokenGGP - The Google Games Platform frame token
 --
--- == Valid Usage
---
--- Unresolved directive in VkPresentFrameTokenGGP.txt -
--- include::{generated}\/validity\/structs\/VkPresentFrameTokenGGP.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PresentFrameTokenGGP = PresentFrameTokenGGP
   { -- Univalued member elided
   -- No documentation found for Nested "PresentFrameTokenGGP" "pNext"
@@ -77,3 +78,11 @@ instance Zero PresentFrameTokenGGP where
   zero = PresentFrameTokenGGP Nothing
                               zero
 
+
+-- No documentation found for TopLevel "VK_GGP_FRAME_TOKEN_EXTENSION_NAME"
+pattern GGP_FRAME_TOKEN_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern GGP_FRAME_TOKEN_EXTENSION_NAME = VK_GGP_FRAME_TOKEN_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_GGP_FRAME_TOKEN_SPEC_VERSION"
+pattern GGP_FRAME_TOKEN_SPEC_VERSION :: Integral a => a
+pattern GGP_FRAME_TOKEN_SPEC_VERSION = VK_GGP_FRAME_TOKEN_SPEC_VERSION

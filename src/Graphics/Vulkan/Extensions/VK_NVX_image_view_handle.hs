@@ -8,11 +8,14 @@ module Graphics.Vulkan.Extensions.VK_NVX_image_view_handle
   , fromCStructImageViewHandleInfoNVX
   , ImageViewHandleInfoNVX(..)
   , getImageViewHandleNVX
-  , pattern VK_NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION
-  , pattern VK_NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX
+  , pattern NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME
+  , pattern NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Data.Word
   ( Word32
   )
@@ -32,6 +35,8 @@ import Graphics.Vulkan.C.Core10.Core
 import Graphics.Vulkan.C.Extensions.VK_NVX_image_view_handle
   ( VkImageViewHandleInfoNVX(..)
   , vkGetImageViewHandleNVX
+  , pattern VK_NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME
+  , pattern VK_NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX
   )
 import Graphics.Vulkan.Core10.DescriptorSet
@@ -51,9 +56,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_NVX_image_view_handle
-  ( pattern VK_NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME
-  , pattern VK_NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX
   )
 
 
@@ -89,12 +93,35 @@ import Graphics.Vulkan.C.Extensions.VK_NVX_image_view_handle
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_STORAGE_BIT'
 --     usage bit set
 --
--- Unresolved directive in VkImageViewHandleInfoNVX.txt -
--- include::{generated}\/validity\/structs\/VkImageViewHandleInfoNVX.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_NVX_image_view_handle.VK_STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @imageView@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.ImageView.VkImageView' handle
+--
+-- -   @descriptorType@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorType' value
+--
+-- -   If @sampler@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @sampler@
+--     /must/ be a valid 'Graphics.Vulkan.C.Core10.Sampler.VkSampler'
+--     handle
+--
+-- -   Both of @imageView@, and @sampler@ that are valid handles /must/
+--     have been created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorType',
+-- 'Graphics.Vulkan.C.Core10.ImageView.VkImageView',
+-- 'Graphics.Vulkan.C.Core10.Sampler.VkSampler',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_image_view_handle.vkGetImageViewHandleNVX'
 data ImageViewHandleInfoNVX = ImageViewHandleInfoNVX
   { -- Univalued member elided
   -- No documentation found for Nested "ImageViewHandleInfoNVX" "pNext"
@@ -140,13 +167,19 @@ instance Zero ImageViewHandleInfoNVX where
 --
 -- -   @pInfo@ describes the image view to query and type of handle.
 --
--- = Description
---
--- Unresolved directive in vkGetImageViewHandleNVX.txt -
--- include::{generated}\/validity\/protos\/vkGetImageViewHandleNVX.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_image_view_handle.VkImageViewHandleInfoNVX'
 getImageViewHandleNVX :: Device ->  ImageViewHandleInfoNVX ->  IO (Word32)
 getImageViewHandleNVX = \(Device device' commandTable) -> \info' -> (\marshalled -> withCStructImageViewHandleInfoNVX marshalled . flip with) info' (\pInfo' -> vkGetImageViewHandleNVX commandTable device' pInfo' >>= (\ret -> pure ret))
+
+-- No documentation found for TopLevel "VK_NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME"
+pattern NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME = VK_NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION"
+pattern NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION :: Integral a => a
+pattern NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION = VK_NVX_IMAGE_VIEW_HANDLE_SPEC_VERSION

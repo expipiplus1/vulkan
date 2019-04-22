@@ -122,24 +122,17 @@ instance Read VkShaderModuleCreateFlags where
 --
 -- -   @codeSize@ /must/ be greater than 0
 --
--- -   If @pCode@ points to SPIR-V code, @codeSize@ /must/ be a multiple of
---     4
+-- -   @codeSize@ /must/ be a multiple of 4
 --
--- -   @pCode@ /must/ point to either valid SPIR-V code, formatted and
---     packed as described by the
+-- -   @pCode@ /must/ point to valid SPIR-V code, formatted and packed as
+--     described by the
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#spirv-spec Khronos SPIR-V Specification>
---     or valid GLSL code which /must/ be written to the
---     @GL_KHR_vulkan_glsl@ extension specification
 --
--- -   If @pCode@ points to SPIR-V code, that code /must/ adhere to the
---     validation rules described by the
+-- -   @pCode@ /must/ adhere to the validation rules described by the
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#spirvenv-module-validation Validation Rules within a Module>
 --     section of the
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#spirvenv-capabilities SPIR-V Environment>
 --     appendix
---
--- -   If @pCode@ points to GLSL code, it /must/ be valid GLSL code written
---     to the @GL_KHR_vulkan_glsl@ GLSL extension specification
 --
 -- -   @pCode@ /must/ declare the @Shader@ capability for SPIR-V code
 --
@@ -155,8 +148,18 @@ instance Read VkShaderModuleCreateFlags where
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#spirvenv-capabilities-table SPIR-V Environment>
 --     appendix, the corresponding feature(s) /must/ be enabled.
 --
--- Unresolved directive in VkShaderModuleCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkShaderModuleCreateInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO'
+--
+-- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkShaderModuleValidationCacheCreateInfoEXT'
+--
+-- -   @flags@ /must/ be @0@
+--
+-- -   @pCode@ /must/ be a valid pointer to an array of
+--     \(\textrm{codeSize} \over 4\) @uint32_t@ values
 --
 -- = See Also
 --
@@ -223,15 +226,33 @@ instance Zero VkShaderModuleCreateInfo where
 -- and
 -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#pipelines-graphics Graphics Pipelines>.
 --
--- If the shader stage fails to compile
--- 'Graphics.Vulkan.C.Extensions.VK_NV_glsl_shader.VK_ERROR_INVALID_SHADER_NV'
--- will be generated and the compile log will be reported back to the
--- application by
--- @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.1-extensions\/html\/vkspec.html#VK_EXT_debug_report@
--- if enabled.
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCreateShaderModule.txt -
--- include::{generated}\/validity\/protos\/vkCreateShaderModule.txt[]
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'VkShaderModuleCreateInfo' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pShaderModule@ /must/ be a valid pointer to a 'VkShaderModule'
+--     handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_NV_glsl_shader.VK_ERROR_INVALID_SHADER_NV'
 --
 -- = See Also
 --
@@ -287,8 +308,26 @@ type PFN_vkCreateShaderModule = FunPtr FN_vkCreateShaderModule
 --     were provided when @shaderModule@ was created, @pAllocator@ /must/
 --     be @NULL@
 --
--- Unresolved directive in vkDestroyShaderModule.txt -
--- include::{generated}\/validity\/protos\/vkDestroyShaderModule.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   If @shaderModule@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @shaderModule@
+--     /must/ be a valid 'VkShaderModule' handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   If @shaderModule@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @shaderModule@ /must/ be externally synchronized
 --
 -- = See Also
 --

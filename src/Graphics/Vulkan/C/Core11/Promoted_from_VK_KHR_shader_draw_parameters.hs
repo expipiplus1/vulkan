@@ -33,39 +33,11 @@ import Graphics.Vulkan.NamedType
   )
 
 
--- | VkPhysicalDeviceShaderDrawParameterFeatures - Structure describing
--- shader draw parameter features that can be supported by an
--- implementation
---
--- = Description
---
--- If the 'VkPhysicalDeviceShaderDrawParameterFeatures' structure is
--- included in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2',
--- it is filled with a value indicating whether the feature is supported.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkPhysicalDeviceShaderDrawParameterFeatures"
 type VkPhysicalDeviceShaderDrawParameterFeatures = VkPhysicalDeviceShaderDrawParametersFeatures
 
 
--- | VkPhysicalDeviceShaderDrawParameterFeatures - Structure describing
--- shader draw parameter features that can be supported by an
--- implementation
---
--- = Description
---
--- If the 'VkPhysicalDeviceShaderDrawParameterFeatures' structure is
--- included in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2',
--- it is filled with a value indicating whether the feature is supported.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkPhysicalDeviceShaderDrawParameterFeatures"
 pattern VkPhysicalDeviceShaderDrawParameterFeatures :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("shaderDrawParameters" ::: VkBool32) -> VkPhysicalDeviceShaderDrawParameterFeatures
 pattern VkPhysicalDeviceShaderDrawParameterFeatures vkSType vkPNext vkShaderDrawParameters = VkPhysicalDeviceShaderDrawParametersFeatures vkSType vkPNext vkShaderDrawParameters
 
@@ -80,16 +52,15 @@ pattern VkPhysicalDeviceShaderDrawParameterFeatures vkSType vkPNext vkShaderDraw
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2',
 -- it is filled with a value indicating whether the feature is supported.
 --
--- Unresolved directive in VkPhysicalDeviceShaderDrawParametersFeatures.txt
--- -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceShaderDrawParametersFeatures.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceShaderDrawParametersFeatures = VkPhysicalDeviceShaderDrawParametersFeatures
-  { -- No documentation found for Nested "VkPhysicalDeviceShaderDrawParametersFeatures" "sType"
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES'
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceShaderDrawParametersFeatures" "pNext"
   vkPNext :: Ptr ()

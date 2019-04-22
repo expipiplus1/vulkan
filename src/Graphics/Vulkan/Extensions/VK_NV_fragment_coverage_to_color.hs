@@ -8,14 +8,17 @@ module Graphics.Vulkan.Extensions.VK_NV_fragment_coverage_to_color
   , withCStructPipelineCoverageToColorStateCreateInfoNV
   , fromCStructPipelineCoverageToColorStateCreateInfoNV
   , PipelineCoverageToColorStateCreateInfoNV(..)
-  , pattern VK_NV_FRAGMENT_COVERAGE_TO_COLOR_SPEC_VERSION
-  , pattern VK_NV_FRAGMENT_COVERAGE_TO_COLOR_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_TO_COLOR_STATE_CREATE_INFO_NV
+  , pattern NV_FRAGMENT_COVERAGE_TO_COLOR_EXTENSION_NAME
+  , pattern NV_FRAGMENT_COVERAGE_TO_COLOR_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PIPELINE_COVERAGE_TO_COLOR_STATE_CREATE_INFO_NV
   ) where
 
 import Data.Maybe
   ( fromMaybe
   , maybe
+  )
+import Data.String
+  ( IsString
   )
 import Data.Word
   ( Word32
@@ -37,6 +40,8 @@ import Graphics.Vulkan.C.Core10.Core
 import Graphics.Vulkan.C.Extensions.VK_NV_fragment_coverage_to_color
   ( VkPipelineCoverageToColorStateCreateFlagsNV(..)
   , VkPipelineCoverageToColorStateCreateInfoNV(..)
+  , pattern VK_NV_FRAGMENT_COVERAGE_TO_COLOR_EXTENSION_NAME
+  , pattern VK_NV_FRAGMENT_COVERAGE_TO_COLOR_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_TO_COLOR_STATE_CREATE_INFO_NV
   )
 import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
@@ -44,9 +49,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_NV_fragment_coverage_to_color
-  ( pattern VK_NV_FRAGMENT_COVERAGE_TO_COLOR_EXTENSION_NAME
-  , pattern VK_NV_FRAGMENT_COVERAGE_TO_COLOR_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PIPELINE_COVERAGE_TO_COLOR_STATE_CREATE_INFO_NV
   )
 
 
@@ -60,8 +64,11 @@ import Graphics.Vulkan.C.Extensions.VK_NV_fragment_coverage_to_color
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_fragment_coverage_to_color.VkPipelineCoverageToColorStateCreateInfoNV'
 type PipelineCoverageToColorStateCreateFlagsNV = VkPipelineCoverageToColorStateCreateFlagsNV
+
+
+-- No complete pragma for PipelineCoverageToColorStateCreateFlagsNV as it has no patterns
 
 
 -- | VkPipelineCoverageToColorStateCreateInfoNV - Structure specifying
@@ -113,12 +120,18 @@ type PipelineCoverageToColorStateCreateFlagsNV = VkPipelineCoverageToColorStateC
 --     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R32_UINT', or
 --     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R32_SINT'
 --
--- Unresolved directive in VkPipelineCoverageToColorStateCreateInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkPipelineCoverageToColorStateCreateInfoNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_NV_fragment_coverage_to_color.VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_TO_COLOR_STATE_CREATE_INFO_NV'
+--
+-- -   @flags@ /must/ be @0@
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_fragment_coverage_to_color.VkPipelineCoverageToColorStateCreateFlagsNV',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PipelineCoverageToColorStateCreateInfoNV = PipelineCoverageToColorStateCreateInfoNV
   { -- Univalued member elided
   -- No documentation found for Nested "PipelineCoverageToColorStateCreateInfoNV" "pNext"
@@ -151,3 +164,11 @@ instance Zero PipelineCoverageToColorStateCreateInfoNV where
                                                   zero
                                                   Nothing
 
+
+-- No documentation found for TopLevel "VK_NV_FRAGMENT_COVERAGE_TO_COLOR_EXTENSION_NAME"
+pattern NV_FRAGMENT_COVERAGE_TO_COLOR_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern NV_FRAGMENT_COVERAGE_TO_COLOR_EXTENSION_NAME = VK_NV_FRAGMENT_COVERAGE_TO_COLOR_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_NV_FRAGMENT_COVERAGE_TO_COLOR_SPEC_VERSION"
+pattern NV_FRAGMENT_COVERAGE_TO_COLOR_SPEC_VERSION :: Integral a => a
+pattern NV_FRAGMENT_COVERAGE_TO_COLOR_SPEC_VERSION = VK_NV_FRAGMENT_COVERAGE_TO_COLOR_SPEC_VERSION

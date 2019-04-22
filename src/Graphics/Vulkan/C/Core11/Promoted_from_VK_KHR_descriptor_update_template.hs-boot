@@ -45,8 +45,13 @@ data VkDescriptorUpdateTemplate_T
 --
 -- = See Also
 --
--- 'vkCreateDescriptorUpdateTemplate', 'vkDestroyDescriptorUpdateTemplate',
--- 'vkUpdateDescriptorSetWithTemplate'
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.vkCmdPushDescriptorSetWithTemplateKHR',
+-- 'vkCreateDescriptorUpdateTemplate',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template.vkCreateDescriptorUpdateTemplateKHR',
+-- 'vkDestroyDescriptorUpdateTemplate',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template.vkDestroyDescriptorUpdateTemplateKHR',
+-- 'vkUpdateDescriptorSetWithTemplate',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template.vkUpdateDescriptorSetWithTemplateKHR'
 type VkDescriptorUpdateTemplate = Ptr VkDescriptorUpdateTemplate_T
 
 data VkDescriptorUpdateTemplateCreateFlags

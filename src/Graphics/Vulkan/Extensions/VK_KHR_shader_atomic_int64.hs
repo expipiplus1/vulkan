@@ -7,11 +7,14 @@ module Graphics.Vulkan.Extensions.VK_KHR_shader_atomic_int64
   ( withCStructPhysicalDeviceShaderAtomicInt64FeaturesKHR
   , fromCStructPhysicalDeviceShaderAtomicInt64FeaturesKHR
   , PhysicalDeviceShaderAtomicInt64FeaturesKHR(..)
-  , pattern VK_KHR_SHADER_ATOMIC_INT64_SPEC_VERSION
-  , pattern VK_KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES_KHR
+  , pattern KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME
+  , pattern KHR_SHADER_ATOMIC_INT64_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES_KHR
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Foreign.Marshal.Utils
   ( maybePeek
   , maybeWith
@@ -26,6 +29,8 @@ import Graphics.Vulkan.C.Core10.Core
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_shader_atomic_int64
   ( VkPhysicalDeviceShaderAtomicInt64FeaturesKHR(..)
+  , pattern VK_KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME
+  , pattern VK_KHR_SHADER_ATOMIC_INT64_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES_KHR
   )
 import Graphics.Vulkan.Core10.Core
@@ -37,9 +42,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_KHR_shader_atomic_int64
-  ( pattern VK_KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME
-  , pattern VK_KHR_SHADER_ATOMIC_INT64_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES_KHR
   )
 
 
@@ -47,15 +51,12 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_shader_atomic_int64
 -- | VkPhysicalDeviceShaderAtomicInt64FeaturesKHR - Structure describing
 -- features supported by VK_KHR_shader_atomic_int64
 --
--- = Description
---
--- Unresolved directive in VkPhysicalDeviceShaderAtomicInt64FeaturesKHR.txt
--- -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceShaderAtomicInt64FeaturesKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceShaderAtomicInt64FeaturesKHR = PhysicalDeviceShaderAtomicInt64FeaturesKHR
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceShaderAtomicInt64FeaturesKHR" "pNext"
@@ -86,3 +87,11 @@ instance Zero PhysicalDeviceShaderAtomicInt64FeaturesKHR where
                                                     False
                                                     False
 
+
+-- No documentation found for TopLevel "VK_KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME"
+pattern KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME = VK_KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_KHR_SHADER_ATOMIC_INT64_SPEC_VERSION"
+pattern KHR_SHADER_ATOMIC_INT64_SPEC_VERSION :: Integral a => a
+pattern KHR_SHADER_ATOMIC_INT64_SPEC_VERSION = VK_KHR_SHADER_ATOMIC_INT64_SPEC_VERSION

@@ -7,6 +7,21 @@
 module Graphics.Vulkan.Extensions.VK_KHR_surface
   ( ColorSpaceKHR
   , pattern COLOR_SPACE_SRGB_NONLINEAR_KHR
+  , pattern COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT
+  , pattern COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT
+  , pattern COLOR_SPACE_DCI_P3_LINEAR_EXT
+  , pattern COLOR_SPACE_DCI_P3_NONLINEAR_EXT
+  , pattern COLOR_SPACE_BT709_LINEAR_EXT
+  , pattern COLOR_SPACE_BT709_NONLINEAR_EXT
+  , pattern COLOR_SPACE_BT2020_LINEAR_EXT
+  , pattern COLOR_SPACE_HDR10_ST2084_EXT
+  , pattern COLOR_SPACE_DOLBYVISION_EXT
+  , pattern COLOR_SPACE_HDR10_HLG_EXT
+  , pattern COLOR_SPACE_ADOBERGB_LINEAR_EXT
+  , pattern COLOR_SPACE_ADOBERGB_NONLINEAR_EXT
+  , pattern COLOR_SPACE_PASS_THROUGH_EXT
+  , pattern COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT
+  , pattern COLOR_SPACE_DISPLAY_NATIVE_AMD
   , CompositeAlphaFlagBitsKHR
   , pattern COMPOSITE_ALPHA_OPAQUE_BIT_KHR
   , pattern COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR
@@ -18,6 +33,8 @@ module Graphics.Vulkan.Extensions.VK_KHR_surface
   , pattern PRESENT_MODE_MAILBOX_KHR
   , pattern PRESENT_MODE_FIFO_KHR
   , pattern PRESENT_MODE_FIFO_RELAXED_KHR
+  , pattern PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR
+  , pattern PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR
   , withCStructSurfaceCapabilitiesKHR
   , fromCStructSurfaceCapabilitiesKHR
   , SurfaceCapabilitiesKHR(..)
@@ -45,11 +62,11 @@ module Graphics.Vulkan.Extensions.VK_KHR_surface
   , getPhysicalDeviceSurfacePresentModesKHR
   , getAllPhysicalDeviceSurfacePresentModesKHR
   , getPhysicalDeviceSurfaceSupportKHR
-  , pattern VK_KHR_SURFACE_SPEC_VERSION
-  , pattern VK_KHR_SURFACE_EXTENSION_NAME
-  , pattern VK_ERROR_SURFACE_LOST_KHR
-  , pattern VK_ERROR_NATIVE_WINDOW_IN_USE_KHR
-  , pattern VK_OBJECT_TYPE_SURFACE_KHR
+  , pattern KHR_SURFACE_EXTENSION_NAME
+  , pattern KHR_SURFACE_SPEC_VERSION
+  , pattern ERROR_SURFACE_LOST_KHR
+  , pattern ERROR_NATIVE_WINDOW_IN_USE_KHR
+  , pattern OBJECT_TYPE_SURFACE_KHR
   ) where
 
 import Control.Exception
@@ -58,6 +75,9 @@ import Control.Exception
 import Control.Monad
   ( (<=<)
   , when
+  )
+import Data.String
+  ( IsString
   )
 import Data.Vector
   ( Vector
@@ -92,6 +112,29 @@ import Graphics.Vulkan.C.Core10.Core
   , Zero(..)
   , pattern VK_SUCCESS
   )
+import Graphics.Vulkan.C.Extensions.VK_AMD_display_native_hdr
+  ( pattern VK_COLOR_SPACE_DISPLAY_NATIVE_AMD
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_swapchain_colorspace
+  ( pattern VK_COLOR_SPACE_ADOBERGB_LINEAR_EXT
+  , pattern VK_COLOR_SPACE_ADOBERGB_NONLINEAR_EXT
+  , pattern VK_COLOR_SPACE_BT2020_LINEAR_EXT
+  , pattern VK_COLOR_SPACE_BT709_LINEAR_EXT
+  , pattern VK_COLOR_SPACE_BT709_NONLINEAR_EXT
+  , pattern VK_COLOR_SPACE_DCI_P3_LINEAR_EXT
+  , pattern VK_COLOR_SPACE_DCI_P3_NONLINEAR_EXT
+  , pattern VK_COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT
+  , pattern VK_COLOR_SPACE_DOLBYVISION_EXT
+  , pattern VK_COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT
+  , pattern VK_COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT
+  , pattern VK_COLOR_SPACE_HDR10_HLG_EXT
+  , pattern VK_COLOR_SPACE_HDR10_ST2084_EXT
+  , pattern VK_COLOR_SPACE_PASS_THROUGH_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image
+  ( pattern VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR
+  , pattern VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR
+  )
 import Graphics.Vulkan.C.Extensions.VK_KHR_surface
   ( VkColorSpaceKHR(..)
   , VkCompositeAlphaFlagBitsKHR(..)
@@ -110,6 +153,8 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_surface
   , pattern VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR
   , pattern VK_COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR
   , pattern VK_COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR
+  , pattern VK_KHR_SURFACE_EXTENSION_NAME
+  , pattern VK_KHR_SURFACE_SPEC_VERSION
   , pattern VK_PRESENT_MODE_FIFO_KHR
   , pattern VK_PRESENT_MODE_FIFO_RELAXED_KHR
   , pattern VK_PRESENT_MODE_IMMEDIATE_KHR
@@ -143,89 +188,104 @@ import Graphics.Vulkan.Core10.Pipeline
 import Graphics.Vulkan.Exception
   ( VulkanException(..)
   )
-import Graphics.Vulkan.C.Extensions.VK_KHR_surface
-  ( pattern VK_ERROR_NATIVE_WINDOW_IN_USE_KHR
-  , pattern VK_ERROR_SURFACE_LOST_KHR
-  , pattern VK_KHR_SURFACE_EXTENSION_NAME
-  , pattern VK_KHR_SURFACE_SPEC_VERSION
-  , pattern VK_OBJECT_TYPE_SURFACE_KHR
+import Graphics.Vulkan.Core10.Core
+  ( pattern ERROR_NATIVE_WINDOW_IN_USE_KHR
+  , pattern ERROR_SURFACE_LOST_KHR
+  , pattern OBJECT_TYPE_SURFACE_KHR
   )
 
 
 -- | VkColorSpaceKHR - supported color space of the presentation engine
 --
--- = Description
---
--- The color components of Non-linear color space swap chain images have
--- had the appropriate transfer function applied. Vulkan requires that all
--- implementations support the sRGB transfer function when using an SRGB
--- pixel format. Other transfer functions, such as SMPTE 170M or SMPTE2084,
--- /must/ not be performed by the implementation, but /can/ be performed by
--- the application shader. This extension defines enums for
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkColorSpaceKHR' that
--- correspond to the following color spaces:
---
--- > +----------+----------+----------+----------+----------+-----------+
--- > | Name     | Red      | Green    | Blue     | White-po | Transfer  |
--- > |          | Primary  | Primary  | Primary  | int      | function  |
--- > +==========+==========+==========+==========+==========+===========+
--- > | DCI-P3   | 0.680,   | 0.265,   | 0.150,   | 0.3127,  | Gamma 2.6 |
--- > |          | 0.320    | 0.690    | 0.060    | 0.3290   |           |
--- > |          |          |          |          | (D65)    |           |
--- > +----------+----------+----------+----------+----------+-----------+
--- > | Display- | 0.680,   | 0.265,   | 0.150,   | 0.3127,  | Display-P |
--- > | P3       | 0.320    | 0.690    | 0.060    | 0.3290   | 3         |
--- > |          |          |          |          | (D65)    |           |
--- > +----------+----------+----------+----------+----------+-----------+
--- > | BT709    | 0.640,   | 0.300,   | 0.150,   | 0.3127,  | SMPTE     |
--- > |          | 0.330    | 0.600    | 0.060    | 0.3290   | 170M      |
--- > |          |          |          |          | (D65)    |           |
--- > +----------+----------+----------+----------+----------+-----------+
--- > | sRGB     | 0.640,   | 0.300,   | 0.150,   | 0.3127,  | sRGB      |
--- > |          | 0.330    | 0.600    | 0.060    | 0.3290   |           |
--- > |          |          |          |          | (D65)    |           |
--- > +----------+----------+----------+----------+----------+-----------+
--- > | extended | 0.640,   | 0.300,   | 0.150,   | 0.3127,  | extended  |
--- > | sRGB     | 0.330    | 0.600    | 0.060    | 0.3290   | sRGB      |
--- > |          |          |          |          | (D65)    |           |
--- > +----------+----------+----------+----------+----------+-----------+
--- > | HDR10_ST | 0.708,   | 0.170,   | 0.131,   | 0.3127,  | ST2084    |
--- > | 2084     | 0.292    | 0.797    | 0.046    | 0.3290   |           |
--- > |          |          |          |          | (D65)    |           |
--- > +----------+----------+----------+----------+----------+-----------+
--- > | DOLBYVIS | 0.708,   | 0.170,   | 0.131,   | 0.3127,  | ST2084    |
--- > | ION      | 0.292    | 0.797    | 0.046    | 0.3290   |           |
--- > |          |          |          |          | (D65)    |           |
--- > +----------+----------+----------+----------+----------+-----------+
--- > | HDR10_HL | 0.708,   | 0.170,   | 0.131,   | 0.3127,  | HLG       |
--- > | G        | 0.292    | 0.797    | 0.046    | 0.3290   |           |
--- > |          |          |          |          | (D65)    |           |
--- > +----------+----------+----------+----------+----------+-----------+
--- > | AdobeRGB | 0.640,   | 0.210,   | 0.150,   | 0.3127,  | AdobeRGB  |
--- > |          | 0.330    | 0.710    | 0.060    | 0.3290   |           |
--- > |          |          |          |          | (D65)    |           |
--- > +----------+----------+----------+----------+----------+-----------+
--- >
--- > Color Spaces and Attributes
---
--- For Opto-Electrical Transfer Function (OETF), unless otherwise
--- specified, the values of L and E are defined as:
---
--- L - linear luminance of image \(0 \leq L \leq 1\) for conventional
--- colorimetry
---
--- E - corresponding electrical signal (value stored in memory)
---
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceFormatKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR'
 type ColorSpaceKHR = VkColorSpaceKHR
+
+
+{-# complete COLOR_SPACE_SRGB_NONLINEAR_KHR, COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT, COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT, COLOR_SPACE_DCI_P3_LINEAR_EXT, COLOR_SPACE_DCI_P3_NONLINEAR_EXT, COLOR_SPACE_BT709_LINEAR_EXT, COLOR_SPACE_BT709_NONLINEAR_EXT, COLOR_SPACE_BT2020_LINEAR_EXT, COLOR_SPACE_HDR10_ST2084_EXT, COLOR_SPACE_DOLBYVISION_EXT, COLOR_SPACE_HDR10_HLG_EXT, COLOR_SPACE_ADOBERGB_LINEAR_EXT, COLOR_SPACE_ADOBERGB_NONLINEAR_EXT, COLOR_SPACE_PASS_THROUGH_EXT, COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT, COLOR_SPACE_DISPLAY_NATIVE_AMD :: ColorSpaceKHR #-}
 
 
 -- | 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_COLOR_SPACE_SRGB_NONLINEAR_KHR'
 -- specifies support for the sRGB color space.
 pattern COLOR_SPACE_SRGB_NONLINEAR_KHR :: (a ~ ColorSpaceKHR) => a
 pattern COLOR_SPACE_SRGB_NONLINEAR_KHR = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR
+
+
+-- No documentation found for Nested "ColorSpaceKHR" "COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT"
+pattern COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT :: (a ~ ColorSpaceKHR) => a
+pattern COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT = VK_COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT
+
+
+-- No documentation found for Nested "ColorSpaceKHR" "COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT"
+pattern COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT :: (a ~ ColorSpaceKHR) => a
+pattern COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT = VK_COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT
+
+
+-- No documentation found for Nested "ColorSpaceKHR" "COLOR_SPACE_DCI_P3_LINEAR_EXT"
+pattern COLOR_SPACE_DCI_P3_LINEAR_EXT :: (a ~ ColorSpaceKHR) => a
+pattern COLOR_SPACE_DCI_P3_LINEAR_EXT = VK_COLOR_SPACE_DCI_P3_LINEAR_EXT
+
+
+-- No documentation found for Nested "ColorSpaceKHR" "COLOR_SPACE_DCI_P3_NONLINEAR_EXT"
+pattern COLOR_SPACE_DCI_P3_NONLINEAR_EXT :: (a ~ ColorSpaceKHR) => a
+pattern COLOR_SPACE_DCI_P3_NONLINEAR_EXT = VK_COLOR_SPACE_DCI_P3_NONLINEAR_EXT
+
+
+-- No documentation found for Nested "ColorSpaceKHR" "COLOR_SPACE_BT709_LINEAR_EXT"
+pattern COLOR_SPACE_BT709_LINEAR_EXT :: (a ~ ColorSpaceKHR) => a
+pattern COLOR_SPACE_BT709_LINEAR_EXT = VK_COLOR_SPACE_BT709_LINEAR_EXT
+
+
+-- No documentation found for Nested "ColorSpaceKHR" "COLOR_SPACE_BT709_NONLINEAR_EXT"
+pattern COLOR_SPACE_BT709_NONLINEAR_EXT :: (a ~ ColorSpaceKHR) => a
+pattern COLOR_SPACE_BT709_NONLINEAR_EXT = VK_COLOR_SPACE_BT709_NONLINEAR_EXT
+
+
+-- No documentation found for Nested "ColorSpaceKHR" "COLOR_SPACE_BT2020_LINEAR_EXT"
+pattern COLOR_SPACE_BT2020_LINEAR_EXT :: (a ~ ColorSpaceKHR) => a
+pattern COLOR_SPACE_BT2020_LINEAR_EXT = VK_COLOR_SPACE_BT2020_LINEAR_EXT
+
+
+-- No documentation found for Nested "ColorSpaceKHR" "COLOR_SPACE_HDR10_ST2084_EXT"
+pattern COLOR_SPACE_HDR10_ST2084_EXT :: (a ~ ColorSpaceKHR) => a
+pattern COLOR_SPACE_HDR10_ST2084_EXT = VK_COLOR_SPACE_HDR10_ST2084_EXT
+
+
+-- No documentation found for Nested "ColorSpaceKHR" "COLOR_SPACE_DOLBYVISION_EXT"
+pattern COLOR_SPACE_DOLBYVISION_EXT :: (a ~ ColorSpaceKHR) => a
+pattern COLOR_SPACE_DOLBYVISION_EXT = VK_COLOR_SPACE_DOLBYVISION_EXT
+
+
+-- No documentation found for Nested "ColorSpaceKHR" "COLOR_SPACE_HDR10_HLG_EXT"
+pattern COLOR_SPACE_HDR10_HLG_EXT :: (a ~ ColorSpaceKHR) => a
+pattern COLOR_SPACE_HDR10_HLG_EXT = VK_COLOR_SPACE_HDR10_HLG_EXT
+
+
+-- No documentation found for Nested "ColorSpaceKHR" "COLOR_SPACE_ADOBERGB_LINEAR_EXT"
+pattern COLOR_SPACE_ADOBERGB_LINEAR_EXT :: (a ~ ColorSpaceKHR) => a
+pattern COLOR_SPACE_ADOBERGB_LINEAR_EXT = VK_COLOR_SPACE_ADOBERGB_LINEAR_EXT
+
+
+-- No documentation found for Nested "ColorSpaceKHR" "COLOR_SPACE_ADOBERGB_NONLINEAR_EXT"
+pattern COLOR_SPACE_ADOBERGB_NONLINEAR_EXT :: (a ~ ColorSpaceKHR) => a
+pattern COLOR_SPACE_ADOBERGB_NONLINEAR_EXT = VK_COLOR_SPACE_ADOBERGB_NONLINEAR_EXT
+
+
+-- No documentation found for Nested "ColorSpaceKHR" "COLOR_SPACE_PASS_THROUGH_EXT"
+pattern COLOR_SPACE_PASS_THROUGH_EXT :: (a ~ ColorSpaceKHR) => a
+pattern COLOR_SPACE_PASS_THROUGH_EXT = VK_COLOR_SPACE_PASS_THROUGH_EXT
+
+
+-- No documentation found for Nested "ColorSpaceKHR" "COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT"
+pattern COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT :: (a ~ ColorSpaceKHR) => a
+pattern COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT = VK_COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT
+
+
+-- No documentation found for Nested "ColorSpaceKHR" "COLOR_SPACE_DISPLAY_NATIVE_AMD"
+pattern COLOR_SPACE_DISPLAY_NATIVE_AMD :: (a ~ ColorSpaceKHR) => a
+pattern COLOR_SPACE_DISPLAY_NATIVE_AMD = VK_COLOR_SPACE_DISPLAY_NATIVE_AMD
 
 -- | VkCompositeAlphaFlagBitsKHR - alpha compositing modes supported on a
 -- device
@@ -236,8 +296,12 @@ pattern COLOR_SPACE_SRGB_NONLINEAR_KHR = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkCompositeAlphaFlagsKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR'
 type CompositeAlphaFlagBitsKHR = VkCompositeAlphaFlagBitsKHR
+
+
+{-# complete COMPOSITE_ALPHA_OPAQUE_BIT_KHR, COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR, COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR, COMPOSITE_ALPHA_INHERIT_BIT_KHR :: CompositeAlphaFlagBitsKHR #-}
 
 
 -- | 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR':
@@ -286,52 +350,14 @@ pattern COMPOSITE_ALPHA_INHERIT_BIT_KHR = VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkCompositeAlphaFlagBitsKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter.VkSurfaceCapabilities2EXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceCapabilitiesKHR'
 type CompositeAlphaFlagsKHR = CompositeAlphaFlagBitsKHR
 
 -- | VkPresentModeKHR - presentation mode supported for a surface
 --
 -- = Description
---
--- The supported
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageUsageFlagBits' of
--- the presentable images of a swapchain created for a surface /may/ differ
--- depending on the presentation mode, and can be determined as per the
--- table below:
---
--- > +-----------------------------------+-----------------------------------+
--- > | Presentation mode                 | Image usage flags                 |
--- > +===================================+===================================+
--- > | 'Graphics.Vulkan.C.Extensions.VK_ | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > | KHR_surface.VK_PRESENT_MODE_IMMED | KHR_surface.VkSurfaceCapabilities |
--- > | IATE_KHR'                         | KHR'::@supportedUsageFlags@       |
--- > +-----------------------------------+-----------------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_ | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > | KHR_surface.VK_PRESENT_MODE_MAILB | KHR_surface.VkSurfaceCapabilities |
--- > | OX_KHR'                           | KHR'::@supportedUsageFlags@       |
--- > +-----------------------------------+-----------------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_ | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > | KHR_surface.VK_PRESENT_MODE_FIFO_ | KHR_surface.VkSurfaceCapabilities |
--- > | KHR'                              | KHR'::@supportedUsageFlags@       |
--- > +-----------------------------------+-----------------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_ | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > | KHR_surface.VK_PRESENT_MODE_FIFO_ | KHR_surface.VkSurfaceCapabilities |
--- > | RELAXED_KHR'                      | KHR'::@supportedUsageFlags@       |
--- > +-----------------------------------+-----------------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_ | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > | KHR_shared_presentable_image.VK_P | KHR_shared_presentable_image.VkSh |
--- > | RESENT_MODE_SHARED_DEMAND_REFRESH | aredPresentSurfaceCapabilitiesKHR |
--- > | _KHR'                             | '::@sharedPresentSupportedUsageFl |
--- > |                                   | ags@                              |
--- > +-----------------------------------+-----------------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_ | 'Graphics.Vulkan.C.Extensions.VK_ |
--- > | KHR_shared_presentable_image.VK_P | KHR_shared_presentable_image.VkSh |
--- > | RESENT_MODE_SHARED_CONTINUOUS_REF | aredPresentSurfaceCapabilitiesKHR |
--- > | RESH_KHR'                         | '::@sharedPresentSupportedUsageFl |
--- > |                                   | ags@                              |
--- > +-----------------------------------+-----------------------------------+
--- >
--- > Presentable image usage queries
 --
 -- __Note__
 --
@@ -345,8 +371,13 @@ type CompositeAlphaFlagsKHR = CompositeAlphaFlagBitsKHR
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.vkGetPhysicalDeviceSurfacePresentModes2EXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.vkGetPhysicalDeviceSurfacePresentModesKHR'
 type PresentModeKHR = VkPresentModeKHR
+
+
+{-# complete PRESENT_MODE_IMMEDIATE_KHR, PRESENT_MODE_MAILBOX_KHR, PRESENT_MODE_FIFO_KHR, PRESENT_MODE_FIFO_RELAXED_KHR, PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR, PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR :: PresentModeKHR #-}
 
 
 -- | 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_PRESENT_MODE_IMMEDIATE_KHR'
@@ -401,6 +432,16 @@ pattern PRESENT_MODE_FIFO_RELAXED_KHR :: (a ~ PresentModeKHR) => a
 pattern PRESENT_MODE_FIFO_RELAXED_KHR = VK_PRESENT_MODE_FIFO_RELAXED_KHR
 
 
+-- No documentation found for Nested "PresentModeKHR" "PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR"
+pattern PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR :: (a ~ PresentModeKHR) => a
+pattern PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR = VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR
+
+
+-- No documentation found for Nested "PresentModeKHR" "PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR"
+pattern PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR :: (a ~ PresentModeKHR) => a
+pattern PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR = VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR
+
+
 -- | VkSurfaceCapabilitiesKHR - Structure describing capabilities of a
 -- surface
 --
@@ -408,24 +449,18 @@ pattern PRESENT_MODE_FIFO_RELAXED_KHR = VK_PRESENT_MODE_FIFO_RELAXED_KHR
 --
 -- __Note__
 --
--- Supported usage flags of a presentable image when using
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image.VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR'
--- or
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image.VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR'
--- presentation mode are provided by
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image.VkSharedPresentSurfaceCapabilitiesKHR'::@sharedPresentSupportedUsageFlags@.
---
--- __Note__
---
 -- Formulas such as min(N, @maxImageCount@) are not correct, since
 -- @maxImageCount@ /may/ be zero.
 --
--- Unresolved directive in VkSurfaceCapabilitiesKHR.txt -
--- include::{generated}\/validity\/structs\/VkSurfaceCapabilitiesKHR.txt[]
---
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkCompositeAlphaFlagsKHR',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkExtent2D',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageUsageFlags',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkSurfaceCapabilities2KHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceTransformFlagBitsKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceTransformFlagsKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.vkGetPhysicalDeviceSurfaceCapabilitiesKHR'
 data SurfaceCapabilitiesKHR = SurfaceCapabilitiesKHR
   { -- No documentation found for Nested "SurfaceCapabilitiesKHR" "minImageCount"
   minImageCount :: Word32
@@ -487,14 +522,12 @@ instance Zero SurfaceCapabilitiesKHR where
 -- | VkSurfaceFormatKHR - Structure describing a supported swapchain
 -- format-color space pair
 --
--- = Description
---
--- Unresolved directive in VkSurfaceFormatKHR.txt -
--- include::{generated}\/validity\/structs\/VkSurfaceFormatKHR.txt[]
---
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkColorSpaceKHR',
+-- 'Graphics.Vulkan.C.Core10.Core.VkFormat',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkSurfaceFormat2KHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.vkGetPhysicalDeviceSurfaceFormatsKHR'
 data SurfaceFormatKHR = SurfaceFormatKHR
   { -- No documentation found for Nested "SurfaceFormatKHR" "format"
   format :: Format
@@ -535,7 +568,29 @@ instance Zero SurfaceFormatKHR where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkPhysicalDeviceSurfaceInfo2KHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_android_surface.vkCreateAndroidSurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkCreateDisplayPlaneSurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_headless_surface.vkCreateHeadlessSurfaceEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_MVK_ios_surface.vkCreateIOSSurfaceMVK',
+-- 'Graphics.Vulkan.C.Extensions.VK_FUCHSIA_imagepipe_surface.vkCreateImagePipeSurfaceFUCHSIA',
+-- 'Graphics.Vulkan.C.Extensions.VK_MVK_macos_surface.vkCreateMacOSSurfaceMVK',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_metal_surface.vkCreateMetalSurfaceEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_GGP_stream_descriptor_surface.vkCreateStreamDescriptorSurfaceGGP',
+-- 'Graphics.Vulkan.C.Extensions.VK_NN_vi_surface.vkCreateViSurfaceNN',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_wayland_surface.vkCreateWaylandSurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_win32_surface.vkCreateWin32SurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_xcb_surface.vkCreateXcbSurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface.vkCreateXlibSurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.vkDestroySurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkGetDeviceGroupSurfacePresentModesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkGetPhysicalDevicePresentRectanglesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter.vkGetPhysicalDeviceSurfaceCapabilities2EXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.vkGetPhysicalDeviceSurfaceCapabilitiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.vkGetPhysicalDeviceSurfaceFormatsKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.vkGetPhysicalDeviceSurfacePresentModesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.vkGetPhysicalDeviceSurfaceSupportKHR'
 type SurfaceKHR = VkSurfaceKHR
 
 -- | VkSurfaceTransformFlagBitsKHR - presentation transforms supported on a
@@ -543,8 +598,15 @@ type SurfaceKHR = VkSurfaceKHR
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplaySurfaceCreateInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter.VkSurfaceCapabilities2EXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceCapabilitiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceTransformFlagsKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR'
 type SurfaceTransformFlagBitsKHR = VkSurfaceTransformFlagBitsKHR
+
+
+{-# complete SURFACE_TRANSFORM_IDENTITY_BIT_KHR, SURFACE_TRANSFORM_ROTATE_90_BIT_KHR, SURFACE_TRANSFORM_ROTATE_180_BIT_KHR, SURFACE_TRANSFORM_ROTATE_270_BIT_KHR, SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR, SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR, SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR, SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR, SURFACE_TRANSFORM_INHERIT_BIT_KHR :: SurfaceTransformFlagBitsKHR #-}
 
 
 -- | 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR'
@@ -615,7 +677,10 @@ pattern SURFACE_TRANSFORM_INHERIT_BIT_KHR = VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayPropertiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter.VkSurfaceCapabilities2EXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceCapabilitiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceTransformFlagBitsKHR'
 type SurfaceTransformFlagsKHR = SurfaceTransformFlagBitsKHR
 
 
@@ -655,12 +720,33 @@ type SurfaceTransformFlagsKHR = SurfaceTransformFlagBitsKHR
 --     were provided when @surface@ was created, @pAllocator@ /must/ be
 --     @NULL@
 --
--- Unresolved directive in vkDestroySurfaceKHR.txt -
--- include::{generated}\/validity\/protos\/vkDestroySurfaceKHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   If @surface@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @surface@
+--     /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   If @surface@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @instance@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @surface@ /must/ be externally synchronized
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR'
 destroySurfaceKHR :: Instance ->  SurfaceKHR ->  Maybe AllocationCallbacks ->  IO ()
 destroySurfaceKHR = \(Instance instance' commandTable) -> \surface' -> \allocator -> maybeWith (\marshalled -> withCStructAllocationCallbacks marshalled . flip with) allocator (\pAllocator -> vkDestroySurfaceKHR commandTable instance' surface' pAllocator *> (pure ()))
 
@@ -679,14 +765,40 @@ destroySurfaceKHR = \(Instance instance' commandTable) -> \surface' -> \allocato
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceCapabilitiesKHR'
 --     structure in which the capabilities are returned.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkGetPhysicalDeviceSurfaceCapabilitiesKHR.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceSurfaceCapabilitiesKHR.txt[]
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @surface@ /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
+--
+-- -   @pSurfaceCapabilities@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceCapabilitiesKHR'
+--     structure
+--
+-- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance'
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_SURFACE_LOST_KHR'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceCapabilitiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR'
 getPhysicalDeviceSurfaceCapabilitiesKHR :: PhysicalDevice ->  SurfaceKHR ->  IO (SurfaceCapabilitiesKHR)
 getPhysicalDeviceSurfaceCapabilitiesKHR = \(PhysicalDevice physicalDevice' commandTable) -> \surface' -> alloca (\pSurfaceCapabilities' -> vkGetPhysicalDeviceSurfaceCapabilitiesKHR commandTable physicalDevice' surface' pSurfaceCapabilities' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((fromCStructSurfaceCapabilitiesKHR <=< peek) pSurfaceCapabilities')))
 
@@ -726,12 +838,47 @@ getPhysicalDeviceSurfaceCapabilitiesKHR = \(PhysicalDevice physicalDevice' comma
 -- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS' to indicate that not all
 -- the available values were returned.
 --
--- Unresolved directive in vkGetPhysicalDeviceSurfaceFormatsKHR.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceSurfaceFormatsKHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @surface@ /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
+--
+-- -   @pSurfaceFormatCount@ /must/ be a valid pointer to a @uint32_t@
+--     value
+--
+-- -   If the value referenced by @pSurfaceFormatCount@ is not @0@, and
+--     @pSurfaceFormats@ is not @NULL@, @pSurfaceFormats@ /must/ be a valid
+--     pointer to an array of @pSurfaceFormatCount@
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceFormatKHR'
+--     structures
+--
+-- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance'
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_SURFACE_LOST_KHR'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceFormatKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR'
 getNumPhysicalDeviceSurfaceFormatsKHR :: PhysicalDevice ->  SurfaceKHR ->  IO (VkResult, Word32)
 getNumPhysicalDeviceSurfaceFormatsKHR = \(PhysicalDevice physicalDevice' commandTable) -> \surface' -> alloca (\pSurfaceFormatCount' -> vkGetPhysicalDeviceSurfaceFormatsKHR commandTable physicalDevice' surface' pSurfaceFormatCount' nullPtr >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>peek pSurfaceFormatCount')))
 
@@ -770,12 +917,47 @@ getNumPhysicalDeviceSurfaceFormatsKHR = \(PhysicalDevice physicalDevice' command
 -- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS' to indicate that not all
 -- the available values were returned.
 --
--- Unresolved directive in vkGetPhysicalDeviceSurfaceFormatsKHR.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceSurfaceFormatsKHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @surface@ /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
+--
+-- -   @pSurfaceFormatCount@ /must/ be a valid pointer to a @uint32_t@
+--     value
+--
+-- -   If the value referenced by @pSurfaceFormatCount@ is not @0@, and
+--     @pSurfaceFormats@ is not @NULL@, @pSurfaceFormats@ /must/ be a valid
+--     pointer to an array of @pSurfaceFormatCount@
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceFormatKHR'
+--     structures
+--
+-- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance'
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_SURFACE_LOST_KHR'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceFormatKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR'
 getPhysicalDeviceSurfaceFormatsKHR :: PhysicalDevice ->  SurfaceKHR ->  Word32 ->  IO (VkResult, Vector SurfaceFormatKHR)
 getPhysicalDeviceSurfaceFormatsKHR = \(PhysicalDevice physicalDevice' commandTable) -> \surface' -> \surfaceFormatCount' -> allocaArray (fromIntegral surfaceFormatCount') (\pSurfaceFormats' -> with surfaceFormatCount' (\pSurfaceFormatCount' -> vkGetPhysicalDeviceSurfaceFormatsKHR commandTable physicalDevice' surface' pSurfaceFormatCount' pSurfaceFormats' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>(flip Data.Vector.generateM ((\p -> fromCStructSurfaceFormatKHR <=< peekElemOff p) pSurfaceFormats') =<< (fromIntegral <$> (peek pSurfaceFormatCount')))))))
 -- | Returns all the values available from 'getPhysicalDeviceSurfaceFormatsKHR'.
@@ -819,12 +1001,46 @@ getAllPhysicalDeviceSurfaceFormatsKHR physicalDevice' surface' =
 -- returned instead of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS' to
 -- indicate that not all the available values were returned.
 --
--- Unresolved directive in vkGetPhysicalDeviceSurfacePresentModesKHR.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceSurfacePresentModesKHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @surface@ /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
+--
+-- -   @pPresentModeCount@ /must/ be a valid pointer to a @uint32_t@ value
+--
+-- -   If the value referenced by @pPresentModeCount@ is not @0@, and
+--     @pPresentModes@ is not @NULL@, @pPresentModes@ /must/ be a valid
+--     pointer to an array of @pPresentModeCount@
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkPresentModeKHR'
+--     values
+--
+-- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance'
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_SURFACE_LOST_KHR'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkPresentModeKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR'
 getNumPhysicalDeviceSurfacePresentModesKHR :: PhysicalDevice ->  SurfaceKHR ->  IO (VkResult, Word32)
 getNumPhysicalDeviceSurfacePresentModesKHR = \(PhysicalDevice physicalDevice' commandTable) -> \surface' -> alloca (\pPresentModeCount' -> vkGetPhysicalDeviceSurfacePresentModesKHR commandTable physicalDevice' surface' pPresentModeCount' nullPtr >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>peek pPresentModeCount')))
 
@@ -861,12 +1077,46 @@ getNumPhysicalDeviceSurfacePresentModesKHR = \(PhysicalDevice physicalDevice' co
 -- returned instead of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS' to
 -- indicate that not all the available values were returned.
 --
--- Unresolved directive in vkGetPhysicalDeviceSurfacePresentModesKHR.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceSurfacePresentModesKHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @surface@ /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
+--
+-- -   @pPresentModeCount@ /must/ be a valid pointer to a @uint32_t@ value
+--
+-- -   If the value referenced by @pPresentModeCount@ is not @0@, and
+--     @pPresentModes@ is not @NULL@, @pPresentModes@ /must/ be a valid
+--     pointer to an array of @pPresentModeCount@
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkPresentModeKHR'
+--     values
+--
+-- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance'
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_SURFACE_LOST_KHR'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkPresentModeKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR'
 getPhysicalDeviceSurfacePresentModesKHR :: PhysicalDevice ->  SurfaceKHR ->  Word32 ->  IO (VkResult, Vector PresentModeKHR)
 getPhysicalDeviceSurfacePresentModesKHR = \(PhysicalDevice physicalDevice' commandTable) -> \surface' -> \presentModeCount' -> allocaArray (fromIntegral presentModeCount') (\pPresentModes' -> with presentModeCount' (\pPresentModeCount' -> vkGetPhysicalDeviceSurfacePresentModesKHR commandTable physicalDevice' surface' pPresentModeCount' pPresentModes' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>(flip Data.Vector.generateM (peekElemOff pPresentModes') =<< (fromIntegral <$> (peek pPresentModeCount')))))))
 -- | Returns all the values available from 'getPhysicalDeviceSurfacePresentModesKHR'.
@@ -895,11 +1145,51 @@ getAllPhysicalDeviceSurfacePresentModesKHR physicalDevice' surface' =
 --
 -- == Valid Usage
 --
--- Unresolved directive in vkGetPhysicalDeviceSurfaceSupportKHR.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceSurfaceSupportKHR.txt[]
+-- -   @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
+--     returned by
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceQueueFamilyProperties'
+--     for the given @physicalDevice@
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @surface@ /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
+--
+-- -   @pSupported@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Core10.Core.VkBool32' value
+--
+-- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance'
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_SURFACE_LOST_KHR'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR'
 getPhysicalDeviceSurfaceSupportKHR :: PhysicalDevice ->  Word32 ->  SurfaceKHR ->  IO (Bool)
 getPhysicalDeviceSurfaceSupportKHR = \(PhysicalDevice physicalDevice' commandTable) -> \queueFamilyIndex' -> \surface' -> alloca (\pSupported' -> vkGetPhysicalDeviceSurfaceSupportKHR commandTable physicalDevice' queueFamilyIndex' surface' pSupported' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (bool32ToBool <$> (peek pSupported'))))
+
+-- No documentation found for TopLevel "VK_KHR_SURFACE_EXTENSION_NAME"
+pattern KHR_SURFACE_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern KHR_SURFACE_EXTENSION_NAME = VK_KHR_SURFACE_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_KHR_SURFACE_SPEC_VERSION"
+pattern KHR_SURFACE_SPEC_VERSION :: Integral a => a
+pattern KHR_SURFACE_SPEC_VERSION = VK_KHR_SURFACE_SPEC_VERSION

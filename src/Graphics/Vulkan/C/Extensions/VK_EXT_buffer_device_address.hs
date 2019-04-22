@@ -103,14 +103,14 @@ import Graphics.Vulkan.NamedType
 -- 'VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT', to avoid
 -- address space allocation conflicts.
 --
--- Unresolved directive in VkBufferDeviceAddressCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkBufferDeviceAddressCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDeviceAddress', 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkBufferDeviceAddressCreateInfoEXT = VkBufferDeviceAddressCreateInfoEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_CREATE_INFO_EXT'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -147,12 +147,20 @@ instance Zero VkBufferDeviceAddressCreateInfoEXT where
 -- -   @buffer@ /must/ have been created with
 --     'VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_EXT'
 --
--- Unresolved directive in VkBufferDeviceAddressInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkBufferDeviceAddressInfoEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be 'VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO_EXT'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @buffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkGetBufferDeviceAddressEXT'
 data VkBufferDeviceAddressInfoEXT = VkBufferDeviceAddressInfoEXT
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -182,7 +190,7 @@ instance Zero VkBufferDeviceAddressInfoEXT where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkBufferDeviceAddressCreateInfoEXT'
 type VkDeviceAddress = Word64
 
 -- No documentation found for TopLevel "VkPhysicalDeviceBufferAddressFeaturesEXT"
@@ -219,15 +227,15 @@ pattern VkPhysicalDeviceBufferAddressFeaturesEXT vkSType vkPNext vkBufferDeviceA
 -- the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
 --
--- Unresolved directive in
--- VkPhysicalDeviceBufferDeviceAddressFeaturesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceBufferDeviceAddressFeaturesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceBufferDeviceAddressFeaturesEXT = VkPhysicalDeviceBufferDeviceAddressFeaturesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceBufferDeviceAddressFeaturesEXT" "sType"
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES_EXT'
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceBufferDeviceAddressFeaturesEXT" "pNext"
   vkPNext :: Ptr ()
@@ -307,12 +315,18 @@ instance Zero VkPhysicalDeviceBufferDeviceAddressFeaturesEXT where
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
 --     feature /must/ be enabled
 --
--- Unresolved directive in vkGetBufferDeviceAddressEXT.txt -
--- include::{generated}\/validity\/protos\/vkGetBufferDeviceAddressEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pInfo@ /must/ be a valid pointer to a valid
+--     'VkBufferDeviceAddressInfoEXT' structure
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkBufferDeviceAddressInfoEXT',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -333,27 +347,20 @@ foreign import ccall
 type FN_vkGetBufferDeviceAddressEXT = ("device" ::: VkDevice) -> ("pInfo" ::: Ptr VkBufferDeviceAddressInfoEXT) -> IO VkDeviceAddress
 type PFN_vkGetBufferDeviceAddressEXT = FunPtr FN_vkGetBufferDeviceAddressEXT
 
--- | 'VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT' specifies that
--- the buffer’s address /can/ be saved and reused on a subsequent run (e.g.
--- for trace capture and replay), see 'VkBufferDeviceAddressCreateInfoEXT'
--- for more detail.
+-- No documentation found for Nested "VkBufferCreateFlagBits" "VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT"
 pattern VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT :: VkBufferCreateFlagBits
 pattern VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT = VkBufferCreateFlagBits 0x00000010
 
--- | 'VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_EXT' specifies that the
--- buffer /can/ be used to retrieve a buffer device address via
--- 'vkGetBufferDeviceAddressEXT' and use that address to access the
--- buffer’s memory from a shader.
+-- No documentation found for Nested "VkBufferUsageFlagBits" "VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_EXT"
 pattern VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_EXT :: VkBufferUsageFlagBits
 pattern VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_EXT = VkBufferUsageFlagBits 0x00020000
 
--- | 'VK_ERROR_INVALID_DEVICE_ADDRESS_EXT' A buffer creation failed because
--- the requested address is not available.
+-- No documentation found for Nested "VkResult" "VK_ERROR_INVALID_DEVICE_ADDRESS_EXT"
 pattern VK_ERROR_INVALID_DEVICE_ADDRESS_EXT :: VkResult
 pattern VK_ERROR_INVALID_DEVICE_ADDRESS_EXT = VkResult (-1000244000)
 
 -- No documentation found for TopLevel "VK_EXT_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME"
-pattern VK_EXT_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME = "VK_EXT_buffer_device_address"
 
 -- No documentation found for TopLevel "VK_EXT_BUFFER_DEVICE_ADDRESS_SPEC_VERSION"

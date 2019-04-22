@@ -66,9 +66,12 @@ data VkPushConstantRange
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutBinding',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkObjectTablePushConstantEntryNVX',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkPhysicalDeviceCooperativeMatrixPropertiesNV',
 -- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VkPhysicalDeviceSubgroupProperties',
 -- 'VkPushConstantRange',
 -- 'Graphics.Vulkan.C.Core10.Pipeline.VkShaderStageFlagBits',
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_shader_info.VkShaderStatisticsInfoAMD',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdPushConstants'
 type VkShaderStageFlags = VkShaderStageFlagBits
 

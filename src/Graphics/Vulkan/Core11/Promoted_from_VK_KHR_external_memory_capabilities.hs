@@ -26,6 +26,10 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities
   , pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT
   , pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT
   , pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT
+  , pattern EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT
+  , pattern EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID
+  , pattern EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT
+  , pattern EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT
   , ExternalMemoryHandleTypeFlagBitsKHR
   , ExternalMemoryHandleTypeFlags
   , ExternalMemoryHandleTypeFlagsKHR
@@ -42,12 +46,11 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities
   , fromCStructPhysicalDeviceIDProperties
   , PhysicalDeviceIDProperties(..)
   , getPhysicalDeviceExternalBufferProperties
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO
-  , pattern VK_STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO
-  , pattern VK_STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES
-  , pattern VK_LUID_SIZE
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO
+  , pattern STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO
+  , pattern STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES
   ) where
 
 import Control.Monad
@@ -118,6 +121,16 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilitie
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES
   )
+import Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
+  ( pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_dma_buf
+  ( pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_host
+  ( pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT
+  , pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT
+  )
 import Graphics.Vulkan.Core10.Buffer
   ( BufferCreateFlags
   , BufferUsageFlags
@@ -137,22 +150,27 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES
+  , pattern STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES
+  )
 
 
 
 -- | VkExternalBufferProperties - Structure specifying supported external
 -- handle capabilities
 --
--- = Description
---
--- Unresolved directive in VkExternalBufferProperties.txt -
--- include::{generated}\/validity\/structs\/VkExternalBufferProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryProperties',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.vkGetPhysicalDeviceExternalBufferProperties'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.vkGetPhysicalDeviceExternalBufferProperties',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_capabilities.vkGetPhysicalDeviceExternalBufferPropertiesKHR'
 data ExternalBufferProperties = ExternalBufferProperties
   { -- Univalued member elided
   -- No documentation found for Nested "ExternalBufferProperties" "pNext"
@@ -184,10 +202,7 @@ instance Zero ExternalBufferProperties where
 -- | VkExternalImageFormatProperties - Structure specifying supported
 -- external handle properties
 --
--- = Description
---
--- Unresolved directive in VkExternalImageFormatProperties.txt -
--- include::{generated}\/validity\/structs\/VkExternalImageFormatProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -231,15 +246,13 @@ instance Zero ExternalImageFormatProperties where
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT'
 -- for the following external handle types:
 --
--- Implementations /must/ not report
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT'
--- for buffers with external handle type
--- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'.
---
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryFeatureFlags'
 type ExternalMemoryFeatureFlagBits = VkExternalMemoryFeatureFlagBits
+
+
+{-# complete EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT, EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT, EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT :: ExternalMemoryFeatureFlagBits #-}
 
 
 -- | 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT'
@@ -360,69 +373,26 @@ type ExternalMemoryFeatureFlagsKHR = ExternalMemoryFeatureFlags
 -- > | E_TYPE_D3D12_RESOURC |                      |                       |
 -- > | E_BIT'               |                      |                       |
 -- > +----------------------+----------------------+-----------------------+
--- > | 'Graphics.Vulkan.C.E | No restriction       | No restriction        |
--- > | xtensions.VK_EXT_ext |                      |                       |
--- > | ernal_memory_host.VK |                      |                       |
--- > | _EXTERNAL_MEMORY_HAN |                      |                       |
--- > | DLE_TYPE_HOST_ALLOCA |                      |                       |
--- > | TION_BIT_EXT'        |                      |                       |
--- > +----------------------+----------------------+-----------------------+
--- > | 'Graphics.Vulkan.C.E | No restriction       | No restriction        |
--- > | xtensions.VK_EXT_ext |                      |                       |
--- > | ernal_memory_host.VK |                      |                       |
--- > | _EXTERNAL_MEMORY_HAN |                      |                       |
--- > | DLE_TYPE_HOST_MAPPED |                      |                       |
--- > | _FOREIGN_MEMORY_BIT_ |                      |                       |
--- > | EXT'                 |                      |                       |
--- > +----------------------+----------------------+-----------------------+
--- > | 'Graphics.Vulkan.C.E | No restriction       | No restriction        |
--- > | xtensions.VK_EXT_ext |                      |                       |
--- > | ernal_memory_dma_buf |                      |                       |
--- > | .VK_EXTERNAL_MEMORY_ |                      |                       |
--- > | HANDLE_TYPE_DMA_BUF_ |                      |                       |
--- > | BIT_EXT'             |                      |                       |
--- > +----------------------+----------------------+-----------------------+
--- > | 'Graphics.Vulkan.C.E | No restriction       | No restriction        |
--- > | xtensions.VK_ANDROID |                      |                       |
--- > | _external_memory_and |                      |                       |
--- > | roid_hardware_buffer |                      |                       |
--- > | .VK_EXTERNAL_MEMORY_ |                      |                       |
--- > | HANDLE_TYPE_ANDROID_ |                      |                       |
--- > | HARDWARE_BUFFER_BIT_ |                      |                       |
--- > | ANDROID'             |                      |                       |
--- > +----------------------+----------------------+-----------------------+
 -- >
 -- > External memory handle types compatibility
---
--- __Note__
---
--- The above table does not restrict the drivers and devices with which
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_host.VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT'
--- and
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_host.VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT'
--- /may/ be shared, as these handle types inherently mean memory that does
--- not come from the same device, as they import memory from the host or a
--- foreign device, respectively.
---
--- __Note__
---
--- Even though the above table does not restrict the drivers and devices
--- with which
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_dma_buf.VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT'
--- /may/ be shared, query mechanisms exist in the Vulkan API that prevent
--- the import of incompatible dma-bufs (such as
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd.vkGetMemoryFdPropertiesKHR')
--- and that prevent incompatible usage of dma-bufs (such as
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_capabilities.VkPhysicalDeviceExternalBufferInfoKHR'
--- and
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_capabilities.VkPhysicalDeviceExternalImageFormatInfoKHR').
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlags',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd.VkImportMemoryFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_host.VkImportMemoryHostPointerInfoEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32.VkImportMemoryWin32HandleInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd.VkMemoryGetFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32.VkMemoryGetWin32HandleInfoKHR',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkPhysicalDeviceExternalBufferInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkPhysicalDeviceExternalImageFormatInfo'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkPhysicalDeviceExternalImageFormatInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd.vkGetMemoryFdPropertiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_host.vkGetMemoryHostPointerPropertiesEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32.vkGetMemoryWin32HandlePropertiesKHR'
 type ExternalMemoryHandleTypeFlagBits = VkExternalMemoryHandleTypeFlagBits
+
+
+{-# complete EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT, EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT, EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT, EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT, EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT, EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT, EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT, EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT, EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID, EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT, EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT :: ExternalMemoryHandleTypeFlagBits #-}
 
 
 -- | 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT'
@@ -492,6 +462,26 @@ pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT = VK_EXTERNAL_MEMORY_HANDLE_T
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT :: (a ~ ExternalMemoryHandleTypeFlagBits) => a
 pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT = VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT
 
+
+-- No documentation found for Nested "ExternalMemoryHandleTypeFlagBits" "EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT"
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT :: (a ~ ExternalMemoryHandleTypeFlagBits) => a
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT = VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT
+
+
+-- No documentation found for Nested "ExternalMemoryHandleTypeFlagBits" "EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID"
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID :: (a ~ ExternalMemoryHandleTypeFlagBits) => a
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID = VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID
+
+
+-- No documentation found for Nested "ExternalMemoryHandleTypeFlagBits" "EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT"
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT :: (a ~ ExternalMemoryHandleTypeFlagBits) => a
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT = VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT
+
+
+-- No documentation found for Nested "ExternalMemoryHandleTypeFlagBits" "EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT"
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT :: (a ~ ExternalMemoryHandleTypeFlagBits) => a
+pattern EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT = VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT
+
 -- No documentation found for TopLevel "ExternalMemoryHandleTypeFlagBitsKHR"
 type ExternalMemoryHandleTypeFlagBitsKHR = ExternalMemoryHandleTypeFlagBits
 
@@ -533,9 +523,6 @@ type ExternalMemoryHandleTypeFlagsKHR = ExternalMemoryHandleTypeFlags
 -- image and intersecting them to obtain the compatible set of
 -- capabilities.
 --
--- Unresolved directive in VkExternalMemoryProperties.txt -
--- include::{generated}\/validity\/structs\/VkExternalMemoryProperties.txt[]
---
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalBufferProperties',
@@ -575,10 +562,7 @@ instance Zero ExternalMemoryProperties where
 -- | VkPhysicalDeviceExternalBufferInfo - Structure specifying buffer
 -- creation parameters
 --
--- = Description
---
--- Unresolved directive in VkPhysicalDeviceExternalBufferInfo.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceExternalBufferInfo.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -586,7 +570,8 @@ instance Zero ExternalMemoryProperties where
 -- 'Graphics.Vulkan.C.Core10.Buffer.VkBufferUsageFlags',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.vkGetPhysicalDeviceExternalBufferProperties'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.vkGetPhysicalDeviceExternalBufferProperties',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_capabilities.vkGetPhysicalDeviceExternalBufferPropertiesKHR'
 data PhysicalDeviceExternalBufferInfo = PhysicalDeviceExternalBufferInfo
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceExternalBufferInfo" "pNext"
@@ -643,8 +628,14 @@ instance Zero PhysicalDeviceExternalBufferInfo where
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceImageFormatProperties2'
 -- returns 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_FORMAT_NOT_SUPPORTED'.
 --
--- Unresolved directive in VkPhysicalDeviceExternalImageFormatInfo.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceExternalImageFormatInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO'
+--
+-- -   If @handleType@ is not @0@, @handleType@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits'
+--     value
 --
 -- = See Also
 --
@@ -696,12 +687,6 @@ instance Zero PhysicalDeviceExternalImageFormatInfo where
 -- where such a restriction exists as defined in the compatibility table
 -- for the particular object type:
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#external-memory-handle-types-compatibility External memory handle types compatibility>
---
--- -   <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility External semaphore handle types compatibility>
---
--- -   <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#external-fence-handle-types-compatibility External fence handle types compatibility>
---
 -- If @deviceLUIDValid@ is 'Graphics.Vulkan.C.Core10.Core.VK_FALSE', the
 -- values of @deviceLUID@ and @deviceNodeMask@ are undefined. If
 -- @deviceLUIDValid@ is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' and Vulkan
@@ -743,8 +728,7 @@ instance Zero PhysicalDeviceExternalImageFormatInfo where
 -- avoid relying on the persistence of this value for uses other than
 -- identifying compatible devices for external object sharing purposes.
 --
--- Unresolved directive in VkPhysicalDeviceIDProperties.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceIDProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -811,11 +795,7 @@ instance Zero PhysicalDeviceIDProperties where
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalBufferProperties'
 --     structure in which capabilities are returned.
 --
--- = Description
---
--- Unresolved directive in vkGetPhysicalDeviceExternalBufferProperties.txt
--- -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceExternalBufferProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --

@@ -4,10 +4,13 @@
 
 module Graphics.Vulkan.Extensions.VK_AMD_buffer_marker
   ( cmdWriteBufferMarkerAMD
-  , pattern VK_AMD_BUFFER_MARKER_SPEC_VERSION
-  , pattern VK_AMD_BUFFER_MARKER_EXTENSION_NAME
+  , pattern AMD_BUFFER_MARKER_EXTENSION_NAME
+  , pattern AMD_BUFFER_MARKER_SPEC_VERSION
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Data.Word
   ( Word32
   )
@@ -15,6 +18,8 @@ import Data.Word
 
 import Graphics.Vulkan.C.Extensions.VK_AMD_buffer_marker
   ( vkCmdWriteBufferMarkerAMD
+  , pattern VK_AMD_BUFFER_MARKER_EXTENSION_NAME
+  , pattern VK_AMD_BUFFER_MARKER_SPEC_VERSION
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
   ( DeviceSize
@@ -25,10 +30,6 @@ import Graphics.Vulkan.Core10.MemoryManagement
 import Graphics.Vulkan.Core10.Queue
   ( CommandBuffer(..)
   , PipelineStageFlagBits
-  )
-import Graphics.Vulkan.C.Extensions.VK_AMD_buffer_marker
-  ( pattern VK_AMD_BUFFER_MARKER_EXTENSION_NAME
-  , pattern VK_AMD_BUFFER_MARKER_SPEC_VERSION
   )
 
 
@@ -101,11 +102,69 @@ import Graphics.Vulkan.C.Extensions.VK_AMD_buffer_marker
 --
 -- -   @dstOffset@ /must/ be a multiple of @4@
 --
--- Unresolved directive in vkCmdWriteBufferMarkerAMD.txt -
--- include::{generated}\/validity\/protos\/vkCmdWriteBufferMarkerAMD.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @pipelineStage@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkPipelineStageFlagBits' value
+--
+-- -   @dstBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support transfer,
+--     graphics, or compute operations
+--
+-- -   Both of @commandBuffer@, and @dstBuffer@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Both            | Transfer        | Transfer        |
+-- > | Secondary       |                 | Graphics        |                 |
+-- > |                 |                 | Compute         |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
+-- 'Graphics.Vulkan.C.Core10.Queue.VkPipelineStageFlagBits'
 cmdWriteBufferMarkerAMD :: CommandBuffer ->  PipelineStageFlagBits ->  Buffer ->  DeviceSize ->  Word32 ->  IO ()
 cmdWriteBufferMarkerAMD = \(CommandBuffer commandBuffer' commandTable) -> \pipelineStage' -> \dstBuffer' -> \dstOffset' -> \marker' -> vkCmdWriteBufferMarkerAMD commandTable commandBuffer' pipelineStage' dstBuffer' dstOffset' marker' *> (pure ())
+
+-- No documentation found for TopLevel "VK_AMD_BUFFER_MARKER_EXTENSION_NAME"
+pattern AMD_BUFFER_MARKER_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern AMD_BUFFER_MARKER_EXTENSION_NAME = VK_AMD_BUFFER_MARKER_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_AMD_BUFFER_MARKER_SPEC_VERSION"
+pattern AMD_BUFFER_MARKER_SPEC_VERSION :: Integral a => a
+pattern AMD_BUFFER_MARKER_SPEC_VERSION = VK_AMD_BUFFER_MARKER_SPEC_VERSION

@@ -22,11 +22,11 @@ module Graphics.Vulkan.Extensions.VK_EXT_validation_cache
   , getAllValidationCacheDataEXT
   , mergeValidationCachesEXT
   , withValidationCacheEXT
-  , pattern VK_EXT_VALIDATION_CACHE_SPEC_VERSION
-  , pattern VK_EXT_VALIDATION_CACHE_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT
-  , pattern VK_STRUCTURE_TYPE_SHADER_MODULE_VALIDATION_CACHE_CREATE_INFO_EXT
-  , pattern VK_OBJECT_TYPE_VALIDATION_CACHE_EXT
+  , pattern EXT_VALIDATION_CACHE_EXTENSION_NAME
+  , pattern EXT_VALIDATION_CACHE_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT
+  , pattern STRUCTURE_TYPE_SHADER_MODULE_VALIDATION_CACHE_CREATE_INFO_EXT
+  , pattern OBJECT_TYPE_VALIDATION_CACHE_EXT
   ) where
 
 import Control.Exception
@@ -49,6 +49,9 @@ import Data.ByteString.Unsafe
   )
 import Data.Function
   ( (&)
+  )
+import Data.String
+  ( IsString
   )
 import Data.Vector
   ( Vector
@@ -94,6 +97,8 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache
   , vkDestroyValidationCacheEXT
   , vkGetValidationCacheDataEXT
   , vkMergeValidationCachesEXT
+  , pattern VK_EXT_VALIDATION_CACHE_EXTENSION_NAME
+  , pattern VK_EXT_VALIDATION_CACHE_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_SHADER_MODULE_VALIDATION_CACHE_CREATE_INFO_EXT
   , pattern VK_STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT
   , pattern VK_VALIDATION_CACHE_HEADER_VERSION_ONE_EXT
@@ -114,10 +119,10 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache
-  ( pattern VK_EXT_VALIDATION_CACHE_EXTENSION_NAME
-  , pattern VK_EXT_VALIDATION_CACHE_SPEC_VERSION
-  , pattern VK_OBJECT_TYPE_VALIDATION_CACHE_EXT
+import Graphics.Vulkan.Core10.Core
+  ( pattern OBJECT_TYPE_VALIDATION_CACHE_EXT
+  , pattern STRUCTURE_TYPE_SHADER_MODULE_VALIDATION_CACHE_CREATE_INFO_EXT
+  , pattern STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT
   )
 
 
@@ -125,14 +130,12 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache
 -- | VkShaderModuleValidationCacheCreateInfoEXT - Specify validation cache to
 -- use during shader module creation
 --
--- = Description
---
--- Unresolved directive in VkShaderModuleValidationCacheCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkShaderModuleValidationCacheCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkValidationCacheEXT'
 data ShaderModuleValidationCacheCreateInfoEXT = ShaderModuleValidationCacheCreateInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "ShaderModuleValidationCacheCreateInfoEXT" "pNext"
@@ -170,8 +173,11 @@ instance Zero ShaderModuleValidationCacheCreateInfoEXT where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkValidationCacheCreateInfoEXT'
 type ValidationCacheCreateFlagsEXT = VkValidationCacheCreateFlagsEXT
+
+
+-- No complete pragma for ValidationCacheCreateFlagsEXT as it has no patterns
 
 
 -- | VkValidationCacheCreateInfoEXT - Structure specifying parameters of a
@@ -188,12 +194,23 @@ type ValidationCacheCreateFlagsEXT = VkValidationCacheCreateFlagsEXT
 --     retrieved from a previous call to
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkGetValidationCacheDataEXT'
 --
--- Unresolved directive in VkValidationCacheCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkValidationCacheCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VK_STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @flags@ /must/ be @0@
+--
+-- -   If @initialDataSize@ is not @0@, @pInitialData@ /must/ be a valid
+--     pointer to an array of @initialDataSize@ bytes
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkValidationCacheCreateFlagsEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkCreateValidationCacheEXT'
 data ValidationCacheCreateInfoEXT = ValidationCacheCreateInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "ValidationCacheCreateInfoEXT" "pNext"
@@ -231,7 +248,11 @@ instance Zero ValidationCacheCreateInfoEXT where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkShaderModuleValidationCacheCreateInfoEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkCreateValidationCacheEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkDestroyValidationCacheEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkGetValidationCacheDataEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkMergeValidationCachesEXT'
 type ValidationCacheEXT = VkValidationCacheEXT
 
 -- | VkValidationCacheHeaderVersionEXT - Encode validation cache version
@@ -241,6 +262,9 @@ type ValidationCacheEXT = VkValidationCacheEXT
 -- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkCreateValidationCacheEXT',
 -- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkGetValidationCacheDataEXT'
 type ValidationCacheHeaderVersionEXT = VkValidationCacheHeaderVersionEXT
+
+
+{-# complete VALIDATION_CACHE_HEADER_VERSION_ONE_EXT :: ValidationCacheHeaderVersionEXT #-}
 
 
 -- | 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VK_VALIDATION_CACHE_HEADER_VERSION_ONE_EXT'
@@ -302,12 +326,38 @@ pattern VALIDATION_CACHE_HEADER_VERSION_ONE_EXT = VK_VALIDATION_CACHE_HEADER_VER
 -- significantly shorter than the duration of the
 -- 'Graphics.Vulkan.C.Core10.Shader.vkCreateShaderModule' command.
 --
--- Unresolved directive in vkCreateValidationCacheEXT.txt -
--- include::{generated}\/validity\/protos\/vkCreateValidationCacheEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkValidationCacheCreateInfoEXT'
+--     structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pValidationCache@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkValidationCacheEXT'
+--     handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkValidationCacheCreateInfoEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkValidationCacheEXT'
 createValidationCacheEXT :: Device ->  ValidationCacheCreateInfoEXT ->  Maybe AllocationCallbacks ->  IO (ValidationCacheEXT)
 createValidationCacheEXT = \(Device device' commandTable) -> \createInfo' -> \allocator -> alloca (\pValidationCache' -> maybeWith (\marshalled -> withCStructAllocationCallbacks marshalled . flip with) allocator (\pAllocator -> (\marshalled -> withCStructValidationCacheCreateInfoEXT marshalled . flip with) createInfo' (\pCreateInfo' -> vkCreateValidationCacheEXT commandTable device' pCreateInfo' pAllocator pValidationCache' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (peek pValidationCache')))))
 
@@ -337,12 +387,34 @@ createValidationCacheEXT = \(Device device' commandTable) -> \createInfo' -> \al
 --     were provided when @validationCache@ was created, @pAllocator@
 --     /must/ be @NULL@
 --
--- Unresolved directive in vkDestroyValidationCacheEXT.txt -
--- include::{generated}\/validity\/protos\/vkDestroyValidationCacheEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   If @validationCache@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE',
+--     @validationCache@ /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkValidationCacheEXT'
+--     handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   If @validationCache@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @validationCache@ /must/ be externally synchronized
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkValidationCacheEXT'
 destroyValidationCacheEXT :: Device ->  ValidationCacheEXT ->  Maybe AllocationCallbacks ->  IO ()
 destroyValidationCacheEXT = \(Device device' commandTable) -> \validationCache' -> \allocator -> maybeWith (\marshalled -> withCStructAllocationCallbacks marshalled . flip with) allocator (\pAllocator -> vkDestroyValidationCacheEXT commandTable device' validationCache' pAllocator *> (pure ()))
 
@@ -433,12 +505,40 @@ destroyValidationCacheEXT = \(Device device' commandTable) -> \validationCache' 
 -- nothing will be written to @pData@ and zero will be written to
 -- @pDataSize@.
 --
--- Unresolved directive in vkGetValidationCacheDataEXT.txt -
--- include::{generated}\/validity\/protos\/vkGetValidationCacheDataEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @validationCache@ /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkValidationCacheEXT'
+--     handle
+--
+-- -   @pDataSize@ /must/ be a valid pointer to a @size_t@ value
+--
+-- -   If the value referenced by @pDataSize@ is not @0@, and @pData@ is
+--     not @NULL@, @pData@ /must/ be a valid pointer to an array of
+--     @pDataSize@ bytes
+--
+-- -   @validationCache@ /must/ have been created, allocated, or retrieved
+--     from @device@
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkValidationCacheEXT'
 getNumValidationCacheDataEXT :: Device ->  ValidationCacheEXT ->  IO (VkResult, CSize)
 getNumValidationCacheDataEXT = \(Device device' commandTable) -> \validationCache' -> alloca (\pDataSize' -> vkGetValidationCacheDataEXT commandTable device' validationCache' pDataSize' nullPtr >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>peek pDataSize')))
 
@@ -528,12 +628,40 @@ getNumValidationCacheDataEXT = \(Device device' commandTable) -> \validationCach
 -- nothing will be written to @pData@ and zero will be written to
 -- @pDataSize@.
 --
--- Unresolved directive in vkGetValidationCacheDataEXT.txt -
--- include::{generated}\/validity\/protos\/vkGetValidationCacheDataEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @validationCache@ /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkValidationCacheEXT'
+--     handle
+--
+-- -   @pDataSize@ /must/ be a valid pointer to a @size_t@ value
+--
+-- -   If the value referenced by @pDataSize@ is not @0@, and @pData@ is
+--     not @NULL@, @pData@ /must/ be a valid pointer to an array of
+--     @pDataSize@ bytes
+--
+-- -   @validationCache@ /must/ have been created, allocated, or retrieved
+--     from @device@
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkValidationCacheEXT'
 getValidationCacheDataEXT :: Device ->  ValidationCacheEXT ->  CSize ->  IO (VkResult, ByteString)
 getValidationCacheDataEXT = \(Device device' commandTable) -> \validationCache' -> \dataSize' -> allocaArray (fromIntegral dataSize') (\pData' -> with dataSize' (\pDataSize' -> vkGetValidationCacheDataEXT commandTable device' validationCache' pDataSize' (castPtr pData') >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>(curry packCStringLen pData' =<< (fromIntegral <$> (peek pDataSize')))))))
 -- | Returns all the values available from 'getValidationCacheDataEXT'.
@@ -571,12 +699,48 @@ getAllValidationCacheDataEXT device' validationCache' =
 --
 -- == Valid Usage
 --
--- Unresolved directive in vkMergeValidationCachesEXT.txt -
--- include::{generated}\/validity\/protos\/vkMergeValidationCachesEXT.txt[]
+-- -   @dstCache@ /must/ not appear in the list of source caches
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @dstCache@ /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkValidationCacheEXT'
+--     handle
+--
+-- -   @pSrcCaches@ /must/ be a valid pointer to an array of
+--     @srcCacheCount@ valid
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkValidationCacheEXT'
+--     handles
+--
+-- -   @srcCacheCount@ /must/ be greater than @0@
+--
+-- -   @dstCache@ /must/ have been created, allocated, or retrieved from
+--     @device@
+--
+-- -   Each element of @pSrcCaches@ /must/ have been created, allocated, or
+--     retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @dstCache@ /must/ be externally synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkValidationCacheEXT'
 mergeValidationCachesEXT :: Device ->  ValidationCacheEXT ->  Vector ValidationCacheEXT ->  IO ()
 mergeValidationCachesEXT = \(Device device' commandTable) -> \dstCache' -> \srcCaches' -> withVec (&) srcCaches' (\pSrcCaches' -> vkMergeValidationCachesEXT commandTable device' dstCache' (fromIntegral $ Data.Vector.length srcCaches') pSrcCaches' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (pure ())))
 
@@ -588,3 +752,11 @@ withValidationCacheEXT
 withValidationCacheEXT device validationCacheCreateInfoEXT allocationCallbacks = bracket
   (createValidationCacheEXT device validationCacheCreateInfoEXT allocationCallbacks)
   (\o -> destroyValidationCacheEXT device o allocationCallbacks)
+
+-- No documentation found for TopLevel "VK_EXT_VALIDATION_CACHE_EXTENSION_NAME"
+pattern EXT_VALIDATION_CACHE_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_VALIDATION_CACHE_EXTENSION_NAME = VK_EXT_VALIDATION_CACHE_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_VALIDATION_CACHE_SPEC_VERSION"
+pattern EXT_VALIDATION_CACHE_SPEC_VERSION :: Integral a => a
+pattern EXT_VALIDATION_CACHE_SPEC_VERSION = VK_EXT_VALIDATION_CACHE_SPEC_VERSION

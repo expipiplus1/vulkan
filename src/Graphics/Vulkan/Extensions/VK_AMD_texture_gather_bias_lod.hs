@@ -7,11 +7,14 @@ module Graphics.Vulkan.Extensions.VK_AMD_texture_gather_bias_lod
   ( withCStructTextureLODGatherFormatPropertiesAMD
   , fromCStructTextureLODGatherFormatPropertiesAMD
   , TextureLODGatherFormatPropertiesAMD(..)
-  , pattern VK_AMD_TEXTURE_GATHER_BIAS_LOD_SPEC_VERSION
-  , pattern VK_AMD_TEXTURE_GATHER_BIAS_LOD_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD
+  , pattern AMD_TEXTURE_GATHER_BIAS_LOD_EXTENSION_NAME
+  , pattern AMD_TEXTURE_GATHER_BIAS_LOD_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Foreign.Marshal.Utils
   ( maybePeek
   , maybeWith
@@ -26,6 +29,8 @@ import Graphics.Vulkan.C.Core10.Core
   )
 import Graphics.Vulkan.C.Extensions.VK_AMD_texture_gather_bias_lod
   ( VkTextureLODGatherFormatPropertiesAMD(..)
+  , pattern VK_AMD_TEXTURE_GATHER_BIAS_LOD_EXTENSION_NAME
+  , pattern VK_AMD_TEXTURE_GATHER_BIAS_LOD_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD
   )
 import Graphics.Vulkan.Core10.Core
@@ -37,9 +42,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_AMD_texture_gather_bias_lod
-  ( pattern VK_AMD_TEXTURE_GATHER_BIAS_LOD_EXTENSION_NAME
-  , pattern VK_AMD_TEXTURE_GATHER_BIAS_LOD_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD
   )
 
 
@@ -48,14 +52,12 @@ import Graphics.Vulkan.C.Extensions.VK_AMD_texture_gather_bias_lod
 -- not texture gather bias\/LOD functionality is supported for a given
 -- image format and a given physical device.
 --
--- = Description
---
--- Unresolved directive in VkTextureLODGatherFormatPropertiesAMD.txt -
--- include::{generated}\/validity\/structs\/VkTextureLODGatherFormatPropertiesAMD.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data TextureLODGatherFormatPropertiesAMD = TextureLODGatherFormatPropertiesAMD
   { -- Univalued member elided
   -- No documentation found for Nested "TextureLODGatherFormatPropertiesAMD" "pNext"
@@ -82,3 +84,11 @@ instance Zero TextureLODGatherFormatPropertiesAMD where
   zero = TextureLODGatherFormatPropertiesAMD Nothing
                                              False
 
+
+-- No documentation found for TopLevel "VK_AMD_TEXTURE_GATHER_BIAS_LOD_EXTENSION_NAME"
+pattern AMD_TEXTURE_GATHER_BIAS_LOD_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern AMD_TEXTURE_GATHER_BIAS_LOD_EXTENSION_NAME = VK_AMD_TEXTURE_GATHER_BIAS_LOD_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_AMD_TEXTURE_GATHER_BIAS_LOD_SPEC_VERSION"
+pattern AMD_TEXTURE_GATHER_BIAS_LOD_SPEC_VERSION :: Integral a => a
+pattern AMD_TEXTURE_GATHER_BIAS_LOD_SPEC_VERSION = VK_AMD_TEXTURE_GATHER_BIAS_LOD_SPEC_VERSION

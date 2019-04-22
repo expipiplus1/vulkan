@@ -13,10 +13,9 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group_creation
   , getNumPhysicalDeviceGroups
   , enumeratePhysicalDeviceGroups
   , enumerateAllPhysicalDeviceGroups
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES
-  , pattern VK_STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO
-  , pattern VK_MAX_DEVICE_GROUP_SIZE
-  , pattern VK_MEMORY_HEAP_MULTI_INSTANCE_BIT
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES
+  , pattern STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO
+  , pattern MEMORY_HEAP_MULTI_INSTANCE_BIT
   ) where
 
 import Control.Exception
@@ -107,9 +106,12 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation
-  ( pattern VK_MAX_DEVICE_GROUP_SIZE
-  , pattern VK_MEMORY_HEAP_MULTI_INSTANCE_BIT
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES
+  )
+import Graphics.Vulkan.Core10.DeviceInitialization
+  ( pattern MEMORY_HEAP_MULTI_INSTANCE_BIT
   )
 
 
@@ -148,8 +150,15 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation
 --     of 'Graphics.Vulkan.C.Core10.Device.vkCreateDevice' /must/ be an
 --     element of @pPhysicalDevices@.
 --
--- Unresolved directive in VkDeviceGroupDeviceCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkDeviceGroupDeviceCreateInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation.VK_STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO'
+--
+-- -   If @physicalDeviceCount@ is not @0@, @pPhysicalDevices@ /must/ be a
+--     valid pointer to an array of @physicalDeviceCount@ valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handles
 --
 -- = See Also
 --
@@ -188,17 +197,15 @@ instance Zero DeviceGroupDeviceCreateInfo where
 -- | VkPhysicalDeviceGroupProperties - Structure specifying physical device
 -- group properties
 --
--- = Description
---
--- Unresolved directive in VkPhysicalDeviceGroupProperties.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceGroupProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation.vkEnumeratePhysicalDeviceGroups'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation.vkEnumeratePhysicalDeviceGroups',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_device_group_creation.vkEnumeratePhysicalDeviceGroupsKHR'
 data PhysicalDeviceGroupProperties = PhysicalDeviceGroupProperties
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceGroupProperties" "pNext"
@@ -267,8 +274,34 @@ instance Zero PhysicalDeviceGroupProperties where
 --
 -- Every physical device /must/ be in exactly one device group.
 --
--- Unresolved directive in vkEnumeratePhysicalDeviceGroups.txt -
--- include::{generated}\/validity\/protos\/vkEnumeratePhysicalDeviceGroups.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @pPhysicalDeviceGroupCount@ /must/ be a valid pointer to a
+--     @uint32_t@ value
+--
+-- -   If the value referenced by @pPhysicalDeviceGroupCount@ is not @0@,
+--     and @pPhysicalDeviceGroupProperties@ is not @NULL@,
+--     @pPhysicalDeviceGroupProperties@ /must/ be a valid pointer to an
+--     array of @pPhysicalDeviceGroupCount@
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation.VkPhysicalDeviceGroupProperties'
+--     structures
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_INITIALIZATION_FAILED'
 --
 -- = See Also
 --
@@ -311,8 +344,34 @@ getNumPhysicalDeviceGroups = \(Instance instance' commandTable) -> alloca (\pPhy
 --
 -- Every physical device /must/ be in exactly one device group.
 --
--- Unresolved directive in vkEnumeratePhysicalDeviceGroups.txt -
--- include::{generated}\/validity\/protos\/vkEnumeratePhysicalDeviceGroups.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @pPhysicalDeviceGroupCount@ /must/ be a valid pointer to a
+--     @uint32_t@ value
+--
+-- -   If the value referenced by @pPhysicalDeviceGroupCount@ is not @0@,
+--     and @pPhysicalDeviceGroupProperties@ is not @NULL@,
+--     @pPhysicalDeviceGroupProperties@ /must/ be a valid pointer to an
+--     array of @pPhysicalDeviceGroupCount@
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation.VkPhysicalDeviceGroupProperties'
+--     structures
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_INITIALIZATION_FAILED'
 --
 -- = See Also
 --

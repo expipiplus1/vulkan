@@ -8,12 +8,12 @@ module Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image
   , fromCStructSharedPresentSurfaceCapabilitiesKHR
   , SharedPresentSurfaceCapabilitiesKHR(..)
   , getSwapchainStatusKHR
-  , pattern VK_KHR_SHARED_PRESENTABLE_IMAGE_SPEC_VERSION
-  , pattern VK_KHR_SHARED_PRESENTABLE_IMAGE_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_KHR
-  , pattern VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR
-  , pattern VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR
-  , pattern VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR
+  , pattern KHR_SHARED_PRESENTABLE_IMAGE_EXTENSION_NAME
+  , pattern KHR_SHARED_PRESENTABLE_IMAGE_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_KHR
+  , pattern PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR
+  , pattern PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR
+  , pattern IMAGE_LAYOUT_SHARED_PRESENT_KHR
   ) where
 
 import Control.Exception
@@ -21,6 +21,9 @@ import Control.Exception
   )
 import Control.Monad
   ( when
+  )
+import Data.String
+  ( IsString
   )
 import Foreign.Marshal.Utils
   ( maybePeek
@@ -39,6 +42,8 @@ import Graphics.Vulkan.C.Core10.Core
 import Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image
   ( VkSharedPresentSurfaceCapabilitiesKHR(..)
   , vkGetSwapchainStatusKHR
+  , pattern VK_KHR_SHARED_PRESENTABLE_IMAGE_EXTENSION_NAME
+  , pattern VK_KHR_SHARED_PRESENTABLE_IMAGE_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_KHR
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
@@ -56,12 +61,15 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image
-  ( pattern VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR
-  , pattern VK_KHR_SHARED_PRESENTABLE_IMAGE_EXTENSION_NAME
-  , pattern VK_KHR_SHARED_PRESENTABLE_IMAGE_SPEC_VERSION
-  , pattern VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR
-  , pattern VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_KHR
+  )
+import Graphics.Vulkan.Core10.Image
+  ( pattern IMAGE_LAYOUT_SHARED_PRESENT_KHR
+  )
+import Graphics.Vulkan.Extensions.VK_KHR_surface
+  ( pattern PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR
+  , pattern PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR
   )
 
 
@@ -69,14 +77,12 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image
 -- | VkSharedPresentSurfaceCapabilitiesKHR - structure describing
 -- capabilities of a surface for shared presentation
 --
--- = Description
---
--- Unresolved directive in VkSharedPresentSurfaceCapabilitiesKHR.txt -
--- include::{generated}\/validity\/structs\/VkSharedPresentSurfaceCapabilitiesKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageUsageFlags',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data SharedPresentSurfaceCapabilitiesKHR = SharedPresentSurfaceCapabilitiesKHR
   { -- Univalued member elided
   -- No documentation found for Nested "SharedPresentSurfaceCapabilitiesKHR" "pNext"
@@ -113,13 +119,54 @@ instance Zero SharedPresentSurfaceCapabilitiesKHR where
 --
 -- -   @swapchain@ is the swapchain to query.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkGetSwapchainStatusKHR.txt -
--- include::{generated}\/validity\/protos\/vkGetSwapchainStatusKHR.txt[]
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @swapchain@ /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
+--     handle
+--
+-- -   Both of @device@, and @swapchain@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance'
+--
+-- == Host Synchronization
+--
+-- -   Host access to @swapchain@ /must/ be externally synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VK_SUBOPTIMAL_KHR'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_DEVICE_LOST'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VK_ERROR_OUT_OF_DATE_KHR'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_SURFACE_LOST_KHR'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
 getSwapchainStatusKHR :: Device ->  SwapchainKHR ->  IO (VkResult)
 getSwapchainStatusKHR = \(Device device' commandTable) -> \swapchain' -> vkGetSwapchainStatusKHR commandTable device' swapchain' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (pure ret))
+
+-- No documentation found for TopLevel "VK_KHR_SHARED_PRESENTABLE_IMAGE_EXTENSION_NAME"
+pattern KHR_SHARED_PRESENTABLE_IMAGE_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern KHR_SHARED_PRESENTABLE_IMAGE_EXTENSION_NAME = VK_KHR_SHARED_PRESENTABLE_IMAGE_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_KHR_SHARED_PRESENTABLE_IMAGE_SPEC_VERSION"
+pattern KHR_SHARED_PRESENTABLE_IMAGE_SPEC_VERSION :: Integral a => a
+pattern KHR_SHARED_PRESENTABLE_IMAGE_SPEC_VERSION = VK_KHR_SHARED_PRESENTABLE_IMAGE_SPEC_VERSION

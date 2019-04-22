@@ -13,7 +13,7 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_semaphore
   , SemaphoreImportFlagBitsKHR
   , SemaphoreImportFlags
   , SemaphoreImportFlagsKHR
-  , pattern VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO
+  , pattern STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO
   ) where
 
 import Foreign.Marshal.Utils
@@ -42,6 +42,9 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO
+  )
 
 
 
@@ -54,8 +57,14 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
 --     reported by
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreProperties'.
 --
--- Unresolved directive in VkExportSemaphoreCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkExportSemaphoreCreateInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore.VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO'
+--
+-- -   @handleTypes@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreHandleTypeFlagBits'
+--     values
 --
 -- = See Also
 --
@@ -101,6 +110,9 @@ instance Zero ExportSemaphoreCreateInfo where
 type SemaphoreImportFlagBits = VkSemaphoreImportFlagBits
 
 
+{-# complete SEMAPHORE_IMPORT_TEMPORARY_BIT :: SemaphoreImportFlagBits #-}
+
+
 -- | 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore.VK_SEMAPHORE_IMPORT_TEMPORARY_BIT'
 -- specifies that the semaphore payload will be imported only temporarily,
 -- as described in
@@ -122,6 +134,8 @@ type SemaphoreImportFlagBitsKHR = SemaphoreImportFlagBits
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd.VkImportSemaphoreFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32.VkImportSemaphoreWin32HandleInfoKHR',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore.VkSemaphoreImportFlagBits'
 type SemaphoreImportFlags = SemaphoreImportFlagBits
 

@@ -88,7 +88,7 @@ pattern VK_DEPENDENCY_VIEW_LOCAL_BIT_KHR :: VkDependencyFlagBits
 pattern VK_DEPENDENCY_VIEW_LOCAL_BIT_KHR = VK_DEPENDENCY_VIEW_LOCAL_BIT
 
 -- No documentation found for TopLevel "VK_KHR_MULTIVIEW_EXTENSION_NAME"
-pattern VK_KHR_MULTIVIEW_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_MULTIVIEW_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_MULTIVIEW_EXTENSION_NAME = "VK_KHR_multiview"
 
 -- No documentation found for TopLevel "VK_KHR_MULTIVIEW_SPEC_VERSION"

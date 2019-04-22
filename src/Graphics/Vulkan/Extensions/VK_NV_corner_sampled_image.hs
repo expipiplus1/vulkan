@@ -7,12 +7,15 @@ module Graphics.Vulkan.Extensions.VK_NV_corner_sampled_image
   ( withCStructPhysicalDeviceCornerSampledImageFeaturesNV
   , fromCStructPhysicalDeviceCornerSampledImageFeaturesNV
   , PhysicalDeviceCornerSampledImageFeaturesNV(..)
-  , pattern VK_NV_CORNER_SAMPLED_IMAGE_SPEC_VERSION
-  , pattern VK_NV_CORNER_SAMPLED_IMAGE_EXTENSION_NAME
-  , pattern VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV
+  , pattern NV_CORNER_SAMPLED_IMAGE_EXTENSION_NAME
+  , pattern NV_CORNER_SAMPLED_IMAGE_SPEC_VERSION
+  , pattern IMAGE_CREATE_CORNER_SAMPLED_BIT_NV
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Foreign.Marshal.Utils
   ( maybePeek
   , maybeWith
@@ -27,6 +30,8 @@ import Graphics.Vulkan.C.Core10.Core
   )
 import Graphics.Vulkan.C.Extensions.VK_NV_corner_sampled_image
   ( VkPhysicalDeviceCornerSampledImageFeaturesNV(..)
+  , pattern VK_NV_CORNER_SAMPLED_IMAGE_EXTENSION_NAME
+  , pattern VK_NV_CORNER_SAMPLED_IMAGE_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV
   )
 import Graphics.Vulkan.Core10.Core
@@ -38,10 +43,11 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_NV_corner_sampled_image
-  ( pattern VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV
-  , pattern VK_NV_CORNER_SAMPLED_IMAGE_EXTENSION_NAME
-  , pattern VK_NV_CORNER_SAMPLED_IMAGE_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV
+  )
+import Graphics.Vulkan.Core10.DeviceInitialization
+  ( pattern IMAGE_CREATE_CORNER_SAMPLED_BIT_NV
   )
 
 
@@ -66,13 +72,12 @@ import Graphics.Vulkan.C.Extensions.VK_NV_corner_sampled_image
 -- /can/ also be used in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
 --
--- Unresolved directive in VkPhysicalDeviceCornerSampledImageFeaturesNV.txt
--- -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceCornerSampledImageFeaturesNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceCornerSampledImageFeaturesNV = PhysicalDeviceCornerSampledImageFeaturesNV
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceCornerSampledImageFeaturesNV" "pNext"
@@ -99,3 +104,11 @@ instance Zero PhysicalDeviceCornerSampledImageFeaturesNV where
   zero = PhysicalDeviceCornerSampledImageFeaturesNV Nothing
                                                     False
 
+
+-- No documentation found for TopLevel "VK_NV_CORNER_SAMPLED_IMAGE_EXTENSION_NAME"
+pattern NV_CORNER_SAMPLED_IMAGE_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern NV_CORNER_SAMPLED_IMAGE_EXTENSION_NAME = VK_NV_CORNER_SAMPLED_IMAGE_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_NV_CORNER_SAMPLED_IMAGE_SPEC_VERSION"
+pattern NV_CORNER_SAMPLED_IMAGE_SPEC_VERSION :: Integral a => a
+pattern NV_CORNER_SAMPLED_IMAGE_SPEC_VERSION = VK_NV_CORNER_SAMPLED_IMAGE_SPEC_VERSION

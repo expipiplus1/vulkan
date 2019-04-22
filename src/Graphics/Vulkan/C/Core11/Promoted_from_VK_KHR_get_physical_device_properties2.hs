@@ -94,20 +94,19 @@ import Graphics.Vulkan.NamedType
 
 -- | VkFormatProperties2 - Structure specifying image format properties
 --
--- = Description
---
--- Unresolved directive in VkFormatProperties2.txt -
--- include::{generated}\/validity\/structs\/VkFormatProperties2.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkFormatProperties',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetPhysicalDeviceFormatProperties2'
+-- 'vkGetPhysicalDeviceFormatProperties2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceFormatProperties2KHR'
 data VkFormatProperties2 = VkFormatProperties2
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_2'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VkDrmFormatModifierPropertiesListEXT'
   vkPNext :: Ptr ()
   , -- | @formatProperties@ is a structure of type
   -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkFormatProperties'
@@ -151,14 +150,28 @@ instance Zero VkFormatProperties2 where
 -- @imageFormatProperties@, not @sType@, @pNext@, or any structures chained
 -- from @pNext@.
 --
--- Unresolved directive in VkImageFormatProperties2.txt -
--- include::{generated}\/validity\/structs\/VkImageFormatProperties2.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be 'VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2'
+--
+-- -   Each @pNext@ member of any structure (including this one) in the
+--     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
+--     instance of
+--     'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkAndroidHardwareBufferUsageANDROID',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalImageFormatProperties',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_filter_cubic.VkFilterCubicImageViewImageFormatPropertiesEXT',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionImageFormatProperties',
+--     or
+--     'Graphics.Vulkan.C.Extensions.VK_AMD_texture_gather_bias_lod.VkTextureLODGatherFormatPropertiesAMD'
+--
+-- -   Each @sType@ member in the @pNext@ chain /must/ be unique
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageFormatProperties',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetPhysicalDeviceImageFormatProperties2'
+-- 'vkGetPhysicalDeviceImageFormatProperties2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceImageFormatProperties2KHR'
 data VkImageFormatProperties2 = VkImageFormatProperties2
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -205,16 +218,16 @@ instance Zero VkImageFormatProperties2 where
 -- case it controls which features are enabled in the device in lieu of
 -- @pEnabledFeatures@.
 --
--- Unresolved directive in VkPhysicalDeviceFeatures2.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceFeatures2.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceFeatures',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetPhysicalDeviceFeatures2'
+-- 'vkGetPhysicalDeviceFeatures2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceFeatures2KHR'
 data VkPhysicalDeviceFeatures2 = VkPhysicalDeviceFeatures2
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -250,23 +263,41 @@ instance Zero VkPhysicalDeviceFeatures2 where
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceImageFormatProperties',
 -- with @sType@ and @pNext@ added for extensibility.
 --
--- == Valid Usage
+-- == Valid Usage (Implicit)
 --
--- -   @tiling@ /must/ be
---     'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
---     if and only if the @pNext@ chain contains
---     'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VkPhysicalDeviceImageDrmFormatModifierInfoEXT'.
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2'
 --
--- -   If @tiling@ is
---     'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
---     and @flags@ contains
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT',
---     then the @pNext@ chain /must/ contain
---     'Graphics.Vulkan.C.Extensions.VK_KHR_image_format_list.VkImageFormatListCreateInfoKHR'
---     with non-zero @viewFormatCount@.
+-- -   Each @pNext@ member of any structure (including this one) in the
+--     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
+--     instance of
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_image_format_list.VkImageFormatListCreateInfoKHR',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_separate_stencil_usage.VkImageStencilUsageCreateInfoEXT',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkPhysicalDeviceExternalImageFormatInfo',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VkPhysicalDeviceImageDrmFormatModifierInfoEXT',
+--     or
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_filter_cubic.VkPhysicalDeviceImageViewImageFormatInfoEXT'
 --
--- Unresolved directive in VkPhysicalDeviceImageFormatInfo2.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceImageFormatInfo2.txt[]
+-- -   Each @sType@ member in the @pNext@ chain /must/ be unique
+--
+-- -   @format@ /must/ be a valid 'Graphics.Vulkan.C.Core10.Core.VkFormat'
+--     value
+--
+-- -   @type@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageType' value
+--
+-- -   @tiling@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageTiling' value
+--
+-- -   @usage@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageUsageFlagBits'
+--     values
+--
+-- -   @usage@ /must/ not be @0@
+--
+-- -   @flags@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageCreateFlagBits'
+--     values
 --
 -- = See Also
 --
@@ -276,7 +307,8 @@ instance Zero VkPhysicalDeviceFeatures2 where
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageType',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageUsageFlags',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetPhysicalDeviceImageFormatProperties2'
+-- 'vkGetPhysicalDeviceImageFormatProperties2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceImageFormatProperties2KHR'
 data VkPhysicalDeviceImageFormatInfo2 = VkPhysicalDeviceImageFormatInfo2
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -341,20 +373,20 @@ instance Zero VkPhysicalDeviceImageFormatInfo2 where
 -- | VkPhysicalDeviceMemoryProperties2 - Structure specifying physical device
 -- memory properties
 --
--- = Description
---
--- Unresolved directive in VkPhysicalDeviceMemoryProperties2.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceMemoryProperties2.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceMemoryProperties',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetPhysicalDeviceMemoryProperties2'
+-- 'vkGetPhysicalDeviceMemoryProperties2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceMemoryProperties2KHR'
 data VkPhysicalDeviceMemoryProperties2 = VkPhysicalDeviceMemoryProperties2
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_memory_budget.VkPhysicalDeviceMemoryBudgetPropertiesEXT'
   vkPNext :: Ptr ()
   , -- | @memoryProperties@ is a structure of type
   -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceMemoryProperties'
@@ -387,14 +419,51 @@ instance Zero VkPhysicalDeviceMemoryProperties2 where
 -- The @pNext@ chain of this structure is used to extend the structure with
 -- properties defined by extensions.
 --
--- Unresolved directive in VkPhysicalDeviceProperties2.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceProperties2.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2'
+--
+-- -   Each @pNext@ member of any structure (including this one) in the
+--     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
+--     instance of
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_blend_operation_advanced.VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization.VkPhysicalDeviceConservativeRasterizationPropertiesEXT',
+--     'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkPhysicalDeviceCooperativeMatrixPropertiesNV',
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VkPhysicalDeviceDepthStencilResolvePropertiesKHR',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingPropertiesEXT',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_discard_rectangles.VkPhysicalDeviceDiscardRectanglePropertiesEXT',
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_driver_properties.VkPhysicalDeviceDriverPropertiesKHR',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_host.VkPhysicalDeviceExternalMemoryHostPropertiesEXT',
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_shader_float_controls.VkPhysicalDeviceFloatControlsPropertiesKHR',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VkPhysicalDeviceFragmentDensityMapPropertiesEXT',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkPhysicalDeviceIDProperties',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VkPhysicalDeviceInlineUniformBlockPropertiesEXT',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance3.VkPhysicalDeviceMaintenance3Properties',
+--     'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.VkPhysicalDeviceMeshShaderPropertiesNV',
+--     'Graphics.Vulkan.C.Extensions.VK_NVX_multiview_per_view_attributes.VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_multiview.VkPhysicalDeviceMultiviewProperties',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_pci_bus_info.VkPhysicalDevicePCIBusInfoPropertiesEXT',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VkPhysicalDevicePointClippingProperties',
+--     'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory.VkPhysicalDeviceProtectedMemoryProperties',
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.VkPhysicalDevicePushDescriptorPropertiesKHR',
+--     'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkPhysicalDeviceRayTracingPropertiesNV',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkPhysicalDeviceSampleLocationsPropertiesEXT',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax.VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT',
+--     'Graphics.Vulkan.C.Extensions.VK_AMD_shader_core_properties.VkPhysicalDeviceShaderCorePropertiesAMD',
+--     'Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image.VkPhysicalDeviceShadingRateImagePropertiesNV',
+--     'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VkPhysicalDeviceSubgroupProperties',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.VkPhysicalDeviceTransformFeedbackPropertiesEXT',
+--     or
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_vertex_attribute_divisor.VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT'
+--
+-- -   Each @sType@ member in the @pNext@ chain /must/ be unique
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceProperties',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetPhysicalDeviceProperties2'
+-- 'vkGetPhysicalDeviceProperties2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceProperties2KHR'
 data VkPhysicalDeviceProperties2 = VkPhysicalDeviceProperties2
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -427,10 +496,7 @@ instance Zero VkPhysicalDeviceProperties2 where
 -- | VkPhysicalDeviceSparseImageFormatInfo2 - Structure specifying sparse
 -- image format inputs
 --
--- == Valid Usage
---
--- Unresolved directive in VkPhysicalDeviceSparseImageFormatInfo2.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceSparseImageFormatInfo2.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -440,28 +506,28 @@ instance Zero VkPhysicalDeviceProperties2 where
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageUsageFlags',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkSampleCountFlagBits',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetPhysicalDeviceSparseImageFormatProperties2'
+-- 'vkGetPhysicalDeviceSparseImageFormatProperties2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceSparseImageFormatProperties2KHR'
 data VkPhysicalDeviceSparseImageFormatInfo2 = VkPhysicalDeviceSparseImageFormatInfo2
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- | @format@ is the image format.
+  , -- | @format@ /must/ be a valid 'Graphics.Vulkan.C.Core10.Core.VkFormat'
+  -- value
   vkFormat :: VkFormat
-  , -- | @type@ is the dimensionality of image.
+  , -- | @type@ /must/ be a valid
+  -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageType' value
   vkType :: VkImageType
-  , -- | @samples@ /must/ be a bit value that is set in
-  -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageFormatProperties'::@sampleCounts@
-  -- returned by
-  -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceImageFormatProperties'
-  -- with @format@, @type@, @tiling@, and @usage@ equal to those in this
-  -- command and @flags@ equal to the value that is set in
-  -- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@flags@ when the
-  -- image is created
+  , -- | @samples@ /must/ be a valid
+  -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkSampleCountFlagBits'
+  -- value
   vkSamples :: VkSampleCountFlagBits
-  , -- | @usage@ is a bitmask describing the intended usage of the image.
+  , -- | @usage@ /must/ not be @0@
   vkUsage :: VkImageUsageFlags
-  , -- | @tiling@ is the tiling arrangement of the texel blocks in memory.
+  , -- | @tiling@ /must/ be a valid
+  -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageTiling' value
   vkTiling :: VkImageTiling
   }
   deriving (Eq, Show)
@@ -496,20 +562,19 @@ instance Zero VkPhysicalDeviceSparseImageFormatInfo2 where
 -- | VkQueueFamilyProperties2 - Structure providing information about a queue
 -- family
 --
--- = Description
---
--- Unresolved directive in VkQueueFamilyProperties2.txt -
--- include::{generated}\/validity\/structs\/VkQueueFamilyProperties2.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkQueueFamilyProperties',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetPhysicalDeviceQueueFamilyProperties2'
+-- 'vkGetPhysicalDeviceQueueFamilyProperties2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceQueueFamilyProperties2KHR'
 data VkQueueFamilyProperties2 = VkQueueFamilyProperties2
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+  -- 'Graphics.Vulkan.C.Extensions.VK_NV_device_diagnostic_checkpoints.VkQueueFamilyCheckpointPropertiesNV'
   vkPNext :: Ptr ()
   , -- | @queueFamilyProperties@ is a structure of type
   -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkQueueFamilyProperties'
@@ -537,20 +602,18 @@ instance Zero VkQueueFamilyProperties2 where
 -- | VkSparseImageFormatProperties2 - Structure specifying sparse image
 -- format properties
 --
--- = Description
---
--- Unresolved directive in VkSparseImageFormatProperties2.txt -
--- include::{generated}\/validity\/structs\/VkSparseImageFormatProperties2.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageFormatProperties',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetPhysicalDeviceSparseImageFormatProperties2'
+-- 'vkGetPhysicalDeviceSparseImageFormatProperties2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceSparseImageFormatProperties2KHR'
 data VkSparseImageFormatProperties2 = VkSparseImageFormatProperties2
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
   , -- | @properties@ is a structure of type
   -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageFormatProperties'
@@ -592,8 +655,7 @@ instance Zero VkSparseImageFormatProperties2 where
 -- writes each member to a boolean value indicating whether that feature is
 -- supported.
 --
--- Unresolved directive in vkGetPhysicalDeviceFeatures2.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceFeatures2.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -640,8 +702,7 @@ type PFN_vkGetPhysicalDeviceFeatures2 = FunPtr FN_vkGetPhysicalDeviceFeatures2
 -- with the ability to return extended information in a @pNext@ chain of
 -- output structures.
 --
--- Unresolved directive in vkGetPhysicalDeviceFormatProperties2.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceFormatProperties2.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -691,19 +752,17 @@ type PFN_vkGetPhysicalDeviceFormatProperties2 = FunPtr FN_vkGetPhysicalDeviceFor
 -- with the ability to return extended information in a @pNext@ chain of
 -- output structures.
 --
--- == Valid Usage
+-- == Return Codes
 --
--- -   If the @pNext@ chain of @pImageFormatProperties@ contains an
---     instance of
---     'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkAndroidHardwareBufferUsageANDROID',
---     the @pNext@ chain of @pImageFormatInfo@ /must/ contain an instance
---     of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkPhysicalDeviceExternalImageFormatInfo'
---     with @handleType@ set to
---     'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'.
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
 --
--- Unresolved directive in vkGetPhysicalDeviceImageFormatProperties2.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceImageFormatProperties2.txt[]
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_FORMAT_NOT_SUPPORTED'
 --
 -- = See Also
 --
@@ -748,8 +807,7 @@ type PFN_vkGetPhysicalDeviceImageFormatProperties2 = FunPtr FN_vkGetPhysicalDevi
 -- with the ability to return extended information in a @pNext@ chain of
 -- output structures.
 --
--- Unresolved directive in vkGetPhysicalDeviceMemoryProperties2.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceMemoryProperties2.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -793,8 +851,7 @@ type PFN_vkGetPhysicalDeviceMemoryProperties2 = FunPtr FN_vkGetPhysicalDeviceMem
 -- 'vkGetPhysicalDeviceProperties2' writes each member to a value
 -- indicating the value of that property or limit.
 --
--- Unresolved directive in vkGetPhysicalDeviceProperties2.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceProperties2.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -842,8 +899,19 @@ type PFN_vkGetPhysicalDeviceProperties2 = FunPtr FN_vkGetPhysicalDevicePropertie
 -- with the ability to return extended information in a @pNext@ chain of
 -- output structures.
 --
--- Unresolved directive in vkGetPhysicalDeviceQueueFamilyProperties2.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceQueueFamilyProperties2.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @pQueueFamilyPropertyCount@ /must/ be a valid pointer to a
+--     @uint32_t@ value
+--
+-- -   If the value referenced by @pQueueFamilyPropertyCount@ is not @0@,
+--     and @pQueueFamilyProperties@ is not @NULL@, @pQueueFamilyProperties@
+--     /must/ be a valid pointer to an array of @pQueueFamilyPropertyCount@
+--     'VkQueueFamilyProperties2' structures
 --
 -- = See Also
 --
@@ -894,9 +962,21 @@ type PFN_vkGetPhysicalDeviceQueueFamilyProperties2 = FunPtr FN_vkGetPhysicalDevi
 -- with the ability to return extended information by adding extension
 -- structures to the @pNext@ chain of its @pProperties@ parameter.
 --
--- Unresolved directive in
--- vkGetPhysicalDeviceSparseImageFormatProperties2.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceSparseImageFormatProperties2.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @pFormatInfo@ /must/ be a valid pointer to a valid
+--     'VkPhysicalDeviceSparseImageFormatInfo2' structure
+--
+-- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
+--
+-- -   If the value referenced by @pPropertyCount@ is not @0@, and
+--     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
+--     to an array of @pPropertyCount@ 'VkSparseImageFormatProperties2'
+--     structures
 --
 -- = See Also
 --

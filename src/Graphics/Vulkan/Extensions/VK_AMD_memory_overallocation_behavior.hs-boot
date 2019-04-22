@@ -19,5 +19,5 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_AMD_memory_overallocation_
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_memory_overallocation_behavior.VkDeviceMemoryOverallocationCreateInfoAMD'
 type MemoryOverallocationBehaviorAMD = VkMemoryOverallocationBehaviorAMD

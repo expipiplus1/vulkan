@@ -48,6 +48,7 @@ data VkSampler_T
 --
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorImageInfo',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutBinding',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_image_view_handle.VkImageViewHandleInfoNVX',
 -- 'vkCreateSampler', 'vkDestroySampler'
 type VkSampler = Ptr VkSampler_T
 

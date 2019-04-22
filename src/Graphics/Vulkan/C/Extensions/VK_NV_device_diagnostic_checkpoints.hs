@@ -58,10 +58,7 @@ import Graphics.Vulkan.NamedType
 
 -- | VkCheckpointDataNV - return structure for command buffer checkpoint data
 --
--- = Description
---
--- Unresolved directive in VkCheckpointDataNV.txt -
--- include::{generated}\/validity\/structs\/VkCheckpointDataNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- Note that the stages at which a checkpoint marker /can/ be executed are
 -- implementation-defined and /can/ be queried by calling
@@ -69,11 +66,13 @@ import Graphics.Vulkan.NamedType
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Queue.VkPipelineStageFlagBits',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkGetQueueCheckpointDataNV'
 data VkCheckpointDataNV = VkCheckpointDataNV
-  { -- | @sType@ is the type of this structure
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_CHECKPOINT_DATA_NV'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
   , -- | @stage@ indicates which pipeline stage the checkpoint marker data refers
   -- to.
@@ -105,16 +104,15 @@ instance Zero VkCheckpointDataNV where
 -- | VkQueueFamilyCheckpointPropertiesNV - return structure for queue family
 -- checkpoint info query
 --
--- = Description
---
--- Unresolved directive in VkQueueFamilyCheckpointPropertiesNV.txt -
--- include::{generated}\/validity\/structs\/VkQueueFamilyCheckpointPropertiesNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Queue.VkPipelineStageFlags',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkQueueFamilyCheckpointPropertiesNV = VkQueueFamilyCheckpointPropertiesNV
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -148,14 +146,47 @@ instance Zero VkQueueFamilyCheckpointPropertiesNV where
 -- -   @pCheckpointMarker@ is an opaque application-provided value that
 --     will be associated with the checkpoint.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCmdSetCheckpointNV.txt -
--- include::{generated}\/validity\/protos\/vkCmdSetCheckpointNV.txt[]
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics, compute,
+--     or transfer operations
+--
+-- == Host Synchronization
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Both            | Graphics        |                 |
+-- > | Secondary       |                 | Compute         |                 |
+-- > |                 |                 | Transfer        |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -207,12 +238,22 @@ type PFN_vkCmdSetCheckpointNV = FunPtr FN_vkCmdSetCheckpointNV
 --
 -- -   The device that @queue@ belongs to /must/ be in the lost state
 --
--- Unresolved directive in vkGetQueueCheckpointDataNV.txt -
--- include::{generated}\/validity\/protos\/vkGetQueueCheckpointDataNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @queue@ /must/ be a valid 'Graphics.Vulkan.C.Core10.Queue.VkQueue'
+--     handle
+--
+-- -   @pCheckpointDataCount@ /must/ be a valid pointer to a @uint32_t@
+--     value
+--
+-- -   If the value referenced by @pCheckpointDataCount@ is not @0@, and
+--     @pCheckpointData@ is not @NULL@, @pCheckpointData@ /must/ be a valid
+--     pointer to an array of @pCheckpointDataCount@ 'VkCheckpointDataNV'
+--     structures
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkCheckpointDataNV', 'Graphics.Vulkan.C.Core10.Queue.VkQueue'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -234,7 +275,7 @@ type FN_vkGetQueueCheckpointDataNV = ("queue" ::: VkQueue) -> ("pCheckpointDataC
 type PFN_vkGetQueueCheckpointDataNV = FunPtr FN_vkGetQueueCheckpointDataNV
 
 -- No documentation found for TopLevel "VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME"
-pattern VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME = "VK_NV_device_diagnostic_checkpoints"
 
 -- No documentation found for TopLevel "VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_SPEC_VERSION"

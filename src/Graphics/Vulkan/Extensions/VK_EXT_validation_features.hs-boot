@@ -20,12 +20,12 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_validation_features
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VkValidationFeaturesEXT'
 type ValidationFeatureDisableEXT = VkValidationFeatureDisableEXT
 
 -- | VkValidationFeatureEnableEXT - Specify validation features to enable
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VkValidationFeaturesEXT'
 type ValidationFeatureEnableEXT = VkValidationFeatureEnableEXT

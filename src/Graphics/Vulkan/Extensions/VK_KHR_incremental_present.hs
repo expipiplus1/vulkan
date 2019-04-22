@@ -13,9 +13,9 @@ module Graphics.Vulkan.Extensions.VK_KHR_incremental_present
   , withCStructRectLayerKHR
   , fromCStructRectLayerKHR
   , RectLayerKHR(..)
-  , pattern VK_KHR_INCREMENTAL_PRESENT_SPEC_VERSION
-  , pattern VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR
+  , pattern KHR_INCREMENTAL_PRESENT_EXTENSION_NAME
+  , pattern KHR_INCREMENTAL_PRESENT_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PRESENT_REGIONS_KHR
   ) where
 
 import Control.Monad
@@ -23,6 +23,9 @@ import Control.Monad
   )
 import Data.Maybe
   ( maybe
+  )
+import Data.String
+  ( IsString
   )
 import Data.Vector
   ( Vector
@@ -53,6 +56,8 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_incremental_present
   ( VkPresentRegionKHR(..)
   , VkPresentRegionsKHR(..)
   , VkRectLayerKHR(..)
+  , pattern VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME
+  , pattern VK_KHR_INCREMENTAL_PRESENT_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR
   )
 import Graphics.Vulkan.Core10.Pipeline
@@ -71,9 +76,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_KHR_incremental_present
-  ( pattern VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME
-  , pattern VK_KHR_INCREMENTAL_PRESENT_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PRESENT_REGIONS_KHR
   )
 
 
@@ -81,14 +85,18 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_incremental_present
 -- | VkPresentRegionKHR - Structure containing rectangular region changed by
 -- vkQueuePresentKHR for a given VkImage
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in VkPresentRegionKHR.txt -
--- include::{generated}\/validity\/structs\/VkPresentRegionKHR.txt[]
+-- -   If @rectangleCount@ is not @0@, and @pRectangles@ is not @NULL@,
+--     @pRectangles@ /must/ be a valid pointer to an array of
+--     @rectangleCount@ valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_incremental_present.VkRectLayerKHR'
+--     structures
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_incremental_present.VkPresentRegionsKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_incremental_present.VkRectLayerKHR'
 data PresentRegionKHR = PresentRegionKHR
   { -- Optional length valued member elided
   -- No documentation found for Nested "PresentRegionKHR" "pRectangles"
@@ -118,12 +126,30 @@ instance Zero PresentRegionKHR where
 --
 -- == Valid Usage
 --
--- Unresolved directive in VkPresentRegionsKHR.txt -
--- include::{generated}\/validity\/structs\/VkPresentRegionsKHR.txt[]
+-- -   @swapchainCount@ /must/ be the same value as
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkPresentInfoKHR'::@swapchainCount@,
+--     where
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkPresentInfoKHR' is
+--     in the @pNext@ chain of this
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_incremental_present.VkPresentRegionsKHR'
+--     structure
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_incremental_present.VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR'
+--
+-- -   If @pRegions@ is not @NULL@, @pRegions@ /must/ be a valid pointer to
+--     an array of @swapchainCount@ valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_incremental_present.VkPresentRegionKHR'
+--     structures
+--
+-- -   @swapchainCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_incremental_present.VkPresentRegionKHR',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PresentRegionsKHR = PresentRegionsKHR
   { -- Univalued member elided
   -- No documentation found for Nested "PresentRegionsKHR" "pNext"
@@ -170,9 +196,6 @@ instance Zero PresentRegionsKHR where
 --     structure given to
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkCreateSwapchainKHR'.
 --
--- Unresolved directive in VkRectLayerKHR.txt -
--- include::{generated}\/validity\/structs\/VkRectLayerKHR.txt[]
---
 -- Some platforms allow the size of a surface to change, and then scale the
 -- pixels of the image to fit the surface.
 -- 'Graphics.Vulkan.C.Extensions.VK_KHR_incremental_present.VkRectLayerKHR'
@@ -181,7 +204,9 @@ instance Zero PresentRegionsKHR where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkExtent2D',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkOffset2D',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_incremental_present.VkPresentRegionKHR'
 data RectLayerKHR = RectLayerKHR
   { -- No documentation found for Nested "RectLayerKHR" "offset"
   offset :: Offset2D
@@ -210,3 +235,11 @@ instance Zero RectLayerKHR where
                       zero
                       zero
 
+
+-- No documentation found for TopLevel "VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME"
+pattern KHR_INCREMENTAL_PRESENT_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern KHR_INCREMENTAL_PRESENT_EXTENSION_NAME = VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_KHR_INCREMENTAL_PRESENT_SPEC_VERSION"
+pattern KHR_INCREMENTAL_PRESENT_SPEC_VERSION :: Integral a => a
+pattern KHR_INCREMENTAL_PRESENT_SPEC_VERSION = VK_KHR_INCREMENTAL_PRESENT_SPEC_VERSION

@@ -17,7 +17,7 @@ import Data.String
 
 
 -- No documentation found for TopLevel "VK_EXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME"
-pattern VK_EXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_SHADER_VIEWPORT_INDEX_LAYER_EXTENSION_NAME = "VK_EXT_shader_viewport_index_layer"
 
 -- No documentation found for TopLevel "VK_EXT_SHADER_VIEWPORT_INDEX_LAYER_SPEC_VERSION"

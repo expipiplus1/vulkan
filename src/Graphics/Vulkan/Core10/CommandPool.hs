@@ -9,6 +9,7 @@ module Graphics.Vulkan.Core10.CommandPool
   , CommandPoolCreateFlagBits
   , pattern COMMAND_POOL_CREATE_TRANSIENT_BIT
   , pattern COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT
+  , pattern COMMAND_POOL_CREATE_PROTECTED_BIT
   , CommandPoolCreateFlags
   , withCStructCommandPoolCreateInfo
   , fromCStructCommandPoolCreateInfo
@@ -65,6 +66,9 @@ import Graphics.Vulkan.C.Core10.Core
   , pattern VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO
   , pattern VK_SUCCESS
   )
+import Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory
+  ( pattern VK_COMMAND_POOL_CREATE_PROTECTED_BIT
+  )
 import Graphics.Vulkan.Core10.DeviceInitialization
   ( AllocationCallbacks(..)
   , Device(..)
@@ -89,7 +93,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
 -- 'Graphics.Vulkan.C.Core10.CommandPool.vkDestroyCommandPool',
 -- 'Graphics.Vulkan.C.Core10.CommandBuffer.vkFreeCommandBuffers',
 -- 'Graphics.Vulkan.C.Core10.CommandPool.vkResetCommandPool',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.vkTrimCommandPool'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.vkTrimCommandPool',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_maintenance1.vkTrimCommandPoolKHR'
 type CommandPool = VkCommandPool
 
 -- | VkCommandPoolCreateFlagBits - Bitmask specifying usage behavior for a
@@ -99,6 +104,9 @@ type CommandPool = VkCommandPool
 --
 -- 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPoolCreateFlags'
 type CommandPoolCreateFlagBits = VkCommandPoolCreateFlagBits
+
+
+{-# complete COMMAND_POOL_CREATE_TRANSIENT_BIT, COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT, COMMAND_POOL_CREATE_PROTECTED_BIT :: CommandPoolCreateFlagBits #-}
 
 
 -- | 'Graphics.Vulkan.C.Core10.CommandPool.VK_COMMAND_POOL_CREATE_TRANSIENT_BIT'
@@ -124,6 +132,11 @@ pattern COMMAND_POOL_CREATE_TRANSIENT_BIT = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT
 pattern COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT :: (a ~ CommandPoolCreateFlagBits) => a
 pattern COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT
 
+
+-- No documentation found for Nested "CommandPoolCreateFlagBits" "COMMAND_POOL_CREATE_PROTECTED_BIT"
+pattern COMMAND_POOL_CREATE_PROTECTED_BIT :: (a ~ CommandPoolCreateFlagBits) => a
+pattern COMMAND_POOL_CREATE_PROTECTED_BIT = VK_COMMAND_POOL_CREATE_PROTECTED_BIT
+
 -- | VkCommandPoolCreateFlags - Bitmask of VkCommandPoolCreateFlagBits
 --
 -- = Description
@@ -142,10 +155,7 @@ type CommandPoolCreateFlags = CommandPoolCreateFlagBits
 -- | VkCommandPoolCreateInfo - Structure specifying parameters of a newly
 -- created command pool
 --
--- = Description
---
--- Unresolved directive in VkCommandPoolCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkCommandPoolCreateInfo.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -192,6 +202,9 @@ instance Zero CommandPoolCreateInfo where
 type CommandPoolResetFlagBits = VkCommandPoolResetFlagBits
 
 
+{-# complete COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT :: CommandPoolResetFlagBits #-}
+
+
 -- | 'Graphics.Vulkan.C.Core10.CommandPool.VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT'
 -- specifies that resetting a command pool recycles all of the resources
 -- from the command pool back to the system.
@@ -233,8 +246,35 @@ type CommandPoolResetFlags = CommandPoolResetFlagBits
 --
 -- == Valid Usage
 --
--- Unresolved directive in vkCreateCommandPool.txt -
--- include::{generated}\/validity\/protos\/vkCreateCommandPool.txt[]
+-- -   @pCreateInfo@::@queueFamilyIndex@ /must/ be the index of a queue
+--     family available in the logical device @device@.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPoolCreateInfo'
+--     structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pCommandPool@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -287,8 +327,27 @@ createCommandPool = \(Device device' commandTable) -> \createInfo' -> \allocator
 --     were provided when @commandPool@ was created, @pAllocator@ /must/ be
 --     @NULL@
 --
--- Unresolved directive in vkDestroyCommandPool.txt -
--- include::{generated}\/validity\/protos\/vkDestroyCommandPool.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   If @commandPool@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @commandPool@
+--     /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   If @commandPool@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandPool@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -332,8 +391,34 @@ destroyCommandPool = \(Device device' commandTable) -> \commandPool' -> \allocat
 --     allocated from @commandPool@ /must/ not be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
--- Unresolved directive in vkResetCommandPool.txt -
--- include::{generated}\/validity\/protos\/vkResetCommandPool.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @commandPool@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' handle
+--
+-- -   @flags@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPoolResetFlagBits'
+--     values
+--
+-- -   @commandPool@ /must/ have been created, allocated, or retrieved from
+--     @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandPool@ /must/ be externally synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --

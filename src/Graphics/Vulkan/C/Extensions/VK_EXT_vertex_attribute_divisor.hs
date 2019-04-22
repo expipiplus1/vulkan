@@ -53,15 +53,15 @@ import Graphics.Vulkan.C.Core10.Core
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable the
 -- feature.
 --
--- Unresolved directive in
--- VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT = VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_FEATURES_EXT'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -108,15 +108,14 @@ instance Zero VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT where
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- Unresolved directive in
--- VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT = VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -145,26 +144,23 @@ instance Zero VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT where
 -- | VkPipelineVertexInputDivisorStateCreateInfoEXT - Structure specifying
 -- vertex attributes assignment during instanced rendering
 --
--- = Description
---
--- Unresolved directive in
--- VkPipelineVertexInputDivisorStateCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkPipelineVertexInputDivisorStateCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'VkVertexInputBindingDivisorDescriptionEXT'
 data VkPipelineVertexInputDivisorStateCreateInfoEXT = VkPipelineVertexInputDivisorStateCreateInfoEXT
-  { -- | @sType@ is the type of this structure
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_EXT'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure
   vkPNext :: Ptr ()
-  , -- | @vertexBindingDivisorCount@ is the number of elements in the
-  -- @pVertexBindingDivisors@ array.
+  , -- | @vertexBindingDivisorCount@ /must/ be greater than @0@
   vkVertexBindingDivisorCount :: Word32
-  , -- | @pVertexBindingDivisors@ is a pointer to an array of
-  -- 'VkVertexInputBindingDivisorDescriptionEXT' structures, which specifies
-  -- the divisor value for each binding.
+  , -- | @pVertexBindingDivisors@ /must/ be a valid pointer to an array of
+  -- @vertexBindingDivisorCount@ 'VkVertexInputBindingDivisorDescriptionEXT'
+  -- structures
   vkPVertexBindingDivisors :: Ptr VkVertexInputBindingDivisorDescriptionEXT
   }
   deriving (Eq, Show)
@@ -215,12 +211,9 @@ instance Zero VkPipelineVertexInputDivisorStateCreateInfoEXT where
 --     'Graphics.Vulkan.C.Core10.Pipeline.VK_VERTEX_INPUT_RATE_INSTANCE'
 --     for this @binding@.
 --
--- Unresolved directive in VkVertexInputBindingDivisorDescriptionEXT.txt -
--- include::{generated}\/validity\/structs\/VkVertexInputBindingDivisorDescriptionEXT.txt[]
---
 -- = See Also
 --
--- No cross-references are available
+-- 'VkPipelineVertexInputDivisorStateCreateInfoEXT'
 data VkVertexInputBindingDivisorDescriptionEXT = VkVertexInputBindingDivisorDescriptionEXT
   { -- | @binding@ is the binding number for which the divisor is specified.
   vkBinding :: Word32
@@ -252,7 +245,7 @@ instance Zero VkVertexInputBindingDivisorDescriptionEXT where
                                                    zero
 
 -- No documentation found for TopLevel "VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME"
-pattern VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_EXTENSION_NAME = "VK_EXT_vertex_attribute_divisor"
 
 -- No documentation found for TopLevel "VK_EXT_VERTEX_ATTRIBUTE_DIVISOR_SPEC_VERSION"

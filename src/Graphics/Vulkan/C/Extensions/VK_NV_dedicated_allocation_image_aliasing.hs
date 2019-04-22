@@ -51,15 +51,15 @@ import Graphics.Vulkan.C.Core10.Core
 -- be used in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
 --
--- Unresolved directive in
--- VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV = VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV
-  { -- No documentation found for Nested "VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV" "sType"
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEDICATED_ALLOCATION_IMAGE_ALIASING_FEATURES_NV'
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV" "pNext"
   vkPNext :: Ptr ()
@@ -85,7 +85,7 @@ instance Zero VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV where
                                                                     zero
 
 -- No documentation found for TopLevel "VK_NV_DEDICATED_ALLOCATION_IMAGE_ALIASING_EXTENSION_NAME"
-pattern VK_NV_DEDICATED_ALLOCATION_IMAGE_ALIASING_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_NV_DEDICATED_ALLOCATION_IMAGE_ALIASING_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_NV_DEDICATED_ALLOCATION_IMAGE_ALIASING_EXTENSION_NAME = "VK_NV_dedicated_allocation_image_aliasing"
 
 -- No documentation found for TopLevel "VK_NV_DEDICATED_ALLOCATION_IMAGE_ALIASING_SPEC_VERSION"

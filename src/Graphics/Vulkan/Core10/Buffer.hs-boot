@@ -119,5 +119,7 @@ type BufferUsageFlags = BufferUsageFlagBits
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Buffer.VkBufferCreateInfo',
--- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'
+-- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VkPhysicalDeviceImageDrmFormatModifierInfoEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR'
 type SharingMode = VkSharingMode

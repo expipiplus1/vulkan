@@ -74,14 +74,15 @@ import Graphics.Vulkan.C.Core10.Core
 -- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to
 -- enable this feature.
 --
--- Unresolved directive in VkPhysicalDeviceDepthClipEnableFeaturesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceDepthClipEnableFeaturesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceDepthClipEnableFeaturesEXT = VkPhysicalDeviceDepthClipEnableFeaturesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceDepthClipEnableFeaturesEXT" "sType"
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_ENABLE_FEATURES_EXT'
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceDepthClipEnableFeaturesEXT" "pNext"
   vkPNext :: Ptr ()
@@ -122,7 +123,7 @@ instance Zero VkPhysicalDeviceDepthClipEnableFeaturesEXT where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkPipelineRasterizationDepthClipStateCreateInfoEXT'
 newtype VkPipelineRasterizationDepthClipStateCreateFlagsEXT = VkPipelineRasterizationDepthClipStateCreateFlagsEXT VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -145,21 +146,20 @@ instance Read VkPipelineRasterizationDepthClipStateCreateFlagsEXT where
 -- | VkPipelineRasterizationDepthClipStateCreateInfoEXT - Structure
 -- specifying depth clipping state
 --
--- = Description
---
--- Unresolved directive in
--- VkPipelineRasterizationDepthClipStateCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkPipelineRasterizationDepthClipStateCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'VkPipelineRasterizationDepthClipStateCreateFlagsEXT',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPipelineRasterizationDepthClipStateCreateInfoEXT = VkPipelineRasterizationDepthClipStateCreateInfoEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_DEPTH_CLIP_STATE_CREATE_INFO_EXT'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @flags@ is reserved for future use.
+  , -- | @flags@ /must/ be @0@
   vkFlags :: VkPipelineRasterizationDepthClipStateCreateFlagsEXT
   , -- | @depthClipEnable@ controls whether depth clipping is enabled as
   -- described in
@@ -187,7 +187,7 @@ instance Zero VkPipelineRasterizationDepthClipStateCreateInfoEXT where
                                                             zero
 
 -- No documentation found for TopLevel "VK_EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME"
-pattern VK_EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME = "VK_EXT_depth_clip_enable"
 
 -- No documentation found for TopLevel "VK_EXT_DEPTH_CLIP_ENABLE_SPEC_VERSION"

@@ -62,16 +62,15 @@ import Graphics.Vulkan.NamedType
 -- | VkSharedPresentSurfaceCapabilitiesKHR - structure describing
 -- capabilities of a surface for shared presentation
 --
--- = Description
---
--- Unresolved directive in VkSharedPresentSurfaceCapabilitiesKHR.txt -
--- include::{generated}\/validity\/structs\/VkSharedPresentSurfaceCapabilitiesKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageUsageFlags',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkSharedPresentSurfaceCapabilitiesKHR = VkSharedPresentSurfaceCapabilitiesKHR
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_KHR'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -113,14 +112,47 @@ instance Zero VkSharedPresentSurfaceCapabilitiesKHR where
 --
 -- -   @swapchain@ is the swapchain to query.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkGetSwapchainStatusKHR.txt -
--- include::{generated}\/validity\/protos\/vkGetSwapchainStatusKHR.txt[]
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @swapchain@ /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
+--     handle
+--
+-- -   Both of @device@, and @swapchain@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance'
+--
+-- == Host Synchronization
+--
+-- -   Host access to @swapchain@ /must/ be externally synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VK_SUBOPTIMAL_KHR'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_DEVICE_LOST'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VK_ERROR_OUT_OF_DATE_KHR'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_SURFACE_LOST_KHR'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -141,41 +173,23 @@ foreign import ccall
 type FN_vkGetSwapchainStatusKHR = ("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> IO VkResult
 type PFN_vkGetSwapchainStatusKHR = FunPtr FN_vkGetSwapchainStatusKHR
 
--- | 'VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR' is valid only for shared
--- presentable images, and /must/ be used for any usage the image supports.
+-- No documentation found for Nested "VkImageLayout" "VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR"
 pattern VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR :: VkImageLayout
 pattern VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR = VkImageLayout 1000111000
 
 -- No documentation found for TopLevel "VK_KHR_SHARED_PRESENTABLE_IMAGE_EXTENSION_NAME"
-pattern VK_KHR_SHARED_PRESENTABLE_IMAGE_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_SHARED_PRESENTABLE_IMAGE_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_SHARED_PRESENTABLE_IMAGE_EXTENSION_NAME = "VK_KHR_shared_presentable_image"
 
 -- No documentation found for TopLevel "VK_KHR_SHARED_PRESENTABLE_IMAGE_SPEC_VERSION"
 pattern VK_KHR_SHARED_PRESENTABLE_IMAGE_SPEC_VERSION :: Integral a => a
 pattern VK_KHR_SHARED_PRESENTABLE_IMAGE_SPEC_VERSION = 1
 
--- | 'VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR' specifies that the
--- presentation engine and application have concurrent access to a single
--- image, which is referred to as a /shared presentable image/. The
--- presentation engine periodically updates the current image on its
--- regular refresh cycle. The application is only required to make one
--- initial presentation request, after which the presentation engine /must/
--- update the current image without any need for further presentation
--- requests. The application /can/ indicate the image contents have been
--- updated by making a presentation request, but this does not guarantee
--- the timing of when it will be updated. This mode /may/ result in visible
--- tearing if rendering to the image is not timed correctly.
+-- No documentation found for Nested "VkPresentModeKHR" "VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR"
 pattern VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR :: VkPresentModeKHR
 pattern VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR = VkPresentModeKHR 1000111001
 
--- | 'VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR' specifies that the
--- presentation engine and application have concurrent access to a single
--- image, which is referred to as a /shared presentable image/. The
--- presentation engine is only required to update the current image after a
--- new presentation request is received. Therefore the application /must/
--- make a presentation request whenever an update is required. However, the
--- presentation engine /may/ update the current image at any point, meaning
--- this mode /may/ result in visible tearing.
+-- No documentation found for Nested "VkPresentModeKHR" "VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR"
 pattern VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR :: VkPresentModeKHR
 pattern VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR = VkPresentModeKHR 1000111000
 

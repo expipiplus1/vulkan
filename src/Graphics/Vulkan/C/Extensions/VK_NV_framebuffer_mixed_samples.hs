@@ -74,7 +74,7 @@ import Graphics.Vulkan.C.Core10.Core
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkPipelineCoverageModulationStateCreateInfoNV'
 newtype VkCoverageModulationModeNV = VkCoverageModulationModeNV Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -129,7 +129,7 @@ pattern VK_COVERAGE_MODULATION_MODE_RGBA_NV = VkCoverageModulationModeNV 3
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkPipelineCoverageModulationStateCreateInfoNV'
 newtype VkPipelineCoverageModulationStateCreateFlagsNV = VkPipelineCoverageModulationStateCreateFlagsNV VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -200,13 +200,21 @@ instance Read VkPipelineCoverageModulationStateCreateFlagsNV where
 --     rasterization samples divided by the number of color samples in the
 --     subpass.
 --
--- Unresolved directive in
--- VkPipelineCoverageModulationStateCreateInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkPipelineCoverageModulationStateCreateInfoNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV'
+--
+-- -   @flags@ /must/ be @0@
+--
+-- -   @coverageModulationMode@ /must/ be a valid
+--     'VkCoverageModulationModeNV' value
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32', 'VkCoverageModulationModeNV',
+-- 'VkPipelineCoverageModulationStateCreateFlagsNV',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPipelineCoverageModulationStateCreateInfoNV = VkPipelineCoverageModulationStateCreateInfoNV
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -257,7 +265,7 @@ instance Zero VkPipelineCoverageModulationStateCreateInfoNV where
                                                        zero
 
 -- No documentation found for TopLevel "VK_NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME"
-pattern VK_NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME = "VK_NV_framebuffer_mixed_samples"
 
 -- No documentation found for TopLevel "VK_NV_FRAMEBUFFER_MIXED_SAMPLES_SPEC_VERSION"

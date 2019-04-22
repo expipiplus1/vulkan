@@ -15,11 +15,11 @@ module Graphics.Vulkan.Extensions.VK_KHR_external_memory_fd
   , MemoryGetFdInfoKHR(..)
   , getMemoryFdKHR
   , getMemoryFdPropertiesKHR
-  , pattern VK_KHR_EXTERNAL_MEMORY_FD_SPEC_VERSION
-  , pattern VK_KHR_EXTERNAL_MEMORY_FD_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_IMPORT_MEMORY_FD_INFO_KHR
-  , pattern VK_STRUCTURE_TYPE_MEMORY_FD_PROPERTIES_KHR
-  , pattern VK_STRUCTURE_TYPE_MEMORY_GET_FD_INFO_KHR
+  , pattern KHR_EXTERNAL_MEMORY_FD_EXTENSION_NAME
+  , pattern KHR_EXTERNAL_MEMORY_FD_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_IMPORT_MEMORY_FD_INFO_KHR
+  , pattern STRUCTURE_TYPE_MEMORY_FD_PROPERTIES_KHR
+  , pattern STRUCTURE_TYPE_MEMORY_GET_FD_INFO_KHR
   ) where
 
 import Control.Exception
@@ -28,6 +28,9 @@ import Control.Exception
 import Control.Monad
   ( (<=<)
   , when
+  )
+import Data.String
+  ( IsString
   )
 import Data.Word
   ( Word32
@@ -61,6 +64,8 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd
   , VkMemoryGetFdInfoKHR(..)
   , vkGetMemoryFdKHR
   , vkGetMemoryFdPropertiesKHR
+  , pattern VK_KHR_EXTERNAL_MEMORY_FD_EXTENSION_NAME
+  , pattern VK_KHR_EXTERNAL_MEMORY_FD_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_IMPORT_MEMORY_FD_INFO_KHR
   , pattern VK_STRUCTURE_TYPE_MEMORY_FD_PROPERTIES_KHR
   , pattern VK_STRUCTURE_TYPE_MEMORY_GET_FD_INFO_KHR
@@ -82,9 +87,10 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd
-  ( pattern VK_KHR_EXTERNAL_MEMORY_FD_EXTENSION_NAME
-  , pattern VK_KHR_EXTERNAL_MEMORY_FD_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_IMPORT_MEMORY_FD_INFO_KHR
+  , pattern STRUCTURE_TYPE_MEMORY_FD_PROPERTIES_KHR
+  , pattern STRUCTURE_TYPE_MEMORY_GET_FD_INFO_KHR
   )
 
 
@@ -130,12 +136,19 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd
 -- -   @fd@ /must/ obey any requirements listed for @handleType@ in
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>.
 --
--- Unresolved directive in VkImportMemoryFdInfoKHR.txt -
--- include::{generated}\/validity\/structs\/VkImportMemoryFdInfoKHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd.VK_STRUCTURE_TYPE_IMPORT_MEMORY_FD_INFO_KHR'
+--
+-- -   If @handleType@ is not @0@, @handleType@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits'
+--     value
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data ImportMemoryFdInfoKHR = ImportMemoryFdInfoKHR
   { -- Univalued member elided
   -- No documentation found for Nested "ImportMemoryFdInfoKHR" "pNext"
@@ -170,14 +183,12 @@ instance Zero ImportMemoryFdInfoKHR where
 
 -- | VkMemoryFdPropertiesKHR - Properties of External Memory File Descriptors
 --
--- = Description
---
--- Unresolved directive in VkMemoryFdPropertiesKHR.txt -
--- include::{generated}\/validity\/structs\/VkMemoryFdPropertiesKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd.vkGetMemoryFdPropertiesKHR'
 data MemoryFdPropertiesKHR = MemoryFdPropertiesKHR
   { -- Univalued member elided
   -- No documentation found for Nested "MemoryFdPropertiesKHR" "pNext"
@@ -217,23 +228,14 @@ instance Zero MemoryFdPropertiesKHR where
 -- for a description of the properties of the defined external memory
 -- handle types.
 --
--- __Note__
---
--- The size of the exported file /may/ be larger than the size requested by
--- 'Graphics.Vulkan.C.Core10.Memory.VkMemoryAllocateInfo'::allocationSize.
--- If @handleType@ is
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_dma_buf.VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT',
--- then the application /can/ query the file’s actual size with
--- <man:lseek(2) lseek(2)>.
---
--- == Valid Usage
---
--- Unresolved directive in VkMemoryGetFdInfoKHR.txt -
--- include::{generated}\/validity\/structs\/VkMemoryGetFdInfoKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd.vkGetMemoryFdKHR'
 data MemoryGetFdInfoKHR = MemoryGetFdInfoKHR
   { -- Univalued member elided
   -- No documentation found for Nested "MemoryGetFdInfoKHR" "pNext"
@@ -292,12 +294,20 @@ instance Zero MemoryGetFdInfoKHR where
 -- the file descriptor to be closed automatically when an @execve@ system
 -- call is made.
 --
--- Unresolved directive in vkGetMemoryFdKHR.txt -
--- include::{generated}\/validity\/protos\/vkGetMemoryFdKHR.txt[]
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_TOO_MANY_OBJECTS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd.VkMemoryGetFdInfoKHR'
 getMemoryFdKHR :: Device ->  MemoryGetFdInfoKHR ->  IO (CInt)
 getMemoryFdKHR = \(Device device' commandTable) -> \getFdInfo' -> alloca (\pFd' -> (\marshalled -> withCStructMemoryGetFdInfoKHR marshalled . flip with) getFdInfo' (\pGetFdInfo' -> vkGetMemoryFdKHR commandTable device' pGetFdInfo' pFd' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (peek pFd'))))
 
@@ -317,13 +327,26 @@ getMemoryFdKHR = \(Device device' commandTable) -> \getFdInfo' -> alloca (\pFd' 
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd.VkMemoryFdPropertiesKHR'
 --     structure in which the properties of the handle @fd@ are returned.
 --
--- == Valid Usage
+-- == Return Codes
 --
--- Unresolved directive in vkGetMemoryFdPropertiesKHR.txt -
--- include::{generated}\/validity\/protos\/vkGetMemoryFdPropertiesKHR.txt[]
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VK_ERROR_INVALID_EXTERNAL_HANDLE'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd.VkMemoryFdPropertiesKHR'
 getMemoryFdPropertiesKHR :: Device ->  ExternalMemoryHandleTypeFlagBits ->  CInt ->  IO (MemoryFdPropertiesKHR)
 getMemoryFdPropertiesKHR = \(Device device' commandTable) -> \handleType' -> \fd' -> alloca (\pMemoryFdProperties' -> vkGetMemoryFdPropertiesKHR commandTable device' handleType' fd' pMemoryFdProperties' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((fromCStructMemoryFdPropertiesKHR <=< peek) pMemoryFdProperties')))
+
+-- No documentation found for TopLevel "VK_KHR_EXTERNAL_MEMORY_FD_EXTENSION_NAME"
+pattern KHR_EXTERNAL_MEMORY_FD_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern KHR_EXTERNAL_MEMORY_FD_EXTENSION_NAME = VK_KHR_EXTERNAL_MEMORY_FD_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_KHR_EXTERNAL_MEMORY_FD_SPEC_VERSION"
+pattern KHR_EXTERNAL_MEMORY_FD_SPEC_VERSION :: Integral a => a
+pattern KHR_EXTERNAL_MEMORY_FD_SPEC_VERSION = VK_KHR_EXTERNAL_MEMORY_FD_SPEC_VERSION

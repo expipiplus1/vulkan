@@ -16,13 +16,16 @@ module Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
   , pattern PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT
   , pattern PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT
   , PipelineCreationFeedbackFlagsEXT
-  , pattern VK_EXT_PIPELINE_CREATION_FEEDBACK_SPEC_VERSION
-  , pattern VK_EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO_EXT
+  , pattern EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME
+  , pattern EXT_PIPELINE_CREATION_FEEDBACK_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO_EXT
   ) where
 
 import Control.Monad
   ( (<=<)
+  )
+import Data.String
+  ( IsString
   )
 import Data.Vector
   ( Vector
@@ -56,6 +59,8 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback
   ( VkPipelineCreationFeedbackCreateInfoEXT(..)
   , VkPipelineCreationFeedbackEXT(..)
   , VkPipelineCreationFeedbackFlagBitsEXT(..)
+  , pattern VK_EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME
+  , pattern VK_EXT_PIPELINE_CREATION_FEEDBACK_SPEC_VERSION
   , pattern VK_PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT
   , pattern VK_PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT
   , pattern VK_PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT
@@ -69,9 +74,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback
-  ( pattern VK_EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME
-  , pattern VK_EXT_PIPELINE_CREATION_FEEDBACK_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO_EXT
   )
 
 
@@ -99,12 +103,9 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback
 -- is set in @pPipelineCreationFeedback@.
 --
 -- When chained to
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkRayTracingPipelineCreateInfoNV'
--- or 'Graphics.Vulkan.C.Core10.Pipeline.VkGraphicsPipelineCreateInfo', the
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkGraphicsPipelineCreateInfo', the
 -- @i@ element of @pPipelineStageCreationFeedbacks@ corresponds to the @i@
 -- element of
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkRayTracingPipelineCreateInfoNV'::@pStages@
--- or
 -- 'Graphics.Vulkan.C.Core10.Pipeline.VkGraphicsPipelineCreateInfo'::@pStages@.
 -- When chained to
 -- 'Graphics.Vulkan.C.Core10.Pipeline.VkComputePipelineCreateInfo', the
@@ -124,21 +125,29 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback.VkPipelineCreationFeedbackEXT'::@pipelineStageCreationFeedbackCount@
 --     /must/ equal 1
 --
--- -   When chained to
---     'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkRayTracingPipelineCreateInfoNV',
---     'Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback.VkPipelineCreationFeedbackEXT'::@pipelineStageCreationFeedbackCount@
---     /must/ equal
---     'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkRayTracingPipelineCreateInfoNV'::@stageCount@
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in VkPipelineCreationFeedbackCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkPipelineCreationFeedbackCreateInfoEXT.txt[]
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback.VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO_EXT'
+--
+-- -   @pPipelineCreationFeedback@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback.VkPipelineCreationFeedbackEXT'
+--     structure
+--
+-- -   @pPipelineStageCreationFeedbacks@ /must/ be a valid pointer to an
+--     array of @pipelineStageCreationFeedbackCount@
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback.VkPipelineCreationFeedbackEXT'
+--     structures
+--
+-- -   @pipelineStageCreationFeedbackCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Pipeline.VkComputePipelineCreateInfo',
 -- 'Graphics.Vulkan.C.Core10.Pipeline.VkGraphicsPipelineCreateInfo',
 -- 'Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback.VkPipelineCreationFeedbackEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkRayTracingPipelineCreateInfoNV'
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkRayTracingPipelineCreateInfoNV',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PipelineCreationFeedbackCreateInfoEXT = PipelineCreationFeedbackCreateInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PipelineCreationFeedbackCreateInfoEXT" "pNext"
@@ -185,13 +194,11 @@ instance Zero PipelineCreationFeedbackCreateInfoEXT where
 -- 'Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback.VkPipelineCreationFeedbackEXT'
 -- data members are undefined.
 --
--- Unresolved directive in VkPipelineCreationFeedbackEXT.txt -
--- include::{generated}\/validity\/structs\/VkPipelineCreationFeedbackEXT.txt[]
---
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback.VkPipelineCreationFeedbackCreateInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback.VkPipelineCreationFeedbackFlagBitsEXT'
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback.VkPipelineCreationFeedbackFlagBitsEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback.VkPipelineCreationFeedbackFlagsEXT'
 data PipelineCreationFeedbackEXT = PipelineCreationFeedbackEXT
   { -- No documentation found for Nested "PipelineCreationFeedbackEXT" "flags"
   flags :: PipelineCreationFeedbackFlagsEXT
@@ -223,8 +230,12 @@ instance Zero PipelineCreationFeedbackEXT where
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback.VkPipelineCreationFeedbackCreateInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback.VkPipelineCreationFeedbackEXT'
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback.VkPipelineCreationFeedbackEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback.VkPipelineCreationFeedbackFlagsEXT'
 type PipelineCreationFeedbackFlagBitsEXT = VkPipelineCreationFeedbackFlagBitsEXT
+
+
+{-# complete PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT, PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT, PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT :: PipelineCreationFeedbackFlagBitsEXT #-}
 
 
 -- | 'Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback.VK_PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT'
@@ -242,9 +253,8 @@ pattern PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT = VK_PIPELINE_CREATION_FEEDBACK
 -- 'Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback.VK_PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT'
 -- bit if it was able to avoid the large majority of pipeline or pipeline
 -- stage creation work by using the @pipelineCache@ parameter of
--- 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateGraphicsPipelines',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCreateRayTracingPipelinesNV',
--- or 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateComputePipelines'. When an
+-- 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateGraphicsPipelines', or
+-- 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateComputePipelines'. When an
 -- implementation sets this bit for the entire pipeline, it /may/ leave it
 -- unset for any stage.
 --
@@ -293,3 +303,11 @@ pattern PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT = VK_PIPEL
 -- 'Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback.VkPipelineCreationFeedbackEXT',
 -- 'Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback.VkPipelineCreationFeedbackFlagBitsEXT'
 type PipelineCreationFeedbackFlagsEXT = PipelineCreationFeedbackFlagBitsEXT
+
+-- No documentation found for TopLevel "VK_EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME"
+pattern EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME = VK_EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_PIPELINE_CREATION_FEEDBACK_SPEC_VERSION"
+pattern EXT_PIPELINE_CREATION_FEEDBACK_SPEC_VERSION :: Integral a => a
+pattern EXT_PIPELINE_CREATION_FEEDBACK_SPEC_VERSION = VK_EXT_PIPELINE_CREATION_FEEDBACK_SPEC_VERSION

@@ -76,7 +76,8 @@ import Graphics.Vulkan.NamedType
 --
 -- = See Also
 --
--- 'vkTrimCommandPool'
+-- 'vkTrimCommandPool',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_maintenance1.vkTrimCommandPoolKHR'
 newtype VkCommandPoolTrimFlags = VkCommandPoolTrimFlags VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -148,8 +149,22 @@ instance Read VkCommandPoolTrimFlags where
 -- pressure after application-known points when there exists enough unused
 -- memory that the cost of trimming is “worth” it.
 --
--- Unresolved directive in vkTrimCommandPool.txt -
--- include::{generated}\/validity\/protos\/vkTrimCommandPool.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @commandPool@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' handle
+--
+-- -   @flags@ /must/ be @0@
+--
+-- -   @commandPool@ /must/ have been created, allocated, or retrieved from
+--     @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandPool@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -176,32 +191,18 @@ foreign import ccall
 type FN_vkTrimCommandPool = ("device" ::: VkDevice) -> ("commandPool" ::: VkCommandPool) -> ("flags" ::: VkCommandPoolTrimFlags) -> IO ()
 type PFN_vkTrimCommandPool = FunPtr FN_vkTrimCommandPool
 
--- | 'VK_ERROR_OUT_OF_POOL_MEMORY' A pool memory allocation has failed. This
--- /must/ only be returned if no attempt to allocate host or device memory
--- was made to accommodate the new allocation. If the failure was
--- definitely due to fragmentation of the pool,
--- 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_FRAGMENTED_POOL' /should/ be
--- returned instead.
+-- No documentation found for Nested "VkResult" "VK_ERROR_OUT_OF_POOL_MEMORY"
 pattern VK_ERROR_OUT_OF_POOL_MEMORY :: VkResult
 pattern VK_ERROR_OUT_OF_POOL_MEMORY = VkResult (-1000069000)
 
--- | 'VK_FORMAT_FEATURE_TRANSFER_DST_BIT' specifies that an image /can/ be
--- used as a destination image for
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#copies copy commands>
--- and
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#clears clear commands>.
+-- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_TRANSFER_DST_BIT"
 pattern VK_FORMAT_FEATURE_TRANSFER_DST_BIT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_TRANSFER_DST_BIT = VkFormatFeatureFlagBits 0x00008000
 
--- | 'VK_FORMAT_FEATURE_TRANSFER_SRC_BIT' specifies that an image /can/ be
--- used as a source image for
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#copies copy commands>.
+-- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_TRANSFER_SRC_BIT"
 pattern VK_FORMAT_FEATURE_TRANSFER_SRC_BIT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_TRANSFER_SRC_BIT = VkFormatFeatureFlagBits 0x00004000
 
--- | 'VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT' specifies that the image /can/
--- be used to create a 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' of
--- type 'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_2D' or
--- 'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_2D_ARRAY'.
+-- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT"
 pattern VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT = VkImageCreateFlagBits 0x00000020

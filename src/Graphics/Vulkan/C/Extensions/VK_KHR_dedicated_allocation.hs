@@ -62,7 +62,7 @@ pattern VkMemoryDedicatedRequirementsKHR :: ("sType" ::: VkStructureType) -> ("p
 pattern VkMemoryDedicatedRequirementsKHR vkSType vkPNext vkPrefersDedicatedAllocation vkRequiresDedicatedAllocation = VkMemoryDedicatedRequirements vkSType vkPNext vkPrefersDedicatedAllocation vkRequiresDedicatedAllocation
 
 -- No documentation found for TopLevel "VK_KHR_DEDICATED_ALLOCATION_EXTENSION_NAME"
-pattern VK_KHR_DEDICATED_ALLOCATION_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_DEDICATED_ALLOCATION_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_DEDICATED_ALLOCATION_EXTENSION_NAME = "VK_KHR_dedicated_allocation"
 
 -- No documentation found for TopLevel "VK_KHR_DEDICATED_ALLOCATION_SPEC_VERSION"

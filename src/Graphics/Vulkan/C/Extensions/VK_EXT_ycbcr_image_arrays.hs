@@ -49,15 +49,15 @@ import Graphics.Vulkan.C.Core10.Core
 -- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to
 -- enable features.
 --
--- Unresolved directive in VkPhysicalDeviceYcbcrImageArraysFeaturesEXT.txt
--- -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceYcbcrImageArraysFeaturesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceYcbcrImageArraysFeaturesEXT = VkPhysicalDeviceYcbcrImageArraysFeaturesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceYcbcrImageArraysFeaturesEXT" "sType"
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_YCBCR_IMAGE_ARRAYS_FEATURES_EXT'
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceYcbcrImageArraysFeaturesEXT" "pNext"
   vkPNext :: Ptr ()
@@ -85,7 +85,7 @@ instance Zero VkPhysicalDeviceYcbcrImageArraysFeaturesEXT where
                                                      zero
 
 -- No documentation found for TopLevel "VK_EXT_YCBCR_IMAGE_ARRAYS_EXTENSION_NAME"
-pattern VK_EXT_YCBCR_IMAGE_ARRAYS_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_YCBCR_IMAGE_ARRAYS_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_YCBCR_IMAGE_ARRAYS_EXTENSION_NAME = "VK_EXT_ycbcr_image_arrays"
 
 -- No documentation found for TopLevel "VK_EXT_YCBCR_IMAGE_ARRAYS_SPEC_VERSION"

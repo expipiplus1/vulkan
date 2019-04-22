@@ -68,22 +68,21 @@ import Graphics.Vulkan.NamedType
 
 -- | VkBufferMemoryRequirementsInfo2 - (None)
 --
--- = Description
---
--- Unresolved directive in VkBufferMemoryRequirementsInfo2.txt -
--- include::{generated}\/validity\/structs\/VkBufferMemoryRequirementsInfo2.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetBufferMemoryRequirements2'
+-- 'vkGetBufferMemoryRequirements2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_memory_requirements2.vkGetBufferMemoryRequirements2KHR'
 data VkBufferMemoryRequirementsInfo2 = VkBufferMemoryRequirementsInfo2
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- | @buffer@ is the buffer to query.
+  , -- | @buffer@ /must/ be a valid
+  -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle
   vkBuffer :: VkBuffer
   }
   deriving (Eq, Show)
@@ -105,57 +104,22 @@ instance Zero VkBufferMemoryRequirementsInfo2 where
 
 -- | VkImageMemoryRequirementsInfo2 - (None)
 --
--- == Valid Usage
---
--- -   If @image@ was created with a /multi-planar/ format and the
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_CREATE_DISJOINT_BIT'
---     flag, there /must/ be a
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkImagePlaneMemoryRequirementsInfo'
---     in the @pNext@ chain of the 'VkImageMemoryRequirementsInfo2'
---     structure
---
--- -   If @image@ was created with
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_CREATE_DISJOINT_BIT'
---     and with
---     'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
---     then there /must/ be a
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkImagePlaneMemoryRequirementsInfo'
---     in the @pNext@ chain of the 'VkImageMemoryRequirementsInfo2'
---     structure
---
--- -   If @image@ was not created with the
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_CREATE_DISJOINT_BIT'
---     flag, there /must/ not be a
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkImagePlaneMemoryRequirementsInfo'
---     in the @pNext@ chain of the 'VkImageMemoryRequirementsInfo2'
---     structure
---
--- -   If @image@ was created with a single-plane format and with any
---     @tiling@ other than
---     'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
---     then there /must/ not be a
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkImagePlaneMemoryRequirementsInfo'
---     in the @pNext@ chain of the 'VkImageMemoryRequirementsInfo2'
---     structure
---
--- -   If @image@ was created with the
---     'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
---     external memory handle type, then @image@ /must/ be bound to memory.
---
--- Unresolved directive in VkImageMemoryRequirementsInfo2.txt -
--- include::{generated}\/validity\/structs\/VkImageMemoryRequirementsInfo2.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetImageMemoryRequirements2'
+-- 'vkGetImageMemoryRequirements2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_memory_requirements2.vkGetImageMemoryRequirements2KHR'
 data VkImageMemoryRequirementsInfo2 = VkImageMemoryRequirementsInfo2
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+  -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkImagePlaneMemoryRequirementsInfo'
   vkPNext :: Ptr ()
-  , -- | @image@ is the image to query.
+  , -- | @image@ /must/ be a valid
+  -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' handle
   vkImage :: VkImage
   }
   deriving (Eq, Show)
@@ -177,22 +141,22 @@ instance Zero VkImageMemoryRequirementsInfo2 where
 
 -- | VkImageSparseMemoryRequirementsInfo2 - (None)
 --
--- = Description
---
--- Unresolved directive in VkImageSparseMemoryRequirementsInfo2.txt -
--- include::{generated}\/validity\/structs\/VkImageSparseMemoryRequirementsInfo2.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetImageSparseMemoryRequirements2'
+-- 'vkGetImageSparseMemoryRequirements2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_memory_requirements2.vkGetImageSparseMemoryRequirements2KHR'
 data VkImageSparseMemoryRequirementsInfo2 = VkImageSparseMemoryRequirementsInfo2
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- | @image@ is the image to query.
+  , -- | @image@ /must/ be a valid
+  -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' handle
   vkImage :: VkImage
   }
   deriving (Eq, Show)
@@ -214,20 +178,21 @@ instance Zero VkImageSparseMemoryRequirementsInfo2 where
 
 -- | VkMemoryRequirements2 - Structure specifying memory requirements
 --
--- = Description
---
--- Unresolved directive in VkMemoryRequirements2.txt -
--- include::{generated}\/validity\/structs\/VkMemoryRequirements2.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetBufferMemoryRequirements2', 'vkGetImageMemoryRequirements2'
+-- 'vkGetBufferMemoryRequirements2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_memory_requirements2.vkGetBufferMemoryRequirements2KHR',
+-- 'vkGetImageMemoryRequirements2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_memory_requirements2.vkGetImageMemoryRequirements2KHR'
 data VkMemoryRequirements2 = VkMemoryRequirements2
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+  -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedRequirements'
   vkPNext :: Ptr ()
   , -- | @memoryRequirements@ is a structure of type
   -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements'
@@ -261,20 +226,18 @@ pattern VkMemoryRequirements2KHR vkSType vkPNext vkMemoryRequirements = VkMemory
 
 -- | VkSparseImageMemoryRequirements2 - (None)
 --
--- = Description
---
--- Unresolved directive in VkSparseImageMemoryRequirements2.txt -
--- include::{generated}\/validity\/structs\/VkSparseImageMemoryRequirements2.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageMemoryRequirements',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetImageSparseMemoryRequirements2'
+-- 'vkGetImageSparseMemoryRequirements2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_memory_requirements2.vkGetImageSparseMemoryRequirements2KHR'
 data VkSparseImageMemoryRequirements2 = VkSparseImageMemoryRequirements2
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
   , -- | @memoryRequirements@ is a structure of type
   -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageMemoryRequirements'
@@ -313,10 +276,7 @@ instance Zero VkSparseImageMemoryRequirements2 where
 --     'VkMemoryRequirements2' structure in which the memory requirements
 --     of the buffer object are returned.
 --
--- = Description
---
--- Unresolved directive in vkGetBufferMemoryRequirements2.txt -
--- include::{generated}\/validity\/protos\/vkGetBufferMemoryRequirements2.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -358,10 +318,7 @@ type PFN_vkGetBufferMemoryRequirements2 = FunPtr FN_vkGetBufferMemoryRequirement
 --     'VkMemoryRequirements2' structure in which the memory requirements
 --     of the image object are returned.
 --
--- = Description
---
--- Unresolved directive in vkGetImageMemoryRequirements2.txt -
--- include::{generated}\/validity\/protos\/vkGetImageMemoryRequirements2.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -405,10 +362,22 @@ type PFN_vkGetImageMemoryRequirements2 = FunPtr FN_vkGetImageMemoryRequirements2
 -- -   @pSparseMemoryRequirements@ is either @NULL@ or a pointer to an
 --     array of 'VkSparseImageMemoryRequirements2' structures.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkGetImageSparseMemoryRequirements2.txt -
--- include::{generated}\/validity\/protos\/vkGetImageSparseMemoryRequirements2.txt[]
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pInfo@ /must/ be a valid pointer to a valid
+--     'VkImageSparseMemoryRequirementsInfo2' structure
+--
+-- -   @pSparseMemoryRequirementCount@ /must/ be a valid pointer to a
+--     @uint32_t@ value
+--
+-- -   If the value referenced by @pSparseMemoryRequirementCount@ is not
+--     @0@, and @pSparseMemoryRequirements@ is not @NULL@,
+--     @pSparseMemoryRequirements@ /must/ be a valid pointer to an array of
+--     @pSparseMemoryRequirementCount@ 'VkSparseImageMemoryRequirements2'
+--     structures
 --
 -- = See Also
 --

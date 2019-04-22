@@ -17,7 +17,7 @@ import Data.String
 
 
 -- No documentation found for TopLevel "VK_AMD_GPU_SHADER_INT16_EXTENSION_NAME"
-pattern VK_AMD_GPU_SHADER_INT16_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_AMD_GPU_SHADER_INT16_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_AMD_GPU_SHADER_INT16_EXTENSION_NAME = "VK_AMD_gpu_shader_int16"
 
 -- No documentation found for TopLevel "VK_AMD_GPU_SHADER_INT16_SPEC_VERSION"

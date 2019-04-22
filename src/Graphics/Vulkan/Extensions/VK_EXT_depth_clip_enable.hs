@@ -11,12 +11,15 @@ module Graphics.Vulkan.Extensions.VK_EXT_depth_clip_enable
   , withCStructPipelineRasterizationDepthClipStateCreateInfoEXT
   , fromCStructPipelineRasterizationDepthClipStateCreateInfoEXT
   , PipelineRasterizationDepthClipStateCreateInfoEXT(..)
-  , pattern VK_EXT_DEPTH_CLIP_ENABLE_SPEC_VERSION
-  , pattern VK_EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_ENABLE_FEATURES_EXT
-  , pattern VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_DEPTH_CLIP_STATE_CREATE_INFO_EXT
+  , pattern EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME
+  , pattern EXT_DEPTH_CLIP_ENABLE_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_ENABLE_FEATURES_EXT
+  , pattern STRUCTURE_TYPE_PIPELINE_RASTERIZATION_DEPTH_CLIP_STATE_CREATE_INFO_EXT
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Foreign.Marshal.Utils
   ( maybePeek
   , maybeWith
@@ -33,6 +36,8 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_depth_clip_enable
   ( VkPhysicalDeviceDepthClipEnableFeaturesEXT(..)
   , VkPipelineRasterizationDepthClipStateCreateFlagsEXT(..)
   , VkPipelineRasterizationDepthClipStateCreateInfoEXT(..)
+  , pattern VK_EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME
+  , pattern VK_EXT_DEPTH_CLIP_ENABLE_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_ENABLE_FEATURES_EXT
   , pattern VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_DEPTH_CLIP_STATE_CREATE_INFO_EXT
   )
@@ -45,9 +50,9 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_depth_clip_enable
-  ( pattern VK_EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME
-  , pattern VK_EXT_DEPTH_CLIP_ENABLE_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_ENABLE_FEATURES_EXT
+  , pattern STRUCTURE_TYPE_PIPELINE_RASTERIZATION_DEPTH_CLIP_STATE_CREATE_INFO_EXT
   )
 
 
@@ -73,12 +78,12 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_depth_clip_enable
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable this
 -- feature.
 --
--- Unresolved directive in VkPhysicalDeviceDepthClipEnableFeaturesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceDepthClipEnableFeaturesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceDepthClipEnableFeaturesEXT = PhysicalDeviceDepthClipEnableFeaturesEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceDepthClipEnableFeaturesEXT" "pNext"
@@ -117,22 +122,23 @@ instance Zero PhysicalDeviceDepthClipEnableFeaturesEXT where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_depth_clip_enable.VkPipelineRasterizationDepthClipStateCreateInfoEXT'
 type PipelineRasterizationDepthClipStateCreateFlagsEXT = VkPipelineRasterizationDepthClipStateCreateFlagsEXT
+
+
+-- No complete pragma for PipelineRasterizationDepthClipStateCreateFlagsEXT as it has no patterns
 
 
 -- | VkPipelineRasterizationDepthClipStateCreateInfoEXT - Structure
 -- specifying depth clipping state
 --
--- = Description
---
--- Unresolved directive in
--- VkPipelineRasterizationDepthClipStateCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkPipelineRasterizationDepthClipStateCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_depth_clip_enable.VkPipelineRasterizationDepthClipStateCreateFlagsEXT',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PipelineRasterizationDepthClipStateCreateInfoEXT = PipelineRasterizationDepthClipStateCreateInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PipelineRasterizationDepthClipStateCreateInfoEXT" "pNext"
@@ -163,3 +169,11 @@ instance Zero PipelineRasterizationDepthClipStateCreateInfoEXT where
                                                           zero
                                                           False
 
+
+-- No documentation found for TopLevel "VK_EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME"
+pattern EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME = VK_EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_DEPTH_CLIP_ENABLE_SPEC_VERSION"
+pattern EXT_DEPTH_CLIP_ENABLE_SPEC_VERSION :: Integral a => a
+pattern EXT_DEPTH_CLIP_ENABLE_SPEC_VERSION = VK_EXT_DEPTH_CLIP_ENABLE_SPEC_VERSION

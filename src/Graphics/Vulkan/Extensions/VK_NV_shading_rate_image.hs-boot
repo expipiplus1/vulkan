@@ -20,7 +20,8 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image.VkPipelineViewportCoarseSampleOrderStateCreateInfoNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image.vkCmdSetCoarseSampleOrderNV'
 type CoarseSampleOrderTypeNV = VkCoarseSampleOrderTypeNV
 
 -- | VkShadingRatePaletteEntryNV - Shading rate image palette entry types
@@ -148,5 +149,6 @@ type CoarseSampleOrderTypeNV = VkCoarseSampleOrderTypeNV
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image.VkCoarseSampleOrderCustomNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image.VkShadingRatePaletteNV'
 type ShadingRatePaletteEntryNV = VkShadingRatePaletteEntryNV

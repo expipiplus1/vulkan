@@ -131,7 +131,16 @@ data VkDisplayKHR_T
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDisplayPlanePropertiesKHR', 'VkDisplayPropertiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_acquire_xlib_display.vkAcquireXlibDisplayEXT',
+-- 'vkCreateDisplayModeKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.vkDisplayPowerControlEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.vkGetDisplayModeProperties2KHR',
+-- 'vkGetDisplayModePropertiesKHR',
+-- 'vkGetDisplayPlaneSupportedDisplaysKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_acquire_xlib_display.vkGetRandROutputDisplayEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.vkRegisterDisplayEventEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_direct_mode_display.vkReleaseDisplayEXT'
 type VkDisplayKHR = Ptr VkDisplayKHR_T
 
 -- ** VkDisplayModeCreateFlagsKHR
@@ -159,25 +168,21 @@ instance Read VkDisplayModeCreateFlagsKHR where
 -- | VkDisplayModeCreateInfoKHR - Structure specifying parameters of a newly
 -- created display mode object
 --
--- = Description
---
--- Unresolved directive in VkDisplayModeCreateInfoKHR.txt -
--- include::{generated}\/validity\/structs\/VkDisplayModeCreateInfoKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDisplayModeCreateFlagsKHR', 'VkDisplayModeParametersKHR',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkCreateDisplayModeKHR'
 data VkDisplayModeCreateInfoKHR = VkDisplayModeCreateInfoKHR
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- | @flags@ is reserved for future use, and /must/ be zero.
+  , -- | @flags@ /must/ be @0@
   vkFlags :: VkDisplayModeCreateFlagsKHR
-  , -- | @parameters@ is a 'VkDisplayModeParametersKHR' structure describing the
-  -- display parameters to use in creating the new mode. If the parameters
-  -- are not compatible with the specified display, the implementation /must/
-  -- return 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_INITIALIZATION_FAILED'.
+  , -- | @parameters@ /must/ be a valid 'VkDisplayModeParametersKHR' structure
   vkParameters :: VkDisplayModeParametersKHR
   }
   deriving (Eq, Show)
@@ -206,7 +211,10 @@ data VkDisplayModeKHR_T
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDisplayModePropertiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.VkDisplayPlaneInfo2KHR',
+-- 'VkDisplaySurfaceCreateInfoKHR', 'vkCreateDisplayModeKHR',
+-- 'vkGetDisplayPlaneCapabilitiesKHR'
 type VkDisplayModeKHR = Ptr VkDisplayModeKHR_T
 
 -- | VkDisplayModeParametersKHR - Structure describing display parameters
@@ -226,12 +234,10 @@ type VkDisplayModeKHR = Ptr VkDisplayModeKHR_T
 --
 -- -   @refreshRate@ /must/ be greater than @0@
 --
--- Unresolved directive in VkDisplayModeParametersKHR.txt -
--- include::{generated}\/validity\/structs\/VkDisplayModeParametersKHR.txt[]
---
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDisplayModeCreateInfoKHR', 'VkDisplayModePropertiesKHR',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkExtent2D'
 data VkDisplayModeParametersKHR = VkDisplayModeParametersKHR
   { -- | @visibleRegion@ is the 2D extents of the visible region.
   vkVisibleRegion :: VkExtent2D
@@ -256,14 +262,11 @@ instance Zero VkDisplayModeParametersKHR where
 -- | VkDisplayModePropertiesKHR - Structure describing display mode
 -- properties
 --
--- = Description
---
--- Unresolved directive in VkDisplayModePropertiesKHR.txt -
--- include::{generated}\/validity\/structs\/VkDisplayModePropertiesKHR.txt[]
---
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDisplayModeKHR', 'VkDisplayModeParametersKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.VkDisplayModeProperties2KHR',
+-- 'vkGetDisplayModePropertiesKHR'
 data VkDisplayModePropertiesKHR = VkDisplayModePropertiesKHR
   { -- | @displayMode@ is a handle to the display mode described in this
   -- structure. This handle will be valid for the lifetime of the Vulkan
@@ -293,7 +296,7 @@ instance Zero VkDisplayModePropertiesKHR where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDisplayPlaneAlphaFlagsKHR', 'VkDisplaySurfaceCreateInfoKHR'
 newtype VkDisplayPlaneAlphaFlagBitsKHR = VkDisplayPlaneAlphaFlagBitsKHR VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -352,7 +355,7 @@ pattern VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = VkDisplayPlaneA
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDisplayPlaneAlphaFlagBitsKHR', 'VkDisplayPlaneCapabilitiesKHR'
 type VkDisplayPlaneAlphaFlagsKHR = VkDisplayPlaneAlphaFlagBitsKHR
 
 -- | VkDisplayPlaneCapabilitiesKHR - Structure describing capabilities of a
@@ -390,12 +393,13 @@ type VkDisplayPlaneAlphaFlagsKHR = VkDisplayPlaneAlphaFlagBitsKHR
 -- supported. Vendors /may/ still fail presentation requests that specify
 -- unsupported combinations.
 --
--- Unresolved directive in VkDisplayPlaneCapabilitiesKHR.txt -
--- include::{generated}\/validity\/structs\/VkDisplayPlaneCapabilitiesKHR.txt[]
---
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDisplayPlaneAlphaFlagsKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.VkDisplayPlaneCapabilities2KHR',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkExtent2D',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkOffset2D',
+-- 'vkGetDisplayPlaneCapabilitiesKHR'
 data VkDisplayPlaneCapabilitiesKHR = VkDisplayPlaneCapabilitiesKHR
   { -- | @supportedAlpha@ is a bitmask of 'VkDisplayPlaneAlphaFlagBitsKHR'
   -- describing the supported alpha blending modes.
@@ -465,14 +469,11 @@ instance Zero VkDisplayPlaneCapabilitiesKHR where
 -- | VkDisplayPlanePropertiesKHR - Structure describing display plane
 -- properties
 --
--- = Description
---
--- Unresolved directive in VkDisplayPlanePropertiesKHR.txt -
--- include::{generated}\/validity\/structs\/VkDisplayPlanePropertiesKHR.txt[]
---
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDisplayKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.VkDisplayPlaneProperties2KHR',
+-- 'vkGetPhysicalDeviceDisplayPlanePropertiesKHR'
 data VkDisplayPlanePropertiesKHR = VkDisplayPlanePropertiesKHR
   { -- | @currentDisplay@ is the handle of the display the plane is currently
   -- associated with. If the plane is not currently attached to any displays,
@@ -513,12 +514,13 @@ instance Zero VkDisplayPlanePropertiesKHR where
 -- when the screen content is updated infrequently, or when only a portion
 -- of the screen needs to be updated in most frames.
 --
--- Unresolved directive in VkDisplayPropertiesKHR.txt -
--- include::{generated}\/validity\/structs\/VkDisplayPropertiesKHR.txt[]
---
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32', 'VkDisplayKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.VkDisplayProperties2KHR',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkExtent2D',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceTransformFlagsKHR',
+-- 'vkGetPhysicalDeviceDisplayPropertiesKHR'
 data VkDisplayPropertiesKHR = VkDisplayPropertiesKHR
   { -- | @display@ is a handle that is used to refer to the display described
   -- here. This handle will be valid for the lifetime of the Vulkan instance.
@@ -645,12 +647,31 @@ instance Read VkDisplaySurfaceCreateFlagsKHR where
 --     than the @maxImageDimensions2D@ member of
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'
 --
--- Unresolved directive in VkDisplaySurfaceCreateInfoKHR.txt -
--- include::{generated}\/validity\/structs\/VkDisplaySurfaceCreateInfoKHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @flags@ /must/ be @0@
+--
+-- -   @displayMode@ /must/ be a valid 'VkDisplayModeKHR' handle
+--
+-- -   @transform@ /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceTransformFlagBitsKHR'
+--     value
+--
+-- -   @alphaMode@ /must/ be a valid 'VkDisplayPlaneAlphaFlagBitsKHR' value
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDisplayModeKHR', 'VkDisplayPlaneAlphaFlagBitsKHR',
+-- 'VkDisplaySurfaceCreateFlagsKHR',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkExtent2D',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceTransformFlagBitsKHR',
+-- 'vkCreateDisplayPlaneSurfaceKHR'
 data VkDisplaySurfaceCreateInfoKHR = VkDisplaySurfaceCreateInfoKHR
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -736,14 +757,45 @@ instance Zero VkDisplaySurfaceCreateInfoKHR where
 --
 -- -   @pMode@ returns the handle of the mode created.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCreateDisplayModeKHR.txt -
--- include::{generated}\/validity\/protos\/vkCreateDisplayModeKHR.txt[]
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @display@ /must/ be a valid 'VkDisplayKHR' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'VkDisplayModeCreateInfoKHR' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pMode@ /must/ be a valid pointer to a 'VkDisplayModeKHR' handle
+--
+-- == Host Synchronization
+--
+-- -   Host access to @display@ /must/ be externally synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_INITIALIZATION_FAILED'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'VkDisplayKHR', 'VkDisplayModeCreateInfoKHR', 'VkDisplayModeKHR',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -786,14 +838,38 @@ type PFN_vkCreateDisplayModeKHR = FunPtr FN_vkCreateDisplayModeKHR
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
 --     which the created surface is returned.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCreateDisplayPlaneSurfaceKHR.txt -
--- include::{generated}\/validity\/protos\/vkCreateDisplayPlaneSurfaceKHR.txt[]
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'VkDisplaySurfaceCreateInfoKHR' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pSurface@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'VkDisplaySurfaceCreateInfoKHR',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -845,12 +921,37 @@ type PFN_vkCreateDisplayPlaneSurfaceKHR = FunPtr FN_vkCreateDisplayPlaneSurfaceK
 -- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS' to indicate that not all
 -- the available values were returned.
 --
--- Unresolved directive in vkGetDisplayModePropertiesKHR.txt -
--- include::{generated}\/validity\/protos\/vkGetDisplayModePropertiesKHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @display@ /must/ be a valid 'VkDisplayKHR' handle
+--
+-- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
+--
+-- -   If the value referenced by @pPropertyCount@ is not @0@, and
+--     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
+--     to an array of @pPropertyCount@ 'VkDisplayModePropertiesKHR'
+--     structures
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDisplayKHR', 'VkDisplayModePropertiesKHR',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -889,14 +990,35 @@ type PFN_vkGetDisplayModePropertiesKHR = FunPtr FN_vkGetDisplayModePropertiesKHR
 -- -   @pCapabilities@ is a pointer to a 'VkDisplayPlaneCapabilitiesKHR'
 --     structure in which the capabilities are returned.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkGetDisplayPlaneCapabilitiesKHR.txt -
--- include::{generated}\/validity\/protos\/vkGetDisplayPlaneCapabilitiesKHR.txt[]
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @mode@ /must/ be a valid 'VkDisplayModeKHR' handle
+--
+-- -   @pCapabilities@ /must/ be a valid pointer to a
+--     'VkDisplayPlaneCapabilitiesKHR' structure
+--
+-- == Host Synchronization
+--
+-- -   Host access to @mode@ /must/ be externally synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDisplayModeKHR', 'VkDisplayPlaneCapabilitiesKHR',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -950,12 +1072,38 @@ type PFN_vkGetDisplayPlaneCapabilitiesKHR = FunPtr FN_vkGetDisplayPlaneCapabilit
 --
 -- == Valid Usage
 --
--- Unresolved directive in vkGetDisplayPlaneSupportedDisplaysKHR.txt -
--- include::{generated}\/validity\/protos\/vkGetDisplayPlaneSupportedDisplaysKHR.txt[]
+-- -   @planeIndex@ /must/ be less than the number of display planes
+--     supported by the device as determined by calling
+--     'vkGetPhysicalDeviceDisplayPlanePropertiesKHR'
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @pDisplayCount@ /must/ be a valid pointer to a @uint32_t@ value
+--
+-- -   If the value referenced by @pDisplayCount@ is not @0@, and
+--     @pDisplays@ is not @NULL@, @pDisplays@ /must/ be a valid pointer to
+--     an array of @pDisplayCount@ 'VkDisplayKHR' handles
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDisplayKHR',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1000,13 +1148,35 @@ type PFN_vkGetDisplayPlaneSupportedDisplaysKHR = FunPtr FN_vkGetDisplayPlaneSupp
 -- number of display planes for @physicalDevice@, at most @pPropertyCount@
 -- structures will be written.
 --
--- Unresolved directive in vkGetPhysicalDeviceDisplayPlanePropertiesKHR.txt
--- -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceDisplayPlanePropertiesKHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
+--
+-- -   If the value referenced by @pPropertyCount@ is not @0@, and
+--     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
+--     to an array of @pPropertyCount@ 'VkDisplayPlanePropertiesKHR'
+--     structures
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDisplayPlanePropertiesKHR',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1055,12 +1225,34 @@ type PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR = FunPtr FN_vkGetPhysicalD
 -- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS' to indicate that not all
 -- the available values were returned.
 --
--- Unresolved directive in vkGetPhysicalDeviceDisplayPropertiesKHR.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceDisplayPropertiesKHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
+--
+-- -   If the value referenced by @pPropertyCount@ is not @0@, and
+--     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
+--     to an array of @pPropertyCount@ 'VkDisplayPropertiesKHR' structures
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDisplayPropertiesKHR',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1082,7 +1274,7 @@ type FN_vkGetPhysicalDeviceDisplayPropertiesKHR = ("physicalDevice" ::: VkPhysic
 type PFN_vkGetPhysicalDeviceDisplayPropertiesKHR = FunPtr FN_vkGetPhysicalDeviceDisplayPropertiesKHR
 
 -- No documentation found for TopLevel "VK_KHR_DISPLAY_EXTENSION_NAME"
-pattern VK_KHR_DISPLAY_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_DISPLAY_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_DISPLAY_EXTENSION_NAME = "VK_KHR_display"
 
 -- No documentation found for TopLevel "VK_KHR_DISPLAY_SPEC_VERSION"

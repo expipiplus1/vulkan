@@ -24,5 +24,5 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_global_priority
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_global_priority.VkDeviceQueueGlobalPriorityCreateInfoEXT'
 type QueueGlobalPriorityEXT = VkQueueGlobalPriorityEXT

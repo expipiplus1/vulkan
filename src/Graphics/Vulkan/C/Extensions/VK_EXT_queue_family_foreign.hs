@@ -21,7 +21,7 @@ import Data.Word
 
 
 -- No documentation found for TopLevel "VK_EXT_QUEUE_FAMILY_FOREIGN_EXTENSION_NAME"
-pattern VK_EXT_QUEUE_FAMILY_FOREIGN_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_QUEUE_FAMILY_FOREIGN_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_QUEUE_FAMILY_FOREIGN_EXTENSION_NAME = "VK_EXT_queue_family_foreign"
 
 -- No documentation found for TopLevel "VK_EXT_QUEUE_FAMILY_FOREIGN_SPEC_VERSION"

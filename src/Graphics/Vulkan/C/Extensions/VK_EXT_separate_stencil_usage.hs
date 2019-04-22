@@ -70,12 +70,21 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
 --     /must/ not be set
 --
--- Unresolved directive in VkImageStencilUsageCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkImageStencilUsageCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_IMAGE_STENCIL_USAGE_CREATE_INFO_EXT'
+--
+-- -   @stencilUsage@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageUsageFlagBits'
+--     values
+--
+-- -   @stencilUsage@ /must/ not be @0@
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageUsageFlags',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkImageStencilUsageCreateInfoEXT = VkImageStencilUsageCreateInfoEXT
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -104,7 +113,7 @@ instance Zero VkImageStencilUsageCreateInfoEXT where
                                           zero
 
 -- No documentation found for TopLevel "VK_EXT_SEPARATE_STENCIL_USAGE_EXTENSION_NAME"
-pattern VK_EXT_SEPARATE_STENCIL_USAGE_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_SEPARATE_STENCIL_USAGE_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_SEPARATE_STENCIL_USAGE_EXTENSION_NAME = "VK_EXT_separate_stencil_usage"
 
 -- No documentation found for TopLevel "VK_EXT_SEPARATE_STENCIL_USAGE_SPEC_VERSION"

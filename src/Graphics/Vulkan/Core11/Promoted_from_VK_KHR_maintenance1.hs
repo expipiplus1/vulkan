@@ -6,10 +6,10 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance1
   ( CommandPoolTrimFlags
   , CommandPoolTrimFlagsKHR
   , trimCommandPool
-  , pattern VK_ERROR_OUT_OF_POOL_MEMORY
-  , pattern VK_FORMAT_FEATURE_TRANSFER_SRC_BIT
-  , pattern VK_FORMAT_FEATURE_TRANSFER_DST_BIT
-  , pattern VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT
+  , pattern ERROR_OUT_OF_POOL_MEMORY
+  , pattern FORMAT_FEATURE_TRANSFER_SRC_BIT
+  , pattern FORMAT_FEATURE_TRANSFER_DST_BIT
+  , pattern IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT
   ) where
 
 
@@ -25,11 +25,13 @@ import Graphics.Vulkan.Core10.CommandPool
 import Graphics.Vulkan.Core10.DeviceInitialization
   ( Device(..)
   )
-import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1
-  ( pattern VK_ERROR_OUT_OF_POOL_MEMORY
-  , pattern VK_FORMAT_FEATURE_TRANSFER_DST_BIT
-  , pattern VK_FORMAT_FEATURE_TRANSFER_SRC_BIT
-  , pattern VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT
+import Graphics.Vulkan.Core10.Core
+  ( pattern ERROR_OUT_OF_POOL_MEMORY
+  )
+import Graphics.Vulkan.Core10.DeviceInitialization
+  ( pattern FORMAT_FEATURE_TRANSFER_DST_BIT
+  , pattern FORMAT_FEATURE_TRANSFER_SRC_BIT
+  , pattern IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT
   )
 
 
@@ -43,8 +45,12 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.vkTrimCommandPool'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.vkTrimCommandPool',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_maintenance1.vkTrimCommandPoolKHR'
 type CommandPoolTrimFlags = VkCommandPoolTrimFlags
+
+
+-- No complete pragma for CommandPoolTrimFlags as it has no patterns
 
 -- No documentation found for TopLevel "CommandPoolTrimFlagsKHR"
 type CommandPoolTrimFlagsKHR = CommandPoolTrimFlags
@@ -102,8 +108,22 @@ type CommandPoolTrimFlagsKHR = CommandPoolTrimFlags
 -- pressure after application-known points when there exists enough unused
 -- memory that the cost of trimming is “worth” it.
 --
--- Unresolved directive in vkTrimCommandPool.txt -
--- include::{generated}\/validity\/protos\/vkTrimCommandPool.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @commandPool@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' handle
+--
+-- -   @flags@ /must/ be @0@
+--
+-- -   @commandPool@ /must/ have been created, allocated, or retrieved from
+--     @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandPool@ /must/ be externally synchronized
 --
 -- = See Also
 --

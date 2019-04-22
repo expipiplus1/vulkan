@@ -7,11 +7,14 @@ module Graphics.Vulkan.Extensions.VK_NV_compute_shader_derivatives
   ( withCStructPhysicalDeviceComputeShaderDerivativesFeaturesNV
   , fromCStructPhysicalDeviceComputeShaderDerivativesFeaturesNV
   , PhysicalDeviceComputeShaderDerivativesFeaturesNV(..)
-  , pattern VK_NV_COMPUTE_SHADER_DERIVATIVES_SPEC_VERSION
-  , pattern VK_NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_NV
+  , pattern NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME
+  , pattern NV_COMPUTE_SHADER_DERIVATIVES_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_NV
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Foreign.Marshal.Utils
   ( maybePeek
   , maybeWith
@@ -26,6 +29,8 @@ import Graphics.Vulkan.C.Core10.Core
   )
 import Graphics.Vulkan.C.Extensions.VK_NV_compute_shader_derivatives
   ( VkPhysicalDeviceComputeShaderDerivativesFeaturesNV(..)
+  , pattern VK_NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME
+  , pattern VK_NV_COMPUTE_SHADER_DERIVATIVES_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_NV
   )
 import Graphics.Vulkan.Core10.Core
@@ -37,9 +42,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_NV_compute_shader_derivatives
-  ( pattern VK_NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME
-  , pattern VK_NV_COMPUTE_SHADER_DERIVATIVES_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_NV
   )
 
 
@@ -69,13 +73,12 @@ import Graphics.Vulkan.C.Extensions.VK_NV_compute_shader_derivatives
 -- /can/ also be used in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
 --
--- Unresolved directive in
--- VkPhysicalDeviceComputeShaderDerivativesFeaturesNV.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceComputeShaderDerivativesFeaturesNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceComputeShaderDerivativesFeaturesNV = PhysicalDeviceComputeShaderDerivativesFeaturesNV
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceComputeShaderDerivativesFeaturesNV" "pNext"
@@ -106,3 +109,11 @@ instance Zero PhysicalDeviceComputeShaderDerivativesFeaturesNV where
                                                           False
                                                           False
 
+
+-- No documentation found for TopLevel "VK_NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME"
+pattern NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME = VK_NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_NV_COMPUTE_SHADER_DERIVATIVES_SPEC_VERSION"
+pattern NV_COMPUTE_SHADER_DERIVATIVES_SPEC_VERSION :: Integral a => a
+pattern NV_COMPUTE_SHADER_DERIVATIVES_SPEC_VERSION = VK_NV_COMPUTE_SHADER_DERIVATIVES_SPEC_VERSION

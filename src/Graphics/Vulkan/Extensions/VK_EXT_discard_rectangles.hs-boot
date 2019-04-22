@@ -20,7 +20,7 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_discard_rectangles
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_discard_rectangles.VkPipelineDiscardRectangleStateCreateInfoEXT'
 type DiscardRectangleModeEXT = VkDiscardRectangleModeEXT
 
 -- | VkPipelineDiscardRectangleStateCreateFlagsEXT - Reserved for future use
@@ -33,5 +33,5 @@ type DiscardRectangleModeEXT = VkDiscardRectangleModeEXT
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_discard_rectangles.VkPipelineDiscardRectangleStateCreateInfoEXT'
 type PipelineDiscardRectangleStateCreateFlagsEXT = VkPipelineDiscardRectangleStateCreateFlagsEXT

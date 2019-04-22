@@ -14,9 +14,9 @@ module Graphics.Vulkan.Extensions.VK_NV_framebuffer_mixed_samples
   , withCStructPipelineCoverageModulationStateCreateInfoNV
   , fromCStructPipelineCoverageModulationStateCreateInfoNV
   , PipelineCoverageModulationStateCreateInfoNV(..)
-  , pattern VK_NV_FRAMEBUFFER_MIXED_SAMPLES_SPEC_VERSION
-  , pattern VK_NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV
+  , pattern NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME
+  , pattern NV_FRAMEBUFFER_MIXED_SAMPLES_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV
   ) where
 
 import Data.Function
@@ -24,6 +24,9 @@ import Data.Function
   )
 import Data.Maybe
   ( maybe
+  )
+import Data.String
+  ( IsString
   )
 import Data.Vector
   ( Vector
@@ -58,6 +61,8 @@ import Graphics.Vulkan.C.Extensions.VK_NV_framebuffer_mixed_samples
   , pattern VK_COVERAGE_MODULATION_MODE_NONE_NV
   , pattern VK_COVERAGE_MODULATION_MODE_RGBA_NV
   , pattern VK_COVERAGE_MODULATION_MODE_RGB_NV
+  , pattern VK_NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME
+  , pattern VK_NV_FRAMEBUFFER_MIXED_SAMPLES_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV
   )
 import Graphics.Vulkan.Core10.Core
@@ -72,9 +77,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_NV_framebuffer_mixed_samples
-  ( pattern VK_NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME
-  , pattern VK_NV_FRAMEBUFFER_MIXED_SAMPLES_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV
   )
 
 
@@ -82,8 +86,11 @@ import Graphics.Vulkan.C.Extensions.VK_NV_framebuffer_mixed_samples
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_framebuffer_mixed_samples.VkPipelineCoverageModulationStateCreateInfoNV'
 type CoverageModulationModeNV = VkCoverageModulationModeNV
+
+
+{-# complete COVERAGE_MODULATION_MODE_NONE_NV, COVERAGE_MODULATION_MODE_RGB_NV, COVERAGE_MODULATION_MODE_ALPHA_NV, COVERAGE_MODULATION_MODE_RGBA_NV :: CoverageModulationModeNV #-}
 
 
 -- | 'Graphics.Vulkan.C.Extensions.VK_NV_framebuffer_mixed_samples.VK_COVERAGE_MODULATION_MODE_NONE_NV'
@@ -121,8 +128,11 @@ pattern COVERAGE_MODULATION_MODE_RGBA_NV = VK_COVERAGE_MODULATION_MODE_RGBA_NV
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_framebuffer_mixed_samples.VkPipelineCoverageModulationStateCreateInfoNV'
 type PipelineCoverageModulationStateCreateFlagsNV = VkPipelineCoverageModulationStateCreateFlagsNV
+
+
+-- No complete pragma for PipelineCoverageModulationStateCreateFlagsNV as it has no patterns
 
 
 -- | VkPipelineCoverageModulationStateCreateInfoNV - Structure specifying
@@ -177,13 +187,23 @@ type PipelineCoverageModulationStateCreateFlagsNV = VkPipelineCoverageModulation
 --     rasterization samples divided by the number of color samples in the
 --     subpass.
 --
--- Unresolved directive in
--- VkPipelineCoverageModulationStateCreateInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkPipelineCoverageModulationStateCreateInfoNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_NV_framebuffer_mixed_samples.VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV'
+--
+-- -   @flags@ /must/ be @0@
+--
+-- -   @coverageModulationMode@ /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_NV_framebuffer_mixed_samples.VkCoverageModulationModeNV'
+--     value
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_framebuffer_mixed_samples.VkCoverageModulationModeNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_framebuffer_mixed_samples.VkPipelineCoverageModulationStateCreateFlagsNV',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PipelineCoverageModulationStateCreateInfoNV = PipelineCoverageModulationStateCreateInfoNV
   { -- Univalued member elided
   -- No documentation found for Nested "PipelineCoverageModulationStateCreateInfoNV" "pNext"
@@ -224,3 +244,11 @@ instance Zero PipelineCoverageModulationStateCreateInfoNV where
                                                      False
                                                      Nothing
 
+
+-- No documentation found for TopLevel "VK_NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME"
+pattern NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME = VK_NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_NV_FRAMEBUFFER_MIXED_SAMPLES_SPEC_VERSION"
+pattern NV_FRAMEBUFFER_MIXED_SAMPLES_SPEC_VERSION :: Integral a => a
+pattern NV_FRAMEBUFFER_MIXED_SAMPLES_SPEC_VERSION = VK_NV_FRAMEBUFFER_MIXED_SAMPLES_SPEC_VERSION

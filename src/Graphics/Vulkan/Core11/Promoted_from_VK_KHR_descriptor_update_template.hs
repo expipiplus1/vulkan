@@ -16,13 +16,14 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_descriptor_update_template
   , DescriptorUpdateTemplateEntry(..)
   , DescriptorUpdateTemplateType
   , pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
+  , pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR
   , DescriptorUpdateTemplateTypeKHR
   , createDescriptorUpdateTemplate
   , destroyDescriptorUpdateTemplate
   , updateDescriptorSetWithTemplate
   , withDescriptorUpdateTemplate
-  , pattern VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO
-  , pattern VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE
+  , pattern STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO
+  , pattern OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE
   ) where
 
 import Control.Exception
@@ -81,6 +82,9 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template
   , pattern VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
   , pattern VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO
   )
+import Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor
+  ( pattern VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR
+  )
 import Graphics.Vulkan.Core10.DescriptorSet
   ( DescriptorSet
   , DescriptorType
@@ -110,8 +114,9 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template
-  ( pattern VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE
+import Graphics.Vulkan.Core10.Core
+  ( pattern OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE
+  , pattern STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO
   )
 
 
@@ -120,9 +125,13 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.vkCmdPushDescriptorSetWithTemplateKHR',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.vkCreateDescriptorUpdateTemplate',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template.vkCreateDescriptorUpdateTemplateKHR',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.vkDestroyDescriptorUpdateTemplate',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.vkUpdateDescriptorSetWithTemplate'
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template.vkDestroyDescriptorUpdateTemplateKHR',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.vkUpdateDescriptorSetWithTemplate',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template.vkUpdateDescriptorSetWithTemplateKHR'
 type DescriptorUpdateTemplate = VkDescriptorUpdateTemplate
 
 -- | VkDescriptorUpdateTemplateCreateFlags - Reserved for future use
@@ -137,6 +146,9 @@ type DescriptorUpdateTemplate = VkDescriptorUpdateTemplate
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplateCreateInfo'
 type DescriptorUpdateTemplateCreateFlags = VkDescriptorUpdateTemplateCreateFlags
+
+
+-- No complete pragma for DescriptorUpdateTemplateCreateFlags as it has no patterns
 
 -- No documentation found for TopLevel "DescriptorUpdateTemplateCreateFlagsKHR"
 type DescriptorUpdateTemplateCreateFlagsKHR = DescriptorUpdateTemplateCreateFlags
@@ -153,24 +165,35 @@ type DescriptorUpdateTemplateCreateFlagsKHR = DescriptorUpdateTemplateCreateFlag
 --     'Graphics.Vulkan.C.Core10.PipelineLayout.VkDescriptorSetLayout'
 --     handle
 --
--- -   If @templateType@ is
---     'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR',
---     @pipelineBindPoint@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Pass.VkPipelineBindPoint' value
+-- == Valid Usage (Implicit)
 --
--- -   If @templateType@ is
---     'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR',
---     @pipelineLayout@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' handle
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO'
 --
--- -   If @templateType@ is
---     'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR',
---     @set@ /must/ be the unique set number in the pipeline layout that
---     uses a descriptor set layout that was created with
---     'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
+-- -   @pNext@ /must/ be @NULL@
 --
--- Unresolved directive in VkDescriptorUpdateTemplateCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkDescriptorUpdateTemplateCreateInfo.txt[]
+-- -   @flags@ /must/ be @0@
+--
+-- -   @pDescriptorUpdateEntries@ /must/ be a valid pointer to an array of
+--     @descriptorUpdateEntryCount@ valid
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplateEntry'
+--     structures
+--
+-- -   @templateType@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplateType'
+--     value
+--
+-- -   If @descriptorSetLayout@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE',
+--     @descriptorSetLayout@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.PipelineLayout.VkDescriptorSetLayout'
+--     handle
+--
+-- -   @descriptorUpdateEntryCount@ /must/ be greater than @0@
+--
+-- -   Both of @descriptorSetLayout@, and @pipelineLayout@ that are valid
+--     handles /must/ have been created, allocated, or retrieved from the
+--     same 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
 -- = See Also
 --
@@ -181,7 +204,8 @@ type DescriptorUpdateTemplateCreateFlagsKHR = DescriptorUpdateTemplateCreateFlag
 -- 'Graphics.Vulkan.C.Core10.Pass.VkPipelineBindPoint',
 -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.vkCreateDescriptorUpdateTemplate'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.vkCreateDescriptorUpdateTemplate',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template.vkCreateDescriptorUpdateTemplateKHR'
 data DescriptorUpdateTemplateCreateInfo = DescriptorUpdateTemplateCreateInfo
   { -- Univalued member elided
   -- No documentation found for Nested "DescriptorUpdateTemplateCreateInfo" "pNext"
@@ -239,29 +263,7 @@ instance Zero DescriptorUpdateTemplateCreateInfo where
 -- | VkDescriptorUpdateTemplateEntry - Describes a single descriptor update
 -- of the descriptor update template
 --
--- == Valid Usage
---
--- -   @dstBinding@ /must/ be a valid binding in the descriptor set layout
---     implicitly specified when using a descriptor update template to
---     update descriptors.
---
--- -   @dstArrayElement@ and @descriptorCount@ /must/ be less than or equal
---     to the number of array elements in the descriptor set binding
---     implicitly specified when using a descriptor update template to
---     update descriptors, and all applicable consecutive bindings, as
---     described by
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-updates-consecutive>
---
--- -   If @descriptor@ type is
---     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
---     @dstArrayElement@ /must/ be an integer multiple of @4@
---
--- -   If @descriptor@ type is
---     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
---     @descriptorCount@ /must/ be an integer multiple of @4@
---
--- Unresolved directive in VkDescriptorUpdateTemplateEntry.txt -
--- include::{generated}\/validity\/structs\/VkDescriptorUpdateTemplateEntry.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -317,11 +319,19 @@ instance Zero DescriptorUpdateTemplateEntry where
 type DescriptorUpdateTemplateType = VkDescriptorUpdateTemplateType
 
 
+{-# complete DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET, DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR, DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR :: DescriptorUpdateTemplateType #-}
+
+
 -- | 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET'
 -- specifies that the descriptor update template will be used for
 -- descriptor set updates only.
 pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET :: (a ~ DescriptorUpdateTemplateType) => a
 pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET = VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
+
+
+-- No documentation found for Nested "DescriptorUpdateTemplateType" "DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR"
+pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR :: (a ~ DescriptorUpdateTemplateType) => a
+pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR = VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR
 
 -- No documentation found for TopLevel "DescriptorUpdateTemplateTypeKHR"
 type DescriptorUpdateTemplateTypeKHR = DescriptorUpdateTemplateType
@@ -339,8 +349,6 @@ type DescriptorUpdateTemplateTypeKHR = DescriptorUpdateTemplateType
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplateCreateInfo'
 --     structure specifying the set of descriptors to update with a single
 --     call to
---     'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.vkCmdPushDescriptorSetWithTemplateKHR'
---     or
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.vkUpdateDescriptorSetWithTemplate'.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
@@ -352,10 +360,33 @@ type DescriptorUpdateTemplateTypeKHR = DescriptorUpdateTemplateType
 --     handle in which the resulting descriptor update template object is
 --     returned.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCreateDescriptorUpdateTemplate.txt -
--- include::{generated}\/validity\/protos\/vkCreateDescriptorUpdateTemplate.txt[]
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplateCreateInfo'
+--     structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pDescriptorUpdateTemplate@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplate'
+--     handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -394,8 +425,29 @@ createDescriptorUpdateTemplate = \(Device device' commandTable) -> \createInfo' 
 --     were provided when @descriptorSetLayout@ was created, @pAllocator@
 --     /must/ be @NULL@
 --
--- Unresolved directive in vkDestroyDescriptorUpdateTemplate.txt -
--- include::{generated}\/validity\/protos\/vkDestroyDescriptorUpdateTemplate.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   If @descriptorUpdateTemplate@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE',
+--     @descriptorUpdateTemplate@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplate'
+--     handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   If @descriptorUpdateTemplate@ is a valid handle, it /must/ have been
+--     created, allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @descriptorUpdateTemplate@ /must/ be externally
+--     synchronized
 --
 -- = See Also
 --
@@ -428,8 +480,32 @@ destroyDescriptorUpdateTemplate = \(Device device' commandTable) -> \descriptorU
 --
 -- == Valid Usage
 --
--- Unresolved directive in vkUpdateDescriptorSetWithTemplate.txt -
--- include::{generated}\/validity\/protos\/vkUpdateDescriptorSetWithTemplate.txt[]
+-- -   @pData@ /must/ be a valid pointer to a memory that contains one or
+--     more valid instances of
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorImageInfo',
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorBufferInfo', or
+--     'Graphics.Vulkan.C.Core10.BufferView.VkBufferView' in a layout
+--     defined by @descriptorUpdateTemplate@ when it was created with
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.vkCreateDescriptorUpdateTemplate'
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @descriptorSet@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSet' handle
+--
+-- -   @descriptorUpdateTemplate@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplate'
+--     handle
+--
+-- -   @descriptorUpdateTemplate@ /must/ have been created, allocated, or
+--     retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @descriptorSet@ /must/ be externally synchronized
 --
 -- __API example.__
 --

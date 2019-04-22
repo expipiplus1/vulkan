@@ -130,12 +130,9 @@ import Graphics.Vulkan.NamedType
 --
 -- == Valid Usage
 --
--- Unresolved directive in VkCoarseSampleLocationNV.txt -
--- include::{generated}\/validity\/structs\/VkCoarseSampleLocationNV.txt[]
---
 -- = See Also
 --
--- No cross-references are available
+-- 'VkCoarseSampleOrderCustomNV'
 data VkCoarseSampleLocationNV = VkCoarseSampleLocationNV
   { -- | @pixelX@ /must/ be less than the width (in pixels) of the fragment.
   vkPixelX :: Word32
@@ -193,12 +190,20 @@ instance Zero VkCoarseSampleLocationNV where
 --     every combination of valid values for @pixelX@, @pixelY@, and
 --     @sample@ in the structure 'VkCoarseSampleOrderCustomNV'.
 --
--- Unresolved directive in VkCoarseSampleOrderCustomNV.txt -
--- include::{generated}\/validity\/structs\/VkCoarseSampleOrderCustomNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @shadingRate@ /must/ be a valid 'VkShadingRatePaletteEntryNV' value
+--
+-- -   @pSampleLocations@ /must/ be a valid pointer to an array of
+--     @sampleLocationCount@ 'VkCoarseSampleLocationNV' structures
+--
+-- -   @sampleLocationCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkCoarseSampleLocationNV',
+-- 'VkPipelineViewportCoarseSampleOrderStateCreateInfoNV',
+-- 'VkShadingRatePaletteEntryNV', 'vkCmdSetCoarseSampleOrderNV'
 data VkCoarseSampleOrderCustomNV = VkCoarseSampleOrderCustomNV
   { -- | @shadingRate@ is a shading rate palette entry that identifies the
   -- fragment width and height for the combination of fragment area and
@@ -241,7 +246,8 @@ instance Zero VkCoarseSampleOrderCustomNV where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkPipelineViewportCoarseSampleOrderStateCreateInfoNV',
+-- 'vkCmdSetCoarseSampleOrderNV'
 newtype VkCoarseSampleOrderTypeNV = VkCoarseSampleOrderTypeNV Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -312,14 +318,15 @@ pattern VK_COARSE_SAMPLE_ORDER_TYPE_SAMPLE_MAJOR_NV = VkCoarseSampleOrderTypeNV 
 -- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to
 -- enable features.
 --
--- Unresolved directive in VkPhysicalDeviceShadingRateImageFeaturesNV.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceShadingRateImageFeaturesNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceShadingRateImageFeaturesNV = VkPhysicalDeviceShadingRateImageFeaturesNV
-  { -- No documentation found for Nested "VkPhysicalDeviceShadingRateImageFeaturesNV" "sType"
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_FEATURES_NV'
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceShadingRateImageFeaturesNV" "pNext"
   vkPNext :: Ptr ()
@@ -371,15 +378,15 @@ instance Zero VkPhysicalDeviceShadingRateImageFeaturesNV where
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- Unresolved directive in VkPhysicalDeviceShadingRateImagePropertiesNV.txt
--- -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceShadingRateImagePropertiesNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkExtent2D',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceShadingRateImagePropertiesNV = VkPhysicalDeviceShadingRateImagePropertiesNV
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADING_RATE_IMAGE_PROPERTIES_NV'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -446,13 +453,22 @@ instance Zero VkPhysicalDeviceShadingRateImagePropertiesNV where
 --     with matching values for both the @shadingRate@ and @sampleCount@
 --     members.
 --
--- Unresolved directive in
--- VkPipelineViewportCoarseSampleOrderStateCreateInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkPipelineViewportCoarseSampleOrderStateCreateInfoNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_COARSE_SAMPLE_ORDER_STATE_CREATE_INFO_NV'
+--
+-- -   @sampleOrderType@ /must/ be a valid 'VkCoarseSampleOrderTypeNV'
+--     value
+--
+-- -   If @customSampleOrderCount@ is not @0@, @pCustomSampleOrders@ /must/
+--     be a valid pointer to an array of @customSampleOrderCount@ valid
+--     'VkCoarseSampleOrderCustomNV' structures
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkCoarseSampleOrderCustomNV', 'VkCoarseSampleOrderTypeNV',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPipelineViewportCoarseSampleOrderStateCreateInfoNV = VkPipelineViewportCoarseSampleOrderStateCreateInfoNV
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -521,13 +537,19 @@ instance Zero VkPipelineViewportCoarseSampleOrderStateCreateInfoNV where
 --     @pShadingRatePalettes@ /must/ be a valid pointer to an array of
 --     @viewportCount@ 'VkShadingRatePaletteNV' structures
 --
--- Unresolved directive in
--- VkPipelineViewportShadingRateImageStateCreateInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkPipelineViewportShadingRateImageStateCreateInfoNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_SHADING_RATE_IMAGE_STATE_CREATE_INFO_NV'
+--
+-- -   If @viewportCount@ is not @0@, and @pShadingRatePalettes@ is not
+--     @NULL@, @pShadingRatePalettes@ /must/ be a valid pointer to an array
+--     of @viewportCount@ valid 'VkShadingRatePaletteNV' structures
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32', 'VkShadingRatePaletteNV',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPipelineViewportShadingRateImageStateCreateInfoNV = VkPipelineViewportShadingRateImageStateCreateInfoNV
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -653,7 +675,7 @@ instance Zero VkPipelineViewportShadingRateImageStateCreateInfoNV where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkCoarseSampleOrderCustomNV', 'VkShadingRatePaletteNV'
 newtype VkShadingRatePaletteEntryNV = VkShadingRatePaletteEntryNV Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -744,22 +766,18 @@ pattern VK_SHADING_RATE_PALETTE_ENTRY_1_INVOCATION_PER_4X4_PIXELS_NV = VkShading
 -- | VkShadingRatePaletteNV - Structure specifying a single shading rate
 -- palette
 --
--- == Valid Usage
---
--- Unresolved directive in VkShadingRatePaletteNV.txt -
--- include::{generated}\/validity\/structs\/VkShadingRatePaletteNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkPipelineViewportShadingRateImageStateCreateInfoNV',
+-- 'VkShadingRatePaletteEntryNV', 'vkCmdSetViewportShadingRatePaletteNV'
 data VkShadingRatePaletteNV = VkShadingRatePaletteNV
-  { -- | @shadingRatePaletteEntryCount@ /must/ be between @1@ and
-  -- 'VkPhysicalDeviceShadingRateImagePropertiesNV'::@shadingRatePaletteSize@,
-  -- inclusive
+  { -- | @shadingRatePaletteEntryCount@ /must/ be greater than @0@
   vkShadingRatePaletteEntryCount :: Word32
-  , -- | @pShadingRatePaletteEntries@ is a pointer to an array of
-  -- 'VkShadingRatePaletteEntryNV' enums defining the shading rate for each
-  -- palette entry.
+  , -- | @pShadingRatePaletteEntries@ /must/ be a valid pointer to an array of
+  -- @shadingRatePaletteEntryCount@ valid 'VkShadingRatePaletteEntryNV'
+  -- values
   vkPShadingRatePaletteEntries :: Ptr VkShadingRatePaletteEntryNV
   }
   deriving (Eq, Show)
@@ -824,12 +842,60 @@ instance Zero VkShadingRatePaletteNV where
 --     /must/ be 'VK_IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV' or
 --     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_GENERAL'.
 --
--- Unresolved directive in vkCmdBindShadingRateImageNV.txt -
--- include::{generated}\/validity\/protos\/vkCmdBindShadingRateImageNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @imageView@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.ImageView.VkImageView' handle
+--
+-- -   @imageLayout@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Image.VkImageLayout' value
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
+--
+-- -   Both of @commandBuffer@, and @imageView@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Both            | Graphics        |                 |
+-- > | Secondary       |                 |                 |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
+-- 'Graphics.Vulkan.C.Core10.Image.VkImageLayout',
+-- 'Graphics.Vulkan.C.Core10.ImageView.VkImageView'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -885,12 +951,56 @@ type PFN_vkCmdBindShadingRateImageNV = FunPtr FN_vkCmdBindShadingRateImageNV
 --     with matching values for both the @shadingRate@ and @sampleCount@
 --     members.
 --
--- Unresolved directive in vkCmdSetCoarseSampleOrderNV.txt -
--- include::{generated}\/validity\/protos\/vkCmdSetCoarseSampleOrderNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @sampleOrderType@ /must/ be a valid 'VkCoarseSampleOrderTypeNV'
+--     value
+--
+-- -   If @customSampleOrderCount@ is not @0@, @pCustomSampleOrders@ /must/
+--     be a valid pointer to an array of @customSampleOrderCount@ valid
+--     'VkCoarseSampleOrderCustomNV' structures
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Both            | Graphics        |                 |
+-- > | Secondary       |                 |                 |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkCoarseSampleOrderCustomNV', 'VkCoarseSampleOrderTypeNV',
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -955,12 +1065,54 @@ type PFN_vkCmdSetCoarseSampleOrderNV = FunPtr FN_vkCmdSetCoarseSampleOrderNV
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-multiViewport multiple viewports>
 --     feature is not enabled, @viewportCount@ /must/ be @1@
 --
--- Unresolved directive in vkCmdSetViewportShadingRatePaletteNV.txt -
--- include::{generated}\/validity\/protos\/vkCmdSetViewportShadingRatePaletteNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @pShadingRatePalettes@ /must/ be a valid pointer to an array of
+--     @viewportCount@ valid 'VkShadingRatePaletteNV' structures
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
+--
+-- -   @viewportCount@ /must/ be greater than @0@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Both            | Graphics        |                 |
+-- > | Secondary       |                 |                 |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
+-- 'VkShadingRatePaletteNV'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -981,56 +1133,35 @@ foreign import ccall
 type FN_vkCmdSetViewportShadingRatePaletteNV = ("commandBuffer" ::: VkCommandBuffer) -> ("firstViewport" ::: Word32) -> ("viewportCount" ::: Word32) -> ("pShadingRatePalettes" ::: Ptr VkShadingRatePaletteNV) -> IO ()
 type PFN_vkCmdSetViewportShadingRatePaletteNV = FunPtr FN_vkCmdSetViewportShadingRatePaletteNV
 
--- | 'VK_ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV' specifies read access to a
--- shading rate image as part of a drawing command, as bound by
--- 'vkCmdBindShadingRateImageNV'.
+-- No documentation found for Nested "VkAccessFlagBits" "VK_ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV"
 pattern VK_ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV :: VkAccessFlagBits
 pattern VK_ACCESS_SHADING_RATE_IMAGE_READ_BIT_NV = VkAccessFlagBits 0x00800000
 
--- | 'VK_DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV' specifies that the
--- coarse sample order state in
--- 'VkPipelineViewportCoarseSampleOrderStateCreateInfoNV' will be ignored
--- and /must/ be set dynamically with 'vkCmdSetCoarseSampleOrderNV' before
--- any draw commands.
+-- No documentation found for Nested "VkDynamicState" "VK_DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV"
 pattern VK_DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV :: VkDynamicState
 pattern VK_DYNAMIC_STATE_VIEWPORT_COARSE_SAMPLE_ORDER_NV = VkDynamicState 1000164006
 
--- | 'VK_DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV' specifies that the
--- @pShadingRatePalettes@ state in
--- 'VkPipelineViewportShadingRateImageStateCreateInfoNV' will be ignored
--- and /must/ be set dynamically with
--- 'vkCmdSetViewportShadingRatePaletteNV' before any draw commands.
+-- No documentation found for Nested "VkDynamicState" "VK_DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV"
 pattern VK_DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV :: VkDynamicState
 pattern VK_DYNAMIC_STATE_VIEWPORT_SHADING_RATE_PALETTE_NV = VkDynamicState 1000164004
 
--- | 'VK_IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV' /must/ only be used as a
--- read-only
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#primsrast-shading-rate-image shading-rate-image>.
--- This layout is valid only for image subresources of images created with
--- the 'VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV' usage bit enabled.
+-- No documentation found for Nested "VkImageLayout" "VK_IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV"
 pattern VK_IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV :: VkImageLayout
 pattern VK_IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV = VkImageLayout 1000164003
 
--- | 'VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV' specifies that the image
--- /can/ be used to create a
--- 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' suitable for use as a
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#primsrast-shading-rate-image shading rate image>.
+-- No documentation found for Nested "VkImageUsageFlagBits" "VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV"
 pattern VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV :: VkImageUsageFlagBits
 pattern VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV = VkImageUsageFlagBits 0x00000100
 
 -- No documentation found for TopLevel "VK_NV_SHADING_RATE_IMAGE_EXTENSION_NAME"
-pattern VK_NV_SHADING_RATE_IMAGE_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_NV_SHADING_RATE_IMAGE_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_NV_SHADING_RATE_IMAGE_EXTENSION_NAME = "VK_NV_shading_rate_image"
 
 -- No documentation found for TopLevel "VK_NV_SHADING_RATE_IMAGE_SPEC_VERSION"
 pattern VK_NV_SHADING_RATE_IMAGE_SPEC_VERSION :: Integral a => a
 pattern VK_NV_SHADING_RATE_IMAGE_SPEC_VERSION = 3
 
--- | 'VK_PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV' specifies the stage of the
--- pipeline where the
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#primsrast-shading-rate-image shading rate image>
--- is read to determine the shading rate for portions of a rasterized
--- primitive.
+-- No documentation found for Nested "VkPipelineStageFlagBits" "VK_PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV"
 pattern VK_PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV :: VkPipelineStageFlagBits
 pattern VK_PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV = VkPipelineStageFlagBits 0x00400000
 

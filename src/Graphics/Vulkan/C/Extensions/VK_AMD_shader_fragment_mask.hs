@@ -17,7 +17,7 @@ import Data.String
 
 
 -- No documentation found for TopLevel "VK_AMD_SHADER_FRAGMENT_MASK_EXTENSION_NAME"
-pattern VK_AMD_SHADER_FRAGMENT_MASK_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_AMD_SHADER_FRAGMENT_MASK_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_AMD_SHADER_FRAGMENT_MASK_EXTENSION_NAME = "VK_AMD_shader_fragment_mask"
 
 -- No documentation found for TopLevel "VK_AMD_SHADER_FRAGMENT_MASK_SPEC_VERSION"

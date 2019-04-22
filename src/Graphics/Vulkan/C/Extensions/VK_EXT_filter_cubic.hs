@@ -53,11 +53,10 @@ import Graphics.Vulkan.C.Extensions.VK_IMG_filter_cubic
 -- | VkFilterCubicImageViewImageFormatPropertiesEXT - Structure for querying
 -- cubic filtering capabilities of an image view type
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in
--- VkFilterCubicImageViewImageFormatPropertiesEXT.txt -
--- include::{generated}\/validity\/structs\/VkFilterCubicImageViewImageFormatPropertiesEXT.txt[]
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT'
 --
 -- == Valid Usage
 --
@@ -73,7 +72,8 @@ import Graphics.Vulkan.C.Extensions.VK_IMG_filter_cubic
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkFilterCubicImageViewImageFormatPropertiesEXT = VkFilterCubicImageViewImageFormatPropertiesEXT
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -111,23 +111,20 @@ instance Zero VkFilterCubicImageViewImageFormatPropertiesEXT where
 -- | VkPhysicalDeviceImageViewImageFormatInfoEXT - Structure for providing
 -- image view type
 --
--- = Description
---
--- Unresolved directive in VkPhysicalDeviceImageViewImageFormatInfoEXT.txt
--- -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceImageViewImageFormatInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.ImageView.VkImageViewType',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceImageViewImageFormatInfoEXT = VkPhysicalDeviceImageViewImageFormatInfoEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @imageViewType@ is a
-  -- 'Graphics.Vulkan.C.Core10.ImageView.VkImageViewType' value specifying
-  -- the type of the image view.
+  , -- | @imageViewType@ /must/ be a valid
+  -- 'Graphics.Vulkan.C.Core10.ImageView.VkImageViewType' value
   vkImageViewType :: VkImageViewType
   }
   deriving (Eq, Show)
@@ -148,7 +145,7 @@ instance Zero VkPhysicalDeviceImageViewImageFormatInfoEXT where
                                                      zero
 
 -- No documentation found for TopLevel "VK_EXT_FILTER_CUBIC_EXTENSION_NAME"
-pattern VK_EXT_FILTER_CUBIC_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_FILTER_CUBIC_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_FILTER_CUBIC_EXTENSION_NAME = "VK_EXT_filter_cubic"
 
 -- No documentation found for TopLevel "VK_EXT_FILTER_CUBIC_SPEC_VERSION"

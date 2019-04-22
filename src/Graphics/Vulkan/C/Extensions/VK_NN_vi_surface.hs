@@ -98,20 +98,18 @@ instance Read VkViSurfaceCreateFlagsNN where
 -- | VkViSurfaceCreateInfoNN - Structure specifying parameters of a newly
 -- created VI surface object
 --
--- == Valid Usage
---
--- Unresolved directive in VkViSurfaceCreateInfoNN.txt -
--- include::{generated}\/validity\/structs\/VkViSurfaceCreateInfoNN.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'VkViSurfaceCreateFlagsNN', 'vkCreateViSurfaceNN'
 data VkViSurfaceCreateInfoNN = VkViSurfaceCreateInfoNN
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- | @flags@ is reserved for future use.
+  , -- | @flags@ /must/ be @0@
   vkFlags :: VkViSurfaceCreateFlagsNN
   , -- | @window@ /must/ be a valid @nn@::@vi@::@NativeWindowHandle@
   vkWindow :: Ptr ()
@@ -173,12 +171,40 @@ instance Zero VkViSurfaceCreateInfoNN where
 -- swapchain’s @imageExtent@ (e.g., by matching the result of a call to
 -- @nn@::@vi@::@GetDisplayResolution@).
 --
--- Unresolved directive in vkCreateViSurfaceNN.txt -
--- include::{generated}\/validity\/protos\/vkCreateViSurfaceNN.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'VkViSurfaceCreateInfoNN' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pSurface@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_NATIVE_WINDOW_IN_USE_KHR'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR',
+-- 'VkViSurfaceCreateInfoNN'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -200,7 +226,7 @@ type FN_vkCreateViSurfaceNN = ("instance" ::: VkInstance) -> ("pCreateInfo" ::: 
 type PFN_vkCreateViSurfaceNN = FunPtr FN_vkCreateViSurfaceNN
 
 -- No documentation found for TopLevel "VK_NN_VI_SURFACE_EXTENSION_NAME"
-pattern VK_NN_VI_SURFACE_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_NN_VI_SURFACE_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_NN_VI_SURFACE_EXTENSION_NAME = "VK_NN_vi_surface"
 
 -- No documentation found for TopLevel "VK_NN_VI_SURFACE_SPEC_VERSION"

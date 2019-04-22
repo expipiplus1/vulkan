@@ -20,7 +20,7 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_framebuffer_mixed_sampl
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_framebuffer_mixed_samples.VkPipelineCoverageModulationStateCreateInfoNV'
 type CoverageModulationModeNV = VkCoverageModulationModeNV
 
 -- | VkPipelineCoverageModulationStateCreateFlagsNV - Reserved for future use
@@ -33,5 +33,5 @@ type CoverageModulationModeNV = VkCoverageModulationModeNV
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_framebuffer_mixed_samples.VkPipelineCoverageModulationStateCreateInfoNV'
 type PipelineCoverageModulationStateCreateFlagsNV = VkPipelineCoverageModulationStateCreateFlagsNV

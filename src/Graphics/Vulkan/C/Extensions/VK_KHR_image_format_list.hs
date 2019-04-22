@@ -62,12 +62,19 @@ import Graphics.Vulkan.C.Core10.Core
 --     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@format@ /must/
 --     be in @pViewFormats@.
 --
--- Unresolved directive in VkImageFormatListCreateInfoKHR.txt -
--- include::{generated}\/validity\/structs\/VkImageFormatListCreateInfoKHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR'
+--
+-- -   If @viewFormatCount@ is not @0@, @pViewFormats@ /must/ be a valid
+--     pointer to an array of @viewFormatCount@ valid
+--     'Graphics.Vulkan.C.Core10.Core.VkFormat' values
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkFormat',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkImageFormatListCreateInfoKHR = VkImageFormatListCreateInfoKHR
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -100,7 +107,7 @@ instance Zero VkImageFormatListCreateInfoKHR where
                                         zero
 
 -- No documentation found for TopLevel "VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME"
-pattern VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME = "VK_KHR_image_format_list"
 
 -- No documentation found for TopLevel "VK_KHR_IMAGE_FORMAT_LIST_SPEC_VERSION"

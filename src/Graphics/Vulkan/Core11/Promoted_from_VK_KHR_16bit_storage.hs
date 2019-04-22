@@ -7,7 +7,7 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_16bit_storage
   ( withCStructPhysicalDevice16BitStorageFeatures
   , fromCStructPhysicalDevice16BitStorageFeatures
   , PhysicalDevice16BitStorageFeatures(..)
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES
   ) where
 
 import Foreign.Marshal.Utils
@@ -35,16 +35,16 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES
+  )
 
 
 
 -- | VkPhysicalDevice16BitStorageFeatures - Structure describing features
 -- supported by VK_KHR_16bit_storage
 --
--- = Description
---
--- Unresolved directive in VkPhysicalDevice16BitStorageFeatures.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDevice16BitStorageFeatures.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --

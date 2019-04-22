@@ -20,7 +20,8 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VkResolveModeFlagsKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VkSubpassDescriptionDepthStencilResolveKHR'
 type ResolveModeFlagBitsKHR = VkResolveModeFlagBitsKHR
 
 -- | VkResolveModeFlagsKHR - Bitmask of VkResolveModeFlagBitsKHR
@@ -33,5 +34,6 @@ type ResolveModeFlagBitsKHR = VkResolveModeFlagBitsKHR
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VkPhysicalDeviceDepthStencilResolvePropertiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VkResolveModeFlagBitsKHR'
 type ResolveModeFlagsKHR = ResolveModeFlagBitsKHR

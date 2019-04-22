@@ -95,7 +95,7 @@ pattern VK_IMAGE_CREATE_ALIAS_BIT_KHR :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_ALIAS_BIT_KHR = VK_IMAGE_CREATE_ALIAS_BIT
 
 -- No documentation found for TopLevel "VK_KHR_BIND_MEMORY_2_EXTENSION_NAME"
-pattern VK_KHR_BIND_MEMORY_2_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_BIND_MEMORY_2_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_BIND_MEMORY_2_EXTENSION_NAME = "VK_KHR_bind_memory2"
 
 -- No documentation found for TopLevel "VK_KHR_BIND_MEMORY_2_SPEC_VERSION"

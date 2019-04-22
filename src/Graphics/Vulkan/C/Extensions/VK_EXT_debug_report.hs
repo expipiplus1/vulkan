@@ -189,7 +189,7 @@ import Graphics.Vulkan.NamedType
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDebugReportCallbackCreateInfoEXT'
 type PFN_vkDebugReportCallbackEXT = Ptr (("flags" ::: VkDebugReportFlagsEXT) -> ("objectType" ::: VkDebugReportObjectTypeEXT) -> ("object" ::: Word64) -> ("location" ::: CSize) -> ("messageCode" ::: Int32) -> ("pLayerPrefix" ::: Ptr CChar) -> ("pMessage" ::: Ptr CChar) -> ("pUserData" ::: Ptr ()) -> IO VkBool32)
 
 -- | VkDebugReportCallbackCreateInfoEXT - Structure specifying parameters of
@@ -215,21 +215,23 @@ type PFN_vkDebugReportCallbackEXT = Ptr (("flags" ::: VkDebugReportFlagsEXT) -> 
 -- A callback may be called from multiple threads simultaneously (if the
 -- application is making Vulkan calls from multiple threads).
 --
--- Unresolved directive in VkDebugReportCallbackCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkDebugReportCallbackCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'PFN_vkDebugReportCallbackEXT', 'VkDebugReportFlagsEXT',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkCreateDebugReportCallbackEXT'
 data VkDebugReportCallbackCreateInfoEXT = VkDebugReportCallbackCreateInfoEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @flags@ is a bitmask of 'VkDebugReportFlagBitsEXT' specifying which
-  -- event(s) will cause this callback to be called.
+  , -- | @flags@ /must/ be a valid combination of 'VkDebugReportFlagBitsEXT'
+  -- values
   vkFlags :: VkDebugReportFlagsEXT
-  , -- | @pfnCallback@ is the application callback function to call.
+  , -- | @pfnCallback@ /must/ be a valid 'PFN_vkDebugReportCallbackEXT' value
   vkPfnCallback :: PFN_vkDebugReportCallbackEXT
   , -- | @pUserData@ is user data to be passed to the callback.
   vkPUserData :: Ptr ()
@@ -264,7 +266,7 @@ data VkDebugReportCallbackEXT_T
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'vkCreateDebugReportCallbackEXT', 'vkDestroyDebugReportCallbackEXT'
 type VkDebugReportCallbackEXT = Ptr VkDebugReportCallbackEXT_T
 
 -- ** VkDebugReportFlagBitsEXT
@@ -274,7 +276,7 @@ type VkDebugReportCallbackEXT = Ptr VkDebugReportCallbackEXT_T
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDebugReportFlagsEXT'
 newtype VkDebugReportFlagBitsEXT = VkDebugReportFlagBitsEXT VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -345,7 +347,8 @@ pattern VK_DEBUG_REPORT_DEBUG_BIT_EXT = VkDebugReportFlagBitsEXT 0x00000010
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDebugReportCallbackCreateInfoEXT', 'VkDebugReportFlagBitsEXT',
+-- 'vkDebugReportMessageEXT'
 type VkDebugReportFlagsEXT = VkDebugReportFlagBitsEXT
 
 -- ** VkDebugReportObjectTypeEXT
@@ -448,40 +451,8 @@ type VkDebugReportFlagsEXT = VkDebugReportFlagBitsEXT
 -- > | L_EXT'                                   | .CommandPool.VkCommandPoo |
 -- > |                                          | l'                        |
 -- > +------------------------------------------+---------------------------+
--- > | 'VK_DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR | 'Graphics.Vulkan.C.Extens |
--- > | _EXT'                                    | ions.VK_KHR_surface.VkSur |
--- > |                                          | faceKHR'                  |
--- > +------------------------------------------+---------------------------+
--- > | 'VK_DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_K | 'Graphics.Vulkan.C.Extens |
--- > | HR_EXT'                                  | ions.VK_KHR_swapchain.VkS |
--- > |                                          | wapchainKHR'              |
--- > +------------------------------------------+---------------------------+
 -- > | 'VK_DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPOR | 'VkDebugReportCallbackEXT |
 -- > | T_CALLBACK_EXT_EXT'                      | '                         |
--- > +------------------------------------------+---------------------------+
--- > | 'VK_DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR | 'Graphics.Vulkan.C.Extens |
--- > | _EXT'                                    | ions.VK_KHR_display.VkDis |
--- > |                                          | playKHR'                  |
--- > +------------------------------------------+---------------------------+
--- > | 'VK_DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MOD | 'Graphics.Vulkan.C.Extens |
--- > | E_KHR_EXT'                               | ions.VK_KHR_display.VkDis |
--- > |                                          | playModeKHR'              |
--- > +------------------------------------------+---------------------------+
--- > | 'VK_DEBUG_REPORT_OBJECT_TYPE_OBJECT_TABL | 'Graphics.Vulkan.C.Extens |
--- > | E_NVX_EXT'                               | ions.VK_NVX_device_genera |
--- > |                                          | ted_commands.VkObjectTabl |
--- > |                                          | eNVX'                     |
--- > +------------------------------------------+---------------------------+
--- > | 'VK_DEBUG_REPORT_OBJECT_TYPE_INDIRECT_CO | 'Graphics.Vulkan.C.Extens |
--- > | MMANDS_LAYOUT_NVX_EXT'                   | ions.VK_NVX_device_genera |
--- > |                                          | ted_commands.VkIndirectCo |
--- > |                                          | mmandsLayoutNVX'          |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_KHR_des | 'Graphics.Vulkan.C.Core11 |
--- > | criptor_update_template.VK_DEBUG_REPORT_ | .Promoted_from_VK_KHR_des |
--- > | OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_K | criptor_update_template.V |
--- > | HR_EXT'                                  | kDescriptorUpdateTemplate |
--- > |                                          | '                         |
 -- > +------------------------------------------+---------------------------+
 -- >
 -- > VkDebugReportObjectTypeEXT and Vulkan Handle Relationship
@@ -494,7 +465,9 @@ type VkDebugReportFlagsEXT = VkDebugReportFlagBitsEXT
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.VkDebugMarkerObjectNameInfoEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.VkDebugMarkerObjectTagInfoEXT',
+-- 'vkDebugReportMessageEXT'
 newtype VkDebugReportObjectTypeEXT = VkDebugReportObjectTypeEXT Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -740,14 +713,35 @@ pattern VK_DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT = VkDebugReportObje
 -- -   @pCallback@ is a pointer to record the 'VkDebugReportCallbackEXT'
 --     object created.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCreateDebugReportCallbackEXT.txt -
--- include::{generated}\/validity\/protos\/vkCreateDebugReportCallbackEXT.txt[]
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'VkDebugReportCallbackCreateInfoEXT' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pCallback@ /must/ be a valid pointer to a
+--     'VkDebugReportCallbackEXT' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'VkDebugReportCallbackCreateInfoEXT', 'VkDebugReportCallbackEXT',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -813,12 +807,26 @@ type PFN_vkCreateDebugReportCallbackEXT = FunPtr FN_vkCreateDebugReportCallbackE
 --     associated with @objectType@ as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#debug-report-object-types>.
 --
--- Unresolved directive in vkDebugReportMessageEXT.txt -
--- include::{generated}\/validity\/protos\/vkDebugReportMessageEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @flags@ /must/ be a valid combination of 'VkDebugReportFlagBitsEXT'
+--     values
+--
+-- -   @flags@ /must/ not be @0@
+--
+-- -   @objectType@ /must/ be a valid 'VkDebugReportObjectTypeEXT' value
+--
+-- -   @pLayerPrefix@ /must/ be a null-terminated UTF-8 string
+--
+-- -   @pMessage@ /must/ be a null-terminated UTF-8 string
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDebugReportFlagsEXT', 'VkDebugReportObjectTypeEXT',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -867,12 +875,30 @@ type PFN_vkDebugReportMessageEXT = FunPtr FN_vkDebugReportMessageEXT
 --     were provided when @callback@ was created, @pAllocator@ /must/ be
 --     @NULL@
 --
--- Unresolved directive in vkDestroyDebugReportCallbackEXT.txt -
--- include::{generated}\/validity\/protos\/vkDestroyDebugReportCallbackEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @callback@ /must/ be a valid 'VkDebugReportCallbackEXT' handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @callback@ /must/ have been created, allocated, or retrieved from
+--     @instance@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @callback@ /must/ be externally synchronized
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'VkDebugReportCallbackEXT',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -906,7 +932,7 @@ pattern VK_ERROR_VALIDATION_FAILED_EXT :: VkResult
 pattern VK_ERROR_VALIDATION_FAILED_EXT = VkResult (-1000011001)
 
 -- No documentation found for TopLevel "VK_EXT_DEBUG_REPORT_EXTENSION_NAME"
-pattern VK_EXT_DEBUG_REPORT_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_DEBUG_REPORT_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_DEBUG_REPORT_EXTENSION_NAME = "VK_EXT_debug_report"
 
 -- No documentation found for TopLevel "VK_EXT_DEBUG_REPORT_SPEC_VERSION"

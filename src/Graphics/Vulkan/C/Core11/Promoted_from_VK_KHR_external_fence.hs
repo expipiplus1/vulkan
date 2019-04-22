@@ -61,8 +61,13 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities
 --     reported by
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceProperties'.
 --
--- Unresolved directive in VkExportFenceCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkExportFenceCreateInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be 'VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO'
+--
+-- -   @handleTypes@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceHandleTypeFlagBits'
+--     values
 --
 -- = See Also
 --
@@ -138,7 +143,9 @@ pattern VK_FENCE_IMPORT_TEMPORARY_BIT = VkFenceImportFlagBits 0x00000001
 --
 -- = See Also
 --
--- 'VkFenceImportFlagBits'
+-- 'VkFenceImportFlagBits',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd.VkImportFenceFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.VkImportFenceWin32HandleInfoKHR'
 type VkFenceImportFlags = VkFenceImportFlagBits
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO"

@@ -73,7 +73,8 @@ data VkAccessFlagBits
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkBufferMemoryBarrier',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkImageMemoryBarrier',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkMemoryBarrier',
--- 'VkSubpassDependency'
+-- 'VkSubpassDependency',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkSubpassDependency2KHR'
 type VkAccessFlags = VkAccessFlagBits
 
 data VkAttachmentDescription
@@ -90,7 +91,9 @@ data VkAttachmentDescriptionFlagBits
 --
 -- = See Also
 --
--- 'VkAttachmentDescription', 'VkAttachmentDescriptionFlagBits'
+-- 'VkAttachmentDescription',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkAttachmentDescription2KHR',
+-- 'VkAttachmentDescriptionFlagBits'
 type VkAttachmentDescriptionFlags = VkAttachmentDescriptionFlagBits
 
 data VkAttachmentLoadOp
@@ -111,6 +114,7 @@ data VkDependencyFlagBits
 -- = See Also
 --
 -- 'VkDependencyFlagBits', 'VkSubpassDependency',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkSubpassDependency2KHR',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdPipelineBarrier'
 type VkDependencyFlags = VkDependencyFlagBits
 
@@ -150,7 +154,9 @@ data VkSubpassDescriptionFlagBits
 --
 -- = See Also
 --
--- 'VkSubpassDescription', 'VkSubpassDescriptionFlagBits'
+-- 'VkSubpassDescription',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkSubpassDescription2KHR',
+-- 'VkSubpassDescriptionFlagBits'
 type VkSubpassDescriptionFlags = VkSubpassDescriptionFlagBits
 
 type FN_vkCreateFramebuffer = ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkFramebufferCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pFramebuffer" ::: Ptr VkFramebuffer) -> IO VkResult

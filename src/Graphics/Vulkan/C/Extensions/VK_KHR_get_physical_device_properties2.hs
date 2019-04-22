@@ -222,7 +222,7 @@ vkGetPhysicalDeviceSparseImageFormatProperties2KHR :: InstanceCmds -> ("physical
 vkGetPhysicalDeviceSparseImageFormatProperties2KHR = vkGetPhysicalDeviceSparseImageFormatProperties2
 
 -- No documentation found for TopLevel "VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME"
-pattern VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME = "VK_KHR_get_physical_device_properties2"
 
 -- No documentation found for TopLevel "VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_SPEC_VERSION"

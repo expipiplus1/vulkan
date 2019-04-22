@@ -17,9 +17,9 @@ module Graphics.Vulkan.Extensions.VK_EXT_calibrated_timestamps
   , getNumPhysicalDeviceCalibrateableTimeDomainsEXT
   , getPhysicalDeviceCalibrateableTimeDomainsEXT
   , getAllPhysicalDeviceCalibrateableTimeDomainsEXT
-  , pattern VK_EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION
-  , pattern VK_EXT_CALIBRATED_TIMESTAMPS_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_EXT
+  , pattern EXT_CALIBRATED_TIMESTAMPS_EXTENSION_NAME
+  , pattern EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_EXT
   ) where
 
 import Control.Exception
@@ -27,6 +27,9 @@ import Control.Exception
   )
 import Control.Monad
   ( when
+  )
+import Data.String
+  ( IsString
   )
 import Data.Vector
   ( Vector
@@ -70,6 +73,8 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps
   , VkTimeDomainEXT(..)
   , vkGetCalibratedTimestampsEXT
   , vkGetPhysicalDeviceCalibrateableTimeDomainsEXT
+  , pattern VK_EXT_CALIBRATED_TIMESTAMPS_EXTENSION_NAME
+  , pattern VK_EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_EXT
   , pattern VK_TIME_DOMAIN_CLOCK_MONOTONIC_EXT
   , pattern VK_TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT
@@ -91,9 +96,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps
-  ( pattern VK_EXT_CALIBRATED_TIMESTAMPS_EXTENSION_NAME
-  , pattern VK_EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_EXT
   )
 
 
@@ -101,14 +105,13 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps
 -- | VkCalibratedTimestampInfoEXT - Structure specifying the input parameters
 -- of a calibrated timestamp query
 --
--- == Valid Usage
---
--- Unresolved directive in VkCalibratedTimestampInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkCalibratedTimestampInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.VkTimeDomainEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.vkGetCalibratedTimestampsEXT'
 data CalibratedTimestampInfoEXT = CalibratedTimestampInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "CalibratedTimestampInfoEXT" "pNext"
@@ -140,8 +143,12 @@ instance Zero CalibratedTimestampInfoEXT where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.VkCalibratedTimestampInfoEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.vkGetPhysicalDeviceCalibrateableTimeDomainsEXT'
 type TimeDomainEXT = VkTimeDomainEXT
+
+
+{-# complete TIME_DOMAIN_DEVICE_EXT, TIME_DOMAIN_CLOCK_MONOTONIC_EXT, TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT, TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT :: TimeDomainEXT #-}
 
 
 -- | 'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.VK_TIME_DOMAIN_DEVICE_EXT'
@@ -216,12 +223,20 @@ pattern TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT = VK_TIME_DOMAIN_QUERY_PERFORM
 -- enough to fit any particular purpose so applications are expected to
 -- re-calibrate the timestamps on a regular basis.
 --
--- Unresolved directive in vkGetCalibratedTimestampsEXT.txt -
--- include::{generated}\/validity\/protos\/vkGetCalibratedTimestampsEXT.txt[]
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.VkCalibratedTimestampInfoEXT',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 getCalibratedTimestampsEXT :: Device ->  Vector CalibratedTimestampInfoEXT ->  IO (Vector Word64, Word64)
 getCalibratedTimestampsEXT = \(Device device' commandTable) -> \timestampInfos' -> alloca (\pMaxDeviation' -> allocaArray ((Data.Vector.length timestampInfos')) (\pTimestamps' -> withVec withCStructCalibratedTimestampInfoEXT timestampInfos' (\pTimestampInfos' -> vkGetCalibratedTimestampsEXT commandTable device' (fromIntegral $ Data.Vector.length timestampInfos') pTimestampInfos' pTimestamps' pMaxDeviation' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> (Data.Vector.generateM ((Data.Vector.length timestampInfos')) (peekElemOff pTimestamps'))<*>peek pMaxDeviation')))))
 
@@ -258,13 +273,36 @@ getCalibratedTimestampsEXT = \(Device device' commandTable) -> \timestampInfos' 
 -- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS' to indicate that not all
 -- the available values were returned.
 --
--- Unresolved directive in
--- vkGetPhysicalDeviceCalibrateableTimeDomainsEXT.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceCalibrateableTimeDomainsEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @pTimeDomainCount@ /must/ be a valid pointer to a @uint32_t@ value
+--
+-- -   If the value referenced by @pTimeDomainCount@ is not @0@, and
+--     @pTimeDomains@ is not @NULL@, @pTimeDomains@ /must/ be a valid
+--     pointer to an array of @pTimeDomainCount@
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.VkTimeDomainEXT'
+--     values
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.VkTimeDomainEXT'
 getNumPhysicalDeviceCalibrateableTimeDomainsEXT :: PhysicalDevice ->  IO (VkResult, Word32)
 getNumPhysicalDeviceCalibrateableTimeDomainsEXT = \(PhysicalDevice physicalDevice' commandTable) -> alloca (\pTimeDomainCount' -> vkGetPhysicalDeviceCalibrateableTimeDomainsEXT commandTable physicalDevice' pTimeDomainCount' nullPtr >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>peek pTimeDomainCount')))
 
@@ -300,13 +338,36 @@ getNumPhysicalDeviceCalibrateableTimeDomainsEXT = \(PhysicalDevice physicalDevic
 -- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS' to indicate that not all
 -- the available values were returned.
 --
--- Unresolved directive in
--- vkGetPhysicalDeviceCalibrateableTimeDomainsEXT.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceCalibrateableTimeDomainsEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @pTimeDomainCount@ /must/ be a valid pointer to a @uint32_t@ value
+--
+-- -   If the value referenced by @pTimeDomainCount@ is not @0@, and
+--     @pTimeDomains@ is not @NULL@, @pTimeDomains@ /must/ be a valid
+--     pointer to an array of @pTimeDomainCount@
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.VkTimeDomainEXT'
+--     values
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.VkTimeDomainEXT'
 getPhysicalDeviceCalibrateableTimeDomainsEXT :: PhysicalDevice ->  Word32 ->  IO (VkResult, Vector TimeDomainEXT)
 getPhysicalDeviceCalibrateableTimeDomainsEXT = \(PhysicalDevice physicalDevice' commandTable) -> \timeDomainCount' -> allocaArray (fromIntegral timeDomainCount') (\pTimeDomains' -> with timeDomainCount' (\pTimeDomainCount' -> vkGetPhysicalDeviceCalibrateableTimeDomainsEXT commandTable physicalDevice' pTimeDomainCount' pTimeDomains' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>(flip Data.Vector.generateM (peekElemOff pTimeDomains') =<< (fromIntegral <$> (peek pTimeDomainCount')))))))
 -- | Returns all the values available from 'getPhysicalDeviceCalibrateableTimeDomainsEXT'.
@@ -315,3 +376,11 @@ getAllPhysicalDeviceCalibrateableTimeDomainsEXT physicalDevice' =
   snd <$> getNumPhysicalDeviceCalibrateableTimeDomainsEXT physicalDevice'
     >>= \num -> snd <$> getPhysicalDeviceCalibrateableTimeDomainsEXT physicalDevice' num
 
+
+-- No documentation found for TopLevel "VK_EXT_CALIBRATED_TIMESTAMPS_EXTENSION_NAME"
+pattern EXT_CALIBRATED_TIMESTAMPS_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_CALIBRATED_TIMESTAMPS_EXTENSION_NAME = VK_EXT_CALIBRATED_TIMESTAMPS_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION"
+pattern EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION :: Integral a => a
+pattern EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION = VK_EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION

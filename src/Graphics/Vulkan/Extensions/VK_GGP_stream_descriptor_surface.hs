@@ -9,9 +9,9 @@ module Graphics.Vulkan.Extensions.VK_GGP_stream_descriptor_surface
   , fromCStructStreamDescriptorSurfaceCreateInfoGGP
   , StreamDescriptorSurfaceCreateInfoGGP(..)
   , createStreamDescriptorSurfaceGGP
-  , pattern VK_GGP_STREAM_DESCRIPTOR_SURFACE_SPEC_VERSION
-  , pattern VK_GGP_STREAM_DESCRIPTOR_SURFACE_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP
+  , pattern GGP_STREAM_DESCRIPTOR_SURFACE_EXTENSION_NAME
+  , pattern GGP_STREAM_DESCRIPTOR_SURFACE_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP
   ) where
 
 import Control.Exception
@@ -19,6 +19,9 @@ import Control.Exception
   )
 import Control.Monad
   ( when
+  )
+import Data.String
+  ( IsString
   )
 import Foreign.Marshal.Alloc
   ( alloca
@@ -45,6 +48,8 @@ import Graphics.Vulkan.C.Extensions.VK_GGP_stream_descriptor_surface
   , VkStreamDescriptorSurfaceCreateInfoGGP(..)
   , GgpStreamDescriptor
   , vkCreateStreamDescriptorSurfaceGGP
+  , pattern VK_GGP_STREAM_DESCRIPTOR_SURFACE_EXTENSION_NAME
+  , pattern VK_GGP_STREAM_DESCRIPTOR_SURFACE_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
@@ -63,9 +68,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_GGP_stream_descriptor_surface
-  ( pattern VK_GGP_STREAM_DESCRIPTOR_SURFACE_EXTENSION_NAME
-  , pattern VK_GGP_STREAM_DESCRIPTOR_SURFACE_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP
   )
 
 
@@ -73,17 +77,19 @@ import Graphics.Vulkan.C.Extensions.VK_GGP_stream_descriptor_surface
 type StreamDescriptorSurfaceCreateFlagsGGP = VkStreamDescriptorSurfaceCreateFlagsGGP
 
 
+-- No complete pragma for StreamDescriptorSurfaceCreateFlagsGGP as it has no patterns
+
+
 -- | VkStreamDescriptorSurfaceCreateInfoGGP - Structure specifying parameters
 -- of a newly created Google Games Platform stream surface object
 --
--- == Valid Usage
---
--- Unresolved directive in VkStreamDescriptorSurfaceCreateInfoGGP.txt -
--- include::{generated}\/validity\/structs\/VkStreamDescriptorSurfaceCreateInfoGGP.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_GGP_stream_descriptor_surface.VkStreamDescriptorSurfaceCreateFlagsGGP',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_GGP_stream_descriptor_surface.vkCreateStreamDescriptorSurfaceGGP'
 data StreamDescriptorSurfaceCreateInfoGGP = StreamDescriptorSurfaceCreateInfoGGP
   { -- Univalued member elided
   -- No documentation found for Nested "StreamDescriptorSurfaceCreateInfoGGP" "pNext"
@@ -138,13 +144,48 @@ instance Zero StreamDescriptorSurfaceCreateInfoGGP where
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
 --     which the created surface object is returned.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCreateStreamDescriptorSurfaceGGP.txt -
--- include::{generated}\/validity\/protos\/vkCreateStreamDescriptorSurfaceGGP.txt[]
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Extensions.VK_GGP_stream_descriptor_surface.VkStreamDescriptorSurfaceCreateInfoGGP'
+--     structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pSurface@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_NATIVE_WINDOW_IN_USE_KHR'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance',
+-- 'Graphics.Vulkan.C.Extensions.VK_GGP_stream_descriptor_surface.VkStreamDescriptorSurfaceCreateInfoGGP',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR'
 createStreamDescriptorSurfaceGGP :: Instance ->  StreamDescriptorSurfaceCreateInfoGGP ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
 createStreamDescriptorSurfaceGGP = \(Instance instance' commandTable) -> \createInfo' -> \allocator -> alloca (\pSurface' -> maybeWith (\marshalled -> withCStructAllocationCallbacks marshalled . flip with) allocator (\pAllocator -> (\marshalled -> withCStructStreamDescriptorSurfaceCreateInfoGGP marshalled . flip with) createInfo' (\pCreateInfo' -> vkCreateStreamDescriptorSurfaceGGP commandTable instance' pCreateInfo' pAllocator pSurface' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (peek pSurface')))))
+
+-- No documentation found for TopLevel "VK_GGP_STREAM_DESCRIPTOR_SURFACE_EXTENSION_NAME"
+pattern GGP_STREAM_DESCRIPTOR_SURFACE_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern GGP_STREAM_DESCRIPTOR_SURFACE_EXTENSION_NAME = VK_GGP_STREAM_DESCRIPTOR_SURFACE_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_GGP_STREAM_DESCRIPTOR_SURFACE_SPEC_VERSION"
+pattern GGP_STREAM_DESCRIPTOR_SURFACE_SPEC_VERSION :: Integral a => a
+pattern GGP_STREAM_DESCRIPTOR_SURFACE_SPEC_VERSION = VK_GGP_STREAM_DESCRIPTOR_SURFACE_SPEC_VERSION

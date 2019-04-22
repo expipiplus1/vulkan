@@ -18,60 +18,63 @@ module Graphics.Vulkan.Extensions.VK_EXT_blend_operation_advanced
   , withCStructPipelineColorBlendAdvancedStateCreateInfoEXT
   , fromCStructPipelineColorBlendAdvancedStateCreateInfoEXT
   , PipelineColorBlendAdvancedStateCreateInfoEXT(..)
-  , pattern VK_EXT_BLEND_OPERATION_ADVANCED_SPEC_VERSION
-  , pattern VK_EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_FEATURES_EXT
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_PROPERTIES_EXT
-  , pattern VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT
-  , pattern VK_BLEND_OP_ZERO_EXT
-  , pattern VK_BLEND_OP_SRC_EXT
-  , pattern VK_BLEND_OP_DST_EXT
-  , pattern VK_BLEND_OP_SRC_OVER_EXT
-  , pattern VK_BLEND_OP_DST_OVER_EXT
-  , pattern VK_BLEND_OP_SRC_IN_EXT
-  , pattern VK_BLEND_OP_DST_IN_EXT
-  , pattern VK_BLEND_OP_SRC_OUT_EXT
-  , pattern VK_BLEND_OP_DST_OUT_EXT
-  , pattern VK_BLEND_OP_SRC_ATOP_EXT
-  , pattern VK_BLEND_OP_DST_ATOP_EXT
-  , pattern VK_BLEND_OP_XOR_EXT
-  , pattern VK_BLEND_OP_MULTIPLY_EXT
-  , pattern VK_BLEND_OP_SCREEN_EXT
-  , pattern VK_BLEND_OP_OVERLAY_EXT
-  , pattern VK_BLEND_OP_DARKEN_EXT
-  , pattern VK_BLEND_OP_LIGHTEN_EXT
-  , pattern VK_BLEND_OP_COLORDODGE_EXT
-  , pattern VK_BLEND_OP_COLORBURN_EXT
-  , pattern VK_BLEND_OP_HARDLIGHT_EXT
-  , pattern VK_BLEND_OP_SOFTLIGHT_EXT
-  , pattern VK_BLEND_OP_DIFFERENCE_EXT
-  , pattern VK_BLEND_OP_EXCLUSION_EXT
-  , pattern VK_BLEND_OP_INVERT_EXT
-  , pattern VK_BLEND_OP_INVERT_RGB_EXT
-  , pattern VK_BLEND_OP_LINEARDODGE_EXT
-  , pattern VK_BLEND_OP_LINEARBURN_EXT
-  , pattern VK_BLEND_OP_VIVIDLIGHT_EXT
-  , pattern VK_BLEND_OP_LINEARLIGHT_EXT
-  , pattern VK_BLEND_OP_PINLIGHT_EXT
-  , pattern VK_BLEND_OP_HARDMIX_EXT
-  , pattern VK_BLEND_OP_HSL_HUE_EXT
-  , pattern VK_BLEND_OP_HSL_SATURATION_EXT
-  , pattern VK_BLEND_OP_HSL_COLOR_EXT
-  , pattern VK_BLEND_OP_HSL_LUMINOSITY_EXT
-  , pattern VK_BLEND_OP_PLUS_EXT
-  , pattern VK_BLEND_OP_PLUS_CLAMPED_EXT
-  , pattern VK_BLEND_OP_PLUS_CLAMPED_ALPHA_EXT
-  , pattern VK_BLEND_OP_PLUS_DARKER_EXT
-  , pattern VK_BLEND_OP_MINUS_EXT
-  , pattern VK_BLEND_OP_MINUS_CLAMPED_EXT
-  , pattern VK_BLEND_OP_CONTRAST_EXT
-  , pattern VK_BLEND_OP_INVERT_OVG_EXT
-  , pattern VK_BLEND_OP_RED_EXT
-  , pattern VK_BLEND_OP_GREEN_EXT
-  , pattern VK_BLEND_OP_BLUE_EXT
-  , pattern VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT
+  , pattern EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME
+  , pattern EXT_BLEND_OPERATION_ADVANCED_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_FEATURES_EXT
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_PROPERTIES_EXT
+  , pattern STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT
+  , pattern BLEND_OP_ZERO_EXT
+  , pattern BLEND_OP_SRC_EXT
+  , pattern BLEND_OP_DST_EXT
+  , pattern BLEND_OP_SRC_OVER_EXT
+  , pattern BLEND_OP_DST_OVER_EXT
+  , pattern BLEND_OP_SRC_IN_EXT
+  , pattern BLEND_OP_DST_IN_EXT
+  , pattern BLEND_OP_SRC_OUT_EXT
+  , pattern BLEND_OP_DST_OUT_EXT
+  , pattern BLEND_OP_SRC_ATOP_EXT
+  , pattern BLEND_OP_DST_ATOP_EXT
+  , pattern BLEND_OP_XOR_EXT
+  , pattern BLEND_OP_MULTIPLY_EXT
+  , pattern BLEND_OP_SCREEN_EXT
+  , pattern BLEND_OP_OVERLAY_EXT
+  , pattern BLEND_OP_DARKEN_EXT
+  , pattern BLEND_OP_LIGHTEN_EXT
+  , pattern BLEND_OP_COLORDODGE_EXT
+  , pattern BLEND_OP_COLORBURN_EXT
+  , pattern BLEND_OP_HARDLIGHT_EXT
+  , pattern BLEND_OP_SOFTLIGHT_EXT
+  , pattern BLEND_OP_DIFFERENCE_EXT
+  , pattern BLEND_OP_EXCLUSION_EXT
+  , pattern BLEND_OP_INVERT_EXT
+  , pattern BLEND_OP_INVERT_RGB_EXT
+  , pattern BLEND_OP_LINEARDODGE_EXT
+  , pattern BLEND_OP_LINEARBURN_EXT
+  , pattern BLEND_OP_VIVIDLIGHT_EXT
+  , pattern BLEND_OP_LINEARLIGHT_EXT
+  , pattern BLEND_OP_PINLIGHT_EXT
+  , pattern BLEND_OP_HARDMIX_EXT
+  , pattern BLEND_OP_HSL_HUE_EXT
+  , pattern BLEND_OP_HSL_SATURATION_EXT
+  , pattern BLEND_OP_HSL_COLOR_EXT
+  , pattern BLEND_OP_HSL_LUMINOSITY_EXT
+  , pattern BLEND_OP_PLUS_EXT
+  , pattern BLEND_OP_PLUS_CLAMPED_EXT
+  , pattern BLEND_OP_PLUS_CLAMPED_ALPHA_EXT
+  , pattern BLEND_OP_PLUS_DARKER_EXT
+  , pattern BLEND_OP_MINUS_EXT
+  , pattern BLEND_OP_MINUS_CLAMPED_EXT
+  , pattern BLEND_OP_CONTRAST_EXT
+  , pattern BLEND_OP_INVERT_OVG_EXT
+  , pattern BLEND_OP_RED_EXT
+  , pattern BLEND_OP_GREEN_EXT
+  , pattern BLEND_OP_BLUE_EXT
+  , pattern ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Data.Word
   ( Word32
   )
@@ -95,6 +98,8 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_blend_operation_advanced
   , pattern VK_BLEND_OVERLAP_CONJOINT_EXT
   , pattern VK_BLEND_OVERLAP_DISJOINT_EXT
   , pattern VK_BLEND_OVERLAP_UNCORRELATED_EXT
+  , pattern VK_EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME
+  , pattern VK_EXT_BLEND_OPERATION_ADVANCED_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_FEATURES_EXT
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_PROPERTIES_EXT
   , pattern VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT
@@ -108,56 +113,61 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_blend_operation_advanced
-  ( pattern VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT
-  , pattern VK_BLEND_OP_BLUE_EXT
-  , pattern VK_BLEND_OP_COLORBURN_EXT
-  , pattern VK_BLEND_OP_COLORDODGE_EXT
-  , pattern VK_BLEND_OP_CONTRAST_EXT
-  , pattern VK_BLEND_OP_DARKEN_EXT
-  , pattern VK_BLEND_OP_DIFFERENCE_EXT
-  , pattern VK_BLEND_OP_DST_ATOP_EXT
-  , pattern VK_BLEND_OP_DST_EXT
-  , pattern VK_BLEND_OP_DST_IN_EXT
-  , pattern VK_BLEND_OP_DST_OUT_EXT
-  , pattern VK_BLEND_OP_DST_OVER_EXT
-  , pattern VK_BLEND_OP_EXCLUSION_EXT
-  , pattern VK_BLEND_OP_GREEN_EXT
-  , pattern VK_BLEND_OP_HARDLIGHT_EXT
-  , pattern VK_BLEND_OP_HARDMIX_EXT
-  , pattern VK_BLEND_OP_HSL_COLOR_EXT
-  , pattern VK_BLEND_OP_HSL_HUE_EXT
-  , pattern VK_BLEND_OP_HSL_LUMINOSITY_EXT
-  , pattern VK_BLEND_OP_HSL_SATURATION_EXT
-  , pattern VK_BLEND_OP_INVERT_EXT
-  , pattern VK_BLEND_OP_INVERT_OVG_EXT
-  , pattern VK_BLEND_OP_INVERT_RGB_EXT
-  , pattern VK_BLEND_OP_LIGHTEN_EXT
-  , pattern VK_BLEND_OP_LINEARBURN_EXT
-  , pattern VK_BLEND_OP_LINEARDODGE_EXT
-  , pattern VK_BLEND_OP_LINEARLIGHT_EXT
-  , pattern VK_BLEND_OP_MINUS_CLAMPED_EXT
-  , pattern VK_BLEND_OP_MINUS_EXT
-  , pattern VK_BLEND_OP_MULTIPLY_EXT
-  , pattern VK_BLEND_OP_OVERLAY_EXT
-  , pattern VK_BLEND_OP_PINLIGHT_EXT
-  , pattern VK_BLEND_OP_PLUS_CLAMPED_ALPHA_EXT
-  , pattern VK_BLEND_OP_PLUS_CLAMPED_EXT
-  , pattern VK_BLEND_OP_PLUS_DARKER_EXT
-  , pattern VK_BLEND_OP_PLUS_EXT
-  , pattern VK_BLEND_OP_RED_EXT
-  , pattern VK_BLEND_OP_SCREEN_EXT
-  , pattern VK_BLEND_OP_SOFTLIGHT_EXT
-  , pattern VK_BLEND_OP_SRC_ATOP_EXT
-  , pattern VK_BLEND_OP_SRC_EXT
-  , pattern VK_BLEND_OP_SRC_IN_EXT
-  , pattern VK_BLEND_OP_SRC_OUT_EXT
-  , pattern VK_BLEND_OP_SRC_OVER_EXT
-  , pattern VK_BLEND_OP_VIVIDLIGHT_EXT
-  , pattern VK_BLEND_OP_XOR_EXT
-  , pattern VK_BLEND_OP_ZERO_EXT
-  , pattern VK_EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME
-  , pattern VK_EXT_BLEND_OPERATION_ADVANCED_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_FEATURES_EXT
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_PROPERTIES_EXT
+  , pattern STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT
+  )
+import Graphics.Vulkan.Core10.Pass
+  ( pattern ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT
+  )
+import Graphics.Vulkan.Core10.Pipeline
+  ( pattern BLEND_OP_BLUE_EXT
+  , pattern BLEND_OP_COLORBURN_EXT
+  , pattern BLEND_OP_COLORDODGE_EXT
+  , pattern BLEND_OP_CONTRAST_EXT
+  , pattern BLEND_OP_DARKEN_EXT
+  , pattern BLEND_OP_DIFFERENCE_EXT
+  , pattern BLEND_OP_DST_ATOP_EXT
+  , pattern BLEND_OP_DST_EXT
+  , pattern BLEND_OP_DST_IN_EXT
+  , pattern BLEND_OP_DST_OUT_EXT
+  , pattern BLEND_OP_DST_OVER_EXT
+  , pattern BLEND_OP_EXCLUSION_EXT
+  , pattern BLEND_OP_GREEN_EXT
+  , pattern BLEND_OP_HARDLIGHT_EXT
+  , pattern BLEND_OP_HARDMIX_EXT
+  , pattern BLEND_OP_HSL_COLOR_EXT
+  , pattern BLEND_OP_HSL_HUE_EXT
+  , pattern BLEND_OP_HSL_LUMINOSITY_EXT
+  , pattern BLEND_OP_HSL_SATURATION_EXT
+  , pattern BLEND_OP_INVERT_EXT
+  , pattern BLEND_OP_INVERT_OVG_EXT
+  , pattern BLEND_OP_INVERT_RGB_EXT
+  , pattern BLEND_OP_LIGHTEN_EXT
+  , pattern BLEND_OP_LINEARBURN_EXT
+  , pattern BLEND_OP_LINEARDODGE_EXT
+  , pattern BLEND_OP_LINEARLIGHT_EXT
+  , pattern BLEND_OP_MINUS_CLAMPED_EXT
+  , pattern BLEND_OP_MINUS_EXT
+  , pattern BLEND_OP_MULTIPLY_EXT
+  , pattern BLEND_OP_OVERLAY_EXT
+  , pattern BLEND_OP_PINLIGHT_EXT
+  , pattern BLEND_OP_PLUS_CLAMPED_ALPHA_EXT
+  , pattern BLEND_OP_PLUS_CLAMPED_EXT
+  , pattern BLEND_OP_PLUS_DARKER_EXT
+  , pattern BLEND_OP_PLUS_EXT
+  , pattern BLEND_OP_RED_EXT
+  , pattern BLEND_OP_SCREEN_EXT
+  , pattern BLEND_OP_SOFTLIGHT_EXT
+  , pattern BLEND_OP_SRC_ATOP_EXT
+  , pattern BLEND_OP_SRC_EXT
+  , pattern BLEND_OP_SRC_IN_EXT
+  , pattern BLEND_OP_SRC_OUT_EXT
+  , pattern BLEND_OP_SRC_OVER_EXT
+  , pattern BLEND_OP_VIVIDLIGHT_EXT
+  , pattern BLEND_OP_XOR_EXT
+  , pattern BLEND_OP_ZERO_EXT
   )
 
 
@@ -217,8 +227,11 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_blend_operation_advanced
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_blend_operation_advanced.VkPipelineColorBlendAdvancedStateCreateInfoEXT'
 type BlendOverlapEXT = VkBlendOverlapEXT
+
+
+{-# complete BLEND_OVERLAP_UNCORRELATED_EXT, BLEND_OVERLAP_DISJOINT_EXT, BLEND_OVERLAP_CONJOINT_EXT :: BlendOverlapEXT #-}
 
 
 -- | 'Graphics.Vulkan.C.Extensions.VK_EXT_blend_operation_advanced.VK_BLEND_OVERLAP_UNCORRELATED_EXT'
@@ -263,13 +276,12 @@ pattern BLEND_OVERLAP_CONJOINT_EXT = VK_BLEND_OVERLAP_CONJOINT_EXT
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable the
 -- features.
 --
--- Unresolved directive in
--- VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceBlendOperationAdvancedFeaturesEXT = PhysicalDeviceBlendOperationAdvancedFeaturesEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceBlendOperationAdvancedFeaturesEXT" "pNext"
@@ -316,13 +328,12 @@ instance Zero PhysicalDeviceBlendOperationAdvancedFeaturesEXT where
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- Unresolved directive in
--- VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceBlendOperationAdvancedPropertiesEXT = PhysicalDeviceBlendOperationAdvancedPropertiesEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceBlendOperationAdvancedPropertiesEXT" "pNext"
@@ -399,13 +410,20 @@ instance Zero PhysicalDeviceBlendOperationAdvancedPropertiesEXT where
 --     property is not supported, @blendOverlap@ /must/ be
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_blend_operation_advanced.VK_BLEND_OVERLAP_UNCORRELATED_EXT'
 --
--- Unresolved directive in
--- VkPipelineColorBlendAdvancedStateCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkPipelineColorBlendAdvancedStateCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_blend_operation_advanced.VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT'
+--
+-- -   @blendOverlap@ /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_blend_operation_advanced.VkBlendOverlapEXT'
+--     value
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_blend_operation_advanced.VkBlendOverlapEXT',
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PipelineColorBlendAdvancedStateCreateInfoEXT = PipelineColorBlendAdvancedStateCreateInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PipelineColorBlendAdvancedStateCreateInfoEXT" "pNext"
@@ -440,3 +458,11 @@ instance Zero PipelineColorBlendAdvancedStateCreateInfoEXT where
                                                       False
                                                       zero
 
+
+-- No documentation found for TopLevel "VK_EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME"
+pattern EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME = VK_EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_BLEND_OPERATION_ADVANCED_SPEC_VERSION"
+pattern EXT_BLEND_OPERATION_ADVANCED_SPEC_VERSION :: Integral a => a
+pattern EXT_BLEND_OPERATION_ADVANCED_SPEC_VERSION = VK_EXT_BLEND_OPERATION_ADVANCED_SPEC_VERSION

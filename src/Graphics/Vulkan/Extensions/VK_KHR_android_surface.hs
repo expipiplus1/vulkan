@@ -9,10 +9,10 @@ module Graphics.Vulkan.Extensions.VK_KHR_android_surface
   , fromCStructAndroidSurfaceCreateInfoKHR
   , AndroidSurfaceCreateInfoKHR(..)
   , createAndroidSurfaceKHR
-  , pattern VK_KHR_ANDROID_SURFACE_SPEC_VERSION
-  , pattern VK_KHR_ANDROID_SURFACE_EXTENSION_NAME
+  , pattern KHR_ANDROID_SURFACE_EXTENSION_NAME
+  , pattern KHR_ANDROID_SURFACE_SPEC_VERSION
   , ANativeWindow
-  , pattern VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR
+  , pattern STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR
   ) where
 
 import Control.Exception
@@ -20,6 +20,9 @@ import Control.Exception
   )
 import Control.Monad
   ( when
+  )
+import Data.String
+  ( IsString
   )
 import Foreign.Marshal.Alloc
   ( alloca
@@ -47,6 +50,8 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_android_surface
   , VkAndroidSurfaceCreateInfoKHR(..)
   , ANativeWindow
   , vkCreateAndroidSurfaceKHR
+  , pattern VK_KHR_ANDROID_SURFACE_EXTENSION_NAME
+  , pattern VK_KHR_ANDROID_SURFACE_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
@@ -65,9 +70,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_KHR_android_surface
-  ( pattern VK_KHR_ANDROID_SURFACE_EXTENSION_NAME
-  , pattern VK_KHR_ANDROID_SURFACE_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR
   )
 
 
@@ -75,17 +79,19 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_android_surface
 type AndroidSurfaceCreateFlagsKHR = VkAndroidSurfaceCreateFlagsKHR
 
 
+-- No complete pragma for AndroidSurfaceCreateFlagsKHR as it has no patterns
+
+
 -- | VkAndroidSurfaceCreateInfoKHR - Structure specifying parameters of a
 -- newly created Android surface object
 --
--- == Valid Usage
---
--- Unresolved directive in VkAndroidSurfaceCreateInfoKHR.txt -
--- include::{generated}\/validity\/structs\/VkAndroidSurfaceCreateInfoKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_android_surface.VkAndroidSurfaceCreateFlagsKHR',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_android_surface.vkCreateAndroidSurfaceKHR'
 data AndroidSurfaceCreateInfoKHR = AndroidSurfaceCreateInfoKHR
   { -- Univalued member elided
   -- No documentation found for Nested "AndroidSurfaceCreateInfoKHR" "pNext"
@@ -174,11 +180,48 @@ instance Zero AndroidSurfaceCreateInfoKHR where
 -- For the system compositor, @currentExtent@ is the window size (i.e. the
 -- consumer’s preferred size).
 --
--- Unresolved directive in vkCreateAndroidSurfaceKHR.txt -
--- include::{generated}\/validity\/protos\/vkCreateAndroidSurfaceKHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_android_surface.VkAndroidSurfaceCreateInfoKHR'
+--     structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pSurface@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_NATIVE_WINDOW_IN_USE_KHR'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_android_surface.VkAndroidSurfaceCreateInfoKHR',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR'
 createAndroidSurfaceKHR :: Instance ->  AndroidSurfaceCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
 createAndroidSurfaceKHR = \(Instance instance' commandTable) -> \createInfo' -> \allocator -> alloca (\pSurface' -> maybeWith (\marshalled -> withCStructAllocationCallbacks marshalled . flip with) allocator (\pAllocator -> (\marshalled -> withCStructAndroidSurfaceCreateInfoKHR marshalled . flip with) createInfo' (\pCreateInfo' -> vkCreateAndroidSurfaceKHR commandTable instance' pCreateInfo' pAllocator pSurface' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (peek pSurface')))))
+
+-- No documentation found for TopLevel "VK_KHR_ANDROID_SURFACE_EXTENSION_NAME"
+pattern KHR_ANDROID_SURFACE_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern KHR_ANDROID_SURFACE_EXTENSION_NAME = VK_KHR_ANDROID_SURFACE_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_KHR_ANDROID_SURFACE_SPEC_VERSION"
+pattern KHR_ANDROID_SURFACE_SPEC_VERSION :: Integral a => a
+pattern KHR_ANDROID_SURFACE_SPEC_VERSION = VK_KHR_ANDROID_SURFACE_SPEC_VERSION

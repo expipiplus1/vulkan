@@ -8,8 +8,8 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_shader_draw_parameters
   , withCStructPhysicalDeviceShaderDrawParametersFeatures
   , fromCStructPhysicalDeviceShaderDrawParametersFeatures
   , PhysicalDeviceShaderDrawParametersFeatures(..)
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES
   ) where
 
 import Foreign.Marshal.Utils
@@ -22,7 +22,8 @@ import Foreign.Ptr
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( Zero(..)
+  ( VkStructureType(..)
+  , Zero(..)
   )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_shader_draw_parameters
   ( VkPhysicalDeviceShaderDrawParametersFeatures(..)
@@ -31,14 +32,12 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_shader_draw_parameters
 import Graphics.Vulkan.Core10.Core
   ( bool32ToBool
   , boolToBool32
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES
   )
 import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   ( SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
-  )
-import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_shader_draw_parameters
-  ( pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES
   )
 
 
@@ -58,9 +57,7 @@ type PhysicalDeviceShaderDrawParameterFeatures = PhysicalDeviceShaderDrawParamet
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2',
 -- it is filled with a value indicating whether the feature is supported.
 --
--- Unresolved directive in VkPhysicalDeviceShaderDrawParametersFeatures.txt
--- -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceShaderDrawParametersFeatures.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -92,3 +89,7 @@ instance Zero PhysicalDeviceShaderDrawParametersFeatures where
   zero = PhysicalDeviceShaderDrawParametersFeatures Nothing
                                                     False
 
+
+-- No documentation found for TopLevel "STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES :: VkStructureType
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETERS_FEATURES

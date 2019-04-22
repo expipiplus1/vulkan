@@ -41,6 +41,7 @@ type ImageAspectFlagBits = VkImageAspectFlagBits
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkAttachmentReference2KHR',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkClearAttachment',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkImageAspectFlagBits',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkImageSubresource',

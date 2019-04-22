@@ -73,7 +73,7 @@ import Graphics.Vulkan.C.Core10.Core
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkPipelineRasterizationConservativeStateCreateInfoEXT'
 newtype VkConservativeRasterizationModeEXT = VkConservativeRasterizationModeEXT Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -128,15 +128,15 @@ pattern VK_CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT = VkConservativeRas
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits and properties.
 --
--- Unresolved directive in
--- VkPhysicalDeviceConservativeRasterizationPropertiesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceConservativeRasterizationPropertiesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceConservativeRasterizationPropertiesEXT = VkPhysicalDeviceConservativeRasterizationPropertiesEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CONSERVATIVE_RASTERIZATION_PROPERTIES_EXT'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -197,17 +197,7 @@ data VkPhysicalDeviceConservativeRasterizationPropertiesEXT = VkPhysicalDeviceCo
   -- enabled and the fragment area is fully covered by the generating
   -- primitive.
   vkFullyCoveredFragmentShaderInputVariable :: VkBool32
-  , -- | @conservativeRasterizationPostDepthCoverage@ is true if the
-  -- implementation supports conservative rasterization with the
-  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#shaders-fragment-earlytest-postdepthcoverage PostDepthCoverage>
-  -- execution mode enabled. When supported the
-  -- 'Graphics.Vulkan.Core10.Pipeline.SampleMask' built-in input variable
-  -- will reflect the coverage after the early per-fragment depth and stencil
-  -- tests are applied even when conservative rasterization is enabled.
-  -- Otherwise
-  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#shaders-fragment-earlytest-postdepthcoverage PostDepthCoverage>
-  -- execution mode /must/ not be used when conservative rasterization is
-  -- enabled.
+  , -- | @conservativeRasterizationPostDepthCoverage@ /must/ be false.
   vkConservativeRasterizationPostDepthCoverage :: VkBool32
   }
   deriving (Eq, Show)
@@ -263,7 +253,7 @@ instance Zero VkPhysicalDeviceConservativeRasterizationPropertiesEXT where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkPipelineRasterizationConservativeStateCreateInfoEXT'
 newtype VkPipelineRasterizationConservativeStateCreateFlagsEXT = VkPipelineRasterizationConservativeStateCreateFlagsEXT VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -286,24 +276,23 @@ instance Read VkPipelineRasterizationConservativeStateCreateFlagsEXT where
 -- | VkPipelineRasterizationConservativeStateCreateInfoEXT - Structure
 -- specifying conservative raster state
 --
--- == Valid Usage
---
--- Unresolved directive in
--- VkPipelineRasterizationConservativeStateCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkPipelineRasterizationConservativeStateCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkConservativeRasterizationModeEXT',
+-- 'VkPipelineRasterizationConservativeStateCreateFlagsEXT',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPipelineRasterizationConservativeStateCreateInfoEXT = VkPipelineRasterizationConservativeStateCreateInfoEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @flags@ is reserved for future use.
+  , -- | @flags@ /must/ be @0@
   vkFlags :: VkPipelineRasterizationConservativeStateCreateFlagsEXT
-  , -- | @conservativeRasterizationMode@ is the conservative rasterization mode
-  -- to use.
+  , -- | @conservativeRasterizationMode@ /must/ be a valid
+  -- 'VkConservativeRasterizationModeEXT' value
   vkConservativeRasterizationMode :: VkConservativeRasterizationModeEXT
   , -- | @extraPrimitiveOverestimationSize@ /must/ be in the range of @0.0@ to
   -- 'VkPhysicalDeviceConservativeRasterizationPropertiesEXT'::@maxExtraPrimitiveOverestimationSize@
@@ -334,7 +323,7 @@ instance Zero VkPipelineRasterizationConservativeStateCreateInfoEXT where
                                                                zero
 
 -- No documentation found for TopLevel "VK_EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME"
-pattern VK_EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_CONSERVATIVE_RASTERIZATION_EXTENSION_NAME = "VK_EXT_conservative_rasterization"
 
 -- No documentation found for TopLevel "VK_EXT_CONSERVATIVE_RASTERIZATION_SPEC_VERSION"

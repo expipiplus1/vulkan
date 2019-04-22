@@ -42,58 +42,58 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion
   , createSamplerYcbcrConversion
   , destroySamplerYcbcrConversion
   , withSamplerYcbcrConversion
-  , pattern VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO
-  , pattern VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO
-  , pattern VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO
-  , pattern VK_STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES
-  , pattern VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES
-  , pattern VK_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION
-  , pattern VK_FORMAT_G8B8G8R8_422_UNORM
-  , pattern VK_FORMAT_B8G8R8G8_422_UNORM
-  , pattern VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM
-  , pattern VK_FORMAT_G8_B8R8_2PLANE_420_UNORM
-  , pattern VK_FORMAT_G8_B8_R8_3PLANE_422_UNORM
-  , pattern VK_FORMAT_G8_B8R8_2PLANE_422_UNORM
-  , pattern VK_FORMAT_G8_B8_R8_3PLANE_444_UNORM
-  , pattern VK_FORMAT_R10X6_UNORM_PACK16
-  , pattern VK_FORMAT_R10X6G10X6_UNORM_2PACK16
-  , pattern VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16
-  , pattern VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16
-  , pattern VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16
-  , pattern VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16
-  , pattern VK_FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16
-  , pattern VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16
-  , pattern VK_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16
-  , pattern VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16
-  , pattern VK_FORMAT_R12X4_UNORM_PACK16
-  , pattern VK_FORMAT_R12X4G12X4_UNORM_2PACK16
-  , pattern VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16
-  , pattern VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16
-  , pattern VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16
-  , pattern VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16
-  , pattern VK_FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16
-  , pattern VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16
-  , pattern VK_FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16
-  , pattern VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16
-  , pattern VK_FORMAT_G16B16G16R16_422_UNORM
-  , pattern VK_FORMAT_B16G16R16G16_422_UNORM
-  , pattern VK_FORMAT_G16_B16_R16_3PLANE_420_UNORM
-  , pattern VK_FORMAT_G16_B16R16_2PLANE_420_UNORM
-  , pattern VK_FORMAT_G16_B16_R16_3PLANE_422_UNORM
-  , pattern VK_FORMAT_G16_B16R16_2PLANE_422_UNORM
-  , pattern VK_FORMAT_G16_B16_R16_3PLANE_444_UNORM
-  , pattern VK_IMAGE_ASPECT_PLANE_0_BIT
-  , pattern VK_IMAGE_ASPECT_PLANE_1_BIT
-  , pattern VK_IMAGE_ASPECT_PLANE_2_BIT
-  , pattern VK_IMAGE_CREATE_DISJOINT_BIT
-  , pattern VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT
-  , pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT
-  , pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT
-  , pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT
-  , pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT
-  , pattern VK_FORMAT_FEATURE_DISJOINT_BIT
-  , pattern VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT
+  , pattern STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO
+  , pattern STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO
+  , pattern STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO
+  , pattern STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES
+  , pattern STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES
+  , pattern OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION
+  , pattern FORMAT_G8B8G8R8_422_UNORM
+  , pattern FORMAT_B8G8R8G8_422_UNORM
+  , pattern FORMAT_G8_B8_R8_3PLANE_420_UNORM
+  , pattern FORMAT_G8_B8R8_2PLANE_420_UNORM
+  , pattern FORMAT_G8_B8_R8_3PLANE_422_UNORM
+  , pattern FORMAT_G8_B8R8_2PLANE_422_UNORM
+  , pattern FORMAT_G8_B8_R8_3PLANE_444_UNORM
+  , pattern FORMAT_R10X6_UNORM_PACK16
+  , pattern FORMAT_R10X6G10X6_UNORM_2PACK16
+  , pattern FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16
+  , pattern FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16
+  , pattern FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16
+  , pattern FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16
+  , pattern FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16
+  , pattern FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16
+  , pattern FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16
+  , pattern FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16
+  , pattern FORMAT_R12X4_UNORM_PACK16
+  , pattern FORMAT_R12X4G12X4_UNORM_2PACK16
+  , pattern FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16
+  , pattern FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16
+  , pattern FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16
+  , pattern FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16
+  , pattern FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16
+  , pattern FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16
+  , pattern FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16
+  , pattern FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16
+  , pattern FORMAT_G16B16G16R16_422_UNORM
+  , pattern FORMAT_B16G16R16G16_422_UNORM
+  , pattern FORMAT_G16_B16_R16_3PLANE_420_UNORM
+  , pattern FORMAT_G16_B16R16_2PLANE_420_UNORM
+  , pattern FORMAT_G16_B16_R16_3PLANE_422_UNORM
+  , pattern FORMAT_G16_B16R16_2PLANE_422_UNORM
+  , pattern FORMAT_G16_B16_R16_3PLANE_444_UNORM
+  , pattern IMAGE_ASPECT_PLANE_0_BIT
+  , pattern IMAGE_ASPECT_PLANE_1_BIT
+  , pattern IMAGE_ASPECT_PLANE_2_BIT
+  , pattern IMAGE_CREATE_DISJOINT_BIT
+  , pattern FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT
+  , pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT
+  , pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT
+  , pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT
+  , pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT
+  , pattern FORMAT_FEATURE_DISJOINT_BIT
+  , pattern FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT
   ) where
 
 import Control.Exception
@@ -184,53 +184,63 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion
-  ( pattern VK_FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16
-  , pattern VK_FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16
-  , pattern VK_FORMAT_B16G16R16G16_422_UNORM
-  , pattern VK_FORMAT_B8G8R8G8_422_UNORM
-  , pattern VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT
-  , pattern VK_FORMAT_FEATURE_DISJOINT_BIT
-  , pattern VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT
-  , pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT
-  , pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT
-  , pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT
-  , pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT
-  , pattern VK_FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16
-  , pattern VK_FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16
-  , pattern VK_FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16
-  , pattern VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16
-  , pattern VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16
-  , pattern VK_FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16
-  , pattern VK_FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16
-  , pattern VK_FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16
-  , pattern VK_FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16
-  , pattern VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16
-  , pattern VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16
-  , pattern VK_FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16
-  , pattern VK_FORMAT_G16B16G16R16_422_UNORM
-  , pattern VK_FORMAT_G16_B16R16_2PLANE_420_UNORM
-  , pattern VK_FORMAT_G16_B16R16_2PLANE_422_UNORM
-  , pattern VK_FORMAT_G16_B16_R16_3PLANE_420_UNORM
-  , pattern VK_FORMAT_G16_B16_R16_3PLANE_422_UNORM
-  , pattern VK_FORMAT_G16_B16_R16_3PLANE_444_UNORM
-  , pattern VK_FORMAT_G8B8G8R8_422_UNORM
-  , pattern VK_FORMAT_G8_B8R8_2PLANE_420_UNORM
-  , pattern VK_FORMAT_G8_B8R8_2PLANE_422_UNORM
-  , pattern VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM
-  , pattern VK_FORMAT_G8_B8_R8_3PLANE_422_UNORM
-  , pattern VK_FORMAT_G8_B8_R8_3PLANE_444_UNORM
-  , pattern VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16
-  , pattern VK_FORMAT_R10X6G10X6_UNORM_2PACK16
-  , pattern VK_FORMAT_R10X6_UNORM_PACK16
-  , pattern VK_FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16
-  , pattern VK_FORMAT_R12X4G12X4_UNORM_2PACK16
-  , pattern VK_FORMAT_R12X4_UNORM_PACK16
-  , pattern VK_IMAGE_ASPECT_PLANE_0_BIT
-  , pattern VK_IMAGE_ASPECT_PLANE_1_BIT
-  , pattern VK_IMAGE_ASPECT_PLANE_2_BIT
-  , pattern VK_IMAGE_CREATE_DISJOINT_BIT
-  , pattern VK_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16
+  , pattern FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16
+  , pattern FORMAT_B16G16R16G16_422_UNORM
+  , pattern FORMAT_B8G8R8G8_422_UNORM
+  , pattern FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16
+  , pattern FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16
+  , pattern FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16
+  , pattern FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16
+  , pattern FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16
+  , pattern FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16
+  , pattern FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16
+  , pattern FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16
+  , pattern FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16
+  , pattern FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16
+  , pattern FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16
+  , pattern FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16
+  , pattern FORMAT_G16B16G16R16_422_UNORM
+  , pattern FORMAT_G16_B16R16_2PLANE_420_UNORM
+  , pattern FORMAT_G16_B16R16_2PLANE_422_UNORM
+  , pattern FORMAT_G16_B16_R16_3PLANE_420_UNORM
+  , pattern FORMAT_G16_B16_R16_3PLANE_422_UNORM
+  , pattern FORMAT_G16_B16_R16_3PLANE_444_UNORM
+  , pattern FORMAT_G8B8G8R8_422_UNORM
+  , pattern FORMAT_G8_B8R8_2PLANE_420_UNORM
+  , pattern FORMAT_G8_B8R8_2PLANE_422_UNORM
+  , pattern FORMAT_G8_B8_R8_3PLANE_420_UNORM
+  , pattern FORMAT_G8_B8_R8_3PLANE_422_UNORM
+  , pattern FORMAT_G8_B8_R8_3PLANE_444_UNORM
+  , pattern FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16
+  , pattern FORMAT_R10X6G10X6_UNORM_2PACK16
+  , pattern FORMAT_R10X6_UNORM_PACK16
+  , pattern FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16
+  , pattern FORMAT_R12X4G12X4_UNORM_2PACK16
+  , pattern FORMAT_R12X4_UNORM_PACK16
+  , pattern OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION
+  , pattern STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO
+  , pattern STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES
+  , pattern STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO
+  , pattern STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES
+  , pattern STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO
+  )
+import Graphics.Vulkan.Core10.DeviceInitialization
+  ( pattern FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT
+  , pattern FORMAT_FEATURE_DISJOINT_BIT
+  , pattern FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT
+  , pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT
+  , pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT
+  , pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT
+  , pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT
+  , pattern IMAGE_CREATE_DISJOINT_BIT
+  )
+import Graphics.Vulkan.Core10.SparseResourceMemoryManagement
+  ( pattern IMAGE_ASPECT_PLANE_0_BIT
+  , pattern IMAGE_ASPECT_PLANE_1_BIT
+  , pattern IMAGE_ASPECT_PLANE_2_BIT
   )
 
 
@@ -256,17 +266,6 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_2_BIT'
 --     for “@_3PLANE@” formats.)
 --
--- -   If the image’s tiling is
---     'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
---     then @planeAspect@ /must/ be a single valid /memory plane/ for the
---     image. (That is, @aspectMask@ /must/ specify a plane index that is
---     less than the
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkDrmFormatModifierPropertiesEXT drmFormatModifierPlaneCount>
---     associated with the image’s
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkImageCreateInfo format>
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkImageDrmFormatModifierPropertiesEXT drmFormatModifier>.)
---
 -- -   A single call to
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.vkBindImageMemory2'
 --     /must/ bind all or none of the planes of an image (i.e. bindings to
@@ -274,8 +273,14 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.vkBindImageMemory2'
 --     call), as separate bindings
 --
--- Unresolved directive in VkBindImagePlaneMemoryInfo.txt -
--- include::{generated}\/validity\/structs\/VkBindImagePlaneMemoryInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO'
+--
+-- -   @planeAspect@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkImageAspectFlagBits'
+--     value
 --
 -- = See Also
 --
@@ -312,8 +317,12 @@ instance Zero BindImagePlaneMemoryInfo where
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkAndroidHardwareBufferFormatPropertiesANDROID',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'
 type ChromaLocation = VkChromaLocation
+
+
+{-# complete CHROMA_LOCATION_COSITED_EVEN, CHROMA_LOCATION_MIDPOINT :: ChromaLocation #-}
 
 
 -- | 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_CHROMA_LOCATION_COSITED_EVEN'
@@ -353,19 +362,14 @@ type ChromaLocationKHR = ChromaLocation
 --     or
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_2_BIT').
 --
--- -   If the image’s tiling is
---     'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
---     then @planeAspect@ /must/ be a single valid /memory plane/ for the
---     image. (That is, @aspectMask@ /must/ specify a plane index that is
---     less than the
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkDrmFormatModifierPropertiesEXT drmFormatModifierPlaneCount>
---     associated with the image’s
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkImageCreateInfo format>
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkImageDrmFormatModifierPropertiesEXT drmFormatModifier>.)
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in VkImagePlaneMemoryRequirementsInfo.txt -
--- include::{generated}\/validity\/structs\/VkImagePlaneMemoryRequirementsInfo.txt[]
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO'
+--
+-- -   @planeAspect@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkImageAspectFlagBits'
+--     value
 --
 -- = See Also
 --
@@ -408,11 +412,7 @@ instance Zero ImagePlaneMemoryRequirementsInfo where
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkPhysicalDeviceSamplerYcbcrConversionFeatures'
 -- structure describe the following feature:
 --
--- = Description
---
--- Unresolved directive in
--- VkPhysicalDeviceSamplerYcbcrConversionFeatures.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceSamplerYcbcrConversionFeatures.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -452,7 +452,9 @@ instance Zero PhysicalDeviceSamplerYcbcrConversionFeatures where
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionInfo',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.vkCreateSamplerYcbcrConversion',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.vkDestroySamplerYcbcrConversion'
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_sampler_ycbcr_conversion.vkCreateSamplerYcbcrConversionKHR',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.vkDestroySamplerYcbcrConversion',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_sampler_ycbcr_conversion.vkDestroySamplerYcbcrConversionKHR'
 type SamplerYcbcrConversion = VkSamplerYcbcrConversion
 
 
@@ -468,21 +470,13 @@ type SamplerYcbcrConversion = VkSamplerYcbcrConversion
 -- on implementations where explicit reconstruction is not the default mode
 -- of operation.
 --
--- If the @pNext@ chain has an instance of
--- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkExternalFormatANDROID'
--- with non-zero @externalFormat@ member, the sampler Y’CBCR conversion
--- object represents an /external format conversion/, and @format@ /must/
--- be 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_UNDEFINED'. Such conversions
--- /must/ only be used to sample image views with a matching
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>.
--- When creating an external format conversion, the value of @components@
--- is ignored.
+-- Sampler Y’CBCR conversion objects do not support /external format
+-- conversion/ without additional extensions defining /external formats/.
 --
 -- == Valid Usage
 --
--- -   If an external format conversion is being created, @format@ /must/
---     be 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_UNDEFINED', otherwise it
---     /must/ not be 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_UNDEFINED'.
+-- -   @format@ /must/ not be
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_UNDEFINED'
 --
 -- -   @format@ /must/ support
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT'
@@ -548,8 +542,38 @@ type SamplerYcbcrConversion = VkSamplerYcbcrConversion
 --     @chromaFilter@ /must/ be
 --     'Graphics.Vulkan.C.Core10.Sampler.VK_FILTER_NEAREST'
 --
--- Unresolved directive in VkSamplerYcbcrConversionCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkSamplerYcbcrConversionCreateInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO'
+--
+-- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+--     'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkExternalFormatANDROID'
+--
+-- -   @format@ /must/ be a valid 'Graphics.Vulkan.C.Core10.Core.VkFormat'
+--     value
+--
+-- -   @ycbcrModel@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrModelConversion'
+--     value
+--
+-- -   @ycbcrRange@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrRange'
+--     value
+--
+-- -   @components@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.ImageView.VkComponentMapping' structure
+--
+-- -   @xChromaOffset@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkChromaLocation'
+--     value
+--
+-- -   @yChromaOffset@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkChromaLocation'
+--     value
+--
+-- -   @chromaFilter@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Sampler.VkFilter' value
 --
 -- If @chromaFilter@ is
 -- 'Graphics.Vulkan.C.Core10.Sampler.VK_FILTER_NEAREST', chroma samples are
@@ -571,7 +595,8 @@ type SamplerYcbcrConversion = VkSamplerYcbcrConversion
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrModelConversion',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrRange',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.vkCreateSamplerYcbcrConversion'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.vkCreateSamplerYcbcrConversion',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_sampler_ycbcr_conversion.vkCreateSamplerYcbcrConversionKHR'
 data SamplerYcbcrConversionCreateInfo = SamplerYcbcrConversionCreateInfo
   { -- Univalued member elided
   -- No documentation found for Nested "SamplerYcbcrConversionCreateInfo" "pNext"
@@ -631,11 +656,7 @@ instance Zero SamplerYcbcrConversionCreateInfo where
 -- | VkSamplerYcbcrConversionImageFormatProperties - Structure specifying
 -- combined image sampler descriptor count for multi-planar images
 --
--- = Description
---
--- Unresolved directive in
--- VkSamplerYcbcrConversionImageFormatProperties.txt -
--- include::{generated}\/validity\/structs\/VkSamplerYcbcrConversionImageFormatProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -671,10 +692,7 @@ instance Zero SamplerYcbcrConversionImageFormatProperties where
 -- | VkSamplerYcbcrConversionInfo - Structure specifying Y’CbCr conversion to
 -- a sampler or image view
 --
--- = Description
---
--- Unresolved directive in VkSamplerYcbcrConversionInfo.txt -
--- include::{generated}\/validity\/structs\/VkSamplerYcbcrConversionInfo.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -776,8 +794,12 @@ instance Zero SamplerYcbcrConversionInfo where
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkAndroidHardwareBufferFormatPropertiesANDROID',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'
 type SamplerYcbcrModelConversion = VkSamplerYcbcrModelConversion
+
+
+{-# complete SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY, SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY, SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709, SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601, SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020 :: SamplerYcbcrModelConversion #-}
 
 
 -- No documentation found for Nested "SamplerYcbcrModelConversion" "SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY"
@@ -825,8 +847,12 @@ type SamplerYcbcrModelConversionKHR = SamplerYcbcrModelConversion
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkAndroidHardwareBufferFormatPropertiesANDROID',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'
 type SamplerYcbcrRange = VkSamplerYcbcrRange
+
+
+{-# complete SAMPLER_YCBCR_RANGE_ITU_FULL, SAMPLER_YCBCR_RANGE_ITU_NARROW :: SamplerYcbcrRange #-}
 
 
 -- | 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_SAMPLER_YCBCR_RANGE_ITU_FULL'
@@ -881,8 +907,33 @@ type SamplerYcbcrRangeKHR = SamplerYcbcrRange
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-sampler-YCbCr-conversion sampler Y’CBCR conversion feature>
 --     /must/ be enabled
 --
--- Unresolved directive in vkCreateSamplerYcbcrConversion.txt -
--- include::{generated}\/validity\/protos\/vkCreateSamplerYcbcrConversion.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'
+--     structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pYcbcrConversion@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversion'
+--     handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -906,10 +957,28 @@ createSamplerYcbcrConversion = \(Device device' commandTable) -> \createInfo' ->
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkDestroySamplerYcbcrConversion.txt -
--- include::{generated}\/validity\/protos\/vkDestroySamplerYcbcrConversion.txt[]
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   If @ycbcrConversion@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE',
+--     @ycbcrConversion@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversion'
+--     handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   If @ycbcrConversion@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @ycbcrConversion@ /must/ be externally synchronized
 --
 -- = See Also
 --

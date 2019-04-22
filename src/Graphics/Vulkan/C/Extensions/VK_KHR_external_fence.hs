@@ -63,7 +63,7 @@ pattern VK_FENCE_IMPORT_TEMPORARY_BIT_KHR :: VkFenceImportFlagBits
 pattern VK_FENCE_IMPORT_TEMPORARY_BIT_KHR = VK_FENCE_IMPORT_TEMPORARY_BIT
 
 -- No documentation found for TopLevel "VK_KHR_EXTERNAL_FENCE_EXTENSION_NAME"
-pattern VK_KHR_EXTERNAL_FENCE_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_EXTERNAL_FENCE_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_EXTERNAL_FENCE_EXTENSION_NAME = "VK_KHR_external_fence"
 
 -- No documentation found for TopLevel "VK_KHR_EXTERNAL_FENCE_SPEC_VERSION"

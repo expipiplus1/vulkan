@@ -7,13 +7,16 @@ module Graphics.Vulkan.Extensions.VK_KHR_image_format_list
   ( withCStructImageFormatListCreateInfoKHR
   , fromCStructImageFormatListCreateInfoKHR
   , ImageFormatListCreateInfoKHR(..)
-  , pattern VK_KHR_IMAGE_FORMAT_LIST_SPEC_VERSION
-  , pattern VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR
+  , pattern KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME
+  , pattern KHR_IMAGE_FORMAT_LIST_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR
   ) where
 
 import Data.Function
   ( (&)
+  )
+import Data.String
+  ( IsString
   )
 import Data.Vector
   ( Vector
@@ -40,6 +43,8 @@ import Graphics.Vulkan.C.Core10.Core
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_image_format_list
   ( VkImageFormatListCreateInfoKHR(..)
+  , pattern VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME
+  , pattern VK_KHR_IMAGE_FORMAT_LIST_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR
   )
 import Graphics.Vulkan.Core10.Core
@@ -53,9 +58,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_KHR_image_format_list
-  ( pattern VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME
-  , pattern VK_KHR_IMAGE_FORMAT_LIST_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR
   )
 
 
@@ -89,12 +93,19 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_image_format_list
 --     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@format@ /must/
 --     be in @pViewFormats@.
 --
--- Unresolved directive in VkImageFormatListCreateInfoKHR.txt -
--- include::{generated}\/validity\/structs\/VkImageFormatListCreateInfoKHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_image_format_list.VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR'
+--
+-- -   If @viewFormatCount@ is not @0@, @pViewFormats@ /must/ be a valid
+--     pointer to an array of @viewFormatCount@ valid
+--     'Graphics.Vulkan.C.Core10.Core.VkFormat' values
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkFormat',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data ImageFormatListCreateInfoKHR = ImageFormatListCreateInfoKHR
   { -- Univalued member elided
   -- No documentation found for Nested "ImageFormatListCreateInfoKHR" "pNext"
@@ -123,3 +134,11 @@ instance Zero ImageFormatListCreateInfoKHR where
   zero = ImageFormatListCreateInfoKHR Nothing
                                       Data.Vector.empty
 
+
+-- No documentation found for TopLevel "VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME"
+pattern KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME = VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_KHR_IMAGE_FORMAT_LIST_SPEC_VERSION"
+pattern KHR_IMAGE_FORMAT_LIST_SPEC_VERSION :: Integral a => a
+pattern KHR_IMAGE_FORMAT_LIST_SPEC_VERSION = VK_KHR_IMAGE_FORMAT_LIST_SPEC_VERSION

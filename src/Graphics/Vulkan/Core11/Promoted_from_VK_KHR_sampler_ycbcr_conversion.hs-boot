@@ -27,6 +27,7 @@ import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbc
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkAndroidHardwareBufferFormatPropertiesANDROID',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'
 type ChromaLocation = VkChromaLocation
 
@@ -40,7 +41,9 @@ type ChromaLocationKHR = ChromaLocation
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionInfo',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.vkCreateSamplerYcbcrConversion',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.vkDestroySamplerYcbcrConversion'
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_sampler_ycbcr_conversion.vkCreateSamplerYcbcrConversionKHR',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.vkDestroySamplerYcbcrConversion',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_sampler_ycbcr_conversion.vkDestroySamplerYcbcrConversionKHR'
 type SamplerYcbcrConversion = VkSamplerYcbcrConversion
 
 -- | VkSamplerYcbcrModelConversion - Color model component of a color space
@@ -112,6 +115,7 @@ type SamplerYcbcrConversion = VkSamplerYcbcrConversion
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkAndroidHardwareBufferFormatPropertiesANDROID',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'
 type SamplerYcbcrModelConversion = VkSamplerYcbcrModelConversion
 
@@ -136,6 +140,7 @@ type SamplerYcbcrModelConversionKHR = SamplerYcbcrModelConversion
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkAndroidHardwareBufferFormatPropertiesANDROID',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'
 type SamplerYcbcrRange = VkSamplerYcbcrRange
 

@@ -7,11 +7,14 @@ module Graphics.Vulkan.Extensions.VK_KHR_8bit_storage
   ( withCStructPhysicalDevice8BitStorageFeaturesKHR
   , fromCStructPhysicalDevice8BitStorageFeaturesKHR
   , PhysicalDevice8BitStorageFeaturesKHR(..)
-  , pattern VK_KHR_8BIT_STORAGE_SPEC_VERSION
-  , pattern VK_KHR_8BIT_STORAGE_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES_KHR
+  , pattern KHR_8BIT_STORAGE_EXTENSION_NAME
+  , pattern KHR_8BIT_STORAGE_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES_KHR
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Foreign.Marshal.Utils
   ( maybePeek
   , maybeWith
@@ -26,6 +29,8 @@ import Graphics.Vulkan.C.Core10.Core
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_8bit_storage
   ( VkPhysicalDevice8BitStorageFeaturesKHR(..)
+  , pattern VK_KHR_8BIT_STORAGE_EXTENSION_NAME
+  , pattern VK_KHR_8BIT_STORAGE_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES_KHR
   )
 import Graphics.Vulkan.Core10.Core
@@ -37,9 +42,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_KHR_8bit_storage
-  ( pattern VK_KHR_8BIT_STORAGE_EXTENSION_NAME
-  , pattern VK_KHR_8BIT_STORAGE_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES_KHR
   )
 
 
@@ -47,14 +51,12 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_8bit_storage
 -- | VkPhysicalDevice8BitStorageFeaturesKHR - Structure describing features
 -- supported by VK_KHR_8bit_storage
 --
--- = Description
---
--- Unresolved directive in VkPhysicalDevice8BitStorageFeaturesKHR.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDevice8BitStorageFeaturesKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDevice8BitStorageFeaturesKHR = PhysicalDevice8BitStorageFeaturesKHR
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDevice8BitStorageFeaturesKHR" "pNext"
@@ -89,3 +91,11 @@ instance Zero PhysicalDevice8BitStorageFeaturesKHR where
                                               False
                                               False
 
+
+-- No documentation found for TopLevel "VK_KHR_8BIT_STORAGE_EXTENSION_NAME"
+pattern KHR_8BIT_STORAGE_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern KHR_8BIT_STORAGE_EXTENSION_NAME = VK_KHR_8BIT_STORAGE_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_KHR_8BIT_STORAGE_SPEC_VERSION"
+pattern KHR_8BIT_STORAGE_SPEC_VERSION :: Integral a => a
+pattern KHR_8BIT_STORAGE_SPEC_VERSION = VK_KHR_8BIT_STORAGE_SPEC_VERSION

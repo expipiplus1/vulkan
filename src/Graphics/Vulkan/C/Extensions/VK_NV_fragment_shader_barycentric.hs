@@ -54,15 +54,15 @@ import Graphics.Vulkan.C.Core10.Core
 -- in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
 --
--- Unresolved directive in
--- VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV = VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV
-  { -- No documentation found for Nested "VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV" "sType"
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_NV'
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV" "pNext"
   vkPNext :: Ptr ()
@@ -90,7 +90,7 @@ instance Zero VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV where
                                                              zero
 
 -- No documentation found for TopLevel "VK_NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME"
-pattern VK_NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME = "VK_NV_fragment_shader_barycentric"
 
 -- No documentation found for TopLevel "VK_NV_FRAGMENT_SHADER_BARYCENTRIC_SPEC_VERSION"

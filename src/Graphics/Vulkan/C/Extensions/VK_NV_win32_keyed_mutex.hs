@@ -40,14 +40,37 @@ import Graphics.Vulkan.C.Core10.Memory
 -- | VkWin32KeyedMutexAcquireReleaseInfoNV - use Windows keyex mutex
 -- mechanism to synchronize work
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in VkWin32KeyedMutexAcquireReleaseInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkWin32KeyedMutexAcquireReleaseInfoNV.txt[]
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV'
+--
+-- -   If @acquireCount@ is not @0@, @pAcquireSyncs@ /must/ be a valid
+--     pointer to an array of @acquireCount@ valid
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' handles
+--
+-- -   If @acquireCount@ is not @0@, @pAcquireKeys@ /must/ be a valid
+--     pointer to an array of @acquireCount@ @uint64_t@ values
+--
+-- -   If @acquireCount@ is not @0@, @pAcquireTimeoutMilliseconds@ /must/
+--     be a valid pointer to an array of @acquireCount@ @uint32_t@ values
+--
+-- -   If @releaseCount@ is not @0@, @pReleaseSyncs@ /must/ be a valid
+--     pointer to an array of @releaseCount@ valid
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' handles
+--
+-- -   If @releaseCount@ is not @0@, @pReleaseKeys@ /must/ be a valid
+--     pointer to an array of @releaseCount@ @uint64_t@ values
+--
+-- -   Both of the elements of @pAcquireSyncs@, and the elements of
+--     @pReleaseSyncs@ that are valid handles /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkWin32KeyedMutexAcquireReleaseInfoNV = VkWin32KeyedMutexAcquireReleaseInfoNV
   { -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoNV" "sType"
   vkSType :: VkStructureType
@@ -115,7 +138,7 @@ instance Zero VkWin32KeyedMutexAcquireReleaseInfoNV where
                                                zero
 
 -- No documentation found for TopLevel "VK_NV_WIN32_KEYED_MUTEX_EXTENSION_NAME"
-pattern VK_NV_WIN32_KEYED_MUTEX_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_NV_WIN32_KEYED_MUTEX_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_NV_WIN32_KEYED_MUTEX_EXTENSION_NAME = "VK_NV_win32_keyed_mutex"
 
 -- No documentation found for TopLevel "VK_NV_WIN32_KEYED_MUTEX_SPEC_VERSION"

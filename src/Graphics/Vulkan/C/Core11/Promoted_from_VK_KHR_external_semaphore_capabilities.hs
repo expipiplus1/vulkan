@@ -179,7 +179,11 @@ type VkExternalSemaphoreFeatureFlags = VkExternalSemaphoreFeatureFlagBits
 -- = See Also
 --
 -- 'VkExternalSemaphoreHandleTypeFlags',
--- 'VkPhysicalDeviceExternalSemaphoreInfo'
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd.VkImportSemaphoreFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32.VkImportSemaphoreWin32HandleInfoKHR',
+-- 'VkPhysicalDeviceExternalSemaphoreInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd.VkSemaphoreGetFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32.VkSemaphoreGetWin32HandleInfoKHR'
 newtype VkExternalSemaphoreHandleTypeFlagBits = VkExternalSemaphoreHandleTypeFlagBits VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -275,18 +279,18 @@ type VkExternalSemaphoreHandleTypeFlags = VkExternalSemaphoreHandleTypeFlagBits
 -- 'VkExternalSemaphoreProperties'::@externalSemaphoreFeatures@ will be set
 -- to zero.
 --
--- Unresolved directive in VkExternalSemaphoreProperties.txt -
--- include::{generated}\/validity\/structs\/VkExternalSemaphoreProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'VkExternalSemaphoreFeatureFlags', 'VkExternalSemaphoreHandleTypeFlags',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetPhysicalDeviceExternalSemaphoreProperties'
+-- 'vkGetPhysicalDeviceExternalSemaphoreProperties',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_capabilities.vkGetPhysicalDeviceExternalSemaphorePropertiesKHR'
 data VkExternalSemaphoreProperties = VkExternalSemaphoreProperties
-  { -- No documentation found for Nested "VkExternalSemaphoreProperties" "sType"
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES'
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkExternalSemaphoreProperties" "pNext"
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
   , -- | @exportFromImportedHandleTypes@ is a bitmask of
   -- 'VkExternalSemaphoreHandleTypeFlagBits' specifying which types of
@@ -328,24 +332,22 @@ instance Zero VkExternalSemaphoreProperties where
 -- | VkPhysicalDeviceExternalSemaphoreInfo - Structure specifying semaphore
 -- creation parameters.
 --
--- = Description
---
--- Unresolved directive in VkPhysicalDeviceExternalSemaphoreInfo.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceExternalSemaphoreInfo.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'VkExternalSemaphoreHandleTypeFlagBits',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetPhysicalDeviceExternalSemaphoreProperties'
+-- 'vkGetPhysicalDeviceExternalSemaphoreProperties',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_capabilities.vkGetPhysicalDeviceExternalSemaphorePropertiesKHR'
 data VkPhysicalDeviceExternalSemaphoreInfo = VkPhysicalDeviceExternalSemaphoreInfo
-  { -- | @sType@ is the type of this structure
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO'
   vkSType :: VkStructureType
-  , -- | @pNext@ is NULL or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- | @handleType@ is a 'VkExternalSemaphoreHandleTypeFlagBits' value
-  -- specifying the external semaphore handle type for which capabilities
-  -- will be returned.
+  , -- | @handleType@ /must/ be a valid 'VkExternalSemaphoreHandleTypeFlagBits'
+  -- value
   vkHandleType :: VkExternalSemaphoreHandleTypeFlagBits
   }
   deriving (Eq, Show)
@@ -382,11 +384,7 @@ instance Zero VkPhysicalDeviceExternalSemaphoreInfo where
 --     'VkExternalSemaphoreProperties' structure in which capabilities are
 --     returned.
 --
--- = Description
---
--- Unresolved directive in
--- vkGetPhysicalDeviceExternalSemaphoreProperties.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceExternalSemaphoreProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --

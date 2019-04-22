@@ -57,6 +57,7 @@ type Filter = VkFilter
 --
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorImageInfo',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutBinding',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_image_view_handle.VkImageViewHandleInfoNVX',
 -- 'Graphics.Vulkan.C.Core10.Sampler.vkCreateSampler',
 -- 'Graphics.Vulkan.C.Core10.Sampler.vkDestroySampler'
 type Sampler = VkSampler
@@ -71,17 +72,6 @@ type SamplerAddressMode = VkSamplerAddressMode
 
 -- | VkSamplerCreateFlagBits - Bitmask specifying additional parameters of
 -- sampler
---
--- = Description
---
--- __Note__
---
--- The approximations used when
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT'
--- is specified are implementation defined. Some implementations /may/
--- interpolate between fragment density levels in a subsampled image. In
--- that case, this bit /may/ be used to decide whether the interpolation
--- factors are calculated per fragment or at a coarser granularity.
 --
 -- = See Also
 --

@@ -127,7 +127,7 @@ vkGetImageSparseMemoryRequirements2KHR :: DeviceCmds -> ("device" ::: VkDevice) 
 vkGetImageSparseMemoryRequirements2KHR = vkGetImageSparseMemoryRequirements2
 
 -- No documentation found for TopLevel "VK_KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME"
-pattern VK_KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME = "VK_KHR_get_memory_requirements2"
 
 -- No documentation found for TopLevel "VK_KHR_GET_MEMORY_REQUIREMENTS_2_SPEC_VERSION"

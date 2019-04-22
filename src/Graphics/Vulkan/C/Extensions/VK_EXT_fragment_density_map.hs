@@ -86,15 +86,15 @@ import Graphics.Vulkan.C.Core10.Sampler
 -- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to
 -- enable the features.
 --
--- Unresolved directive in
--- VkPhysicalDeviceFragmentDensityMapFeaturesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceFragmentDensityMapFeaturesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceFragmentDensityMapFeaturesEXT = VkPhysicalDeviceFragmentDensityMapFeaturesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceFragmentDensityMapFeaturesEXT" "sType"
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT'
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceFragmentDensityMapFeaturesEXT" "pNext"
   vkPNext :: Ptr ()
@@ -154,11 +154,7 @@ instance Zero VkPhysicalDeviceFragmentDensityMapFeaturesEXT where
 -- The members of the 'VkPhysicalDeviceFragmentDensityMapPropertiesEXT'
 -- structure describe the following implementation-dependent limits:
 --
--- = Description
---
--- Unresolved directive in
--- VkPhysicalDeviceFragmentDensityMapPropertiesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceFragmentDensityMapPropertiesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- If the 'VkPhysicalDeviceFragmentDensityMapPropertiesEXT' structure is
 -- included in the @pNext@ chain of
@@ -167,9 +163,12 @@ instance Zero VkPhysicalDeviceFragmentDensityMapFeaturesEXT where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkExtent2D',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceFragmentDensityMapPropertiesEXT = VkPhysicalDeviceFragmentDensityMapPropertiesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceFragmentDensityMapPropertiesEXT" "sType"
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT'
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceFragmentDensityMapPropertiesEXT" "pNext"
   vkPNext :: Ptr ()
@@ -260,13 +259,18 @@ instance Zero VkPhysicalDeviceFragmentDensityMapPropertiesEXT where
 --     @storeOp@ equal to
 --     'Graphics.Vulkan.C.Core10.Pass.VK_ATTACHMENT_STORE_OP_DONT_CARE'.
 --
--- Unresolved directive in VkRenderPassFragmentDensityMapCreateInfoEXT.txt
--- -
--- include::{generated}\/validity\/structs\/VkRenderPassFragmentDensityMapCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT'
+--
+-- -   @fragmentDensityMapAttachment@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Pass.VkAttachmentReference' structure
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Pass.VkAttachmentReference',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkRenderPassFragmentDensityMapCreateInfoEXT = VkRenderPassFragmentDensityMapCreateInfoEXT
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -293,56 +297,27 @@ instance Zero VkRenderPassFragmentDensityMapCreateInfoEXT where
                                                      zero
                                                      zero
 
--- | 'VK_ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT' specifies read access to a
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>
--- during dynamic
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fragmentdensitymapops fragment density map operations>
+-- No documentation found for Nested "VkAccessFlagBits" "VK_ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT"
 pattern VK_ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT :: VkAccessFlagBits
 pattern VK_ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT = VkAccessFlagBits 0x01000000
 
 -- No documentation found for TopLevel "VK_EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME"
-pattern VK_EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME = "VK_EXT_fragment_density_map"
 
 -- No documentation found for TopLevel "VK_EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION"
 pattern VK_EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION = 1
 
--- | 'VK_FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT' specifies that an image
--- view /can/ be used as a
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>.
+-- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT"
 pattern VK_FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT = VkFormatFeatureFlagBits 0x01000000
 
--- | 'VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT' specifies that an image /can/ be in
--- a subsampled format which /may/ be more optimal when written as an
--- attachment by a render pass that has a fragment density map attachment.
--- Accessing a subsampled image has additional considerations:
---
--- -   Image data read as an image sampler is undefined if the sampler was
---     not created with @flags@ containing
---     'VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT' or was not sampled through
---     the use of a combined image sampler with an immutable sampler in
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutBinding'.
---
--- -   Image data read with an input attachment is undefined if the
---     contents were not written as an attachment in an earlier subpass of
---     the same render pass.
---
--- -   Image data read with load operations /may/ be resampled to the
---     fragment density of the render pass.
---
--- -   Image contents outside of the render area become undefined if the
---     image is stored as a render pass attachment.
---
+-- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT"
 pattern VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT = VkImageCreateFlagBits 0x00004000
 
--- | 'VK_IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT' /must/ only be used
--- as a fragment density map attachment in a
--- 'Graphics.Vulkan.C.Core10.Pipeline.VkRenderPass'. This layout is valid
--- only for image subresources of images created with the
--- 'VK_IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT' usage bit enabled.
+-- No documentation found for Nested "VkImageLayout" "VK_IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT"
 pattern VK_IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT :: VkImageLayout
 pattern VK_IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT = VkImageLayout 1000218000
 
@@ -350,29 +325,19 @@ pattern VK_IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT = VkImageLayout 1000218
 pattern VK_IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT :: VkImageUsageFlagBits
 pattern VK_IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT = VkImageUsageFlagBits 0x00000200
 
--- | 'VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT' prohibits
--- the implementation from accessing the fragment density map by the host
--- during
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBeginRenderPass' as
--- the contents are expected to change after recording
+-- No documentation found for Nested "VkImageViewCreateFlagBits" "VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT"
 pattern VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT :: VkImageViewCreateFlagBits
 pattern VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT = VkImageViewCreateFlagBits 0x00000001
 
--- | 'VK_PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT' specifies the stage
--- of the pipeline where the fragment density map is read to
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fragmentdensitymapops generate the fragment areas>.
+-- No documentation found for Nested "VkPipelineStageFlagBits" "VK_PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT"
 pattern VK_PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT :: VkPipelineStageFlagBits
 pattern VK_PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT = VkPipelineStageFlagBits 0x00800000
 
--- | 'VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT' specifies that the sampler will
--- read from an image created with @flags@ containing
--- 'VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT'.
+-- No documentation found for Nested "VkSamplerCreateFlagBits" "VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT"
 pattern VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT :: VkSamplerCreateFlagBits
 pattern VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT = VkSamplerCreateFlagBits 0x00000001
 
--- | 'VK_SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT' specifies
--- that the implementation /may/ use approximations when reconstructing a
--- full color value for texture access from a subsampled image.
+-- No documentation found for Nested "VkSamplerCreateFlagBits" "VK_SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT"
 pattern VK_SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT :: VkSamplerCreateFlagBits
 pattern VK_SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT = VkSamplerCreateFlagBits 0x00000002
 

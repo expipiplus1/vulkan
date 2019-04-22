@@ -25,7 +25,8 @@ import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.vkTrimCommandPool'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.vkTrimCommandPool',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_maintenance1.vkTrimCommandPoolKHR'
 type CommandPoolTrimFlags = VkCommandPoolTrimFlags
 
 -- No documentation found for TopLevel "CommandPoolTrimFlagsKHR"

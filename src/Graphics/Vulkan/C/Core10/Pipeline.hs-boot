@@ -144,9 +144,15 @@ data VkPipeline_T
 -- = See Also
 --
 -- 'VkComputePipelineCreateInfo', 'VkGraphicsPipelineCreateInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkObjectTablePipelineEntryNVX',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkRayTracingPipelineCreateInfoNV',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindPipeline',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCompileDeferredNV',
 -- 'vkCreateComputePipelines', 'vkCreateGraphicsPipelines',
--- 'vkDestroyPipeline'
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCreateRayTracingPipelinesNV',
+-- 'vkDestroyPipeline',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkGetRayTracingShaderGroupHandlesNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_shader_info.vkGetShaderInfoAMD'
 type VkPipeline = Ptr VkPipeline_T
 
 data VkPipelineColorBlendAttachmentState
@@ -167,7 +173,8 @@ data VkPipelineCreateFlagBits
 -- = See Also
 --
 -- 'VkComputePipelineCreateInfo', 'VkGraphicsPipelineCreateInfo',
--- 'VkPipelineCreateFlagBits'
+-- 'VkPipelineCreateFlagBits',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkRayTracingPipelineCreateInfoNV'
 type VkPipelineCreateFlags = VkPipelineCreateFlagBits
 
 data VkPipelineDepthStencilStateCreateFlags
@@ -191,8 +198,13 @@ data VkPipelineLayout_T
 -- 'VkComputePipelineCreateInfo',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplateCreateInfo',
 -- 'VkGraphicsPipelineCreateInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkObjectTableDescriptorSetEntryNVX',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkObjectTablePushConstantEntryNVX',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkRayTracingPipelineCreateInfoNV',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindDescriptorSets',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdPushConstants',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.vkCmdPushDescriptorSetKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.vkCmdPushDescriptorSetWithTemplateKHR',
 -- 'Graphics.Vulkan.C.Core10.PipelineLayout.vkCreatePipelineLayout',
 -- 'Graphics.Vulkan.C.Core10.PipelineLayout.vkDestroyPipelineLayout'
 type VkPipelineLayout = Ptr VkPipelineLayout_T
@@ -238,6 +250,7 @@ data VkRenderPass_T
 -- 'VkGraphicsPipelineCreateInfo',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkRenderPassBeginInfo',
 -- 'Graphics.Vulkan.C.Core10.Pass.vkCreateRenderPass',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.vkCreateRenderPass2KHR',
 -- 'Graphics.Vulkan.C.Core10.Pass.vkDestroyRenderPass',
 -- 'Graphics.Vulkan.C.Core10.Pass.vkGetRenderAreaGranularity'
 type VkRenderPass = Ptr VkRenderPass_T

@@ -26,8 +26,8 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_fence_capabilities
   , fromCStructPhysicalDeviceExternalFenceInfo
   , PhysicalDeviceExternalFenceInfo(..)
   , getPhysicalDeviceExternalFenceProperties
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO
-  , pattern VK_STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO
+  , pattern STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES
   ) where
 
 import Control.Monad
@@ -75,6 +75,10 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO
+  )
 
 
 -- | VkExternalFenceFeatureFlagBits - Bitfield describing features of an
@@ -84,6 +88,9 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceFeatureFlags'
 type ExternalFenceFeatureFlagBits = VkExternalFenceFeatureFlagBits
+
+
+{-# complete EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT, EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT :: ExternalFenceFeatureFlagBits #-}
 
 
 -- | 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VK_EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT'
@@ -172,8 +179,15 @@ type ExternalFenceFeatureFlagsKHR = ExternalFenceFeatureFlags
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceHandleTypeFlags',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd.VkFenceGetFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.VkFenceGetWin32HandleInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd.VkImportFenceFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.VkImportFenceWin32HandleInfoKHR',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkPhysicalDeviceExternalFenceInfo'
 type ExternalFenceHandleTypeFlagBits = VkExternalFenceHandleTypeFlagBits
+
+
+{-# complete EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT, EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT, EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT, EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT :: ExternalFenceHandleTypeFlagBits #-}
 
 
 -- | 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VK_EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT'
@@ -252,15 +266,15 @@ type ExternalFenceHandleTypeFlagsKHR = ExternalFenceHandleTypeFlags
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceProperties'::@externalFenceFeatures@
 -- will be set to zero.
 --
--- Unresolved directive in VkExternalFenceProperties.txt -
--- include::{generated}\/validity\/structs\/VkExternalFenceProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceFeatureFlags',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceHandleTypeFlags',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.vkGetPhysicalDeviceExternalFenceProperties'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.vkGetPhysicalDeviceExternalFenceProperties',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_capabilities.vkGetPhysicalDeviceExternalFencePropertiesKHR'
 data ExternalFenceProperties = ExternalFenceProperties
   { -- Univalued member elided
   -- No documentation found for Nested "ExternalFenceProperties" "pNext"
@@ -313,14 +327,14 @@ instance Zero ExternalFenceProperties where
 -- or are prepared to deal with the system-defined operation failures
 -- resulting from using the wrong type.
 --
--- Unresolved directive in VkPhysicalDeviceExternalFenceInfo.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceExternalFenceInfo.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceHandleTypeFlagBits',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.vkGetPhysicalDeviceExternalFenceProperties'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.vkGetPhysicalDeviceExternalFenceProperties',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_capabilities.vkGetPhysicalDeviceExternalFencePropertiesKHR'
 data PhysicalDeviceExternalFenceInfo = PhysicalDeviceExternalFenceInfo
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceExternalFenceInfo" "pNext"
@@ -366,10 +380,7 @@ instance Zero PhysicalDeviceExternalFenceInfo where
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceProperties'
 --     structure in which capabilities are returned.
 --
--- = Description
---
--- Unresolved directive in vkGetPhysicalDeviceExternalFenceProperties.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceExternalFenceProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --

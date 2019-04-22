@@ -86,7 +86,7 @@ vkEnumeratePhysicalDeviceGroupsKHR :: InstanceCmds -> ("instance" ::: VkInstance
 vkEnumeratePhysicalDeviceGroupsKHR = vkEnumeratePhysicalDeviceGroups
 
 -- No documentation found for TopLevel "VK_KHR_DEVICE_GROUP_CREATION_EXTENSION_NAME"
-pattern VK_KHR_DEVICE_GROUP_CREATION_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_DEVICE_GROUP_CREATION_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_DEVICE_GROUP_CREATION_EXTENSION_NAME = "VK_KHR_device_group_creation"
 
 -- No documentation found for TopLevel "VK_KHR_DEVICE_GROUP_CREATION_SPEC_VERSION"

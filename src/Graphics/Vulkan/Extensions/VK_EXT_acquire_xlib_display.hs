@@ -5,8 +5,8 @@
 module Graphics.Vulkan.Extensions.VK_EXT_acquire_xlib_display
   ( acquireXlibDisplayEXT
   , getRandROutputDisplayEXT
-  , pattern VK_EXT_ACQUIRE_XLIB_DISPLAY_SPEC_VERSION
-  , pattern VK_EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME
+  , pattern EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME
+  , pattern EXT_ACQUIRE_XLIB_DISPLAY_SPEC_VERSION
   ) where
 
 import Control.Exception
@@ -14,6 +14,9 @@ import Control.Exception
   )
 import Control.Monad
   ( when
+  )
+import Data.String
+  ( IsString
   )
 import Foreign.Marshal.Alloc
   ( alloca
@@ -30,6 +33,8 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_acquire_xlib_display
   ( RROutput
   , vkAcquireXlibDisplayEXT
   , vkGetRandROutputDisplayEXT
+  , pattern VK_EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME
+  , pattern VK_EXT_ACQUIRE_XLIB_DISPLAY_SPEC_VERSION
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface
   ( Display(..)
@@ -42,10 +47,6 @@ import Graphics.Vulkan.Exception
   )
 import Graphics.Vulkan.Extensions.VK_KHR_display
   ( DisplayKHR
-  )
-import Graphics.Vulkan.C.Extensions.VK_EXT_acquire_xlib_display
-  ( pattern VK_EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME
-  , pattern VK_EXT_ACQUIRE_XLIB_DISPLAY_SPEC_VERSION
   )
 
 
@@ -79,12 +80,18 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_acquire_xlib_display
 -- One example of when an X11 server loses access to a display is when it
 -- loses ownership of its virtual terminal.
 --
--- Unresolved directive in vkAcquireXlibDisplayEXT.txt -
--- include::{generated}\/validity\/protos\/vkAcquireXlibDisplayEXT.txt[]
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_INITIALIZATION_FAILED'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayKHR',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
 acquireXlibDisplayEXT :: PhysicalDevice ->  DisplayKHR ->  IO (Display)
 acquireXlibDisplayEXT = \(PhysicalDevice physicalDevice' commandTable) -> \display' -> alloca (\pDpy' -> vkAcquireXlibDisplayEXT commandTable physicalDevice' pDpy' display' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (peek pDpy')))
 
@@ -113,11 +120,22 @@ acquireXlibDisplayEXT = \(PhysicalDevice physicalDevice' commandTable) -> \displ
 -- 'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE' /must/ be returned
 -- in @pDisplay@.
 --
--- Unresolved directive in vkGetRandROutputDisplayEXT.txt -
--- include::{generated}\/validity\/protos\/vkGetRandROutputDisplayEXT.txt[]
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayKHR',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
 getRandROutputDisplayEXT :: PhysicalDevice ->  RROutput ->  IO (Display, DisplayKHR)
 getRandROutputDisplayEXT = \(PhysicalDevice physicalDevice' commandTable) -> \rrOutput' -> alloca (\pDisplay' -> alloca (\pDpy' -> vkGetRandROutputDisplayEXT commandTable physicalDevice' pDpy' rrOutput' pDisplay' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> peek pDpy'<*>peek pDisplay'))))
+
+-- No documentation found for TopLevel "VK_EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME"
+pattern EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME = VK_EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_ACQUIRE_XLIB_DISPLAY_SPEC_VERSION"
+pattern EXT_ACQUIRE_XLIB_DISPLAY_SPEC_VERSION :: Integral a => a
+pattern EXT_ACQUIRE_XLIB_DISPLAY_SPEC_VERSION = VK_EXT_ACQUIRE_XLIB_DISPLAY_SPEC_VERSION

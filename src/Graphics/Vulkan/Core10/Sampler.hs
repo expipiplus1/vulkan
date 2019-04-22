@@ -15,13 +15,17 @@ module Graphics.Vulkan.Core10.Sampler
   , Filter
   , pattern FILTER_NEAREST
   , pattern FILTER_LINEAR
+  , pattern FILTER_CUBIC_IMG
   , Sampler
   , SamplerAddressMode
   , pattern SAMPLER_ADDRESS_MODE_REPEAT
   , pattern SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT
   , pattern SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE
   , pattern SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER
+  , pattern SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE
   , SamplerCreateFlagBits
+  , pattern SAMPLER_CREATE_SUBSAMPLED_BIT_EXT
+  , pattern SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT
   , SamplerCreateFlags
   , withCStructSamplerCreateInfo
   , fromCStructSamplerCreateInfo
@@ -90,6 +94,16 @@ import Graphics.Vulkan.C.Core10.Sampler
   , pattern VK_SAMPLER_MIPMAP_MODE_LINEAR
   , pattern VK_SAMPLER_MIPMAP_MODE_NEAREST
   )
+import Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map
+  ( pattern VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT
+  , pattern VK_SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_IMG_filter_cubic
+  ( pattern VK_FILTER_CUBIC_IMG
+  )
+import Graphics.Vulkan.C.Extensions.VK_KHR_sampler_mirror_clamp_to_edge
+  ( pattern VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE
+  )
 import Graphics.Vulkan.Core10.Core
   ( bool32ToBool
   , boolToBool32
@@ -123,6 +137,9 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
 --
 -- 'Graphics.Vulkan.C.Core10.Sampler.VkSamplerCreateInfo'
 type BorderColor = VkBorderColor
+
+
+{-# complete BORDER_COLOR_FLOAT_TRANSPARENT_BLACK, BORDER_COLOR_INT_TRANSPARENT_BLACK, BORDER_COLOR_FLOAT_OPAQUE_BLACK, BORDER_COLOR_INT_OPAQUE_BLACK, BORDER_COLOR_FLOAT_OPAQUE_WHITE, BORDER_COLOR_INT_OPAQUE_WHITE :: BorderColor #-}
 
 
 -- | 'Graphics.Vulkan.C.Core10.Sampler.VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK'
@@ -175,6 +192,9 @@ pattern BORDER_COLOR_INT_OPAQUE_WHITE = VK_BORDER_COLOR_INT_OPAQUE_WHITE
 type Filter = VkFilter
 
 
+{-# complete FILTER_NEAREST, FILTER_LINEAR, FILTER_CUBIC_IMG :: Filter #-}
+
+
 -- | 'Graphics.Vulkan.C.Core10.Sampler.VK_FILTER_NEAREST' specifies nearest
 -- filtering.
 pattern FILTER_NEAREST :: (a ~ Filter) => a
@@ -186,12 +206,18 @@ pattern FILTER_NEAREST = VK_FILTER_NEAREST
 pattern FILTER_LINEAR :: (a ~ Filter) => a
 pattern FILTER_LINEAR = VK_FILTER_LINEAR
 
+
+-- No documentation found for Nested "Filter" "FILTER_CUBIC_IMG"
+pattern FILTER_CUBIC_IMG :: (a ~ Filter) => a
+pattern FILTER_CUBIC_IMG = VK_FILTER_CUBIC_IMG
+
 -- | VkSampler - Opaque handle to a sampler object
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorImageInfo',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutBinding',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_image_view_handle.VkImageViewHandleInfoNVX',
 -- 'Graphics.Vulkan.C.Core10.Sampler.vkCreateSampler',
 -- 'Graphics.Vulkan.C.Core10.Sampler.vkDestroySampler'
 type Sampler = VkSampler
@@ -203,6 +229,9 @@ type Sampler = VkSampler
 --
 -- 'Graphics.Vulkan.C.Core10.Sampler.VkSamplerCreateInfo'
 type SamplerAddressMode = VkSamplerAddressMode
+
+
+{-# complete SAMPLER_ADDRESS_MODE_REPEAT, SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT, SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE, SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER, SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE :: SamplerAddressMode #-}
 
 
 -- | 'Graphics.Vulkan.C.Core10.Sampler.VK_SAMPLER_ADDRESS_MODE_REPEAT'
@@ -228,24 +257,35 @@ pattern SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_ED
 pattern SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER :: (a ~ SamplerAddressMode) => a
 pattern SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER
 
+
+-- | 'Graphics.Vulkan.C.Extensions.VK_KHR_sampler_mirror_clamp_to_edge.VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE'
+-- specifies that the mirror clamp to edge wrap mode will be used. This is
+-- only valid if the
+-- @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.1-extensions\/html\/vkspec.html#VK_KHR_sampler_mirror_clamp_to_edge@
+-- extension is enabled.
+pattern SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE :: (a ~ SamplerAddressMode) => a
+pattern SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE
+
 -- | VkSamplerCreateFlagBits - Bitmask specifying additional parameters of
 -- sampler
---
--- = Description
---
--- __Note__
---
--- The approximations used when
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT'
--- is specified are implementation defined. Some implementations /may/
--- interpolate between fragment density levels in a subsampled image. In
--- that case, this bit /may/ be used to decide whether the interpolation
--- factors are calculated per fragment or at a coarser granularity.
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Sampler.VkSamplerCreateFlags'
 type SamplerCreateFlagBits = VkSamplerCreateFlagBits
+
+
+{-# complete SAMPLER_CREATE_SUBSAMPLED_BIT_EXT, SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT :: SamplerCreateFlagBits #-}
+
+
+-- No documentation found for Nested "SamplerCreateFlagBits" "SAMPLER_CREATE_SUBSAMPLED_BIT_EXT"
+pattern SAMPLER_CREATE_SUBSAMPLED_BIT_EXT :: (a ~ SamplerCreateFlagBits) => a
+pattern SAMPLER_CREATE_SUBSAMPLED_BIT_EXT = VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT
+
+
+-- No documentation found for Nested "SamplerCreateFlagBits" "SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT"
+pattern SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT :: (a ~ SamplerCreateFlagBits) => a
+pattern SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT = VK_SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT
 
 -- | VkSamplerCreateFlags - Reserved for future use
 --
@@ -328,13 +368,6 @@ type SamplerCreateFlags = SamplerCreateFlagBits
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxSamplerAnisotropy@,
 --     inclusive
 --
--- -   If
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>
---     is enabled and
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT'
---     is not set for the format, @minFilter@ and @magFilter@ /must/ be
---     equal to the sampler Y’CBCR conversion’s @chromaFilter@
---
 -- -   If @unnormalizedCoordinates@ is
 --     'Graphics.Vulkan.C.Core10.Core.VK_TRUE', @minFilter@ and @magFilter@
 --     /must/ be equal
@@ -367,22 +400,6 @@ type SamplerCreateFlags = SamplerCreateFlagBits
 --     @borderColor@ /must/ be a valid
 --     'Graphics.Vulkan.C.Core10.Sampler.VkBorderColor' value
 --
--- -   If
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>
---     is enabled, @addressModeU@, @addressModeV@, and @addressModeW@
---     /must/ be
---     'Graphics.Vulkan.C.Core10.Sampler.VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE',
---     @anisotropyEnable@ /must/ be
---     'Graphics.Vulkan.C.Core10.Core.VK_FALSE', and
---     @unnormalizedCoordinates@ /must/ be
---     'Graphics.Vulkan.C.Core10.Core.VK_FALSE'
---
--- -   The sampler reduction mode /must/ be set to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax.VK_SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_EXT'
---     if
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>
---     is enabled
---
 -- -   If the
 --     @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.1-extensions\/html\/vkspec.html#VK_KHR_sampler_mirror_clamp_to_edge@
 --     extension is not enabled, @addressModeU@, @addressModeV@ and
@@ -393,54 +410,40 @@ type SamplerCreateFlags = SamplerCreateFlagBits
 --     @compareOp@ /must/ be a valid
 --     'Graphics.Vulkan.C.Core10.Pipeline.VkCompareOp' value
 --
--- -   If either @magFilter@ or @minFilter@ is
---     'Graphics.Vulkan.C.Extensions.VK_EXT_filter_cubic.VK_FILTER_CUBIC_EXT',
---     @anisotropyEnable@ /must/ be
---     'Graphics.Vulkan.C.Core10.Core.VK_FALSE'
+-- == Valid Usage (Implicit)
 --
--- -   If @compareEnable@ is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE', the
---     @reductionMode@ member of
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO'
+--
+-- -   Each @pNext@ member of any structure (including this one) in the
+--     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
+--     instance of
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax.VkSamplerReductionModeCreateInfoEXT'
---     /must/ be
---     'Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax.VK_SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_EXT'
---
--- -   If @flags@ includes
---     'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
---     then @minFilter@ and @magFilter@ /must/ be equal.
---
--- -   If @flags@ includes
---     'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
---     then @mipmapMode@ /must/ be
---     'Graphics.Vulkan.C.Core10.Sampler.VK_SAMPLER_MIPMAP_MODE_NEAREST'.
---
--- -   If @flags@ includes
---     'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
---     then @minLod@ and @maxLod@ /must/ be zero.
---
--- -   If @flags@ includes
---     'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
---     then @addressModeU@ and @addressModeV@ /must/ each be either
---     'Graphics.Vulkan.C.Core10.Sampler.VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --     or
---     'Graphics.Vulkan.C.Core10.Sampler.VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER'.
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionInfo'
 --
--- -   If @flags@ includes
---     'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
---     then @anisotropyEnable@ /must/ be
---     'Graphics.Vulkan.C.Core10.Core.VK_FALSE'.
+-- -   Each @sType@ member in the @pNext@ chain /must/ be unique
 --
--- -   If @flags@ includes
---     'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
---     then @compareEnable@ /must/ be
---     'Graphics.Vulkan.C.Core10.Core.VK_FALSE'.
+-- -   @flags@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core10.Sampler.VkSamplerCreateFlagBits' values
 --
--- -   If @flags@ includes
---     'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
---     then @unnormalizedCoordinates@ /must/ be
---     'Graphics.Vulkan.C.Core10.Core.VK_FALSE'.
+-- -   @magFilter@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Sampler.VkFilter' value
 --
--- Unresolved directive in VkSamplerCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkSamplerCreateInfo.txt[]
+-- -   @minFilter@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Sampler.VkFilter' value
+--
+-- -   @mipmapMode@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Sampler.VkSamplerMipmapMode' value
+--
+-- -   @addressModeU@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Sampler.VkSamplerAddressMode' value
+--
+-- -   @addressModeV@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Sampler.VkSamplerAddressMode' value
+--
+-- -   @addressModeW@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Sampler.VkSamplerAddressMode' value
 --
 -- = See Also
 --
@@ -553,6 +556,9 @@ instance Zero SamplerCreateInfo where
 type SamplerMipmapMode = VkSamplerMipmapMode
 
 
+{-# complete SAMPLER_MIPMAP_MODE_NEAREST, SAMPLER_MIPMAP_MODE_LINEAR :: SamplerMipmapMode #-}
+
+
 -- | 'Graphics.Vulkan.C.Core10.Sampler.VK_SAMPLER_MIPMAP_MODE_NEAREST'
 -- specifies nearest filtering.
 pattern SAMPLER_MIPMAP_MODE_NEAREST :: (a ~ SamplerMipmapMode) => a
@@ -582,10 +588,33 @@ pattern SAMPLER_MIPMAP_MODE_LINEAR = VK_SAMPLER_MIPMAP_MODE_LINEAR
 -- -   @pSampler@ points to a 'Graphics.Vulkan.C.Core10.Sampler.VkSampler'
 --     handle in which the resulting sampler object is returned.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCreateSampler.txt -
--- include::{generated}\/validity\/protos\/vkCreateSampler.txt[]
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Core10.Sampler.VkSamplerCreateInfo' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pSampler@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Core10.Sampler.VkSampler' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_TOO_MANY_OBJECTS'
 --
 -- = See Also
 --
@@ -624,8 +653,27 @@ createSampler = \(Device device' commandTable) -> \createInfo' -> \allocator -> 
 --     were provided when @sampler@ was created, @pAllocator@ /must/ be
 --     @NULL@
 --
--- Unresolved directive in vkDestroySampler.txt -
--- include::{generated}\/validity\/protos\/vkDestroySampler.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   If @sampler@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @sampler@
+--     /must/ be a valid 'Graphics.Vulkan.C.Core10.Sampler.VkSampler'
+--     handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   If @sampler@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @sampler@ /must/ be externally synchronized
 --
 -- = See Also
 --

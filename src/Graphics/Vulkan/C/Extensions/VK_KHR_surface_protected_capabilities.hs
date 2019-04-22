@@ -34,16 +34,14 @@ import Graphics.Vulkan.C.Core10.Core
 -- | VkSurfaceProtectedCapabilitiesKHR - Structure describing capability of a
 -- surface to be protected
 --
--- = Description
---
--- Unresolved directive in VkSurfaceProtectedCapabilitiesKHR.txt -
--- include::{generated}\/validity\/structs\/VkSurfaceProtectedCapabilitiesKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkSurfaceProtectedCapabilitiesKHR = VkSurfaceProtectedCapabilitiesKHR
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -74,7 +72,7 @@ instance Zero VkSurfaceProtectedCapabilitiesKHR where
                                            zero
 
 -- No documentation found for TopLevel "VK_KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME"
-pattern VK_KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME = "VK_KHR_surface_protected_capabilities"
 
 -- No documentation found for TopLevel "VK_KHR_SURFACE_PROTECTED_CAPABILITIES_SPEC_VERSION"

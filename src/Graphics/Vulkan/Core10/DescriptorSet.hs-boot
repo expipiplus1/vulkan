@@ -77,15 +77,24 @@ type DescriptorPoolResetFlags = VkDescriptorPoolResetFlags
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkCopyDescriptorSet',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkObjectTableDescriptorSetEntryNVX',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkWriteDescriptorSet',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkAllocateDescriptorSets',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindDescriptorSets',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkFreeDescriptorSets',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.vkUpdateDescriptorSetWithTemplate'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.vkUpdateDescriptorSetWithTemplate',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template.vkUpdateDescriptorSetWithTemplateKHR'
 type DescriptorSet = VkDescriptorSet
 
 -- | VkDescriptorSetLayoutCreateFlagBits - Bitmask specifying descriptor set
 -- layout properties
+--
+-- = Description
+--
+-- __Note__
+--
+-- All bits for this type are defined by extensions, and none of those
+-- extensions are enabled in this build of the specification.
 --
 -- = See Also
 --
@@ -156,10 +165,6 @@ type DescriptorSetLayoutCreateFlags = DescriptorSetLayoutCreateFlagBits
 --     specifies an
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-inputattachment input attachment descriptor>.
 --
--- -   'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
---     specifies an
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-inlineuniformblock inline uniform block>.
---
 -- When a descriptor set is updated via elements of
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkWriteDescriptorSet', members
 -- of @pImageInfo@, @pBufferInfo@ and @pTexelBufferView@ are only accessed
@@ -206,27 +211,11 @@ type DescriptorSetLayoutCreateFlags = DescriptorSetLayoutCreateFlagBits
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VkWriteDescriptorSet'::@pTexelBufferView@
 --     is accessed.
 --
--- When updating descriptors with a @descriptorType@ of
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
--- none of the @pImageInfo@, @pBufferInfo@, or @pTexelBufferView@ members
--- are accessed, instead the source data of the descriptor update operation
--- is taken from the instance of
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VkWriteDescriptorSetInlineUniformBlockEXT'
--- in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkWriteDescriptorSet'. When
--- updating descriptors with a @descriptorType@ of
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV',
--- none of the @pImageInfo@, @pBufferInfo@, or @pTexelBufferView@ members
--- are accessed, instead the source data of the descriptor update operation
--- is taken from the instance of
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkWriteDescriptorSetAccelerationStructureNV'
--- in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkWriteDescriptorSet'.
---
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorPoolSize',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutBinding',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplateEntry',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_image_view_handle.VkImageViewHandleInfoNVX',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkWriteDescriptorSet'
 type DescriptorType = VkDescriptorType

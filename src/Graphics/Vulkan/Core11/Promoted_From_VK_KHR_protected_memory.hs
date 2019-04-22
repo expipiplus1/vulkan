@@ -17,16 +17,16 @@ module Graphics.Vulkan.Core11.Promoted_From_VK_KHR_protected_memory
   , fromCStructProtectedSubmitInfo
   , ProtectedSubmitInfo(..)
   , getDeviceQueue2
-  , pattern VK_STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES
-  , pattern VK_STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2
-  , pattern VK_QUEUE_PROTECTED_BIT
-  , pattern VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT
-  , pattern VK_MEMORY_PROPERTY_PROTECTED_BIT
-  , pattern VK_BUFFER_CREATE_PROTECTED_BIT
-  , pattern VK_IMAGE_CREATE_PROTECTED_BIT
-  , pattern VK_COMMAND_POOL_CREATE_PROTECTED_BIT
+  , pattern STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES
+  , pattern STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2
+  , pattern QUEUE_PROTECTED_BIT
+  , pattern DEVICE_QUEUE_CREATE_PROTECTED_BIT
+  , pattern MEMORY_PROPERTY_PROTECTED_BIT
+  , pattern BUFFER_CREATE_PROTECTED_BIT
+  , pattern IMAGE_CREATE_PROTECTED_BIT
+  , pattern COMMAND_POOL_CREATE_PROTECTED_BIT
   ) where
 
 import Data.Word
@@ -80,13 +80,25 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory
-  ( pattern VK_BUFFER_CREATE_PROTECTED_BIT
-  , pattern VK_COMMAND_POOL_CREATE_PROTECTED_BIT
-  , pattern VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT
-  , pattern VK_IMAGE_CREATE_PROTECTED_BIT
-  , pattern VK_MEMORY_PROPERTY_PROTECTED_BIT
-  , pattern VK_QUEUE_PROTECTED_BIT
+import Graphics.Vulkan.Core10.Buffer
+  ( pattern BUFFER_CREATE_PROTECTED_BIT
+  )
+import Graphics.Vulkan.Core10.CommandPool
+  ( pattern COMMAND_POOL_CREATE_PROTECTED_BIT
+  )
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES
+  , pattern STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO
+  )
+import Graphics.Vulkan.Core10.Device
+  ( pattern DEVICE_QUEUE_CREATE_PROTECTED_BIT
+  )
+import Graphics.Vulkan.Core10.DeviceInitialization
+  ( pattern IMAGE_CREATE_PROTECTED_BIT
+  , pattern MEMORY_PROPERTY_PROTECTED_BIT
+  , pattern QUEUE_PROTECTED_BIT
   )
 
 
@@ -104,10 +116,7 @@ import Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory
 -- no matching @flags@ were specified at device creation time then @pQueue@
 -- will return 'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE'.
 --
--- == Valid Usage
---
--- Unresolved directive in VkDeviceQueueInfo2.txt -
--- include::{generated}\/validity\/structs\/VkDeviceQueueInfo2.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -161,8 +170,7 @@ instance Zero DeviceQueueInfo2 where
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2',
 -- it is filled with a value indicating whether the feature is supported.
 --
--- Unresolved directive in VkPhysicalDeviceProtectedMemoryFeatures.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceProtectedMemoryFeatures.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -208,8 +216,7 @@ instance Zero PhysicalDeviceProtectedMemoryFeatures where
 -- it is filled with a value indicating the implementation-dependent
 -- behavior.
 --
--- Unresolved directive in VkPhysicalDeviceProtectedMemoryProperties.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceProtectedMemoryProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -265,8 +272,10 @@ instance Zero PhysicalDeviceProtectedMemoryProperties where
 --     structure, then each element of the command buffer of the
 --     @pCommandBuffers@ array /must/ be an unprotected command buffer.
 --
--- Unresolved directive in VkProtectedSubmitInfo.txt -
--- include::{generated}\/validity\/structs\/VkProtectedSubmitInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory.VK_STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO'
 --
 -- = See Also
 --
@@ -314,10 +323,7 @@ instance Zero ProtectedSubmitInfo where
 -- -   @pQueue@ is a pointer to a 'Graphics.Vulkan.C.Core10.Queue.VkQueue'
 --     object that will be filled with the handle for the requested queue.
 --
--- = Description
---
--- Unresolved directive in vkGetDeviceQueue2.txt -
--- include::{generated}\/validity\/protos\/vkGetDeviceQueue2.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --

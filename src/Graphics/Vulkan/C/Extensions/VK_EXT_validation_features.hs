@@ -70,7 +70,7 @@ import Graphics.Vulkan.C.Core10.Core
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkValidationFeaturesEXT'
 newtype VkValidationFeatureDisableEXT = VkValidationFeatureDisableEXT Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -146,7 +146,7 @@ pattern VK_VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT = VkValidationFeatureDi
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkValidationFeaturesEXT'
 newtype VkValidationFeatureEnableEXT = VkValidationFeatureEnableEXT Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -188,14 +188,24 @@ pattern VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT = VkV
 -- | VkValidationFeaturesEXT - Specify validation features to enable or
 -- disable for a Vulkan instance
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in VkValidationFeaturesEXT.txt -
--- include::{generated}\/validity\/structs\/VkValidationFeaturesEXT.txt[]
+-- -   @sType@ /must/ be 'VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT'
+--
+-- -   If @enabledValidationFeatureCount@ is not @0@,
+--     @pEnabledValidationFeatures@ /must/ be a valid pointer to an array
+--     of @enabledValidationFeatureCount@ valid
+--     'VkValidationFeatureEnableEXT' values
+--
+-- -   If @disabledValidationFeatureCount@ is not @0@,
+--     @pDisabledValidationFeatures@ /must/ be a valid pointer to an array
+--     of @disabledValidationFeatureCount@ valid
+--     'VkValidationFeatureDisableEXT' values
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'VkValidationFeatureDisableEXT', 'VkValidationFeatureEnableEXT'
 data VkValidationFeaturesEXT = VkValidationFeaturesEXT
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -241,7 +251,7 @@ instance Zero VkValidationFeaturesEXT where
                                  zero
 
 -- No documentation found for TopLevel "VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME"
-pattern VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME = "VK_EXT_validation_features"
 
 -- No documentation found for TopLevel "VK_EXT_VALIDATION_FEATURES_SPEC_VERSION"

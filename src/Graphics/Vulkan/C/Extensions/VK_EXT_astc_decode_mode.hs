@@ -85,12 +85,18 @@ import Graphics.Vulkan.C.Core10.Core
 --
 -- If @format@ uses sRGB encoding then the @decodeMode@ has no effect.
 --
--- Unresolved directive in VkImageViewASTCDecodeModeEXT.txt -
--- include::{generated}\/validity\/structs\/VkImageViewASTCDecodeModeEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_IMAGE_VIEW_ASTC_DECODE_MODE_EXT'
+--
+-- -   @decodeMode@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Core.VkFormat' value
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkFormat',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkImageViewASTCDecodeModeEXT = VkImageViewASTCDecodeModeEXT
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -135,14 +141,15 @@ instance Zero VkImageViewASTCDecodeModeEXT where
 -- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.vkCreateDevice' to
 -- enable features.
 --
--- Unresolved directive in VkPhysicalDeviceASTCDecodeFeaturesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceASTCDecodeFeaturesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceASTCDecodeFeaturesEXT = VkPhysicalDeviceASTCDecodeFeaturesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceASTCDecodeFeaturesEXT" "sType"
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT'
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceASTCDecodeFeaturesEXT" "pNext"
   vkPNext :: Ptr ()
@@ -170,7 +177,7 @@ instance Zero VkPhysicalDeviceASTCDecodeFeaturesEXT where
                                                zero
 
 -- No documentation found for TopLevel "VK_EXT_ASTC_DECODE_MODE_EXTENSION_NAME"
-pattern VK_EXT_ASTC_DECODE_MODE_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_ASTC_DECODE_MODE_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_ASTC_DECODE_MODE_EXTENSION_NAME = "VK_EXT_astc_decode_mode"
 
 -- No documentation found for TopLevel "VK_EXT_ASTC_DECODE_MODE_SPEC_VERSION"

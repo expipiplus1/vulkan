@@ -102,20 +102,19 @@ instance Read VkMetalSurfaceCreateFlagsEXT where
 -- | VkMetalSurfaceCreateInfoEXT - Structure specifying parameters of a newly
 -- created Metal surface object
 --
--- == Valid Usage
---
--- Unresolved directive in VkMetalSurfaceCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkMetalSurfaceCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkMetalSurfaceCreateFlagsEXT',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkCreateMetalSurfaceEXT'
 data VkMetalSurfaceCreateInfoEXT = VkMetalSurfaceCreateInfoEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- | @flags@ is reserved for future use.
+  , -- | @flags@ /must/ be @0@
   vkFlags :: VkMetalSurfaceCreateFlagsEXT
   , -- | @pLayer@ is a reference to a 'CAMetalLayer' object that represents a
   -- renderable surface.
@@ -160,14 +159,40 @@ instance Zero VkMetalSurfaceCreateInfoEXT where
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
 --     which the created surface object is returned.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCreateMetalSurfaceEXT.txt -
--- include::{generated}\/validity\/protos\/vkCreateMetalSurfaceEXT.txt[]
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'VkMetalSurfaceCreateInfoEXT' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pSurface@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_NATIVE_WINDOW_IN_USE_KHR'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance',
+-- 'VkMetalSurfaceCreateInfoEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -189,7 +214,7 @@ type FN_vkCreateMetalSurfaceEXT = ("instance" ::: VkInstance) -> ("pCreateInfo" 
 type PFN_vkCreateMetalSurfaceEXT = FunPtr FN_vkCreateMetalSurfaceEXT
 
 -- No documentation found for TopLevel "VK_EXT_METAL_SURFACE_EXTENSION_NAME"
-pattern VK_EXT_METAL_SURFACE_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_METAL_SURFACE_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_METAL_SURFACE_EXTENSION_NAME = "VK_EXT_metal_surface"
 
 -- No documentation found for TopLevel "VK_EXT_METAL_SURFACE_SPEC_VERSION"

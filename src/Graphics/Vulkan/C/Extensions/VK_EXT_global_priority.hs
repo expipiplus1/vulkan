@@ -66,19 +66,19 @@ import Graphics.Vulkan.C.Core10.Core
 -- 'VkDeviceQueueGlobalPriorityCreateInfoEXT' will default to
 -- 'VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT'.
 --
--- Unresolved directive in VkDeviceQueueGlobalPriorityCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkDeviceQueueGlobalPriorityCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkQueueGlobalPriorityEXT',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkDeviceQueueGlobalPriorityCreateInfoEXT = VkDeviceQueueGlobalPriorityCreateInfoEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @globalPriority@ is the system-wide priority associated to this queue as
-  -- specified by 'VkQueueGlobalPriorityEXT'
+  , -- | @globalPriority@ /must/ be a valid 'VkQueueGlobalPriorityEXT' value
   vkGlobalPriority :: VkQueueGlobalPriorityEXT
   }
   deriving (Eq, Show)
@@ -110,7 +110,7 @@ instance Zero VkDeviceQueueGlobalPriorityCreateInfoEXT where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDeviceQueueGlobalPriorityCreateInfoEXT'
 newtype VkQueueGlobalPriorityEXT = VkQueueGlobalPriorityEXT Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -157,7 +157,7 @@ pattern VK_ERROR_NOT_PERMITTED_EXT :: VkResult
 pattern VK_ERROR_NOT_PERMITTED_EXT = VkResult (-1000174001)
 
 -- No documentation found for TopLevel "VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME"
-pattern VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME = "VK_EXT_global_priority"
 
 -- No documentation found for TopLevel "VK_EXT_GLOBAL_PRIORITY_SPEC_VERSION"

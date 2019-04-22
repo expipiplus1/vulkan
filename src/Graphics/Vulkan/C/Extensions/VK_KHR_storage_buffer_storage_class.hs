@@ -17,7 +17,7 @@ import Data.String
 
 
 -- No documentation found for TopLevel "VK_KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME"
-pattern VK_KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_STORAGE_BUFFER_STORAGE_CLASS_EXTENSION_NAME = "VK_KHR_storage_buffer_storage_class"
 
 -- No documentation found for TopLevel "VK_KHR_STORAGE_BUFFER_STORAGE_CLASS_SPEC_VERSION"

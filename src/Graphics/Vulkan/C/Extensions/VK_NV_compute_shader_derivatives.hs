@@ -54,15 +54,15 @@ import Graphics.Vulkan.C.Core10.Core
 -- in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
 --
--- Unresolved directive in
--- VkPhysicalDeviceComputeShaderDerivativesFeaturesNV.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceComputeShaderDerivativesFeaturesNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceComputeShaderDerivativesFeaturesNV = VkPhysicalDeviceComputeShaderDerivativesFeaturesNV
-  { -- No documentation found for Nested "VkPhysicalDeviceComputeShaderDerivativesFeaturesNV" "sType"
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COMPUTE_SHADER_DERIVATIVES_FEATURES_NV'
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceComputeShaderDerivativesFeaturesNV" "pNext"
   vkPNext :: Ptr ()
@@ -94,7 +94,7 @@ instance Zero VkPhysicalDeviceComputeShaderDerivativesFeaturesNV where
                                                             zero
 
 -- No documentation found for TopLevel "VK_NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME"
-pattern VK_NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_NV_COMPUTE_SHADER_DERIVATIVES_EXTENSION_NAME = "VK_NV_compute_shader_derivatives"
 
 -- No documentation found for TopLevel "VK_NV_COMPUTE_SHADER_DERIVATIVES_SPEC_VERSION"

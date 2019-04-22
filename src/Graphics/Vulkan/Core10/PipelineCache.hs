@@ -108,6 +108,7 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
 -- 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateComputePipelines',
 -- 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateGraphicsPipelines',
 -- 'Graphics.Vulkan.C.Core10.PipelineCache.vkCreatePipelineCache',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCreateRayTracingPipelinesNV',
 -- 'Graphics.Vulkan.C.Core10.PipelineCache.vkDestroyPipelineCache',
 -- 'Graphics.Vulkan.C.Core10.PipelineCache.vkGetPipelineCacheData',
 -- 'Graphics.Vulkan.C.Core10.PipelineCache.vkMergePipelineCaches'
@@ -127,6 +128,9 @@ type PipelineCache = VkPipelineCache
 type PipelineCacheCreateFlags = VkPipelineCacheCreateFlags
 
 
+-- No complete pragma for PipelineCacheCreateFlags as it has no patterns
+
+
 -- | VkPipelineCacheCreateInfo - Structure specifying parameters of a newly
 -- created pipeline cache
 --
@@ -141,8 +145,17 @@ type PipelineCacheCreateFlags = VkPipelineCacheCreateFlags
 --     retrieved from a previous call to
 --     'Graphics.Vulkan.C.Core10.PipelineCache.vkGetPipelineCacheData'
 --
--- Unresolved directive in VkPipelineCacheCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkPipelineCacheCreateInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @flags@ /must/ be @0@
+--
+-- -   If @initialDataSize@ is not @0@, @pInitialData@ /must/ be a valid
+--     pointer to an array of @initialDataSize@ bytes
 --
 -- = See Also
 --
@@ -233,8 +246,32 @@ instance Zero PipelineCacheCreateInfo where
 -- 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateGraphicsPipelines' and
 -- 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateComputePipelines' commands.
 --
--- Unresolved directive in vkCreatePipelineCache.txt -
--- include::{generated}\/validity\/protos\/vkCreatePipelineCache.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Core10.PipelineCache.VkPipelineCacheCreateInfo'
+--     structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pPipelineCache@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Core10.PipelineCache.VkPipelineCache' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -271,8 +308,27 @@ createPipelineCache = \(Device device' commandTable) -> \createInfo' -> \allocat
 --     were provided when @pipelineCache@ was created, @pAllocator@ /must/
 --     be @NULL@
 --
--- Unresolved directive in vkDestroyPipelineCache.txt -
--- include::{generated}\/validity\/protos\/vkDestroyPipelineCache.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   If @pipelineCache@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @pipelineCache@
+--     /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.PipelineCache.VkPipelineCache' handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   If @pipelineCache@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @pipelineCache@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -380,8 +436,34 @@ destroyPipelineCache = \(Device device' commandTable) -> \pipelineCache' -> \all
 -- nothing will be written to @pData@ and zero will be written to
 -- @pDataSize@.
 --
--- Unresolved directive in vkGetPipelineCacheData.txt -
--- include::{generated}\/validity\/protos\/vkGetPipelineCacheData.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pipelineCache@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.PipelineCache.VkPipelineCache' handle
+--
+-- -   @pDataSize@ /must/ be a valid pointer to a @size_t@ value
+--
+-- -   If the value referenced by @pDataSize@ is not @0@, and @pData@ is
+--     not @NULL@, @pData@ /must/ be a valid pointer to an array of
+--     @pDataSize@ bytes
+--
+-- -   @pipelineCache@ /must/ have been created, allocated, or retrieved
+--     from @device@
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -487,8 +569,34 @@ getNumPipelineCacheData = \(Device device' commandTable) -> \pipelineCache' -> a
 -- nothing will be written to @pData@ and zero will be written to
 -- @pDataSize@.
 --
--- Unresolved directive in vkGetPipelineCacheData.txt -
--- include::{generated}\/validity\/protos\/vkGetPipelineCacheData.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pipelineCache@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.PipelineCache.VkPipelineCache' handle
+--
+-- -   @pDataSize@ /must/ be a valid pointer to a @size_t@ value
+--
+-- -   If the value referenced by @pDataSize@ is not @0@, and @pData@ is
+--     not @NULL@, @pData@ /must/ be a valid pointer to an array of
+--     @pDataSize@ bytes
+--
+-- -   @pipelineCache@ /must/ have been created, allocated, or retrieved
+--     from @device@
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -529,8 +637,41 @@ getAllPipelineCacheData device' pipelineCache' =
 --
 -- == Valid Usage
 --
--- Unresolved directive in vkMergePipelineCaches.txt -
--- include::{generated}\/validity\/protos\/vkMergePipelineCaches.txt[]
+-- -   @dstCache@ /must/ not appear in the list of source caches
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @dstCache@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.PipelineCache.VkPipelineCache' handle
+--
+-- -   @pSrcCaches@ /must/ be a valid pointer to an array of
+--     @srcCacheCount@ valid
+--     'Graphics.Vulkan.C.Core10.PipelineCache.VkPipelineCache' handles
+--
+-- -   @srcCacheCount@ /must/ be greater than @0@
+--
+-- -   @dstCache@ /must/ have been created, allocated, or retrieved from
+--     @device@
+--
+-- -   Each element of @pSrcCaches@ /must/ have been created, allocated, or
+--     retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @dstCache@ /must/ be externally synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --

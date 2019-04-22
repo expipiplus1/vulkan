@@ -34,17 +34,15 @@ import Graphics.Vulkan.C.Core10.Core
 -- | VkPhysicalDeviceVulkanMemoryModelFeaturesKHR - Structure describing
 -- features supported by VK_KHR_vulkan_memory_model
 --
--- = Description
---
--- Unresolved directive in VkPhysicalDeviceVulkanMemoryModelFeaturesKHR.txt
--- -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceVulkanMemoryModelFeaturesKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceVulkanMemoryModelFeaturesKHR = VkPhysicalDeviceVulkanMemoryModelFeaturesKHR
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES_KHR'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -89,7 +87,7 @@ instance Zero VkPhysicalDeviceVulkanMemoryModelFeaturesKHR where
                                                       zero
 
 -- No documentation found for TopLevel "VK_KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME"
-pattern VK_KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME = "VK_KHR_vulkan_memory_model"
 
 -- No documentation found for TopLevel "VK_KHR_VULKAN_MEMORY_MODEL_SPEC_VERSION"

@@ -13,11 +13,10 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory
   , withCStructExternalMemoryImageCreateInfo
   , fromCStructExternalMemoryImageCreateInfo
   , ExternalMemoryImageCreateInfo(..)
-  , pattern VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO
-  , pattern VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO
-  , pattern VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO
-  , pattern VK_ERROR_INVALID_EXTERNAL_HANDLE
-  , pattern VK_QUEUE_FAMILY_EXTERNAL
+  , pattern STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO
+  , pattern STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO
+  , pattern STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO
+  , pattern ERROR_INVALID_EXTERNAL_HANDLE
   ) where
 
 import Foreign.Marshal.Utils
@@ -48,9 +47,11 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory
-  ( pattern VK_ERROR_INVALID_EXTERNAL_HANDLE
-  , pattern VK_QUEUE_FAMILY_EXTERNAL
+import Graphics.Vulkan.Core10.Core
+  ( pattern ERROR_INVALID_EXTERNAL_HANDLE
+  , pattern STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO
+  , pattern STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO
+  , pattern STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO
   )
 
 
@@ -66,8 +67,14 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory
 --     or
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalBufferProperties'.
 --
--- Unresolved directive in VkExportMemoryAllocateInfo.txt -
--- include::{generated}\/validity\/structs\/VkExportMemoryAllocateInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO'
+--
+-- -   @handleTypes@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits'
+--     values
 --
 -- = See Also
 --
@@ -104,10 +111,7 @@ instance Zero ExportMemoryAllocateInfo where
 -- | VkExternalMemoryBufferCreateInfo - Specify that a buffer may be backed
 -- by external memory
 --
--- = Description
---
--- Unresolved directive in VkExternalMemoryBufferCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkExternalMemoryBufferCreateInfo.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -144,10 +148,7 @@ instance Zero ExternalMemoryBufferCreateInfo where
 -- | VkExternalMemoryImageCreateInfo - Specify that an image may be backed by
 -- external memory
 --
--- = Description
---
--- Unresolved directive in VkExternalMemoryImageCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkExternalMemoryImageCreateInfo.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --

@@ -100,7 +100,7 @@ import Graphics.Vulkan.NamedType
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkCooperativeMatrixPropertiesNV'
 newtype VkComponentTypeNV = VkComponentTypeNV Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -194,16 +194,17 @@ pattern VK_COMPONENT_TYPE_UINT64_NV = VkComponentTypeNV 10
 -- At least one entry in the list /must/ have power of two values for all
 -- of @MSize@, @KSize@, and @NSize@.
 --
--- Unresolved directive in VkCooperativeMatrixPropertiesNV.txt -
--- include::{generated}\/validity\/structs\/VkCooperativeMatrixPropertiesNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkComponentTypeNV', 'VkScopeNV',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkGetPhysicalDeviceCooperativeMatrixPropertiesNV'
 data VkCooperativeMatrixPropertiesNV = VkCooperativeMatrixPropertiesNV
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_COOPERATIVE_MATRIX_PROPERTIES_NV'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
   , -- | @MSize@ is the number of rows in matrices A, C, and D.
   vkMSize :: Word32
@@ -211,15 +212,15 @@ data VkCooperativeMatrixPropertiesNV = VkCooperativeMatrixPropertiesNV
   vkNSize :: Word32
   , -- | @KSize@ is the number of columns in matrix A and rows in matrix B.
   vkKSize :: Word32
-  , -- | @AType@ is the component type of matrix A, of type 'VkComponentTypeNV'.
+  , -- | @AType@ /must/ be a valid 'VkComponentTypeNV' value
   vkAType :: VkComponentTypeNV
-  , -- | @BType@ is the component type of matrix B, of type 'VkComponentTypeNV'.
+  , -- | @BType@ /must/ be a valid 'VkComponentTypeNV' value
   vkBType :: VkComponentTypeNV
-  , -- | @CType@ is the component type of matrix C, of type 'VkComponentTypeNV'.
+  , -- | @CType@ /must/ be a valid 'VkComponentTypeNV' value
   vkCType :: VkComponentTypeNV
-  , -- | @DType@ is the component type of matrix D, of type 'VkComponentTypeNV'.
+  , -- | @DType@ /must/ be a valid 'VkComponentTypeNV' value
   vkDType :: VkComponentTypeNV
-  , -- | @scope@ is the scope of all the matrix types, of type 'VkScopeNV'.
+  , -- | @scope@ /must/ be a valid 'VkScopeNV' value
   vkScope :: VkScopeNV
   }
   deriving (Eq, Show)
@@ -278,15 +279,15 @@ instance Zero VkCooperativeMatrixPropertiesNV where
 -- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to
 -- enable features.
 --
--- Unresolved directive in VkPhysicalDeviceCooperativeMatrixFeaturesNV.txt
--- -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceCooperativeMatrixFeaturesNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceCooperativeMatrixFeaturesNV = VkPhysicalDeviceCooperativeMatrixFeaturesNV
-  { -- No documentation found for Nested "VkPhysicalDeviceCooperativeMatrixFeaturesNV" "sType"
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_FEATURES_NV'
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceCooperativeMatrixFeaturesNV" "pNext"
   vkPNext :: Ptr ()
@@ -333,15 +334,15 @@ instance Zero VkPhysicalDeviceCooperativeMatrixFeaturesNV where
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- Unresolved directive in
--- VkPhysicalDeviceCooperativeMatrixPropertiesNV.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceCooperativeMatrixPropertiesNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.PipelineLayout.VkShaderStageFlags',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceCooperativeMatrixPropertiesNV = VkPhysicalDeviceCooperativeMatrixPropertiesNV
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_COOPERATIVE_MATRIX_PROPERTIES_NV'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -381,7 +382,7 @@ instance Zero VkPhysicalDeviceCooperativeMatrixPropertiesNV where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkCooperativeMatrixPropertiesNV'
 newtype VkScopeNV = VkScopeNV Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -450,13 +451,35 @@ pattern VK_SCOPE_QUEUE_FAMILY_NV = VkScopeNV 5
 -- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS', to indicate that not all
 -- the available cooperative matrix properties were returned.
 --
--- Unresolved directive in
--- vkGetPhysicalDeviceCooperativeMatrixPropertiesNV.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceCooperativeMatrixPropertiesNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
+--
+-- -   If the value referenced by @pPropertyCount@ is not @0@, and
+--     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
+--     to an array of @pPropertyCount@ 'VkCooperativeMatrixPropertiesNV'
+--     structures
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkCooperativeMatrixPropertiesNV',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -478,7 +501,7 @@ type FN_vkGetPhysicalDeviceCooperativeMatrixPropertiesNV = ("physicalDevice" :::
 type PFN_vkGetPhysicalDeviceCooperativeMatrixPropertiesNV = FunPtr FN_vkGetPhysicalDeviceCooperativeMatrixPropertiesNV
 
 -- No documentation found for TopLevel "VK_NV_COOPERATIVE_MATRIX_EXTENSION_NAME"
-pattern VK_NV_COOPERATIVE_MATRIX_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_NV_COOPERATIVE_MATRIX_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_NV_COOPERATIVE_MATRIX_EXTENSION_NAME = "VK_NV_cooperative_matrix"
 
 -- No documentation found for TopLevel "VK_NV_COOPERATIVE_MATRIX_SPEC_VERSION"

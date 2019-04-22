@@ -55,7 +55,9 @@ data VkValidationCacheEXT_T
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkShaderModuleValidationCacheCreateInfoEXT',
+-- 'vkCreateValidationCacheEXT', 'vkDestroyValidationCacheEXT',
+-- 'vkGetValidationCacheDataEXT', 'vkMergeValidationCachesEXT'
 type VkValidationCacheEXT = Ptr VkValidationCacheEXT_T
 
 data VkValidationCacheHeaderVersionEXT

@@ -33,11 +33,6 @@ import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_mem
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT'
 -- for the following external handle types:
 --
--- Implementations /must/ not report
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT'
--- for buffers with external handle type
--- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'.
---
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryFeatureFlags'
@@ -137,68 +132,22 @@ type ExternalMemoryFeatureFlagsKHR = ExternalMemoryFeatureFlags
 -- > | E_TYPE_D3D12_RESOURC |                      |                       |
 -- > | E_BIT'               |                      |                       |
 -- > +----------------------+----------------------+-----------------------+
--- > | 'Graphics.Vulkan.C.E | No restriction       | No restriction        |
--- > | xtensions.VK_EXT_ext |                      |                       |
--- > | ernal_memory_host.VK |                      |                       |
--- > | _EXTERNAL_MEMORY_HAN |                      |                       |
--- > | DLE_TYPE_HOST_ALLOCA |                      |                       |
--- > | TION_BIT_EXT'        |                      |                       |
--- > +----------------------+----------------------+-----------------------+
--- > | 'Graphics.Vulkan.C.E | No restriction       | No restriction        |
--- > | xtensions.VK_EXT_ext |                      |                       |
--- > | ernal_memory_host.VK |                      |                       |
--- > | _EXTERNAL_MEMORY_HAN |                      |                       |
--- > | DLE_TYPE_HOST_MAPPED |                      |                       |
--- > | _FOREIGN_MEMORY_BIT_ |                      |                       |
--- > | EXT'                 |                      |                       |
--- > +----------------------+----------------------+-----------------------+
--- > | 'Graphics.Vulkan.C.E | No restriction       | No restriction        |
--- > | xtensions.VK_EXT_ext |                      |                       |
--- > | ernal_memory_dma_buf |                      |                       |
--- > | .VK_EXTERNAL_MEMORY_ |                      |                       |
--- > | HANDLE_TYPE_DMA_BUF_ |                      |                       |
--- > | BIT_EXT'             |                      |                       |
--- > +----------------------+----------------------+-----------------------+
--- > | 'Graphics.Vulkan.C.E | No restriction       | No restriction        |
--- > | xtensions.VK_ANDROID |                      |                       |
--- > | _external_memory_and |                      |                       |
--- > | roid_hardware_buffer |                      |                       |
--- > | .VK_EXTERNAL_MEMORY_ |                      |                       |
--- > | HANDLE_TYPE_ANDROID_ |                      |                       |
--- > | HARDWARE_BUFFER_BIT_ |                      |                       |
--- > | ANDROID'             |                      |                       |
--- > +----------------------+----------------------+-----------------------+
 -- >
 -- > External memory handle types compatibility
---
--- __Note__
---
--- The above table does not restrict the drivers and devices with which
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_host.VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT'
--- and
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_host.VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT'
--- /may/ be shared, as these handle types inherently mean memory that does
--- not come from the same device, as they import memory from the host or a
--- foreign device, respectively.
---
--- __Note__
---
--- Even though the above table does not restrict the drivers and devices
--- with which
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_dma_buf.VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT'
--- /may/ be shared, query mechanisms exist in the Vulkan API that prevent
--- the import of incompatible dma-bufs (such as
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd.vkGetMemoryFdPropertiesKHR')
--- and that prevent incompatible usage of dma-bufs (such as
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_capabilities.VkPhysicalDeviceExternalBufferInfoKHR'
--- and
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_capabilities.VkPhysicalDeviceExternalImageFormatInfoKHR').
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlags',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd.VkImportMemoryFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_host.VkImportMemoryHostPointerInfoEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32.VkImportMemoryWin32HandleInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd.VkMemoryGetFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32.VkMemoryGetWin32HandleInfoKHR',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkPhysicalDeviceExternalBufferInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkPhysicalDeviceExternalImageFormatInfo'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkPhysicalDeviceExternalImageFormatInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd.vkGetMemoryFdPropertiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_host.vkGetMemoryHostPointerPropertiesEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32.vkGetMemoryWin32HandlePropertiesKHR'
 type ExternalMemoryHandleTypeFlagBits = VkExternalMemoryHandleTypeFlagBits
 
 -- No documentation found for TopLevel "ExternalMemoryHandleTypeFlagBitsKHR"

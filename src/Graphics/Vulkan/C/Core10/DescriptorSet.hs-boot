@@ -106,11 +106,13 @@ data VkDescriptorSet_T
 --
 -- = See Also
 --
--- 'VkCopyDescriptorSet', 'VkWriteDescriptorSet',
--- 'vkAllocateDescriptorSets',
+-- 'VkCopyDescriptorSet',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkObjectTableDescriptorSetEntryNVX',
+-- 'VkWriteDescriptorSet', 'vkAllocateDescriptorSets',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindDescriptorSets',
 -- 'vkFreeDescriptorSets',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.vkUpdateDescriptorSetWithTemplate'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.vkUpdateDescriptorSetWithTemplate',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template.vkUpdateDescriptorSetWithTemplateKHR'
 type VkDescriptorSet = Ptr VkDescriptorSet_T
 
 data VkDescriptorSetAllocateInfo

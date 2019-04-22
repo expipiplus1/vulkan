@@ -38,7 +38,7 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkAccelerationStructureMemoryRequirementsInfoNV'
 type AccelerationStructureMemoryRequirementsTypeNV = VkAccelerationStructureMemoryRequirementsTypeNV
 
 -- | VkAccelerationStructureNV - Opaque handle to an acceleration structure
@@ -46,14 +46,22 @@ type AccelerationStructureMemoryRequirementsTypeNV = VkAccelerationStructureMemo
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkAccelerationStructureMemoryRequirementsInfoNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkBindAccelerationStructureMemoryInfoNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkWriteDescriptorSetAccelerationStructureNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCmdBuildAccelerationStructureNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCmdCopyAccelerationStructureNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCmdWriteAccelerationStructuresPropertiesNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCreateAccelerationStructureNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkDestroyAccelerationStructureNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkGetAccelerationStructureHandleNV'
 type AccelerationStructureNV = VkAccelerationStructureNV
 
 -- | VkAccelerationStructureTypeNV - Type of acceleration structure
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkAccelerationStructureInfoNV'
 type AccelerationStructureTypeNV = VkAccelerationStructureTypeNV
 
 -- | VkBuildAccelerationStructureFlagBitsNV - Bitmask specifying additional
@@ -71,7 +79,7 @@ type AccelerationStructureTypeNV = VkAccelerationStructureTypeNV
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkBuildAccelerationStructureFlagsNV'
 type BuildAccelerationStructureFlagBitsNV = VkBuildAccelerationStructureFlagBitsNV
 
 -- | VkBuildAccelerationStructureFlagsNV - Bitmask of
@@ -85,14 +93,15 @@ type BuildAccelerationStructureFlagBitsNV = VkBuildAccelerationStructureFlagBits
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkAccelerationStructureInfoNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkBuildAccelerationStructureFlagBitsNV'
 type BuildAccelerationStructureFlagsNV = BuildAccelerationStructureFlagBitsNV
 
 -- | VkCopyAccelerationStructureModeNV - Acceleration structure copy mode
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCmdCopyAccelerationStructureNV'
 type CopyAccelerationStructureModeNV = VkCopyAccelerationStructureModeNV
 
 -- | VkGeometryFlagBitsNV - Bitmask specifying additional parameters for a
@@ -100,7 +109,7 @@ type CopyAccelerationStructureModeNV = VkCopyAccelerationStructureModeNV
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkGeometryFlagsNV'
 type GeometryFlagBitsNV = VkGeometryFlagBitsNV
 
 -- | VkGeometryFlagsNV - Bitmask of VkGeometryFlagBitsNV
@@ -113,7 +122,8 @@ type GeometryFlagBitsNV = VkGeometryFlagBitsNV
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkGeometryFlagBitsNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkGeometryNV'
 type GeometryFlagsNV = GeometryFlagBitsNV
 
 -- | VkGeometryInstanceFlagBitsNV - Instance flag bits
@@ -127,7 +137,7 @@ type GeometryFlagsNV = GeometryFlagBitsNV
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkGeometryInstanceFlagsNV'
 type GeometryInstanceFlagBitsNV = VkGeometryInstanceFlagBitsNV
 
 -- | VkGeometryInstanceFlagsNV - Bitmask of VkGeometryInstanceFlagBitsNV
@@ -140,14 +150,14 @@ type GeometryInstanceFlagBitsNV = VkGeometryInstanceFlagBitsNV
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkGeometryInstanceFlagBitsNV'
 type GeometryInstanceFlagsNV = GeometryInstanceFlagBitsNV
 
 -- | VkGeometryTypeNV - Enum specifying which type of geometry is provided
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkGeometryNV'
 type GeometryTypeNV = VkGeometryTypeNV
 
 -- | VkRayTracingShaderGroupTypeNV - Shader group types
@@ -162,5 +172,5 @@ type GeometryTypeNV = VkGeometryTypeNV
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkRayTracingShaderGroupCreateInfoNV'
 type RayTracingShaderGroupTypeNV = VkRayTracingShaderGroupTypeNV

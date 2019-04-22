@@ -10,9 +10,9 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_
   , withCStructBindImageMemoryDeviceGroupInfo
   , fromCStructBindImageMemoryDeviceGroupInfo
   , BindImageMemoryDeviceGroupInfo(..)
-  , pattern VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO
-  , pattern VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO
-  , pattern VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT
+  , pattern STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO
+  , pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO
+  , pattern IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT
   ) where
 
 import Control.Monad
@@ -66,8 +66,12 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2
-  ( pattern VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO
+  , pattern STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO
+  )
+import Graphics.Vulkan.Core10.DeviceInitialization
+  ( pattern IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT
   )
 
 
@@ -124,8 +128,13 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bin
 --
 -- -   All elements of @pDeviceIndices@ /must/ be valid device indices
 --
--- Unresolved directive in VkBindBufferMemoryDeviceGroupInfo.txt -
--- include::{generated}\/validity\/structs\/VkBindBufferMemoryDeviceGroupInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO'
+--
+-- -   If @deviceIndexCount@ is not @0@, @pDeviceIndices@ /must/ be a valid
+--     pointer to an array of @deviceIndexCount@ @uint32_t@ values
 --
 -- = See Also
 --
@@ -263,8 +272,18 @@ instance Zero BindBufferMemoryDeviceGroupInfo where
 --     or else @extent.height@
 --     @offset.y@ /must/ equal the width of the image subresource
 --
--- Unresolved directive in VkBindImageMemoryDeviceGroupInfo.txt -
--- include::{generated}\/validity\/structs\/VkBindImageMemoryDeviceGroupInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO'
+--
+-- -   If @deviceIndexCount@ is not @0@, @pDeviceIndices@ /must/ be a valid
+--     pointer to an array of @deviceIndexCount@ @uint32_t@ values
+--
+-- -   If @splitInstanceBindRegionCount@ is not @0@,
+--     @pSplitInstanceBindRegions@ /must/ be a valid pointer to an array of
+--     @splitInstanceBindRegionCount@
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkRect2D' structures
 --
 -- = See Also
 --

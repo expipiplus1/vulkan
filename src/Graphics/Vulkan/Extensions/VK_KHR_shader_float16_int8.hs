@@ -7,11 +7,14 @@ module Graphics.Vulkan.Extensions.VK_KHR_shader_float16_int8
   ( withCStructPhysicalDeviceFloat16Int8FeaturesKHR
   , fromCStructPhysicalDeviceFloat16Int8FeaturesKHR
   , PhysicalDeviceFloat16Int8FeaturesKHR(..)
-  , pattern VK_KHR_SHADER_FLOAT16_INT8_SPEC_VERSION
-  , pattern VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT16_INT8_FEATURES_KHR
+  , pattern KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME
+  , pattern KHR_SHADER_FLOAT16_INT8_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT16_INT8_FEATURES_KHR
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Foreign.Marshal.Utils
   ( maybePeek
   , maybeWith
@@ -26,6 +29,8 @@ import Graphics.Vulkan.C.Core10.Core
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_shader_float16_int8
   ( VkPhysicalDeviceFloat16Int8FeaturesKHR(..)
+  , pattern VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME
+  , pattern VK_KHR_SHADER_FLOAT16_INT8_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT16_INT8_FEATURES_KHR
   )
 import Graphics.Vulkan.Core10.Core
@@ -37,9 +42,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_KHR_shader_float16_int8
-  ( pattern VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME
-  , pattern VK_KHR_SHADER_FLOAT16_INT8_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT16_INT8_FEATURES_KHR
   )
 
 
@@ -47,14 +51,12 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_shader_float16_int8
 -- | VkPhysicalDeviceFloat16Int8FeaturesKHR - Structure describing features
 -- supported by VK_KHR_shader_float16_int8
 --
--- = Description
---
--- Unresolved directive in VkPhysicalDeviceFloat16Int8FeaturesKHR.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceFloat16Int8FeaturesKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceFloat16Int8FeaturesKHR = PhysicalDeviceFloat16Int8FeaturesKHR
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceFloat16Int8FeaturesKHR" "pNext"
@@ -85,3 +87,11 @@ instance Zero PhysicalDeviceFloat16Int8FeaturesKHR where
                                               False
                                               False
 
+
+-- No documentation found for TopLevel "VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME"
+pattern KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME = VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_KHR_SHADER_FLOAT16_INT8_SPEC_VERSION"
+pattern KHR_SHADER_FLOAT16_INT8_SPEC_VERSION :: Integral a => a
+pattern KHR_SHADER_FLOAT16_INT8_SPEC_VERSION = VK_KHR_SHADER_FLOAT16_INT8_SPEC_VERSION

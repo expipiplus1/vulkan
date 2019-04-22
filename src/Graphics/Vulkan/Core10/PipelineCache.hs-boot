@@ -23,6 +23,7 @@ import {-# source #-} Graphics.Vulkan.C.Core10.PipelineCache
 -- 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateComputePipelines',
 -- 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateGraphicsPipelines',
 -- 'Graphics.Vulkan.C.Core10.PipelineCache.vkCreatePipelineCache',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCreateRayTracingPipelinesNV',
 -- 'Graphics.Vulkan.C.Core10.PipelineCache.vkDestroyPipelineCache',
 -- 'Graphics.Vulkan.C.Core10.PipelineCache.vkGetPipelineCacheData',
 -- 'Graphics.Vulkan.C.Core10.PipelineCache.vkMergePipelineCaches'

@@ -23,6 +23,8 @@ import {-# source #-} Graphics.Vulkan.C.Core10.CommandBufferBuilding
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkGeometryTrianglesNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkObjectTableIndexBufferEntryNVX',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindIndexBuffer'
 type IndexType = VkIndexType
 
@@ -55,6 +57,7 @@ type StencilFaceFlags = StencilFaceFlagBits
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkSubpassBeginInfoKHR',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBeginRenderPass',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdNextSubpass'
 type SubpassContents = VkSubpassContents

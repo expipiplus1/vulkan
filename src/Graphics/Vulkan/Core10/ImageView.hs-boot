@@ -58,6 +58,8 @@ type ComponentSwizzle = VkComponentSwizzle
 --
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorImageInfo',
 -- 'Graphics.Vulkan.C.Core10.Pass.VkFramebufferCreateInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_image_view_handle.VkImageViewHandleInfoNVX',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image.vkCmdBindShadingRateImageNV',
 -- 'Graphics.Vulkan.C.Core10.ImageView.vkCreateImageView',
 -- 'Graphics.Vulkan.C.Core10.ImageView.vkDestroyImageView'
 type ImageView = VkImageView
@@ -98,5 +100,6 @@ type ImageViewCreateFlags = ImageViewCreateFlagBits
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.C.Core10.ImageView.VkImageViewCreateInfo'
+-- 'Graphics.Vulkan.C.Core10.ImageView.VkImageViewCreateInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_filter_cubic.VkPhysicalDeviceImageViewImageFormatInfoEXT'
 type ImageViewType = VkImageViewType

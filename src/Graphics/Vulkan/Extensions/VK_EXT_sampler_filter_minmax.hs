@@ -15,13 +15,16 @@ module Graphics.Vulkan.Extensions.VK_EXT_sampler_filter_minmax
   , pattern SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_EXT
   , pattern SAMPLER_REDUCTION_MODE_MIN_EXT
   , pattern SAMPLER_REDUCTION_MODE_MAX_EXT
-  , pattern VK_EXT_SAMPLER_FILTER_MINMAX_SPEC_VERSION
-  , pattern VK_EXT_SAMPLER_FILTER_MINMAX_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES_EXT
-  , pattern VK_STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO_EXT
-  , pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT
+  , pattern EXT_SAMPLER_FILTER_MINMAX_EXTENSION_NAME
+  , pattern EXT_SAMPLER_FILTER_MINMAX_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES_EXT
+  , pattern STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO_EXT
+  , pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Foreign.Marshal.Utils
   ( maybePeek
   , maybeWith
@@ -38,6 +41,8 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax
   ( VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT(..)
   , VkSamplerReductionModeCreateInfoEXT(..)
   , VkSamplerReductionModeEXT(..)
+  , pattern VK_EXT_SAMPLER_FILTER_MINMAX_EXTENSION_NAME
+  , pattern VK_EXT_SAMPLER_FILTER_MINMAX_SPEC_VERSION
   , pattern VK_SAMPLER_REDUCTION_MODE_MAX_EXT
   , pattern VK_SAMPLER_REDUCTION_MODE_MIN_EXT
   , pattern VK_SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_EXT
@@ -53,10 +58,12 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax
-  ( pattern VK_EXT_SAMPLER_FILTER_MINMAX_EXTENSION_NAME
-  , pattern VK_EXT_SAMPLER_FILTER_MINMAX_SPEC_VERSION
-  , pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES_EXT
+  , pattern STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO_EXT
+  )
+import Graphics.Vulkan.Core10.DeviceInitialization
+  ( pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT
   )
 
 
@@ -102,13 +109,12 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax
 -- is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' this restriction does not
 -- apply and image component mapping works as normal.
 --
--- Unresolved directive in
--- VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceSamplerFilterMinmaxPropertiesEXT = PhysicalDeviceSamplerFilterMinmaxPropertiesEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceSamplerFilterMinmaxPropertiesEXT" "pNext"
@@ -149,12 +155,12 @@ instance Zero PhysicalDeviceSamplerFilterMinmaxPropertiesEXT where
 -- If this structure is not present, @reductionMode@ is considered to be
 -- 'Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax.VK_SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_EXT'.
 --
--- Unresolved directive in VkSamplerReductionModeCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkSamplerReductionModeCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax.VkSamplerReductionModeEXT',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data SamplerReductionModeCreateInfoEXT = SamplerReductionModeCreateInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "SamplerReductionModeCreateInfoEXT" "pNext"
@@ -186,8 +192,11 @@ instance Zero SamplerReductionModeCreateInfoEXT where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax.VkSamplerReductionModeCreateInfoEXT'
 type SamplerReductionModeEXT = VkSamplerReductionModeEXT
+
+
+{-# complete SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_EXT, SAMPLER_REDUCTION_MODE_MIN_EXT, SAMPLER_REDUCTION_MODE_MAX_EXT :: SamplerReductionModeEXT #-}
 
 
 -- | 'Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax.VK_SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_EXT'
@@ -210,3 +219,11 @@ pattern SAMPLER_REDUCTION_MODE_MIN_EXT = VK_SAMPLER_REDUCTION_MODE_MIN_EXT
 -- maximum of values in the footprint with non-zero weights.
 pattern SAMPLER_REDUCTION_MODE_MAX_EXT :: (a ~ SamplerReductionModeEXT) => a
 pattern SAMPLER_REDUCTION_MODE_MAX_EXT = VK_SAMPLER_REDUCTION_MODE_MAX_EXT
+
+-- No documentation found for TopLevel "VK_EXT_SAMPLER_FILTER_MINMAX_EXTENSION_NAME"
+pattern EXT_SAMPLER_FILTER_MINMAX_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_SAMPLER_FILTER_MINMAX_EXTENSION_NAME = VK_EXT_SAMPLER_FILTER_MINMAX_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_SAMPLER_FILTER_MINMAX_SPEC_VERSION"
+pattern EXT_SAMPLER_FILTER_MINMAX_SPEC_VERSION :: Integral a => a
+pattern EXT_SAMPLER_FILTER_MINMAX_SPEC_VERSION = VK_EXT_SAMPLER_FILTER_MINMAX_SPEC_VERSION

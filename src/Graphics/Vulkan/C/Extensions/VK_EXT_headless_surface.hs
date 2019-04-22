@@ -98,20 +98,19 @@ instance Read VkHeadlessSurfaceCreateFlagsEXT where
 -- | VkHeadlessSurfaceCreateInfoEXT - Structure specifying parameters of a
 -- newly created headless surface object
 --
--- = Description
---
--- Unresolved directive in VkHeadlessSurfaceCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkHeadlessSurfaceCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkHeadlessSurfaceCreateFlagsEXT',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkCreateHeadlessSurfaceEXT'
 data VkHeadlessSurfaceCreateInfoEXT = VkHeadlessSurfaceCreateInfoEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_HEADLESS_SURFACE_CREATE_INFO_EXT'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- | @flags@ is reserved for future use.
+  , -- | @flags@ /must/ be @0@
   vkFlags :: VkHeadlessSurfaceCreateFlagsEXT
   }
   deriving (Eq, Show)
@@ -151,14 +150,38 @@ instance Zero VkHeadlessSurfaceCreateInfoEXT where
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
 --     which the created surface object is returned.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCreateHeadlessSurfaceEXT.txt -
--- include::{generated}\/validity\/protos\/vkCreateHeadlessSurfaceEXT.txt[]
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'VkHeadlessSurfaceCreateInfoEXT' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pSurface@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'VkHeadlessSurfaceCreateInfoEXT',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -180,7 +203,7 @@ type FN_vkCreateHeadlessSurfaceEXT = ("instance" ::: VkInstance) -> ("pCreateInf
 type PFN_vkCreateHeadlessSurfaceEXT = FunPtr FN_vkCreateHeadlessSurfaceEXT
 
 -- No documentation found for TopLevel "VK_EXT_HEADLESS_SURFACE_EXTENSION_NAME"
-pattern VK_EXT_HEADLESS_SURFACE_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_HEADLESS_SURFACE_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_HEADLESS_SURFACE_EXTENSION_NAME = "VK_EXT_headless_surface"
 
 -- No documentation found for TopLevel "VK_EXT_HEADLESS_SURFACE_SPEC_VERSION"

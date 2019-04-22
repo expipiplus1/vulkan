@@ -114,7 +114,13 @@ data VkAccelerationStructureNV_T
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkAccelerationStructureMemoryRequirementsInfoNV',
+-- 'VkBindAccelerationStructureMemoryInfoNV',
+-- 'VkWriteDescriptorSetAccelerationStructureNV',
+-- 'vkCmdBuildAccelerationStructureNV', 'vkCmdCopyAccelerationStructureNV',
+-- 'vkCmdWriteAccelerationStructuresPropertiesNV',
+-- 'vkCreateAccelerationStructureNV', 'vkDestroyAccelerationStructureNV',
+-- 'vkGetAccelerationStructureHandleNV'
 type VkAccelerationStructureNV = Ptr VkAccelerationStructureNV_T
 
 data VkAccelerationStructureTypeNV
@@ -133,7 +139,8 @@ data VkBuildAccelerationStructureFlagBitsNV
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkAccelerationStructureInfoNV',
+-- 'VkBuildAccelerationStructureFlagBitsNV'
 type VkBuildAccelerationStructureFlagsNV = VkBuildAccelerationStructureFlagBitsNV
 
 data VkCopyAccelerationStructureModeNV
@@ -153,7 +160,7 @@ data VkGeometryFlagBitsNV
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkGeometryFlagBitsNV', 'VkGeometryNV'
 type VkGeometryFlagsNV = VkGeometryFlagBitsNV
 
 data VkGeometryInstanceFlagBitsNV
@@ -167,7 +174,7 @@ data VkGeometryInstanceFlagBitsNV
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkGeometryInstanceFlagBitsNV'
 type VkGeometryInstanceFlagsNV = VkGeometryInstanceFlagBitsNV
 
 data VkGeometryNV

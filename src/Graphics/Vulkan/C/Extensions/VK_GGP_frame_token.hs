@@ -40,16 +40,13 @@ type GgpFrameToken = Word32
 
 -- | VkPresentFrameTokenGGP - The Google Games Platform frame token
 --
--- == Valid Usage
---
--- Unresolved directive in VkPresentFrameTokenGGP.txt -
--- include::{generated}\/validity\/structs\/VkPresentFrameTokenGGP.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPresentFrameTokenGGP = VkPresentFrameTokenGGP
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -74,7 +71,7 @@ instance Zero VkPresentFrameTokenGGP where
                                 zero
 
 -- No documentation found for TopLevel "VK_GGP_FRAME_TOKEN_EXTENSION_NAME"
-pattern VK_GGP_FRAME_TOKEN_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_GGP_FRAME_TOKEN_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_GGP_FRAME_TOKEN_EXTENSION_NAME = "VK_GGP_frame_token"
 
 -- No documentation found for TopLevel "VK_GGP_FRAME_TOKEN_SPEC_VERSION"

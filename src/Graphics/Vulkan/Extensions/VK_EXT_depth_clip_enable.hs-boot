@@ -25,5 +25,5 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_depth_clip_enable
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_depth_clip_enable.VkPipelineRasterizationDepthClipStateCreateInfoEXT'
 type PipelineRasterizationDepthClipStateCreateFlagsEXT = VkPipelineRasterizationDepthClipStateCreateFlagsEXT

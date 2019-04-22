@@ -17,8 +17,9 @@ module Graphics.Vulkan.Core11.Promoted_From_VK_KHR_subgroup
   , pattern SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT
   , pattern SUBGROUP_FEATURE_CLUSTERED_BIT
   , pattern SUBGROUP_FEATURE_QUAD_BIT
+  , pattern SUBGROUP_FEATURE_PARTITIONED_BIT_NV
   , SubgroupFeatureFlags
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES
   ) where
 
 import Data.Word
@@ -49,6 +50,9 @@ import Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup
   , pattern VK_SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT
   , pattern VK_SUBGROUP_FEATURE_VOTE_BIT
   )
+import Graphics.Vulkan.C.Extensions.VK_NV_shader_subgroup_partitioned
+  ( pattern VK_SUBGROUP_FEATURE_PARTITIONED_BIT_NV
+  )
 import Graphics.Vulkan.Core10.Core
   ( bool32ToBool
   , boolToBool32
@@ -60,6 +64,9 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   ( SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
+  )
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES
   )
 
 
@@ -81,8 +88,7 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- Unresolved directive in VkPhysicalDeviceSubgroupProperties.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceSubgroupProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -136,6 +142,9 @@ instance Zero PhysicalDeviceSubgroupProperties where
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VkSubgroupFeatureFlags'
 type SubgroupFeatureFlagBits = VkSubgroupFeatureFlagBits
+
+
+{-# complete SUBGROUP_FEATURE_BASIC_BIT, SUBGROUP_FEATURE_VOTE_BIT, SUBGROUP_FEATURE_ARITHMETIC_BIT, SUBGROUP_FEATURE_BALLOT_BIT, SUBGROUP_FEATURE_SHUFFLE_BIT, SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT, SUBGROUP_FEATURE_CLUSTERED_BIT, SUBGROUP_FEATURE_QUAD_BIT, SUBGROUP_FEATURE_PARTITIONED_BIT_NV :: SubgroupFeatureFlagBits #-}
 
 
 -- | 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VK_SUBGROUP_FEATURE_BASIC_BIT'
@@ -192,6 +201,11 @@ pattern SUBGROUP_FEATURE_CLUSTERED_BIT = VK_SUBGROUP_FEATURE_CLUSTERED_BIT
 -- @GroupNonUniformQuad@ capability.
 pattern SUBGROUP_FEATURE_QUAD_BIT :: (a ~ SubgroupFeatureFlagBits) => a
 pattern SUBGROUP_FEATURE_QUAD_BIT = VK_SUBGROUP_FEATURE_QUAD_BIT
+
+
+-- No documentation found for Nested "SubgroupFeatureFlagBits" "SUBGROUP_FEATURE_PARTITIONED_BIT_NV"
+pattern SUBGROUP_FEATURE_PARTITIONED_BIT_NV :: (a ~ SubgroupFeatureFlagBits) => a
+pattern SUBGROUP_FEATURE_PARTITIONED_BIT_NV = VK_SUBGROUP_FEATURE_PARTITIONED_BIT_NV
 
 -- | VkSubgroupFeatureFlags - Bitmask of VkSubgroupFeatureFlagBits
 --

@@ -49,15 +49,15 @@ import Graphics.Vulkan.C.Core10.Core
 -- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to
 -- enable this feature.
 --
--- Unresolved directive in VkPhysicalDeviceScalarBlockLayoutFeaturesEXT.txt
--- -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceScalarBlockLayoutFeaturesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceScalarBlockLayoutFeaturesEXT = VkPhysicalDeviceScalarBlockLayoutFeaturesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceScalarBlockLayoutFeaturesEXT" "sType"
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES_EXT'
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceScalarBlockLayoutFeaturesEXT" "pNext"
   vkPNext :: Ptr ()
@@ -84,7 +84,7 @@ instance Zero VkPhysicalDeviceScalarBlockLayoutFeaturesEXT where
                                                       zero
 
 -- No documentation found for TopLevel "VK_EXT_SCALAR_BLOCK_LAYOUT_EXTENSION_NAME"
-pattern VK_EXT_SCALAR_BLOCK_LAYOUT_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_SCALAR_BLOCK_LAYOUT_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_SCALAR_BLOCK_LAYOUT_EXTENSION_NAME = "VK_EXT_scalar_block_layout"
 
 -- No documentation found for TopLevel "VK_EXT_SCALAR_BLOCK_LAYOUT_SPEC_VERSION"

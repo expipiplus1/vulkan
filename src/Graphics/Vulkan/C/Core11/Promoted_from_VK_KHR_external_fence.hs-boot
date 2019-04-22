@@ -27,5 +27,7 @@ data VkFenceImportFlagBits
 --
 -- = See Also
 --
--- 'VkFenceImportFlagBits'
+-- 'VkFenceImportFlagBits',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd.VkImportFenceFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.VkImportFenceWin32HandleInfoKHR'
 type VkFenceImportFlags = VkFenceImportFlagBits

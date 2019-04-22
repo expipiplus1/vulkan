@@ -48,10 +48,10 @@ import Graphics.Vulkan.NamedType
 --     supported by instance-level functionality, encoded as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#extendingvulkan-coreversions-versionnumbers>.
 --
--- = Description
+-- == Return Codes
 --
--- Unresolved directive in vkEnumerateInstanceVersion.txt -
--- include::{generated}\/validity\/protos\/vkEnumerateInstanceVersion.txt[]
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
 --
 -- = See Also
 --

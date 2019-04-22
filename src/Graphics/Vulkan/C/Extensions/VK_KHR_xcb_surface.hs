@@ -109,20 +109,18 @@ instance Read VkXcbSurfaceCreateFlagsKHR where
 -- | VkXcbSurfaceCreateInfoKHR - Structure specifying parameters of a newly
 -- created Xcb surface object
 --
--- == Valid Usage
---
--- Unresolved directive in VkXcbSurfaceCreateInfoKHR.txt -
--- include::{generated}\/validity\/structs\/VkXcbSurfaceCreateInfoKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'VkXcbSurfaceCreateFlagsKHR', 'vkCreateXcbSurfaceKHR'
 data VkXcbSurfaceCreateInfoKHR = VkXcbSurfaceCreateInfoKHR
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- | @flags@ is reserved for future use.
+  , -- | @flags@ /must/ be @0@
   vkFlags :: VkXcbSurfaceCreateFlagsKHR
   , -- | @connection@ /must/ point to a valid X11 @xcb_connection_t@.
   vkConnection :: Ptr Xcb_connection_t
@@ -184,14 +182,38 @@ type Xcb_window_t = Word32
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
 --     which the created surface object is returned.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCreateXcbSurfaceKHR.txt -
--- include::{generated}\/validity\/protos\/vkCreateXcbSurfaceKHR.txt[]
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'VkXcbSurfaceCreateInfoKHR' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pSurface@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR',
+-- 'VkXcbSurfaceCreateInfoKHR'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -229,15 +251,11 @@ type PFN_vkCreateXcbSurfaceKHR = FunPtr FN_vkCreateXcbSurfaceKHR
 -- This platform-specific function /can/ be called prior to creating a
 -- surface.
 --
--- == Valid Usage
---
--- Unresolved directive in vkGetPhysicalDeviceXcbPresentationSupportKHR.txt
--- -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceXcbPresentationSupportKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -259,7 +277,7 @@ type FN_vkGetPhysicalDeviceXcbPresentationSupportKHR = ("physicalDevice" ::: VkP
 type PFN_vkGetPhysicalDeviceXcbPresentationSupportKHR = FunPtr FN_vkGetPhysicalDeviceXcbPresentationSupportKHR
 
 -- No documentation found for TopLevel "VK_KHR_XCB_SURFACE_EXTENSION_NAME"
-pattern VK_KHR_XCB_SURFACE_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_XCB_SURFACE_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_XCB_SURFACE_EXTENSION_NAME = "VK_KHR_xcb_surface"
 
 -- No documentation found for TopLevel "VK_KHR_XCB_SURFACE_SPEC_VERSION"

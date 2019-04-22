@@ -56,11 +56,7 @@ import Graphics.Vulkan.C.Core10.Core
 -- | VkPipelineRasterizationStateRasterizationOrderAMD - Structure defining
 -- rasterization order for a graphics pipeline
 --
--- = Description
---
--- Unresolved directive in
--- VkPipelineRasterizationStateRasterizationOrderAMD.txt -
--- include::{generated}\/validity\/structs\/VkPipelineRasterizationStateRasterizationOrderAMD.txt[]
+-- == Valid Usage (Implicit)
 --
 -- If the
 -- @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.1-extensions\/html\/vkspec.html#VK_AMD_rasterization_order@
@@ -72,14 +68,15 @@ import Graphics.Vulkan.C.Core10.Core
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkRasterizationOrderAMD',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPipelineRasterizationStateRasterizationOrderAMD = VkPipelineRasterizationStateRasterizationOrderAMD
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_RASTERIZATION_ORDER_AMD'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @rasterizationOrder@ is a 'VkRasterizationOrderAMD' value specifying the
-  -- primitive rasterization order to use.
+  , -- | @rasterizationOrder@ /must/ be a valid 'VkRasterizationOrderAMD' value
   vkRasterizationOrder :: VkRasterizationOrderAMD
   }
   deriving (Eq, Show)
@@ -106,7 +103,7 @@ instance Zero VkPipelineRasterizationStateRasterizationOrderAMD where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkPipelineRasterizationStateRasterizationOrderAMD'
 newtype VkRasterizationOrderAMD = VkRasterizationOrderAMD Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -139,7 +136,7 @@ pattern VK_RASTERIZATION_ORDER_RELAXED_AMD :: VkRasterizationOrderAMD
 pattern VK_RASTERIZATION_ORDER_RELAXED_AMD = VkRasterizationOrderAMD 1
 
 -- No documentation found for TopLevel "VK_AMD_RASTERIZATION_ORDER_EXTENSION_NAME"
-pattern VK_AMD_RASTERIZATION_ORDER_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_AMD_RASTERIZATION_ORDER_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_AMD_RASTERIZATION_ORDER_EXTENSION_NAME = "VK_AMD_rasterization_order"
 
 -- No documentation found for TopLevel "VK_AMD_RASTERIZATION_ORDER_SPEC_VERSION"

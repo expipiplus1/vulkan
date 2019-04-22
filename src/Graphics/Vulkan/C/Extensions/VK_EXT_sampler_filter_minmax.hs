@@ -99,15 +99,15 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
 -- is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' this restriction does not
 -- apply and image component mapping works as normal.
 --
--- Unresolved directive in
--- VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT = VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES_EXT'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -147,19 +147,19 @@ instance Zero VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT where
 -- If this structure is not present, @reductionMode@ is considered to be
 -- 'VK_SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_EXT'.
 --
--- Unresolved directive in VkSamplerReductionModeCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkSamplerReductionModeCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkSamplerReductionModeEXT',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkSamplerReductionModeCreateInfoEXT = VkSamplerReductionModeCreateInfoEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO_EXT'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @reductionMode@ is an enum of type 'VkSamplerReductionModeEXT' that
-  -- controls how texture filtering combines texel values.
+  , -- | @reductionMode@ /must/ be a valid 'VkSamplerReductionModeEXT' value
   vkReductionMode :: VkSamplerReductionModeEXT
   }
   deriving (Eq, Show)
@@ -185,7 +185,7 @@ instance Zero VkSamplerReductionModeCreateInfoEXT where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkSamplerReductionModeCreateInfoEXT'
 newtype VkSamplerReductionModeEXT = VkSamplerReductionModeEXT Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -227,18 +227,14 @@ pattern VK_SAMPLER_REDUCTION_MODE_MAX_EXT :: VkSamplerReductionModeEXT
 pattern VK_SAMPLER_REDUCTION_MODE_MAX_EXT = VkSamplerReductionModeEXT 2
 
 -- No documentation found for TopLevel "VK_EXT_SAMPLER_FILTER_MINMAX_EXTENSION_NAME"
-pattern VK_EXT_SAMPLER_FILTER_MINMAX_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_SAMPLER_FILTER_MINMAX_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_SAMPLER_FILTER_MINMAX_EXTENSION_NAME = "VK_EXT_sampler_filter_minmax"
 
 -- No documentation found for TopLevel "VK_EXT_SAMPLER_FILTER_MINMAX_SPEC_VERSION"
 pattern VK_EXT_SAMPLER_FILTER_MINMAX_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_SAMPLER_FILTER_MINMAX_SPEC_VERSION = 1
 
--- | 'VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT' specifies
--- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' /can/ be used as a
--- sampled image with a min or max 'VkSamplerReductionModeEXT'. This bit
--- /must/ only be exposed for formats that also support the
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT'.
+-- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT"
 pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT :: VkFormatFeatureFlagBits
 pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT = VkFormatFeatureFlagBits 0x00010000
 

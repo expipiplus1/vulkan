@@ -11,11 +11,11 @@ module Graphics.Vulkan.Extensions.VK_NV_scissor_exclusive
   , fromCStructPipelineViewportExclusiveScissorStateCreateInfoNV
   , PipelineViewportExclusiveScissorStateCreateInfoNV(..)
   , cmdSetExclusiveScissorNV
-  , pattern VK_NV_SCISSOR_EXCLUSIVE_SPEC_VERSION
-  , pattern VK_NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV
-  , pattern VK_DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXCLUSIVE_SCISSOR_FEATURES_NV
+  , pattern NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME
+  , pattern NV_SCISSOR_EXCLUSIVE_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV
+  , pattern DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_EXCLUSIVE_SCISSOR_FEATURES_NV
   ) where
 
 import Control.Monad
@@ -23,6 +23,9 @@ import Control.Monad
   )
 import Data.Maybe
   ( maybe
+  )
+import Data.String
+  ( IsString
   )
 import Data.Vector
   ( Vector
@@ -53,6 +56,8 @@ import Graphics.Vulkan.C.Extensions.VK_NV_scissor_exclusive
   ( VkPhysicalDeviceExclusiveScissorFeaturesNV(..)
   , VkPipelineViewportExclusiveScissorStateCreateInfoNV(..)
   , vkCmdSetExclusiveScissorNV
+  , pattern VK_NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME
+  , pattern VK_NV_SCISSOR_EXCLUSIVE_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXCLUSIVE_SCISSOR_FEATURES_NV
   , pattern VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV
   )
@@ -76,10 +81,12 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_NV_scissor_exclusive
-  ( pattern VK_DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV
-  , pattern VK_NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME
-  , pattern VK_NV_SCISSOR_EXCLUSIVE_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_EXCLUSIVE_SCISSOR_FEATURES_NV
+  , pattern STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV
+  )
+import Graphics.Vulkan.Core10.Pipeline
+  ( pattern DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV
   )
 
 
@@ -109,12 +116,12 @@ import Graphics.Vulkan.C.Extensions.VK_NV_scissor_exclusive
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable the
 -- feature.
 --
--- Unresolved directive in VkPhysicalDeviceExclusiveScissorFeaturesNV.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceExclusiveScissorFeaturesNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceExclusiveScissorFeaturesNV = PhysicalDeviceExclusiveScissorFeaturesNV
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceExclusiveScissorFeaturesNV" "pNext"
@@ -170,13 +177,20 @@ instance Zero PhysicalDeviceExclusiveScissorFeaturesNV where
 --     be a valid pointer to an array of @exclusiveScissorCount@
 --     'Graphics.Vulkan.C.Core10.Pipeline.VkRect2D' structures
 --
--- Unresolved directive in
--- VkPipelineViewportExclusiveScissorStateCreateInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkPipelineViewportExclusiveScissorStateCreateInfoNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_NV_scissor_exclusive.VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV'
+--
+-- -   If @exclusiveScissorCount@ is not @0@, and @pExclusiveScissors@ is
+--     not @NULL@, @pExclusiveScissors@ /must/ be a valid pointer to an
+--     array of @exclusiveScissorCount@
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkRect2D' structures
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkRect2D',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PipelineViewportExclusiveScissorStateCreateInfoNV = PipelineViewportExclusiveScissorStateCreateInfoNV
   { -- Univalued member elided
   -- No documentation found for Nested "PipelineViewportExclusiveScissorStateCreateInfoNV" "pNext"
@@ -274,11 +288,62 @@ instance Zero PipelineViewportExclusiveScissorStateCreateInfoNV where
 --     @pExclusiveScissors@ /must/ not cause a signed integer addition
 --     overflow
 --
--- Unresolved directive in vkCmdSetExclusiveScissorNV.txt -
--- include::{generated}\/validity\/protos\/vkCmdSetExclusiveScissorNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @pExclusiveScissors@ /must/ be a valid pointer to an array of
+--     @exclusiveScissorCount@ 'Graphics.Vulkan.C.Core10.Pipeline.VkRect2D'
+--     structures
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
+--
+-- -   @exclusiveScissorCount@ /must/ be greater than @0@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Both            | Graphics        |                 |
+-- > | Secondary       |                 |                 |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkRect2D'
 cmdSetExclusiveScissorNV :: CommandBuffer ->  Word32 ->  Vector Rect2D ->  IO ()
 cmdSetExclusiveScissorNV = \(CommandBuffer commandBuffer' commandTable) -> \firstExclusiveScissor' -> \exclusiveScissors' -> withVec withCStructRect2D exclusiveScissors' (\pExclusiveScissors' -> vkCmdSetExclusiveScissorNV commandTable commandBuffer' firstExclusiveScissor' (fromIntegral $ Data.Vector.length exclusiveScissors') pExclusiveScissors' *> (pure ()))
+
+-- No documentation found for TopLevel "VK_NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME"
+pattern NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME = VK_NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_NV_SCISSOR_EXCLUSIVE_SPEC_VERSION"
+pattern NV_SCISSOR_EXCLUSIVE_SPEC_VERSION :: Integral a => a
+pattern NV_SCISSOR_EXCLUSIVE_SPEC_VERSION = VK_NV_SCISSOR_EXCLUSIVE_SPEC_VERSION

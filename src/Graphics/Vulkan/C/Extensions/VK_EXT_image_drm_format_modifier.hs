@@ -161,12 +161,10 @@ import Graphics.Vulkan.NamedType
 -- @drmFormatModifierPlaneCount@. In all other cases, the /memory
 -- planecount/ is ignored.
 --
--- Unresolved directive in VkDrmFormatModifierPropertiesEXT.txt -
--- include::{generated}\/validity\/structs\/VkDrmFormatModifierPropertiesEXT.txt[]
---
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDrmFormatModifierPropertiesListEXT',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkFormatFeatureFlags'
 data VkDrmFormatModifierPropertiesEXT = VkDrmFormatModifierPropertiesEXT
   { -- | @drmFormatModifier@ is a /Linux DRM format modifier/.
   vkDrmFormatModifier :: Word64
@@ -214,14 +212,15 @@ instance Zero VkDrmFormatModifierPropertiesEXT where
 -- Among the elements in array @pDrmFormatModifierProperties@, each
 -- returned @drmFormatModifier@ /must/ be unique.
 --
--- Unresolved directive in VkDrmFormatModifierPropertiesListEXT.txt -
--- include::{generated}\/validity\/structs\/VkDrmFormatModifierPropertiesListEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDrmFormatModifierPropertiesEXT',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkDrmFormatModifierPropertiesListEXT = VkDrmFormatModifierPropertiesListEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_EXT'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -302,13 +301,19 @@ instance Zero VkDrmFormatModifierPropertiesListEXT where
 --     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@extent@::@depth@
 --     is 1.
 --
--- Unresolved directive in
--- VkImageDrmFormatModifierExplicitCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkImageDrmFormatModifierExplicitCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT'
+--
+-- -   If @drmFormatModifierPlaneCount@ is not @0@, @pPlaneLayouts@ /must/
+--     be a valid pointer to an array of @drmFormatModifierPlaneCount@
+--     'Graphics.Vulkan.C.Core10.Image.VkSubresourceLayout' structures
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Core10.Image.VkSubresourceLayout'
 data VkImageDrmFormatModifierExplicitCreateInfoEXT = VkImageDrmFormatModifierExplicitCreateInfoEXT
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -360,12 +365,19 @@ instance Zero VkImageDrmFormatModifierExplicitCreateInfoEXT where
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2'
 --     extended with 'VkPhysicalDeviceImageDrmFormatModifierInfoEXT'.
 --
--- Unresolved directive in VkImageDrmFormatModifierListCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkImageDrmFormatModifierListCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_LIST_CREATE_INFO_EXT'
+--
+-- -   @pDrmFormatModifiers@ /must/ be a valid pointer to an array of
+--     @drmFormatModifierCount@ @uint64_t@ values
+--
+-- -   @drmFormatModifierCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkImageDrmFormatModifierListCreateInfoEXT = VkImageDrmFormatModifierListCreateInfoEXT
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -413,16 +425,17 @@ instance Zero VkImageDrmFormatModifierListCreateInfoEXT where
 -- creation in
 -- 'VkImageDrmFormatModifierExplicitCreateInfoEXT'::@drmFormatModifier@.
 --
--- Unresolved directive in VkImageDrmFormatModifierPropertiesEXT.txt -
--- include::{generated}\/validity\/structs\/VkImageDrmFormatModifierPropertiesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkGetImageDrmFormatModifierPropertiesEXT'
 data VkImageDrmFormatModifierPropertiesEXT = VkImageDrmFormatModifierPropertiesEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
   , -- | @drmFormatModifier@ returns the image’s
   -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#glossary-drm-format-modifier Linux DRM format modifier>.
@@ -477,13 +490,18 @@ instance Zero VkImageDrmFormatModifierPropertiesEXT where
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceQueueFamilyProperties2'
 --     for the @physicalDevice@ that was used to create @device@.
 --
--- Unresolved directive in
--- VkPhysicalDeviceImageDrmFormatModifierInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceImageDrmFormatModifierInfoEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT'
+--
+-- -   @sharingMode@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Buffer.VkSharingMode' value
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Buffer.VkSharingMode',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceImageDrmFormatModifierInfoEXT = VkPhysicalDeviceImageDrmFormatModifierInfoEXT
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -543,14 +561,16 @@ instance Zero VkPhysicalDeviceImageDrmFormatModifierInfoEXT where
 -- -   @pProperties@ will return properties of the image’s /DRM format
 --     modifier/.
 --
--- == Valid Usage
+-- == Return Codes
 --
--- Unresolved directive in vkGetImageDrmFormatModifierPropertiesEXT.txt -
--- include::{generated}\/validity\/protos\/vkGetImageDrmFormatModifierPropertiesEXT.txt[]
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage',
+-- 'VkImageDrmFormatModifierPropertiesEXT'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -576,7 +596,7 @@ pattern VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT :: VkResult
 pattern VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT = VkResult (-1000158000)
 
 -- No documentation found for TopLevel "VK_EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME"
-pattern VK_EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME = "VK_EXT_image_drm_format_modifier"
 
 -- No documentation found for TopLevel "VK_EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION"
@@ -599,13 +619,7 @@ pattern VK_IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT = VkImageAspectFlagBits 0x0000020
 pattern VK_IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT :: VkImageAspectFlagBits
 pattern VK_IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT = VkImageAspectFlagBits 0x00000400
 
--- | 'VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT' indicates that the image’s
--- tiling is defined by a
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#glossary-drm-format-modifier Linux DRM format modifier>.
--- The modifier is specified at image creation with
--- 'VkImageDrmFormatModifierListCreateInfoEXT' or
--- 'VkImageDrmFormatModifierExplicitCreateInfoEXT', and /can/ be queried
--- with 'vkGetImageDrmFormatModifierPropertiesEXT'.
+-- No documentation found for Nested "VkImageTiling" "VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT"
 pattern VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT :: VkImageTiling
 pattern VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT = VkImageTiling 1000158000
 

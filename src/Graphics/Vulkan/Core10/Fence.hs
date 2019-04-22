@@ -103,6 +103,9 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
 type FenceCreateFlagBits = VkFenceCreateFlagBits
 
 
+{-# complete FENCE_CREATE_SIGNALED_BIT :: FenceCreateFlagBits #-}
+
+
 -- | 'Graphics.Vulkan.C.Core10.Fence.VK_FENCE_CREATE_SIGNALED_BIT' specifies
 -- that the fence object is created in the signaled state. Otherwise, it is
 -- created in the unsignaled state.
@@ -127,10 +130,22 @@ type FenceCreateFlags = FenceCreateFlagBits
 -- | VkFenceCreateInfo - Structure specifying parameters of a newly created
 -- fence
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in VkFenceCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkFenceCreateInfo.txt[]
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_FENCE_CREATE_INFO'
+--
+-- -   Each @pNext@ member of any structure (including this one) in the
+--     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
+--     instance of
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence.VkExportFenceCreateInfo'
+--     or
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.VkExportFenceWin32HandleInfoKHR'
+--
+-- -   Each @sType@ member in the @pNext@ chain /must/ be unique
+--
+-- -   @flags@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core10.Fence.VkFenceCreateFlagBits' values
 --
 -- = See Also
 --
@@ -182,10 +197,31 @@ instance Zero FenceCreateInfo where
 -- -   @pFence@ points to a handle in which the resulting fence object is
 --     returned.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCreateFence.txt -
--- include::{generated}\/validity\/protos\/vkCreateFence.txt[]
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Core10.Fence.VkFenceCreateInfo' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pFence@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Core10.Queue.VkFence' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -225,8 +261,26 @@ createFence = \(Device device' commandTable) -> \createInfo' -> \allocator -> al
 --     were provided when @fence@ was created, @pAllocator@ /must/ be
 --     @NULL@
 --
--- Unresolved directive in vkDestroyFence.txt -
--- include::{generated}\/validity\/protos\/vkDestroyFence.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   If @fence@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @fence@ /must/
+--     be a valid 'Graphics.Vulkan.C.Core10.Queue.VkFence' handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   If @fence@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @fence@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -282,8 +336,19 @@ destroyFence = \(Device device' commandTable) -> \fence' -> \allocator -> maybeW
 -- 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS' or
 -- 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_DEVICE_LOST'.
 --
--- Unresolved directive in vkGetFenceStatus.txt -
--- include::{generated}\/validity\/protos\/vkGetFenceStatus.txt[]
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_NOT_READY'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_DEVICE_LOST'
 --
 -- = See Also
 --
@@ -305,12 +370,6 @@ getFenceStatus = \(Device device' commandTable) -> \fence' -> vkGetFenceStatus c
 --
 -- = Description
 --
--- If any member of @pFences@ currently has its
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-fences-importing payload imported>
--- with temporary permanence, that fence’s prior permanent payload is first
--- restored. The remaining operations described therefore operate on the
--- restored payload.
---
 -- When 'Graphics.Vulkan.C.Core10.Fence.vkResetFences' is executed on the
 -- host, it defines a /fence unsignal operation/ for each fence, which
 -- resets the fence to the unsignaled state.
@@ -325,8 +384,33 @@ getFenceStatus = \(Device device' commandTable) -> \fence' -> vkGetFenceStatus c
 -- -   Each element of @pFences@ /must/ not be currently associated with
 --     any queue command that has not yet completed execution on that queue
 --
--- Unresolved directive in vkResetFences.txt -
--- include::{generated}\/validity\/protos\/vkResetFences.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pFences@ /must/ be a valid pointer to an array of @fenceCount@
+--     valid 'Graphics.Vulkan.C.Core10.Queue.VkFence' handles
+--
+-- -   @fenceCount@ /must/ be greater than @0@
+--
+-- -   Each element of @pFences@ /must/ have been created, allocated, or
+--     retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to each member of @pFences@ /must/ be externally
+--     synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -398,8 +482,32 @@ resetFences = \(Device device' commandTable) -> \fences' -> withVec (&) fences' 
 -- 'Graphics.Vulkan.C.Core10.Fence.vkWaitForFences' will not result in a
 -- permanently (or seemingly permanently) dead process.
 --
--- Unresolved directive in vkWaitForFences.txt -
--- include::{generated}\/validity\/protos\/vkWaitForFences.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pFences@ /must/ be a valid pointer to an array of @fenceCount@
+--     valid 'Graphics.Vulkan.C.Core10.Queue.VkFence' handles
+--
+-- -   @fenceCount@ /must/ be greater than @0@
+--
+-- -   Each element of @pFences@ /must/ have been created, allocated, or
+--     retrieved from @device@
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_TIMEOUT'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_DEVICE_LOST'
 --
 -- = See Also
 --

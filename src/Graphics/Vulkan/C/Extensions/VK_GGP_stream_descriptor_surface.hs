@@ -106,20 +106,20 @@ instance Read VkStreamDescriptorSurfaceCreateFlagsGGP where
 -- | VkStreamDescriptorSurfaceCreateInfoGGP - Structure specifying parameters
 -- of a newly created Google Games Platform stream surface object
 --
--- == Valid Usage
---
--- Unresolved directive in VkStreamDescriptorSurfaceCreateInfoGGP.txt -
--- include::{generated}\/validity\/structs\/VkStreamDescriptorSurfaceCreateInfoGGP.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkStreamDescriptorSurfaceCreateFlagsGGP',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkCreateStreamDescriptorSurfaceGGP'
 data VkStreamDescriptorSurfaceCreateInfoGGP = VkStreamDescriptorSurfaceCreateInfoGGP
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- | @flags@ is reserved for future use.
+  , -- | @flags@ /must/ be @0@
   vkFlags :: VkStreamDescriptorSurfaceCreateFlagsGGP
   , -- | @streamDescriptor@ /must/ be a valid 'GgpStreamDescriptor'
   vkStreamDescriptor :: GgpStreamDescriptor
@@ -165,14 +165,40 @@ instance Zero VkStreamDescriptorSurfaceCreateInfoGGP where
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
 --     which the created surface object is returned.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCreateStreamDescriptorSurfaceGGP.txt -
--- include::{generated}\/validity\/protos\/vkCreateStreamDescriptorSurfaceGGP.txt[]
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'VkStreamDescriptorSurfaceCreateInfoGGP' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pSurface@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_NATIVE_WINDOW_IN_USE_KHR'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance',
+-- 'VkStreamDescriptorSurfaceCreateInfoGGP',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -194,7 +220,7 @@ type FN_vkCreateStreamDescriptorSurfaceGGP = ("instance" ::: VkInstance) -> ("pC
 type PFN_vkCreateStreamDescriptorSurfaceGGP = FunPtr FN_vkCreateStreamDescriptorSurfaceGGP
 
 -- No documentation found for TopLevel "VK_GGP_STREAM_DESCRIPTOR_SURFACE_EXTENSION_NAME"
-pattern VK_GGP_STREAM_DESCRIPTOR_SURFACE_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_GGP_STREAM_DESCRIPTOR_SURFACE_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_GGP_STREAM_DESCRIPTOR_SURFACE_EXTENSION_NAME = "VK_GGP_stream_descriptor_surface"
 
 -- No documentation found for TopLevel "VK_GGP_STREAM_DESCRIPTOR_SURFACE_SPEC_VERSION"

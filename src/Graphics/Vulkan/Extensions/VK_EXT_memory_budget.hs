@@ -7,11 +7,14 @@ module Graphics.Vulkan.Extensions.VK_EXT_memory_budget
   ( withCStructPhysicalDeviceMemoryBudgetPropertiesEXT
   , fromCStructPhysicalDeviceMemoryBudgetPropertiesEXT
   , PhysicalDeviceMemoryBudgetPropertiesEXT(..)
-  , pattern VK_EXT_MEMORY_BUDGET_SPEC_VERSION
-  , pattern VK_EXT_MEMORY_BUDGET_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT
+  , pattern EXT_MEMORY_BUDGET_EXTENSION_NAME
+  , pattern EXT_MEMORY_BUDGET_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Data.Vector
   ( Vector
   )
@@ -41,6 +44,8 @@ import Graphics.Vulkan.C.Core10.Core
   )
 import Graphics.Vulkan.C.Extensions.VK_EXT_memory_budget
   ( VkPhysicalDeviceMemoryBudgetPropertiesEXT(..)
+  , pattern VK_EXT_MEMORY_BUDGET_EXTENSION_NAME
+  , pattern VK_EXT_MEMORY_BUDGET_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
@@ -54,9 +59,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_memory_budget
-  ( pattern VK_EXT_MEMORY_BUDGET_EXTENSION_NAME
-  , pattern VK_EXT_MEMORY_BUDGET_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT
   )
 
 
@@ -76,12 +80,12 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_memory_budget
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkMemoryHeap'::@size@ for
 -- each heap.
 --
--- Unresolved directive in VkPhysicalDeviceMemoryBudgetPropertiesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceMemoryBudgetPropertiesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceMemoryBudgetPropertiesEXT = PhysicalDeviceMemoryBudgetPropertiesEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceMemoryBudgetPropertiesEXT" "pNext"
@@ -112,3 +116,11 @@ instance Zero PhysicalDeviceMemoryBudgetPropertiesEXT where
                                                  Data.Vector.empty
                                                  Data.Vector.empty
 
+
+-- No documentation found for TopLevel "VK_EXT_MEMORY_BUDGET_EXTENSION_NAME"
+pattern EXT_MEMORY_BUDGET_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_MEMORY_BUDGET_EXTENSION_NAME = VK_EXT_MEMORY_BUDGET_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_MEMORY_BUDGET_SPEC_VERSION"
+pattern EXT_MEMORY_BUDGET_SPEC_VERSION :: Integral a => a
+pattern EXT_MEMORY_BUDGET_SPEC_VERSION = VK_EXT_MEMORY_BUDGET_SPEC_VERSION

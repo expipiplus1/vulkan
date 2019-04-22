@@ -91,7 +91,7 @@ import Graphics.Vulkan.NamedType
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'vkGetShaderInfoAMD'
 newtype VkShaderInfoTypeAMD = VkShaderInfoTypeAMD Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -131,14 +131,9 @@ pattern VK_SHADER_INFO_TYPE_DISASSEMBLY_AMD = VkShaderInfoTypeAMD 2
 -- | VkShaderResourceUsageAMD - Resource usage information about a particular
 -- shader within a pipeline
 --
--- = Description
---
--- Unresolved directive in VkShaderResourceUsageAMD.txt -
--- include::{generated}\/validity\/structs\/VkShaderResourceUsageAMD.txt[]
---
 -- = See Also
 --
--- No cross-references are available
+-- 'VkShaderStatisticsInfoAMD'
 data VkShaderResourceUsageAMD = VkShaderResourceUsageAMD
   { -- | @numUsedVgprs@ is the number of vector instruction general-purpose
   -- registers used by this shader.
@@ -197,12 +192,10 @@ instance Zero VkShaderResourceUsageAMD where
 -- assignment. These values /may/ further be limited by implementations due
 -- to performance optimizations where register pressure is a bottleneck.
 --
--- Unresolved directive in VkShaderStatisticsInfoAMD.txt -
--- include::{generated}\/validity\/structs\/VkShaderStatisticsInfoAMD.txt[]
---
 -- = See Also
 --
--- No cross-references are available
+-- 'VkShaderResourceUsageAMD',
+-- 'Graphics.Vulkan.C.Core10.PipelineLayout.VkShaderStageFlags'
 data VkShaderStatisticsInfoAMD = VkShaderStatisticsInfoAMD
   { -- | @shaderStageMask@ are the combination of logical shader stages contained
   -- within this shader.
@@ -310,12 +303,45 @@ instance Zero VkShaderStatisticsInfoAMD where
 -- @infoType@ 'VK_SHADER_INFO_TYPE_BINARY_AMD', are left to the vendor and
 -- are not further specified by this extension.
 --
--- Unresolved directive in vkGetShaderInfoAMD.txt -
--- include::{generated}\/validity\/protos\/vkGetShaderInfoAMD.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pipeline@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' handle
+--
+-- -   @shaderStage@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkShaderStageFlagBits' value
+--
+-- -   @infoType@ /must/ be a valid 'VkShaderInfoTypeAMD' value
+--
+-- -   @pInfoSize@ /must/ be a valid pointer to a @size_t@ value
+--
+-- -   If the value referenced by @pInfoSize@ is not @0@, and @pInfo@ is
+--     not @NULL@, @pInfo@ /must/ be a valid pointer to an array of
+--     @pInfoSize@ bytes
+--
+-- -   @pipeline@ /must/ have been created, allocated, or retrieved from
+--     @device@
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_FEATURE_NOT_PRESENT'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline', 'VkShaderInfoTypeAMD',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkShaderStageFlagBits'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -337,7 +363,7 @@ type FN_vkGetShaderInfoAMD = ("device" ::: VkDevice) -> ("pipeline" ::: VkPipeli
 type PFN_vkGetShaderInfoAMD = FunPtr FN_vkGetShaderInfoAMD
 
 -- No documentation found for TopLevel "VK_AMD_SHADER_INFO_EXTENSION_NAME"
-pattern VK_AMD_SHADER_INFO_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_AMD_SHADER_INFO_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_AMD_SHADER_INFO_EXTENSION_NAME = "VK_AMD_shader_info"
 
 -- No documentation found for TopLevel "VK_AMD_SHADER_INFO_SPEC_VERSION"

@@ -11,8 +11,8 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance3
   , fromCStructPhysicalDeviceMaintenance3Properties
   , PhysicalDeviceMaintenance3Properties(..)
   , getDescriptorSetLayoutSupport
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES
-  , pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES
+  , pattern STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT
   ) where
 
 import Control.Monad
@@ -64,6 +64,10 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES
+  )
 
 
 
@@ -76,14 +80,14 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
 -- descriptor set /can/ be created, or else is set to
 -- 'Graphics.Vulkan.C.Core10.Core.VK_FALSE'.
 --
--- Unresolved directive in VkDescriptorSetLayoutSupport.txt -
--- include::{generated}\/validity\/structs\/VkDescriptorSetLayoutSupport.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance3.vkGetDescriptorSetLayoutSupport'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance3.vkGetDescriptorSetLayoutSupport',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_maintenance3.vkGetDescriptorSetLayoutSupportKHR'
 data DescriptorSetLayoutSupport = DescriptorSetLayoutSupport
   { -- Univalued member elided
   -- No documentation found for Nested "DescriptorSetLayoutSupport" "pNext"
@@ -129,8 +133,7 @@ instance Zero DescriptorSetLayoutSupport where
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- Unresolved directive in VkPhysicalDeviceMaintenance3Properties.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceMaintenance3Properties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -216,8 +219,7 @@ instance Zero PhysicalDeviceMaintenance3Properties where
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice' because
 -- the answer /may/ depend on enabled features.
 --
--- Unresolved directive in vkGetDescriptorSetLayoutSupport.txt -
--- include::{generated}\/validity\/protos\/vkGetDescriptorSetLayoutSupport.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --

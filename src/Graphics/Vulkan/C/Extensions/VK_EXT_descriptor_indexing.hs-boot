@@ -29,7 +29,8 @@ data VkDescriptorBindingFlagBitsEXT
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDescriptorBindingFlagBitsEXT',
+-- 'VkDescriptorSetLayoutBindingFlagsCreateInfoEXT'
 type VkDescriptorBindingFlagsEXT = VkDescriptorBindingFlagBitsEXT
 
 data VkDescriptorSetLayoutBindingFlagsCreateInfoEXT

@@ -70,14 +70,15 @@ import Graphics.Vulkan.NamedType
 -- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to
 -- enable features.
 --
--- Unresolved directive in VkPhysicalDeviceHostQueryResetFeaturesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceHostQueryResetFeaturesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceHostQueryResetFeaturesEXT = VkPhysicalDeviceHostQueryResetFeaturesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceHostQueryResetFeaturesEXT" "sType"
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES_EXT'
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceHostQueryResetFeaturesEXT" "pNext"
   vkPNext :: Ptr ()
@@ -130,12 +131,21 @@ instance Zero VkPhysicalDeviceHostQueryResetFeaturesEXT where
 -- -   The sum of @firstQuery@ and @queryCount@ /must/ be less than or
 --     equal to the number of queries in @queryPool@
 --
--- Unresolved directive in vkResetQueryPoolEXT.txt -
--- include::{generated}\/validity\/protos\/vkResetQueryPoolEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @queryPool@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Query.VkQueryPool' handle
+--
+-- -   @queryPool@ /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Core10.Query.VkQueryPool'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -157,7 +167,7 @@ type FN_vkResetQueryPoolEXT = ("device" ::: VkDevice) -> ("queryPool" ::: VkQuer
 type PFN_vkResetQueryPoolEXT = FunPtr FN_vkResetQueryPoolEXT
 
 -- No documentation found for TopLevel "VK_EXT_HOST_QUERY_RESET_EXTENSION_NAME"
-pattern VK_EXT_HOST_QUERY_RESET_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_HOST_QUERY_RESET_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_HOST_QUERY_RESET_EXTENSION_NAME = "VK_EXT_host_query_reset"
 
 -- No documentation found for TopLevel "VK_EXT_HOST_QUERY_RESET_SPEC_VERSION"

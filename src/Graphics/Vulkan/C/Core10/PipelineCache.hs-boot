@@ -49,8 +49,10 @@ data VkPipelineCache_T
 --
 -- 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateComputePipelines',
 -- 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateGraphicsPipelines',
--- 'vkCreatePipelineCache', 'vkDestroyPipelineCache',
--- 'vkGetPipelineCacheData', 'vkMergePipelineCaches'
+-- 'vkCreatePipelineCache',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCreateRayTracingPipelinesNV',
+-- 'vkDestroyPipelineCache', 'vkGetPipelineCacheData',
+-- 'vkMergePipelineCaches'
 type VkPipelineCache = Ptr VkPipelineCache_T
 
 data VkPipelineCacheCreateFlags

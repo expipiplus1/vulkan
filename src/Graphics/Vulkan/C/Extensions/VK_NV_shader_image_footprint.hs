@@ -49,15 +49,15 @@ import Graphics.Vulkan.C.Core10.Core
 -- the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
 --
--- Unresolved directive in
--- VkPhysicalDeviceShaderImageFootprintFeaturesNV.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceShaderImageFootprintFeaturesNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceShaderImageFootprintFeaturesNV = VkPhysicalDeviceShaderImageFootprintFeaturesNV
-  { -- No documentation found for Nested "VkPhysicalDeviceShaderImageFootprintFeaturesNV" "sType"
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_FOOTPRINT_FEATURES_NV'
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceShaderImageFootprintFeaturesNV" "pNext"
   vkPNext :: Ptr ()
@@ -83,7 +83,7 @@ instance Zero VkPhysicalDeviceShaderImageFootprintFeaturesNV where
                                                         zero
 
 -- No documentation found for TopLevel "VK_NV_SHADER_IMAGE_FOOTPRINT_EXTENSION_NAME"
-pattern VK_NV_SHADER_IMAGE_FOOTPRINT_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_NV_SHADER_IMAGE_FOOTPRINT_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_NV_SHADER_IMAGE_FOOTPRINT_EXTENSION_NAME = "VK_NV_shader_image_footprint"
 
 -- No documentation found for TopLevel "VK_NV_SHADER_IMAGE_FOOTPRINT_SPEC_VERSION"

@@ -124,21 +124,19 @@ instance Read VkEventCreateFlags where
 -- | VkEventCreateInfo - Structure specifying parameters of a newly created
 -- event
 --
--- = Description
---
--- Unresolved directive in VkEventCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkEventCreateInfo.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'VkEventCreateFlags', 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
 -- 'vkCreateEvent'
 data VkEventCreateInfo = VkEventCreateInfo
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_EVENT_CREATE_INFO'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- | @flags@ is reserved for future use.
+  , -- | @flags@ /must/ be @0@
   vkFlags :: VkEventCreateFlags
   }
   deriving (Eq, Show)
@@ -179,8 +177,30 @@ instance Zero VkEventCreateInfo where
 --
 -- When created, the event object is in the unsignaled state.
 --
--- Unresolved directive in vkCreateEvent.txt -
--- include::{generated}\/validity\/protos\/vkCreateEvent.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'VkEventCreateInfo' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pEvent@ /must/ be a valid pointer to a 'VkEvent' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -234,8 +254,26 @@ type PFN_vkCreateEvent = FunPtr FN_vkCreateEvent
 --     were provided when @event@ was created, @pAllocator@ /must/ be
 --     @NULL@
 --
--- Unresolved directive in vkDestroyEvent.txt -
--- include::{generated}\/validity\/protos\/vkDestroyEvent.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   If @event@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @event@ /must/
+--     be a valid 'VkEvent' handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   If @event@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @event@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -298,8 +336,19 @@ type PFN_vkDestroyEvent = FunPtr FN_vkDestroyEvent
 -- will return the new state. If an event is already in the requested
 -- state, then updating it to the same state has no effect.
 --
--- Unresolved directive in vkGetEventStatus.txt -
--- include::{generated}\/validity\/protos\/vkGetEventStatus.txt[]
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_EVENT_SET'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_EVENT_RESET'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_DEVICE_LOST'
 --
 -- = See Also
 --
@@ -343,8 +392,33 @@ type PFN_vkGetEventStatus = FunPtr FN_vkGetEventStatus
 --
 -- == Valid Usage
 --
--- Unresolved directive in vkResetEvent.txt -
--- include::{generated}\/validity\/protos\/vkResetEvent.txt[]
+-- -   @event@ /must/ not be waited on by a
+--     'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdWaitEvents'
+--     command that is currently executing
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @event@ /must/ be a valid 'VkEvent' handle
+--
+-- -   @event@ /must/ have been created, allocated, or retrieved from
+--     @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @event@ /must/ be externally synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -386,8 +460,29 @@ type PFN_vkResetEvent = FunPtr FN_vkResetEvent
 -- executed, then 'vkSetEvent' has no effect, and no event signal operation
 -- occurs.
 --
--- Unresolved directive in vkSetEvent.txt -
--- include::{generated}\/validity\/protos\/vkSetEvent.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @event@ /must/ be a valid 'VkEvent' handle
+--
+-- -   @event@ /must/ have been created, allocated, or retrieved from
+--     @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @event@ /must/ be externally synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --

@@ -10,9 +10,9 @@ module Graphics.Vulkan.Extensions.VK_KHR_xlib_surface
   , XlibSurfaceCreateInfoKHR(..)
   , createXlibSurfaceKHR
   , getPhysicalDeviceXlibPresentationSupportKHR
-  , pattern VK_KHR_XLIB_SURFACE_SPEC_VERSION
-  , pattern VK_KHR_XLIB_SURFACE_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR
+  , pattern KHR_XLIB_SURFACE_EXTENSION_NAME
+  , pattern KHR_XLIB_SURFACE_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR
   ) where
 
 import Control.Exception
@@ -20,6 +20,9 @@ import Control.Exception
   )
 import Control.Monad
   ( when
+  )
+import Data.String
+  ( IsString
   )
 import Data.Word
   ( Word32
@@ -54,6 +57,8 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface
   , Window
   , vkCreateXlibSurfaceKHR
   , vkGetPhysicalDeviceXlibPresentationSupportKHR
+  , pattern VK_KHR_XLIB_SURFACE_EXTENSION_NAME
+  , pattern VK_KHR_XLIB_SURFACE_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
@@ -73,9 +78,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface
-  ( pattern VK_KHR_XLIB_SURFACE_EXTENSION_NAME
-  , pattern VK_KHR_XLIB_SURFACE_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR
   )
 
 
@@ -83,17 +87,19 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface
 type XlibSurfaceCreateFlagsKHR = VkXlibSurfaceCreateFlagsKHR
 
 
+-- No complete pragma for XlibSurfaceCreateFlagsKHR as it has no patterns
+
+
 -- | VkXlibSurfaceCreateInfoKHR - Structure specifying parameters of a newly
 -- created Xlib surface object
 --
--- == Valid Usage
---
--- Unresolved directive in VkXlibSurfaceCreateInfoKHR.txt -
--- include::{generated}\/validity\/structs\/VkXlibSurfaceCreateInfoKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface.VkXlibSurfaceCreateFlagsKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface.vkCreateXlibSurfaceKHR'
 data XlibSurfaceCreateInfoKHR = XlibSurfaceCreateInfoKHR
   { -- Univalued member elided
   -- No documentation found for Nested "XlibSurfaceCreateInfoKHR" "pNext"
@@ -152,14 +158,39 @@ instance Zero XlibSurfaceCreateInfoKHR where
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
 --     which the created surface object is returned.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCreateXlibSurfaceKHR.txt -
--- include::{generated}\/validity\/protos\/vkCreateXlibSurfaceKHR.txt[]
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface.VkXlibSurfaceCreateInfoKHR'
+--     structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pSurface@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface.VkXlibSurfaceCreateInfoKHR'
 createXlibSurfaceKHR :: Instance ->  XlibSurfaceCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
 createXlibSurfaceKHR = \(Instance instance' commandTable) -> \createInfo' -> \allocator -> alloca (\pSurface' -> maybeWith (\marshalled -> withCStructAllocationCallbacks marshalled . flip with) allocator (\pAllocator -> (\marshalled -> withCStructXlibSurfaceCreateInfoKHR marshalled . flip with) createInfo' (\pCreateInfo' -> vkCreateXlibSurfaceKHR commandTable instance' pCreateInfo' pAllocator pSurface' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (peek pSurface')))))
 
@@ -185,14 +216,18 @@ createXlibSurfaceKHR = \(Instance instance' commandTable) -> \createInfo' -> \al
 -- This platform-specific function /can/ be called prior to creating a
 -- surface.
 --
--- == Valid Usage
---
--- Unresolved directive in
--- vkGetPhysicalDeviceXlibPresentationSupportKHR.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceXlibPresentationSupportKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
 getPhysicalDeviceXlibPresentationSupportKHR :: PhysicalDevice ->  Word32 ->  VisualID ->  IO (VkBool32, Display)
 getPhysicalDeviceXlibPresentationSupportKHR = \(PhysicalDevice physicalDevice' commandTable) -> \queueFamilyIndex' -> \visualID' -> alloca (\pDpy' -> vkGetPhysicalDeviceXlibPresentationSupportKHR commandTable physicalDevice' queueFamilyIndex' pDpy' visualID' >>= (\ret -> (,) <$> pure ret<*>peek pDpy'))
+
+-- No documentation found for TopLevel "VK_KHR_XLIB_SURFACE_EXTENSION_NAME"
+pattern KHR_XLIB_SURFACE_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern KHR_XLIB_SURFACE_EXTENSION_NAME = VK_KHR_XLIB_SURFACE_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_KHR_XLIB_SURFACE_SPEC_VERSION"
+pattern KHR_XLIB_SURFACE_SPEC_VERSION :: Integral a => a
+pattern KHR_XLIB_SURFACE_SPEC_VERSION = VK_KHR_XLIB_SURFACE_SPEC_VERSION

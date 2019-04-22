@@ -30,6 +30,22 @@ module Graphics.Vulkan.Core10.DeviceInitialization
   , pattern FORMAT_FEATURE_BLIT_SRC_BIT
   , pattern FORMAT_FEATURE_BLIT_DST_BIT
   , pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT
+  , pattern FORMAT_FEATURE_TRANSFER_SRC_BIT
+  , pattern FORMAT_FEATURE_TRANSFER_DST_BIT
+  , pattern FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT
+  , pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT
+  , pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT
+  , pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT
+  , pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT
+  , pattern FORMAT_FEATURE_DISJOINT_BIT
+  , pattern FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT
+  , pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG
+  , pattern FORMAT_FEATURE_RESERVED_27_BIT_KHR
+  , pattern FORMAT_FEATURE_RESERVED_28_BIT_KHR
+  , pattern FORMAT_FEATURE_RESERVED_25_BIT_KHR
+  , pattern FORMAT_FEATURE_RESERVED_26_BIT_KHR
+  , pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT
+  , pattern FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT
   , FormatFeatureFlags
   , withCStructFormatProperties
   , fromCStructFormatProperties
@@ -40,6 +56,16 @@ module Graphics.Vulkan.Core10.DeviceInitialization
   , pattern IMAGE_CREATE_SPARSE_ALIASED_BIT
   , pattern IMAGE_CREATE_MUTABLE_FORMAT_BIT
   , pattern IMAGE_CREATE_CUBE_COMPATIBLE_BIT
+  , pattern IMAGE_CREATE_ALIAS_BIT
+  , pattern IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT
+  , pattern IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT
+  , pattern IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT
+  , pattern IMAGE_CREATE_EXTENDED_USAGE_BIT
+  , pattern IMAGE_CREATE_PROTECTED_BIT
+  , pattern IMAGE_CREATE_DISJOINT_BIT
+  , pattern IMAGE_CREATE_CORNER_SAMPLED_BIT_NV
+  , pattern IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT
+  , pattern IMAGE_CREATE_SUBSAMPLED_BIT_EXT
   , ImageCreateFlags
   , withCStructImageFormatProperties
   , fromCStructImageFormatProperties
@@ -47,6 +73,7 @@ module Graphics.Vulkan.Core10.DeviceInitialization
   , ImageTiling
   , pattern IMAGE_TILING_OPTIMAL
   , pattern IMAGE_TILING_LINEAR
+  , pattern IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT
   , ImageType
   , pattern IMAGE_TYPE_1D
   , pattern IMAGE_TYPE_2D
@@ -60,6 +87,14 @@ module Graphics.Vulkan.Core10.DeviceInitialization
   , pattern IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
   , pattern IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT
   , pattern IMAGE_USAGE_INPUT_ATTACHMENT_BIT
+  , pattern IMAGE_USAGE_RESERVED_13_BIT_KHR
+  , pattern IMAGE_USAGE_RESERVED_14_BIT_KHR
+  , pattern IMAGE_USAGE_RESERVED_15_BIT_KHR
+  , pattern IMAGE_USAGE_RESERVED_10_BIT_KHR
+  , pattern IMAGE_USAGE_RESERVED_11_BIT_KHR
+  , pattern IMAGE_USAGE_RESERVED_12_BIT_KHR
+  , pattern IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV
+  , pattern IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT
   , ImageUsageFlags
   , Instance(..)
   , InstanceCreateFlags
@@ -71,6 +106,7 @@ module Graphics.Vulkan.Core10.DeviceInitialization
   , MemoryHeap(..)
   , MemoryHeapFlagBits
   , pattern MEMORY_HEAP_DEVICE_LOCAL_BIT
+  , pattern MEMORY_HEAP_MULTI_INSTANCE_BIT
   , MemoryHeapFlags
   , MemoryPropertyFlagBits
   , pattern MEMORY_PROPERTY_DEVICE_LOCAL_BIT
@@ -78,6 +114,7 @@ module Graphics.Vulkan.Core10.DeviceInitialization
   , pattern MEMORY_PROPERTY_HOST_COHERENT_BIT
   , pattern MEMORY_PROPERTY_HOST_CACHED_BIT
   , pattern MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT
+  , pattern MEMORY_PROPERTY_PROTECTED_BIT
   , MemoryPropertyFlags
   , withCStructMemoryType
   , fromCStructMemoryType
@@ -112,6 +149,9 @@ module Graphics.Vulkan.Core10.DeviceInitialization
   , pattern QUEUE_COMPUTE_BIT
   , pattern QUEUE_TRANSFER_BIT
   , pattern QUEUE_SPARSE_BINDING_BIT
+  , pattern QUEUE_PROTECTED_BIT
+  , pattern QUEUE_RESERVED_6_BIT_KHR
+  , pattern QUEUE_RESERVED_5_BIT_KHR
   , QueueFlags
   , SampleCountFlagBits
   , pattern SAMPLE_COUNT_1_BIT
@@ -138,6 +178,18 @@ module Graphics.Vulkan.Core10.DeviceInitialization
   , getPhysicalDeviceQueueFamilyProperties
   , getAllPhysicalDeviceQueueFamilyProperties
   , withInstance
+  , pattern VK_FORMAT_FEATURE_RESERVED_25_BIT_KHR
+  , pattern VK_FORMAT_FEATURE_RESERVED_26_BIT_KHR
+  , pattern VK_FORMAT_FEATURE_RESERVED_27_BIT_KHR
+  , pattern VK_FORMAT_FEATURE_RESERVED_28_BIT_KHR
+  , pattern VK_IMAGE_USAGE_RESERVED_10_BIT_KHR
+  , pattern VK_IMAGE_USAGE_RESERVED_11_BIT_KHR
+  , pattern VK_IMAGE_USAGE_RESERVED_12_BIT_KHR
+  , pattern VK_IMAGE_USAGE_RESERVED_13_BIT_KHR
+  , pattern VK_IMAGE_USAGE_RESERVED_14_BIT_KHR
+  , pattern VK_IMAGE_USAGE_RESERVED_15_BIT_KHR
+  , pattern VK_QUEUE_RESERVED_5_BIT_KHR
+  , pattern VK_QUEUE_RESERVED_6_BIT_KHR
   ) where
 
 import Control.Exception
@@ -329,10 +381,66 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
   , pattern VK_SAMPLE_COUNT_8_BIT
   , pattern VK_UUID_SIZE
   )
+import Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory
+  ( pattern VK_IMAGE_CREATE_PROTECTED_BIT
+  , pattern VK_MEMORY_PROPERTY_PROTECTED_BIT
+  , pattern VK_QUEUE_PROTECTED_BIT
+  )
+import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2
+  ( pattern VK_IMAGE_CREATE_ALIAS_BIT
+  )
+import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2
+  ( pattern VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT
+  )
+import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation
+  ( pattern VK_MEMORY_HEAP_MULTI_INSTANCE_BIT
+  )
+import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1
+  ( pattern VK_FORMAT_FEATURE_TRANSFER_DST_BIT
+  , pattern VK_FORMAT_FEATURE_TRANSFER_SRC_BIT
+  , pattern VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT
+  )
+import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2
+  ( pattern VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT
+  , pattern VK_IMAGE_CREATE_EXTENDED_USAGE_BIT
+  )
+import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion
+  ( pattern VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT
+  , pattern VK_FORMAT_FEATURE_DISJOINT_BIT
+  , pattern VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT
+  , pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT
+  , pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT
+  , pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT
+  , pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT
+  , pattern VK_IMAGE_CREATE_DISJOINT_BIT
+  )
 import Graphics.Vulkan.C.Dynamic
   ( DeviceCmds(..)
   , InstanceCmds(..)
   , initInstanceCmds
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map
+  ( pattern VK_FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT
+  , pattern VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT
+  , pattern VK_IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier
+  ( pattern VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations
+  ( pattern VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax
+  ( pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_IMG_filter_cubic
+  ( pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG
+  )
+import Graphics.Vulkan.C.Extensions.VK_NV_corner_sampled_image
+  ( pattern VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV
+  )
+import Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image
+  ( pattern VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV
   )
 import Graphics.Vulkan.Core10.Core
   ( Format
@@ -375,9 +483,6 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
 -- -   If either of @pfnInternalAllocation@ or @pfnInternalFree@ is not
 --     @NULL@, both /must/ be valid callbacks
 --
--- Unresolved directive in VkAllocationCallbacks.txt -
--- include::{generated}\/validity\/structs\/VkAllocationCallbacks.txt[]
---
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.PFN_vkAllocationFunction',
@@ -386,42 +491,74 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.PFN_vkInternalFreeNotification',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.PFN_vkReallocationFunction',
 -- 'Graphics.Vulkan.C.Core10.Memory.vkAllocateMemory',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCreateAccelerationStructureNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_android_surface.vkCreateAndroidSurfaceKHR',
 -- 'Graphics.Vulkan.C.Core10.Buffer.vkCreateBuffer',
 -- 'Graphics.Vulkan.C.Core10.BufferView.vkCreateBufferView',
 -- 'Graphics.Vulkan.C.Core10.CommandPool.vkCreateCommandPool',
 -- 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateComputePipelines',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.vkCreateDebugReportCallbackEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.vkCreateDebugUtilsMessengerEXT',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkCreateDescriptorPool',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkCreateDescriptorSetLayout',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.vkCreateDescriptorUpdateTemplate',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template.vkCreateDescriptorUpdateTemplateKHR',
 -- 'Graphics.Vulkan.C.Core10.Device.vkCreateDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkCreateDisplayModeKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkCreateDisplayPlaneSurfaceKHR',
 -- 'Graphics.Vulkan.C.Core10.Event.vkCreateEvent',
 -- 'Graphics.Vulkan.C.Core10.Fence.vkCreateFence',
 -- 'Graphics.Vulkan.C.Core10.Pass.vkCreateFramebuffer',
 -- 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateGraphicsPipelines',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_headless_surface.vkCreateHeadlessSurfaceEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_MVK_ios_surface.vkCreateIOSSurfaceMVK',
 -- 'Graphics.Vulkan.C.Core10.Image.vkCreateImage',
+-- 'Graphics.Vulkan.C.Extensions.VK_FUCHSIA_imagepipe_surface.vkCreateImagePipeSurfaceFUCHSIA',
 -- 'Graphics.Vulkan.C.Core10.ImageView.vkCreateImageView',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.vkCreateIndirectCommandsLayoutNVX',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.vkCreateInstance',
+-- 'Graphics.Vulkan.C.Extensions.VK_MVK_macos_surface.vkCreateMacOSSurfaceMVK',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_metal_surface.vkCreateMetalSurfaceEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.vkCreateObjectTableNVX',
 -- 'Graphics.Vulkan.C.Core10.PipelineCache.vkCreatePipelineCache',
 -- 'Graphics.Vulkan.C.Core10.PipelineLayout.vkCreatePipelineLayout',
 -- 'Graphics.Vulkan.C.Core10.Query.vkCreateQueryPool',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCreateRayTracingPipelinesNV',
 -- 'Graphics.Vulkan.C.Core10.Pass.vkCreateRenderPass',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.vkCreateRenderPass2KHR',
 -- 'Graphics.Vulkan.C.Core10.Sampler.vkCreateSampler',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.vkCreateSamplerYcbcrConversion',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_sampler_ycbcr_conversion.vkCreateSamplerYcbcrConversionKHR',
 -- 'Graphics.Vulkan.C.Core10.QueueSemaphore.vkCreateSemaphore',
 -- 'Graphics.Vulkan.C.Core10.Shader.vkCreateShaderModule',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display_swapchain.vkCreateSharedSwapchainsKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_GGP_stream_descriptor_surface.vkCreateStreamDescriptorSurfaceGGP',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkCreateSwapchainKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkCreateValidationCacheEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_NN_vi_surface.vkCreateViSurfaceNN',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_wayland_surface.vkCreateWaylandSurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_win32_surface.vkCreateWin32SurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_xcb_surface.vkCreateXcbSurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface.vkCreateXlibSurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkDestroyAccelerationStructureNV',
 -- 'Graphics.Vulkan.C.Core10.Buffer.vkDestroyBuffer',
 -- 'Graphics.Vulkan.C.Core10.BufferView.vkDestroyBufferView',
 -- 'Graphics.Vulkan.C.Core10.CommandPool.vkDestroyCommandPool',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.vkDestroyDebugReportCallbackEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.vkDestroyDebugUtilsMessengerEXT',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkDestroyDescriptorPool',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkDestroyDescriptorSetLayout',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.vkDestroyDescriptorUpdateTemplate',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template.vkDestroyDescriptorUpdateTemplateKHR',
 -- 'Graphics.Vulkan.C.Core10.Device.vkDestroyDevice',
 -- 'Graphics.Vulkan.C.Core10.Event.vkDestroyEvent',
 -- 'Graphics.Vulkan.C.Core10.Fence.vkDestroyFence',
 -- 'Graphics.Vulkan.C.Core10.Pass.vkDestroyFramebuffer',
 -- 'Graphics.Vulkan.C.Core10.Image.vkDestroyImage',
 -- 'Graphics.Vulkan.C.Core10.ImageView.vkDestroyImageView',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.vkDestroyIndirectCommandsLayoutNVX',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.vkDestroyInstance',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.vkDestroyObjectTableNVX',
 -- 'Graphics.Vulkan.C.Core10.Pipeline.vkDestroyPipeline',
 -- 'Graphics.Vulkan.C.Core10.PipelineCache.vkDestroyPipelineCache',
 -- 'Graphics.Vulkan.C.Core10.PipelineLayout.vkDestroyPipelineLayout',
@@ -429,9 +566,15 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
 -- 'Graphics.Vulkan.C.Core10.Pass.vkDestroyRenderPass',
 -- 'Graphics.Vulkan.C.Core10.Sampler.vkDestroySampler',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.vkDestroySamplerYcbcrConversion',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_sampler_ycbcr_conversion.vkDestroySamplerYcbcrConversionKHR',
 -- 'Graphics.Vulkan.C.Core10.QueueSemaphore.vkDestroySemaphore',
 -- 'Graphics.Vulkan.C.Core10.Shader.vkDestroyShaderModule',
--- 'Graphics.Vulkan.C.Core10.Memory.vkFreeMemory'
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.vkDestroySurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkDestroySwapchainKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkDestroyValidationCacheEXT',
+-- 'Graphics.Vulkan.C.Core10.Memory.vkFreeMemory',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.vkRegisterDeviceEventEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.vkRegisterDisplayEventEXT'
 data AllocationCallbacks = AllocationCallbacks
   { -- No documentation found for Nested "AllocationCallbacks" "pUserData"
   userData :: Ptr ()
@@ -476,10 +619,18 @@ instance Zero AllocationCallbacks where
 
 -- | VkApplicationInfo - Structure specifying application info
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in VkApplicationInfo.txt -
--- include::{generated}\/validity\/structs\/VkApplicationInfo.txt[]
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_APPLICATION_INFO'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   If @pApplicationName@ is not @NULL@, @pApplicationName@ /must/ be a
+--     null-terminated UTF-8 string
+--
+-- -   If @pEngineName@ is not @NULL@, @pEngineName@ /must/ be a
+--     null-terminated UTF-8 string
 --
 -- = See Also
 --
@@ -545,6 +696,9 @@ instance Ord Device where
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkAccelerationStructureCreateInfoNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkAndroidHardwareBufferPropertiesANDROID',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkBindAccelerationStructureMemoryInfoNV',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.VkBindBufferMemoryInfo',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.VkBindImageMemoryInfo',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkBufferCopy',
@@ -552,28 +706,49 @@ instance Ord Device where
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkBufferImageCopy',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkBufferMemoryBarrier',
 -- 'Graphics.Vulkan.C.Core10.BufferView.VkBufferViewCreateInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkCmdProcessCommandsInfoNVX',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_conditional_rendering.VkConditionalRenderingBeginInfoEXT',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorBufferInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkGeometryAABBNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkGeometryTrianglesNV',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageFormatProperties',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkIndirectCommandsTokenNVX',
 -- 'Graphics.Vulkan.C.Core10.Memory.VkMappedMemoryRange',
 -- 'Graphics.Vulkan.C.Core10.Memory.VkMemoryAllocateInfo',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkMemoryHeap',
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_host.VkPhysicalDeviceExternalMemoryHostPropertiesEXT',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance3.VkPhysicalDeviceMaintenance3Properties',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_memory_budget.VkPhysicalDeviceMemoryBudgetPropertiesEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.VkPhysicalDeviceTransformFeedbackPropertiesEXT',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageMemoryBind',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageMemoryRequirements',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseMemoryBind',
 -- 'Graphics.Vulkan.C.Core10.Image.VkSubresourceLayout',
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.vkBindBufferMemory',
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.vkBindImageMemory',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdBeginTransformFeedbackEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindIndexBuffer',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdBindTransformFeedbackBuffersEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindVertexBuffers',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCmdBuildAccelerationStructureNV',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdCopyQueryPoolResults',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDispatchIndirect',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDrawIndexedIndirect',
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_draw_indirect_count.vkCmdDrawIndexedIndirectCountAMD',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_draw_indirect_count.vkCmdDrawIndexedIndirectCountKHR',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDrawIndirect',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdDrawIndirectByteCountEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_draw_indirect_count.vkCmdDrawIndirectCountAMD',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_draw_indirect_count.vkCmdDrawIndirectCountKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.vkCmdDrawMeshTasksIndirectCountNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.vkCmdDrawMeshTasksIndirectNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdEndTransformFeedbackEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdFillBuffer',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCmdTraceRaysNV',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdUpdateBuffer',
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_buffer_marker.vkCmdWriteBufferMarkerAMD',
 -- 'Graphics.Vulkan.C.Core10.Memory.vkGetDeviceMemoryCommitment',
 -- 'Graphics.Vulkan.C.Core10.Query.vkGetQueryPoolResults',
 -- 'Graphics.Vulkan.C.Core10.Memory.vkMapMemory'
@@ -582,11 +757,6 @@ type DeviceSize = VkDeviceSize
 
 
 -- | VkExtent3D - Structure specifying a three-dimensional extent
---
--- = Description
---
--- Unresolved directive in VkExtent3D.txt -
--- include::{generated}\/validity\/structs\/VkExtent3D.txt[]
 --
 -- = See Also
 --
@@ -632,10 +802,8 @@ instance Zero Extent3D where
 --
 -- = Description
 --
--- The following bits /may/ be set in @linearTilingFeatures@,
--- @optimalTilingFeatures@, and
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkDrmFormatModifierPropertiesEXT drmFormatModifierTilingFeatures>,
--- specifying that the features are supported by
+-- The following bits /may/ be set in @linearTilingFeatures@ and
+-- @optimalTilingFeatures@, specifying that the features are supported by
 -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkImage images>
 -- or
 -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkImageView image views>
@@ -706,98 +874,6 @@ instance Zero Extent3D where
 --     or a weighted average of, the number of comparison passes or
 --     failures.
 --
--- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.VK_FORMAT_FEATURE_TRANSFER_SRC_BIT'
---     specifies that an image /can/ be used as a source image for
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#copies copy commands>.
---
--- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.VK_FORMAT_FEATURE_TRANSFER_DST_BIT'
---     specifies that an image /can/ be used as a destination image for
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#copies copy commands>
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#clears clear commands>.
---
--- -   'Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax.VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT'
---     specifies 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' /can/
---     be used as a sampled image with a min or max
---     'Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax.VkSamplerReductionModeEXT'.
---     This bit /must/ only be exposed for formats that also support the
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT'.
---
--- -   'Graphics.Vulkan.C.Extensions.VK_EXT_filter_cubic.VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT'
---     specifies that 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage'
---     /can/ be used with a sampler that has either of @magFilter@ or
---     @minFilter@ set to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_filter_cubic.VK_FILTER_CUBIC_EXT',
---     or be the source image for a blit with @filter@ set to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_filter_cubic.VK_FILTER_CUBIC_EXT'.
---     This bit /must/ only be exposed for formats that also support the
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT'.
---     If the format being queried is a depth\/stencil format, this only
---     specifies that the depth aspect is cubic filterable.
---
--- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT'
---     specifies that an application /can/ define a
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>
---     using this format as a source, and that an image of this format
---     /can/ be used with a
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'
---     @xChromaOffset@ and\/or @yChromaOffset@ of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_CHROMA_LOCATION_MIDPOINT'.
---     Otherwise both @xChromaOffset@ and @yChromaOffset@ /must/ be
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_CHROMA_LOCATION_COSITED_EVEN'.
---     If a format does not incorporate chroma downsampling (it is not a
---     “422” or “420” format) but the implementation supports sampler
---     Y’CBCR conversion for this format, the implementation /must/ set
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT'.
---
--- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT'
---     specifies that an application /can/ define a
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>
---     using this format as a source, and that an image of this format
---     /can/ be used with a
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'
---     @xChromaOffset@ and\/or @yChromaOffset@ of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_CHROMA_LOCATION_COSITED_EVEN'.
---     Otherwise both @xChromaOffset@ and @yChromaOffset@ /must/ be
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_CHROMA_LOCATION_MIDPOINT'.
---     If neither
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT'
---     nor
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT'
---     is set, the application /must/ not define a
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>
---     using this format as a source.
---
--- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT'
---     specifies that the format can do linear sampler filtering
---     (min\/magFilter) whilst sampler Y’CBCR conversion is enabled.
---
--- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT'
---     specifies that the format can have different chroma, min, and mag
---     filters.
---
--- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT'
---     specifies that reconstruction is explicit, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures-chroma-reconstruction>.
---     If this bit is not present, reconstruction is implicit by default.
---
--- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT'
---     specifies that reconstruction /can/ be forcibly made explicit by
---     setting
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'::@forceExplicitReconstruction@
---     to 'Graphics.Vulkan.C.Core10.Core.VK_TRUE'.
---
--- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_DISJOINT_BIT'
---     specifies that a multi-planar image /can/ have the
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_CREATE_DISJOINT_BIT'
---     set during image creation. An implementation /must/ not set
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_DISJOINT_BIT'
---     for /single-plane formats/.
---
--- -   'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT'
---     specifies that an image view /can/ be used as a
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>.
---
 -- The following bits /may/ be set in @bufferFeatures@, specifying that the
 -- features are supported by
 -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkBuffer buffers>
@@ -831,6 +907,9 @@ instance Zero Extent3D where
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkFormatFeatureFlags'
 type FormatFeatureFlagBits = VkFormatFeatureFlagBits
+
+
+{-# complete FORMAT_FEATURE_SAMPLED_IMAGE_BIT, FORMAT_FEATURE_STORAGE_IMAGE_BIT, FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT, FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT, FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT, FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT, FORMAT_FEATURE_VERTEX_BUFFER_BIT, FORMAT_FEATURE_COLOR_ATTACHMENT_BIT, FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT, FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT, FORMAT_FEATURE_BLIT_SRC_BIT, FORMAT_FEATURE_BLIT_DST_BIT, FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT, FORMAT_FEATURE_TRANSFER_SRC_BIT, FORMAT_FEATURE_TRANSFER_DST_BIT, FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT, FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT, FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT, FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT, FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT, FORMAT_FEATURE_DISJOINT_BIT, FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT, FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG, FORMAT_FEATURE_RESERVED_27_BIT_KHR, FORMAT_FEATURE_RESERVED_28_BIT_KHR, FORMAT_FEATURE_RESERVED_25_BIT_KHR, FORMAT_FEATURE_RESERVED_26_BIT_KHR, FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT, FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT :: FormatFeatureFlagBits #-}
 
 
 -- | 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT'
@@ -952,6 +1031,86 @@ pattern FORMAT_FEATURE_BLIT_DST_BIT = VK_FORMAT_FEATURE_BLIT_DST_BIT
 pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT :: (a ~ FormatFeatureFlagBits) => a
 pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT
 
+
+-- No documentation found for Nested "FormatFeatureFlagBits" "FORMAT_FEATURE_TRANSFER_SRC_BIT"
+pattern FORMAT_FEATURE_TRANSFER_SRC_BIT :: (a ~ FormatFeatureFlagBits) => a
+pattern FORMAT_FEATURE_TRANSFER_SRC_BIT = VK_FORMAT_FEATURE_TRANSFER_SRC_BIT
+
+
+-- No documentation found for Nested "FormatFeatureFlagBits" "FORMAT_FEATURE_TRANSFER_DST_BIT"
+pattern FORMAT_FEATURE_TRANSFER_DST_BIT :: (a ~ FormatFeatureFlagBits) => a
+pattern FORMAT_FEATURE_TRANSFER_DST_BIT = VK_FORMAT_FEATURE_TRANSFER_DST_BIT
+
+
+-- No documentation found for Nested "FormatFeatureFlagBits" "FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT"
+pattern FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT :: (a ~ FormatFeatureFlagBits) => a
+pattern FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT = VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT
+
+
+-- No documentation found for Nested "FormatFeatureFlagBits" "FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT"
+pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT :: (a ~ FormatFeatureFlagBits) => a
+pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT = VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT
+
+
+-- No documentation found for Nested "FormatFeatureFlagBits" "FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT"
+pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT :: (a ~ FormatFeatureFlagBits) => a
+pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT = VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT
+
+
+-- No documentation found for Nested "FormatFeatureFlagBits" "FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT"
+pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT :: (a ~ FormatFeatureFlagBits) => a
+pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT = VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT
+
+
+-- No documentation found for Nested "FormatFeatureFlagBits" "FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT"
+pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT :: (a ~ FormatFeatureFlagBits) => a
+pattern FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT = VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT
+
+
+-- No documentation found for Nested "FormatFeatureFlagBits" "FORMAT_FEATURE_DISJOINT_BIT"
+pattern FORMAT_FEATURE_DISJOINT_BIT :: (a ~ FormatFeatureFlagBits) => a
+pattern FORMAT_FEATURE_DISJOINT_BIT = VK_FORMAT_FEATURE_DISJOINT_BIT
+
+
+-- No documentation found for Nested "FormatFeatureFlagBits" "FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT"
+pattern FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT :: (a ~ FormatFeatureFlagBits) => a
+pattern FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT = VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT
+
+
+-- No documentation found for Nested "FormatFeatureFlagBits" "FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG"
+pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG :: (a ~ FormatFeatureFlagBits) => a
+pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG = VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG
+
+
+-- No documentation found for Nested "FormatFeatureFlagBits" "FORMAT_FEATURE_RESERVED_27_BIT_KHR"
+pattern FORMAT_FEATURE_RESERVED_27_BIT_KHR :: (a ~ FormatFeatureFlagBits) => a
+pattern FORMAT_FEATURE_RESERVED_27_BIT_KHR = VK_FORMAT_FEATURE_RESERVED_27_BIT_KHR
+
+
+-- No documentation found for Nested "FormatFeatureFlagBits" "FORMAT_FEATURE_RESERVED_28_BIT_KHR"
+pattern FORMAT_FEATURE_RESERVED_28_BIT_KHR :: (a ~ FormatFeatureFlagBits) => a
+pattern FORMAT_FEATURE_RESERVED_28_BIT_KHR = VK_FORMAT_FEATURE_RESERVED_28_BIT_KHR
+
+
+-- No documentation found for Nested "FormatFeatureFlagBits" "FORMAT_FEATURE_RESERVED_25_BIT_KHR"
+pattern FORMAT_FEATURE_RESERVED_25_BIT_KHR :: (a ~ FormatFeatureFlagBits) => a
+pattern FORMAT_FEATURE_RESERVED_25_BIT_KHR = VK_FORMAT_FEATURE_RESERVED_25_BIT_KHR
+
+
+-- No documentation found for Nested "FormatFeatureFlagBits" "FORMAT_FEATURE_RESERVED_26_BIT_KHR"
+pattern FORMAT_FEATURE_RESERVED_26_BIT_KHR :: (a ~ FormatFeatureFlagBits) => a
+pattern FORMAT_FEATURE_RESERVED_26_BIT_KHR = VK_FORMAT_FEATURE_RESERVED_26_BIT_KHR
+
+
+-- No documentation found for Nested "FormatFeatureFlagBits" "FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT"
+pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT :: (a ~ FormatFeatureFlagBits) => a
+pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT = VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT
+
+
+-- No documentation found for Nested "FormatFeatureFlagBits" "FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT"
+pattern FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT :: (a ~ FormatFeatureFlagBits) => a
+pattern FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT = VK_FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT
+
 -- | VkFormatFeatureFlags - Bitmask of VkFormatFeatureFlagBits
 --
 -- = Description
@@ -962,6 +1121,8 @@ pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = VK_FORMAT_FEATURE_SAMPL
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkAndroidHardwareBufferFormatPropertiesANDROID',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VkDrmFormatModifierPropertiesEXT',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkFormatFeatureFlagBits',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkFormatProperties'
 type FormatFeatureFlags = FormatFeatureFlagBits
@@ -973,18 +1134,13 @@ type FormatFeatureFlags = FormatFeatureFlagBits
 --
 -- __Note__
 --
--- If no format feature flags are supported, the format itself is not
--- supported, and images of that format cannot be created.
+-- If no format feature flags are supported, then the only possible use
+-- would be image transfers - which alone are not useful. As such, if no
+-- format feature flags are supported, the format itself is not supported,
+-- and images of that format cannot be created.
 --
 -- If @format@ is a block-compressed format, then @bufferFeatures@ /must/
 -- not support any features for the format.
---
--- If @format@ is not a multi-plane format then @linearTilingFeatures@ and
--- @optimalTilingFeatures@ /must/ not contain
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_DISJOINT_BIT'.
---
--- Unresolved directive in VkFormatProperties.txt -
--- include::{generated}\/validity\/structs\/VkFormatProperties.txt[]
 --
 -- = See Also
 --
@@ -1037,6 +1193,9 @@ instance Zero FormatProperties where
 type ImageCreateFlagBits = VkImageCreateFlagBits
 
 
+{-# complete IMAGE_CREATE_SPARSE_BINDING_BIT, IMAGE_CREATE_SPARSE_RESIDENCY_BIT, IMAGE_CREATE_SPARSE_ALIASED_BIT, IMAGE_CREATE_MUTABLE_FORMAT_BIT, IMAGE_CREATE_CUBE_COMPATIBLE_BIT, IMAGE_CREATE_ALIAS_BIT, IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT, IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT, IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT, IMAGE_CREATE_EXTENDED_USAGE_BIT, IMAGE_CREATE_PROTECTED_BIT, IMAGE_CREATE_DISJOINT_BIT, IMAGE_CREATE_CORNER_SAMPLED_BIT_NV, IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT, IMAGE_CREATE_SUBSAMPLED_BIT_EXT :: ImageCreateFlagBits #-}
+
+
 -- | 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_CREATE_SPARSE_BINDING_BIT'
 -- specifies that the image will be backed using sparse memory binding.
 pattern IMAGE_CREATE_SPARSE_BINDING_BIT :: (a ~ ImageCreateFlagBits) => a
@@ -1066,12 +1225,7 @@ pattern IMAGE_CREATE_SPARSE_ALIASED_BIT = VK_IMAGE_CREATE_SPARSE_ALIASED_BIT
 -- | 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT'
 -- specifies that the image /can/ be used to create a
 -- 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' with a different format
--- from the image. For
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
--- formats,
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT'
--- specifies that a 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' can be
--- created of a /plane/ of the image.
+-- from the image.
 pattern IMAGE_CREATE_MUTABLE_FORMAT_BIT :: (a ~ ImageCreateFlagBits) => a
 pattern IMAGE_CREATE_MUTABLE_FORMAT_BIT = VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT
 
@@ -1083,6 +1237,56 @@ pattern IMAGE_CREATE_MUTABLE_FORMAT_BIT = VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT
 -- 'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_CUBE_ARRAY'.
 pattern IMAGE_CREATE_CUBE_COMPATIBLE_BIT :: (a ~ ImageCreateFlagBits) => a
 pattern IMAGE_CREATE_CUBE_COMPATIBLE_BIT = VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT
+
+
+-- No documentation found for Nested "ImageCreateFlagBits" "IMAGE_CREATE_ALIAS_BIT"
+pattern IMAGE_CREATE_ALIAS_BIT :: (a ~ ImageCreateFlagBits) => a
+pattern IMAGE_CREATE_ALIAS_BIT = VK_IMAGE_CREATE_ALIAS_BIT
+
+
+-- No documentation found for Nested "ImageCreateFlagBits" "IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT"
+pattern IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT :: (a ~ ImageCreateFlagBits) => a
+pattern IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT = VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT
+
+
+-- No documentation found for Nested "ImageCreateFlagBits" "IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT"
+pattern IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT :: (a ~ ImageCreateFlagBits) => a
+pattern IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT = VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT
+
+
+-- No documentation found for Nested "ImageCreateFlagBits" "IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT"
+pattern IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT :: (a ~ ImageCreateFlagBits) => a
+pattern IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT = VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT
+
+
+-- No documentation found for Nested "ImageCreateFlagBits" "IMAGE_CREATE_EXTENDED_USAGE_BIT"
+pattern IMAGE_CREATE_EXTENDED_USAGE_BIT :: (a ~ ImageCreateFlagBits) => a
+pattern IMAGE_CREATE_EXTENDED_USAGE_BIT = VK_IMAGE_CREATE_EXTENDED_USAGE_BIT
+
+
+-- No documentation found for Nested "ImageCreateFlagBits" "IMAGE_CREATE_PROTECTED_BIT"
+pattern IMAGE_CREATE_PROTECTED_BIT :: (a ~ ImageCreateFlagBits) => a
+pattern IMAGE_CREATE_PROTECTED_BIT = VK_IMAGE_CREATE_PROTECTED_BIT
+
+
+-- No documentation found for Nested "ImageCreateFlagBits" "IMAGE_CREATE_DISJOINT_BIT"
+pattern IMAGE_CREATE_DISJOINT_BIT :: (a ~ ImageCreateFlagBits) => a
+pattern IMAGE_CREATE_DISJOINT_BIT = VK_IMAGE_CREATE_DISJOINT_BIT
+
+
+-- No documentation found for Nested "ImageCreateFlagBits" "IMAGE_CREATE_CORNER_SAMPLED_BIT_NV"
+pattern IMAGE_CREATE_CORNER_SAMPLED_BIT_NV :: (a ~ ImageCreateFlagBits) => a
+pattern IMAGE_CREATE_CORNER_SAMPLED_BIT_NV = VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV
+
+
+-- No documentation found for Nested "ImageCreateFlagBits" "IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT"
+pattern IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT :: (a ~ ImageCreateFlagBits) => a
+pattern IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT = VK_IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT
+
+
+-- No documentation found for Nested "ImageCreateFlagBits" "IMAGE_CREATE_SUBSAMPLED_BIT_EXT"
+pattern IMAGE_CREATE_SUBSAMPLED_BIT_EXT :: (a ~ ImageCreateFlagBits) => a
+pattern IMAGE_CREATE_SUBSAMPLED_BIT_EXT = VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT
 
 -- | VkImageCreateFlags - Bitmask of VkImageCreateFlagBits
 --
@@ -1097,78 +1301,13 @@ pattern IMAGE_CREATE_CUBE_COMPATIBLE_BIT = VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageCreateFlagBits',
 -- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.vkGetPhysicalDeviceExternalImageFormatPropertiesNV',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceImageFormatProperties'
 type ImageCreateFlags = ImageCreateFlagBits
 
 
 -- | VkImageFormatProperties - Structure specifying an image format
 -- properties
---
--- = Members
---
--- -   @maxExtent@ are the maximum image dimensions. See the
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-extentperimagetype Allowed Extent Values>
---     section below for how these values are constrained by @type@.
---
--- -   @maxMipLevels@ is the maximum number of mipmap levels.
---     @maxMipLevels@ /must/ be equal to the number of levels in the
---     complete mipmap chain based on the @maxExtent.width@,
---     @maxExtent.height@, and @maxExtent.depth@, except when one of the
---     following conditions is true, in which case it /may/ instead be @1@:
---
---     -   'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceImageFormatProperties'::@tiling@
---         was
---         'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TILING_LINEAR'
---
---     -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2'::@tiling@
---         was
---         'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
---
---     -   the
---         'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2'::@pNext@
---         chain included an instance of
---         'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkPhysicalDeviceExternalImageFormatInfo'
---         with a handle type included in the @handleTypes@ member for
---         which mipmap image support is not required
---
---     -   image @format@ is one of those listed in
---         <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>
---
---     -   @flags@ contains
---         'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
---
--- -   @maxArrayLayers@ is the maximum number of array layers.
---     @maxArrayLayers@ /must/ be no less than
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxImageArrayLayers@,
---     except when one of the following conditions is true, in which case
---     it /may/ instead be @1@:
---
---     -   @tiling@ is
---         'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TILING_LINEAR'
---
---     -   @tiling@ is
---         'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TILING_OPTIMAL'
---         and @type@ is
---         'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_3D'
---
---     -   @format@ is one of those listed in
---         <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>
---
--- -   If @tiling@ is
---     'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
---     then @maxArrayLayers@ /must/ not be 0.
---
--- -   @sampleCounts@ is a bitmask of
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkSampleCountFlagBits'
---     specifying all the supported sample counts for this image as
---     described
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-supported-sample-counts below>.
---
--- -   @maxResourceSize@ is an upper bound on the total image size in
---     bytes, inclusive of all image subresources. Implementations /may/
---     have an address space limit on total size of a resource, which is
---     advertised by this property. @maxResourceSize@ /must/ be at least
---     231.
 --
 -- = Description
 --
@@ -1198,13 +1337,11 @@ type ImageCreateFlags = ImageCreateFlagBits
 -- output structures have undefined contents on error. This exception was
 -- unintentional, but is preserved for backwards compatibility.
 --
--- Unresolved directive in VkImageFormatProperties.txt -
--- include::{generated}\/validity\/structs\/VkImageFormatProperties.txt[]
---
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkExtent3D',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalImageFormatPropertiesNV',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkImageFormatProperties2',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkSampleCountFlags',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceImageFormatProperties'
@@ -1252,9 +1389,13 @@ instance Zero ImageFormatProperties where
 -- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceSparseImageFormatInfo2',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.vkGetPhysicalDeviceExternalImageFormatPropertiesNV',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceImageFormatProperties',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.vkGetPhysicalDeviceSparseImageFormatProperties'
 type ImageTiling = VkImageTiling
+
+
+{-# complete IMAGE_TILING_OPTIMAL, IMAGE_TILING_LINEAR, IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT :: ImageTiling #-}
 
 
 -- | 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TILING_OPTIMAL'
@@ -1270,6 +1411,11 @@ pattern IMAGE_TILING_OPTIMAL = VK_IMAGE_TILING_OPTIMAL
 pattern IMAGE_TILING_LINEAR :: (a ~ ImageTiling) => a
 pattern IMAGE_TILING_LINEAR = VK_IMAGE_TILING_LINEAR
 
+
+-- No documentation found for Nested "ImageTiling" "IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT"
+pattern IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT :: (a ~ ImageTiling) => a
+pattern IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT = VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT
+
 -- | VkImageType - Specifies the type of an image object
 --
 -- = See Also
@@ -1277,9 +1423,13 @@ pattern IMAGE_TILING_LINEAR = VK_IMAGE_TILING_LINEAR
 -- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceSparseImageFormatInfo2',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.vkGetPhysicalDeviceExternalImageFormatPropertiesNV',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceImageFormatProperties',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.vkGetPhysicalDeviceSparseImageFormatProperties'
 type ImageType = VkImageType
+
+
+{-# complete IMAGE_TYPE_1D, IMAGE_TYPE_2D, IMAGE_TYPE_3D :: ImageType #-}
 
 
 -- | 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TYPE_1D'
@@ -1305,6 +1455,9 @@ pattern IMAGE_TYPE_3D = VK_IMAGE_TYPE_3D
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageUsageFlags'
 type ImageUsageFlagBits = VkImageUsageFlagBits
+
+
+{-# complete IMAGE_USAGE_TRANSFER_SRC_BIT, IMAGE_USAGE_TRANSFER_DST_BIT, IMAGE_USAGE_SAMPLED_BIT, IMAGE_USAGE_STORAGE_BIT, IMAGE_USAGE_COLOR_ATTACHMENT_BIT, IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT, IMAGE_USAGE_INPUT_ATTACHMENT_BIT, IMAGE_USAGE_RESERVED_13_BIT_KHR, IMAGE_USAGE_RESERVED_14_BIT_KHR, IMAGE_USAGE_RESERVED_15_BIT_KHR, IMAGE_USAGE_RESERVED_10_BIT_KHR, IMAGE_USAGE_RESERVED_11_BIT_KHR, IMAGE_USAGE_RESERVED_12_BIT_KHR, IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV, IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT :: ImageUsageFlagBits #-}
 
 
 -- | 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_TRANSFER_SRC_BIT'
@@ -1355,7 +1508,7 @@ pattern IMAGE_USAGE_COLOR_ATTACHMENT_BIT = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT
 -- | 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
 -- specifies that the image /can/ be used to create a
 -- 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' suitable for use as a
--- depth\/stencil or depth\/stencil resolve attachment in a
+-- depth\/stencil attachment in a
 -- 'Graphics.Vulkan.C.Core10.Pass.VkFramebuffer'.
 pattern IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT :: (a ~ ImageUsageFlagBits) => a
 pattern IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
@@ -1384,6 +1537,46 @@ pattern IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT = VK_IMAGE_USAGE_TRANSIENT_ATTACHME
 pattern IMAGE_USAGE_INPUT_ATTACHMENT_BIT :: (a ~ ImageUsageFlagBits) => a
 pattern IMAGE_USAGE_INPUT_ATTACHMENT_BIT = VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT
 
+
+-- No documentation found for Nested "ImageUsageFlagBits" "IMAGE_USAGE_RESERVED_13_BIT_KHR"
+pattern IMAGE_USAGE_RESERVED_13_BIT_KHR :: (a ~ ImageUsageFlagBits) => a
+pattern IMAGE_USAGE_RESERVED_13_BIT_KHR = VK_IMAGE_USAGE_RESERVED_13_BIT_KHR
+
+
+-- No documentation found for Nested "ImageUsageFlagBits" "IMAGE_USAGE_RESERVED_14_BIT_KHR"
+pattern IMAGE_USAGE_RESERVED_14_BIT_KHR :: (a ~ ImageUsageFlagBits) => a
+pattern IMAGE_USAGE_RESERVED_14_BIT_KHR = VK_IMAGE_USAGE_RESERVED_14_BIT_KHR
+
+
+-- No documentation found for Nested "ImageUsageFlagBits" "IMAGE_USAGE_RESERVED_15_BIT_KHR"
+pattern IMAGE_USAGE_RESERVED_15_BIT_KHR :: (a ~ ImageUsageFlagBits) => a
+pattern IMAGE_USAGE_RESERVED_15_BIT_KHR = VK_IMAGE_USAGE_RESERVED_15_BIT_KHR
+
+
+-- No documentation found for Nested "ImageUsageFlagBits" "IMAGE_USAGE_RESERVED_10_BIT_KHR"
+pattern IMAGE_USAGE_RESERVED_10_BIT_KHR :: (a ~ ImageUsageFlagBits) => a
+pattern IMAGE_USAGE_RESERVED_10_BIT_KHR = VK_IMAGE_USAGE_RESERVED_10_BIT_KHR
+
+
+-- No documentation found for Nested "ImageUsageFlagBits" "IMAGE_USAGE_RESERVED_11_BIT_KHR"
+pattern IMAGE_USAGE_RESERVED_11_BIT_KHR :: (a ~ ImageUsageFlagBits) => a
+pattern IMAGE_USAGE_RESERVED_11_BIT_KHR = VK_IMAGE_USAGE_RESERVED_11_BIT_KHR
+
+
+-- No documentation found for Nested "ImageUsageFlagBits" "IMAGE_USAGE_RESERVED_12_BIT_KHR"
+pattern IMAGE_USAGE_RESERVED_12_BIT_KHR :: (a ~ ImageUsageFlagBits) => a
+pattern IMAGE_USAGE_RESERVED_12_BIT_KHR = VK_IMAGE_USAGE_RESERVED_12_BIT_KHR
+
+
+-- No documentation found for Nested "ImageUsageFlagBits" "IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV"
+pattern IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV :: (a ~ ImageUsageFlagBits) => a
+pattern IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV = VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV
+
+
+-- No documentation found for Nested "ImageUsageFlagBits" "IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT"
+pattern IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT :: (a ~ ImageUsageFlagBits) => a
+pattern IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT = VK_IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT
+
 -- | VkImageUsageFlags - Bitmask of VkImageUsageFlagBits
 --
 -- = Description
@@ -1395,10 +1588,16 @@ pattern IMAGE_USAGE_INPUT_ATTACHMENT_BIT = VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_separate_stencil_usage.VkImageStencilUsageCreateInfoEXT',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageUsageFlagBits',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VkImageViewUsageCreateInfo',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceSparseImageFormatInfo2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image.VkSharedPresentSurfaceCapabilitiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter.VkSurfaceCapabilities2EXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceCapabilitiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.vkGetPhysicalDeviceExternalImageFormatPropertiesNV',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceImageFormatProperties',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.vkGetPhysicalDeviceSparseImageFormatProperties'
 type ImageUsageFlags = ImageUsageFlagBits
@@ -1430,13 +1629,42 @@ instance Ord Instance where
 type InstanceCreateFlags = VkInstanceCreateFlags
 
 
+-- No complete pragma for InstanceCreateFlags as it has no patterns
+
+
 -- | VkInstanceCreateInfo - Structure specifying parameters of a newly
 -- created instance
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in VkInstanceCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkInstanceCreateInfo.txt[]
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO'
+--
+-- -   Each @pNext@ member of any structure (including this one) in the
+--     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
+--     instance of
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VkDebugReportCallbackCreateInfoEXT',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.VkDebugUtilsMessengerCreateInfoEXT',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VkValidationFeaturesEXT',
+--     or
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_validation_flags.VkValidationFlagsEXT'
+--
+-- -   Each @sType@ member in the @pNext@ chain /must/ be unique
+--
+-- -   @flags@ /must/ be @0@
+--
+-- -   If @pApplicationInfo@ is not @NULL@, @pApplicationInfo@ /must/ be a
+--     valid pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkApplicationInfo'
+--     structure
+--
+-- -   If @enabledLayerCount@ is not @0@, @ppEnabledLayerNames@ /must/ be a
+--     valid pointer to an array of @enabledLayerCount@ null-terminated
+--     UTF-8 strings
+--
+-- -   If @enabledExtensionCount@ is not @0@, @ppEnabledExtensionNames@
+--     /must/ be a valid pointer to an array of @enabledExtensionCount@
+--     null-terminated UTF-8 strings
 --
 -- = See Also
 --
@@ -1490,11 +1718,6 @@ instance Zero InstanceCreateInfo where
 
 -- | VkMemoryHeap - Structure specifying a memory heap
 --
--- = Description
---
--- Unresolved directive in VkMemoryHeap.txt -
--- include::{generated}\/validity\/structs\/VkMemoryHeap.txt[]
---
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
@@ -1533,12 +1756,20 @@ instance Zero MemoryHeap where
 type MemoryHeapFlagBits = VkMemoryHeapFlagBits
 
 
+{-# complete MEMORY_HEAP_DEVICE_LOCAL_BIT, MEMORY_HEAP_MULTI_INSTANCE_BIT :: MemoryHeapFlagBits #-}
+
+
 -- | 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_MEMORY_HEAP_DEVICE_LOCAL_BIT'
 -- specifies that the heap corresponds to device local memory. Device local
 -- memory /may/ have different performance characteristics than host local
 -- memory, and /may/ support different memory property flags.
 pattern MEMORY_HEAP_DEVICE_LOCAL_BIT :: (a ~ MemoryHeapFlagBits) => a
 pattern MEMORY_HEAP_DEVICE_LOCAL_BIT = VK_MEMORY_HEAP_DEVICE_LOCAL_BIT
+
+
+-- No documentation found for Nested "MemoryHeapFlagBits" "MEMORY_HEAP_MULTI_INSTANCE_BIT"
+pattern MEMORY_HEAP_MULTI_INSTANCE_BIT :: (a ~ MemoryHeapFlagBits) => a
+pattern MEMORY_HEAP_MULTI_INSTANCE_BIT = VK_MEMORY_HEAP_MULTI_INSTANCE_BIT
 
 -- | VkMemoryHeapFlags - Bitmask of VkMemoryHeapFlagBits
 --
@@ -1561,6 +1792,9 @@ type MemoryHeapFlags = MemoryHeapFlagBits
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkMemoryPropertyFlags'
 type MemoryPropertyFlagBits = VkMemoryPropertyFlagBits
+
+
+{-# complete MEMORY_PROPERTY_DEVICE_LOCAL_BIT, MEMORY_PROPERTY_HOST_VISIBLE_BIT, MEMORY_PROPERTY_HOST_COHERENT_BIT, MEMORY_PROPERTY_HOST_CACHED_BIT, MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT, MEMORY_PROPERTY_PROTECTED_BIT :: MemoryPropertyFlagBits #-}
 
 
 -- | 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT'
@@ -1610,6 +1844,11 @@ pattern MEMORY_PROPERTY_HOST_CACHED_BIT = VK_MEMORY_PROPERTY_HOST_CACHED_BIT
 pattern MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT :: (a ~ MemoryPropertyFlagBits) => a
 pattern MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT = VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT
 
+
+-- No documentation found for Nested "MemoryPropertyFlagBits" "MEMORY_PROPERTY_PROTECTED_BIT"
+pattern MEMORY_PROPERTY_PROTECTED_BIT :: (a ~ MemoryPropertyFlagBits) => a
+pattern MEMORY_PROPERTY_PROTECTED_BIT = VK_MEMORY_PROPERTY_PROTECTED_BIT
+
 -- | VkMemoryPropertyFlags - Bitmask of VkMemoryPropertyFlagBits
 --
 -- = Description
@@ -1626,11 +1865,6 @@ type MemoryPropertyFlags = MemoryPropertyFlagBits
 
 
 -- | VkMemoryType - Structure specifying memory type
---
--- = Description
---
--- Unresolved directive in VkMemoryType.txt -
--- include::{generated}\/validity\/structs\/VkMemoryType.txt[]
 --
 -- = See Also
 --
@@ -1683,11 +1917,6 @@ instance Ord PhysicalDevice where
 -- The members of the
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceFeatures'
 -- structure describe the following features:
---
--- = Description
---
--- Unresolved directive in VkPhysicalDeviceFeatures.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceFeatures.txt[]
 --
 -- = See Also
 --
@@ -1957,9 +2186,6 @@ instance Zero PhysicalDeviceFeatures where
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceImageFormatProperties'
 --     as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-supported-sample-counts Supported Sample Counts>.
---
--- Unresolved directive in VkPhysicalDeviceLimits.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceLimits.txt[]
 --
 -- = See Also
 --
@@ -2580,9 +2806,6 @@ instance Zero PhysicalDeviceLimits where
 -- >     memoryType =
 -- >         findProperties(&memoryProperties, memoryRequirements.memoryTypeBits, requiredProperties);
 --
--- Unresolved directive in VkPhysicalDeviceMemoryProperties.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceMemoryProperties.txt[]
---
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkMemoryHeap',
@@ -2673,9 +2896,6 @@ instance Zero PhysicalDeviceMemoryProperties where
 -- specific silicon IP GPU version and configuration /should/ use the same
 -- device ID, even if those uses occur in different SoCs.
 --
--- Unresolved directive in VkPhysicalDeviceProperties.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceProperties.txt[]
---
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits',
@@ -2740,11 +2960,6 @@ instance Zero PhysicalDeviceProperties where
 -- | VkPhysicalDeviceSparseProperties - Structure specifying physical device
 -- sparse memory properties
 --
--- = Description
---
--- Unresolved directive in VkPhysicalDeviceSparseProperties.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceSparseProperties.txt[]
---
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
@@ -2799,6 +3014,9 @@ instance Zero PhysicalDeviceSparseProperties where
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceProperties'
 type PhysicalDeviceType = VkPhysicalDeviceType
+
+
+{-# complete PHYSICAL_DEVICE_TYPE_OTHER, PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU, PHYSICAL_DEVICE_TYPE_DISCRETE_GPU, PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU, PHYSICAL_DEVICE_TYPE_CPU :: PhysicalDeviceType #-}
 
 
 -- | 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_PHYSICAL_DEVICE_TYPE_OTHER'
@@ -2908,9 +3126,6 @@ pattern PHYSICAL_DEVICE_TYPE_CPU = VK_PHYSICAL_DEVICE_TYPE_CPU
 -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features Features>
 -- chapter.
 --
--- Unresolved directive in VkQueueFamilyProperties.txt -
--- include::{generated}\/validity\/structs\/VkQueueFamilyProperties.txt[]
---
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkExtent3D',
@@ -2980,6 +3195,9 @@ instance Zero QueueFamilyProperties where
 type QueueFlagBits = VkQueueFlagBits
 
 
+{-# complete QUEUE_GRAPHICS_BIT, QUEUE_COMPUTE_BIT, QUEUE_TRANSFER_BIT, QUEUE_SPARSE_BINDING_BIT, QUEUE_PROTECTED_BIT, QUEUE_RESERVED_6_BIT_KHR, QUEUE_RESERVED_5_BIT_KHR :: QueueFlagBits #-}
+
+
 -- | 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_QUEUE_GRAPHICS_BIT'
 -- specifies that queues in this queue family support graphics operations.
 pattern QUEUE_GRAPHICS_BIT :: (a ~ QueueFlagBits) => a
@@ -3007,6 +3225,21 @@ pattern QUEUE_TRANSFER_BIT = VK_QUEUE_TRANSFER_BIT
 pattern QUEUE_SPARSE_BINDING_BIT :: (a ~ QueueFlagBits) => a
 pattern QUEUE_SPARSE_BINDING_BIT = VK_QUEUE_SPARSE_BINDING_BIT
 
+
+-- No documentation found for Nested "QueueFlagBits" "QUEUE_PROTECTED_BIT"
+pattern QUEUE_PROTECTED_BIT :: (a ~ QueueFlagBits) => a
+pattern QUEUE_PROTECTED_BIT = VK_QUEUE_PROTECTED_BIT
+
+
+-- No documentation found for Nested "QueueFlagBits" "QUEUE_RESERVED_6_BIT_KHR"
+pattern QUEUE_RESERVED_6_BIT_KHR :: (a ~ QueueFlagBits) => a
+pattern QUEUE_RESERVED_6_BIT_KHR = VK_QUEUE_RESERVED_6_BIT_KHR
+
+
+-- No documentation found for Nested "QueueFlagBits" "QUEUE_RESERVED_5_BIT_KHR"
+pattern QUEUE_RESERVED_5_BIT_KHR :: (a ~ QueueFlagBits) => a
+pattern QUEUE_RESERVED_5_BIT_KHR = VK_QUEUE_RESERVED_5_BIT_KHR
+
 -- | VkQueueFlags - Bitmask of VkQueueFlagBits
 --
 -- = Description
@@ -3027,12 +3260,18 @@ type QueueFlags = QueueFlagBits
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Pass.VkAttachmentDescription',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkAttachmentDescription2KHR',
 -- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceSparseImageFormatInfo2',
 -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineMultisampleStateCreateInfo',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkSampleCountFlags',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkSampleLocationsInfoEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.vkGetPhysicalDeviceMultisamplePropertiesEXT',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.vkGetPhysicalDeviceSparseImageFormatProperties'
 type SampleCountFlagBits = VkSampleCountFlagBits
+
+
+{-# complete SAMPLE_COUNT_1_BIT, SAMPLE_COUNT_2_BIT, SAMPLE_COUNT_4_BIT, SAMPLE_COUNT_8_BIT, SAMPLE_COUNT_16_BIT, SAMPLE_COUNT_32_BIT, SAMPLE_COUNT_64_BIT :: SampleCountFlagBits #-}
 
 
 -- | 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_SAMPLE_COUNT_1_BIT'
@@ -3088,6 +3327,7 @@ pattern SAMPLE_COUNT_64_BIT = VK_SAMPLE_COUNT_64_BIT
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageFormatProperties',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkPhysicalDeviceSampleLocationsPropertiesEXT',
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkSampleCountFlagBits'
 type SampleCountFlags = SampleCountFlagBits
 
@@ -3136,8 +3376,37 @@ type SampleCountFlags = SampleCountFlagBits
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstanceCreateInfo'::@ppEnabledExtensionNames@
 --     list /must/ also be present in that list.
 --
--- Unresolved directive in vkCreateInstance.txt -
--- include::{generated}\/validity\/protos\/vkCreateInstance.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstanceCreateInfo'
+--     structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pInstance@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_INITIALIZATION_FAILED'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_LAYER_NOT_PRESENT'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_EXTENSION_NOT_PRESENT'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_INCOMPATIBLE_DRIVER'
 --
 -- = See Also
 --
@@ -3173,8 +3442,19 @@ createInstance = \createInfo' -> \allocator -> alloca (\pInstance' -> maybeWith 
 --     were provided when @instance@ was created, @pAllocator@ /must/ be
 --     @NULL@
 --
--- Unresolved directive in vkDestroyInstance.txt -
--- include::{generated}\/validity\/protos\/vkDestroyInstance.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   If @instance@ is not @NULL@, @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- == Host Synchronization
+--
+-- -   Host access to @instance@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -3214,8 +3494,33 @@ destroyInstance = \(Instance instance' commandTable) -> \allocator -> maybeWith 
 -- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS', to indicate that not all
 -- the available physical devices were returned.
 --
--- Unresolved directive in vkEnumeratePhysicalDevices.txt -
--- include::{generated}\/validity\/protos\/vkEnumeratePhysicalDevices.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @pPhysicalDeviceCount@ /must/ be a valid pointer to a @uint32_t@
+--     value
+--
+-- -   If the value referenced by @pPhysicalDeviceCount@ is not @0@, and
+--     @pPhysicalDevices@ is not @NULL@, @pPhysicalDevices@ /must/ be a
+--     valid pointer to an array of @pPhysicalDeviceCount@
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handles
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_INITIALIZATION_FAILED'
 --
 -- = See Also
 --
@@ -3254,8 +3559,33 @@ getNumPhysicalDevices = \(Instance instance' commandTable) -> alloca (\pPhysical
 -- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS', to indicate that not all
 -- the available physical devices were returned.
 --
--- Unresolved directive in vkEnumeratePhysicalDevices.txt -
--- include::{generated}\/validity\/protos\/vkEnumeratePhysicalDevices.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @pPhysicalDeviceCount@ /must/ be a valid pointer to a @uint32_t@
+--     value
+--
+-- -   If the value referenced by @pPhysicalDeviceCount@ is not @0@, and
+--     @pPhysicalDevices@ is not @NULL@, @pPhysicalDevices@ /must/ be a
+--     valid pointer to an array of @pPhysicalDeviceCount@
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handles
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_INITIALIZATION_FAILED'
 --
 -- = See Also
 --
@@ -3308,8 +3638,7 @@ enumerateAllPhysicalDevices instance' =
 -- >
 -- > vkGetDeviceProcAddr behavior
 --
--- Unresolved directive in vkGetDeviceProcAddr.txt -
--- include::{generated}\/validity\/protos\/vkGetDeviceProcAddr.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -3400,8 +3729,12 @@ getDeviceProcAddr = \(Device device' commandTable) -> \name' -> useAsCString nam
 --     An “available device extension” is a device extension supported by
 --     any physical device enumerated by @instance@.
 --
--- Unresolved directive in vkGetInstanceProcAddr.txt -
--- include::{generated}\/validity\/protos\/vkGetInstanceProcAddr.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   If @instance@ is not @NULL@, @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @pName@ /must/ be a null-terminated UTF-8 string
 --
 -- = See Also
 --
@@ -3426,10 +3759,7 @@ getInstanceProcAddr = \(Instance instance' commandTable) -> \name' -> useAsCStri
 --     'Graphics.Vulkan.C.Core10.Core.VK_FALSE' specifies that the feature
 --     is not supported.
 --
--- = Description
---
--- Unresolved directive in vkGetPhysicalDeviceFeatures.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceFeatures.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -3454,10 +3784,7 @@ getPhysicalDeviceFeatures = \(PhysicalDevice physicalDevice' commandTable) -> al
 --     structure in which physical device properties for @format@ are
 --     returned.
 --
--- = Description
---
--- Unresolved directive in vkGetPhysicalDeviceFormatProperties.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceFormatProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -3529,10 +3856,17 @@ getPhysicalDeviceFormatProperties = \(PhysicalDevice physicalDevice' commandTabl
 -- more strict than the limitations for @usage2@ and @flags2@, for all
 -- values of @format@, @type@, and @tiling@.
 --
--- == Valid Usage
+-- == Return Codes
 --
--- Unresolved directive in vkGetPhysicalDeviceImageFormatProperties.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceImageFormatProperties.txt[]
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_FORMAT_NOT_SUPPORTED'
 --
 -- = See Also
 --
@@ -3558,10 +3892,7 @@ getPhysicalDeviceImageFormatProperties = \(PhysicalDevice physicalDevice' comman
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceMemoryProperties'
 --     structure in which the properties are returned.
 --
--- = Description
---
--- Unresolved directive in vkGetPhysicalDeviceMemoryProperties.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceMemoryProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -3582,10 +3913,7 @@ getPhysicalDeviceMemoryProperties = \(PhysicalDevice physicalDevice' commandTabl
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceProperties'
 --     structure, that will be filled with returned information.
 --
--- = Description
---
--- Unresolved directive in vkGetPhysicalDeviceProperties.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -3625,8 +3953,20 @@ getPhysicalDeviceProperties = \(PhysicalDevice physicalDevice' commandTable) -> 
 -- available, at most @pQueueFamilyPropertyCount@ structures will be
 -- written.
 --
--- Unresolved directive in vkGetPhysicalDeviceQueueFamilyProperties.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceQueueFamilyProperties.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @pQueueFamilyPropertyCount@ /must/ be a valid pointer to a
+--     @uint32_t@ value
+--
+-- -   If the value referenced by @pQueueFamilyPropertyCount@ is not @0@,
+--     and @pQueueFamilyProperties@ is not @NULL@, @pQueueFamilyProperties@
+--     /must/ be a valid pointer to an array of @pQueueFamilyPropertyCount@
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkQueueFamilyProperties'
+--     structures
 --
 -- = See Also
 --
@@ -3665,8 +4005,20 @@ getNumPhysicalDeviceQueueFamilyProperties = \(PhysicalDevice physicalDevice' com
 -- available, at most @pQueueFamilyPropertyCount@ structures will be
 -- written.
 --
--- Unresolved directive in vkGetPhysicalDeviceQueueFamilyProperties.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceQueueFamilyProperties.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @pQueueFamilyPropertyCount@ /must/ be a valid pointer to a
+--     @uint32_t@ value
+--
+-- -   If the value referenced by @pQueueFamilyPropertyCount@ is not @0@,
+--     and @pQueueFamilyProperties@ is not @NULL@, @pQueueFamilyProperties@
+--     /must/ be a valid pointer to an array of @pQueueFamilyPropertyCount@
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkQueueFamilyProperties'
+--     structures
 --
 -- = See Also
 --
@@ -3689,3 +4041,51 @@ withInstance
 withInstance instanceCreateInfo allocationCallbacks = bracket
   (createInstance instanceCreateInfo allocationCallbacks)
   (\o -> destroyInstance o allocationCallbacks)
+
+-- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_RESERVED_25_BIT_KHR"
+pattern VK_FORMAT_FEATURE_RESERVED_25_BIT_KHR :: VkFormatFeatureFlagBits
+pattern VK_FORMAT_FEATURE_RESERVED_25_BIT_KHR = VkFormatFeatureFlagBits 0x02000000
+
+-- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_RESERVED_26_BIT_KHR"
+pattern VK_FORMAT_FEATURE_RESERVED_26_BIT_KHR :: VkFormatFeatureFlagBits
+pattern VK_FORMAT_FEATURE_RESERVED_26_BIT_KHR = VkFormatFeatureFlagBits 0x04000000
+
+-- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_RESERVED_27_BIT_KHR"
+pattern VK_FORMAT_FEATURE_RESERVED_27_BIT_KHR :: VkFormatFeatureFlagBits
+pattern VK_FORMAT_FEATURE_RESERVED_27_BIT_KHR = VkFormatFeatureFlagBits 0x08000000
+
+-- No documentation found for Nested "VkFormatFeatureFlagBits" "VK_FORMAT_FEATURE_RESERVED_28_BIT_KHR"
+pattern VK_FORMAT_FEATURE_RESERVED_28_BIT_KHR :: VkFormatFeatureFlagBits
+pattern VK_FORMAT_FEATURE_RESERVED_28_BIT_KHR = VkFormatFeatureFlagBits 0x10000000
+
+-- No documentation found for Nested "VkImageUsageFlagBits" "VK_IMAGE_USAGE_RESERVED_10_BIT_KHR"
+pattern VK_IMAGE_USAGE_RESERVED_10_BIT_KHR :: VkImageUsageFlagBits
+pattern VK_IMAGE_USAGE_RESERVED_10_BIT_KHR = VkImageUsageFlagBits 0x00000400
+
+-- No documentation found for Nested "VkImageUsageFlagBits" "VK_IMAGE_USAGE_RESERVED_11_BIT_KHR"
+pattern VK_IMAGE_USAGE_RESERVED_11_BIT_KHR :: VkImageUsageFlagBits
+pattern VK_IMAGE_USAGE_RESERVED_11_BIT_KHR = VkImageUsageFlagBits 0x00000800
+
+-- No documentation found for Nested "VkImageUsageFlagBits" "VK_IMAGE_USAGE_RESERVED_12_BIT_KHR"
+pattern VK_IMAGE_USAGE_RESERVED_12_BIT_KHR :: VkImageUsageFlagBits
+pattern VK_IMAGE_USAGE_RESERVED_12_BIT_KHR = VkImageUsageFlagBits 0x00001000
+
+-- No documentation found for Nested "VkImageUsageFlagBits" "VK_IMAGE_USAGE_RESERVED_13_BIT_KHR"
+pattern VK_IMAGE_USAGE_RESERVED_13_BIT_KHR :: VkImageUsageFlagBits
+pattern VK_IMAGE_USAGE_RESERVED_13_BIT_KHR = VkImageUsageFlagBits 0x00002000
+
+-- No documentation found for Nested "VkImageUsageFlagBits" "VK_IMAGE_USAGE_RESERVED_14_BIT_KHR"
+pattern VK_IMAGE_USAGE_RESERVED_14_BIT_KHR :: VkImageUsageFlagBits
+pattern VK_IMAGE_USAGE_RESERVED_14_BIT_KHR = VkImageUsageFlagBits 0x00004000
+
+-- No documentation found for Nested "VkImageUsageFlagBits" "VK_IMAGE_USAGE_RESERVED_15_BIT_KHR"
+pattern VK_IMAGE_USAGE_RESERVED_15_BIT_KHR :: VkImageUsageFlagBits
+pattern VK_IMAGE_USAGE_RESERVED_15_BIT_KHR = VkImageUsageFlagBits 0x00008000
+
+-- No documentation found for Nested "VkQueueFlagBits" "VK_QUEUE_RESERVED_5_BIT_KHR"
+pattern VK_QUEUE_RESERVED_5_BIT_KHR :: VkQueueFlagBits
+pattern VK_QUEUE_RESERVED_5_BIT_KHR = VkQueueFlagBits 0x00000020
+
+-- No documentation found for Nested "VkQueueFlagBits" "VK_QUEUE_RESERVED_6_BIT_KHR"
+pattern VK_QUEUE_RESERVED_6_BIT_KHR :: VkQueueFlagBits
+pattern VK_QUEUE_RESERVED_6_BIT_KHR = VkQueueFlagBits 0x00000040

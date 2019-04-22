@@ -78,13 +78,17 @@ type QueryPipelineStatisticFlags = QueryPipelineStatisticFlagBits
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBeginQuery',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdBeginQueryIndexedEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdCopyQueryPoolResults',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdEndQuery',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdEndQueryIndexedEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdResetQueryPool',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCmdWriteAccelerationStructuresPropertiesNV',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdWriteTimestamp',
 -- 'Graphics.Vulkan.C.Core10.Query.vkCreateQueryPool',
 -- 'Graphics.Vulkan.C.Core10.Query.vkDestroyQueryPool',
--- 'Graphics.Vulkan.C.Core10.Query.vkGetQueryPoolResults'
+-- 'Graphics.Vulkan.C.Core10.Query.vkGetQueryPoolResults',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_host_query_reset.vkResetQueryPoolEXT'
 type QueryPool = VkQueryPool
 
 -- | VkQueryPoolCreateFlags - Reserved for future use
@@ -126,5 +130,6 @@ type QueryResultFlags = QueryResultFlagBits
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.C.Core10.Query.VkQueryPoolCreateInfo'
+-- 'Graphics.Vulkan.C.Core10.Query.VkQueryPoolCreateInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCmdWriteAccelerationStructuresPropertiesNV'
 type QueryType = VkQueryType

@@ -49,7 +49,7 @@ data VkExternalMemoryFeatureFlagBitsNV
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkExternalImageFormatPropertiesNV', 'VkExternalMemoryFeatureFlagBitsNV'
 type VkExternalMemoryFeatureFlagsNV = VkExternalMemoryFeatureFlagBitsNV
 
 data VkExternalMemoryHandleTypeFlagBitsNV
@@ -64,7 +64,13 @@ data VkExternalMemoryHandleTypeFlagBitsNV
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory.VkExportMemoryAllocateInfoNV',
+-- 'VkExternalImageFormatPropertiesNV',
+-- 'VkExternalMemoryHandleTypeFlagBitsNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory.VkExternalMemoryImageCreateInfoNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32.VkImportMemoryWin32HandleInfoNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32.vkGetMemoryWin32HandleNV',
+-- 'vkGetPhysicalDeviceExternalImageFormatPropertiesNV'
 type VkExternalMemoryHandleTypeFlagsNV = VkExternalMemoryHandleTypeFlagBitsNV
 
 type FN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV = ("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("type" ::: VkImageType) -> ("tiling" ::: VkImageTiling) -> ("usage" ::: VkImageUsageFlags) -> ("flags" ::: VkImageCreateFlags) -> ("externalHandleType" ::: VkExternalMemoryHandleTypeFlagsNV) -> ("pExternalImageFormatProperties" ::: Ptr VkExternalImageFormatPropertiesNV) -> IO VkResult

@@ -103,18 +103,18 @@ resultString = \case
   VK_ERROR_TOO_MANY_OBJECTS -> "Too many objects of the type have already been created"
   VK_ERROR_FORMAT_NOT_SUPPORTED -> "A requested format is not supported on this device"
   VK_ERROR_FRAGMENTED_POOL -> "A pool allocation has failed due to fragmentation of the pool's memory"
-  VK_ERROR_OUT_OF_POOL_MEMORY -> "A pool memory allocation has failed"
-  VK_ERROR_INVALID_EXTERNAL_HANDLE -> "An external handle is not a valid handle of the specified type"
-  VK_ERROR_SURFACE_LOST_KHR -> "A surface is no longer available"
-  VK_ERROR_NATIVE_WINDOW_IN_USE_KHR -> "The requested window is already in use by Vulkan or another API in a manner which prevents it from being used again"
-  VK_SUBOPTIMAL_KHR -> "A swapchain no longer matches the surface properties exactly, but can still be used to present to the surface successfully"
-  VK_ERROR_OUT_OF_DATE_KHR -> "A surface has changed in such a way that it is no longer compatible with the swapchain, and further presentation requests using the swapchain will fail"
-  VK_ERROR_INCOMPATIBLE_DISPLAY_KHR -> "The display used by a swapchain does not use the same presentable image layout, or is incompatible in a way that prevents sharing an image"
+  VK_ERROR_OUT_OF_POOL_MEMORY -> show VK_ERROR_OUT_OF_POOL_MEMORY
+  VK_ERROR_INVALID_EXTERNAL_HANDLE -> show VK_ERROR_INVALID_EXTERNAL_HANDLE
+  VK_ERROR_SURFACE_LOST_KHR -> show VK_ERROR_SURFACE_LOST_KHR
+  VK_ERROR_NATIVE_WINDOW_IN_USE_KHR -> show VK_ERROR_NATIVE_WINDOW_IN_USE_KHR
+  VK_SUBOPTIMAL_KHR -> show VK_SUBOPTIMAL_KHR
+  VK_ERROR_OUT_OF_DATE_KHR -> show VK_ERROR_OUT_OF_DATE_KHR
+  VK_ERROR_INCOMPATIBLE_DISPLAY_KHR -> show VK_ERROR_INCOMPATIBLE_DISPLAY_KHR
   VK_ERROR_VALIDATION_FAILED_EXT -> show VK_ERROR_VALIDATION_FAILED_EXT
-  VK_ERROR_INVALID_SHADER_NV -> "One or more shaders failed to compile or link"
+  VK_ERROR_INVALID_SHADER_NV -> show VK_ERROR_INVALID_SHADER_NV
   VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT -> show VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT
-  VK_ERROR_FRAGMENTATION_EXT -> "A descriptor pool creation has failed due to fragmentation"
+  VK_ERROR_FRAGMENTATION_EXT -> show VK_ERROR_FRAGMENTATION_EXT
   VK_ERROR_NOT_PERMITTED_EXT -> show VK_ERROR_NOT_PERMITTED_EXT
-  VK_ERROR_INVALID_DEVICE_ADDRESS_EXT -> "A buffer creation failed because the requested address is not available"
-  VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT -> "An operation on a swapchain created with VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT failed as it did not have exlusive full-screen access"
+  VK_ERROR_INVALID_DEVICE_ADDRESS_EXT -> show VK_ERROR_INVALID_DEVICE_ADDRESS_EXT
+  VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT -> show VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT
   r -> show r

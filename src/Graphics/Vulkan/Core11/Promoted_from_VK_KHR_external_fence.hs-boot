@@ -38,7 +38,9 @@ type FenceImportFlagBitsKHR = FenceImportFlagBits
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence.VkFenceImportFlagBits'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence.VkFenceImportFlagBits',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd.VkImportFenceFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.VkImportFenceWin32HandleInfoKHR'
 type FenceImportFlags = FenceImportFlagBits
 
 -- No documentation found for TopLevel "FenceImportFlagsKHR"

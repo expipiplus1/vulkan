@@ -53,15 +53,15 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
 -- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to
 -- enable features.
 --
--- Unresolved directive in VkPhysicalDeviceCornerSampledImageFeaturesNV.txt
--- -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceCornerSampledImageFeaturesNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceCornerSampledImageFeaturesNV = VkPhysicalDeviceCornerSampledImageFeaturesNV
-  { -- No documentation found for Nested "VkPhysicalDeviceCornerSampledImageFeaturesNV" "sType"
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV'
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceCornerSampledImageFeaturesNV" "pNext"
   vkPNext :: Ptr ()
@@ -88,13 +88,12 @@ instance Zero VkPhysicalDeviceCornerSampledImageFeaturesNV where
                                                       zero
                                                       zero
 
--- | 'VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV' specifies that the image is a
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-images-corner-sampled corner-sampled image>.
+-- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV"
 pattern VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV = VkImageCreateFlagBits 0x00002000
 
 -- No documentation found for TopLevel "VK_NV_CORNER_SAMPLED_IMAGE_EXTENSION_NAME"
-pattern VK_NV_CORNER_SAMPLED_IMAGE_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_NV_CORNER_SAMPLED_IMAGE_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_NV_CORNER_SAMPLED_IMAGE_EXTENSION_NAME = "VK_NV_corner_sampled_image"
 
 -- No documentation found for TopLevel "VK_NV_CORNER_SAMPLED_IMAGE_SPEC_VERSION"

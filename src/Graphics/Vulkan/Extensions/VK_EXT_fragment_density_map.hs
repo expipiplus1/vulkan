@@ -13,22 +13,25 @@ module Graphics.Vulkan.Extensions.VK_EXT_fragment_density_map
   , withCStructRenderPassFragmentDensityMapCreateInfoEXT
   , fromCStructRenderPassFragmentDensityMapCreateInfoEXT
   , RenderPassFragmentDensityMapCreateInfoEXT(..)
-  , pattern VK_EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION
-  , pattern VK_EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT
-  , pattern VK_STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT
-  , pattern VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT
-  , pattern VK_IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT
-  , pattern VK_ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT
-  , pattern VK_FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT
-  , pattern VK_IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT
-  , pattern VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT
-  , pattern VK_PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT
-  , pattern VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT
-  , pattern VK_SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT
+  , pattern EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME
+  , pattern EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT
+  , pattern STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT
+  , pattern IMAGE_CREATE_SUBSAMPLED_BIT_EXT
+  , pattern IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT
+  , pattern ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT
+  , pattern FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT
+  , pattern IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT
+  , pattern IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT
+  , pattern PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT
+  , pattern SAMPLER_CREATE_SUBSAMPLED_BIT_EXT
+  , pattern SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Foreign.Marshal.Utils
   ( maybePeek
   , maybeWith
@@ -45,6 +48,8 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map
   ( VkPhysicalDeviceFragmentDensityMapFeaturesEXT(..)
   , VkPhysicalDeviceFragmentDensityMapPropertiesEXT(..)
   , VkRenderPassFragmentDensityMapCreateInfoEXT(..)
+  , pattern VK_EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME
+  , pattern VK_EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT
   , pattern VK_STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT
@@ -68,18 +73,31 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map
-  ( pattern VK_ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT
-  , pattern VK_EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME
-  , pattern VK_EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION
-  , pattern VK_FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT
-  , pattern VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT
-  , pattern VK_IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT
-  , pattern VK_IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT
-  , pattern VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT
-  , pattern VK_PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT
-  , pattern VK_SAMPLER_CREATE_SUBSAMPLED_BIT_EXT
-  , pattern VK_SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT
+  , pattern STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT
+  )
+import Graphics.Vulkan.Core10.DeviceInitialization
+  ( pattern FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT
+  , pattern IMAGE_CREATE_SUBSAMPLED_BIT_EXT
+  , pattern IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT
+  )
+import Graphics.Vulkan.Core10.Image
+  ( pattern IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT
+  )
+import Graphics.Vulkan.Core10.ImageView
+  ( pattern IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT
+  )
+import Graphics.Vulkan.Core10.Pass
+  ( pattern ACCESS_FRAGMENT_DENSITY_MAP_READ_BIT_EXT
+  )
+import Graphics.Vulkan.Core10.Queue
+  ( pattern PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT
+  )
+import Graphics.Vulkan.Core10.Sampler
+  ( pattern SAMPLER_CREATE_SUBSAMPLED_BIT_EXT
+  , pattern SAMPLER_CREATE_SUBSAMPLED_COARSE_RECONSTRUCTION_BIT_EXT
   )
 
 
@@ -105,13 +123,12 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable the
 -- features.
 --
--- Unresolved directive in
--- VkPhysicalDeviceFragmentDensityMapFeaturesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceFragmentDensityMapFeaturesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceFragmentDensityMapFeaturesEXT = PhysicalDeviceFragmentDensityMapFeaturesEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceFragmentDensityMapFeaturesEXT" "pNext"
@@ -158,11 +175,7 @@ instance Zero PhysicalDeviceFragmentDensityMapFeaturesEXT where
 -- 'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VkPhysicalDeviceFragmentDensityMapPropertiesEXT'
 -- structure describe the following implementation-dependent limits:
 --
--- = Description
---
--- Unresolved directive in
--- VkPhysicalDeviceFragmentDensityMapPropertiesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceFragmentDensityMapPropertiesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- If the
 -- 'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VkPhysicalDeviceFragmentDensityMapPropertiesEXT'
@@ -172,7 +185,9 @@ instance Zero PhysicalDeviceFragmentDensityMapFeaturesEXT where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkExtent2D',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceFragmentDensityMapPropertiesEXT = PhysicalDeviceFragmentDensityMapPropertiesEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceFragmentDensityMapPropertiesEXT" "pNext"
@@ -263,13 +278,18 @@ instance Zero PhysicalDeviceFragmentDensityMapPropertiesEXT where
 --     @storeOp@ equal to
 --     'Graphics.Vulkan.C.Core10.Pass.VK_ATTACHMENT_STORE_OP_DONT_CARE'.
 --
--- Unresolved directive in VkRenderPassFragmentDensityMapCreateInfoEXT.txt
--- -
--- include::{generated}\/validity\/structs\/VkRenderPassFragmentDensityMapCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT'
+--
+-- -   @fragmentDensityMapAttachment@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Pass.VkAttachmentReference' structure
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Pass.VkAttachmentReference',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data RenderPassFragmentDensityMapCreateInfoEXT = RenderPassFragmentDensityMapCreateInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "RenderPassFragmentDensityMapCreateInfoEXT" "pNext"
@@ -296,3 +316,11 @@ instance Zero RenderPassFragmentDensityMapCreateInfoEXT where
   zero = RenderPassFragmentDensityMapCreateInfoEXT Nothing
                                                    zero
 
+
+-- No documentation found for TopLevel "VK_EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME"
+pattern EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME = VK_EXT_FRAGMENT_DENSITY_MAP_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION"
+pattern EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION :: Integral a => a
+pattern EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION = VK_EXT_FRAGMENT_DENSITY_MAP_SPEC_VERSION

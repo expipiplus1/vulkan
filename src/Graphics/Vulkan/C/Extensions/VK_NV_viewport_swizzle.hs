@@ -80,7 +80,7 @@ import Graphics.Vulkan.C.Core10.Core
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkPipelineViewportSwizzleStateCreateInfoNV'
 newtype VkPipelineViewportSwizzleStateCreateFlagsNV = VkPipelineViewportSwizzleStateCreateFlagsNV VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -103,26 +103,24 @@ instance Read VkPipelineViewportSwizzleStateCreateFlagsNV where
 -- | VkPipelineViewportSwizzleStateCreateInfoNV - Structure specifying
 -- swizzle applied to primitive clip coordinates
 --
--- == Valid Usage
---
--- Unresolved directive in VkPipelineViewportSwizzleStateCreateInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkPipelineViewportSwizzleStateCreateInfoNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkPipelineViewportSwizzleStateCreateFlagsNV',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType', 'VkViewportSwizzleNV'
 data VkPipelineViewportSwizzleStateCreateInfoNV = VkPipelineViewportSwizzleStateCreateInfoNV
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @flags@ is reserved for future use.
+  , -- | @flags@ /must/ be @0@
   vkFlags :: VkPipelineViewportSwizzleStateCreateFlagsNV
-  , -- | @viewportCount@ /must/ match the @viewportCount@ set in
-  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineViewportStateCreateInfo'
+  , -- | @viewportCount@ /must/ be greater than @0@
   vkViewportCount :: Word32
-  , -- | @pViewportSwizzles@ is a pointer to an array of 'VkViewportSwizzleNV'
-  -- structures, defining the viewport swizzles.
+  , -- | @pViewportSwizzles@ /must/ be a valid pointer to an array of
+  -- @viewportCount@ valid 'VkViewportSwizzleNV' structures
   vkPViewportSwizzles :: Ptr VkViewportSwizzleNV
   }
   deriving (Eq, Show)
@@ -160,7 +158,7 @@ instance Zero VkPipelineViewportSwizzleStateCreateInfoNV where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkViewportSwizzleNV'
 newtype VkViewportCoordinateSwizzleNV = VkViewportCoordinateSwizzleNV Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -226,26 +224,20 @@ pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV = VkViewportCoordinateSwizz
 
 -- | VkViewportSwizzleNV - Structure specifying a viewport swizzle
 --
--- = Description
---
--- Unresolved directive in VkViewportSwizzleNV.txt -
--- include::{generated}\/validity\/structs\/VkViewportSwizzleNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkPipelineViewportSwizzleStateCreateInfoNV',
+-- 'VkViewportCoordinateSwizzleNV'
 data VkViewportSwizzleNV = VkViewportSwizzleNV
-  { -- | @x@ is a 'VkViewportCoordinateSwizzleNV' value specifying the swizzle
-  -- operation to apply to the x component of the primitive
+  { -- | @x@ /must/ be a valid 'VkViewportCoordinateSwizzleNV' value
   vkX :: VkViewportCoordinateSwizzleNV
-  , -- | @y@ is a 'VkViewportCoordinateSwizzleNV' value specifying the swizzle
-  -- operation to apply to the y component of the primitive
+  , -- | @y@ /must/ be a valid 'VkViewportCoordinateSwizzleNV' value
   vkY :: VkViewportCoordinateSwizzleNV
-  , -- | @z@ is a 'VkViewportCoordinateSwizzleNV' value specifying the swizzle
-  -- operation to apply to the z component of the primitive
+  , -- | @z@ /must/ be a valid 'VkViewportCoordinateSwizzleNV' value
   vkZ :: VkViewportCoordinateSwizzleNV
-  , -- | @w@ is a 'VkViewportCoordinateSwizzleNV' value specifying the swizzle
-  -- operation to apply to the w component of the primitive
+  , -- | @w@ /must/ be a valid 'VkViewportCoordinateSwizzleNV' value
   vkW :: VkViewportCoordinateSwizzleNV
   }
   deriving (Eq, Show)
@@ -269,7 +261,7 @@ instance Zero VkViewportSwizzleNV where
                              zero
 
 -- No documentation found for TopLevel "VK_NV_VIEWPORT_SWIZZLE_EXTENSION_NAME"
-pattern VK_NV_VIEWPORT_SWIZZLE_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_NV_VIEWPORT_SWIZZLE_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_NV_VIEWPORT_SWIZZLE_EXTENSION_NAME = "VK_NV_viewport_swizzle"
 
 -- No documentation found for TopLevel "VK_NV_VIEWPORT_SWIZZLE_SPEC_VERSION"

@@ -26,16 +26,16 @@ module Graphics.Vulkan.Extensions.VK_EXT_descriptor_indexing
   , withCStructPhysicalDeviceDescriptorIndexingPropertiesEXT
   , fromCStructPhysicalDeviceDescriptorIndexingPropertiesEXT
   , PhysicalDeviceDescriptorIndexingPropertiesEXT(..)
-  , pattern VK_EXT_DESCRIPTOR_INDEXING_SPEC_VERSION
-  , pattern VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO_EXT
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES_EXT
-  , pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO_EXT
-  , pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT_EXT
-  , pattern VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT
-  , pattern VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT
-  , pattern VK_ERROR_FRAGMENTATION_EXT
+  , pattern EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
+  , pattern EXT_DESCRIPTOR_INDEXING_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO_EXT
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES_EXT
+  , pattern STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO_EXT
+  , pattern STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT_EXT
+  , pattern DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT
+  , pattern DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT
+  , pattern ERROR_FRAGMENTATION_EXT
   ) where
 
 import Data.Function
@@ -43,6 +43,9 @@ import Data.Function
   )
 import Data.Maybe
   ( maybe
+  )
+import Data.String
+  ( IsString
   )
 import Data.Vector
   ( Vector
@@ -81,6 +84,8 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing
   , pattern VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT
   , pattern VK_DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT_EXT
   , pattern VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT
+  , pattern VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
+  , pattern VK_EXT_DESCRIPTOR_INDEXING_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO_EXT
   , pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO_EXT
   , pattern VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT_EXT
@@ -99,12 +104,17 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing
-  ( pattern VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT
-  , pattern VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT
-  , pattern VK_ERROR_FRAGMENTATION_EXT
-  , pattern VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
-  , pattern VK_EXT_DESCRIPTOR_INDEXING_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern ERROR_FRAGMENTATION_EXT
+  , pattern STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO_EXT
+  , pattern STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO_EXT
+  , pattern STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT_EXT
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES_EXT
+  )
+import Graphics.Vulkan.Core10.DescriptorSet
+  ( pattern DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT
+  , pattern DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT
   )
 
 
@@ -129,8 +139,11 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkDescriptorBindingFlagsEXT'
 type DescriptorBindingFlagBitsEXT = VkDescriptorBindingFlagBitsEXT
+
+
+{-# complete DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT, DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT_EXT, DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT, DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT :: DescriptorBindingFlagBitsEXT #-}
 
 
 -- | 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT'
@@ -141,9 +154,8 @@ type DescriptorBindingFlagBitsEXT = VkDescriptorBindingFlagBitsEXT
 -- invalidate the command buffer. Descriptor bindings created with this
 -- flag are also partially exempt from the external synchronization
 -- requirement in
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template.vkUpdateDescriptorSetWithTemplateKHR'
--- and 'Graphics.Vulkan.C.Core10.DescriptorSet.vkUpdateDescriptorSets'.
--- They /can/ be updated concurrently with the set being bound to a command
+-- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkUpdateDescriptorSets'. They
+-- /can/ be updated concurrently with the set being bound to a command
 -- buffer in another thread, but not concurrently with the set being reset
 -- or freed.
 pattern DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT :: (a ~ DescriptorBindingFlagBitsEXT) => a
@@ -183,13 +195,7 @@ pattern DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT = VK_DESCRIPTOR_BINDING_PARTI
 -- descriptor set layout (i.e. the binding with the largest value of
 -- @binding@). For the purposes of counting against limits such as
 -- @maxDescriptorSet@* and @maxPerStageDescriptor@*, the full value of
--- @descriptorCount@ is counted , except for descriptor bindings with a
--- descriptor type of
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
--- where @descriptorCount@ specifies the upper bound on the byte size of
--- the binding, thus it counts against the
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#limits-maxInlineUniformBlockSize maxInlineUniformBlockSize>
--- limit instead. .
+-- @descriptorCount@ is counted .
 pattern DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT :: (a ~ DescriptorBindingFlagBitsEXT) => a
 pattern DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT = VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT
 
@@ -203,7 +209,8 @@ pattern DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT = VK_DESCRIPTOR_BIN
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkDescriptorBindingFlagBitsEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkDescriptorSetLayoutBindingFlagsCreateInfoEXT'
 type DescriptorBindingFlagsEXT = DescriptorBindingFlagBitsEXT
 
 
@@ -224,16 +231,6 @@ type DescriptorBindingFlagsEXT = DescriptorBindingFlagBitsEXT
 --
 -- -   If @bindingCount@ is not zero, @bindingCount@ /must/ equal
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutCreateInfo'::@bindingCount@
---
--- -   If
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutCreateInfo'::@flags@
---     includes
---     'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',
---     then all elements of @pBindingFlags@ /must/ not include
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT',
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT_EXT',
---     or
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT'
 --
 -- -   If an element of @pBindingFlags@ includes
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT',
@@ -286,13 +283,6 @@ type DescriptorBindingFlagsEXT = DescriptorBindingFlagBitsEXT
 --     /must/ not use
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT'
 --
--- -   If
---     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VkPhysicalDeviceInlineUniformBlockFeaturesEXT'::@descriptorBindingInlineUniformBlockUpdateAfterBind@
---     is not enabled, all bindings with descriptor type
---     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
---     /must/ not use
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT'
---
 -- -   All bindings with descriptor type
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
@@ -323,13 +313,21 @@ type DescriptorBindingFlagsEXT = DescriptorBindingFlagBitsEXT
 --     or
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
 --
--- Unresolved directive in
--- VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkDescriptorSetLayoutBindingFlagsCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO_EXT'
+--
+-- -   If @bindingCount@ is not @0@, and @pBindingFlags@ is not @NULL@,
+--     @pBindingFlags@ /must/ be a valid pointer to an array of
+--     @bindingCount@ valid combinations of
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkDescriptorBindingFlagBitsEXT'
+--     values
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkDescriptorBindingFlagsEXT',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data DescriptorSetLayoutBindingFlagsCreateInfoEXT = DescriptorSetLayoutBindingFlagsCreateInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "DescriptorSetLayoutBindingFlagsCreateInfoEXT" "pNext"
@@ -369,11 +367,7 @@ instance Zero DescriptorSetLayoutBindingFlagsCreateInfoEXT where
 -- @pNext@ chain, then the variable lengths are considered to be zero.
 -- Otherwise, @pDescriptorCounts@[i] is the number of descriptors in the
 -- variable count descriptor binding in the corresponding descriptor set
--- layout. If the variable count descriptor binding in the corresponding
--- descriptor set layout has a descriptor type of
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
--- then @pDescriptorCounts@[i] specifies the binding’s capacity in bytes.
--- If
+-- layout. If
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetAllocateInfo'::@pSetLayouts@[i]
 -- does not include a variable count descriptor binding, then
 -- @pDescriptorCounts@[i] is ignored.
@@ -390,13 +384,17 @@ instance Zero DescriptorSetLayoutBindingFlagsCreateInfoEXT where
 --     /must/ be less than or equal to the descriptor count specified for
 --     that binding when the descriptor set layout was created.
 --
--- Unresolved directive in
--- VkDescriptorSetVariableDescriptorCountAllocateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkDescriptorSetVariableDescriptorCountAllocateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO_EXT'
+--
+-- -   If @descriptorSetCount@ is not @0@, @pDescriptorCounts@ /must/ be a
+--     valid pointer to an array of @descriptorSetCount@ @uint32_t@ values
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data DescriptorSetVariableDescriptorCountAllocateInfoEXT = DescriptorSetVariableDescriptorCountAllocateInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "DescriptorSetVariableDescriptorCountAllocateInfoEXT" "pNext"
@@ -448,13 +446,11 @@ instance Zero DescriptorSetVariableDescriptorCountAllocateInfoEXT where
 -- supported, then the value written to @maxVariableDescriptorCount@ is
 -- undefined.
 --
--- Unresolved directive in
--- VkDescriptorSetVariableDescriptorCountLayoutSupportEXT.txt -
--- include::{generated}\/validity\/structs\/VkDescriptorSetVariableDescriptorCountLayoutSupportEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data DescriptorSetVariableDescriptorCountLayoutSupportEXT = DescriptorSetVariableDescriptorCountLayoutSupportEXT
   { -- Univalued member elided
   -- No documentation found for Nested "DescriptorSetVariableDescriptorCountLayoutSupportEXT" "pNext"
@@ -503,13 +499,12 @@ instance Zero DescriptorSetVariableDescriptorCountLayoutSupportEXT where
 -- /can/ also be used in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
 --
--- Unresolved directive in
--- VkPhysicalDeviceDescriptorIndexingFeaturesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceDescriptorIndexingFeaturesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceDescriptorIndexingFeaturesEXT = PhysicalDeviceDescriptorIndexingFeaturesEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingFeaturesEXT" "pNext"
@@ -632,13 +627,12 @@ instance Zero PhysicalDeviceDescriptorIndexingFeaturesEXT where
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- Unresolved directive in
--- VkPhysicalDeviceDescriptorIndexingPropertiesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceDescriptorIndexingPropertiesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceDescriptorIndexingPropertiesEXT = PhysicalDeviceDescriptorIndexingPropertiesEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceDescriptorIndexingPropertiesEXT" "pNext"
@@ -753,3 +747,11 @@ instance Zero PhysicalDeviceDescriptorIndexingPropertiesEXT where
                                                        zero
                                                        zero
 
+
+-- No documentation found for TopLevel "VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME"
+pattern EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME = VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_DESCRIPTOR_INDEXING_SPEC_VERSION"
+pattern EXT_DESCRIPTOR_INDEXING_SPEC_VERSION :: Integral a => a
+pattern EXT_DESCRIPTOR_INDEXING_SPEC_VERSION = VK_EXT_DESCRIPTOR_INDEXING_SPEC_VERSION

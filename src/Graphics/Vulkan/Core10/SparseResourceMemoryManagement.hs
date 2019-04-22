@@ -13,6 +13,13 @@ module Graphics.Vulkan.Core10.SparseResourceMemoryManagement
   , pattern IMAGE_ASPECT_DEPTH_BIT
   , pattern IMAGE_ASPECT_STENCIL_BIT
   , pattern IMAGE_ASPECT_METADATA_BIT
+  , pattern IMAGE_ASPECT_PLANE_0_BIT
+  , pattern IMAGE_ASPECT_PLANE_1_BIT
+  , pattern IMAGE_ASPECT_PLANE_2_BIT
+  , pattern IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT
+  , pattern IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT
+  , pattern IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT
+  , pattern IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT
   , ImageAspectFlags
   , withCStructImageSubresource
   , fromCStructImageSubresource
@@ -134,6 +141,17 @@ import Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement
   , pattern VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT
   , pattern VK_SPARSE_MEMORY_BIND_METADATA_BIT
   )
+import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion
+  ( pattern VK_IMAGE_ASPECT_PLANE_0_BIT
+  , pattern VK_IMAGE_ASPECT_PLANE_1_BIT
+  , pattern VK_IMAGE_ASPECT_PLANE_2_BIT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier
+  ( pattern VK_IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT
+  , pattern VK_IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT
+  , pattern VK_IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT
+  , pattern VK_IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT
+  )
 import Graphics.Vulkan.Core10.Core
   ( Format
   )
@@ -177,10 +195,41 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
 
 -- | VkBindSparseInfo - Structure specifying a sparse binding operation
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in VkBindSparseInfo.txt -
--- include::{generated}\/validity\/structs\/VkBindSparseInfo.txt[]
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_BIND_SPARSE_INFO'
+--
+-- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.VkDeviceGroupBindSparseInfo'
+--
+-- -   If @waitSemaphoreCount@ is not @0@, @pWaitSemaphores@ /must/ be a
+--     valid pointer to an array of @waitSemaphoreCount@ valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkSemaphore' handles
+--
+-- -   If @bufferBindCount@ is not @0@, @pBufferBinds@ /must/ be a valid
+--     pointer to an array of @bufferBindCount@ valid
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseBufferMemoryBindInfo'
+--     structures
+--
+-- -   If @imageOpaqueBindCount@ is not @0@, @pImageOpaqueBinds@ /must/ be
+--     a valid pointer to an array of @imageOpaqueBindCount@ valid
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageOpaqueMemoryBindInfo'
+--     structures
+--
+-- -   If @imageBindCount@ is not @0@, @pImageBinds@ /must/ be a valid
+--     pointer to an array of @imageBindCount@ valid
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageMemoryBindInfo'
+--     structures
+--
+-- -   If @signalSemaphoreCount@ is not @0@, @pSignalSemaphores@ /must/ be
+--     a valid pointer to an array of @signalSemaphoreCount@ valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkSemaphore' handles
+--
+-- -   Both of the elements of @pSignalSemaphores@, and the elements of
+--     @pWaitSemaphores@ that are valid handles /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
 -- = See Also
 --
@@ -254,6 +303,9 @@ instance Zero BindSparseInfo where
 type ImageAspectFlagBits = VkImageAspectFlagBits
 
 
+{-# complete IMAGE_ASPECT_COLOR_BIT, IMAGE_ASPECT_DEPTH_BIT, IMAGE_ASPECT_STENCIL_BIT, IMAGE_ASPECT_METADATA_BIT, IMAGE_ASPECT_PLANE_0_BIT, IMAGE_ASPECT_PLANE_1_BIT, IMAGE_ASPECT_PLANE_2_BIT, IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT, IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT, IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT, IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT :: ImageAspectFlagBits #-}
+
+
 -- | 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_COLOR_BIT'
 -- specifies the color aspect.
 pattern IMAGE_ASPECT_COLOR_BIT :: (a ~ ImageAspectFlagBits) => a
@@ -279,6 +331,41 @@ pattern IMAGE_ASPECT_STENCIL_BIT = VK_IMAGE_ASPECT_STENCIL_BIT
 pattern IMAGE_ASPECT_METADATA_BIT :: (a ~ ImageAspectFlagBits) => a
 pattern IMAGE_ASPECT_METADATA_BIT = VK_IMAGE_ASPECT_METADATA_BIT
 
+
+-- No documentation found for Nested "ImageAspectFlagBits" "IMAGE_ASPECT_PLANE_0_BIT"
+pattern IMAGE_ASPECT_PLANE_0_BIT :: (a ~ ImageAspectFlagBits) => a
+pattern IMAGE_ASPECT_PLANE_0_BIT = VK_IMAGE_ASPECT_PLANE_0_BIT
+
+
+-- No documentation found for Nested "ImageAspectFlagBits" "IMAGE_ASPECT_PLANE_1_BIT"
+pattern IMAGE_ASPECT_PLANE_1_BIT :: (a ~ ImageAspectFlagBits) => a
+pattern IMAGE_ASPECT_PLANE_1_BIT = VK_IMAGE_ASPECT_PLANE_1_BIT
+
+
+-- No documentation found for Nested "ImageAspectFlagBits" "IMAGE_ASPECT_PLANE_2_BIT"
+pattern IMAGE_ASPECT_PLANE_2_BIT :: (a ~ ImageAspectFlagBits) => a
+pattern IMAGE_ASPECT_PLANE_2_BIT = VK_IMAGE_ASPECT_PLANE_2_BIT
+
+
+-- No documentation found for Nested "ImageAspectFlagBits" "IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT"
+pattern IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT :: (a ~ ImageAspectFlagBits) => a
+pattern IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT = VK_IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT
+
+
+-- No documentation found for Nested "ImageAspectFlagBits" "IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT"
+pattern IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT :: (a ~ ImageAspectFlagBits) => a
+pattern IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT = VK_IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT
+
+
+-- No documentation found for Nested "ImageAspectFlagBits" "IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT"
+pattern IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT :: (a ~ ImageAspectFlagBits) => a
+pattern IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT = VK_IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT
+
+
+-- No documentation found for Nested "ImageAspectFlagBits" "IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT"
+pattern IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT :: (a ~ ImageAspectFlagBits) => a
+pattern IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT = VK_IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT
+
 -- | VkImageAspectFlags - Bitmask of VkImageAspectFlagBits
 --
 -- = Description
@@ -289,6 +376,7 @@ pattern IMAGE_ASPECT_METADATA_BIT = VK_IMAGE_ASPECT_METADATA_BIT
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkAttachmentReference2KHR',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkClearAttachment',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkImageAspectFlagBits',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkImageSubresource',
@@ -301,10 +389,7 @@ type ImageAspectFlags = ImageAspectFlagBits
 
 -- | VkImageSubresource - Structure specifying an image subresource
 --
--- = Description
---
--- Unresolved directive in VkImageSubresource.txt -
--- include::{generated}\/validity\/structs\/VkImageSubresource.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -342,11 +427,6 @@ instance Zero ImageSubresource where
 
 
 -- | VkOffset3D - Structure specifying a three-dimensional offset
---
--- = Description
---
--- Unresolved directive in VkOffset3D.txt -
--- include::{generated}\/validity\/structs\/VkOffset3D.txt[]
 --
 -- = See Also
 --
@@ -388,10 +468,7 @@ instance Zero Offset3D where
 -- | VkSparseBufferMemoryBindInfo - Structure specifying a sparse buffer
 -- memory bind operation
 --
--- = Description
---
--- Unresolved directive in VkSparseBufferMemoryBindInfo.txt -
--- include::{generated}\/validity\/structs\/VkSparseBufferMemoryBindInfo.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -434,6 +511,9 @@ instance Zero SparseBufferMemoryBindInfo where
 type SparseImageFormatFlagBits = VkSparseImageFormatFlagBits
 
 
+{-# complete SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT, SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT, SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT :: SparseImageFormatFlagBits #-}
+
+
 -- | 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT'
 -- specifies that the image uses a single mip tail region for all array
 -- layers.
@@ -473,11 +553,6 @@ type SparseImageFormatFlags = SparseImageFormatFlagBits
 
 -- | VkSparseImageFormatProperties - Structure specifying sparse image format
 -- properties
---
--- = Description
---
--- Unresolved directive in VkSparseImageFormatProperties.txt -
--- include::{generated}\/validity\/structs\/VkSparseImageFormatProperties.txt[]
 --
 -- = See Also
 --
@@ -558,8 +633,19 @@ instance Zero SparseImageFormatProperties where
 --     depth of the image, or else (@extent.depth@ + @offset.z@) /must/
 --     equal the depth of the image subresource
 --
--- Unresolved directive in VkSparseImageMemoryBind.txt -
--- include::{generated}\/validity\/structs\/VkSparseImageMemoryBind.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @subresource@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkImageSubresource'
+--     structure
+--
+-- -   If @memory@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @memory@ /must/
+--     be a valid 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' handle
+--
+-- -   @flags@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseMemoryBindFlagBits'
+--     values
 --
 -- = See Also
 --
@@ -627,8 +713,16 @@ instance Zero SparseImageMemoryBind where
 --     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' when @image@ was
 --     created
 --
--- Unresolved directive in VkSparseImageMemoryBindInfo.txt -
--- include::{generated}\/validity\/structs\/VkSparseImageMemoryBindInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @image@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' handle
+--
+-- -   @pBinds@ /must/ be a valid pointer to an array of @bindCount@ valid
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageMemoryBind'
+--     structures
+--
+-- -   @bindCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
@@ -665,11 +759,6 @@ instance Zero SparseImageMemoryBindInfo where
 
 -- | VkSparseImageMemoryRequirements - Structure specifying sparse image
 -- memory requirements
---
--- = Description
---
--- Unresolved directive in VkSparseImageMemoryRequirements.txt -
--- include::{generated}\/validity\/structs\/VkSparseImageMemoryRequirements.txt[]
 --
 -- = See Also
 --
@@ -725,8 +814,16 @@ instance Zero SparseImageMemoryRequirements where
 --     the binding range defined /must/ be within the mip tail region of
 --     the metadata aspect of @image@
 --
--- Unresolved directive in VkSparseImageOpaqueMemoryBindInfo.txt -
--- include::{generated}\/validity\/structs\/VkSparseImageOpaqueMemoryBindInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @image@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' handle
+--
+-- -   @pBinds@ /must/ be a valid pointer to an array of @bindCount@ valid
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseMemoryBind'
+--     structures
+--
+-- -   @bindCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
@@ -817,8 +914,15 @@ instance Zero SparseImageOpaqueMemoryBindInfo where
 -- -   @size@ /must/ be less than or equal to the size of @memory@ minus
 --     @memoryOffset@
 --
--- Unresolved directive in VkSparseMemoryBind.txt -
--- include::{generated}\/validity\/structs\/VkSparseMemoryBind.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   If @memory@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @memory@ /must/
+--     be a valid 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' handle
+--
+-- -   @flags@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseMemoryBindFlagBits'
+--     values
 --
 -- = See Also
 --
@@ -871,6 +975,9 @@ instance Zero SparseMemoryBind where
 --
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseMemoryBindFlags'
 type SparseMemoryBindFlagBits = VkSparseMemoryBindFlagBits
+
+
+{-# complete SPARSE_MEMORY_BIND_METADATA_BIT :: SparseMemoryBindFlagBits #-}
 
 
 -- | 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_SPARSE_MEMORY_BIND_METADATA_BIT'
@@ -942,8 +1049,26 @@ type SparseMemoryBindFlags = SparseMemoryBindFlagBits
 -- This /may/ occur when the implementation requires unused padding in the
 -- address range describing the resource.
 --
--- Unresolved directive in vkGetImageSparseMemoryRequirements.txt -
--- include::{generated}\/validity\/protos\/vkGetImageSparseMemoryRequirements.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @image@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' handle
+--
+-- -   @pSparseMemoryRequirementCount@ /must/ be a valid pointer to a
+--     @uint32_t@ value
+--
+-- -   If the value referenced by @pSparseMemoryRequirementCount@ is not
+--     @0@, and @pSparseMemoryRequirements@ is not @NULL@,
+--     @pSparseMemoryRequirements@ /must/ be a valid pointer to an array of
+--     @pSparseMemoryRequirementCount@
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageMemoryRequirements'
+--     structures
+--
+-- -   @image@ /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- = See Also
 --
@@ -1001,8 +1126,26 @@ getNumImageSparseMemoryRequirements = \(Device device' commandTable) -> \image' 
 -- This /may/ occur when the implementation requires unused padding in the
 -- address range describing the resource.
 --
--- Unresolved directive in vkGetImageSparseMemoryRequirements.txt -
--- include::{generated}\/validity\/protos\/vkGetImageSparseMemoryRequirements.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @image@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' handle
+--
+-- -   @pSparseMemoryRequirementCount@ /must/ be a valid pointer to a
+--     @uint32_t@ value
+--
+-- -   If the value referenced by @pSparseMemoryRequirementCount@ is not
+--     @0@, and @pSparseMemoryRequirements@ is not @NULL@,
+--     @pSparseMemoryRequirements@ /must/ be a valid pointer to an array of
+--     @pSparseMemoryRequirementCount@
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageMemoryRequirements'
+--     structures
+--
+-- -   @image@ /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- = See Also
 --
@@ -1076,9 +1219,47 @@ getAllImageSparseMemoryRequirements device' image' =
 --
 -- == Valid Usage
 --
--- Unresolved directive in
--- vkGetPhysicalDeviceSparseImageFormatProperties.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceSparseImageFormatProperties.txt[]
+-- -   @samples@ /must/ be a bit value that is set in
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageFormatProperties'::@sampleCounts@
+--     returned by
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceImageFormatProperties'
+--     with @format@, @type@, @tiling@, and @usage@ equal to those in this
+--     command and @flags@ equal to the value that is set in
+--     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@flags@ when the
+--     image is created
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @format@ /must/ be a valid 'Graphics.Vulkan.C.Core10.Core.VkFormat'
+--     value
+--
+-- -   @type@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageType' value
+--
+-- -   @samples@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkSampleCountFlagBits'
+--     value
+--
+-- -   @usage@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageUsageFlagBits'
+--     values
+--
+-- -   @usage@ /must/ not be @0@
+--
+-- -   @tiling@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageTiling' value
+--
+-- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
+--
+-- -   If the value referenced by @pPropertyCount@ is not @0@, and
+--     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
+--     to an array of @pPropertyCount@
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageFormatProperties'
+--     structures
 --
 -- = See Also
 --
@@ -1149,9 +1330,47 @@ getNumPhysicalDeviceSparseImageFormatProperties = \(PhysicalDevice physicalDevic
 --
 -- == Valid Usage
 --
--- Unresolved directive in
--- vkGetPhysicalDeviceSparseImageFormatProperties.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceSparseImageFormatProperties.txt[]
+-- -   @samples@ /must/ be a bit value that is set in
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageFormatProperties'::@sampleCounts@
+--     returned by
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceImageFormatProperties'
+--     with @format@, @type@, @tiling@, and @usage@ equal to those in this
+--     command and @flags@ equal to the value that is set in
+--     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@flags@ when the
+--     image is created
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @format@ /must/ be a valid 'Graphics.Vulkan.C.Core10.Core.VkFormat'
+--     value
+--
+-- -   @type@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageType' value
+--
+-- -   @samples@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkSampleCountFlagBits'
+--     value
+--
+-- -   @usage@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageUsageFlagBits'
+--     values
+--
+-- -   @usage@ /must/ not be @0@
+--
+-- -   @tiling@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageTiling' value
+--
+-- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
+--
+-- -   If the value referenced by @pPropertyCount@ is not @0@, and
+--     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
+--     to an array of @pPropertyCount@
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageFormatProperties'
+--     structures
 --
 -- = See Also
 --
@@ -1241,8 +1460,76 @@ getAllPhysicalDeviceSparseImageFormatProperties physicalDevice' format' type' sa
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operations>
 --     previously submitted for execution.
 --
--- Unresolved directive in vkQueueBindSparse.txt -
--- include::{generated}\/validity\/protos\/vkQueueBindSparse.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @queue@ /must/ be a valid 'Graphics.Vulkan.C.Core10.Queue.VkQueue'
+--     handle
+--
+-- -   If @bindInfoCount@ is not @0@, @pBindInfo@ /must/ be a valid pointer
+--     to an array of @bindInfoCount@ valid
+--     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkBindSparseInfo'
+--     structures
+--
+-- -   If @fence@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @fence@ /must/
+--     be a valid 'Graphics.Vulkan.C.Core10.Queue.VkFence' handle
+--
+-- -   The @queue@ /must/ support sparse binding operations
+--
+-- -   Both of @fence@, and @queue@ that are valid handles /must/ have been
+--     created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
+--
+-- == Host Synchronization
+--
+-- -   Host access to @queue@ /must/ be externally synchronized
+--
+-- -   Host access to @pBindInfo@[].pWaitSemaphores[] /must/ be externally
+--     synchronized
+--
+-- -   Host access to @pBindInfo@[].pSignalSemaphores[] /must/ be
+--     externally synchronized
+--
+-- -   Host access to @pBindInfo@[].pBufferBinds[].buffer /must/ be
+--     externally synchronized
+--
+-- -   Host access to @pBindInfo@[].pImageOpaqueBinds[].image /must/ be
+--     externally synchronized
+--
+-- -   Host access to @pBindInfo@[].pImageBinds[].image /must/ be
+--     externally synchronized
+--
+-- -   Host access to @fence@ /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | -               | -               | SPARSE_BINDING  | -               |
+-- > +-----------------+-----------------+-----------------+-----------------+
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_DEVICE_LOST'
 --
 -- = See Also
 --

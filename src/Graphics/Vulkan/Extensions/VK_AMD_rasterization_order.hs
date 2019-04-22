@@ -11,11 +11,14 @@ module Graphics.Vulkan.Extensions.VK_AMD_rasterization_order
   , RasterizationOrderAMD
   , pattern RASTERIZATION_ORDER_STRICT_AMD
   , pattern RASTERIZATION_ORDER_RELAXED_AMD
-  , pattern VK_AMD_RASTERIZATION_ORDER_SPEC_VERSION
-  , pattern VK_AMD_RASTERIZATION_ORDER_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_RASTERIZATION_ORDER_AMD
+  , pattern AMD_RASTERIZATION_ORDER_EXTENSION_NAME
+  , pattern AMD_RASTERIZATION_ORDER_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_RASTERIZATION_ORDER_AMD
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Foreign.Marshal.Utils
   ( maybePeek
   , maybeWith
@@ -31,6 +34,8 @@ import Graphics.Vulkan.C.Core10.Core
 import Graphics.Vulkan.C.Extensions.VK_AMD_rasterization_order
   ( VkPipelineRasterizationStateRasterizationOrderAMD(..)
   , VkRasterizationOrderAMD(..)
+  , pattern VK_AMD_RASTERIZATION_ORDER_EXTENSION_NAME
+  , pattern VK_AMD_RASTERIZATION_ORDER_SPEC_VERSION
   , pattern VK_RASTERIZATION_ORDER_RELAXED_AMD
   , pattern VK_RASTERIZATION_ORDER_STRICT_AMD
   , pattern VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_RASTERIZATION_ORDER_AMD
@@ -40,9 +45,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_AMD_rasterization_order
-  ( pattern VK_AMD_RASTERIZATION_ORDER_EXTENSION_NAME
-  , pattern VK_AMD_RASTERIZATION_ORDER_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_RASTERIZATION_ORDER_AMD
   )
 
 
@@ -50,11 +54,7 @@ import Graphics.Vulkan.C.Extensions.VK_AMD_rasterization_order
 -- | VkPipelineRasterizationStateRasterizationOrderAMD - Structure defining
 -- rasterization order for a graphics pipeline
 --
--- = Description
---
--- Unresolved directive in
--- VkPipelineRasterizationStateRasterizationOrderAMD.txt -
--- include::{generated}\/validity\/structs\/VkPipelineRasterizationStateRasterizationOrderAMD.txt[]
+-- == Valid Usage (Implicit)
 --
 -- If the
 -- @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.1-extensions\/html\/vkspec.html#VK_AMD_rasterization_order@
@@ -67,7 +67,8 @@ import Graphics.Vulkan.C.Extensions.VK_AMD_rasterization_order
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_rasterization_order.VkRasterizationOrderAMD',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PipelineRasterizationStateRasterizationOrderAMD = PipelineRasterizationStateRasterizationOrderAMD
   { -- Univalued member elided
   -- No documentation found for Nested "PipelineRasterizationStateRasterizationOrderAMD" "pNext"
@@ -100,8 +101,11 @@ instance Zero PipelineRasterizationStateRasterizationOrderAMD where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_rasterization_order.VkPipelineRasterizationStateRasterizationOrderAMD'
 type RasterizationOrderAMD = VkRasterizationOrderAMD
+
+
+{-# complete RASTERIZATION_ORDER_STRICT_AMD, RASTERIZATION_ORDER_RELAXED_AMD :: RasterizationOrderAMD #-}
 
 
 -- | 'Graphics.Vulkan.C.Extensions.VK_AMD_rasterization_order.VK_RASTERIZATION_ORDER_STRICT_AMD'
@@ -118,3 +122,11 @@ pattern RASTERIZATION_ORDER_STRICT_AMD = VK_RASTERIZATION_ORDER_STRICT_AMD
 -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#drawing-primitive-order primitive order>.
 pattern RASTERIZATION_ORDER_RELAXED_AMD :: (a ~ RasterizationOrderAMD) => a
 pattern RASTERIZATION_ORDER_RELAXED_AMD = VK_RASTERIZATION_ORDER_RELAXED_AMD
+
+-- No documentation found for TopLevel "VK_AMD_RASTERIZATION_ORDER_EXTENSION_NAME"
+pattern AMD_RASTERIZATION_ORDER_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern AMD_RASTERIZATION_ORDER_EXTENSION_NAME = VK_AMD_RASTERIZATION_ORDER_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_AMD_RASTERIZATION_ORDER_SPEC_VERSION"
+pattern AMD_RASTERIZATION_ORDER_SPEC_VERSION :: Integral a => a
+pattern AMD_RASTERIZATION_ORDER_SPEC_VERSION = VK_AMD_RASTERIZATION_ORDER_SPEC_VERSION

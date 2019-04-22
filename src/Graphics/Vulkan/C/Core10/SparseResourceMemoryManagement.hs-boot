@@ -74,6 +74,7 @@ data VkImageAspectFlagBits
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkAttachmentReference2KHR',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkClearAttachment',
 -- 'VkImageAspectFlagBits', 'VkImageSubresource',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkImageSubresourceLayers',

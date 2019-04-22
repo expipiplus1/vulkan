@@ -77,7 +77,7 @@ vkGetDescriptorSetLayoutSupportKHR :: DeviceCmds -> ("device" ::: VkDevice) -> (
 vkGetDescriptorSetLayoutSupportKHR = vkGetDescriptorSetLayoutSupport
 
 -- No documentation found for TopLevel "VK_KHR_MAINTENANCE3_EXTENSION_NAME"
-pattern VK_KHR_MAINTENANCE3_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_MAINTENANCE3_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_MAINTENANCE3_EXTENSION_NAME = "VK_KHR_maintenance3"
 
 -- No documentation found for TopLevel "VK_KHR_MAINTENANCE3_SPEC_VERSION"

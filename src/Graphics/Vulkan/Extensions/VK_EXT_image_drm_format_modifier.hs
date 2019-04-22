@@ -23,20 +23,20 @@ module Graphics.Vulkan.Extensions.VK_EXT_image_drm_format_modifier
   , fromCStructPhysicalDeviceImageDrmFormatModifierInfoEXT
   , PhysicalDeviceImageDrmFormatModifierInfoEXT(..)
   , getImageDrmFormatModifierPropertiesEXT
-  , pattern VK_EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION
-  , pattern VK_EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME
-  , pattern VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT
-  , pattern VK_STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_EXT
-  , pattern VK_STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT
-  , pattern VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_LIST_CREATE_INFO_EXT
-  , pattern VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT
-  , pattern VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT
-  , pattern VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT
-  , pattern VK_IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT
-  , pattern VK_IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT
-  , pattern VK_IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT
-  , pattern VK_IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT
+  , pattern EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME
+  , pattern EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION
+  , pattern ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT
+  , pattern STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_EXT
+  , pattern STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT
+  , pattern STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_LIST_CREATE_INFO_EXT
+  , pattern STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT
+  , pattern STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT
+  , pattern IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT
+  , pattern IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT
+  , pattern IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT
+  , pattern IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT
+  , pattern IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT
   ) where
 
 import Control.Exception
@@ -51,6 +51,9 @@ import Data.Function
   )
 import Data.Maybe
   ( maybe
+  )
+import Data.String
+  ( IsString
   )
 import Data.Vector
   ( Vector
@@ -92,6 +95,8 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier
   , VkImageDrmFormatModifierPropertiesEXT(..)
   , VkPhysicalDeviceImageDrmFormatModifierInfoEXT(..)
   , vkGetImageDrmFormatModifierPropertiesEXT
+  , pattern VK_EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME
+  , pattern VK_EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_EXT
   , pattern VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT
   , pattern VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_LIST_CREATE_INFO_EXT
@@ -124,16 +129,23 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier
-  ( pattern VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT
-  , pattern VK_EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME
-  , pattern VK_EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION
-  , pattern VK_IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT
-  , pattern VK_IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT
-  , pattern VK_IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT
-  , pattern VK_IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT
-  , pattern VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT
-  , pattern VK_STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT
+import Graphics.Vulkan.Core10.Core
+  ( pattern ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT
+  , pattern STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT
+  , pattern STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_EXT
+  , pattern STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT
+  , pattern STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_LIST_CREATE_INFO_EXT
+  , pattern STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT
+  )
+import Graphics.Vulkan.Core10.DeviceInitialization
+  ( pattern IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT
+  )
+import Graphics.Vulkan.Core10.SparseResourceMemoryManagement
+  ( pattern IMAGE_ASPECT_MEMORY_PLANE_0_BIT_EXT
+  , pattern IMAGE_ASPECT_MEMORY_PLANE_1_BIT_EXT
+  , pattern IMAGE_ASPECT_MEMORY_PLANE_2_BIT_EXT
+  , pattern IMAGE_ASPECT_MEMORY_PLANE_3_BIT_EXT
   )
 
 
@@ -221,12 +233,10 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier
 -- @drmFormatModifierPlaneCount@. In all other cases, the /memory
 -- planecount/ is ignored.
 --
--- Unresolved directive in VkDrmFormatModifierPropertiesEXT.txt -
--- include::{generated}\/validity\/structs\/VkDrmFormatModifierPropertiesEXT.txt[]
---
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VkDrmFormatModifierPropertiesListEXT',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkFormatFeatureFlags'
 data DrmFormatModifierPropertiesEXT = DrmFormatModifierPropertiesEXT
   { -- No documentation found for Nested "DrmFormatModifierPropertiesEXT" "drmFormatModifier"
   drmFormatModifier :: Word64
@@ -273,12 +283,12 @@ instance Zero DrmFormatModifierPropertiesEXT where
 -- Among the elements in array @pDrmFormatModifierProperties@, each
 -- returned @drmFormatModifier@ /must/ be unique.
 --
--- Unresolved directive in VkDrmFormatModifierPropertiesListEXT.txt -
--- include::{generated}\/validity\/structs\/VkDrmFormatModifierPropertiesListEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VkDrmFormatModifierPropertiesEXT',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data DrmFormatModifierPropertiesListEXT = DrmFormatModifierPropertiesListEXT
   { -- Univalued member elided
   -- No documentation found for Nested "DrmFormatModifierPropertiesListEXT" "pNext"
@@ -361,13 +371,19 @@ instance Zero DrmFormatModifierPropertiesListEXT where
 --     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@extent@::@depth@
 --     is 1.
 --
--- Unresolved directive in
--- VkImageDrmFormatModifierExplicitCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkImageDrmFormatModifierExplicitCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT'
+--
+-- -   If @drmFormatModifierPlaneCount@ is not @0@, @pPlaneLayouts@ /must/
+--     be a valid pointer to an array of @drmFormatModifierPlaneCount@
+--     'Graphics.Vulkan.C.Core10.Image.VkSubresourceLayout' structures
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Core10.Image.VkSubresourceLayout'
 data ImageDrmFormatModifierExplicitCreateInfoEXT = ImageDrmFormatModifierExplicitCreateInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "ImageDrmFormatModifierExplicitCreateInfoEXT" "pNext"
@@ -414,12 +430,19 @@ instance Zero ImageDrmFormatModifierExplicitCreateInfoEXT where
 --     extended with
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VkPhysicalDeviceImageDrmFormatModifierInfoEXT'.
 --
--- Unresolved directive in VkImageDrmFormatModifierListCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkImageDrmFormatModifierListCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_LIST_CREATE_INFO_EXT'
+--
+-- -   @pDrmFormatModifiers@ /must/ be a valid pointer to an array of
+--     @drmFormatModifierCount@ @uint64_t@ values
+--
+-- -   @drmFormatModifierCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data ImageDrmFormatModifierListCreateInfoEXT = ImageDrmFormatModifierListCreateInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "ImageDrmFormatModifierListCreateInfoEXT" "pNext"
@@ -466,12 +489,12 @@ instance Zero ImageDrmFormatModifierListCreateInfoEXT where
 -- time of image creation in
 -- 'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VkImageDrmFormatModifierExplicitCreateInfoEXT'::@drmFormatModifier@.
 --
--- Unresolved directive in VkImageDrmFormatModifierPropertiesEXT.txt -
--- include::{generated}\/validity\/structs\/VkImageDrmFormatModifierPropertiesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.vkGetImageDrmFormatModifierPropertiesEXT'
 data ImageDrmFormatModifierPropertiesEXT = ImageDrmFormatModifierPropertiesEXT
   { -- Univalued member elided
   -- No documentation found for Nested "ImageDrmFormatModifierPropertiesEXT" "pNext"
@@ -532,13 +555,18 @@ instance Zero ImageDrmFormatModifierPropertiesEXT where
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceQueueFamilyProperties2'
 --     for the @physicalDevice@ that was used to create @device@.
 --
--- Unresolved directive in
--- VkPhysicalDeviceImageDrmFormatModifierInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceImageDrmFormatModifierInfoEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT'
+--
+-- -   @sharingMode@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Buffer.VkSharingMode' value
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Buffer.VkSharingMode',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceImageDrmFormatModifierInfoEXT = PhysicalDeviceImageDrmFormatModifierInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceImageDrmFormatModifierInfoEXT" "pNext"
@@ -589,13 +617,23 @@ instance Zero PhysicalDeviceImageDrmFormatModifierInfoEXT where
 -- -   @pProperties@ will return properties of the image’s /DRM format
 --     modifier/.
 --
--- == Valid Usage
+-- == Return Codes
 --
--- Unresolved directive in vkGetImageDrmFormatModifierPropertiesEXT.txt -
--- include::{generated}\/validity\/protos\/vkGetImageDrmFormatModifierPropertiesEXT.txt[]
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VkImageDrmFormatModifierPropertiesEXT'
 getImageDrmFormatModifierPropertiesEXT :: Device ->  Image ->  IO (ImageDrmFormatModifierPropertiesEXT)
 getImageDrmFormatModifierPropertiesEXT = \(Device device' commandTable) -> \image' -> alloca (\pProperties' -> vkGetImageDrmFormatModifierPropertiesEXT commandTable device' image' pProperties' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((fromCStructImageDrmFormatModifierPropertiesEXT <=< peek) pProperties')))
+
+-- No documentation found for TopLevel "VK_EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME"
+pattern EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME = VK_EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION"
+pattern EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION :: Integral a => a
+pattern EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION = VK_EXT_IMAGE_DRM_FORMAT_MODIFIER_SPEC_VERSION

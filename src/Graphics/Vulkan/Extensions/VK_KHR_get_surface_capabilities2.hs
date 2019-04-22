@@ -17,11 +17,11 @@ module Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2
   , getNumPhysicalDeviceSurfaceFormats2KHR
   , getPhysicalDeviceSurfaceFormats2KHR
   , getAllPhysicalDeviceSurfaceFormats2KHR
-  , pattern VK_KHR_GET_SURFACE_CAPABILITIES_2_SPEC_VERSION
-  , pattern VK_KHR_GET_SURFACE_CAPABILITIES_2_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR
-  , pattern VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR
-  , pattern VK_STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR
+  , pattern KHR_GET_SURFACE_CAPABILITIES_2_EXTENSION_NAME
+  , pattern KHR_GET_SURFACE_CAPABILITIES_2_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR
+  , pattern STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR
+  , pattern STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR
   ) where
 
 import Control.Exception
@@ -30,6 +30,9 @@ import Control.Exception
 import Control.Monad
   ( (<=<)
   , when
+  )
+import Data.String
+  ( IsString
   )
 import Data.Vector
   ( Vector
@@ -72,6 +75,8 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2
   , VkSurfaceFormat2KHR(..)
   , vkGetPhysicalDeviceSurfaceCapabilities2KHR
   , vkGetPhysicalDeviceSurfaceFormats2KHR
+  , pattern VK_KHR_GET_SURFACE_CAPABILITIES_2_EXTENSION_NAME
+  , pattern VK_KHR_GET_SURFACE_CAPABILITIES_2_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR
   , pattern VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR
   , pattern VK_STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR
@@ -96,9 +101,10 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2
-  ( pattern VK_KHR_GET_SURFACE_CAPABILITIES_2_EXTENSION_NAME
-  , pattern VK_KHR_GET_SURFACE_CAPABILITIES_2_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR
+  , pattern STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR
+  , pattern STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR
   )
 
 
@@ -114,39 +120,31 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2
 -- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.vkGetPhysicalDeviceSurfaceCapabilitiesKHR',
 -- with @sType@ and @pNext@ added for extensibility.
 --
--- Additional capabilities of a surface /may/ be available to swapchains
--- created with different full-screen exclusive settings - particularly if
--- exclusive full-screen access is application controlled. These additional
--- capabilities /can/ be queried by including the
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.VkSurfaceFullScreenExclusiveInfoEXT'
--- structure in the @pNext@ chain of this structure when used to query
--- surface properties. Additionally, for Win32 surfaces with application
--- controlled exclusive full-screen access, chaining a valid instance of
--- the
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.VkSurfaceFullScreenExclusiveWin32InfoEXT'
--- structure /may/ also report additional surface capabilities. These
--- additional capabilities only apply to swapchains created with the same
--- parameters passed into the @pNext@ chain of
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR'.
+-- == Valid Usage (Implicit)
 --
--- == Valid Usage
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR'
 --
--- -   If the @pNext@ chain includes an instance of
+-- -   Each @pNext@ member of any structure (including this one) in the
+--     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
+--     instance of
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.VkSurfaceFullScreenExclusiveInfoEXT'
---     with its @fullScreenExclusive@ member set to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT',
---     and @surface@ was created using
---     'Graphics.Vulkan.C.Extensions.VK_KHR_win32_surface.vkCreateWin32SurfaceKHR',
---     an instance of
+--     or
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.VkSurfaceFullScreenExclusiveWin32InfoEXT'
---     /must/ be present in the @pNext@ chain
 --
--- Unresolved directive in VkPhysicalDeviceSurfaceInfo2KHR.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceSurfaceInfo2KHR.txt[]
+-- -   Each @sType@ member in the @pNext@ chain /must/ be unique
+--
+-- -   @surface@ /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_device_group.vkGetDeviceGroupSurfacePresentModes2EXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.vkGetPhysicalDeviceSurfaceCapabilities2KHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.vkGetPhysicalDeviceSurfaceFormats2KHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.vkGetPhysicalDeviceSurfacePresentModes2EXT'
 data PhysicalDeviceSurfaceInfo2KHR = PhysicalDeviceSurfaceInfo2KHR
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceSurfaceInfo2KHR" "pNext"
@@ -178,14 +176,27 @@ instance Zero PhysicalDeviceSurfaceInfo2KHR where
 -- | VkSurfaceCapabilities2KHR - Structure describing capabilities of a
 -- surface
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in VkSurfaceCapabilities2KHR.txt -
--- include::{generated}\/validity\/structs\/VkSurfaceCapabilities2KHR.txt[]
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR'
+--
+-- -   Each @pNext@ member of any structure (including this one) in the
+--     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
+--     instance of
+--     'Graphics.Vulkan.C.Extensions.VK_AMD_display_native_hdr.VkDisplayNativeHdrSurfaceCapabilitiesAMD',
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image.VkSharedPresentSurfaceCapabilitiesKHR',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.VkSurfaceCapabilitiesFullScreenExclusiveEXT',
+--     or
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface_protected_capabilities.VkSurfaceProtectedCapabilitiesKHR'
+--
+-- -   Each @sType@ member in the @pNext@ chain /must/ be unique
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceCapabilitiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.vkGetPhysicalDeviceSurfaceCapabilities2KHR'
 data SurfaceCapabilities2KHR = SurfaceCapabilities2KHR
   { -- Univalued member elided
   -- No documentation found for Nested "SurfaceCapabilities2KHR" "pNext"
@@ -217,14 +228,13 @@ instance Zero SurfaceCapabilities2KHR where
 -- | VkSurfaceFormat2KHR - Structure describing a supported swapchain format
 -- tuple
 --
--- = Description
---
--- Unresolved directive in VkSurfaceFormat2KHR.txt -
--- include::{generated}\/validity\/structs\/VkSurfaceFormat2KHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceFormatKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.vkGetPhysicalDeviceSurfaceFormats2KHR'
 data SurfaceFormat2KHR = SurfaceFormat2KHR
   { -- Univalued member elided
   -- No documentation found for Nested "SurfaceFormat2KHR" "pNext"
@@ -281,21 +291,23 @@ instance Zero SurfaceFormat2KHR where
 -- structures, and to return extended information via chained output
 -- structures.
 --
--- == Valid Usage
+-- == Return Codes
 --
--- -   If an instance of
---     'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.VkSurfaceCapabilitiesFullScreenExclusiveEXT'
---     is included in the @pNext@ chain of @pSurfaceCapabilities@, an
---     instance of
---     'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.VkSurfaceFullScreenExclusiveWin32InfoEXT'
---     /must/ be included in the @pNext@ chain of @pSurfaceInfo@.
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
 --
--- Unresolved directive in vkGetPhysicalDeviceSurfaceCapabilities2KHR.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceSurfaceCapabilities2KHR.txt[]
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_SURFACE_LOST_KHR'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkPhysicalDeviceSurfaceInfo2KHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkSurfaceCapabilities2KHR'
 getPhysicalDeviceSurfaceCapabilities2KHR :: PhysicalDevice ->  PhysicalDeviceSurfaceInfo2KHR ->  IO (SurfaceCapabilities2KHR)
 getPhysicalDeviceSurfaceCapabilities2KHR = \(PhysicalDevice physicalDevice' commandTable) -> \surfaceInfo' -> alloca (\pSurfaceCapabilities' -> (\marshalled -> withCStructPhysicalDeviceSurfaceInfo2KHR marshalled . flip with) surfaceInfo' (\pSurfaceInfo' -> vkGetPhysicalDeviceSurfaceCapabilities2KHR commandTable physicalDevice' pSurfaceInfo' pSurfaceCapabilities' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((fromCStructSurfaceCapabilities2KHR <=< peek) pSurfaceCapabilities'))))
 
@@ -339,12 +351,44 @@ getPhysicalDeviceSurfaceCapabilities2KHR = \(PhysicalDevice physicalDevice' comm
 -- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS' to indicate that not all
 -- the available values were returned.
 --
--- Unresolved directive in vkGetPhysicalDeviceSurfaceFormats2KHR.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceSurfaceFormats2KHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @pSurfaceInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkPhysicalDeviceSurfaceInfo2KHR'
+--     structure
+--
+-- -   @pSurfaceFormatCount@ /must/ be a valid pointer to a @uint32_t@
+--     value
+--
+-- -   If the value referenced by @pSurfaceFormatCount@ is not @0@, and
+--     @pSurfaceFormats@ is not @NULL@, @pSurfaceFormats@ /must/ be a valid
+--     pointer to an array of @pSurfaceFormatCount@
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkSurfaceFormat2KHR'
+--     structures
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_SURFACE_LOST_KHR'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkPhysicalDeviceSurfaceInfo2KHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkSurfaceFormat2KHR'
 getNumPhysicalDeviceSurfaceFormats2KHR :: PhysicalDevice ->  PhysicalDeviceSurfaceInfo2KHR ->  IO (VkResult, Word32)
 getNumPhysicalDeviceSurfaceFormats2KHR = \(PhysicalDevice physicalDevice' commandTable) -> \surfaceInfo' -> alloca (\pSurfaceFormatCount' -> (\marshalled -> withCStructPhysicalDeviceSurfaceInfo2KHR marshalled . flip with) surfaceInfo' (\pSurfaceInfo' -> vkGetPhysicalDeviceSurfaceFormats2KHR commandTable physicalDevice' pSurfaceInfo' pSurfaceFormatCount' nullPtr >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>peek pSurfaceFormatCount'))))
 
@@ -387,12 +431,44 @@ getNumPhysicalDeviceSurfaceFormats2KHR = \(PhysicalDevice physicalDevice' comman
 -- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS' to indicate that not all
 -- the available values were returned.
 --
--- Unresolved directive in vkGetPhysicalDeviceSurfaceFormats2KHR.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceSurfaceFormats2KHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @pSurfaceInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkPhysicalDeviceSurfaceInfo2KHR'
+--     structure
+--
+-- -   @pSurfaceFormatCount@ /must/ be a valid pointer to a @uint32_t@
+--     value
+--
+-- -   If the value referenced by @pSurfaceFormatCount@ is not @0@, and
+--     @pSurfaceFormats@ is not @NULL@, @pSurfaceFormats@ /must/ be a valid
+--     pointer to an array of @pSurfaceFormatCount@
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkSurfaceFormat2KHR'
+--     structures
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_SURFACE_LOST_KHR'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkPhysicalDeviceSurfaceInfo2KHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkSurfaceFormat2KHR'
 getPhysicalDeviceSurfaceFormats2KHR :: PhysicalDevice ->  PhysicalDeviceSurfaceInfo2KHR ->  Word32 ->  IO (VkResult, Vector SurfaceFormat2KHR)
 getPhysicalDeviceSurfaceFormats2KHR = \(PhysicalDevice physicalDevice' commandTable) -> \surfaceInfo' -> \surfaceFormatCount' -> allocaArray (fromIntegral surfaceFormatCount') (\pSurfaceFormats' -> with surfaceFormatCount' (\pSurfaceFormatCount' -> (\marshalled -> withCStructPhysicalDeviceSurfaceInfo2KHR marshalled . flip with) surfaceInfo' (\pSurfaceInfo' -> vkGetPhysicalDeviceSurfaceFormats2KHR commandTable physicalDevice' pSurfaceInfo' pSurfaceFormatCount' pSurfaceFormats' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>(flip Data.Vector.generateM ((\p -> fromCStructSurfaceFormat2KHR <=< peekElemOff p) pSurfaceFormats') =<< (fromIntegral <$> (peek pSurfaceFormatCount'))))))))
 -- | Returns all the values available from 'getPhysicalDeviceSurfaceFormats2KHR'.
@@ -401,3 +477,11 @@ getAllPhysicalDeviceSurfaceFormats2KHR physicalDevice' pSurfaceInfo' =
   snd <$> getNumPhysicalDeviceSurfaceFormats2KHR physicalDevice' pSurfaceInfo'
     >>= \num -> snd <$> getPhysicalDeviceSurfaceFormats2KHR physicalDevice' pSurfaceInfo' num
 
+
+-- No documentation found for TopLevel "VK_KHR_GET_SURFACE_CAPABILITIES_2_EXTENSION_NAME"
+pattern KHR_GET_SURFACE_CAPABILITIES_2_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern KHR_GET_SURFACE_CAPABILITIES_2_EXTENSION_NAME = VK_KHR_GET_SURFACE_CAPABILITIES_2_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_KHR_GET_SURFACE_CAPABILITIES_2_SPEC_VERSION"
+pattern KHR_GET_SURFACE_CAPABILITIES_2_SPEC_VERSION :: Integral a => a
+pattern KHR_GET_SURFACE_CAPABILITIES_2_SPEC_VERSION = VK_KHR_GET_SURFACE_CAPABILITIES_2_SPEC_VERSION

@@ -2,6 +2,7 @@
 {-# language CPP #-}
 {-# language PatternSynonyms #-}
 {-# language DuplicateRecordFields #-}
+{-# language TypeFamilies #-}
 
 module Graphics.Vulkan.Core10.Device
   ( DeviceCreateFlags
@@ -9,6 +10,7 @@ module Graphics.Vulkan.Core10.Device
   , fromCStructDeviceCreateInfo
   , DeviceCreateInfo(..)
   , DeviceQueueCreateFlagBits
+  , pattern DEVICE_QUEUE_CREATE_PROTECTED_BIT
   , DeviceQueueCreateFlags
   , withCStructDeviceQueueCreateInfo
   , fromCStructDeviceQueueCreateInfo
@@ -78,6 +80,9 @@ import Graphics.Vulkan.C.Core10.Device
   , vkCreateDevice
   , vkDestroyDevice
   )
+import Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory
+  ( pattern VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT
+  )
 import Graphics.Vulkan.C.Dynamic
   ( initDeviceCmds
   )
@@ -117,6 +122,9 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
 type DeviceCreateFlags = VkDeviceCreateFlags
 
 
+-- No complete pragma for DeviceCreateFlags as it has no patterns
+
+
 -- | VkDeviceCreateInfo - Structure specifying parameters of a newly created
 -- device
 --
@@ -125,17 +133,75 @@ type DeviceCreateFlags = VkDeviceCreateFlags
 -- -   The @queueFamilyIndex@ member of each element of @pQueueCreateInfos@
 --     /must/ be unique within @pQueueCreateInfos@
 --
--- -   If the @pNext@ chain includes a
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2'
---     structure, then @pEnabledFeatures@ /must/ be @NULL@
+-- == Valid Usage (Implicit)
 --
--- -   @ppEnabledExtensionNames@ /must/ not contain both
---     @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.1-extensions\/html\/vkspec.html#VK_KHR_maintenance1@
---     and
---     @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.1-extensions\/html\/vkspec.html#VK_AMD_negative_viewport_height@
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO'
 --
--- Unresolved directive in VkDeviceCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkDeviceCreateInfo.txt[]
+-- -   Each @pNext@ member of any structure (including this one) in the
+--     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
+--     instance of
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation.VkDeviceGroupDeviceCreateInfo',
+--     'Graphics.Vulkan.C.Extensions.VK_AMD_memory_overallocation_behavior.VkDeviceMemoryOverallocationCreateInfoAMD',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_16bit_storage.VkPhysicalDevice16BitStorageFeatures',
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_8bit_storage.VkPhysicalDevice8BitStorageFeaturesKHR',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_astc_decode_mode.VkPhysicalDeviceASTCDecodeFeaturesEXT',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_blend_operation_advanced.VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VkPhysicalDeviceBufferDeviceAddressFeaturesEXT',
+--     'Graphics.Vulkan.C.Extensions.VK_NV_compute_shader_derivatives.VkPhysicalDeviceComputeShaderDerivativesFeaturesNV',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_conditional_rendering.VkPhysicalDeviceConditionalRenderingFeaturesEXT',
+--     'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkPhysicalDeviceCooperativeMatrixFeaturesNV',
+--     'Graphics.Vulkan.C.Extensions.VK_NV_corner_sampled_image.VkPhysicalDeviceCornerSampledImageFeaturesNV',
+--     'Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation_image_aliasing.VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_depth_clip_enable.VkPhysicalDeviceDepthClipEnableFeaturesEXT',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingFeaturesEXT',
+--     'Graphics.Vulkan.C.Extensions.VK_NV_scissor_exclusive.VkPhysicalDeviceExclusiveScissorFeaturesNV',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2',
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_shader_float16_int8.VkPhysicalDeviceFloat16Int8FeaturesKHR',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VkPhysicalDeviceFragmentDensityMapFeaturesEXT',
+--     'Graphics.Vulkan.C.Extensions.VK_NV_fragment_shader_barycentric.VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_host_query_reset.VkPhysicalDeviceHostQueryResetFeaturesEXT',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VkPhysicalDeviceInlineUniformBlockFeaturesEXT',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_memory_priority.VkPhysicalDeviceMemoryPriorityFeaturesEXT',
+--     'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.VkPhysicalDeviceMeshShaderFeaturesNV',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_multiview.VkPhysicalDeviceMultiviewFeatures',
+--     'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory.VkPhysicalDeviceProtectedMemoryFeatures',
+--     'Graphics.Vulkan.C.Extensions.VK_NV_representative_fragment_test.VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkPhysicalDeviceSamplerYcbcrConversionFeatures',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_scalar_block_layout.VkPhysicalDeviceScalarBlockLayoutFeaturesEXT',
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_shader_atomic_int64.VkPhysicalDeviceShaderAtomicInt64FeaturesKHR',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_shader_draw_parameters.VkPhysicalDeviceShaderDrawParametersFeatures',
+--     'Graphics.Vulkan.C.Extensions.VK_NV_shader_image_footprint.VkPhysicalDeviceShaderImageFootprintFeaturesNV',
+--     'Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image.VkPhysicalDeviceShadingRateImageFeaturesNV',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.VkPhysicalDeviceTransformFeedbackFeaturesEXT',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_variable_pointers.VkPhysicalDeviceVariablePointersFeatures',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_vertex_attribute_divisor.VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT',
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_vulkan_memory_model.VkPhysicalDeviceVulkanMemoryModelFeaturesKHR',
+--     or
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_ycbcr_image_arrays.VkPhysicalDeviceYcbcrImageArraysFeaturesEXT'
+--
+-- -   Each @sType@ member in the @pNext@ chain /must/ be unique
+--
+-- -   @flags@ /must/ be @0@
+--
+-- -   @pQueueCreateInfos@ /must/ be a valid pointer to an array of
+--     @queueCreateInfoCount@ valid
+--     'Graphics.Vulkan.C.Core10.Device.VkDeviceQueueCreateInfo' structures
+--
+-- -   If @enabledLayerCount@ is not @0@, @ppEnabledLayerNames@ /must/ be a
+--     valid pointer to an array of @enabledLayerCount@ null-terminated
+--     UTF-8 strings
+--
+-- -   If @enabledExtensionCount@ is not @0@, @ppEnabledExtensionNames@
+--     /must/ be a valid pointer to an array of @enabledExtensionCount@
+--     null-terminated UTF-8 strings
+--
+-- -   If @pEnabledFeatures@ is not @NULL@, @pEnabledFeatures@ /must/ be a
+--     valid pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceFeatures'
+--     structure
+--
+-- -   @queueCreateInfoCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
@@ -200,6 +266,18 @@ instance Zero DeviceCreateInfo where
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceQueueCreateFlags'
 type DeviceQueueCreateFlagBits = VkDeviceQueueCreateFlagBits
 
+
+{-# complete DEVICE_QUEUE_CREATE_PROTECTED_BIT :: DeviceQueueCreateFlagBits #-}
+
+
+-- | 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory.VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT'
+-- specifies that the device queue is a protected-capable queue. If the
+-- protected memory feature is not enabled, the
+-- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory.VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT'
+-- bit of @flags@ /must/ not be set.
+pattern DEVICE_QUEUE_CREATE_PROTECTED_BIT :: (a ~ DeviceQueueCreateFlagBits) => a
+pattern DEVICE_QUEUE_CREATE_PROTECTED_BIT = VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT
+
 -- | VkDeviceQueueCreateFlags - Bitmask of VkDeviceQueueCreateFlagBits
 --
 -- = Description
@@ -235,8 +313,21 @@ type DeviceQueueCreateFlags = DeviceQueueCreateFlagBits
 -- -   Each element of @pQueuePriorities@ /must/ be between @0.0@ and @1.0@
 --     inclusive
 --
--- Unresolved directive in VkDeviceQueueCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkDeviceQueueCreateInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO'
+--
+-- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_global_priority.VkDeviceQueueGlobalPriorityCreateInfoEXT'
+--
+-- -   @flags@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core10.Device.VkDeviceQueueCreateFlagBits' values
+--
+-- -   @pQueuePriorities@ /must/ be a valid pointer to an array of
+--     @queueCount@ @float@ values
+--
+-- -   @queueCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
@@ -341,8 +432,42 @@ instance Zero DeviceQueueCreateInfo where
 --     'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo'::@ppEnabledExtensionNames@
 --     list /must/ also be present in that list.
 --
--- Unresolved directive in vkCreateDevice.txt -
--- include::{generated}\/validity\/protos\/vkCreateDevice.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pDevice@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_INITIALIZATION_FAILED'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_EXTENSION_NOT_PRESENT'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_FEATURE_NOT_PRESENT'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_TOO_MANY_OBJECTS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_DEVICE_LOST'
 --
 -- = See Also
 --
@@ -396,8 +521,19 @@ createDevice = \(PhysicalDevice physicalDevice' commandTable) -> \createInfo' ->
 --     were provided when @device@ was created, @pAllocator@ /must/ be
 --     @NULL@
 --
--- Unresolved directive in vkDestroyDevice.txt -
--- include::{generated}\/validity\/protos\/vkDestroyDevice.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   If @device@ is not @NULL@, @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- == Host Synchronization
+--
+-- -   Host access to @device@ /must/ be externally synchronized
 --
 -- = See Also
 --

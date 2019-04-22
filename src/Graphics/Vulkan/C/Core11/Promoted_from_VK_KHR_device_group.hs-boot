@@ -76,7 +76,8 @@ data VkPeerMemoryFeatureFlagBits
 --
 -- = See Also
 --
--- 'VkPeerMemoryFeatureFlagBits', 'vkGetDeviceGroupPeerMemoryFeatures'
+-- 'VkPeerMemoryFeatureFlagBits', 'vkGetDeviceGroupPeerMemoryFeatures',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_device_group.vkGetDeviceGroupPeerMemoryFeaturesKHR'
 type VkPeerMemoryFeatureFlags = VkPeerMemoryFeatureFlagBits
 
 type FN_vkCmdDispatchBase = ("commandBuffer" ::: VkCommandBuffer) -> ("baseGroupX" ::: Word32) -> ("baseGroupY" ::: Word32) -> ("baseGroupZ" ::: Word32) -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ()

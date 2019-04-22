@@ -38,25 +38,20 @@ import Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities
 -- | VkExportMemoryAllocateInfoNV - Specify memory handle types that may be
 -- exported
 --
--- = Description
---
--- Unresolved directive in VkExportMemoryAllocateInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkExportMemoryAllocateInfoNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryHandleTypeFlagsNV',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkExportMemoryAllocateInfoNV = VkExportMemoryAllocateInfoNV
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @handleTypes@ is a bitmask of
+  , -- | @handleTypes@ /must/ be a valid combination of
   -- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBitsNV'
-  -- specifying one or more memory handle types that /may/ be exported.
-  -- Multiple handle types /may/ be requested for the same allocation as long
-  -- as they are compatible, as reported by
-  -- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.vkGetPhysicalDeviceExternalImageFormatPropertiesNV'.
+  -- values
   vkHandleTypes :: VkExternalMemoryHandleTypeFlagsNV
   }
   deriving (Eq, Show)
@@ -79,22 +74,21 @@ instance Zero VkExportMemoryAllocateInfoNV where
 -- | VkExternalMemoryImageCreateInfoNV - Specify that an image may be backed
 -- by external memory
 --
--- = Description
---
--- Unresolved directive in VkExternalMemoryImageCreateInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkExternalMemoryImageCreateInfoNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryHandleTypeFlagsNV',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkExternalMemoryImageCreateInfoNV = VkExternalMemoryImageCreateInfoNV
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @handleTypes@ is a bitmask of
+  , -- | @handleTypes@ /must/ be a valid combination of
   -- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBitsNV'
-  -- specifying one or more external memory handle types.
+  -- values
   vkHandleTypes :: VkExternalMemoryHandleTypeFlagsNV
   }
   deriving (Eq, Show)
@@ -115,7 +109,7 @@ instance Zero VkExternalMemoryImageCreateInfoNV where
                                            zero
 
 -- No documentation found for TopLevel "VK_NV_EXTERNAL_MEMORY_EXTENSION_NAME"
-pattern VK_NV_EXTERNAL_MEMORY_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_NV_EXTERNAL_MEMORY_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_NV_EXTERNAL_MEMORY_EXTENSION_NAME = "VK_NV_external_memory"
 
 -- No documentation found for TopLevel "VK_NV_EXTERNAL_MEMORY_SPEC_VERSION"

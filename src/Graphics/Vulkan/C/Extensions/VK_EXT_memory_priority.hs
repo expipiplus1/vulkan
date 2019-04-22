@@ -46,16 +46,13 @@ import Graphics.Vulkan.C.Core10.Core
 -- If this structure is not included, it is as if the @priority@ value were
 -- @0.5@.
 --
--- == Valid Usage
---
--- Unresolved directive in VkMemoryPriorityAllocateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkMemoryPriorityAllocateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkMemoryPriorityAllocateInfoEXT = VkMemoryPriorityAllocateInfoEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_MEMORY_PRIORITY_ALLOCATE_INFO_EXT'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -97,14 +94,15 @@ instance Zero VkMemoryPriorityAllocateInfoEXT where
 -- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to
 -- enable features.
 --
--- Unresolved directive in VkPhysicalDeviceMemoryPriorityFeaturesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceMemoryPriorityFeaturesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceMemoryPriorityFeaturesEXT = VkPhysicalDeviceMemoryPriorityFeaturesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceMemoryPriorityFeaturesEXT" "sType"
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PRIORITY_FEATURES_EXT'
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceMemoryPriorityFeaturesEXT" "pNext"
   vkPNext :: Ptr ()
@@ -131,7 +129,7 @@ instance Zero VkPhysicalDeviceMemoryPriorityFeaturesEXT where
                                                    zero
 
 -- No documentation found for TopLevel "VK_EXT_MEMORY_PRIORITY_EXTENSION_NAME"
-pattern VK_EXT_MEMORY_PRIORITY_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_MEMORY_PRIORITY_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_MEMORY_PRIORITY_EXTENSION_NAME = "VK_EXT_memory_priority"
 
 -- No documentation found for TopLevel "VK_EXT_MEMORY_PRIORITY_SPEC_VERSION"

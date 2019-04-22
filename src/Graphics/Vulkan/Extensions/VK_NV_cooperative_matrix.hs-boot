@@ -20,7 +20,7 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkCooperativeMatrixPropertiesNV'
 type ComponentTypeNV = VkComponentTypeNV
 
 -- | VkScopeNV - Specify SPIR-V scope
@@ -31,5 +31,5 @@ type ComponentTypeNV = VkComponentTypeNV
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkCooperativeMatrixPropertiesNV'
 type ScopeNV = VkScopeNV

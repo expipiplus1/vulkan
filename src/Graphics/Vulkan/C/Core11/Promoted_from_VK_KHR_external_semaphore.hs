@@ -61,8 +61,13 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabili
 --     reported by
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreProperties'.
 --
--- Unresolved directive in VkExportSemaphoreCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkExportSemaphoreCreateInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be 'VK_STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO'
+--
+-- -   @handleTypes@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreHandleTypeFlagBits'
+--     values
 --
 -- = See Also
 --
@@ -142,6 +147,8 @@ pattern VK_SEMAPHORE_IMPORT_TEMPORARY_BIT = VkSemaphoreImportFlagBits 0x00000001
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd.VkImportSemaphoreFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32.VkImportSemaphoreWin32HandleInfoKHR',
 -- 'VkSemaphoreImportFlagBits'
 type VkSemaphoreImportFlags = VkSemaphoreImportFlagBits
 

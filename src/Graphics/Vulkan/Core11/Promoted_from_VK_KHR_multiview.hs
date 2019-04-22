@@ -13,10 +13,10 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_multiview
   , withCStructRenderPassMultiviewCreateInfo
   , fromCStructRenderPassMultiviewCreateInfo
   , RenderPassMultiviewCreateInfo(..)
-  , pattern VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES
-  , pattern VK_DEPENDENCY_VIEW_LOCAL_BIT
+  , pattern STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES
+  , pattern DEPENDENCY_VIEW_LOCAL_BIT
   ) where
 
 import Data.Function
@@ -71,8 +71,13 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_multiview
-  ( pattern VK_DEPENDENCY_VIEW_LOCAL_BIT
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES
+  , pattern STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO
+  )
+import Graphics.Vulkan.Core10.Pass
+  ( pattern DEPENDENCY_VIEW_LOCAL_BIT
   )
 
 
@@ -124,8 +129,10 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_multiview
 -- -   If @multiviewTessellationShader@ is enabled then @multiview@ /must/
 --     also be enabled.
 --
--- Unresolved directive in VkPhysicalDeviceMultiviewFeatures.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceMultiviewFeatures.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_multiview.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES'
 --
 -- = See Also
 --
@@ -184,8 +191,7 @@ instance Zero PhysicalDeviceMultiviewFeatures where
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- Unresolved directive in VkPhysicalDeviceMultiviewProperties.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceMultiviewProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -277,48 +283,25 @@ instance Zero PhysicalDeviceMultiviewProperties where
 -- sets or vertex\/index buffers /must/ be bound, and any relevant dynamic
 -- state or push constants /must/ be set before they are used.
 --
--- A multiview subpass /can/ declare that its shaders will write per-view
--- attributes for all views in a single invocation, by setting the
--- 'Graphics.Vulkan.C.Extensions.VK_NVX_multiview_per_view_attributes.VK_SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX'
--- bit in the subpass description. The only supported per-view attributes
--- are position and viewport mask, and per-view position and viewport masks
--- are written to output array variables decorated with @PositionPerViewNV@
--- and @ViewportMaskPerViewNV@, respectively. If
--- @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.1-extensions\/html\/vkspec.html#VK_NV_viewport_array2@
--- is not supported and enabled, @ViewportMaskPerViewNV@ /must/ not be
--- used. Values written to elements of @PositionPerViewNV@ and
--- @ViewportMaskPerViewNV@ /must/ not depend on the @ViewIndex@. The shader
--- /must/ also write to an output variable decorated with @Position@, and
--- the value written to @Position@ /must/ equal the value written to
--- @PositionPerViewNV@[@ViewIndex@]. Similarly, if @ViewportMaskPerViewNV@
--- is written to then the shader /must/ also write to an output variable
--- decorated with @ViewportMaskNV@, and the value written to
--- @ViewportMaskNV@ /must/ equal the value written to
--- @ViewportMaskPerViewNV@[@ViewIndex@]. Implementations will either use
--- values taken from @Position@ and @ViewportMaskNV@ and invoke the shader
--- once for each view, or will use values taken from @PositionPerViewNV@
--- and @ViewportMaskPerViewNV@ and invoke the shader fewer times. The
--- values written to @Position@ and @ViewportMaskNV@ /must/ not depend on
--- the values written to @PositionPerViewNV@ and @ViewportMaskPerViewNV@,
--- or vice versa (to allow compilers to eliminate the unused outputs). All
--- attributes that do not have @*PerViewNV@ counterparts /must/ not depend
--- on @ViewIndex@.
---
--- Per-view attributes are all-or-nothing for a subpass. That is, all
--- pipelines compiled against a subpass that includes the
--- 'Graphics.Vulkan.C.Extensions.VK_NVX_multiview_per_view_attributes.VK_SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX'
--- bit /must/ write per-view attributes to the @*PerViewNV[]@ shader
--- outputs, in addition to the non-per-view (e.g. @Position@) outputs.
--- Pipelines compiled against a subpass that does not include this bit
--- /must/ not include the @*PerViewNV[]@ outputs in their interfaces.
---
 -- == Valid Usage
 --
 -- -   Each view index /must/ not be set in more than one element of
 --     @pCorrelationMasks@
 --
--- Unresolved directive in VkRenderPassMultiviewCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkRenderPassMultiviewCreateInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_multiview.VK_STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO'
+--
+-- -   If @subpassCount@ is not @0@, @pViewMasks@ /must/ be a valid pointer
+--     to an array of @subpassCount@ @uint32_t@ values
+--
+-- -   If @dependencyCount@ is not @0@, @pViewOffsets@ /must/ be a valid
+--     pointer to an array of @dependencyCount@ @int32_t@ values
+--
+-- -   If @correlationMaskCount@ is not @0@, @pCorrelationMasks@ /must/ be
+--     a valid pointer to an array of @correlationMaskCount@ @uint32_t@
+--     values
 --
 -- = See Also
 --

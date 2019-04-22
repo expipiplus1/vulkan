@@ -9,9 +9,9 @@ module Graphics.Vulkan.Extensions.VK_MVK_ios_surface
   , fromCStructIOSSurfaceCreateInfoMVK
   , IOSSurfaceCreateInfoMVK(..)
   , createIOSSurfaceMVK
-  , pattern VK_MVK_IOS_SURFACE_SPEC_VERSION
-  , pattern VK_MVK_IOS_SURFACE_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK
+  , pattern MVK_IOS_SURFACE_EXTENSION_NAME
+  , pattern MVK_IOS_SURFACE_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK
   ) where
 
 import Control.Exception
@@ -19,6 +19,9 @@ import Control.Exception
   )
 import Control.Monad
   ( when
+  )
+import Data.String
+  ( IsString
   )
 import Foreign.Marshal.Alloc
   ( alloca
@@ -45,6 +48,8 @@ import Graphics.Vulkan.C.Extensions.VK_MVK_ios_surface
   ( VkIOSSurfaceCreateFlagsMVK(..)
   , VkIOSSurfaceCreateInfoMVK(..)
   , vkCreateIOSSurfaceMVK
+  , pattern VK_MVK_IOS_SURFACE_EXTENSION_NAME
+  , pattern VK_MVK_IOS_SURFACE_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
@@ -63,9 +68,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_MVK_ios_surface
-  ( pattern VK_MVK_IOS_SURFACE_EXTENSION_NAME
-  , pattern VK_MVK_IOS_SURFACE_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK
   )
 
 
@@ -73,17 +77,19 @@ import Graphics.Vulkan.C.Extensions.VK_MVK_ios_surface
 type IOSSurfaceCreateFlagsMVK = VkIOSSurfaceCreateFlagsMVK
 
 
+-- No complete pragma for IOSSurfaceCreateFlagsMVK as it has no patterns
+
+
 -- | VkIOSSurfaceCreateInfoMVK - Structure specifying parameters of a newly
 -- created iOS surface object
 --
--- == Valid Usage
---
--- Unresolved directive in VkIOSSurfaceCreateInfoMVK.txt -
--- include::{generated}\/validity\/structs\/VkIOSSurfaceCreateInfoMVK.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_MVK_ios_surface.VkIOSSurfaceCreateFlagsMVK',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_MVK_ios_surface.vkCreateIOSSurfaceMVK'
 data IOSSurfaceCreateInfoMVK = IOSSurfaceCreateInfoMVK
   { -- Univalued member elided
   -- No documentation found for Nested "IOSSurfaceCreateInfoMVK" "pNext"
@@ -136,13 +142,48 @@ instance Zero IOSSurfaceCreateInfoMVK where
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
 --     which the created surface object is returned.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCreateIOSSurfaceMVK.txt -
--- include::{generated}\/validity\/protos\/vkCreateIOSSurfaceMVK.txt[]
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Extensions.VK_MVK_ios_surface.VkIOSSurfaceCreateInfoMVK'
+--     structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pSurface@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_NATIVE_WINDOW_IN_USE_KHR'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Extensions.VK_MVK_ios_surface.VkIOSSurfaceCreateInfoMVK',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR'
 createIOSSurfaceMVK :: Instance ->  IOSSurfaceCreateInfoMVK ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
 createIOSSurfaceMVK = \(Instance instance' commandTable) -> \createInfo' -> \allocator -> alloca (\pSurface' -> maybeWith (\marshalled -> withCStructAllocationCallbacks marshalled . flip with) allocator (\pAllocator -> (\marshalled -> withCStructIOSSurfaceCreateInfoMVK marshalled . flip with) createInfo' (\pCreateInfo' -> vkCreateIOSSurfaceMVK commandTable instance' pCreateInfo' pAllocator pSurface' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (peek pSurface')))))
+
+-- No documentation found for TopLevel "VK_MVK_IOS_SURFACE_EXTENSION_NAME"
+pattern MVK_IOS_SURFACE_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern MVK_IOS_SURFACE_EXTENSION_NAME = VK_MVK_IOS_SURFACE_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_MVK_IOS_SURFACE_SPEC_VERSION"
+pattern MVK_IOS_SURFACE_SPEC_VERSION :: Integral a => a
+pattern MVK_IOS_SURFACE_SPEC_VERSION = VK_MVK_IOS_SURFACE_SPEC_VERSION

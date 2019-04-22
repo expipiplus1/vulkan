@@ -36,16 +36,14 @@ import Graphics.Vulkan.C.Core10.Core
 -- | VkPhysicalDevicePCIBusInfoPropertiesEXT - Structure containing PCI bus
 -- information of a physical device
 --
--- = Description
---
--- Unresolved directive in VkPhysicalDevicePCIBusInfoPropertiesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDevicePCIBusInfoPropertiesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDevicePCIBusInfoPropertiesEXT = VkPhysicalDevicePCIBusInfoPropertiesEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PCI_BUS_INFO_PROPERTIES_EXT'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -85,7 +83,7 @@ instance Zero VkPhysicalDevicePCIBusInfoPropertiesEXT where
                                                  zero
 
 -- No documentation found for TopLevel "VK_EXT_PCI_BUS_INFO_EXTENSION_NAME"
-pattern VK_EXT_PCI_BUS_INFO_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_PCI_BUS_INFO_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_PCI_BUS_INFO_EXTENSION_NAME = "VK_EXT_pci_bus_info"
 
 -- No documentation found for TopLevel "VK_EXT_PCI_BUS_INFO_SPEC_VERSION"

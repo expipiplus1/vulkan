@@ -10,9 +10,9 @@ module Graphics.Vulkan.Extensions.VK_KHR_wayland_surface
   , WaylandSurfaceCreateInfoKHR(..)
   , createWaylandSurfaceKHR
   , getPhysicalDeviceWaylandPresentationSupportKHR
-  , pattern VK_KHR_WAYLAND_SURFACE_SPEC_VERSION
-  , pattern VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR
+  , pattern KHR_WAYLAND_SURFACE_EXTENSION_NAME
+  , pattern KHR_WAYLAND_SURFACE_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR
   ) where
 
 import Control.Exception
@@ -20,6 +20,9 @@ import Control.Exception
   )
 import Control.Monad
   ( when
+  )
+import Data.String
+  ( IsString
   )
 import Data.Word
   ( Word32
@@ -53,6 +56,8 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_wayland_surface
   , Wl_surface
   , vkCreateWaylandSurfaceKHR
   , vkGetPhysicalDeviceWaylandPresentationSupportKHR
+  , pattern VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME
+  , pattern VK_KHR_WAYLAND_SURFACE_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
@@ -72,9 +77,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_KHR_wayland_surface
-  ( pattern VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME
-  , pattern VK_KHR_WAYLAND_SURFACE_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR
   )
 
 
@@ -82,17 +86,19 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_wayland_surface
 type WaylandSurfaceCreateFlagsKHR = VkWaylandSurfaceCreateFlagsKHR
 
 
+-- No complete pragma for WaylandSurfaceCreateFlagsKHR as it has no patterns
+
+
 -- | VkWaylandSurfaceCreateInfoKHR - Structure specifying parameters of a
 -- newly created Wayland surface object
 --
--- == Valid Usage
---
--- Unresolved directive in VkWaylandSurfaceCreateInfoKHR.txt -
--- include::{generated}\/validity\/structs\/VkWaylandSurfaceCreateInfoKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_wayland_surface.VkWaylandSurfaceCreateFlagsKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_wayland_surface.vkCreateWaylandSurfaceKHR'
 data WaylandSurfaceCreateInfoKHR = WaylandSurfaceCreateInfoKHR
   { -- Univalued member elided
   -- No documentation found for Nested "WaylandSurfaceCreateInfoKHR" "pNext"
@@ -151,14 +157,39 @@ instance Zero WaylandSurfaceCreateInfoKHR where
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
 --     which the created surface object is returned.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCreateWaylandSurfaceKHR.txt -
--- include::{generated}\/validity\/protos\/vkCreateWaylandSurfaceKHR.txt[]
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_wayland_surface.VkWaylandSurfaceCreateInfoKHR'
+--     structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pSurface@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_wayland_surface.VkWaylandSurfaceCreateInfoKHR'
 createWaylandSurfaceKHR :: Instance ->  WaylandSurfaceCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
 createWaylandSurfaceKHR = \(Instance instance' commandTable) -> \createInfo' -> \allocator -> alloca (\pSurface' -> maybeWith (\marshalled -> withCStructAllocationCallbacks marshalled . flip with) allocator (\pAllocator -> (\marshalled -> withCStructWaylandSurfaceCreateInfoKHR marshalled . flip with) createInfo' (\pCreateInfo' -> vkCreateWaylandSurfaceKHR commandTable instance' pCreateInfo' pAllocator pSurface' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (peek pSurface')))))
 
@@ -180,14 +211,18 @@ createWaylandSurfaceKHR = \(Instance instance' commandTable) -> \createInfo' -> 
 -- This platform-specific function /can/ be called prior to creating a
 -- surface.
 --
--- == Valid Usage
---
--- Unresolved directive in
--- vkGetPhysicalDeviceWaylandPresentationSupportKHR.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceWaylandPresentationSupportKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
 getPhysicalDeviceWaylandPresentationSupportKHR :: PhysicalDevice ->  Word32 ->  Ptr Wl_display ->  IO (VkBool32)
 getPhysicalDeviceWaylandPresentationSupportKHR = \(PhysicalDevice physicalDevice' commandTable) -> \queueFamilyIndex' -> \display' -> vkGetPhysicalDeviceWaylandPresentationSupportKHR commandTable physicalDevice' queueFamilyIndex' display' >>= (\ret -> pure ret)
+
+-- No documentation found for TopLevel "VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME"
+pattern KHR_WAYLAND_SURFACE_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern KHR_WAYLAND_SURFACE_EXTENSION_NAME = VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_KHR_WAYLAND_SURFACE_SPEC_VERSION"
+pattern KHR_WAYLAND_SURFACE_SPEC_VERSION :: Integral a => a
+pattern KHR_WAYLAND_SURFACE_SPEC_VERSION = VK_KHR_WAYLAND_SURFACE_SPEC_VERSION

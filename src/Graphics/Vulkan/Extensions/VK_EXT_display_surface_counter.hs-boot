@@ -19,7 +19,8 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counte
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter.VkSurfaceCounterFlagsEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.vkGetSwapchainCounterEXT'
 type SurfaceCounterFlagBitsEXT = VkSurfaceCounterFlagBitsEXT
 
 -- | VkSurfaceCounterFlagsEXT - Bitmask of VkSurfaceCounterFlagBitsEXT
@@ -32,5 +33,7 @@ type SurfaceCounterFlagBitsEXT = VkSurfaceCounterFlagBitsEXT
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter.VkSurfaceCapabilities2EXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter.VkSurfaceCounterFlagBitsEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.VkSwapchainCounterCreateInfoEXT'
 type SurfaceCounterFlagsEXT = SurfaceCounterFlagBitsEXT

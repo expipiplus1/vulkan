@@ -58,16 +58,15 @@ import Graphics.Vulkan.NamedType
 -- | VkDisplayNativeHdrSurfaceCapabilitiesAMD - Structure describing display
 -- native HDR specific capabilities of a surface
 --
--- = Description
---
--- Unresolved directive in VkDisplayNativeHdrSurfaceCapabilitiesAMD.txt -
--- include::{generated}\/validity\/structs\/VkDisplayNativeHdrSurfaceCapabilitiesAMD.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkDisplayNativeHdrSurfaceCapabilitiesAMD = VkDisplayNativeHdrSurfaceCapabilitiesAMD
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_DISPLAY_NATIVE_HDR_SURFACE_CAPABILITIES_AMD'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -107,8 +106,10 @@ instance Zero VkDisplayNativeHdrSurfaceCapabilitiesAMD where
 -- @localDimmingEnable@ is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE', meaning
 -- local dimming is initially enabled for the swapchain.
 --
--- Unresolved directive in VkSwapchainDisplayNativeHdrCreateInfoAMD.txt -
--- include::{generated}\/validity\/structs\/VkSwapchainDisplayNativeHdrCreateInfoAMD.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_SWAPCHAIN_DISPLAY_NATIVE_HDR_CREATE_INFO_AMD'
 --
 -- == Valid Usage
 --
@@ -119,7 +120,8 @@ instance Zero VkDisplayNativeHdrSurfaceCapabilitiesAMD where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkSwapchainDisplayNativeHdrCreateInfoAMD = VkSwapchainDisplayNativeHdrCreateInfoAMD
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -157,13 +159,20 @@ instance Zero VkSwapchainDisplayNativeHdrCreateInfoAMD where
 -- -   @localDimmingEnable@ specifies whether local dimming is enabled for
 --     the swapchain.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkSetLocalDimmingAMD.txt -
--- include::{generated}\/validity\/protos\/vkSetLocalDimmingAMD.txt[]
--- .Valid Usage
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
 --
--- == 
+-- -   @swapChain@ /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
+--     handle
+--
+-- -   Both of @device@, and @swapChain@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance'
+--
+-- == Valid Usage
 --
 -- -   It is only valid to call 'vkSetLocalDimmingAMD' if
 --     'VkDisplayNativeHdrSurfaceCapabilitiesAMD'::@localDimmingSupport@ is
@@ -171,7 +180,9 @@ instance Zero VkSwapchainDisplayNativeHdrCreateInfoAMD where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -193,16 +204,14 @@ type FN_vkSetLocalDimmingAMD = ("device" ::: VkDevice) -> ("swapChain" ::: VkSwa
 type PFN_vkSetLocalDimmingAMD = FunPtr FN_vkSetLocalDimmingAMD
 
 -- No documentation found for TopLevel "VK_AMD_DISPLAY_NATIVE_HDR_EXTENSION_NAME"
-pattern VK_AMD_DISPLAY_NATIVE_HDR_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_AMD_DISPLAY_NATIVE_HDR_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_AMD_DISPLAY_NATIVE_HDR_EXTENSION_NAME = "VK_AMD_display_native_hdr"
 
 -- No documentation found for TopLevel "VK_AMD_DISPLAY_NATIVE_HDR_SPEC_VERSION"
 pattern VK_AMD_DISPLAY_NATIVE_HDR_SPEC_VERSION :: Integral a => a
 pattern VK_AMD_DISPLAY_NATIVE_HDR_SPEC_VERSION = 1
 
--- | 'VK_COLOR_SPACE_DISPLAY_NATIVE_AMD' specifies support for the display’s
--- native color space. This matches the color space expectations of AMD’s
--- FreeSync2 standard, for displays supporting it.
+-- No documentation found for Nested "VkColorSpaceKHR" "VK_COLOR_SPACE_DISPLAY_NATIVE_AMD"
 pattern VK_COLOR_SPACE_DISPLAY_NATIVE_AMD :: VkColorSpaceKHR
 pattern VK_COLOR_SPACE_DISPLAY_NATIVE_AMD = VkColorSpaceKHR 1000213000
 

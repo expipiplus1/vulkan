@@ -461,51 +461,80 @@ pattern VK_UUID_SIZE = 16
 -- -   If either of @pfnInternalAllocation@ or @pfnInternalFree@ is not
 --     @NULL@, both /must/ be valid callbacks
 --
--- Unresolved directive in VkAllocationCallbacks.txt -
--- include::{generated}\/validity\/structs\/VkAllocationCallbacks.txt[]
---
 -- = See Also
 --
 -- 'PFN_vkAllocationFunction', 'PFN_vkFreeFunction',
 -- 'PFN_vkInternalAllocationNotification',
 -- 'PFN_vkInternalFreeNotification', 'PFN_vkReallocationFunction',
 -- 'Graphics.Vulkan.C.Core10.Memory.vkAllocateMemory',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCreateAccelerationStructureNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_android_surface.vkCreateAndroidSurfaceKHR',
 -- 'Graphics.Vulkan.C.Core10.Buffer.vkCreateBuffer',
 -- 'Graphics.Vulkan.C.Core10.BufferView.vkCreateBufferView',
 -- 'Graphics.Vulkan.C.Core10.CommandPool.vkCreateCommandPool',
 -- 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateComputePipelines',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.vkCreateDebugReportCallbackEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.vkCreateDebugUtilsMessengerEXT',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkCreateDescriptorPool',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkCreateDescriptorSetLayout',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.vkCreateDescriptorUpdateTemplate',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template.vkCreateDescriptorUpdateTemplateKHR',
 -- 'Graphics.Vulkan.C.Core10.Device.vkCreateDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkCreateDisplayModeKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkCreateDisplayPlaneSurfaceKHR',
 -- 'Graphics.Vulkan.C.Core10.Event.vkCreateEvent',
 -- 'Graphics.Vulkan.C.Core10.Fence.vkCreateFence',
 -- 'Graphics.Vulkan.C.Core10.Pass.vkCreateFramebuffer',
 -- 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateGraphicsPipelines',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_headless_surface.vkCreateHeadlessSurfaceEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_MVK_ios_surface.vkCreateIOSSurfaceMVK',
 -- 'Graphics.Vulkan.C.Core10.Image.vkCreateImage',
+-- 'Graphics.Vulkan.C.Extensions.VK_FUCHSIA_imagepipe_surface.vkCreateImagePipeSurfaceFUCHSIA',
 -- 'Graphics.Vulkan.C.Core10.ImageView.vkCreateImageView',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.vkCreateIndirectCommandsLayoutNVX',
 -- 'vkCreateInstance',
+-- 'Graphics.Vulkan.C.Extensions.VK_MVK_macos_surface.vkCreateMacOSSurfaceMVK',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_metal_surface.vkCreateMetalSurfaceEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.vkCreateObjectTableNVX',
 -- 'Graphics.Vulkan.C.Core10.PipelineCache.vkCreatePipelineCache',
 -- 'Graphics.Vulkan.C.Core10.PipelineLayout.vkCreatePipelineLayout',
 -- 'Graphics.Vulkan.C.Core10.Query.vkCreateQueryPool',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCreateRayTracingPipelinesNV',
 -- 'Graphics.Vulkan.C.Core10.Pass.vkCreateRenderPass',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.vkCreateRenderPass2KHR',
 -- 'Graphics.Vulkan.C.Core10.Sampler.vkCreateSampler',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.vkCreateSamplerYcbcrConversion',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_sampler_ycbcr_conversion.vkCreateSamplerYcbcrConversionKHR',
 -- 'Graphics.Vulkan.C.Core10.QueueSemaphore.vkCreateSemaphore',
 -- 'Graphics.Vulkan.C.Core10.Shader.vkCreateShaderModule',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display_swapchain.vkCreateSharedSwapchainsKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_GGP_stream_descriptor_surface.vkCreateStreamDescriptorSurfaceGGP',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkCreateSwapchainKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkCreateValidationCacheEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_NN_vi_surface.vkCreateViSurfaceNN',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_wayland_surface.vkCreateWaylandSurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_win32_surface.vkCreateWin32SurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_xcb_surface.vkCreateXcbSurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface.vkCreateXlibSurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkDestroyAccelerationStructureNV',
 -- 'Graphics.Vulkan.C.Core10.Buffer.vkDestroyBuffer',
 -- 'Graphics.Vulkan.C.Core10.BufferView.vkDestroyBufferView',
 -- 'Graphics.Vulkan.C.Core10.CommandPool.vkDestroyCommandPool',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.vkDestroyDebugReportCallbackEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.vkDestroyDebugUtilsMessengerEXT',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkDestroyDescriptorPool',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkDestroyDescriptorSetLayout',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.vkDestroyDescriptorUpdateTemplate',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template.vkDestroyDescriptorUpdateTemplateKHR',
 -- 'Graphics.Vulkan.C.Core10.Device.vkDestroyDevice',
 -- 'Graphics.Vulkan.C.Core10.Event.vkDestroyEvent',
 -- 'Graphics.Vulkan.C.Core10.Fence.vkDestroyFence',
 -- 'Graphics.Vulkan.C.Core10.Pass.vkDestroyFramebuffer',
 -- 'Graphics.Vulkan.C.Core10.Image.vkDestroyImage',
 -- 'Graphics.Vulkan.C.Core10.ImageView.vkDestroyImageView',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.vkDestroyIndirectCommandsLayoutNVX',
 -- 'vkDestroyInstance',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.vkDestroyObjectTableNVX',
 -- 'Graphics.Vulkan.C.Core10.Pipeline.vkDestroyPipeline',
 -- 'Graphics.Vulkan.C.Core10.PipelineCache.vkDestroyPipelineCache',
 -- 'Graphics.Vulkan.C.Core10.PipelineLayout.vkDestroyPipelineLayout',
@@ -513,9 +542,15 @@ pattern VK_UUID_SIZE = 16
 -- 'Graphics.Vulkan.C.Core10.Pass.vkDestroyRenderPass',
 -- 'Graphics.Vulkan.C.Core10.Sampler.vkDestroySampler',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.vkDestroySamplerYcbcrConversion',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_sampler_ycbcr_conversion.vkDestroySamplerYcbcrConversionKHR',
 -- 'Graphics.Vulkan.C.Core10.QueueSemaphore.vkDestroySemaphore',
 -- 'Graphics.Vulkan.C.Core10.Shader.vkDestroyShaderModule',
--- 'Graphics.Vulkan.C.Core10.Memory.vkFreeMemory'
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.vkDestroySurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkDestroySwapchainKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkDestroyValidationCacheEXT',
+-- 'Graphics.Vulkan.C.Core10.Memory.vkFreeMemory',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.vkRegisterDeviceEventEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.vkRegisterDisplayEventEXT'
 data VkAllocationCallbacks = VkAllocationCallbacks
   { -- | @pUserData@ is a value to be interpreted by the implementation of the
   -- callbacks. When any of the callbacks in 'VkAllocationCallbacks' are
@@ -571,10 +606,18 @@ instance Zero VkAllocationCallbacks where
 
 -- | VkApplicationInfo - Structure specifying application info
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in VkApplicationInfo.txt -
--- include::{generated}\/validity\/structs\/VkApplicationInfo.txt[]
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_APPLICATION_INFO'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   If @pApplicationName@ is not @NULL@, @pApplicationName@ /must/ be a
+--     null-terminated UTF-8 string
+--
+-- -   If @pEngineName@ is not @NULL@, @pEngineName@ /must/ be a
+--     null-terminated UTF-8 string
 --
 -- = See Also
 --
@@ -645,13 +688,21 @@ data VkDevice_T
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.vkAcquireFullScreenExclusiveModeEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkAcquireNextImage2KHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkAcquireNextImageKHR',
 -- 'Graphics.Vulkan.C.Core10.CommandBuffer.vkAllocateCommandBuffers',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkAllocateDescriptorSets',
 -- 'Graphics.Vulkan.C.Core10.Memory.vkAllocateMemory',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkBindAccelerationStructureMemoryNV',
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.vkBindBufferMemory',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.vkBindBufferMemory2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_bind_memory2.vkBindBufferMemory2KHR',
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.vkBindImageMemory',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.vkBindImageMemory2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_bind_memory2.vkBindImageMemory2KHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCompileDeferredNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCreateAccelerationStructureNV',
 -- 'Graphics.Vulkan.C.Core10.Buffer.vkCreateBuffer',
 -- 'Graphics.Vulkan.C.Core10.BufferView.vkCreateBufferView',
 -- 'Graphics.Vulkan.C.Core10.CommandPool.vkCreateCommandPool',
@@ -659,6 +710,7 @@ data VkDevice_T
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkCreateDescriptorPool',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkCreateDescriptorSetLayout',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.vkCreateDescriptorUpdateTemplate',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template.vkCreateDescriptorUpdateTemplateKHR',
 -- 'Graphics.Vulkan.C.Core10.Device.vkCreateDevice',
 -- 'Graphics.Vulkan.C.Core10.Event.vkCreateEvent',
 -- 'Graphics.Vulkan.C.Core10.Fence.vkCreateFence',
@@ -666,26 +718,40 @@ data VkDevice_T
 -- 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateGraphicsPipelines',
 -- 'Graphics.Vulkan.C.Core10.Image.vkCreateImage',
 -- 'Graphics.Vulkan.C.Core10.ImageView.vkCreateImageView',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.vkCreateIndirectCommandsLayoutNVX',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.vkCreateObjectTableNVX',
 -- 'Graphics.Vulkan.C.Core10.PipelineCache.vkCreatePipelineCache',
 -- 'Graphics.Vulkan.C.Core10.PipelineLayout.vkCreatePipelineLayout',
 -- 'Graphics.Vulkan.C.Core10.Query.vkCreateQueryPool',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCreateRayTracingPipelinesNV',
 -- 'Graphics.Vulkan.C.Core10.Pass.vkCreateRenderPass',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.vkCreateRenderPass2KHR',
 -- 'Graphics.Vulkan.C.Core10.Sampler.vkCreateSampler',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.vkCreateSamplerYcbcrConversion',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_sampler_ycbcr_conversion.vkCreateSamplerYcbcrConversionKHR',
 -- 'Graphics.Vulkan.C.Core10.QueueSemaphore.vkCreateSemaphore',
 -- 'Graphics.Vulkan.C.Core10.Shader.vkCreateShaderModule',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display_swapchain.vkCreateSharedSwapchainsKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkCreateSwapchainKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkCreateValidationCacheEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.vkDebugMarkerSetObjectNameEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.vkDebugMarkerSetObjectTagEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkDestroyAccelerationStructureNV',
 -- 'Graphics.Vulkan.C.Core10.Buffer.vkDestroyBuffer',
 -- 'Graphics.Vulkan.C.Core10.BufferView.vkDestroyBufferView',
 -- 'Graphics.Vulkan.C.Core10.CommandPool.vkDestroyCommandPool',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkDestroyDescriptorPool',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkDestroyDescriptorSetLayout',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.vkDestroyDescriptorUpdateTemplate',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template.vkDestroyDescriptorUpdateTemplateKHR',
 -- 'Graphics.Vulkan.C.Core10.Device.vkDestroyDevice',
 -- 'Graphics.Vulkan.C.Core10.Event.vkDestroyEvent',
 -- 'Graphics.Vulkan.C.Core10.Fence.vkDestroyFence',
 -- 'Graphics.Vulkan.C.Core10.Pass.vkDestroyFramebuffer',
 -- 'Graphics.Vulkan.C.Core10.Image.vkDestroyImage',
 -- 'Graphics.Vulkan.C.Core10.ImageView.vkDestroyImageView',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.vkDestroyIndirectCommandsLayoutNVX',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.vkDestroyObjectTableNVX',
 -- 'Graphics.Vulkan.C.Core10.Pipeline.vkDestroyPipeline',
 -- 'Graphics.Vulkan.C.Core10.PipelineCache.vkDestroyPipelineCache',
 -- 'Graphics.Vulkan.C.Core10.PipelineLayout.vkDestroyPipelineLayout',
@@ -693,42 +759,97 @@ data VkDevice_T
 -- 'Graphics.Vulkan.C.Core10.Pass.vkDestroyRenderPass',
 -- 'Graphics.Vulkan.C.Core10.Sampler.vkDestroySampler',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.vkDestroySamplerYcbcrConversion',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_sampler_ycbcr_conversion.vkDestroySamplerYcbcrConversionKHR',
 -- 'Graphics.Vulkan.C.Core10.QueueSemaphore.vkDestroySemaphore',
 -- 'Graphics.Vulkan.C.Core10.Shader.vkDestroyShaderModule',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkDestroySwapchainKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkDestroyValidationCacheEXT',
 -- 'Graphics.Vulkan.C.Core10.Queue.vkDeviceWaitIdle',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.vkDisplayPowerControlEXT',
 -- 'Graphics.Vulkan.C.Core10.Memory.vkFlushMappedMemoryRanges',
 -- 'Graphics.Vulkan.C.Core10.CommandBuffer.vkFreeCommandBuffers',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkFreeDescriptorSets',
 -- 'Graphics.Vulkan.C.Core10.Memory.vkFreeMemory',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkGetAccelerationStructureHandleNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkGetAccelerationStructureMemoryRequirementsNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.vkGetAndroidHardwareBufferPropertiesANDROID',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.vkGetBufferDeviceAddressEXT',
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.vkGetBufferMemoryRequirements',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.vkGetBufferMemoryRequirements2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_memory_requirements2.vkGetBufferMemoryRequirements2KHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.vkGetCalibratedTimestampsEXT',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance3.vkGetDescriptorSetLayoutSupport',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_maintenance3.vkGetDescriptorSetLayoutSupportKHR',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.vkGetDeviceGroupPeerMemoryFeatures',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_device_group.vkGetDeviceGroupPeerMemoryFeaturesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkGetDeviceGroupPresentCapabilitiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_device_group.vkGetDeviceGroupSurfacePresentModes2EXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkGetDeviceGroupSurfacePresentModesKHR',
 -- 'Graphics.Vulkan.C.Core10.Memory.vkGetDeviceMemoryCommitment',
 -- 'vkGetDeviceProcAddr',
 -- 'Graphics.Vulkan.C.Core10.Queue.vkGetDeviceQueue',
 -- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory.vkGetDeviceQueue2',
 -- 'Graphics.Vulkan.C.Core10.Event.vkGetEventStatus',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd.vkGetFenceFdKHR',
 -- 'Graphics.Vulkan.C.Core10.Fence.vkGetFenceStatus',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.vkGetFenceWin32HandleKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.vkGetImageDrmFormatModifierPropertiesEXT',
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.vkGetImageMemoryRequirements',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.vkGetImageMemoryRequirements2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_memory_requirements2.vkGetImageMemoryRequirements2KHR',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.vkGetImageSparseMemoryRequirements',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.vkGetImageSparseMemoryRequirements2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_memory_requirements2.vkGetImageSparseMemoryRequirements2KHR',
 -- 'Graphics.Vulkan.C.Core10.Image.vkGetImageSubresourceLayout',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_image_view_handle.vkGetImageViewHandleNVX',
+-- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.vkGetMemoryAndroidHardwareBufferANDROID',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd.vkGetMemoryFdKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd.vkGetMemoryFdPropertiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_host.vkGetMemoryHostPointerPropertiesEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32.vkGetMemoryWin32HandleKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32.vkGetMemoryWin32HandleNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32.vkGetMemoryWin32HandlePropertiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.vkGetPastPresentationTimingGOOGLE',
 -- 'Graphics.Vulkan.C.Core10.PipelineCache.vkGetPipelineCacheData',
 -- 'Graphics.Vulkan.C.Core10.Query.vkGetQueryPoolResults',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkGetRayTracingShaderGroupHandlesNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.vkGetRefreshCycleDurationGOOGLE',
 -- 'Graphics.Vulkan.C.Core10.Pass.vkGetRenderAreaGranularity',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd.vkGetSemaphoreFdKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32.vkGetSemaphoreWin32HandleKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_shader_info.vkGetShaderInfoAMD',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.vkGetSwapchainCounterEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkGetSwapchainImagesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image.vkGetSwapchainStatusKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkGetValidationCacheDataEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd.vkImportFenceFdKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.vkImportFenceWin32HandleKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd.vkImportSemaphoreFdKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32.vkImportSemaphoreWin32HandleKHR',
 -- 'Graphics.Vulkan.C.Core10.Memory.vkInvalidateMappedMemoryRanges',
 -- 'Graphics.Vulkan.C.Core10.Memory.vkMapMemory',
 -- 'Graphics.Vulkan.C.Core10.PipelineCache.vkMergePipelineCaches',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkMergeValidationCachesEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.vkRegisterDeviceEventEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.vkRegisterDisplayEventEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.vkRegisterObjectsNVX',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.vkReleaseFullScreenExclusiveModeEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandPool.vkResetCommandPool',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkResetDescriptorPool',
 -- 'Graphics.Vulkan.C.Core10.Event.vkResetEvent',
 -- 'Graphics.Vulkan.C.Core10.Fence.vkResetFences',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_host_query_reset.vkResetQueryPoolEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.vkSetDebugUtilsObjectNameEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.vkSetDebugUtilsObjectTagEXT',
 -- 'Graphics.Vulkan.C.Core10.Event.vkSetEvent',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_hdr_metadata.vkSetHdrMetadataEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_display_native_hdr.vkSetLocalDimmingAMD',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.vkTrimCommandPool',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_maintenance1.vkTrimCommandPoolKHR',
 -- 'Graphics.Vulkan.C.Core10.Memory.vkUnmapMemory',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.vkUnregisterObjectsNVX',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.vkUpdateDescriptorSetWithTemplate',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template.vkUpdateDescriptorSetWithTemplateKHR',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkUpdateDescriptorSets',
 -- 'Graphics.Vulkan.C.Core10.Fence.vkWaitForFences'
 type VkDevice = Ptr VkDevice_T
@@ -737,6 +858,9 @@ type VkDevice = Ptr VkDevice_T
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkAccelerationStructureCreateInfoNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkAndroidHardwareBufferPropertiesANDROID',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkBindAccelerationStructureMemoryInfoNV',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.VkBindBufferMemoryInfo',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.VkBindImageMemoryInfo',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkBufferCopy',
@@ -744,38 +868,54 @@ type VkDevice = Ptr VkDevice_T
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkBufferImageCopy',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkBufferMemoryBarrier',
 -- 'Graphics.Vulkan.C.Core10.BufferView.VkBufferViewCreateInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkCmdProcessCommandsInfoNVX',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_conditional_rendering.VkConditionalRenderingBeginInfoEXT',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorBufferInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkGeometryAABBNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkGeometryTrianglesNV',
 -- 'VkImageFormatProperties',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkIndirectCommandsTokenNVX',
 -- 'Graphics.Vulkan.C.Core10.Memory.VkMappedMemoryRange',
 -- 'Graphics.Vulkan.C.Core10.Memory.VkMemoryAllocateInfo', 'VkMemoryHeap',
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_host.VkPhysicalDeviceExternalMemoryHostPropertiesEXT',
 -- 'VkPhysicalDeviceLimits',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance3.VkPhysicalDeviceMaintenance3Properties',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_memory_budget.VkPhysicalDeviceMemoryBudgetPropertiesEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.VkPhysicalDeviceTransformFeedbackPropertiesEXT',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageMemoryBind',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageMemoryRequirements',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseMemoryBind',
 -- 'Graphics.Vulkan.C.Core10.Image.VkSubresourceLayout',
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.vkBindBufferMemory',
 -- 'Graphics.Vulkan.C.Core10.MemoryManagement.vkBindImageMemory',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdBeginTransformFeedbackEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindIndexBuffer',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdBindTransformFeedbackBuffersEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindVertexBuffers',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCmdBuildAccelerationStructureNV',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdCopyQueryPoolResults',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDispatchIndirect',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDrawIndexedIndirect',
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_draw_indirect_count.vkCmdDrawIndexedIndirectCountAMD',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_draw_indirect_count.vkCmdDrawIndexedIndirectCountKHR',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDrawIndirect',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdDrawIndirectByteCountEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_draw_indirect_count.vkCmdDrawIndirectCountAMD',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_draw_indirect_count.vkCmdDrawIndirectCountKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.vkCmdDrawMeshTasksIndirectCountNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.vkCmdDrawMeshTasksIndirectNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdEndTransformFeedbackEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdFillBuffer',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCmdTraceRaysNV',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdUpdateBuffer',
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_buffer_marker.vkCmdWriteBufferMarkerAMD',
 -- 'Graphics.Vulkan.C.Core10.Memory.vkGetDeviceMemoryCommitment',
 -- 'Graphics.Vulkan.C.Core10.Query.vkGetQueryPoolResults',
 -- 'Graphics.Vulkan.C.Core10.Memory.vkMapMemory'
 type VkDeviceSize = Word64
 
 -- | VkExtent3D - Structure specifying a three-dimensional extent
---
--- = Description
---
--- Unresolved directive in VkExtent3D.txt -
--- include::{generated}\/validity\/structs\/VkExtent3D.txt[]
 --
 -- = See Also
 --
@@ -819,10 +959,8 @@ instance Zero VkExtent3D where
 --
 -- = Description
 --
--- The following bits /may/ be set in @linearTilingFeatures@,
--- @optimalTilingFeatures@, and
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkDrmFormatModifierPropertiesEXT drmFormatModifierTilingFeatures>,
--- specifying that the features are supported by
+-- The following bits /may/ be set in @linearTilingFeatures@ and
+-- @optimalTilingFeatures@, specifying that the features are supported by
 -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkImage images>
 -- or
 -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#VkImageView image views>
@@ -889,98 +1027,6 @@ instance Zero VkExtent3D where
 --     value /must/ be in the range [0,1] and /should/ be proportional to,
 --     or a weighted average of, the number of comparison passes or
 --     failures.
---
--- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.VK_FORMAT_FEATURE_TRANSFER_SRC_BIT'
---     specifies that an image /can/ be used as a source image for
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#copies copy commands>.
---
--- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.VK_FORMAT_FEATURE_TRANSFER_DST_BIT'
---     specifies that an image /can/ be used as a destination image for
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#copies copy commands>
---     and
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#clears clear commands>.
---
--- -   'Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax.VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT'
---     specifies 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' /can/
---     be used as a sampled image with a min or max
---     'Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax.VkSamplerReductionModeEXT'.
---     This bit /must/ only be exposed for formats that also support the
---     'VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT'.
---
--- -   'Graphics.Vulkan.C.Extensions.VK_EXT_filter_cubic.VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT'
---     specifies that 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage'
---     /can/ be used with a sampler that has either of @magFilter@ or
---     @minFilter@ set to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_filter_cubic.VK_FILTER_CUBIC_EXT',
---     or be the source image for a blit with @filter@ set to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_filter_cubic.VK_FILTER_CUBIC_EXT'.
---     This bit /must/ only be exposed for formats that also support the
---     'VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT'. If the format being queried
---     is a depth\/stencil format, this only specifies that the depth
---     aspect is cubic filterable.
---
--- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT'
---     specifies that an application /can/ define a
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>
---     using this format as a source, and that an image of this format
---     /can/ be used with a
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'
---     @xChromaOffset@ and\/or @yChromaOffset@ of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_CHROMA_LOCATION_MIDPOINT'.
---     Otherwise both @xChromaOffset@ and @yChromaOffset@ /must/ be
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_CHROMA_LOCATION_COSITED_EVEN'.
---     If a format does not incorporate chroma downsampling (it is not a
---     “422” or “420” format) but the implementation supports sampler
---     Y’CBCR conversion for this format, the implementation /must/ set
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT'.
---
--- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT'
---     specifies that an application /can/ define a
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>
---     using this format as a source, and that an image of this format
---     /can/ be used with a
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'
---     @xChromaOffset@ and\/or @yChromaOffset@ of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_CHROMA_LOCATION_COSITED_EVEN'.
---     Otherwise both @xChromaOffset@ and @yChromaOffset@ /must/ be
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_CHROMA_LOCATION_MIDPOINT'.
---     If neither
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT'
---     nor
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT'
---     is set, the application /must/ not define a
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>
---     using this format as a source.
---
--- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT'
---     specifies that the format can do linear sampler filtering
---     (min\/magFilter) whilst sampler Y’CBCR conversion is enabled.
---
--- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT'
---     specifies that the format can have different chroma, min, and mag
---     filters.
---
--- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT'
---     specifies that reconstruction is explicit, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures-chroma-reconstruction>.
---     If this bit is not present, reconstruction is implicit by default.
---
--- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT'
---     specifies that reconstruction /can/ be forcibly made explicit by
---     setting
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo'::@forceExplicitReconstruction@
---     to 'Graphics.Vulkan.C.Core10.Core.VK_TRUE'.
---
--- -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_DISJOINT_BIT'
---     specifies that a multi-planar image /can/ have the
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_CREATE_DISJOINT_BIT'
---     set during image creation. An implementation /must/ not set
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_DISJOINT_BIT'
---     for /single-plane formats/.
---
--- -   'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_FORMAT_FEATURE_FRAGMENT_DENSITY_MAP_BIT_EXT'
---     specifies that an image view /can/ be used as a
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>.
 --
 -- The following bits /may/ be set in @bufferFeatures@, specifying that the
 -- features are supported by
@@ -1198,6 +1244,8 @@ pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT = VkFormatFeatureFlagB
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkAndroidHardwareBufferFormatPropertiesANDROID',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VkDrmFormatModifierPropertiesEXT',
 -- 'VkFormatFeatureFlagBits', 'VkFormatProperties'
 type VkFormatFeatureFlags = VkFormatFeatureFlagBits
 
@@ -1207,18 +1255,13 @@ type VkFormatFeatureFlags = VkFormatFeatureFlagBits
 --
 -- __Note__
 --
--- If no format feature flags are supported, the format itself is not
--- supported, and images of that format cannot be created.
+-- If no format feature flags are supported, then the only possible use
+-- would be image transfers - which alone are not useful. As such, if no
+-- format feature flags are supported, the format itself is not supported,
+-- and images of that format cannot be created.
 --
 -- If @format@ is a block-compressed format, then @bufferFeatures@ /must/
 -- not support any features for the format.
---
--- If @format@ is not a multi-plane format then @linearTilingFeatures@ and
--- @optimalTilingFeatures@ /must/ not contain
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_FEATURE_DISJOINT_BIT'.
---
--- Unresolved directive in VkFormatProperties.txt -
--- include::{generated}\/validity\/structs\/VkFormatProperties.txt[]
 --
 -- = See Also
 --
@@ -1340,11 +1383,7 @@ pattern VK_IMAGE_CREATE_SPARSE_ALIASED_BIT = VkImageCreateFlagBits 0x00000004
 
 -- | 'VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT' specifies that the image /can/ be
 -- used to create a 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' with a
--- different format from the image. For
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
--- formats, 'VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT' specifies that a
--- 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' can be created of a
--- /plane/ of the image.
+-- different format from the image.
 pattern VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT = VkImageCreateFlagBits 0x00000008
 
@@ -1367,71 +1406,12 @@ pattern VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT = VkImageCreateFlagBits 0x00000010
 -- 'VkImageCreateFlagBits',
 -- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.vkGetPhysicalDeviceExternalImageFormatPropertiesNV',
 -- 'vkGetPhysicalDeviceImageFormatProperties'
 type VkImageCreateFlags = VkImageCreateFlagBits
 
 -- | VkImageFormatProperties - Structure specifying an image format
 -- properties
---
--- = Members
---
--- -   @maxExtent@ are the maximum image dimensions. See the
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-extentperimagetype Allowed Extent Values>
---     section below for how these values are constrained by @type@.
---
--- -   @maxMipLevels@ is the maximum number of mipmap levels.
---     @maxMipLevels@ /must/ be equal to the number of levels in the
---     complete mipmap chain based on the @maxExtent.width@,
---     @maxExtent.height@, and @maxExtent.depth@, except when one of the
---     following conditions is true, in which case it /may/ instead be @1@:
---
---     -   'vkGetPhysicalDeviceImageFormatProperties'::@tiling@ was
---         'VK_IMAGE_TILING_LINEAR'
---
---     -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2'::@tiling@
---         was
---         'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
---
---     -   the
---         'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2'::@pNext@
---         chain included an instance of
---         'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkPhysicalDeviceExternalImageFormatInfo'
---         with a handle type included in the @handleTypes@ member for
---         which mipmap image support is not required
---
---     -   image @format@ is one of those listed in
---         <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>
---
---     -   @flags@ contains
---         'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
---
--- -   @maxArrayLayers@ is the maximum number of array layers.
---     @maxArrayLayers@ /must/ be no less than
---     'VkPhysicalDeviceLimits'::@maxImageArrayLayers@, except when one of
---     the following conditions is true, in which case it /may/ instead be
---     @1@:
---
---     -   @tiling@ is 'VK_IMAGE_TILING_LINEAR'
---
---     -   @tiling@ is 'VK_IMAGE_TILING_OPTIMAL' and @type@ is
---         'VK_IMAGE_TYPE_3D'
---
---     -   @format@ is one of those listed in
---         <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>
---
--- -   If @tiling@ is
---     'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
---     then @maxArrayLayers@ /must/ not be 0.
---
--- -   @sampleCounts@ is a bitmask of 'VkSampleCountFlagBits' specifying
---     all the supported sample counts for this image as described
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-supported-sample-counts below>.
---
--- -   @maxResourceSize@ is an upper bound on the total image size in
---     bytes, inclusive of all image subresources. Implementations /may/
---     have an address space limit on total size of a resource, which is
---     advertised by this property. @maxResourceSize@ /must/ be at least
---     231.
 --
 -- = Description
 --
@@ -1459,24 +1439,46 @@ type VkImageCreateFlags = VkImageCreateFlagBits
 -- contents on error. This exception was unintentional, but is preserved
 -- for backwards compatibility.
 --
--- Unresolved directive in VkImageFormatProperties.txt -
--- include::{generated}\/validity\/structs\/VkImageFormatProperties.txt[]
---
 -- = See Also
 --
 -- 'VkDeviceSize', 'VkExtent3D',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalImageFormatPropertiesNV',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkImageFormatProperties2',
 -- 'VkSampleCountFlags', 'vkGetPhysicalDeviceImageFormatProperties'
 data VkImageFormatProperties = VkImageFormatProperties
-  { -- No documentation found for Nested "VkImageFormatProperties" "maxExtent"
+  { -- | @maxExtent@ are the maximum image dimensions. See the
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-extentperimagetype Allowed Extent Values>
+  -- section below for how these values are constrained by @type@.
   vkMaxExtent :: VkExtent3D
-  , -- No documentation found for Nested "VkImageFormatProperties" "maxMipLevels"
+  , -- | @maxMipLevels@ is the maximum number of mipmap levels. @maxMipLevels@
+  -- /must/ be equal to the number of levels in the complete mipmap chain
+  -- based on the @maxExtent.width@, @maxExtent.height@, and
+  -- @maxExtent.depth@, except when one of the following conditions is true,
+  -- in which case it /may/ instead be @1@:
+  --
+  -- -   'vkGetPhysicalDeviceImageFormatProperties'::@tiling@ was
+  --     'VK_IMAGE_TILING_LINEAR'
+  --
   vkMaxMipLevels :: Word32
-  , -- No documentation found for Nested "VkImageFormatProperties" "maxArrayLayers"
+  , -- | @maxArrayLayers@ is the maximum number of array layers. @maxArrayLayers@
+  -- /must/ be no less than 'VkPhysicalDeviceLimits'::@maxImageArrayLayers@,
+  -- except when one of the following conditions is true, in which case it
+  -- /may/ instead be @1@:
+  --
+  -- -   @tiling@ is 'VK_IMAGE_TILING_LINEAR'
+  --
+  -- -   @tiling@ is 'VK_IMAGE_TILING_OPTIMAL' and @type@ is
+  --     'VK_IMAGE_TYPE_3D'
+  --
   vkMaxArrayLayers :: Word32
-  , -- No documentation found for Nested "VkImageFormatProperties" "sampleCounts"
+  , -- | @sampleCounts@ is a bitmask of 'VkSampleCountFlagBits' specifying all
+  -- the supported sample counts for this image as described
+  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-supported-sample-counts below>.
   vkSampleCounts :: VkSampleCountFlags
-  , -- No documentation found for Nested "VkImageFormatProperties" "maxResourceSize"
+  , -- | @maxResourceSize@ is an upper bound on the total image size in bytes,
+  -- inclusive of all image subresources. Implementations /may/ have an
+  -- address space limit on total size of a resource, which is advertised by
+  -- this property. @maxResourceSize@ /must/ be at least 231.
   vkMaxResourceSize :: VkDeviceSize
   }
   deriving (Eq, Show)
@@ -1511,6 +1513,7 @@ instance Zero VkImageFormatProperties where
 -- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceSparseImageFormatInfo2',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.vkGetPhysicalDeviceExternalImageFormatPropertiesNV',
 -- 'vkGetPhysicalDeviceImageFormatProperties',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.vkGetPhysicalDeviceSparseImageFormatProperties'
 newtype VkImageTiling = VkImageTiling Int32
@@ -1556,6 +1559,7 @@ pattern VK_IMAGE_TILING_LINEAR = VkImageTiling 1
 -- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceSparseImageFormatInfo2',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.vkGetPhysicalDeviceExternalImageFormatPropertiesNV',
 -- 'vkGetPhysicalDeviceImageFormatProperties',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.vkGetPhysicalDeviceSparseImageFormatProperties'
 newtype VkImageType = VkImageType Int32
@@ -1686,7 +1690,7 @@ pattern VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT = VkImageUsageFlagBits 0x00000010
 -- | 'VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT' specifies that the image
 -- /can/ be used to create a
 -- 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' suitable for use as a
--- depth\/stencil or depth\/stencil resolve attachment in a
+-- depth\/stencil attachment in a
 -- 'Graphics.Vulkan.C.Core10.Pass.VkFramebuffer'.
 pattern VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT :: VkImageUsageFlagBits
 pattern VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT = VkImageUsageFlagBits 0x00000020
@@ -1721,10 +1725,16 @@ pattern VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT = VkImageUsageFlagBits 0x00000080
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_separate_stencil_usage.VkImageStencilUsageCreateInfoEXT',
 -- 'VkImageUsageFlagBits',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VkImageViewUsageCreateInfo',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceSparseImageFormatInfo2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image.VkSharedPresentSurfaceCapabilitiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter.VkSurfaceCapabilities2EXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceCapabilitiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.vkGetPhysicalDeviceExternalImageFormatPropertiesNV',
 -- 'vkGetPhysicalDeviceImageFormatProperties',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.vkGetPhysicalDeviceSparseImageFormatProperties'
 type VkImageUsageFlags = VkImageUsageFlagBits
@@ -1735,9 +1745,31 @@ data VkInstance_T
 --
 -- = See Also
 --
--- 'vkCreateInstance', 'vkDestroyInstance',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_android_surface.vkCreateAndroidSurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.vkCreateDebugReportCallbackEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.vkCreateDebugUtilsMessengerEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkCreateDisplayPlaneSurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_headless_surface.vkCreateHeadlessSurfaceEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_MVK_ios_surface.vkCreateIOSSurfaceMVK',
+-- 'Graphics.Vulkan.C.Extensions.VK_FUCHSIA_imagepipe_surface.vkCreateImagePipeSurfaceFUCHSIA',
+-- 'vkCreateInstance',
+-- 'Graphics.Vulkan.C.Extensions.VK_MVK_macos_surface.vkCreateMacOSSurfaceMVK',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_metal_surface.vkCreateMetalSurfaceEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_GGP_stream_descriptor_surface.vkCreateStreamDescriptorSurfaceGGP',
+-- 'Graphics.Vulkan.C.Extensions.VK_NN_vi_surface.vkCreateViSurfaceNN',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_wayland_surface.vkCreateWaylandSurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_win32_surface.vkCreateWin32SurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_xcb_surface.vkCreateXcbSurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface.vkCreateXlibSurfaceKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.vkDebugReportMessageEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.vkDestroyDebugReportCallbackEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.vkDestroyDebugUtilsMessengerEXT',
+-- 'vkDestroyInstance',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.vkDestroySurfaceKHR',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation.vkEnumeratePhysicalDeviceGroups',
--- 'vkEnumeratePhysicalDevices', 'vkGetInstanceProcAddr'
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_device_group_creation.vkEnumeratePhysicalDeviceGroupsKHR',
+-- 'vkEnumeratePhysicalDevices', 'vkGetInstanceProcAddr',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.vkSubmitDebugUtilsMessageEXT'
 type VkInstance = Ptr VkInstance_T
 
 -- ** VkInstanceCreateFlags
@@ -1774,10 +1806,34 @@ instance Read VkInstanceCreateFlags where
 -- | VkInstanceCreateInfo - Structure specifying parameters of a newly
 -- created instance
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in VkInstanceCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkInstanceCreateInfo.txt[]
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO'
+--
+-- -   Each @pNext@ member of any structure (including this one) in the
+--     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
+--     instance of
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VkDebugReportCallbackCreateInfoEXT',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.VkDebugUtilsMessengerCreateInfoEXT',
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VkValidationFeaturesEXT',
+--     or
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_validation_flags.VkValidationFlagsEXT'
+--
+-- -   Each @sType@ member in the @pNext@ chain /must/ be unique
+--
+-- -   @flags@ /must/ be @0@
+--
+-- -   If @pApplicationInfo@ is not @NULL@, @pApplicationInfo@ /must/ be a
+--     valid pointer to a valid 'VkApplicationInfo' structure
+--
+-- -   If @enabledLayerCount@ is not @0@, @ppEnabledLayerNames@ /must/ be a
+--     valid pointer to an array of @enabledLayerCount@ null-terminated
+--     UTF-8 strings
+--
+-- -   If @enabledExtensionCount@ is not @0@, @ppEnabledExtensionNames@
+--     /must/ be a valid pointer to an array of @enabledExtensionCount@
+--     null-terminated UTF-8 strings
 --
 -- = See Also
 --
@@ -1872,11 +1928,6 @@ pattern VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE :: VkInternalAllocationType
 pattern VK_INTERNAL_ALLOCATION_TYPE_EXECUTABLE = VkInternalAllocationType 0
 
 -- | VkMemoryHeap - Structure specifying a memory heap
---
--- = Description
---
--- Unresolved directive in VkMemoryHeap.txt -
--- include::{generated}\/validity\/structs\/VkMemoryHeap.txt[]
 --
 -- = See Also
 --
@@ -2039,11 +2090,6 @@ type VkMemoryPropertyFlags = VkMemoryPropertyFlagBits
 
 -- | VkMemoryType - Structure specifying memory type
 --
--- = Description
---
--- Unresolved directive in VkMemoryType.txt -
--- include::{generated}\/validity\/structs\/VkMemoryType.txt[]
---
 -- = See Also
 --
 -- 'VkMemoryPropertyFlags', 'VkPhysicalDeviceMemoryProperties'
@@ -2078,27 +2124,68 @@ data VkPhysicalDevice_T
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation.VkDeviceGroupDeviceCreateInfo',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation.VkPhysicalDeviceGroupProperties',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_acquire_xlib_display.vkAcquireXlibDisplayEXT',
 -- 'Graphics.Vulkan.C.Core10.Device.vkCreateDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkCreateDisplayModeKHR',
 -- 'Graphics.Vulkan.C.Core10.ExtensionDiscovery.vkEnumerateDeviceExtensionProperties',
 -- 'Graphics.Vulkan.C.Core10.LayerDiscovery.vkEnumerateDeviceLayerProperties',
 -- 'vkEnumeratePhysicalDevices',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.vkGetDisplayModeProperties2KHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetDisplayModePropertiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.vkGetDisplayPlaneCapabilities2KHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetDisplayPlaneCapabilitiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetDisplayPlaneSupportedDisplaysKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.vkGetPhysicalDeviceCalibrateableTimeDomainsEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.vkGetPhysicalDeviceCooperativeMatrixPropertiesNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.vkGetPhysicalDeviceDisplayPlaneProperties2KHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetPhysicalDeviceDisplayPlanePropertiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.vkGetPhysicalDeviceDisplayProperties2KHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetPhysicalDeviceDisplayPropertiesKHR',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.vkGetPhysicalDeviceExternalBufferProperties',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_capabilities.vkGetPhysicalDeviceExternalBufferPropertiesKHR',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.vkGetPhysicalDeviceExternalFenceProperties',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_capabilities.vkGetPhysicalDeviceExternalFencePropertiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.vkGetPhysicalDeviceExternalImageFormatPropertiesNV',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.vkGetPhysicalDeviceExternalSemaphoreProperties',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_capabilities.vkGetPhysicalDeviceExternalSemaphorePropertiesKHR',
 -- 'vkGetPhysicalDeviceFeatures',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceFeatures2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceFeatures2KHR',
 -- 'vkGetPhysicalDeviceFormatProperties',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceFormatProperties2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceFormatProperties2KHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX',
 -- 'vkGetPhysicalDeviceImageFormatProperties',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceImageFormatProperties2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceImageFormatProperties2KHR',
 -- 'vkGetPhysicalDeviceMemoryProperties',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceMemoryProperties2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceMemoryProperties2KHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.vkGetPhysicalDeviceMultisamplePropertiesEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkGetPhysicalDevicePresentRectanglesKHR',
 -- 'vkGetPhysicalDeviceProperties',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceProperties2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceProperties2KHR',
 -- 'vkGetPhysicalDeviceQueueFamilyProperties',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceQueueFamilyProperties2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceQueueFamilyProperties2KHR',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.vkGetPhysicalDeviceSparseImageFormatProperties',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceSparseImageFormatProperties2'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceSparseImageFormatProperties2',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceSparseImageFormatProperties2KHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter.vkGetPhysicalDeviceSurfaceCapabilities2EXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.vkGetPhysicalDeviceSurfaceCapabilities2KHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.vkGetPhysicalDeviceSurfaceCapabilitiesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.vkGetPhysicalDeviceSurfaceFormats2KHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.vkGetPhysicalDeviceSurfaceFormatsKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.vkGetPhysicalDeviceSurfacePresentModes2EXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.vkGetPhysicalDeviceSurfacePresentModesKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.vkGetPhysicalDeviceSurfaceSupportKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_wayland_surface.vkGetPhysicalDeviceWaylandPresentationSupportKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_win32_surface.vkGetPhysicalDeviceWin32PresentationSupportKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_xcb_surface.vkGetPhysicalDeviceXcbPresentationSupportKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface.vkGetPhysicalDeviceXlibPresentationSupportKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_acquire_xlib_display.vkGetRandROutputDisplayEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_direct_mode_display.vkReleaseDisplayEXT'
 type VkPhysicalDevice = Ptr VkPhysicalDevice_T
 
 -- | VkPhysicalDeviceFeatures - Structure describing the fine-grained
@@ -2108,11 +2195,6 @@ type VkPhysicalDevice = Ptr VkPhysicalDevice_T
 --
 -- The members of the 'VkPhysicalDeviceFeatures' structure describe the
 -- following features:
---
--- = Description
---
--- Unresolved directive in VkPhysicalDeviceFeatures.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceFeatures.txt[]
 --
 -- = See Also
 --
@@ -2140,17 +2222,7 @@ data VkPhysicalDeviceFeatures = VkPhysicalDeviceFeatures
   --
   --     -   The pointer was not formed by @OpImageTexelPointer@ and the
   --         object pointed to is not wholly contained within the bound
-  --         range. This includes accesses performed via /variable pointers/
-  --         where the buffer descriptor being accessed cannot be statically
-  --         determined. Uninitialized pointers and pointers equal to
-  --         @OpConstantNull@ are treated as pointing to a zero-sized object,
-  --         so all accesses through such pointers are considered to be out
-  --         of bounds. Buffer accesses through buffer device addresses are
-  --         not bounds-checked. If the
-  --         <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-cooperativeMatrixRobustBufferAccess cooperativeMatrixRobustBufferAccess>
-  --         feature is not enabled, then accesses using
-  --         @OpCooperativeMatrixLoadNV@ and @OpCooperativeMatrixStoreNV@
-  --         /may/ not be bounds-checked.
+  --         range.
   --
   --         __Note__
   --
@@ -2386,15 +2458,6 @@ data VkPhysicalDeviceFeatures = VkPhysicalDeviceFeatures
   --
   -- -   The @firstScissor@ and @scissorCount@ parameters to the
   --     'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdSetScissor'
-  --     command /must/ be set to 0 and 1, respectively.
-  --
-  -- -   The @exclusiveScissorCount@ member of the
-  --     'Graphics.Vulkan.C.Extensions.VK_NV_scissor_exclusive.VkPipelineViewportExclusiveScissorStateCreateInfoNV'
-  --     structure /must/ be set to 0 or 1.
-  --
-  -- -   The @firstExclusiveScissor@ and @exclusiveScissorCount@ parameters
-  --     to the
-  --     'Graphics.Vulkan.C.Extensions.VK_NV_scissor_exclusive.vkCmdSetExclusiveScissorNV'
   --     command /must/ be set to 0 and 1, respectively.
   --
   vkMultiViewport :: VkBool32
@@ -2999,9 +3062,6 @@ instance Zero VkPhysicalDeviceFeatures where
 --     'vkGetPhysicalDeviceImageFormatProperties' as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-supported-sample-counts Supported Sample Counts>.
 --
--- Unresolved directive in VkPhysicalDeviceLimits.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceLimits.txt[]
---
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Core.VkBool32', 'VkDeviceSize',
@@ -3096,11 +3156,8 @@ data VkPhysicalDeviceLimits = VkPhysicalDeviceLimits
   -- Descriptors with a type of
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLER' or
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
-  -- count against this limit. Only descriptors in descriptor set layouts
-  -- created without the
-  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
-  -- bit set count against this limit. A descriptor is accessible to a shader
-  -- stage when the @stageFlags@ member of the
+  -- count against this limit. A descriptor is accessible to a shader stage
+  -- when the @stageFlags@ member of the
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutBinding'
   -- structure has the bit for that shader stage set. See
   -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-sampler>
@@ -3113,11 +3170,8 @@ data VkPhysicalDeviceLimits = VkPhysicalDeviceLimits
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER'
   -- or
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
-  -- count against this limit. Only descriptors in descriptor set layouts
-  -- created without the
-  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
-  -- bit set count against this limit. A descriptor is accessible to a shader
-  -- stage when the @stageFlags@ member of the
+  -- count against this limit. A descriptor is accessible to a shader stage
+  -- when the @stageFlags@ member of the
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutBinding'
   -- structure has the bit for that shader stage set. See
   -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-uniformbuffer>
@@ -3130,11 +3184,8 @@ data VkPhysicalDeviceLimits = VkPhysicalDeviceLimits
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER'
   -- or
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
-  -- count against this limit. Only descriptors in descriptor set layouts
-  -- created without the
-  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
-  -- bit set count against this limit. A descriptor is accessible to a
-  -- pipeline shader stage when the @stageFlags@ member of the
+  -- count against this limit. A descriptor is accessible to a pipeline
+  -- shader stage when the @stageFlags@ member of the
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutBinding'
   -- structure has the bit for that shader stage set. See
   -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storagebuffer>
@@ -3148,11 +3199,8 @@ data VkPhysicalDeviceLimits = VkPhysicalDeviceLimits
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE',
   -- or
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
-  -- count against this limit. Only descriptors in descriptor set layouts
-  -- created without the
-  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
-  -- bit set count against this limit. A descriptor is accessible to a
-  -- pipeline shader stage when the @stageFlags@ member of the
+  -- count against this limit. A descriptor is accessible to a pipeline
+  -- shader stage when the @stageFlags@ member of the
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutBinding'
   -- structure has the bit for that shader stage set. See
   -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-combinedimagesampler>,
@@ -3166,11 +3214,8 @@ data VkPhysicalDeviceLimits = VkPhysicalDeviceLimits
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE',
   -- or
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
-  -- count against this limit. Only descriptors in descriptor set layouts
-  -- created without the
-  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
-  -- bit set count against this limit. A descriptor is accessible to a
-  -- pipeline shader stage when the @stageFlags@ member of the
+  -- count against this limit. A descriptor is accessible to a pipeline
+  -- shader stage when the @stageFlags@ member of the
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutBinding'
   -- structure has the bit for that shader stage set. See
   -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storageimage>,
@@ -3181,11 +3226,8 @@ data VkPhysicalDeviceLimits = VkPhysicalDeviceLimits
   -- attachments that /can/ be accessible to a single shader stage in a
   -- pipeline layout. Descriptors with a type of
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
-  -- count against this limit. Only descriptors in descriptor set layouts
-  -- created without the
-  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
-  -- bit set count against this limit. A descriptor is accessible to a
-  -- pipeline shader stage when the @stageFlags@ member of the
+  -- count against this limit. A descriptor is accessible to a pipeline
+  -- shader stage when the @stageFlags@ member of the
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutBinding'
   -- structure has the bit for that shader stage set. These are only
   -- supported for the fragment stage. See
@@ -3205,11 +3247,8 @@ data VkPhysicalDeviceLimits = VkPhysicalDeviceLimits
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC',
   -- or
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
-  -- count against this limit. Only descriptors in descriptor set layouts
-  -- created without the
-  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
-  -- bit set count against this limit. For the fragment shader stage the
-  -- framebuffer color attachments also count against this limit.
+  -- count against this limit. For the fragment shader stage the framebuffer
+  -- color attachments also count against this limit.
   vkMaxPerStageResources :: Word32
   , -- | @maxDescriptorSetSamplers@ is the maximum number of samplers that /can/
   -- be included in descriptor bindings in a pipeline layout across all
@@ -3217,10 +3256,7 @@ data VkPhysicalDeviceLimits = VkPhysicalDeviceLimits
   -- type of
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLER' or
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
-  -- count against this limit. Only descriptors in descriptor set layouts
-  -- created without the
-  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
-  -- bit set count against this limit. See
+  -- count against this limit. See
   -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-sampler>
   -- and
   -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-combinedimagesampler>.
@@ -3232,10 +3268,7 @@ data VkPhysicalDeviceLimits = VkPhysicalDeviceLimits
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER'
   -- or
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
-  -- count against this limit. Only descriptors in descriptor set layouts
-  -- created without the
-  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
-  -- bit set count against this limit. See
+  -- count against this limit. See
   -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-uniformbuffer>
   -- and
   -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic>.
@@ -3245,10 +3278,7 @@ data VkPhysicalDeviceLimits = VkPhysicalDeviceLimits
   -- pipeline layout across all pipeline shader stages and descriptor set
   -- numbers. Descriptors with a type of
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
-  -- count against this limit. Only descriptors in descriptor set layouts
-  -- created without the
-  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
-  -- bit set count against this limit. See
+  -- count against this limit. See
   -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-uniformbufferdynamic>.
   vkMaxDescriptorSetUniformBuffersDynamic :: Word32
   , -- | @maxDescriptorSetStorageBuffers@ is the maximum number of storage
@@ -3258,10 +3288,7 @@ data VkPhysicalDeviceLimits = VkPhysicalDeviceLimits
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER'
   -- or
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
-  -- count against this limit. Only descriptors in descriptor set layouts
-  -- created without the
-  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
-  -- bit set count against this limit. See
+  -- count against this limit. See
   -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storagebuffer>
   -- and
   -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic>.
@@ -3271,10 +3298,7 @@ data VkPhysicalDeviceLimits = VkPhysicalDeviceLimits
   -- pipeline layout across all pipeline shader stages and descriptor set
   -- numbers. Descriptors with a type of
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
-  -- count against this limit. Only descriptors in descriptor set layouts
-  -- created without the
-  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
-  -- bit set count against this limit. See
+  -- count against this limit. See
   -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storagebufferdynamic>.
   vkMaxDescriptorSetStorageBuffersDynamic :: Word32
   , -- | @maxDescriptorSetSampledImages@ is the maximum number of sampled images
@@ -3285,10 +3309,7 @@ data VkPhysicalDeviceLimits = VkPhysicalDeviceLimits
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE',
   -- or
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
-  -- count against this limit. Only descriptors in descriptor set layouts
-  -- created without the
-  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
-  -- bit set count against this limit. See
+  -- count against this limit. See
   -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-combinedimagesampler>,
   -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-sampledimage>,
   -- and
@@ -3301,10 +3322,7 @@ data VkPhysicalDeviceLimits = VkPhysicalDeviceLimits
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE',
   -- or
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
-  -- count against this limit. Only descriptors in descriptor set layouts
-  -- created without the
-  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
-  -- bit set count against this limit. See
+  -- count against this limit. See
   -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storageimage>,
   -- and
   -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storagetexelbuffer>.
@@ -3314,10 +3332,7 @@ data VkPhysicalDeviceLimits = VkPhysicalDeviceLimits
   -- layout across all pipeline shader stages and descriptor set numbers.
   -- Descriptors with a type of
   -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
-  -- count against this limit. Only descriptors in descriptor set layouts
-  -- created without the
-  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
-  -- bit set count against this limit. See
+  -- count against this limit. See
   -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-inputattachment>.
   vkMaxDescriptorSetInputAttachments :: Word32
   , -- | @maxVertexInputAttributes@ is the maximum number of vertex input
@@ -4239,9 +4254,6 @@ instance Zero VkPhysicalDeviceLimits where
 -- >     memoryType =
 -- >         findProperties(&memoryProperties, memoryRequirements.memoryTypeBits, requiredProperties);
 --
--- Unresolved directive in VkPhysicalDeviceMemoryProperties.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceMemoryProperties.txt[]
---
 -- = See Also
 --
 -- 'VkMemoryHeap', 'VkMemoryType',
@@ -4335,9 +4347,6 @@ instance Zero VkPhysicalDeviceMemoryProperties where
 -- specific silicon IP GPU version and configuration /should/ use the same
 -- device ID, even if those uses occur in different SoCs.
 --
--- Unresolved directive in VkPhysicalDeviceProperties.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceProperties.txt[]
---
 -- = See Also
 --
 -- 'VkPhysicalDeviceLimits',
@@ -4414,11 +4423,6 @@ instance Zero VkPhysicalDeviceProperties where
 
 -- | VkPhysicalDeviceSparseProperties - Structure specifying physical device
 -- sparse memory properties
---
--- = Description
---
--- Unresolved directive in VkPhysicalDeviceSparseProperties.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceSparseProperties.txt[]
 --
 -- = See Also
 --
@@ -4634,9 +4638,6 @@ pattern VK_PHYSICAL_DEVICE_TYPE_CPU = VkPhysicalDeviceType 4
 -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features Features>
 -- chapter.
 --
--- Unresolved directive in VkQueueFamilyProperties.txt -
--- include::{generated}\/validity\/structs\/VkQueueFamilyProperties.txt[]
---
 -- = See Also
 --
 -- 'VkExtent3D',
@@ -4781,10 +4782,13 @@ type VkQueueFlags = VkQueueFlagBits
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Pass.VkAttachmentDescription',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkAttachmentDescription2KHR',
 -- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceSparseImageFormatInfo2',
 -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineMultisampleStateCreateInfo',
 -- 'VkSampleCountFlags',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkSampleLocationsInfoEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.vkGetPhysicalDeviceMultisamplePropertiesEXT',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.vkGetPhysicalDeviceSparseImageFormatProperties'
 newtype VkSampleCountFlagBits = VkSampleCountFlagBits VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
@@ -4853,6 +4857,7 @@ pattern VK_SAMPLE_COUNT_64_BIT = VkSampleCountFlagBits 0x00000040
 -- = See Also
 --
 -- 'VkImageFormatProperties', 'VkPhysicalDeviceLimits',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkPhysicalDeviceSampleLocationsPropertiesEXT',
 -- 'VkSampleCountFlagBits'
 type VkSampleCountFlags = VkSampleCountFlagBits
 
@@ -4871,9 +4876,7 @@ type VkSampleCountFlags = VkSampleCountFlagBits
 --
 -- -   'VK_SYSTEM_ALLOCATION_SCOPE_CACHE' specifies that the allocation is
 --     scoped to the lifetime of a
---     'Graphics.Vulkan.C.Core10.PipelineCache.VkPipelineCache' or
---     'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkValidationCacheEXT'
---     object.
+--     'Graphics.Vulkan.C.Core10.PipelineCache.VkPipelineCache' object.
 --
 -- -   'VK_SYSTEM_ALLOCATION_SCOPE_DEVICE' specifies that the allocation is
 --     scoped to the lifetime of the Vulkan device.
@@ -4900,8 +4903,7 @@ type VkSampleCountFlags = VkSampleCountFlagBits
 --     allocator it will be used. Else,
 --
 -- -   If an allocation is associated with an object of type
---     'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkValidationCacheEXT'
---     or 'Graphics.Vulkan.C.Core10.PipelineCache.VkPipelineCache', the
+--     'Graphics.Vulkan.C.Core10.PipelineCache.VkPipelineCache', the
 --     allocator will use the 'VK_SYSTEM_ALLOCATION_SCOPE_CACHE' allocation
 --     scope. The most specific allocator available is used (cache, else
 --     device, else instance). Else,
@@ -5010,8 +5012,33 @@ pattern VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE = VkSystemAllocationScope 4
 --     'VkInstanceCreateInfo'::@ppEnabledExtensionNames@ list /must/ also
 --     be present in that list.
 --
--- Unresolved directive in vkCreateInstance.txt -
--- include::{generated}\/validity\/protos\/vkCreateInstance.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'VkInstanceCreateInfo' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid 'VkAllocationCallbacks' structure
+--
+-- -   @pInstance@ /must/ be a valid pointer to a 'VkInstance' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_INITIALIZATION_FAILED'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_LAYER_NOT_PRESENT'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_EXTENSION_NOT_PRESENT'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_INCOMPATIBLE_DRIVER'
 --
 -- = See Also
 --
@@ -5062,8 +5089,17 @@ type PFN_vkCreateInstance = FunPtr FN_vkCreateInstance
 -- -   If no 'VkAllocationCallbacks' were provided when @instance@ was
 --     created, @pAllocator@ /must/ be @NULL@
 --
--- Unresolved directive in vkDestroyInstance.txt -
--- include::{generated}\/validity\/protos\/vkDestroyInstance.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   If @instance@ is not @NULL@, @instance@ /must/ be a valid
+--     'VkInstance' handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid 'VkAllocationCallbacks' structure
+--
+-- == Host Synchronization
+--
+-- -   Host access to @instance@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -5117,8 +5153,31 @@ type PFN_vkDestroyInstance = FunPtr FN_vkDestroyInstance
 -- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS', to indicate that not all
 -- the available physical devices were returned.
 --
--- Unresolved directive in vkEnumeratePhysicalDevices.txt -
--- include::{generated}\/validity\/protos\/vkEnumeratePhysicalDevices.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @instance@ /must/ be a valid 'VkInstance' handle
+--
+-- -   @pPhysicalDeviceCount@ /must/ be a valid pointer to a @uint32_t@
+--     value
+--
+-- -   If the value referenced by @pPhysicalDeviceCount@ is not @0@, and
+--     @pPhysicalDevices@ is not @NULL@, @pPhysicalDevices@ /must/ be a
+--     valid pointer to an array of @pPhysicalDeviceCount@
+--     'VkPhysicalDevice' handles
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_INITIALIZATION_FAILED'
 --
 -- = See Also
 --
@@ -5178,8 +5237,7 @@ type PFN_vkEnumeratePhysicalDevices = FunPtr FN_vkEnumeratePhysicalDevices
 -- >
 -- > vkGetDeviceProcAddr behavior
 --
--- Unresolved directive in vkGetDeviceProcAddr.txt -
--- include::{generated}\/validity\/protos\/vkGetDeviceProcAddr.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -5278,8 +5336,12 @@ type PFN_vkGetDeviceProcAddr = FunPtr FN_vkGetDeviceProcAddr
 --     An “available device extension” is a device extension supported by
 --     any physical device enumerated by @instance@.
 --
--- Unresolved directive in vkGetInstanceProcAddr.txt -
--- include::{generated}\/validity\/protos\/vkGetInstanceProcAddr.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   If @instance@ is not @NULL@, @instance@ /must/ be a valid
+--     'VkInstance' handle
+--
+-- -   @pName@ /must/ be a null-terminated UTF-8 string
 --
 -- = See Also
 --
@@ -5324,10 +5386,7 @@ type PFN_vkGetInstanceProcAddr = FunPtr FN_vkGetInstanceProcAddr
 --     'Graphics.Vulkan.C.Core10.Core.VK_FALSE' specifies that the feature
 --     is not supported.
 --
--- = Description
---
--- Unresolved directive in vkGetPhysicalDeviceFeatures.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceFeatures.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -5365,10 +5424,7 @@ type PFN_vkGetPhysicalDeviceFeatures = FunPtr FN_vkGetPhysicalDeviceFeatures
 -- -   @pFormatProperties@ is a pointer to a 'VkFormatProperties' structure
 --     in which physical device properties for @format@ are returned.
 --
--- = Description
---
--- Unresolved directive in vkGetPhysicalDeviceFormatProperties.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceFormatProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -5448,10 +5504,17 @@ type PFN_vkGetPhysicalDeviceFormatProperties = FunPtr FN_vkGetPhysicalDeviceForm
 -- limitations for @usage2@ and @flags2@, for all values of @format@,
 -- @type@, and @tiling@.
 --
--- == Valid Usage
+-- == Return Codes
 --
--- Unresolved directive in vkGetPhysicalDeviceImageFormatProperties.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceImageFormatProperties.txt[]
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_FORMAT_NOT_SUPPORTED'
 --
 -- = See Also
 --
@@ -5489,10 +5552,7 @@ type PFN_vkGetPhysicalDeviceImageFormatProperties = FunPtr FN_vkGetPhysicalDevic
 --     'VkPhysicalDeviceMemoryProperties' structure in which the properties
 --     are returned.
 --
--- = Description
---
--- Unresolved directive in vkGetPhysicalDeviceMemoryProperties.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceMemoryProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -5528,10 +5588,7 @@ type PFN_vkGetPhysicalDeviceMemoryProperties = FunPtr FN_vkGetPhysicalDeviceMemo
 --     'VkPhysicalDeviceProperties' structure, that will be filled with
 --     returned information.
 --
--- = Description
---
--- Unresolved directive in vkGetPhysicalDeviceProperties.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -5584,8 +5641,17 @@ type PFN_vkGetPhysicalDeviceProperties = FunPtr FN_vkGetPhysicalDeviceProperties
 -- available, at most @pQueueFamilyPropertyCount@ structures will be
 -- written.
 --
--- Unresolved directive in vkGetPhysicalDeviceQueueFamilyProperties.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceQueueFamilyProperties.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid 'VkPhysicalDevice' handle
+--
+-- -   @pQueueFamilyPropertyCount@ /must/ be a valid pointer to a
+--     @uint32_t@ value
+--
+-- -   If the value referenced by @pQueueFamilyPropertyCount@ is not @0@,
+--     and @pQueueFamilyProperties@ is not @NULL@, @pQueueFamilyProperties@
+--     /must/ be a valid pointer to an array of @pQueueFamilyPropertyCount@
+--     'VkQueueFamilyProperties' structures
 --
 -- = See Also
 --

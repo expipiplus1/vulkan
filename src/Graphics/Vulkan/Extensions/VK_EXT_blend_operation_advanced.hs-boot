@@ -70,5 +70,5 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_blend_operation_advanc
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_blend_operation_advanced.VkPipelineColorBlendAdvancedStateCreateInfoEXT'
 type BlendOverlapEXT = VkBlendOverlapEXT

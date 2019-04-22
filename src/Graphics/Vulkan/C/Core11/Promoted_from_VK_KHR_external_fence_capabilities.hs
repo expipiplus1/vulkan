@@ -162,7 +162,12 @@ type VkExternalFenceFeatureFlags = VkExternalFenceFeatureFlagBits
 --
 -- = See Also
 --
--- 'VkExternalFenceHandleTypeFlags', 'VkPhysicalDeviceExternalFenceInfo'
+-- 'VkExternalFenceHandleTypeFlags',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd.VkFenceGetFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.VkFenceGetWin32HandleInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd.VkImportFenceFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.VkImportFenceWin32HandleInfoKHR',
+-- 'VkPhysicalDeviceExternalFenceInfo'
 newtype VkExternalFenceHandleTypeFlagBits = VkExternalFenceHandleTypeFlagBits VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -247,18 +252,18 @@ type VkExternalFenceHandleTypeFlags = VkExternalFenceHandleTypeFlagBits
 -- 'VkExternalFenceProperties'::@externalFenceFeatures@ will be set to
 -- zero.
 --
--- Unresolved directive in VkExternalFenceProperties.txt -
--- include::{generated}\/validity\/structs\/VkExternalFenceProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'VkExternalFenceFeatureFlags', 'VkExternalFenceHandleTypeFlags',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetPhysicalDeviceExternalFenceProperties'
+-- 'vkGetPhysicalDeviceExternalFenceProperties',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_capabilities.vkGetPhysicalDeviceExternalFencePropertiesKHR'
 data VkExternalFenceProperties = VkExternalFenceProperties
-  { -- No documentation found for Nested "VkExternalFenceProperties" "sType"
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES'
   vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkExternalFenceProperties" "pNext"
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
   , -- | @exportFromImportedHandleTypes@ is a bitmask of
   -- 'VkExternalFenceHandleTypeFlagBits' indicating which types of imported
@@ -310,21 +315,21 @@ instance Zero VkExternalFenceProperties where
 -- are prepared to deal with the system-defined operation failures
 -- resulting from using the wrong type.
 --
--- Unresolved directive in VkPhysicalDeviceExternalFenceInfo.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceExternalFenceInfo.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'VkExternalFenceHandleTypeFlagBits',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetPhysicalDeviceExternalFenceProperties'
+-- 'vkGetPhysicalDeviceExternalFenceProperties',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_capabilities.vkGetPhysicalDeviceExternalFencePropertiesKHR'
 data VkPhysicalDeviceExternalFenceInfo = VkPhysicalDeviceExternalFenceInfo
-  { -- | @sType@ is the type of this structure
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO'
   vkSType :: VkStructureType
-  , -- | @pNext@ is NULL or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- | @handleType@ is a 'VkExternalFenceHandleTypeFlagBits' value indicating
-  -- an external fence handle type for which capabilities will be returned.
+  , -- | @handleType@ /must/ be a valid 'VkExternalFenceHandleTypeFlagBits' value
   vkHandleType :: VkExternalFenceHandleTypeFlagBits
   }
   deriving (Eq, Show)
@@ -361,10 +366,7 @@ instance Zero VkPhysicalDeviceExternalFenceInfo where
 --     'VkExternalFenceProperties' structure in which capabilities are
 --     returned.
 --
--- = Description
---
--- Unresolved directive in vkGetPhysicalDeviceExternalFenceProperties.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceExternalFenceProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --

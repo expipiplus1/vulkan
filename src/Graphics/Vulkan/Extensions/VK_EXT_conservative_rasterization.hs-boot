@@ -21,7 +21,7 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasteriza
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization.VkPipelineRasterizationConservativeStateCreateInfoEXT'
 type ConservativeRasterizationModeEXT = VkConservativeRasterizationModeEXT
 
 -- | VkPipelineRasterizationConservativeStateCreateFlagsEXT - Reserved for
@@ -35,5 +35,5 @@ type ConservativeRasterizationModeEXT = VkConservativeRasterizationModeEXT
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization.VkPipelineRasterizationConservativeStateCreateInfoEXT'
 type PipelineRasterizationConservativeStateCreateFlagsEXT = VkPipelineRasterizationConservativeStateCreateFlagsEXT

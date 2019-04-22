@@ -41,14 +41,15 @@ import Graphics.Vulkan.C.Core10.Core
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- Unresolved directive in VkPhysicalDeviceFloatControlsPropertiesKHR.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceFloatControlsPropertiesKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceFloatControlsPropertiesKHR = VkPhysicalDeviceFloatControlsPropertiesKHR
-  { -- No documentation found for Nested "VkPhysicalDeviceFloatControlsPropertiesKHR" "sType"
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES_KHR'
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceFloatControlsPropertiesKHR" "pNext"
   vkPNext :: Ptr ()
@@ -211,7 +212,7 @@ instance Zero VkPhysicalDeviceFloatControlsPropertiesKHR where
                                                     zero
 
 -- No documentation found for TopLevel "VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME"
-pattern VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME = "VK_KHR_shader_float_controls"
 
 -- No documentation found for TopLevel "VK_KHR_SHADER_FLOAT_CONTROLS_SPEC_VERSION"

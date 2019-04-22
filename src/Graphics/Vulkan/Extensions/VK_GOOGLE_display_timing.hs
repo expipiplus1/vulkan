@@ -20,9 +20,9 @@ module Graphics.Vulkan.Extensions.VK_GOOGLE_display_timing
   , getPastPresentationTimingGOOGLE
   , getAllPastPresentationTimingGOOGLE
   , getRefreshCycleDurationGOOGLE
-  , pattern VK_GOOGLE_DISPLAY_TIMING_SPEC_VERSION
-  , pattern VK_GOOGLE_DISPLAY_TIMING_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE
+  , pattern GOOGLE_DISPLAY_TIMING_EXTENSION_NAME
+  , pattern GOOGLE_DISPLAY_TIMING_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE
   ) where
 
 import Control.Exception
@@ -34,6 +34,9 @@ import Control.Monad
   )
 import Data.Maybe
   ( maybe
+  )
+import Data.String
+  ( IsString
   )
 import Data.Vector
   ( Vector
@@ -79,6 +82,8 @@ import Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing
   , VkRefreshCycleDurationGOOGLE(..)
   , vkGetPastPresentationTimingGOOGLE
   , vkGetRefreshCycleDurationGOOGLE
+  , pattern VK_GOOGLE_DISPLAY_TIMING_EXTENSION_NAME
+  , pattern VK_GOOGLE_DISPLAY_TIMING_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
@@ -98,9 +103,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing
-  ( pattern VK_GOOGLE_DISPLAY_TIMING_EXTENSION_NAME
-  , pattern VK_GOOGLE_DISPLAY_TIMING_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE
   )
 
 
@@ -135,7 +139,7 @@ import Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.vkGetPastPresentationTimingGOOGLE'
 data PastPresentationTimingGOOGLE = PastPresentationTimingGOOGLE
   { -- No documentation found for Nested "PastPresentationTimingGOOGLE" "presentID"
   presentID :: Word32
@@ -178,7 +182,7 @@ instance Zero PastPresentationTimingGOOGLE where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.VkPresentTimesInfoGOOGLE'
 data PresentTimeGOOGLE = PresentTimeGOOGLE
   { -- No documentation found for Nested "PresentTimeGOOGLE" "presentID"
   presentID :: Word32
@@ -210,12 +214,30 @@ instance Zero PresentTimeGOOGLE where
 --
 -- == Valid Usage
 --
--- Unresolved directive in VkPresentTimesInfoGOOGLE.txt -
--- include::{generated}\/validity\/structs\/VkPresentTimesInfoGOOGLE.txt[]
+-- -   @swapchainCount@ /must/ be the same value as
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkPresentInfoKHR'::@swapchainCount@,
+--     where
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkPresentInfoKHR' is
+--     in the @pNext@ chain of this
+--     'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.VkPresentTimesInfoGOOGLE'
+--     structure.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.VK_STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE'
+--
+-- -   If @pTimes@ is not @NULL@, @pTimes@ /must/ be a valid pointer to an
+--     array of @swapchainCount@
+--     'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.VkPresentTimeGOOGLE'
+--     structures
+--
+-- -   @swapchainCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.VkPresentTimeGOOGLE',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PresentTimesInfoGOOGLE = PresentTimesInfoGOOGLE
   { -- Univalued member elided
   -- No documentation found for Nested "PresentTimesInfoGOOGLE" "pNext"
@@ -249,14 +271,9 @@ instance Zero PresentTimesInfoGOOGLE where
 -- | VkRefreshCycleDurationGOOGLE - Structure containing the RC duration of a
 -- display
 --
--- = Description
---
--- Unresolved directive in VkRefreshCycleDurationGOOGLE.txt -
--- include::{generated}\/validity\/structs\/VkRefreshCycleDurationGOOGLE.txt[]
---
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.vkGetRefreshCycleDurationGOOGLE'
 data RefreshCycleDurationGOOGLE = RefreshCycleDurationGOOGLE
   { -- No documentation found for Nested "RefreshCycleDurationGOOGLE" "refreshDuration"
   refreshDuration :: Word64
@@ -315,12 +332,51 @@ instance Zero RefreshCycleDurationGOOGLE where
 -- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS' to indicate that not all
 -- the available values were returned.
 --
--- Unresolved directive in vkGetPastPresentationTimingGOOGLE.txt -
--- include::{generated}\/validity\/protos\/vkGetPastPresentationTimingGOOGLE.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @swapchain@ /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
+--     handle
+--
+-- -   @pPresentationTimingCount@ /must/ be a valid pointer to a @uint32_t@
+--     value
+--
+-- -   If the value referenced by @pPresentationTimingCount@ is not @0@,
+--     and @pPresentationTimings@ is not @NULL@, @pPresentationTimings@
+--     /must/ be a valid pointer to an array of @pPresentationTimingCount@
+--     'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.VkPastPresentationTimingGOOGLE'
+--     structures
+--
+-- -   Both of @device@, and @swapchain@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance'
+--
+-- == Host Synchronization
+--
+-- -   Host access to @swapchain@ /must/ be externally synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_DEVICE_LOST'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VK_ERROR_OUT_OF_DATE_KHR'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_SURFACE_LOST_KHR'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.VkPastPresentationTimingGOOGLE',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
 getNumPastPresentationTimingGOOGLE :: Device ->  SwapchainKHR ->  IO (VkResult, Word32)
 getNumPastPresentationTimingGOOGLE = \(Device device' commandTable) -> \swapchain' -> alloca (\pPresentationTimingCount' -> vkGetPastPresentationTimingGOOGLE commandTable device' swapchain' pPresentationTimingCount' nullPtr >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>peek pPresentationTimingCount')))
 
@@ -360,12 +416,51 @@ getNumPastPresentationTimingGOOGLE = \(Device device' commandTable) -> \swapchai
 -- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS' to indicate that not all
 -- the available values were returned.
 --
--- Unresolved directive in vkGetPastPresentationTimingGOOGLE.txt -
--- include::{generated}\/validity\/protos\/vkGetPastPresentationTimingGOOGLE.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @swapchain@ /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
+--     handle
+--
+-- -   @pPresentationTimingCount@ /must/ be a valid pointer to a @uint32_t@
+--     value
+--
+-- -   If the value referenced by @pPresentationTimingCount@ is not @0@,
+--     and @pPresentationTimings@ is not @NULL@, @pPresentationTimings@
+--     /must/ be a valid pointer to an array of @pPresentationTimingCount@
+--     'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.VkPastPresentationTimingGOOGLE'
+--     structures
+--
+-- -   Both of @device@, and @swapchain@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance'
+--
+-- == Host Synchronization
+--
+-- -   Host access to @swapchain@ /must/ be externally synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_DEVICE_LOST'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VK_ERROR_OUT_OF_DATE_KHR'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_SURFACE_LOST_KHR'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.VkPastPresentationTimingGOOGLE',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
 getPastPresentationTimingGOOGLE :: Device ->  SwapchainKHR ->  Word32 ->  IO (VkResult, Vector PastPresentationTimingGOOGLE)
 getPastPresentationTimingGOOGLE = \(Device device' commandTable) -> \swapchain' -> \presentationTimingCount' -> allocaArray (fromIntegral presentationTimingCount') (\pPresentationTimings' -> with presentationTimingCount' (\pPresentationTimingCount' -> vkGetPastPresentationTimingGOOGLE commandTable device' swapchain' pPresentationTimingCount' pPresentationTimings' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>(flip Data.Vector.generateM ((\p -> fromCStructPastPresentationTimingGOOGLE <=< peekElemOff p) pPresentationTimings') =<< (fromIntegral <$> (peek pPresentationTimingCount')))))))
 -- | Returns all the values available from 'getPastPresentationTimingGOOGLE'.
@@ -389,13 +484,49 @@ getAllPastPresentationTimingGOOGLE device' swapchain' =
 --     'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.VkRefreshCycleDurationGOOGLE'
 --     structure.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkGetRefreshCycleDurationGOOGLE.txt -
--- include::{generated}\/validity\/protos\/vkGetRefreshCycleDurationGOOGLE.txt[]
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @swapchain@ /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
+--     handle
+--
+-- -   @pDisplayTimingProperties@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.VkRefreshCycleDurationGOOGLE'
+--     structure
+--
+-- -   Both of @device@, and @swapchain@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance'
+--
+-- == Host Synchronization
+--
+-- -   Host access to @swapchain@ /must/ be externally synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_DEVICE_LOST'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_SURFACE_LOST_KHR'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.VkRefreshCycleDurationGOOGLE',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
 getRefreshCycleDurationGOOGLE :: Device ->  SwapchainKHR ->  IO (RefreshCycleDurationGOOGLE)
 getRefreshCycleDurationGOOGLE = \(Device device' commandTable) -> \swapchain' -> alloca (\pDisplayTimingProperties' -> vkGetRefreshCycleDurationGOOGLE commandTable device' swapchain' pDisplayTimingProperties' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((fromCStructRefreshCycleDurationGOOGLE <=< peek) pDisplayTimingProperties')))
+
+-- No documentation found for TopLevel "VK_GOOGLE_DISPLAY_TIMING_EXTENSION_NAME"
+pattern GOOGLE_DISPLAY_TIMING_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern GOOGLE_DISPLAY_TIMING_EXTENSION_NAME = VK_GOOGLE_DISPLAY_TIMING_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_GOOGLE_DISPLAY_TIMING_SPEC_VERSION"
+pattern GOOGLE_DISPLAY_TIMING_SPEC_VERSION :: Integral a => a
+pattern GOOGLE_DISPLAY_TIMING_SPEC_VERSION = VK_GOOGLE_DISPLAY_TIMING_SPEC_VERSION

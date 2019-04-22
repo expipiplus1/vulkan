@@ -27,8 +27,8 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_semaphore_capabiliti
   , fromCStructPhysicalDeviceExternalSemaphoreInfo
   , PhysicalDeviceExternalSemaphoreInfo(..)
   , getPhysicalDeviceExternalSemaphoreProperties
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO
-  , pattern VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO
+  , pattern STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES
   ) where
 
 import Control.Monad
@@ -77,6 +77,10 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO
+  )
 
 
 -- | VkExternalSemaphoreFeatureFlagBits - Bitfield describing features of an
@@ -86,6 +90,9 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreFeatureFlags'
 type ExternalSemaphoreFeatureFlagBits = VkExternalSemaphoreFeatureFlagBits
+
+
+{-# complete EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT, EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT :: ExternalSemaphoreFeatureFlagBits #-}
 
 
 -- | 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VK_EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT'
@@ -196,8 +203,15 @@ type ExternalSemaphoreFeatureFlagsKHR = ExternalSemaphoreFeatureFlags
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreHandleTypeFlags',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkPhysicalDeviceExternalSemaphoreInfo'
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd.VkImportSemaphoreFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32.VkImportSemaphoreWin32HandleInfoKHR',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkPhysicalDeviceExternalSemaphoreInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd.VkSemaphoreGetFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32.VkSemaphoreGetWin32HandleInfoKHR'
 type ExternalSemaphoreHandleTypeFlagBits = VkExternalSemaphoreHandleTypeFlagBits
+
+
+{-# complete EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT, EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT, EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT, EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT, EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT :: ExternalSemaphoreHandleTypeFlagBits #-}
 
 
 -- | 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT'
@@ -285,15 +299,15 @@ type ExternalSemaphoreHandleTypeFlagsKHR = ExternalSemaphoreHandleTypeFlags
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreProperties'::@externalSemaphoreFeatures@
 -- will be set to zero.
 --
--- Unresolved directive in VkExternalSemaphoreProperties.txt -
--- include::{generated}\/validity\/structs\/VkExternalSemaphoreProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreFeatureFlags',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreHandleTypeFlags',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.vkGetPhysicalDeviceExternalSemaphoreProperties'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.vkGetPhysicalDeviceExternalSemaphoreProperties',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_capabilities.vkGetPhysicalDeviceExternalSemaphorePropertiesKHR'
 data ExternalSemaphoreProperties = ExternalSemaphoreProperties
   { -- Univalued member elided
   -- No documentation found for Nested "ExternalSemaphoreProperties" "pNext"
@@ -333,16 +347,14 @@ instance Zero ExternalSemaphoreProperties where
 -- | VkPhysicalDeviceExternalSemaphoreInfo - Structure specifying semaphore
 -- creation parameters.
 --
--- = Description
---
--- Unresolved directive in VkPhysicalDeviceExternalSemaphoreInfo.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceExternalSemaphoreInfo.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreHandleTypeFlagBits',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.vkGetPhysicalDeviceExternalSemaphoreProperties'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.vkGetPhysicalDeviceExternalSemaphoreProperties',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_capabilities.vkGetPhysicalDeviceExternalSemaphorePropertiesKHR'
 data PhysicalDeviceExternalSemaphoreInfo = PhysicalDeviceExternalSemaphoreInfo
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceExternalSemaphoreInfo" "pNext"
@@ -388,11 +400,7 @@ instance Zero PhysicalDeviceExternalSemaphoreInfo where
 --     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreProperties'
 --     structure in which capabilities are returned.
 --
--- = Description
---
--- Unresolved directive in
--- vkGetPhysicalDeviceExternalSemaphoreProperties.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceExternalSemaphoreProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --

@@ -103,54 +103,98 @@ data VkCommandBuffer_T
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkCmdProcessCommandsInfoNVX',
 -- 'VkSubmitInfo',
 -- 'Graphics.Vulkan.C.Core10.CommandBuffer.vkAllocateCommandBuffers',
 -- 'Graphics.Vulkan.C.Core10.CommandBuffer.vkBeginCommandBuffer',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_conditional_rendering.vkCmdBeginConditionalRenderingEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.vkCmdBeginDebugUtilsLabelEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBeginQuery',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdBeginQueryIndexedEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBeginRenderPass',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.vkCmdBeginRenderPass2KHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdBeginTransformFeedbackEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindDescriptorSets',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindIndexBuffer',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindPipeline',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image.vkCmdBindShadingRateImageNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdBindTransformFeedbackBuffersEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindVertexBuffers',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBlitImage',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCmdBuildAccelerationStructureNV',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdClearAttachments',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdClearColorImage',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdClearDepthStencilImage',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCmdCopyAccelerationStructureNV',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdCopyBuffer',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdCopyBufferToImage',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdCopyImage',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdCopyImageToBuffer',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdCopyQueryPoolResults',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.vkCmdDebugMarkerBeginEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.vkCmdDebugMarkerEndEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.vkCmdDebugMarkerInsertEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDispatch',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.vkCmdDispatchBase',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_device_group.vkCmdDispatchBaseKHR',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDispatchIndirect',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDraw',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDrawIndexed',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDrawIndexedIndirect',
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_draw_indirect_count.vkCmdDrawIndexedIndirectCountAMD',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_draw_indirect_count.vkCmdDrawIndexedIndirectCountKHR',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDrawIndirect',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdDrawIndirectByteCountEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_draw_indirect_count.vkCmdDrawIndirectCountAMD',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_draw_indirect_count.vkCmdDrawIndirectCountKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.vkCmdDrawMeshTasksIndirectCountNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.vkCmdDrawMeshTasksIndirectNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.vkCmdDrawMeshTasksNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_conditional_rendering.vkCmdEndConditionalRenderingEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.vkCmdEndDebugUtilsLabelEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdEndQuery',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdEndQueryIndexedEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdEndRenderPass',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.vkCmdEndRenderPass2KHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdEndTransformFeedbackEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdExecuteCommands',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdFillBuffer',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.vkCmdInsertDebugUtilsLabelEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdNextSubpass',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.vkCmdNextSubpass2KHR',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdPipelineBarrier',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.vkCmdProcessCommandsNVX',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdPushConstants',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.vkCmdPushDescriptorSetKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.vkCmdPushDescriptorSetWithTemplateKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.vkCmdReserveSpaceForCommandsNVX',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdResetEvent',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdResetQueryPool',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdResolveImage',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdSetBlendConstants',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_device_diagnostic_checkpoints.vkCmdSetCheckpointNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image.vkCmdSetCoarseSampleOrderNV',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdSetDepthBias',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdSetDepthBounds',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.vkCmdSetDeviceMask',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_device_group.vkCmdSetDeviceMaskKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_discard_rectangles.vkCmdSetDiscardRectangleEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdSetEvent',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_scissor_exclusive.vkCmdSetExclusiveScissorNV',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdSetLineWidth',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.vkCmdSetSampleLocationsEXT',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdSetScissor',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdSetStencilCompareMask',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdSetStencilReference',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdSetStencilWriteMask',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdSetViewport',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image.vkCmdSetViewportShadingRatePaletteNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_clip_space_w_scaling.vkCmdSetViewportWScalingNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCmdTraceRaysNV',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdUpdateBuffer',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdWaitEvents',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCmdWriteAccelerationStructuresPropertiesNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_buffer_marker.vkCmdWriteBufferMarkerAMD',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdWriteTimestamp',
 -- 'Graphics.Vulkan.C.Core10.CommandBuffer.vkEndCommandBuffer',
 -- 'Graphics.Vulkan.C.Core10.CommandBuffer.vkFreeCommandBuffers',
@@ -163,11 +207,20 @@ data VkFence_T
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkAcquireNextImageInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd.VkFenceGetFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.VkFenceGetWin32HandleInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd.VkImportFenceFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.VkImportFenceWin32HandleInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkAcquireNextImageKHR',
 -- 'Graphics.Vulkan.C.Core10.Fence.vkCreateFence',
 -- 'Graphics.Vulkan.C.Core10.Fence.vkDestroyFence',
 -- 'Graphics.Vulkan.C.Core10.Fence.vkGetFenceStatus',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.vkQueueBindSparse',
--- 'vkQueueSubmit', 'Graphics.Vulkan.C.Core10.Fence.vkResetFences',
+-- 'vkQueueSubmit',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.vkRegisterDeviceEventEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.vkRegisterDisplayEventEXT',
+-- 'Graphics.Vulkan.C.Core10.Fence.vkResetFences',
 -- 'Graphics.Vulkan.C.Core10.Fence.vkWaitForFences'
 type VkFence = Ptr VkFence_T
 
@@ -200,7 +253,9 @@ type VkFence = Ptr VkFence_T
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_device_diagnostic_checkpoints.VkCheckpointDataNV',
 -- 'VkPipelineStageFlags',
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_buffer_marker.vkCmdWriteBufferMarkerAMD',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdWriteTimestamp'
 newtype VkPipelineStageFlagBits = VkPipelineStageFlagBits VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
@@ -281,9 +336,7 @@ pattern VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT :: VkPipelineStageFlagBits
 pattern VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT = VkPipelineStageFlagBits 0x00000001
 
 -- | 'VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT' specifies the stage of the
--- pipeline where Draw\/DispatchIndirect data structures are consumed. This
--- stage also includes reading commands written by
--- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.vkCmdProcessCommandsNVX'.
+-- pipeline where Draw\/DispatchIndirect data structures are consumed.
 pattern VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT :: VkPipelineStageFlagBits
 pattern VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT = VkPipelineStageFlagBits 0x00000002
 
@@ -337,7 +390,7 @@ pattern VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT = VkPipelineStageFlagBits 0x00
 -- the pipeline. This stage also includes
 -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#renderpass-load-store-ops subpass load and store operations>
 -- and multisample resolve operations for framebuffer attachments with a
--- color or depth\/stencil format.
+-- color format.
 pattern VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT :: VkPipelineStageFlagBits
 pattern VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT = VkPipelineStageFlagBits 0x00000400
 
@@ -375,10 +428,6 @@ pattern VK_PIPELINE_STAGE_HOST_BIT = VkPipelineStageFlagBits 0x00004000
 --
 -- -   'VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT'
 --
--- -   'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.VK_PIPELINE_STAGE_TASK_SHADER_BIT_NV'
---
--- -   'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.VK_PIPELINE_STAGE_MESH_SHADER_BIT_NV'
---
 -- -   'VK_PIPELINE_STAGE_VERTEX_INPUT_BIT'
 --
 -- -   'VK_PIPELINE_STAGE_VERTEX_SHADER_BIT'
@@ -399,14 +448,6 @@ pattern VK_PIPELINE_STAGE_HOST_BIT = VkPipelineStageFlagBits 0x00004000
 --
 -- -   'VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT'
 --
--- -   'Graphics.Vulkan.C.Extensions.VK_EXT_conditional_rendering.VK_PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT'
---
--- -   'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.VK_PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT'
---
--- -   'Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image.VK_PIPELINE_STAGE_SHADING_RATE_IMAGE_BIT_NV'
---
--- -   'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VK_PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'
---
 pattern VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT :: VkPipelineStageFlagBits
 pattern VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT = VkPipelineStageFlagBits 0x00008000
 
@@ -425,8 +466,10 @@ pattern VK_PIPELINE_STAGE_ALL_COMMANDS_BIT = VkPipelineStageFlagBits 0x00010000
 --
 -- = See Also
 --
--- 'VkPipelineStageFlagBits', 'VkSubmitInfo',
--- 'Graphics.Vulkan.C.Core10.Pass.VkSubpassDependency',
+-- 'VkPipelineStageFlagBits',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_device_diagnostic_checkpoints.VkQueueFamilyCheckpointPropertiesNV',
+-- 'VkSubmitInfo', 'Graphics.Vulkan.C.Core10.Pass.VkSubpassDependency',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkSubpassDependency2KHR',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdPipelineBarrier',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdResetEvent',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdSetEvent',
@@ -441,7 +484,12 @@ data VkQueue_T
 --
 -- 'vkGetDeviceQueue',
 -- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory.vkGetDeviceQueue2',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_device_diagnostic_checkpoints.vkGetQueueCheckpointDataNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.vkQueueBeginDebugUtilsLabelEXT',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.vkQueueBindSparse',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.vkQueueEndDebugUtilsLabelEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.vkQueueInsertDebugUtilsLabelEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkQueuePresentKHR',
 -- 'vkQueueSubmit', 'vkQueueWaitIdle'
 type VkQueue = Ptr VkQueue_T
 
@@ -451,8 +499,15 @@ data VkSemaphore_T
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkAcquireNextImageInfoKHR',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkBindSparseInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd.VkImportSemaphoreFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32.VkImportSemaphoreWin32HandleInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkPresentInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd.VkSemaphoreGetFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32.VkSemaphoreGetWin32HandleInfoKHR',
 -- 'VkSubmitInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkAcquireNextImageKHR',
 -- 'Graphics.Vulkan.C.Core10.QueueSemaphore.vkCreateSemaphore',
 -- 'Graphics.Vulkan.C.Core10.QueueSemaphore.vkDestroySemaphore'
 type VkSemaphore = Ptr VkSemaphore_T
@@ -490,20 +545,45 @@ type VkSemaphore = Ptr VkSemaphore_T
 -- -   Each element of @pWaitDstStageMask@ /must/ not include
 --     'VK_PIPELINE_STAGE_HOST_BIT'.
 --
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-meshShader mesh shaders>
---     feature is not enabled, each element of @pWaitDstStageMask@ /must/
---     not contain
---     'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.VK_PIPELINE_STAGE_MESH_SHADER_BIT_NV'
+-- == Valid Usage (Implicit)
 --
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-taskShader task shaders>
---     feature is not enabled, each element of @pWaitDstStageMask@ /must/
---     not contain
---     'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.VK_PIPELINE_STAGE_TASK_SHADER_BIT_NV'
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_SUBMIT_INFO'
 --
--- Unresolved directive in VkSubmitInfo.txt -
--- include::{generated}\/validity\/structs\/VkSubmitInfo.txt[]
+-- -   Each @pNext@ member of any structure (including this one) in the
+--     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
+--     instance of
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32.VkD3D12FenceSubmitInfoKHR',
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.VkDeviceGroupSubmitInfo',
+--     'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory.VkProtectedSubmitInfo',
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_win32_keyed_mutex.VkWin32KeyedMutexAcquireReleaseInfoKHR',
+--     or
+--     'Graphics.Vulkan.C.Extensions.VK_NV_win32_keyed_mutex.VkWin32KeyedMutexAcquireReleaseInfoNV'
+--
+-- -   Each @sType@ member in the @pNext@ chain /must/ be unique
+--
+-- -   If @waitSemaphoreCount@ is not @0@, @pWaitSemaphores@ /must/ be a
+--     valid pointer to an array of @waitSemaphoreCount@ valid
+--     'VkSemaphore' handles
+--
+-- -   If @waitSemaphoreCount@ is not @0@, @pWaitDstStageMask@ /must/ be a
+--     valid pointer to an array of @waitSemaphoreCount@ valid combinations
+--     of 'VkPipelineStageFlagBits' values
+--
+-- -   Each element of @pWaitDstStageMask@ /must/ not be @0@
+--
+-- -   If @commandBufferCount@ is not @0@, @pCommandBuffers@ /must/ be a
+--     valid pointer to an array of @commandBufferCount@ valid
+--     'VkCommandBuffer' handles
+--
+-- -   If @signalSemaphoreCount@ is not @0@, @pSignalSemaphores@ /must/ be
+--     a valid pointer to an array of @signalSemaphoreCount@ valid
+--     'VkSemaphore' handles
+--
+-- -   Each of the elements of @pCommandBuffers@, the elements of
+--     @pSignalSemaphores@, and the elements of @pWaitSemaphores@ that are
+--     valid handles /must/ have been created, allocated, or retrieved from
+--     the same 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
 -- = See Also
 --
@@ -586,8 +666,27 @@ instance Zero VkSubmitInfo where
 -- 'vkDeviceWaitIdle' is equivalent to calling 'vkQueueWaitIdle' for all
 -- queues owned by @device@.
 --
--- Unresolved directive in vkDeviceWaitIdle.txt -
--- include::{generated}\/validity\/protos\/vkDeviceWaitIdle.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- == Host Synchronization
+--
+-- -   Host access to all 'VkQueue' objects created from @device@ /must/ be
+--     externally synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_DEVICE_LOST'
 --
 -- = See Also
 --
@@ -641,8 +740,12 @@ type PFN_vkDeviceWaitIdle = FunPtr FN_vkDeviceWaitIdle
 -- -   'Graphics.Vulkan.C.Core10.Device.VkDeviceQueueCreateInfo'::@flags@
 --     /must/ have been set to zero when @device@ was created
 --
--- Unresolved directive in vkGetDeviceQueue.txt -
--- include::{generated}\/validity\/protos\/vkGetDeviceQueue.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pQueue@ /must/ be a valid pointer to a 'VkQueue' handle
 --
 -- = See Also
 --
@@ -827,8 +930,62 @@ type PFN_vkGetDeviceQueue = FunPtr FN_vkGetDeviceQueue
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-queue-transfers-acquire acquire operations>,
 --     and which happens before the acquire operation.
 --
--- Unresolved directive in vkQueueSubmit.txt -
--- include::{generated}\/validity\/protos\/vkQueueSubmit.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @queue@ /must/ be a valid 'VkQueue' handle
+--
+-- -   If @submitCount@ is not @0@, @pSubmits@ /must/ be a valid pointer to
+--     an array of @submitCount@ valid 'VkSubmitInfo' structures
+--
+-- -   If @fence@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @fence@ /must/
+--     be a valid 'VkFence' handle
+--
+-- -   Both of @fence@, and @queue@ that are valid handles /must/ have been
+--     created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
+--
+-- == Host Synchronization
+--
+-- -   Host access to @queue@ /must/ be externally synchronized
+--
+-- -   Host access to @pSubmits@[].pWaitSemaphores[] /must/ be externally
+--     synchronized
+--
+-- -   Host access to @pSubmits@[].pSignalSemaphores[] /must/ be externally
+--     synchronized
+--
+-- -   Host access to @fence@ /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | -               | -               | Any             | -               |
+-- > +-----------------+-----------------+-----------------+-----------------+
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_DEVICE_LOST'
 --
 -- = See Also
 --
@@ -864,8 +1021,43 @@ type PFN_vkQueueSubmit = FunPtr FN_vkQueueSubmit
 -- 'vkQueueWaitIdle' is equivalent to submitting a fence to a queue and
 -- waiting with an infinite timeout for that fence to signal.
 --
--- Unresolved directive in vkQueueWaitIdle.txt -
--- include::{generated}\/validity\/protos\/vkQueueWaitIdle.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @queue@ /must/ be a valid 'VkQueue' handle
+--
+-- == Host Synchronization
+--
+-- -   Host access to @queue@ /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | -               | -               | Any             | -               |
+-- > +-----------------+-----------------+-----------------+-----------------+
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_DEVICE_LOST'
 --
 -- = See Also
 --

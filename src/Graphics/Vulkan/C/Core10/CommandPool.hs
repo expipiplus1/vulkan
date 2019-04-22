@@ -90,7 +90,8 @@ data VkCommandPool_T
 -- 'vkCreateCommandPool', 'vkDestroyCommandPool',
 -- 'Graphics.Vulkan.C.Core10.CommandBuffer.vkFreeCommandBuffers',
 -- 'vkResetCommandPool',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.vkTrimCommandPool'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.vkTrimCommandPool',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_maintenance1.vkTrimCommandPoolKHR'
 type VkCommandPool = Ptr VkCommandPool_T
 
 -- ** VkCommandPoolCreateFlagBits
@@ -160,22 +161,20 @@ type VkCommandPoolCreateFlags = VkCommandPoolCreateFlagBits
 -- | VkCommandPoolCreateInfo - Structure specifying parameters of a newly
 -- created command pool
 --
--- = Description
---
--- Unresolved directive in VkCommandPoolCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkCommandPoolCreateInfo.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'VkCommandPoolCreateFlags',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType', 'vkCreateCommandPool'
 data VkCommandPoolCreateInfo = VkCommandPoolCreateInfo
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- | @flags@ is a bitmask of 'VkCommandPoolCreateFlagBits' indicating usage
-  -- behavior for the pool and command buffers allocated from it.
+  , -- | @flags@ /must/ be a valid combination of 'VkCommandPoolCreateFlagBits'
+  -- values
   vkFlags :: VkCommandPoolCreateFlags
   , -- | @queueFamilyIndex@ designates a queue family as described in section
   -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#devsandqueues-queueprops Queue Family Properties>.
@@ -265,8 +264,33 @@ type VkCommandPoolResetFlags = VkCommandPoolResetFlagBits
 --
 -- == Valid Usage
 --
--- Unresolved directive in vkCreateCommandPool.txt -
--- include::{generated}\/validity\/protos\/vkCreateCommandPool.txt[]
+-- -   @pCreateInfo@::@queueFamilyIndex@ /must/ be the index of a queue
+--     family available in the logical device @device@.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'VkCommandPoolCreateInfo' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pCommandPool@ /must/ be a valid pointer to a 'VkCommandPool' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -334,8 +358,26 @@ type PFN_vkCreateCommandPool = FunPtr FN_vkCreateCommandPool
 --     were provided when @commandPool@ was created, @pAllocator@ /must/ be
 --     @NULL@
 --
--- Unresolved directive in vkDestroyCommandPool.txt -
--- include::{generated}\/validity\/protos\/vkDestroyCommandPool.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   If @commandPool@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @commandPool@
+--     /must/ be a valid 'VkCommandPool' handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   If @commandPool@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandPool@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -394,8 +436,32 @@ type PFN_vkDestroyCommandPool = FunPtr FN_vkDestroyCommandPool
 --     allocated from @commandPool@ /must/ not be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
--- Unresolved directive in vkResetCommandPool.txt -
--- include::{generated}\/validity\/protos\/vkResetCommandPool.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @commandPool@ /must/ be a valid 'VkCommandPool' handle
+--
+-- -   @flags@ /must/ be a valid combination of
+--     'VkCommandPoolResetFlagBits' values
+--
+-- -   @commandPool@ /must/ have been created, allocated, or retrieved from
+--     @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandPool@ /must/ be externally synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --

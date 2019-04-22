@@ -32,7 +32,7 @@ pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG :: VkFormatFeatureF
 pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG = VkFormatFeatureFlagBits 0x00002000
 
 -- No documentation found for TopLevel "VK_IMG_FILTER_CUBIC_EXTENSION_NAME"
-pattern VK_IMG_FILTER_CUBIC_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_IMG_FILTER_CUBIC_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_IMG_FILTER_CUBIC_EXTENSION_NAME = "VK_IMG_filter_cubic"
 
 -- No documentation found for TopLevel "VK_IMG_FILTER_CUBIC_SPEC_VERSION"

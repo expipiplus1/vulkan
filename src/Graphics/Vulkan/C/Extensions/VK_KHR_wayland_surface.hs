@@ -108,20 +108,18 @@ instance Read VkWaylandSurfaceCreateFlagsKHR where
 -- | VkWaylandSurfaceCreateInfoKHR - Structure specifying parameters of a
 -- newly created Wayland surface object
 --
--- == Valid Usage
---
--- Unresolved directive in VkWaylandSurfaceCreateInfoKHR.txt -
--- include::{generated}\/validity\/structs\/VkWaylandSurfaceCreateInfoKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'VkWaylandSurfaceCreateFlagsKHR', 'vkCreateWaylandSurfaceKHR'
 data VkWaylandSurfaceCreateInfoKHR = VkWaylandSurfaceCreateInfoKHR
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- | @flags@ is reserved for future use.
+  , -- | @flags@ /must/ be @0@
   vkFlags :: VkWaylandSurfaceCreateFlagsKHR
   , -- | @display@ /must/ point to a valid Wayland @wl_display@.
   vkDisplay :: Ptr Wl_display
@@ -178,14 +176,38 @@ data Wl_surface
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
 --     which the created surface object is returned.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCreateWaylandSurfaceKHR.txt -
--- include::{generated}\/validity\/protos\/vkCreateWaylandSurfaceKHR.txt[]
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'VkWaylandSurfaceCreateInfoKHR' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pSurface@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR',
+-- 'VkWaylandSurfaceCreateInfoKHR'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -223,15 +245,11 @@ type PFN_vkCreateWaylandSurfaceKHR = FunPtr FN_vkCreateWaylandSurfaceKHR
 -- This platform-specific function /can/ be called prior to creating a
 -- surface.
 --
--- == Valid Usage
---
--- Unresolved directive in
--- vkGetPhysicalDeviceWaylandPresentationSupportKHR.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceWaylandPresentationSupportKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -253,7 +271,7 @@ type FN_vkGetPhysicalDeviceWaylandPresentationSupportKHR = ("physicalDevice" :::
 type PFN_vkGetPhysicalDeviceWaylandPresentationSupportKHR = FunPtr FN_vkGetPhysicalDeviceWaylandPresentationSupportKHR
 
 -- No documentation found for TopLevel "VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME"
-pattern VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME = "VK_KHR_wayland_surface"
 
 -- No documentation found for TopLevel "VK_KHR_WAYLAND_SURFACE_SPEC_VERSION"

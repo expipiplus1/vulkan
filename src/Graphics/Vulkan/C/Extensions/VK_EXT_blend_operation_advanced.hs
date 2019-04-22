@@ -173,7 +173,7 @@ import Graphics.Vulkan.C.Core10.Pipeline
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkPipelineColorBlendAdvancedStateCreateInfoEXT'
 newtype VkBlendOverlapEXT = VkBlendOverlapEXT Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -228,15 +228,15 @@ pattern VK_BLEND_OVERLAP_CONJOINT_EXT = VkBlendOverlapEXT 2
 -- in @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo'
 -- to enable the features.
 --
--- Unresolved directive in
--- VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT = VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT" "sType"
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_FEATURES_EXT'
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT" "pNext"
   vkPNext :: Ptr ()
@@ -287,15 +287,15 @@ instance Zero VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT where
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- Unresolved directive in
--- VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT = VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_PROPERTIES_EXT'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -389,13 +389,17 @@ instance Zero VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT where
 --     property is not supported, @blendOverlap@ /must/ be
 --     'VK_BLEND_OVERLAP_UNCORRELATED_EXT'
 --
--- Unresolved directive in
--- VkPipelineColorBlendAdvancedStateCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkPipelineColorBlendAdvancedStateCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT'
+--
+-- -   @blendOverlap@ /must/ be a valid 'VkBlendOverlapEXT' value
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkBlendOverlapEXT', 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPipelineColorBlendAdvancedStateCreateInfoEXT = VkPipelineColorBlendAdvancedStateCreateInfoEXT
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -434,10 +438,7 @@ instance Zero VkPipelineColorBlendAdvancedStateCreateInfoEXT where
                                                         zero
                                                         zero
 
--- | 'VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT' is similar to
--- 'Graphics.Vulkan.C.Core10.Pass.VK_ACCESS_COLOR_ATTACHMENT_READ_BIT', but
--- also includes
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#framebuffer-blend-advanced advanced blend operations>.
+-- No documentation found for Nested "VkAccessFlagBits" "VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT"
 pattern VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT :: VkAccessFlagBits
 pattern VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT = VkAccessFlagBits 0x00080000
 
@@ -626,7 +627,7 @@ pattern VK_BLEND_OP_ZERO_EXT :: VkBlendOp
 pattern VK_BLEND_OP_ZERO_EXT = VkBlendOp 1000148000
 
 -- No documentation found for TopLevel "VK_EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME"
-pattern VK_EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME = "VK_EXT_blend_operation_advanced"
 
 -- No documentation found for TopLevel "VK_EXT_BLEND_OPERATION_ADVANCED_SPEC_VERSION"

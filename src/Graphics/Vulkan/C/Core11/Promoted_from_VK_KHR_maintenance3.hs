@@ -58,18 +58,19 @@ import Graphics.Vulkan.NamedType
 -- descriptor set /can/ be created, or else is set to
 -- 'Graphics.Vulkan.C.Core10.Core.VK_FALSE'.
 --
--- Unresolved directive in VkDescriptorSetLayoutSupport.txt -
--- include::{generated}\/validity\/structs\/VkDescriptorSetLayoutSupport.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetDescriptorSetLayoutSupport'
+-- 'vkGetDescriptorSetLayoutSupport',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_maintenance3.vkGetDescriptorSetLayoutSupportKHR'
 data VkDescriptorSetLayoutSupport = VkDescriptorSetLayoutSupport
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkDescriptorSetVariableDescriptorCountLayoutSupportEXT'
   vkPNext :: Ptr ()
   , -- | @supported@ specifies whether the descriptor set layout /can/ be
   -- created.
@@ -107,15 +108,15 @@ instance Zero VkDescriptorSetLayoutSupport where
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- Unresolved directive in VkPhysicalDeviceMaintenance3Properties.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceMaintenance3Properties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceMaintenance3Properties = VkPhysicalDeviceMaintenance3Properties
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -198,8 +199,7 @@ instance Zero VkPhysicalDeviceMaintenance3Properties where
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice' because
 -- the answer /may/ depend on enabled features.
 --
--- Unresolved directive in vkGetDescriptorSetLayoutSupport.txt -
--- include::{generated}\/validity\/protos\/vkGetDescriptorSetLayoutSupport.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --

@@ -11,13 +11,16 @@ module Graphics.Vulkan.Extensions.VK_EXT_hdr_metadata
   , fromCStructXYColorEXT
   , XYColorEXT(..)
   , setHdrMetadataEXT
-  , pattern VK_EXT_HDR_METADATA_SPEC_VERSION
-  , pattern VK_EXT_HDR_METADATA_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_HDR_METADATA_EXT
+  , pattern EXT_HDR_METADATA_EXTENSION_NAME
+  , pattern EXT_HDR_METADATA_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_HDR_METADATA_EXT
   ) where
 
 import Data.Function
   ( (&)
+  )
+import Data.String
+  ( IsString
   )
 import Data.Vector
   ( Vector
@@ -44,6 +47,8 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_hdr_metadata
   ( VkHdrMetadataEXT(..)
   , VkXYColorEXT(..)
   , vkSetHdrMetadataEXT
+  , pattern VK_EXT_HDR_METADATA_EXTENSION_NAME
+  , pattern VK_EXT_HDR_METADATA_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_HDR_METADATA_EXT
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
@@ -60,19 +65,15 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_hdr_metadata
-  ( pattern VK_EXT_HDR_METADATA_EXTENSION_NAME
-  , pattern VK_EXT_HDR_METADATA_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_HDR_METADATA_EXT
   )
 
 
 
 -- | VkHdrMetadataEXT - structure to specify Hdr metadata
 --
--- = Description
---
--- Unresolved directive in VkHdrMetadataEXT.txt -
--- include::{generated}\/validity\/structs\/VkHdrMetadataEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- __Note__
 --
@@ -80,7 +81,9 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_hdr_metadata
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_hdr_metadata.VkXYColorEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_hdr_metadata.vkSetHdrMetadataEXT'
 data HdrMetadataEXT = HdrMetadataEXT
   { -- Univalued member elided
   -- No documentation found for Nested "HdrMetadataEXT" "pNext"
@@ -141,7 +144,7 @@ instance Zero HdrMetadataEXT where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_hdr_metadata.VkHdrMetadataEXT'
 data XYColorEXT = XYColorEXT
   { -- No documentation found for Nested "XYColorEXT" "x"
   x :: CFloat
@@ -185,13 +188,39 @@ instance Zero XYColorEXT where
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_hdr_metadata.VkHdrMetadataEXT'
 --     structures.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkSetHdrMetadataEXT.txt -
--- include::{generated}\/validity\/protos\/vkSetHdrMetadataEXT.txt[]
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pSwapchains@ /must/ be a valid pointer to an array of
+--     @swapchainCount@ valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
+--     handles
+--
+-- -   @pMetadata@ /must/ be a valid pointer to an array of
+--     @swapchainCount@ valid
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_hdr_metadata.VkHdrMetadataEXT'
+--     structures
+--
+-- -   @swapchainCount@ /must/ be greater than @0@
+--
+-- -   Both of @device@, and the elements of @pSwapchains@ /must/ have been
+--     created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_hdr_metadata.VkHdrMetadataEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
 setHdrMetadataEXT :: Device ->  Vector SwapchainKHR ->  Vector HdrMetadataEXT ->  IO ()
 setHdrMetadataEXT = \(Device device' commandTable) -> \swapchains' -> \metadata' -> withVec withCStructHdrMetadataEXT metadata' (\pMetadata' -> withVec (&) swapchains' (\pSwapchains' -> vkSetHdrMetadataEXT commandTable device' (fromIntegral $ Data.Vector.length swapchains' `min` Data.Vector.length metadata') pSwapchains' pMetadata' *> (pure ())))
+
+-- No documentation found for TopLevel "VK_EXT_HDR_METADATA_EXTENSION_NAME"
+pattern EXT_HDR_METADATA_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_HDR_METADATA_EXTENSION_NAME = VK_EXT_HDR_METADATA_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_HDR_METADATA_SPEC_VERSION"
+pattern EXT_HDR_METADATA_SPEC_VERSION :: Integral a => a
+pattern EXT_HDR_METADATA_SPEC_VERSION = VK_EXT_HDR_METADATA_SPEC_VERSION

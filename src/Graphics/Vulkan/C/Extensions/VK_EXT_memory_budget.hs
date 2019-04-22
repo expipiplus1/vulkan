@@ -52,14 +52,15 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkMemoryHeap'::@size@ for
 -- each heap.
 --
--- Unresolved directive in VkPhysicalDeviceMemoryBudgetPropertiesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceMemoryBudgetPropertiesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceMemoryBudgetPropertiesEXT = VkPhysicalDeviceMemoryBudgetPropertiesEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -95,7 +96,7 @@ instance Zero VkPhysicalDeviceMemoryBudgetPropertiesEXT where
                                                    zero
 
 -- No documentation found for TopLevel "VK_EXT_MEMORY_BUDGET_EXTENSION_NAME"
-pattern VK_EXT_MEMORY_BUDGET_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_MEMORY_BUDGET_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_MEMORY_BUDGET_EXTENSION_NAME = "VK_EXT_memory_budget"
 
 -- No documentation found for TopLevel "VK_EXT_MEMORY_BUDGET_SPEC_VERSION"

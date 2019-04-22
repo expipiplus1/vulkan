@@ -20,8 +20,8 @@ module Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities
   , pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV
   , ExternalMemoryHandleTypeFlagsNV
   , getPhysicalDeviceExternalImageFormatPropertiesNV
-  , pattern VK_NV_EXTERNAL_MEMORY_CAPABILITIES_SPEC_VERSION
-  , pattern VK_NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME
+  , pattern NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME
+  , pattern NV_EXTERNAL_MEMORY_CAPABILITIES_SPEC_VERSION
   ) where
 
 import Control.Exception
@@ -30,6 +30,9 @@ import Control.Exception
 import Control.Monad
   ( (<=<)
   , when
+  )
+import Data.String
+  ( IsString
   )
 import Foreign.Marshal.Alloc
   ( alloca
@@ -55,6 +58,8 @@ import Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities
   , pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV
   , pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV
   , pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV
+  , pattern VK_NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME
+  , pattern VK_NV_EXTERNAL_MEMORY_CAPABILITIES_SPEC_VERSION
   )
 import Graphics.Vulkan.Core10.Core
   ( Format
@@ -72,24 +77,18 @@ import Graphics.Vulkan.Core10.DeviceInitialization
 import Graphics.Vulkan.Exception
   ( VulkanException(..)
   )
-import Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities
-  ( pattern VK_NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME
-  , pattern VK_NV_EXTERNAL_MEMORY_CAPABILITIES_SPEC_VERSION
-  )
 
 
 
 -- | VkExternalImageFormatPropertiesNV - Structure specifying external image
 -- format properties
 --
--- = Description
---
--- Unresolved directive in VkExternalImageFormatPropertiesNV.txt -
--- include::{generated}\/validity\/structs\/VkExternalImageFormatPropertiesNV.txt[]
---
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryFeatureFlagsNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryHandleTypeFlagsNV',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageFormatProperties',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.vkGetPhysicalDeviceExternalImageFormatPropertiesNV'
 data ExternalImageFormatPropertiesNV = ExternalImageFormatPropertiesNV
   { -- No documentation found for Nested "ExternalImageFormatPropertiesNV" "imageFormatProperties"
   imageFormatProperties :: ImageFormatProperties
@@ -129,8 +128,12 @@ instance Zero ExternalImageFormatPropertiesNV where
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalImageFormatPropertiesNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryFeatureFlagsNV',
 -- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.vkGetPhysicalDeviceExternalImageFormatPropertiesNV'
 type ExternalMemoryFeatureFlagBitsNV = VkExternalMemoryFeatureFlagBitsNV
+
+
+{-# complete EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV, EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV, EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV :: ExternalMemoryFeatureFlagBitsNV #-}
 
 
 -- | 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VK_EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV'
@@ -164,7 +167,8 @@ pattern EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV = VK_EXTERNAL_MEMORY_FEATURE_I
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalImageFormatPropertiesNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryFeatureFlagBitsNV'
 type ExternalMemoryFeatureFlagsNV = ExternalMemoryFeatureFlagBitsNV
 
 -- | VkExternalMemoryHandleTypeFlagBitsNV - Bitmask specifying external
@@ -172,8 +176,11 @@ type ExternalMemoryFeatureFlagsNV = ExternalMemoryFeatureFlagBitsNV
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryHandleTypeFlagsNV'
 type ExternalMemoryHandleTypeFlagBitsNV = VkExternalMemoryHandleTypeFlagBitsNV
+
+
+{-# complete EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV, EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV, EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV, EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV :: ExternalMemoryHandleTypeFlagBitsNV #-}
 
 
 -- | 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV'
@@ -216,7 +223,13 @@ pattern EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV = VK_EXTERNAL_MEMORY_
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory.VkExportMemoryAllocateInfoNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalImageFormatPropertiesNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBitsNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory.VkExternalMemoryImageCreateInfoNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32.VkImportMemoryWin32HandleInfoNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32.vkGetMemoryWin32HandleNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.vkGetPhysicalDeviceExternalImageFormatPropertiesNV'
 type ExternalMemoryHandleTypeFlagsNV = ExternalMemoryHandleTypeFlagBitsNV
 
 
@@ -262,12 +275,35 @@ type ExternalMemoryHandleTypeFlagsNV = ExternalMemoryHandleTypeFlagBitsNV
 -- Otherwise, they are filled in as described for
 -- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalImageFormatPropertiesNV'.
 --
--- Unresolved directive in
--- vkGetPhysicalDeviceExternalImageFormatPropertiesNV.txt -
--- include::{generated}\/validity\/protos\/vkGetPhysicalDeviceExternalImageFormatPropertiesNV.txt[]
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_FORMAT_NOT_SUPPORTED'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalImageFormatPropertiesNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryHandleTypeFlagsNV',
+-- 'Graphics.Vulkan.C.Core10.Core.VkFormat',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageCreateFlags',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageTiling',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageType',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageUsageFlags',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
 getPhysicalDeviceExternalImageFormatPropertiesNV :: PhysicalDevice ->  Format ->  ImageType ->  ImageTiling ->  ImageUsageFlags ->  ImageCreateFlags ->  ExternalMemoryHandleTypeFlagsNV ->  IO (ExternalImageFormatPropertiesNV)
 getPhysicalDeviceExternalImageFormatPropertiesNV = \(PhysicalDevice physicalDevice' commandTable) -> \format' -> \type' -> \tiling' -> \usage' -> \flags' -> \externalHandleType' -> alloca (\pExternalImageFormatProperties' -> vkGetPhysicalDeviceExternalImageFormatPropertiesNV commandTable physicalDevice' format' type' tiling' usage' flags' externalHandleType' pExternalImageFormatProperties' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((fromCStructExternalImageFormatPropertiesNV <=< peek) pExternalImageFormatProperties')))
+
+-- No documentation found for TopLevel "VK_NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME"
+pattern NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME = VK_NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_NV_EXTERNAL_MEMORY_CAPABILITIES_SPEC_VERSION"
+pattern NV_EXTERNAL_MEMORY_CAPABILITIES_SPEC_VERSION :: Integral a => a
+pattern NV_EXTERNAL_MEMORY_CAPABILITIES_SPEC_VERSION = VK_NV_EXTERNAL_MEMORY_CAPABILITIES_SPEC_VERSION

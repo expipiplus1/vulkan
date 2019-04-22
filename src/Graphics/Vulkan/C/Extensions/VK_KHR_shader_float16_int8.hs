@@ -34,16 +34,15 @@ import Graphics.Vulkan.C.Core10.Core
 -- | VkPhysicalDeviceFloat16Int8FeaturesKHR - Structure describing features
 -- supported by VK_KHR_shader_float16_int8
 --
--- = Description
---
--- Unresolved directive in VkPhysicalDeviceFloat16Int8FeaturesKHR.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceFloat16Int8FeaturesKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceFloat16Int8FeaturesKHR = VkPhysicalDeviceFloat16Int8FeaturesKHR
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT16_INT8_FEATURES_KHR'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -77,7 +76,7 @@ instance Zero VkPhysicalDeviceFloat16Int8FeaturesKHR where
                                                 zero
 
 -- No documentation found for TopLevel "VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME"
-pattern VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME = "VK_KHR_shader_float16_int8"
 
 -- No documentation found for TopLevel "VK_KHR_SHADER_FLOAT16_INT8_SPEC_VERSION"

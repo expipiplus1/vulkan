@@ -85,21 +85,18 @@ import Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement
 -- determining the valid usage conditions of
 -- 'Graphics.Vulkan.C.Core10.ImageView.VkImageViewCreateInfo'.
 --
--- Unresolved directive in VkImageViewUsageCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkImageViewUsageCreateInfo.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageUsageFlags',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkImageViewUsageCreateInfo = VkImageViewUsageCreateInfo
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @usage@ is a bitmask describing the allowed usages of the image view.
-  -- See 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageUsageFlagBits'
-  -- for a description of the supported bits.
+  , -- | @usage@ /must/ not be @0@
   vkUsage :: VkImageUsageFlags
   }
   deriving (Eq, Show)
@@ -122,10 +119,7 @@ instance Zero VkImageViewUsageCreateInfo where
 -- | VkInputAttachmentAspectReference - Structure specifying a subpass\/input
 -- attachment pair and an aspect mask that /can/ be read.
 --
--- == Valid Usage
---
--- Unresolved directive in VkInputAttachmentAspectReference.txt -
--- include::{generated}\/validity\/structs\/VkInputAttachmentAspectReference.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -138,8 +132,7 @@ data VkInputAttachmentAspectReference = VkInputAttachmentAspectReference
   , -- | @inputAttachmentIndex@ is an index into the @pInputAttachments@ of the
   -- specified subpass.
   vkInputAttachmentIndex :: Word32
-  , -- | @aspectMask@ /must/ not include @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@
-  -- for any index @i@.
+  , -- | @aspectMask@ /must/ not be @0@
   vkAspectMask :: VkImageAspectFlags
   }
   deriving (Eq, Show)
@@ -174,15 +167,15 @@ instance Zero VkInputAttachmentAspectReference where
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- Unresolved directive in VkPhysicalDevicePointClippingProperties.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDevicePointClippingProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'VkPointClippingBehavior',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDevicePointClippingProperties = VkPhysicalDevicePointClippingProperties
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -219,21 +212,19 @@ instance Zero VkPhysicalDevicePointClippingProperties where
 -- not present, it is as if @domainOrigin@ were
 -- 'VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT'.
 --
--- Unresolved directive in
--- VkPipelineTessellationDomainOriginStateCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkPipelineTessellationDomainOriginStateCreateInfo.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
 -- 'VkTessellationDomainOrigin'
 data VkPipelineTessellationDomainOriginStateCreateInfo = VkPipelineTessellationDomainOriginStateCreateInfo
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @domainOrigin@ controls the origin of the tessellation domain space, and
-  -- is of type 'VkTessellationDomainOrigin'.
+  , -- | @domainOrigin@ /must/ be a valid 'VkTessellationDomainOrigin' value
   vkDomainOrigin :: VkTessellationDomainOrigin
   }
   deriving (Eq, Show)
@@ -294,28 +285,23 @@ pattern VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY = VkPointClippingBehavi
 -- | VkRenderPassInputAttachmentAspectCreateInfo - Structure specifying, for
 -- a given subpass\/input attachment pair, which aspect /can/ be read.
 --
--- = Description
---
--- Unresolved directive in VkRenderPassInputAttachmentAspectCreateInfo.txt
--- -
--- include::{generated}\/validity\/structs\/VkRenderPassInputAttachmentAspectCreateInfo.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'VkInputAttachmentAspectReference',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkRenderPassInputAttachmentAspectCreateInfo = VkRenderPassInputAttachmentAspectCreateInfo
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @aspectReferenceCount@ is the number of elements in the
-  -- @pAspectReferences@ array.
+  , -- | @aspectReferenceCount@ /must/ be greater than @0@
   vkAspectReferenceCount :: Word32
-  , -- | @pAspectReferences@ points to an array of @aspectReferenceCount@ number
-  -- of 'VkInputAttachmentAspectReference' structures describing which
-  -- aspect(s) /can/ be accessed for a given input attachment within a given
-  -- subpass.
+  , -- | @pAspectReferences@ /must/ be a valid pointer to an array of
+  -- @aspectReferenceCount@ valid 'VkInputAttachmentAspectReference'
+  -- structures
   vkPAspectReferences :: Ptr VkInputAttachmentAspectReference
   }
   deriving (Eq, Show)
@@ -382,55 +368,19 @@ pattern VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT = VkTessellationDomainOrigin 0
 pattern VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT :: VkTessellationDomainOrigin
 pattern VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT = VkTessellationDomainOrigin 1
 
--- | 'VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT' specifies that the
--- image having a compressed format /can/ be used to create a
--- 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' with an uncompressed
--- format where each texel in the image view corresponds to a compressed
--- texel block of the image.
+-- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT"
 pattern VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT = VkImageCreateFlagBits 0x00000080
 
--- | 'VK_IMAGE_CREATE_EXTENDED_USAGE_BIT' specifies that the image /can/ be
--- created with usage flags that are not supported for the format the image
--- is created with but are supported for at least one format a
--- 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' created from the image
--- /can/ have.
+-- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_EXTENDED_USAGE_BIT"
 pattern VK_IMAGE_CREATE_EXTENDED_USAGE_BIT :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_EXTENDED_USAGE_BIT = VkImageCreateFlagBits 0x00000100
 
--- | 'VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL': /must/
--- only be used as a depth\/stencil attachment in a
--- 'Graphics.Vulkan.C.Core10.Pass.VkFramebuffer', where the stencil aspect
--- is read-only, and\/or as a read-only image in a shader (which /can/ be
--- read as a sampled image, combined image\/sampler and\/or input
--- attachment) where only the stencil aspect is accessed. This layout is
--- valid only for image subresources of images created with the
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
--- usage bit enabled. Only image views created with a @usage@ value
--- including
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_SAMPLED_BIT'
--- /can/ be used as a sampled image or combined image\/sampler in a shader.
--- Similarly, only image views created with a @usage@ value including
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
--- /can/ be used as input attachments.
+-- No documentation found for Nested "VkImageLayout" "VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL"
 pattern VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL :: VkImageLayout
 pattern VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL = VkImageLayout 1000117001
 
--- | 'VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL': /must/
--- only be used as a depth\/stencil attachment in a
--- 'Graphics.Vulkan.C.Core10.Pass.VkFramebuffer', where the depth aspect is
--- read-only, and\/or as a read-only image in a shader (which /can/ be read
--- as a sampled image, combined image\/sampler and\/or input attachment)
--- where only the depth aspect is accessed. This layout is valid only for
--- image subresources of images created with the
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
--- usage bit enabled. Only image views created with a @usage@ value
--- including
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_SAMPLED_BIT'
--- /can/ be used as a sampled image or combined image\/sampler in a shader.
--- Similarly, only image views created with a @usage@ value including
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
--- /can/ be used as input attachments.
+-- No documentation found for Nested "VkImageLayout" "VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL"
 pattern VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL :: VkImageLayout
 pattern VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL = VkImageLayout 1000117000
 

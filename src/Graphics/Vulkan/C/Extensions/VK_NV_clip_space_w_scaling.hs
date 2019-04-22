@@ -60,26 +60,22 @@ import Graphics.Vulkan.NamedType
 -- | VkPipelineViewportWScalingStateCreateInfoNV - Structure specifying
 -- parameters of a newly created pipeline viewport W scaling state
 --
--- = Description
---
--- Unresolved directive in VkPipelineViewportWScalingStateCreateInfoNV.txt
--- -
--- include::{generated}\/validity\/structs\/VkPipelineViewportWScalingStateCreateInfoNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType', 'VkViewportWScalingNV'
 data VkPipelineViewportWScalingStateCreateInfoNV = VkPipelineViewportWScalingStateCreateInfoNV
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
   , -- | @viewportWScalingEnable@ controls whether viewport __W__ scaling is
   -- enabled.
   vkViewportWScalingEnable :: VkBool32
-  , -- | @viewportCount@ is the number of viewports used by __W__ scaling, and
-  -- /must/ match the number of viewports in the pipeline if viewport __W__
-  -- scaling is enabled.
+  , -- | @viewportCount@ /must/ be greater than @0@
   vkViewportCount :: Word32
   , -- | @pViewportWScalings@ is a pointer to an array of 'VkViewportWScalingNV'
   -- structures, which define the __W__ scaling parameters for the
@@ -112,14 +108,10 @@ instance Zero VkPipelineViewportWScalingStateCreateInfoNV where
 
 -- | VkViewportWScalingNV - Structure specifying a viewport
 --
--- = Description
---
--- Unresolved directive in VkViewportWScalingNV.txt -
--- include::{generated}\/validity\/structs\/VkViewportWScalingNV.txt[]
---
 -- = See Also
 --
--- No cross-references are available
+-- 'VkPipelineViewportWScalingStateCreateInfoNV',
+-- 'vkCmdSetViewportWScalingNV'
 data VkViewportWScalingNV = VkViewportWScalingNV
   { -- | @xcoeff@ and @ycoeff@ are the viewport’s W scaling factor for x and y
   -- respectively.
@@ -177,12 +169,53 @@ instance Zero VkViewportWScalingNV where
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxViewports@,
 --     inclusive
 --
--- Unresolved directive in vkCmdSetViewportWScalingNV.txt -
--- include::{generated}\/validity\/protos\/vkCmdSetViewportWScalingNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @pViewportWScalings@ /must/ be a valid pointer to an array of
+--     @viewportCount@ 'VkViewportWScalingNV' structures
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
+--
+-- -   @viewportCount@ /must/ be greater than @0@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Both            | Graphics        |                 |
+-- > | Secondary       |                 |                 |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer', 'VkViewportWScalingNV'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -203,18 +236,12 @@ foreign import ccall
 type FN_vkCmdSetViewportWScalingNV = ("commandBuffer" ::: VkCommandBuffer) -> ("firstViewport" ::: Word32) -> ("viewportCount" ::: Word32) -> ("pViewportWScalings" ::: Ptr VkViewportWScalingNV) -> IO ()
 type PFN_vkCmdSetViewportWScalingNV = FunPtr FN_vkCmdSetViewportWScalingNV
 
--- | 'VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV' specifies that the
--- @pViewportScalings@ state in
--- 'VkPipelineViewportWScalingStateCreateInfoNV' will be ignored and /must/
--- be set dynamically with 'vkCmdSetViewportWScalingNV' before any draws
--- are performed with a pipeline state with
--- 'VkPipelineViewportWScalingStateCreateInfoNV' member
--- @viewportScalingEnable@ set to 'Graphics.Vulkan.C.Core10.Core.VK_TRUE'
+-- No documentation found for Nested "VkDynamicState" "VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV"
 pattern VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV :: VkDynamicState
 pattern VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV = VkDynamicState 1000087000
 
 -- No documentation found for TopLevel "VK_NV_CLIP_SPACE_W_SCALING_EXTENSION_NAME"
-pattern VK_NV_CLIP_SPACE_W_SCALING_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_NV_CLIP_SPACE_W_SCALING_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_NV_CLIP_SPACE_W_SCALING_EXTENSION_NAME = "VK_NV_clip_space_w_scaling"
 
 -- No documentation found for TopLevel "VK_NV_CLIP_SPACE_W_SCALING_SPEC_VERSION"

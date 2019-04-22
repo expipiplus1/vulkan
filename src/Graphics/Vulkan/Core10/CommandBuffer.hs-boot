@@ -93,5 +93,6 @@ type QueryControlFlagBits = VkQueryControlFlagBits
 --
 -- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferInheritanceInfo',
 -- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkQueryControlFlagBits',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBeginQuery'
+-- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBeginQuery',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdBeginQueryIndexedEXT'
 type QueryControlFlags = QueryControlFlagBits

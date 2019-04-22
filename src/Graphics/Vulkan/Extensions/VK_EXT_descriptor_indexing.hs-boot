@@ -36,7 +36,7 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkDescriptorBindingFlagsEXT'
 type DescriptorBindingFlagBitsEXT = VkDescriptorBindingFlagBitsEXT
 
 -- | VkDescriptorBindingFlagsEXT - Bitmask of VkDescriptorBindingFlagBitsEXT
@@ -49,5 +49,6 @@ type DescriptorBindingFlagBitsEXT = VkDescriptorBindingFlagBitsEXT
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkDescriptorBindingFlagBitsEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkDescriptorSetLayoutBindingFlagsCreateInfoEXT'
 type DescriptorBindingFlagsEXT = DescriptorBindingFlagBitsEXT

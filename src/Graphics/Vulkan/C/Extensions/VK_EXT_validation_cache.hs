@@ -98,24 +98,18 @@ import Graphics.Vulkan.NamedType
 -- | VkShaderModuleValidationCacheCreateInfoEXT - Specify validation cache to
 -- use during shader module creation
 --
--- = Description
---
--- Unresolved directive in VkShaderModuleValidationCacheCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkShaderModuleValidationCacheCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType', 'VkValidationCacheEXT'
 data VkShaderModuleValidationCacheCreateInfoEXT = VkShaderModuleValidationCacheCreateInfoEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_SHADER_MODULE_VALIDATION_CACHE_CREATE_INFO_EXT'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @validationCache@ is the validation cache object from which the results
-  -- of prior validation attempts will be written, and to which new
-  -- validation results for this
-  -- 'Graphics.Vulkan.C.Core10.Shader.VkShaderModule' will be written (if not
-  -- already present).
+  , -- | @validationCache@ /must/ be a valid 'VkValidationCacheEXT' handle
   vkValidationCache :: VkValidationCacheEXT
   }
   deriving (Eq, Show)
@@ -146,7 +140,7 @@ instance Zero VkShaderModuleValidationCacheCreateInfoEXT where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkValidationCacheCreateInfoEXT'
 newtype VkValidationCacheCreateFlagsEXT = VkValidationCacheCreateFlagsEXT VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -178,12 +172,22 @@ instance Read VkValidationCacheCreateFlagsEXT where
 -- -   If @initialDataSize@ is not @0@, @pInitialData@ /must/ have been
 --     retrieved from a previous call to 'vkGetValidationCacheDataEXT'
 --
--- Unresolved directive in VkValidationCacheCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkValidationCacheCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @flags@ /must/ be @0@
+--
+-- -   If @initialDataSize@ is not @0@, @pInitialData@ /must/ be a valid
+--     pointer to an array of @initialDataSize@ bytes
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'VkValidationCacheCreateFlagsEXT', 'vkCreateValidationCacheEXT'
 data VkValidationCacheCreateInfoEXT = VkValidationCacheCreateInfoEXT
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -229,7 +233,9 @@ data VkValidationCacheEXT_T
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkShaderModuleValidationCacheCreateInfoEXT',
+-- 'vkCreateValidationCacheEXT', 'vkDestroyValidationCacheEXT',
+-- 'vkGetValidationCacheDataEXT', 'vkMergeValidationCachesEXT'
 type VkValidationCacheEXT = Ptr VkValidationCacheEXT_T
 
 -- ** VkValidationCacheHeaderVersionEXT
@@ -310,12 +316,35 @@ pattern VK_VALIDATION_CACHE_HEADER_VERSION_ONE_EXT = VkValidationCacheHeaderVers
 -- significantly shorter than the duration of the
 -- 'Graphics.Vulkan.C.Core10.Shader.vkCreateShaderModule' command.
 --
--- Unresolved directive in vkCreateValidationCacheEXT.txt -
--- include::{generated}\/validity\/protos\/vkCreateValidationCacheEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'VkValidationCacheCreateInfoEXT' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pValidationCache@ /must/ be a valid pointer to a
+--     'VkValidationCacheEXT' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'VkValidationCacheCreateInfoEXT', 'VkValidationCacheEXT'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -361,12 +390,32 @@ type PFN_vkCreateValidationCacheEXT = FunPtr FN_vkCreateValidationCacheEXT
 --     were provided when @validationCache@ was created, @pAllocator@
 --     /must/ be @NULL@
 --
--- Unresolved directive in vkDestroyValidationCacheEXT.txt -
--- include::{generated}\/validity\/protos\/vkDestroyValidationCacheEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   If @validationCache@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE',
+--     @validationCache@ /must/ be a valid 'VkValidationCacheEXT' handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   If @validationCache@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @validationCache@ /must/ be externally synchronized
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'VkValidationCacheEXT'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -466,12 +515,38 @@ type PFN_vkDestroyValidationCacheEXT = FunPtr FN_vkDestroyValidationCacheEXT
 -- nothing will be written to @pData@ and zero will be written to
 -- @pDataSize@.
 --
--- Unresolved directive in vkGetValidationCacheDataEXT.txt -
--- include::{generated}\/validity\/protos\/vkGetValidationCacheDataEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @validationCache@ /must/ be a valid 'VkValidationCacheEXT' handle
+--
+-- -   @pDataSize@ /must/ be a valid pointer to a @size_t@ value
+--
+-- -   If the value referenced by @pDataSize@ is not @0@, and @pData@ is
+--     not @NULL@, @pData@ /must/ be a valid pointer to an array of
+--     @pDataSize@ bytes
+--
+-- -   @validationCache@ /must/ have been created, allocated, or retrieved
+--     from @device@
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'VkValidationCacheEXT'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -519,12 +594,44 @@ type PFN_vkGetValidationCacheDataEXT = FunPtr FN_vkGetValidationCacheDataEXT
 --
 -- == Valid Usage
 --
--- Unresolved directive in vkMergeValidationCachesEXT.txt -
--- include::{generated}\/validity\/protos\/vkMergeValidationCachesEXT.txt[]
+-- -   @dstCache@ /must/ not appear in the list of source caches
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @dstCache@ /must/ be a valid 'VkValidationCacheEXT' handle
+--
+-- -   @pSrcCaches@ /must/ be a valid pointer to an array of
+--     @srcCacheCount@ valid 'VkValidationCacheEXT' handles
+--
+-- -   @srcCacheCount@ /must/ be greater than @0@
+--
+-- -   @dstCache@ /must/ have been created, allocated, or retrieved from
+--     @device@
+--
+-- -   Each element of @pSrcCaches@ /must/ have been created, allocated, or
+--     retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @dstCache@ /must/ be externally synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'VkValidationCacheEXT'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -546,7 +653,7 @@ type FN_vkMergeValidationCachesEXT = ("device" ::: VkDevice) -> ("dstCache" ::: 
 type PFN_vkMergeValidationCachesEXT = FunPtr FN_vkMergeValidationCachesEXT
 
 -- No documentation found for TopLevel "VK_EXT_VALIDATION_CACHE_EXTENSION_NAME"
-pattern VK_EXT_VALIDATION_CACHE_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_VALIDATION_CACHE_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_VALIDATION_CACHE_EXTENSION_NAME = "VK_EXT_validation_cache"
 
 -- No documentation found for TopLevel "VK_EXT_VALIDATION_CACHE_SPEC_VERSION"

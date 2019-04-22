@@ -100,7 +100,7 @@ import {-# source #-} Graphics.Vulkan.C.Core10.DeviceInitialization
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDebugReportCallbackCreateInfoEXT'
 type PFN_vkDebugReportCallbackEXT = Ptr (("flags" ::: VkDebugReportFlagsEXT) -> ("objectType" ::: VkDebugReportObjectTypeEXT) -> ("object" ::: Word64) -> ("location" ::: CSize) -> ("messageCode" ::: Int32) -> ("pLayerPrefix" ::: Ptr CChar) -> ("pMessage" ::: Ptr CChar) -> ("pUserData" ::: Ptr ()) -> IO VkBool32)
 
 data VkDebugReportCallbackCreateInfoEXT
@@ -112,7 +112,7 @@ data VkDebugReportCallbackEXT_T
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'vkCreateDebugReportCallbackEXT', 'vkDestroyDebugReportCallbackEXT'
 type VkDebugReportCallbackEXT = Ptr VkDebugReportCallbackEXT_T
 
 data VkDebugReportFlagBitsEXT
@@ -126,7 +126,8 @@ data VkDebugReportFlagBitsEXT
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDebugReportCallbackCreateInfoEXT', 'VkDebugReportFlagBitsEXT',
+-- 'vkDebugReportMessageEXT'
 type VkDebugReportFlagsEXT = VkDebugReportFlagBitsEXT
 
 data VkDebugReportObjectTypeEXT

@@ -13,13 +13,16 @@ module Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation
   , withCStructDedicatedAllocationMemoryAllocateInfoNV
   , fromCStructDedicatedAllocationMemoryAllocateInfoNV
   , DedicatedAllocationMemoryAllocateInfoNV(..)
-  , pattern VK_NV_DEDICATED_ALLOCATION_SPEC_VERSION
-  , pattern VK_NV_DEDICATED_ALLOCATION_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV
-  , pattern VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_BUFFER_CREATE_INFO_NV
-  , pattern VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV
+  , pattern NV_DEDICATED_ALLOCATION_EXTENSION_NAME
+  , pattern NV_DEDICATED_ALLOCATION_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV
+  , pattern STRUCTURE_TYPE_DEDICATED_ALLOCATION_BUFFER_CREATE_INFO_NV
+  , pattern STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Foreign.Marshal.Utils
   ( maybePeek
   , maybeWith
@@ -36,6 +39,8 @@ import Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation
   ( VkDedicatedAllocationBufferCreateInfoNV(..)
   , VkDedicatedAllocationImageCreateInfoNV(..)
   , VkDedicatedAllocationMemoryAllocateInfoNV(..)
+  , pattern VK_NV_DEDICATED_ALLOCATION_EXTENSION_NAME
+  , pattern VK_NV_DEDICATED_ALLOCATION_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_BUFFER_CREATE_INFO_NV
   , pattern VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV
   , pattern VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV
@@ -53,9 +58,10 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation
-  ( pattern VK_NV_DEDICATED_ALLOCATION_EXTENSION_NAME
-  , pattern VK_NV_DEDICATED_ALLOCATION_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_DEDICATED_ALLOCATION_BUFFER_CREATE_INFO_NV
+  , pattern STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV
+  , pattern STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV
   )
 
 
@@ -63,14 +69,12 @@ import Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation
 -- | VkDedicatedAllocationBufferCreateInfoNV - Specify that a buffer is bound
 -- to a dedicated memory resource
 --
--- = Description
---
--- Unresolved directive in VkDedicatedAllocationBufferCreateInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkDedicatedAllocationBufferCreateInfoNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data DedicatedAllocationBufferCreateInfoNV = DedicatedAllocationBufferCreateInfoNV
   { -- Univalued member elided
   -- No documentation found for Nested "DedicatedAllocationBufferCreateInfoNV" "pNext"
@@ -119,12 +123,15 @@ instance Zero DedicatedAllocationBufferCreateInfoNV where
 --     or
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_CREATE_SPARSE_ALIASED_BIT'
 --
--- Unresolved directive in VkDedicatedAllocationImageCreateInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkDedicatedAllocationImageCreateInfoNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation.VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data DedicatedAllocationImageCreateInfoNV = DedicatedAllocationImageCreateInfoNV
   { -- Univalued member elided
   -- No documentation found for Nested "DedicatedAllocationImageCreateInfoNV" "pNext"
@@ -187,26 +194,30 @@ instance Zero DedicatedAllocationImageCreateInfoNV where
 --     'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements'::@size@
 --     of the buffer
 --
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation.VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV'
+--
 -- -   If @image@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE' and
---     'Graphics.Vulkan.C.Core10.Memory.VkMemoryAllocateInfo' defines a
---     memory import operation, the memory being imported /must/ also be a
---     dedicated image allocation and @image@ /must/ be identical to the
---     image associated with the imported memory.
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @image@ /must/
+--     be a valid 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage'
+--     handle
 --
 -- -   If @buffer@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE' and
---     'Graphics.Vulkan.C.Core10.Memory.VkMemoryAllocateInfo' defines a
---     memory import operation, the memory being imported /must/ also be a
---     dedicated buffer allocation and @buffer@ /must/ be identical to the
---     buffer associated with the imported memory.
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @buffer@ /must/
+--     be a valid 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer'
+--     handle
 --
--- Unresolved directive in VkDedicatedAllocationMemoryAllocateInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkDedicatedAllocationMemoryAllocateInfoNV.txt[]
+-- -   Both of @buffer@, and @image@ that are valid handles /must/ have
+--     been created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',
+-- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data DedicatedAllocationMemoryAllocateInfoNV = DedicatedAllocationMemoryAllocateInfoNV
   { -- Univalued member elided
   -- No documentation found for Nested "DedicatedAllocationMemoryAllocateInfoNV" "pNext"
@@ -237,3 +248,11 @@ instance Zero DedicatedAllocationMemoryAllocateInfoNV where
                                                  zero
                                                  zero
 
+
+-- No documentation found for TopLevel "VK_NV_DEDICATED_ALLOCATION_EXTENSION_NAME"
+pattern NV_DEDICATED_ALLOCATION_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern NV_DEDICATED_ALLOCATION_EXTENSION_NAME = VK_NV_DEDICATED_ALLOCATION_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_NV_DEDICATED_ALLOCATION_SPEC_VERSION"
+pattern NV_DEDICATED_ALLOCATION_SPEC_VERSION :: Integral a => a
+pattern NV_DEDICATED_ALLOCATION_SPEC_VERSION = VK_NV_DEDICATED_ALLOCATION_SPEC_VERSION

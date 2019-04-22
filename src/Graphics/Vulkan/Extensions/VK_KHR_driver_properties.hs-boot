@@ -33,5 +33,5 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_driver_properties
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_driver_properties.VkPhysicalDeviceDriverPropertiesKHR'
 type DriverIdKHR = VkDriverIdKHR

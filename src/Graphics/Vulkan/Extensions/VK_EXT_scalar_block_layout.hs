@@ -7,11 +7,14 @@ module Graphics.Vulkan.Extensions.VK_EXT_scalar_block_layout
   ( withCStructPhysicalDeviceScalarBlockLayoutFeaturesEXT
   , fromCStructPhysicalDeviceScalarBlockLayoutFeaturesEXT
   , PhysicalDeviceScalarBlockLayoutFeaturesEXT(..)
-  , pattern VK_EXT_SCALAR_BLOCK_LAYOUT_SPEC_VERSION
-  , pattern VK_EXT_SCALAR_BLOCK_LAYOUT_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES_EXT
+  , pattern EXT_SCALAR_BLOCK_LAYOUT_EXTENSION_NAME
+  , pattern EXT_SCALAR_BLOCK_LAYOUT_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES_EXT
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Foreign.Marshal.Utils
   ( maybePeek
   , maybeWith
@@ -26,6 +29,8 @@ import Graphics.Vulkan.C.Core10.Core
   )
 import Graphics.Vulkan.C.Extensions.VK_EXT_scalar_block_layout
   ( VkPhysicalDeviceScalarBlockLayoutFeaturesEXT(..)
+  , pattern VK_EXT_SCALAR_BLOCK_LAYOUT_EXTENSION_NAME
+  , pattern VK_EXT_SCALAR_BLOCK_LAYOUT_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES_EXT
   )
 import Graphics.Vulkan.Core10.Core
@@ -37,9 +42,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_scalar_block_layout
-  ( pattern VK_EXT_SCALAR_BLOCK_LAYOUT_EXTENSION_NAME
-  , pattern VK_EXT_SCALAR_BLOCK_LAYOUT_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES_EXT
   )
 
 
@@ -65,13 +69,12 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_scalar_block_layout
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable this
 -- feature.
 --
--- Unresolved directive in VkPhysicalDeviceScalarBlockLayoutFeaturesEXT.txt
--- -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceScalarBlockLayoutFeaturesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceScalarBlockLayoutFeaturesEXT = PhysicalDeviceScalarBlockLayoutFeaturesEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceScalarBlockLayoutFeaturesEXT" "pNext"
@@ -98,3 +101,11 @@ instance Zero PhysicalDeviceScalarBlockLayoutFeaturesEXT where
   zero = PhysicalDeviceScalarBlockLayoutFeaturesEXT Nothing
                                                     False
 
+
+-- No documentation found for TopLevel "VK_EXT_SCALAR_BLOCK_LAYOUT_EXTENSION_NAME"
+pattern EXT_SCALAR_BLOCK_LAYOUT_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_SCALAR_BLOCK_LAYOUT_EXTENSION_NAME = VK_EXT_SCALAR_BLOCK_LAYOUT_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_SCALAR_BLOCK_LAYOUT_SPEC_VERSION"
+pattern EXT_SCALAR_BLOCK_LAYOUT_SPEC_VERSION :: Integral a => a
+pattern EXT_SCALAR_BLOCK_LAYOUT_SPEC_VERSION = VK_EXT_SCALAR_BLOCK_LAYOUT_SPEC_VERSION

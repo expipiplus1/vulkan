@@ -9,13 +9,16 @@ module Graphics.Vulkan.Extensions.VK_KHR_push_descriptor
   , PhysicalDevicePushDescriptorPropertiesKHR(..)
   , cmdPushDescriptorSetKHR
   , cmdPushDescriptorSetWithTemplateKHR
-  , pattern VK_KHR_PUSH_DESCRIPTOR_SPEC_VERSION
-  , pattern VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR
-  , pattern VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR
-  , pattern VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR
+  , pattern KHR_PUSH_DESCRIPTOR_EXTENSION_NAME
+  , pattern KHR_PUSH_DESCRIPTOR_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR
+  , pattern DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR
+  , pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Data.Vector
   ( Vector
   )
@@ -42,6 +45,8 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor
   ( VkPhysicalDevicePushDescriptorPropertiesKHR(..)
   , vkCmdPushDescriptorSetKHR
   , vkCmdPushDescriptorSetWithTemplateKHR
+  , pattern VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME
+  , pattern VK_KHR_PUSH_DESCRIPTOR_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR
   )
 import Graphics.Vulkan.Core10.DescriptorSet
@@ -68,11 +73,14 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor
-  ( pattern VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR
-  , pattern VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR
-  , pattern VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME
-  , pattern VK_KHR_PUSH_DESCRIPTOR_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR
+  )
+import Graphics.Vulkan.Core10.DescriptorSet
+  ( pattern DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR
+  )
+import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_descriptor_update_template
+  ( pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR
   )
 
 
@@ -94,13 +102,11 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- Unresolved directive in VkPhysicalDevicePushDescriptorPropertiesKHR.txt
--- -
--- include::{generated}\/validity\/structs\/VkPhysicalDevicePushDescriptorPropertiesKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDevicePushDescriptorPropertiesKHR = PhysicalDevicePushDescriptorPropertiesKHR
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDevicePushDescriptorPropertiesKHR" "pNext"
@@ -207,12 +213,80 @@ instance Zero PhysicalDevicePushDescriptorPropertiesKHR where
 --
 -- == Valid Usage
 --
--- Unresolved directive in vkCmdPushDescriptorSetKHR.txt -
--- include::{generated}\/validity\/protos\/vkCmdPushDescriptorSetKHR.txt[]
+-- -   @pipelineBindPoint@ /must/ be supported by the @commandBuffer@’s
+--     parent 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool'’s queue
+--     family
+--
+-- -   @set@ /must/ be less than
+--     'Graphics.Vulkan.C.Core10.PipelineLayout.VkPipelineLayoutCreateInfo'::@setLayoutCount@
+--     provided when @layout@ was created
+--
+-- -   @set@ /must/ be the unique set number in the pipeline layout that
+--     uses a descriptor set layout that was created with
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @pipelineBindPoint@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Pass.VkPipelineBindPoint' value
+--
+-- -   @layout@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' handle
+--
+-- -   @pDescriptorWrites@ /must/ be a valid pointer to an array of
+--     @descriptorWriteCount@ valid
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkWriteDescriptorSet'
+--     structures
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics, or
+--     compute operations
+--
+-- -   @descriptorWriteCount@ /must/ be greater than @0@
+--
+-- -   Both of @commandBuffer@, and @layout@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Both            | Graphics        |                 |
+-- > | Secondary       |                 | Compute         |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
+-- 'Graphics.Vulkan.C.Core10.Pass.VkPipelineBindPoint',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout',
+-- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkWriteDescriptorSet'
 cmdPushDescriptorSetKHR :: CommandBuffer ->  PipelineBindPoint ->  PipelineLayout ->  Word32 ->  Vector WriteDescriptorSet ->  IO ()
 cmdPushDescriptorSetKHR = \(CommandBuffer commandBuffer' commandTable) -> \pipelineBindPoint' -> \layout' -> \set' -> \descriptorWrites' -> withVec withCStructWriteDescriptorSet descriptorWrites' (\pDescriptorWrites' -> vkCmdPushDescriptorSetKHR commandTable commandBuffer' pipelineBindPoint' layout' set' (fromIntegral $ Data.Vector.length descriptorWrites') pDescriptorWrites' *> (pure ()))
 
@@ -254,8 +328,55 @@ cmdPushDescriptorSetKHR = \(CommandBuffer commandBuffer' commandTable) -> \pipel
 --     defined by @descriptorUpdateTemplate@ when it was created with
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template.vkCreateDescriptorUpdateTemplateKHR'
 --
--- Unresolved directive in vkCmdPushDescriptorSetWithTemplateKHR.txt -
--- include::{generated}\/validity\/protos\/vkCmdPushDescriptorSetWithTemplateKHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @descriptorUpdateTemplate@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplate'
+--     handle
+--
+-- -   @layout@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' handle
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics, or
+--     compute operations
+--
+-- -   Each of @commandBuffer@, @descriptorUpdateTemplate@, and @layout@
+--     /must/ have been created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Both            | Graphics        |                 |
+-- > | Secondary       |                 | Compute         |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
 --
 -- __API example.__
 --
@@ -307,6 +428,16 @@ cmdPushDescriptorSetKHR = \(CommandBuffer commandBuffer' commandTable) -> \pipel
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplate',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout'
 cmdPushDescriptorSetWithTemplateKHR :: CommandBuffer ->  DescriptorUpdateTemplate ->  PipelineLayout ->  Word32 ->  Ptr () ->  IO ()
 cmdPushDescriptorSetWithTemplateKHR = \(CommandBuffer commandBuffer' commandTable) -> \descriptorUpdateTemplate' -> \layout' -> \set' -> \pData' -> vkCmdPushDescriptorSetWithTemplateKHR commandTable commandBuffer' descriptorUpdateTemplate' layout' set' pData' *> (pure ())
+
+-- No documentation found for TopLevel "VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME"
+pattern KHR_PUSH_DESCRIPTOR_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern KHR_PUSH_DESCRIPTOR_EXTENSION_NAME = VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_KHR_PUSH_DESCRIPTOR_SPEC_VERSION"
+pattern KHR_PUSH_DESCRIPTOR_SPEC_VERSION :: Integral a => a
+pattern KHR_PUSH_DESCRIPTOR_SPEC_VERSION = VK_KHR_PUSH_DESCRIPTOR_SPEC_VERSION

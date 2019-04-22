@@ -11,10 +11,10 @@ module Graphics.Vulkan.Extensions.VK_NV_clip_space_w_scaling
   , fromCStructViewportWScalingNV
   , ViewportWScalingNV(..)
   , cmdSetViewportWScalingNV
-  , pattern VK_NV_CLIP_SPACE_W_SCALING_SPEC_VERSION
-  , pattern VK_NV_CLIP_SPACE_W_SCALING_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV
-  , pattern VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV
+  , pattern NV_CLIP_SPACE_W_SCALING_EXTENSION_NAME
+  , pattern NV_CLIP_SPACE_W_SCALING_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV
+  , pattern DYNAMIC_STATE_VIEWPORT_W_SCALING_NV
   ) where
 
 import Control.Monad
@@ -22,6 +22,9 @@ import Control.Monad
   )
 import Data.Maybe
   ( maybe
+  )
+import Data.String
+  ( IsString
   )
 import Data.Vector
   ( Vector
@@ -55,6 +58,8 @@ import Graphics.Vulkan.C.Extensions.VK_NV_clip_space_w_scaling
   ( VkPipelineViewportWScalingStateCreateInfoNV(..)
   , VkViewportWScalingNV(..)
   , vkCmdSetViewportWScalingNV
+  , pattern VK_NV_CLIP_SPACE_W_SCALING_EXTENSION_NAME
+  , pattern VK_NV_CLIP_SPACE_W_SCALING_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV
   )
 import Graphics.Vulkan.Core10.Core
@@ -72,10 +77,11 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_NV_clip_space_w_scaling
-  ( pattern VK_DYNAMIC_STATE_VIEWPORT_W_SCALING_NV
-  , pattern VK_NV_CLIP_SPACE_W_SCALING_EXTENSION_NAME
-  , pattern VK_NV_CLIP_SPACE_W_SCALING_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV
+  )
+import Graphics.Vulkan.Core10.Pipeline
+  ( pattern DYNAMIC_STATE_VIEWPORT_W_SCALING_NV
   )
 
 
@@ -83,15 +89,13 @@ import Graphics.Vulkan.C.Extensions.VK_NV_clip_space_w_scaling
 -- | VkPipelineViewportWScalingStateCreateInfoNV - Structure specifying
 -- parameters of a newly created pipeline viewport W scaling state
 --
--- = Description
---
--- Unresolved directive in VkPipelineViewportWScalingStateCreateInfoNV.txt
--- -
--- include::{generated}\/validity\/structs\/VkPipelineViewportWScalingStateCreateInfoNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_clip_space_w_scaling.VkViewportWScalingNV'
 data PipelineViewportWScalingStateCreateInfoNV = PipelineViewportWScalingStateCreateInfoNV
   { -- Univalued member elided
   -- No documentation found for Nested "PipelineViewportWScalingStateCreateInfoNV" "pNext"
@@ -128,14 +132,10 @@ instance Zero PipelineViewportWScalingStateCreateInfoNV where
 
 -- | VkViewportWScalingNV - Structure specifying a viewport
 --
--- = Description
---
--- Unresolved directive in VkViewportWScalingNV.txt -
--- include::{generated}\/validity\/structs\/VkViewportWScalingNV.txt[]
---
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_clip_space_w_scaling.VkPipelineViewportWScalingStateCreateInfoNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_clip_space_w_scaling.vkCmdSetViewportWScalingNV'
 data ViewportWScalingNV = ViewportWScalingNV
   { -- No documentation found for Nested "ViewportWScalingNV" "xcoeff"
   xcoeff :: CFloat
@@ -200,11 +200,63 @@ instance Zero ViewportWScalingNV where
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxViewports@,
 --     inclusive
 --
--- Unresolved directive in vkCmdSetViewportWScalingNV.txt -
--- include::{generated}\/validity\/protos\/vkCmdSetViewportWScalingNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @pViewportWScalings@ /must/ be a valid pointer to an array of
+--     @viewportCount@
+--     'Graphics.Vulkan.C.Extensions.VK_NV_clip_space_w_scaling.VkViewportWScalingNV'
+--     structures
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
+--
+-- -   @viewportCount@ /must/ be greater than @0@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Both            | Graphics        |                 |
+-- > | Secondary       |                 |                 |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_clip_space_w_scaling.VkViewportWScalingNV'
 cmdSetViewportWScalingNV :: CommandBuffer ->  Word32 ->  Vector ViewportWScalingNV ->  IO ()
 cmdSetViewportWScalingNV = \(CommandBuffer commandBuffer' commandTable) -> \firstViewport' -> \viewportWScalings' -> withVec withCStructViewportWScalingNV viewportWScalings' (\pViewportWScalings' -> vkCmdSetViewportWScalingNV commandTable commandBuffer' firstViewport' (fromIntegral $ Data.Vector.length viewportWScalings') pViewportWScalings' *> (pure ()))
+
+-- No documentation found for TopLevel "VK_NV_CLIP_SPACE_W_SCALING_EXTENSION_NAME"
+pattern NV_CLIP_SPACE_W_SCALING_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern NV_CLIP_SPACE_W_SCALING_EXTENSION_NAME = VK_NV_CLIP_SPACE_W_SCALING_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_NV_CLIP_SPACE_W_SCALING_SPEC_VERSION"
+pattern NV_CLIP_SPACE_W_SCALING_SPEC_VERSION :: Integral a => a
+pattern NV_CLIP_SPACE_W_SCALING_SPEC_VERSION = VK_NV_CLIP_SPACE_W_SCALING_SPEC_VERSION

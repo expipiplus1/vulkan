@@ -65,64 +65,23 @@ import Graphics.Vulkan.C.Core10.MemoryManagement
 --     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_CREATE_SPARSE_BINDING_BIT'
 --     set in 'Graphics.Vulkan.C.Core10.Buffer.VkBufferCreateInfo'::@flags@
 --
--- -   If @image@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE' and
---     'Graphics.Vulkan.C.Core10.Memory.VkMemoryAllocateInfo' defines a
---     memory import operation with handle type
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT',
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT',
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT',
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT',
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT',
---     or
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT',
---     and the external handle was created by the Vulkan API, then the
---     memory being imported /must/ also be a dedicated image allocation
---     and @image@ must be identical to the image associated with the
---     imported memory.
+-- == Valid Usage (Implicit)
 --
--- -   If @buffer@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE' and
---     'Graphics.Vulkan.C.Core10.Memory.VkMemoryAllocateInfo' defines a
---     memory import operation with handle type
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT',
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT',
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT',
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT',
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT',
---     or
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT',
---     and the external handle was created by the Vulkan API, then the
---     memory being imported /must/ also be a dedicated buffer allocation
---     and @buffer@ must be identical to the buffer associated with the
---     imported memory.
---
--- -   If @image@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE' and
---     'Graphics.Vulkan.C.Core10.Memory.VkMemoryAllocateInfo' defines a
---     memory import operation with handle type
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT',
---     the memory being imported /must/ also be a dedicated image
---     allocation and @image@ must be identical to the image associated
---     with the imported memory.
---
--- -   If @buffer@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE' and
---     'Graphics.Vulkan.C.Core10.Memory.VkMemoryAllocateInfo' defines a
---     memory import operation with handle type
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT',
---     the memory being imported /must/ also be a dedicated buffer
---     allocation and @buffer@ must be identical to the buffer associated
---     with the imported memory.
+-- -   @sType@ /must/ be 'VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO'
 --
 -- -   If @image@ is not
 --     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @image@ /must/
---     not have been created with
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_CREATE_DISJOINT_BIT'
---     set in 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@flags@
+--     be a valid 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage'
+--     handle
 --
--- Unresolved directive in VkMemoryDedicatedAllocateInfo.txt -
--- include::{generated}\/validity\/structs\/VkMemoryDedicatedAllocateInfo.txt[]
+-- -   If @buffer@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @buffer@ /must/
+--     be a valid 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer'
+--     handle
+--
+-- -   Both of @buffer@, and @image@ that are valid handles /must/ have
+--     been created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
 -- = See Also
 --
@@ -179,19 +138,7 @@ instance Zero VkMemoryDedicatedAllocateInfo where
 -- 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' under one of the following
 -- conditions:
 --
--- -   The @pNext@ chain of
---     'Graphics.Vulkan.C.Core10.Buffer.VkBufferCreateInfo' for the call to
---     'Graphics.Vulkan.C.Core10.Buffer.vkCreateBuffer' used to create the
---     buffer being queried contained an instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryBufferCreateInfo',
---     and any of the handle types specified in
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryBufferCreateInfo'::@handleTypes@
---     requires dedicated allocation, as reported by
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.vkGetPhysicalDeviceExternalBufferProperties'
---     in
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalBufferProperties'::@externalMemoryProperties@::@externalMemoryFeatures@,
---     the @requiresDedicatedAllocation@ field will be set to
---     'Graphics.Vulkan.C.Core10.Core.VK_TRUE'.
+-- -   none
 --
 -- In all other cases, @requiresDedicatedAllocation@ /must/ be set to
 -- 'Graphics.Vulkan.C.Core10.Core.VK_FALSE' by the implementation whenever
@@ -222,19 +169,7 @@ instance Zero VkMemoryDedicatedAllocateInfo where
 -- 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' under one of the following
 -- conditions:
 --
--- -   The @pNext@ chain of
---     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' for the call to
---     'Graphics.Vulkan.C.Core10.Image.vkCreateImage' used to create the
---     image being queried contained an instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryImageCreateInfo',
---     and any of the handle types specified in
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryImageCreateInfo'::@handleTypes@
---     requires dedicated allocation, as reported by
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceImageFormatProperties2'
---     in
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalImageFormatProperties'::@externalMemoryProperties@::@externalMemoryFeatures@,
---     the @requiresDedicatedAllocation@ field will be set to
---     'Graphics.Vulkan.C.Core10.Core.VK_TRUE'.
+-- -   none
 --
 -- In all other cases, @requiresDedicatedAllocation@ /must/ be set to
 -- 'Graphics.Vulkan.C.Core10.Core.VK_FALSE' by the implementation whenever
@@ -256,8 +191,9 @@ instance Zero VkMemoryDedicatedAllocateInfo where
 -- @prefersDedicatedAllocation@ and @requiresDedicatedAllocation@ to
 -- 'Graphics.Vulkan.C.Core10.Core.VK_FALSE'.
 --
--- Unresolved directive in VkMemoryDedicatedRequirements.txt -
--- include::{generated}\/validity\/structs\/VkMemoryDedicatedRequirements.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be 'VK_STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS'
 --
 -- = See Also
 --

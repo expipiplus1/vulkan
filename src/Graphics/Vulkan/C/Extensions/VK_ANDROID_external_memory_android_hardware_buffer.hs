@@ -172,15 +172,20 @@ data AHardwareBuffer
 -- does, achieving identical results between APIs /may/ not be possible on
 -- some implementations.
 --
--- Unresolved directive in
--- VkAndroidHardwareBufferFormatPropertiesANDROID.txt -
--- include::{generated}\/validity\/structs\/VkAndroidHardwareBufferFormatPropertiesANDROID.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkChromaLocation',
+-- 'Graphics.Vulkan.C.Core10.ImageView.VkComponentMapping',
+-- 'Graphics.Vulkan.C.Core10.Core.VkFormat',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkFormatFeatureFlags',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrModelConversion',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrRange',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkAndroidHardwareBufferFormatPropertiesANDROID = VkAndroidHardwareBufferFormatPropertiesANDROID
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_PROPERTIES_ANDROID'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -252,18 +257,19 @@ instance Zero VkAndroidHardwareBufferFormatPropertiesANDROID where
 -- | VkAndroidHardwareBufferPropertiesANDROID - Properties of External Memory
 -- Android Hardware Buffers
 --
--- = Description
---
--- Unresolved directive in VkAndroidHardwareBufferPropertiesANDROID.txt -
--- include::{generated}\/validity\/structs\/VkAndroidHardwareBufferPropertiesANDROID.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkGetAndroidHardwareBufferPropertiesANDROID'
 data VkAndroidHardwareBufferPropertiesANDROID = VkAndroidHardwareBufferPropertiesANDROID
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_PROPERTIES_ANDROID'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+  -- 'VkAndroidHardwareBufferFormatPropertiesANDROID'
   vkPNext :: Ptr ()
   , -- | @allocationSize@ is the size of the external memory
   vkAllocationSize :: VkDeviceSize
@@ -318,14 +324,14 @@ instance Zero VkAndroidHardwareBufferPropertiesANDROID where
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkImageFormatProperties2'
 -- are required.
 --
--- Unresolved directive in VkAndroidHardwareBufferUsageANDROID.txt -
--- include::{generated}\/validity\/structs\/VkAndroidHardwareBufferUsageANDROID.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkAndroidHardwareBufferUsageANDROID = VkAndroidHardwareBufferUsageANDROID
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_USAGE_ANDROID'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -359,16 +365,13 @@ instance Zero VkAndroidHardwareBufferUsageANDROID where
 -- 'VkExternalFormatANDROID' structure was not present. Otherwise, the
 -- @image@ will have the specified external format.
 --
--- == Valid Usage
---
--- Unresolved directive in VkExternalFormatANDROID.txt -
--- include::{generated}\/validity\/structs\/VkExternalFormatANDROID.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkExternalFormatANDROID = VkExternalFormatANDROID
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_EXTERNAL_FORMAT_ANDROID'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -420,12 +423,16 @@ instance Zero VkExternalFormatANDROID where
 --     in
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-external-android-hardware-buffer Android Hardware Buffers>.
 --
--- Unresolved directive in VkImportAndroidHardwareBufferInfoANDROID.txt -
--- include::{generated}\/validity\/structs\/VkImportAndroidHardwareBufferInfoANDROID.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_IMPORT_ANDROID_HARDWARE_BUFFER_INFO_ANDROID'
+--
+-- -   @buffer@ /must/ be a valid pointer to an 'AHardwareBuffer' value
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkImportAndroidHardwareBufferInfoANDROID = VkImportAndroidHardwareBufferInfoANDROID
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -468,13 +475,21 @@ instance Zero VkImportAndroidHardwareBufferInfoANDROID where
 --     with non-@NULL@ @image@ member, then that @image@ /must/ already be
 --     bound to @memory@.
 --
--- Unresolved directive in VkMemoryGetAndroidHardwareBufferInfoANDROID.txt
--- -
--- include::{generated}\/validity\/structs\/VkMemoryGetAndroidHardwareBufferInfoANDROID.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_MEMORY_GET_ANDROID_HARDWARE_BUFFER_INFO_ANDROID'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @memory@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' handle
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkGetMemoryAndroidHardwareBufferANDROID'
 data VkMemoryGetAndroidHardwareBufferInfoANDROID = VkMemoryGetAndroidHardwareBufferInfoANDROID
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -514,15 +529,18 @@ instance Zero VkMemoryGetAndroidHardwareBufferInfoANDROID where
 --     'VkAndroidHardwareBufferPropertiesANDROID' structure in which the
 --     properties of @buffer@ are returned.
 --
--- == Valid Usage
+-- == Return Codes
 --
--- Unresolved directive in vkGetAndroidHardwareBufferPropertiesANDROID.txt
--- -
--- include::{generated}\/validity\/protos\/vkGetAndroidHardwareBufferPropertiesANDROID.txt[]
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory.VK_ERROR_INVALID_EXTERNAL_HANDLE_KHR'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkAndroidHardwareBufferPropertiesANDROID',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -572,12 +590,20 @@ type PFN_vkGetAndroidHardwareBufferPropertiesANDROID = FunPtr FN_vkGetAndroidHar
 -- Android hardware buffer, 'vkGetMemoryAndroidHardwareBufferANDROID'
 -- /must/ return that same Android hardware buffer object.
 --
--- Unresolved directive in vkGetMemoryAndroidHardwareBufferANDROID.txt -
--- include::{generated}\/validity\/protos\/vkGetMemoryAndroidHardwareBufferANDROID.txt[]
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_TOO_MANY_OBJECTS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'VkMemoryGetAndroidHardwareBufferInfoANDROID'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -599,17 +625,14 @@ type FN_vkGetMemoryAndroidHardwareBufferANDROID = ("device" ::: VkDevice) -> ("p
 type PFN_vkGetMemoryAndroidHardwareBufferANDROID = FunPtr FN_vkGetMemoryAndroidHardwareBufferANDROID
 
 -- No documentation found for TopLevel "VK_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME"
-pattern VK_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME = "VK_ANDROID_external_memory_android_hardware_buffer"
 
 -- No documentation found for TopLevel "VK_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_SPEC_VERSION"
 pattern VK_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_SPEC_VERSION :: Integral a => a
 pattern VK_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_SPEC_VERSION = 3
 
--- | 'VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
--- specifies an 'AHardwareBuffer' object defined by the Android NDK. See
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-external-android-hardware-buffer Android Hardware Buffers>
--- for more details of this handle type.
+-- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBits" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID"
 pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID :: VkExternalMemoryHandleTypeFlagBits
 pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID = VkExternalMemoryHandleTypeFlagBits 0x00000400
 

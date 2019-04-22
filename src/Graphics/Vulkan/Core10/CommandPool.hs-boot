@@ -29,7 +29,8 @@ import {-# source #-} Graphics.Vulkan.C.Core10.CommandPool
 -- 'Graphics.Vulkan.C.Core10.CommandPool.vkDestroyCommandPool',
 -- 'Graphics.Vulkan.C.Core10.CommandBuffer.vkFreeCommandBuffers',
 -- 'Graphics.Vulkan.C.Core10.CommandPool.vkResetCommandPool',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.vkTrimCommandPool'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.vkTrimCommandPool',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_maintenance1.vkTrimCommandPoolKHR'
 type CommandPool = VkCommandPool
 
 -- | VkCommandPoolCreateFlagBits - Bitmask specifying usage behavior for a

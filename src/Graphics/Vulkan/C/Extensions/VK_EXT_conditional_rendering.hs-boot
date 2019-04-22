@@ -45,7 +45,8 @@ data VkConditionalRenderingFlagBitsEXT
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkConditionalRenderingBeginInfoEXT',
+-- 'VkConditionalRenderingFlagBitsEXT'
 type VkConditionalRenderingFlagsEXT = VkConditionalRenderingFlagBitsEXT
 
 data VkPhysicalDeviceConditionalRenderingFeaturesEXT

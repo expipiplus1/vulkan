@@ -12,10 +12,10 @@ module Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_fd
   , SemaphoreGetFdInfoKHR(..)
   , getSemaphoreFdKHR
   , importSemaphoreFdKHR
-  , pattern VK_KHR_EXTERNAL_SEMAPHORE_FD_SPEC_VERSION
-  , pattern VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_FD_INFO_KHR
-  , pattern VK_STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR
+  , pattern KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME
+  , pattern KHR_EXTERNAL_SEMAPHORE_FD_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_IMPORT_SEMAPHORE_FD_INFO_KHR
+  , pattern STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR
   ) where
 
 import Control.Exception
@@ -23,6 +23,9 @@ import Control.Exception
   )
 import Control.Monad
   ( when
+  )
+import Data.String
+  ( IsString
   )
 import Foreign.C.Types
   ( CInt(..)
@@ -52,6 +55,8 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd
   , VkSemaphoreGetFdInfoKHR(..)
   , vkGetSemaphoreFdKHR
   , vkImportSemaphoreFdKHR
+  , pattern VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME
+  , pattern VK_KHR_EXTERNAL_SEMAPHORE_FD_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_FD_INFO_KHR
   , pattern VK_STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR
   )
@@ -75,9 +80,9 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd
-  ( pattern VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME
-  , pattern VK_KHR_EXTERNAL_SEMAPHORE_FD_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_IMPORT_SEMAPHORE_FD_INFO_KHR
+  , pattern STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR
   )
 
 
@@ -113,12 +118,42 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd
 --
 -- == Valid Usage
 --
--- Unresolved directive in VkImportSemaphoreFdInfoKHR.txt -
--- include::{generated}\/validity\/structs\/VkImportSemaphoreFdInfoKHR.txt[]
+-- -   @handleType@ /must/ be a value included in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-semaphore-handletypes-fd Handle Types Supported by VkImportSemaphoreFdInfoKHR>
+--     table.
+--
+-- -   @fd@ /must/ obey any requirements listed for @handleType@ in
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#external-semaphore-handle-types-compatibility external semaphore handle types compatibility>.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd.VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_FD_INFO_KHR'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @semaphore@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkSemaphore' handle
+--
+-- -   @flags@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore.VkSemaphoreImportFlagBits'
+--     values
+--
+-- -   @handleType@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreHandleTypeFlagBits'
+--     value
+--
+-- == Host Synchronization
+--
+-- -   Host access to @semaphore@ /must/ be externally synchronized
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreHandleTypeFlagBits',
+-- 'Graphics.Vulkan.C.Core10.Queue.VkSemaphore',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore.VkSemaphoreImportFlags',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd.vkImportSemaphoreFdKHR'
 data ImportSemaphoreFdInfoKHR = ImportSemaphoreFdInfoKHR
   { -- Univalued member elided
   -- No documentation found for Nested "ImportSemaphoreFdInfoKHR" "pNext"
@@ -196,12 +231,26 @@ instance Zero ImportSemaphoreFdInfoKHR where
 --
 -- -   @handleType@ /must/ be defined as a POSIX file descriptor handle.
 --
--- Unresolved directive in VkSemaphoreGetFdInfoKHR.txt -
--- include::{generated}\/validity\/structs\/VkSemaphoreGetFdInfoKHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd.VK_STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @semaphore@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkSemaphore' handle
+--
+-- -   @handleType@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreHandleTypeFlagBits'
+--     value
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreHandleTypeFlagBits',
+-- 'Graphics.Vulkan.C.Core10.Queue.VkSemaphore',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd.vkGetSemaphoreFdKHR'
 data SemaphoreGetFdInfoKHR = SemaphoreGetFdInfoKHR
   { -- Univalued member elided
   -- No documentation found for Nested "SemaphoreGetFdInfoKHR" "pNext"
@@ -271,12 +320,20 @@ instance Zero SemaphoreGetFdInfoKHR where
 -- in
 -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore State>.
 --
--- Unresolved directive in vkGetSemaphoreFdKHR.txt -
--- include::{generated}\/validity\/protos\/vkGetSemaphoreFdKHR.txt[]
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_TOO_MANY_OBJECTS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd.VkSemaphoreGetFdInfoKHR'
 getSemaphoreFdKHR :: Device ->  SemaphoreGetFdInfoKHR ->  IO (CInt)
 getSemaphoreFdKHR = \(Device device' commandTable) -> \getFdInfo' -> alloca (\pFd' -> (\marshalled -> withCStructSemaphoreGetFdInfoKHR marshalled . flip with) getFdInfo' (\pGetFdInfo' -> vkGetSemaphoreFdKHR commandTable device' pGetFdInfo' pFd' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (peek pFd'))))
 
@@ -302,13 +359,27 @@ getSemaphoreFdKHR = \(Device device' commandTable) -> \getFdInfo' -> alloca (\pF
 -- instances of Vulkan, into the same instance from which it was exported,
 -- and multiple times into a given Vulkan instance.
 --
--- == Valid Usage
+-- == Return Codes
 --
--- Unresolved directive in vkImportSemaphoreFdKHR.txt -
--- include::{generated}\/validity\/protos\/vkImportSemaphoreFdKHR.txt[]
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VK_ERROR_INVALID_EXTERNAL_HANDLE'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd.VkImportSemaphoreFdInfoKHR'
 importSemaphoreFdKHR :: Device ->  ImportSemaphoreFdInfoKHR ->  IO ()
 importSemaphoreFdKHR = \(Device device' commandTable) -> \importSemaphoreFdInfo' -> (\marshalled -> withCStructImportSemaphoreFdInfoKHR marshalled . flip with) importSemaphoreFdInfo' (\pImportSemaphoreFdInfo' -> vkImportSemaphoreFdKHR commandTable device' pImportSemaphoreFdInfo' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (pure ())))
+
+-- No documentation found for TopLevel "VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME"
+pattern KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME = VK_KHR_EXTERNAL_SEMAPHORE_FD_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_KHR_EXTERNAL_SEMAPHORE_FD_SPEC_VERSION"
+pattern KHR_EXTERNAL_SEMAPHORE_FD_SPEC_VERSION :: Integral a => a
+pattern KHR_EXTERNAL_SEMAPHORE_FD_SPEC_VERSION = VK_KHR_EXTERNAL_SEMAPHORE_FD_SPEC_VERSION

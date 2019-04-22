@@ -244,12 +244,21 @@ import Graphics.Vulkan.NamedType
 -- -   If @compactedSize@ is not @0@ then both @info.geometryCount@ and
 --     @info.instanceCount@ /must/ be @0@
 --
--- Unresolved directive in VkAccelerationStructureCreateInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkAccelerationStructureCreateInfoNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_CREATE_INFO_NV'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @info@ /must/ be a valid 'VkAccelerationStructureInfoNV' structure
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkAccelerationStructureInfoNV',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkCreateAccelerationStructureNV'
 data VkAccelerationStructureCreateInfoNV = VkAccelerationStructureCreateInfoNV
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -317,12 +326,27 @@ instance Zero VkAccelerationStructureCreateInfoNV where
 --     then it /must/ not have the
 --     'VK_BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_NV' bit set
 --
--- Unresolved directive in VkAccelerationStructureInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkAccelerationStructureInfoNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be 'VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_INFO_NV'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @type@ /must/ be a valid 'VkAccelerationStructureTypeNV' value
+--
+-- -   @flags@ /must/ be a valid combination of
+--     'VkBuildAccelerationStructureFlagBitsNV' values
+--
+-- -   If @geometryCount@ is not @0@, @pGeometries@ /must/ be a valid
+--     pointer to an array of @geometryCount@ valid 'VkGeometryNV'
+--     structures
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkAccelerationStructureCreateInfoNV', 'VkAccelerationStructureTypeNV',
+-- 'VkBuildAccelerationStructureFlagsNV', 'VkGeometryNV',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkCmdBuildAccelerationStructureNV'
 data VkAccelerationStructureInfoNV = VkAccelerationStructureInfoNV
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -376,32 +400,25 @@ instance Zero VkAccelerationStructureInfoNV where
 -- | VkAccelerationStructureMemoryRequirementsInfoNV - Structure specifying
 -- acceleration to query for memory requirements
 --
--- = Description
---
--- Unresolved directive in
--- VkAccelerationStructureMemoryRequirementsInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkAccelerationStructureMemoryRequirementsInfoNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkAccelerationStructureMemoryRequirementsTypeNV',
+-- 'VkAccelerationStructureNV',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkGetAccelerationStructureMemoryRequirementsNV'
 data VkAccelerationStructureMemoryRequirementsInfoNV = VkAccelerationStructureMemoryRequirementsInfoNV
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_INFO_NV'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- | @type@ selects the type of memory requirement being queried.
-  -- 'VK_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_OBJECT_NV' returns
-  -- the memory requirements for the object itself.
-  -- 'VK_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_BUILD_SCRATCH_NV'
-  -- returns the memory requirements for the scratch memory when doing a
-  -- build.
-  -- 'VK_ACCELERATION_STRUCTURE_MEMORY_REQUIREMENTS_TYPE_UPDATE_SCRATCH_NV'
-  -- returns the memory requirements for the scratch memory when doing an
-  -- update.
+  , -- | @type@ /must/ be a valid
+  -- 'VkAccelerationStructureMemoryRequirementsTypeNV' value
   vkType :: VkAccelerationStructureMemoryRequirementsTypeNV
-  , -- | @accelerationStructure@ is the acceleration structure to be queried for
-  -- memory requirements.
+  , -- | @accelerationStructure@ /must/ be a valid 'VkAccelerationStructureNV'
+  -- handle
   vkAccelerationStructure :: VkAccelerationStructureNV
   }
   deriving (Eq, Show)
@@ -431,7 +448,7 @@ instance Zero VkAccelerationStructureMemoryRequirementsInfoNV where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkAccelerationStructureMemoryRequirementsInfoNV'
 newtype VkAccelerationStructureMemoryRequirementsTypeNV = VkAccelerationStructureMemoryRequirementsTypeNV Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -477,7 +494,13 @@ data VkAccelerationStructureNV_T
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkAccelerationStructureMemoryRequirementsInfoNV',
+-- 'VkBindAccelerationStructureMemoryInfoNV',
+-- 'VkWriteDescriptorSetAccelerationStructureNV',
+-- 'vkCmdBuildAccelerationStructureNV', 'vkCmdCopyAccelerationStructureNV',
+-- 'vkCmdWriteAccelerationStructuresPropertiesNV',
+-- 'vkCreateAccelerationStructureNV', 'vkDestroyAccelerationStructureNV',
+-- 'vkGetAccelerationStructureHandleNV'
 type VkAccelerationStructureNV = Ptr VkAccelerationStructureNV_T
 
 -- ** VkAccelerationStructureTypeNV
@@ -486,7 +509,7 @@ type VkAccelerationStructureNV = Ptr VkAccelerationStructureNV_T
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkAccelerationStructureInfoNV'
 newtype VkAccelerationStructureTypeNV = VkAccelerationStructureTypeNV Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -553,12 +576,33 @@ pattern VK_ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_NV = VkAccelerationStructure
 --     /must/ be less than or equal to the size of @memory@ minus
 --     @memoryOffset@
 --
--- Unresolved directive in VkBindAccelerationStructureMemoryInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkBindAccelerationStructureMemoryInfoNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @accelerationStructure@ /must/ be a valid
+--     'VkAccelerationStructureNV' handle
+--
+-- -   @memory@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' handle
+--
+-- -   If @deviceIndexCount@ is not @0@, @pDeviceIndices@ /must/ be a valid
+--     pointer to an array of @deviceIndexCount@ @uint32_t@ values
+--
+-- -   Both of @accelerationStructure@, and @memory@ /must/ have been
+--     created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkAccelerationStructureNV',
+-- 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkBindAccelerationStructureMemoryNV'
 data VkBindAccelerationStructureMemoryInfoNV = VkBindAccelerationStructureMemoryInfoNV
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -626,7 +670,7 @@ instance Zero VkBindAccelerationStructureMemoryInfoNV where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkBuildAccelerationStructureFlagsNV'
 newtype VkBuildAccelerationStructureFlagBitsNV = VkBuildAccelerationStructureFlagBitsNV VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -696,7 +740,8 @@ pattern VK_BUILD_ACCELERATION_STRUCTURE_LOW_MEMORY_BIT_NV = VkBuildAccelerationS
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkAccelerationStructureInfoNV',
+-- 'VkBuildAccelerationStructureFlagBitsNV'
 type VkBuildAccelerationStructureFlagsNV = VkBuildAccelerationStructureFlagBitsNV
 
 -- ** VkCopyAccelerationStructureModeNV
@@ -705,7 +750,7 @@ type VkBuildAccelerationStructureFlagsNV = VkBuildAccelerationStructureFlagBitsN
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'vkCmdCopyAccelerationStructureNV'
 newtype VkCopyAccelerationStructureModeNV = VkCopyAccelerationStructureModeNV Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -751,12 +796,28 @@ pattern VK_COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_NV = VkCopyAccelerationStruc
 --
 -- == Valid Usage
 --
--- Unresolved directive in VkGeometryAABBNV.txt -
--- include::{generated}\/validity\/structs\/VkGeometryAABBNV.txt[]
+-- -   @offset@ /must/ be less than the size of @aabbData@
+--
+-- -   @offset@ /must/ be a multiple of @8@
+--
+-- -   @stride@ /must/ be a multiple of @8@
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be 'VK_STRUCTURE_TYPE_GEOMETRY_AABB_NV'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   If @aabbData@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @aabbData@
+--     /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
+-- 'VkGeometryDataNV', 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkGeometryAABBNV = VkGeometryAABBNV
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -766,9 +827,9 @@ data VkGeometryAABBNV = VkGeometryAABBNV
   vkAabbData :: VkBuffer
   , -- | @numAABBs@ is the number of AABBs in this geometry.
   vkNumAABBs :: Word32
-  , -- | @stride@ /must/ be a multiple of @8@
+  , -- | @stride@ is the stride in bytes between AABBs in @aabbData@.
   vkStride :: Word32
-  , -- | @offset@ /must/ be a multiple of @8@
+  , -- | @offset@ is the offset in bytes of the first AABB in @aabbData@.
   vkOffset :: VkDeviceSize
   }
   deriving (Eq, Show)
@@ -800,20 +861,15 @@ instance Zero VkGeometryAABBNV where
 -- | VkGeometryDataNV - Structure specifying geometry in a bottom-level
 -- acceleration structure
 --
--- = Description
---
--- Unresolved directive in VkGeometryDataNV.txt -
--- include::{generated}\/validity\/structs\/VkGeometryDataNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkGeometryAABBNV', 'VkGeometryNV', 'VkGeometryTrianglesNV'
 data VkGeometryDataNV = VkGeometryDataNV
-  { -- | @triangles@ contains triangle data if 'VkGeometryNV'::@geometryType@ is
-  -- 'VK_GEOMETRY_TYPE_TRIANGLES_NV'.
+  { -- | @triangles@ /must/ be a valid 'VkGeometryTrianglesNV' structure
   vkTriangles :: VkGeometryTrianglesNV
-  , -- | @aabbs@ contains axis-aligned bounding box data if
-  -- 'VkGeometryNV'::@geometryType@ is 'VK_GEOMETRY_TYPE_AABBS_NV'.
+  , -- | @aabbs@ /must/ be a valid 'VkGeometryAABBNV' structure
   vkAabbs :: VkGeometryAABBNV
   }
   deriving (Eq, Show)
@@ -837,7 +893,7 @@ instance Zero VkGeometryDataNV where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkGeometryFlagsNV'
 newtype VkGeometryFlagBitsNV = VkGeometryFlagBitsNV VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -878,7 +934,7 @@ pattern VK_GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT_NV = VkGeometryFlagBitsN
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkGeometryFlagBitsNV', 'VkGeometryNV'
 type VkGeometryFlagsNV = VkGeometryFlagBitsNV
 
 -- ** VkGeometryInstanceFlagBitsNV
@@ -893,7 +949,7 @@ type VkGeometryFlagsNV = VkGeometryFlagBitsNV
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkGeometryInstanceFlagsNV'
 newtype VkGeometryInstanceFlagBitsNV = VkGeometryInstanceFlagBitsNV VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -953,32 +1009,29 @@ pattern VK_GEOMETRY_INSTANCE_FORCE_NO_OPAQUE_BIT_NV = VkGeometryInstanceFlagBits
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkGeometryInstanceFlagBitsNV'
 type VkGeometryInstanceFlagsNV = VkGeometryInstanceFlagBitsNV
 
 -- | VkGeometryNV - Structure specifying a geometry in a bottom-level
 -- acceleration structure
 --
--- = Description
---
--- Unresolved directive in VkGeometryNV.txt -
--- include::{generated}\/validity\/structs\/VkGeometryNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkAccelerationStructureInfoNV', 'VkGeometryDataNV',
+-- 'VkGeometryFlagsNV', 'VkGeometryTypeNV',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkGeometryNV = VkGeometryNV
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_GEOMETRY_NV'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- | @geometryType@ describes which type of geometry this 'VkGeometryNV'
-  -- refers to.
+  , -- | @geometryType@ /must/ be a valid 'VkGeometryTypeNV' value
   vkGeometryType :: VkGeometryTypeNV
-  , -- | @geometry@ contains the geometry data as described in
-  -- 'VkGeometryDataNV'.
+  , -- | @geometry@ /must/ be a valid 'VkGeometryDataNV' structure
   vkGeometry :: VkGeometryDataNV
-  , -- | @flags@ has flags describing options for this geometry.
+  , -- | @flags@ /must/ be a valid combination of 'VkGeometryFlagBitsNV' values
   vkFlags :: VkGeometryFlagsNV
   }
   deriving (Eq, Show)
@@ -1016,12 +1069,81 @@ instance Zero VkGeometryNV where
 --
 -- == Valid Usage
 --
--- Unresolved directive in VkGeometryTrianglesNV.txt -
--- include::{generated}\/validity\/structs\/VkGeometryTrianglesNV.txt[]
+-- -   @vertexOffset@ /must/ be less than the size of @vertexData@
+--
+-- -   @vertexOffset@ /must/ be a multiple of the component size of
+--     @vertexFormat@
+--
+-- -   @vertexFormat@ /must/ be one of
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R32G32B32_SFLOAT',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R32G32_SFLOAT',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16B16_SFLOAT',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16_SFLOAT',
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16_SNORM', or
+--     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16B16_SNORM'
+--
+-- -   @indexOffset@ /must/ be less than the size of @indexData@
+--
+-- -   @indexOffset@ /must/ be a multiple of the element size of
+--     @indexType@
+--
+-- -   @indexType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VK_INDEX_TYPE_UINT16',
+--     'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VK_INDEX_TYPE_UINT32',
+--     or 'VK_INDEX_TYPE_NONE_NV'
+--
+-- -   @indexData@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE' if @indexType@
+--     is 'VK_INDEX_TYPE_NONE_NV'
+--
+-- -   @indexData@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle if
+--     @indexType@ is not 'VK_INDEX_TYPE_NONE_NV'
+--
+-- -   @indexCount@ /must/ be @0@ if @indexType@ is 'VK_INDEX_TYPE_NONE_NV'
+--
+-- -   @transformOffset@ /must/ be less than the size of @transformData@
+--
+-- -   @transformOffset@ /must/ be a multiple of @16@
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be 'VK_STRUCTURE_TYPE_GEOMETRY_TRIANGLES_NV'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   If @vertexData@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @vertexData@
+--     /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle
+--
+-- -   @vertexFormat@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Core.VkFormat' value
+--
+-- -   If @indexData@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @indexData@
+--     /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle
+--
+-- -   @indexType@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkIndexType' value
+--
+-- -   If @transformData@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @transformData@
+--     /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle
+--
+-- -   Each of @indexData@, @transformData@, and @vertexData@ that are
+--     valid handles /must/ have been created, allocated, or retrieved from
+--     the same 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
+-- 'Graphics.Vulkan.C.Core10.Core.VkFormat', 'VkGeometryDataNV',
+-- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkIndexType',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkGeometryTrianglesNV = VkGeometryTrianglesNV
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -1029,39 +1151,30 @@ data VkGeometryTrianglesNV = VkGeometryTrianglesNV
   vkPNext :: Ptr ()
   , -- | @vertexData@ is the buffer containing vertex data for this geometry.
   vkVertexData :: VkBuffer
-  , -- | @vertexOffset@ /must/ be a multiple of the component size of
-  -- @vertexFormat@
+  , -- | @vertexOffset@ is the offset in bytes within @vertexData@ containing
+  -- vertex data for this geometry.
   vkVertexOffset :: VkDeviceSize
   , -- | @vertexCount@ is the number of valid vertices.
   vkVertexCount :: Word32
   , -- | @vertexStride@ is the stride in bytes between each vertex.
   vkVertexStride :: VkDeviceSize
-  , -- | @vertexFormat@ /must/ be one of
-  -- 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R32G32B32_SFLOAT',
-  -- 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R32G32_SFLOAT',
-  -- 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16B16_SFLOAT',
-  -- 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16_SFLOAT',
-  -- 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16_SNORM', or
-  -- 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16B16_SNORM'
+  , -- | @vertexFormat@ is the format of each vertex element.
   vkVertexFormat :: VkFormat
-  , -- | @indexData@ /must/ be a valid
-  -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle if
-  -- @indexType@ is not 'VK_INDEX_TYPE_NONE_NV'
+  , -- | @indexData@ is the buffer containing index data for this geometry.
   vkIndexData :: VkBuffer
-  , -- | @indexOffset@ /must/ be a multiple of the element size of @indexType@
+  , -- | @indexOffset@ is the offset in bytes within @indexData@ containing index
+  -- data for this geometry.
   vkIndexOffset :: VkDeviceSize
-  , -- | @indexCount@ /must/ be @0@ if @indexType@ is 'VK_INDEX_TYPE_NONE_NV'
+  , -- | @indexCount@ is the number of indices to include in this geometry.
   vkIndexCount :: Word32
-  , -- | @indexType@ /must/ be
-  -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VK_INDEX_TYPE_UINT16',
-  -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VK_INDEX_TYPE_UINT32',
-  -- or 'VK_INDEX_TYPE_NONE_NV'
+  , -- | @indexType@ is the format of each index.
   vkIndexType :: VkIndexType
   , -- | @transformData@ is a buffer containing optional reference to an array of
   -- 32-bit floats representing a 3x4 row major affine transformation matrix
   -- for this geometry.
   vkTransformData :: VkBuffer
-  , -- | @transformOffset@ /must/ be a multiple of @16@
+  , -- | @transformOffset@ is the offset in bytes in @transformData@ of the
+  -- transform information described above.
   vkTransformOffset :: VkDeviceSize
   }
   deriving (Eq, Show)
@@ -1117,7 +1230,7 @@ instance Zero VkGeometryTrianglesNV where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkGeometryNV'
 newtype VkGeometryTypeNV = VkGeometryTypeNV Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -1157,14 +1270,14 @@ pattern VK_GEOMETRY_TYPE_AABBS_NV = VkGeometryTypeNV 1
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- Unresolved directive in VkPhysicalDeviceRayTracingPropertiesNV.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceRayTracingPropertiesNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceRayTracingPropertiesNV = VkPhysicalDeviceRayTracingPropertiesNV
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_NV'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -1285,12 +1398,45 @@ instance Zero VkPhysicalDeviceRayTracingPropertiesNV where
 -- -   @maxRecursionDepth@ /must/ be less than or equal to
 --     'VkPhysicalDeviceRayTracingPropertiesNV'::@maxRecursionDepth@
 --
--- Unresolved directive in VkRayTracingPipelineCreateInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkRayTracingPipelineCreateInfoNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_NV'
+--
+-- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback.VkPipelineCreationFeedbackCreateInfoEXT'
+--
+-- -   @flags@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineCreateFlagBits' values
+--
+-- -   @pStages@ /must/ be a valid pointer to an array of @stageCount@
+--     valid
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineShaderStageCreateInfo'
+--     structures
+--
+-- -   @pGroups@ /must/ be a valid pointer to an array of @groupCount@
+--     valid 'VkRayTracingShaderGroupCreateInfoNV' structures
+--
+-- -   @layout@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' handle
+--
+-- -   @stageCount@ /must/ be greater than @0@
+--
+-- -   @groupCount@ /must/ be greater than @0@
+--
+-- -   Both of @basePipelineHandle@, and @layout@ that are valid handles
+--     /must/ have been created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineCreateFlags',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineShaderStageCreateInfo',
+-- 'VkRayTracingShaderGroupCreateInfoNV',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkCreateRayTracingPipelinesNV'
 data VkRayTracingPipelineCreateInfoNV = VkRayTracingPipelineCreateInfoNV
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -1397,12 +1543,19 @@ instance Zero VkRayTracingPipelineCreateInfoNV where
 --     index into @pStages@ referring to a shader of
 --     'VK_SHADER_STAGE_ANY_HIT_BIT_NV'
 --
--- Unresolved directive in VkRayTracingShaderGroupCreateInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkRayTracingShaderGroupCreateInfoNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_RAY_TRACING_SHADER_GROUP_CREATE_INFO_NV'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @type@ /must/ be a valid 'VkRayTracingShaderGroupTypeNV' value
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkRayTracingPipelineCreateInfoNV', 'VkRayTracingShaderGroupTypeNV',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkRayTracingShaderGroupCreateInfoNV = VkRayTracingShaderGroupCreateInfoNV
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -1480,7 +1633,7 @@ instance Zero VkRayTracingShaderGroupCreateInfoNV where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkRayTracingShaderGroupCreateInfoNV'
 newtype VkRayTracingShaderGroupTypeNV = VkRayTracingShaderGroupTypeNV Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -1525,24 +1678,22 @@ pattern VK_RAY_TRACING_SHADER_GROUP_TYPE_PROCEDURAL_HIT_GROUP_NV = VkRayTracingS
 -- | VkWriteDescriptorSetAccelerationStructureNV - Structure specifying
 -- acceleration to query for memory requirements
 --
--- == Valid Usage
---
--- Unresolved directive in VkWriteDescriptorSetAccelerationStructureNV.txt
--- -
--- include::{generated}\/validity\/structs\/VkWriteDescriptorSetAccelerationStructureNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkAccelerationStructureNV',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkWriteDescriptorSetAccelerationStructureNV = VkWriteDescriptorSetAccelerationStructureNV
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @accelerationStructureCount@ /must/ be equal to @descriptorCount@ in the
-  -- extended structure
+  , -- | @accelerationStructureCount@ /must/ be greater than @0@
   vkAccelerationStructureCount :: Word32
-  , -- | @pAccelerationStructures@ are the acceleration structures to update.
+  , -- | @pAccelerationStructures@ /must/ be a valid pointer to an array of
+  -- @accelerationStructureCount@ valid 'VkAccelerationStructureNV' handles
   vkPAccelerationStructures :: Ptr VkAccelerationStructureNV
   }
   deriving (Eq, Show)
@@ -1578,14 +1729,20 @@ instance Zero VkWriteDescriptorSetAccelerationStructureNV where
 --     'VkBindAccelerationStructureMemoryInfoNV', describing images and
 --     memory to bind.
 --
--- = Description
+-- == Return Codes
 --
--- Unresolved directive in vkBindAccelerationStructureMemoryNV.txt -
--- include::{generated}\/validity\/protos\/vkBindAccelerationStructureMemoryNV.txt[]
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkBindAccelerationStructureMemoryInfoNV',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1687,12 +1844,70 @@ type PFN_vkBindAccelerationStructureMemoryNV = FunPtr FN_vkBindAccelerationStruc
 --     /must/ be less than or equal to the size of @scratch@ minus
 --     @scratchOffset@
 --
--- Unresolved directive in vkCmdBuildAccelerationStructureNV.txt -
--- include::{generated}\/validity\/protos\/vkCmdBuildAccelerationStructureNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @pInfo@ /must/ be a valid pointer to a valid
+--     'VkAccelerationStructureInfoNV' structure
+--
+-- -   If @instanceData@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @instanceData@
+--     /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle
+--
+-- -   @dst@ /must/ be a valid 'VkAccelerationStructureNV' handle
+--
+-- -   If @src@ is not 'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE',
+--     @src@ /must/ be a valid 'VkAccelerationStructureNV' handle
+--
+-- -   @scratch@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support compute operations
+--
+-- -   Each of @commandBuffer@, @dst@, @instanceData@, @scratch@, and @src@
+--     that are valid handles /must/ have been created, allocated, or
+--     retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
+--
+-- == Host Synchronization
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Both            | Compute         |                 |
+-- > | Secondary       |                 |                 |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkAccelerationStructureInfoNV', 'VkAccelerationStructureNV',
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1729,12 +1944,64 @@ type PFN_vkCmdBuildAccelerationStructureNV = FunPtr FN_vkCmdBuildAccelerationStr
 --
 -- == Valid Usage
 --
--- Unresolved directive in vkCmdCopyAccelerationStructureNV.txt -
--- include::{generated}\/validity\/protos\/vkCmdCopyAccelerationStructureNV.txt[]
+-- -   @mode@ /must/ be 'VK_COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_NV' or
+--     'VK_COPY_ACCELERATION_STRUCTURE_MODE_CLONE_NV'
+--
+-- -   @src@ /must/ have been built with
+--     'VK_BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_NV' if @mode@
+--     is 'VK_COPY_ACCELERATION_STRUCTURE_MODE_COMPACT_NV'
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @dst@ /must/ be a valid 'VkAccelerationStructureNV' handle
+--
+-- -   @src@ /must/ be a valid 'VkAccelerationStructureNV' handle
+--
+-- -   @mode@ /must/ be a valid 'VkCopyAccelerationStructureModeNV' value
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support compute operations
+--
+-- -   Each of @commandBuffer@, @dst@, and @src@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
+--
+-- == Host Synchronization
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Both            | Compute         |                 |
+-- > | Secondary       |                 |                 |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkAccelerationStructureNV',
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
+-- 'VkCopyAccelerationStructureModeNV'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1812,51 +2079,218 @@ type PFN_vkCmdCopyAccelerationStructureNV = FunPtr FN_vkCmdCopyAccelerationStruc
 --
 -- == Valid Usage
 --
--- Unresolved directive in vkCmdTraceRaysNV.txt -
--- include::{chapters}\/commonvalidity\/draw_dispatch_common.txt[]
--- Unresolved directive in vkCmdTraceRaysNV.txt -
--- include::{chapters}\/commonvalidity\/draw_dispatch_nonindirect_common.txt[]
--- * @raygenShaderBindingOffset@ /must/ be less than the size of
--- @raygenShaderBindingTableBuffer@ * @raygenShaderBindingOffset@ /must/ be
--- a multiple of
--- 'VkPhysicalDeviceRayTracingPropertiesNV'::@shaderGroupBaseAlignment@ *
--- @missShaderBindingOffset@ /must/ be less than the size of
--- @missShaderBindingTableBuffer@ * @missShaderBindingOffset@ /must/ be a
--- multiple of
--- 'VkPhysicalDeviceRayTracingPropertiesNV'::@shaderGroupBaseAlignment@ *
--- @hitShaderBindingOffset@ /must/ be less than the size of
--- @hitShaderBindingTableBuffer@ * @hitShaderBindingOffset@ /must/ be a
--- multiple of
--- 'VkPhysicalDeviceRayTracingPropertiesNV'::@shaderGroupBaseAlignment@ *
--- @callableShaderBindingOffset@ /must/ be less than the size of
--- @callableShaderBindingTableBuffer@ * @callableShaderBindingOffset@
--- /must/ be a multiple of
--- 'VkPhysicalDeviceRayTracingPropertiesNV'::@shaderGroupBaseAlignment@ *
--- @missShaderBindingStride@ /must/ be a multiple of
--- 'VkPhysicalDeviceRayTracingPropertiesNV'::@shaderGroupHandleSize@ *
--- @hitShaderBindingStride@ /must/ be a multiple of
--- 'VkPhysicalDeviceRayTracingPropertiesNV'::@shaderGroupHandleSize@ *
--- @callableShaderBindingStride@ /must/ be a multiple of
--- 'VkPhysicalDeviceRayTracingPropertiesNV'::@shaderGroupHandleSize@ *
--- @missShaderBindingStride@ /must/ be a less than or equal to
--- 'VkPhysicalDeviceRayTracingPropertiesNV'::@maxShaderGroupStride@ *
--- @hitShaderBindingStride@ /must/ be a less than or equal to
--- 'VkPhysicalDeviceRayTracingPropertiesNV'::@maxShaderGroupStride@ *
--- @callableShaderBindingStride@ /must/ be a less than or equal to
--- 'VkPhysicalDeviceRayTracingPropertiesNV'::@maxShaderGroupStride@ *
--- @width@ /must/ be less than or equal to
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
--- * @height@ /must/ be less than or equal to
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
--- * @depth@ /must/ be less than or equal to
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
+-- -   If a 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' is sampled
+--     with 'Graphics.Vulkan.C.Core10.Sampler.VK_FILTER_LINEAR' as a result
+--     of this command, then the image view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'
 --
--- Unresolved directive in vkCmdTraceRaysNV.txt -
--- include::{generated}\/validity\/protos\/vkCmdTraceRaysNV.txt[]
+-- -   If a 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' is accessed
+--     using atomic operations as a result of this command, then the image
+--     view’s
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features>
+--     /must/ contain
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT'
+--
+-- -   For each set /n/ that is statically used by the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to the pipeline
+--     bind point used by this command, a descriptor set /must/ have been
+--     bound to /n/ at the same pipeline bind point, with a
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' that is
+--     compatible for set /n/, with the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' used to create
+--     the current 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline', as
+--     described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility ???>
+--
+-- -   For each push constant that is statically used by the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to the pipeline
+--     bind point used by this command, a push constant value /must/ have
+--     been set for the same pipeline bind point, with a
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' that is
+--     compatible for push constants, with the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' used to create
+--     the current 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline', as
+--     described in
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility ???>
+--
+-- -   Descriptors in each bound descriptor set, specified via
+--     'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindDescriptorSets',
+--     /must/ be valid if they are statically used by the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to the pipeline
+--     bind point used by this command
+--
+-- -   A valid pipeline /must/ be bound to the pipeline bind point used by
+--     this command
+--
+-- -   If the 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound
+--     to the pipeline bind point used by this command requires any dynamic
+--     state, that state /must/ have been set for @commandBuffer@
+--
+-- -   If the 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound
+--     to the pipeline bind point used by this command accesses a
+--     'Graphics.Vulkan.C.Core10.Sampler.VkSampler' object that uses
+--     unnormalized coordinates, that sampler /must/ not be used to sample
+--     from any 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' with a
+--     'Graphics.Vulkan.C.Core10.ImageView.VkImageView' of the type
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_3D',
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_CUBE',
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_1D_ARRAY',
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_2D_ARRAY' or
+--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_CUBE_ARRAY',
+--     in any shader stage
+--
+-- -   If the 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound
+--     to the pipeline bind point used by this command accesses a
+--     'Graphics.Vulkan.C.Core10.Sampler.VkSampler' object that uses
+--     unnormalized coordinates, that sampler /must/ not be used with any
+--     of the SPIR-V @OpImageSample*@ or @OpImageSparseSample*@
+--     instructions with @ImplicitLod@, @Dref@ or @Proj@ in their name, in
+--     any shader stage
+--
+-- -   If the 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound
+--     to the pipeline bind point used by this command accesses a
+--     'Graphics.Vulkan.C.Core10.Sampler.VkSampler' object that uses
+--     unnormalized coordinates, that sampler /must/ not be used with any
+--     of the SPIR-V @OpImageSample*@ or @OpImageSparseSample*@
+--     instructions that includes a LOD bias or any offset values, in any
+--     shader stage
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
+--     feature is not enabled, and if the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound to the
+--     pipeline bind point used by this command accesses a uniform buffer,
+--     it /must/ not access values outside of the range of the buffer as
+--     specified in the descriptor set bound to the same pipeline bind
+--     point
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access>
+--     feature is not enabled, and if the
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound to the
+--     pipeline bind point used by this command accesses a storage buffer,
+--     it /must/ not access values outside of the range of the buffer as
+--     specified in the descriptor set bound to the same pipeline bind
+--     point
+--
+-- -   @raygenShaderBindingOffset@ /must/ be less than the size of
+--     @raygenShaderBindingTableBuffer@
+--
+-- -   @raygenShaderBindingOffset@ /must/ be a multiple of
+--     'VkPhysicalDeviceRayTracingPropertiesNV'::@shaderGroupBaseAlignment@
+--
+-- -   @missShaderBindingOffset@ /must/ be less than the size of
+--     @missShaderBindingTableBuffer@
+--
+-- -   @missShaderBindingOffset@ /must/ be a multiple of
+--     'VkPhysicalDeviceRayTracingPropertiesNV'::@shaderGroupBaseAlignment@
+--
+-- -   @hitShaderBindingOffset@ /must/ be less than the size of
+--     @hitShaderBindingTableBuffer@
+--
+-- -   @hitShaderBindingOffset@ /must/ be a multiple of
+--     'VkPhysicalDeviceRayTracingPropertiesNV'::@shaderGroupBaseAlignment@
+--
+-- -   @callableShaderBindingOffset@ /must/ be less than the size of
+--     @callableShaderBindingTableBuffer@
+--
+-- -   @callableShaderBindingOffset@ /must/ be a multiple of
+--     'VkPhysicalDeviceRayTracingPropertiesNV'::@shaderGroupBaseAlignment@
+--
+-- -   @missShaderBindingStride@ /must/ be a multiple of
+--     'VkPhysicalDeviceRayTracingPropertiesNV'::@shaderGroupHandleSize@
+--
+-- -   @hitShaderBindingStride@ /must/ be a multiple of
+--     'VkPhysicalDeviceRayTracingPropertiesNV'::@shaderGroupHandleSize@
+--
+-- -   @callableShaderBindingStride@ /must/ be a multiple of
+--     'VkPhysicalDeviceRayTracingPropertiesNV'::@shaderGroupHandleSize@
+--
+-- -   @missShaderBindingStride@ /must/ be a less than or equal to
+--     'VkPhysicalDeviceRayTracingPropertiesNV'::@maxShaderGroupStride@
+--
+-- -   @hitShaderBindingStride@ /must/ be a less than or equal to
+--     'VkPhysicalDeviceRayTracingPropertiesNV'::@maxShaderGroupStride@
+--
+-- -   @callableShaderBindingStride@ /must/ be a less than or equal to
+--     'VkPhysicalDeviceRayTracingPropertiesNV'::@maxShaderGroupStride@
+--
+-- -   @width@ /must/ be less than or equal to
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
+--
+-- -   @height@ /must/ be less than or equal to
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[1]
+--
+-- -   @depth@ /must/ be less than or equal to
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxComputeWorkGroupCount@[2]
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @raygenShaderBindingTableBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle
+--
+-- -   If @missShaderBindingTableBuffer@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE',
+--     @missShaderBindingTableBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle
+--
+-- -   If @hitShaderBindingTableBuffer@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE',
+--     @hitShaderBindingTableBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle
+--
+-- -   If @callableShaderBindingTableBuffer@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE',
+--     @callableShaderBindingTableBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support compute operations
+--
+-- -   Each of @callableShaderBindingTableBuffer@, @commandBuffer@,
+--     @hitShaderBindingTableBuffer@, @missShaderBindingTableBuffer@, and
+--     @raygenShaderBindingTableBuffer@ that are valid handles /must/ have
+--     been created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
+--
+-- == Host Synchronization
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Both            | Compute         |                 |
+-- > | Secondary       |                 |                 |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1917,13 +2351,65 @@ type PFN_vkCmdTraceRaysNV = FunPtr FN_vkCmdTraceRaysNV
 --     @queryType@ is
 --     'VK_QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV'
 --
--- Unresolved directive in vkCmdWriteAccelerationStructuresPropertiesNV.txt
--- -
--- include::{generated}\/validity\/protos\/vkCmdWriteAccelerationStructuresPropertiesNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @pAccelerationStructures@ /must/ be a valid pointer to an array of
+--     @accelerationStructureCount@ valid 'VkAccelerationStructureNV'
+--     handles
+--
+-- -   @queryType@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Query.VkQueryType' value
+--
+-- -   @queryPool@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Query.VkQueryPool' handle
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support compute operations
+--
+-- -   @accelerationStructureCount@ /must/ be greater than @0@
+--
+-- -   Each of @commandBuffer@, @queryPool@, and the elements of
+--     @pAccelerationStructures@ /must/ have been created, allocated, or
+--     retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
+--
+-- == Host Synchronization
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Both            | Compute         |                 |
+-- > | Secondary       |                 |                 |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkAccelerationStructureNV',
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
+-- 'Graphics.Vulkan.C.Core10.Query.VkQueryPool',
+-- 'Graphics.Vulkan.C.Core10.Query.VkQueryType'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -1956,14 +2442,20 @@ type PFN_vkCmdWriteAccelerationStructuresPropertiesNV = FunPtr FN_vkCmdWriteAcce
 --
 -- -   @shader@ is the index of the shader to compile.
 --
--- == Valid Usage
+-- == Return Codes
 --
--- Unresolved directive in vkCompileDeferredNV.txt -
--- include::{generated}\/validity\/protos\/vkCompileDeferredNV.txt[]
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -2015,12 +2507,35 @@ type PFN_vkCompileDeferredNV = FunPtr FN_vkCompileDeferredNV
 -- Acceleration structure creation uses the count and type information from
 -- the geometries, but does not use the data references in the structures.
 --
--- Unresolved directive in vkCreateAccelerationStructureNV.txt -
--- include::{generated}\/validity\/protos\/vkCreateAccelerationStructureNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'VkAccelerationStructureCreateInfoNV' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pAccelerationStructure@ /must/ be a valid pointer to a
+--     'VkAccelerationStructureNV' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkAccelerationStructureCreateInfoNV', 'VkAccelerationStructureNV',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -2083,12 +2598,53 @@ type PFN_vkCreateAccelerationStructureNV = FunPtr FN_vkCreateAccelerationStructu
 --     'Graphics.Vulkan.C.Core10.Pipeline.VK_PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT'
 --     flag set
 --
--- Unresolved directive in vkCreateRayTracingPipelinesNV.txt -
--- include::{generated}\/validity\/protos\/vkCreateRayTracingPipelinesNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   If @pipelineCache@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @pipelineCache@
+--     /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.PipelineCache.VkPipelineCache' handle
+--
+-- -   @pCreateInfos@ /must/ be a valid pointer to an array of
+--     @createInfoCount@ valid 'VkRayTracingPipelineCreateInfoNV'
+--     structures
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pPipelines@ /must/ be a valid pointer to an array of
+--     @createInfoCount@ 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline'
+--     handles
+--
+-- -   @createInfoCount@ /must/ be greater than @0@
+--
+-- -   If @pipelineCache@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_NV_glsl_shader.VK_ERROR_INVALID_SHADER_NV'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline',
+-- 'Graphics.Vulkan.C.Core10.PipelineCache.VkPipelineCache',
+-- 'VkRayTracingPipelineCreateInfoNV'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -2137,12 +2693,27 @@ type PFN_vkCreateRayTracingPipelinesNV = FunPtr FN_vkCreateRayTracingPipelinesNV
 --     were provided when @accelerationStructure@ was created, @pAllocator@
 --     /must/ be @NULL@
 --
--- Unresolved directive in vkDestroyAccelerationStructureNV.txt -
--- include::{generated}\/validity\/protos\/vkDestroyAccelerationStructureNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @accelerationStructure@ /must/ be a valid
+--     'VkAccelerationStructureNV' handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @accelerationStructure@ /must/ have been created, allocated, or
+--     retrieved from @device@
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkAccelerationStructureNV',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -2178,14 +2749,20 @@ type PFN_vkDestroyAccelerationStructureNV = FunPtr FN_vkDestroyAccelerationStruc
 -- -   @pData@ is a pointer to a user-allocated buffer where the results
 --     will be written.
 --
--- == Valid Usage
+-- == Return Codes
 --
--- Unresolved directive in vkGetAccelerationStructureHandleNV.txt -
--- include::{generated}\/validity\/protos\/vkGetAccelerationStructureHandleNV.txt[]
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkAccelerationStructureNV',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -2220,15 +2797,13 @@ type PFN_vkGetAccelerationStructureHandleNV = FunPtr FN_vkGetAccelerationStructu
 -- -   @pMemoryRequirements@ returns the requested acceleration structure
 --     memory requirements.
 --
--- = Description
---
--- Unresolved directive in
--- vkGetAccelerationStructureMemoryRequirementsNV.txt -
--- include::{generated}\/validity\/protos\/vkGetAccelerationStructureMemoryRequirementsNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkAccelerationStructureMemoryRequirementsInfoNV',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkMemoryRequirements2KHR'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -2279,12 +2854,35 @@ type PFN_vkGetAccelerationStructureMemoryRequirementsNV = FunPtr FN_vkGetAcceler
 --     'VkPhysicalDeviceRayTracingPropertiesNV'::@shaderGroupHandleSize@ ×
 --     @groupCount@
 --
--- Unresolved directive in vkGetRayTracingShaderGroupHandlesNV.txt -
--- include::{generated}\/validity\/protos\/vkGetRayTracingShaderGroupHandlesNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pipeline@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' handle
+--
+-- -   @pData@ /must/ be a valid pointer to an array of @dataSize@ bytes
+--
+-- -   @dataSize@ /must/ be greater than @0@
+--
+-- -   @pipeline@ /must/ have been created, allocated, or retrieved from
+--     @device@
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -2305,19 +2903,15 @@ foreign import ccall
 type FN_vkGetRayTracingShaderGroupHandlesNV = ("device" ::: VkDevice) -> ("pipeline" ::: VkPipeline) -> ("firstGroup" ::: Word32) -> ("groupCount" ::: Word32) -> ("dataSize" ::: CSize) -> ("pData" ::: Ptr ()) -> IO VkResult
 type PFN_vkGetRayTracingShaderGroupHandlesNV = FunPtr FN_vkGetRayTracingShaderGroupHandlesNV
 
--- | 'VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_NV' specifies read access to
--- an acceleration structure as part of a trace or build command.
+-- No documentation found for Nested "VkAccessFlagBits" "VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_NV"
 pattern VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_NV :: VkAccessFlagBits
 pattern VK_ACCESS_ACCELERATION_STRUCTURE_READ_BIT_NV = VkAccessFlagBits 0x00200000
 
--- | 'VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_NV' specifies write access
--- to an acceleration structure as part of a build command.
+-- No documentation found for Nested "VkAccessFlagBits" "VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_NV"
 pattern VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_NV :: VkAccessFlagBits
 pattern VK_ACCESS_ACCELERATION_STRUCTURE_WRITE_BIT_NV = VkAccessFlagBits 0x00400000
 
--- | 'VK_BUFFER_USAGE_RAY_TRACING_BIT_NV' specifies that the buffer is
--- suitable for use in 'vkCmdTraceRaysNV' and
--- 'vkCmdBuildAccelerationStructureNV'.
+-- No documentation found for Nested "VkBufferUsageFlagBits" "VK_BUFFER_USAGE_RAY_TRACING_BIT_NV"
 pattern VK_BUFFER_USAGE_RAY_TRACING_BIT_NV :: VkBufferUsageFlagBits
 pattern VK_BUFFER_USAGE_RAY_TRACING_BIT_NV = VkBufferUsageFlagBits 0x00000400
 
@@ -2329,12 +2923,12 @@ pattern VK_DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT = VkDebugRepor
 pattern VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV :: VkDescriptorType
 pattern VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV = VkDescriptorType 1000165000
 
--- | 'VK_INDEX_TYPE_NONE_NV' specifies that no indices are provided.
+-- No documentation found for Nested "VkIndexType" "VK_INDEX_TYPE_NONE_NV"
 pattern VK_INDEX_TYPE_NONE_NV :: VkIndexType
 pattern VK_INDEX_TYPE_NONE_NV = VkIndexType 1000165000
 
 -- No documentation found for TopLevel "VK_NV_RAY_TRACING_EXTENSION_NAME"
-pattern VK_NV_RAY_TRACING_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_NV_RAY_TRACING_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_NV_RAY_TRACING_EXTENSION_NAME = "VK_NV_ray_tracing"
 
 -- No documentation found for TopLevel "VK_NV_RAY_TRACING_SPEC_VERSION"
@@ -2345,27 +2939,19 @@ pattern VK_NV_RAY_TRACING_SPEC_VERSION = 3
 pattern VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV :: VkObjectType
 pattern VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV = VkObjectType 1000165000
 
--- | 'VK_PIPELINE_BIND_POINT_RAY_TRACING_NV' specifies binding as a ray
--- tracing pipeline.
+-- No documentation found for Nested "VkPipelineBindPoint" "VK_PIPELINE_BIND_POINT_RAY_TRACING_NV"
 pattern VK_PIPELINE_BIND_POINT_RAY_TRACING_NV :: VkPipelineBindPoint
 pattern VK_PIPELINE_BIND_POINT_RAY_TRACING_NV = VkPipelineBindPoint 1000165000
 
--- | 'VK_PIPELINE_CREATE_DEFER_COMPILE_BIT_NV' specifies that a pipeline is
--- created with all shaders in the deferred state. Before using the
--- pipeline the application /must/ call 'vkCompileDeferredNV' exactly once
--- on each shader in the pipeline before using the pipeline.
+-- No documentation found for Nested "VkPipelineCreateFlagBits" "VK_PIPELINE_CREATE_DEFER_COMPILE_BIT_NV"
 pattern VK_PIPELINE_CREATE_DEFER_COMPILE_BIT_NV :: VkPipelineCreateFlagBits
 pattern VK_PIPELINE_CREATE_DEFER_COMPILE_BIT_NV = VkPipelineCreateFlagBits 0x00000020
 
--- | 'VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_NV' specifies the
--- execution of 'vkCmdBuildAccelerationStructureNV',
--- 'vkCmdCopyAccelerationStructureNV', and
--- 'vkCmdWriteAccelerationStructuresPropertiesNV'.
+-- No documentation found for Nested "VkPipelineStageFlagBits" "VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_NV"
 pattern VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_NV :: VkPipelineStageFlagBits
 pattern VK_PIPELINE_STAGE_ACCELERATION_STRUCTURE_BUILD_BIT_NV = VkPipelineStageFlagBits 0x02000000
 
--- | 'VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_NV' specifies the execution of
--- the ray tracing shader stages.
+-- No documentation found for Nested "VkPipelineStageFlagBits" "VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_NV"
 pattern VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_NV :: VkPipelineStageFlagBits
 pattern VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_NV = VkPipelineStageFlagBits 0x00200000
 
@@ -2373,27 +2959,27 @@ pattern VK_PIPELINE_STAGE_RAY_TRACING_SHADER_BIT_NV = VkPipelineStageFlagBits 0x
 pattern VK_QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV :: VkQueryType
 pattern VK_QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV = VkQueryType 1000165000
 
--- | 'VK_SHADER_STAGE_ANY_HIT_BIT_NV' specifies the any-hit stage.
+-- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_ANY_HIT_BIT_NV"
 pattern VK_SHADER_STAGE_ANY_HIT_BIT_NV :: VkShaderStageFlagBits
 pattern VK_SHADER_STAGE_ANY_HIT_BIT_NV = VkShaderStageFlagBits 0x00000200
 
--- | 'VK_SHADER_STAGE_CALLABLE_BIT_NV' specifies the callable stage.
+-- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_CALLABLE_BIT_NV"
 pattern VK_SHADER_STAGE_CALLABLE_BIT_NV :: VkShaderStageFlagBits
 pattern VK_SHADER_STAGE_CALLABLE_BIT_NV = VkShaderStageFlagBits 0x00002000
 
--- | 'VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV' specifies the closest hit stage.
+-- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV"
 pattern VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV :: VkShaderStageFlagBits
 pattern VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV = VkShaderStageFlagBits 0x00000400
 
--- | 'VK_SHADER_STAGE_INTERSECTION_BIT_NV' specifies the intersection stage.
+-- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_INTERSECTION_BIT_NV"
 pattern VK_SHADER_STAGE_INTERSECTION_BIT_NV :: VkShaderStageFlagBits
 pattern VK_SHADER_STAGE_INTERSECTION_BIT_NV = VkShaderStageFlagBits 0x00001000
 
--- | 'VK_SHADER_STAGE_MISS_BIT_NV' specifies the miss stage.
+-- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_MISS_BIT_NV"
 pattern VK_SHADER_STAGE_MISS_BIT_NV :: VkShaderStageFlagBits
 pattern VK_SHADER_STAGE_MISS_BIT_NV = VkShaderStageFlagBits 0x00000800
 
--- | 'VK_SHADER_STAGE_RAYGEN_BIT_NV' specifies the ray generation stage.
+-- No documentation found for Nested "VkShaderStageFlagBits" "VK_SHADER_STAGE_RAYGEN_BIT_NV"
 pattern VK_SHADER_STAGE_RAYGEN_BIT_NV :: VkShaderStageFlagBits
 pattern VK_SHADER_STAGE_RAYGEN_BIT_NV = VkShaderStageFlagBits 0x00000100
 

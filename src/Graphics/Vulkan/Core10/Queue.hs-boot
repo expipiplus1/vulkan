@@ -23,11 +23,19 @@ import {-# source #-} Graphics.Vulkan.C.Core10.Queue
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkAcquireNextImageInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd.VkFenceGetFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.VkFenceGetWin32HandleInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd.VkImportFenceFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.VkImportFenceWin32HandleInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkAcquireNextImageKHR',
 -- 'Graphics.Vulkan.C.Core10.Fence.vkCreateFence',
 -- 'Graphics.Vulkan.C.Core10.Fence.vkDestroyFence',
 -- 'Graphics.Vulkan.C.Core10.Fence.vkGetFenceStatus',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.vkQueueBindSparse',
 -- 'Graphics.Vulkan.C.Core10.Queue.vkQueueSubmit',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.vkRegisterDeviceEventEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.vkRegisterDisplayEventEXT',
 -- 'Graphics.Vulkan.C.Core10.Fence.vkResetFences',
 -- 'Graphics.Vulkan.C.Core10.Fence.vkWaitForFences'
 type Fence = VkFence
@@ -63,7 +71,9 @@ type Fence = VkFence
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_device_diagnostic_checkpoints.VkCheckpointDataNV',
 -- 'Graphics.Vulkan.C.Core10.Queue.VkPipelineStageFlags',
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_buffer_marker.vkCmdWriteBufferMarkerAMD',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdWriteTimestamp'
 type PipelineStageFlagBits = VkPipelineStageFlagBits
 
@@ -78,8 +88,10 @@ type PipelineStageFlagBits = VkPipelineStageFlagBits
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Queue.VkPipelineStageFlagBits',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_device_diagnostic_checkpoints.VkQueueFamilyCheckpointPropertiesNV',
 -- 'Graphics.Vulkan.C.Core10.Queue.VkSubmitInfo',
 -- 'Graphics.Vulkan.C.Core10.Pass.VkSubpassDependency',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkSubpassDependency2KHR',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdPipelineBarrier',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdResetEvent',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdSetEvent',
@@ -90,8 +102,15 @@ type PipelineStageFlags = PipelineStageFlagBits
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkAcquireNextImageInfoKHR',
 -- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkBindSparseInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd.VkImportSemaphoreFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32.VkImportSemaphoreWin32HandleInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkPresentInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd.VkSemaphoreGetFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32.VkSemaphoreGetWin32HandleInfoKHR',
 -- 'Graphics.Vulkan.C.Core10.Queue.VkSubmitInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkAcquireNextImageKHR',
 -- 'Graphics.Vulkan.C.Core10.QueueSemaphore.vkCreateSemaphore',
 -- 'Graphics.Vulkan.C.Core10.QueueSemaphore.vkDestroySemaphore'
 type Semaphore = VkSemaphore

@@ -85,8 +85,13 @@ import Graphics.Vulkan.C.Core10.Pipeline
 --
 -- -   All elements of @pDeviceIndices@ /must/ be valid device indices
 --
--- Unresolved directive in VkBindBufferMemoryDeviceGroupInfo.txt -
--- include::{generated}\/validity\/structs\/VkBindBufferMemoryDeviceGroupInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO'
+--
+-- -   If @deviceIndexCount@ is not @0@, @pDeviceIndices@ /must/ be a valid
+--     pointer to an array of @deviceIndexCount@ @uint32_t@ values
 --
 -- = See Also
 --
@@ -221,8 +226,18 @@ instance Zero VkBindBufferMemoryDeviceGroupInfo where
 --     or else @extent.height@
 --     @offset.y@ /must/ equal the width of the image subresource
 --
--- Unresolved directive in VkBindImageMemoryDeviceGroupInfo.txt -
--- include::{generated}\/validity\/structs\/VkBindImageMemoryDeviceGroupInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO'
+--
+-- -   If @deviceIndexCount@ is not @0@, @pDeviceIndices@ /must/ be a valid
+--     pointer to an array of @deviceIndexCount@ @uint32_t@ values
+--
+-- -   If @splitInstanceBindRegionCount@ is not @0@,
+--     @pSplitInstanceBindRegions@ /must/ be a valid pointer to an array of
+--     @splitInstanceBindRegionCount@
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkRect2D' structures
 --
 -- = See Also
 --
@@ -268,13 +283,7 @@ instance Zero VkBindImageMemoryDeviceGroupInfo where
                                           zero
                                           zero
 
--- | 'VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT' specifies that the
--- image /can/ be used with a non-zero value of the
--- @splitInstanceBindRegionCount@ member of a
--- 'VkBindImageMemoryDeviceGroupInfo' structure passed into
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.vkBindImageMemory2'.
--- This flag also has the effect of making the image use the standard
--- sparse image block dimensions.
+-- No documentation found for Nested "VkImageCreateFlagBits" "VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT"
 pattern VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT :: VkImageCreateFlagBits
 pattern VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT = VkImageCreateFlagBits 0x00000040
 

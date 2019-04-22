@@ -57,10 +57,7 @@ import Graphics.Vulkan.NamedType
 
 -- | VkHdrMetadataEXT - structure to specify Hdr metadata
 --
--- = Description
---
--- Unresolved directive in VkHdrMetadataEXT.txt -
--- include::{generated}\/validity\/structs\/VkHdrMetadataEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- __Note__
 --
@@ -68,11 +65,12 @@ import Graphics.Vulkan.NamedType
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType', 'VkXYColorEXT',
+-- 'vkSetHdrMetadataEXT'
 data VkHdrMetadataEXT = VkHdrMetadataEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_HDR_METADATA_EXT'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
   , -- | @displayPrimaryRed@ is the mastering display’s red primary in
   -- chromaticity coordinates
@@ -138,7 +136,7 @@ instance Zero VkHdrMetadataEXT where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkHdrMetadataEXT'
 data VkXYColorEXT = VkXYColorEXT
   { -- No documentation found for Nested "VkXYColorEXT" "x"
   vkX :: CFloat
@@ -175,14 +173,30 @@ instance Zero VkXYColorEXT where
 -- -   @pMetadata@ is a pointer to the array of @swapchainCount@
 --     'VkHdrMetadataEXT' structures.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkSetHdrMetadataEXT.txt -
--- include::{generated}\/validity\/protos\/vkSetHdrMetadataEXT.txt[]
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pSwapchains@ /must/ be a valid pointer to an array of
+--     @swapchainCount@ valid
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
+--     handles
+--
+-- -   @pMetadata@ /must/ be a valid pointer to an array of
+--     @swapchainCount@ valid 'VkHdrMetadataEXT' structures
+--
+-- -   @swapchainCount@ /must/ be greater than @0@
+--
+-- -   Both of @device@, and the elements of @pSwapchains@ /must/ have been
+--     created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'VkHdrMetadataEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -204,7 +218,7 @@ type FN_vkSetHdrMetadataEXT = ("device" ::: VkDevice) -> ("swapchainCount" ::: W
 type PFN_vkSetHdrMetadataEXT = FunPtr FN_vkSetHdrMetadataEXT
 
 -- No documentation found for TopLevel "VK_EXT_HDR_METADATA_EXTENSION_NAME"
-pattern VK_EXT_HDR_METADATA_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_HDR_METADATA_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_HDR_METADATA_EXTENSION_NAME = "VK_EXT_hdr_metadata"
 
 -- No documentation found for TopLevel "VK_EXT_HDR_METADATA_SPEC_VERSION"

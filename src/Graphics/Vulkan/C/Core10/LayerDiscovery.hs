@@ -74,11 +74,6 @@ pattern VK_MAX_DESCRIPTION_SIZE = 256
 
 -- | VkLayerProperties - Structure specifying layer properties
 --
--- = Description
---
--- Unresolved directive in VkLayerProperties.txt -
--- include::{generated}\/validity\/structs\/VkLayerProperties.txt[]
---
 -- = See Also
 --
 -- 'vkEnumerateDeviceLayerProperties', 'vkEnumerateInstanceLayerProperties'
@@ -150,8 +145,29 @@ instance Zero VkLayerProperties where
 -- same as the properties when the layer was enumerated by
 -- 'vkEnumerateInstanceLayerProperties'.
 --
--- Unresolved directive in vkEnumerateDeviceLayerProperties.txt -
--- include::{generated}\/validity\/protos\/vkEnumerateDeviceLayerProperties.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @physicalDevice@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+--     handle
+--
+-- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
+--
+-- -   If the value referenced by @pPropertyCount@ is not @0@, and
+--     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
+--     to an array of @pPropertyCount@ 'VkLayerProperties' structures
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -211,8 +227,25 @@ type PFN_vkEnumerateDeviceLayerProperties = FunPtr FN_vkEnumerateDeviceLayerProp
 -- lifetime of that instance, even if some of them become unavailable for
 -- future instances.
 --
--- Unresolved directive in vkEnumerateInstanceLayerProperties.txt -
--- include::{generated}\/validity\/protos\/vkEnumerateInstanceLayerProperties.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
+--
+-- -   If the value referenced by @pPropertyCount@ is not @0@, and
+--     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
+--     to an array of @pPropertyCount@ 'VkLayerProperties' structures
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --

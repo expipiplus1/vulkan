@@ -7,11 +7,14 @@ module Graphics.Vulkan.Extensions.VK_KHR_surface_protected_capabilities
   ( withCStructSurfaceProtectedCapabilitiesKHR
   , fromCStructSurfaceProtectedCapabilitiesKHR
   , SurfaceProtectedCapabilitiesKHR(..)
-  , pattern VK_KHR_SURFACE_PROTECTED_CAPABILITIES_SPEC_VERSION
-  , pattern VK_KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR
+  , pattern KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME
+  , pattern KHR_SURFACE_PROTECTED_CAPABILITIES_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Foreign.Marshal.Utils
   ( maybePeek
   , maybeWith
@@ -26,6 +29,8 @@ import Graphics.Vulkan.C.Core10.Core
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_surface_protected_capabilities
   ( VkSurfaceProtectedCapabilitiesKHR(..)
+  , pattern VK_KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME
+  , pattern VK_KHR_SURFACE_PROTECTED_CAPABILITIES_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR
   )
 import Graphics.Vulkan.Core10.Core
@@ -37,9 +42,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_KHR_surface_protected_capabilities
-  ( pattern VK_KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME
-  , pattern VK_KHR_SURFACE_PROTECTED_CAPABILITIES_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR
   )
 
 
@@ -47,14 +51,12 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_surface_protected_capabilities
 -- | VkSurfaceProtectedCapabilitiesKHR - Structure describing capability of a
 -- surface to be protected
 --
--- = Description
---
--- Unresolved directive in VkSurfaceProtectedCapabilitiesKHR.txt -
--- include::{generated}\/validity\/structs\/VkSurfaceProtectedCapabilitiesKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data SurfaceProtectedCapabilitiesKHR = SurfaceProtectedCapabilitiesKHR
   { -- Univalued member elided
   -- No documentation found for Nested "SurfaceProtectedCapabilitiesKHR" "pNext"
@@ -81,3 +83,11 @@ instance Zero SurfaceProtectedCapabilitiesKHR where
   zero = SurfaceProtectedCapabilitiesKHR Nothing
                                          False
 
+
+-- No documentation found for TopLevel "VK_KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME"
+pattern KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME = VK_KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_KHR_SURFACE_PROTECTED_CAPABILITIES_SPEC_VERSION"
+pattern KHR_SURFACE_PROTECTED_CAPABILITIES_SPEC_VERSION :: Integral a => a
+pattern KHR_SURFACE_PROTECTED_CAPABILITIES_SPEC_VERSION = VK_KHR_SURFACE_PROTECTED_CAPABILITIES_SPEC_VERSION

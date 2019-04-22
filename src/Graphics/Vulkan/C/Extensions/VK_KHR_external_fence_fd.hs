@@ -95,12 +95,24 @@ import Graphics.Vulkan.NamedType
 --
 -- -   @handleType@ /must/ be defined as a POSIX file descriptor handle.
 --
--- Unresolved directive in VkFenceGetFdInfoKHR.txt -
--- include::{generated}\/validity\/structs\/VkFenceGetFdInfoKHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be 'VK_STRUCTURE_TYPE_FENCE_GET_FD_INFO_KHR'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @fence@ /must/ be a valid 'Graphics.Vulkan.C.Core10.Queue.VkFence'
+--     handle
+--
+-- -   @handleType@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceHandleTypeFlagBits'
+--     value
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceHandleTypeFlagBits',
+-- 'Graphics.Vulkan.C.Core10.Queue.VkFence',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType', 'vkGetFenceFdKHR'
 data VkFenceGetFdInfoKHR = VkFenceGetFdInfoKHR
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -159,6 +171,13 @@ instance Zero VkFenceGetFdInfoKHR where
 --
 -- == Valid Usage
 --
+-- -   @handleType@ /must/ be a value included in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-fence-handletypes-fd Handle Types Supported by VkImportFenceFdInfoKHR>
+--     table.
+--
+-- -   @fd@ /must/ obey any requirements listed for @handleType@ in
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#external-fence-handle-types-compatibility external fence handle types compatibility>.
+--
 -- If @handleType@ is
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT',
 -- the special value @-1@ for @fd@ is treated like a valid sync file
@@ -178,12 +197,33 @@ instance Zero VkFenceGetFdInfoKHR where
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT'
 -- from a 'Graphics.Vulkan.C.Core10.Queue.VkFence' which is signaled.
 --
--- Unresolved directive in VkImportFenceFdInfoKHR.txt -
--- include::{generated}\/validity\/structs\/VkImportFenceFdInfoKHR.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be 'VK_STRUCTURE_TYPE_IMPORT_FENCE_FD_INFO_KHR'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @fence@ /must/ be a valid 'Graphics.Vulkan.C.Core10.Queue.VkFence'
+--     handle
+--
+-- -   @flags@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence.VkFenceImportFlagBits'
+--     values
+--
+-- -   @handleType@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceHandleTypeFlagBits'
+--     value
+--
+-- == Host Synchronization
+--
+-- -   Host access to @fence@ /must/ be externally synchronized
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceHandleTypeFlagBits',
+-- 'Graphics.Vulkan.C.Core10.Queue.VkFence',
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence.VkFenceImportFlags',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType', 'vkImportFenceFdKHR'
 data VkImportFenceFdInfoKHR = VkImportFenceFdInfoKHR
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -195,12 +235,9 @@ data VkImportFenceFdInfoKHR = VkImportFenceFdInfoKHR
   -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence.VkFenceImportFlagBits'
   -- specifying additional parameters for the fence payload import operation.
   vkFlags :: VkFenceImportFlags
-  , -- | @handleType@ /must/ be a value included in the
-  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-fence-handletypes-fd Handle Types Supported by VkImportFenceFdInfoKHR>
-  -- table.
+  , -- | @handleType@ specifies the type of @fd@.
   vkHandleType :: VkExternalFenceHandleTypeFlagBits
-  , -- | @fd@ /must/ obey any requirements listed for @handleType@ in
-  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#external-fence-handle-types-compatibility external fence handle types compatibility>.
+  , -- | @fd@ is the external handle to import.
   vkFd :: CInt
   }
   deriving (Eq, Show)
@@ -270,12 +307,20 @@ instance Zero VkImportFenceFdInfoKHR where
 -- in
 -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence State>.
 --
--- Unresolved directive in vkGetFenceFdKHR.txt -
--- include::{generated}\/validity\/protos\/vkGetFenceFdKHR.txt[]
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_TOO_MANY_OBJECTS'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'VkFenceGetFdInfoKHR'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -316,14 +361,20 @@ type PFN_vkGetFenceFdKHR = FunPtr FN_vkGetFenceFdKHR
 -- of Vulkan, into the same instance from which it was exported, and
 -- multiple times into a given Vulkan instance.
 --
--- == Valid Usage
+-- == Return Codes
 --
--- Unresolved directive in vkImportFenceFdKHR.txt -
--- include::{generated}\/validity\/protos\/vkImportFenceFdKHR.txt[]
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VK_ERROR_INVALID_EXTERNAL_HANDLE'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'VkImportFenceFdInfoKHR'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -345,7 +396,7 @@ type FN_vkImportFenceFdKHR = ("device" ::: VkDevice) -> ("pImportFenceFdInfo" ::
 type PFN_vkImportFenceFdKHR = FunPtr FN_vkImportFenceFdKHR
 
 -- No documentation found for TopLevel "VK_KHR_EXTERNAL_FENCE_FD_EXTENSION_NAME"
-pattern VK_KHR_EXTERNAL_FENCE_FD_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_EXTERNAL_FENCE_FD_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_EXTERNAL_FENCE_FD_EXTENSION_NAME = "VK_KHR_external_fence_fd"
 
 -- No documentation found for TopLevel "VK_KHR_EXTERNAL_FENCE_FD_SPEC_VERSION"

@@ -57,20 +57,20 @@ import Graphics.Vulkan.C.Core10.Core
 -- | VkDeviceMemoryOverallocationCreateInfoAMD - Specify memory
 -- overallocation behavior for a Vulkan device
 --
--- = Description
---
--- Unresolved directive in VkDeviceMemoryOverallocationCreateInfoAMD.txt -
--- include::{generated}\/validity\/structs\/VkDeviceMemoryOverallocationCreateInfoAMD.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkMemoryOverallocationBehaviorAMD',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkDeviceMemoryOverallocationCreateInfoAMD = VkDeviceMemoryOverallocationCreateInfoAMD
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @overallocationBehavior@ is the desired overallocation behavior.
+  , -- | @overallocationBehavior@ /must/ be a valid
+  -- 'VkMemoryOverallocationBehaviorAMD' value
   vkOverallocationBehavior :: VkMemoryOverallocationBehaviorAMD
   }
   deriving (Eq, Show)
@@ -97,7 +97,7 @@ instance Zero VkDeviceMemoryOverallocationCreateInfoAMD where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkDeviceMemoryOverallocationCreateInfoAMD'
 newtype VkMemoryOverallocationBehaviorAMD = VkMemoryOverallocationBehaviorAMD Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -139,7 +139,7 @@ pattern VK_MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD :: VkMemoryOverallocati
 pattern VK_MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD = VkMemoryOverallocationBehaviorAMD 2
 
 -- No documentation found for TopLevel "VK_AMD_MEMORY_OVERALLOCATION_BEHAVIOR_EXTENSION_NAME"
-pattern VK_AMD_MEMORY_OVERALLOCATION_BEHAVIOR_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_AMD_MEMORY_OVERALLOCATION_BEHAVIOR_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_AMD_MEMORY_OVERALLOCATION_BEHAVIOR_EXTENSION_NAME = "VK_AMD_memory_overallocation_behavior"
 
 -- No documentation found for TopLevel "VK_AMD_MEMORY_OVERALLOCATION_BEHAVIOR_SPEC_VERSION"

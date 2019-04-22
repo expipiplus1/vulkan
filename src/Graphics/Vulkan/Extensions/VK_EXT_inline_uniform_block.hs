@@ -16,13 +16,13 @@ module Graphics.Vulkan.Extensions.VK_EXT_inline_uniform_block
   , withCStructWriteDescriptorSetInlineUniformBlockEXT
   , fromCStructWriteDescriptorSetInlineUniformBlockEXT
   , WriteDescriptorSetInlineUniformBlockEXT(..)
-  , pattern VK_EXT_INLINE_UNIFORM_BLOCK_SPEC_VERSION
-  , pattern VK_EXT_INLINE_UNIFORM_BLOCK_EXTENSION_NAME
-  , pattern VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES_EXT
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES_EXT
-  , pattern VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK_EXT
-  , pattern VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO_EXT
+  , pattern EXT_INLINE_UNIFORM_BLOCK_EXTENSION_NAME
+  , pattern EXT_INLINE_UNIFORM_BLOCK_SPEC_VERSION
+  , pattern DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES_EXT
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES_EXT
+  , pattern STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK_EXT
+  , pattern STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO_EXT
   ) where
 
 import Data.ByteString
@@ -35,6 +35,9 @@ import qualified Data.ByteString
   )
 import Data.ByteString.Unsafe
   ( unsafeUseAsCString
+  )
+import Data.String
+  ( IsString
   )
 import Data.Word
   ( Word32
@@ -56,6 +59,8 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block
   , VkPhysicalDeviceInlineUniformBlockFeaturesEXT(..)
   , VkPhysicalDeviceInlineUniformBlockPropertiesEXT(..)
   , VkWriteDescriptorSetInlineUniformBlockEXT(..)
+  , pattern VK_EXT_INLINE_UNIFORM_BLOCK_EXTENSION_NAME
+  , pattern VK_EXT_INLINE_UNIFORM_BLOCK_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO_EXT
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES_EXT
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES_EXT
@@ -70,10 +75,14 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block
-  ( pattern VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT
-  , pattern VK_EXT_INLINE_UNIFORM_BLOCK_EXTENSION_NAME
-  , pattern VK_EXT_INLINE_UNIFORM_BLOCK_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_DESCRIPTOR_POOL_INLINE_UNIFORM_BLOCK_CREATE_INFO_EXT
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_FEATURES_EXT
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_INLINE_UNIFORM_BLOCK_PROPERTIES_EXT
+  , pattern STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_INLINE_UNIFORM_BLOCK_EXT
+  )
+import Graphics.Vulkan.Core10.DescriptorSet
+  ( pattern DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT
   )
 
 
@@ -82,15 +91,11 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block
 -- the maximum number of inline uniform block bindings of a newly created
 -- descriptor pool
 --
--- = Description
---
--- Unresolved directive in
--- VkDescriptorPoolInlineUniformBlockCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkDescriptorPoolInlineUniformBlockCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data DescriptorPoolInlineUniformBlockCreateInfoEXT = DescriptorPoolInlineUniformBlockCreateInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "DescriptorPoolInlineUniformBlockCreateInfoEXT" "pNext"
@@ -139,13 +144,12 @@ instance Zero DescriptorPoolInlineUniformBlockCreateInfoEXT where
 -- /can/ also be used in the @pNext@ chain of
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
 --
--- Unresolved directive in
--- VkPhysicalDeviceInlineUniformBlockFeaturesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceInlineUniformBlockFeaturesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceInlineUniformBlockFeaturesEXT = PhysicalDeviceInlineUniformBlockFeaturesEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceInlineUniformBlockFeaturesEXT" "pNext"
@@ -196,13 +200,11 @@ instance Zero PhysicalDeviceInlineUniformBlockFeaturesEXT where
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- Unresolved directive in
--- VkPhysicalDeviceInlineUniformBlockPropertiesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceInlineUniformBlockPropertiesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceInlineUniformBlockPropertiesEXT = PhysicalDeviceInlineUniformBlockPropertiesEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceInlineUniformBlockPropertiesEXT" "pNext"
@@ -250,14 +252,11 @@ instance Zero PhysicalDeviceInlineUniformBlockPropertiesEXT where
 -- | VkWriteDescriptorSetInlineUniformBlockEXT - Structure specifying inline
 -- uniform block data
 --
--- == Valid Usage
---
--- Unresolved directive in VkWriteDescriptorSetInlineUniformBlockEXT.txt -
--- include::{generated}\/validity\/structs\/VkWriteDescriptorSetInlineUniformBlockEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data WriteDescriptorSetInlineUniformBlockEXT = WriteDescriptorSetInlineUniformBlockEXT
   { -- Univalued member elided
   -- No documentation found for Nested "WriteDescriptorSetInlineUniformBlockEXT" "pNext"
@@ -286,3 +285,11 @@ instance Zero WriteDescriptorSetInlineUniformBlockEXT where
   zero = WriteDescriptorSetInlineUniformBlockEXT Nothing
                                                  Data.ByteString.empty
 
+
+-- No documentation found for TopLevel "VK_EXT_INLINE_UNIFORM_BLOCK_EXTENSION_NAME"
+pattern EXT_INLINE_UNIFORM_BLOCK_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_INLINE_UNIFORM_BLOCK_EXTENSION_NAME = VK_EXT_INLINE_UNIFORM_BLOCK_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_INLINE_UNIFORM_BLOCK_SPEC_VERSION"
+pattern EXT_INLINE_UNIFORM_BLOCK_SPEC_VERSION :: Integral a => a
+pattern EXT_INLINE_UNIFORM_BLOCK_SPEC_VERSION = VK_EXT_INLINE_UNIFORM_BLOCK_SPEC_VERSION

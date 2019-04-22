@@ -9,9 +9,9 @@ module Graphics.Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface
   , fromCStructImagePipeSurfaceCreateInfoFUCHSIA
   , ImagePipeSurfaceCreateInfoFUCHSIA(..)
   , createImagePipeSurfaceFUCHSIA
-  , pattern VK_FUCHSIA_IMAGEPIPE_SURFACE_SPEC_VERSION
-  , pattern VK_FUCHSIA_IMAGEPIPE_SURFACE_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_IMAGEPIPE_SURFACE_CREATE_INFO_FUCHSIA
+  , pattern FUCHSIA_IMAGEPIPE_SURFACE_EXTENSION_NAME
+  , pattern FUCHSIA_IMAGEPIPE_SURFACE_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_IMAGEPIPE_SURFACE_CREATE_INFO_FUCHSIA
   ) where
 
 import Control.Exception
@@ -19,6 +19,9 @@ import Control.Exception
   )
 import Control.Monad
   ( when
+  )
+import Data.String
+  ( IsString
   )
 import Foreign.Marshal.Alloc
   ( alloca
@@ -45,6 +48,8 @@ import Graphics.Vulkan.C.Extensions.VK_FUCHSIA_imagepipe_surface
   , VkImagePipeSurfaceCreateInfoFUCHSIA(..)
   , Zx_handle_t
   , vkCreateImagePipeSurfaceFUCHSIA
+  , pattern VK_FUCHSIA_IMAGEPIPE_SURFACE_EXTENSION_NAME
+  , pattern VK_FUCHSIA_IMAGEPIPE_SURFACE_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_IMAGEPIPE_SURFACE_CREATE_INFO_FUCHSIA
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
@@ -63,9 +68,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_FUCHSIA_imagepipe_surface
-  ( pattern VK_FUCHSIA_IMAGEPIPE_SURFACE_EXTENSION_NAME
-  , pattern VK_FUCHSIA_IMAGEPIPE_SURFACE_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_IMAGEPIPE_SURFACE_CREATE_INFO_FUCHSIA
   )
 
 
@@ -73,17 +77,19 @@ import Graphics.Vulkan.C.Extensions.VK_FUCHSIA_imagepipe_surface
 type ImagePipeSurfaceCreateFlagsFUCHSIA = VkImagePipeSurfaceCreateFlagsFUCHSIA
 
 
+-- No complete pragma for ImagePipeSurfaceCreateFlagsFUCHSIA as it has no patterns
+
+
 -- | VkImagePipeSurfaceCreateInfoFUCHSIA - Structure specifying parameters of
 -- a newly created ImagePipe surface object
 --
--- == Valid Usage
---
--- Unresolved directive in VkImagePipeSurfaceCreateInfoFUCHSIA.txt -
--- include::{generated}\/validity\/structs\/VkImagePipeSurfaceCreateInfoFUCHSIA.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_FUCHSIA_imagepipe_surface.VkImagePipeSurfaceCreateFlagsFUCHSIA',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_FUCHSIA_imagepipe_surface.vkCreateImagePipeSurfaceFUCHSIA'
 data ImagePipeSurfaceCreateInfoFUCHSIA = ImagePipeSurfaceCreateInfoFUCHSIA
   { -- Univalued member elided
   -- No documentation found for Nested "ImagePipeSurfaceCreateInfoFUCHSIA" "pNext"
@@ -138,13 +144,46 @@ instance Zero ImagePipeSurfaceCreateInfoFUCHSIA where
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
 --     which the created surface object is returned.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCreateImagePipeSurfaceFUCHSIA.txt -
--- include::{generated}\/validity\/protos\/vkCreateImagePipeSurfaceFUCHSIA.txt[]
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Extensions.VK_FUCHSIA_imagepipe_surface.VkImagePipeSurfaceCreateInfoFUCHSIA'
+--     structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pSurface@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Extensions.VK_FUCHSIA_imagepipe_surface.VkImagePipeSurfaceCreateInfoFUCHSIA',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR'
 createImagePipeSurfaceFUCHSIA :: Instance ->  ImagePipeSurfaceCreateInfoFUCHSIA ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
 createImagePipeSurfaceFUCHSIA = \(Instance instance' commandTable) -> \createInfo' -> \allocator -> alloca (\pSurface' -> maybeWith (\marshalled -> withCStructAllocationCallbacks marshalled . flip with) allocator (\pAllocator -> (\marshalled -> withCStructImagePipeSurfaceCreateInfoFUCHSIA marshalled . flip with) createInfo' (\pCreateInfo' -> vkCreateImagePipeSurfaceFUCHSIA commandTable instance' pCreateInfo' pAllocator pSurface' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (peek pSurface')))))
+
+-- No documentation found for TopLevel "VK_FUCHSIA_IMAGEPIPE_SURFACE_EXTENSION_NAME"
+pattern FUCHSIA_IMAGEPIPE_SURFACE_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern FUCHSIA_IMAGEPIPE_SURFACE_EXTENSION_NAME = VK_FUCHSIA_IMAGEPIPE_SURFACE_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_FUCHSIA_IMAGEPIPE_SURFACE_SPEC_VERSION"
+pattern FUCHSIA_IMAGEPIPE_SURFACE_SPEC_VERSION :: Integral a => a
+pattern FUCHSIA_IMAGEPIPE_SURFACE_SPEC_VERSION = VK_FUCHSIA_IMAGEPIPE_SURFACE_SPEC_VERSION

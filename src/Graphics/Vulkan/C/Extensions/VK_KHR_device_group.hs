@@ -287,12 +287,23 @@ vkGetDeviceGroupPeerMemoryFeaturesKHR = vkGetDeviceGroupPeerMemoryFeatures
 -- with the ability to specify extended inputs via chained input
 -- structures.
 --
--- Unresolved directive in vkGetDeviceGroupSurfacePresentModes2EXT.txt -
--- include::{generated}\/validity\/protos\/vkGetDeviceGroupSurfacePresentModes2EXT.txt[]
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_SURFACE_LOST_KHR'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkDeviceGroupPresentModeFlagsKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkPhysicalDeviceSurfaceInfo2KHR'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -322,7 +333,7 @@ pattern VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR :: VkImageCreateFlag
 pattern VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR = VK_IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT
 
 -- No documentation found for TopLevel "VK_KHR_DEVICE_GROUP_EXTENSION_NAME"
-pattern VK_KHR_DEVICE_GROUP_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_DEVICE_GROUP_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_DEVICE_GROUP_EXTENSION_NAME = "VK_KHR_device_group"
 
 -- No documentation found for TopLevel "VK_KHR_DEVICE_GROUP_SPEC_VERSION"

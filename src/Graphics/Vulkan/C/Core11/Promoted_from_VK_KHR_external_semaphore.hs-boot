@@ -27,5 +27,7 @@ data VkSemaphoreImportFlagBits
 --
 -- = See Also
 --
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd.VkImportSemaphoreFdInfoKHR',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32.VkImportSemaphoreWin32HandleInfoKHR',
 -- 'VkSemaphoreImportFlagBits'
 type VkSemaphoreImportFlags = VkSemaphoreImportFlagBits

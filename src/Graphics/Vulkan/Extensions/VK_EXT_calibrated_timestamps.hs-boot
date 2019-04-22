@@ -18,5 +18,6 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.VkCalibratedTimestampInfoEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.vkGetPhysicalDeviceCalibrateableTimeDomainsEXT'
 type TimeDomainEXT = VkTimeDomainEXT

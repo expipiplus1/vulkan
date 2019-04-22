@@ -98,20 +98,19 @@ instance Read VkMacOSSurfaceCreateFlagsMVK where
 -- | VkMacOSSurfaceCreateInfoMVK - Structure specifying parameters of a newly
 -- created macOS surface object
 --
--- == Valid Usage
---
--- Unresolved directive in VkMacOSSurfaceCreateInfoMVK.txt -
--- include::{generated}\/validity\/structs\/VkMacOSSurfaceCreateInfoMVK.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkMacOSSurfaceCreateFlagsMVK',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkCreateMacOSSurfaceMVK'
 data VkMacOSSurfaceCreateInfoMVK = VkMacOSSurfaceCreateInfoMVK
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- | @flags@ is reserved for future use.
+  , -- | @flags@ /must/ be @0@
   vkFlags :: VkMacOSSurfaceCreateFlagsMVK
   , -- | @pView@ /must/ be a valid @NSView@ and /must/ be backed by a @CALayer@
   -- instance of type
@@ -158,14 +157,40 @@ instance Zero VkMacOSSurfaceCreateInfoMVK where
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
 --     which the created surface object is returned.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCreateMacOSSurfaceMVK.txt -
--- include::{generated}\/validity\/protos\/vkCreateMacOSSurfaceMVK.txt[]
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'VkMacOSSurfaceCreateInfoMVK' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pSurface@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_NATIVE_WINDOW_IN_USE_KHR'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance',
+-- 'VkMacOSSurfaceCreateInfoMVK',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -187,7 +212,7 @@ type FN_vkCreateMacOSSurfaceMVK = ("instance" ::: VkInstance) -> ("pCreateInfo" 
 type PFN_vkCreateMacOSSurfaceMVK = FunPtr FN_vkCreateMacOSSurfaceMVK
 
 -- No documentation found for TopLevel "VK_MVK_MACOS_SURFACE_EXTENSION_NAME"
-pattern VK_MVK_MACOS_SURFACE_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_MVK_MACOS_SURFACE_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_MVK_MACOS_SURFACE_EXTENSION_NAME = "VK_MVK_macos_surface"
 
 -- No documentation found for TopLevel "VK_MVK_MACOS_SURFACE_SPEC_VERSION"

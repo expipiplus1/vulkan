@@ -21,13 +21,16 @@ module Graphics.Vulkan.Extensions.VK_NV_viewport_swizzle
   , withCStructViewportSwizzleNV
   , fromCStructViewportSwizzleNV
   , ViewportSwizzleNV(..)
-  , pattern VK_NV_VIEWPORT_SWIZZLE_SPEC_VERSION
-  , pattern VK_NV_VIEWPORT_SWIZZLE_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV
+  , pattern NV_VIEWPORT_SWIZZLE_EXTENSION_NAME
+  , pattern NV_VIEWPORT_SWIZZLE_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV
   ) where
 
 import Control.Monad
   ( (<=<)
+  )
+import Data.String
+  ( IsString
   )
 import Data.Vector
   ( Vector
@@ -57,6 +60,8 @@ import Graphics.Vulkan.C.Extensions.VK_NV_viewport_swizzle
   , VkPipelineViewportSwizzleStateCreateInfoNV(..)
   , VkViewportCoordinateSwizzleNV(..)
   , VkViewportSwizzleNV(..)
+  , pattern VK_NV_VIEWPORT_SWIZZLE_EXTENSION_NAME
+  , pattern VK_NV_VIEWPORT_SWIZZLE_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV
   , pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV
   , pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV
@@ -75,9 +80,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_NV_viewport_swizzle
-  ( pattern VK_NV_VIEWPORT_SWIZZLE_EXTENSION_NAME
-  , pattern VK_NV_VIEWPORT_SWIZZLE_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV
   )
 
 
@@ -91,21 +95,23 @@ import Graphics.Vulkan.C.Extensions.VK_NV_viewport_swizzle
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_viewport_swizzle.VkPipelineViewportSwizzleStateCreateInfoNV'
 type PipelineViewportSwizzleStateCreateFlagsNV = VkPipelineViewportSwizzleStateCreateFlagsNV
+
+
+-- No complete pragma for PipelineViewportSwizzleStateCreateFlagsNV as it has no patterns
 
 
 -- | VkPipelineViewportSwizzleStateCreateInfoNV - Structure specifying
 -- swizzle applied to primitive clip coordinates
 --
--- == Valid Usage
---
--- Unresolved directive in VkPipelineViewportSwizzleStateCreateInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkPipelineViewportSwizzleStateCreateInfoNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_viewport_swizzle.VkPipelineViewportSwizzleStateCreateFlagsNV',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_viewport_swizzle.VkViewportSwizzleNV'
 data PipelineViewportSwizzleStateCreateInfoNV = PipelineViewportSwizzleStateCreateInfoNV
   { -- Univalued member elided
   -- No documentation found for Nested "PipelineViewportSwizzleStateCreateInfoNV" "pNext"
@@ -149,8 +155,11 @@ instance Zero PipelineViewportSwizzleStateCreateInfoNV where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_viewport_swizzle.VkViewportSwizzleNV'
 type ViewportCoordinateSwizzleNV = VkViewportCoordinateSwizzleNV
+
+
+{-# complete VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV, VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV, VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV, VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV, VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV, VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV, VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV, VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV :: ViewportCoordinateSwizzleNV #-}
 
 
 -- No documentation found for Nested "ViewportCoordinateSwizzleNV" "VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV"
@@ -195,14 +204,12 @@ pattern VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV = VK_VIEWPORT_COORDINATE_SWIZZ
 
 -- | VkViewportSwizzleNV - Structure specifying a viewport swizzle
 --
--- = Description
---
--- Unresolved directive in VkViewportSwizzleNV.txt -
--- include::{generated}\/validity\/structs\/VkViewportSwizzleNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_viewport_swizzle.VkPipelineViewportSwizzleStateCreateInfoNV',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_viewport_swizzle.VkViewportCoordinateSwizzleNV'
 data ViewportSwizzleNV = ViewportSwizzleNV
   { -- No documentation found for Nested "ViewportSwizzleNV" "x"
   x :: ViewportCoordinateSwizzleNV
@@ -235,3 +242,11 @@ instance Zero ViewportSwizzleNV where
                            zero
                            zero
 
+
+-- No documentation found for TopLevel "VK_NV_VIEWPORT_SWIZZLE_EXTENSION_NAME"
+pattern NV_VIEWPORT_SWIZZLE_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern NV_VIEWPORT_SWIZZLE_EXTENSION_NAME = VK_NV_VIEWPORT_SWIZZLE_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_NV_VIEWPORT_SWIZZLE_SPEC_VERSION"
+pattern NV_VIEWPORT_SWIZZLE_SPEC_VERSION :: Integral a => a
+pattern NV_VIEWPORT_SWIZZLE_SPEC_VERSION = VK_NV_VIEWPORT_SWIZZLE_SPEC_VERSION

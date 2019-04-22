@@ -7,11 +7,14 @@ module Graphics.Vulkan.Extensions.VK_KHR_shader_float_controls
   ( withCStructPhysicalDeviceFloatControlsPropertiesKHR
   , fromCStructPhysicalDeviceFloatControlsPropertiesKHR
   , PhysicalDeviceFloatControlsPropertiesKHR(..)
-  , pattern VK_KHR_SHADER_FLOAT_CONTROLS_SPEC_VERSION
-  , pattern VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES_KHR
+  , pattern KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
+  , pattern KHR_SHADER_FLOAT_CONTROLS_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES_KHR
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Foreign.Marshal.Utils
   ( maybePeek
   , maybeWith
@@ -26,6 +29,8 @@ import Graphics.Vulkan.C.Core10.Core
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_shader_float_controls
   ( VkPhysicalDeviceFloatControlsPropertiesKHR(..)
+  , pattern VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
+  , pattern VK_KHR_SHADER_FLOAT_CONTROLS_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES_KHR
   )
 import Graphics.Vulkan.Core10.Core
@@ -37,9 +42,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_KHR_shader_float_controls
-  ( pattern VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
-  , pattern VK_KHR_SHADER_FLOAT_CONTROLS_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES_KHR
   )
 
 
@@ -55,12 +59,12 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_shader_float_controls
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- Unresolved directive in VkPhysicalDeviceFloatControlsPropertiesKHR.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceFloatControlsPropertiesKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceFloatControlsPropertiesKHR = PhysicalDeviceFloatControlsPropertiesKHR
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceFloatControlsPropertiesKHR" "pNext"
@@ -151,3 +155,11 @@ instance Zero PhysicalDeviceFloatControlsPropertiesKHR where
                                                   False
                                                   False
 
+
+-- No documentation found for TopLevel "VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME"
+pattern KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME = VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_KHR_SHADER_FLOAT_CONTROLS_SPEC_VERSION"
+pattern KHR_SHADER_FLOAT_CONTROLS_SPEC_VERSION :: Integral a => a
+pattern KHR_SHADER_FLOAT_CONTROLS_SPEC_VERSION = VK_KHR_SHADER_FLOAT_CONTROLS_SPEC_VERSION

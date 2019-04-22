@@ -80,14 +80,9 @@ import Graphics.Vulkan.C.Core10.Core
 -- | VkConformanceVersionKHR - Structure containing the conformance test
 -- suite version the implementation is compliant with
 --
--- = Description
---
--- Unresolved directive in VkConformanceVersionKHR.txt -
--- include::{generated}\/validity\/structs\/VkConformanceVersionKHR.txt[]
---
 -- = See Also
 --
--- No cross-references are available
+-- 'VkPhysicalDeviceDriverPropertiesKHR'
 data VkConformanceVersionKHR = VkConformanceVersionKHR
   { -- | @major@ is the major version number of the conformance test suite.
   vkMajor :: Word8
@@ -139,7 +134,7 @@ instance Zero VkConformanceVersionKHR where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkPhysicalDeviceDriverPropertiesKHR'
 newtype VkDriverIdKHR = VkDriverIdKHR Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -229,14 +224,15 @@ pattern VK_DRIVER_ID_GGP_PROPRIETARY_KHR = VkDriverIdKHR 11
 -- @driverID@ /must/ be immutable for a given driver across instances,
 -- processes, driver versions, and system reboots.
 --
--- Unresolved directive in VkPhysicalDeviceDriverPropertiesKHR.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceDriverPropertiesKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkConformanceVersionKHR', 'VkDriverIdKHR',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceDriverPropertiesKHR = VkPhysicalDeviceDriverPropertiesKHR
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension specific structure.
   vkPNext :: Ptr ()
@@ -279,7 +275,7 @@ instance Zero VkPhysicalDeviceDriverPropertiesKHR where
                                              zero
 
 -- No documentation found for TopLevel "VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME"
-pattern VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME = "VK_KHR_driver_properties"
 
 -- No documentation found for TopLevel "VK_KHR_DRIVER_PROPERTIES_SPEC_VERSION"

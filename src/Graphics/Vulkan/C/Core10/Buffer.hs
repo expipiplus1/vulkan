@@ -187,10 +187,8 @@ type VkBufferCreateFlags = VkBufferCreateFlagBits
 --
 -- -   If @sharingMode@ is 'VK_SHARING_MODE_CONCURRENT', each element of
 --     @pQueueFamilyIndices@ /must/ be unique and /must/ be less than
---     @pQueueFamilyPropertyCount@ returned by either
+--     @pQueueFamilyPropertyCount@ returned by
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceQueueFamilyProperties'
---     or
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceQueueFamilyProperties2'
 --     for the @physicalDevice@ that was used to create @device@
 --
 -- -   If the
@@ -212,43 +210,30 @@ type VkBufferCreateFlags = VkBufferCreateFlagBits
 --     'VK_BUFFER_CREATE_SPARSE_ALIASED_BIT', it /must/ also contain
 --     'VK_BUFFER_CREATE_SPARSE_BINDING_BIT'
 --
--- -   If the @pNext@ chain contains an instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryBufferCreateInfo',
---     its @handleTypes@ member /must/ only contain bits that are also in
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalBufferProperties'::@externalMemoryProperties.compatibleHandleTypes@,
---     as returned by
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.vkGetPhysicalDeviceExternalBufferProperties'
---     with @pExternalBufferInfo@->@handleType@ equal to any one of the
---     handle types specified in
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryBufferCreateInfo'::@handleTypes@
+-- == Valid Usage (Implicit)
 --
--- -   If the @pNext@ chain contains an instance of
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO'
+--
+-- -   Each @pNext@ member of any structure (including this one) in the
+--     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
+--     instance of
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VkBufferDeviceAddressCreateInfoEXT',
 --     'Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationBufferCreateInfoNV',
---     and the @dedicatedAllocation@ member of the chained structure is
---     'Graphics.Vulkan.C.Core10.Core.VK_TRUE', then @flags@ /must/ not
---     include 'VK_BUFFER_CREATE_SPARSE_BINDING_BIT',
---     'VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT', or
---     'VK_BUFFER_CREATE_SPARSE_ALIASED_BIT'
+--     or
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryBufferCreateInfo'
 --
--- -   If
---     'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VkBufferDeviceAddressCreateInfoEXT'::@deviceAddress@
---     is not zero, @flags@ /must/ include
---     'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT'
+-- -   Each @sType@ member in the @pNext@ chain /must/ be unique
 --
--- -   If @flags@ includes
---     'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VK_BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT_EXT',
---     the
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-bufferDeviceAddressCaptureReplay bufferDeviceAddressCaptureReplay>
---     feature /must/ be enabled
+-- -   @flags@ /must/ be a valid combination of 'VkBufferCreateFlagBits'
+--     values
 --
--- -   If @usage@ includes
---     'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_EXT',
---     the
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-bufferDeviceAddress bufferDeviceAddress>
---     feature /must/ be enabled
+-- -   @usage@ /must/ be a valid combination of 'VkBufferUsageFlagBits'
+--     values
 --
--- Unresolved directive in VkBufferCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkBufferCreateInfo.txt[]
+-- -   @usage@ /must/ not be @0@
+--
+-- -   @sharingMode@ /must/ be a valid 'VkSharingMode' value
 --
 -- = See Also
 --
@@ -438,14 +423,8 @@ pattern VK_BUFFER_USAGE_VERTEX_BUFFER_BIT = VkBufferUsageFlagBits 0x00000080
 -- suitable for passing as the @buffer@ parameter to
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDrawIndirect',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDrawIndexedIndirect',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.vkCmdDrawMeshTasksIndirectNV',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.vkCmdDrawMeshTasksIndirectCountNV',
 -- or
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDispatchIndirect'.
--- It is also suitable for passing as the @buffer@ member of
--- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkIndirectCommandsTokenNVX',
--- or @sequencesCountBuffer@ or @sequencesIndexBuffer@ member of
--- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkCmdProcessCommandsInfoNVX'
 pattern VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT :: VkBufferUsageFlagBits
 pattern VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT = VkBufferUsageFlagBits 0x00000100
 
@@ -506,7 +485,10 @@ type VkBufferUsageFlags = VkBufferUsageFlagBits
 --
 -- = See Also
 --
--- 'VkBufferCreateInfo', 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'
+-- 'VkBufferCreateInfo',
+-- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VkPhysicalDeviceImageDrmFormatModifierInfoEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR'
 newtype VkSharingMode = VkSharingMode Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -565,8 +547,33 @@ pattern VK_SHARING_MODE_CONCURRENT = VkSharingMode 1
 --     sparse resources on the device to exceed
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@sparseAddressSpaceSize@
 --
--- Unresolved directive in vkCreateBuffer.txt -
--- include::{generated}\/validity\/protos\/vkCreateBuffer.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'VkBufferCreateInfo' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pBuffer@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VK_ERROR_INVALID_DEVICE_ADDRESS_EXT'
 --
 -- = See Also
 --
@@ -622,8 +629,27 @@ type PFN_vkCreateBuffer = FunPtr FN_vkCreateBuffer
 --     were provided when @buffer@ was created, @pAllocator@ /must/ be
 --     @NULL@
 --
--- Unresolved directive in vkDestroyBuffer.txt -
--- include::{generated}\/validity\/protos\/vkDestroyBuffer.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   If @buffer@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @buffer@ /must/
+--     be a valid 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer'
+--     handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   If @buffer@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @buffer@ /must/ be externally synchronized
 --
 -- = See Also
 --

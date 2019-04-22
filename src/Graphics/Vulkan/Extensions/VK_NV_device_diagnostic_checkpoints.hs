@@ -14,14 +14,17 @@ module Graphics.Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints
   , getNumQueueCheckpointDataNV
   , getQueueCheckpointDataNV
   , getAllQueueCheckpointDataNV
-  , pattern VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_SPEC_VERSION
-  , pattern VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_CHECKPOINT_DATA_NV
-  , pattern VK_STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV
+  , pattern NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME
+  , pattern NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_CHECKPOINT_DATA_NV
+  , pattern STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV
   ) where
 
 import Control.Monad
   ( (<=<)
+  )
+import Data.String
+  ( IsString
   )
 import Data.Vector
   ( Vector
@@ -62,6 +65,8 @@ import Graphics.Vulkan.C.Extensions.VK_NV_device_diagnostic_checkpoints
   , VkQueueFamilyCheckpointPropertiesNV(..)
   , vkCmdSetCheckpointNV
   , vkGetQueueCheckpointDataNV
+  , pattern VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME
+  , pattern VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_CHECKPOINT_DATA_NV
   , pattern VK_STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV
   )
@@ -76,19 +81,16 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_NV_device_diagnostic_checkpoints
-  ( pattern VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME
-  , pattern VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_CHECKPOINT_DATA_NV
+  , pattern STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV
   )
 
 
 
 -- | VkCheckpointDataNV - return structure for command buffer checkpoint data
 --
--- = Description
---
--- Unresolved directive in VkCheckpointDataNV.txt -
--- include::{generated}\/validity\/structs\/VkCheckpointDataNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- Note that the stages at which a checkpoint marker /can/ be executed are
 -- implementation-defined and /can/ be queried by calling
@@ -96,7 +98,9 @@ import Graphics.Vulkan.C.Extensions.VK_NV_device_diagnostic_checkpoints
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Queue.VkPipelineStageFlagBits',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_device_diagnostic_checkpoints.vkGetQueueCheckpointDataNV'
 data CheckpointDataNV = CheckpointDataNV
   { -- Univalued member elided
   -- No documentation found for Nested "CheckpointDataNV" "pNext"
@@ -132,14 +136,12 @@ instance Zero CheckpointDataNV where
 -- | VkQueueFamilyCheckpointPropertiesNV - return structure for queue family
 -- checkpoint info query
 --
--- = Description
---
--- Unresolved directive in VkQueueFamilyCheckpointPropertiesNV.txt -
--- include::{generated}\/validity\/structs\/VkQueueFamilyCheckpointPropertiesNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Queue.VkPipelineStageFlags',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data QueueFamilyCheckpointPropertiesNV = QueueFamilyCheckpointPropertiesNV
   { -- Univalued member elided
   -- No documentation found for Nested "QueueFamilyCheckpointPropertiesNV" "pNext"
@@ -177,14 +179,47 @@ instance Zero QueueFamilyCheckpointPropertiesNV where
 -- -   @pCheckpointMarker@ is an opaque application-provided value that
 --     will be associated with the checkpoint.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCmdSetCheckpointNV.txt -
--- include::{generated}\/validity\/protos\/vkCmdSetCheckpointNV.txt[]
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics, compute,
+--     or transfer operations
+--
+-- == Host Synchronization
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Both            | Graphics        |                 |
+-- > | Secondary       |                 | Compute         |                 |
+-- > |                 |                 | Transfer        |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer'
 cmdSetCheckpointNV :: CommandBuffer ->  Ptr () ->  IO ()
 cmdSetCheckpointNV = \(CommandBuffer commandBuffer' commandTable) -> \pCheckpointMarker' -> vkCmdSetCheckpointNV commandTable commandBuffer' pCheckpointMarker' *> (pure ())
 
@@ -221,12 +256,24 @@ cmdSetCheckpointNV = \(CommandBuffer commandBuffer' commandTable) -> \pCheckpoin
 --
 -- -   The device that @queue@ belongs to /must/ be in the lost state
 --
--- Unresolved directive in vkGetQueueCheckpointDataNV.txt -
--- include::{generated}\/validity\/protos\/vkGetQueueCheckpointDataNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @queue@ /must/ be a valid 'Graphics.Vulkan.C.Core10.Queue.VkQueue'
+--     handle
+--
+-- -   @pCheckpointDataCount@ /must/ be a valid pointer to a @uint32_t@
+--     value
+--
+-- -   If the value referenced by @pCheckpointDataCount@ is not @0@, and
+--     @pCheckpointData@ is not @NULL@, @pCheckpointData@ /must/ be a valid
+--     pointer to an array of @pCheckpointDataCount@
+--     'Graphics.Vulkan.C.Extensions.VK_NV_device_diagnostic_checkpoints.VkCheckpointDataNV'
+--     structures
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_device_diagnostic_checkpoints.VkCheckpointDataNV',
+-- 'Graphics.Vulkan.C.Core10.Queue.VkQueue'
 getNumQueueCheckpointDataNV :: Queue ->  IO (Word32)
 getNumQueueCheckpointDataNV = \(Queue queue' commandTable) -> alloca (\pCheckpointDataCount' -> vkGetQueueCheckpointDataNV commandTable queue' pCheckpointDataCount' nullPtr *> (peek pCheckpointDataCount'))
 
@@ -262,12 +309,24 @@ getNumQueueCheckpointDataNV = \(Queue queue' commandTable) -> alloca (\pCheckpoi
 --
 -- -   The device that @queue@ belongs to /must/ be in the lost state
 --
--- Unresolved directive in vkGetQueueCheckpointDataNV.txt -
--- include::{generated}\/validity\/protos\/vkGetQueueCheckpointDataNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @queue@ /must/ be a valid 'Graphics.Vulkan.C.Core10.Queue.VkQueue'
+--     handle
+--
+-- -   @pCheckpointDataCount@ /must/ be a valid pointer to a @uint32_t@
+--     value
+--
+-- -   If the value referenced by @pCheckpointDataCount@ is not @0@, and
+--     @pCheckpointData@ is not @NULL@, @pCheckpointData@ /must/ be a valid
+--     pointer to an array of @pCheckpointDataCount@
+--     'Graphics.Vulkan.C.Extensions.VK_NV_device_diagnostic_checkpoints.VkCheckpointDataNV'
+--     structures
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_device_diagnostic_checkpoints.VkCheckpointDataNV',
+-- 'Graphics.Vulkan.C.Core10.Queue.VkQueue'
 getQueueCheckpointDataNV :: Queue ->  Word32 ->  IO (Vector CheckpointDataNV)
 getQueueCheckpointDataNV = \(Queue queue' commandTable) -> \checkpointDataCount' -> allocaArray (fromIntegral checkpointDataCount') (\pCheckpointData' -> with checkpointDataCount' (\pCheckpointDataCount' -> vkGetQueueCheckpointDataNV commandTable queue' pCheckpointDataCount' pCheckpointData' *> ((flip Data.Vector.generateM ((\p -> fromCStructCheckpointDataNV <=< peekElemOff p) pCheckpointData') =<< (fromIntegral <$> (peek pCheckpointDataCount'))))))
 -- | Returns all the values available from 'getQueueCheckpointDataNV'.
@@ -276,3 +335,11 @@ getAllQueueCheckpointDataNV queue' =
   getNumQueueCheckpointDataNV queue'
     >>= \num -> getQueueCheckpointDataNV queue' num
 
+
+-- No documentation found for TopLevel "VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME"
+pattern NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME = VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_SPEC_VERSION"
+pattern NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_SPEC_VERSION :: Integral a => a
+pattern NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_SPEC_VERSION = VK_NV_DEVICE_DIAGNOSTIC_CHECKPOINTS_SPEC_VERSION

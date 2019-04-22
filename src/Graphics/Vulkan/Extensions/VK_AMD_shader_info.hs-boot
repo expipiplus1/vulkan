@@ -18,5 +18,5 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_AMD_shader_info
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_AMD_shader_info.vkGetShaderInfoAMD'
 type ShaderInfoTypeAMD = VkShaderInfoTypeAMD

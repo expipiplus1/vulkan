@@ -11,13 +11,16 @@ module Graphics.Vulkan.Extensions.VK_EXT_validation_flags
   , withCStructValidationFlagsEXT
   , fromCStructValidationFlagsEXT
   , ValidationFlagsEXT(..)
-  , pattern VK_EXT_VALIDATION_FLAGS_SPEC_VERSION
-  , pattern VK_EXT_VALIDATION_FLAGS_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_VALIDATION_FLAGS_EXT
+  , pattern EXT_VALIDATION_FLAGS_EXTENSION_NAME
+  , pattern EXT_VALIDATION_FLAGS_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_VALIDATION_FLAGS_EXT
   ) where
 
 import Data.Function
   ( (&)
+  )
+import Data.String
+  ( IsString
   )
 import Data.Vector
   ( Vector
@@ -45,6 +48,8 @@ import Graphics.Vulkan.C.Core10.Core
 import Graphics.Vulkan.C.Extensions.VK_EXT_validation_flags
   ( VkValidationCheckEXT(..)
   , VkValidationFlagsEXT(..)
+  , pattern VK_EXT_VALIDATION_FLAGS_EXTENSION_NAME
+  , pattern VK_EXT_VALIDATION_FLAGS_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_VALIDATION_FLAGS_EXT
   , pattern VK_VALIDATION_CHECK_ALL_EXT
   , pattern VK_VALIDATION_CHECK_SHADERS_EXT
@@ -57,9 +62,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_validation_flags
-  ( pattern VK_EXT_VALIDATION_FLAGS_EXTENSION_NAME
-  , pattern VK_EXT_VALIDATION_FLAGS_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_VALIDATION_FLAGS_EXT
   )
 
 
@@ -67,8 +71,11 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_validation_flags
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_flags.VkValidationFlagsEXT'
 type ValidationCheckEXT = VkValidationCheckEXT
+
+
+{-# complete VALIDATION_CHECK_ALL_EXT, VALIDATION_CHECK_SHADERS_EXT :: ValidationCheckEXT #-}
 
 
 -- | 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_flags.VK_VALIDATION_CHECK_ALL_EXT'
@@ -86,14 +93,12 @@ pattern VALIDATION_CHECK_SHADERS_EXT = VK_VALIDATION_CHECK_SHADERS_EXT
 -- | VkValidationFlagsEXT - Specify validation checks to disable for a Vulkan
 -- instance
 --
--- = Description
---
--- Unresolved directive in VkValidationFlagsEXT.txt -
--- include::{generated}\/validity\/structs\/VkValidationFlagsEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_flags.VkValidationCheckEXT'
 data ValidationFlagsEXT = ValidationFlagsEXT
   { -- Univalued member elided
   -- No documentation found for Nested "ValidationFlagsEXT" "pNext"
@@ -122,3 +127,11 @@ instance Zero ValidationFlagsEXT where
   zero = ValidationFlagsEXT Nothing
                             Data.Vector.empty
 
+
+-- No documentation found for TopLevel "VK_EXT_VALIDATION_FLAGS_EXTENSION_NAME"
+pattern EXT_VALIDATION_FLAGS_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_VALIDATION_FLAGS_EXTENSION_NAME = VK_EXT_VALIDATION_FLAGS_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_VALIDATION_FLAGS_SPEC_VERSION"
+pattern EXT_VALIDATION_FLAGS_SPEC_VERSION :: Integral a => a
+pattern EXT_VALIDATION_FLAGS_SPEC_VERSION = VK_EXT_VALIDATION_FLAGS_SPEC_VERSION

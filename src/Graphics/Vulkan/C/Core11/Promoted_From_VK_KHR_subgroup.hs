@@ -78,8 +78,7 @@ import Graphics.Vulkan.C.Core10.PipelineLayout
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- Unresolved directive in VkPhysicalDeviceSubgroupProperties.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceSubgroupProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -88,7 +87,8 @@ import Graphics.Vulkan.C.Core10.PipelineLayout
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
 -- 'VkSubgroupFeatureFlags'
 data VkPhysicalDeviceSubgroupProperties = VkPhysicalDeviceSubgroupProperties
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()

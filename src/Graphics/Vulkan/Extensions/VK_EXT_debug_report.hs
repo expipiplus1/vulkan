@@ -51,18 +51,19 @@ module Graphics.Vulkan.Extensions.VK_EXT_debug_report
   , pattern DEBUG_REPORT_OBJECT_TYPE_OBJECT_TABLE_NVX_EXT
   , pattern DEBUG_REPORT_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX_EXT
   , pattern DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT
+  , pattern DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT
+  , pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT
+  , pattern DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT
   , createDebugReportCallbackEXT
   , debugReportMessageEXT
   , destroyDebugReportCallbackEXT
   , withDebugReportCallbackEXT
-  , pattern VK_EXT_DEBUG_REPORT_SPEC_VERSION
-  , pattern VK_EXT_DEBUG_REPORT_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT
-  , pattern VK_STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT
-  , pattern VK_ERROR_VALIDATION_FAILED_EXT
-  , pattern VK_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT
-  , pattern VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT
-  , pattern VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT
+  , pattern EXT_DEBUG_REPORT_EXTENSION_NAME
+  , pattern EXT_DEBUG_REPORT_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT
+  , pattern STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT
+  , pattern ERROR_VALIDATION_FAILED_EXT
+  , pattern OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT
   ) where
 
 import Control.Exception
@@ -78,6 +79,9 @@ import Data.ByteString
   )
 import Data.Int
   ( Int32
+  )
+import Data.String
+  ( IsString
   )
 import Data.Word
   ( Word64
@@ -103,7 +107,8 @@ import Foreign.Storable
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( Zero(..)
+  ( VkStructureType(..)
+  , Zero(..)
   , pattern VK_SUCCESS
   )
 import Graphics.Vulkan.C.Extensions.VK_EXT_debug_report
@@ -126,6 +131,7 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_debug_report
   , pattern VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT
   , pattern VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT
   , pattern VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT_EXT
+  , pattern VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT
   , pattern VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_EXT
   , pattern VK_DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT
   , pattern VK_DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT
@@ -146,6 +152,7 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_debug_report
   , pattern VK_DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT
   , pattern VK_DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT
   , pattern VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT
+  , pattern VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT
   , pattern VK_DEBUG_REPORT_OBJECT_TYPE_SEMAPHORE_EXT
   , pattern VK_DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT
   , pattern VK_DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT
@@ -154,7 +161,15 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_debug_report
   , pattern VK_DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT
   , pattern VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT
   , pattern VK_DEBUG_REPORT_WARNING_BIT_EXT
+  , pattern VK_EXT_DEBUG_REPORT_EXTENSION_NAME
+  , pattern VK_EXT_DEBUG_REPORT_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing
+  ( pattern VK_DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT
+  )
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT
   )
 import Graphics.Vulkan.Core10.DeviceInitialization
   ( AllocationCallbacks(..)
@@ -169,14 +184,9 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_debug_report
-  ( pattern VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT
-  , pattern VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT
-  , pattern VK_ERROR_VALIDATION_FAILED_EXT
-  , pattern VK_EXT_DEBUG_REPORT_EXTENSION_NAME
-  , pattern VK_EXT_DEBUG_REPORT_SPEC_VERSION
-  , pattern VK_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT
-  , pattern VK_STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT
+import Graphics.Vulkan.Core10.Core
+  ( pattern ERROR_VALIDATION_FAILED_EXT
+  , pattern OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT
   )
 
 
@@ -211,12 +221,14 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_debug_report
 -- A callback may be called from multiple threads simultaneously (if the
 -- application is making Vulkan calls from multiple threads).
 --
--- Unresolved directive in VkDebugReportCallbackCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkDebugReportCallbackCreateInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.PFN_vkDebugReportCallbackEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VkDebugReportFlagsEXT',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.vkCreateDebugReportCallbackEXT'
 data DebugReportCallbackCreateInfoEXT = DebugReportCallbackCreateInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "DebugReportCallbackCreateInfoEXT" "pNext"
@@ -257,7 +269,8 @@ instance Zero DebugReportCallbackCreateInfoEXT where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.vkCreateDebugReportCallbackEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.vkDestroyDebugReportCallbackEXT'
 type DebugReportCallbackEXT = VkDebugReportCallbackEXT
 
 -- | VkDebugReportFlagBitsEXT - Bitmask specifying events which cause a debug
@@ -265,8 +278,11 @@ type DebugReportCallbackEXT = VkDebugReportCallbackEXT
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VkDebugReportFlagsEXT'
 type DebugReportFlagBitsEXT = VkDebugReportFlagBitsEXT
+
+
+{-# complete DEBUG_REPORT_INFORMATION_BIT_EXT, DEBUG_REPORT_WARNING_BIT_EXT, DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT, DEBUG_REPORT_ERROR_BIT_EXT, DEBUG_REPORT_DEBUG_BIT_EXT :: DebugReportFlagBitsEXT #-}
 
 
 -- | 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VK_DEBUG_REPORT_INFORMATION_BIT_EXT'
@@ -320,7 +336,9 @@ pattern DEBUG_REPORT_DEBUG_BIT_EXT = VK_DEBUG_REPORT_DEBUG_BIT_EXT
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VkDebugReportCallbackCreateInfoEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VkDebugReportFlagBitsEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.vkDebugReportMessageEXT'
 type DebugReportFlagsEXT = DebugReportFlagBitsEXT
 
 -- | VkDebugReportObjectTypeEXT - Specify the type of an object handle
@@ -438,40 +456,8 @@ type DebugReportFlagsEXT = DebugReportFlagBitsEXT
 -- > | MMAND_POOL_EXT'                          | l'                        |
 -- > +------------------------------------------+---------------------------+
 -- > | 'Graphics.Vulkan.C.Extensions.VK_EXT_deb | 'Graphics.Vulkan.C.Extens |
--- > | ug_report.VK_DEBUG_REPORT_OBJECT_TYPE_SU | ions.VK_KHR_surface.VkSur |
--- > | RFACE_KHR_EXT'                           | faceKHR'                  |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_EXT_deb | 'Graphics.Vulkan.C.Extens |
--- > | ug_report.VK_DEBUG_REPORT_OBJECT_TYPE_SW | ions.VK_KHR_swapchain.VkS |
--- > | APCHAIN_KHR_EXT'                         | wapchainKHR'              |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_EXT_deb | 'Graphics.Vulkan.C.Extens |
 -- > | ug_report.VK_DEBUG_REPORT_OBJECT_TYPE_DE | ions.VK_EXT_debug_report. |
 -- > | BUG_REPORT_CALLBACK_EXT_EXT'             | VkDebugReportCallbackEXT' |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_EXT_deb | 'Graphics.Vulkan.C.Extens |
--- > | ug_report.VK_DEBUG_REPORT_OBJECT_TYPE_DI | ions.VK_KHR_display.VkDis |
--- > | SPLAY_KHR_EXT'                           | playKHR'                  |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_EXT_deb | 'Graphics.Vulkan.C.Extens |
--- > | ug_report.VK_DEBUG_REPORT_OBJECT_TYPE_DI | ions.VK_KHR_display.VkDis |
--- > | SPLAY_MODE_KHR_EXT'                      | playModeKHR'              |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_EXT_deb | 'Graphics.Vulkan.C.Extens |
--- > | ug_report.VK_DEBUG_REPORT_OBJECT_TYPE_OB | ions.VK_NVX_device_genera |
--- > | JECT_TABLE_NVX_EXT'                      | ted_commands.VkObjectTabl |
--- > |                                          | eNVX'                     |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_EXT_deb | 'Graphics.Vulkan.C.Extens |
--- > | ug_report.VK_DEBUG_REPORT_OBJECT_TYPE_IN | ions.VK_NVX_device_genera |
--- > | DIRECT_COMMANDS_LAYOUT_NVX_EXT'          | ted_commands.VkIndirectCo |
--- > |                                          | mmandsLayoutNVX'          |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Extensions.VK_KHR_des | 'Graphics.Vulkan.C.Core11 |
--- > | criptor_update_template.VK_DEBUG_REPORT_ | .Promoted_from_VK_KHR_des |
--- > | OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_K | criptor_update_template.V |
--- > | HR_EXT'                                  | kDescriptorUpdateTemplate |
--- > |                                          | '                         |
 -- > +------------------------------------------+---------------------------+
 -- >
 -- > VkDebugReportObjectTypeEXT and Vulkan Handle Relationship
@@ -485,8 +471,13 @@ type DebugReportFlagsEXT = DebugReportFlagBitsEXT
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.VkDebugMarkerObjectNameInfoEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.VkDebugMarkerObjectTagInfoEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.vkDebugReportMessageEXT'
 type DebugReportObjectTypeEXT = VkDebugReportObjectTypeEXT
+
+
+{-# complete DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT, DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT, DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT, DEBUG_REPORT_OBJECT_TYPE_DEVICE_EXT, DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT, DEBUG_REPORT_OBJECT_TYPE_SEMAPHORE_EXT, DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT, DEBUG_REPORT_OBJECT_TYPE_FENCE_EXT, DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT, DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT, DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT, DEBUG_REPORT_OBJECT_TYPE_EVENT_EXT, DEBUG_REPORT_OBJECT_TYPE_QUERY_POOL_EXT, DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW_EXT, DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT, DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT, DEBUG_REPORT_OBJECT_TYPE_PIPELINE_CACHE_EXT, DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LAYOUT_EXT, DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT, DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT, DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT_EXT, DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT, DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT, DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT, DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT, DEBUG_REPORT_OBJECT_TYPE_COMMAND_POOL_EXT, DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT, DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT, DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT, DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT, DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT, DEBUG_REPORT_OBJECT_TYPE_OBJECT_TABLE_NVX_EXT, DEBUG_REPORT_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX_EXT, DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT, DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT, DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT, DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT, DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT :: DebugReportObjectTypeEXT #-}
 
 
 -- No documentation found for Nested "DebugReportObjectTypeEXT" "DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT"
@@ -659,6 +650,21 @@ pattern DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT :: (a ~ DebugReportObj
 pattern DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT = VK_DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT
 
 
+-- No documentation found for Nested "DebugReportObjectTypeEXT" "DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT"
+pattern DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT :: (a ~ DebugReportObjectTypeEXT) => a
+pattern DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT = VK_DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT
+
+
+-- No documentation found for Nested "DebugReportObjectTypeEXT" "DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT"
+pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT :: (a ~ DebugReportObjectTypeEXT) => a
+pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT = VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT
+
+
+-- No documentation found for Nested "DebugReportObjectTypeEXT" "DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT"
+pattern DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT :: (a ~ DebugReportObjectTypeEXT) => a
+pattern DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT = VK_DEBUG_REPORT_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV_EXT
+
+
 -- | vkCreateDebugReportCallbackEXT - Create a debug report callback object
 --
 -- = Parameters
@@ -678,14 +684,38 @@ pattern DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT = VK_DEBUG_REPORT_OBJE
 --     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VkDebugReportCallbackEXT'
 --     object created.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCreateDebugReportCallbackEXT.txt -
--- include::{generated}\/validity\/protos\/vkCreateDebugReportCallbackEXT.txt[]
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VkDebugReportCallbackCreateInfoEXT'
+--     structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pCallback@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VkDebugReportCallbackEXT'
+--     handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VkDebugReportCallbackCreateInfoEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VkDebugReportCallbackEXT',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance'
 createDebugReportCallbackEXT :: Instance ->  DebugReportCallbackCreateInfoEXT ->  Maybe AllocationCallbacks ->  IO (DebugReportCallbackEXT)
 createDebugReportCallbackEXT = \(Instance instance' commandTable) -> \createInfo' -> \allocator -> alloca (\pCallback' -> maybeWith (\marshalled -> withCStructAllocationCallbacks marshalled . flip with) allocator (\pAllocator -> (\marshalled -> withCStructDebugReportCallbackCreateInfoEXT marshalled . flip with) createInfo' (\pCreateInfo' -> vkCreateDebugReportCallbackEXT commandTable instance' pCreateInfo' pAllocator pCallback' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (peek pCallback')))))
 
@@ -740,12 +770,30 @@ createDebugReportCallbackEXT = \(Instance instance' commandTable) -> \createInfo
 --     @objectType@ as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#debug-report-object-types>.
 --
--- Unresolved directive in vkDebugReportMessageEXT.txt -
--- include::{generated}\/validity\/protos\/vkDebugReportMessageEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @flags@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VkDebugReportFlagBitsEXT'
+--     values
+--
+-- -   @flags@ /must/ not be @0@
+--
+-- -   @objectType@ /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VkDebugReportObjectTypeEXT'
+--     value
+--
+-- -   @pLayerPrefix@ /must/ be a null-terminated UTF-8 string
+--
+-- -   @pMessage@ /must/ be a null-terminated UTF-8 string
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VkDebugReportFlagsEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VkDebugReportObjectTypeEXT',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance'
 debugReportMessageEXT :: Instance ->  DebugReportFlagsEXT ->  DebugReportObjectTypeEXT ->  Word64 ->  CSize ->  Int32 ->  ByteString ->  ByteString ->  IO ()
 debugReportMessageEXT = \(Instance instance' commandTable) -> \flags' -> \objectType' -> \object' -> \location' -> \messageCode' -> \layerPrefix' -> \message' -> useAsCString message' (\pMessage' -> useAsCString layerPrefix' (\pLayerPrefix' -> vkDebugReportMessageEXT commandTable instance' flags' objectType' object' location' messageCode' pLayerPrefix' pMessage' *> (pure ())))
 
@@ -780,12 +828,32 @@ debugReportMessageEXT = \(Instance instance' commandTable) -> \flags' -> \object
 --     were provided when @callback@ was created, @pAllocator@ /must/ be
 --     @NULL@
 --
--- Unresolved directive in vkDestroyDebugReportCallbackEXT.txt -
--- include::{generated}\/validity\/protos\/vkDestroyDebugReportCallbackEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @instance@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
+--
+-- -   @callback@ /must/ be a valid
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VkDebugReportCallbackEXT'
+--     handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @callback@ /must/ have been created, allocated, or retrieved from
+--     @instance@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @callback@ /must/ be externally synchronized
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VkDebugReportCallbackEXT',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance'
 destroyDebugReportCallbackEXT :: Instance ->  DebugReportCallbackEXT ->  Maybe AllocationCallbacks ->  IO ()
 destroyDebugReportCallbackEXT = \(Instance instance' commandTable) -> \callback' -> \allocator -> maybeWith (\marshalled -> withCStructAllocationCallbacks marshalled . flip with) allocator (\pAllocator -> vkDestroyDebugReportCallbackEXT commandTable instance' callback' pAllocator *> (pure ()))
 
@@ -797,3 +865,15 @@ withDebugReportCallbackEXT
 withDebugReportCallbackEXT instance' debugReportCallbackCreateInfoEXT allocationCallbacks = bracket
   (createDebugReportCallbackEXT instance' debugReportCallbackCreateInfoEXT allocationCallbacks)
   (\o -> destroyDebugReportCallbackEXT instance' o allocationCallbacks)
+
+-- No documentation found for TopLevel "VK_EXT_DEBUG_REPORT_EXTENSION_NAME"
+pattern EXT_DEBUG_REPORT_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_DEBUG_REPORT_EXTENSION_NAME = VK_EXT_DEBUG_REPORT_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_DEBUG_REPORT_SPEC_VERSION"
+pattern EXT_DEBUG_REPORT_SPEC_VERSION :: Integral a => a
+pattern EXT_DEBUG_REPORT_SPEC_VERSION = VK_EXT_DEBUG_REPORT_SPEC_VERSION
+
+-- No documentation found for TopLevel "STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT"
+pattern STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT :: VkStructureType
+pattern STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT = STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT

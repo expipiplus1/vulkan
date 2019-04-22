@@ -62,7 +62,7 @@ import Graphics.Vulkan.C.Core10.Core
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkValidationFlagsEXT'
 newtype VkValidationCheckEXT = VkValidationCheckEXT Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -95,24 +95,20 @@ pattern VK_VALIDATION_CHECK_SHADERS_EXT = VkValidationCheckEXT 1
 -- | VkValidationFlagsEXT - Specify validation checks to disable for a Vulkan
 -- instance
 --
--- = Description
---
--- Unresolved directive in VkValidationFlagsEXT.txt -
--- include::{generated}\/validity\/structs\/VkValidationFlagsEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType', 'VkValidationCheckEXT'
 data VkValidationFlagsEXT = VkValidationFlagsEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_VALIDATION_FLAGS_EXT'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @disabledValidationCheckCount@ is the number of checks to disable.
+  , -- | @disabledValidationCheckCount@ /must/ be greater than @0@
   vkDisabledValidationCheckCount :: Word32
-  , -- | @pDisabledValidationChecks@ is a pointer to an array of
-  -- 'VkValidationCheckEXT' values specifying the validation checks to be
-  -- disabled.
+  , -- | @pDisabledValidationChecks@ /must/ be a valid pointer to an array of
+  -- @disabledValidationCheckCount@ valid 'VkValidationCheckEXT' values
   vkPDisabledValidationChecks :: Ptr VkValidationCheckEXT
   }
   deriving (Eq, Show)
@@ -136,7 +132,7 @@ instance Zero VkValidationFlagsEXT where
                               zero
 
 -- No documentation found for TopLevel "VK_EXT_VALIDATION_FLAGS_EXTENSION_NAME"
-pattern VK_EXT_VALIDATION_FLAGS_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_VALIDATION_FLAGS_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_VALIDATION_FLAGS_EXTENSION_NAME = "VK_EXT_validation_flags"
 
 -- No documentation found for TopLevel "VK_EXT_VALIDATION_FLAGS_SPEC_VERSION"

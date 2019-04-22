@@ -20,7 +20,7 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_conditional_rendering
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_conditional_rendering.VkConditionalRenderingFlagsEXT'
 type ConditionalRenderingFlagBitsEXT = VkConditionalRenderingFlagBitsEXT
 
 -- | VkConditionalRenderingFlagsEXT - Bitmask of
@@ -34,5 +34,6 @@ type ConditionalRenderingFlagBitsEXT = VkConditionalRenderingFlagBitsEXT
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_conditional_rendering.VkConditionalRenderingBeginInfoEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_conditional_rendering.VkConditionalRenderingFlagBitsEXT'
 type ConditionalRenderingFlagsEXT = ConditionalRenderingFlagBitsEXT

@@ -82,12 +82,9 @@ import Graphics.Vulkan.C.Core10.Core
 -- is set in @pPipelineCreationFeedback@.
 --
 -- When chained to
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkRayTracingPipelineCreateInfoNV'
--- or 'Graphics.Vulkan.C.Core10.Pipeline.VkGraphicsPipelineCreateInfo', the
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkGraphicsPipelineCreateInfo', the
 -- @i@ element of @pPipelineStageCreationFeedbacks@ corresponds to the @i@
 -- element of
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkRayTracingPipelineCreateInfoNV'::@pStages@
--- or
 -- 'Graphics.Vulkan.C.Core10.Pipeline.VkGraphicsPipelineCreateInfo'::@pStages@.
 -- When chained to
 -- 'Graphics.Vulkan.C.Core10.Pipeline.VkComputePipelineCreateInfo', the
@@ -107,21 +104,27 @@ import Graphics.Vulkan.C.Core10.Core
 --     'VkPipelineCreationFeedbackEXT'::@pipelineStageCreationFeedbackCount@
 --     /must/ equal 1
 --
--- -   When chained to
---     'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkRayTracingPipelineCreateInfoNV',
---     'VkPipelineCreationFeedbackEXT'::@pipelineStageCreationFeedbackCount@
---     /must/ equal
---     'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkRayTracingPipelineCreateInfoNV'::@stageCount@
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in VkPipelineCreationFeedbackCreateInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkPipelineCreationFeedbackCreateInfoEXT.txt[]
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO_EXT'
+--
+-- -   @pPipelineCreationFeedback@ /must/ be a valid pointer to a
+--     'VkPipelineCreationFeedbackEXT' structure
+--
+-- -   @pPipelineStageCreationFeedbacks@ /must/ be a valid pointer to an
+--     array of @pipelineStageCreationFeedbackCount@
+--     'VkPipelineCreationFeedbackEXT' structures
+--
+-- -   @pipelineStageCreationFeedbackCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Pipeline.VkComputePipelineCreateInfo',
 -- 'Graphics.Vulkan.C.Core10.Pipeline.VkGraphicsPipelineCreateInfo',
 -- 'VkPipelineCreationFeedbackEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkRayTracingPipelineCreateInfoNV'
+-- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkRayTracingPipelineCreateInfoNV',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPipelineCreationFeedbackCreateInfoEXT = VkPipelineCreationFeedbackCreateInfoEXT
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -170,13 +173,11 @@ instance Zero VkPipelineCreationFeedbackCreateInfoEXT where
 -- @flags@, an implementation /must/ not set any other bits in @flags@, and
 -- all other 'VkPipelineCreationFeedbackEXT' data members are undefined.
 --
--- Unresolved directive in VkPipelineCreationFeedbackEXT.txt -
--- include::{generated}\/validity\/structs\/VkPipelineCreationFeedbackEXT.txt[]
---
 -- = See Also
 --
 -- 'VkPipelineCreationFeedbackCreateInfoEXT',
--- 'VkPipelineCreationFeedbackFlagBitsEXT'
+-- 'VkPipelineCreationFeedbackFlagBitsEXT',
+-- 'VkPipelineCreationFeedbackFlagsEXT'
 data VkPipelineCreationFeedbackEXT = VkPipelineCreationFeedbackEXT
   { -- | @flags@ is a bitmask of 'VkPipelineCreationFeedbackFlagBitsEXT'
   -- providing feedback about the creation of a pipeline or of a pipeline
@@ -208,7 +209,7 @@ instance Zero VkPipelineCreationFeedbackEXT where
 -- = See Also
 --
 -- 'VkPipelineCreationFeedbackCreateInfoEXT',
--- 'VkPipelineCreationFeedbackEXT'
+-- 'VkPipelineCreationFeedbackEXT', 'VkPipelineCreationFeedbackFlagsEXT'
 newtype VkPipelineCreationFeedbackFlagBitsEXT = VkPipelineCreationFeedbackFlagBitsEXT VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -244,9 +245,8 @@ pattern VK_PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT = VkPipelineCreationFeedback
 -- 'VK_PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT'
 -- bit if it was able to avoid the large majority of pipeline or pipeline
 -- stage creation work by using the @pipelineCache@ parameter of
--- 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateGraphicsPipelines',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCreateRayTracingPipelinesNV',
--- or 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateComputePipelines'. When an
+-- 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateGraphicsPipelines', or
+-- 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateComputePipelines'. When an
 -- implementation sets this bit for the entire pipeline, it /may/ leave it
 -- unset for any stage.
 --
@@ -294,7 +294,7 @@ pattern VK_PIPELINE_CREATION_FEEDBACK_BASE_PIPELINE_ACCELERATION_BIT_EXT = VkPip
 type VkPipelineCreationFeedbackFlagsEXT = VkPipelineCreationFeedbackFlagBitsEXT
 
 -- No documentation found for TopLevel "VK_EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME"
-pattern VK_EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME = "VK_EXT_pipeline_creation_feedback"
 
 -- No documentation found for TopLevel "VK_EXT_PIPELINE_CREATION_FEEDBACK_SPEC_VERSION"

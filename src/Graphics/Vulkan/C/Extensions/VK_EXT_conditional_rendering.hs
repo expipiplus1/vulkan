@@ -110,13 +110,15 @@ import Graphics.Vulkan.NamedType
 --     feature is not enabled, @conditionalRenderingEnable@ /must/ be
 --     'Graphics.Vulkan.C.Core10.Core.VK_FALSE'
 --
--- Unresolved directive in
--- VkCommandBufferInheritanceConditionalRenderingInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkCommandBufferInheritanceConditionalRenderingInfoEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_CONDITIONAL_RENDERING_INFO_EXT'
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkCommandBufferInheritanceConditionalRenderingInfoEXT = VkCommandBufferInheritanceConditionalRenderingInfoEXT
   { -- | @sType@ is the type of this structure
   vkSType :: VkStructureType
@@ -175,12 +177,26 @@ instance Zero VkCommandBufferInheritanceConditionalRenderingInfoEXT where
 --
 -- -   @offset@ /must/ be a multiple of 4
 --
--- Unresolved directive in VkConditionalRenderingBeginInfoEXT.txt -
--- include::{generated}\/validity\/structs\/VkConditionalRenderingBeginInfoEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_EXT'
+--
+-- -   @pNext@ /must/ be @NULL@
+--
+-- -   @buffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle
+--
+-- -   @flags@ /must/ be a valid combination of
+--     'VkConditionalRenderingFlagBitsEXT' values
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',
+-- 'VkConditionalRenderingFlagsEXT',
+-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'vkCmdBeginConditionalRenderingEXT'
 data VkConditionalRenderingBeginInfoEXT = VkConditionalRenderingBeginInfoEXT
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -225,7 +241,7 @@ instance Zero VkConditionalRenderingBeginInfoEXT where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkConditionalRenderingFlagsEXT'
 newtype VkConditionalRenderingFlagBitsEXT = VkConditionalRenderingFlagBitsEXT VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -261,7 +277,8 @@ pattern VK_CONDITIONAL_RENDERING_INVERTED_BIT_EXT = VkConditionalRenderingFlagBi
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkConditionalRenderingBeginInfoEXT',
+-- 'VkConditionalRenderingFlagBitsEXT'
 type VkConditionalRenderingFlagsEXT = VkConditionalRenderingFlagBitsEXT
 
 -- | VkPhysicalDeviceConditionalRenderingFeaturesEXT - Structure describing
@@ -279,15 +296,15 @@ type VkConditionalRenderingFlagsEXT = VkConditionalRenderingFlagBitsEXT
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable the
 -- features.
 --
--- Unresolved directive in
--- VkPhysicalDeviceConditionalRenderingFeaturesEXT.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceConditionalRenderingFeaturesEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceConditionalRenderingFeaturesEXT = VkPhysicalDeviceConditionalRenderingFeaturesEXT
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CONDITIONAL_RENDERING_FEATURES_EXT'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -336,12 +353,52 @@ instance Zero VkPhysicalDeviceConditionalRenderingFeaturesEXT where
 -- -   Conditional rendering /must/ not already be
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#active-conditional-rendering active>
 --
--- Unresolved directive in vkCmdBeginConditionalRenderingEXT.txt -
--- include::{generated}\/validity\/protos\/vkCmdBeginConditionalRenderingEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @pConditionalRenderingBegin@ /must/ be a valid pointer to a valid
+--     'VkConditionalRenderingBeginInfoEXT' structure
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics, or
+--     compute operations
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Both            | Graphics        |                 |
+-- > | Secondary       |                 | Compute         |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
+-- 'VkConditionalRenderingBeginInfoEXT'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -388,12 +445,48 @@ type PFN_vkCmdBeginConditionalRenderingEXT = FunPtr FN_vkCmdBeginConditionalRend
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#active-conditional-rendering active>
 --     within a subpass it must be ended in the same subpass
 --
--- Unresolved directive in vkCmdEndConditionalRenderingEXT.txt -
--- include::{generated}\/validity\/protos\/vkCmdEndConditionalRenderingEXT.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics, or
+--     compute operations
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Both            | Graphics        |                 |
+-- > | Secondary       |                 | Compute         |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -414,27 +507,23 @@ foreign import ccall
 type FN_vkCmdEndConditionalRenderingEXT = ("commandBuffer" ::: VkCommandBuffer) -> IO ()
 type PFN_vkCmdEndConditionalRenderingEXT = FunPtr FN_vkCmdEndConditionalRenderingEXT
 
--- | 'VK_ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT' specifies read access to
--- a predicate as part of conditional rendering.
+-- No documentation found for Nested "VkAccessFlagBits" "VK_ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT"
 pattern VK_ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT :: VkAccessFlagBits
 pattern VK_ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT = VkAccessFlagBits 0x00100000
 
--- | 'VK_BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT' specifies that the
--- buffer is suitable for passing as the @buffer@ parameter to
--- 'vkCmdBeginConditionalRenderingEXT'.
+-- No documentation found for Nested "VkBufferUsageFlagBits" "VK_BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT"
 pattern VK_BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT :: VkBufferUsageFlagBits
 pattern VK_BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT = VkBufferUsageFlagBits 0x00000200
 
 -- No documentation found for TopLevel "VK_EXT_CONDITIONAL_RENDERING_EXTENSION_NAME"
-pattern VK_EXT_CONDITIONAL_RENDERING_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_EXT_CONDITIONAL_RENDERING_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_EXT_CONDITIONAL_RENDERING_EXTENSION_NAME = "VK_EXT_conditional_rendering"
 
 -- No documentation found for TopLevel "VK_EXT_CONDITIONAL_RENDERING_SPEC_VERSION"
 pattern VK_EXT_CONDITIONAL_RENDERING_SPEC_VERSION :: Integral a => a
 pattern VK_EXT_CONDITIONAL_RENDERING_SPEC_VERSION = 1
 
--- | 'VK_PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT' specifies the stage of
--- the pipeline where the predicate of conditional rendering is consumed.
+-- No documentation found for Nested "VkPipelineStageFlagBits" "VK_PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT"
 pattern VK_PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT :: VkPipelineStageFlagBits
 pattern VK_PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT = VkPipelineStageFlagBits 0x00040000
 

@@ -44,7 +44,7 @@ pattern VkPhysicalDevice16BitStorageFeaturesKHR :: ("sType" ::: VkStructureType)
 pattern VkPhysicalDevice16BitStorageFeaturesKHR vkSType vkPNext vkStorageBuffer16BitAccess vkUniformAndStorageBuffer16BitAccess vkStoragePushConstant16 vkStorageInputOutput16 = VkPhysicalDevice16BitStorageFeatures vkSType vkPNext vkStorageBuffer16BitAccess vkUniformAndStorageBuffer16BitAccess vkStoragePushConstant16 vkStorageInputOutput16
 
 -- No documentation found for TopLevel "VK_KHR_16BIT_STORAGE_EXTENSION_NAME"
-pattern VK_KHR_16BIT_STORAGE_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_16BIT_STORAGE_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_16BIT_STORAGE_EXTENSION_NAME = "VK_KHR_16bit_storage"
 
 -- No documentation found for TopLevel "VK_KHR_16BIT_STORAGE_SPEC_VERSION"

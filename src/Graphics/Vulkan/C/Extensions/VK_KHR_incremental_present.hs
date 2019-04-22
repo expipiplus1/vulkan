@@ -42,14 +42,15 @@ import Graphics.Vulkan.C.Core10.Pipeline
 -- | VkPresentRegionKHR - Structure containing rectangular region changed by
 -- vkQueuePresentKHR for a given VkImage
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in VkPresentRegionKHR.txt -
--- include::{generated}\/validity\/structs\/VkPresentRegionKHR.txt[]
+-- -   If @rectangleCount@ is not @0@, and @pRectangles@ is not @NULL@,
+--     @pRectangles@ /must/ be a valid pointer to an array of
+--     @rectangleCount@ valid 'VkRectLayerKHR' structures
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkPresentRegionsKHR', 'VkRectLayerKHR'
 data VkPresentRegionKHR = VkPresentRegionKHR
   { -- | @rectangleCount@ is the number of rectangles in @pRectangles@, or zero
   -- if the entire image has changed and should be presented.
@@ -81,21 +82,31 @@ instance Zero VkPresentRegionKHR where
 --
 -- == Valid Usage
 --
--- Unresolved directive in VkPresentRegionsKHR.txt -
--- include::{generated}\/validity\/structs\/VkPresentRegionsKHR.txt[]
+-- -   @swapchainCount@ /must/ be the same value as
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkPresentInfoKHR'::@swapchainCount@,
+--     where
+--     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkPresentInfoKHR' is
+--     in the @pNext@ chain of this 'VkPresentRegionsKHR' structure
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be 'VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR'
+--
+-- -   If @pRegions@ is not @NULL@, @pRegions@ /must/ be a valid pointer to
+--     an array of @swapchainCount@ valid 'VkPresentRegionKHR' structures
+--
+-- -   @swapchainCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'VkPresentRegionKHR', 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPresentRegionsKHR = VkPresentRegionsKHR
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
-  , -- | @swapchainCount@ /must/ be the same value as
-  -- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkPresentInfoKHR'::@swapchainCount@,
-  -- where 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkPresentInfoKHR'
-  -- is in the @pNext@ chain of this 'VkPresentRegionsKHR' structure
+  , -- | @swapchainCount@ is the number of swapchains being presented to by this
+  -- command.
   vkSwapchainCount :: Word32
   , -- | @pRegions@ is @NULL@ or a pointer to an array of 'VkPresentRegionKHR'
   -- elements with @swapchainCount@ entries. If not @NULL@, each element of
@@ -141,9 +152,6 @@ instance Zero VkPresentRegionsKHR where
 --     structure given to
 --     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkCreateSwapchainKHR'.
 --
--- Unresolved directive in VkRectLayerKHR.txt -
--- include::{generated}\/validity\/structs\/VkRectLayerKHR.txt[]
---
 -- Some platforms allow the size of a surface to change, and then scale the
 -- pixels of the image to fit the surface. 'VkRectLayerKHR' specifies
 -- pixels of the swapchain’s image(s), which will be constant for the life
@@ -151,7 +159,8 @@ instance Zero VkPresentRegionsKHR where
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkExtent2D',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkOffset2D', 'VkPresentRegionKHR'
 data VkRectLayerKHR = VkRectLayerKHR
   { -- | @offset@ is the origin of the rectangle, in pixels.
   vkOffset :: VkOffset2D
@@ -179,7 +188,7 @@ instance Zero VkRectLayerKHR where
                         zero
 
 -- No documentation found for TopLevel "VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME"
-pattern VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME = "VK_KHR_incremental_present"
 
 -- No documentation found for TopLevel "VK_KHR_INCREMENTAL_PRESENT_SPEC_VERSION"

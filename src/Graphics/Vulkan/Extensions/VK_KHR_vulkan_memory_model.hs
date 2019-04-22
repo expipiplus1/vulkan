@@ -7,11 +7,14 @@ module Graphics.Vulkan.Extensions.VK_KHR_vulkan_memory_model
   ( withCStructPhysicalDeviceVulkanMemoryModelFeaturesKHR
   , fromCStructPhysicalDeviceVulkanMemoryModelFeaturesKHR
   , PhysicalDeviceVulkanMemoryModelFeaturesKHR(..)
-  , pattern VK_KHR_VULKAN_MEMORY_MODEL_SPEC_VERSION
-  , pattern VK_KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES_KHR
+  , pattern KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME
+  , pattern KHR_VULKAN_MEMORY_MODEL_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES_KHR
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Foreign.Marshal.Utils
   ( maybePeek
   , maybeWith
@@ -26,6 +29,8 @@ import Graphics.Vulkan.C.Core10.Core
   )
 import Graphics.Vulkan.C.Extensions.VK_KHR_vulkan_memory_model
   ( VkPhysicalDeviceVulkanMemoryModelFeaturesKHR(..)
+  , pattern VK_KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME
+  , pattern VK_KHR_VULKAN_MEMORY_MODEL_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES_KHR
   )
 import Graphics.Vulkan.Core10.Core
@@ -37,9 +42,8 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_KHR_vulkan_memory_model
-  ( pattern VK_KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME
-  , pattern VK_KHR_VULKAN_MEMORY_MODEL_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_MEMORY_MODEL_FEATURES_KHR
   )
 
 
@@ -47,15 +51,12 @@ import Graphics.Vulkan.C.Extensions.VK_KHR_vulkan_memory_model
 -- | VkPhysicalDeviceVulkanMemoryModelFeaturesKHR - Structure describing
 -- features supported by VK_KHR_vulkan_memory_model
 --
--- = Description
---
--- Unresolved directive in VkPhysicalDeviceVulkanMemoryModelFeaturesKHR.txt
--- -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceVulkanMemoryModelFeaturesKHR.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceVulkanMemoryModelFeaturesKHR = PhysicalDeviceVulkanMemoryModelFeaturesKHR
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceVulkanMemoryModelFeaturesKHR" "pNext"
@@ -90,3 +91,11 @@ instance Zero PhysicalDeviceVulkanMemoryModelFeaturesKHR where
                                                     False
                                                     False
 
+
+-- No documentation found for TopLevel "VK_KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME"
+pattern KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME = VK_KHR_VULKAN_MEMORY_MODEL_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_KHR_VULKAN_MEMORY_MODEL_SPEC_VERSION"
+pattern KHR_VULKAN_MEMORY_MODEL_SPEC_VERSION :: Integral a => a
+pattern KHR_VULKAN_MEMORY_MODEL_SPEC_VERSION = VK_KHR_VULKAN_MEMORY_MODEL_SPEC_VERSION

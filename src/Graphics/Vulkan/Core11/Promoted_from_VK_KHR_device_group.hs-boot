@@ -92,7 +92,8 @@ type PeerMemoryFeatureFlagBitsKHR = PeerMemoryFeatureFlagBits
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.VkPeerMemoryFeatureFlagBits',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.vkGetDeviceGroupPeerMemoryFeatures'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.vkGetDeviceGroupPeerMemoryFeatures',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_device_group.vkGetDeviceGroupPeerMemoryFeaturesKHR'
 type PeerMemoryFeatureFlags = PeerMemoryFeatureFlagBits
 
 -- No documentation found for TopLevel "PeerMemoryFeatureFlagsKHR"

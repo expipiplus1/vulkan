@@ -25,5 +25,5 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.VkPipelineRasterizationStateStreamCreateInfoEXT'
 type PipelineRasterizationStateStreamCreateFlagsEXT = VkPipelineRasterizationStateStreamCreateFlagsEXT

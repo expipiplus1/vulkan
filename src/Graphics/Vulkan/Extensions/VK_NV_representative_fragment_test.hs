@@ -10,12 +10,15 @@ module Graphics.Vulkan.Extensions.VK_NV_representative_fragment_test
   , withCStructPipelineRepresentativeFragmentTestStateCreateInfoNV
   , fromCStructPipelineRepresentativeFragmentTestStateCreateInfoNV
   , PipelineRepresentativeFragmentTestStateCreateInfoNV(..)
-  , pattern VK_NV_REPRESENTATIVE_FRAGMENT_TEST_SPEC_VERSION
-  , pattern VK_NV_REPRESENTATIVE_FRAGMENT_TEST_EXTENSION_NAME
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_REPRESENTATIVE_FRAGMENT_TEST_FEATURES_NV
-  , pattern VK_STRUCTURE_TYPE_PIPELINE_REPRESENTATIVE_FRAGMENT_TEST_STATE_CREATE_INFO_NV
+  , pattern NV_REPRESENTATIVE_FRAGMENT_TEST_EXTENSION_NAME
+  , pattern NV_REPRESENTATIVE_FRAGMENT_TEST_SPEC_VERSION
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_REPRESENTATIVE_FRAGMENT_TEST_FEATURES_NV
+  , pattern STRUCTURE_TYPE_PIPELINE_REPRESENTATIVE_FRAGMENT_TEST_STATE_CREATE_INFO_NV
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Foreign.Marshal.Utils
   ( maybePeek
   , maybeWith
@@ -31,6 +34,8 @@ import Graphics.Vulkan.C.Core10.Core
 import Graphics.Vulkan.C.Extensions.VK_NV_representative_fragment_test
   ( VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV(..)
   , VkPipelineRepresentativeFragmentTestStateCreateInfoNV(..)
+  , pattern VK_NV_REPRESENTATIVE_FRAGMENT_TEST_EXTENSION_NAME
+  , pattern VK_NV_REPRESENTATIVE_FRAGMENT_TEST_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_REPRESENTATIVE_FRAGMENT_TEST_FEATURES_NV
   , pattern VK_STRUCTURE_TYPE_PIPELINE_REPRESENTATIVE_FRAGMENT_TEST_STATE_CREATE_INFO_NV
   )
@@ -43,9 +48,9 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_NV_representative_fragment_test
-  ( pattern VK_NV_REPRESENTATIVE_FRAGMENT_TEST_EXTENSION_NAME
-  , pattern VK_NV_REPRESENTATIVE_FRAGMENT_TEST_SPEC_VERSION
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_REPRESENTATIVE_FRAGMENT_TEST_FEATURES_NV
+  , pattern STRUCTURE_TYPE_PIPELINE_REPRESENTATIVE_FRAGMENT_TEST_STATE_CREATE_INFO_NV
   )
 
 
@@ -72,13 +77,12 @@ import Graphics.Vulkan.C.Extensions.VK_NV_representative_fragment_test
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable the
 -- feature.
 --
--- Unresolved directive in
--- VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceRepresentativeFragmentTestFeaturesNV = PhysicalDeviceRepresentativeFragmentTestFeaturesNV
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceRepresentativeFragmentTestFeaturesNV" "pNext"
@@ -121,13 +125,12 @@ instance Zero PhysicalDeviceRepresentativeFragmentTestFeaturesNV where
 -- are not enabled in the active fragment shader, the representative
 -- fragment shader test has no effect, even if enabled.
 --
--- Unresolved directive in
--- VkPipelineRepresentativeFragmentTestStateCreateInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkPipelineRepresentativeFragmentTestStateCreateInfoNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PipelineRepresentativeFragmentTestStateCreateInfoNV = PipelineRepresentativeFragmentTestStateCreateInfoNV
   { -- Univalued member elided
   -- No documentation found for Nested "PipelineRepresentativeFragmentTestStateCreateInfoNV" "pNext"
@@ -154,3 +157,11 @@ instance Zero PipelineRepresentativeFragmentTestStateCreateInfoNV where
   zero = PipelineRepresentativeFragmentTestStateCreateInfoNV Nothing
                                                              False
 
+
+-- No documentation found for TopLevel "VK_NV_REPRESENTATIVE_FRAGMENT_TEST_EXTENSION_NAME"
+pattern NV_REPRESENTATIVE_FRAGMENT_TEST_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern NV_REPRESENTATIVE_FRAGMENT_TEST_EXTENSION_NAME = VK_NV_REPRESENTATIVE_FRAGMENT_TEST_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_NV_REPRESENTATIVE_FRAGMENT_TEST_SPEC_VERSION"
+pattern NV_REPRESENTATIVE_FRAGMENT_TEST_SPEC_VERSION :: Integral a => a
+pattern NV_REPRESENTATIVE_FRAGMENT_TEST_SPEC_VERSION = VK_NV_REPRESENTATIVE_FRAGMENT_TEST_SPEC_VERSION

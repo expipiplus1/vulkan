@@ -82,24 +82,18 @@ import Graphics.Vulkan.NamedType
 -- no matching @flags@ were specified at device creation time then @pQueue@
 -- will return 'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE'.
 --
--- == Valid Usage
---
--- Unresolved directive in VkDeviceQueueInfo2.txt -
--- include::{generated}\/validity\/structs\/VkDeviceQueueInfo2.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Device.VkDeviceQueueCreateFlags',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType', 'vkGetDeviceQueue2'
 data VkDeviceQueueInfo2 = VkDeviceQueueInfo2
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2'
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure. The
-  -- @pNext@ chain of 'VkDeviceQueueInfo2' is used to provide additional
-  -- image parameters to 'vkGetDeviceQueue2'.
+  , -- | @pNext@ /must/ be @NULL@
   vkPNext :: Ptr ()
-  , -- | @flags@ is a 'Graphics.Vulkan.C.Core10.Device.VkDeviceQueueCreateFlags'
-  -- value indicating the flags used to create the device queue.
+  , -- | @flags@ /must/ not be @0@
   vkFlags :: VkDeviceQueueCreateFlags
   , -- | @queueFamilyIndex@ /must/ be one of the queue family indices specified
   -- when @device@ was created, via the
@@ -146,15 +140,15 @@ instance Zero VkDeviceQueueInfo2 where
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2',
 -- it is filled with a value indicating whether the feature is supported.
 --
--- Unresolved directive in VkPhysicalDeviceProtectedMemoryFeatures.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceProtectedMemoryFeatures.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceProtectedMemoryFeatures = VkPhysicalDeviceProtectedMemoryFeatures
-  { -- No documentation found for Nested "VkPhysicalDeviceProtectedMemoryFeatures" "sType"
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES'
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceProtectedMemoryFeatures" "pNext"
   vkPNext :: Ptr ()
@@ -189,15 +183,15 @@ instance Zero VkPhysicalDeviceProtectedMemoryFeatures where
 -- it is filled with a value indicating the implementation-dependent
 -- behavior.
 --
--- Unresolved directive in VkPhysicalDeviceProtectedMemoryProperties.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceProtectedMemoryProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceProtectedMemoryProperties = VkPhysicalDeviceProtectedMemoryProperties
-  { -- | @sType@ is the type of this structure.
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES'
   vkSType :: VkStructureType
   , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
   vkPNext :: Ptr ()
@@ -246,8 +240,9 @@ instance Zero VkPhysicalDeviceProtectedMemoryProperties where
 --     element of the command buffer of the @pCommandBuffers@ array /must/
 --     be an unprotected command buffer.
 --
--- Unresolved directive in VkProtectedSubmitInfo.txt -
--- include::{generated}\/validity\/structs\/VkProtectedSubmitInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be 'VK_STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO'
 --
 -- = See Also
 --
@@ -296,10 +291,7 @@ instance Zero VkProtectedSubmitInfo where
 -- -   @pQueue@ is a pointer to a 'Graphics.Vulkan.C.Core10.Queue.VkQueue'
 --     object that will be filled with the handle for the requested queue.
 --
--- = Description
---
--- Unresolved directive in vkGetDeviceQueue2.txt -
--- include::{generated}\/validity\/protos\/vkGetDeviceQueue2.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --

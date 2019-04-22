@@ -143,10 +143,7 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
 -- | VkCommandBufferAllocateInfo - Structure specifying the allocation
 -- parameters for command buffer object
 --
--- == Valid Usage
---
--- Unresolved directive in VkCommandBufferAllocateInfo.txt -
--- include::{generated}\/validity\/structs\/VkCommandBufferAllocateInfo.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -212,8 +209,17 @@ instance Zero CommandBufferAllocateInfo where
 --     'Graphics.Vulkan.C.Core10.Pass.VkFramebuffer' that is compatible
 --     with the @renderPass@ member of @pInheritanceInfo@
 --
--- Unresolved directive in VkCommandBufferBeginInfo.txt -
--- include::{generated}\/validity\/structs\/VkCommandBufferBeginInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO'
+--
+-- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+--     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.VkDeviceGroupCommandBufferBeginInfo'
+--
+-- -   @flags@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferUsageFlagBits'
+--     values
 --
 -- = See Also
 --
@@ -273,8 +279,17 @@ instance Zero CommandBufferBeginInfo where
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-pipelineStatisticsQuery pipeline statistics queries>
 --     feature is not enabled, @pipelineStatistics@ /must/ be @0@
 --
--- Unresolved directive in VkCommandBufferInheritanceInfo.txt -
--- include::{generated}\/validity\/structs\/VkCommandBufferInheritanceInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO'
+--
+-- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_conditional_rendering.VkCommandBufferInheritanceConditionalRenderingInfoEXT'
+--
+-- -   Both of @framebuffer@, and @renderPass@ that are valid handles
+--     /must/ have been created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
 -- = See Also
 --
@@ -340,6 +355,9 @@ instance Zero CommandBufferInheritanceInfo where
 type CommandBufferLevel = VkCommandBufferLevel
 
 
+{-# complete COMMAND_BUFFER_LEVEL_PRIMARY, COMMAND_BUFFER_LEVEL_SECONDARY :: CommandBufferLevel #-}
+
+
 -- | 'Graphics.Vulkan.C.Core10.CommandBuffer.VK_COMMAND_BUFFER_LEVEL_PRIMARY'
 -- specifies a primary command buffer.
 pattern COMMAND_BUFFER_LEVEL_PRIMARY :: (a ~ CommandBufferLevel) => a
@@ -358,6 +376,9 @@ pattern COMMAND_BUFFER_LEVEL_SECONDARY = VK_COMMAND_BUFFER_LEVEL_SECONDARY
 --
 -- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferResetFlags'
 type CommandBufferResetFlagBits = VkCommandBufferResetFlagBits
+
+
+{-# complete COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT :: CommandBufferResetFlagBits #-}
 
 
 -- | 'Graphics.Vulkan.C.Core10.CommandBuffer.VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT'
@@ -391,6 +412,9 @@ type CommandBufferResetFlags = CommandBufferResetFlagBits
 --
 -- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferUsageFlags'
 type CommandBufferUsageFlagBits = VkCommandBufferUsageFlagBits
+
+
+{-# complete COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT, COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT, COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT :: CommandBufferUsageFlagBits #-}
 
 
 -- | 'Graphics.Vulkan.C.Core10.CommandBuffer.VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT'
@@ -438,6 +462,9 @@ type CommandBufferUsageFlags = CommandBufferUsageFlagBits
 type QueryControlFlagBits = VkQueryControlFlagBits
 
 
+{-# complete QUERY_CONTROL_PRECISE_BIT :: QueryControlFlagBits #-}
+
+
 -- | 'Graphics.Vulkan.C.Core10.CommandBuffer.VK_QUERY_CONTROL_PRECISE_BIT'
 -- specifies the precision of
 -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#queries-occlusion occlusion queries>.
@@ -456,7 +483,8 @@ pattern QUERY_CONTROL_PRECISE_BIT = VK_QUERY_CONTROL_PRECISE_BIT
 --
 -- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferInheritanceInfo',
 -- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkQueryControlFlagBits',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBeginQuery'
+-- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBeginQuery',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdBeginQueryIndexedEXT'
 type QueryControlFlags = QueryControlFlagBits
 
 
@@ -480,17 +508,36 @@ type QueryControlFlags = QueryControlFlagBits
 --
 -- = Description
 --
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.vkAllocateCommandBuffers' /can/
--- be used to create multiple command buffers. If the creation of any of
--- those command buffers fails, the implementation /must/ destroy all
--- successfully created command buffer objects from this command, set all
--- entries of the @pCommandBuffers@ array to @NULL@ and return the error.
---
 -- When command buffers are first allocated, they are in the
 -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>.
 --
--- Unresolved directive in vkAllocateCommandBuffers.txt -
--- include::{generated}\/validity\/protos\/vkAllocateCommandBuffers.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pAllocateInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferAllocateInfo'
+--     structure
+--
+-- -   @pCommandBuffers@ /must/ be a valid pointer to an array of
+--     @pAllocateInfo@::commandBufferCount
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handles
+--
+-- == Host Synchronization
+--
+-- -   Host access to @pAllocateInfo@::commandPool /must/ be externally
+--     synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -538,8 +585,32 @@ allocateCommandBuffers = \(Device device' commandTable) -> \allocateInfo' -> all
 --     contain
 --     'Graphics.Vulkan.C.Core10.CommandBuffer.VK_QUERY_CONTROL_PRECISE_BIT'
 --
--- Unresolved directive in vkBeginCommandBuffer.txt -
--- include::{generated}\/validity\/protos\/vkBeginCommandBuffer.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @pBeginInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferBeginInfo'
+--     structure
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -579,25 +650,28 @@ beginCommandBuffer = \(CommandBuffer commandBuffer' commandTable) -> \beginInfo'
 --     during the recording of @commandBuffer@ /must/ have been made
 --     inactive
 --
--- -   Conditional rendering must not be
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#active-conditional-rendering active>
+-- == Valid Usage (Implicit)
 --
--- -   If @commandBuffer@ is a secondary command buffer, there /must/ not
---     be an outstanding
---     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.vkCmdBeginDebugUtilsLabelEXT'
---     command recorded to @commandBuffer@ that has not previously been
---     ended by a call to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.vkCmdEndDebugUtilsLabelEXT'.
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
 --
--- -   If @commandBuffer@ is a secondary command buffer, there /must/ not
---     be an outstanding
---     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.vkCmdDebugMarkerBeginEXT'
---     command recorded to @commandBuffer@ that has not previously been
---     ended by a call to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.vkCmdDebugMarkerEndEXT'.
+-- == Host Synchronization
 --
--- Unresolved directive in vkEndCommandBuffer.txt -
--- include::{generated}\/validity\/protos\/vkEndCommandBuffer.txt[]
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -636,8 +710,28 @@ endCommandBuffer = \(CommandBuffer commandBuffer' commandTable) -> vkEndCommandB
 --     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handles, each
 --     element of which /must/ either be a valid handle or @NULL@
 --
--- Unresolved directive in vkFreeCommandBuffers.txt -
--- include::{generated}\/validity\/protos\/vkFreeCommandBuffers.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @commandPool@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' handle
+--
+-- -   @commandBufferCount@ /must/ be greater than @0@
+--
+-- -   @commandPool@ /must/ have been created, allocated, or retrieved from
+--     @device@
+--
+-- -   Each element of @pCommandBuffers@ that is a valid handle /must/ have
+--     been created, allocated, or retrieved from @commandPool@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandPool@ /must/ be externally synchronized
+--
+-- -   Host access to each member of @pCommandBuffers@ /must/ be externally
+--     synchronized
 --
 -- = See Also
 --
@@ -671,8 +765,35 @@ freeCommandBuffers = \(Device device' commandTable) -> \commandPool' -> \command
 --
 -- == Valid Usage
 --
--- Unresolved directive in vkResetCommandBuffer.txt -
--- include::{generated}\/validity\/protos\/vkResetCommandBuffer.txt[]
+-- -   @commandBuffer@ /must/ not be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
+--
+-- -   @commandBuffer@ /must/ have been allocated from a pool that was
+--     created with the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT'
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @flags@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferResetFlagBits'
+--     values
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --

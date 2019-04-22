@@ -54,7 +54,9 @@ data VkSamplerYcbcrConversion_T
 -- = See Also
 --
 -- 'VkSamplerYcbcrConversionInfo', 'vkCreateSamplerYcbcrConversion',
--- 'vkDestroySamplerYcbcrConversion'
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_sampler_ycbcr_conversion.vkCreateSamplerYcbcrConversionKHR',
+-- 'vkDestroySamplerYcbcrConversion',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_sampler_ycbcr_conversion.vkDestroySamplerYcbcrConversionKHR'
 type VkSamplerYcbcrConversion = Ptr VkSamplerYcbcrConversion_T
 
 data VkSamplerYcbcrConversionCreateInfo

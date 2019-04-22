@@ -46,7 +46,8 @@ data VkCommandPool_T
 -- 'vkCreateCommandPool', 'vkDestroyCommandPool',
 -- 'Graphics.Vulkan.C.Core10.CommandBuffer.vkFreeCommandBuffers',
 -- 'vkResetCommandPool',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.vkTrimCommandPool'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.vkTrimCommandPool',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_maintenance1.vkTrimCommandPoolKHR'
 type VkCommandPool = Ptr VkCommandPool_T
 
 data VkCommandPoolCreateFlagBits

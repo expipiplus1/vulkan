@@ -28,14 +28,14 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance2
   , pattern TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT
   , pattern TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT
   , TessellationDomainOriginKHR
-  , pattern VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT
-  , pattern VK_IMAGE_CREATE_EXTENDED_USAGE_BIT
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES
-  , pattern VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO
-  , pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO
-  , pattern VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO
-  , pattern VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL
-  , pattern VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL
+  , pattern IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT
+  , pattern IMAGE_CREATE_EXTENDED_USAGE_BIT
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES
+  , pattern STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO
+  , pattern STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO
+  , pattern STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO
+  , pattern IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL
+  , pattern IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL
   ) where
 
 import Control.Monad
@@ -98,11 +98,19 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2
-  ( pattern VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT
-  , pattern VK_IMAGE_CREATE_EXTENDED_USAGE_BIT
-  , pattern VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL
-  , pattern VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES
+  , pattern STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO
+  , pattern STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO
+  )
+import Graphics.Vulkan.Core10.DeviceInitialization
+  ( pattern IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT
+  , pattern IMAGE_CREATE_EXTENDED_USAGE_BIT
+  )
+import Graphics.Vulkan.Core10.Image
+  ( pattern IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL
+  , pattern IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL
   )
 
 
@@ -118,8 +126,7 @@ import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2
 -- determining the valid usage conditions of
 -- 'Graphics.Vulkan.C.Core10.ImageView.VkImageViewCreateInfo'.
 --
--- Unresolved directive in VkImageViewUsageCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkImageViewUsageCreateInfo.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -156,10 +163,7 @@ instance Zero ImageViewUsageCreateInfo where
 -- | VkInputAttachmentAspectReference - Structure specifying a subpass\/input
 -- attachment pair and an aspect mask that /can/ be read.
 --
--- == Valid Usage
---
--- Unresolved directive in VkInputAttachmentAspectReference.txt -
--- include::{generated}\/validity\/structs\/VkInputAttachmentAspectReference.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -212,8 +216,7 @@ instance Zero InputAttachmentAspectReference where
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
 -- it is filled with the implementation-dependent limits.
 --
--- Unresolved directive in VkPhysicalDevicePointClippingProperties.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDevicePointClippingProperties.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -260,9 +263,7 @@ instance Zero PhysicalDevicePointClippingProperties where
 -- not present, it is as if @domainOrigin@ were
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT'.
 --
--- Unresolved directive in
--- VkPipelineTessellationDomainOriginStateCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkPipelineTessellationDomainOriginStateCreateInfo.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -303,6 +304,9 @@ instance Zero PipelineTessellationDomainOriginStateCreateInfo where
 type PointClippingBehavior = VkPointClippingBehavior
 
 
+{-# complete POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES, POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY :: PointClippingBehavior #-}
+
+
 -- | 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES'
 -- specifies that the primitive is discarded if the vertex lies outside any
 -- clip plane, including the planes bounding the view volume.
@@ -323,11 +327,7 @@ type PointClippingBehaviorKHR = PointClippingBehavior
 -- | VkRenderPassInputAttachmentAspectCreateInfo - Structure specifying, for
 -- a given subpass\/input attachment pair, which aspect /can/ be read.
 --
--- = Description
---
--- Unresolved directive in VkRenderPassInputAttachmentAspectCreateInfo.txt
--- -
--- include::{generated}\/validity\/structs\/VkRenderPassInputAttachmentAspectCreateInfo.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -374,6 +374,9 @@ instance Zero RenderPassInputAttachmentAspectCreateInfo where
 --
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VkPipelineTessellationDomainOriginStateCreateInfo'
 type TessellationDomainOrigin = VkTessellationDomainOrigin
+
+
+{-# complete TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT, TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT :: TessellationDomainOrigin #-}
 
 
 -- | 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT'

@@ -78,14 +78,15 @@ import Graphics.Vulkan.NamedType
 -- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to
 -- enable the feature.
 --
--- Unresolved directive in VkPhysicalDeviceExclusiveScissorFeaturesNV.txt -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceExclusiveScissorFeaturesNV.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPhysicalDeviceExclusiveScissorFeaturesNV = VkPhysicalDeviceExclusiveScissorFeaturesNV
-  { -- No documentation found for Nested "VkPhysicalDeviceExclusiveScissorFeaturesNV" "sType"
+  { -- | @sType@ /must/ be
+  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXCLUSIVE_SCISSOR_FEATURES_NV'
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceExclusiveScissorFeaturesNV" "pNext"
   vkPNext :: Ptr ()
@@ -137,13 +138,20 @@ instance Zero VkPhysicalDeviceExclusiveScissorFeaturesNV where
 --     array of @exclusiveScissorCount@
 --     'Graphics.Vulkan.C.Core10.Pipeline.VkRect2D' structures
 --
--- Unresolved directive in
--- VkPipelineViewportExclusiveScissorStateCreateInfoNV.txt -
--- include::{generated}\/validity\/structs\/VkPipelineViewportExclusiveScissorStateCreateInfoNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV'
+--
+-- -   If @exclusiveScissorCount@ is not @0@, and @pExclusiveScissors@ is
+--     not @NULL@, @pExclusiveScissors@ /must/ be a valid pointer to an
+--     array of @exclusiveScissorCount@
+--     'Graphics.Vulkan.C.Core10.Pipeline.VkRect2D' structures
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkRect2D',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data VkPipelineViewportExclusiveScissorStateCreateInfoNV = VkPipelineViewportExclusiveScissorStateCreateInfoNV
   { -- | @sType@ is the type of this structure.
   vkSType :: VkStructureType
@@ -244,12 +252,55 @@ instance Zero VkPipelineViewportExclusiveScissorStateCreateInfoNV where
 --     @pExclusiveScissors@ /must/ not cause a signed integer addition
 --     overflow
 --
--- Unresolved directive in vkCmdSetExclusiveScissorNV.txt -
--- include::{generated}\/validity\/protos\/vkCmdSetExclusiveScissorNV.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @commandBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle
+--
+-- -   @pExclusiveScissors@ /must/ be a valid pointer to an array of
+--     @exclusiveScissorCount@ 'Graphics.Vulkan.C.Core10.Pipeline.VkRect2D'
+--     structures
+--
+-- -   @commandBuffer@ /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
+--
+-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
+--
+-- -   @exclusiveScissorCount@ /must/ be greater than @0@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
+--
+-- -   Host access to the
+--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
+--
+-- == Command Properties
+--
+-- \'
+--
+-- > +-----------------+-----------------+-----------------+-----------------+
+-- > | <https://www.kh | <https://www.kh | <https://www.kh | <https://www.kh |
+-- > | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |
+-- > | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |
+-- > | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |
+-- > | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |
+-- > | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |
+-- > | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |
+-- > | nd Buffer Level | r Pass Scope>   | Queue Types>    | tages-types Pip |
+-- > | s>              |                 |                 | eline Type>     |
+-- > +=================+=================+=================+=================+
+-- > | Primary         | Both            | Graphics        |                 |
+-- > | Secondary       |                 |                 |                 |
+-- > +-----------------+-----------------+-----------------+-----------------+
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',
+-- 'Graphics.Vulkan.C.Core10.Pipeline.VkRect2D'
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -270,18 +321,12 @@ foreign import ccall
 type FN_vkCmdSetExclusiveScissorNV = ("commandBuffer" ::: VkCommandBuffer) -> ("firstExclusiveScissor" ::: Word32) -> ("exclusiveScissorCount" ::: Word32) -> ("pExclusiveScissors" ::: Ptr VkRect2D) -> IO ()
 type PFN_vkCmdSetExclusiveScissorNV = FunPtr FN_vkCmdSetExclusiveScissorNV
 
--- | 'VK_DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV' specifies that the
--- @pExclusiveScissors@ state in
--- 'VkPipelineViewportExclusiveScissorStateCreateInfoNV' will be ignored
--- and /must/ be set dynamically with 'vkCmdSetExclusiveScissorNV' before
--- any draw commands. The number of exclusive scissor rectangles used by a
--- pipeline is still specified by the @exclusiveScissorCount@ member of
--- 'VkPipelineViewportExclusiveScissorStateCreateInfoNV'.
+-- No documentation found for Nested "VkDynamicState" "VK_DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV"
 pattern VK_DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV :: VkDynamicState
 pattern VK_DYNAMIC_STATE_EXCLUSIVE_SCISSOR_NV = VkDynamicState 1000205001
 
 -- No documentation found for TopLevel "VK_NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME"
-pattern VK_NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME :: (Eq a ,IsString a) => a
+pattern VK_NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME :: (Eq a, IsString a) => a
 pattern VK_NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME = "VK_NV_scissor_exclusive"
 
 -- No documentation found for TopLevel "VK_NV_SCISSOR_EXCLUSIVE_SPEC_VERSION"

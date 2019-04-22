@@ -21,7 +21,8 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feed
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback.VkPipelineCreationFeedbackCreateInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback.VkPipelineCreationFeedbackEXT'
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback.VkPipelineCreationFeedbackEXT',
+-- 'Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback.VkPipelineCreationFeedbackFlagsEXT'
 type PipelineCreationFeedbackFlagBitsEXT = VkPipelineCreationFeedbackFlagBitsEXT
 
 -- | VkPipelineCreationFeedbackFlagsEXT - Bitmask of

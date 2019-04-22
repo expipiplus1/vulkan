@@ -17,6 +17,7 @@ module Graphics.Vulkan.Core10.DescriptorSet
   , DescriptorPool
   , DescriptorPoolCreateFlagBits
   , pattern DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT
+  , pattern DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT
   , DescriptorPoolCreateFlags
   , withCStructDescriptorPoolCreateInfo
   , fromCStructDescriptorPoolCreateInfo
@@ -33,6 +34,8 @@ module Graphics.Vulkan.Core10.DescriptorSet
   , fromCStructDescriptorSetLayoutBinding
   , DescriptorSetLayoutBinding(..)
   , DescriptorSetLayoutCreateFlagBits
+  , pattern DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR
+  , pattern DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT
   , DescriptorSetLayoutCreateFlags
   , withCStructDescriptorSetLayoutCreateInfo
   , fromCStructDescriptorSetLayoutCreateInfo
@@ -49,6 +52,8 @@ module Graphics.Vulkan.Core10.DescriptorSet
   , pattern DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC
   , pattern DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC
   , pattern DESCRIPTOR_TYPE_INPUT_ATTACHMENT
+  , pattern DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT
+  , pattern DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV
   , withCStructWriteDescriptorSet
   , fromCStructWriteDescriptorSet
   , WriteDescriptorSet(..)
@@ -159,6 +164,19 @@ import Graphics.Vulkan.C.Core10.DescriptorSet
   , pattern VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC
   , pattern VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER
   )
+import Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing
+  ( pattern VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT
+  , pattern VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block
+  ( pattern VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT
+  )
+import Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor
+  ( pattern VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR
+  )
+import Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing
+  ( pattern VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV
+  )
 import Graphics.Vulkan.Core10.BufferView
   ( BufferView
   )
@@ -227,53 +245,22 @@ import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
 --     include array elements from consecutive bindings as described by
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-updates-consecutive>
 --
--- -   If the descriptor type of the descriptor set binding specified by
---     @srcBinding@ is
---     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
---     @srcArrayElement@ /must/ be an integer multiple of @4@
+-- == Valid Usage (Implicit)
 --
--- -   If the descriptor type of the descriptor set binding specified by
---     @dstBinding@ is
---     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
---     @dstArrayElement@ /must/ be an integer multiple of @4@
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_COPY_DESCRIPTOR_SET'
 --
--- -   If the descriptor type of the descriptor set binding specified by
---     either @srcBinding@ or @dstBinding@ is
---     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
---     @descriptorCount@ /must/ be an integer multiple of @4@
+-- -   @pNext@ /must/ be @NULL@
 --
--- -   If @srcSet@’s layout was created with the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
---     flag set, then @dstSet@’s layout /must/ also have been created with
---     the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
---     flag set
+-- -   @srcSet@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSet' handle
 --
--- -   If @srcSet@’s layout was created without the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
---     flag set, then @dstSet@’s layout /must/ also have been created
---     without the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
---     flag set
+-- -   @dstSet@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSet' handle
 --
--- -   If the descriptor pool from which @srcSet@ was allocated was created
---     with the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT'
---     flag set, then the descriptor pool from which @dstSet@ was allocated
---     /must/ also have been created with the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT'
---     flag set
---
--- -   If the descriptor pool from which @srcSet@ was allocated was created
---     without the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT'
---     flag set, then the descriptor pool from which @dstSet@ was allocated
---     /must/ also have been created without the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT'
---     flag set
---
--- Unresolved directive in VkCopyDescriptorSet.txt -
--- include::{generated}\/validity\/structs\/VkCopyDescriptorSet.txt[]
+-- -   Both of @dstSet@, and @srcSet@ /must/ have been created, allocated,
+--     or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
 -- = See Also
 --
@@ -369,8 +356,10 @@ instance Zero CopyDescriptorSet where
 --     'Graphics.Vulkan.C.Core10.Constants.VK_WHOLE_SIZE', @range@ /must/
 --     be less than or equal to the size of @buffer@ minus @offset@
 --
--- Unresolved directive in VkDescriptorBufferInfo.txt -
--- include::{generated}\/validity\/structs\/VkDescriptorBufferInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @buffer@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle
 --
 -- = See Also
 --
@@ -417,9 +406,6 @@ instance Zero DescriptorBufferInfo where
 --
 -- == Valid Usage
 --
--- -   @imageView@ /must/ not be 2D or 2D array image view created from a
---     3D image
---
 -- -   If @imageView@ is created from a depth\/stencil image, the
 --     @aspectMask@ used to create the @imageView@ /must/ include either
 --     'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VK_IMAGE_ASPECT_DEPTH_BIT'
@@ -433,19 +419,11 @@ instance Zero DescriptorBufferInfo where
 --     as defined by the
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-image-layouts-matching-rule image layout matching rules>
 --
--- -   If @sampler@ is used and the
---     'Graphics.Vulkan.C.Core10.Core.VkFormat' of the image is a
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
---     the image /must/ have been created with
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT',
---     and the @aspectMask@ of the @imageView@ /must/ be
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_0_BIT',
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_1_BIT'
---     or (for three-plane formats only)
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_ASPECT_PLANE_2_BIT'
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in VkDescriptorImageInfo.txt -
--- include::{generated}\/validity\/structs\/VkDescriptorImageInfo.txt[]
+-- -   Both of @imageView@, and @sampler@ that are valid handles /must/
+--     have been created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
 -- = See Also
 --
@@ -502,6 +480,9 @@ type DescriptorPool = VkDescriptorPool
 type DescriptorPoolCreateFlagBits = VkDescriptorPoolCreateFlagBits
 
 
+{-# complete DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT, DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT :: DescriptorPoolCreateFlagBits #-}
+
+
 -- | 'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT'
 -- specifies that descriptor sets /can/ return their individual allocations
 -- to the pool, i.e. all of
@@ -515,6 +496,11 @@ type DescriptorPoolCreateFlagBits = VkDescriptorPoolCreateFlagBits
 -- allowed.
 pattern DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT :: (a ~ DescriptorPoolCreateFlagBits) => a
 pattern DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT
+
+
+-- No documentation found for Nested "DescriptorPoolCreateFlagBits" "DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT"
+pattern DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT :: (a ~ DescriptorPoolCreateFlagBits) => a
+pattern DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT
 
 -- | VkDescriptorPoolCreateFlags - Bitmask of VkDescriptorPoolCreateFlagBits
 --
@@ -565,19 +551,7 @@ type DescriptorPoolCreateFlags = DescriptorPoolCreateFlagBits
 -- /can/ create an additional descriptor pool to perform further descriptor
 -- set allocations.
 --
--- If @flags@ has the
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT'
--- bit set, descriptor pool creation /may/ fail with the error
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_ERROR_FRAGMENTATION_EXT'
--- if the total number of descriptors across all pools (including this one)
--- created with this bit set exceeds
--- @maxUpdateAfterBindDescriptorsInAllPools@, or if fragmentation of the
--- underlying hardware resources occurs.
---
--- == Valid Usage
---
--- Unresolved directive in VkDescriptorPoolCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkDescriptorPoolCreateInfo.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -636,18 +610,12 @@ instance Zero DescriptorPoolCreateInfo where
 type DescriptorPoolResetFlags = VkDescriptorPoolResetFlags
 
 
+-- No complete pragma for DescriptorPoolResetFlags as it has no patterns
+
+
 -- | VkDescriptorPoolSize - Structure specifying descriptor pool size
 --
--- == Valid Usage
---
--- -   @descriptorCount@ /must/ be greater than @0@
---
--- -   If @type@ is
---     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
---     then @descriptorCount@ /must/ be a multiple of @4@
---
--- Unresolved directive in VkDescriptorPoolSize.txt -
--- include::{generated}\/validity\/structs\/VkDescriptorPoolSize.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
@@ -683,11 +651,13 @@ instance Zero DescriptorPoolSize where
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkCopyDescriptorSet',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkObjectTableDescriptorSetEntryNVX',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkWriteDescriptorSet',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkAllocateDescriptorSets',
 -- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindDescriptorSets',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkFreeDescriptorSets',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.vkUpdateDescriptorSetWithTemplate'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.vkUpdateDescriptorSetWithTemplate',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template.vkUpdateDescriptorSetWithTemplateKHR'
 type DescriptorSet = VkDescriptorSet
 
 
@@ -696,18 +666,33 @@ type DescriptorSet = VkDescriptorSet
 --
 -- == Valid Usage
 --
--- -   Each element of @pSetLayouts@ /must/ not have been created with
---     'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
---     set
+-- -   @descriptorSetCount@ /must/ not be greater than the number of sets
+--     that are currently available for allocation in @descriptorPool@
 --
--- -   If any element of @pSetLayouts@ was created with the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
---     bit set, @descriptorPool@ /must/ have been created with the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT'
---     flag set
+-- -   @descriptorPool@ /must/ have enough free descriptor capacity
+--     remaining to allocate the descriptor sets of the specified layouts
 --
--- Unresolved directive in VkDescriptorSetAllocateInfo.txt -
--- include::{generated}\/validity\/structs\/VkDescriptorSetAllocateInfo.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO'
+--
+-- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkDescriptorSetVariableDescriptorCountAllocateInfoEXT'
+--
+-- -   @descriptorPool@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorPool' handle
+--
+-- -   @pSetLayouts@ /must/ be a valid pointer to an array of
+--     @descriptorSetCount@ valid
+--     'Graphics.Vulkan.C.Core10.PipelineLayout.VkDescriptorSetLayout'
+--     handles
+--
+-- -   @descriptorSetCount@ /must/ be greater than @0@
+--
+-- -   Both of @descriptorPool@, and the elements of @pSetLayouts@ /must/
+--     have been created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
 -- = See Also
 --
@@ -799,15 +784,6 @@ instance Zero DescriptorSetAllocateInfo where
 --     of @descriptorCount@ valid
 --     'Graphics.Vulkan.C.Core10.Sampler.VkSampler' handles
 --
--- -   If @descriptorType@ is
---     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
---     then @descriptorCount@ /must/ be a multiple of @4@
---
--- -   If @descriptorType@ is
---     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
---     then @descriptorCount@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VkPhysicalDeviceInlineUniformBlockPropertiesEXT'::@maxInlineUniformBlockSize@
---
 -- -   If @descriptorCount@ is not @0@, @stageFlags@ /must/ be a valid
 --     combination of
 --     'Graphics.Vulkan.C.Core10.Pipeline.VkShaderStageFlagBits' values
@@ -817,8 +793,10 @@ instance Zero DescriptorSetAllocateInfo where
 --     and @descriptorCount@ is not @0@, then @stageFlags@ /must/ be @0@ or
 --     'Graphics.Vulkan.C.Core10.Pipeline.VK_SHADER_STAGE_FRAGMENT_BIT'
 --
--- Unresolved directive in VkDescriptorSetLayoutBinding.txt -
--- include::{generated}\/validity\/structs\/VkDescriptorSetLayoutBinding.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @descriptorType@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorType' value
 --
 -- = See Also
 --
@@ -864,10 +842,30 @@ instance Zero DescriptorSetLayoutBinding where
 -- | VkDescriptorSetLayoutCreateFlagBits - Bitmask specifying descriptor set
 -- layout properties
 --
+-- = Description
+--
+-- __Note__
+--
+-- All bits for this type are defined by extensions, and none of those
+-- extensions are enabled in this build of the specification.
+--
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutCreateFlags'
 type DescriptorSetLayoutCreateFlagBits = VkDescriptorSetLayoutCreateFlagBits
+
+
+{-# complete DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR, DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT :: DescriptorSetLayoutCreateFlagBits #-}
+
+
+-- No documentation found for Nested "DescriptorSetLayoutCreateFlagBits" "DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR"
+pattern DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR :: (a ~ DescriptorSetLayoutCreateFlagBits) => a
+pattern DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR = VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR
+
+
+-- No documentation found for Nested "DescriptorSetLayoutCreateFlagBits" "DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT"
+pattern DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT :: (a ~ DescriptorSetLayoutCreateFlagBits) => a
+pattern DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT
 
 -- | VkDescriptorSetLayoutCreateFlags - Bitmask of
 -- VkDescriptorSetLayoutCreateFlagBits
@@ -895,40 +893,22 @@ type DescriptorSetLayoutCreateFlags = DescriptorSetLayoutCreateFlagBits
 --     members of the elements of the @pBindings@ array /must/ each have
 --     different values.
 --
--- -   If @flags@ contains
---     'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',
---     then all elements of @pBindings@ /must/ not have a @descriptorType@
---     of
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
---     or
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
+-- == Valid Usage (Implicit)
 --
--- -   If @flags@ contains
---     'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',
---     then all elements of @pBindings@ /must/ not have a @descriptorType@
---     of
---     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO'
 --
--- -   If @flags@ contains
---     'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',
---     then the total number of elements of all bindings /must/ be less
---     than or equal to
---     'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.VkPhysicalDevicePushDescriptorPropertiesKHR'::@maxPushDescriptors@
+-- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkDescriptorSetLayoutBindingFlagsCreateInfoEXT'
 --
--- -   If any binding has the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT'
---     bit set, @flags@ /must/ include
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT'
+-- -   @flags@ /must/ be a valid combination of
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutCreateFlagBits'
+--     values
 --
--- -   If any binding has the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT'
---     bit set, then all bindings /must/ not have @descriptorType@ of
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
---     or
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
---
--- Unresolved directive in VkDescriptorSetLayoutCreateInfo.txt -
--- include::{generated}\/validity\/structs\/VkDescriptorSetLayoutCreateInfo.txt[]
+-- -   If @bindingCount@ is not @0@, @pBindings@ /must/ be a valid pointer
+--     to an array of @bindingCount@ valid
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutBinding'
+--     structures
 --
 -- = See Also
 --
@@ -936,7 +916,8 @@ type DescriptorSetLayoutCreateFlags = DescriptorSetLayoutCreateFlagBits
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutCreateFlags',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkCreateDescriptorSetLayout',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance3.vkGetDescriptorSetLayoutSupport'
+-- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance3.vkGetDescriptorSetLayoutSupport',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_maintenance3.vkGetDescriptorSetLayoutSupportKHR'
 data DescriptorSetLayoutCreateInfo = DescriptorSetLayoutCreateInfo
   { -- Univalued member elided
   -- No documentation found for Nested "DescriptorSetLayoutCreateInfo" "pNext"
@@ -1019,10 +1000,6 @@ instance Zero DescriptorSetLayoutCreateInfo where
 --     specifies an
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-inputattachment input attachment descriptor>.
 --
--- -   'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
---     specifies an
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-inlineuniformblock inline uniform block>.
---
 -- When a descriptor set is updated via elements of
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkWriteDescriptorSet', members
 -- of @pImageInfo@, @pBufferInfo@ and @pTexelBufferView@ are only accessed
@@ -1069,30 +1046,17 @@ instance Zero DescriptorSetLayoutCreateInfo where
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VkWriteDescriptorSet'::@pTexelBufferView@
 --     is accessed.
 --
--- When updating descriptors with a @descriptorType@ of
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
--- none of the @pImageInfo@, @pBufferInfo@, or @pTexelBufferView@ members
--- are accessed, instead the source data of the descriptor update operation
--- is taken from the instance of
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VkWriteDescriptorSetInlineUniformBlockEXT'
--- in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkWriteDescriptorSet'. When
--- updating descriptors with a @descriptorType@ of
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV',
--- none of the @pImageInfo@, @pBufferInfo@, or @pTexelBufferView@ members
--- are accessed, instead the source data of the descriptor update operation
--- is taken from the instance of
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkWriteDescriptorSetAccelerationStructureNV'
--- in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkWriteDescriptorSet'.
---
 -- = See Also
 --
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorPoolSize',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutBinding',
 -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplateEntry',
+-- 'Graphics.Vulkan.C.Extensions.VK_NVX_image_view_handle.VkImageViewHandleInfoNVX',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkWriteDescriptorSet'
 type DescriptorType = VkDescriptorType
+
+
+{-# complete DESCRIPTOR_TYPE_SAMPLER, DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, DESCRIPTOR_TYPE_SAMPLED_IMAGE, DESCRIPTOR_TYPE_STORAGE_IMAGE, DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, DESCRIPTOR_TYPE_UNIFORM_BUFFER, DESCRIPTOR_TYPE_STORAGE_BUFFER, DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, DESCRIPTOR_TYPE_INPUT_ATTACHMENT, DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT, DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV :: DescriptorType #-}
 
 
 -- No documentation found for Nested "DescriptorType" "DESCRIPTOR_TYPE_SAMPLER"
@@ -1150,6 +1114,16 @@ pattern DESCRIPTOR_TYPE_INPUT_ATTACHMENT :: (a ~ DescriptorType) => a
 pattern DESCRIPTOR_TYPE_INPUT_ATTACHMENT = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT
 
 
+-- No documentation found for Nested "DescriptorType" "DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT"
+pattern DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT :: (a ~ DescriptorType) => a
+pattern DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT = VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT
+
+
+-- No documentation found for Nested "DescriptorType" "DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV"
+pattern DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV :: (a ~ DescriptorType) => a
+pattern DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV = VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV
+
+
 -- | VkWriteDescriptorSet - Structure specifying the parameters of a
 -- descriptor set write operation
 --
@@ -1159,21 +1133,7 @@ pattern DESCRIPTOR_TYPE_INPUT_ATTACHMENT = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT
 -- is used according to the descriptor type specified in the
 -- @descriptorType@ member of the containing
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkWriteDescriptorSet' structure,
--- or none of them in case @descriptorType@ is
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
--- in which case the source data for the descriptor writes is taken from
--- the instance of
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VkWriteDescriptorSetInlineUniformBlockEXT'
--- in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkWriteDescriptorSet', or if
--- @descriptorType@ is
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV',
--- in which case the source data for the descriptor writes is taken from
--- the instance of
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkWriteDescriptorSetAccelerationStructureNV'
--- in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkWriteDescriptorSet', as
--- specified below.
+-- as specified below.
 --
 -- If the @dstBinding@ has fewer than @descriptorCount@ array elements
 -- remaining starting from @dstArrayElement@, then the remainder will be
@@ -1182,17 +1142,6 @@ pattern DESCRIPTOR_TYPE_INPUT_ATTACHMENT = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT
 -- skipped. This behavior applies recursively, with the update affecting
 -- consecutive bindings as needed to update all @descriptorCount@
 -- descriptors.
---
--- __Note__
---
--- The same behavior applies to bindings with a descriptor type of
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
--- where @descriptorCount@ specifies the number of bytes to update while
--- @dstArrayElement@ specifies the starting byte offset, thus in this case
--- if the @dstBinding@ has a smaller byte size than the sum of
--- @dstArrayElement@ and @descriptorCount@, then the remainder will be used
--- to update the subsequent binding - @dstBinding@+1 starting at offset
--- zero. This falls out as a special case of the above rule.
 --
 -- == Valid Usage
 --
@@ -1226,14 +1175,6 @@ pattern DESCRIPTOR_TYPE_INPUT_ATTACHMENT = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT
 --     binding specified by @dstBinding@, and all applicable consecutive
 --     bindings, as described by
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-updates-consecutive>
---
--- -   If @descriptorType@ is
---     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
---     @dstArrayElement@ /must/ be an integer multiple of @4@
---
--- -   If @descriptorType@ is
---     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
---     @descriptorCount@ /must/ be an integer multiple of @4@
 --
 -- -   If @descriptorType@ is
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLER',
@@ -1285,48 +1226,6 @@ pattern DESCRIPTOR_TYPE_INPUT_ATTACHMENT = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT
 --     @pImageInfo@ /must/ be a valid
 --     'Graphics.Vulkan.C.Core10.ImageView.VkImageView' and
 --     'Graphics.Vulkan.C.Core10.Image.VkImageLayout', respectively
---
--- -   If @descriptorType@ is
---     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
---     the @pNext@ chain /must/ include a
---     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VkWriteDescriptorSetInlineUniformBlockEXT'
---     structure whose @dataSize@ member equals @descriptorCount@
---
--- -   If @descriptorType@ is
---     'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV',
---     the @pNext@ chain /must/ include a
---     'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkWriteDescriptorSetAccelerationStructureNV'
---     structure whose @accelerationStructureCount@ member equals
---     @descriptorCount@
---
--- -   If @descriptorType@ is
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE',
---     then the @imageView@ member of each @pImageInfo@ element /must/ have
---     been created without a
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionInfo'
---     structure in its @pNext@ chain
---
--- -   If @descriptorType@ is
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
---     and if any element of @pImageInfo@ has a @imageView@ member that was
---     created with a
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionInfo'
---     structure in its @pNext@ chain, then @dstSet@ /must/ have been
---     allocated with a layout that included immutable samplers for
---     @dstBinding@
---
--- -   If @descriptorType@ is
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
---     and @dstSet@ was allocated with a layout that included immutable
---     samplers for @dstBinding@, then the @imageView@ member of each
---     element of @pImageInfo@ which corresponds to an immutable sampler
---     that enables
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y’CBCR conversion>
---     /must/ have been created with a
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionInfo'
---     structure in its @pNext@ chain with an /identically defined/
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionInfo'
---     to the corresponding immutable sampler
 --
 -- -   If @descriptorType@ is
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE',
@@ -1457,14 +1356,28 @@ pattern DESCRIPTOR_TYPE_INPUT_ATTACHMENT = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT
 --     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_STORAGE_BIT'
 --     set
 --
--- -   All consecutive bindings updated via a single
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VkWriteDescriptorSet'
---     structure, except those with a @descriptorCount@ of zero, /must/
---     have identical
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkDescriptorBindingFlagBitsEXT'.
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in VkWriteDescriptorSet.txt -
--- include::{generated}\/validity\/structs\/VkWriteDescriptorSet.txt[]
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET'
+--
+-- -   Each @pNext@ member of any structure (including this one) in the
+--     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
+--     instance of
+--     'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkWriteDescriptorSetAccelerationStructureNV'
+--     or
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VkWriteDescriptorSetInlineUniformBlockEXT'
+--
+-- -   Each @sType@ member in the @pNext@ chain /must/ be unique
+--
+-- -   @descriptorType@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorType' value
+--
+-- -   @descriptorCount@ /must/ be greater than @0@
+--
+-- -   Both of @dstSet@, and the elements of @pTexelBufferView@ that are
+--     valid handles /must/ have been created, allocated, or retrieved from
+--     the same 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
 --
 -- = See Also
 --
@@ -1474,6 +1387,7 @@ pattern DESCRIPTOR_TYPE_INPUT_ATTACHMENT = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSet',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorType',
 -- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
+-- 'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.vkCmdPushDescriptorSetKHR',
 -- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkUpdateDescriptorSets'
 data WriteDescriptorSet = WriteDescriptorSet
   { -- Univalued member elided
@@ -1553,63 +1467,67 @@ instance Zero WriteDescriptorSet where
 -- containing undefined descriptors /can/ still be bound and used, subject
 -- to the following conditions:
 --
--- -   For descriptor set bindings created with the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT'
---     bit set, all descriptors in that binding that are dynamically used
+-- -   Descriptors that are
+--     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#shaders-staticuse statically used>
 --     /must/ have been populated before the descriptor set is
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-binding consumed>.
---
--- -   For descriptor set bindings created without the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT'
---     bit set, all descriptors in that binding that are statically used
---     /must/ have been populated before the descriptor set is
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-binding consumed>.
---
--- -   Descriptor bindings with descriptor type of
---     'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
---     /can/ be undefined when the descriptor set is
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-binding consumed>;
---     though values in that block will be undefined.
 --
 -- -   Entries that are not used by a pipeline /can/ have undefined
 --     descriptors.
 --
--- If a call to
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkAllocateDescriptorSets' would
--- cause the total number of descriptor sets allocated from the pool to
--- exceed the value of
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorPoolCreateInfo'::@maxSets@
--- used to create @pAllocateInfo@->@descriptorPool@, then the allocation
--- /may/ fail due to lack of space in the descriptor pool. Similarly, the
--- allocation /may/ fail due to lack of space if the call to
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkAllocateDescriptorSets' would
--- cause the number of any given descriptor type to exceed the sum of all
--- the @descriptorCount@ members of each element of
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorPoolCreateInfo'::@pPoolSizes@
--- with a @member@ equal to that type.
+-- If an allocation fails due to fragmentation, an indeterminate error is
+-- returned with an unspecified error code. Any returned error other than
+-- 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_FRAGMENTED_POOL' does not imply
+-- its usual meaning: applications /should/ assume that the allocation
+-- failed due to fragmentation, and create a new descriptor pool.
 --
--- Additionally, the allocation /may/ also fail if a call to
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkAllocateDescriptorSets' would
--- cause the total number of inline uniform block bindings allocated from
--- the pool to exceed the value of
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VkDescriptorPoolInlineUniformBlockCreateInfoEXT'::@maxInlineUniformBlockBindings@
--- used to create the descriptor pool.
+-- __Note__
 --
--- If the allocation fails due to no more space in the descriptor pool, and
--- not because of system or device memory exhaustion, then
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.VK_ERROR_OUT_OF_POOL_MEMORY'
--- /must/ be returned.
+-- Applications /should/ check for a negative return value when allocating
+-- new descriptor sets, assume that any error effectively means
+-- 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_FRAGMENTED_POOL', and try to
+-- create a new descriptor pool. If
+-- 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_FRAGMENTED_POOL' is the actual
+-- return value, it adds certainty to that decision.
 --
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkAllocateDescriptorSets' /can/
--- be used to create multiple descriptor sets. If the creation of any of
--- those descriptor sets fails, then the implementation /must/ destroy all
--- successfully created descriptor set objects from this command, set all
--- entries of the @pDescriptorSets@ array to
--- 'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE' and return the
--- error.
+-- The reason for this is that
+-- 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_FRAGMENTED_POOL' was only added
+-- in a later version of the 1.0 specification, and so drivers /may/ return
+-- other errors if they were written against earlier versions. To ensure
+-- full compatibility with earlier patch versions, these other errors are
+-- allowed.
 --
--- Unresolved directive in vkAllocateDescriptorSets.txt -
--- include::{generated}\/validity\/protos\/vkAllocateDescriptorSets.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pAllocateInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetAllocateInfo'
+--     structure
+--
+-- -   @pDescriptorSets@ /must/ be a valid pointer to an array of
+--     @pAllocateInfo@::descriptorSetCount
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSet' handles
+--
+-- == Host Synchronization
+--
+-- -   Host access to @pAllocateInfo@::descriptorPool /must/ be externally
+--     synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_FRAGMENTED_POOL'
+--
+--     -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.VK_ERROR_OUT_OF_POOL_MEMORY'
 --
 -- = See Also
 --
@@ -1646,8 +1564,34 @@ allocateDescriptorSets = \(Device device' commandTable) -> \allocateInfo' -> all
 --
 -- The created descriptor pool is returned in @pDescriptorPool@.
 --
--- Unresolved directive in vkCreateDescriptorPool.txt -
--- include::{generated}\/validity\/protos\/vkCreateDescriptorPool.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorPoolCreateInfo'
+--     structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pDescriptorPool@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorPool' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_ERROR_FRAGMENTATION_EXT'
 --
 -- = See Also
 --
@@ -1679,10 +1623,33 @@ createDescriptorPool = \(Device device' commandTable) -> \createInfo' -> \alloca
 --     handle in which the resulting descriptor set layout object is
 --     returned.
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in vkCreateDescriptorSetLayout.txt -
--- include::{generated}\/validity\/protos\/vkCreateDescriptorSetLayout.txt[]
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutCreateInfo'
+--     structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   @pSetLayout@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.C.Core10.PipelineLayout.VkDescriptorSetLayout'
+--     handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -1728,8 +1695,27 @@ createDescriptorSetLayout = \(Device device' commandTable) -> \createInfo' -> \a
 --     were provided when @descriptorPool@ was created, @pAllocator@ /must/
 --     be @NULL@
 --
--- Unresolved directive in vkDestroyDescriptorPool.txt -
--- include::{generated}\/validity\/protos\/vkDestroyDescriptorPool.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   If @descriptorPool@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE',
+--     @descriptorPool@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorPool' handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   If @descriptorPool@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @descriptorPool@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -1765,8 +1751,29 @@ destroyDescriptorPool = \(Device device' commandTable) -> \descriptorPool' -> \a
 --     were provided when @descriptorSetLayout@ was created, @pAllocator@
 --     /must/ be @NULL@
 --
--- Unresolved directive in vkDestroyDescriptorSetLayout.txt -
--- include::{generated}\/validity\/protos\/vkDestroyDescriptorSetLayout.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   If @descriptorSetLayout@ is not
+--     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE',
+--     @descriptorSetLayout@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.PipelineLayout.VkDescriptorSetLayout'
+--     handle
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
+--     structure
+--
+-- -   If @descriptorSetLayout@ is a valid handle, it /must/ have been
+--     created, allocated, or retrieved from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @descriptorSetLayout@ /must/ be externally
+--     synchronized
 --
 -- = See Also
 --
@@ -1816,8 +1823,38 @@ destroyDescriptorSetLayout = \(Device device' commandTable) -> \descriptorSetLay
 --     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT'
 --     flag
 --
--- Unresolved directive in vkFreeDescriptorSets.txt -
--- include::{generated}\/validity\/protos\/vkFreeDescriptorSets.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @descriptorPool@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorPool' handle
+--
+-- -   @descriptorSetCount@ /must/ be greater than @0@
+--
+-- -   @descriptorPool@ /must/ have been created, allocated, or retrieved
+--     from @device@
+--
+-- -   Each element of @pDescriptorSets@ that is a valid handle /must/ have
+--     been created, allocated, or retrieved from @descriptorPool@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @descriptorPool@ /must/ be externally synchronized
+--
+-- -   Host access to each member of @pDescriptorSets@ /must/ be externally
+--     synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -1849,8 +1886,36 @@ freeDescriptorSets = \(Device device' commandTable) -> \descriptorPool' -> \desc
 -- -   All uses of @descriptorPool@ (via any allocated descriptor sets)
 --     /must/ have completed execution
 --
--- Unresolved directive in vkResetDescriptorPool.txt -
--- include::{generated}\/validity\/protos\/vkResetDescriptorPool.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   @descriptorPool@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorPool' handle
+--
+-- -   @flags@ /must/ be @0@
+--
+-- -   @descriptorPool@ /must/ have been created, allocated, or retrieved
+--     from @device@
+--
+-- == Host Synchronization
+--
+-- -   Host access to @descriptorPool@ /must/ be externally synchronized
+--
+-- -   Host access to any
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSet' objects
+--     allocated from @descriptorPool@ /must/ be externally synchronized
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
@@ -1900,27 +1965,38 @@ resetDescriptorPool = \(Device device' commandTable) -> \descriptorPool' -> \fla
 -- @pDescriptorCopies@ is bound, accessed, or modified by any command that
 -- was recorded to a command buffer which is currently in the
 -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#commandbuffers-lifecycle recording or executable state>,
--- and any of the descriptor bindings that are updated were not created
--- with the
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT'
--- or
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT_EXT'
--- bits set, that command buffer becomes
+-- that command buffer becomes
 -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#commandbuffers-lifecycle invalid>.
 --
 -- == Valid Usage
 --
--- -   Descriptor bindings updated by this command which were created
---     without the
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT'
---     or
---     'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VK_DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT_EXT'
---     bits set /must/ not be used by any command that was recorded to a
---     command buffer which is in the
+-- -   The @dstSet@ member of each element of @pDescriptorWrites@ or
+--     @pDescriptorCopies@ /must/ not be used by any command that was
+--     recorded to a command buffer which is in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>.
 --
--- Unresolved directive in vkUpdateDescriptorSets.txt -
--- include::{generated}\/validity\/protos\/vkUpdateDescriptorSets.txt[]
+-- == Valid Usage (Implicit)
+--
+-- -   @device@ /must/ be a valid
+--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
+--
+-- -   If @descriptorWriteCount@ is not @0@, @pDescriptorWrites@ /must/ be
+--     a valid pointer to an array of @descriptorWriteCount@ valid
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkWriteDescriptorSet'
+--     structures
+--
+-- -   If @descriptorCopyCount@ is not @0@, @pDescriptorCopies@ /must/ be a
+--     valid pointer to an array of @descriptorCopyCount@ valid
+--     'Graphics.Vulkan.C.Core10.DescriptorSet.VkCopyDescriptorSet'
+--     structures
+--
+-- == Host Synchronization
+--
+-- -   Host access to @pDescriptorWrites@[].dstSet /must/ be externally
+--     synchronized
+--
+-- -   Host access to @pDescriptorCopies@[].dstSet /must/ be externally
+--     synchronized
 --
 -- = See Also
 --

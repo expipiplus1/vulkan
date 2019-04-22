@@ -10,16 +10,19 @@ module Graphics.Vulkan.Extensions.VK_EXT_filter_cubic
   , withCStructPhysicalDeviceImageViewImageFormatInfoEXT
   , fromCStructPhysicalDeviceImageViewImageFormatInfoEXT
   , PhysicalDeviceImageViewImageFormatInfoEXT(..)
-  , pattern VK_EXT_FILTER_CUBIC_SPEC_VERSION
-  , pattern VK_EXT_FILTER_CUBIC_EXTENSION_NAME
-  , pattern VK_FILTER_CUBIC_EXT
-  , pattern VK_FILTER_CUBIC_IMG
-  , pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT
-  , pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT
-  , pattern VK_STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT
+  , pattern EXT_FILTER_CUBIC_EXTENSION_NAME
+  , pattern EXT_FILTER_CUBIC_SPEC_VERSION
+  , pattern FILTER_CUBIC_EXT
+  , pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT
+  , pattern FILTER_CUBIC_IMG
+  , pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT
+  , pattern STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT
   ) where
 
+import Data.String
+  ( IsString
+  )
 import Foreign.Marshal.Utils
   ( maybePeek
   , maybeWith
@@ -32,9 +35,17 @@ import Foreign.Ptr
 import Graphics.Vulkan.C.Core10.Core
   ( Zero(..)
   )
+import Graphics.Vulkan.C.Core10.DeviceInitialization
+  ( VkFormatFeatureFlagBits(..)
+  )
+import Graphics.Vulkan.C.Core10.Sampler
+  ( VkFilter(..)
+  )
 import Graphics.Vulkan.C.Extensions.VK_EXT_filter_cubic
   ( VkFilterCubicImageViewImageFormatPropertiesEXT(..)
   , VkPhysicalDeviceImageViewImageFormatInfoEXT(..)
+  , pattern VK_EXT_FILTER_CUBIC_EXTENSION_NAME
+  , pattern VK_EXT_FILTER_CUBIC_SPEC_VERSION
   , pattern VK_STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT
   , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT
   )
@@ -42,23 +53,23 @@ import Graphics.Vulkan.Core10.Core
   ( bool32ToBool
   , boolToBool32
   )
+import Graphics.Vulkan.Core10.DeviceInitialization
+  ( pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG
+  )
 import Graphics.Vulkan.Core10.ImageView
   ( ImageViewType
+  )
+import Graphics.Vulkan.Core10.Sampler
+  ( pattern FILTER_CUBIC_IMG
   )
 import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   ( SomeVkStruct
   , peekVkStruct
   , withSomeVkStruct
   )
-import Graphics.Vulkan.C.Extensions.VK_EXT_filter_cubic
-  ( pattern VK_EXT_FILTER_CUBIC_EXTENSION_NAME
-  , pattern VK_EXT_FILTER_CUBIC_SPEC_VERSION
-  , pattern VK_FILTER_CUBIC_EXT
-  , pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT
-  )
-import Graphics.Vulkan.C.Extensions.VK_IMG_filter_cubic
-  ( pattern VK_FILTER_CUBIC_IMG
-  , pattern VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG
+import Graphics.Vulkan.Core10.Core
+  ( pattern STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT
+  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT
   )
 
 
@@ -66,11 +77,10 @@ import Graphics.Vulkan.C.Extensions.VK_IMG_filter_cubic
 -- | VkFilterCubicImageViewImageFormatPropertiesEXT - Structure for querying
 -- cubic filtering capabilities of an image view type
 --
--- = Description
+-- == Valid Usage (Implicit)
 --
--- Unresolved directive in
--- VkFilterCubicImageViewImageFormatPropertiesEXT.txt -
--- include::{generated}\/validity\/structs\/VkFilterCubicImageViewImageFormatPropertiesEXT.txt[]
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.C.Extensions.VK_EXT_filter_cubic.VK_STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT'
 --
 -- == Valid Usage
 --
@@ -86,7 +96,8 @@ import Graphics.Vulkan.C.Extensions.VK_IMG_filter_cubic
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data FilterCubicImageViewImageFormatPropertiesEXT = FilterCubicImageViewImageFormatPropertiesEXT
   { -- Univalued member elided
   -- No documentation found for Nested "FilterCubicImageViewImageFormatPropertiesEXT" "pNext"
@@ -122,15 +133,12 @@ instance Zero FilterCubicImageViewImageFormatPropertiesEXT where
 -- | VkPhysicalDeviceImageViewImageFormatInfoEXT - Structure for providing
 -- image view type
 --
--- = Description
---
--- Unresolved directive in VkPhysicalDeviceImageViewImageFormatInfoEXT.txt
--- -
--- include::{generated}\/validity\/structs\/VkPhysicalDeviceImageViewImageFormatInfoEXT.txt[]
+-- == Valid Usage (Implicit)
 --
 -- = See Also
 --
--- No cross-references are available
+-- 'Graphics.Vulkan.C.Core10.ImageView.VkImageViewType',
+-- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
 data PhysicalDeviceImageViewImageFormatInfoEXT = PhysicalDeviceImageViewImageFormatInfoEXT
   { -- Univalued member elided
   -- No documentation found for Nested "PhysicalDeviceImageViewImageFormatInfoEXT" "pNext"
@@ -157,3 +165,19 @@ instance Zero PhysicalDeviceImageViewImageFormatInfoEXT where
   zero = PhysicalDeviceImageViewImageFormatInfoEXT Nothing
                                                    zero
 
+
+-- No documentation found for TopLevel "VK_EXT_FILTER_CUBIC_EXTENSION_NAME"
+pattern EXT_FILTER_CUBIC_EXTENSION_NAME :: (Eq a, IsString a) => a
+pattern EXT_FILTER_CUBIC_EXTENSION_NAME = VK_EXT_FILTER_CUBIC_EXTENSION_NAME
+
+-- No documentation found for TopLevel "VK_EXT_FILTER_CUBIC_SPEC_VERSION"
+pattern EXT_FILTER_CUBIC_SPEC_VERSION :: Integral a => a
+pattern EXT_FILTER_CUBIC_SPEC_VERSION = VK_EXT_FILTER_CUBIC_SPEC_VERSION
+
+-- No documentation found for TopLevel "FILTER_CUBIC_EXT"
+pattern FILTER_CUBIC_EXT :: VkFilter
+pattern FILTER_CUBIC_EXT = FILTER_CUBIC_IMG
+
+-- No documentation found for TopLevel "FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT"
+pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT :: VkFormatFeatureFlagBits
+pattern FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_EXT = FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG
