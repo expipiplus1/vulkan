@@ -31,9 +31,12 @@ import           Write.Element
 import           Write.Module
 
 data ModuleSeed = ModuleSeed
-  { msName     :: Text
-  , msSeeds    :: [HaskellName]
-  , msPlatform :: Maybe Text
+  { msName       :: Text
+  , msSeeds      :: [HaskellName]
+  , msReexported :: [HaskellName]
+    -- ^ Don't act as seeds for the partition, but are explicitly reexported
+    -- from this module
+  , msPlatform   :: Maybe Text
     -- ^ Is this module only available on a particular platform
   }
   deriving (Show)
@@ -47,24 +50,24 @@ partitionElements wes ss = validationToEither $ do
       Set.fromList $ weProvidesHN =<< providingElements =<< msSeeds =<< ss
 
     closeSeed :: ModuleSeed -> Set.Set HaskellName
-    closeSeed ModuleSeed {..}
-      = let
-          step name =
-            let
-              ds = Set.map unGuarded
-                $ Set.fromList (weDepends =<< providingElements name)
-            in                   --  Don't allow other modules to grab exports from another seed
-                ds `Set.difference` allSeedNames
-        in  close
-              step
-              (Set.fromList
-                (  msSeeds
-                ++ [ export
-                   | (moduleName, export) <- explicitlyPlacedNames
-                   , moduleName == msName
-                   ]
-                )
+    closeSeed ModuleSeed {..} =
+      let
+        step name =
+          let
+            ds = Set.map unGuarded
+              $ Set.fromList (weDepends =<< providingElements name)
+          in                      --  Don't allow other modules to grab exports from another seed
+              ds `Set.difference` allSeedNames
+      in  close
+            step
+            (Set.fromList
+              (  msSeeds
+              ++ [ export
+                 | (moduleName, export) <- explicitlyPlacedNames
+                 , moduleName == msName
+                 ]
               )
+            )
 
     providingElements :: HaskellName -> [WriteElement]
     providingElements = (`MultiMap.lookup` m)
@@ -77,39 +80,40 @@ partitionElements wes ss = validationToEither $ do
       []    -> Nothing
       x : _ -> find ((== n) . unExport . unGuarded) (weProvides x)
 
-    modules
-      = [ Module msName guardedClosure [] seedReexports []
-        | m@ModuleSeed {..} <- ss
-        , let
-          names = Set.toList (closeSeed m)
-          closure :: [WriteElement]
-          closure        = nubOrdOn weProvides $ providingElements =<< names
-          -- TODO: This only does one level of guards, do this properly
-          guardedClosure = closure <&> \we ->
-            let guards =
+    modules =
+      [ Module msName guardedClosure [] seedReexports []
+      | m@ModuleSeed {..} <- ss
+      , let
+        names = Set.toList (closeSeed m)
+        closure :: [WriteElement]
+        closure        = nubOrdOn weProvides $ providingElements =<< names
+        -- TODO: This only does one level of guards, do this properly
+        guardedClosure = closure <&> \we ->
+          let guards =
                   [ g
                   | d                  <- weDepends we ++ weSourceDepends we
                   , Just (Guarded g _) <- pure $ nameExport (unGuarded d)
                   ]
-            in  case guards of
-                  [g] -> fromMaybe we (guardWriteElement g we)
-                  -- TODO: Warn here if there are multiple guards
-                  _   -> we
-          guardSeedName :: Guarded Export -> Guarded Export
-          guardSeedName = \case
-            Guarded g n -> Guarded g n
-            Unguarded n ->
-              case
-                  [ Guarded g n'
-                  | Guarded g n' <- weProvides =<< guardedClosure
-                  , n == n'
-                  ]
-                of
-                  []    -> Unguarded n
-                  x : _ -> x
-          seedReexports =
-            fmap guardSeedName . nubOrd $ mapMaybe nameExport msSeeds
-        ]
+          in  case guards of
+                [g] -> fromMaybe we (guardWriteElement g we)
+                -- TODO: Warn here if there are multiple guards
+                _   -> we
+        guardSeedName :: Guarded Export -> Guarded Export
+        guardSeedName = \case
+          Guarded g n -> Guarded g n
+          Unguarded n ->
+            case
+                [ Guarded g n'
+                | Guarded g n' <- weProvides =<< guardedClosure
+                , n == n'
+                ]
+              of
+                []    -> Unguarded n
+                x : _ -> x
+        seedReexports = fmap guardSeedName . nubOrd $ mapMaybe
+          nameExport
+          (msSeeds ++ msReexported)
+      ]
     prioritizedModules = prioritizeModules modules
   _ <- assertUniqueSeedNames ss
   _ <- assertExactlyOneSeeds wes ss

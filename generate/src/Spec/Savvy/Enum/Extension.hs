@@ -35,7 +35,7 @@ data EnumExtension = EnumExtension
   , exValue   :: Either Int32 Word32
   , exComment :: Maybe Text
   }
-  deriving (Show)
+  deriving (Show, Eq, Ord)
 
 ----------------------------------------------------------------
 -- Enums

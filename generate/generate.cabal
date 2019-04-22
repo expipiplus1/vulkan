@@ -86,6 +86,7 @@ executable generate
                      , Write.HeaderVersion
                      , Write.Loader
                      , Write.Marshal.Aliases
+                     , Write.Marshal.Bracket
                      , Write.Marshal.Exception
                      , Write.Marshal.Handle
                      , Write.Marshal.Monad

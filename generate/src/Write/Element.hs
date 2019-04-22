@@ -14,6 +14,7 @@ module Write.Element
   , unGuarded
   , guardWriteElement
   , guardCPPGuard
+  , isPatternName
   , pattern Pattern
   , pattern Term
   , pattern TypeConstructor
@@ -21,9 +22,10 @@ module Write.Element
   , DocMap
   ) where
 
+import           Data.List.Extra
 import           Data.Text
 import           Data.Text.Prettyprint.Doc
-import           Text.InterpolatedString.Perl6(ShowQ(..))
+import           Text.InterpolatedString.Perl6            ( ShowQ(..) )
 
 import           Documentation
 import           Documentation.Haddock
@@ -59,6 +61,11 @@ data HaskellName
   | TermName { unHaskellName :: Text }
   | PatternName { unHaskellName :: Text }
   deriving (Show, Eq, Ord)
+
+isPatternName :: HaskellName -> Bool
+isPatternName = \case
+  PatternName _ -> True
+  _             -> False
 
 instance ShowQ HaskellName where
   showQ = unpack . unHaskellName
@@ -137,15 +144,18 @@ isQualifiedImport = \case
 type DocMap = Documentee -> Maybe Haddock
 
 instance Semigroup WriteElement where
-  we1 <> we2 = WriteElement
-    { weName                 = weName we1 <> " and " <> weName we2
-    , weDoc                  = \d -> vcat [weDoc we1 d, line, weDoc we2 d]
-    , weExtensions           = weExtensions we1 <> weExtensions we2
-    , weImports              = weImports we1 <> weImports we2
-    , weProvides             = weProvides we1 <> weProvides we2
-    , weDepends              = weDepends we1 <> weDepends we2
-    , weUndependableProvides = weUndependableProvides we1
-      <> weUndependableProvides we2
-    , weSourceDepends        = weSourceDepends we1 <> weSourceDepends we2
-    , weBootElement          = weBootElement we1 <> weBootElement we2
-    }
+  we1 <> we2 =
+    let ps = weProvides we1 <> weProvides we2
+    in
+      WriteElement
+        { weName                 = weName we1 <> " and " <> weName we2
+        , weDoc                  = \d -> vcat [weDoc we1 d, line, weDoc we2 d]
+        , weExtensions           = weExtensions we1 <> weExtensions we2
+        , weImports              = weImports we1 <> weImports we2
+        , weProvides             = ps
+        , weDepends = (weDepends we1 <> weDepends we2) \\ (fmap unExport <$> ps)
+        , weUndependableProvides = weUndependableProvides we1
+                                     <> weUndependableProvides we2
+        , weSourceDepends        = weSourceDepends we1 <> weSourceDepends we2
+        , weBootElement          = weBootElement we1 <> weBootElement we2
+        }

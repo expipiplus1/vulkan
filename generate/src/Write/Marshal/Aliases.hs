@@ -4,38 +4,72 @@
 
 module Write.Marshal.Aliases
   ( makeMarshalledAliases
+  , makeMarshalledEnumAliases
   ) where
 
-import           Control.Monad     (guard)
+import Debug.Trace
+
+import           Control.Monad                            ( guard )
 import           Data.Maybe
-import qualified Data.Text.Extra   as T
-import           Prelude           hiding (Enum)
-import           Spec.Savvy.Alias  as A
+import           Data.Functor
+import qualified Data.Text.Extra               as T
+import           Data.Text.Extra                          ( Text )
+import           Prelude                           hiding ( Enum )
+import           Data.List.Extra
+import           Spec.Savvy.Alias              as A
 import           Spec.Savvy.Enum
 import           Spec.Savvy.Handle
 import           Spec.Savvy.Spec
+import           Spec.Savvy.Extension
+import           Spec.Savvy.Feature
+import           Spec.Savvy.APIConstant
 
 makeMarshalledAliases :: Spec -> Aliases
 makeMarshalledAliases Spec {..} =
   let
     -- Command aliases require type info, so are handled by the command writer
     commandAliases = []
-    -- Anum aliases are not given marshalled names
-    enumAliases =
-      mapMaybe makeMarshalledEnumAlias sEnums
-        ++ ((, []) <$> mapMaybe makeMarshalledAliasAlias
-                                (fst <$> A.enumAliases sAliases)
-           )
+    enumAliases    = -- mapMaybe makeMarshalledEnumAlias sEnums ++
+                     catMaybes
+      (A.enumAliases sAliases <&> \(e) ->
+        -- (,,)
+          -- <$>
+                                          (makeMarshalledAliasAlias "Vk" e)
+          -- <*> (traverse (makeMarshalledAliasAlias "VK_") ees)
+          -- <*> (traverse (makeMarshalledAliasAlias "VK_") exs)
+                                                                           )
     handleAliases = mapMaybe makeMarshalledHandleAlias sHandles
-      ++ mapMaybe makeMarshalledAliasAlias (A.handleAliases sAliases)
+      ++ mapMaybe (makeMarshalledAliasAlias "Vk") (A.handleAliases sAliases)
     -- Struct aliases require type info, so are handled by the struct writer
-    structAliases        = []
+    structAliases            = []
     -- Constants are not given marshalled names
-    constantAliases      = []
+    constantAliases          = [] -- mapMaybe makeMarshalledConstant sConstants
+    constantExtensionAliases = mapMaybe
+      makeMarshalledConstantAlias
+      (rConstants =<< extRequirements =<< sExtensions)
     -- Enum extensions are not given marshalled names
-    enumExtensionAliases = []
+    enumExtensionAliases = mapMaybe (makeMarshalledAliasAlias "VK_")
+                                    (A.enumExtensionAliases sAliases)
   in
     Aliases { .. }
+
+makeMarshalledEnumAliases
+  :: Spec -> [(Alias Enum, [Alias EnumElement], [Alias EnumExtension])]
+makeMarshalledEnumAliases Spec {..} = flip mapMaybe sEnums $ \e@Enum {..} -> do
+  guard (eName `notElem` unmarshalledEnumNames)
+  aName <- T.dropPrefix "Vk" eName
+  let aAliasName = eName
+      aAlias     = ATarget e
+  ees <- traverse makeMarshalledEnumElementAlias eElements
+  exs <- traverse makeMarshalledEnumExtensionAlias eExtensions
+  pure (Alias { .. }, ees, exs)
+
+makeMarshalledConstant :: APIConstant -> Maybe (Alias APIConstant)
+makeMarshalledConstant c@APIConstant {..} = do
+  aName <- T.dropPrefix "VK_" acName
+  let aAliasName = acName
+      aAlias     = ATarget c
+  pure Alias { .. }
 
 -- | Note that this doesn't make an alias for dispatchable handles, these are
 -- handled separately because they contain the table of command addresses
@@ -47,14 +81,13 @@ makeMarshalledHandleAlias h@Handle {..} = do
       aAlias     = ATarget h
   pure Alias {..}
 
-makeMarshalledEnumAlias :: Enum -> Maybe (Alias Enum, [Alias EnumElement])
-makeMarshalledEnumAlias e@Enum {..} = do
-  guard (eName `notElem` unmarshalledEnumNames)
-  aName <- T.dropPrefix "Vk" eName
-  let aAliasName = eName
+makeMarshalledConstantAlias
+  :: ConstantExtension -> Maybe (Alias ConstantExtension)
+makeMarshalledConstantAlias e@ConstantExtension {..} = do
+  aName <- T.dropPrefix "VK_" ceName
+  let aAliasName = ceName
       aAlias     = ATarget e
-      elements   = mapMaybe makeMarshalledEnumElementAlias eElements
-  pure (Alias { .. }, elements)
+  pure Alias { .. }
 
 makeMarshalledEnumElementAlias :: EnumElement -> Maybe (Alias EnumElement)
 makeMarshalledEnumElementAlias e@EnumElement {..} = do
@@ -63,10 +96,17 @@ makeMarshalledEnumElementAlias e@EnumElement {..} = do
       aAlias     = ATarget e
   pure Alias { .. }
 
-makeMarshalledAliasAlias :: Alias a -> Maybe (Alias a)
-makeMarshalledAliasAlias a = do
-  aName      <- T.dropPrefix "Vk" (aName a)
-  aAliasName <- T.dropPrefix "Vk" (A.aAliasName a)
+makeMarshalledEnumExtensionAlias :: EnumExtension -> Maybe (Alias EnumExtension)
+makeMarshalledEnumExtensionAlias e@EnumExtension {..} = do
+  aName <- T.dropPrefix "VK_" exName
+  let aAliasName = exName
+      aAlias     = ATarget e
+  pure Alias { .. }
+
+makeMarshalledAliasAlias :: Text -> Alias a -> Maybe (Alias a)
+makeMarshalledAliasAlias prefix a = do
+  aName      <- T.dropPrefix prefix (aName a)
+  aAliasName <- T.dropPrefix prefix (A.aAliasName a)
   let aAlias = AnAlias (Alias aAliasName (A.aAliasName a) (AnAlias a))
   pure Alias {..}
 

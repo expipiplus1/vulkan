@@ -5,13 +5,17 @@
 
 module Write.Alias
   ( writeAliases
+  , writeFullEnumAliases
   ) where
+
+import Debug.Trace
 
 import           Control.Applicative
 import           Data.Text                         hiding ( concat )
 import           Control.Arrow                            ( (&&&) )
 import           Data.Functor
 import           Data.Foldable
+import           Data.List.Extra
 import           Data.List.NonEmpty                       ( NonEmpty(..) )
 import           Data.Semigroup
 import           Data.Either.Validation
@@ -27,11 +31,13 @@ import           Spec.Savvy.Error
 import           Spec.Savvy.Struct
 import           Spec.Savvy.Type
 import           Spec.Savvy.Type.Haskell
+import           Spec.Savvy.Feature
 import           Write.Element                     hiding ( TypeName )
 import qualified Write.Element                 as WE
 import           Write.Struct
 import           Write.Util
 import           Write.Command
+import           Write.ConstantExtension
 
 writeAliases :: Aliases -> Validation [SpecError] [WriteElement]
 writeAliases Aliases{..} =
@@ -42,6 +48,7 @@ writeAliases Aliases{..} =
     , liftA2 (liftA2 (<>)) (pure . writeTypeAlias) writeStructPatternAlias <$> structAliases
     , writeConstantAlias <$> constantAliases
     , writePatternAlias (TypeName . eName . fst) <$> enumExtensionAliases
+    , writeConstantExtensionAliases <$> constantExtensionAliases
     ]
 
 writeCommandAlias
@@ -98,22 +105,66 @@ writePatternAliasWithType (t, (is, ds, es)) docName alias@Alias{..} = do
       weBootElement          = Nothing
   pure WriteElement {..}
 
+writeConstantExtensionAliases
+  :: Alias ConstantExtension -> Validation [SpecError] WriteElement
+writeConstantExtensionAliases a@Alias {..} = eitherToValidation $ do
+  target <- aliasTarget a
+  let (tyDoc, is) = constantExtensionType (const Nothing) target
+  writePatternAliasWithType (tyDoc, (is, [], [])) (TopLevel (ceName target)) a
+
+
 writeEnumAlias
-  :: (Alias Enum, [Alias EnumElement]) -> Validation [SpecError] WriteElement
-writeEnumAlias (eAlias, eeAliases) = sconcat <$> sequenceA
-  (  pure (writeTypeAlias eAlias)
-  :| (eeAliases <&> \eeAlias -> eitherToValidation $ do
-       target               <- aliasTarget eAlias
-       (enumType, (is, es)) <- toHsType (TypeName (aName eAlias))
-       let ds  = typeDepends (TypeName (aName eAlias))
-           t   = [qci|(a ~ {enumType}) => a|]
-           es' = "TypeFamilies" : es
-       writePatternAliasWithType
-         (t, (is, ds, es'))
-         (Nested (aName eAlias) (aName eeAlias))
-         eeAlias
-     )
-  )
+  :: Alias Enum
+  -> Validation [SpecError] WriteElement
+writeEnumAlias eAlias = pure (writeTypeAlias eAlias)
+
+writeFullEnumAliases
+  :: (Alias Enum, [Alias EnumElement], [Alias EnumExtension])
+  -> Validation [SpecError] WriteElement
+writeFullEnumAliases (eAlias, eeAliases, exAliases) =
+  let
+    writeEnumerant :: Alias a -> Validation [SpecError] WriteElement
+    writeEnumerant enumerantAlias = eitherToValidation $ do
+      target               <- aliasTarget eAlias
+      (enumType, (is, es)) <- toHsType (TypeName (aName eAlias))
+      let ds  = typeDepends (TypeName (aName eAlias))
+          t   = [qci|(a ~ {enumType}) => a|]
+          es' = "TypeFamilies" : es
+      writePatternAliasWithType (t, (is, ds, es'))
+                                (Nested (aName eAlias) (aName enumerantAlias))
+                                enumerantAlias
+  in
+    fmap sconcat
+    .  sequenceA
+    $  pure (writeTypeAlias eAlias)
+    :| (pure
+         (writeCompletePragma (aName eAlias)
+                              ((aName <$> eeAliases) ++ (aName <$> exAliases))
+         )
+       )
+    :  (  (eeAliases <&> writeEnumerant)
+       ++ (nubOrdOn aName exAliases <&> writeEnumerant)
+       )
+
+writeCompletePragma :: Text -> [Text] -> WriteElement
+writeCompletePragma typeName patterns =
+  let
+    weImports = []
+    weDoc getDoc = if Prelude.null patterns
+      then
+        [qci|-- No complete pragma for {pretty typeName} as it has no patterns|]
+      else
+        [qci|\{-# complete {hsep $ punctuate "," (pretty <$> patterns)} :: {pretty typeName} #-}|]
+    weExtensions           = []
+    weName                 = "complete pragma for " <> typeName
+    weProvides             = []
+    weDepends = Unguarded <$> WE.TypeName typeName : (PatternName <$> patterns)
+    weUndependableProvides = []
+    weSourceDepends        = []
+    weBootElement          = Nothing
+    w                      = WriteElement { .. }
+  in
+    w
 
 writeTypeAlias
   :: Alias a

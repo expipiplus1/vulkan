@@ -4,6 +4,8 @@
 
 module Write.ConstantExtension
   ( writeConstantExtension
+  , constantExtensionDocWithValue
+  , constantExtensionType
   ) where
 
 import           Data.Maybe
@@ -43,19 +45,32 @@ writeConstantExtension getEnumerantEnumName ce@ConstantExtension {..} =
         _ -> []
   in  WriteElement {..}
 
+constantExtensionDocWithValue
+  :: (Text -> Maybe Text) -> ConstantExtension -> Doc () -> DocMap -> Doc ()
+constantExtensionDocWithValue getEnumerantEnumName ce@ConstantExtension{..} value getDoc = [qci|
+  {document getDoc (TopLevel ceName)}
+  pattern {ceName} :: {fst (constantExtensionType getEnumerantEnumName ce)}
+  pattern {ceName} = {value}
+|]
+
+constantExtensionType
+  :: (Text -> Maybe Text) -> ConstantExtension -> (Doc (), [Guarded Import])
+constantExtensionType getEnumerantEnumName ConstantExtension {..} =
+  case ceValue of
+    EnumValueString _ ->
+      ( "(Eq a, IsString a) => a" :: Doc a
+      , [Unguarded (Import "Data.String" ["IsString"])]
+      )
+    EnumValueInt _ -> ("Integral a => a", [])
+    -- TODO: error handling here
+    EnumValueAlias a ->
+      (pretty (fromMaybe (error (show a)) (getEnumerantEnumName a)), [])
+
 constantExtensionDoc
   :: (Text -> Maybe Text) -> ConstantExtension -> DocMap -> Doc ()
-constantExtensionDoc getEnumerantEnumName ConstantExtension{..} getDoc = [qci|
-  {document getDoc (TopLevel ceName)}
-  pattern {ceName} :: {case ceValue of
-      EnumValueString _ -> "(Eq a ,IsString a) => a" :: Doc a
-      EnumValueInt    _ -> "Integral a => a"
-      -- TODO: error handling here
-      EnumValueAlias  a -> pretty (fromMaybe (error (show a)) (getEnumerantEnumName a))
-  }
-  pattern {ceName} = {case ceValue of
-      EnumValueString s -> tShow s
-      EnumValueInt    i -> tShow i
-      EnumValueAlias  a -> a
-  }
-|]
+constantExtensionDoc getEnumerantEnumName ce@ConstantExtension {..} =
+  let value = pretty $ case ceValue of
+        EnumValueString s -> tShow s
+        EnumValueInt    i -> tShow i
+        EnumValueAlias  a -> a
+  in  constantExtensionDocWithValue getEnumerantEnumName ce value

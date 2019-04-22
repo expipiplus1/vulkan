@@ -207,6 +207,7 @@ specWrapperWriteElements spec@Spec {..} = do
   handleWrappers <- eitherToValidation
     $ traverse handleWrapper dispatchableHandles
   aliases        <- writeAliases (makeMarshalledAliases spec)
+  enumAliases    <- traverse writeFullEnumAliases (makeMarshalledEnumAliases spec)
   someVkStructWE <- eitherToValidation
     $ someVkStructWriteElement getHandle sPlatforms enabledStructs
   peekStructWE <- eitherToValidation
@@ -217,6 +218,7 @@ specWrapperWriteElements spec@Spec {..} = do
         , concat bracketAndCommandWrappers
         , handleWrappers
         , aliases
+        , enumAliases
         ]
     ++ [vkStructWriteElement, peekStructWE, someVkStructWE]
     )
@@ -233,7 +235,7 @@ specCWriteElements s@Spec {..} = do
 
     getEnumAliasTarget :: Text -> Maybe Text
     getEnumAliasTarget n = do
-      a <- find ((== n) . aName ) (fst <$> enumAliases sAliases)
+      a <- find ((== n) . aName ) (enumAliases sAliases)
       eitherToMaybe (eName <$> aliasTarget a)
 
     getEnumerantEnumName :: Text -> Maybe Text

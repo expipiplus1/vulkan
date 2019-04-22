@@ -35,10 +35,11 @@ import qualified Spec.Type               as P
 
 data Aliases = Aliases
   { commandAliases       :: [Alias Command]
-  , enumAliases          :: [(Alias Enum, [Alias EnumElement])]
+  , enumAliases          :: [Alias Enum]
   , handleAliases        :: [Alias Handle]
   , structAliases        :: [Alias Struct]
   , constantAliases      :: [Alias APIConstant]
+  , constantExtensionAliases :: [Alias ConstantExtension]
   , enumExtensionAliases :: [Alias (Enum, Text)]
     -- (Enum, enumerant name)
   }
@@ -85,8 +86,7 @@ specAliases P.Spec {..} commands enums handles structs constants requirements =
       commands
       cName
     enumAliases <-
-      fmap (fmap (, []))
-      .   (<>)
+      (<>)
       <$> makeTypeAliases typeAliases "enum" enums eName
       <*> makeBitmaskAliases typeAliases bitmaskTypes enums eName
     handleAliases   <- makeTypeAliases typeAliases "handle" handles hName
@@ -98,6 +98,7 @@ specAliases P.Spec {..} commands enums handles structs constants requirements =
       ]
       constants
       acName
+    let constantExtensionAliases = []
     enumExtensionAliases <- eitherToValidation $ do
       let enumMap              = Map.fromList ((eName &&& id) <$> enums)
           enumExtensionAliases = rEnumAliases =<< requirements
