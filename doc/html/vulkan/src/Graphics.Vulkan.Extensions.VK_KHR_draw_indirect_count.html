@@ -1,0 +1,572 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language Strict #-}</span><span>
+</span><a name="line-2"></a><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><a name="line-3"></a><span class="hs-pragma">{-# language PatternSynonyms #-}</span><span>
+</span><a name="line-4"></a><span>
+</span><a name="line-5"></a><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Graphics.Vulkan.Extensions.VK_KHR_draw_indirect_count</span><span>
+</span><a name="line-6"></a><span>  </span><span class="hs-special">(</span><span> </span><a href="Graphics.Vulkan.Extensions.VK_KHR_draw_indirect_count.html#cmdDrawIndexedIndirectCountKHR"><span class="hs-identifier hs-var">cmdDrawIndexedIndirectCountKHR</span></a><span>
+</span><a name="line-7"></a><span>  </span><span class="hs-special">,</span><span> </span><a href="Graphics.Vulkan.Extensions.VK_KHR_draw_indirect_count.html#cmdDrawIndirectCountKHR"><span class="hs-identifier hs-var">cmdDrawIndirectCountKHR</span></a><span>
+</span><a name="line-8"></a><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><a href="Graphics.Vulkan.Extensions.VK_KHR_draw_indirect_count.html#KHR_DRAW_INDIRECT_COUNT_EXTENSION_NAME"><span class="hs-identifier hs-var">KHR_DRAW_INDIRECT_COUNT_EXTENSION_NAME</span></a><span>
+</span><a name="line-9"></a><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><a href="Graphics.Vulkan.Extensions.VK_KHR_draw_indirect_count.html#KHR_DRAW_INDIRECT_COUNT_SPEC_VERSION"><span class="hs-identifier hs-var">KHR_DRAW_INDIRECT_COUNT_SPEC_VERSION</span></a><span>
+</span><a name="line-10"></a><span>  </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><a name="line-11"></a><span>
+</span><a name="line-12"></a><span class="hs-keyword">import</span><span> </span><span class="hs-identifier">Data.String</span><span>
+</span><a name="line-13"></a><span>  </span><span class="hs-special">(</span><span> </span><span class="hs-identifier hs-type">IsString</span><span>
+</span><a name="line-14"></a><span>  </span><span class="hs-special">)</span><span>
+</span><a name="line-15"></a><span class="hs-keyword">import</span><span> </span><span class="hs-identifier">Data.Word</span><span>
+</span><a name="line-16"></a><span>  </span><span class="hs-special">(</span><span> </span><span class="hs-identifier hs-type">Word32</span><span>
+</span><a name="line-17"></a><span>  </span><span class="hs-special">)</span><span>
+</span><a name="line-18"></a><span>
+</span><a name="line-19"></a><span>
+</span><a name="line-20"></a><span class="hs-keyword">import</span><span> </span><a href="Graphics.Vulkan.C.Extensions.VK_KHR_draw_indirect_count.html"><span class="hs-identifier">Graphics.Vulkan.C.Extensions.VK_KHR_draw_indirect_count</span></a><span>
+</span><a name="line-21"></a><span>  </span><span class="hs-special">(</span><span> </span><a href="Graphics.Vulkan.C.Extensions.VK_KHR_draw_indirect_count.html#vkCmdDrawIndexedIndirectCountKHR"><span class="hs-identifier hs-var">vkCmdDrawIndexedIndirectCountKHR</span></a><span>
+</span><a name="line-22"></a><span>  </span><span class="hs-special">,</span><span> </span><a href="Graphics.Vulkan.C.Extensions.VK_KHR_draw_indirect_count.html#vkCmdDrawIndirectCountKHR"><span class="hs-identifier hs-var">vkCmdDrawIndirectCountKHR</span></a><span>
+</span><a name="line-23"></a><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><a href="Graphics.Vulkan.C.Extensions.VK_KHR_draw_indirect_count.html#VK_KHR_DRAW_INDIRECT_COUNT_EXTENSION_NAME"><span class="hs-identifier hs-var">VK_KHR_DRAW_INDIRECT_COUNT_EXTENSION_NAME</span></a><span>
+</span><a name="line-24"></a><span>  </span><span class="hs-special">,</span><span> </span><span class="hs-keyword">pattern</span><span> </span><a href="Graphics.Vulkan.C.Extensions.VK_KHR_draw_indirect_count.html#VK_KHR_DRAW_INDIRECT_COUNT_SPEC_VERSION"><span class="hs-identifier hs-var">VK_KHR_DRAW_INDIRECT_COUNT_SPEC_VERSION</span></a><span>
+</span><a name="line-25"></a><span>  </span><span class="hs-special">)</span><span>
+</span><a name="line-26"></a><span class="hs-keyword">import</span><span> </span><a href="Graphics.Vulkan.Core10.DeviceInitialization.html"><span class="hs-identifier">Graphics.Vulkan.Core10.DeviceInitialization</span></a><span>
+</span><a name="line-27"></a><span>  </span><span class="hs-special">(</span><span> </span><a href="Graphics.Vulkan.Core10.DeviceInitialization.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a><span>
+</span><a name="line-28"></a><span>  </span><span class="hs-special">)</span><span>
+</span><a name="line-29"></a><span class="hs-keyword">import</span><span> </span><a href="Graphics.Vulkan.Core10.MemoryManagement.html"><span class="hs-identifier">Graphics.Vulkan.Core10.MemoryManagement</span></a><span>
+</span><a name="line-30"></a><span>  </span><span class="hs-special">(</span><span> </span><a href="Graphics.Vulkan.Core10.MemoryManagement.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a><span>
+</span><a name="line-31"></a><span>  </span><span class="hs-special">)</span><span>
+</span><a name="line-32"></a><span class="hs-keyword">import</span><span> </span><a href="Graphics.Vulkan.Core10.Queue.html"><span class="hs-identifier">Graphics.Vulkan.Core10.Queue</span></a><span>
+</span><a name="line-33"></a><span>  </span><span class="hs-special">(</span><span> </span><a href="Graphics.Vulkan.Core10.Queue.html#CommandBuffer"><span class="hs-identifier hs-type">CommandBuffer</span></a><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span>
+</span><a name="line-34"></a><span>  </span><span class="hs-special">)</span><span>
+</span><a name="line-35"></a><span>
+</span><a name="line-36"></a><span>
+</span><a name="line-37"></a><span>
+</span><a name="line-38"></a><span class="hs-comment">-- | vkCmdDrawIndexedIndirectCountKHR - Perform an indexed indirect draw with</span><span>
+</span><a name="line-39"></a><span class="hs-comment">-- the draw count sourced from a buffer</span><span>
+</span><a name="line-40"></a><span class="hs-comment">--</span><span>
+</span><a name="line-41"></a><span class="hs-comment">-- = Parameters</span><span>
+</span><a name="line-42"></a><span class="hs-comment">--</span><span>
+</span><a name="line-43"></a><span class="hs-comment">-- -   @commandBuffer@ is the command buffer into which the command is</span><span>
+</span><a name="line-44"></a><span class="hs-comment">--     recorded.</span><span>
+</span><a name="line-45"></a><span class="hs-comment">--</span><span>
+</span><a name="line-46"></a><span class="hs-comment">-- -   @buffer@ is the buffer containing draw parameters.</span><span>
+</span><a name="line-47"></a><span class="hs-comment">--</span><span>
+</span><a name="line-48"></a><span class="hs-comment">-- -   @offset@ is the byte offset into @buffer@ where parameters begin.</span><span>
+</span><a name="line-49"></a><span class="hs-comment">--</span><span>
+</span><a name="line-50"></a><span class="hs-comment">-- -   @countBuffer@ is the buffer containing the draw count.</span><span>
+</span><a name="line-51"></a><span class="hs-comment">--</span><span>
+</span><a name="line-52"></a><span class="hs-comment">-- -   @countBufferOffset@ is the byte offset into @countBuffer@ where the</span><span>
+</span><a name="line-53"></a><span class="hs-comment">--     draw count begins.</span><span>
+</span><a name="line-54"></a><span class="hs-comment">--</span><span>
+</span><a name="line-55"></a><span class="hs-comment">-- -   @maxDrawCount@ specifies the maximum number of draws that will be</span><span>
+</span><a name="line-56"></a><span class="hs-comment">--     executed. The actual number of executed draw calls is the minimum of</span><span>
+</span><a name="line-57"></a><span class="hs-comment">--     the count specified in @countBuffer@ and @maxDrawCount@.</span><span>
+</span><a name="line-58"></a><span class="hs-comment">--</span><span>
+</span><a name="line-59"></a><span class="hs-comment">-- -   @stride@ is the byte stride between successive sets of draw</span><span>
+</span><a name="line-60"></a><span class="hs-comment">--     parameters.</span><span>
+</span><a name="line-61"></a><span class="hs-comment">--</span><span>
+</span><a name="line-62"></a><span class="hs-comment">-- = Description</span><span>
+</span><a name="line-63"></a><span class="hs-comment">--</span><span>
+</span><a name="line-64"></a><span class="hs-comment">-- 'Graphics.Vulkan.C.Extensions.VK_KHR_draw_indirect_count.vkCmdDrawIndexedIndirectCountKHR'</span><span>
+</span><a name="line-65"></a><span class="hs-comment">-- behaves similarly to</span><span>
+</span><a name="line-66"></a><span class="hs-comment">-- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDrawIndexedIndirect'</span><span>
+</span><a name="line-67"></a><span class="hs-comment">-- except that the draw count is read by the device from a buffer during</span><span>
+</span><a name="line-68"></a><span class="hs-comment">-- execution. The command will read an unsigned 32-bit integer from</span><span>
+</span><a name="line-69"></a><span class="hs-comment">-- @countBuffer@ located at @countBufferOffset@ and use this as the draw</span><span>
+</span><a name="line-70"></a><span class="hs-comment">-- count.</span><span>
+</span><a name="line-71"></a><span class="hs-comment">--</span><span>
+</span><a name="line-72"></a><span class="hs-comment">-- == Valid Usage</span><span>
+</span><a name="line-73"></a><span class="hs-comment">--</span><span>
+</span><a name="line-74"></a><span class="hs-comment">-- -   If a 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' is sampled</span><span>
+</span><a name="line-75"></a><span class="hs-comment">--     with 'Graphics.Vulkan.C.Core10.Sampler.VK_FILTER_LINEAR' as a result</span><span>
+</span><a name="line-76"></a><span class="hs-comment">--     of this command, then the image view&#8217;s</span><span>
+</span><a name="line-77"></a><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features&gt;</span><span>
+</span><a name="line-78"></a><span class="hs-comment">--     /must/ contain</span><span>
+</span><a name="line-79"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'</span><span>
+</span><a name="line-80"></a><span class="hs-comment">--</span><span>
+</span><a name="line-81"></a><span class="hs-comment">-- -   If a 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' is accessed</span><span>
+</span><a name="line-82"></a><span class="hs-comment">--     using atomic operations as a result of this command, then the image</span><span>
+</span><a name="line-83"></a><span class="hs-comment">--     view&#8217;s</span><span>
+</span><a name="line-84"></a><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features&gt;</span><span>
+</span><a name="line-85"></a><span class="hs-comment">--     /must/ contain</span><span>
+</span><a name="line-86"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT'</span><span>
+</span><a name="line-87"></a><span class="hs-comment">--</span><span>
+</span><a name="line-88"></a><span class="hs-comment">-- -   For each set /n/ that is statically used by the</span><span>
+</span><a name="line-89"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to the pipeline</span><span>
+</span><a name="line-90"></a><span class="hs-comment">--     bind point used by this command, a descriptor set /must/ have been</span><span>
+</span><a name="line-91"></a><span class="hs-comment">--     bound to /n/ at the same pipeline bind point, with a</span><span>
+</span><a name="line-92"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' that is</span><span>
+</span><a name="line-93"></a><span class="hs-comment">--     compatible for set /n/, with the</span><span>
+</span><a name="line-94"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' used to create</span><span>
+</span><a name="line-95"></a><span class="hs-comment">--     the current 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline', as</span><span>
+</span><a name="line-96"></a><span class="hs-comment">--     described in</span><span>
+</span><a name="line-97"></a><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility ???&gt;</span><span>
+</span><a name="line-98"></a><span class="hs-comment">--</span><span>
+</span><a name="line-99"></a><span class="hs-comment">-- -   For each push constant that is statically used by the</span><span>
+</span><a name="line-100"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to the pipeline</span><span>
+</span><a name="line-101"></a><span class="hs-comment">--     bind point used by this command, a push constant value /must/ have</span><span>
+</span><a name="line-102"></a><span class="hs-comment">--     been set for the same pipeline bind point, with a</span><span>
+</span><a name="line-103"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' that is</span><span>
+</span><a name="line-104"></a><span class="hs-comment">--     compatible for push constants, with the</span><span>
+</span><a name="line-105"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' used to create</span><span>
+</span><a name="line-106"></a><span class="hs-comment">--     the current 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline', as</span><span>
+</span><a name="line-107"></a><span class="hs-comment">--     described in</span><span>
+</span><a name="line-108"></a><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility ???&gt;</span><span>
+</span><a name="line-109"></a><span class="hs-comment">--</span><span>
+</span><a name="line-110"></a><span class="hs-comment">-- -   Descriptors in each bound descriptor set, specified via</span><span>
+</span><a name="line-111"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindDescriptorSets',</span><span>
+</span><a name="line-112"></a><span class="hs-comment">--     /must/ be valid if they are statically used by the</span><span>
+</span><a name="line-113"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to the pipeline</span><span>
+</span><a name="line-114"></a><span class="hs-comment">--     bind point used by this command</span><span>
+</span><a name="line-115"></a><span class="hs-comment">--</span><span>
+</span><a name="line-116"></a><span class="hs-comment">-- -   A valid pipeline /must/ be bound to the pipeline bind point used by</span><span>
+</span><a name="line-117"></a><span class="hs-comment">--     this command</span><span>
+</span><a name="line-118"></a><span class="hs-comment">--</span><span>
+</span><a name="line-119"></a><span class="hs-comment">-- -   If the 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound</span><span>
+</span><a name="line-120"></a><span class="hs-comment">--     to the pipeline bind point used by this command requires any dynamic</span><span>
+</span><a name="line-121"></a><span class="hs-comment">--     state, that state /must/ have been set for @commandBuffer@</span><span>
+</span><a name="line-122"></a><span class="hs-comment">--</span><span>
+</span><a name="line-123"></a><span class="hs-comment">-- -   If the 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound</span><span>
+</span><a name="line-124"></a><span class="hs-comment">--     to the pipeline bind point used by this command accesses a</span><span>
+</span><a name="line-125"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Sampler.VkSampler' object that uses</span><span>
+</span><a name="line-126"></a><span class="hs-comment">--     unnormalized coordinates, that sampler /must/ not be used to sample</span><span>
+</span><a name="line-127"></a><span class="hs-comment">--     from any 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' with a</span><span>
+</span><a name="line-128"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.ImageView.VkImageView' of the type</span><span>
+</span><a name="line-129"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_3D',</span><span>
+</span><a name="line-130"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_CUBE',</span><span>
+</span><a name="line-131"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_1D_ARRAY',</span><span>
+</span><a name="line-132"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_2D_ARRAY' or</span><span>
+</span><a name="line-133"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_CUBE_ARRAY',</span><span>
+</span><a name="line-134"></a><span class="hs-comment">--     in any shader stage</span><span>
+</span><a name="line-135"></a><span class="hs-comment">--</span><span>
+</span><a name="line-136"></a><span class="hs-comment">-- -   If the 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound</span><span>
+</span><a name="line-137"></a><span class="hs-comment">--     to the pipeline bind point used by this command accesses a</span><span>
+</span><a name="line-138"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Sampler.VkSampler' object that uses</span><span>
+</span><a name="line-139"></a><span class="hs-comment">--     unnormalized coordinates, that sampler /must/ not be used with any</span><span>
+</span><a name="line-140"></a><span class="hs-comment">--     of the SPIR-V @OpImageSample*@ or @OpImageSparseSample*@</span><span>
+</span><a name="line-141"></a><span class="hs-comment">--     instructions with @ImplicitLod@, @Dref@ or @Proj@ in their name, in</span><span>
+</span><a name="line-142"></a><span class="hs-comment">--     any shader stage</span><span>
+</span><a name="line-143"></a><span class="hs-comment">--</span><span>
+</span><a name="line-144"></a><span class="hs-comment">-- -   If the 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound</span><span>
+</span><a name="line-145"></a><span class="hs-comment">--     to the pipeline bind point used by this command accesses a</span><span>
+</span><a name="line-146"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Sampler.VkSampler' object that uses</span><span>
+</span><a name="line-147"></a><span class="hs-comment">--     unnormalized coordinates, that sampler /must/ not be used with any</span><span>
+</span><a name="line-148"></a><span class="hs-comment">--     of the SPIR-V @OpImageSample*@ or @OpImageSparseSample*@</span><span>
+</span><a name="line-149"></a><span class="hs-comment">--     instructions that includes a LOD bias or any offset values, in any</span><span>
+</span><a name="line-150"></a><span class="hs-comment">--     shader stage</span><span>
+</span><a name="line-151"></a><span class="hs-comment">--</span><span>
+</span><a name="line-152"></a><span class="hs-comment">-- -   If the</span><span>
+</span><a name="line-153"></a><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access&gt;</span><span>
+</span><a name="line-154"></a><span class="hs-comment">--     feature is not enabled, and if the</span><span>
+</span><a name="line-155"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound to the</span><span>
+</span><a name="line-156"></a><span class="hs-comment">--     pipeline bind point used by this command accesses a uniform buffer,</span><span>
+</span><a name="line-157"></a><span class="hs-comment">--     it /must/ not access values outside of the range of the buffer as</span><span>
+</span><a name="line-158"></a><span class="hs-comment">--     specified in the descriptor set bound to the same pipeline bind</span><span>
+</span><a name="line-159"></a><span class="hs-comment">--     point</span><span>
+</span><a name="line-160"></a><span class="hs-comment">--</span><span>
+</span><a name="line-161"></a><span class="hs-comment">-- -   If the</span><span>
+</span><a name="line-162"></a><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access&gt;</span><span>
+</span><a name="line-163"></a><span class="hs-comment">--     feature is not enabled, and if the</span><span>
+</span><a name="line-164"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound to the</span><span>
+</span><a name="line-165"></a><span class="hs-comment">--     pipeline bind point used by this command accesses a storage buffer,</span><span>
+</span><a name="line-166"></a><span class="hs-comment">--     it /must/ not access values outside of the range of the buffer as</span><span>
+</span><a name="line-167"></a><span class="hs-comment">--     specified in the descriptor set bound to the same pipeline bind</span><span>
+</span><a name="line-168"></a><span class="hs-comment">--     point</span><span>
+</span><a name="line-169"></a><span class="hs-comment">--</span><span>
+</span><a name="line-170"></a><span class="hs-comment">-- -   The current render pass /must/ be</span><span>
+</span><a name="line-171"></a><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility compatible&gt;</span><span>
+</span><a name="line-172"></a><span class="hs-comment">--     with the @renderPass@ member of the</span><span>
+</span><a name="line-173"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkGraphicsPipelineCreateInfo'</span><span>
+</span><a name="line-174"></a><span class="hs-comment">--     structure specified when creating the</span><span>
+</span><a name="line-175"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to</span><span>
+</span><a name="line-176"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS'.</span><span>
+</span><a name="line-177"></a><span class="hs-comment">--</span><span>
+</span><a name="line-178"></a><span class="hs-comment">-- -   The subpass index of the current render pass /must/ be equal to the</span><span>
+</span><a name="line-179"></a><span class="hs-comment">--     @subpass@ member of the</span><span>
+</span><a name="line-180"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkGraphicsPipelineCreateInfo'</span><span>
+</span><a name="line-181"></a><span class="hs-comment">--     structure specified when creating the</span><span>
+</span><a name="line-182"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to</span><span>
+</span><a name="line-183"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS'.</span><span>
+</span><a name="line-184"></a><span class="hs-comment">--</span><span>
+</span><a name="line-185"></a><span class="hs-comment">-- -   Every input attachment used by the current subpass /must/ be bound</span><span>
+</span><a name="line-186"></a><span class="hs-comment">--     to the pipeline via a descriptor set</span><span>
+</span><a name="line-187"></a><span class="hs-comment">--</span><span>
+</span><a name="line-188"></a><span class="hs-comment">-- -   Image subresources used as attachments in the current render pass</span><span>
+</span><a name="line-189"></a><span class="hs-comment">--     /must/ not be accessed in any way other than as an attachment by</span><span>
+</span><a name="line-190"></a><span class="hs-comment">--     this command.</span><span>
+</span><a name="line-191"></a><span class="hs-comment">--</span><span>
+</span><a name="line-192"></a><span class="hs-comment">-- -   All vertex input bindings accessed via vertex input variables</span><span>
+</span><a name="line-193"></a><span class="hs-comment">--     declared in the vertex shader entry point&#8217;s interface /must/ have</span><span>
+</span><a name="line-194"></a><span class="hs-comment">--     valid buffers bound</span><span>
+</span><a name="line-195"></a><span class="hs-comment">--</span><span>
+</span><a name="line-196"></a><span class="hs-comment">-- -   For a given vertex buffer binding, any attribute data fetched /must/</span><span>
+</span><a name="line-197"></a><span class="hs-comment">--     be entirely contained within the corresponding vertex buffer</span><span>
+</span><a name="line-198"></a><span class="hs-comment">--     binding, as described in</span><span>
+</span><a name="line-199"></a><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fxvertex-input ???&gt;</span><span>
+</span><a name="line-200"></a><span class="hs-comment">--</span><span>
+</span><a name="line-201"></a><span class="hs-comment">-- -   If @buffer@ is non-sparse then it /must/ be bound completely and</span><span>
+</span><a name="line-202"></a><span class="hs-comment">--     contiguously to a single</span><span>
+</span><a name="line-203"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object</span><span>
+</span><a name="line-204"></a><span class="hs-comment">--</span><span>
+</span><a name="line-205"></a><span class="hs-comment">-- -   @buffer@ /must/ have been created with the</span><span>
+</span><a name="line-206"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT'</span><span>
+</span><a name="line-207"></a><span class="hs-comment">--     bit set</span><span>
+</span><a name="line-208"></a><span class="hs-comment">--</span><span>
+</span><a name="line-209"></a><span class="hs-comment">-- -   @offset@ /must/ be a multiple of @4@</span><span>
+</span><a name="line-210"></a><span class="hs-comment">--</span><span>
+</span><a name="line-211"></a><span class="hs-comment">-- -   If @countBuffer@ is non-sparse then it /must/ be bound completely</span><span>
+</span><a name="line-212"></a><span class="hs-comment">--     and contiguously to a single</span><span>
+</span><a name="line-213"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object</span><span>
+</span><a name="line-214"></a><span class="hs-comment">--</span><span>
+</span><a name="line-215"></a><span class="hs-comment">-- -   @countBuffer@ /must/ have been created with the</span><span>
+</span><a name="line-216"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT'</span><span>
+</span><a name="line-217"></a><span class="hs-comment">--     bit set</span><span>
+</span><a name="line-218"></a><span class="hs-comment">--</span><span>
+</span><a name="line-219"></a><span class="hs-comment">-- -   @countBufferOffset@ /must/ be a multiple of @4@</span><span>
+</span><a name="line-220"></a><span class="hs-comment">--</span><span>
+</span><a name="line-221"></a><span class="hs-comment">-- -   The count stored in @countBuffer@ /must/ be less than or equal to</span><span>
+</span><a name="line-222"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxDrawIndirectCount@</span><span>
+</span><a name="line-223"></a><span class="hs-comment">--</span><span>
+</span><a name="line-224"></a><span class="hs-comment">-- -   @stride@ /must/ be a multiple of @4@ and /must/ be greater than or</span><span>
+</span><a name="line-225"></a><span class="hs-comment">--     equal to</span><span>
+</span><a name="line-226"></a><span class="hs-comment">--     sizeof('Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkDrawIndexedIndirectCommand')</span><span>
+</span><a name="line-227"></a><span class="hs-comment">--</span><span>
+</span><a name="line-228"></a><span class="hs-comment">-- -   If @maxDrawCount@ is greater than or equal to @1@, (@stride@ &#215;</span><span>
+</span><a name="line-229"></a><span class="hs-comment">--     (@maxDrawCount@ - 1) + @offset@ +</span><span>
+</span><a name="line-230"></a><span class="hs-comment">--     sizeof('Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkDrawIndexedIndirectCommand'))</span><span>
+</span><a name="line-231"></a><span class="hs-comment">--     /must/ be less than or equal to the size of @buffer@</span><span>
+</span><a name="line-232"></a><span class="hs-comment">--</span><span>
+</span><a name="line-233"></a><span class="hs-comment">-- -   If count stored in @countBuffer@ is equal to @1@, (@offset@ +</span><span>
+</span><a name="line-234"></a><span class="hs-comment">--     sizeof('Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkDrawIndexedIndirectCommand'))</span><span>
+</span><a name="line-235"></a><span class="hs-comment">--     /must/ be less than or equal to the size of @buffer@</span><span>
+</span><a name="line-236"></a><span class="hs-comment">--</span><span>
+</span><a name="line-237"></a><span class="hs-comment">-- -   If count stored in @countBuffer@ is greater than @1@, (@stride@ &#215;</span><span>
+</span><a name="line-238"></a><span class="hs-comment">--     (@drawCount@ - 1) + @offset@ +</span><span>
+</span><a name="line-239"></a><span class="hs-comment">--     sizeof('Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkDrawIndexedIndirectCommand'))</span><span>
+</span><a name="line-240"></a><span class="hs-comment">--     /must/ be less than or equal to the size of @buffer@</span><span>
+</span><a name="line-241"></a><span class="hs-comment">--</span><span>
+</span><a name="line-242"></a><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><a name="line-243"></a><span class="hs-comment">--</span><span>
+</span><a name="line-244"></a><span class="hs-comment">-- -   @commandBuffer@ /must/ be a valid</span><span>
+</span><a name="line-245"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle</span><span>
+</span><a name="line-246"></a><span class="hs-comment">--</span><span>
+</span><a name="line-247"></a><span class="hs-comment">-- -   @buffer@ /must/ be a valid</span><span>
+</span><a name="line-248"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle</span><span>
+</span><a name="line-249"></a><span class="hs-comment">--</span><span>
+</span><a name="line-250"></a><span class="hs-comment">-- -   @countBuffer@ /must/ be a valid</span><span>
+</span><a name="line-251"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle</span><span>
+</span><a name="line-252"></a><span class="hs-comment">--</span><span>
+</span><a name="line-253"></a><span class="hs-comment">-- -   @commandBuffer@ /must/ be in the</span><span>
+</span><a name="line-254"></a><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state&gt;</span><span>
+</span><a name="line-255"></a><span class="hs-comment">--</span><span>
+</span><a name="line-256"></a><span class="hs-comment">-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that</span><span>
+</span><a name="line-257"></a><span class="hs-comment">--     @commandBuffer@ was allocated from /must/ support graphics</span><span>
+</span><a name="line-258"></a><span class="hs-comment">--     operations</span><span>
+</span><a name="line-259"></a><span class="hs-comment">--</span><span>
+</span><a name="line-260"></a><span class="hs-comment">-- -   This command /must/ only be called inside of a render pass instance</span><span>
+</span><a name="line-261"></a><span class="hs-comment">--</span><span>
+</span><a name="line-262"></a><span class="hs-comment">-- -   Each of @buffer@, @commandBuffer@, and @countBuffer@ /must/ have</span><span>
+</span><a name="line-263"></a><span class="hs-comment">--     been created, allocated, or retrieved from the same</span><span>
+</span><a name="line-264"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'</span><span>
+</span><a name="line-265"></a><span class="hs-comment">--</span><span>
+</span><a name="line-266"></a><span class="hs-comment">-- == Host Synchronization</span><span>
+</span><a name="line-267"></a><span class="hs-comment">--</span><span>
+</span><a name="line-268"></a><span class="hs-comment">-- -   Host access to @commandBuffer@ /must/ be externally synchronized</span><span>
+</span><a name="line-269"></a><span class="hs-comment">--</span><span>
+</span><a name="line-270"></a><span class="hs-comment">-- -   Host access to the</span><span>
+</span><a name="line-271"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that</span><span>
+</span><a name="line-272"></a><span class="hs-comment">--     @commandBuffer@ was allocated from /must/ be externally synchronized</span><span>
+</span><a name="line-273"></a><span class="hs-comment">--</span><span>
+</span><a name="line-274"></a><span class="hs-comment">-- == Command Properties</span><span>
+</span><a name="line-275"></a><span class="hs-comment">--</span><span>
+</span><a name="line-276"></a><span class="hs-comment">-- \'</span><span>
+</span><a name="line-277"></a><span class="hs-comment">--</span><span>
+</span><a name="line-278"></a><span class="hs-comment">-- &gt; +-----------------+-----------------+-----------------+-----------------+</span><span>
+</span><a name="line-279"></a><span class="hs-comment">-- &gt; | &lt;https://www.kh | &lt;https://www.kh | &lt;https://www.kh | &lt;https://www.kh |</span><span>
+</span><a name="line-280"></a><span class="hs-comment">-- &gt; | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |</span><span>
+</span><a name="line-281"></a><span class="hs-comment">-- &gt; | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |</span><span>
+</span><a name="line-282"></a><span class="hs-comment">-- &gt; | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |</span><span>
+</span><a name="line-283"></a><span class="hs-comment">-- &gt; | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |</span><span>
+</span><a name="line-284"></a><span class="hs-comment">-- &gt; | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |</span><span>
+</span><a name="line-285"></a><span class="hs-comment">-- &gt; | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |</span><span>
+</span><a name="line-286"></a><span class="hs-comment">-- &gt; | nd Buffer Level | r Pass Scope&gt;   | Queue Types&gt;    | tages-types Pip |</span><span>
+</span><a name="line-287"></a><span class="hs-comment">-- &gt; | s&gt;              |                 |                 | eline Type&gt;     |</span><span>
+</span><a name="line-288"></a><span class="hs-comment">-- &gt; +=================+=================+=================+=================+</span><span>
+</span><a name="line-289"></a><span class="hs-comment">-- &gt; | Primary         | Inside          | Graphics        | Graphics        |</span><span>
+</span><a name="line-290"></a><span class="hs-comment">-- &gt; | Secondary       |                 |                 |                 |</span><span>
+</span><a name="line-291"></a><span class="hs-comment">-- &gt; +-----------------+-----------------+-----------------+-----------------+</span><span>
+</span><a name="line-292"></a><span class="hs-comment">--</span><span>
+</span><a name="line-293"></a><span class="hs-comment">-- = See Also</span><span>
+</span><a name="line-294"></a><span class="hs-comment">--</span><span>
+</span><a name="line-295"></a><span class="hs-comment">-- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',</span><span>
+</span><a name="line-296"></a><span class="hs-comment">-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',</span><span>
+</span><a name="line-297"></a><span class="hs-comment">-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize'</span><span>
+</span><a name="line-298"></a><span class="hs-identifier">cmdDrawIndexedIndirectCountKHR</span><span> </span><span class="hs-glyph">::</span><span> </span><a href="Graphics.Vulkan.Core10.Queue.html#CommandBuffer"><span class="hs-identifier hs-type">CommandBuffer</span></a><span> </span><span class="hs-glyph">-&gt;</span><span>  </span><a href="Graphics.Vulkan.Core10.MemoryManagement.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a><span> </span><span class="hs-glyph">-&gt;</span><span>  </span><a href="Graphics.Vulkan.Core10.DeviceInitialization.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a><span> </span><span class="hs-glyph">-&gt;</span><span>  </span><a href="Graphics.Vulkan.Core10.MemoryManagement.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a><span> </span><span class="hs-glyph">-&gt;</span><span>  </span><a href="Graphics.Vulkan.Core10.DeviceInitialization.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a><span> </span><span class="hs-glyph">-&gt;</span><span>  </span><span class="hs-identifier hs-type">Word32</span><span> </span><span class="hs-glyph">-&gt;</span><span>  </span><span class="hs-identifier hs-type">Word32</span><span> </span><span class="hs-glyph">-&gt;</span><span>  </span><span class="hs-identifier hs-type">IO</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><a name="line-299"></a><a name="cmdDrawIndexedIndirectCountKHR"><a href="Graphics.Vulkan.Extensions.VK_KHR_draw_indirect_count.html#cmdDrawIndexedIndirectCountKHR"><span class="hs-identifier">cmdDrawIndexedIndirectCountKHR</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-special">(</span><a href="Graphics.Vulkan.Core10.Queue.html#CommandBuffer"><span class="hs-identifier hs-var">CommandBuffer</span></a><span> </span><a name="local-6989586621679922250"><a href="#local-6989586621679922250"><span class="hs-identifier">commandBuffer'</span></a></a><span> </span><a name="local-6989586621679922251"><a href="#local-6989586621679922251"><span class="hs-identifier">commandTable</span></a></a><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-glyph">\</span><a name="local-6989586621679922252"><a href="#local-6989586621679922252"><span class="hs-identifier">buffer'</span></a></a><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-glyph">\</span><a name="local-6989586621679922253"><a href="#local-6989586621679922253"><span class="hs-identifier">offset'</span></a></a><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-glyph">\</span><a name="local-6989586621679922254"><a href="#local-6989586621679922254"><span class="hs-identifier">countBuffer'</span></a></a><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-glyph">\</span><a name="local-6989586621679922255"><a href="#local-6989586621679922255"><span class="hs-identifier">countBufferOffset'</span></a></a><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-glyph">\</span><a name="local-6989586621679922256"><a href="#local-6989586621679922256"><span class="hs-identifier">maxDrawCount'</span></a></a><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-glyph">\</span><a name="local-6989586621679922257"><a href="#local-6989586621679922257"><span class="hs-identifier">stride'</span></a></a><span> </span><span class="hs-glyph">-&gt;</span><span> </span><a href="Graphics.Vulkan.C.Extensions.VK_KHR_draw_indirect_count.html#vkCmdDrawIndexedIndirectCountKHR"><span class="hs-identifier hs-var">vkCmdDrawIndexedIndirectCountKHR</span></a><span> </span><a href="#local-6989586621679922251"><span class="hs-identifier hs-var">commandTable</span></a><span> </span><a href="#local-6989586621679922250"><span class="hs-identifier hs-var">commandBuffer'</span></a><span> </span><a href="#local-6989586621679922252"><span class="hs-identifier hs-var">buffer'</span></a><span> </span><a href="#local-6989586621679922253"><span class="hs-identifier hs-var">offset'</span></a><span> </span><a href="#local-6989586621679922254"><span class="hs-identifier hs-var">countBuffer'</span></a><span> </span><a href="#local-6989586621679922255"><span class="hs-identifier hs-var">countBufferOffset'</span></a><span> </span><a href="#local-6989586621679922256"><span class="hs-identifier hs-var">maxDrawCount'</span></a><span> </span><a href="#local-6989586621679922257"><span class="hs-identifier hs-var">stride'</span></a><span> </span><span class="hs-operator hs-var">*&gt;</span><span> </span><span class="hs-special">(</span><span class="hs-identifier hs-var">pure</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a name="line-300"></a><span>
+</span><a name="line-301"></a><span>
+</span><a name="line-302"></a><span class="hs-comment">-- | vkCmdDrawIndirectCountKHR - Perform an indirect draw with the draw count</span><span>
+</span><a name="line-303"></a><span class="hs-comment">-- sourced from a buffer</span><span>
+</span><a name="line-304"></a><span class="hs-comment">--</span><span>
+</span><a name="line-305"></a><span class="hs-comment">-- = Parameters</span><span>
+</span><a name="line-306"></a><span class="hs-comment">--</span><span>
+</span><a name="line-307"></a><span class="hs-comment">-- -   @commandBuffer@ is the command buffer into which the command is</span><span>
+</span><a name="line-308"></a><span class="hs-comment">--     recorded.</span><span>
+</span><a name="line-309"></a><span class="hs-comment">--</span><span>
+</span><a name="line-310"></a><span class="hs-comment">-- -   @buffer@ is the buffer containing draw parameters.</span><span>
+</span><a name="line-311"></a><span class="hs-comment">--</span><span>
+</span><a name="line-312"></a><span class="hs-comment">-- -   @offset@ is the byte offset into @buffer@ where parameters begin.</span><span>
+</span><a name="line-313"></a><span class="hs-comment">--</span><span>
+</span><a name="line-314"></a><span class="hs-comment">-- -   @countBuffer@ is the buffer containing the draw count.</span><span>
+</span><a name="line-315"></a><span class="hs-comment">--</span><span>
+</span><a name="line-316"></a><span class="hs-comment">-- -   @countBufferOffset@ is the byte offset into @countBuffer@ where the</span><span>
+</span><a name="line-317"></a><span class="hs-comment">--     draw count begins.</span><span>
+</span><a name="line-318"></a><span class="hs-comment">--</span><span>
+</span><a name="line-319"></a><span class="hs-comment">-- -   @maxDrawCount@ specifies the maximum number of draws that will be</span><span>
+</span><a name="line-320"></a><span class="hs-comment">--     executed. The actual number of executed draw calls is the minimum of</span><span>
+</span><a name="line-321"></a><span class="hs-comment">--     the count specified in @countBuffer@ and @maxDrawCount@.</span><span>
+</span><a name="line-322"></a><span class="hs-comment">--</span><span>
+</span><a name="line-323"></a><span class="hs-comment">-- -   @stride@ is the byte stride between successive sets of draw</span><span>
+</span><a name="line-324"></a><span class="hs-comment">--     parameters.</span><span>
+</span><a name="line-325"></a><span class="hs-comment">--</span><span>
+</span><a name="line-326"></a><span class="hs-comment">-- = Description</span><span>
+</span><a name="line-327"></a><span class="hs-comment">--</span><span>
+</span><a name="line-328"></a><span class="hs-comment">-- 'Graphics.Vulkan.C.Extensions.VK_KHR_draw_indirect_count.vkCmdDrawIndirectCountKHR'</span><span>
+</span><a name="line-329"></a><span class="hs-comment">-- behaves similarly to</span><span>
+</span><a name="line-330"></a><span class="hs-comment">-- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdDrawIndirect'</span><span>
+</span><a name="line-331"></a><span class="hs-comment">-- except that the draw count is read by the device from a buffer during</span><span>
+</span><a name="line-332"></a><span class="hs-comment">-- execution. The command will read an unsigned 32-bit integer from</span><span>
+</span><a name="line-333"></a><span class="hs-comment">-- @countBuffer@ located at @countBufferOffset@ and use this as the draw</span><span>
+</span><a name="line-334"></a><span class="hs-comment">-- count.</span><span>
+</span><a name="line-335"></a><span class="hs-comment">--</span><span>
+</span><a name="line-336"></a><span class="hs-comment">-- == Valid Usage</span><span>
+</span><a name="line-337"></a><span class="hs-comment">--</span><span>
+</span><a name="line-338"></a><span class="hs-comment">-- -   If a 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' is sampled</span><span>
+</span><a name="line-339"></a><span class="hs-comment">--     with 'Graphics.Vulkan.C.Core10.Sampler.VK_FILTER_LINEAR' as a result</span><span>
+</span><a name="line-340"></a><span class="hs-comment">--     of this command, then the image view&#8217;s</span><span>
+</span><a name="line-341"></a><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features&gt;</span><span>
+</span><a name="line-342"></a><span class="hs-comment">--     /must/ contain</span><span>
+</span><a name="line-343"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT'</span><span>
+</span><a name="line-344"></a><span class="hs-comment">--</span><span>
+</span><a name="line-345"></a><span class="hs-comment">-- -   If a 'Graphics.Vulkan.C.Core10.ImageView.VkImageView' is accessed</span><span>
+</span><a name="line-346"></a><span class="hs-comment">--     using atomic operations as a result of this command, then the image</span><span>
+</span><a name="line-347"></a><span class="hs-comment">--     view&#8217;s</span><span>
+</span><a name="line-348"></a><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-view-format-features format features&gt;</span><span>
+</span><a name="line-349"></a><span class="hs-comment">--     /must/ contain</span><span>
+</span><a name="line-350"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT'</span><span>
+</span><a name="line-351"></a><span class="hs-comment">--</span><span>
+</span><a name="line-352"></a><span class="hs-comment">-- -   For each set /n/ that is statically used by the</span><span>
+</span><a name="line-353"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to the pipeline</span><span>
+</span><a name="line-354"></a><span class="hs-comment">--     bind point used by this command, a descriptor set /must/ have been</span><span>
+</span><a name="line-355"></a><span class="hs-comment">--     bound to /n/ at the same pipeline bind point, with a</span><span>
+</span><a name="line-356"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' that is</span><span>
+</span><a name="line-357"></a><span class="hs-comment">--     compatible for set /n/, with the</span><span>
+</span><a name="line-358"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' used to create</span><span>
+</span><a name="line-359"></a><span class="hs-comment">--     the current 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline', as</span><span>
+</span><a name="line-360"></a><span class="hs-comment">--     described in</span><span>
+</span><a name="line-361"></a><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility ???&gt;</span><span>
+</span><a name="line-362"></a><span class="hs-comment">--</span><span>
+</span><a name="line-363"></a><span class="hs-comment">-- -   For each push constant that is statically used by the</span><span>
+</span><a name="line-364"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to the pipeline</span><span>
+</span><a name="line-365"></a><span class="hs-comment">--     bind point used by this command, a push constant value /must/ have</span><span>
+</span><a name="line-366"></a><span class="hs-comment">--     been set for the same pipeline bind point, with a</span><span>
+</span><a name="line-367"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' that is</span><span>
+</span><a name="line-368"></a><span class="hs-comment">--     compatible for push constants, with the</span><span>
+</span><a name="line-369"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' used to create</span><span>
+</span><a name="line-370"></a><span class="hs-comment">--     the current 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline', as</span><span>
+</span><a name="line-371"></a><span class="hs-comment">--     described in</span><span>
+</span><a name="line-372"></a><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility ???&gt;</span><span>
+</span><a name="line-373"></a><span class="hs-comment">--</span><span>
+</span><a name="line-374"></a><span class="hs-comment">-- -   Descriptors in each bound descriptor set, specified via</span><span>
+</span><a name="line-375"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindDescriptorSets',</span><span>
+</span><a name="line-376"></a><span class="hs-comment">--     /must/ be valid if they are statically used by the</span><span>
+</span><a name="line-377"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to the pipeline</span><span>
+</span><a name="line-378"></a><span class="hs-comment">--     bind point used by this command</span><span>
+</span><a name="line-379"></a><span class="hs-comment">--</span><span>
+</span><a name="line-380"></a><span class="hs-comment">-- -   A valid pipeline /must/ be bound to the pipeline bind point used by</span><span>
+</span><a name="line-381"></a><span class="hs-comment">--     this command</span><span>
+</span><a name="line-382"></a><span class="hs-comment">--</span><span>
+</span><a name="line-383"></a><span class="hs-comment">-- -   If the 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound</span><span>
+</span><a name="line-384"></a><span class="hs-comment">--     to the pipeline bind point used by this command requires any dynamic</span><span>
+</span><a name="line-385"></a><span class="hs-comment">--     state, that state /must/ have been set for @commandBuffer@</span><span>
+</span><a name="line-386"></a><span class="hs-comment">--</span><span>
+</span><a name="line-387"></a><span class="hs-comment">-- -   If the 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound</span><span>
+</span><a name="line-388"></a><span class="hs-comment">--     to the pipeline bind point used by this command accesses a</span><span>
+</span><a name="line-389"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Sampler.VkSampler' object that uses</span><span>
+</span><a name="line-390"></a><span class="hs-comment">--     unnormalized coordinates, that sampler /must/ not be used to sample</span><span>
+</span><a name="line-391"></a><span class="hs-comment">--     from any 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' with a</span><span>
+</span><a name="line-392"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.ImageView.VkImageView' of the type</span><span>
+</span><a name="line-393"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_3D',</span><span>
+</span><a name="line-394"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_CUBE',</span><span>
+</span><a name="line-395"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_1D_ARRAY',</span><span>
+</span><a name="line-396"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_2D_ARRAY' or</span><span>
+</span><a name="line-397"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_CUBE_ARRAY',</span><span>
+</span><a name="line-398"></a><span class="hs-comment">--     in any shader stage</span><span>
+</span><a name="line-399"></a><span class="hs-comment">--</span><span>
+</span><a name="line-400"></a><span class="hs-comment">-- -   If the 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound</span><span>
+</span><a name="line-401"></a><span class="hs-comment">--     to the pipeline bind point used by this command accesses a</span><span>
+</span><a name="line-402"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Sampler.VkSampler' object that uses</span><span>
+</span><a name="line-403"></a><span class="hs-comment">--     unnormalized coordinates, that sampler /must/ not be used with any</span><span>
+</span><a name="line-404"></a><span class="hs-comment">--     of the SPIR-V @OpImageSample*@ or @OpImageSparseSample*@</span><span>
+</span><a name="line-405"></a><span class="hs-comment">--     instructions with @ImplicitLod@, @Dref@ or @Proj@ in their name, in</span><span>
+</span><a name="line-406"></a><span class="hs-comment">--     any shader stage</span><span>
+</span><a name="line-407"></a><span class="hs-comment">--</span><span>
+</span><a name="line-408"></a><span class="hs-comment">-- -   If the 'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound</span><span>
+</span><a name="line-409"></a><span class="hs-comment">--     to the pipeline bind point used by this command accesses a</span><span>
+</span><a name="line-410"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Sampler.VkSampler' object that uses</span><span>
+</span><a name="line-411"></a><span class="hs-comment">--     unnormalized coordinates, that sampler /must/ not be used with any</span><span>
+</span><a name="line-412"></a><span class="hs-comment">--     of the SPIR-V @OpImageSample*@ or @OpImageSparseSample*@</span><span>
+</span><a name="line-413"></a><span class="hs-comment">--     instructions that includes a LOD bias or any offset values, in any</span><span>
+</span><a name="line-414"></a><span class="hs-comment">--     shader stage</span><span>
+</span><a name="line-415"></a><span class="hs-comment">--</span><span>
+</span><a name="line-416"></a><span class="hs-comment">-- -   If the</span><span>
+</span><a name="line-417"></a><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access&gt;</span><span>
+</span><a name="line-418"></a><span class="hs-comment">--     feature is not enabled, and if the</span><span>
+</span><a name="line-419"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound to the</span><span>
+</span><a name="line-420"></a><span class="hs-comment">--     pipeline bind point used by this command accesses a uniform buffer,</span><span>
+</span><a name="line-421"></a><span class="hs-comment">--     it /must/ not access values outside of the range of the buffer as</span><span>
+</span><a name="line-422"></a><span class="hs-comment">--     specified in the descriptor set bound to the same pipeline bind</span><span>
+</span><a name="line-423"></a><span class="hs-comment">--     point</span><span>
+</span><a name="line-424"></a><span class="hs-comment">--</span><span>
+</span><a name="line-425"></a><span class="hs-comment">-- -   If the</span><span>
+</span><a name="line-426"></a><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-robustBufferAccess robust buffer access&gt;</span><span>
+</span><a name="line-427"></a><span class="hs-comment">--     feature is not enabled, and if the</span><span>
+</span><a name="line-428"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' object bound to the</span><span>
+</span><a name="line-429"></a><span class="hs-comment">--     pipeline bind point used by this command accesses a storage buffer,</span><span>
+</span><a name="line-430"></a><span class="hs-comment">--     it /must/ not access values outside of the range of the buffer as</span><span>
+</span><a name="line-431"></a><span class="hs-comment">--     specified in the descriptor set bound to the same pipeline bind</span><span>
+</span><a name="line-432"></a><span class="hs-comment">--     point</span><span>
+</span><a name="line-433"></a><span class="hs-comment">--</span><span>
+</span><a name="line-434"></a><span class="hs-comment">-- -   The current render pass /must/ be</span><span>
+</span><a name="line-435"></a><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility compatible&gt;</span><span>
+</span><a name="line-436"></a><span class="hs-comment">--     with the @renderPass@ member of the</span><span>
+</span><a name="line-437"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkGraphicsPipelineCreateInfo'</span><span>
+</span><a name="line-438"></a><span class="hs-comment">--     structure specified when creating the</span><span>
+</span><a name="line-439"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to</span><span>
+</span><a name="line-440"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS'.</span><span>
+</span><a name="line-441"></a><span class="hs-comment">--</span><span>
+</span><a name="line-442"></a><span class="hs-comment">-- -   The subpass index of the current render pass /must/ be equal to the</span><span>
+</span><a name="line-443"></a><span class="hs-comment">--     @subpass@ member of the</span><span>
+</span><a name="line-444"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkGraphicsPipelineCreateInfo'</span><span>
+</span><a name="line-445"></a><span class="hs-comment">--     structure specified when creating the</span><span>
+</span><a name="line-446"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pipeline.VkPipeline' bound to</span><span>
+</span><a name="line-447"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Pass.VK_PIPELINE_BIND_POINT_GRAPHICS'.</span><span>
+</span><a name="line-448"></a><span class="hs-comment">--</span><span>
+</span><a name="line-449"></a><span class="hs-comment">-- -   Every input attachment used by the current subpass /must/ be bound</span><span>
+</span><a name="line-450"></a><span class="hs-comment">--     to the pipeline via a descriptor set</span><span>
+</span><a name="line-451"></a><span class="hs-comment">--</span><span>
+</span><a name="line-452"></a><span class="hs-comment">-- -   Image subresources used as attachments in the current render pass</span><span>
+</span><a name="line-453"></a><span class="hs-comment">--     /must/ not be accessed in any way other than as an attachment by</span><span>
+</span><a name="line-454"></a><span class="hs-comment">--     this command.</span><span>
+</span><a name="line-455"></a><span class="hs-comment">--</span><span>
+</span><a name="line-456"></a><span class="hs-comment">-- -   All vertex input bindings accessed via vertex input variables</span><span>
+</span><a name="line-457"></a><span class="hs-comment">--     declared in the vertex shader entry point&#8217;s interface /must/ have</span><span>
+</span><a name="line-458"></a><span class="hs-comment">--     valid buffers bound</span><span>
+</span><a name="line-459"></a><span class="hs-comment">--</span><span>
+</span><a name="line-460"></a><span class="hs-comment">-- -   For a given vertex buffer binding, any attribute data fetched /must/</span><span>
+</span><a name="line-461"></a><span class="hs-comment">--     be entirely contained within the corresponding vertex buffer</span><span>
+</span><a name="line-462"></a><span class="hs-comment">--     binding, as described in</span><span>
+</span><a name="line-463"></a><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fxvertex-input ???&gt;</span><span>
+</span><a name="line-464"></a><span class="hs-comment">--</span><span>
+</span><a name="line-465"></a><span class="hs-comment">-- -   If @buffer@ is non-sparse then it /must/ be bound completely and</span><span>
+</span><a name="line-466"></a><span class="hs-comment">--     contiguously to a single</span><span>
+</span><a name="line-467"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object</span><span>
+</span><a name="line-468"></a><span class="hs-comment">--</span><span>
+</span><a name="line-469"></a><span class="hs-comment">-- -   @buffer@ /must/ have been created with the</span><span>
+</span><a name="line-470"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT'</span><span>
+</span><a name="line-471"></a><span class="hs-comment">--     bit set</span><span>
+</span><a name="line-472"></a><span class="hs-comment">--</span><span>
+</span><a name="line-473"></a><span class="hs-comment">-- -   @offset@ /must/ be a multiple of @4@</span><span>
+</span><a name="line-474"></a><span class="hs-comment">--</span><span>
+</span><a name="line-475"></a><span class="hs-comment">-- -   If @countBuffer@ is non-sparse then it /must/ be bound completely</span><span>
+</span><a name="line-476"></a><span class="hs-comment">--     and contiguously to a single</span><span>
+</span><a name="line-477"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object</span><span>
+</span><a name="line-478"></a><span class="hs-comment">--</span><span>
+</span><a name="line-479"></a><span class="hs-comment">-- -   @countBuffer@ /must/ have been created with the</span><span>
+</span><a name="line-480"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Buffer.VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT'</span><span>
+</span><a name="line-481"></a><span class="hs-comment">--     bit set</span><span>
+</span><a name="line-482"></a><span class="hs-comment">--</span><span>
+</span><a name="line-483"></a><span class="hs-comment">-- -   @countBufferOffset@ /must/ be a multiple of @4@</span><span>
+</span><a name="line-484"></a><span class="hs-comment">--</span><span>
+</span><a name="line-485"></a><span class="hs-comment">-- -   The count stored in @countBuffer@ /must/ be less than or equal to</span><span>
+</span><a name="line-486"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxDrawIndirectCount@</span><span>
+</span><a name="line-487"></a><span class="hs-comment">--</span><span>
+</span><a name="line-488"></a><span class="hs-comment">-- -   @stride@ /must/ be a multiple of @4@ and /must/ be greater than or</span><span>
+</span><a name="line-489"></a><span class="hs-comment">--     equal to</span><span>
+</span><a name="line-490"></a><span class="hs-comment">--     sizeof('Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkDrawIndirectCommand')</span><span>
+</span><a name="line-491"></a><span class="hs-comment">--</span><span>
+</span><a name="line-492"></a><span class="hs-comment">-- -   If @maxDrawCount@ is greater than or equal to @1@, (@stride@ &#215;</span><span>
+</span><a name="line-493"></a><span class="hs-comment">--     (@maxDrawCount@ - 1) + @offset@ +</span><span>
+</span><a name="line-494"></a><span class="hs-comment">--     sizeof('Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkDrawIndirectCommand'))</span><span>
+</span><a name="line-495"></a><span class="hs-comment">--     /must/ be less than or equal to the size of @buffer@</span><span>
+</span><a name="line-496"></a><span class="hs-comment">--</span><span>
+</span><a name="line-497"></a><span class="hs-comment">-- -   If the count stored in @countBuffer@ is equal to @1@, (@offset@ +</span><span>
+</span><a name="line-498"></a><span class="hs-comment">--     sizeof('Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkDrawIndirectCommand'))</span><span>
+</span><a name="line-499"></a><span class="hs-comment">--     /must/ be less than or equal to the size of @buffer@</span><span>
+</span><a name="line-500"></a><span class="hs-comment">--</span><span>
+</span><a name="line-501"></a><span class="hs-comment">-- -   If the count stored in @countBuffer@ is greater than @1@, (@stride@</span><span>
+</span><a name="line-502"></a><span class="hs-comment">--     &#215; (@drawCount@ - 1) + @offset@ +</span><span>
+</span><a name="line-503"></a><span class="hs-comment">--     sizeof('Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkDrawIndirectCommand'))</span><span>
+</span><a name="line-504"></a><span class="hs-comment">--     /must/ be less than or equal to the size of @buffer@</span><span>
+</span><a name="line-505"></a><span class="hs-comment">--</span><span>
+</span><a name="line-506"></a><span class="hs-comment">-- == Valid Usage (Implicit)</span><span>
+</span><a name="line-507"></a><span class="hs-comment">--</span><span>
+</span><a name="line-508"></a><span class="hs-comment">-- -   @commandBuffer@ /must/ be a valid</span><span>
+</span><a name="line-509"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer' handle</span><span>
+</span><a name="line-510"></a><span class="hs-comment">--</span><span>
+</span><a name="line-511"></a><span class="hs-comment">-- -   @buffer@ /must/ be a valid</span><span>
+</span><a name="line-512"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle</span><span>
+</span><a name="line-513"></a><span class="hs-comment">--</span><span>
+</span><a name="line-514"></a><span class="hs-comment">-- -   @countBuffer@ /must/ be a valid</span><span>
+</span><a name="line-515"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle</span><span>
+</span><a name="line-516"></a><span class="hs-comment">--</span><span>
+</span><a name="line-517"></a><span class="hs-comment">-- -   @commandBuffer@ /must/ be in the</span><span>
+</span><a name="line-518"></a><span class="hs-comment">--     &lt;https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle recording state&gt;</span><span>
+</span><a name="line-519"></a><span class="hs-comment">--</span><span>
+</span><a name="line-520"></a><span class="hs-comment">-- -   The 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that</span><span>
+</span><a name="line-521"></a><span class="hs-comment">--     @commandBuffer@ was allocated from /must/ support graphics</span><span>
+</span><a name="line-522"></a><span class="hs-comment">--     operations</span><span>
+</span><a name="line-523"></a><span class="hs-comment">--</span><span>
+</span><a name="line-524"></a><span class="hs-comment">-- -   This command /must/ only be called inside of a render pass instance</span><span>
+</span><a name="line-525"></a><span class="hs-comment">--</span><span>
+</span><a name="line-526"></a><span class="hs-comment">-- -   Each of @buffer@, @commandBuffer@, and @countBuffer@ /must/ have</span><span>
+</span><a name="line-527"></a><span class="hs-comment">--     been created, allocated, or retrieved from the same</span><span>
+</span><a name="line-528"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'</span><span>
+</span><a name="line-529"></a><span class="hs-comment">--</span><span>
+</span><a name="line-530"></a><span class="hs-comment">-- == Host Synchronization</span><span>
+</span><a name="line-531"></a><span class="hs-comment">--</span><span>
+</span><a name="line-532"></a><span class="hs-comment">-- -   Host access to @commandBuffer@ /must/ be externally synchronized</span><span>
+</span><a name="line-533"></a><span class="hs-comment">--</span><span>
+</span><a name="line-534"></a><span class="hs-comment">-- -   Host access to the</span><span>
+</span><a name="line-535"></a><span class="hs-comment">--     'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPool' that</span><span>
+</span><a name="line-536"></a><span class="hs-comment">--     @commandBuffer@ was allocated from /must/ be externally synchronized</span><span>
+</span><a name="line-537"></a><span class="hs-comment">--</span><span>
+</span><a name="line-538"></a><span class="hs-comment">-- == Command Properties</span><span>
+</span><a name="line-539"></a><span class="hs-comment">--</span><span>
+</span><a name="line-540"></a><span class="hs-comment">-- \'</span><span>
+</span><a name="line-541"></a><span class="hs-comment">--</span><span>
+</span><a name="line-542"></a><span class="hs-comment">-- &gt; +-----------------+-----------------+-----------------+-----------------+</span><span>
+</span><a name="line-543"></a><span class="hs-comment">-- &gt; | &lt;https://www.kh | &lt;https://www.kh | &lt;https://www.kh | &lt;https://www.kh |</span><span>
+</span><a name="line-544"></a><span class="hs-comment">-- &gt; | ronos.org/regis | ronos.org/regis | ronos.org/regis | ronos.org/regis |</span><span>
+</span><a name="line-545"></a><span class="hs-comment">-- &gt; | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec | try/vulkan/spec |</span><span>
+</span><a name="line-546"></a><span class="hs-comment">-- &gt; | s/1.0-extension | s/1.0-extension | s/1.0-extension | s/1.0-extension |</span><span>
+</span><a name="line-547"></a><span class="hs-comment">-- &gt; | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h | s/html/vkspec.h |</span><span>
+</span><a name="line-548"></a><span class="hs-comment">-- &gt; | tml#VkCommandBu | tml#vkCmdBeginR | tml#VkQueueFlag | tml#synchroniza |</span><span>
+</span><a name="line-549"></a><span class="hs-comment">-- &gt; | fferLevel Comma | enderPass Rende | Bits Supported  | tion-pipeline-s |</span><span>
+</span><a name="line-550"></a><span class="hs-comment">-- &gt; | nd Buffer Level | r Pass Scope&gt;   | Queue Types&gt;    | tages-types Pip |</span><span>
+</span><a name="line-551"></a><span class="hs-comment">-- &gt; | s&gt;              |                 |                 | eline Type&gt;     |</span><span>
+</span><a name="line-552"></a><span class="hs-comment">-- &gt; +=================+=================+=================+=================+</span><span>
+</span><a name="line-553"></a><span class="hs-comment">-- &gt; | Primary         | Inside          | Graphics        | Graphics        |</span><span>
+</span><a name="line-554"></a><span class="hs-comment">-- &gt; | Secondary       |                 |                 |                 |</span><span>
+</span><a name="line-555"></a><span class="hs-comment">-- &gt; +-----------------+-----------------+-----------------+-----------------+</span><span>
+</span><a name="line-556"></a><span class="hs-comment">--</span><span>
+</span><a name="line-557"></a><span class="hs-comment">-- = See Also</span><span>
+</span><a name="line-558"></a><span class="hs-comment">--</span><span>
+</span><a name="line-559"></a><span class="hs-comment">-- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',</span><span>
+</span><a name="line-560"></a><span class="hs-comment">-- 'Graphics.Vulkan.C.Core10.Queue.VkCommandBuffer',</span><span>
+</span><a name="line-561"></a><span class="hs-comment">-- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize'</span><span>
+</span><a name="line-562"></a><span class="hs-identifier">cmdDrawIndirectCountKHR</span><span> </span><span class="hs-glyph">::</span><span> </span><a href="Graphics.Vulkan.Core10.Queue.html#CommandBuffer"><span class="hs-identifier hs-type">CommandBuffer</span></a><span> </span><span class="hs-glyph">-&gt;</span><span>  </span><a href="Graphics.Vulkan.Core10.MemoryManagement.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a><span> </span><span class="hs-glyph">-&gt;</span><span>  </span><a href="Graphics.Vulkan.Core10.DeviceInitialization.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a><span> </span><span class="hs-glyph">-&gt;</span><span>  </span><a href="Graphics.Vulkan.Core10.MemoryManagement.html#Buffer"><span class="hs-identifier hs-type">Buffer</span></a><span> </span><span class="hs-glyph">-&gt;</span><span>  </span><a href="Graphics.Vulkan.Core10.DeviceInitialization.html#DeviceSize"><span class="hs-identifier hs-type">DeviceSize</span></a><span> </span><span class="hs-glyph">-&gt;</span><span>  </span><span class="hs-identifier hs-type">Word32</span><span> </span><span class="hs-glyph">-&gt;</span><span>  </span><span class="hs-identifier hs-type">Word32</span><span> </span><span class="hs-glyph">-&gt;</span><span>  </span><span class="hs-identifier hs-type">IO</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span>
+</span><a name="line-563"></a><a name="cmdDrawIndirectCountKHR"><a href="Graphics.Vulkan.Extensions.VK_KHR_draw_indirect_count.html#cmdDrawIndirectCountKHR"><span class="hs-identifier">cmdDrawIndirectCountKHR</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-special">(</span><a href="Graphics.Vulkan.Core10.Queue.html#CommandBuffer"><span class="hs-identifier hs-var">CommandBuffer</span></a><span> </span><a name="local-6989586621679922258"><a href="#local-6989586621679922258"><span class="hs-identifier">commandBuffer'</span></a></a><span> </span><a name="local-6989586621679922259"><a href="#local-6989586621679922259"><span class="hs-identifier">commandTable</span></a></a><span class="hs-special">)</span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-glyph">\</span><a name="local-6989586621679922260"><a href="#local-6989586621679922260"><span class="hs-identifier">buffer'</span></a></a><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-glyph">\</span><a name="local-6989586621679922261"><a href="#local-6989586621679922261"><span class="hs-identifier">offset'</span></a></a><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-glyph">\</span><a name="local-6989586621679922262"><a href="#local-6989586621679922262"><span class="hs-identifier">countBuffer'</span></a></a><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-glyph">\</span><a name="local-6989586621679922263"><a href="#local-6989586621679922263"><span class="hs-identifier">countBufferOffset'</span></a></a><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-glyph">\</span><a name="local-6989586621679922264"><a href="#local-6989586621679922264"><span class="hs-identifier">maxDrawCount'</span></a></a><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="hs-glyph">\</span><a name="local-6989586621679922265"><a href="#local-6989586621679922265"><span class="hs-identifier">stride'</span></a></a><span> </span><span class="hs-glyph">-&gt;</span><span> </span><a href="Graphics.Vulkan.C.Extensions.VK_KHR_draw_indirect_count.html#vkCmdDrawIndirectCountKHR"><span class="hs-identifier hs-var">vkCmdDrawIndirectCountKHR</span></a><span> </span><a href="#local-6989586621679922259"><span class="hs-identifier hs-var">commandTable</span></a><span> </span><a href="#local-6989586621679922258"><span class="hs-identifier hs-var">commandBuffer'</span></a><span> </span><a href="#local-6989586621679922260"><span class="hs-identifier hs-var">buffer'</span></a><span> </span><a href="#local-6989586621679922261"><span class="hs-identifier hs-var">offset'</span></a><span> </span><a href="#local-6989586621679922262"><span class="hs-identifier hs-var">countBuffer'</span></a><span> </span><a href="#local-6989586621679922263"><span class="hs-identifier hs-var">countBufferOffset'</span></a><span> </span><a href="#local-6989586621679922264"><span class="hs-identifier hs-var">maxDrawCount'</span></a><span> </span><a href="#local-6989586621679922265"><span class="hs-identifier hs-var">stride'</span></a><span> </span><span class="hs-operator hs-var">*&gt;</span><span> </span><span class="hs-special">(</span><span class="hs-identifier hs-var">pure</span><span> </span><span class="hs-special">(</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><a name="line-564"></a><span>
+</span><a name="line-565"></a><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_KHR_DRAW_INDIRECT_COUNT_EXTENSION_NAME&quot;</span><span>
+</span><a name="line-566"></a><span class="hs-keyword">pattern</span><span> </span><span class="hs-identifier">KHR_DRAW_INDIRECT_COUNT_EXTENSION_NAME</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-special">(</span><span class="hs-identifier hs-type">Eq</span><span> </span><a href="#local-6989586621679922249"><span class="hs-identifier hs-type">a</span></a><span class="hs-special">,</span><span> </span><span class="hs-identifier hs-type">IsString</span><span> </span><a href="#local-6989586621679922249"><span class="hs-identifier hs-type">a</span></a><span class="hs-special">)</span><span> </span><span class="hs-glyph">=&gt;</span><span> </span><a href="#local-6989586621679922249"><span class="hs-identifier hs-type">a</span></a><span>
+</span><a name="line-567"></a><span class="hs-keyword">pattern</span><span> </span><a name="KHR_DRAW_INDIRECT_COUNT_EXTENSION_NAME"><a href="Graphics.Vulkan.Extensions.VK_KHR_draw_indirect_count.html#KHR_DRAW_INDIRECT_COUNT_EXTENSION_NAME"><span class="hs-identifier">KHR_DRAW_INDIRECT_COUNT_EXTENSION_NAME</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><a href="Graphics.Vulkan.C.Extensions.VK_KHR_draw_indirect_count.html#VK_KHR_DRAW_INDIRECT_COUNT_EXTENSION_NAME"><span class="hs-identifier hs-var">VK_KHR_DRAW_INDIRECT_COUNT_EXTENSION_NAME</span></a><span>
+</span><a name="line-568"></a><span>
+</span><a name="line-569"></a><span class="hs-comment">-- No documentation found for TopLevel &quot;VK_KHR_DRAW_INDIRECT_COUNT_SPEC_VERSION&quot;</span><span>
+</span><a name="line-570"></a><span class="hs-keyword">pattern</span><span> </span><span class="hs-identifier">KHR_DRAW_INDIRECT_COUNT_SPEC_VERSION</span><span> </span><span class="hs-glyph">::</span><span> </span><span class="hs-identifier hs-type">Integral</span><span> </span><a href="#local-6989586621679922248"><span class="hs-identifier hs-type">a</span></a><span> </span><span class="hs-glyph">=&gt;</span><span> </span><a href="#local-6989586621679922248"><span class="hs-identifier hs-type">a</span></a><span>
+</span><a name="line-571"></a><span class="hs-keyword">pattern</span><span> </span><a name="KHR_DRAW_INDIRECT_COUNT_SPEC_VERSION"><a href="Graphics.Vulkan.Extensions.VK_KHR_draw_indirect_count.html#KHR_DRAW_INDIRECT_COUNT_SPEC_VERSION"><span class="hs-identifier">KHR_DRAW_INDIRECT_COUNT_SPEC_VERSION</span></a></a><span> </span><span class="hs-glyph">=</span><span> </span><a href="Graphics.Vulkan.C.Extensions.VK_KHR_draw_indirect_count.html#VK_KHR_DRAW_INDIRECT_COUNT_SPEC_VERSION"><span class="hs-identifier hs-var">VK_KHR_DRAW_INDIRECT_COUNT_SPEC_VERSION</span></a><span>
+</span><a name="line-572"></a></pre></body></html>
