@@ -1,6 +1,7 @@
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE QuasiQuotes       #-}
-{-# LANGUAGE RecordWildCards   #-}
+{-# LANGUAGE OverloadedStrings   #-}
+{-# LANGUAGE QuasiQuotes         #-}
+{-# LANGUAGE RecordWildCards     #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 
 module Write.Command
   ( writeCommand
@@ -22,24 +23,24 @@ import           Spec.Savvy.Type.Haskell           hiding ( toHsType )
 
 import           Write.Element
 import           Write.Util
-import           Write.Marshal.Monad
+import           Write.Monad
 
 writeCommand
   :: (Text -> Maybe Text)
   -- ^ A function to get the target of an enum alias
   -> Command
-  -> Either [SpecError] WriteElement
+  -> Write WriteElement
 writeCommand getEnumName fp@Command {..} = do
   bootElem <-
-    wrapMToWriteElements ("Command boot:" T.<+> cName) Nothing
-    . censorSourceDepends [(TypeName "(:::)")]
+    runWE ("Command boot:" T.<+> cName)
+    . makeSourceDepends [TypeName "(:::)"]
     $ do
         tellImport "Foreign.Ptr" "FunPtr"
         synonyms <- commandTypeSynonyms fp
         d        <- case cName of
           "vkGetInstanceProcAddr" -> do
-            tellExport (Unguarded (Term "vkGetInstanceProcAddr"))
-            tellSourceDepend (Unguarded (TypeName "InstanceCmds"))
+            tellExport (Term "vkGetInstanceProcAddr")
+            tellSourceDepend (TypeName "InstanceCmds")
             pure $ vsep
               [ [qci|
                 #if defined(EXPOSE_CORE10_COMMANDS)
@@ -53,7 +54,8 @@ writeCommand getEnumName fp@Command {..} = do
           _ -> pure synonyms
         pure $ const d
 
-  wrapMToWriteElements ("Command:" T.<+> cName) (Just bootElem) $ do
+  runWE ("Command:" T.<+> cName) $ do
+    tellBootElem bootElem
     let staticGuard = case cAvailability of
           CoreCommand major minor ->
             "EXPOSE_CORE" <> T.tShow major <> T.tShow minor <> "_COMMANDS"
@@ -62,9 +64,9 @@ writeCommand getEnumName fp@Command {..} = do
           cReturnType
           [ (Just n, lowerArrayToPointer t) | Parameter n t _ _ <- cParameters ]
     tellDepends
-      $  (Unguarded <$> protoDepends)
+      $  protoDepends
       <> -- The constructors for an enum type need to be in scope
-         [ Unguarded (TypeName e)
+         [ TypeName e
          | TypeName n <- protoDepends
          , Just e <- [getEnumName n]
          ]
@@ -74,7 +76,7 @@ writeCommand getEnumName fp@Command {..} = do
 commandDoc
   :: Text
   -> Command
-  -> WrapM (DocMap -> Doc ())
+  -> WE (DocMap -> Doc ())
 commandDoc staticGuard c@Command {..} = do
   let upperCaseName = T.upperCaseFirst cName
   dynType <- toHsType (commandDynamicType c)
@@ -88,7 +90,7 @@ commandDoc staticGuard c@Command {..} = do
       tellImport "Foreign.Ptr" "castPtrToFunPtr"
       tellImport "System.IO.Unsafe" "unsafeDupablePerformIO"
       tellQualifiedImport "GHC.Ptr" "Ptr(Ptr)"
-      tellDepend (Unguarded (TermName "vkGetInstanceProcAddr'"))
+      tellDepend (TermName "vkGetInstanceProcAddr'")
       pure [qci|
         foreign import ccall
         #if !defined(SAFE_FOREIGN_CALLS)
@@ -110,7 +112,7 @@ commandDoc staticGuard c@Command {..} = do
                      PhysicalDevice -> "Instance"
                      Device -> "Device"
       tellImport "Foreign.Ptr" "FunPtr"
-      tellDepend (Guarded (InvGuard staticGuard) (TypeName (domain <> "Cmds")))
+      tellGuardedDepend (Guarded (InvGuard staticGuard) (TypeName (domain <> "Cmds")))
       pure [qci|
         {cName} :: {dynType}
         {cName} deviceCmds = mk{upperCaseName} (p{upperCaseName} deviceCmds)
@@ -123,7 +125,7 @@ commandDoc staticGuard c@Command {..} = do
       |]
   getInstanceProcAddrDoc :: Doc () <- case cName of
     "vkGetInstanceProcAddr" -> do
-      tellExport (Unguarded (Term "vkGetInstanceProcAddr'"))
+      tellExport (Term "vkGetInstanceProcAddr'")
       pure [qci|
         -- | A version of 'vkGetInstanceProcAddr' which can be called with a
         -- null pointer for the instance.
@@ -135,7 +137,7 @@ commandDoc staticGuard c@Command {..} = do
       |]
     _ -> pure ""
   synonyms <- commandTypeSynonyms c
-  tellExport (Unguarded (Term cName))
+  tellExport (Term cName)
   pure $ \getDoc -> [qci|
     {document getDoc (TopLevel cName)}
     #if defined({staticGuard})
@@ -162,13 +164,13 @@ commandDynamicType c@Command {..} = case cCommandLevel of
     in  Proto ret ((Nothing, commandTableType) : args)
   _ -> commandType c
 
-commandTypeSynonyms :: Command -> WrapM (Doc ())
+commandTypeSynonyms :: Command -> WE (Doc ())
 commandTypeSynonyms c@Command{..} = do
   t <- toHsType (commandType c)
   traverse
     tellExport
-    [ Unguarded (TypeAlias ("FN_" <> cName))
-    , Unguarded (TypeAlias ("PFN_" <> cName))
+    [ TypeAlias ("FN_" <> cName)
+    , TypeAlias ("PFN_" <> cName)
     ]
   pure [qci|
     type FN_{cName} = {t}

@@ -89,7 +89,6 @@ executable generate
                      , Write.Marshal.Bracket
                      , Write.Marshal.Exception
                      , Write.Marshal.Handle
-                     , Write.Marshal.Monad
                      , Write.Marshal.SomeVkStruct
                      , Write.Marshal.Struct
                      , Write.Marshal.Struct.Utils
@@ -97,6 +96,7 @@ executable generate
                      , Write.Marshal.Wrap
                      , Write.Module
                      , Write.Module.Aggregate
+                     , Write.Monad
                      , Write.Partition
                      , Write.Seed
                      , Write.Spec

@@ -69,6 +69,7 @@ import           Write.Struct
 import           Write.Type.Enum
 import           Write.Type.FuncPointer
 import           Write.Wrapper
+import           Write.Monad
 
 -- TODO: Better error handling
 writeSpec
@@ -184,14 +185,14 @@ specWrapperWriteElements spec@Spec {..} = do
 
 
   bracketAndCommandWrappers <- eitherToValidation $ do
-    (bracketConstructors, bs) <- unzip <$> brackets sHandles
+    (bracketConstructors, bs) <- unzip <$> toE (brackets sHandles)
     let getBrackets :: Text -> Maybe HaskellName
         getBrackets commandName = listToMaybe
           [ bName
           | (createName, bName) <- bracketConstructors
           , TermName commandName == createName
           ]
-    cs <- traverse
+    cs <- toE $ traverseV
       (commandWrapper getHandle
                       isBitmask
                       isStruct
@@ -201,16 +202,15 @@ specWrapperWriteElements spec@Spec {..} = do
       )
       enabledCommands
     pure $ bs : cs
-  structWrappers <- eitherToValidation $ traverse
+  structWrappers <- toV $ traverseV
     (structWrapper getHandle isBitmask isStruct enabledStructs)
     enabledStructs
-  handleWrappers <- eitherToValidation
-    $ traverse handleWrapper dispatchableHandles
+  handleWrappers <- toV $ traverseV handleWrapper dispatchableHandles
   aliases        <- writeAliases (makeMarshalledAliases spec)
-  enumAliases    <- traverse writeFullEnumAliases (makeMarshalledEnumAliases spec)
-  someVkStructWE <- eitherToValidation
+  enumAliases <- traverse writeFullEnumAliases (makeMarshalledEnumAliases spec)
+  someVkStructWE <- toV
     $ someVkStructWriteElement getHandle sPlatforms enabledStructs
-  peekStructWE <- eitherToValidation
+  peekStructWE <- toV
     $ vkPeekStructWriteElement getHandle sPlatforms enabledStructs
   pure
     (  concat
@@ -227,48 +227,47 @@ specCWriteElements :: Spec -> Validation [SpecError] [WriteElement]
 specCWriteElements s@Spec {..} = do
   let
     -- All requirement in features and specs
-    reqs =
-      (extRequirements =<< sExtensions)
-        ++ (   fRequirements
-           =<< [vulkan10Feature sFeatures, vulkan11Feature sFeatures]
-           )
+      reqs =
+        (extRequirements =<< sExtensions)
+          ++ (   fRequirements
+             =<< [vulkan10Feature sFeatures, vulkan11Feature sFeatures]
+             )
 
-    getEnumAliasTarget :: Text -> Maybe Text
-    getEnumAliasTarget n = do
-      a <- find ((== n) . aName ) (enumAliases sAliases)
-      eitherToMaybe (eName <$> aliasTarget a)
+      getEnumAliasTarget :: Text -> Maybe Text
+      getEnumAliasTarget n = do
+        a <- find ((== n) . aName) (enumAliases sAliases)
+        eitherToMaybe (eName <$> aliasTarget a)
 
-    getEnumerantEnumName :: Text -> Maybe Text
-    getEnumerantEnumName enumerantName = listToMaybe
-      [ eName e
-      | e <- sEnums
-      , enumerantName
-        `elem` ((eeName <$> eElements e) <> (exName <$> eExtensions e))
-      ]
+      getEnumerantEnumName :: Text -> Maybe Text
+      getEnumerantEnumName enumerantName = listToMaybe
+        [ eName e
+        | e <- sEnums
+        , enumerantName
+          `elem` ((eeName <$> eElements e) <> (exName <$> eExtensions e))
+        ]
 
-    wHeaderVersion  = writeHeaderVersion sHeaderVersion
-    wEnums          = writeEnum <$> sEnums
-    -- Take the nub here to deal with duplicate extensions
-    wEnumExtensions = uncurry writeEnumExtension <$> nubOrdOn
-      (second exName)
-      [ (eName e, ex) | e <- sEnums, ex <- eExtensions e ]
-    wEnumAliases = [] -- writeEnumAlias <$> [ ea | r <- reqs, ea <- rEnumAliases r ]
-    wConstants =
-      let isAllowedConstant c = acName c `notElem` ["VK_TRUE", "VK_FALSE"]
-      in  writeAPIConstant <$> filter isAllowedConstant sConstants
-    wConstantExtensions =
-      fmap (writeConstantExtension getEnumerantEnumName) . rConstants =<< reqs
-  wFuncPointers <- eitherToValidation $ traverse writeFuncPointer sFuncPointers
-  wHandles      <- eitherToValidation $ traverse writeHandle sHandles
-  wCommands     <- eitherToValidation
-    $ traverse (writeCommand getEnumAliasTarget) sCommands
-  wStructs           <- eitherToValidation $ traverse writeStruct sStructs
-  wAliases           <- writeAliases sAliases
-  wBaseTypes         <-
+      wHeaderVersion  = writeHeaderVersion sHeaderVersion
+      -- Take the nub here to deal with duplicate extensions
+      wEnumExtensions = uncurry writeEnumExtension <$> nubOrdOn
+        (second exName)
+        [ (eName e, ex) | e <- sEnums, ex <- eExtensions e ]
+      wEnumAliases = [] -- writeEnumAlias <$> [ ea | r <- reqs, ea <- rEnumAliases r ]
+      wConstants =
+        let isAllowedConstant c = acName c `notElem` ["VK_TRUE", "VK_FALSE"]
+        in  writeAPIConstant <$> filter isAllowedConstant sConstants
+      wConstantExtensions =
+        fmap (writeConstantExtension getEnumerantEnumName) . rConstants =<< reqs
+  wEnums        <- toV $ traverseV writeEnum sEnums
+  wFuncPointers <- toV $ traverseV writeFuncPointer sFuncPointers
+  wHandles      <- toV $ traverseV writeHandle sHandles
+  wCommands     <- toV $ traverseV (writeCommand getEnumAliasTarget) sCommands
+  wStructs      <- toV $ traverseV writeStruct sStructs
+  wAliases      <- writeAliases sAliases
+  wBaseTypes    <-
     let isAllowedBaseType bt = btName bt /= "VkBool32"
     in  eitherToValidation
           $ traverse writeBaseType (filter isAllowedBaseType sBaseTypes)
-  wLoader <- eitherToValidation $ writeLoader sPlatforms sCommands
+  wLoader <- toV $ writeLoader sPlatforms sCommands
   pure $ concat
     [ [wHeaderVersion]
     , bespokeWriteElements
@@ -283,5 +282,5 @@ specCWriteElements s@Spec {..} = do
     , wStructs
     , wAliases
     , wBaseTypes
-    , wLoader
+    , [wLoader]
     ]

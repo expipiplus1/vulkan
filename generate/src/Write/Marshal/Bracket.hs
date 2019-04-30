@@ -32,16 +32,16 @@ import           Spec.Savvy.Type
 
 import           Write.Element                     hiding ( TypeName )
 import qualified Write.Element                 as WE
-import           Write.Marshal.Monad
+import           Write.Monad
 import           Write.Marshal.Util
 
 import           Debug.Trace
 
 brackets
-  :: [Handle] -> Either [SpecError] [((HaskellName, HaskellName), WriteElement)]
+  :: [Handle] -> Write [((HaskellName, HaskellName), WriteElement)]
   -- ^ ((Creating command, Bracket command), WriteElement)
 brackets handles = do
-  rs <- traverse
+  rs <- traverseV
     writePair
     [ simpleBracket True  "Instance"                  Nothing
     , simpleBracket False "Device"                    (Just "PhysicalDevice")
@@ -85,7 +85,7 @@ brackets handles = do
       bracketNames     = [ n | (TypeName n, _, _, _) <- rs ]
       unhandledHandles = handleNames \\ (bracketNames ++ ignoredHandles)
   unless (null unhandledHandles)
-    $ throwError [Other ("Unbracketed handles: " <> T.tShow unhandledHandles)]
+    $ throwError ("Unbracketed handles: " <> T.tShow unhandledHandles)
   pure [ ((c, b), w) | (_, c, b, w) <- rs ]
 
 simpleBracket :: Bool -> Text -> Maybe Text -> Bracket
@@ -251,13 +251,13 @@ data ConstructedType
   | Multiple { unConstructedType :: Type }
   deriving (Eq, Ord)
 
-constructedTypeToHsType :: ConstructedType -> WrapM (Doc ())
+constructedTypeToHsType :: ConstructedType -> WE (Doc ())
 constructedTypeToHsType = \case
   Single t -> toHsType t
-  Optional t -> ("Maybe" <+>) . parens <$> toHsType t
+  Optional t -> ("Maybe" <+>) <$> toHsType t
   Multiple t -> do
     tellImport "Data.Vector" "Vector"
-    ("Vector" <+>) . parens <$> toHsType t
+    ("Vector" <+>) <$> toHsType t
 
 data Argument
   = Provided ConstructedType Text
@@ -267,19 +267,19 @@ data Argument
 
 writePair
   :: Bracket
-  -> Either [SpecError] (Type, HaskellName, HaskellName, WriteElement)
+  -> Write (Type, HaskellName, HaskellName, WriteElement)
 writePair Bracket{..} =
   let arguments = nubOrd (bCreateArguments ++ bDestroyArguments)
-  in fmap (unConstructedType bInnerType, bCreate, bWrapperName,) . wrapMToWriteElements (unHaskellName bWrapperName) Nothing $ do
-    tellExport (Unguarded (WithoutConstructors bWrapperName))
-    tellDepend (Unguarded bCreate)
-    tellDepend (Unguarded bDestroy)
+  in fmap (unConstructedType bInnerType, bCreate, bWrapperName,) . runWE (unHaskellName bWrapperName) $ do
+    tellExport (WithoutConstructors bWrapperName)
+    tellDepend (bCreate)
+    tellDepend bDestroy
     argHsTypes <- traverse constructedTypeToHsType [ t | Provided t _ <- arguments]
     let argHsVars = [pretty (unReservedWord v) | Provided _ v <- arguments]
     createArgVars <- for bCreateArguments $ \case
       Provided _ v -> pure (pretty (unReservedWord v))
-      Resource -> throwError [Other "Resource used in its own construction"]
-      Member _ _ -> throwError [Other "Member used during construction"]
+      Resource -> throwError "Resource used in its own construction"
+      Member _ _ -> throwError "Member used during construction"
     destroyArgVars <- for bDestroyArguments $ \case
       Provided _ v -> pure $ pretty (unReservedWord v)
       Resource -> pure "o"
@@ -289,7 +289,7 @@ writePair Bracket{..} =
           argumentType <- toHsType t
           pure [qci|({member} ({argument} :: {argumentType})) |]
         | otherwise
-        -> throwError [Other "Can't find single argument for member"]
+        -> throwError "Can't find single argument for member"
     innerHsType <- constructedTypeToHsType bInnerType
     let noDestructorResource = Resource `notElem` bDestroyArguments
         noResource = bInnerType == Single Void && noDestructorResource

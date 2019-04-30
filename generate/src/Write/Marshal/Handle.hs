@@ -24,46 +24,36 @@ import           Spec.Savvy.Type(Type(TypeName))
 
 import           Write.Element                            hiding (TypeName)
 import qualified Write.Element                            as WE
-import           Write.Marshal.Monad
+import           Write.Monad
 import           Write.Marshal.Util
 
-handleWrapper :: Handle -> Either [SpecError] WriteElement
-handleWrapper handle = do
-  let weName        = hName handle T.<+> "wrapper"
-      weBootElement = Nothing
-  (weDoc, (weImports, (weProvides, weUndependableProvides), (weDepends, weSourceDepends), weExtensions, _)) <-
-    either (throwError . fmap (WithContext (hName handle)))
-           pure
-           (runWrap $ wrapHandle handle)
-  pure WriteElement {..}
+handleWrapper :: Handle -> Write WriteElement
+handleWrapper Handle {..} = do
+  runWE (hName T.<+> "wrapper") $ do
+    when (hHandleType == NonDispatchable)
+      $ throwError "Wrapping a non-dispatchable handle"
+    let marshalledName = dropVkType hName
+    tellExport (TypeConstructor marshalledName)
+    tellExport (Term marshalledName)
+    tellDepend (WE.TypeName hName)
+    cmdTable <- case hLevel of
+      Just Instance       -> pure "InstanceCmds"
+      Just PhysicalDevice -> pure "InstanceCmds"
+      Just Device         -> pure "DeviceCmds"
+      Nothing             -> throwError "wrapping handle without a level"
+    tellDepend (WE.TypeName cmdTable)
+    tellImport "Data.Function" "on"
+    pure $ \_ -> [qci|
+      data {marshalledName} = {marshalledName}
+        \{ {T.lowerCaseFirst marshalledName}Handle :: {hName}
+        , {T.lowerCaseFirst marshalledName}Cmds    :: {cmdTable}
+        }
+        deriving Show
 
-wrapHandle :: Handle -> WrapM (DocMap -> Doc ())
-  -- ^ Returns the docs for this handle, and any aliases
-wrapHandle Handle {..} = do
-  when (hHandleType == NonDispatchable)
-    $ throwError [Other "Wrapping a non-dispatchable handle"]
-  let marshalledName = dropVkType hName
-  tellExport (Unguarded (TypeConstructor marshalledName))
-  tellExport (Unguarded (Term marshalledName))
-  tellDepend (Unguarded (WE.TypeName hName))
-  cmdTable <- case hLevel of
-    Just Instance       -> pure "InstanceCmds"
-    Just PhysicalDevice -> pure "InstanceCmds"
-    Just Device         -> pure "DeviceCmds"
-    Nothing             -> throwError [Other "wrapping handle without a level"]
-  tellDepend (Unguarded (WE.TypeName cmdTable))
-  tellImport "Data.Function" "on"
-  pure $ \_ -> [qci|
-    data {marshalledName} = {marshalledName}
-      \{ {T.lowerCaseFirst marshalledName}Handle :: {hName}
-      , {T.lowerCaseFirst marshalledName}Cmds    :: {cmdTable}
-      }
-      deriving Show
+      instance Eq {marshalledName} where
+        (==) = (==) `on` {T.lowerCaseFirst marshalledName}Handle
 
-    instance Eq {marshalledName} where
-      (==) = (==) `on` {T.lowerCaseFirst marshalledName}Handle
+      instance Ord {marshalledName} where
+        compare = compare `on` {T.lowerCaseFirst marshalledName}Handle
 
-    instance Ord {marshalledName} where
-      compare = compare `on` {T.lowerCaseFirst marshalledName}Handle
-
-  |]
+    |]

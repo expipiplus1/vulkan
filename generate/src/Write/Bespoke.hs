@@ -18,6 +18,7 @@ import           Spec.Savvy.Enum
 import           Write.Element
 import           Write.Type.Enum
 import           Write.Util
+import           Write.Monad
 
 bespokeWriteElements :: [WriteElement]
 bespokeWriteElements =
@@ -193,8 +194,9 @@ zero =
   in WriteElement{..}
 
 bools :: WriteElement
-bools = writeEnum
-  Enum { eName = "VkBool32"
+bools =
+  let we = writeEnum
+       Enum { eName = "VkBool32"
        , eType = EnumTypeEnum
        , eAliases = []
        , eComment = Just "Note that VkBool32 is not strongly typed in the specification"
@@ -203,6 +205,9 @@ bools = writeEnum
                      ]
        , eExtensions = []
        }
+  in case unWrite we of
+       Left _ -> error "writeEnum errors"
+       Right w -> w
 
 voidDataWriteElement :: Text -> WriteElement
 voidDataWriteElement n =

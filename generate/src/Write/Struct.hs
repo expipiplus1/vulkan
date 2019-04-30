@@ -16,91 +16,64 @@ import           Control.Bool
 import           Data.Char
 import           Data.List.Extra
 import           Data.Functor
-import           Data.Text                                (Text)
-import qualified Data.Text.Extra                          as T
+import           Data.Text                                ( Text )
+import qualified Data.Text.Extra               as T
 import           Data.Text.Prettyprint.Doc
-import           Prelude                                  hiding (Enum)
+import           Prelude                           hiding ( Enum )
 import           Text.InterpolatedString.Perl6.Unindented
+import           Data.Foldable
+import           Control.Monad
 
 import           Spec.Savvy.Error
 import           Spec.Savvy.Struct
 import           Spec.Savvy.Type
-import           Spec.Savvy.Type.Haskell
+-- import           Spec.Savvy.Type.Haskell
 
 import           Write.Element                     hiding ( TypeName )
 import qualified Write.Element                 as WE
 import           Write.Util
+import           Write.Monad
 
-writeStruct :: Struct -> Either [SpecError] WriteElement
+writeStruct :: Struct -> Write WriteElement
 writeStruct s@Struct {..} = case sStructOrUnion of
-  AStruct -> do
-    (weDoc, imports, extensions) <- structDoc s
-    let weName       = "Struct: " <> sName
-        weExtensions = extensions ++ ["DuplicateRecordFields"]
-        weImports =
-          imports
-            ++ (   Unguarded
-               <$> [ Import "Foreign.Ptr"      ["plusPtr"]
-                   , Import "Foreign.Storable" ["Storable(..)"]
-                   ]
-               )
-        weProvides  = Unguarded <$> [TypeConstructor sName, Term sName]
-        termDepends = \case
+  AStruct -> runWE ("Struct: " <> sName) $ do
+    tellExtension "DuplicateRecordFields"
+    tellImport "Foreign.Ptr"      "plusPtr"
+    tellImport "Foreign.Storable" "Storable(..)"
+    tellExport (TypeConstructor sName)
+    tellExport (Term sName)
+    tellBootElem <=< liftWrite . runWE ("Struct boot: " <> sName) $ do
+      tellExport (TypeConstructor sName)
+      pure $ \_ -> pretty $ "data" T.<+> sName
+    tellDepend (WE.TypeName "Zero")
+    let termDepends = \case
           Just vs -> PatternName <$> vs
           Nothing -> []
-        weDepends = Unguarded <$> nubOrd
-          (  WE.TypeName "Zero"
-          :  concatMap (typeDepends . smType)   sMembers
-          ++ concatMap (termDepends . smValues) sMembers
-          )
-        weUndependableProvides = []
-        weSourceDepends        = []
-        weBootElement          = Just $ WriteElement
-          { weImports    = []
-          , weExtensions = []
-          , weProvides   = Unguarded <$> [TypeConstructor sName]
-          , weDepends    = []
-          , weDoc        = \_ -> pretty $ "data" T.<+> sName
-          , ..
-          }
-    pure WriteElement { .. }
-  AUnion -> do
-    (weDoc, imports, extensions) <- unionDoc s
-    let
-      smNames      = toConstructorName <$> (smName <$> sMembers)
-      weName       = "Union: " <> sName
-      weExtensions = extensions
-      weImports =
-        imports
-          ++ (   Unguarded
-             <$> [ Import "Foreign.Ptr"      ["castPtr"]
-                 , Import "Foreign.Storable" ["Storable(..)"]
-                 ]
-             )
-      weProvides = Unguarded <$> TypeConstructor sName : (Term <$> smNames)
-      weDepends =
-        Unguarded <$> nubOrd (concatMap (typeDepends . smType) sMembers)
-      weUndependableProvides = []
-      weSourceDepends        = []
-      weBootElement          = Just $ WriteElement
-        { weImports    = []
-        , weExtensions = []
-        , weProvides   = Unguarded <$> [TypeConstructor sName]
-        , weDepends    = []
-        , weDoc        = \_ -> pretty $ "data" T.<+> sName
-        , ..
-        }
-    pure WriteElement { .. }
+    tellDepends $ nubOrd
+      (  concatMap (typeDepends . smType)   sMembers
+      ++ concatMap (termDepends . smValues) sMembers
+      )
+    structDoc s
+  AUnion -> runWE ("Union: " <> sName) $ do
+    tellImport "Foreign.Ptr"      "castPtr"
+    tellImport "Foreign.Storable" "Storable(..)"
+    let smNames = toConstructorName <$> (smName <$> sMembers)
+    traverse_ tellExport $ TypeConstructor sName : (Term <$> smNames)
+    tellDepends $ nubOrd (concatMap (typeDepends . smType) sMembers)
+    tellBootElem <=< liftWrite . runWE ("Union boot: " <> sName) $ do
+      tellExport (TypeConstructor sName)
+      pure $ \_ -> pretty $ "data" T.<+> sName
+    unionDoc s
 
 ----------------------------------------------------------------
 -- Struct
 ----------------------------------------------------------------
 
-structDoc :: Struct -> Either [SpecError] (DocMap -> Doc (), [Guarded Import], [Text])
+structDoc :: Struct -> WE (DocMap -> Doc ())
 structDoc s@Struct {..} = do
   let membersFixedNames = fixMemberName <$> sMembers
-  (memberDocs, imports, extensions) <-
-    unzip3 <$> traverse (memberDoc sName) sMembers
+  memberDocs <- traverse (memberDoc sName) sMembers
+  tellImport "Foreign.Storable" "Storable"
   let zeroDocs = membersFixedNames <&> \case
         StructMember{..}
           | smName == "vkSType"
@@ -109,7 +82,7 @@ structDoc s@Struct {..} = do
           -> pretty v
           | otherwise
           -> "zero"
-  pure (\getDoc -> [qci|
+  pure $ \getDoc -> [qci|
   {document getDoc (TopLevel sName)}
   data {sName} = {sName}
     \{ {indent (-2) . vsep $
@@ -130,18 +103,18 @@ structDoc s@Struct {..} = do
 
   instance Zero {sName} where
     zero = {sName} {indent 0 . vsep $ (zeroDocs :: [Doc()])}
-|], concat imports ++ [Unguarded $ Import "Foreign.Storable" ["Storable"]], concat extensions)
+|]
 
 memberDoc
   :: Text
   -> StructMember
-  -> Either [SpecError] (DocMap -> Doc (), [Guarded Import], [Text])
+  -> WE (DocMap -> Doc ())
 memberDoc parentName StructMember{..} = do
-  (t, (is, es)) <- toHsType smType
-  pure (\getDoc -> [qci|
+  t <- toHsType smType
+  pure $ \getDoc -> [qci|
   {document getDoc (Nested parentName smName)}
   {toRecordMemberName smName} :: {t}
-|], is, es)
+|]
 
 memberPeekDoc :: StructMember -> Doc ()
 memberPeekDoc StructMember{..} = [qci|
@@ -158,12 +131,13 @@ memberPokeDoc Struct{..} StructMember{..} = [qci|
 ----------------------------------------------------------------
 
 unionDoc
-  :: Struct -> Either [SpecError] (DocMap -> Doc (), [Guarded Import], [Text])
+  :: Struct -> WE (DocMap -> Doc ())
 unionDoc Struct{..} = do
   let membersFixedNames = fixUnionMemberName <$> sMembers
-  (memberDocs, imports, extensions ) <-
-    unzip3 <$> traverse (unionMemberDoc sName) membersFixedNames
-  pure (\getDoc -> [qci|
+  memberDocs <- traverse (unionMemberDoc sName) membersFixedNames
+  tellExtension "LambdaCase"
+  tellImport "Foreign.Storable" "Storable"
+  pure $ \getDoc -> [qci|
   {document getDoc (TopLevel sName)}
   data {sName}
     = {indent (-2) . vsep $
@@ -180,19 +154,19 @@ unionDoc Struct{..} = do
 
   instance Zero {sName} where
     zero = {smName . head $ membersFixedNames} zero
-|], concat imports ++ [Unguarded $ Import "Foreign.Storable" ["Storable"]], concat extensions ++ ["LambdaCase"])
+|]
 
 unionMemberDoc
   :: Text
   -- ^ Parent name
   -> StructMember
-  -> Either [SpecError] (DocMap -> Doc (), [Guarded Import], [Text])
+  -> WE (DocMap -> Doc ())
 unionMemberDoc parentName StructMember{..} = do
-  (t, (is, es)) <- toHsTypePrec 10 smType
-  pure (\getDoc -> [qci|
-  {document getDoc (Nested parentName smName)}
-  {smName} {t}
-|], is, es)
+  t <- toHsTypePrec 10 smType
+  pure $ \getDoc -> [qci|
+    {document getDoc (Nested parentName smName)}
+    {smName} {t}
+  |]
 
 unionMemberPokeDoc :: StructMember -> Doc ()
 unionMemberPokeDoc StructMember{..} = [qci|

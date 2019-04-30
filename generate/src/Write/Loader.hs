@@ -8,28 +8,30 @@ module Write.Loader
   ( writeLoader
   ) where
 
-import           Control.Arrow                            ((&&&))
+import           Control.Arrow                            ( (&&&) )
 import           Control.Monad
 import           Control.Monad.Except
 import           Control.Monad.Writer.Class
 import           Data.Either.Validation
 import           Data.Foldable
 import           Data.Traversable
-import           Data.List.Extra hiding (for)
-import qualified Data.Map                                 as Map
+import           Data.List.Extra                   hiding ( for )
+import qualified Data.Map                      as Map
 import           Data.Maybe
-import           Data.Text.Extra                          (Text)
-import qualified Data.Text.Extra                          as T
+import           Data.Text.Extra                          ( Text )
+import qualified Data.Text.Extra               as T
 import           Data.Text.Prettyprint.Doc
-import           Prelude                                  hiding (Enum)
+import           Prelude                           hiding ( Enum )
 import           Text.InterpolatedString.Perl6.Unindented
+import           Control.Monad.State.Strict
 
 import           Spec.Savvy.Command
 import           Spec.Savvy.Error
 import           Spec.Savvy.Platform
-import           Spec.Savvy.Type                          hiding (TypeName)
+import           Spec.Savvy.Type                   hiding ( TypeName )
+import qualified Spec.Savvy.Type.Haskell       as H
 import           Write.Element
-import           Write.Marshal.Monad
+import           Write.Monad
 import           Write.Marshal.Util
 import           Write.Util
 
@@ -38,10 +40,10 @@ writeLoader
   -- ^ Platform guard info
   -> [Command]
   -- ^ Commands in the spec
-  -> Either [SpecError] [WriteElement]
+  -> Write WriteElement
 writeLoader platforms commands = do
-  boot <- wrapMToWriteElements "Dynamic loader boot" Nothing $ do
-    tellExport (Unguarded (TypeConstructor "InstanceCmds"))
+  boot <- runWE "Dynamic loader boot" $ do
+    tellExport (TypeConstructor "InstanceCmds")
     pure $ \_ -> "data InstanceCmds"
   let
     platformGuardMap :: Text -> Maybe Text
@@ -50,7 +52,6 @@ writeLoader platforms commands = do
         ((Spec.Savvy.Platform.pName &&& pProtect) <$> platforms)
       )
     weName              = "Dynamic Function Pointer Loaders"
-    weBootElement       = Just boot
     deviceLevelCommands = [ c | c <- commands, cCommandLevel c == Just Device ]
     instanceLevelCommands =
       [ c
@@ -58,22 +59,16 @@ writeLoader platforms commands = do
       , cCommandLevel c `elem` [Just Instance, Just PhysicalDevice]
       ]
     noLevelCommands = [ c | c <- commands, cCommandLevel c == Nothing ]
-    writeCommands :: [Command] -> Text -> Either [SpecError] [WriteElement]
-    writeCommands commands level = for commands $ \c -> wrapMToWriteElements
+    writeCommands :: [Command] -> Text -> Write [WriteElement]
+    writeCommands commands level = forV commands $ \c -> runWE
       ("Dynamic loader for" T.<+> cName c)
-      Nothing
       ((writeFunction platformGuardMap level) c)
-  r <- wrapMToWriteElements
-    weName
-    weBootElement
-    (writeLoaderDoc platformGuardMap
-                    deviceLevelCommands
-                    instanceLevelCommands
-                    noLevelCommands
-    )
-  -- dfs <- writeCommands deviceLevelCommands "Device"
-  -- ifs <- writeCommands instanceLevelCommands "Instance"
-  pure $ [r] -- : dfs ++ ifs
+  runWE weName $ do
+    tellBootElem boot
+    writeLoaderDoc platformGuardMap
+                   deviceLevelCommands
+                   instanceLevelCommands
+                   noLevelCommands
 
 writeLoaderDoc
   :: (Text -> Maybe Text)
@@ -84,14 +79,14 @@ writeLoaderDoc
   -- ^ Instance commands
   -> [Command]
   -- ^ No level commands
-  -> WrapM (DocMap -> Doc ())
+  -> WE (DocMap -> Doc ())
 writeLoaderDoc platformGuardMap deviceLevelCommands instanceLevelCommands noLevelCommands = do
   drs <- traverse (writeRecordMember platformGuardMap) deviceLevelCommands
   irs <- traverse (writeRecordMember platformGuardMap) instanceLevelCommands
   ifi <- initInstanceFunction platformGuardMap instanceLevelCommands
   ifd <- initDeviceFunction platformGuardMap deviceLevelCommands
-  tellExport (Unguarded (TypeConstructor "DeviceCmds"))
-  tellExport (Unguarded (TypeConstructor "InstanceCmds"))
+  tellExport (TypeConstructor "DeviceCmds")
+  tellExport (TypeConstructor "InstanceCmds")
   pure $ \_ -> [qci|
     data DeviceCmds = DeviceCmds
       \{ deviceCmdsHandle :: VkDevice
@@ -117,11 +112,11 @@ hasFunction gm domain Command{..} = ([qci|
   |], gm =<< cPlatform)
 
 -- | The initialization function for a set of command pointers
-initInstanceFunction :: (Text -> Maybe Text) -> [Command] -> WrapM (Doc ())
+initInstanceFunction :: (Text -> Maybe Text) -> [Command] -> WE (Doc ())
 initInstanceFunction gm commands = do
   initLines <- traverse (initLine gm "vkGetInstanceProcAddr'") commands
-  tellSourceDepend (Unguarded (TypeName "VkInstance"))
-  tellExport (Unguarded (Term "initInstanceCmds"))
+  tellSourceDepend (TypeName "VkInstance")
+  tellExport (Term "initInstanceCmds")
   tellQualifiedImport "GHC.Ptr" "Ptr(..)"
   pure [qci|
     -- | A version of 'vkGetInstanceProcAddr' which can be called with a
@@ -139,12 +134,12 @@ initInstanceFunction gm commands = do
   |]
 
 -- | The initialization function for a set of command pointers
-initDeviceFunction :: (Text -> Maybe Text) -> [Command] -> WrapM (Doc ())
+initDeviceFunction :: (Text -> Maybe Text) -> [Command] -> WE (Doc ())
 initDeviceFunction gm commands = do
   initLines <- traverse (initLine gm "getDeviceProcAddr'") commands
-  tellSourceDepend (Unguarded (TypeName "VkDevice"))
-  tellSourceDepend (Unguarded (TermName "vkGetInstanceProcAddr"))
-  tellExport (Unguarded (Term "initDeviceCmds"))
+  tellSourceDepend (TypeName "VkDevice")
+  tellSourceDepend (TermName "vkGetInstanceProcAddr")
+  tellExport (Term "initDeviceCmds")
   tellQualifiedImport "GHC.Ptr" "Ptr(..)"
   pure [qci|
     foreign import ccall
@@ -164,9 +159,9 @@ initDeviceFunction gm commands = do
              (zip initLines ((gm <=< cPlatform) <$> commands))}
   |]
 
-initLine :: (Text -> Maybe Text) -> Text -> Command -> WrapM (Doc ())
+initLine :: (Text -> Maybe Text) -> Text -> Command -> WE (Doc ())
 initLine gm getProcAddr c@Command{..} = censorGuarded gm c $ do
-  tellSourceDepend (Unguarded (TypeName ("FN_" <> cName)))
+  tellSourceDepend (TypeName ("FN_" <> cName))
   tellExtension "MagicHash"
   tellExtension "TypeApplications"
   tellImport "Foreign.Ptr" "castPtrToFunPtr"
@@ -176,15 +171,15 @@ writeRecordMember
   :: (Text -> Maybe Text)
   -- ^ platform to guard
   -> Command
-  -> WrapM (Doc (), Maybe Text)
+  -> WE (Doc (), Maybe Text)
 writeRecordMember gp c@Command {..} = do
   let excludedSourceDepends =
         TypeName <$> ["(:::)", "VkBool32", "VkFormat", "VkResult"]
-  t <- censorSourceDepends excludedSourceDepends $ censorGuarded gp c $ toHsType
+  t <- makeSourceDepends excludedSourceDepends $ censorGuarded gp c $ toHsType
     (commandType c)
   tellImport "Foreign.Ptr" "FunPtr"
-  censorSourceDepends excludedSourceDepends
-    . traverse tellDepend
+  makeSourceDepends excludedSourceDepends
+    . traverse tellGuardedDepend
     . commandDepends gp
     $ c
   let d = [qci|p{T.upperCaseFirst cName} :: FunPtr ({t})|]
@@ -194,8 +189,8 @@ censorGuarded
   :: (Text -> Maybe Text)
   -- ^ platform to guard
   -> Command
-  -> WrapM a
-  -> WrapM a
+  -> WE a
+  -> WE a
 censorGuarded gp Command {..}
   = let
       makeGuarded = case gp =<< cPlatform of
@@ -203,29 +198,30 @@ censorGuarded gp Command {..}
         Just g ->
           let replaceGuards :: [Guarded a] -> [Guarded a]
               replaceGuards = fmap (Guarded (Guard g) . unGuarded)
-          in  \(a, (exports, undependableExports), (depends, sourceDepends), d, e) ->
-                ( a
-                , (replaceGuards exports, replaceGuards undependableExports)
-                , (replaceGuards depends, replaceGuards sourceDepends)
-                , d
-                , e
-                )
-    in  censor makeGuarded
+          in  \we -> we
+                { weProvides             = replaceGuards (weProvides we)
+                , weUndependableProvides = replaceGuards
+                                             (weUndependableProvides we)
+                , weDepends              = replaceGuards (weDepends we)
+                , weSourceDepends        = replaceGuards (weSourceDepends we)
+                }
+    in  WE . mapStateT (fmap (fmap makeGuarded)) . unWE
 
 writeFunction
   :: (Text -> Maybe Text)
   -- ^ platform to guard
   -> Text
   -> Command
-  -> WrapM (DocMap -> Doc ())
+  -> WE (DocMap -> Doc ())
 writeFunction gm domain c@Command{..} = censorGuarded gm c $ do
   -- This is taken care of in a better way with commandDepends (importing
   -- constructors)
-  t <- censor (const mempty) $ toHsType (commandType c)
-  tellDepends . commandDepends gm $ c
+  (t, _) <-
+    either (throwError . prettySpecError . head) pure (H.toHsType (commandType c))
+  traverse tellGuardedDepend . commandDepends gm $ c
   tellExtension "ForeignFunctionInterface"
   tellImport "Foreign.Ptr" "FunPtr"
-  tellExport (Unguarded (Term (dropVk cName)))
+  tellExport (Term (dropVk cName))
   let upperCaseName = T.upperCaseFirst cName
   pure $ \getDoc -> guarded (gm =<< cPlatform) [qci|
     {document getDoc (TopLevel cName)}
@@ -266,11 +262,11 @@ commandDepends platformGuardMap Command {..} =
 
 
 -- | Write the commands which do not require a valid instance
-writeInitializationCommands :: [Command] -> WrapM (Doc ())
+writeInitializationCommands :: [Command] -> WE (Doc ())
 writeInitializationCommands commands = do
   let findCommand n = case find ((== n) . cName) commands of
         Nothing ->
-          throwError [Other ("Couldn't find initialization command:" T.<+> n)]
+          throwError ("Couldn't find initialization command:" T.<+> n)
         Just c -> pure c
   enumerateInstanceVersion <- findCommand "vkEnumerateInstanceVersion"
   enumerateInstanceExtensionProperties <- findCommand
@@ -283,13 +279,13 @@ writeInitializationCommands commands = do
   tellImport "Foreign.Ptr" "castPtrToFunPtr"
   tellImport "Foreign.Ptr" "nullPtr"
   tellImport "System.IO.Unsafe" "unsafeDupablePerformIO"
-  tellDepend (Unguarded (TermName "vkGetInstanceProcAddr'"))
+  tellDepend (TermName "vkGetInstanceProcAddr'")
   tellExtension "MagicHash"
 
   let go c = do
         ty <- toHsType (commandType c)
-        tellUndependableExport (Unguarded (Term (dropVk (cName c))))
-        tellDepend (Unguarded (TypeName ("FN_" <> cName c)))
+        tellUndependableExport (Term (dropVk (cName c)))
+        tellDepend (TypeName ("FN_" <> cName c))
         pure [qci|
           foreign import ccall
           #if !defined(SAFE_FOREIGN_CALLS)

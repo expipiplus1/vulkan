@@ -38,7 +38,7 @@ import           Text.InterpolatedString.Perl6.Unindented
 import           Spec.Savvy.Command
 import           Spec.Savvy.Type
 
-import           Write.Marshal.Monad
+import           Write.Monad
 
 -- | Is this a type we don't want to marshal
 isPassAsPointerType :: Type -> Bool
@@ -55,7 +55,7 @@ isPassAsPointerType = \case
     -> True
   _ -> False
 
-writePokes :: Doc () -> [Doc ()] -> WrapM (Doc ())
+writePokes :: Doc () -> [Doc ()] -> WE (Doc ())
 writePokes ptr ds = do
   let writePoke :: Int -> (Doc () -> Doc ())
       writePoke n d = [qci|pokeElemOff {ptr} {n} {d}|]

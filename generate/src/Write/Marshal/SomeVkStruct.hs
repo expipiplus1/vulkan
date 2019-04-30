@@ -12,31 +12,32 @@ module Write.Marshal.SomeVkStruct
   , vkPeekStructWriteElement
   ) where
 
-import           Control.Arrow                            ((&&&))
+import           Control.Arrow                            ( (&&&) )
 import           Control.Monad
 import           Control.Monad.Except
 import           Control.Monad.Writer.Class
-import Data.Traversable
+import           Data.Traversable
 import           Data.Foldable
 import           Data.Function
 import           Data.Functor
 import           Data.Functor.Identity
-import qualified Data.Map                                 as Map
+import qualified Data.Map                      as Map
 import           Data.Maybe
-import           Data.Text                                (Text)
-import qualified Data.Text.Extra                          as T
+import           Data.Text                                ( Text )
+import qualified Data.Text.Extra               as T
 import           Data.Text.Prettyprint.Doc
-import           Prelude                                  hiding (Enum)
+import           Prelude                           hiding ( Enum )
 import           Text.InterpolatedString.Perl6.Unindented
+import           Control.Monad.State.Strict
 
 import           Spec.Savvy.Error
 import           Spec.Savvy.Handle
 import           Spec.Savvy.Platform
 import           Spec.Savvy.Struct
-import           Write.Element                            hiding (TypeName)
-import qualified Write.Element                            as WE
-import Write.Util
-import           Write.Marshal.Monad
+import           Write.Element                     hiding ( TypeName )
+import qualified Write.Element                 as WE
+import           Write.Util
+import           Write.Monad
 import           Write.Marshal.Struct.Utils
 import           Write.Marshal.Util
 
@@ -46,7 +47,7 @@ someVkStructWriteElement
   -> [Platform]
   -- ^ Platform guard info
   -> [Struct]
-  -> Either [SpecError] WriteElement
+  -> Write WriteElement
 someVkStructWriteElement getHandle platforms structs
   = let
       containsUnion = doesStructContainUnion structs
@@ -59,9 +60,9 @@ someVkStructWriteElement getHandle platforms structs
         (`Map.lookup` Map.fromList
           ((Spec.Savvy.Platform.pName &&& pProtect) <$> platforms)
         )
-      weName        = "ToCStruct class declaration"
-      weBootElement = Just someVkStructBootElement
-      go            = do
+      name     = "ToCStruct class declaration"
+      go       = do
+        tellBootElem someVkStructBootElement
         tellImports
           [ Import "Control.Applicative"   ["(<|>)"]
           , Import "Control.Exception"     ["throwIO"]
@@ -73,8 +74,8 @@ someVkStructWriteElement getHandle platforms structs
                    ["IOException(..)", "IOErrorType(InvalidArgument)"]
           ]
         traverse_ tellExport
-          $   Unguarded
-          <$> [ WithConstructors $ WE.TypeName "ToCStruct"
+          $
+          [ WithConstructors $ WE.TypeName "ToCStruct"
               , WithConstructors $ WE.TypeName "FromCStruct"
               , WithConstructors $ WE.TypeName "SomeVkStruct"
               , WithConstructors $ WE.TypeName "HasNext"
@@ -86,20 +87,6 @@ someVkStructWriteElement getHandle platforms structs
               , Term "fromCStructPtr"
               , Term "fromCStructPtrElem"
               ]
-        -- tellDepends
-        --   [ d
-        --   | Struct {..} <- structs
-        --   , d           <-
-        --     Unguarded
-        --     <$> [ WE.TypeName sName
-        --         , WE.TypeName (T.dropPrefix' "Vk" sName)
-        --         , WE.TermName ("withCStruct" <> T.dropPrefix' "Vk" sName)
-        --         ]
-        --     ++  [ WE.TermName ("fromCStruct" <> T.dropPrefix' "Vk" sName)
-        --         | not (containsUnion sName)
-        --         , not (containsDispatchableHandle sName)
-        --         ]
-        --   ]
         traverse_
           tellExtension
           [ "FunctionalDependencies"
@@ -184,7 +171,7 @@ someVkStructWriteElement getHandle platforms structs
           ----------------------------------------------------------------
           {vcat instances}
         |]
-  in wrapMToWriteElements weName weBootElement go
+  in runWE name go
 
 writeSomeStructInstances
   :: (Text -> Maybe Text)
@@ -194,17 +181,17 @@ writeSomeStructInstances
   -> (Text -> Bool)
   -- ^ Does a struct contain a dispatchable handle
   -> Struct
-  -> WrapM (Doc ())
+  -> WE (Doc ())
 writeSomeStructInstances guardMap containsUnion containsDispatchableHandle s@Struct{..}
   = censorGuarded guardMap s $ do
     marshalledName <- case T.dropPrefix "Vk" sName of
-                        Nothing -> throwError [Other "Struct without a Vk Prefix"]
+                        Nothing -> throwError "Struct without a Vk Prefix"
                         Just x -> pure x
     toCStructDoc <- do
       let withC = "withCStruct" <> marshalledName
-      tellDepend (Unguarded (TermName withC))
-      tellDepend (Unguarded (WE.TypeName marshalledName))
-      tellDepend (Unguarded (WE.TypeName sName))
+      tellDepend (TermName withC)
+      tellDepend (WE.TypeName marshalledName)
+      tellDepend (WE.TypeName sName)
       pure [qci|
         instance ToCStruct {marshalledName} {sName} where
           withCStruct = {withC}
@@ -216,9 +203,9 @@ writeSomeStructInstances guardMap containsUnion containsDispatchableHandle s@Str
               -- No FromCStruct instance for {sName} as it contains a dispatchable handle|]
           | otherwise -> do
               let fromC = "fromCStruct" <> marshalledName
-              tellDepend (Unguarded (TermName fromC))
-              tellDepend (Unguarded (WE.TypeName marshalledName))
-              tellDepend (Unguarded (WE.TypeName sName))
+              tellDepend (TermName fromC)
+              tellDepend (WE.TypeName marshalledName)
+              tellDepend (WE.TypeName sName)
               pure [qci|
                 instance FromCStruct {marshalledName} {sName} where
                   fromCStruct = {fromC}
@@ -228,7 +215,7 @@ writeSomeStructInstances guardMap containsUnion containsDispatchableHandle s@Str
                      StructMember {smName = "pNext"} -> True
                      _ -> False) sMembers
             then do
-              tellDepend (Unguarded (WE.TypeName marshalledName))
+              tellDepend (WE.TypeName marshalledName)
               pure [qci|
                 instance HasNext {marshalledName} where
                   getNext s = next (s :: {marshalledName})
@@ -266,7 +253,7 @@ vkPeekStructWriteElement
   :: (Text -> Maybe Handle)
   -> [Platform]
   -> [Struct]
-  -> Either [SpecError] WriteElement
+  -> Write WriteElement
 vkPeekStructWriteElement getHandle platforms structs
   = let
       containsUnion = doesStructContainUnion structs
@@ -279,19 +266,18 @@ vkPeekStructWriteElement getHandle platforms structs
         (`Map.lookup` Map.fromList
           ((Spec.Savvy.Platform.pName &&& pProtect) <$> platforms)
         )
-      weName        = "peekVkStruct declaration"
-      weBootElement = Just peekBootElement
       go            = do
+        tellBootElem peekBootElement
         tellImports
           [ Import "Data.Typeable"         ["Typeable", "cast", "eqT"]
           , Import "Foreign.Marshal.Alloc" ["alloca"]
           , Import "Foreign.Ptr"           ["Ptr", "castPtr"]
           , Import "Foreign.Storable"      ["Storable", "poke", "peek", "peekElemOff"]
           ]
-        tellExport (Unguarded (Term "peekVkStruct"))
+        tellExport (Term "peekVkStruct")
         tellDepends $
-            [ Unguarded (WE.TypeName "SomeVkStruct")
-            , Unguarded (WE.TypeName "VkStructureType")
+            [ WE.TypeName "SomeVkStruct"
+            , WE.TypeName "VkStructureType"
             ]
         tellExtension "LambdaCase"
         peeks <- fmap catMaybes $
@@ -317,7 +303,7 @@ vkPeekStructWriteElement getHandle platforms structs
               t -> throwIO (IOError Nothing InvalidArgument "" ("Unknown VkStructureType: " ++ show t) Nothing Nothing)
         |]
     in
-      wrapMToWriteElements weName weBootElement go
+      runWE "peekVkStruct declaration" go
 
 
 writeSomeStructPeek
@@ -328,7 +314,7 @@ writeSomeStructPeek
   -> (Text -> Bool)
   -- ^ Does a struct contain a dispatchable handle
   -> Struct
-  -> WrapM (Maybe (Doc ()))
+  -> WE (Maybe (Doc ()))
 writeSomeStructPeek guardMap containsUnion containsDispatchableHandle s@Struct{..}
   = censorGuardedNoCPPF guardMap s $ do
     case sMembers of
@@ -339,7 +325,7 @@ writeSomeStructPeek guardMap containsUnion containsDispatchableHandle s@Struct{.
             tellImport "GHC.IO.Exception" "IOException(..)"
             tellImport "GHC.IO.Exception" "IOErrorType(InvalidArgument)"
             tellImport "Control.Exception" "throwIO"
-            tellDepend (Unguarded (PatternName enum))
+            tellDepend (PatternName enum)
             pure [qci|
               -- We are not able to marshal this type back into Haskell as we don't know which union component to use
               {enum} -> throwIO (IOError Nothing InvalidArgument "" ("Unable to marshal Vulkan structure containing unions: " ++ show {enum}) Nothing Nothing)
@@ -349,7 +335,7 @@ writeSomeStructPeek guardMap containsUnion containsDispatchableHandle s@Struct{.
             tellImport "GHC.IO.Exception" "IOException(..)"
             tellImport "GHC.IO.Exception" "IOErrorType(InvalidArgument)"
             tellImport "Control.Exception" "throwIO"
-            tellDepend (Unguarded (PatternName enum))
+            tellDepend (PatternName enum)
             pure [qci|
               -- We are not able to marshal this type back into Haskell as we don't have the command table for it
               {enum} -> throwIO (IOError Nothing InvalidArgument "" ("Unable to marshal Vulkan structure containing dispatchable handles: " ++ show {enum}) Nothing Nothing)
@@ -357,9 +343,9 @@ writeSomeStructPeek guardMap containsUnion containsDispatchableHandle s@Struct{.
           | otherwise
           -> do
             let fromC = "fromCStruct" <> T.dropPrefix' "Vk" sName
-            tellDepend (Unguarded (WE.TypeName "SomeVkStruct"))
-            tellDepend (Unguarded (PatternName enum))
-            tellDepend (Unguarded (TermName fromC))
+            tellDepend (WE.TypeName "SomeVkStruct")
+            tellDepend (PatternName enum)
+            tellDepend (TermName fromC)
             tellImport "Foreign.Storable" "peek"
             tellImport "Foreign.Ptr" "Ptr"
             tellImport "Foreign.Ptr" "castPtr"
@@ -386,9 +372,9 @@ censorGuarded
   :: (Text -> Maybe Text)
   -- ^ platform to guard
   -> Struct
-  -> WrapM (Doc ())
+  -> WE (Doc ())
   -- ^ The doc will be wrapped in guards if the struct is platform specific
-  -> WrapM (Doc ())
+  -> WE (Doc ())
 censorGuarded gp s = fmap runIdentity . censorGuardedF gp s . fmap Identity
 
 censorGuardedF
@@ -396,49 +382,34 @@ censorGuardedF
   => (Text -> Maybe Text)
   -- ^ platform to guard
   -> Struct
-  -> WrapM (f (Doc ()))
+  -> WE (f (Doc ()))
   -- ^ The doc will be wrapped in guards if the struct is platform specific
-  -> WrapM (f (Doc ()))
-censorGuardedF gp Struct {..}
-  = let
-      (censorer, guardContents) = case gp =<< sPlatform of
-        Nothing -> (id, id)
-        Just g
-          -> let
-               replaceGuards :: [Guarded a] -> [Guarded a]
-               replaceGuards = fmap (Guarded (Guard g) . unGuarded)
-               cen =
-                 \(a, (exports, undependableExports), (depends, sourceDepends), d, e) ->
-                   ( a
-                   , (replaceGuards exports, replaceGuards undependableExports)
-                   , (replaceGuards depends, replaceGuards sourceDepends)
-                   , d
-                   , e
-                   )
-             in
-               (cen, guarded (Just g))
-    in  fmap (fmap guardContents) . censor censorer
+  -> WE (f (Doc ()))
+censorGuardedF gp struct@Struct {..} =
+  let guardContents = case gp =<< sPlatform of
+        Nothing -> id
+        Just g  -> guarded (Just g)
+  in  fmap (fmap guardContents) . censorGuardedNoCPPF gp struct
 
 censorGuardedNoCPPF
   :: Functor f
   => (Text -> Maybe Text)
   -- ^ platform to guard
   -> Struct
-  -> WrapM (f (Doc ()))
+  -> WE (f (Doc ()))
   -- ^ The doc will be wrapped in guards if the struct is platform specific
-  -> WrapM (f (Doc ()))
-censorGuardedNoCPPF gp Struct {..}
-  = let
-      censorer = case gp =<< sPlatform of
+  -> WE (f (Doc ()))
+censorGuardedNoCPPF gp Struct {..} =
+  let censorer = case gp =<< sPlatform of
         Nothing -> id
         Just g ->
           let replaceGuards :: [Guarded a] -> [Guarded a]
               replaceGuards = fmap (Guarded (Guard g) . unGuarded)
-          in  \(a, (exports, undependableExports), (depends, sourceDepends), d, e) ->
-                ( a
-                , (replaceGuards exports, replaceGuards undependableExports)
-                , (replaceGuards depends, replaceGuards sourceDepends)
-                , d
-                , e
-                )
-    in  censor censorer
+          in  \we -> we
+                { weProvides             = replaceGuards (weProvides we)
+                , weUndependableProvides = replaceGuards
+                                             (weUndependableProvides we)
+                , weDepends              = replaceGuards (weDepends we)
+                , weSourceDepends        = replaceGuards (weSourceDepends we)
+                }
+  in  WE . mapStateT (fmap (fmap censorer)) . unWE

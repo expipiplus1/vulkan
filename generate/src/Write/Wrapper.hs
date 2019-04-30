@@ -38,7 +38,7 @@ import           Spec.Savvy.Type
 
 import           Write.Element                     hiding ( TypeName )
 import qualified Write.Element                 as WE
-import           Write.Marshal.Monad
+import           Write.Monad
 import           Write.Util                               ( document, Documentee(..) )
 import           Write.Marshal.Util
 import           Write.Marshal.Wrap
@@ -61,11 +61,10 @@ commandWrapper
   -> (Text -> Maybe HaskellName)
   -- ^ Get brackets for this command
   -> Command
-  -> Either [SpecError] [WriteElement]
+  -> Write [WriteElement]
 commandWrapper getHandle isBitmask isStruct structDispatchableHandle resolveAlias getBrackets command
   = do
-    let weName        = cName command T.<+> "wrapper"
-        weBootElement = Nothing
+    let
         isNonDispatchableHandle n = case getHandle n of
           Just h  -> hHandleType h == NonDispatchable
           Nothing -> True
@@ -83,20 +82,18 @@ commandWrapper getHandle isBitmask isStruct structDispatchableHandle resolveAlia
         getTypeHandle h = getHandle . ("Vk" <>) =<< simpleTypeName h
         structContainsDispatchableHandle s =
           isJust $ structDispatchableHandle . ("Vk" <>) =<< simpleTypeName s
-    ((weDoc, aliasWriteElements), (weImports, (weProvides, weUndependableProvides), (weDepends, weSourceDepends), weExtensions, _)) <-
-      either
-        (throwError . fmap (WithContext (cName command)))
-        -- (pure . first (first (const . vcat)))
-        (pure . first (first (fmap vcat . sequence)))
-        (runWrap $ wrapCommand getTypeHandle
-                               isDefaultable
-                               isTypeStruct
-                               structContainsDispatchableHandle
-                               resolveAlias
-                               getBrackets
-                               command
-        )
-    let rs = WriteElement { .. } : aliasWriteElements
+    (we, aliasWriteElements) <-
+      runWE' (cName command T.<+> "wrapper") $ do
+        (ds, es) <- wrapCommand getTypeHandle
+                                isDefaultable
+                                isTypeStruct
+                                structContainsDispatchableHandle
+                                resolveAlias
+                                getBrackets
+                                command
+        pure (fmap vcat $ sequence ds, es)
+
+    let rs = we : aliasWriteElements
         -- TODO: Remove this
         r  = case cName command of
           "vkGetDeviceGroupSurfacePresentModes2EXT" -> fromJust
@@ -124,51 +121,51 @@ wrapCommand
   -> (Text -> Maybe HaskellName)
   -- ^ Get brackets for this command
   -> Command
-  -> WrapM ([DocMap -> Doc ()], [WriteElement])
+  -> WE ([DocMap -> Doc ()], [WriteElement])
 wrapCommand getHandle isDefaultable isStruct structContainsDispatchableHandle resolveAlias getBrackets c@Command {..} = do
   let lengthPairs :: [(Parameter, Maybe Text, [Parameter])]
       lengthPairs = getLengthPointerPairs cParameters
-      makeWts :: Maybe CommandUsage -> WrapM ([WrappingType], [Constraint])
-      makeWts usage = listens getConstraints $
+      makeWts :: Maybe CommandUsage -> WE [WrappingType]
+      makeWts usage =
         parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatchableHandle resolveAlias usage lengthPairs cParameters
-  let printWrapped ::  Text -> [WrappingType] -> [Constraint] -> WriterT WriteState (Except [SpecError]) (DocMap -> Doc ann)
-      printWrapped n wts constraints = do
+  let printWrapped ::  Text -> [WrappingType] -> WE (DocMap -> Doc ann)
+      printWrapped n wts = do
         wrapped <- wrap c wts
-        t <- makeType wts constraints
-        tellDepend (Unguarded (TermName cName))
+        t <- makeType wts
+        tellDepend (TermName cName)
         pure $ \getDoc -> line <> [qci|
           {document getDoc (TopLevel cName)}
           {n} :: {t :: Doc ()}
           {n} = {wrapped (pretty cName) :: Doc ()}|]
-      makeType wts constraints = wtsToSig KeepVkResult c constraints wts
+      makeType wts = wtsToSig KeepVkResult c wts
   (ds, aliases) <- if isDualUseCommand lengthPairs
     then do
-      (lengthWts, lengthConstraints) <- makeWts (Just CommandGetLength)
-      (valueWts, valueConstraints) <- makeWts (Just CommandGetValues)
+      lengthWts <- makeWts (Just CommandGetLength)
+      valueWts <- makeWts (Just CommandGetValues)
       (wts1, as1) <- do
         n <- maybe
-          (throwError [Other $ "Failed to get wrapped function name for" T.<+> cName]) pure
+          (throwError $ "Failed to get wrapped function name for" T.<+> cName) pure
           (funGetLengthName cName)
-        tellExport (Unguarded (Term n ))
-        (,) <$> printWrapped n lengthWts lengthConstraints
+        tellExport (Term n)
+        (,) <$> printWrapped n lengthWts
             <*> pure [] -- TODO: write aliases for get length names
       (wts2, as2) <- do
         let n = funName cName
-        tellExport (Unguarded (Term n))
-        (,) <$> printWrapped n valueWts valueConstraints
-            <*> traverse (writeAlias valueWts valueConstraints c) cAliases
+        tellExport (Term n)
+        (,) <$> printWrapped n valueWts
+            <*> liftWrite (traverse (writeAlias valueWts c) cAliases)
       (wts3, as3) <-
         (,) <$> writeGetAllCommand lengthWts valueWts c
             <*> pure [] -- TODO: write aliases for get length names
       pure ([wts1, wts2, wts3], as1 ++ as2 ++ as3)
     else do
-      tellExport (Unguarded (Term (funName cName)))
-      (wts, constraints) <- makeWts Nothing
+      tellExport (Term (funName cName))
+      wts <- makeWts Nothing
       let n = funName cName
-      d <- printWrapped n wts constraints
-      as <- traverse (writeAlias wts constraints c) cAliases
+      d <- printWrapped n wts
+      as <- liftWrite (traverse (writeAlias wts c) cAliases)
       pure ([d], as)
-  traverse_ (tellDepend . Unguarded) (getBrackets (dropVk cName))
+  traverse_ tellDepend (getBrackets (dropVk cName))
   pure (ds, aliases)
 
 isDualUseCommand :: [(Parameter, Maybe Text, [Parameter])] -> Bool
@@ -193,11 +190,11 @@ data ReturnValueHandling
 wtsToSig
   :: ReturnValueHandling
   -> Command
-  -> [Constraint]
   -> [WrappingType]
-  -> WrapM (Doc ())
-wtsToSig returnValueHandling c@Command {..} constraints ts = do
-  outputs <- sequenceA [ t | WrappingType _ (Just (Output t _)) _ <- ts ]
+  -> WE (Doc ())
+wtsToSig returnValueHandling c@Command {..} ts = do
+  let constraints = mapMaybe wtConstraint ts
+  outputs <- sequenceA [ t | WrappingType _ (Just (Output t _)) _ _ <- ts ]
   ret     <-
     tupled <$> if commandReturnsResult c && returnValueHandling == KeepVkResult
       then do
@@ -229,7 +226,7 @@ parametersToWrappingTypes
   -- ^ (parameter containing length, name of member representing length,
   -- vector parameters which must be this length)
   -> [Parameter]
-  -> WrapM [WrappingType]
+  -> WE [WrappingType]
 parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatchableHandle resolveAlias maybeCommandUsage lengthPairs ps
   = let
       -- Go from a length name to a list of vectors having that length
@@ -298,7 +295,7 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
           then Just "pSetLayouts"
           else Nothing
 
-      parameterToWrappingType :: Parameter -> WrapM WrappingType
+      parameterToWrappingType :: Parameter -> WE WrappingType
       parameterToWrappingType p
         = let
             name = pName p
@@ -308,7 +305,7 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
             getAlloc t = if isMarshalledStruct t
               then do
                 let Just tyName = simpleTypeName t
-                tellDepend (Unguarded (TermName ("withCStruct" <> tyName)))
+                tellDepend (TermName ("withCStruct" <> tyName))
                 tellImport "Foreign.Marshal.Utils" "with"
                 pure [qci|(\\marshalled -> withCStruct{tyName} marshalled . flip with)|]
               else do
@@ -317,7 +314,7 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
             getNonPtrAlloc t = if isMarshalledStruct t
               then do
                 let Just tyName = simpleTypeName t
-                tellDepend (Unguarded (TermName ("withCStruct" <> tyName)))
+                tellDepend (TermName ("withCStruct" <> tyName))
                 pure ("withCStruct" <> tyName)
               else do
                 tellImport "Data.Function" "(&)"
@@ -329,7 +326,7 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
             getPeek t = if isMarshalledStruct t
               then do
                 let Just tyName = simpleTypeName t
-                tellDepend (Unguarded (TermName ("fromCStruct" <> tyName)))
+                tellDepend (TermName ("fromCStruct" <> tyName))
                 tellImport "Foreign.Storable" "peek"
                 tellImport "Control.Monad"    "(<=<)"
                 pure $ if structContainsDispatchableHandle t
@@ -342,15 +339,9 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
               Just h | Dispatchable <- hHandleType h -> do
                 getCommandTable <- case hLevel h of
                   Nothing ->
-                    throwError
-                      [ Other
-                          "Getting the command table for a handle without a level"
-                      ]
+                    throwError "Getting the command table for a handle without a level"
                   Just Instance ->
-                    throwError
-                      [ Other
-                          "Getting the command table for vector of instances"
-                      ]
+                    throwError "Getting the command table for vector of instances"
                   Just PhysicalDevice ->
                     pure ("pure commandTable" :: Doc ())
                   Just Device ->
@@ -361,7 +352,7 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
               _ | isMarshalledStruct t
                 -> do
                   let Just tyName = simpleTypeName t
-                  tellDepend (Unguarded (TermName ("fromCStruct" <> tyName)))
+                  tellDepend (TermName ("fromCStruct" <> tyName))
                   tellImport "Foreign.Storable" "peekElemOff"
                   tellImport "Control.Monad"    "(<=<)"
                   pure $ if structContainsDispatchableHandle t
@@ -372,7 +363,7 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
                 pure "peekElemOff"
           in
             case deepMarshalledType (pType p) of
-              Void -> throwError [Other "void parameter"]
+              Void -> throwError "void parameter"
               Array Const (NumericArraySize n) unmarshalledType
                 | t <- marshalledType unmarshalledType
                 , n >= 2
@@ -381,8 +372,8 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
                 -> do
                   (w, _) <- tupleWrap n paramName
                   pure $ InputType (Input paramName (tupleTy n <$> toHsType t)) w
-              Array{}   -> throwError [Other "array parameter"]
-              Proto _ _ -> throwError [Other "proto paramter"]
+              Array{}   -> throwError "array parameter"
+              Proto _ _ -> throwError "proto paramter"
               t
                 | -- The length of an array of untyped (void*) values, length is
                   -- given in bytes.
@@ -504,12 +495,11 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
                   let alloc = "(&)"
                   w <- voidVecWrap alloc paramName
                   tellImport "Foreign.Storable" "Storable"
-                  tellConstraint "Storable a"
                   let vType = do
                         tellImport "Data.Vector" "Vector"
                         let tyName = "a"
                         pure ("Vector" <+> tyName)
-                  pure $ InputType (Input paramName vType) w
+                  pure $ InputTypeWithConstraint (Input paramName vType) w "Storable a"
                 | -- A non optional string
                   Char <- t
                 , Just NullTerminated <- pLength p
@@ -538,7 +528,7 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
                 -> pure $ InputType (Input paramName (toHsType ptrType))
                                     (simpleWrap paramName)
                 | otherwise
-                -> throwError [Other "array ptr parameter"]
+                -> throwError "array ptr parameter"
               ptrType@(Ptr NonConst t)
                 | -- Is this a type which we should pass using the pointer
                   -- without any marshaling
@@ -564,7 +554,7 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
                 -> do
                   (w, ptr) <- simpleAllocaOutputWrap paramName
                   peek     <- getPeek t
-                  tellDepend (Unguarded (TermName "bool32ToBool"))
+                  tellDepend (TermName "bool32ToBool")
                   pure $ OutputType
                     (Output
                       (pure "Bool")
@@ -627,7 +617,7 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
                 -> do
                   tellExtension "DuplicateRecordFields"
                   structType <- case getParameter s of
-                    Nothing -> throwError [Other "Cant find length parameter"]
+                    Nothing -> throwError "Cant find length parameter"
                     Just p' -> pure $ case deepMarshalledType (pType p') of
                       Ptr _ structType -> structType
                       structType       -> structType
@@ -675,7 +665,7 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
                   tellQualifiedImport "Data.Vector" "length"
                   let lengthExpression =
                         "(Data.Vector.length "
-                          <> (makeParamName (dropPointer (pName inputVector)))
+                          <> makeParamName (dropPointer (pName inputVector))
                           <> ")"
                   peekElemOff <- getPeekElemOff t
                   peek        <- peekVectorOutput peekElemOff
@@ -728,21 +718,15 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
                         getCommandTable <- case hLevel h of
                           Nothing ->
                             throwError
-                              [ Other
-                                  "Getting the command table for a handle without a level"
-                              ]
+                              "Getting the command table for a handle without a level"
                           Just Instance ->
                             throwError
-                              [ Other
-                                  "Getting the command table for vector of instances"
-                              ]
+                              "Getting the command table for vector of instances"
                           Just PhysicalDevice ->
                             pure ("pure commandTable" :: Doc ())
                           Just Device ->
                             throwError
-                              [ Other
-                                  "Getting the command table for vector of devices"
-                              ]
+                              "Getting the command table for vector of devices"
                         tellImport "Foreign.Storable" "peekElemOff"
                         pure
                           [qci|(\\p i -> {dropVkType (hName h)} <$> peekElemOff p i <*> {getCommandTable})|]
@@ -776,7 +760,7 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
                     vType =
                       tellImport "Data.ByteString" "ByteString" $> "ByteString"
                   pure $ OutputType (Output vType peek) w
-              t -> throwError [Other ("unhandled type: " <> T.tShow t)]
+              t -> throwError ("unhandled type: " <> T.tShow t)
     in
       traverse parameterToWrappingType ps
 
@@ -816,27 +800,31 @@ data WrappingType = WrappingType
     -- ^ A function taking a continuation to wrap the wrapped value and
     -- returning a wrapper
     -- TODO: Make better types!
+  , wtConstraint :: Maybe Text
   }
 
 data Input = Input
   { iName :: Text
-  , iType :: WrapM (Doc ())
+  , iType :: WE (Doc ())
   }
 
 data Output = Output
-  { _oType :: WrapM (Doc ())
+  { _oType :: WE (Doc ())
   , oPeek :: Doc ()
     -- ^ An expression of type "IO oType"
   }
 
 pattern InputType :: Input -> Wrapper -> WrappingType
-pattern InputType i w = WrappingType (Just i) Nothing w
+pattern InputType i w = WrappingType (Just i) Nothing w Nothing
+
+pattern InputTypeWithConstraint :: Input -> Wrapper -> Text -> WrappingType
+pattern InputTypeWithConstraint i w c = WrappingType (Just i) Nothing w (Just c)
 
 pattern OutputType :: Output -> Wrapper -> WrappingType
-pattern OutputType o w = WrappingType Nothing (Just o) w
+pattern OutputType o w = WrappingType Nothing (Just o) w Nothing
 
 pattern InferredType :: Wrapper -> WrappingType
-pattern InferredType w = WrappingType Nothing Nothing w
+pattern InferredType w = WrappingType Nothing Nothing w Nothing
 
 ----------------------------------------------------------------
 -- Parameter Wrappers
@@ -854,7 +842,7 @@ handleWrap
   :: Text
   -- ^ Parameter name
   -> Handle
-  -> WrapM Wrapper
+  -> WE Wrapper
 handleWrap paramName handle = do
   let w = pretty $ unReservedWord paramName
       pat = parens [qci|{dropVkType (hName handle)} {w} commandTable|]
@@ -863,9 +851,9 @@ handleWrap paramName handle = do
 boolWrap
   :: Text
   -- ^ Parameter name
-  -> WrapM Wrapper
+  -> WE Wrapper
 boolWrap paramName = do
-  tellDepend (Unguarded (TermName "boolToBool32"))
+  tellDepend (TermName "boolToBool32")
   let paramDoc = pretty $ unReservedWord paramName
       w = parens $ "boolToBool32" <+> paramDoc
   pure $ \cont e -> [qci|\\{paramDoc} -> {cont (e <+> w)}|]
@@ -873,7 +861,7 @@ boolWrap paramName = do
 cStringWrap
   :: Text
   -- ^ Parameter name
-  -> WrapM Wrapper
+  -> WE Wrapper
 cStringWrap paramName = do
   tellImport "Data.ByteString" "useAsCString"
   pure $ \cont e ->
@@ -887,7 +875,7 @@ cStringWrap paramName = do
 optionalCStringWrap
   :: Text
   -- ^ Parameter name
-  -> WrapM Wrapper
+  -> WE Wrapper
 optionalCStringWrap paramName = do
   tellImport "Data.ByteString"       "useAsCString"
   tellImport "Foreign.Marshal.Utils" "maybeWith"
@@ -904,7 +892,7 @@ optionalCStringWrap paramName = do
 simpleAllocaOutputWrap
   :: Text
   -- ^ Parameter name
-  -> WrapM (Wrapper, Doc ())
+  -> WE (Wrapper, Doc ())
   -- ^ The wrapper and the name of the pointer used
 simpleAllocaOutputWrap paramName = do
   tellImport "Foreign.Marshal.Alloc" "alloca"
@@ -916,7 +904,7 @@ simpleAllocaOutputWrap paramName = do
 handleOutputWrap
   :: Text
   -- ^ Parameter name
-  -> WrapM (Wrapper, Doc ())
+  -> WE (Wrapper, Doc ())
   -- ^ The wrapper and the name of the pointer used
 handleOutputWrap = simpleAllocaOutputWrap
 
@@ -924,21 +912,21 @@ constructHandle
   :: Handle
   -> Doc ()
   -- ^ The name of the pointer to the C handle
-  -> WrapM (Doc ())
+  -> WE (Doc ())
 constructHandle h ptr = case hHandleType h of
   NonDispatchable -> do
     tellImport "Foreign.Storable" "peek"
     pure [qci|peek {ptr}|]
   Dispatchable -> case hName h of
     "VkInstance" -> do
-      tellDepend (Unguarded (WE.TypeName "Instance"))
-      tellDepend (Unguarded (TermName "initInstanceCmds"))
+      tellDepend (WE.TypeName "Instance")
+      tellDepend (TermName "initInstanceCmds")
       tellImport "Foreign.Storable" "peek"
       pure
         [qci|peek {ptr} >>= (\instanceH -> Instance instanceH <$> initInstanceCmds instanceH)|]
     "VkDevice" -> do
-      tellDepend (Unguarded (WE.TypeName "Device"))
-      tellDepend (Unguarded (TermName "initDeviceCmds"))
+      tellDepend (WE.TypeName "Device")
+      tellDepend (TermName "initDeviceCmds")
       tellImport "Foreign.Storable" "peek"
       pure
         [qci|peek {ptr} >>= (\deviceH -> Device deviceH <$> initDeviceCmds commandTable deviceH)|]
@@ -946,17 +934,17 @@ constructHandle h ptr = case hHandleType h of
       Just _ -> do
         let con = dropVkType (hName h)
         tellImport "Foreign.Storable" "peek"
-        tellDepend (Unguarded (WE.TypeName con))
+        tellDepend (WE.TypeName con)
         pure [qci|flip {pretty con} commandTable <$> peek {ptr}|]
       Nothing ->
-        throwError [Other "constructing dispatchable handle with no level"]
+        throwError "constructing dispatchable handle with no level"
 
 allocaWrap
   :: Text
   -- ^ allocator
   -> Text
   -- ^ Parameter name
-  -> WrapM Wrapper
+  -> WE Wrapper
 allocaWrap alloc paramName =
   pure $ \cont e ->
     let param    = pretty (dropPointer paramName)
@@ -970,7 +958,7 @@ optionalAllocaWrap
   -- ^ allocator
   -> Text
   -- ^ Parameter name
-  -> WrapM Wrapper
+  -> WE Wrapper
 optionalAllocaWrap alloc paramName = do
   tellImport "Foreign.Marshal.Utils" "maybeWith"
   pure $ \cont e ->
@@ -987,10 +975,10 @@ lengthWrap
   -- ^ Required vector names
   -> [Text]
   -- ^ Optional vector names
-  -> WrapM Wrapper
+  -> WE Wrapper
 lengthWrap vecs optionals = do
   when (null vecs) $
-    throwError [Other "lengthWrap has no required vectors"]
+    throwError "lengthWrap has no required vectors"
   tellQualifiedImport "Data.Vector" "length"
   let lengthExpressions =
         (vecs <&> \n -> [qci|Data.Vector.length {unReservedWord n}|])
@@ -1003,7 +991,7 @@ lengthWrap vecs optionals = do
 lengthBytesWrap
   :: Text
   -- ^ Vector name
-  -> WrapM Wrapper
+  -> WE Wrapper
 lengthBytesWrap vec = do
   tellImport          "Foreign.Storable" "sizeOf"
   tellQualifiedImport "Data.Vector"      "length"
@@ -1012,7 +1000,7 @@ lengthBytesWrap vec = do
     cont
       [qci|{e} (fromIntegral $ sizeOf (Data.Vector.head {vec}) * Data.Vector.length {vec})|]
 
-passNullPtrWrap :: WrapM Wrapper
+passNullPtrWrap :: WE Wrapper
 passNullPtrWrap = do
   tellImport "Foreign.Ptr" "nullPtr"
   pure $ \cont e -> cont [qci|{e} nullPtr|]
@@ -1022,9 +1010,9 @@ vecWrap
   -- ^ Non pointer Allocator
   -> Text
   -- ^ vector name
-  -> WrapM Wrapper
+  -> WE Wrapper
 vecWrap nonPtrAlloc vecName = do
-  tellDepend (Unguarded (TermName "withVec"))
+  tellDepend (TermName "withVec")
   pure $ \cont e ->
     let param    = pretty (unReservedWord $ dropPointer vecName)
         paramPtr = pretty (ptrName (dropPointer vecName))
@@ -1037,9 +1025,9 @@ optionalVecWrap
   -- ^ Non pointer Allocator
   -> Text
   -- ^ vector name
-  -> WrapM Wrapper
+  -> WE Wrapper
 optionalVecWrap nonPtrAlloc vecName = do
-  tellDepend (Unguarded (TermName "withVec"))
+  tellDepend (TermName "withVec")
   tellImport "Foreign.Marshal.Utils" "maybeWith"
   pure $ \cont e ->
     let param    = pretty (unReservedWord $ dropPointer vecName)
@@ -1053,10 +1041,10 @@ voidVecWrap
   -- ^ Non Pointer Allocator
   -> Text
   -- ^ vector name
-  -> WrapM Wrapper
+  -> WE Wrapper
 voidVecWrap nonPtrAlloc vecName = do
   tellImport "Foreign.Ptr"          "castPtr"
-  tellDepend (Unguarded (TermName "withVec"))
+  tellDepend (TermName "withVec")
   pure $ \cont e ->
     let
       param    = pretty (unReservedWord $ dropPointer vecName)
@@ -1074,7 +1062,7 @@ peekVectorOutput
   -- ^ Parameter name
   -> Text
   -- ^ Expression to get the length
-  -> WrapM (Doc ())
+  -> WE (Doc ())
 peekVectorOutput peekElemOff paramName len = do
   tellQualifiedImport "Data.Vector" "generateM"
   pure [qci|(Data.Vector.generateM ({len}) ({peekElemOff} {ptrName (dropPointer paramName)}))|]
@@ -1086,7 +1074,7 @@ peekVectorOutputPeekLength
   -- ^ Parameter name
   -> Text
   -- ^ Expression to get a pointer to the length
-  -> WrapM (Doc ())
+  -> WE (Doc ())
 peekVectorOutputPeekLength peekElemOff paramName lenPtr = do
   tellImport "Foreign.Storable" "peek"
   tellQualifiedImport "Data.Vector" "generateM"
@@ -1098,7 +1086,7 @@ vectorOutputWrap
   -- ^ Parameter name
   -> Text
   -- ^ Expression to get the length
-  -> WrapM Wrapper
+  -> WE Wrapper
 vectorOutputWrap vecName len = do
   tellImport "Foreign.Marshal.Array" "allocaArray"
   pure $ \cont e ->
@@ -1115,7 +1103,7 @@ peekByteStringOutput
   -- ^ Parameter name
   -> Text
   -- ^ Expression to get the length
-  -> WrapM (Doc ())
+  -> WE (Doc ())
 peekByteStringOutput paramName len = do
   tellImport "Data.ByteString" "packCStringLen"
   pure [qci|(packCStringLen ({ptrName (dropPointer paramName)}, (fromIntegral {len})))|]
@@ -1125,7 +1113,7 @@ peekByteStringOutputPeekLength
   -- ^ Parameter name
   -> Text
   -- ^ Expression to get a pointer to the length
-  -> WrapM (Doc ())
+  -> WE (Doc ())
 peekByteStringOutputPeekLength paramName lenPtr = do
   tellImport "Data.ByteString" "packCStringLen"
   tellImport "Foreign.Storable" "peek"
@@ -1136,7 +1124,7 @@ byteStringOutputWrap
   -- ^ Parameter name
   -> Text
   -- ^ Expression to get the length
-  -> WrapM Wrapper
+  -> WE Wrapper
 byteStringOutputWrap bsName len = do
   tellImport "Foreign.Marshal.Array" "allocaArray"
   tellImport "Foreign.Ptr" "castPtr"
@@ -1153,7 +1141,7 @@ tupleTy :: Word -> Doc () -> Doc ()
 tupleTy n t = tupled (replicate (fromIntegral n) t)
 
 tupleWrap :: Word -> Text
-  -> WrapM (Wrapper, Doc ())
+  -> WE (Wrapper, Doc ())
   -- ^ Returns the wrapper and the pointer name
 tupleWrap n paramName = do
    let paramPtr  = pretty (ptrName (dropPointer paramName))
@@ -1165,18 +1153,18 @@ tupleWrap n paramName = do
            [qci|\\{tupled paramNames} -> allocaArray {n} (\\{paramPtr} -> {pokes} *> {e} {paramPtr}|]
      in [qci|{cont withPtr})|]
 
-wrap :: Command -> [WrappingType] -> WrapM (Doc () -> Doc ())
+wrap :: Command -> [WrappingType] -> WE (Doc () -> Doc ())
 wrap c wts = do
   makeOutput <-
-    let outputs = [ o | WrappingType _ (Just o) _ <- wts ]
+    let outputs = [ o | WrappingType _ (Just o) _ _ <- wts ]
     in
       case cReturnType c of
         Void -> pure $ \e -> [qci|{e} *> ({tupleA (oPeek <$> outputs)})|]
         TypeName "VkResult" -> do
           tellImport "Control.Monad"     "when"
           tellImport "Control.Exception" "throwIO"
-          tellDepend (Unguarded (PatternName "VK_SUCCESS"))
-          tellDepend (Unguarded (WE.TypeName "VulkanException"))
+          tellDepend (PatternName "VK_SUCCESS")
+          tellDepend (WE.TypeName "VulkanException")
           let returnsResult = commandReturnsResult c
           pure
             $ \e ->
@@ -1220,32 +1208,22 @@ data CommandUsage
 ----------------------------------------------------------------
 
 writeAlias
-  :: MonadError [SpecError] m
-  => [WrappingType]
+  :: [WrappingType]
   -- ^ The types
-  -> [Constraint]
-  -- ^ constraints
   -> Command
   -- ^ The original command
   -> Text
   -- ^ The alias name
-  -> m WriteElement
-writeAlias wts constraints c@Command{..} name = do
-  let weName = name T.<+> "alias" T.<+> cName
-      weBootElement          = Nothing
-      aliasDoc = do
-        t <- wtsToSig KeepVkResult c constraints wts
-        tellExport (Unguarded (Term (dropVk name)))
-        tellDepend (Unguarded (TermName (dropVk cName)))
-        pure $ \_ -> [qci|
-          {dropVk name} :: {t}
-          {dropVk name} = {dropVk cName}
-        |]
-  (weDoc, (weImports, (weProvides, weUndependableProvides), (weDepends, weSourceDepends), weExtensions, _)) <- either
-    (throwError . fmap (WithContext cName))
-    pure
-    (runWrap aliasDoc)
-  pure WriteElement {..}
+  -> Write WriteElement
+writeAlias wts c@Command {..} name =
+  runWE (name T.<+> "alias" T.<+> cName) $ do
+    t <- wtsToSig KeepVkResult c wts
+    tellExport (Term (dropVk name))
+    tellDepend (TermName (dropVk cName))
+    pure $ \_ ->  [qci|
+      {dropVk name} :: {t}
+      {dropVk name} = {dropVk cName}
+    |]
 
 ----------------------------------------------------------------
 -- Getting all values using a dual use command
@@ -1257,46 +1235,45 @@ writeGetAllCommand
   -> [WrappingType]
   -- ^ The wrapping types for the GetValues command
   -> Command
-  -> WrapM (DocMap -> Doc ())
+  -> WE (DocMap -> Doc ())
 writeGetAllCommand getLengthTypes getValuesTypes c@Command {..} = do
   getAll <- maybe
-    (throwError [Other $ "Failed to get 'getAll' function name for" T.<+> cName]
+    (throwError $ "Failed to get 'getAll' function name for" T.<+> cName
     )
     pure
     (funGetAllName cName)
   getLength <- maybe
-    (throwError [Other $ "Failed to get 'getAll' function name for" T.<+> cName]
+    (throwError $ "Failed to get 'getAll' function name for" T.<+> cName
     )
     pure
     (funGetLengthName cName)
   let get     = funName cName
-      inputs  = [ i | WrappingType (Just i) _ _ <- getLengthTypes ]
-      outputs = [ o | WrappingType _ (Just o) _ <- getValuesTypes ]
+      inputs  = [ i | WrappingType (Just i) _ _ _ <- getLengthTypes ]
+      outputs = [ o | WrappingType _ (Just o) _ _ <- getValuesTypes ]
       args    = pretty . unReservedWord . iName <$> inputs
   case outputs of
-    []  -> throwError [Other ("getAll command has no outputs:" T.<+> cName)]
+    []  -> throwError ("getAll command has no outputs:" T.<+> cName)
     [_] -> pure ()
     _   -> throwError
-      [Other ("getAll command has more than one output:" T.<+> cName)]
+      ("getAll command has more than one output:" T.<+> cName)
   case cSuccessCodes of
     -- TODO: why does vkGetPhysicalDeviceQueueFamilyProperties behave like this
     Nothing | Void <- cReturnType -> pure ()
     Nothing                       -> throwError
-      [Other ("getAll command doesn't return VK_INCOMPLETE:" T.<+> cName)]
+      ("getAll command doesn't return VK_INCOMPLETE:" T.<+> cName)
     Just ["VK_SUCCESS"] -> throwError
-      [Other ("getAll command doesn't return VK_INCOMPLETE:" T.<+> cName)]
+      ("getAll command doesn't return VK_INCOMPLETE:" T.<+> cName)
     Just ["VK_SUCCESS", "VK_INCOMPLETE"] -> pure ()
     Just cs                              -> throwError
-      [Other ("getAll returns unexpected success codes:" T.<+> T.tShow cs)]
+      ("getAll returns unexpected success codes:" T.<+> T.tShow cs)
   type' <- wtsToSig
     IgnoreVkResult
     c
-    []
-    (  ((\i -> WrappingType (Just i) Nothing id) <$> inputs)
-    <> ((\o -> WrappingType Nothing (Just o) id) <$> outputs)
+    (  ((\i -> WrappingType (Just i) Nothing id Nothing) <$> inputs)
+    <> ((\o -> WrappingType Nothing (Just o) id Nothing) <$> outputs)
     )
   let takeResult = if cReturnType == Void then "" else "snd <$> " :: Doc ()
-  tellExport (Unguarded (Term getAll))
+  tellExport (Term getAll)
   pure $ \_ -> [qci|
     -- | Returns all the values available from '{get}'.
     {getAll} :: {type'}

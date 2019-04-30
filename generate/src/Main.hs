@@ -21,6 +21,8 @@ import           Spec.Savvy.Extension
 import           Spec.Savvy.Spec
 import           Write.Spec
 
+import Write.Monad
+
 
 main :: IO ()
 main = do

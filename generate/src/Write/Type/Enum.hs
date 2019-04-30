@@ -15,51 +15,46 @@ import           Data.Text                                ( Text )
 import qualified Data.Text.Extra               as T
 import           Data.Text.Prettyprint.Doc
 import           Data.Word
+import           Data.Foldable
 import           Prelude                           hiding ( Enum )
 import           Text.InterpolatedString.Perl6.Unindented
 import           Text.Printf
+import           Control.Monad.Trans
+import           Control.Monad
 
 import           Spec.Savvy.Enum
 
 import           Write.Element
 import           Write.Util
+import           Write.Monad
 
-writeEnum :: Enum -> WriteElement
-writeEnum e@Enum {..} =
-  let weName       = "Enum: " <> eName
-      weDoc        = enumDoc e
-      weExtensions = ["GeneralizedNewtypeDeriving", "PatternSynonyms"]
-      weImports =
-        Unguarded
-          <$> [ Import "Foreign.Storable" ["Storable(..)"]
-              , Import "Text.Read"        ["Read(..)", "parens"]
-              , Import "Text.Read.Lex"    ["Lexeme(Ident)"]
-              , Import "Text.ParserCombinators.ReadPrec"
-                       ["(+++)", "prec", "step"]
-              , Import "GHC.Read" ["expectP", "choose"]
-              ]
-          ++  case eType of
-                EnumTypeEnum    -> [Import "Data.Int" ["Int32"]]
-                EnumTypeBitmask -> [Import "Data.Bits" ["Bits", "FiniteBits"]]
-
-      weProvides =
-        Unguarded
-          <$> [TypeConstructor eName, Term eName]
-          ++  [ Pattern eeName | EnumElement {..} <- eElements ]
-      weUndependableProvides = []
-      weSourceDepends        = []
-      weBootElement          = Just $ WriteElement
-          { weImports    = []
-          , weExtensions = []
-          , weProvides   = Unguarded <$> [TypeConstructor eName]
-          , weDepends    = []
-          , weDoc        = \_ -> pretty $ "data" T.<+> eName
-          , ..
-          }
-      weDepends              = Unguarded <$> case eType of
-        EnumTypeEnum    -> [TypeName "Zero"]
-        EnumTypeBitmask -> [TypeName "VkFlags", TypeName "Zero"]
-  in  WriteElement {..}
+writeEnum :: Enum -> Write WriteElement
+writeEnum e@Enum {..} = runWE ("Enum:" T.<+> eName) $ do
+  tellExtension "GeneralizedNewtypeDeriving"
+  tellExtension "PatternSynonyms"
+  tellImports
+    [ Import "Foreign.Storable"                ["Storable(..)"]
+    , Import "Text.Read"                       ["Read(..)", "parens"]
+    , Import "Text.Read.Lex"                   ["Lexeme(Ident)"]
+    , Import "Text.ParserCombinators.ReadPrec" ["(+++)", "prec", "step"]
+    , Import "GHC.Read"                        ["expectP", "choose"]
+    ]
+  tellDepend (TypeName "Zero")
+  case eType of
+    EnumTypeEnum    -> tellImport "Data.Int" "Int32"
+    EnumTypeBitmask -> do
+      tellImport "Data.Bits" "Bits"
+      tellImport "Data.Bits" "FiniteBits"
+      tellDepend (TypeName "VkFlags")
+  traverse_
+    tellExport
+    (  [TypeConstructor eName, Term eName]
+    ++ [ Pattern eeName | EnumElement {..} <- eElements ]
+    )
+  tellBootElem <=< liftWrite . runWE ("Enum: " <> eName <> " boot") $ do
+    tellExport (TypeConstructor eName)
+    pure $ \_ -> pretty $ "data" T.<+> eName
+  pure $ enumDoc e
 
 enumDoc :: Enum -> DocMap -> Doc ()
 enumDoc e@Enum{..} getDoc = [qci|
