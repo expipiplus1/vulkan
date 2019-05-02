@@ -19,7 +19,6 @@ import           Data.Foldable
 import           Prelude                           hiding ( Enum )
 import           Text.InterpolatedString.Perl6.Unindented
 import           Text.Printf
-import           Control.Monad.Trans
 import           Control.Monad
 
 import           Spec.Savvy.Enum

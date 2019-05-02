@@ -12,6 +12,7 @@ module Spec.Savvy.Command
   , specCommands
   , commandType
   , lowerArrayToPointer
+  , lengthStringToParamLength
   ) where
 
 import           Control.Arrow
@@ -112,11 +113,8 @@ specCommands pc P.Spec {..} handles features extensions
         ps  <- for cParameters $ \P.Parameter {..} -> eitherToValidation $ do
           t <- stringToTypeExpected pc pName pType
           let pLength = case pLengths of
-                Nothing                  -> Nothing
-                Just ["null-terminated"] -> Just NullTerminated
-                Just [l] | [param, member'] <- T.splitOn "::" l ->
-                  Just (NamedMemberLength param member')
-                Just [l] -> Just (NamedLength l)
+                Nothing  -> Nothing
+                Just [l] -> Just $ lengthStringToParamLength l
                 Just _   -> error "TODO: Multiple lengths"
           pure Parameter {pType = t, ..}
         pure
@@ -134,6 +132,12 @@ specCommands pc P.Spec {..} handles features extensions
                   Nothing -> Nothing
                   Just cAvailability ->
                     Just $ Command {cReturnType = ret, cParameters = ps, ..}
+
+lengthStringToParamLength :: Text -> ParameterLength
+lengthStringToParamLength = \case
+  "null-terminated" -> NullTerminated
+  l | [param, member'] <- T.splitOn "::" l -> NamedMemberLength param member'
+  l                 -> NamedLength l
 
 commandType :: Command -> Type
 commandType Command {..} = Proto

@@ -12,7 +12,6 @@ import           Text.InterpolatedString.Perl6.Unindented
 import           Control.Monad.Except
 import           Data.Text.Extra               as T
 
-import           Spec.Savvy.Error
 import           Spec.Savvy.Handle
 import           Spec.Savvy.Type
 

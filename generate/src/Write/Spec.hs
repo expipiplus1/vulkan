@@ -16,7 +16,6 @@ import           Data.Foldable
 import           Data.List.Extra
 import qualified Data.Map                      as Map
 import           Data.Maybe
-import qualified Data.Set                      as Set
 import           Data.Text                                ( Text )
 import qualified Data.Text                     as T
 import           Data.Text.Prettyprint.Doc         hiding ( brackets )
@@ -70,6 +69,8 @@ import           Write.Type.Enum
 import           Write.Type.FuncPointer
 import           Write.Wrapper
 import           Write.Monad
+
+import           Write.Marshal.Marshal
 
 -- TODO: Better error handling
 writeSpec
@@ -148,19 +149,35 @@ renderWide :: Doc () -> String
 renderWide = renderString . layoutPretty (LayoutOptions Unbounded)
 
 specWrapperWriteElements :: Spec -> Validation [SpecError] [WriteElement]
-specWrapperWriteElements spec@Spec {..} = do
+specWrapperWriteElements spec'@Spec {..} = do
   let
     getHandle = (`Map.lookup` Map.fromList ((hName &&& id) <$> sHandles))
-    isBitmask =
-      (`Set.member` Set.fromList
-        [ n
-        | Enum {..} <- sEnums
-        , n         <- eName : eAliases
+    isBitmask = isJust . getBitmask
+    getBitmask =
+      (`Map.lookup` Map.fromList
+        [ (n, e)
+        | e@Enum {..} <- sEnums
+        , n           <- eName : eAliases
         , eType == EnumTypeBitmask
         ]
       )
-    isStruct s = any (`Set.member` Set.fromList (sName <$> sStructs))
-                     (s : [ a | Just a <- [getAlias1 sTypeAliases s] ])
+    getEnum =
+      (`Map.lookup` Map.fromList
+        [ (n, e)
+        | e@Enum {..} <- sEnums
+        , n           <- eName : eAliases
+        , eType == EnumTypeEnum
+        ]
+      )
+    isStruct = isJust . getStruct
+    getStruct =
+      (`Map.lookup` Map.fromList
+        [ (n, s)
+        | s <- sStructs
+        , n <-
+          sName s : [ a | Just a <- pure $ getAlias1 sTypeAliases (sName s) ]
+        ]
+      )
 
     -- TODO: Filter in a better way
     enabledCommands =
@@ -183,6 +200,8 @@ specWrapperWriteElements spec@Spec {..} = do
     resolveAlias :: Text -> Text
     resolveAlias t = fromMaybe t (getAlias1 sTypeAliases t)
 
+    lookup = Lookup getEnum getBitmask getStruct getHandle
+
 
   bracketAndCommandWrappers <- eitherToValidation $ do
     (bracketConstructors, bs) <- unzip <$> toE (brackets sHandles)
@@ -202,12 +221,14 @@ specWrapperWriteElements spec@Spec {..} = do
       )
       enabledCommands
     pure $ bs : cs
-  structWrappers <- toV $ traverseV
+  _ <- toVLookup lookup
+    $ traverseV marshalStructMembers enabledStructs
+  structWrappers <- toVLookup lookup $ traverseV
     (structWrapper getHandle isBitmask isStruct enabledStructs)
     enabledStructs
   handleWrappers <- toV $ traverseV handleWrapper dispatchableHandles
-  aliases        <- writeAliases (makeMarshalledAliases spec)
-  enumAliases <- traverse writeFullEnumAliases (makeMarshalledEnumAliases spec)
+  aliases        <- writeAliases (makeMarshalledAliases spec')
+  enumAliases <- traverse writeFullEnumAliases (makeMarshalledEnumAliases spec')
   someVkStructWE <- toV
     $ someVkStructWriteElement getHandle sPlatforms enabledStructs
   peekStructWE <- toV
@@ -224,7 +245,7 @@ specWrapperWriteElements spec@Spec {..} = do
     )
 
 specCWriteElements :: Spec -> Validation [SpecError] [WriteElement]
-specCWriteElements s@Spec {..} = do
+specCWriteElements Spec {..} = do
   let
     -- All requirement in features and specs
       reqs =

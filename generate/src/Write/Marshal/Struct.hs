@@ -35,7 +35,6 @@ import           Data.Traversable
 import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
 
-import           Spec.Savvy.Error
 import           Spec.Savvy.Struct
 import           Spec.Savvy.Type
 import           Spec.Savvy.Handle
@@ -47,6 +46,8 @@ import           Write.Marshal.Util
 import           Write.Marshal.Struct.Utils
 import           Write.Marshal.Wrap
 import           Write.Util
+
+import qualified Write.Marshal.Marshal as M
 
 
 {-# ANN module ("HLint: ignore Reduce duplication" :: String) #-}
@@ -119,7 +120,7 @@ wrapStruct isDefaultable isStruct getHandle containsUnion containsDispatchableHa
   toCStructDoc   <- writeToCStructInstance marshalled
   fromCStructDoc <- writeFromCStructInstance containsUnion containsDispatchableHandle marshalled
   zeroDoc        <- writeZeroInstance marshalled
-  marshalledDoc  <- writeMarshalled marshalled
+  marshalledDoc  <- writeMarshalled s marshalled
   tellExtension "DuplicateRecordFields"
   tellExport (WithConstructors (WE.TypeName (dropVkType (sName s))))
   tellExport (Term (dropVkType (sName s)))
@@ -1199,19 +1200,19 @@ getLengthRelation struct structMembers
 -- Writing marshalled structs
 ----------------------------------------------------------------
 
-writeMarshalled :: MarshalledStruct -> WE (DocMap -> Doc ())
-writeMarshalled MarshalledStruct {..} =
+writeMarshalled :: Struct -> MarshalledStruct -> WE (DocMap -> Doc ())
+writeMarshalled s MarshalledStruct {..} =
   case msStructOrUnion of
     AStruct -> do
       memberDocs <- traverse
         (writeMarshalledMember msName)
         msMembers
+      mParams <- liftWrite $ M.marshalStructMembers s
+      mDocs <- traverse (writeMarshalledParam msName) mParams
       pure $ \getDoc -> [qci|
       {document getDoc (TopLevel ("Vk" <> msName))}
       data {msName} = {msName}
-        \{ {indent (-2) . vsep $
-           intercalatePrependEither "," (($ getDoc) <$> memberDocs)
-          }
+        \{ {indent (-2) . vsep . intercalatePrepend "," . concat . fmap ($ getDoc) $ mDocs}
         }
         deriving (Show, Eq)
       |]
@@ -1226,6 +1227,15 @@ writeMarshalled MarshalledStruct {..} =
            intercalatePrependEither "|" (($ getDoc) <$> memberDocs)}
         deriving (Show, Eq)
       |]
+
+writeMarshalledParam
+  :: Text -> M.MarshalledParam StructMember -> WE (DocMap -> [Doc ()])
+writeMarshalledParam parentName p = do
+  rendered <- M.renderMarshalledType (M.mmType p)
+  pure $ \getDoc -> rendered <&> \(name, type') -> [qci|
+    {document getDoc (Nested parentName (M.unName name))}
+    {M.unName (M.getMarshalledName name)} :: {type'}
+  |]
 
 writeMarshalledMember
   :: Text
@@ -1576,13 +1586,13 @@ writeMarshalledMemberZero = \case
   FixedArrayNullTerminated _ _ -> do
     tellQualifiedImport "Data.ByteString" "empty"
     pure $ Just "Data.ByteString.empty"
-  FixedArrayZeroPadByteString memberName _ -> do
+  FixedArrayZeroPadByteString _memberName _ -> do
     tellQualifiedImport "Data.ByteString" "empty"
     pure $ Just "Data.ByteString.empty"
-  FixedArrayZeroPad memberName _ t -> do
+  FixedArrayZeroPad _memberName _ _t -> do
     tellQualifiedImport "Data.Vector" "empty"
     pure $ Just "Data.Vector.empty"
-  MaybeByteString memberName ->
+  MaybeByteString _memberName ->
     pure $ Just "Nothing"
   Vector{} -> do
     tellQualifiedImport "Data.Vector" "empty"
@@ -1593,9 +1603,9 @@ writeMarshalledMemberZero = \case
   FixedArray{} -> do
     tellQualifiedImport "Data.Vector" "empty"
     pure $ Just "Data.Vector.empty"
-  FixedArrayTuple _ len t _ _->
+  FixedArrayTuple _ len _t _ _->
     pure . Just $ tupled (replicate (fromIntegral len) "zero")
-  OptionalVector _ memberName t _ _ ->
+  OptionalVector _ _memberName _t _ _ ->
     pure $ Just "Nothing"
   Preserved MarshalledMember{..} ->
     pure $ Just "zero"
@@ -1603,17 +1613,17 @@ writeMarshalledMemberZero = \case
     --   pure $ Just "0"
     -- | otherwise
     -- -> error (show (3,mmName, mmType))
-  DispatchableHandle memberName h ->
+  DispatchableHandle _memberName _h ->
     pure $ Just "zero"
-  PreservedMarshalled memberName memberType ->
+  PreservedMarshalled _memberName _memberType ->
     pure $ Just "zero"
-  Bool memberName ->
+  Bool _memberName ->
     pure $ Just "False"
-  OptionalPtr memberName t _ _ ->
+  OptionalPtr _memberName _t _ _ ->
     pure $ Just "Nothing"
-  NonOptionalPtr memberName t _ _ ->
+  NonOptionalPtr _memberName _t _ _ ->
     pure $ Just "zero"
-  OptionalZero memberName t ->
+  OptionalZero _memberName _t ->
     pure $ Just "Nothing"
   SiblingVectorMaster {} -> error "Sibling vectors unimplemented"
   SiblingVectorSlave  {} -> error "Sibling vectors unimplemented"

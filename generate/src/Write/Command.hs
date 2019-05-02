@@ -9,6 +9,7 @@ module Write.Command
   ) where
 
 import           Data.Maybe
+import           Data.Foldable
 import           Data.Text                                (Text)
 import qualified Data.Text.Extra                          as T
 import           Data.Text.Prettyprint.Doc
@@ -16,10 +17,8 @@ import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
 
 import           Spec.Savvy.Command
-import           Spec.Savvy.Error
 import           Spec.Savvy.Type                   hiding ( TypeName )
 import qualified Spec.Savvy.Type               as Type
-import           Spec.Savvy.Type.Haskell           hiding ( toHsType )
 
 import           Write.Element
 import           Write.Util
@@ -167,7 +166,7 @@ commandDynamicType c@Command {..} = case cCommandLevel of
 commandTypeSynonyms :: Command -> WE (Doc ())
 commandTypeSynonyms c@Command{..} = do
   t <- toHsType (commandType c)
-  traverse
+  traverse_
     tellExport
     [ TypeAlias ("FN_" <> cName)
     , TypeAlias ("PFN_" <> cName)

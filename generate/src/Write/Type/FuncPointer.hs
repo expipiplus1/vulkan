@@ -6,15 +6,12 @@ module Write.Type.FuncPointer
   ( writeFuncPointer
   ) where
 
-import           Data.Text                                ( Text )
 import           Data.Text.Prettyprint.Doc
 import           Prelude                           hiding ( Enum )
 import           Text.InterpolatedString.Perl6.Unindented
 import           Control.Monad
 
-import           Spec.Savvy.Error
 import           Spec.Savvy.FuncPointer
-import           Spec.Savvy.Type
 
 import           Write.Element                 as WE
 import           Write.Util

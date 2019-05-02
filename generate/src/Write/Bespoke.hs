@@ -205,7 +205,7 @@ bools =
                      ]
        , eExtensions = []
        }
-  in case unWrite we of
+  in case toE we of
        Left _ -> error "writeEnum errors"
        Right w -> w
 

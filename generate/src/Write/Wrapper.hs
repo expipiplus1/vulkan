@@ -33,7 +33,6 @@ import           Text.InterpolatedString.Perl6.Unindented
 
 import           Spec.Savvy.Command
 import           Spec.Savvy.Handle
-import           Spec.Savvy.Error
 import           Spec.Savvy.Type
 
 import           Write.Element                     hiding ( TypeName )
@@ -43,7 +42,6 @@ import           Write.Util                               ( document, Documentee
 import           Write.Marshal.Util
 import           Write.Marshal.Wrap
 import           Write.Marshal.Struct
-import           Write.Struct
 
 {-# ANN module ("HLint: ignore Reduce duplication" :: String) #-}
 

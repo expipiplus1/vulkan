@@ -75,6 +75,7 @@ asciidoctor extensions vkPath manTxt = do
         -- ]
       args =
         attribOpts
+          ++ extAttribs
           ++ adocOpts
           ++ mathemeticalOpts
           ++ ["--backend", "docbook5", manTxt, "--out-file", "-"]

@@ -12,6 +12,7 @@
 -- errors and accumulates members for 'WriteElement's
 module Write.Monad
   ( Write(..)
+  , Lookup(..)
   , throw
   , forV
   , traverseV
@@ -35,60 +36,76 @@ module Write.Monad
   , tellExtension
   , toE
   , toV
+  , toELookup
+  , toVLookup
   ) where
 
+import           Prelude                           hiding ( Enum )
 import           Data.Text.Extra                   hiding ( head
-                                                          , elem
                                                           , partition
                                                           , reverse
                                                           )
 import           Data.List.Extra                          ( elem
                                                           , partition
                                                           )
-import           Data.Coerce
 import           Control.Monad.Except
 import           Data.Either.Validation
 import           Data.Traversable
 import           Data.Foldable
 import           Control.Monad.State.Strict
+import           Control.Monad.Reader
 import           Data.Text.Prettyprint.Doc                ( Doc )
 import           Data.Bifunctor
 
 import           Write.Element
+import           Write.Monad.Lookup
 import           Spec.Savvy.Error
 import           Spec.Savvy.Type
 import qualified Spec.Savvy.Type.Haskell       as H
 
-newtype Write a = Write { unWrite :: Either [Text] a }
-  deriving (Functor, Applicative, Monad, MonadFix, Show)
+newtype Write a = Write { unWrite :: ReaderT Lookup (Either [Text]) a }
+  deriving (Functor, Applicative, Monad, MonadFix)
+
+deriving instance MonadReader Lookup Write
 
 instance MonadError Text Write where
   throwError = Write . throwError . pure
-  catchError (Write a) h = case a of
-    Left  []      -> error "empty errors"
-    Left  (e : _) -> h e
-    Right r       -> Write (Right r)
+  catchError (Write a) h =
+    Write $ catchError a (unWrite . h . head)
+    -- case a of
+    -- Left  []      -> error "empty errors"
+    -- Left  (e : _) -> h e
+    -- Right r       -> Write (Right r)
 
 withContext :: Text -> Write a -> Write a
-withContext context (Write e) = Write (first (fmap ((context <> ":") <+>)) e)
+withContext context (Write e) =
+  Write (mapReaderT (first (fmap ((context <> ":") <+>))) e)
 
 throw :: Text -> Write a
 throw message = Write $ throwError [message]
 
 -- | flip traverseV
 forV :: forall t a b . Traversable t => t a -> (a -> Write b) -> Write (t b)
-forV t f =
-  Write . validationToEither $ for t (eitherToValidation . unWrite . f)
+forV t f = do
+  Write $ do
+    mapReaderT validationToEither
+      $ for t (mapReaderT eitherToValidation . unWrite . f)
 
 -- | Accumulate several errors while traversing a structure
 traverseV :: Traversable t => (a -> Write b) -> t a -> Write (t b)
 traverseV = flip forV
+
+----------------------------------------------------------------
+-- WE stuff
+----------------------------------------------------------------
 
 -- | A monad for generating write elements
 newtype WE a = WE { unWE :: StateT WriteElement Write a }
   deriving (Functor, Applicative, Monad)
 
 deriving instance MonadError Text WE
+
+deriving instance MonadReader Lookup WE
 
 liftWrite :: Write a -> WE a
 liftWrite = WE . lift
@@ -134,7 +151,7 @@ toHsType = toHsTypePrec (-1)
 toHsTypePrec :: Int -> Type -> WE (Doc ())
 toHsTypePrec prec t = case H.toHsTypePrec prec t of
   Left es -> WE . lift $ do
-    forV es $ \e -> throwError (prettySpecError e)
+    _ <- forV es $ \e -> throwError (prettySpecError e)
     throwError ""
   Right (d, (is, es)) -> do
     tellImports' is
@@ -225,4 +242,11 @@ toV :: Write a -> Validation [SpecError] a
 toV = eitherToValidation . toE
 
 toE :: Write a -> Either [SpecError] a
-toE = first (fmap Other) . unWrite
+toE = first (fmap Other) . flip runReaderT emptyLookup . unWrite
+
+toVLookup :: Lookup -> Write a -> Validation [SpecError] a
+toVLookup l = eitherToValidation . toELookup l
+
+toELookup :: Lookup -> Write a -> Either [SpecError] a
+toELookup l = first (fmap Other) . flip runReaderT l . unWrite
+

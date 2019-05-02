@@ -7,22 +7,18 @@ module Write.Marshal.Aliases
   , makeMarshalledEnumAliases
   ) where
 
-import Debug.Trace
-
 import           Control.Monad                            ( guard )
 import           Data.Maybe
 import           Data.Functor
 import qualified Data.Text.Extra               as T
 import           Data.Text.Extra                          ( Text )
 import           Prelude                           hiding ( Enum )
-import           Data.List.Extra
 import           Spec.Savvy.Alias              as A
 import           Spec.Savvy.Enum
 import           Spec.Savvy.Handle
 import           Spec.Savvy.Spec
 import           Spec.Savvy.Extension
 import           Spec.Savvy.Feature
-import           Spec.Savvy.APIConstant
 
 makeMarshalledAliases :: Spec -> Aliases
 makeMarshalledAliases Spec {..} =
@@ -63,13 +59,6 @@ makeMarshalledEnumAliases Spec {..} = flip mapMaybe sEnums $ \e@Enum {..} -> do
   ees <- traverse makeMarshalledEnumElementAlias eElements
   exs <- traverse makeMarshalledEnumExtensionAlias eExtensions
   pure (Alias { .. }, ees, exs)
-
-makeMarshalledConstant :: APIConstant -> Maybe (Alias APIConstant)
-makeMarshalledConstant c@APIConstant {..} = do
-  aName <- T.dropPrefix "VK_" acName
-  let aAliasName = acName
-      aAlias     = ATarget c
-  pure Alias { .. }
 
 -- | Note that this doesn't make an alias for dispatchable handles, these are
 -- handled separately because they contain the table of command addresses

@@ -10,9 +10,6 @@ module Write.Loader
 
 import           Control.Arrow                            ( (&&&) )
 import           Control.Monad
-import           Control.Monad.Except
-import           Control.Monad.Writer.Class
-import           Data.Either.Validation
 import           Data.Foldable
 import           Data.Traversable
 import           Data.List.Extra                   hiding ( for )
@@ -26,13 +23,10 @@ import           Text.InterpolatedString.Perl6.Unindented
 import           Control.Monad.State.Strict
 
 import           Spec.Savvy.Command
-import           Spec.Savvy.Error
 import           Spec.Savvy.Platform
 import           Spec.Savvy.Type                   hiding ( TypeName )
-import qualified Spec.Savvy.Type.Haskell       as H
 import           Write.Element
 import           Write.Monad
-import           Write.Marshal.Util
 import           Write.Util
 
 writeLoader
@@ -58,17 +52,11 @@ writeLoader platforms commands = do
       | c <- commands
       , cCommandLevel c `elem` [Just Instance, Just PhysicalDevice]
       ]
-    noLevelCommands = [ c | c <- commands, cCommandLevel c == Nothing ]
-    writeCommands :: [Command] -> Text -> Write [WriteElement]
-    writeCommands commands level = forV commands $ \c -> runWE
-      ("Dynamic loader for" T.<+> cName c)
-      ((writeFunction platformGuardMap level) c)
   runWE weName $ do
     tellBootElem boot
     writeLoaderDoc platformGuardMap
                    deviceLevelCommands
                    instanceLevelCommands
-                   noLevelCommands
 
 writeLoaderDoc
   :: (Text -> Maybe Text)
@@ -77,10 +65,8 @@ writeLoaderDoc
   -- ^ Device commands
   -> [Command]
   -- ^ Instance commands
-  -> [Command]
-  -- ^ No level commands
   -> WE (DocMap -> Doc ())
-writeLoaderDoc platformGuardMap deviceLevelCommands instanceLevelCommands noLevelCommands = do
+writeLoaderDoc platformGuardMap deviceLevelCommands instanceLevelCommands = do
   drs <- traverse (writeRecordMember platformGuardMap) deviceLevelCommands
   irs <- traverse (writeRecordMember platformGuardMap) instanceLevelCommands
   ifi <- initInstanceFunction platformGuardMap instanceLevelCommands
@@ -104,12 +90,6 @@ writeLoaderDoc platformGuardMap deviceLevelCommands instanceLevelCommands noLeve
 
     {ifi}
   |]
-
-hasFunction :: (Text -> Maybe Text) -> Text -> Command -> (Doc (), Maybe Text)
-hasFunction gm domain Command{..} = ([qci|
-    has{T.upperCaseFirst $ dropVk cName} :: {domain}Cmds -> Bool
-    has{T.upperCaseFirst $ dropVk cName} = (/= nullFunPtr) . p{T.upperCaseFirst cName}
-  |], gm =<< cPlatform)
 
 -- | The initialization function for a set of command pointers
 initInstanceFunction :: (Text -> Maybe Text) -> [Command] -> WE (Doc ())
@@ -178,7 +158,8 @@ writeRecordMember gp c@Command {..} = do
   t <- makeSourceDepends excludedSourceDepends $ censorGuarded gp c $ toHsType
     (commandType c)
   tellImport "Foreign.Ptr" "FunPtr"
-  makeSourceDepends excludedSourceDepends
+  _ <-
+    makeSourceDepends excludedSourceDepends
     . traverse tellGuardedDepend
     . commandDepends gp
     $ c
@@ -207,38 +188,6 @@ censorGuarded gp Command {..}
                 }
     in  WE . mapStateT (fmap (fmap makeGuarded)) . unWE
 
-writeFunction
-  :: (Text -> Maybe Text)
-  -- ^ platform to guard
-  -> Text
-  -> Command
-  -> WE (DocMap -> Doc ())
-writeFunction gm domain c@Command{..} = censorGuarded gm c $ do
-  -- This is taken care of in a better way with commandDepends (importing
-  -- constructors)
-  (t, _) <-
-    either (throwError . prettySpecError . head) pure (H.toHsType (commandType c))
-  traverse tellGuardedDepend . commandDepends gm $ c
-  tellExtension "ForeignFunctionInterface"
-  tellImport "Foreign.Ptr" "FunPtr"
-  tellExport (Term (dropVk cName))
-  let upperCaseName = T.upperCaseFirst cName
-  pure $ \getDoc -> guarded (gm =<< cPlatform) [qci|
-    {document getDoc (TopLevel cName)}
-    {dropVk cName} :: {domain}Cmds -> ({t})
-    {dropVk cName} deviceCmds = mk{upperCaseName} (p{upperCaseName} deviceCmds)
-    foreign import ccall
-    #if !defined(SAFE_FOREIGN_CALLS)
-      unsafe
-    #endif
-      "dynamic" mk{upperCaseName}
-      :: FunPtr ({t}) -> ({t})
-  |]
-
-traverseP
-  :: (Semigroup e, Traversable t) => (a -> Either e b) -> t a -> Either e (t b)
-traverseP f xs = validationToEither $ traverse (eitherToValidation . f) xs
-
 commandDepends
   :: (Text -> Maybe Text)
   -- ^ platform map
@@ -248,63 +197,7 @@ commandDepends platformGuardMap Command {..} =
   let protoDepends = typeDepends $ Proto
         cReturnType
         [ (Just n, lowerArrayToPointer t) | Parameter n t _ _ <- cParameters ]
-      protoDependsNoPointers = typeDepends $ Proto
-        cReturnType
-        [ (Just n, t)
-        | Parameter n t _ _ <- cParameters
-        , not (isPtrType t)
-        , not (isArrayType t)
-        ]
       names = protoDepends
   in  case platformGuardMap =<< cPlatform of
         Nothing -> Unguarded <$> names
         Just g  -> Guarded (Guard g) <$> names
-
-
--- | Write the commands which do not require a valid instance
-writeInitializationCommands :: [Command] -> WE (Doc ())
-writeInitializationCommands commands = do
-  let findCommand n = case find ((== n) . cName) commands of
-        Nothing ->
-          throwError ("Couldn't find initialization command:" T.<+> n)
-        Just c -> pure c
-  enumerateInstanceVersion <- findCommand "vkEnumerateInstanceVersion"
-  enumerateInstanceExtensionProperties <- findCommand
-    "vkEnumerateInstanceExtensionProperties"
-  enumerateInstanceLayerProperties <- findCommand
-    "vkEnumerateInstanceLayerProperties"
-  createInstance     <- findCommand "vkCreateInstance"
-
-  tellImport "Foreign.Ptr" "FunPtr"
-  tellImport "Foreign.Ptr" "castPtrToFunPtr"
-  tellImport "Foreign.Ptr" "nullPtr"
-  tellImport "System.IO.Unsafe" "unsafeDupablePerformIO"
-  tellDepend (TermName "vkGetInstanceProcAddr'")
-  tellExtension "MagicHash"
-
-  let go c = do
-        ty <- toHsType (commandType c)
-        tellUndependableExport (Term (dropVk (cName c)))
-        tellDepend (TypeName ("FN_" <> cName c))
-        pure [qci|
-          foreign import ccall
-          #if !defined(SAFE_FOREIGN_CALLS)
-            unsafe
-          #endif
-            "dynamic" mk{T.upperCaseFirst (cName c)}
-            :: FunPtr ({ty}) -> ({ty})
-
-          {dropVk (cName c)} :: {ty}
-          {dropVk (cName c)} = mk{T.upperCaseFirst (cName c)} procAddr
-            where
-              procAddr = castPtrToFunPtr @_ @FN_{cName c} $
-                unsafeDupablePerformIO
-                  $ vkGetInstanceProcAddr' nullPtr (GHC.Ptr.Ptr "{cName c}\NUL"#)
-        |]
-
-  vcat <$> traverse go
-    [ enumerateInstanceVersion
-    , enumerateInstanceExtensionProperties
-    , enumerateInstanceLayerProperties
-    , createInstance
-    ]

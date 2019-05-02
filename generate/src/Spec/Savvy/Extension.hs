@@ -29,7 +29,7 @@ specExtensions P.Spec {..} = for sExtensions $ \P.Extension {..} -> do
   let reqs = [ r | P.AnExtensionRequirement r <- extElements ]
   extRequirements <- traverse (extractRequirement (fromIntegral extNumber)) reqs
   pure $ if extName `elem` forcedUniversalExtensions
-    then let extPlatform = Nothing in Extension { .. }
+    then Extension { extPlatform = Nothing, .. }
     else Extension { .. }
 
 forcedUniversalExtensions :: [Text]

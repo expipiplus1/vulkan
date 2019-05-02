@@ -15,7 +15,6 @@ module Write.Marshal.SomeVkStruct
 import           Control.Arrow                            ( (&&&) )
 import           Control.Monad
 import           Control.Monad.Except
-import           Control.Monad.Writer.Class
 import           Data.Traversable
 import           Data.Foldable
 import           Data.Function
@@ -30,7 +29,6 @@ import           Prelude                           hiding ( Enum )
 import           Text.InterpolatedString.Perl6.Unindented
 import           Control.Monad.State.Strict
 
-import           Spec.Savvy.Error
 import           Spec.Savvy.Handle
 import           Spec.Savvy.Platform
 import           Spec.Savvy.Struct

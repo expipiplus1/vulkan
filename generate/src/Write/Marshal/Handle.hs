@@ -11,16 +11,11 @@ import           Control.Monad
 import           Control.Monad.Except
 import           Data.Function
 import           Data.Maybe
-import           Data.Text                                (Text)
 import qualified Data.Text.Extra                          as T
-import           Data.Text.Prettyprint.Doc
 import           Prelude                                  hiding (Enum)
 import           Text.InterpolatedString.Perl6.Unindented
 
-import           Spec.Savvy.Error
 import           Spec.Savvy.Handle
-import           Spec.Savvy.Command
-import           Spec.Savvy.Type(Type(TypeName))
 
 import           Write.Element                            hiding (TypeName)
 import qualified Write.Element                            as WE

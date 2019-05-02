@@ -231,6 +231,7 @@ typeDepends = \case
   TypeName "uint64_t"             -> []
   TypeName "int32_t"              -> []
   TypeName "size_t"               -> []
+  TypeName "Bool"                 -> []
   -- TODO: This mapping is replicated in several places!
   TypeName "xcb_connection_t"     -> [WE.TypeName "Xcb_connection_t"]
   TypeName "xcb_visualid_t"       -> [WE.TypeName "Xcb_visualid_t"]

@@ -26,16 +26,12 @@ import           Data.Traversable
 import           Prelude                           hiding ( Enum )
 import           Text.InterpolatedString.Perl6.Unindented
 
-import           Spec.Savvy.Error
 import           Spec.Savvy.Handle
 import           Spec.Savvy.Type
 
 import           Write.Element                     hiding ( TypeName )
-import qualified Write.Element                 as WE
 import           Write.Monad
 import           Write.Marshal.Util
-
-import           Debug.Trace
 
 brackets
   :: [Handle] -> Write [((HaskellName, HaskellName), WriteElement)]

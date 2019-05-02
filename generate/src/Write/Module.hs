@@ -18,7 +18,6 @@ import           Data.Functor
 import           Data.List.Extra
 import qualified Data.Map                      as Map
 import qualified Data.MultiMap                 as MultiMap
-import           Data.MultiMap                            ( MultiMap )
 import           Data.Maybe
 import qualified Data.Set                      as Set
 import           Data.Text                                ( Text )
@@ -165,9 +164,6 @@ isConstructor = \case
 moduleImports :: Module -> [Doc ()]
 moduleImports Module {..} =
   let simplifiedImports = simplifyDependencies $ weImports =<< mWriteElements
-      guardMaybe = \case
-        Guarded g _ -> Just (guardCPPGuard g)
-        Unguarded _ -> Nothing
       importMap :: Map.Map (Text, Bool, [Guard]) [Text]
       --- ^ (Module, isQualified, guard disjunction) [imports]
       importMap = sort <$> Map.fromListWith

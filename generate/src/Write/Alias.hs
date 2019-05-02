@@ -8,8 +8,6 @@ module Write.Alias
   , writeFullEnumAliases
   ) where
 
-import Debug.Trace
-
 import           Control.Applicative
 import           Data.Text                         hiding ( concat )
 import           Control.Arrow                            ( (&&&) )
@@ -89,7 +87,7 @@ writePatternAliasWithType
   -- ^ Documentation name
   -> Alias a
   -> Either [SpecError] WriteElement
-writePatternAliasWithType (t, (is, ds, es)) docName alias@Alias{..} = do
+writePatternAliasWithType (t, (is, ds, es)) docName Alias{..} = do
   let weImports    = is
       weDoc getDoc = [qci|
         {document getDoc docName}
@@ -125,7 +123,6 @@ writeFullEnumAliases (eAlias, eeAliases, exAliases) =
   let
     writeEnumerant :: Alias a -> Validation [SpecError] WriteElement
     writeEnumerant enumerantAlias = eitherToValidation $ do
-      target               <- aliasTarget eAlias
       (enumType, (is, es)) <- toHsType (TypeName (aName eAlias))
       let ds  = typeDepends (TypeName (aName eAlias))
           t   = [qci|(a ~ {enumType}) => a|]
@@ -150,7 +147,7 @@ writeCompletePragma :: Text -> [Text] -> WriteElement
 writeCompletePragma typeName patterns =
   let
     weImports = []
-    weDoc getDoc = if Prelude.null patterns
+    weDoc _ = if Prelude.null patterns
       then
         [qci|-- No complete pragma for {pretty typeName} as it has no patterns|]
       else

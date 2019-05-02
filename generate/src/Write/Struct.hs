@@ -24,10 +24,8 @@ import           Text.InterpolatedString.Perl6.Unindented
 import           Data.Foldable
 import           Control.Monad
 
-import           Spec.Savvy.Error
 import           Spec.Savvy.Struct
 import           Spec.Savvy.Type
--- import           Spec.Savvy.Type.Haskell
 
 import           Write.Element                     hiding ( TypeName )
 import qualified Write.Element                 as WE
