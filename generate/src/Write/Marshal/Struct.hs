@@ -1208,11 +1208,12 @@ writeMarshalled s MarshalledStruct {..} =
         (writeMarshalledMember msName)
         msMembers
       mParams <- liftWrite $ M.marshalStructMembers s
-      mDocs <- traverse (writeMarshalledParam msName) mParams
+      mDocs <- sequenceA . mapMaybe (writeMarshalledParam msName) $ mParams
       pure $ \getDoc -> [qci|
       {document getDoc (TopLevel ("Vk" <> msName))}
       data {msName} = {msName}
-        \{ {indent (-2) . vsep . intercalatePrepend "," . concat . fmap ($ getDoc) $ mDocs}
+        \{ {
+            indent (-2) . vsep . intercalatePrepend "," . fmap ($ getDoc) $ mDocs}
         }
         deriving (Show, Eq)
       |]
@@ -1229,12 +1230,12 @@ writeMarshalled s MarshalledStruct {..} =
       |]
 
 writeMarshalledParam
-  :: Text -> M.MarshalledParam StructMember -> WE (DocMap -> [Doc ()])
-writeMarshalledParam parentName p = do
-  rendered <- M.renderMarshalledType (M.mmType p)
-  pure $ \getDoc -> rendered <&> \(name, type') -> [qci|
-    {document getDoc (Nested parentName (M.unName name))}
-    {M.unName (M.getMarshalledName name)} :: {type'}
+  :: Text -> M.MarshalScheme StructMember -> Maybe (WE (DocMap -> Doc ()))
+writeMarshalledParam parentName p = M.msMarshalledType p <&> \t -> do
+  type' <- t
+  pure $ \getDoc -> [qci|
+    {document getDoc (Nested parentName (M.unName (M.msUnmarshalledName p)))}
+    {M.unName (M.msMarshalledName p)} :: {type'}
   |]
 
 writeMarshalledMember

@@ -328,7 +328,6 @@ library
                      , Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix
                      , Graphics.Vulkan.C.Extensions.VK_EXT_ycbcr_image_arrays
                      , Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive
-                     , Graphics.Vulkan.C.Extensions.VK_EXT_headless_surface
                      , Graphics.Vulkan.C.Extensions.VK_EXT_host_query_reset
                      , Graphics.Vulkan.C.Dynamic
                      , Graphics.Vulkan.Core10.Constants
@@ -528,7 +527,6 @@ library
                      , Graphics.Vulkan.Extensions.VK_NV_cooperative_matrix
                      , Graphics.Vulkan.Extensions.VK_EXT_ycbcr_image_arrays
                      , Graphics.Vulkan.Extensions.VK_EXT_full_screen_exclusive
-                     , Graphics.Vulkan.Extensions.VK_EXT_headless_surface
                      , Graphics.Vulkan.Extensions.VK_EXT_host_query_reset
                      , Graphics.Vulkan.Marshal.Utils
                      , Graphics.Vulkan.Marshal.SomeVkStruct

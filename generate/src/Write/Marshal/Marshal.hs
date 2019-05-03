@@ -1,4 +1,5 @@
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE Strict #-}
 {-# LANGUAGE LambdaCase #-}
@@ -14,9 +15,7 @@ import           Control.Arrow                            ( (&&&)
 import           Data.Text.Prettyprint.Doc
 import           Data.Text.Extra                          ( Text )
 import qualified Data.Text.Extra               as T
-import qualified Data.MultiMap                 as MultiMap
 import           Data.List.Extra                          ( partition )
-import           Data.MultiMap                            ( MultiMap )
 import           Data.Maybe
 import           Control.Monad.Except
 import           Control.Monad.Trans.Maybe
@@ -24,6 +23,7 @@ import           Control.Monad.Reader
 import           Control.Applicative                      ( Alternative(..) )
 import           Data.Traversable
 import           Control.Bool
+import           Data.Foldable                            ( asum )
 
 import           Spec.Savvy.Command
 import           Spec.Savvy.Handle
@@ -34,33 +34,9 @@ import           Write.Marshal.Util
 import           Write.Monad
 import           Write.Monad.Lookup
 
-marshalStructMembers :: Struct -> Write [MarshalledParam StructMember]
-marshalStructMembers Struct {..} = do
-  mms <- fmap concat . traverseV id $ allWithOthers extractMarshalledMember sMembers
-  let schemeMap :: MultiMap Text Text
-      schemeMap = MultiMap.fromList
-        [ (smName, mmSchemeName)
-        | MarshalledParam {..} <- mms
-        , StructMember {..}    <- mmUnmarshalled
-        ]
-      assertUnique :: StructMember -> Write ()
-      assertUnique StructMember {..} = case MultiMap.lookup smName schemeMap of
-        [_] -> pure ()
-        [] ->
-          throwError
-            $     sName
-            <>    "."
-            <>    smName
-            T.<+> "is not handled by any marshalling scheme"
-        xs ->
-          throwError
-            $     sName
-            <>    "."
-            <>    smName
-            T.<+> "is handled by multiple marshalling schemes:"
-            T.<+> T.tShow xs
-  _ <- traverseV assertUnique sMembers
-  pure mms
+marshalStructMembers :: Struct -> Write [MarshalScheme StructMember]
+marshalStructMembers s@Struct {..} =
+  traverseV id $ fmap (extractMarshalledMember s) sMembers
 
 data Namespace
   = Unmarshalled
@@ -69,10 +45,105 @@ data Namespace
 newtype Name (a :: Namespace) = Name {unName :: Text}
   deriving (Eq, Show)
 
+-- TODO: Rename
+data MarshalScheme a = MarshalScheme
+  { msSchemeName :: Text
+  , msParam :: a
+  , msMarshalledType :: Maybe (WE (Doc ()))
+  }
+
+msUnmarshalledName :: Param a => MarshalScheme a -> Name Unmarshalled
+msUnmarshalledName = name . msParam
+
+msMarshalledName :: Param a => MarshalScheme a -> Name Marshalled
+msMarshalledName = getMarshalledName . msUnmarshalledName
+
+----------------------------------------------------------------
+-- Schemes
+----------------------------------------------------------------
+
+-- | This always takes priority
+bespokeScheme :: Param a => a -> MaybeT Write (MarshalScheme a)
+bespokeScheme p = do
+  Name "pNext" <- pure $ name p
+  Ptr _ Void   <- pure $ type' p
+  let tDoc = do
+        tellSourceDepend (WE.TypeName "SomeVkStruct")
+        pure "Maybe SomeVkStruct"
+  pure $ MarshalScheme "pNext" p (Just tDoc)
+
+scalarScheme :: Param a => a -> MaybeT Write (MarshalScheme a)
+scalarScheme p = do
+  let tDoc = toHsType . deepMarshalledType . type' $ p
+  guard . isNothing . values $ p
+  guard . isNothing . lengths $ p
+  guard . isNothing . isOptional $ p
+  guard . (/= Void) . unPtrType . type' $ p
+  pure $ MarshalScheme "scalar" p (Just tDoc)
+
+univaluedScheme :: Param a => a -> MaybeT Write (MarshalScheme a)
+univaluedScheme p = do
+  [_value] <- values p
+  pure $ MarshalScheme "univalued" p Nothing
+
+arrayScheme :: Param a => a -> MaybeT Write (MarshalScheme a)
+arrayScheme p = do
+  lens <- lengths p
+  Ptr _ t <- pure $ type' p
+  guard . (/= Void) . unPtrType . type' $ p
+  let tDoc = do
+        e <- toHsTypePrec 10 (deepMarshalledType t)
+        tellImport "Data.Vector" "Vector"
+        pure $ "Vector" <+> e
+  pure $ MarshalScheme "array" p (Just tDoc)
+
+lengthScheme :: Param a => [a] -> a -> MaybeT Write (MarshalScheme a)
+lengthScheme ps p = do
+  vs                  <- pure $ getSizedWith (name p) ps
+  guard (not (null vs))
+  pure $ MarshalScheme "length" p Nothing
+
+-- | An optional value with a default
+optionalDefaultScheme :: Param a => a -> MaybeT Write (MarshalScheme a)
+optionalDefaultScheme p = do
+  Just [True] <- pure $ isOptional p
+  guard . isNothing . lengths $ p
+  guard . (/= Void) . unPtrType . type' $ p
+  let tDoc = do
+        e <- toHsType . deepMarshalledType . unPtrType . type' $ p
+        pure e
+  pure $ MarshalScheme "optional default" p (Just tDoc)
+
+voidPointerScheme :: Param a => a -> MaybeT Write (MarshalScheme a)
+voidPointerScheme p = do
+  Ptr _ Void <- pure $ type' p
+  let tDoc = do
+        tellImport "Foreign.Ptr" "Ptr"
+        pure "Ptr ()"
+  pure $ MarshalScheme "void pointer" p (Just tDoc)
+
+-- -- | A pointer to a single optional value
+-- optionalPointerScheme :: Param a => a -> MaybeT Write (MarshalScheme a)
+-- optionalPointerScheme p = do
+--   Just [True] <- pure $ isOptional p
+--   guard . isNothing . lengths $ p
+--   Ptr _ t <- pure $ type' p
+--   let tDoc = do
+--         e <- toHsTypePrec 10 (deepMarshalledType t)
+--         pure $ "Maybe" <+> e
+--   pure $ MarshalScheme "optional pointer" p (Just tDoc)
+
+----------------------------------------------------------------
+--
+----------------------------------------------------------------
+
 data MarshalledParam a = MarshalledParam
   { mmSchemeName :: Text
-  , mmUnmarshalled :: [a]
+    -- ^ For debugging
+  , mmUnmarshalled :: a
+    -- ^ The member/parameter this was created from
   , mmType :: MarshalType
+    -- ^ How is this to be marshalled
   }
 
 class Param a where
@@ -98,10 +169,16 @@ instance Param Parameter where
 
 data MarshalType
   = Univalued (Name Unmarshalled) (Doc ())
-  | Scalar Bool (Name Unmarshalled) Type ScalarType
-  | Array' Bool [(Name Unmarshalled, Type)] [(Name Unmarshalled, Type)]
+  | Scalar Optional (Name Unmarshalled) Type ScalarType
+  | Length Optional [(Name Unmarshalled, Type)] [(Name Unmarshalled, Type)]
   | Bespoke
   deriving (Show)
+
+data Optional = NonOptional | Optional
+  deriving (Show)
+
+getOptional :: Param a => a -> Optional
+getOptional = bool NonOptional Optional . isJust . isOptional
 
 data ScalarType
   = PNext
@@ -114,21 +191,57 @@ data ScalarType
   | Handle'
   | OptionalScalar
   | ArrayFixed
+  | ArrayFixedNum Word
   | CString
   | FD
   | UnsizedVoidPtr
   | FunctionPtr
+  | Array'
+  | ArrayNonConst
   deriving (Show)
 
 scalarParam :: Param a => ScalarType -> a -> MarshalledParam a
 scalarParam t p = MarshalledParam
   (T.tShow t)
-  [p]
-  (Scalar (isJust . isOptional $ p) (name p) (type' p) t)
+  p
+  (Scalar (getOptional p) (name p) (type' p) t)
 
 extractMarshalledMember
-  :: StructMember -> [StructMember] -> Write [MarshalledParam StructMember]
-extractMarshalledMember member others = do
+  :: Struct
+  -> StructMember
+  -> Write (MarshalScheme StructMember)
+extractMarshalledMember Struct {..} member = do
+  let schemes =
+        [ -- Anything we specifically single out should go first
+          bespokeScheme
+          -- These two are for value constrained params:
+        , univaluedScheme
+        , lengthScheme sMembers
+          -- Pointers to Void have some special handling
+        , voidPointerScheme
+          -- Optional and non optional arrays are next
+        , arrayScheme
+          -- Optional things:
+        , optionalDefaultScheme
+          -- Everything left over is treated as a boring scalar parameter
+        , scalarScheme
+        ]
+  m <- runMaybeT . asum . fmap ($ member) $ schemes
+  case m of
+    Just x -> pure x
+    Nothing ->
+      throwError
+        $     sName
+        <>    "."
+        <>    smName member
+        T.<+> "is not handled by any marshalling scheme"
+
+extractMarshalledMember'
+  :: Struct
+  -> StructMember
+  -> [StructMember]
+  -> Write (MarshalledParam StructMember)
+extractMarshalledMember' Struct {..} member others = do
   let schemes =
         (   (const .)
           <$> [ univalued
@@ -142,15 +255,31 @@ extractMarshalledMember member others = do
               , fixedArray
               , optionalScalar
               , cString
+              , array
+              , nonConstArray
               , fd
               , unsizedVoidPtr
               , functionPtr
               , bespoke
               ]
           )
-          ++ [basicType, array, arrayVoid]
+          ++ [basicType, arrayLength, arrayVoidLength]
   fs <- traverseV runMaybeT [ s member others | s <- schemes ]
-  pure $ catMaybes fs
+  case catMaybes fs of
+    [x] -> pure x
+    [] ->
+      throwError
+        $     sName
+        <>    "."
+        <>    smName member
+        T.<+> "is not handled by any marshalling scheme"
+    xs ->
+      throwError
+        $     sName
+        <>    "."
+        <>    smName member
+        T.<+> "is handled by multiple marshalling schemes:"
+        T.<+> T.tShow (mmSchemeName <$> xs)
 
 ----------------------------------------------------------------
 -- Schemes
@@ -162,7 +291,7 @@ type Scheme a = a -> [a] -> MaybeT Write (MarshalledParam a)
 univalued :: Param a => Scheme1 a
 univalued p = do
   [value] <- values p
-  pure $ MarshalledParam "univalued" [p] (Univalued (name p) (pretty value))
+  pure $ MarshalledParam "univalued" p (Univalued (name p) (pretty value))
 
 pNext :: Scheme1 StructMember
 pNext p = do
@@ -262,37 +391,40 @@ boolean p = do
   Nothing             <- pure $ isOptional p
   pure $ scalarParam Bool p
 
-array :: forall a . Param a => Scheme a
-array p ps = do
+arrayLength :: forall a . Param a => Scheme a
+arrayLength p ps = do
   TypeName "uint32_t" <- pure $ type' p
   vs                  <- pure $ getSizedWith (name p) ps
   guard (not (null vs))
-  let optionalSize                    = isJust . isOptional $ p
+  let optionalSize                    = getOptional p
   let (optionalVecs, nonOptionalVecs) = partition (isJust . isOptional) vs
   pure $ MarshalledParam
     "array"
-    (p : vs)
-    (Array' optionalSize
+    p
+    (Length optionalSize
             ((name &&& type') <$> optionalVecs)
             ((name &&& type') <$> nonOptionalVecs)
     )
 
-arrayVoid :: forall a . Param a => Scheme a
-arrayVoid p ps = do
+arrayVoidLength :: forall a . Param a => Scheme a
+arrayVoidLength p ps = do
   TypeName "size_t" <- pure $ type' p
   vs                <- pure $ getSizedWith (name p) ps
   guard (not (null vs))
-  let optional = isJust . isOptional $ p
+  let optional = getOptional p
   guard (all (isNothing . isOptional) vs)
   guard (all ((== (Ptr Const Void)) . type') vs)
   pure $ MarshalledParam "void array"
-                         (p : vs)
-                         (Array' optional [] ((name &&& type') <$> vs))
+                         p
+                         (Length optional [] ((name &&& type') <$> vs))
 
 fixedArray :: Param a => Scheme1 a
 fixedArray p = do
-  Array NonConst _arraySize _t <- pure $ type' p
-  pure $ scalarParam ArrayFixed p
+  Array _ arraySize _t <- pure $ type' p
+  let t = case arraySize of
+        NumericArraySize n -> ArrayFixedNum n
+        SymbolicArraySize _ -> ArrayFixed
+  pure $ scalarParam t p
 
 optionalScalar :: Param a => Scheme1 a
 optionalScalar p = do
@@ -307,94 +439,134 @@ cString p = do
   [   NullTerminated]    <- lengths p
   pure $ scalarParam CString p
 
+array :: Param a => Scheme1 a
+array p = do
+  guard $ name p `notElem` [Name "pCode", Name "pSampleMask"]
+  Ptr Const t <- pure $ type' p
+  NamedLength _ : _ <- lengths p
+  pure $ scalarParam Array' p
+
+nonConstArray :: Param a => Scheme1 a
+nonConstArray p = do
+  Ptr NonConst t <- pure $ type' p
+  [NamedLength _] <- lengths p
+  pure $ scalarParam ArrayNonConst p
+
 bespoke :: Param a => Scheme1 a
 bespoke p = do
   guard $ name p `elem` [Name "pSampleMask", Name "pCode"]
-  pure $ MarshalledParam "bespoke" [p] Bespoke
+  pure $ MarshalledParam "bespoke" p Bespoke
 
 ----------------------------------------------------------------
 -- Rendering Marshalled type
 ----------------------------------------------------------------
 
-renderMarshalledType :: MarshalType -> WE [(Name Unmarshalled, Doc ())]
+renderMarshalledType
+  :: MarshalType -> WE (Either (Doc ()) (Name Unmarshalled, Doc ()))
 renderMarshalledType = \case
-  Univalued _ _           -> pure []
-  Scalar False n _t PNext -> do
+  Univalued _ _                 -> pure (Left "-- Univalued member elided")
+  Scalar NonOptional n _t PNext -> do
     tellSourceDepend (WE.TypeName "SomeVkStruct")
-    pure [(n, "Maybe SomeVkStruct")]
-  Scalar False n t _ -> do
+    pure (Right (n, "Maybe SomeVkStruct"))
+  Scalar _ n (Ptr Const (Ptr Const Char)) Array' -> do
+    tellImport "Data.Vector"     "Vector"
+    tellImport "Data.ByteString" "ByteString"
+    pure (Right (n, "Vector ByteString"))
+  Scalar _ n (Array _ _ t) (ArrayFixedNum len) -> do
     tDoc <- toHsType (deepMarshalledType t)
-    pure [(n, tDoc)]
-  Scalar True n t _ -> do
+    pure (Right (n, tupled (replicate (fromIntegral len) tDoc)))
+  Scalar _ n (Ptr Const Char) ArrayFixed -> do
+    tellImport "Data.ByteString" "ByteString"
+    pure (Right (n, "ByteString"))
+  Scalar _ n (Ptr Const t) ArrayFixed -> do
+    tDoc <- toHsTypePrec 10 (deepMarshalledType t)
+    tellImport "Data.Vector" "Vector"
+    pure (Right (n, "Vector" <+> tDoc))
+  Scalar _ n (Ptr Const t) Array' -> do
+    tDoc <- toHsTypePrec 10 (deepMarshalledType t)
+    tellImport "Data.Vector" "Vector"
+    pure (Right (n, "Vector" <+> tDoc))
+  Scalar Optional n (Ptr _ t) _ -> do
+    tDoc <- toHsTypePrec 10 (deepMarshalledType t)
+    pure (Right (n, "Maybe" <+> tDoc))
+  Scalar NonOptional n (Ptr _ t) _ -> do
+    tDoc <- toHsType (deepMarshalledType t)
+    pure (Right (n, tDoc))
+  Scalar NonOptional n t _ -> do
+    tDoc <- toHsType (deepMarshalledType t)
+    pure (Right (n, tDoc))
+  Scalar Optional n t _ -> do
     isDefaultable t >>= \case
       False -> do
-        tDoc <- toHsTypePrec (-1) (deepMarshalledType t)
-        pure [(n, "Maybe" <+> tDoc)]
+        tDoc <- toHsTypePrec 10 (deepMarshalledType t)
+        pure (Right (n, "Maybe" <+> tDoc))
       True -> do
         tDoc <- toHsType (deepMarshalledType t)
-        pure [(n, tDoc)]
-  Array' _ [] [(n, Ptr _ Void)] -> do
-    tellImport "Foreign.Ptr" "Ptr"
-    pure [(n, "Ptr ()")]
-  Array' True [] [(n, Ptr Const (Ptr Const Char))] -> do
-    tellImport "Data.Vector"     "Vector"
-    tellImport "Data.Bytestring" "Bytestring"
-    pure [(n, "Vector Bytestring")]
-  Array' _ [] [(n, Ptr Const t)] -> do
-    tDoc <- toHsTypePrec (-1) (deepMarshalledType t)
-    tellImport "Data.Vector" "Vector"
-    pure [(n, "Vector" <+> tDoc)]
-  -- TODO: Improve this case V
-  Array' _ ovs vs
-    | all
-      ( (\case
-          Ptr Const _ -> True
-          _           -> False
-        )
-      . snd
-      )
-      (ovs ++ vs)
-    -> for (ovs ++ vs) $ \(n, Ptr Const t) -> do
-      tDoc <- toHsTypePrec (-1) (deepMarshalledType t)
-      tellImport "Data.Vector" "Vector"
-      pure (n, "Vector" <+> tDoc)
-  Array' _ [(n, Ptr Const t)] [] -> do
-    tDoc <- toHsTypePrec (-1) (deepMarshalledType t)
-    tellImport "Data.Vector" "Vector"
-    pure [(n, "Vector" <+> tDoc)]
-  Array' _ [] [(n, Ptr NonConst t)] -> do
-    tDoc <- toHsTypePrec (-1) (deepMarshalledType t)
-    tellImport "Foreign.Ptr" "Ptr"
-    pure [(n, "Ptr" <+> tDoc)]
-  Array' _ [(n, Ptr NonConst t)] [] -> do
-    tDoc <- toHsTypePrec (-1) (deepMarshalledType t)
-    tellImport "Foreign.Ptr" "Ptr"
-    pure [(n, "Ptr" <+> tDoc)]
-  Array' _ [(n, Ptr NonConst t)] vs
-    | all
-      ( (\case
-          Ptr Const _ -> True
-          _           -> False
-        )
-      . snd
-      )
-      vs
-    -> do
-      vs' <- for vs $ \(vn, Ptr Const t) -> do
-        tDoc <- toHsTypePrec (-1) (deepMarshalledType t)
-        tellImport "Data.Vector" "Vector"
-        pure (vn, "Vector" <+> tDoc)
-      tDoc <- toHsTypePrec (-1) (deepMarshalledType t)
-      tellImport "Foreign.Ptr" "Ptr"
-      pure $ (n, "Ptr" <+> tDoc) : vs'
-  Bespoke -> pure [(Name "member", "type")]
+        pure (Right (n, tDoc))
+  Length _ _ _ -> do
+    pure (Left "-- Length valued member elided")
+  -- Array' _ [] [(n, Ptr _ Void)] -> do
+  --   tellImport "Foreign.Ptr" "Ptr"
+  --   pure [(n, "Ptr ()")]
+  -- Array' True [] [(n, Ptr Const (Ptr Const Char))] -> do
+  --   tellImport "Data.Vector"     "Vector"
+  --   tellImport "Data.Bytestring" "Bytestring"
+  --   pure [(n, "Vector Bytestring")]
+  -- Array' _ [] [(n, Ptr Const t)] -> do
+  --   tDoc <- toHsTypePrec (-1) (deepMarshalledType t)
+  --   tellImport "Data.Vector" "Vector"
+  --   pure [(n, "Vector" <+> tDoc)]
+  -- -- TODO: Improve this case V
+  -- Array' _ ovs vs
+  --   | all
+  --     ( (\case
+  --         Ptr Const _ -> True
+  --         _           -> False
+  --       )
+  --     . snd
+  --     )
+  --     (ovs ++ vs)
+  --   -> for (ovs ++ vs) $ \(n, Ptr Const t) -> do
+  --     tDoc <- toHsTypePrec (-1) (deepMarshalledType t)
+  --     tellImport "Data.Vector" "Vector"
+  --     pure (n, "Vector" <+> tDoc)
+  -- Array' _ [(n, Ptr Const t)] [] -> do
+  --   tDoc <- toHsTypePrec (-1) (deepMarshalledType t)
+  --   tellImport "Data.Vector" "Vector"
+  --   pure [(n, "Vector" <+> tDoc)]
+  -- Array' _ [] [(n, Ptr NonConst t)] -> do
+  --   tDoc <- toHsTypePrec (-1) (deepMarshalledType t)
+  --   tellImport "Foreign.Ptr" "Ptr"
+  --   pure [(n, "Ptr" <+> tDoc)]
+  -- Array' _ [(n, Ptr NonConst t)] [] -> do
+  --   tDoc <- toHsTypePrec (-1) (deepMarshalledType t)
+  --   tellImport "Foreign.Ptr" "Ptr"
+  --   pure [(n, "Ptr" <+> tDoc)]
+  -- Array' _ [(n, Ptr NonConst t)] vs
+  --   | all
+  --     ( (\case
+  --         Ptr Const _ -> True
+  --         _           -> False
+  --       )
+  --     . snd
+  --     )
+  --     vs
+  --   -> do
+  --     vs' <- for vs $ \(vn, Ptr Const t) -> do
+  --       tDoc <- toHsTypePrec (-1) (deepMarshalledType t)
+  --       tellImport "Data.Vector" "Vector"
+  --       pure (vn, "Vector" <+> tDoc)
+  --     tDoc <- toHsTypePrec (-1) (deepMarshalledType t)
+  --     tellImport "Foreign.Ptr" "Ptr"
+  --     pure $ (n, "Ptr" <+> tDoc) : vs'
+  Bespoke -> pure (Right (Name "member", "type"))
   t       -> throwError ("Unable to render marshalled type:" T.<+> T.tShow t)
 
 marshalledMarshalType :: MarshalType -> MarshalType
 marshalledMarshalType = \case
   Scalar o n t s -> Scalar o n (deepMarshalledType t) s
-  Array' o vs ovs ->
-    Array' o (second deepMarshalledType <$> vs) (second deepMarshalledType <$> ovs)
+  Length o vs ovs ->
+    Length o (second deepMarshalledType <$> vs) (second deepMarshalledType <$> ovs)
   m -> m
 
 marshalledType :: Type -> Type
@@ -467,3 +639,8 @@ allWithOthers f xs =
 getMarshalledName :: Name Unmarshalled -> Name Marshalled
 getMarshalledName (Name n) =
   Name (unReservedWord . T.lowerCaseFirst . dropPointer $ n)
+
+unPtrType :: Type -> Type
+unPtrType = \case
+  Ptr _ t -> t
+  t       -> t

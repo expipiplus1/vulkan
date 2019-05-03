@@ -1,12 +1,7 @@
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
-{-# LANGUAGE TupleSections #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE StandaloneDeriving #-}
-{-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE Strict #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TypeApplications #-}
 
 module Write.Monad.Lookup
   where
@@ -26,8 +21,8 @@ import           Spec.Savvy.Handle
 data Lookup = Lookup
   { lIsEnum    :: Text -> Maybe Enum
   , lIsBitmask :: Text -> Maybe Enum
-  , lIsStruct  ::  Text -> Maybe Struct
-  , lIsHandle  ::  Text -> Maybe Handle
+  , lIsStruct  :: Text -> Maybe Struct
+  , lIsHandle  :: Text -> Maybe Handle
   }
 
 emptyLookup :: Lookup
