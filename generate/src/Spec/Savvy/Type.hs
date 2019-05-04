@@ -18,6 +18,7 @@ module Spec.Savvy.Type
   , specParserContext
   , typeDepends
   , isPtrType
+  , isConstPtr
   , isArrayType
   ) where
 
@@ -232,6 +233,7 @@ typeDepends = \case
   TypeName "int32_t"              -> []
   TypeName "size_t"               -> []
   TypeName "Bool"                 -> []
+  TypeName "Float"                -> []
   -- TODO: This mapping is replicated in several places!
   TypeName "xcb_connection_t"     -> [WE.TypeName "Xcb_connection_t"]
   TypeName "xcb_visualid_t"       -> [WE.TypeName "Xcb_visualid_t"]
@@ -251,7 +253,12 @@ typeDepends = \case
 isPtrType :: Type -> Bool
 isPtrType = \case
   Ptr _ _ -> True
-  _ -> False
+  _       -> False
+
+isConstPtr :: Type -> Bool
+isConstPtr = \case
+  Ptr Const _ -> True
+  _           -> False
 
 isArrayType :: Type -> Bool
 isArrayType = \case

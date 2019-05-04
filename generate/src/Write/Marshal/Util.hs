@@ -47,10 +47,13 @@ isPassAsPointerType = \case
     | n
       `elem` [ "MirConnection"
              , "wl_display"
+             , "wl_surface"
+             , "Display"
              , "xcb_connection_t"
              , "AHardwareBuffer"
              , "ANativeWindow"
              , "CAMetalLayer"
+             , "SECURITY_ATTRIBUTES"
              ]
     -> True
   _ -> False
