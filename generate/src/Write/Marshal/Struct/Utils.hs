@@ -40,9 +40,12 @@ vkStructWriteElement =
         , Import "Data.Word"                 ["Word8"]
         , Import "Foreign.C.Types"           ["CChar(..)"]
         , Import "Data.ByteString" ["ByteString", "take", "unpack", "packCString"]
+        , Import "Data.ByteString.Unsafe" ["unsafeUseAsCString"]
+        , QualifiedImport "Data.ByteString" ["length"]
         , Import "Data.Vector"           ["Vector", "ifoldr"]
         , Import "Foreign.Marshal.Array" ["allocaArray"]
-        , Import "Foreign.Ptr"           ["Ptr"]
+        , Import "Foreign.Marshal.Utils" ["copyBytes"]
+        , Import "Foreign.Ptr"           ["Ptr", "castPtr"]
         , Import "Foreign.Storable" ["Storable", "pokeElemOff", "peekElemOff"]
         , Import "GHC.TypeNats" ["natVal", "KnownNat", "type (<=)"]
         , QualifiedImport "Data.Vector"           ["length"]
@@ -177,6 +180,25 @@ vkStructWriteElement =
           n                  = fromIntegral (natVal (Proxy @n))
           byteStringToVector = Data.Vector.Generic.fromList . Data.ByteString.unpack
 
+      pokeFixedLengthNullTerminatedByteString :: Int -> Ptr CChar -> ByteString -> IO ()
+      pokeFixedLengthNullTerminatedByteString maxLength to bs =
+        unsafeUseAsCString bs $ \from -> do
+          let len = min maxLength (Data.ByteString.length bs)
+              end = min (maxLength - 1) len
+          -- Copy the entire string into the buffer
+          copyBytes to from len
+          -- Make the last byte (the one following the string, or the
+          -- one at the end of the buffer)
+          pokeElemOff to end 0
+
+      pokeFixedLengthByteString :: Int -> Ptr Word8 -> ByteString -> IO ()
+      pokeFixedLengthByteString maxLength to bs =
+        unsafeUseAsCString bs $ \from -> do
+          let len = min maxLength (Data.ByteString.length bs)
+          copyBytes to (castPtr @CChar @Word8 from) len
+
+      sameLength :: [Int] -> [Maybe Int] -> IO Int
+      sameLength required optional = _
     |]
   in WriteElement{..}
 

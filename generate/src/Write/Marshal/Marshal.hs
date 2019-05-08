@@ -9,14 +9,15 @@
 
 module Write.Marshal.Marshal where
 
-import           Control.Arrow                            (
-                                                          second
-                                                          )
+import           Control.Arrow                            ( second )
 import           Data.Text.Prettyprint.Doc
 import           Data.Text.Extra                          ( Text )
 import qualified Data.Text.Extra               as T
 import           Data.Maybe
 import           Control.Monad.Except
+import           Data.List.Extra                          ( intersperse
+                                                          , partition
+                                                          )
 import           Control.Monad.Trans.Maybe
 import           Control.Monad.Reader
 import           Control.Applicative                      ( Alternative(..) )
@@ -43,18 +44,36 @@ data Namespace
 newtype Name (a :: Namespace) = Name {unName :: Text}
   deriving (Eq, Show)
 
--- TODO: Rename
-data MarshalScheme a = MarshalScheme
-  { msSchemeName :: Text
-  , msParam :: a
-  , msMarshalledType :: Maybe (WE (Doc ()))
-  }
-
 msUnmarshalledName :: Param a => MarshalScheme a -> Name Unmarshalled
 msUnmarshalledName = name . msParam
 
 msMarshalledName :: Param a => MarshalScheme a -> Name Marshalled
 msMarshalledName = getMarshalledName . msUnmarshalledName
+
+unmarshalledParamNameDoc :: Param a => a -> Doc ()
+unmarshalledParamNameDoc = pretty . unName . name
+
+marshalledParamNameDoc :: Param a => a -> Doc ()
+marshalledParamNameDoc = pretty . unName . getMarshalledName . name
+
+-- TODO: Rename
+data MarshalScheme a = MarshalScheme
+  { msSchemeName :: Text
+  , msParam :: a
+  , msMarshalledType :: Maybe (WE (Doc ()))
+  , msPokes :: [Poke]
+  }
+
+data Poke
+  = SimplePoke
+  | ComplexPoke (Doc () -> WE (Doc ()))
+  | ContTPoke (WE (Doc ()))
+    -- ^ A poke which doesn't bind any variables taking place in ContT
+  | IOPoke (WE (Doc ()))
+    -- ^ A poke which doesn't bind any variables
+  | WrappedPokeIO (WE (Doc ()))
+  | WrappedPokeContT (WE (Doc ()))
+  | WrappedPokePure (WE (Doc ()))
 
 ----------------------------------------------------------------
 -- Schemes
@@ -88,53 +107,112 @@ msMarshalledName = getMarshalledName . msUnmarshalledName
 --
 -- Because we don't represent things as non-empty the optionalness of the
 -- count is uninteresting.
+--
+-- The @Either Word32@ part can be dropped if there is a non-optional vector
+-- with the same length
 ----------------------------------------------------------------
 
 -- | This always takes priority
-bespokeScheme :: Param a => Struct -> a -> MaybeT Write (MarshalScheme a)
-bespokeScheme struct p = asum
-  [ do
-    Name "pNext" <- pure $ name p
-    Ptr _ Void   <- pure $ type' p
-    let tDoc = do
-          tellSourceDepend (WE.TypeName "SomeVkStruct")
-          pure "Maybe SomeVkStruct"
-    pure $ MarshalScheme "pNext" p (Just tDoc)
-  , case
-    [ v
-    | (s, c, v) <- fixedArrayLengths
-    , s == Name (sName struct)
-    , c == name p
-    ]
-  of
-    [] -> empty
-    vs -> pure $ MarshalScheme "fixed array length" p Nothing
-  , case
-    [ v | (s, c, v) <- cacheDataArrays, s == Name (sName struct), c == name p ]
-  of
-    [] -> empty
-    vs -> pure $ MarshalScheme "Cache data length" p Nothing
-  , case
-    [ v | (s, c, v) <- cacheDataArrays, s == Name (sName struct), v == name p ]
-  of
-    [] -> empty
-    vs -> do
-      let tDoc = do
-            tellImport "Data.ByteString" "ByteString"
-            pure "ByteString"
-      pure $ MarshalScheme "Cache data length" p (Just tDoc)
-  , do
-    "VkShaderModuleCreateInfo" <- pure (sName struct)
-    Name "codeSize"            <- pure $ name p
-    pure $ MarshalScheme "Shader module code size" p Nothing
-  , do
-    "VkShaderModuleCreateInfo" <- pure (sName struct)
-    Name "pCode"               <- pure $ name p
-    let tDoc = do
-          tellImport "Data.ByteString" "ByteString"
-          pure "ByteString"
-    pure $ MarshalScheme "Shader module code" p (Just tDoc)
-  ]
+bespokeScheme
+  :: Struct -> StructMember -> MaybeT Write (MarshalScheme StructMember)
+bespokeScheme struct p =
+  let
+    schemes =
+      [ do
+        Name "pNext" <- pure $ name p
+        Ptr _ Void   <- pure $ type' p
+        let
+          tDoc = do
+            tellSourceDepend (WE.TypeName "SomeVkStruct")
+            pure "Maybe SomeVkStruct"
+          poke = WrappedPokeContT $ do
+            tellSourceDepend (WE.TermName "withSomeVkStruct")
+            pure
+              $   "maybeWith withSomeVkStruct"
+              <+> marshalledParamNameDoc p
+        pure $ MarshalScheme "pNext" p (Just tDoc) [poke, SimplePoke]
+      , case
+          [ v
+          | (s, c, v) <- fixedArrayLengths
+          , s == Name (sName struct)
+          , c == name p
+          ]
+        of
+          []  -> empty
+          [v] -> pure $ MarshalScheme
+            "fixed array length"
+            p
+            Nothing
+            [ WrappedPokePure $ do
+              tellQualifiedImport "Data.Vector" "length"
+              pure $ "fromIntegral $ Data.Vector.length" <+> pretty
+                (unName (getMarshalledName v))
+            , SimplePoke
+            ]
+          vs -> lift $ throwError "Multiple vectors for fixed array length"
+      , case
+          [ v
+          | (s, c, v) <- cacheDataArrays
+          , s == Name (sName struct)
+          , c == name p
+          ]
+        of
+          []  -> empty
+          [v] -> pure $ MarshalScheme
+            "Cache data length"
+            p
+            Nothing
+            [ WrappedPokePure $ do
+              tellQualifiedImport "Data.ByteString" "length"
+              pure $ "fromIntegral $ Data.ByteString.length" <+> pretty
+                (unName (getMarshalledName v))
+            , SimplePoke
+            ]
+          vs -> lift $ throwError "Multiple vectors for cache array length"
+      , case
+          [ v
+          | (s, _, v) <- cacheDataArrays
+          , s == Name (sName struct)
+          , v == name p
+          ]
+        of
+          [v] -> do
+            let
+              tDoc = do
+                tellImport "Data.ByteString" "ByteString"
+                pure "ByteString"
+              poke = WrappedPokeContT $ do
+                tellImport "Data.ByteString.Unsafe"   "unsafeUseAsCString"
+                tellImport "Data.Coerce"              "coerce"
+                tellExtension "TypeApplications"
+                pure
+                  $ "coerce @_ @((Ptr () -> IO a) -> IO a) unsafeUseAsCString"
+                  <+> pretty (unName v)
+            pure $ MarshalScheme "Cache data" p (Just tDoc) [poke, SimplePoke]
+          _ -> empty
+      , do
+        "VkShaderModuleCreateInfo" <- pure (sName struct)
+        Name "codeSize"            <- pure $ name p
+        pure $ MarshalScheme
+          "Shader module code size"
+          p
+          Nothing
+          [WrappedPokePure (pure "SHADER LENGTH"), SimplePoke]
+      , do
+        "VkShaderModuleCreateInfo" <- pure (sName struct)
+        Name "pCode"               <- pure $ name p
+        let tDoc = do
+              tellImport "Data.ByteString" "ByteString"
+              pure "ByteString"
+            poke = WrappedPokeContT $ do
+              tellImport "Data.ByteString.Unsafe"   "unsafeUseAsCString"
+              pure $ "unsafeUseAsCString" <+> marshalledParamNameDoc p
+        pure $ MarshalScheme "Shader module code"
+                             p
+                             (Just tDoc)
+                             [poke, SimplePoke]
+      ]
+  in  asum schemes
   where
      -- A list of (Struct name, length member name, array member name) for
      -- fixed sized arrays where only the first 'length member name' elements
@@ -185,29 +263,82 @@ scalarScheme p = do
   guard ((isNothing . isOptional $ p) || ((== Just [False]) . isOptional $ p))
   guard . (/= Void) $ t
   guard $ not (isPtrType t) || isPassAsPointerType (unPtrType t)
-  pure $ MarshalScheme "scalar" p (Just tDoc)
+  pure $ MarshalScheme "scalar" p (Just tDoc) [SimplePoke]
 
 univaluedScheme :: Param a => a -> MaybeT Write (MarshalScheme a)
 univaluedScheme p = do
-  [_value] <- values p
-  pure $ MarshalScheme "univalued" p Nothing
+  [value] <- values p
+  pure $ MarshalScheme "univalued"
+                       p
+                       Nothing
+                       [WrappedPokePure (pure (pretty value)), SimplePoke]
 
-arrayScheme :: Param a => a -> MaybeT Write (MarshalScheme a)
-arrayScheme p = do
+arrayScheme :: Param a => [a] -> a -> MaybeT Write (MarshalScheme a)
+arrayScheme ps p = do
   case lengths p of
     Just (NamedLength _ : _) -> do
       Ptr Const t <- pure $ type' p
-      let tDoc = do
-            e <- case t of
-              Ptr Const c | isByteArrayElem c -> do
+      -- TODO: find a non-optional sibling, or make the type Either Word32...
+      let
+        (eDoc, fill) = case t of
+          Ptr Const c | isByteArrayElem c -> case isOptional p of
+            Just [True] ->
+              ( do
                 tellImport "Data.ByteString" "ByteString"
-                pure $ case isOptional p of
-                  Just [True] -> "Maybe ByteString"
-                  _           -> "ByteString"
-              _ -> toHsTypePrec 10 (deepMarshalledType t)
-            tellImport "Data.Vector" "Vector"
-            pure $ "Vector" <+> e
-      pure $ MarshalScheme "array" p (Just tDoc)
+                pure "Maybe ByteString"
+              , ContTPoke (pure "WRITE MAYBE BS")
+              )
+            _ ->
+              ( do
+                tellImport "Data.ByteString" "ByteString"
+                pure "ByteString"
+              , ContTPoke $ do
+                tellImport "Data.Foldable"            "traverse_"
+                tellImport "Control.Monad.Trans.Cont" "ContT(..)"
+                tellImport "Data.ByteString"          "useAsCString"
+                tellImport "Foreign.Storable"         "pokeElemOff"
+                tellQualifiedImport "Data.Vector" "imapM_"
+                pure
+                  $   "Data.Vector.imapM_"
+                  <+> parens
+                        (   "\\i bs -> ContT (useAsCString bs) >>="
+                        <+> parens
+                              (   "lift . pokeElemOff"
+                              <+> unmarshalledParamNameDoc p
+                              <+> "i"
+                              )
+                        )
+                  <+> marshalledParamNameDoc p
+              )
+          _ ->
+            ( toHsTypePrec 10 (deepMarshalledType t)
+            , IOPoke $ do
+              tellQualifiedImport "Data.Vector" "imapM_"
+              tellImport "Foreign.Storable" "pokeElemOff"
+              pure
+                $   "Data.Vector.imapM_"
+                <+> parens ("pokeElemOff" <+> unmarshalledParamNameDoc p)
+                <+> marshalledParamNameDoc p
+            )
+        vDoc = do
+          e <- eDoc
+          tellImport "Data.Vector" "Vector"
+          pure $ "Vector" <+> e
+        tDoc = vDoc
+        -- Allocate the array
+        poke = WrappedPokeContT $ do
+          elemTyDoc <- toHsTypePrec 10 t
+          tellExtension "TypeApplications"
+          tellQualifiedImport "Data.Vector" "length"
+          tellImport "Foreign.Storable"      "sizeOf"
+          tellImport "Foreign.Storable"      "alignment"
+          tellImport "Foreign.Marshal.Alloc" "allocaBytesAligned"
+          let elemSize = "sizeOf @" <> elemTyDoc <+> "undefined"
+              len      = "Data.Vector.length" <+> marshalledParamNameDoc p
+              size     = parens $ elemSize <+> "*" <+> len
+              align    = parens $ "alignment @" <> elemTyDoc <+> "undefined"
+          pure $ "allocaBytesAligned @" <> elemTyDoc <+> size <+> align
+      pure $ MarshalScheme "array" p (Just tDoc) [poke, fill, SimplePoke]
     Just [NullTerminated] -> do
       Ptr Const c <- pure $ type' p
       guard $ isByteArrayElem c
@@ -216,24 +347,50 @@ arrayScheme p = do
             pure $ case isOptional p of
               Just [True] -> "Maybe ByteString"
               _           -> "ByteString"
-      pure $ MarshalScheme "C string" p (Just tDoc)
+      pure $ MarshalScheme
+        "C string"
+        p
+        (Just tDoc)
+        [ WrappedPokeContT $ do
+          tellImport "Data.ByteString" "useAsCString"
+          pure
+            $   "useAsCString"
+            <+> (pretty . unName . getMarshalledName . name $ p)
+        , SimplePoke
+        ]
     _ -> empty
 
 fixedArrayScheme :: Param a => a -> MaybeT Write (MarshalScheme a)
 fixedArrayScheme p = do
   guard . isNothing . lengths $ p
   case type' p of
-    Array _ (SymbolicArraySize _) t | isByteArrayElem t -> do
+    Array _ (SymbolicArraySize s) t | isByteArrayElem t -> do
       let tDoc = do
             tellImport "Data.ByteString" "ByteString"
             pure "ByteString"
-      pure $ MarshalScheme "fixed array" p (Just tDoc)
-    Array _ (SymbolicArraySize _) t -> do
-      let tDoc = do
-            e <- toHsTypePrec 10 (deepMarshalledType t)
-            tellImport "Data.Vector" "Vector"
-            pure $ "Vector" <+> e
-      pure $ MarshalScheme "fixed array" p (Just tDoc)
+          poke = ComplexPoke $ \offset -> do
+            let f = case t of
+                  Char -> "pokeFixedLengthNullTerminatedByteString"
+                  _    -> "pokeFixedLengthByteString"
+            pure $ f <+> pretty s <+> offset <+> marshalledParamNameDoc p
+
+      pure $ MarshalScheme "fixed array" p (Just tDoc) [poke]
+    Array _ (SymbolicArraySize s) t -> do
+      let
+        tDoc = do
+          e <- toHsTypePrec 10 (deepMarshalledType t)
+          tellImport "Data.Vector" "Vector"
+          pure $ "Vector" <+> e
+        poke = ComplexPoke $ \offset -> do
+          let f = "pokeElemOff" <+> offset
+              v = "Data.Vector.take" <+> pretty s <+> marshalledParamNameDoc p
+          tellDepend $ WE.PatternName s
+          tellImport "Foreign.Storable" "pokeElemOff"
+          tellImport "Foreign.Storable" "Ptr"
+          tellQualifiedImport "Data.Vector" "take"
+          tellQualifiedImport "Data.Vector" "imapM_"
+          pure $ "Data.Vector.imapM_" <+> parens f <+> parens v
+      pure $ MarshalScheme "fixed array" p (Just tDoc) [poke]
     Array _ (NumericArraySize n) t -> do
       let tDoc = do
             e <- if isByteArrayElem t
@@ -242,7 +399,24 @@ fixedArrayScheme p = do
                 pure "ByteString"
               else toHsType (deepMarshalledType t)
             pure (tupled (replicate (fromIntegral n) e))
-      pure $ MarshalScheme "fixed array" p (Just tDoc)
+          poke = ComplexPoke $ \offset -> do
+            let vars =
+                  (marshalledParamNameDoc p <>) . pretty . show <$> [1 .. n]
+            pure
+              $   "let"
+              <+> tupled vars
+              <+> "="
+              <+> marshalledParamNameDoc p
+              <+> "in"
+              <+> hsep
+                    (punctuate
+                      " >>"
+                      [ "pokeElemOff" <+> offset <+> pretty (show i) <+> v
+                      | (v, i) <- zip vars [0 ..]
+                      ]
+                    )
+
+      pure $ MarshalScheme "fixed array" p (Just tDoc) [poke]
     _ -> empty
 
 -- | Matches if this parameter is the length of one or more vectors
@@ -250,12 +424,50 @@ lengthScheme :: Param a => [a] -> a -> MaybeT Write (MarshalScheme a)
 lengthScheme ps p = do
   -- Get the vectors which are sized with this parameter
   vs <- pure $ getSizedWith (name p) ps
-  -- Make sure they exist
-  guard (not (null vs))
   -- Make sure they are not all void pointer, those do not have the length
   -- elided
   guard (any (\v -> type' v /= Ptr Const Void) $ vs)
-  pure $ MarshalScheme "length" p Nothing
+  poke <- case partition (maybe False head . isOptional) vs of
+    -- Make sure they exist
+    ([] , []) -> empty
+    ([o], []) -> pure $ WrappedPokePure $ do
+      tellQualifiedImport "Data.Vector" "length"
+      tellImport "Data.Either" "either"
+      pure
+        $   "either id (fromIntegral . Data.Vector.length)"
+        <+> marshalledParamNameDoc o
+    (o : os, [] ) -> error "TODO: handle multiple optional vectors"
+    ([]    , [v]) -> pure $ WrappedPokePure $ do
+      tellQualifiedImport "Data.Vector" "length"
+      pure $ "fromIntegral $ Data.Vector.length" <+> marshalledParamNameDoc v
+    (opts, v : vs) -> pure $ WrappedPokeIO $ do
+      tellQualifiedImport "Data.Vector" "length"
+      tellQualifiedImport "Data.Vector" "length"
+      tyDoc <- toHsType (type' p)
+      pure
+        $   "let l = Data.Vector.length"
+        <+> marshalledParamNameDoc v
+        <+> "in if"
+        <+> (hsep $ intersperse
+              "&&"
+              ((("l == Data.Vector.length" <+>) . marshalledParamNameDoc <$> vs)
+              ++ (   (\n ->
+                       parens
+                         $   "Data.Vector.null"
+                         <+> n
+                         <+> "|| l == Data.Vector.length"
+                         <+> n
+                     )
+                 .   marshalledParamNameDoc
+                 <$> opts
+                 )
+              )
+            )
+        <+> "then fromIntegral l ::"
+        <+> tyDoc
+        <+> "else _"
+
+  pure $ MarshalScheme "length" p Nothing [poke, SimplePoke]
 
 -- | An optional value with a default, so we don't need to wrap it in a Maybe
 optionalDefaultScheme :: Param a => a -> MaybeT Write (MarshalScheme a)
@@ -266,7 +478,7 @@ optionalDefaultScheme p = do
   let tDoc = do
         e <- toHsType . deepMarshalledType . type' $ p
         pure e
-  pure $ MarshalScheme "optional default" p (Just tDoc)
+  pure $ MarshalScheme "optional default" p (Just tDoc) [SimplePoke]
 
 -- | An optional value to be wrapped in a Maybe
 optionalScheme :: Param a => a -> MaybeT Write (MarshalScheme a)
@@ -276,7 +488,7 @@ optionalScheme p = do
   let tDoc = do
         e <- toHsTypePrec 10 . deepMarshalledType . unPtrType . type' $ p
         pure ("Maybe " <> e)
-  pure $ MarshalScheme "optional" p (Just tDoc)
+  pure $ MarshalScheme "optional" p (Just tDoc) [SimplePoke] -- TODO: this is wrong if this is a ptr
 
 -- | Matches const and non-const void pointers, exposes them as 'Ptr ()'
 voidPointerScheme :: Param a => a -> MaybeT Write (MarshalScheme a)
@@ -285,13 +497,13 @@ voidPointerScheme p = do
   let tDoc = do
         tellImport "Foreign.Ptr" "Ptr"
         pure "Ptr ()"
-  pure $ MarshalScheme "void pointer" p (Just tDoc)
+  pure $ MarshalScheme "void pointer" p (Just tDoc) [SimplePoke]
 
 returnPointerScheme :: Param a => a -> MaybeT Write (MarshalScheme a)
 returnPointerScheme p = do
   Ptr NonConst t <- pure $ type' p
   let tDoc = toHsType $ type' p
-  pure $ MarshalScheme "void pointer" p (Just tDoc)
+  pure $ MarshalScheme "void pointer" p (Just tDoc) [SimplePoke]
 
 ----------------------------------------------------------------
 --
@@ -341,7 +553,7 @@ extractMarshalledMember s@Struct {..} member = do
           -- Pointers to return values in
         , returnPointerScheme
           -- Optional and non optional arrays
-        , arrayScheme
+        , arrayScheme sMembers
         , fixedArrayScheme
           -- Optional things:
         , optionalDefaultScheme
@@ -427,6 +639,67 @@ isDefaultableForeignType =
   )
 
 ----------------------------------------------------------------
+-- Rendering
+----------------------------------------------------------------
+
+data PokeSet = PokeSet
+  { pokeSetContT :: [Doc ()]
+  , pokeSetIO    :: [Doc ()]
+  , pokeSetPure  :: [Doc ()]
+  , pokeSetPoke  :: [Doc ()]
+  }
+
+instance Semigroup PokeSet where
+  PokeSet a1 b1 c1 d1 <> PokeSet a2 b2 c2 d2 =
+    PokeSet (a1 <> a2) (b1 <> b2) (c1 <> c2) (d1 <> d2)
+
+instance Monoid PokeSet where
+  mempty = PokeSet [] [] [] []
+
+renderStructMemberPoke :: MarshalScheme StructMember -> WE PokeSet
+renderStructMemberPoke ms@MarshalScheme {..} = do
+  let StructMember {..} = msParam
+      name              = pretty . unName . msUnmarshalledName $ ms
+  tyDoc' <- toHsTypePrec 10 smType
+  tellImport "Foreign.Ptr" "plusPtr"
+  let offset =
+        parens
+          $   "p `plusPtr`"
+          <+> pretty (show smOffset)
+          <+> "::"
+          <+> "Ptr"
+          <+> tyDoc'
+  case msPokes of
+    [WrappedPokePure value', SimplePoke] -> do
+      value <- value'
+      tyDoc <- toHsType smType
+      pure $ PokeSet []
+                     []
+                     []
+                     ["poke" <+> offset <+> parens (value <+> "::" <+> tyDoc)]
+    _ -> flip foldMap msPokes $ \case
+      SimplePoke -> do
+        tellImport "Foreign.Storable" "poke"
+        pure $ PokeSet [] [] [] ["poke" <+> offset <+> name]
+      ComplexPoke d     -> PokeSet [] [] [] . pure <$> d offset
+      ContTPoke   poke' -> do
+        poke <- poke'
+        pure $ PokeSet [poke] [] [] []
+      IOPoke poke' -> do
+        poke <- poke'
+        pure $ PokeSet [] [poke] [] []
+      WrappedPokeContT wrapFun' -> do
+        wrapFun <- wrapFun'
+        tellImport "Control.Monad.Trans.Cont" "ContT(..)"
+        pure $ PokeSet [name <+> "<- ContT $" <+> wrapFun] [] [] []
+      WrappedPokeIO value' -> do
+        value <- value'
+        pure $ PokeSet [] [name <+> "<-" <+> value] [] []
+      WrappedPokePure value' -> do
+        value <- value'
+        pure $ PokeSet [] [] ["let" <+> name <+> "=" <+> value] []
+
+----------------------------------------------------------------
 -- Utils
 ----------------------------------------------------------------
 
@@ -460,3 +733,8 @@ isByteArrayElem = \case
   Char               -> True
   TypeName "uint8_t" -> True
   _                  -> False
+
+-- TODO: Change for 32 bit library
+pointerAlignment :: Word
+pointerAlignment = 8
+

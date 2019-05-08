@@ -85,12 +85,6 @@ getTypeSize TypeContext{..} = fixEndo tcTypeSize
 getTypeAlignment :: TypeContext -> Type -> Either [SpecError] Word
 getTypeAlignment TypeContext{..} = fixEndo tcTypeAlignment
 
--- instance Semigroup TypeContext where
---   tc1 <> tc2 =
---     TypeContext (tcParseContext tc1) --  <> tcParseContext tc2)
---                 (liftA2 (<>) (tcTypeSize tc1) (tcTypeSize tc2))
---                 (liftA2 (<>) (tcTypeAlignment tc1) (tcTypeAlignment tc2))
-
 extendTypeContext
   :: (Type -> Either [SpecError] Word)
   -- ^ TypeSize

@@ -117,7 +117,7 @@ wrapStruct
   -- ^ Returns the Docs for this struct, and any aliases
 wrapStruct isDefaultable isStruct getHandle containsUnion containsDispatchableHandle s = do
   marshalled     <- marshallStruct isStruct isDefaultable getHandle s
-  toCStructDoc   <- writeToCStructInstance marshalled
+  toCStructDoc   <- writeToCStructInstance s marshalled
   fromCStructDoc <- writeFromCStructInstance containsUnion containsDispatchableHandle marshalled
   zeroDoc        <- writeZeroInstance marshalled
   marshalledDoc  <- writeMarshalled s marshalled
@@ -761,20 +761,35 @@ marshallMember isStruct isDefaultable getHandle lengthRelation struct m = do
   pure $ MarshalledMember (smName m) <$> ty
 
 writeToCStructInstance
-  :: MarshalledStruct -> WE (Doc ())
-writeToCStructInstance MarshalledStruct{..} = do
+  :: Struct -> MarshalledStruct -> WE (Doc ())
+writeToCStructInstance s MarshalledStruct{..} = do
   tellDepend (WE.TypeName ("Vk" <> msName))
   tellExport (Term ("withCStruct" <> msName))
   let marshalledName = "marshalled"
+      size = pretty . show . sSize $ s
+      align = pretty . show . sAlignment $ s
   case msStructOrUnion of
     AStruct -> do
       wrapped <- wrap "cont" ("Vk" <> msName) msName marshalledName msMembers
+      schemes <- liftWrite $ M.marshalStructMembers s
+      tellImport "Control.Monad.IO.Class" "liftIO"
+      tellImport "Foreign.Marshal.Alloc" "allocaBytesAligned"
+      tellImport "Control.Monad.Trans.Cont" "ContT(..)"
+      tellExtension "RecordWildCards"
+      M.PokeSet {..} <- foldMap M.renderStructMemberPoke schemes
       pure [qci|
         -- | A function to temporarily allocate memory for a 'Vk{msName}' and
         -- marshal a '{msName}' into it. The 'Vk{msName}' is only valid inside
         -- the provided computation and must not be returned out of it.
         withCStruct{msName} :: {msName} -> (Vk{msName} -> IO a) -> IO a
-        withCStruct{msName} {marshalledName} cont = {wrapped :: Doc ()}
+        withCStruct{msName} {marshalledName} cont = {wrapped}
+
+        withCStruct{msName}' :: {msName} -> (Ptr Vk{msName} -> IO a) -> IO a
+        withCStruct{msName}' {msName}\{..} = runContT $ do
+        {indent 2 . vsep $ ("p <- ContT $ allocaBytesAligned" <+> size <+> align) : pokeSetContT}
+          liftIO $ do
+        {indent 4 . vsep $ pokeSetIO <> pokeSetPure <> pokeSetPoke}
+          pure p
         |]
     AUnion -> do
       wrappedAlts <- for msMembers $ \case

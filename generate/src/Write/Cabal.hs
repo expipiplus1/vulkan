@@ -109,6 +109,7 @@ writeCabal modules platforms guardInfo =
 
           build-depends:       base >= 4.9 && < 5
                              , bytestring
+                             , transformers
                              , vector
                              , vector-sized >= 1.0.1
           default-language:    Haskell2010

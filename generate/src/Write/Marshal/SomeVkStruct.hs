@@ -112,6 +112,9 @@ someVkStructWriteElement getHandle platforms structs
             -- returned out of it.
             withCStruct :: marshalled -> (c -> IO a) -> IO a
 
+          structSize :: SomeVkStruct -> Word
+          structSize = error "TODO structSize"
+
           -- | A class for converting C type structures to the marshalled types
           class FromCStruct marshalled c | marshalled -> c, c -> marshalled where
             -- | Read a C type structure and dependencies
