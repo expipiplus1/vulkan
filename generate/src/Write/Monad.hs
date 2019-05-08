@@ -1,4 +1,5 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE DerivingVia #-}
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE StandaloneDeriving #-}
@@ -51,6 +52,7 @@ import           Data.List.Extra                          ( elem
 import           Control.Monad.Except
 import           Data.Either.Validation
 import           Data.Traversable
+import           Data.Monoid                              ( Ap(..) )
 import           Data.Foldable
 import           Control.Monad.State.Strict
 import           Control.Monad.Reader
@@ -102,6 +104,7 @@ traverseV = flip forV
 -- | A monad for generating write elements
 newtype WE a = WE { unWE :: StateT WriteElement Write a }
   deriving (Functor, Applicative, Monad)
+  deriving (Semigroup, Monoid) via (Ap WE a)
 
 deriving instance MonadError Text WE
 

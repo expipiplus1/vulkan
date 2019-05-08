@@ -177,6 +177,22 @@ vkStructWriteElement =
           n                  = fromIntegral (natVal (Proxy @n))
           byteStringToVector = Data.Vector.Generic.fromList . Data.ByteString.unpack
 
+      pokeFixedLengthNullTerminatedByteString :: Int -> Ptr CChar -> ByteString -> IO ()
+      pokeFixedLengthNullTerminatedByteString maxLength to bs =
+        unsafeUseAsCString bs $ \from -> do
+          let len = min maxLength (Data.ByteString.length bs)
+              end = min (maxLength - 1) len
+          -- Copy the entire string into the buffer
+          copyBytes to from len
+          -- Make the last byte (the one following the string, or the
+          -- one at the end of the buffer)
+          pokeElemOff to end 0
+
+      pokeFixedLengthByteString :: Int -> Ptr Word8 -> ByteString -> IO ()
+      pokeFixedLengthByteString maxLength to bs =
+        unsafeUseAsCString bs $ \from -> do
+          let len = min maxLength (Data.ByteString.length bs)
+          copyBytes to from len
     |]
   in WriteElement{..}
 
