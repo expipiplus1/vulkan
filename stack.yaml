@@ -1,3 +1,6 @@
-resolver: lts-10.10
+resolver: lts-13.23
 packages:
 - .
+nix:
+  enable: false
+  packages: [vulkan-loader]
