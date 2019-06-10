@@ -59,32 +59,13 @@ import Graphics.Vulkan.NamedType
   )
 
 
--- | VkSharedPresentSurfaceCapabilitiesKHR - structure describing
--- capabilities of a surface for shared presentation
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageUsageFlags',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkSharedPresentSurfaceCapabilitiesKHR"
 data VkSharedPresentSurfaceCapabilitiesKHR = VkSharedPresentSurfaceCapabilitiesKHR
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_KHR'
+  { -- No documentation found for Nested "VkSharedPresentSurfaceCapabilitiesKHR" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkSharedPresentSurfaceCapabilitiesKHR" "pNext"
   vkPNext :: Ptr ()
-  , -- | @sharedPresentSupportedUsageFlags@ is a bitmask of
-  -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageUsageFlagBits'
-  -- representing the ways the application /can/ use the shared presentable
-  -- image from a swapchain created with
-  -- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkPresentModeKHR' set to
-  -- 'VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR' or
-  -- 'VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR' for the surface on the
-  -- specified device.
-  -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
-  -- /must/ be included in the set but implementations /may/ support
-  -- additional usages.
+  , -- No documentation found for Nested "VkSharedPresentSurfaceCapabilitiesKHR" "sharedPresentSupportedUsageFlags"
   vkSharedPresentSupportedUsageFlags :: VkImageUsageFlags
   }
   deriving (Eq, Show)
@@ -104,55 +85,7 @@ instance Zero VkSharedPresentSurfaceCapabilitiesKHR where
                                                zero
                                                zero
 
--- | vkGetSwapchainStatusKHR - Get a swapchain’s status
---
--- = Parameters
---
--- -   @device@ is the device associated with @swapchain@.
---
--- -   @swapchain@ is the swapchain to query.
---
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
---
--- -   @swapchain@ /must/ be a valid
---     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
---     handle
---
--- -   Both of @device@, and @swapchain@ /must/ have been created,
---     allocated, or retrieved from the same
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance'
---
--- == Host Synchronization
---
--- -   Host access to @swapchain@ /must/ be externally synchronized
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
---     -   'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VK_SUBOPTIMAL_KHR'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_DEVICE_LOST'
---
---     -   'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VK_ERROR_OUT_OF_DATE_KHR'
---
---     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_SURFACE_LOST_KHR'
---
---     -   'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
+-- No documentation found for TopLevel "vkGetSwapchainStatusKHR"
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)

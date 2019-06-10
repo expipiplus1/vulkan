@@ -31,45 +31,13 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- | VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV - Structure
--- describing barycentric support in fragment shaders that can be supported
--- by an implementation
---
--- = Members
---
--- The members of the 'VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV'
--- structure describe the following features:
---
--- = Description
---
--- See
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#primsrast-barycentric Barycentric Interpolation>
--- for more information.
---
--- If the 'VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV' structure
--- is included in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
--- it is filled with values indicating whether the feature is supported.
--- 'VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV' /can/ also be used
--- in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV"
 data VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV = VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_NV'
+  { -- No documentation found for Nested "VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV" "sType"
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV" "pNext"
   vkPNext :: Ptr ()
-  , -- | @fragmentShaderBarycentric@ indicates that the implementation supports
-  -- the @BaryCoordNV@ and @BaryCoordNoPerspNV@ SPIR-V fragment shader
-  -- built-ins and supports the @PerVertexNV@ SPIR-V decoration on fragment
-  -- shader input variables.
+  , -- No documentation found for Nested "VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV" "fragmentShaderBarycentric"
   vkFragmentShaderBarycentric :: VkBool32
   }
   deriving (Eq, Show)

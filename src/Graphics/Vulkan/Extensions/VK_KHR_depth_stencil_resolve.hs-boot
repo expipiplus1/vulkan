@@ -15,25 +15,8 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve
   )
 
 
--- | VkResolveModeFlagBitsKHR - Bitmask indicating supported depth and
--- stencil resolve modes
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VkResolveModeFlagsKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VkSubpassDescriptionDepthStencilResolveKHR'
+-- No documentation found for TopLevel "ResolveModeFlagBitsKHR"
 type ResolveModeFlagBitsKHR = VkResolveModeFlagBitsKHR
 
--- | VkResolveModeFlagsKHR - Bitmask of VkResolveModeFlagBitsKHR
---
--- = Description
---
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VkResolveModeFlagsKHR'
--- is a bitmask type for setting a mask of zero or more
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VkResolveModeFlagBitsKHR'.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VkPhysicalDeviceDepthStencilResolvePropertiesKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VkResolveModeFlagBitsKHR'
+-- No documentation found for TopLevel "ResolveModeFlagsKHR"
 type ResolveModeFlagsKHR = ResolveModeFlagBitsKHR

@@ -30,33 +30,12 @@ import {-# source #-} Graphics.Vulkan.C.Core10.DeviceInitialization
 
 data VkExternalSemaphoreFeatureFlagBits
 
--- | VkExternalSemaphoreFeatureFlags - Bitmask of
--- VkExternalSemaphoreFeatureFlagBitsKHR
---
--- = Description
---
--- 'VkExternalSemaphoreFeatureFlags' is a bitmask type for setting a mask
--- of zero or more 'VkExternalSemaphoreFeatureFlagBits'.
---
--- = See Also
---
--- 'VkExternalSemaphoreFeatureFlagBits', 'VkExternalSemaphoreProperties'
+-- No documentation found for TopLevel "VkExternalSemaphoreFeatureFlags"
 type VkExternalSemaphoreFeatureFlags = VkExternalSemaphoreFeatureFlagBits
 
 data VkExternalSemaphoreHandleTypeFlagBits
 
--- | VkExternalSemaphoreHandleTypeFlags - Bitmask of
--- VkExternalSemaphoreHandleTypeFlagBits
---
--- = Description
---
--- 'VkExternalSemaphoreHandleTypeFlags' is a bitmask type for setting a
--- mask of zero or more 'VkExternalSemaphoreHandleTypeFlagBits'.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore.VkExportSemaphoreCreateInfo',
--- 'VkExternalSemaphoreHandleTypeFlagBits', 'VkExternalSemaphoreProperties'
+-- No documentation found for TopLevel "VkExternalSemaphoreHandleTypeFlags"
 type VkExternalSemaphoreHandleTypeFlags = VkExternalSemaphoreHandleTypeFlagBits
 
 data VkExternalSemaphoreProperties

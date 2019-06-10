@@ -56,42 +56,13 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- | VkPhysicalDeviceDepthClipEnableFeaturesEXT - Structure indicating
--- support for explicit enable of depth clip
---
--- = Members
---
--- The members of the 'VkPhysicalDeviceDepthClipEnableFeaturesEXT'
--- structure describe the following features:
---
--- = Description
---
--- If the 'VkPhysicalDeviceDepthClipEnableFeaturesEXT' structure is
--- included in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
--- it is filled with values indicating whether the feature is supported.
--- 'VkPhysicalDeviceDepthClipEnableFeaturesEXT' /can/ also be used in the
--- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to
--- enable this feature.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkPhysicalDeviceDepthClipEnableFeaturesEXT"
 data VkPhysicalDeviceDepthClipEnableFeaturesEXT = VkPhysicalDeviceDepthClipEnableFeaturesEXT
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_ENABLE_FEATURES_EXT'
+  { -- No documentation found for Nested "VkPhysicalDeviceDepthClipEnableFeaturesEXT" "sType"
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceDepthClipEnableFeaturesEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- | @depthClipEnable@ indicates that the implementation supports setting the
-  -- depth clipping operation explicitly via the
-  -- 'VkPipelineRasterizationDepthClipStateCreateInfoEXT' pipeline state.
-  -- Otherwise depth clipping is only enabled when
-  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineRasterizationStateCreateInfo'::@depthClampEnable@
-  -- is set to 'Graphics.Vulkan.C.Core10.Core.VK_FALSE'.
+  , -- No documentation found for Nested "VkPhysicalDeviceDepthClipEnableFeaturesEXT" "depthClipEnable"
   vkDepthClipEnable :: VkBool32
   }
   deriving (Eq, Show)
@@ -113,17 +84,7 @@ instance Zero VkPhysicalDeviceDepthClipEnableFeaturesEXT where
 
 -- ** VkPipelineRasterizationDepthClipStateCreateFlagsEXT
 
--- | VkPipelineRasterizationDepthClipStateCreateFlagsEXT - Reserved for
--- future use
---
--- = Description
---
--- 'VkPipelineRasterizationDepthClipStateCreateFlagsEXT' is a bitmask type
--- for setting a mask, but is currently reserved for future use.
---
--- = See Also
---
--- 'VkPipelineRasterizationDepthClipStateCreateInfoEXT'
+-- No documentation found for TopLevel "VkPipelineRasterizationDepthClipStateCreateFlagsEXT"
 newtype VkPipelineRasterizationDepthClipStateCreateFlagsEXT = VkPipelineRasterizationDepthClipStateCreateFlagsEXT VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -143,27 +104,15 @@ instance Read VkPipelineRasterizationDepthClipStateCreateFlagsEXT where
 
 
 
--- | VkPipelineRasterizationDepthClipStateCreateInfoEXT - Structure
--- specifying depth clipping state
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'VkPipelineRasterizationDepthClipStateCreateFlagsEXT',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkPipelineRasterizationDepthClipStateCreateInfoEXT"
 data VkPipelineRasterizationDepthClipStateCreateInfoEXT = VkPipelineRasterizationDepthClipStateCreateInfoEXT
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_DEPTH_CLIP_STATE_CREATE_INFO_EXT'
+  { -- No documentation found for Nested "VkPipelineRasterizationDepthClipStateCreateInfoEXT" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkPipelineRasterizationDepthClipStateCreateInfoEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- | @flags@ /must/ be @0@
+  , -- No documentation found for Nested "VkPipelineRasterizationDepthClipStateCreateInfoEXT" "flags"
   vkFlags :: VkPipelineRasterizationDepthClipStateCreateFlagsEXT
-  , -- | @depthClipEnable@ controls whether depth clipping is enabled as
-  -- described in
-  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#vertexpostproc-clipping Primitive Clipping>.
+  , -- No documentation found for Nested "VkPipelineRasterizationDepthClipStateCreateInfoEXT" "depthClipEnable"
   vkDepthClipEnable :: VkBool32
   }
   deriving (Eq, Show)

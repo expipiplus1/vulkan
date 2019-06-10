@@ -157,14 +157,14 @@ import {-# source #-} Graphics.Vulkan.C.Core10.MemoryManagement
   , VkImage
   )
 import {-# source #-} Graphics.Vulkan.C.Core10.Pass
-  ( VkPipelineBindPoint
-  , VkDependencyFlags
+  ( VkDependencyFlags
+  , VkPipelineBindPoint
   )
 import {-# source #-} Graphics.Vulkan.C.Core10.Pipeline
-  ( VkRect2D
-  , VkViewport
-  , VkPipeline
+  ( VkPipeline
   , VkPipelineLayout
+  , VkRect2D
+  , VkViewport
   )
 import {-# source #-} Graphics.Vulkan.C.Core10.PipelineLayout
   ( VkShaderStageFlags
@@ -174,8 +174,8 @@ import {-# source #-} Graphics.Vulkan.C.Core10.Query
   , VkQueryResultFlags
   )
 import {-# source #-} Graphics.Vulkan.C.Core10.Queue
-  ( VkPipelineStageFlagBits
-  , VkCommandBuffer
+  ( VkCommandBuffer
+  , VkPipelineStageFlagBits
   , VkPipelineStageFlags
   )
 import {-# source #-} Graphics.Vulkan.C.Core10.Sampler
@@ -223,17 +223,7 @@ data VkRenderPassBeginInfo
 
 data VkStencilFaceFlagBits
 
--- | VkStencilFaceFlags - Bitmask of VkStencilFaceFlagBits
---
--- = Description
---
--- 'VkStencilFaceFlags' is a bitmask type for setting a mask of zero or
--- more 'VkStencilFaceFlagBits'.
---
--- = See Also
---
--- 'VkStencilFaceFlagBits', 'vkCmdSetStencilCompareMask',
--- 'vkCmdSetStencilReference', 'vkCmdSetStencilWriteMask'
+-- No documentation found for TopLevel "VkStencilFaceFlags"
 type VkStencilFaceFlags = VkStencilFaceFlagBits
 
 data VkSubpassContents

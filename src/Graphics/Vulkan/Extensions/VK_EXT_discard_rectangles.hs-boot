@@ -16,22 +16,8 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_discard_rectangles
   )
 
 
--- | VkDiscardRectangleModeEXT - Specify the discard rectangle mode
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_discard_rectangles.VkPipelineDiscardRectangleStateCreateInfoEXT'
+-- No documentation found for TopLevel "DiscardRectangleModeEXT"
 type DiscardRectangleModeEXT = VkDiscardRectangleModeEXT
 
--- | VkPipelineDiscardRectangleStateCreateFlagsEXT - Reserved for future use
---
--- = Description
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_discard_rectangles.VkPipelineDiscardRectangleStateCreateFlagsEXT'
--- is a bitmask type for setting a mask, but is currently reserved for
--- future use.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_discard_rectangles.VkPipelineDiscardRectangleStateCreateInfoEXT'
+-- No documentation found for TopLevel "PipelineDiscardRectangleStateCreateFlagsEXT"
 type PipelineDiscardRectangleStateCreateFlagsEXT = VkPipelineDiscardRectangleStateCreateFlagsEXT

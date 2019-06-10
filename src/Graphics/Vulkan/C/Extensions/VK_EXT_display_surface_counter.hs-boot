@@ -35,17 +35,7 @@ data VkSurfaceCapabilities2EXT
 
 data VkSurfaceCounterFlagBitsEXT
 
--- | VkSurfaceCounterFlagsEXT - Bitmask of VkSurfaceCounterFlagBitsEXT
---
--- = Description
---
--- 'VkSurfaceCounterFlagsEXT' is a bitmask type for setting a mask of zero
--- or more 'VkSurfaceCounterFlagBitsEXT'.
---
--- = See Also
---
--- 'VkSurfaceCapabilities2EXT', 'VkSurfaceCounterFlagBitsEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.VkSwapchainCounterCreateInfoEXT'
+-- No documentation found for TopLevel "VkSurfaceCounterFlagsEXT"
 type VkSurfaceCounterFlagsEXT = VkSurfaceCounterFlagBitsEXT
 
 type FN_vkGetPhysicalDeviceSurfaceCapabilities2EXT = ("physicalDevice" ::: VkPhysicalDevice) -> ("surface" ::: VkSurfaceKHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilities2EXT) -> IO VkResult

@@ -99,25 +99,15 @@ instance Read VkMetalSurfaceCreateFlagsEXT where
 
 
 
--- | VkMetalSurfaceCreateInfoEXT - Structure specifying parameters of a newly
--- created Metal surface object
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'VkMetalSurfaceCreateFlagsEXT',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkCreateMetalSurfaceEXT'
+-- No documentation found for TopLevel "VkMetalSurfaceCreateInfoEXT"
 data VkMetalSurfaceCreateInfoEXT = VkMetalSurfaceCreateInfoEXT
-  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT'
+  { -- No documentation found for Nested "VkMetalSurfaceCreateInfoEXT" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- No documentation found for Nested "VkMetalSurfaceCreateInfoEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- | @flags@ /must/ be @0@
+  , -- No documentation found for Nested "VkMetalSurfaceCreateInfoEXT" "flags"
   vkFlags :: VkMetalSurfaceCreateFlagsEXT
-  , -- | @pLayer@ is a reference to a 'CAMetalLayer' object that represents a
-  -- renderable surface.
+  , -- No documentation found for Nested "VkMetalSurfaceCreateInfoEXT" "pLayer"
   vkPLayer :: Ptr CAMetalLayer
   }
   deriving (Eq, Show)
@@ -140,59 +130,7 @@ instance Zero VkMetalSurfaceCreateInfoEXT where
                                      zero
                                      zero
 
--- | vkCreateMetalSurfaceEXT - Create a VkSurfaceKHR object for CAMetalLayer
---
--- = Parameters
---
--- -   @instance@ is the instance with which to associate the surface.
---
--- -   @pCreateInfo@ is a pointer to an instance of the
---     'VkMetalSurfaceCreateInfoEXT' structure containing the parameters
---     affecting the creation of the surface object.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     surface object when there is no more specific allocator available
---     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
---
--- -   @pSurface@ points to a
---     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
---     which the created surface object is returned.
---
--- == Valid Usage (Implicit)
---
--- -   @instance@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
---
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'VkMetalSurfaceCreateInfoEXT' structure
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
---     structure
---
--- -   @pSurface@ /must/ be a valid pointer to a
---     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_NATIVE_WINDOW_IN_USE_KHR'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance',
--- 'VkMetalSurfaceCreateInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR'
+-- No documentation found for TopLevel "vkCreateMetalSurfaceEXT"
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)

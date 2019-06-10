@@ -14,9 +14,5 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_AMD_shader_info
   )
 
 
--- | VkShaderInfoTypeAMD - Enum specifying which type of shader info to query
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_AMD_shader_info.vkGetShaderInfoAMD'
+-- No documentation found for TopLevel "ShaderInfoTypeAMD"
 type ShaderInfoTypeAMD = VkShaderInfoTypeAMD

@@ -19,17 +19,7 @@ data VkPhysicalDeviceDepthStencilResolvePropertiesKHR
 
 data VkResolveModeFlagBitsKHR
 
--- | VkResolveModeFlagsKHR - Bitmask of VkResolveModeFlagBitsKHR
---
--- = Description
---
--- 'VkResolveModeFlagsKHR' is a bitmask type for setting a mask of zero or
--- more 'VkResolveModeFlagBitsKHR'.
---
--- = See Also
---
--- 'VkPhysicalDeviceDepthStencilResolvePropertiesKHR',
--- 'VkResolveModeFlagBitsKHR'
+-- No documentation found for TopLevel "VkResolveModeFlagsKHR"
 type VkResolveModeFlagsKHR = VkResolveModeFlagBitsKHR
 
 data VkSubpassDescriptionDepthStencilResolveKHR

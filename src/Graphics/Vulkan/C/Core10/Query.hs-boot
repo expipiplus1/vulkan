@@ -47,36 +47,12 @@ import {-# source #-} Graphics.Vulkan.C.Core10.DeviceInitialization
 
 data VkQueryPipelineStatisticFlagBits
 
--- | VkQueryPipelineStatisticFlags - Bitmask of
--- VkQueryPipelineStatisticFlagBits
---
--- = Description
---
--- 'VkQueryPipelineStatisticFlags' is a bitmask type for setting a mask of
--- zero or more 'VkQueryPipelineStatisticFlagBits'.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferInheritanceInfo',
--- 'VkQueryPipelineStatisticFlagBits', 'VkQueryPoolCreateInfo'
+-- No documentation found for TopLevel "VkQueryPipelineStatisticFlags"
 type VkQueryPipelineStatisticFlags = VkQueryPipelineStatisticFlagBits
 
 -- | Dummy data to tag the 'Ptr' with
 data VkQueryPool_T
--- | VkQueryPool - Opaque handle to a query pool object
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBeginQuery',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdBeginQueryIndexedEXT',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdCopyQueryPoolResults',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdEndQuery',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdEndQueryIndexedEXT',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdResetQueryPool',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCmdWriteAccelerationStructuresPropertiesNV',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdWriteTimestamp',
--- 'vkCreateQueryPool', 'vkDestroyQueryPool', 'vkGetQueryPoolResults',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_host_query_reset.vkResetQueryPoolEXT'
+-- No documentation found for TopLevel "VkQueryPool"
 type VkQueryPool = Ptr VkQueryPool_T
 
 data VkQueryPoolCreateFlags
@@ -85,18 +61,7 @@ data VkQueryPoolCreateInfo
 
 data VkQueryResultFlagBits
 
--- | VkQueryResultFlags - Bitmask of VkQueryResultFlagBits
---
--- = Description
---
--- 'VkQueryResultFlags' is a bitmask type for setting a mask of zero or
--- more 'VkQueryResultFlagBits'.
---
--- = See Also
---
--- 'VkQueryResultFlagBits',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdCopyQueryPoolResults',
--- 'vkGetQueryPoolResults'
+-- No documentation found for TopLevel "VkQueryResultFlags"
 type VkQueryResultFlags = VkQueryResultFlagBits
 
 data VkQueryType

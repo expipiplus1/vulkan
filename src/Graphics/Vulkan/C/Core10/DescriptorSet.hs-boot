@@ -71,27 +71,12 @@ data VkDescriptorImageInfo
 
 -- | Dummy data to tag the 'Ptr' with
 data VkDescriptorPool_T
--- | VkDescriptorPool - Opaque handle to a descriptor pool object
---
--- = See Also
---
--- 'VkDescriptorSetAllocateInfo', 'vkCreateDescriptorPool',
--- 'vkDestroyDescriptorPool', 'vkFreeDescriptorSets',
--- 'vkResetDescriptorPool'
+-- No documentation found for TopLevel "VkDescriptorPool"
 type VkDescriptorPool = Ptr VkDescriptorPool_T
 
 data VkDescriptorPoolCreateFlagBits
 
--- | VkDescriptorPoolCreateFlags - Bitmask of VkDescriptorPoolCreateFlagBits
---
--- = Description
---
--- 'VkDescriptorPoolCreateFlags' is a bitmask type for setting a mask of
--- zero or more 'VkDescriptorPoolCreateFlagBits'.
---
--- = See Also
---
--- 'VkDescriptorPoolCreateFlagBits', 'VkDescriptorPoolCreateInfo'
+-- No documentation found for TopLevel "VkDescriptorPoolCreateFlags"
 type VkDescriptorPoolCreateFlags = VkDescriptorPoolCreateFlagBits
 
 data VkDescriptorPoolCreateInfo
@@ -102,17 +87,7 @@ data VkDescriptorPoolSize
 
 -- | Dummy data to tag the 'Ptr' with
 data VkDescriptorSet_T
--- | VkDescriptorSet - Opaque handle to a descriptor set object
---
--- = See Also
---
--- 'VkCopyDescriptorSet',
--- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkObjectTableDescriptorSetEntryNVX',
--- 'VkWriteDescriptorSet', 'vkAllocateDescriptorSets',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindDescriptorSets',
--- 'vkFreeDescriptorSets',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.vkUpdateDescriptorSetWithTemplate',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template.vkUpdateDescriptorSetWithTemplateKHR'
+-- No documentation found for TopLevel "VkDescriptorSet"
 type VkDescriptorSet = Ptr VkDescriptorSet_T
 
 data VkDescriptorSetAllocateInfo
@@ -121,17 +96,7 @@ data VkDescriptorSetLayoutBinding
 
 data VkDescriptorSetLayoutCreateFlagBits
 
--- | VkDescriptorSetLayoutCreateFlags - Bitmask of
--- VkDescriptorSetLayoutCreateFlagBits
---
--- = Description
---
--- 'VkDescriptorSetLayoutCreateFlags' is a bitmask type for setting a mask
--- of zero or more 'VkDescriptorSetLayoutCreateFlagBits'.
---
--- = See Also
---
--- 'VkDescriptorSetLayoutCreateFlagBits', 'VkDescriptorSetLayoutCreateInfo'
+-- No documentation found for TopLevel "VkDescriptorSetLayoutCreateFlags"
 type VkDescriptorSetLayoutCreateFlags = VkDescriptorSetLayoutCreateFlagBits
 
 data VkDescriptorSetLayoutCreateInfo

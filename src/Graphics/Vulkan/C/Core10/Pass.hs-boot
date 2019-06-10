@@ -60,40 +60,14 @@ import {-# source #-} Graphics.Vulkan.C.Core10.Pipeline
 
 data VkAccessFlagBits
 
--- | VkAccessFlags - Bitmask of VkAccessFlagBits
---
--- = Description
---
--- 'VkAccessFlags' is a bitmask type for setting a mask of zero or more
--- 'VkAccessFlagBits'.
---
--- = See Also
---
--- 'VkAccessFlagBits',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkBufferMemoryBarrier',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkImageMemoryBarrier',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkMemoryBarrier',
--- 'VkSubpassDependency',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkSubpassDependency2KHR'
+-- No documentation found for TopLevel "VkAccessFlags"
 type VkAccessFlags = VkAccessFlagBits
 
 data VkAttachmentDescription
 
 data VkAttachmentDescriptionFlagBits
 
--- | VkAttachmentDescriptionFlags - Bitmask of
--- VkAttachmentDescriptionFlagBits
---
--- = Description
---
--- 'VkAttachmentDescriptionFlags' is a bitmask type for setting a mask of
--- zero or more 'VkAttachmentDescriptionFlagBits'.
---
--- = See Also
---
--- 'VkAttachmentDescription',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkAttachmentDescription2KHR',
--- 'VkAttachmentDescriptionFlagBits'
+-- No documentation found for TopLevel "VkAttachmentDescriptionFlags"
 type VkAttachmentDescriptionFlags = VkAttachmentDescriptionFlagBits
 
 data VkAttachmentLoadOp
@@ -104,29 +78,12 @@ data VkAttachmentStoreOp
 
 data VkDependencyFlagBits
 
--- | VkDependencyFlags - Bitmask of VkDependencyFlagBits
---
--- = Description
---
--- 'VkDependencyFlags' is a bitmask type for setting a mask of zero or more
--- 'VkDependencyFlagBits'.
---
--- = See Also
---
--- 'VkDependencyFlagBits', 'VkSubpassDependency',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkSubpassDependency2KHR',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdPipelineBarrier'
+-- No documentation found for TopLevel "VkDependencyFlags"
 type VkDependencyFlags = VkDependencyFlagBits
 
 -- | Dummy data to tag the 'Ptr' with
 data VkFramebuffer_T
--- | VkFramebuffer - Opaque handle to a framebuffer object
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferInheritanceInfo',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkRenderPassBeginInfo',
--- 'vkCreateFramebuffer', 'vkDestroyFramebuffer'
+-- No documentation found for TopLevel "VkFramebuffer"
 type VkFramebuffer = Ptr VkFramebuffer_T
 
 data VkFramebufferCreateFlags
@@ -145,18 +102,7 @@ data VkSubpassDescription
 
 data VkSubpassDescriptionFlagBits
 
--- | VkSubpassDescriptionFlags - Bitmask of VkSubpassDescriptionFlagBits
---
--- = Description
---
--- 'VkSubpassDescriptionFlags' is a bitmask type for setting a mask of zero
--- or more 'VkSubpassDescriptionFlagBits'.
---
--- = See Also
---
--- 'VkSubpassDescription',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkSubpassDescription2KHR',
--- 'VkSubpassDescriptionFlagBits'
+-- No documentation found for TopLevel "VkSubpassDescriptionFlags"
 type VkSubpassDescriptionFlags = VkSubpassDescriptionFlagBits
 
 type FN_vkCreateFramebuffer = ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkFramebufferCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pFramebuffer" ::: Ptr VkFramebuffer) -> IO VkResult

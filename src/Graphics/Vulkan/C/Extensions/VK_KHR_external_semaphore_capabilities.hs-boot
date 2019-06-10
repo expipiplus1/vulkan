@@ -16,11 +16,11 @@ module Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_capabilities
 
 import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities
   ( VkExternalSemaphoreFeatureFlagBits
+  , VkExternalSemaphoreFeatureFlags
   , VkExternalSemaphoreHandleTypeFlagBits
+  , VkExternalSemaphoreHandleTypeFlags
   , VkExternalSemaphoreProperties
   , VkPhysicalDeviceExternalSemaphoreInfo
-  , VkExternalSemaphoreFeatureFlags
-  , VkExternalSemaphoreHandleTypeFlags
   )
 
 

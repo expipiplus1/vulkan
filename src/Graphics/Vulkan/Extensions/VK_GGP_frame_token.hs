@@ -1,13 +1,15 @@
 {-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
 {-# language DuplicateRecordFields #-}
+{-# language PatternSynonyms #-}
 
 module Graphics.Vulkan.Extensions.VK_GGP_frame_token
-  ( withCStructPresentFrameTokenGGP
-  , fromCStructPresentFrameTokenGGP
-  , PresentFrameTokenGGP(..)
-  , pattern GGP_FRAME_TOKEN_EXTENSION_NAME
+  ( 
+#if defined(VK_USE_PLATFORM_GGP)
+  PresentFrameTokenGGP(..)
+  , 
+#endif
+  pattern GGP_FRAME_TOKEN_EXTENSION_NAME
   , pattern GGP_FRAME_TOKEN_SPEC_VERSION
   , pattern STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP
   ) where
@@ -15,69 +17,52 @@ module Graphics.Vulkan.Extensions.VK_GGP_frame_token
 import Data.String
   ( IsString
   )
-import Foreign.Marshal.Utils
-  ( maybePeek
-  , maybeWith
-  )
-import Foreign.Ptr
-  ( castPtr
-  )
 
 
+
+#if defined(VK_USE_PLATFORM_GGP)
 import Graphics.Vulkan.C.Core10.Core
   ( Zero(..)
   )
+#endif
 import Graphics.Vulkan.C.Extensions.VK_GGP_frame_token
-  ( VkPresentFrameTokenGGP(..)
-  , GgpFrameToken
-  , pattern VK_GGP_FRAME_TOKEN_EXTENSION_NAME
+  ( pattern VK_GGP_FRAME_TOKEN_EXTENSION_NAME
   , pattern VK_GGP_FRAME_TOKEN_SPEC_VERSION
-  , pattern VK_STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP
   )
+
+#if defined(VK_USE_PLATFORM_GGP)
+import Graphics.Vulkan.C.Extensions.VK_GGP_frame_token
+  ( GgpFrameToken
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
 import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   ( SomeVkStruct
-  , peekVkStruct
-  , withSomeVkStruct
   )
+#endif
 import Graphics.Vulkan.Core10.Core
   ( pattern STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP
   )
 
 
 
--- | VkPresentFrameTokenGGP - The Google Games Platform frame token
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+#if defined(VK_USE_PLATFORM_GGP)
+
+-- No documentation found for TopLevel "VkPresentFrameTokenGGP"
 data PresentFrameTokenGGP = PresentFrameTokenGGP
-  { -- Univalued member elided
-  -- No documentation found for Nested "PresentFrameTokenGGP" "pNext"
+  { -- No documentation found for Nested "PresentFrameTokenGGP" "pNext"
   next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PresentFrameTokenGGP" "frameToken"
   frameToken :: GgpFrameToken
   }
   deriving (Show, Eq)
 
--- | A function to temporarily allocate memory for a 'VkPresentFrameTokenGGP' and
--- marshal a 'PresentFrameTokenGGP' into it. The 'VkPresentFrameTokenGGP' is only valid inside
--- the provided computation and must not be returned out of it.
-withCStructPresentFrameTokenGGP :: PresentFrameTokenGGP -> (VkPresentFrameTokenGGP -> IO a) -> IO a
-withCStructPresentFrameTokenGGP marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PresentFrameTokenGGP)) (\pPNext -> cont (VkPresentFrameTokenGGP VK_STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP pPNext (frameToken (marshalled :: PresentFrameTokenGGP))))
-
--- | A function to read a 'VkPresentFrameTokenGGP' and all additional
--- structures in the pointer chain into a 'PresentFrameTokenGGP'.
-fromCStructPresentFrameTokenGGP :: VkPresentFrameTokenGGP -> IO PresentFrameTokenGGP
-fromCStructPresentFrameTokenGGP c = PresentFrameTokenGGP <$> -- Univalued Member elided
-                                                         maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPresentFrameTokenGGP)))
-                                                         <*> pure (vkFrameToken (c :: VkPresentFrameTokenGGP))
-
 instance Zero PresentFrameTokenGGP where
   zero = PresentFrameTokenGGP Nothing
                               zero
 
+#endif
 
 -- No documentation found for TopLevel "VK_GGP_FRAME_TOKEN_EXTENSION_NAME"
 pattern GGP_FRAME_TOKEN_EXTENSION_NAME :: (Eq a, IsString a) => a

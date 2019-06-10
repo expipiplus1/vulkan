@@ -37,42 +37,15 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
   )
 
 
--- | VkPhysicalDeviceMemoryBudgetPropertiesEXT - Structure specifying
--- physical device memory budget and usage
---
--- = Description
---
--- The values returned in this structure are not invariant. The
--- @heapBudget@ and @heapUsage@ values /must/ be zero for array elements
--- greater than or equal to
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceMemoryProperties'::@memoryHeapCount@.
--- The @heapBudget@ value /must/ be non-zero for array elements less than
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceMemoryProperties'::@memoryHeapCount@.
--- The @heapBudget@ value /must/ be less than or equal to
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkMemoryHeap'::@size@ for
--- each heap.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkPhysicalDeviceMemoryBudgetPropertiesEXT"
 data VkPhysicalDeviceMemoryBudgetPropertiesEXT = VkPhysicalDeviceMemoryBudgetPropertiesEXT
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT'
+  { -- No documentation found for Nested "VkPhysicalDeviceMemoryBudgetPropertiesEXT" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkPhysicalDeviceMemoryBudgetPropertiesEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- | @heapBudget@ is an array of memory budgets, with one element for each
-  -- memory heap. A heap’s budget is a rough estimate of how much memory the
-  -- process /can/ allocate from that heap before allocations /may/ fail or
-  -- cause performance degradation. The budget includes any currently
-  -- allocated device memory.
+  , -- No documentation found for Nested "VkPhysicalDeviceMemoryBudgetPropertiesEXT" "heapBudget"
   vkHeapBudget :: Vector VK_MAX_MEMORY_HEAPS VkDeviceSize
-  , -- | @heapUsage@ is an array of memory usage, with one element for each
-  -- memory heap. A heap’s usage is an estimate of how much memory the
-  -- process is currently using in that heap.
+  , -- No documentation found for Nested "VkPhysicalDeviceMemoryBudgetPropertiesEXT" "heapUsage"
   vkHeapUsage :: Vector VK_MAX_MEMORY_HEAPS VkDeviceSize
   }
   deriving (Eq, Show)

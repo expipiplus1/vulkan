@@ -42,30 +42,14 @@ data VkFilter
 
 -- | Dummy data to tag the 'Ptr' with
 data VkSampler_T
--- | VkSampler - Opaque handle to a sampler object
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorImageInfo',
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutBinding',
--- 'Graphics.Vulkan.C.Extensions.VK_NVX_image_view_handle.VkImageViewHandleInfoNVX',
--- 'vkCreateSampler', 'vkDestroySampler'
+-- No documentation found for TopLevel "VkSampler"
 type VkSampler = Ptr VkSampler_T
 
 data VkSamplerAddressMode
 
 data VkSamplerCreateFlagBits
 
--- | VkSamplerCreateFlags - Reserved for future use
---
--- = Description
---
--- 'VkSamplerCreateFlags' is a bitmask type for setting a mask of zero or
--- more 'VkSamplerCreateFlagBits'.
---
--- = See Also
---
--- 'VkSamplerCreateFlagBits', 'VkSamplerCreateInfo'
+-- No documentation found for TopLevel "VkSamplerCreateFlags"
 type VkSamplerCreateFlags = VkSamplerCreateFlagBits
 
 data VkSamplerCreateInfo

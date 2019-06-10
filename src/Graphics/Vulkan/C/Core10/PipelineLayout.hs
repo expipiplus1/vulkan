@@ -79,29 +79,12 @@ import Graphics.Vulkan.NamedType
 
 -- | Dummy data to tag the 'Ptr' with
 data VkDescriptorSetLayout_T
--- | VkDescriptorSetLayout - Opaque handle to a descriptor set layout object
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetAllocateInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplateCreateInfo',
--- 'VkPipelineLayoutCreateInfo',
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkCreateDescriptorSetLayout',
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.vkDestroyDescriptorSetLayout'
+-- No documentation found for TopLevel "VkDescriptorSetLayout"
 type VkDescriptorSetLayout = Ptr VkDescriptorSetLayout_T
 
 -- ** VkPipelineLayoutCreateFlags
 
--- | VkPipelineLayoutCreateFlags - Reserved for future use
---
--- = Description
---
--- 'VkPipelineLayoutCreateFlags' is a bitmask type for setting a mask, but
--- is currently reserved for future use.
---
--- = See Also
---
--- 'VkPipelineLayoutCreateInfo'
+-- No documentation found for TopLevel "VkPipelineLayoutCreateFlags"
 newtype VkPipelineLayoutCreateFlags = VkPipelineLayoutCreateFlags VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -121,167 +104,21 @@ instance Read VkPipelineLayoutCreateFlags where
 
 
 
--- | VkPipelineLayoutCreateInfo - Structure specifying the parameters of a
--- newly created pipeline layout object
---
--- == Valid Usage
---
--- -   @setLayoutCount@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxBoundDescriptorSets@
---
--- -   The total number of descriptors of the type
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLER'
---     and
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
---     accessible to any shader stage across all elements of @pSetLayouts@
---     /must/ be less than or equal to
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxPerStageDescriptorSamplers@
---
--- -   The total number of descriptors of the type
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER'
---     and
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
---     accessible to any shader stage across all elements of @pSetLayouts@
---     /must/ be less than or equal to
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxPerStageDescriptorUniformBuffers@
---
--- -   The total number of descriptors of the type
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER'
---     and
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
---     accessible to any shader stage across all elements of @pSetLayouts@
---     /must/ be less than or equal to
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxPerStageDescriptorStorageBuffers@
---
--- -   The total number of descriptors of the type
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE',
---     and
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
---     accessible to any shader stage across all elements of @pSetLayouts@
---     /must/ be less than or equal to
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxPerStageDescriptorSampledImages@
---
--- -   The total number of descriptors of the type
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE',
---     and
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
---     accessible to any shader stage across all elements of @pSetLayouts@
---     /must/ be less than or equal to
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxPerStageDescriptorStorageImages@
---
--- -   The total number of descriptors of the type
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
---     accessible to any given shader stage across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxPerStageDescriptorInputAttachments@
---
--- -   The total number of descriptors of the type
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLER'
---     and
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
---     accessible across all shader stages and across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxDescriptorSetSamplers@
---
--- -   The total number of descriptors of the type
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER'
---     accessible across all shader stages and across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxDescriptorSetUniformBuffers@
---
--- -   The total number of descriptors of the type
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
---     accessible across all shader stages and across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxDescriptorSetUniformBuffersDynamic@
---
--- -   The total number of descriptors of the type
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER'
---     accessible across all shader stages and across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxDescriptorSetStorageBuffers@
---
--- -   The total number of descriptors of the type
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
---     accessible across all shader stages and across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxDescriptorSetStorageBuffersDynamic@
---
--- -   The total number of descriptors of the type
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE',
---     and
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
---     accessible across all shader stages and across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxDescriptorSetSampledImages@
---
--- -   The total number of descriptors of the type
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE',
---     and
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
---     accessible across all shader stages and across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxDescriptorSetStorageImages@
---
--- -   The total number of descriptors of the type
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
---     accessible across all shader stages and across all elements of
---     @pSetLayouts@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxDescriptorSetInputAttachments@
---
--- -   Any two elements of @pPushConstantRanges@ /must/ not include the
---     same stage in @stageFlags@
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO'
---
--- -   @pNext@ /must/ be @NULL@
---
--- -   @flags@ /must/ be @0@
---
--- -   If @setLayoutCount@ is not @0@, @pSetLayouts@ /must/ be a valid
---     pointer to an array of @setLayoutCount@ valid
---     'VkDescriptorSetLayout' handles
---
--- -   If @pushConstantRangeCount@ is not @0@, @pPushConstantRanges@ /must/
---     be a valid pointer to an array of @pushConstantRangeCount@ valid
---     'VkPushConstantRange' structures
---
--- = See Also
---
--- 'VkDescriptorSetLayout', 'VkPipelineLayoutCreateFlags',
--- 'VkPushConstantRange', 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkCreatePipelineLayout'
+-- No documentation found for TopLevel "VkPipelineLayoutCreateInfo"
 data VkPipelineLayoutCreateInfo = VkPipelineLayoutCreateInfo
-  { -- | @sType@ is the type of this structure.
+  { -- No documentation found for Nested "VkPipelineLayoutCreateInfo" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkPipelineLayoutCreateInfo" "pNext"
   vkPNext :: Ptr ()
-  , -- | @flags@ is reserved for future use.
+  , -- No documentation found for Nested "VkPipelineLayoutCreateInfo" "flags"
   vkFlags :: VkPipelineLayoutCreateFlags
-  , -- | @setLayoutCount@ is the number of descriptor sets included in the
-  -- pipeline layout.
+  , -- No documentation found for Nested "VkPipelineLayoutCreateInfo" "setLayoutCount"
   vkSetLayoutCount :: Word32
-  , -- | @pSetLayouts@ is a pointer to an array of 'VkDescriptorSetLayout'
-  -- objects.
+  , -- No documentation found for Nested "VkPipelineLayoutCreateInfo" "pSetLayouts"
   vkPSetLayouts :: Ptr VkDescriptorSetLayout
-  , -- | @pushConstantRangeCount@ is the number of push constant ranges included
-  -- in the pipeline layout.
+  , -- No documentation found for Nested "VkPipelineLayoutCreateInfo" "pushConstantRangeCount"
   vkPushConstantRangeCount :: Word32
-  , -- | @pPushConstantRanges@ is a pointer to an array of 'VkPushConstantRange'
-  -- structures defining a set of push constant ranges for use in a single
-  -- pipeline layout. In addition to descriptor set layouts, a pipeline
-  -- layout also describes how many push constants /can/ be accessed by each
-  -- stage of the pipeline.
-  --
-  -- __Note__
-  --
-  -- Push constants represent a high speed path to modify constant data in
-  -- pipelines that is expected to outperform memory-backed resource updates.
+  , -- No documentation found for Nested "VkPipelineLayoutCreateInfo" "pPushConstantRanges"
   vkPPushConstantRanges :: Ptr VkPushConstantRange
   }
   deriving (Eq, Show)
@@ -313,21 +150,13 @@ instance Zero VkPipelineLayoutCreateInfo where
                                     zero
                                     zero
 
--- | VkPushConstantRange - Structure specifying a push constant range
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'VkPipelineLayoutCreateInfo', 'VkShaderStageFlags'
+-- No documentation found for TopLevel "VkPushConstantRange"
 data VkPushConstantRange = VkPushConstantRange
-  { -- | @stageFlags@ /must/ not be @0@
+  { -- No documentation found for Nested "VkPushConstantRange" "stageFlags"
   vkStageFlags :: VkShaderStageFlags
-  , -- | @offset@ /must/ be a multiple of @4@
+  , -- No documentation found for Nested "VkPushConstantRange" "offset"
   vkOffset :: Word32
-  , -- | @size@ /must/ be less than or equal to
-  -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxPushConstantsSize@
-  -- minus @offset@
+  , -- No documentation found for Nested "VkPushConstantRange" "size"
   vkSize :: Word32
   }
   deriving (Eq, Show)
@@ -347,75 +176,10 @@ instance Zero VkPushConstantRange where
                              zero
                              zero
 
--- | VkShaderStageFlags - Bitmask of VkShaderStageFlagBits
---
--- = Description
---
--- 'VkShaderStageFlags' is a bitmask type for setting a mask of zero or
--- more 'Graphics.Vulkan.C.Core10.Pipeline.VkShaderStageFlagBits'.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutBinding',
--- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkObjectTablePushConstantEntryNVX',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkPhysicalDeviceCooperativeMatrixPropertiesNV',
--- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VkPhysicalDeviceSubgroupProperties',
--- 'VkPushConstantRange',
--- 'Graphics.Vulkan.C.Core10.Pipeline.VkShaderStageFlagBits',
--- 'Graphics.Vulkan.C.Extensions.VK_AMD_shader_info.VkShaderStatisticsInfoAMD',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdPushConstants'
+-- No documentation found for TopLevel "VkShaderStageFlags"
 type VkShaderStageFlags = VkShaderStageFlagBits
 
--- | vkCreatePipelineLayout - Creates a new pipeline layout object
---
--- = Parameters
---
--- -   @device@ is the logical device that creates the pipeline layout.
---
--- -   @pCreateInfo@ is a pointer to an instance of the
---     'VkPipelineLayoutCreateInfo' structure specifying the state of the
---     pipeline layout object.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pPipelineLayout@ points to a
---     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' handle in which
---     the resulting pipeline layout object is returned.
---
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
---
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'VkPipelineLayoutCreateInfo' structure
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
---     structure
---
--- -   @pPipelineLayout@ /must/ be a valid pointer to a
---     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
--- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout',
--- 'VkPipelineLayoutCreateInfo'
+-- No documentation found for TopLevel "vkCreatePipelineLayout"
 #if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -436,62 +200,7 @@ foreign import ccall
 type FN_vkCreatePipelineLayout = ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkPipelineLayoutCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pPipelineLayout" ::: Ptr VkPipelineLayout) -> IO VkResult
 type PFN_vkCreatePipelineLayout = FunPtr FN_vkCreatePipelineLayout
 
--- | vkDestroyPipelineLayout - Destroy a pipeline layout object
---
--- = Parameters
---
--- -   @device@ is the logical device that destroys the pipeline layout.
---
--- -   @pipelineLayout@ is the pipeline layout to destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- == Valid Usage
---
--- -   If
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
---     were provided when @pipelineLayout@ was created, a compatible set of
---     callbacks /must/ be provided here
---
--- -   If no
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
---     were provided when @pipelineLayout@ was created, @pAllocator@ /must/
---     be @NULL@
---
--- -   @pipelineLayout@ /must/ not have been passed to any @vkCmd*@ command
---     for any command buffers that are still in the
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
---     when 'vkDestroyPipelineLayout' is called
---
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
---
--- -   If @pipelineLayout@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE',
---     @pipelineLayout@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout' handle
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
---     structure
---
--- -   If @pipelineLayout@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
---
--- == Host Synchronization
---
--- -   Host access to @pipelineLayout@ /must/ be externally synchronized
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
--- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineLayout'
+-- No documentation found for TopLevel "vkDestroyPipelineLayout"
 #if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)

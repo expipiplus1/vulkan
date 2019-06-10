@@ -38,23 +38,7 @@ import Graphics.Vulkan.NamedType
   )
 
 
--- | vkReleaseDisplayEXT - Release access to an acquired VkDisplayKHR
---
--- = Parameters
---
--- -   @physicalDevice@ The physical device the display is on.
---
--- -   @display@ The display to release control of.
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayKHR',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+-- No documentation found for TopLevel "vkReleaseDisplayEXT"
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)

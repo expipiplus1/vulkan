@@ -11,28 +11,13 @@ module Graphics.Vulkan.Core10.Shader
 
 
 import {-# source #-} Graphics.Vulkan.C.Core10.Shader
-  ( VkShaderModuleCreateFlags
-  , VkShaderModule
+  ( VkShaderModule
+  , VkShaderModuleCreateFlags
   )
 
 
--- | VkShaderModule - Opaque handle to a shader module object
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineShaderStageCreateInfo',
--- 'Graphics.Vulkan.C.Core10.Shader.vkCreateShaderModule',
--- 'Graphics.Vulkan.C.Core10.Shader.vkDestroyShaderModule'
+-- No documentation found for TopLevel "ShaderModule"
 type ShaderModule = VkShaderModule
 
--- | VkShaderModuleCreateFlags - Reserved for future use
---
--- = Description
---
--- 'Graphics.Vulkan.C.Core10.Shader.VkShaderModuleCreateFlags' is a bitmask
--- type for setting a mask, but is currently reserved for future use.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Shader.VkShaderModuleCreateInfo'
+-- No documentation found for TopLevel "ShaderModuleCreateFlags"
 type ShaderModuleCreateFlags = VkShaderModuleCreateFlags

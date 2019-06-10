@@ -55,43 +55,27 @@ import Graphics.Vulkan.NamedType
   )
 
 
--- | VkHdrMetadataEXT - structure to specify Hdr metadata
---
--- == Valid Usage (Implicit)
---
--- __Note__
---
--- The validity and use of this data is outside the scope of Vulkan.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType', 'VkXYColorEXT',
--- 'vkSetHdrMetadataEXT'
+-- No documentation found for TopLevel "VkHdrMetadataEXT"
 data VkHdrMetadataEXT = VkHdrMetadataEXT
-  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_HDR_METADATA_EXT'
+  { -- No documentation found for Nested "VkHdrMetadataEXT" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- No documentation found for Nested "VkHdrMetadataEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- | @displayPrimaryRed@ is the mastering display’s red primary in
-  -- chromaticity coordinates
+  , -- No documentation found for Nested "VkHdrMetadataEXT" "displayPrimaryRed"
   vkDisplayPrimaryRed :: VkXYColorEXT
-  , -- | @displayPrimaryGreen@ is the mastering display’s green primary in
-  -- chromaticity coordinates
+  , -- No documentation found for Nested "VkHdrMetadataEXT" "displayPrimaryGreen"
   vkDisplayPrimaryGreen :: VkXYColorEXT
-  , -- | @displayPrimaryBlue@ is the mastering display’s blue primary in
-  -- chromaticity coordinates
+  , -- No documentation found for Nested "VkHdrMetadataEXT" "displayPrimaryBlue"
   vkDisplayPrimaryBlue :: VkXYColorEXT
-  , -- | @whitePoint@ is the mastering display’s white-point in chromaticity
-  -- coordinates
+  , -- No documentation found for Nested "VkHdrMetadataEXT" "whitePoint"
   vkWhitePoint :: VkXYColorEXT
-  , -- | @maxLuminance@ is the maximum luminance of the mastering display in nits
+  , -- No documentation found for Nested "VkHdrMetadataEXT" "maxLuminance"
   vkMaxLuminance :: CFloat
-  , -- | @minLuminance@ is the minimum luminance of the mastering display in nits
+  , -- No documentation found for Nested "VkHdrMetadataEXT" "minLuminance"
   vkMinLuminance :: CFloat
-  , -- | @maxContentLightLevel@ is content’s maximum luminance in nits
+  , -- No documentation found for Nested "VkHdrMetadataEXT" "maxContentLightLevel"
   vkMaxContentLightLevel :: CFloat
-  , -- | @maxFrameAverageLightLevel@ is the maximum frame average light level in
-  -- nits
+  , -- No documentation found for Nested "VkHdrMetadataEXT" "maxFrameAverageLightLevel"
   vkMaxFrameAverageLightLevel :: CFloat
   }
   deriving (Eq, Show)
@@ -132,11 +116,7 @@ instance Zero VkHdrMetadataEXT where
                           zero
                           zero
 
--- | VkXYColorEXT - structure to specify X,Y chromaticity coordinates
---
--- = See Also
---
--- 'VkHdrMetadataEXT'
+-- No documentation found for TopLevel "VkXYColorEXT"
 data VkXYColorEXT = VkXYColorEXT
   { -- No documentation found for Nested "VkXYColorEXT" "x"
   vkX :: CFloat
@@ -157,46 +137,7 @@ instance Zero VkXYColorEXT where
   zero = VkXYColorEXT zero
                       zero
 
--- | vkSetHdrMetadataEXT - function to set Hdr metadata
---
--- = Parameters
---
--- -   @device@ is the logical device where the swapchain(s) were created.
---
--- -   @swapchainCount@ is the number of swapchains included in
---     @pSwapchains@.
---
--- -   @pSwapchains@ is a pointer to the array of @swapchainCount@
---     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
---     handles.
---
--- -   @pMetadata@ is a pointer to the array of @swapchainCount@
---     'VkHdrMetadataEXT' structures.
---
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
---
--- -   @pSwapchains@ /must/ be a valid pointer to an array of
---     @swapchainCount@ valid
---     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
---     handles
---
--- -   @pMetadata@ /must/ be a valid pointer to an array of
---     @swapchainCount@ valid 'VkHdrMetadataEXT' structures
---
--- -   @swapchainCount@ /must/ be greater than @0@
---
--- -   Both of @device@, and the elements of @pSwapchains@ /must/ have been
---     created, allocated, or retrieved from the same
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
--- 'VkHdrMetadataEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
+-- No documentation found for TopLevel "vkSetHdrMetadataEXT"
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)

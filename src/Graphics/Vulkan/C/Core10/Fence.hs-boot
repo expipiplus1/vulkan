@@ -47,16 +47,7 @@ import {-# source #-} Graphics.Vulkan.C.Core10.Queue
 
 data VkFenceCreateFlagBits
 
--- | VkFenceCreateFlags - Bitmask of VkFenceCreateFlagBits
---
--- = Description
---
--- 'VkFenceCreateFlags' is a bitmask type for setting a mask of zero or
--- more 'VkFenceCreateFlagBits'.
---
--- = See Also
---
--- 'VkFenceCreateFlagBits', 'VkFenceCreateInfo'
+-- No documentation found for TopLevel "VkFenceCreateFlags"
 type VkFenceCreateFlags = VkFenceCreateFlagBits
 
 data VkFenceCreateInfo

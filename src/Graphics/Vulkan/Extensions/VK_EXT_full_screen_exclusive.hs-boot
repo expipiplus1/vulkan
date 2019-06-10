@@ -14,10 +14,5 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive
   )
 
 
--- | VkFullScreenExclusiveEXT - Hint values an application can specify
--- affecting full-screen transition behavior
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.VkSurfaceFullScreenExclusiveInfoEXT'
+-- No documentation found for TopLevel "FullScreenExclusiveEXT"
 type FullScreenExclusiveEXT = VkFullScreenExclusiveEXT

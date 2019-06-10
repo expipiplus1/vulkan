@@ -16,20 +16,8 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix
   )
 
 
--- | VkComponentTypeNV - Specify SPIR-V cooperative matrix component type
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkCooperativeMatrixPropertiesNV'
+-- No documentation found for TopLevel "ComponentTypeNV"
 type ComponentTypeNV = VkComponentTypeNV
 
--- | VkScopeNV - Specify SPIR-V scope
---
--- = Description
---
--- All enum values match the corresponding SPIR-V value.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkCooperativeMatrixPropertiesNV'
+-- No documentation found for TopLevel "ScopeNV"
 type ScopeNV = VkScopeNV

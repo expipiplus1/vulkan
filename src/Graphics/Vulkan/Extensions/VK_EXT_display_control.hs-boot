@@ -18,23 +18,11 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_display_control
   )
 
 
--- | VkDeviceEventTypeEXT - Events that can occur on a device object
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.VkDeviceEventInfoEXT'
+-- No documentation found for TopLevel "DeviceEventTypeEXT"
 type DeviceEventTypeEXT = VkDeviceEventTypeEXT
 
--- | VkDisplayEventTypeEXT - Events that can occur on a display object
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.VkDisplayEventInfoEXT'
+-- No documentation found for TopLevel "DisplayEventTypeEXT"
 type DisplayEventTypeEXT = VkDisplayEventTypeEXT
 
--- | VkDisplayPowerStateEXT - Possible power states for a display
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.VkDisplayPowerInfoEXT'
+-- No documentation found for TopLevel "DisplayPowerStateEXT"
 type DisplayPowerStateEXT = VkDisplayPowerStateEXT

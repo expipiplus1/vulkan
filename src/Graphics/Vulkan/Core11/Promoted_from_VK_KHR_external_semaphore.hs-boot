@@ -17,34 +17,13 @@ import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_sem
   )
 
 
--- | VkSemaphoreImportFlagBits - Bitmask specifying additional parameters of
--- semaphore payload import
---
--- = Description
---
--- These bits have the following meanings:
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore.VkSemaphoreImportFlags'
+-- No documentation found for TopLevel "SemaphoreImportFlagBits"
 type SemaphoreImportFlagBits = VkSemaphoreImportFlagBits
 
 -- No documentation found for TopLevel "SemaphoreImportFlagBitsKHR"
 type SemaphoreImportFlagBitsKHR = SemaphoreImportFlagBits
 
--- | VkSemaphoreImportFlags - Bitmask of VkSemaphoreImportFlagBits
---
--- = Description
---
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore.VkSemaphoreImportFlags'
--- is a bitmask type for setting a mask of zero or more
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore.VkSemaphoreImportFlagBits'.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd.VkImportSemaphoreFdInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32.VkImportSemaphoreWin32HandleInfoKHR',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore.VkSemaphoreImportFlagBits'
+-- No documentation found for TopLevel "SemaphoreImportFlags"
 type SemaphoreImportFlags = SemaphoreImportFlagBits
 
 -- No documentation found for TopLevel "SemaphoreImportFlagsKHR"

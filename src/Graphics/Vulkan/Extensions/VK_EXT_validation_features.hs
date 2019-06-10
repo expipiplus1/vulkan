@@ -16,50 +16,36 @@ module Graphics.Vulkan.Extensions.VK_EXT_validation_features
   , ValidationFeatureEnableEXT
   , pattern VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT
   , pattern VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT
-  , withCStructValidationFeaturesEXT
-  , fromCStructValidationFeaturesEXT
+#if defined(VK_USE_PLATFORM_GGP)
   , ValidationFeaturesEXT(..)
+#endif
   , pattern EXT_VALIDATION_FEATURES_EXTENSION_NAME
   , pattern EXT_VALIDATION_FEATURES_SPEC_VERSION
   , pattern STRUCTURE_TYPE_VALIDATION_FEATURES_EXT
   ) where
 
-import Data.Function
-  ( (&)
-  )
 import Data.String
   ( IsString
   )
+
+#if defined(VK_USE_PLATFORM_GGP)
 import Data.Vector
   ( Vector
   )
-import qualified Data.Vector
-  ( empty
-  , generateM
-  , length
-  )
-import Foreign.Marshal.Utils
-  ( maybePeek
-  , maybeWith
-  )
-import Foreign.Ptr
-  ( castPtr
-  )
-import Foreign.Storable
-  ( peekElemOff
-  )
+#endif
 
 
+
+#if defined(VK_USE_PLATFORM_GGP)
 import Graphics.Vulkan.C.Core10.Core
   ( Zero(..)
   )
+#endif
 import Graphics.Vulkan.C.Extensions.VK_EXT_validation_features
   ( VkValidationFeatureDisableEXT(..)
   , VkValidationFeatureEnableEXT(..)
-  , VkValidationFeaturesEXT(..)
   , pattern VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME
   , pattern VK_EXT_VALIDATION_FEATURES_SPEC_VERSION
-  , pattern VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT
   , pattern VK_VALIDATION_FEATURE_DISABLE_ALL_EXT
   , pattern VK_VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT
   , pattern VK_VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT
@@ -70,169 +56,94 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_validation_features
   , pattern VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT
   , pattern VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT
   )
-import Graphics.Vulkan.Marshal.Utils
-  ( withVec
-  )
+
+#if defined(VK_USE_PLATFORM_GGP)
 import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   ( SomeVkStruct
-  , peekVkStruct
-  , withSomeVkStruct
   )
+#endif
 import Graphics.Vulkan.Core10.Core
   ( pattern STRUCTURE_TYPE_VALIDATION_FEATURES_EXT
   )
 
 
--- | VkValidationFeatureDisableEXT - Specify validation features to disable
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VkValidationFeaturesEXT'
+-- No documentation found for TopLevel "ValidationFeatureDisableEXT"
 type ValidationFeatureDisableEXT = VkValidationFeatureDisableEXT
 
 
 {-# complete VALIDATION_FEATURE_DISABLE_ALL_EXT, VALIDATION_FEATURE_DISABLE_SHADERS_EXT, VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT, VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT, VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT, VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT, VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT :: ValidationFeatureDisableEXT #-}
 
 
--- | 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VK_VALIDATION_FEATURE_DISABLE_ALL_EXT'
--- specifies that all validation checks are disabled.
+-- No documentation found for Nested "ValidationFeatureDisableEXT" "VALIDATION_FEATURE_DISABLE_ALL_EXT"
 pattern VALIDATION_FEATURE_DISABLE_ALL_EXT :: (a ~ ValidationFeatureDisableEXT) => a
 pattern VALIDATION_FEATURE_DISABLE_ALL_EXT = VK_VALIDATION_FEATURE_DISABLE_ALL_EXT
 
 
--- | 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VK_VALIDATION_FEATURE_DISABLE_SHADERS_EXT'
--- specifies that shader validation is disabled. This feature is enabled by
--- default.
+-- No documentation found for Nested "ValidationFeatureDisableEXT" "VALIDATION_FEATURE_DISABLE_SHADERS_EXT"
 pattern VALIDATION_FEATURE_DISABLE_SHADERS_EXT :: (a ~ ValidationFeatureDisableEXT) => a
 pattern VALIDATION_FEATURE_DISABLE_SHADERS_EXT = VK_VALIDATION_FEATURE_DISABLE_SHADERS_EXT
 
 
--- | 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VK_VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT'
--- specifies that thread safety validation is disabled. This feature is
--- enabled by default.
+-- No documentation found for Nested "ValidationFeatureDisableEXT" "VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT"
 pattern VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT :: (a ~ ValidationFeatureDisableEXT) => a
 pattern VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT = VK_VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT
 
 
--- | 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VK_VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT'
--- specifies that stateless parameter validation is disabled. This feature
--- is enabled by default.
+-- No documentation found for Nested "ValidationFeatureDisableEXT" "VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT"
 pattern VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT :: (a ~ ValidationFeatureDisableEXT) => a
 pattern VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT = VK_VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT
 
 
--- | 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VK_VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT'
--- specifies that object lifetime validation is disabled. This feature is
--- enabled by default.
+-- No documentation found for Nested "ValidationFeatureDisableEXT" "VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT"
 pattern VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT :: (a ~ ValidationFeatureDisableEXT) => a
 pattern VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT = VK_VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT
 
 
--- | 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VK_VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT'
--- specifies that core validation checks are disabled. This feature is
--- enabled by default. If this feature is disabled, the shader validation
--- and GPU-assisted validation features are also disabled.
+-- No documentation found for Nested "ValidationFeatureDisableEXT" "VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT"
 pattern VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT :: (a ~ ValidationFeatureDisableEXT) => a
 pattern VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT = VK_VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT
 
 
--- | 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VK_VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT'
--- specifies that protection against duplicate non-dispatchable object
--- handles is disabled. This feature is enabled by default.
+-- No documentation found for Nested "ValidationFeatureDisableEXT" "VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT"
 pattern VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT :: (a ~ ValidationFeatureDisableEXT) => a
 pattern VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT = VK_VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT
 
--- | VkValidationFeatureEnableEXT - Specify validation features to enable
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VkValidationFeaturesEXT'
+-- No documentation found for TopLevel "ValidationFeatureEnableEXT"
 type ValidationFeatureEnableEXT = VkValidationFeatureEnableEXT
 
 
 {-# complete VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT, VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT :: ValidationFeatureEnableEXT #-}
 
 
--- | 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT'
--- specifies that GPU-assisted validation is enabled. Activating this
--- feature instruments shader programs to generate additional diagnostic
--- data. This feature is disabled by default.
+-- No documentation found for Nested "ValidationFeatureEnableEXT" "VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT"
 pattern VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT :: (a ~ ValidationFeatureEnableEXT) => a
 pattern VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT = VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT
 
 
--- | 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT'
--- specifies that the validation layers reserve a descriptor set binding
--- slot for their own use. The layer reports a value for
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxBoundDescriptorSets@
--- that is one less than the value reported by the device. If the device
--- supports the binding of only one descriptor set, the validation layer
--- does not perform GPU-assisted validation. This feature is disabled by
--- default. The GPU-assisted validation feature must be enabled in order to
--- use this feature.
+-- No documentation found for Nested "ValidationFeatureEnableEXT" "VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT"
 pattern VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT :: (a ~ ValidationFeatureEnableEXT) => a
 pattern VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT = VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT
 
 
--- | VkValidationFeaturesEXT - Specify validation features to enable or
--- disable for a Vulkan instance
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT'
---
--- -   If @enabledValidationFeatureCount@ is not @0@,
---     @pEnabledValidationFeatures@ /must/ be a valid pointer to an array
---     of @enabledValidationFeatureCount@ valid
---     'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VkValidationFeatureEnableEXT'
---     values
---
--- -   If @disabledValidationFeatureCount@ is not @0@,
---     @pDisabledValidationFeatures@ /must/ be a valid pointer to an array
---     of @disabledValidationFeatureCount@ valid
---     'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VkValidationFeatureDisableEXT'
---     values
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VkValidationFeatureDisableEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VkValidationFeatureEnableEXT'
+#if defined(VK_USE_PLATFORM_GGP)
+
+-- No documentation found for TopLevel "VkValidationFeaturesEXT"
 data ValidationFeaturesEXT = ValidationFeaturesEXT
-  { -- Univalued member elided
-  -- No documentation found for Nested "ValidationFeaturesEXT" "pNext"
+  { -- No documentation found for Nested "ValidationFeaturesEXT" "pNext"
   next :: Maybe SomeVkStruct
-  -- Length valued member elided
   , -- No documentation found for Nested "ValidationFeaturesEXT" "pEnabledValidationFeatures"
   enabledValidationFeatures :: Vector ValidationFeatureEnableEXT
-  -- Length valued member elided
   , -- No documentation found for Nested "ValidationFeaturesEXT" "pDisabledValidationFeatures"
   disabledValidationFeatures :: Vector ValidationFeatureDisableEXT
   }
   deriving (Show, Eq)
 
--- | A function to temporarily allocate memory for a 'VkValidationFeaturesEXT' and
--- marshal a 'ValidationFeaturesEXT' into it. The 'VkValidationFeaturesEXT' is only valid inside
--- the provided computation and must not be returned out of it.
-withCStructValidationFeaturesEXT :: ValidationFeaturesEXT -> (VkValidationFeaturesEXT -> IO a) -> IO a
-withCStructValidationFeaturesEXT marshalled cont = withVec (&) (disabledValidationFeatures (marshalled :: ValidationFeaturesEXT)) (\pPDisabledValidationFeatures -> withVec (&) (enabledValidationFeatures (marshalled :: ValidationFeaturesEXT)) (\pPEnabledValidationFeatures -> maybeWith withSomeVkStruct (next (marshalled :: ValidationFeaturesEXT)) (\pPNext -> cont (VkValidationFeaturesEXT VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT pPNext (fromIntegral (Data.Vector.length (enabledValidationFeatures (marshalled :: ValidationFeaturesEXT)))) pPEnabledValidationFeatures (fromIntegral (Data.Vector.length (disabledValidationFeatures (marshalled :: ValidationFeaturesEXT)))) pPDisabledValidationFeatures))))
-
--- | A function to read a 'VkValidationFeaturesEXT' and all additional
--- structures in the pointer chain into a 'ValidationFeaturesEXT'.
-fromCStructValidationFeaturesEXT :: VkValidationFeaturesEXT -> IO ValidationFeaturesEXT
-fromCStructValidationFeaturesEXT c = ValidationFeaturesEXT <$> -- Univalued Member elided
-                                                           maybePeek peekVkStruct (castPtr (vkPNext (c :: VkValidationFeaturesEXT)))
-                                                           -- Length valued member elided
-                                                           <*> (Data.Vector.generateM (fromIntegral (vkEnabledValidationFeatureCount (c :: VkValidationFeaturesEXT))) (peekElemOff (vkPEnabledValidationFeatures (c :: VkValidationFeaturesEXT))))
-                                                           -- Length valued member elided
-                                                           <*> (Data.Vector.generateM (fromIntegral (vkDisabledValidationFeatureCount (c :: VkValidationFeaturesEXT))) (peekElemOff (vkPDisabledValidationFeatures (c :: VkValidationFeaturesEXT))))
-
 instance Zero ValidationFeaturesEXT where
   zero = ValidationFeaturesEXT Nothing
-                               Data.Vector.empty
-                               Data.Vector.empty
+                               mempty
+                               mempty
 
+#endif
 
 -- No documentation found for TopLevel "VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME"
 pattern EXT_VALIDATION_FEATURES_EXTENSION_NAME :: (Eq a, IsString a) => a

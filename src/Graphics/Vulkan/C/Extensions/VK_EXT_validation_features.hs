@@ -66,11 +66,7 @@ import Graphics.Vulkan.C.Core10.Core
 
 -- ** VkValidationFeatureDisableEXT
 
--- | VkValidationFeatureDisableEXT - Specify validation features to disable
---
--- = See Also
---
--- 'VkValidationFeaturesEXT'
+-- No documentation found for TopLevel "VkValidationFeatureDisableEXT"
 newtype VkValidationFeatureDisableEXT = VkValidationFeatureDisableEXT Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -100,53 +96,37 @@ instance Read VkValidationFeatureDisableEXT where
                         )
                     )
 
--- | 'VK_VALIDATION_FEATURE_DISABLE_ALL_EXT' specifies that all validation
--- checks are disabled.
+-- No documentation found for Nested "VkValidationFeatureDisableEXT" "VK_VALIDATION_FEATURE_DISABLE_ALL_EXT"
 pattern VK_VALIDATION_FEATURE_DISABLE_ALL_EXT :: VkValidationFeatureDisableEXT
 pattern VK_VALIDATION_FEATURE_DISABLE_ALL_EXT = VkValidationFeatureDisableEXT 0
 
--- | 'VK_VALIDATION_FEATURE_DISABLE_SHADERS_EXT' specifies that shader
--- validation is disabled. This feature is enabled by default.
+-- No documentation found for Nested "VkValidationFeatureDisableEXT" "VK_VALIDATION_FEATURE_DISABLE_SHADERS_EXT"
 pattern VK_VALIDATION_FEATURE_DISABLE_SHADERS_EXT :: VkValidationFeatureDisableEXT
 pattern VK_VALIDATION_FEATURE_DISABLE_SHADERS_EXT = VkValidationFeatureDisableEXT 1
 
--- | 'VK_VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT' specifies that thread
--- safety validation is disabled. This feature is enabled by default.
+-- No documentation found for Nested "VkValidationFeatureDisableEXT" "VK_VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT"
 pattern VK_VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT :: VkValidationFeatureDisableEXT
 pattern VK_VALIDATION_FEATURE_DISABLE_THREAD_SAFETY_EXT = VkValidationFeatureDisableEXT 2
 
--- | 'VK_VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT' specifies that
--- stateless parameter validation is disabled. This feature is enabled by
--- default.
+-- No documentation found for Nested "VkValidationFeatureDisableEXT" "VK_VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT"
 pattern VK_VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT :: VkValidationFeatureDisableEXT
 pattern VK_VALIDATION_FEATURE_DISABLE_API_PARAMETERS_EXT = VkValidationFeatureDisableEXT 3
 
--- | 'VK_VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT' specifies that
--- object lifetime validation is disabled. This feature is enabled by
--- default.
+-- No documentation found for Nested "VkValidationFeatureDisableEXT" "VK_VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT"
 pattern VK_VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT :: VkValidationFeatureDisableEXT
 pattern VK_VALIDATION_FEATURE_DISABLE_OBJECT_LIFETIMES_EXT = VkValidationFeatureDisableEXT 4
 
--- | 'VK_VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT' specifies that core
--- validation checks are disabled. This feature is enabled by default. If
--- this feature is disabled, the shader validation and GPU-assisted
--- validation features are also disabled.
+-- No documentation found for Nested "VkValidationFeatureDisableEXT" "VK_VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT"
 pattern VK_VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT :: VkValidationFeatureDisableEXT
 pattern VK_VALIDATION_FEATURE_DISABLE_CORE_CHECKS_EXT = VkValidationFeatureDisableEXT 5
 
--- | 'VK_VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT' specifies that
--- protection against duplicate non-dispatchable object handles is
--- disabled. This feature is enabled by default.
+-- No documentation found for Nested "VkValidationFeatureDisableEXT" "VK_VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT"
 pattern VK_VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT :: VkValidationFeatureDisableEXT
 pattern VK_VALIDATION_FEATURE_DISABLE_UNIQUE_HANDLES_EXT = VkValidationFeatureDisableEXT 6
 
 -- ** VkValidationFeatureEnableEXT
 
--- | VkValidationFeatureEnableEXT - Specify validation features to enable
---
--- = See Also
---
--- 'VkValidationFeaturesEXT'
+-- No documentation found for TopLevel "VkValidationFeatureEnableEXT"
 newtype VkValidationFeatureEnableEXT = VkValidationFeatureEnableEXT Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -166,62 +146,27 @@ instance Read VkValidationFeatureEnableEXT where
                         )
                     )
 
--- | 'VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT' specifies that
--- GPU-assisted validation is enabled. Activating this feature instruments
--- shader programs to generate additional diagnostic data. This feature is
--- disabled by default.
+-- No documentation found for Nested "VkValidationFeatureEnableEXT" "VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT"
 pattern VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT :: VkValidationFeatureEnableEXT
 pattern VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT = VkValidationFeatureEnableEXT 0
 
--- | 'VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT'
--- specifies that the validation layers reserve a descriptor set binding
--- slot for their own use. The layer reports a value for
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxBoundDescriptorSets@
--- that is one less than the value reported by the device. If the device
--- supports the binding of only one descriptor set, the validation layer
--- does not perform GPU-assisted validation. This feature is disabled by
--- default. The GPU-assisted validation feature must be enabled in order to
--- use this feature.
+-- No documentation found for Nested "VkValidationFeatureEnableEXT" "VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT"
 pattern VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT :: VkValidationFeatureEnableEXT
 pattern VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_RESERVE_BINDING_SLOT_EXT = VkValidationFeatureEnableEXT 1
 
--- | VkValidationFeaturesEXT - Specify validation features to enable or
--- disable for a Vulkan instance
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be 'VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT'
---
--- -   If @enabledValidationFeatureCount@ is not @0@,
---     @pEnabledValidationFeatures@ /must/ be a valid pointer to an array
---     of @enabledValidationFeatureCount@ valid
---     'VkValidationFeatureEnableEXT' values
---
--- -   If @disabledValidationFeatureCount@ is not @0@,
---     @pDisabledValidationFeatures@ /must/ be a valid pointer to an array
---     of @disabledValidationFeatureCount@ valid
---     'VkValidationFeatureDisableEXT' values
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'VkValidationFeatureDisableEXT', 'VkValidationFeatureEnableEXT'
+-- No documentation found for TopLevel "VkValidationFeaturesEXT"
 data VkValidationFeaturesEXT = VkValidationFeaturesEXT
-  { -- | @sType@ is the type of this structure.
+  { -- No documentation found for Nested "VkValidationFeaturesEXT" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkValidationFeaturesEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- | @enabledValidationFeatureCount@ is the number of features to enable.
+  , -- No documentation found for Nested "VkValidationFeaturesEXT" "enabledValidationFeatureCount"
   vkEnabledValidationFeatureCount :: Word32
-  , -- | @pEnabledValidationFeatures@ is a pointer to an array of
-  -- 'VkValidationFeatureEnableEXT' values specifying the validation features
-  -- to be enabled.
+  , -- No documentation found for Nested "VkValidationFeaturesEXT" "pEnabledValidationFeatures"
   vkPEnabledValidationFeatures :: Ptr VkValidationFeatureEnableEXT
-  , -- | @disabledValidationFeatureCount@ is the number of features to disable.
+  , -- No documentation found for Nested "VkValidationFeaturesEXT" "disabledValidationFeatureCount"
   vkDisabledValidationFeatureCount :: Word32
-  , -- | @pDisabledValidationFeatures@ is a pointer to an array of
-  -- 'VkValidationFeatureDisableEXT' values specifying the validation
-  -- features to be disabled.
+  , -- No documentation found for Nested "VkValidationFeaturesEXT" "pDisabledValidationFeatures"
   vkPDisabledValidationFeatures :: Ptr VkValidationFeatureDisableEXT
   }
   deriving (Eq, Show)

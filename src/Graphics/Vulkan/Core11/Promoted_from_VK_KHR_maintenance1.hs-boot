@@ -15,18 +15,7 @@ import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1
   )
 
 
--- | VkCommandPoolTrimFlags - Reserved for future use
---
--- = Description
---
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.VkCommandPoolTrimFlags'
--- is a bitmask type for setting a mask, but is currently reserved for
--- future use.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.vkTrimCommandPool',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_maintenance1.vkTrimCommandPoolKHR'
+-- No documentation found for TopLevel "CommandPoolTrimFlags"
 type CommandPoolTrimFlags = VkCommandPoolTrimFlags
 
 -- No documentation found for TopLevel "CommandPoolTrimFlagsKHR"

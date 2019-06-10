@@ -61,47 +61,13 @@ import Graphics.Vulkan.NamedType
   )
 
 
--- | VkPhysicalDeviceSurfaceInfo2KHR - Structure specifying a surface and
--- related swapchain creation parameters
---
--- = Description
---
--- The members of 'VkPhysicalDeviceSurfaceInfo2KHR' correspond to the
--- arguments to
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.vkGetPhysicalDeviceSurfaceCapabilitiesKHR',
--- with @sType@ and @pNext@ added for extensibility.
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR'
---
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
---     'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.VkSurfaceFullScreenExclusiveInfoEXT'
---     or
---     'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.VkSurfaceFullScreenExclusiveWin32InfoEXT'
---
--- -   Each @sType@ member in the @pNext@ chain /must/ be unique
---
--- -   @surface@ /must/ be a valid
---     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_device_group.vkGetDeviceGroupSurfacePresentModes2EXT',
--- 'vkGetPhysicalDeviceSurfaceCapabilities2KHR',
--- 'vkGetPhysicalDeviceSurfaceFormats2KHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.vkGetPhysicalDeviceSurfacePresentModes2EXT'
+-- No documentation found for TopLevel "VkPhysicalDeviceSurfaceInfo2KHR"
 data VkPhysicalDeviceSurfaceInfo2KHR = VkPhysicalDeviceSurfaceInfo2KHR
-  { -- | @sType@ is the type of this structure.
+  { -- No documentation found for Nested "VkPhysicalDeviceSurfaceInfo2KHR" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkPhysicalDeviceSurfaceInfo2KHR" "pNext"
   vkPNext :: Ptr ()
-  , -- | @surface@ is the surface that will be associated with the swapchain.
+  , -- No documentation found for Nested "VkPhysicalDeviceSurfaceInfo2KHR" "surface"
   vkSurface :: VkSurfaceKHR
   }
   deriving (Eq, Show)
@@ -121,37 +87,13 @@ instance Zero VkPhysicalDeviceSurfaceInfo2KHR where
                                          zero
                                          zero
 
--- | VkSurfaceCapabilities2KHR - Structure describing capabilities of a
--- surface
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be 'VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR'
---
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
---     'Graphics.Vulkan.C.Extensions.VK_AMD_display_native_hdr.VkDisplayNativeHdrSurfaceCapabilitiesAMD',
---     'Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image.VkSharedPresentSurfaceCapabilitiesKHR',
---     'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.VkSurfaceCapabilitiesFullScreenExclusiveEXT',
---     or
---     'Graphics.Vulkan.C.Extensions.VK_KHR_surface_protected_capabilities.VkSurfaceProtectedCapabilitiesKHR'
---
--- -   Each @sType@ member in the @pNext@ chain /must/ be unique
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceCapabilitiesKHR',
--- 'vkGetPhysicalDeviceSurfaceCapabilities2KHR'
+-- No documentation found for TopLevel "VkSurfaceCapabilities2KHR"
 data VkSurfaceCapabilities2KHR = VkSurfaceCapabilities2KHR
-  { -- | @sType@ is the type of this structure.
+  { -- No documentation found for Nested "VkSurfaceCapabilities2KHR" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkSurfaceCapabilities2KHR" "pNext"
   vkPNext :: Ptr ()
-  , -- | @surfaceCapabilities@ is a structure of type
-  -- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceCapabilitiesKHR'
-  -- describing the capabilities of the specified surface.
+  , -- No documentation found for Nested "VkSurfaceCapabilities2KHR" "surfaceCapabilities"
   vkSurfaceCapabilities :: VkSurfaceCapabilitiesKHR
   }
   deriving (Eq, Show)
@@ -171,25 +113,13 @@ instance Zero VkSurfaceCapabilities2KHR where
                                    zero
                                    zero
 
--- | VkSurfaceFormat2KHR - Structure describing a supported swapchain format
--- tuple
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceFormatKHR',
--- 'vkGetPhysicalDeviceSurfaceFormats2KHR'
+-- No documentation found for TopLevel "VkSurfaceFormat2KHR"
 data VkSurfaceFormat2KHR = VkSurfaceFormat2KHR
-  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR'
+  { -- No documentation found for Nested "VkSurfaceFormat2KHR" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- No documentation found for Nested "VkSurfaceFormat2KHR" "pNext"
   vkPNext :: Ptr ()
-  , -- | @surfaceFormat@ is an instance of
-  -- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceFormatKHR'
-  -- describing a format-color space pair that is compatible with the
-  -- specified surface.
+  , -- No documentation found for Nested "VkSurfaceFormat2KHR" "surfaceFormat"
   vkSurfaceFormat :: VkSurfaceFormatKHR
   }
   deriving (Eq, Show)
@@ -209,48 +139,7 @@ instance Zero VkSurfaceFormat2KHR where
                              zero
                              zero
 
--- | vkGetPhysicalDeviceSurfaceCapabilities2KHR - Reports capabilities of a
--- surface on a physical device
---
--- = Parameters
---
--- -   @physicalDevice@ is the physical device that will be associated with
---     the swapchain to be created, as described for
---     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkCreateSwapchainKHR'.
---
--- -   @pSurfaceInfo@ points to an instance of the
---     'VkPhysicalDeviceSurfaceInfo2KHR' structure, describing the surface
---     and other fixed parameters that would be consumed by
---     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkCreateSwapchainKHR'.
---
--- -   @pSurfaceCapabilities@ points to an instance of the
---     'VkSurfaceCapabilities2KHR' structure in which the capabilities are
---     returned.
---
--- = Description
---
--- 'vkGetPhysicalDeviceSurfaceCapabilities2KHR' behaves similarly to
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.vkGetPhysicalDeviceSurfaceCapabilitiesKHR',
--- with the ability to specify extended inputs via chained input
--- structures, and to return extended information via chained output
--- structures.
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_SURFACE_LOST_KHR'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice',
--- 'VkPhysicalDeviceSurfaceInfo2KHR', 'VkSurfaceCapabilities2KHR'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceSurfaceCapabilities2KHR"
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -271,78 +160,7 @@ foreign import ccall
 type FN_vkGetPhysicalDeviceSurfaceCapabilities2KHR = ("physicalDevice" ::: VkPhysicalDevice) -> ("pSurfaceInfo" ::: Ptr VkPhysicalDeviceSurfaceInfo2KHR) -> ("pSurfaceCapabilities" ::: Ptr VkSurfaceCapabilities2KHR) -> IO VkResult
 type PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR = FunPtr FN_vkGetPhysicalDeviceSurfaceCapabilities2KHR
 
--- | vkGetPhysicalDeviceSurfaceFormats2KHR - Query color formats supported by
--- surface
---
--- = Parameters
---
--- -   @physicalDevice@ is the physical device that will be associated with
---     the swapchain to be created, as described for
---     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkCreateSwapchainKHR'.
---
--- -   @pSurfaceInfo@ points to an instance of the
---     'VkPhysicalDeviceSurfaceInfo2KHR' structure, describing the surface
---     and other fixed parameters that would be consumed by
---     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkCreateSwapchainKHR'.
---
--- -   @pSurfaceFormatCount@ is a pointer to an integer related to the
---     number of format tuples available or queried, as described below.
---
--- -   @pSurfaceFormats@ is either @NULL@ or a pointer to an array of
---     'VkSurfaceFormat2KHR' structures.
---
--- = Description
---
--- If @pSurfaceFormats@ is @NULL@, then the number of format tuples
--- supported for the given @surface@ is returned in @pSurfaceFormatCount@.
--- The number of format tuples supported will be greater than or equal to
--- 1. Otherwise, @pSurfaceFormatCount@ /must/ point to a variable set by
--- the user to the number of elements in the @pSurfaceFormats@ array, and
--- on return the variable is overwritten with the number of structures
--- actually written to @pSurfaceFormats@. If the value of
--- @pSurfaceFormatCount@ is less than the number of format tuples
--- supported, at most @pSurfaceFormatCount@ structures will be written. If
--- @pSurfaceFormatCount@ is smaller than the number of format tuples
--- supported for the surface parameters described in @pSurfaceInfo@,
--- 'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE' will be returned instead
--- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS' to indicate that not all
--- the available values were returned.
---
--- == Valid Usage (Implicit)
---
--- -   @physicalDevice@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
---     handle
---
--- -   @pSurfaceInfo@ /must/ be a valid pointer to a valid
---     'VkPhysicalDeviceSurfaceInfo2KHR' structure
---
--- -   @pSurfaceFormatCount@ /must/ be a valid pointer to a @uint32_t@
---     value
---
--- -   If the value referenced by @pSurfaceFormatCount@ is not @0@, and
---     @pSurfaceFormats@ is not @NULL@, @pSurfaceFormats@ /must/ be a valid
---     pointer to an array of @pSurfaceFormatCount@ 'VkSurfaceFormat2KHR'
---     structures
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_SURFACE_LOST_KHR'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice',
--- 'VkPhysicalDeviceSurfaceInfo2KHR', 'VkSurfaceFormat2KHR'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceSurfaceFormats2KHR"
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)

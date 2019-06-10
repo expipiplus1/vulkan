@@ -18,27 +18,13 @@ import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2
   )
 
 
--- | VkPointClippingBehavior - Enum specifying the point clipping behavior
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VkPhysicalDevicePointClippingProperties'
+-- No documentation found for TopLevel "PointClippingBehavior"
 type PointClippingBehavior = VkPointClippingBehavior
 
 -- No documentation found for TopLevel "PointClippingBehaviorKHR"
 type PointClippingBehaviorKHR = PointClippingBehavior
 
--- | VkTessellationDomainOrigin - Enum describing tessellation domain origin
---
--- = Description
---
--- This enum affects how the @VertexOrderCw@ and @VertexOrderCcw@
--- tessellation execution modes are interpreted, since the winding is
--- defined relative to the orientation of the domain.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VkPipelineTessellationDomainOriginStateCreateInfo'
+-- No documentation found for TopLevel "TessellationDomainOrigin"
 type TessellationDomainOrigin = VkTessellationDomainOrigin
 
 -- No documentation found for TopLevel "TessellationDomainOriginKHR"

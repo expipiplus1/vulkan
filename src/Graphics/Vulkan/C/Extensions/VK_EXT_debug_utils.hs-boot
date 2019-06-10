@@ -65,71 +65,19 @@ import {-# source #-} Graphics.Vulkan.C.Core10.Queue
   )
 
 
--- | PFN_vkDebugUtilsMessengerCallbackEXT - Application-defined debug
--- messenger callback function
---
--- = Parameters
---
--- -   @messageSeverity@ specifies the
---     'VkDebugUtilsMessageSeverityFlagBitsEXT' that triggered this
---     callback.
---
--- -   @messageTypes@ is a bitmask of 'VkDebugUtilsMessageTypeFlagBitsEXT'
---     specifying which type of event(s) triggered this callback.
---
--- -   @pCallbackData@ contains all the callback related data in the
---     'VkDebugUtilsMessengerCallbackDataEXT' structure.
---
--- -   @pUserData@ is the user data provided when the
---     'VkDebugUtilsMessengerEXT' was created.
---
--- = Description
---
--- The callback /must/ not call 'vkDestroyDebugUtilsMessengerEXT'.
---
--- The callback returns a 'Graphics.Vulkan.C.Core10.Core.VkBool32', which
--- is interpreted in a layer-specified manner. The application /should/
--- always return 'Graphics.Vulkan.C.Core10.Core.VK_FALSE'. The
--- 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' value is reserved for use in
--- layer development.
---
--- = See Also
---
--- 'VkDebugUtilsMessengerCreateInfoEXT'
+-- No documentation found for TopLevel "PFN_vkDebugUtilsMessengerCallbackEXT"
 type PFN_vkDebugUtilsMessengerCallbackEXT = Ptr (("messageSeverity" ::: VkDebugUtilsMessageSeverityFlagBitsEXT) -> ("messageTypes" ::: VkDebugUtilsMessageTypeFlagsEXT) -> ("pCallbackData" ::: Ptr VkDebugUtilsMessengerCallbackDataEXT) -> ("pUserData" ::: Ptr ()) -> IO VkBool32)
 
 data VkDebugUtilsLabelEXT
 
 data VkDebugUtilsMessageSeverityFlagBitsEXT
 
--- | VkDebugUtilsMessageSeverityFlagsEXT - Bitmask of
--- VkDebugUtilsMessageSeverityFlagBitsEXT
---
--- = Description
---
--- 'VkDebugUtilsMessageSeverityFlagsEXT' is a bitmask type for setting a
--- mask of zero or more 'VkDebugUtilsMessageSeverityFlagBitsEXT'.
---
--- = See Also
---
--- 'VkDebugUtilsMessageSeverityFlagBitsEXT',
--- 'VkDebugUtilsMessengerCreateInfoEXT'
+-- No documentation found for TopLevel "VkDebugUtilsMessageSeverityFlagsEXT"
 type VkDebugUtilsMessageSeverityFlagsEXT = VkDebugUtilsMessageSeverityFlagBitsEXT
 
 data VkDebugUtilsMessageTypeFlagBitsEXT
 
--- | VkDebugUtilsMessageTypeFlagsEXT - Bitmask of
--- VkDebugUtilsMessageTypeFlagBitsEXT
---
--- = Description
---
--- 'VkDebugUtilsMessageTypeFlagsEXT' is a bitmask type for setting a mask
--- of zero or more 'VkDebugUtilsMessageTypeFlagBitsEXT'.
---
--- = See Also
---
--- 'VkDebugUtilsMessageTypeFlagBitsEXT',
--- 'VkDebugUtilsMessengerCreateInfoEXT', 'vkSubmitDebugUtilsMessageEXT'
+-- No documentation found for TopLevel "VkDebugUtilsMessageTypeFlagsEXT"
 type VkDebugUtilsMessageTypeFlagsEXT = VkDebugUtilsMessageTypeFlagBitsEXT
 
 data VkDebugUtilsMessengerCallbackDataEXT
@@ -142,21 +90,7 @@ data VkDebugUtilsMessengerCreateInfoEXT
 
 -- | Dummy data to tag the 'Ptr' with
 data VkDebugUtilsMessengerEXT_T
--- | VkDebugUtilsMessengerEXT - Opaque handle to a debug messenger object
---
--- = Description
---
--- The debug messenger will provide detailed feedback on the application’s
--- use of Vulkan when events of interest occur. When an event of interest
--- does occur, the debug messenger will submit a debug message to the debug
--- callback that was provided during its creation. Additionally, the debug
--- messenger is responsible with filtering out debug messages that the
--- callback is not interested in and will only provide desired debug
--- messages.
---
--- = See Also
---
--- 'vkCreateDebugUtilsMessengerEXT', 'vkDestroyDebugUtilsMessengerEXT'
+-- No documentation found for TopLevel "VkDebugUtilsMessengerEXT"
 type VkDebugUtilsMessengerEXT = Ptr VkDebugUtilsMessengerEXT_T
 
 data VkDebugUtilsObjectNameInfoEXT

@@ -31,39 +31,13 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- | VkPhysicalDeviceScalarBlockLayoutFeaturesEXT - Structure indicating
--- support for scalar block layouts
---
--- = Members
---
--- The members of the 'VkPhysicalDeviceScalarBlockLayoutFeaturesEXT'
--- structure describe the following features:
---
--- = Description
---
--- If the 'VkPhysicalDeviceScalarBlockLayoutFeaturesEXT' structure is
--- included in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
--- it is filled with values indicating whether the feature is supported.
--- 'VkPhysicalDeviceScalarBlockLayoutFeaturesEXT' /can/ also be used in the
--- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to
--- enable this feature.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkPhysicalDeviceScalarBlockLayoutFeaturesEXT"
 data VkPhysicalDeviceScalarBlockLayoutFeaturesEXT = VkPhysicalDeviceScalarBlockLayoutFeaturesEXT
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SCALAR_BLOCK_LAYOUT_FEATURES_EXT'
+  { -- No documentation found for Nested "VkPhysicalDeviceScalarBlockLayoutFeaturesEXT" "sType"
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceScalarBlockLayoutFeaturesEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- | @scalarBlockLayout@ indicates that the implementation supports the
-  -- layout of resource blocks in shaders using
-  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#interfaces-scalar-block-layout scalar alignment>.
+  , -- No documentation found for Nested "VkPhysicalDeviceScalarBlockLayoutFeaturesEXT" "scalarBlockLayout"
   vkScalarBlockLayout :: VkBool32
   }
   deriving (Eq, Show)

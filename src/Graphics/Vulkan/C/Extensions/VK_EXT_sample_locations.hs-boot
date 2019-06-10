@@ -28,8 +28,8 @@ import Graphics.Vulkan.NamedType
   ( (:::)
   )
 import {-# source #-} Graphics.Vulkan.C.Core10.DeviceInitialization
-  ( VkSampleCountFlagBits
-  , VkPhysicalDevice
+  ( VkPhysicalDevice
+  , VkSampleCountFlagBits
   )
 import {-# source #-} Graphics.Vulkan.C.Core10.Queue
   ( VkCommandBuffer

@@ -45,12 +45,12 @@ import {-# source #-} Graphics.Vulkan.C.Core10.Core
   , VkResult
   )
 import {-# source #-} Graphics.Vulkan.C.Core10.DeviceInitialization
-  ( VkImageTiling
+  ( VkDevice
+  , VkImageTiling
   , VkImageType
-  , VkSampleCountFlagBits
-  , VkDevice
   , VkImageUsageFlags
   , VkPhysicalDevice
+  , VkSampleCountFlagBits
   )
 import {-# source #-} Graphics.Vulkan.C.Core10.MemoryManagement
   ( VkImage
@@ -65,22 +65,7 @@ data VkBindSparseInfo
 
 data VkImageAspectFlagBits
 
--- | VkImageAspectFlags - Bitmask of VkImageAspectFlagBits
---
--- = Description
---
--- 'VkImageAspectFlags' is a bitmask type for setting a mask of zero or
--- more 'VkImageAspectFlagBits'.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkAttachmentReference2KHR',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkClearAttachment',
--- 'VkImageAspectFlagBits', 'VkImageSubresource',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkImageSubresourceLayers',
--- 'Graphics.Vulkan.C.Core10.ImageView.VkImageSubresourceRange',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VkInputAttachmentAspectReference',
--- 'VkSparseImageFormatProperties'
+-- No documentation found for TopLevel "VkImageAspectFlags"
 type VkImageAspectFlags = VkImageAspectFlagBits
 
 data VkImageSubresource
@@ -91,16 +76,7 @@ data VkSparseBufferMemoryBindInfo
 
 data VkSparseImageFormatFlagBits
 
--- | VkSparseImageFormatFlags - Bitmask of VkSparseImageFormatFlagBits
---
--- = Description
---
--- 'VkSparseImageFormatFlags' is a bitmask type for setting a mask of zero
--- or more 'VkSparseImageFormatFlagBits'.
---
--- = See Also
---
--- 'VkSparseImageFormatFlagBits', 'VkSparseImageFormatProperties'
+-- No documentation found for TopLevel "VkSparseImageFormatFlags"
 type VkSparseImageFormatFlags = VkSparseImageFormatFlagBits
 
 data VkSparseImageFormatProperties
@@ -117,17 +93,7 @@ data VkSparseMemoryBind
 
 data VkSparseMemoryBindFlagBits
 
--- | VkSparseMemoryBindFlags - Bitmask of VkSparseMemoryBindFlagBits
---
--- = Description
---
--- 'VkSparseMemoryBindFlags' is a bitmask type for setting a mask of zero
--- or more 'VkSparseMemoryBindFlagBits'.
---
--- = See Also
---
--- 'VkSparseImageMemoryBind', 'VkSparseMemoryBind',
--- 'VkSparseMemoryBindFlagBits'
+-- No documentation found for TopLevel "VkSparseMemoryBindFlags"
 type VkSparseMemoryBindFlags = VkSparseMemoryBindFlagBits
 
 type FN_vkGetImageSparseMemoryRequirements = ("device" ::: VkDevice) -> ("image" ::: VkImage) -> ("pSparseMemoryRequirementCount" ::: Ptr Word32) -> ("pSparseMemoryRequirements" ::: Ptr VkSparseImageMemoryRequirements) -> IO ()

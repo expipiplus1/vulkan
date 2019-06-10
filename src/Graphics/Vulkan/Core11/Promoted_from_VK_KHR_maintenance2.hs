@@ -1,29 +1,27 @@
 {-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
 {-# language DuplicateRecordFields #-}
+{-# language PatternSynonyms #-}
 {-# language TypeFamilies #-}
 
 module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance2
-  ( withCStructImageViewUsageCreateInfo
-  , fromCStructImageViewUsageCreateInfo
-  , ImageViewUsageCreateInfo(..)
-  , withCStructInputAttachmentAspectReference
-  , fromCStructInputAttachmentAspectReference
-  , InputAttachmentAspectReference(..)
-  , withCStructPhysicalDevicePointClippingProperties
-  , fromCStructPhysicalDevicePointClippingProperties
+  ( 
+#if defined(VK_USE_PLATFORM_GGP)
+  ImageViewUsageCreateInfo(..)
+  , 
+#endif
+  InputAttachmentAspectReference(..)
+#if defined(VK_USE_PLATFORM_GGP)
   , PhysicalDevicePointClippingProperties(..)
-  , withCStructPipelineTessellationDomainOriginStateCreateInfo
-  , fromCStructPipelineTessellationDomainOriginStateCreateInfo
   , PipelineTessellationDomainOriginStateCreateInfo(..)
+#endif
   , PointClippingBehavior
   , pattern POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES
   , pattern POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY
   , PointClippingBehaviorKHR
-  , withCStructRenderPassInputAttachmentAspectCreateInfo
-  , fromCStructRenderPassInputAttachmentAspectCreateInfo
+#if defined(VK_USE_PLATFORM_GGP)
   , RenderPassInputAttachmentAspectCreateInfo(..)
+#endif
   , TessellationDomainOrigin
   , pattern TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT
   , pattern TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT
@@ -38,29 +36,14 @@ module Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance2
   , pattern IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL
   ) where
 
-import Control.Monad
-  ( (<=<)
-  )
+
+#if defined(VK_USE_PLATFORM_GGP)
 import Data.Vector
   ( Vector
   )
-import qualified Data.Vector
-  ( empty
-  , generateM
-  , length
-  )
+#endif
 import Data.Word
   ( Word32
-  )
-import Foreign.Marshal.Utils
-  ( maybePeek
-  , maybeWith
-  )
-import Foreign.Ptr
-  ( castPtr
-  )
-import Foreign.Storable
-  ( peekElemOff
   )
 
 
@@ -68,36 +51,28 @@ import Graphics.Vulkan.C.Core10.Core
   ( Zero(..)
   )
 import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2
-  ( VkImageViewUsageCreateInfo(..)
-  , VkInputAttachmentAspectReference(..)
-  , VkPhysicalDevicePointClippingProperties(..)
-  , VkPipelineTessellationDomainOriginStateCreateInfo(..)
-  , VkPointClippingBehavior(..)
-  , VkRenderPassInputAttachmentAspectCreateInfo(..)
+  ( VkPointClippingBehavior(..)
   , VkTessellationDomainOrigin(..)
   , pattern VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES
   , pattern VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY
-  , pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES
-  , pattern VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO
-  , pattern VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO
   , pattern VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT
   , pattern VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT
   )
+
+#if defined(VK_USE_PLATFORM_GGP)
 import Graphics.Vulkan.Core10.DeviceInitialization
   ( ImageUsageFlags
   )
+#endif
 import Graphics.Vulkan.Core10.SparseResourceMemoryManagement
   ( ImageAspectFlags
   )
-import Graphics.Vulkan.Marshal.Utils
-  ( withVec
-  )
+
+#if defined(VK_USE_PLATFORM_GGP)
 import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   ( SomeVkStruct
-  , peekVkStruct
-  , withSomeVkStruct
   )
+#endif
 import Graphics.Vulkan.Core10.Core
   ( pattern STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO
   , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES
@@ -115,60 +90,25 @@ import Graphics.Vulkan.Core10.Image
 
 
 
--- | VkImageViewUsageCreateInfo - Specify the intended usage of an image view
---
--- = Description
---
--- When this structure is chained to
--- 'Graphics.Vulkan.C.Core10.ImageView.VkImageViewCreateInfo' the @usage@
--- field overrides the implicit @usage@ parameter inherited from image
--- creation time and its value is used instead for the purposes of
--- determining the valid usage conditions of
--- 'Graphics.Vulkan.C.Core10.ImageView.VkImageViewCreateInfo'.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageUsageFlags',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+#if defined(VK_USE_PLATFORM_GGP)
+
+-- No documentation found for TopLevel "VkImageViewUsageCreateInfo"
 data ImageViewUsageCreateInfo = ImageViewUsageCreateInfo
-  { -- Univalued member elided
-  -- No documentation found for Nested "ImageViewUsageCreateInfo" "pNext"
+  { -- No documentation found for Nested "ImageViewUsageCreateInfo" "pNext"
   next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "ImageViewUsageCreateInfo" "usage"
   usage :: ImageUsageFlags
   }
   deriving (Show, Eq)
 
--- | A function to temporarily allocate memory for a 'VkImageViewUsageCreateInfo' and
--- marshal a 'ImageViewUsageCreateInfo' into it. The 'VkImageViewUsageCreateInfo' is only valid inside
--- the provided computation and must not be returned out of it.
-withCStructImageViewUsageCreateInfo :: ImageViewUsageCreateInfo -> (VkImageViewUsageCreateInfo -> IO a) -> IO a
-withCStructImageViewUsageCreateInfo marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: ImageViewUsageCreateInfo)) (\pPNext -> cont (VkImageViewUsageCreateInfo VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO pPNext (usage (marshalled :: ImageViewUsageCreateInfo))))
-
--- | A function to read a 'VkImageViewUsageCreateInfo' and all additional
--- structures in the pointer chain into a 'ImageViewUsageCreateInfo'.
-fromCStructImageViewUsageCreateInfo :: VkImageViewUsageCreateInfo -> IO ImageViewUsageCreateInfo
-fromCStructImageViewUsageCreateInfo c = ImageViewUsageCreateInfo <$> -- Univalued Member elided
-                                                                 maybePeek peekVkStruct (castPtr (vkPNext (c :: VkImageViewUsageCreateInfo)))
-                                                                 <*> pure (vkUsage (c :: VkImageViewUsageCreateInfo))
-
 instance Zero ImageViewUsageCreateInfo where
   zero = ImageViewUsageCreateInfo Nothing
                                   zero
 
+#endif
 
 
--- | VkInputAttachmentAspectReference - Structure specifying a subpass\/input
--- attachment pair and an aspect mask that /can/ be read.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkImageAspectFlags',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VkRenderPassInputAttachmentAspectCreateInfo'
+-- No documentation found for TopLevel "VkInputAttachmentAspectReference"
 data InputAttachmentAspectReference = InputAttachmentAspectReference
   { -- No documentation found for Nested "InputAttachmentAspectReference" "subpass"
   subpass :: Word32
@@ -179,19 +119,6 @@ data InputAttachmentAspectReference = InputAttachmentAspectReference
   }
   deriving (Show, Eq)
 
--- | A function to temporarily allocate memory for a 'VkInputAttachmentAspectReference' and
--- marshal a 'InputAttachmentAspectReference' into it. The 'VkInputAttachmentAspectReference' is only valid inside
--- the provided computation and must not be returned out of it.
-withCStructInputAttachmentAspectReference :: InputAttachmentAspectReference -> (VkInputAttachmentAspectReference -> IO a) -> IO a
-withCStructInputAttachmentAspectReference marshalled cont = cont (VkInputAttachmentAspectReference (subpass (marshalled :: InputAttachmentAspectReference)) (inputAttachmentIndex (marshalled :: InputAttachmentAspectReference)) (aspectMask (marshalled :: InputAttachmentAspectReference)))
-
--- | A function to read a 'VkInputAttachmentAspectReference' and all additional
--- structures in the pointer chain into a 'InputAttachmentAspectReference'.
-fromCStructInputAttachmentAspectReference :: VkInputAttachmentAspectReference -> IO InputAttachmentAspectReference
-fromCStructInputAttachmentAspectReference c = InputAttachmentAspectReference <$> pure (vkSubpass (c :: VkInputAttachmentAspectReference))
-                                                                             <*> pure (vkInputAttachmentIndex (c :: VkInputAttachmentAspectReference))
-                                                                             <*> pure (vkAspectMask (c :: VkInputAttachmentAspectReference))
-
 instance Zero InputAttachmentAspectReference where
   zero = InputAttachmentAspectReference zero
                                         zero
@@ -199,124 +126,54 @@ instance Zero InputAttachmentAspectReference where
 
 
 
--- | VkPhysicalDevicePointClippingProperties - Structure describing the point
--- clipping behavior supported by an implementation
---
--- = Members
---
--- The members of the
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VkPhysicalDevicePointClippingProperties'
--- structure describe the following implementation-dependent limit:
---
--- = Description
---
--- If the
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VkPhysicalDevicePointClippingProperties'
--- structure is included in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VkPointClippingBehavior',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+#if defined(VK_USE_PLATFORM_GGP)
+
+-- No documentation found for TopLevel "VkPhysicalDevicePointClippingProperties"
 data PhysicalDevicePointClippingProperties = PhysicalDevicePointClippingProperties
-  { -- Univalued member elided
-  -- No documentation found for Nested "PhysicalDevicePointClippingProperties" "pNext"
+  { -- No documentation found for Nested "PhysicalDevicePointClippingProperties" "pNext"
   next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDevicePointClippingProperties" "pointClippingBehavior"
   pointClippingBehavior :: PointClippingBehavior
   }
   deriving (Show, Eq)
 
--- | A function to temporarily allocate memory for a 'VkPhysicalDevicePointClippingProperties' and
--- marshal a 'PhysicalDevicePointClippingProperties' into it. The 'VkPhysicalDevicePointClippingProperties' is only valid inside
--- the provided computation and must not be returned out of it.
-withCStructPhysicalDevicePointClippingProperties :: PhysicalDevicePointClippingProperties -> (VkPhysicalDevicePointClippingProperties -> IO a) -> IO a
-withCStructPhysicalDevicePointClippingProperties marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PhysicalDevicePointClippingProperties)) (\pPNext -> cont (VkPhysicalDevicePointClippingProperties VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES pPNext (pointClippingBehavior (marshalled :: PhysicalDevicePointClippingProperties))))
-
--- | A function to read a 'VkPhysicalDevicePointClippingProperties' and all additional
--- structures in the pointer chain into a 'PhysicalDevicePointClippingProperties'.
-fromCStructPhysicalDevicePointClippingProperties :: VkPhysicalDevicePointClippingProperties -> IO PhysicalDevicePointClippingProperties
-fromCStructPhysicalDevicePointClippingProperties c = PhysicalDevicePointClippingProperties <$> -- Univalued Member elided
-                                                                                           maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDevicePointClippingProperties)))
-                                                                                           <*> pure (vkPointClippingBehavior (c :: VkPhysicalDevicePointClippingProperties))
-
 instance Zero PhysicalDevicePointClippingProperties where
   zero = PhysicalDevicePointClippingProperties Nothing
                                                zero
 
+#endif
 
 
--- | VkPipelineTessellationDomainOriginStateCreateInfo - Structure specifying
--- the orientation of the tessellation domain
---
--- = Description
---
--- If the
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VkPipelineTessellationDomainOriginStateCreateInfo'
--- structure is included in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineTessellationStateCreateInfo',
--- it controls the origin of the tessellation domain. If this structure is
--- not present, it is as if @domainOrigin@ were
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT'.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VkTessellationDomainOrigin'
+#if defined(VK_USE_PLATFORM_GGP)
+
+-- No documentation found for TopLevel "VkPipelineTessellationDomainOriginStateCreateInfo"
 data PipelineTessellationDomainOriginStateCreateInfo = PipelineTessellationDomainOriginStateCreateInfo
-  { -- Univalued member elided
-  -- No documentation found for Nested "PipelineTessellationDomainOriginStateCreateInfo" "pNext"
+  { -- No documentation found for Nested "PipelineTessellationDomainOriginStateCreateInfo" "pNext"
   next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PipelineTessellationDomainOriginStateCreateInfo" "domainOrigin"
   domainOrigin :: TessellationDomainOrigin
   }
   deriving (Show, Eq)
 
--- | A function to temporarily allocate memory for a 'VkPipelineTessellationDomainOriginStateCreateInfo' and
--- marshal a 'PipelineTessellationDomainOriginStateCreateInfo' into it. The 'VkPipelineTessellationDomainOriginStateCreateInfo' is only valid inside
--- the provided computation and must not be returned out of it.
-withCStructPipelineTessellationDomainOriginStateCreateInfo :: PipelineTessellationDomainOriginStateCreateInfo -> (VkPipelineTessellationDomainOriginStateCreateInfo -> IO a) -> IO a
-withCStructPipelineTessellationDomainOriginStateCreateInfo marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PipelineTessellationDomainOriginStateCreateInfo)) (\pPNext -> cont (VkPipelineTessellationDomainOriginStateCreateInfo VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO pPNext (domainOrigin (marshalled :: PipelineTessellationDomainOriginStateCreateInfo))))
-
--- | A function to read a 'VkPipelineTessellationDomainOriginStateCreateInfo' and all additional
--- structures in the pointer chain into a 'PipelineTessellationDomainOriginStateCreateInfo'.
-fromCStructPipelineTessellationDomainOriginStateCreateInfo :: VkPipelineTessellationDomainOriginStateCreateInfo -> IO PipelineTessellationDomainOriginStateCreateInfo
-fromCStructPipelineTessellationDomainOriginStateCreateInfo c = PipelineTessellationDomainOriginStateCreateInfo <$> -- Univalued Member elided
-                                                                                                               maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPipelineTessellationDomainOriginStateCreateInfo)))
-                                                                                                               <*> pure (vkDomainOrigin (c :: VkPipelineTessellationDomainOriginStateCreateInfo))
-
 instance Zero PipelineTessellationDomainOriginStateCreateInfo where
   zero = PipelineTessellationDomainOriginStateCreateInfo Nothing
                                                          zero
 
+#endif
 
--- | VkPointClippingBehavior - Enum specifying the point clipping behavior
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VkPhysicalDevicePointClippingProperties'
+-- No documentation found for TopLevel "PointClippingBehavior"
 type PointClippingBehavior = VkPointClippingBehavior
 
 
 {-# complete POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES, POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY :: PointClippingBehavior #-}
 
 
--- | 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES'
--- specifies that the primitive is discarded if the vertex lies outside any
--- clip plane, including the planes bounding the view volume.
+-- No documentation found for Nested "PointClippingBehavior" "POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES"
 pattern POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES :: (a ~ PointClippingBehavior) => a
 pattern POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES = VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES
 
 
--- | 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY'
--- specifies that the primitive is discarded only if the vertex lies
--- outside any user clip plane.
+-- No documentation found for Nested "PointClippingBehavior" "POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY"
 pattern POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY :: (a ~ PointClippingBehavior) => a
 pattern POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY = VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY
 
@@ -324,73 +181,36 @@ pattern POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY = VK_POINT_CLIPPING_BEHAVI
 type PointClippingBehaviorKHR = PointClippingBehavior
 
 
--- | VkRenderPassInputAttachmentAspectCreateInfo - Structure specifying, for
--- a given subpass\/input attachment pair, which aspect /can/ be read.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VkInputAttachmentAspectReference',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+#if defined(VK_USE_PLATFORM_GGP)
+
+-- No documentation found for TopLevel "VkRenderPassInputAttachmentAspectCreateInfo"
 data RenderPassInputAttachmentAspectCreateInfo = RenderPassInputAttachmentAspectCreateInfo
-  { -- Univalued member elided
-  -- No documentation found for Nested "RenderPassInputAttachmentAspectCreateInfo" "pNext"
+  { -- No documentation found for Nested "RenderPassInputAttachmentAspectCreateInfo" "pNext"
   next :: Maybe SomeVkStruct
-  -- Length valued member elided
   , -- No documentation found for Nested "RenderPassInputAttachmentAspectCreateInfo" "pAspectReferences"
   aspectReferences :: Vector InputAttachmentAspectReference
   }
   deriving (Show, Eq)
 
--- | A function to temporarily allocate memory for a 'VkRenderPassInputAttachmentAspectCreateInfo' and
--- marshal a 'RenderPassInputAttachmentAspectCreateInfo' into it. The 'VkRenderPassInputAttachmentAspectCreateInfo' is only valid inside
--- the provided computation and must not be returned out of it.
-withCStructRenderPassInputAttachmentAspectCreateInfo :: RenderPassInputAttachmentAspectCreateInfo -> (VkRenderPassInputAttachmentAspectCreateInfo -> IO a) -> IO a
-withCStructRenderPassInputAttachmentAspectCreateInfo marshalled cont = withVec withCStructInputAttachmentAspectReference (aspectReferences (marshalled :: RenderPassInputAttachmentAspectCreateInfo)) (\pPAspectReferences -> maybeWith withSomeVkStruct (next (marshalled :: RenderPassInputAttachmentAspectCreateInfo)) (\pPNext -> cont (VkRenderPassInputAttachmentAspectCreateInfo VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO pPNext (fromIntegral (Data.Vector.length (aspectReferences (marshalled :: RenderPassInputAttachmentAspectCreateInfo)))) pPAspectReferences)))
-
--- | A function to read a 'VkRenderPassInputAttachmentAspectCreateInfo' and all additional
--- structures in the pointer chain into a 'RenderPassInputAttachmentAspectCreateInfo'.
-fromCStructRenderPassInputAttachmentAspectCreateInfo :: VkRenderPassInputAttachmentAspectCreateInfo -> IO RenderPassInputAttachmentAspectCreateInfo
-fromCStructRenderPassInputAttachmentAspectCreateInfo c = RenderPassInputAttachmentAspectCreateInfo <$> -- Univalued Member elided
-                                                                                                   maybePeek peekVkStruct (castPtr (vkPNext (c :: VkRenderPassInputAttachmentAspectCreateInfo)))
-                                                                                                   -- Length valued member elided
-                                                                                                   <*> (Data.Vector.generateM (fromIntegral (vkAspectReferenceCount (c :: VkRenderPassInputAttachmentAspectCreateInfo))) (((fromCStructInputAttachmentAspectReference <=<) . peekElemOff) (vkPAspectReferences (c :: VkRenderPassInputAttachmentAspectCreateInfo))))
-
 instance Zero RenderPassInputAttachmentAspectCreateInfo where
   zero = RenderPassInputAttachmentAspectCreateInfo Nothing
-                                                   Data.Vector.empty
+                                                   mempty
 
+#endif
 
--- | VkTessellationDomainOrigin - Enum describing tessellation domain origin
---
--- = Description
---
--- This enum affects how the @VertexOrderCw@ and @VertexOrderCcw@
--- tessellation execution modes are interpreted, since the winding is
--- defined relative to the orientation of the domain.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VkPipelineTessellationDomainOriginStateCreateInfo'
+-- No documentation found for TopLevel "TessellationDomainOrigin"
 type TessellationDomainOrigin = VkTessellationDomainOrigin
 
 
 {-# complete TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT, TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT :: TessellationDomainOrigin #-}
 
 
--- | 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT'
--- specifies that the origin of the domain space is in the upper left
--- corner, as shown in figure
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#img-tessellation-topology-ul>.
+-- No documentation found for Nested "TessellationDomainOrigin" "TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT"
 pattern TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT :: (a ~ TessellationDomainOrigin) => a
 pattern TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT = VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT
 
 
--- | 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT'
--- specifies that the origin of the domain space is in the lower left
--- corner, as shown in figure
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#img-tessellation-topology-ll>.
+-- No documentation found for Nested "TessellationDomainOrigin" "TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT"
 pattern TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT :: (a ~ TessellationDomainOrigin) => a
 pattern TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT = VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT
 

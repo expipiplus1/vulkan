@@ -38,36 +38,12 @@ data VkExternalImageFormatProperties
 
 data VkExternalMemoryFeatureFlagBits
 
--- | VkExternalMemoryFeatureFlags - Bitmask of
--- VkExternalMemoryFeatureFlagBits
---
--- = Description
---
--- 'VkExternalMemoryFeatureFlags' is a bitmask type for setting a mask of
--- zero or more 'VkExternalMemoryFeatureFlagBits'.
---
--- = See Also
---
--- 'VkExternalMemoryFeatureFlagBits', 'VkExternalMemoryProperties'
+-- No documentation found for TopLevel "VkExternalMemoryFeatureFlags"
 type VkExternalMemoryFeatureFlags = VkExternalMemoryFeatureFlagBits
 
 data VkExternalMemoryHandleTypeFlagBits
 
--- | VkExternalMemoryHandleTypeFlags - Bitmask of
--- VkExternalMemoryHandleTypeFlagBits
---
--- = Description
---
--- 'VkExternalMemoryHandleTypeFlags' is a bitmask type for setting a mask
--- of zero or more 'VkExternalMemoryHandleTypeFlagBits'.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VkExportMemoryAllocateInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryBufferCreateInfo',
--- 'VkExternalMemoryHandleTypeFlagBits',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryImageCreateInfo',
--- 'VkExternalMemoryProperties'
+-- No documentation found for TopLevel "VkExternalMemoryHandleTypeFlags"
 type VkExternalMemoryHandleTypeFlags = VkExternalMemoryHandleTypeFlagBits
 
 data VkExternalMemoryProperties

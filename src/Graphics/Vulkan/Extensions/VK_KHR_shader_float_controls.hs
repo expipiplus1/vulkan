@@ -1,13 +1,15 @@
 {-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
 {-# language DuplicateRecordFields #-}
+{-# language PatternSynonyms #-}
 
 module Graphics.Vulkan.Extensions.VK_KHR_shader_float_controls
-  ( withCStructPhysicalDeviceFloatControlsPropertiesKHR
-  , fromCStructPhysicalDeviceFloatControlsPropertiesKHR
-  , PhysicalDeviceFloatControlsPropertiesKHR(..)
-  , pattern KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
+  ( 
+#if defined(VK_USE_PLATFORM_GGP)
+  PhysicalDeviceFloatControlsPropertiesKHR(..)
+  , 
+#endif
+  pattern KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
   , pattern KHR_SHADER_FLOAT_CONTROLS_SPEC_VERSION
   , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES_KHR
   ) where
@@ -15,59 +17,35 @@ module Graphics.Vulkan.Extensions.VK_KHR_shader_float_controls
 import Data.String
   ( IsString
   )
-import Foreign.Marshal.Utils
-  ( maybePeek
-  , maybeWith
-  )
-import Foreign.Ptr
-  ( castPtr
-  )
 
 
+
+#if defined(VK_USE_PLATFORM_GGP)
 import Graphics.Vulkan.C.Core10.Core
   ( Zero(..)
   )
+#endif
 import Graphics.Vulkan.C.Extensions.VK_KHR_shader_float_controls
-  ( VkPhysicalDeviceFloatControlsPropertiesKHR(..)
-  , pattern VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
+  ( pattern VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME
   , pattern VK_KHR_SHADER_FLOAT_CONTROLS_SPEC_VERSION
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES_KHR
   )
-import Graphics.Vulkan.Core10.Core
-  ( bool32ToBool
-  , boolToBool32
-  )
+
+#if defined(VK_USE_PLATFORM_GGP)
 import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   ( SomeVkStruct
-  , peekVkStruct
-  , withSomeVkStruct
   )
+#endif
 import Graphics.Vulkan.Core10.Core
   ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES_KHR
   )
 
 
 
--- | VkPhysicalDeviceFloatControlsPropertiesKHR - Structure describing
--- properties supported by VK_KHR_shader_float_controls
---
--- = Description
---
--- If the
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_shader_float_controls.VkPhysicalDeviceFloatControlsPropertiesKHR'
--- structure is included in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+#if defined(VK_USE_PLATFORM_GGP)
+
+-- No documentation found for TopLevel "VkPhysicalDeviceFloatControlsPropertiesKHR"
 data PhysicalDeviceFloatControlsPropertiesKHR = PhysicalDeviceFloatControlsPropertiesKHR
-  { -- Univalued member elided
-  -- No documentation found for Nested "PhysicalDeviceFloatControlsPropertiesKHR" "pNext"
+  { -- No documentation found for Nested "PhysicalDeviceFloatControlsPropertiesKHR" "pNext"
   next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDeviceFloatControlsPropertiesKHR" "separateDenormSettings"
   separateDenormSettings :: Bool
@@ -106,35 +84,6 @@ data PhysicalDeviceFloatControlsPropertiesKHR = PhysicalDeviceFloatControlsPrope
   }
   deriving (Show, Eq)
 
--- | A function to temporarily allocate memory for a 'VkPhysicalDeviceFloatControlsPropertiesKHR' and
--- marshal a 'PhysicalDeviceFloatControlsPropertiesKHR' into it. The 'VkPhysicalDeviceFloatControlsPropertiesKHR' is only valid inside
--- the provided computation and must not be returned out of it.
-withCStructPhysicalDeviceFloatControlsPropertiesKHR :: PhysicalDeviceFloatControlsPropertiesKHR -> (VkPhysicalDeviceFloatControlsPropertiesKHR -> IO a) -> IO a
-withCStructPhysicalDeviceFloatControlsPropertiesKHR marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR)) (\pPNext -> cont (VkPhysicalDeviceFloatControlsPropertiesKHR VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT_CONTROLS_PROPERTIES_KHR pPNext (boolToBool32 (separateDenormSettings (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (separateRoundingModeSettings (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderSignedZeroInfNanPreserveFloat16 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderSignedZeroInfNanPreserveFloat32 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderSignedZeroInfNanPreserveFloat64 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderDenormPreserveFloat16 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderDenormPreserveFloat32 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderDenormPreserveFloat64 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderDenormFlushToZeroFloat16 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderDenormFlushToZeroFloat32 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderDenormFlushToZeroFloat64 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderRoundingModeRTEFloat16 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderRoundingModeRTEFloat32 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderRoundingModeRTEFloat64 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderRoundingModeRTZFloat16 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderRoundingModeRTZFloat32 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR))) (boolToBool32 (shaderRoundingModeRTZFloat64 (marshalled :: PhysicalDeviceFloatControlsPropertiesKHR)))))
-
--- | A function to read a 'VkPhysicalDeviceFloatControlsPropertiesKHR' and all additional
--- structures in the pointer chain into a 'PhysicalDeviceFloatControlsPropertiesKHR'.
-fromCStructPhysicalDeviceFloatControlsPropertiesKHR :: VkPhysicalDeviceFloatControlsPropertiesKHR -> IO PhysicalDeviceFloatControlsPropertiesKHR
-fromCStructPhysicalDeviceFloatControlsPropertiesKHR c = PhysicalDeviceFloatControlsPropertiesKHR <$> -- Univalued Member elided
-                                                                                                 maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceFloatControlsPropertiesKHR)))
-                                                                                                 <*> pure (bool32ToBool (vkSeparateDenormSettings (c :: VkPhysicalDeviceFloatControlsPropertiesKHR)))
-                                                                                                 <*> pure (bool32ToBool (vkSeparateRoundingModeSettings (c :: VkPhysicalDeviceFloatControlsPropertiesKHR)))
-                                                                                                 <*> pure (bool32ToBool (vkShaderSignedZeroInfNanPreserveFloat16 (c :: VkPhysicalDeviceFloatControlsPropertiesKHR)))
-                                                                                                 <*> pure (bool32ToBool (vkShaderSignedZeroInfNanPreserveFloat32 (c :: VkPhysicalDeviceFloatControlsPropertiesKHR)))
-                                                                                                 <*> pure (bool32ToBool (vkShaderSignedZeroInfNanPreserveFloat64 (c :: VkPhysicalDeviceFloatControlsPropertiesKHR)))
-                                                                                                 <*> pure (bool32ToBool (vkShaderDenormPreserveFloat16 (c :: VkPhysicalDeviceFloatControlsPropertiesKHR)))
-                                                                                                 <*> pure (bool32ToBool (vkShaderDenormPreserveFloat32 (c :: VkPhysicalDeviceFloatControlsPropertiesKHR)))
-                                                                                                 <*> pure (bool32ToBool (vkShaderDenormPreserveFloat64 (c :: VkPhysicalDeviceFloatControlsPropertiesKHR)))
-                                                                                                 <*> pure (bool32ToBool (vkShaderDenormFlushToZeroFloat16 (c :: VkPhysicalDeviceFloatControlsPropertiesKHR)))
-                                                                                                 <*> pure (bool32ToBool (vkShaderDenormFlushToZeroFloat32 (c :: VkPhysicalDeviceFloatControlsPropertiesKHR)))
-                                                                                                 <*> pure (bool32ToBool (vkShaderDenormFlushToZeroFloat64 (c :: VkPhysicalDeviceFloatControlsPropertiesKHR)))
-                                                                                                 <*> pure (bool32ToBool (vkShaderRoundingModeRTEFloat16 (c :: VkPhysicalDeviceFloatControlsPropertiesKHR)))
-                                                                                                 <*> pure (bool32ToBool (vkShaderRoundingModeRTEFloat32 (c :: VkPhysicalDeviceFloatControlsPropertiesKHR)))
-                                                                                                 <*> pure (bool32ToBool (vkShaderRoundingModeRTEFloat64 (c :: VkPhysicalDeviceFloatControlsPropertiesKHR)))
-                                                                                                 <*> pure (bool32ToBool (vkShaderRoundingModeRTZFloat16 (c :: VkPhysicalDeviceFloatControlsPropertiesKHR)))
-                                                                                                 <*> pure (bool32ToBool (vkShaderRoundingModeRTZFloat32 (c :: VkPhysicalDeviceFloatControlsPropertiesKHR)))
-                                                                                                 <*> pure (bool32ToBool (vkShaderRoundingModeRTZFloat64 (c :: VkPhysicalDeviceFloatControlsPropertiesKHR)))
-
 instance Zero PhysicalDeviceFloatControlsPropertiesKHR where
   zero = PhysicalDeviceFloatControlsPropertiesKHR Nothing
                                                   False
@@ -155,6 +104,7 @@ instance Zero PhysicalDeviceFloatControlsPropertiesKHR where
                                                   False
                                                   False
 
+#endif
 
 -- No documentation found for TopLevel "VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME"
 pattern KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME :: (Eq a, IsString a) => a

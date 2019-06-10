@@ -14,65 +14,23 @@ module Graphics.Vulkan.Core10.CommandPool
 
 
 import {-# source #-} Graphics.Vulkan.C.Core10.CommandPool
-  ( VkCommandPoolCreateFlagBits
+  ( VkCommandPool
+  , VkCommandPoolCreateFlagBits
   , VkCommandPoolResetFlagBits
-  , VkCommandPool
   )
 
 
--- | VkCommandPool - Opaque handle to a command pool object
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferAllocateInfo',
--- 'Graphics.Vulkan.C.Core10.CommandPool.vkCreateCommandPool',
--- 'Graphics.Vulkan.C.Core10.CommandPool.vkDestroyCommandPool',
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.vkFreeCommandBuffers',
--- 'Graphics.Vulkan.C.Core10.CommandPool.vkResetCommandPool',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1.vkTrimCommandPool',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_maintenance1.vkTrimCommandPoolKHR'
+-- No documentation found for TopLevel "CommandPool"
 type CommandPool = VkCommandPool
 
--- | VkCommandPoolCreateFlagBits - Bitmask specifying usage behavior for a
--- command pool
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPoolCreateFlags'
+-- No documentation found for TopLevel "CommandPoolCreateFlagBits"
 type CommandPoolCreateFlagBits = VkCommandPoolCreateFlagBits
 
--- | VkCommandPoolCreateFlags - Bitmask of VkCommandPoolCreateFlagBits
---
--- = Description
---
--- 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPoolCreateFlags' is a
--- bitmask type for setting a mask of zero or more
--- 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPoolCreateFlagBits'.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPoolCreateFlagBits',
--- 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPoolCreateInfo'
+-- No documentation found for TopLevel "CommandPoolCreateFlags"
 type CommandPoolCreateFlags = CommandPoolCreateFlagBits
 
--- | VkCommandPoolResetFlagBits - Bitmask controlling behavior of a command
--- pool reset
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPoolResetFlags'
+-- No documentation found for TopLevel "CommandPoolResetFlagBits"
 type CommandPoolResetFlagBits = VkCommandPoolResetFlagBits
 
--- | VkCommandPoolResetFlags - Bitmask of VkCommandPoolResetFlagBits
---
--- = Description
---
--- 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPoolResetFlags' is a
--- bitmask type for setting a mask of zero or more
--- 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPoolResetFlagBits'.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPoolResetFlagBits',
--- 'Graphics.Vulkan.C.Core10.CommandPool.vkResetCommandPool'
+-- No documentation found for TopLevel "CommandPoolResetFlags"
 type CommandPoolResetFlags = CommandPoolResetFlagBits

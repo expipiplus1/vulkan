@@ -76,10 +76,10 @@ import Graphics.Vulkan.Core10.Image
   )
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance2
   ( ImageViewUsageCreateInfo(..)
-  , InputAttachmentAspectReference(..)
   , PhysicalDevicePointClippingProperties(..)
   , PipelineTessellationDomainOriginStateCreateInfo(..)
   , RenderPassInputAttachmentAspectCreateInfo(..)
+  , InputAttachmentAspectReference(..)
   , pattern POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES
   , pattern POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY
   , pattern TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT

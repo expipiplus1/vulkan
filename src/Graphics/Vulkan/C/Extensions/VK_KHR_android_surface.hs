@@ -99,24 +99,15 @@ instance Read VkAndroidSurfaceCreateFlagsKHR where
 
 
 
--- | VkAndroidSurfaceCreateInfoKHR - Structure specifying parameters of a
--- newly created Android surface object
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'VkAndroidSurfaceCreateFlagsKHR',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkCreateAndroidSurfaceKHR'
+-- No documentation found for TopLevel "VkAndroidSurfaceCreateInfoKHR"
 data VkAndroidSurfaceCreateInfoKHR = VkAndroidSurfaceCreateInfoKHR
-  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR'
+  { -- No documentation found for Nested "VkAndroidSurfaceCreateInfoKHR" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- No documentation found for Nested "VkAndroidSurfaceCreateInfoKHR" "pNext"
   vkPNext :: Ptr ()
-  , -- | @flags@ /must/ be @0@
+  , -- No documentation found for Nested "VkAndroidSurfaceCreateInfoKHR" "flags"
   vkFlags :: VkAndroidSurfaceCreateFlagsKHR
-  , -- | @window@ /must/ point to a valid Android 'ANativeWindow'.
+  , -- No documentation found for Nested "VkAndroidSurfaceCreateInfoKHR" "window"
   vkWindow :: Ptr ANativeWindow
   }
   deriving (Eq, Show)
@@ -139,89 +130,7 @@ instance Zero VkAndroidSurfaceCreateInfoKHR where
                                        zero
                                        zero
 
--- | vkCreateAndroidSurfaceKHR - Create a
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' object for an
--- Android native window
---
--- = Parameters
---
--- -   @instance@ is the instance to associate the surface with.
---
--- -   @pCreateInfo@ is a pointer to an instance of the
---     'VkAndroidSurfaceCreateInfoKHR' structure containing parameters
---     affecting the creation of the surface object.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     surface object when there is no more specific allocator available
---     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
---
--- -   @pSurface@ points to a
---     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
---     which the created surface object is returned.
---
--- = Description
---
--- During the lifetime of a surface created using a particular
--- 'ANativeWindow' handle any attempts to create another surface for the
--- same 'ANativeWindow' and any attempts to connect to the same
--- 'ANativeWindow' through other platform mechanisms will fail.
---
--- __Note__
---
--- In particular, only one
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' /can/ exist
--- at a time for a given window. Similarly, a native window /cannot/ be
--- used by both a
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' and
--- @EGLSurface@ simultaneously.
---
--- If successful, 'vkCreateAndroidSurfaceKHR' increments the
--- 'ANativeWindow'’s reference count, and
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.vkDestroySurfaceKHR' will
--- decrement it.
---
--- On Android, when a swapchain’s @imageExtent@ does not match the
--- surface’s @currentExtent@, the presentable images will be scaled to the
--- surface’s dimensions during presentation. @minImageExtent@ is (1,1), and
--- @maxImageExtent@ is the maximum image size supported by the consumer.
--- For the system compositor, @currentExtent@ is the window size (i.e. the
--- consumer’s preferred size).
---
--- == Valid Usage (Implicit)
---
--- -   @instance@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
---
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'VkAndroidSurfaceCreateInfoKHR' structure
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
---     structure
---
--- -   @pSurface@ /must/ be a valid pointer to a
---     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_NATIVE_WINDOW_IN_USE_KHR'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'VkAndroidSurfaceCreateInfoKHR',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR'
+-- No documentation found for TopLevel "vkCreateAndroidSurfaceKHR"
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)

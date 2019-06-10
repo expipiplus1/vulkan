@@ -1,95 +1,113 @@
 {-# language Strict #-}
 {-# language CPP #-}
 {-# language DuplicateRecordFields #-}
-{-# language PatternSynonyms #-}
 
 module Graphics.Vulkan.Core10.LayerDiscovery
-  ( withCStructLayerProperties
-  , fromCStructLayerProperties
-  , LayerProperties(..)
+  ( LayerProperties(..)
+#if defined(VK_USE_PLATFORM_GGP)
   , getNumDeviceLayerProperties
   , enumerateDeviceLayerProperties
   , enumerateAllDeviceLayerProperties
   , getNumInstanceLayerProperties
   , enumerateInstanceLayerProperties
   , enumerateAllInstanceLayerProperties
+#endif
   ) where
 
-import Control.Exception
-  ( throwIO
-  )
+
+#if defined(VK_USE_PLATFORM_GGP)
 import Control.Monad
   ( (<=<)
-  , when
   )
+#endif
 import Data.ByteString
   ( ByteString
-  , packCString
   )
-import qualified Data.ByteString
-  ( empty
-  )
+
+#if defined(VK_USE_PLATFORM_GGP)
 import Data.Vector
   ( Vector
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
 import qualified Data.Vector
   ( generateM
   )
-import qualified Data.Vector.Storable
-  ( unsafeWith
-  )
-import qualified Data.Vector.Storable.Sized
-  ( fromSized
-  )
+#endif
 import Data.Word
   ( Word32
   )
+
+#if defined(VK_USE_PLATFORM_GGP)
 import Foreign.Marshal.Alloc
   ( alloca
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
 import Foreign.Marshal.Array
   ( allocaArray
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
 import Foreign.Marshal.Utils
   ( with
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
 import Foreign.Ptr
   ( nullPtr
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
+import Foreign.Storable
+  ( peekElemOff
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
 import Foreign.Storable
   ( peek
-  , peekElemOff
   )
+#endif
 
 
 import Graphics.Vulkan.C.Core10.Core
-  ( VkResult(..)
-  , Zero(..)
-  , pattern VK_SUCCESS
+  ( Zero(..)
   )
+
+#if defined(VK_USE_PLATFORM_GGP)
+import Graphics.Vulkan.C.Core10.Core
+  ( VkResult(..)
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
 import Graphics.Vulkan.C.Core10.LayerDiscovery
-  ( VkLayerProperties(..)
-  , vkEnumerateDeviceLayerProperties
+  ( vkEnumerateDeviceLayerProperties
   , vkEnumerateInstanceLayerProperties
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
 import Graphics.Vulkan.Core10.DeviceInitialization
   ( PhysicalDevice(..)
   )
-import Graphics.Vulkan.Exception
-  ( VulkanException(..)
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
+import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
+  ( FromCStruct(..)
   )
-import Graphics.Vulkan.Marshal.Utils
-  ( byteStringToNullTerminatedSizedVector
-  )
+#endif
 
 
 
--- | VkLayerProperties - Structure specifying layer properties
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.LayerDiscovery.vkEnumerateDeviceLayerProperties',
--- 'Graphics.Vulkan.C.Core10.LayerDiscovery.vkEnumerateInstanceLayerProperties'
+-- No documentation found for TopLevel "VkLayerProperties"
 data LayerProperties = LayerProperties
   { -- No documentation found for Nested "LayerProperties" "layerName"
   layerName :: ByteString
@@ -102,297 +120,45 @@ data LayerProperties = LayerProperties
   }
   deriving (Show, Eq)
 
--- | A function to temporarily allocate memory for a 'VkLayerProperties' and
--- marshal a 'LayerProperties' into it. The 'VkLayerProperties' is only valid inside
--- the provided computation and must not be returned out of it.
-withCStructLayerProperties :: LayerProperties -> (VkLayerProperties -> IO a) -> IO a
-withCStructLayerProperties marshalled cont = cont (VkLayerProperties (byteStringToNullTerminatedSizedVector (layerName (marshalled :: LayerProperties))) (specVersion (marshalled :: LayerProperties)) (implementationVersion (marshalled :: LayerProperties)) (byteStringToNullTerminatedSizedVector (description (marshalled :: LayerProperties))))
-
--- | A function to read a 'VkLayerProperties' and all additional
--- structures in the pointer chain into a 'LayerProperties'.
-fromCStructLayerProperties :: VkLayerProperties -> IO LayerProperties
-fromCStructLayerProperties c = LayerProperties <$> Data.Vector.Storable.unsafeWith (Data.Vector.Storable.Sized.fromSized (vkLayerName (c :: VkLayerProperties))) packCString
-                                               <*> pure (vkSpecVersion (c :: VkLayerProperties))
-                                               <*> pure (vkImplementationVersion (c :: VkLayerProperties))
-                                               <*> Data.Vector.Storable.unsafeWith (Data.Vector.Storable.Sized.fromSized (vkDescription (c :: VkLayerProperties))) packCString
-
 instance Zero LayerProperties where
-  zero = LayerProperties Data.ByteString.empty
+  zero = LayerProperties mempty
                          zero
                          zero
-                         Data.ByteString.empty
+                         mempty
 
 
 
--- | vkEnumerateDeviceLayerProperties - Returns properties of available
--- physical device layers
---
--- = Parameters
---
--- -   @pPropertyCount@ is a pointer to an integer related to the number of
---     layer properties available or queried.
---
--- -   @pProperties@ is either @NULL@ or a pointer to an array of
---     'Graphics.Vulkan.C.Core10.LayerDiscovery.VkLayerProperties'
---     structures.
---
--- = Description
---
--- If @pProperties@ is @NULL@, then the number of layer properties
--- available is returned in @pPropertyCount@. Otherwise, @pPropertyCount@
--- /must/ point to a variable set by the user to the number of elements in
--- the @pProperties@ array, and on return the variable is overwritten with
--- the number of structures actually written to @pProperties@. If
--- @pPropertyCount@ is less than the number of layer properties available,
--- at most @pPropertyCount@ structures will be written. If @pPropertyCount@
--- is smaller than the number of layers available,
--- 'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE' will be returned instead
--- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS', to indicate that not all
--- the available layer properties were returned.
---
--- The list of layers enumerated by
--- 'Graphics.Vulkan.C.Core10.LayerDiscovery.vkEnumerateDeviceLayerProperties'
--- /must/ be exactly the sequence of layers enabled for the instance. The
--- members of 'Graphics.Vulkan.C.Core10.LayerDiscovery.VkLayerProperties'
--- for each enumerated layer /must/ be the same as the properties when the
--- layer was enumerated by
--- 'Graphics.Vulkan.C.Core10.LayerDiscovery.vkEnumerateInstanceLayerProperties'.
---
--- == Valid Usage (Implicit)
---
--- -   @physicalDevice@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
---     handle
---
--- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
---
--- -   If the value referenced by @pPropertyCount@ is not @0@, and
---     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
---     to an array of @pPropertyCount@
---     'Graphics.Vulkan.C.Core10.LayerDiscovery.VkLayerProperties'
---     structures
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.LayerDiscovery.VkLayerProperties',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+#if defined(VK_USE_PLATFORM_GGP)
+
+-- No documentation found for TopLevel "vkEnumerateDeviceLayerProperties"
 getNumDeviceLayerProperties :: PhysicalDevice ->  IO (VkResult, Word32)
-getNumDeviceLayerProperties = \(PhysicalDevice physicalDevice' commandTable) -> alloca (\pPropertyCount' -> vkEnumerateDeviceLayerProperties commandTable physicalDevice' pPropertyCount' nullPtr >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>peek pPropertyCount')))
+getNumDeviceLayerProperties = undefined {- {wrapped (pretty cName) :: Doc ()} -}
 
--- | vkEnumerateDeviceLayerProperties - Returns properties of available
--- physical device layers
---
--- = Parameters
---
--- -   @pPropertyCount@ is a pointer to an integer related to the number of
---     layer properties available or queried.
---
--- -   @pProperties@ is either @NULL@ or a pointer to an array of
---     'Graphics.Vulkan.C.Core10.LayerDiscovery.VkLayerProperties'
---     structures.
---
--- = Description
---
--- If @pProperties@ is @NULL@, then the number of layer properties
--- available is returned in @pPropertyCount@. Otherwise, @pPropertyCount@
--- /must/ point to a variable set by the user to the number of elements in
--- the @pProperties@ array, and on return the variable is overwritten with
--- the number of structures actually written to @pProperties@. If
--- @pPropertyCount@ is less than the number of layer properties available,
--- at most @pPropertyCount@ structures will be written. If @pPropertyCount@
--- is smaller than the number of layers available,
--- 'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE' will be returned instead
--- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS', to indicate that not all
--- the available layer properties were returned.
---
--- The list of layers enumerated by
--- 'Graphics.Vulkan.C.Core10.LayerDiscovery.vkEnumerateDeviceLayerProperties'
--- /must/ be exactly the sequence of layers enabled for the instance. The
--- members of 'Graphics.Vulkan.C.Core10.LayerDiscovery.VkLayerProperties'
--- for each enumerated layer /must/ be the same as the properties when the
--- layer was enumerated by
--- 'Graphics.Vulkan.C.Core10.LayerDiscovery.vkEnumerateInstanceLayerProperties'.
---
--- == Valid Usage (Implicit)
---
--- -   @physicalDevice@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
---     handle
---
--- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
---
--- -   If the value referenced by @pPropertyCount@ is not @0@, and
---     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
---     to an array of @pPropertyCount@
---     'Graphics.Vulkan.C.Core10.LayerDiscovery.VkLayerProperties'
---     structures
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.LayerDiscovery.VkLayerProperties',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+-- No documentation found for TopLevel "vkEnumerateDeviceLayerProperties"
 enumerateDeviceLayerProperties :: PhysicalDevice ->  Word32 ->  IO (VkResult, Vector LayerProperties)
-enumerateDeviceLayerProperties = \(PhysicalDevice physicalDevice' commandTable) -> \propertyCount' -> allocaArray (fromIntegral propertyCount') (\pProperties' -> with propertyCount' (\pPropertyCount' -> vkEnumerateDeviceLayerProperties commandTable physicalDevice' pPropertyCount' pProperties' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>(flip Data.Vector.generateM ((\p -> fromCStructLayerProperties <=< peekElemOff p) pProperties') =<< (fromIntegral <$> (peek pPropertyCount')))))))
+enumerateDeviceLayerProperties = undefined {- {wrapped (pretty cName) :: Doc ()} -}
 -- | Returns all the values available from 'enumerateDeviceLayerProperties'.
 enumerateAllDeviceLayerProperties :: PhysicalDevice ->  IO (Vector LayerProperties)
 enumerateAllDeviceLayerProperties physicalDevice' =
   snd <$> getNumDeviceLayerProperties physicalDevice'
     >>= \num -> snd <$> enumerateDeviceLayerProperties physicalDevice' num
 
+#endif
 
 
--- | vkEnumerateInstanceLayerProperties - Returns up to requested number of
--- global layer properties
---
--- = Parameters
---
--- -   @pPropertyCount@ is a pointer to an integer related to the number of
---     layer properties available or queried, as described below.
---
--- -   @pProperties@ is either @NULL@ or a pointer to an array of
---     'Graphics.Vulkan.C.Core10.LayerDiscovery.VkLayerProperties'
---     structures.
---
--- = Description
---
--- If @pProperties@ is @NULL@, then the number of layer properties
--- available is returned in @pPropertyCount@. Otherwise, @pPropertyCount@
--- /must/ point to a variable set by the user to the number of elements in
--- the @pProperties@ array, and on return the variable is overwritten with
--- the number of structures actually written to @pProperties@. If
--- @pPropertyCount@ is less than the number of layer properties available,
--- at most @pPropertyCount@ structures will be written. If @pPropertyCount@
--- is smaller than the number of layers available,
--- 'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE' will be returned instead
--- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS', to indicate that not all
--- the available layer properties were returned.
---
--- The list of available layers may change at any time due to actions
--- outside of the Vulkan implementation, so two calls to
--- 'Graphics.Vulkan.C.Core10.LayerDiscovery.vkEnumerateInstanceLayerProperties'
--- with the same parameters /may/ return different results, or retrieve
--- different @pPropertyCount@ values or @pProperties@ contents. Once an
--- instance has been created, the layers enabled for that instance will
--- continue to be enabled and valid for the lifetime of that instance, even
--- if some of them become unavailable for future instances.
---
--- == Valid Usage (Implicit)
---
--- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
---
--- -   If the value referenced by @pPropertyCount@ is not @0@, and
---     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
---     to an array of @pPropertyCount@
---     'Graphics.Vulkan.C.Core10.LayerDiscovery.VkLayerProperties'
---     structures
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.LayerDiscovery.VkLayerProperties'
+#if defined(VK_USE_PLATFORM_GGP)
+
+-- No documentation found for TopLevel "vkEnumerateInstanceLayerProperties"
 getNumInstanceLayerProperties :: IO (VkResult, Word32)
-getNumInstanceLayerProperties = alloca (\pPropertyCount' -> vkEnumerateInstanceLayerProperties pPropertyCount' nullPtr >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>peek pPropertyCount')))
+getNumInstanceLayerProperties = undefined {- {wrapped (pretty cName) :: Doc ()} -}
 
--- | vkEnumerateInstanceLayerProperties - Returns up to requested number of
--- global layer properties
---
--- = Parameters
---
--- -   @pPropertyCount@ is a pointer to an integer related to the number of
---     layer properties available or queried, as described below.
---
--- -   @pProperties@ is either @NULL@ or a pointer to an array of
---     'Graphics.Vulkan.C.Core10.LayerDiscovery.VkLayerProperties'
---     structures.
---
--- = Description
---
--- If @pProperties@ is @NULL@, then the number of layer properties
--- available is returned in @pPropertyCount@. Otherwise, @pPropertyCount@
--- /must/ point to a variable set by the user to the number of elements in
--- the @pProperties@ array, and on return the variable is overwritten with
--- the number of structures actually written to @pProperties@. If
--- @pPropertyCount@ is less than the number of layer properties available,
--- at most @pPropertyCount@ structures will be written. If @pPropertyCount@
--- is smaller than the number of layers available,
--- 'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE' will be returned instead
--- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS', to indicate that not all
--- the available layer properties were returned.
---
--- The list of available layers may change at any time due to actions
--- outside of the Vulkan implementation, so two calls to
--- 'Graphics.Vulkan.C.Core10.LayerDiscovery.vkEnumerateInstanceLayerProperties'
--- with the same parameters /may/ return different results, or retrieve
--- different @pPropertyCount@ values or @pProperties@ contents. Once an
--- instance has been created, the layers enabled for that instance will
--- continue to be enabled and valid for the lifetime of that instance, even
--- if some of them become unavailable for future instances.
---
--- == Valid Usage (Implicit)
---
--- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
---
--- -   If the value referenced by @pPropertyCount@ is not @0@, and
---     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
---     to an array of @pPropertyCount@
---     'Graphics.Vulkan.C.Core10.LayerDiscovery.VkLayerProperties'
---     structures
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.LayerDiscovery.VkLayerProperties'
+-- No documentation found for TopLevel "vkEnumerateInstanceLayerProperties"
 enumerateInstanceLayerProperties :: Word32 ->  IO (VkResult, Vector LayerProperties)
-enumerateInstanceLayerProperties = \propertyCount' -> allocaArray (fromIntegral propertyCount') (\pProperties' -> with propertyCount' (\pPropertyCount' -> vkEnumerateInstanceLayerProperties pPropertyCount' pProperties' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>(flip Data.Vector.generateM ((\p -> fromCStructLayerProperties <=< peekElemOff p) pProperties') =<< (fromIntegral <$> (peek pPropertyCount')))))))
+enumerateInstanceLayerProperties = undefined {- {wrapped (pretty cName) :: Doc ()} -}
 -- | Returns all the values available from 'enumerateInstanceLayerProperties'.
 enumerateAllInstanceLayerProperties :: IO (Vector LayerProperties)
 enumerateAllInstanceLayerProperties  =
   snd <$> getNumInstanceLayerProperties 
     >>= \num -> snd <$> enumerateInstanceLayerProperties  num
 
+#endif

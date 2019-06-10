@@ -55,27 +55,13 @@ import Graphics.Vulkan.NamedType
   )
 
 
--- | VkDisplayNativeHdrSurfaceCapabilitiesAMD - Structure describing display
--- native HDR specific capabilities of a surface
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkDisplayNativeHdrSurfaceCapabilitiesAMD"
 data VkDisplayNativeHdrSurfaceCapabilitiesAMD = VkDisplayNativeHdrSurfaceCapabilitiesAMD
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_DISPLAY_NATIVE_HDR_SURFACE_CAPABILITIES_AMD'
+  { -- No documentation found for Nested "VkDisplayNativeHdrSurfaceCapabilitiesAMD" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkDisplayNativeHdrSurfaceCapabilitiesAMD" "pNext"
   vkPNext :: Ptr ()
-  , -- | @localDimmingSupport@ specifies whether the surface supports local
-  -- dimming. If this is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE',
-  -- 'VkSwapchainDisplayNativeHdrCreateInfoAMD' /can/ be used to explicitly
-  -- enable or disable local dimming for the surface. Local dimming may also
-  -- be overriden by 'vkSetLocalDimmingAMD' during the lifetime of the
-  -- swapchain.
+  , -- No documentation found for Nested "VkDisplayNativeHdrSurfaceCapabilitiesAMD" "localDimmingSupport"
   vkLocalDimmingSupport :: VkBool32
   }
   deriving (Eq, Show)
@@ -95,40 +81,13 @@ instance Zero VkDisplayNativeHdrSurfaceCapabilitiesAMD where
                                                   zero
                                                   zero
 
--- | VkSwapchainDisplayNativeHdrCreateInfoAMD - Structure specifying display
--- native HDR parameters of a newly created swapchain object
---
--- = Description
---
--- If the @pNext@ chain of
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR'
--- does not contain this structure, the default value for
--- @localDimmingEnable@ is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE', meaning
--- local dimming is initially enabled for the swapchain.
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     'VK_STRUCTURE_TYPE_SWAPCHAIN_DISPLAY_NATIVE_HDR_CREATE_INFO_AMD'
---
--- == Valid Usage
---
--- -   It is only valid to set @localDimmingEnable@ to
---     'Graphics.Vulkan.C.Core10.Core.VK_TRUE' if
---     'VkDisplayNativeHdrSurfaceCapabilitiesAMD'::@localDimmingSupport@ is
---     supported.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkSwapchainDisplayNativeHdrCreateInfoAMD"
 data VkSwapchainDisplayNativeHdrCreateInfoAMD = VkSwapchainDisplayNativeHdrCreateInfoAMD
-  { -- | @sType@ is the type of this structure.
+  { -- No documentation found for Nested "VkSwapchainDisplayNativeHdrCreateInfoAMD" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkSwapchainDisplayNativeHdrCreateInfoAMD" "pNext"
   vkPNext :: Ptr ()
-  , -- | @localDimmingEnable@ specifies whether local dimming is enabled for the
-  -- swapchain.
+  , -- No documentation found for Nested "VkSwapchainDisplayNativeHdrCreateInfoAMD" "localDimmingEnable"
   vkLocalDimmingEnable :: VkBool32
   }
   deriving (Eq, Show)
@@ -148,41 +107,7 @@ instance Zero VkSwapchainDisplayNativeHdrCreateInfoAMD where
                                                   zero
                                                   zero
 
--- | vkSetLocalDimmingAMD - Set Local Dimming
---
--- = Parameters
---
--- -   @device@ is the device associated with @swapChain@.
---
--- -   @swapChain@ handle to enable local dimming.
---
--- -   @localDimmingEnable@ specifies whether local dimming is enabled for
---     the swapchain.
---
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
---
--- -   @swapChain@ /must/ be a valid
---     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
---     handle
---
--- -   Both of @device@, and @swapChain@ /must/ have been created,
---     allocated, or retrieved from the same
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance'
---
--- == Valid Usage
---
--- -   It is only valid to call 'vkSetLocalDimmingAMD' if
---     'VkDisplayNativeHdrSurfaceCapabilitiesAMD'::@localDimmingSupport@ is
---     supported.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
+-- No documentation found for TopLevel "vkSetLocalDimmingAMD"
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)

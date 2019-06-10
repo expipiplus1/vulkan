@@ -35,40 +35,13 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
   )
 
 
--- | VkPhysicalDeviceCornerSampledImageFeaturesNV - Structure describing
--- corner sampled image features that can be supported by an implementation
---
--- = Members
---
--- The members of the 'VkPhysicalDeviceCornerSampledImageFeaturesNV'
--- structure describe the following features:
---
--- = Description
---
--- If the 'VkPhysicalDeviceCornerSampledImageFeaturesNV' structure is
--- included in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
--- it is filled with values indicating whether each feature is supported.
--- 'VkPhysicalDeviceCornerSampledImageFeaturesNV' /can/ also be used in the
--- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to
--- enable features.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkPhysicalDeviceCornerSampledImageFeaturesNV"
 data VkPhysicalDeviceCornerSampledImageFeaturesNV = VkPhysicalDeviceCornerSampledImageFeaturesNV
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CORNER_SAMPLED_IMAGE_FEATURES_NV'
+  { -- No documentation found for Nested "VkPhysicalDeviceCornerSampledImageFeaturesNV" "sType"
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceCornerSampledImageFeaturesNV" "pNext"
   vkPNext :: Ptr ()
-  , -- | @cornerSampledImage@ specifies whether images can be created with a
-  -- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@flags@ containing
-  -- 'VK_IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'. See
-  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-images-corner-sampled Corner-Sampled Images>.
+  , -- No documentation found for Nested "VkPhysicalDeviceCornerSampledImageFeaturesNV" "cornerSampledImage"
   vkCornerSampledImage :: VkBool32
   }
   deriving (Eq, Show)

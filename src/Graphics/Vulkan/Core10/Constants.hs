@@ -17,19 +17,13 @@ import Graphics.Vulkan.C.Core10.Constants
   )
 
 
--- | VkPipelineCacheHeaderVersion - Encode pipeline cache version
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.PipelineCache.vkCreatePipelineCache',
--- 'Graphics.Vulkan.C.Core10.PipelineCache.vkGetPipelineCacheData'
+-- No documentation found for TopLevel "PipelineCacheHeaderVersion"
 type PipelineCacheHeaderVersion = VkPipelineCacheHeaderVersion
 
 
 {-# complete PIPELINE_CACHE_HEADER_VERSION_ONE :: PipelineCacheHeaderVersion #-}
 
 
--- | 'Graphics.Vulkan.C.Core10.Constants.VK_PIPELINE_CACHE_HEADER_VERSION_ONE'
--- specifies version one of the pipeline cache.
+-- No documentation found for Nested "PipelineCacheHeaderVersion" "PIPELINE_CACHE_HEADER_VERSION_ONE"
 pattern PIPELINE_CACHE_HEADER_VERSION_ONE :: (a ~ PipelineCacheHeaderVersion) => a
 pattern PIPELINE_CACHE_HEADER_VERSION_ONE = VK_PIPELINE_CACHE_HEADER_VERSION_ONE

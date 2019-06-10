@@ -95,16 +95,7 @@ data VkBlendOp
 
 data VkColorComponentFlagBits
 
--- | VkColorComponentFlags - Bitmask of VkColorComponentFlagBits
---
--- = Description
---
--- 'VkColorComponentFlags' is a bitmask type for setting a mask of zero or
--- more 'VkColorComponentFlagBits'.
---
--- = See Also
---
--- 'VkColorComponentFlagBits', 'VkPipelineColorBlendAttachmentState'
+-- No documentation found for TopLevel "VkColorComponentFlags"
 type VkColorComponentFlags = VkColorComponentFlagBits
 
 data VkCompareOp
@@ -113,16 +104,7 @@ data VkComputePipelineCreateInfo
 
 data VkCullModeFlagBits
 
--- | VkCullModeFlags - Bitmask of VkCullModeFlagBits
---
--- = Description
---
--- 'VkCullModeFlags' is a bitmask type for setting a mask of zero or more
--- 'VkCullModeFlagBits'.
---
--- = See Also
---
--- 'VkCullModeFlagBits', 'VkPipelineRasterizationStateCreateInfo'
+-- No documentation found for TopLevel "VkCullModeFlags"
 type VkCullModeFlags = VkCullModeFlagBits
 
 data VkDynamicState
@@ -139,20 +121,7 @@ data VkOffset2D
 
 -- | Dummy data to tag the 'Ptr' with
 data VkPipeline_T
--- | VkPipeline - Opaque handle to a pipeline object
---
--- = See Also
---
--- 'VkComputePipelineCreateInfo', 'VkGraphicsPipelineCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkObjectTablePipelineEntryNVX',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkRayTracingPipelineCreateInfoNV',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindPipeline',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCompileDeferredNV',
--- 'vkCreateComputePipelines', 'vkCreateGraphicsPipelines',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCreateRayTracingPipelinesNV',
--- 'vkDestroyPipeline',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkGetRayTracingShaderGroupHandlesNV',
--- 'Graphics.Vulkan.C.Extensions.VK_AMD_shader_info.vkGetShaderInfoAMD'
+-- No documentation found for TopLevel "VkPipeline"
 type VkPipeline = Ptr VkPipeline_T
 
 data VkPipelineColorBlendAttachmentState
@@ -163,18 +132,7 @@ data VkPipelineColorBlendStateCreateInfo
 
 data VkPipelineCreateFlagBits
 
--- | VkPipelineCreateFlags - Bitmask of VkPipelineCreateFlagBits
---
--- = Description
---
--- 'VkPipelineCreateFlags' is a bitmask type for setting a mask of zero or
--- more 'VkPipelineCreateFlagBits'.
---
--- = See Also
---
--- 'VkComputePipelineCreateInfo', 'VkGraphicsPipelineCreateInfo',
--- 'VkPipelineCreateFlagBits',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkRayTracingPipelineCreateInfoNV'
+-- No documentation found for TopLevel "VkPipelineCreateFlags"
 type VkPipelineCreateFlags = VkPipelineCreateFlagBits
 
 data VkPipelineDepthStencilStateCreateFlags
@@ -191,22 +149,7 @@ data VkPipelineInputAssemblyStateCreateInfo
 
 -- | Dummy data to tag the 'Ptr' with
 data VkPipelineLayout_T
--- | VkPipelineLayout - Opaque handle to a pipeline layout object
---
--- = See Also
---
--- 'VkComputePipelineCreateInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplateCreateInfo',
--- 'VkGraphicsPipelineCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkObjectTableDescriptorSetEntryNVX',
--- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkObjectTablePushConstantEntryNVX',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkRayTracingPipelineCreateInfoNV',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBindDescriptorSets',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdPushConstants',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.vkCmdPushDescriptorSetKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.vkCmdPushDescriptorSetWithTemplateKHR',
--- 'Graphics.Vulkan.C.Core10.PipelineLayout.vkCreatePipelineLayout',
--- 'Graphics.Vulkan.C.Core10.PipelineLayout.vkDestroyPipelineLayout'
+-- No documentation found for TopLevel "VkPipelineLayout"
 type VkPipelineLayout = Ptr VkPipelineLayout_T
 
 data VkPipelineMultisampleStateCreateFlags
@@ -241,25 +184,10 @@ data VkRect2D
 
 -- | Dummy data to tag the 'Ptr' with
 data VkRenderPass_T
--- | VkRenderPass - Opaque handle to a render pass object
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferInheritanceInfo',
--- 'Graphics.Vulkan.C.Core10.Pass.VkFramebufferCreateInfo',
--- 'VkGraphicsPipelineCreateInfo',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkRenderPassBeginInfo',
--- 'Graphics.Vulkan.C.Core10.Pass.vkCreateRenderPass',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.vkCreateRenderPass2KHR',
--- 'Graphics.Vulkan.C.Core10.Pass.vkDestroyRenderPass',
--- 'Graphics.Vulkan.C.Core10.Pass.vkGetRenderAreaGranularity'
+-- No documentation found for TopLevel "VkRenderPass"
 type VkRenderPass = Ptr VkRenderPass_T
 
--- | VkSampleMask - Mask of sample coverage information
---
--- = See Also
---
--- 'VkPipelineMultisampleStateCreateInfo'
+-- No documentation found for TopLevel "VkSampleMask"
 type VkSampleMask = Word32
 
 data VkShaderStageFlagBits

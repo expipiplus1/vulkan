@@ -38,19 +38,13 @@ import Graphics.Vulkan.C.Core10.Core
 type GgpFrameToken = Word32
   
 
--- | VkPresentFrameTokenGGP - The Google Games Platform frame token
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkPresentFrameTokenGGP"
 data VkPresentFrameTokenGGP = VkPresentFrameTokenGGP
-  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_PRESENT_FRAME_TOKEN_GGP'
+  { -- No documentation found for Nested "VkPresentFrameTokenGGP" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkPresentFrameTokenGGP" "pNext"
   vkPNext :: Ptr ()
-  , -- | @frameToken@ /must/ be a valid 'GgpFrameToken'
+  , -- No documentation found for Nested "VkPresentFrameTokenGGP" "frameToken"
   vkFrameToken :: GgpFrameToken
   }
   deriving (Eq, Show)

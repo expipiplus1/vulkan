@@ -18,14 +18,5 @@ data VkPhysicalDeviceSubgroupProperties
 
 data VkSubgroupFeatureFlagBits
 
--- | VkSubgroupFeatureFlags - Bitmask of VkSubgroupFeatureFlagBits
---
--- = Description
---
--- 'VkSubgroupFeatureFlags' is a bitmask type for setting a mask of zero or
--- more 'VkSubgroupFeatureFlagBits'.
---
--- = See Also
---
--- 'VkPhysicalDeviceSubgroupProperties', 'VkSubgroupFeatureFlagBits'
+-- No documentation found for TopLevel "VkSubgroupFeatureFlags"
 type VkSubgroupFeatureFlags = VkSubgroupFeatureFlagBits

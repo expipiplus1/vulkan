@@ -35,18 +35,7 @@ data VkConditionalRenderingBeginInfoEXT
 
 data VkConditionalRenderingFlagBitsEXT
 
--- | VkConditionalRenderingFlagsEXT - Bitmask of
--- VkConditionalRenderingFlagBitsEXT
---
--- = Description
---
--- 'VkConditionalRenderingFlagsEXT' is a bitmask type for setting a mask of
--- zero or more 'VkConditionalRenderingFlagBitsEXT'.
---
--- = See Also
---
--- 'VkConditionalRenderingBeginInfoEXT',
--- 'VkConditionalRenderingFlagBitsEXT'
+-- No documentation found for TopLevel "VkConditionalRenderingFlagsEXT"
 type VkConditionalRenderingFlagsEXT = VkConditionalRenderingFlagBitsEXT
 
 data VkPhysicalDeviceConditionalRenderingFeaturesEXT

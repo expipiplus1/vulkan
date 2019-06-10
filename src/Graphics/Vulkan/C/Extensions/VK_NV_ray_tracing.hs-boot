@@ -88,8 +88,8 @@ import {-# source #-} Graphics.Vulkan.C.Core10.PipelineCache
   ( VkPipelineCache
   )
 import {-# source #-} Graphics.Vulkan.C.Core10.Query
-  ( VkQueryType
-  , VkQueryPool
+  ( VkQueryPool
+  , VkQueryType
   )
 import {-# source #-} Graphics.Vulkan.C.Core10.Queue
   ( VkCommandBuffer
@@ -109,18 +109,7 @@ data VkAccelerationStructureMemoryRequirementsTypeNV
 
 -- | Dummy data to tag the 'Ptr' with
 data VkAccelerationStructureNV_T
--- | VkAccelerationStructureNV - Opaque handle to an acceleration structure
--- object
---
--- = See Also
---
--- 'VkAccelerationStructureMemoryRequirementsInfoNV',
--- 'VkBindAccelerationStructureMemoryInfoNV',
--- 'VkWriteDescriptorSetAccelerationStructureNV',
--- 'vkCmdBuildAccelerationStructureNV', 'vkCmdCopyAccelerationStructureNV',
--- 'vkCmdWriteAccelerationStructuresPropertiesNV',
--- 'vkCreateAccelerationStructureNV', 'vkDestroyAccelerationStructureNV',
--- 'vkGetAccelerationStructureHandleNV'
+-- No documentation found for TopLevel "VkAccelerationStructureNV"
 type VkAccelerationStructureNV = Ptr VkAccelerationStructureNV_T
 
 data VkAccelerationStructureTypeNV
@@ -129,18 +118,7 @@ data VkBindAccelerationStructureMemoryInfoNV
 
 data VkBuildAccelerationStructureFlagBitsNV
 
--- | VkBuildAccelerationStructureFlagsNV - Bitmask of
--- VkBuildAccelerationStructureFlagBitsNV
---
--- = Description
---
--- 'VkBuildAccelerationStructureFlagsNV' is a bitmask type for setting a
--- mask of zero or more 'VkBuildAccelerationStructureFlagBitsNV'.
---
--- = See Also
---
--- 'VkAccelerationStructureInfoNV',
--- 'VkBuildAccelerationStructureFlagBitsNV'
+-- No documentation found for TopLevel "VkBuildAccelerationStructureFlagsNV"
 type VkBuildAccelerationStructureFlagsNV = VkBuildAccelerationStructureFlagBitsNV
 
 data VkCopyAccelerationStructureModeNV
@@ -151,30 +129,12 @@ data VkGeometryDataNV
 
 data VkGeometryFlagBitsNV
 
--- | VkGeometryFlagsNV - Bitmask of VkGeometryFlagBitsNV
---
--- = Description
---
--- 'VkGeometryFlagsNV' is a bitmask type for setting a mask of zero or more
--- 'VkGeometryFlagBitsNV'.
---
--- = See Also
---
--- 'VkGeometryFlagBitsNV', 'VkGeometryNV'
+-- No documentation found for TopLevel "VkGeometryFlagsNV"
 type VkGeometryFlagsNV = VkGeometryFlagBitsNV
 
 data VkGeometryInstanceFlagBitsNV
 
--- | VkGeometryInstanceFlagsNV - Bitmask of VkGeometryInstanceFlagBitsNV
---
--- = Description
---
--- 'VkGeometryInstanceFlagsNV' is a bitmask type for setting a mask of zero
--- or more 'VkGeometryInstanceFlagBitsNV'.
---
--- = See Also
---
--- 'VkGeometryInstanceFlagBitsNV'
+-- No documentation found for TopLevel "VkGeometryInstanceFlagsNV"
 type VkGeometryInstanceFlagsNV = VkGeometryInstanceFlagBitsNV
 
 data VkGeometryNV

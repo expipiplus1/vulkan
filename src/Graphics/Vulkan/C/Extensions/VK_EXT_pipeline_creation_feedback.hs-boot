@@ -21,15 +21,5 @@ data VkPipelineCreationFeedbackEXT
 
 data VkPipelineCreationFeedbackFlagBitsEXT
 
--- | VkPipelineCreationFeedbackFlagsEXT - Bitmask of
--- VkPipelineCreationFeedbackFlagBitsEXT
---
--- = Description
---
--- 'VkPipelineCreationFeedbackFlagsEXT' is a bitmask type for providing
--- zero or more 'VkPipelineCreationFeedbackFlagBitsEXT'.
---
--- = See Also
---
--- 'VkPipelineCreationFeedbackEXT', 'VkPipelineCreationFeedbackFlagBitsEXT'
+-- No documentation found for TopLevel "VkPipelineCreationFeedbackFlagsEXT"
 type VkPipelineCreationFeedbackFlagsEXT = VkPipelineCreationFeedbackFlagBitsEXT

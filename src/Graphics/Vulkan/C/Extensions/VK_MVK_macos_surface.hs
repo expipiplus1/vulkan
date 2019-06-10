@@ -95,26 +95,15 @@ instance Read VkMacOSSurfaceCreateFlagsMVK where
 
 
 
--- | VkMacOSSurfaceCreateInfoMVK - Structure specifying parameters of a newly
--- created macOS surface object
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'VkMacOSSurfaceCreateFlagsMVK',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkCreateMacOSSurfaceMVK'
+-- No documentation found for TopLevel "VkMacOSSurfaceCreateInfoMVK"
 data VkMacOSSurfaceCreateInfoMVK = VkMacOSSurfaceCreateInfoMVK
-  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK'
+  { -- No documentation found for Nested "VkMacOSSurfaceCreateInfoMVK" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- No documentation found for Nested "VkMacOSSurfaceCreateInfoMVK" "pNext"
   vkPNext :: Ptr ()
-  , -- | @flags@ /must/ be @0@
+  , -- No documentation found for Nested "VkMacOSSurfaceCreateInfoMVK" "flags"
   vkFlags :: VkMacOSSurfaceCreateFlagsMVK
-  , -- | @pView@ /must/ be a valid @NSView@ and /must/ be backed by a @CALayer@
-  -- instance of type
-  -- 'Graphics.Vulkan.C.Extensions.VK_EXT_metal_surface.CAMetalLayer'.
+  , -- No documentation found for Nested "VkMacOSSurfaceCreateInfoMVK" "pView"
   vkPView :: Ptr ()
   }
   deriving (Eq, Show)
@@ -137,60 +126,7 @@ instance Zero VkMacOSSurfaceCreateInfoMVK where
                                      zero
                                      zero
 
--- | vkCreateMacOSSurfaceMVK - Create a VkSurfaceKHR object for a macOS
--- NSView
---
--- = Parameters
---
--- -   @instance@ is the instance with which to associate the surface.
---
--- -   @pCreateInfo@ is a pointer to an instance of the
---     'VkMacOSSurfaceCreateInfoMVK' structure containing parameters
---     affecting the creation of the surface object.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     surface object when there is no more specific allocator available
---     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
---
--- -   @pSurface@ points to a
---     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
---     which the created surface object is returned.
---
--- == Valid Usage (Implicit)
---
--- -   @instance@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
---
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'VkMacOSSurfaceCreateInfoMVK' structure
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
---     structure
---
--- -   @pSurface@ /must/ be a valid pointer to a
---     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_NATIVE_WINDOW_IN_USE_KHR'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance',
--- 'VkMacOSSurfaceCreateInfoMVK',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR'
+-- No documentation found for TopLevel "vkCreateMacOSSurfaceMVK"
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)

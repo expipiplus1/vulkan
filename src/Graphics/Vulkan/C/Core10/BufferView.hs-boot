@@ -33,12 +33,7 @@ import {-# source #-} Graphics.Vulkan.C.Core10.DeviceInitialization
 
 -- | Dummy data to tag the 'Ptr' with
 data VkBufferView_T
--- | VkBufferView - Opaque handle to a buffer view object
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkWriteDescriptorSet',
--- 'vkCreateBufferView', 'vkDestroyBufferView'
+-- No documentation found for TopLevel "VkBufferView"
 type VkBufferView = Ptr VkBufferView_T
 
 data VkBufferViewCreateFlags

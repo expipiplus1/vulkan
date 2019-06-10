@@ -1,14 +1,16 @@
 {-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
 {-# language DuplicateRecordFields #-}
+{-# language PatternSynonyms #-}
 {-# language TypeFamilies #-}
 
 module Graphics.Vulkan.Extensions.VK_EXT_calibrated_timestamps
-  ( withCStructCalibratedTimestampInfoEXT
-  , fromCStructCalibratedTimestampInfoEXT
-  , CalibratedTimestampInfoEXT(..)
-  , TimeDomainEXT
+  ( 
+#if defined(VK_USE_PLATFORM_GGP)
+  CalibratedTimestampInfoEXT(..)
+  , 
+#endif
+  TimeDomainEXT
   , pattern TIME_DOMAIN_DEVICE_EXT
   , pattern TIME_DOMAIN_CLOCK_MONOTONIC_EXT
   , pattern TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT
@@ -22,12 +24,6 @@ module Graphics.Vulkan.Extensions.VK_EXT_calibrated_timestamps
   , pattern STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_EXT
   ) where
 
-import Control.Exception
-  ( throwIO
-  )
-import Control.Monad
-  ( when
-  )
 import Data.String
   ( IsString
   )
@@ -49,13 +45,10 @@ import Foreign.Marshal.Array
   ( allocaArray
   )
 import Foreign.Marshal.Utils
-  ( maybePeek
-  , maybeWith
-  , with
+  ( with
   )
 import Foreign.Ptr
-  ( castPtr
-  , nullPtr
+  ( nullPtr
   )
 import Foreign.Storable
   ( peek
@@ -65,17 +58,19 @@ import Foreign.Storable
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkResult(..)
-  , Zero(..)
-  , pattern VK_SUCCESS
   )
+
+#if defined(VK_USE_PLATFORM_GGP)
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
+#endif
 import Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps
-  ( VkCalibratedTimestampInfoEXT(..)
-  , VkTimeDomainEXT(..)
+  ( VkTimeDomainEXT(..)
   , vkGetCalibratedTimestampsEXT
   , vkGetPhysicalDeviceCalibrateableTimeDomainsEXT
   , pattern VK_EXT_CALIBRATED_TIMESTAMPS_EXTENSION_NAME
   , pattern VK_EXT_CALIBRATED_TIMESTAMPS_SPEC_VERSION
-  , pattern VK_STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_EXT
   , pattern VK_TIME_DOMAIN_CLOCK_MONOTONIC_EXT
   , pattern VK_TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT
   , pattern VK_TIME_DOMAIN_DEVICE_EXT
@@ -85,291 +80,77 @@ import Graphics.Vulkan.Core10.DeviceInitialization
   ( Device(..)
   , PhysicalDevice(..)
   )
-import Graphics.Vulkan.Exception
-  ( VulkanException(..)
-  )
 import Graphics.Vulkan.Marshal.Utils
   ( withVec
   )
+
+#if defined(VK_USE_PLATFORM_GGP)
 import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   ( SomeVkStruct
-  , peekVkStruct
-  , withSomeVkStruct
   )
+#endif
 import Graphics.Vulkan.Core10.Core
   ( pattern STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_EXT
   )
 
 
 
--- | VkCalibratedTimestampInfoEXT - Structure specifying the input parameters
--- of a calibrated timestamp query
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.VkTimeDomainEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.vkGetCalibratedTimestampsEXT'
+#if defined(VK_USE_PLATFORM_GGP)
+
+-- No documentation found for TopLevel "VkCalibratedTimestampInfoEXT"
 data CalibratedTimestampInfoEXT = CalibratedTimestampInfoEXT
-  { -- Univalued member elided
-  -- No documentation found for Nested "CalibratedTimestampInfoEXT" "pNext"
+  { -- No documentation found for Nested "CalibratedTimestampInfoEXT" "pNext"
   next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "CalibratedTimestampInfoEXT" "timeDomain"
   timeDomain :: TimeDomainEXT
   }
   deriving (Show, Eq)
 
--- | A function to temporarily allocate memory for a 'VkCalibratedTimestampInfoEXT' and
--- marshal a 'CalibratedTimestampInfoEXT' into it. The 'VkCalibratedTimestampInfoEXT' is only valid inside
--- the provided computation and must not be returned out of it.
-withCStructCalibratedTimestampInfoEXT :: CalibratedTimestampInfoEXT -> (VkCalibratedTimestampInfoEXT -> IO a) -> IO a
-withCStructCalibratedTimestampInfoEXT marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: CalibratedTimestampInfoEXT)) (\pPNext -> cont (VkCalibratedTimestampInfoEXT VK_STRUCTURE_TYPE_CALIBRATED_TIMESTAMP_INFO_EXT pPNext (timeDomain (marshalled :: CalibratedTimestampInfoEXT))))
-
--- | A function to read a 'VkCalibratedTimestampInfoEXT' and all additional
--- structures in the pointer chain into a 'CalibratedTimestampInfoEXT'.
-fromCStructCalibratedTimestampInfoEXT :: VkCalibratedTimestampInfoEXT -> IO CalibratedTimestampInfoEXT
-fromCStructCalibratedTimestampInfoEXT c = CalibratedTimestampInfoEXT <$> -- Univalued Member elided
-                                                                     maybePeek peekVkStruct (castPtr (vkPNext (c :: VkCalibratedTimestampInfoEXT)))
-                                                                     <*> pure (vkTimeDomain (c :: VkCalibratedTimestampInfoEXT))
-
 instance Zero CalibratedTimestampInfoEXT where
   zero = CalibratedTimestampInfoEXT Nothing
                                     zero
 
+#endif
 
--- | VkTimeDomainEXT - Supported time domains
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.VkCalibratedTimestampInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.vkGetPhysicalDeviceCalibrateableTimeDomainsEXT'
+-- No documentation found for TopLevel "TimeDomainEXT"
 type TimeDomainEXT = VkTimeDomainEXT
 
 
 {-# complete TIME_DOMAIN_DEVICE_EXT, TIME_DOMAIN_CLOCK_MONOTONIC_EXT, TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT, TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT :: TimeDomainEXT #-}
 
 
--- | 'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.VK_TIME_DOMAIN_DEVICE_EXT'
--- specifies the device time domain. Timestamp values in this time domain
--- are comparable with device timestamp values captured using
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdWriteTimestamp' and
--- are defined to be incrementing according to the
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#limits-timestampPeriod timestampPeriod>
--- of the device.
+-- No documentation found for Nested "TimeDomainEXT" "TIME_DOMAIN_DEVICE_EXT"
 pattern TIME_DOMAIN_DEVICE_EXT :: (a ~ TimeDomainEXT) => a
 pattern TIME_DOMAIN_DEVICE_EXT = VK_TIME_DOMAIN_DEVICE_EXT
 
 
--- | 'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.VK_TIME_DOMAIN_CLOCK_MONOTONIC_EXT'
--- specifies the CLOCK_MONOTONIC time domain available on POSIX platforms.
+-- No documentation found for Nested "TimeDomainEXT" "TIME_DOMAIN_CLOCK_MONOTONIC_EXT"
 pattern TIME_DOMAIN_CLOCK_MONOTONIC_EXT :: (a ~ TimeDomainEXT) => a
 pattern TIME_DOMAIN_CLOCK_MONOTONIC_EXT = VK_TIME_DOMAIN_CLOCK_MONOTONIC_EXT
 
 
--- | 'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.VK_TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT'
--- specifies the CLOCK_MONOTONIC_RAW time domain available on POSIX
--- platforms.
+-- No documentation found for Nested "TimeDomainEXT" "TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT"
 pattern TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT :: (a ~ TimeDomainEXT) => a
 pattern TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT = VK_TIME_DOMAIN_CLOCK_MONOTONIC_RAW_EXT
 
 
--- | 'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.VK_TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT'
--- specifies the performance counter (QPC) time domain available on
--- Windows.
+-- No documentation found for Nested "TimeDomainEXT" "TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT"
 pattern TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT :: (a ~ TimeDomainEXT) => a
 pattern TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT = VK_TIME_DOMAIN_QUERY_PERFORMANCE_COUNTER_EXT
 
 
--- | vkGetCalibratedTimestampsEXT - Query calibrated timestamps
---
--- = Parameters
---
--- -   @device@ is the logical device used to perform the query.
---
--- -   @timestampCount@ is the number of timestamps to query.
---
--- -   @pTimestampInfos@ is a pointer to an array of @timestampCount@
---     number of structures of type
---     'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.VkCalibratedTimestampInfoEXT',
---     describing the time domains the calibrated timestamps should be
---     captured from.
---
--- -   @pTimestamps@ is a pointer to an array of @timestampCount@ number of
---     64-bit unsigned integer values in which the requested calibrated
---     timestamp values are returned.
---
--- -   @pMaxDeviation@ is a pointer to a 64-bit unsigned integer value in
---     which the strictly positive maximum deviation, in nanoseconds, of
---     the calibrated timestamp values is returned.
---
--- = Description
---
--- __Note__
---
--- The maximum deviation /may/ vary between calls to
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.vkGetCalibratedTimestampsEXT'
--- even for the same set of time domains due to implementation and platform
--- specific reasons. It is the application’s responsibility to assess
--- whether the returned maximum deviation makes the timestamp values
--- suitable for any particular purpose and /can/ choose to re-issue the
--- timestamp calibration call pursuing a lower devation value.
---
--- Calibrated timestamp values /can/ be extrapolated to estimate future
--- coinciding timestamp values, however, depending on the nature of the
--- time domains and other properties of the platform extrapolating values
--- over a sufficiently long period of time /may/ no longer be accurate
--- enough to fit any particular purpose so applications are expected to
--- re-calibrate the timestamps on a regular basis.
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.VkCalibratedTimestampInfoEXT',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
+-- No documentation found for TopLevel "vkGetCalibratedTimestampsEXT"
 getCalibratedTimestampsEXT :: Device ->  Vector CalibratedTimestampInfoEXT ->  IO (Vector Word64, Word64)
-getCalibratedTimestampsEXT = \(Device device' commandTable) -> \timestampInfos' -> alloca (\pMaxDeviation' -> allocaArray ((Data.Vector.length timestampInfos')) (\pTimestamps' -> withVec withCStructCalibratedTimestampInfoEXT timestampInfos' (\pTimestampInfos' -> vkGetCalibratedTimestampsEXT commandTable device' (fromIntegral $ Data.Vector.length timestampInfos') pTimestampInfos' pTimestamps' pMaxDeviation' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> (Data.Vector.generateM ((Data.Vector.length timestampInfos')) (peekElemOff pTimestamps'))<*>peek pMaxDeviation')))))
+getCalibratedTimestampsEXT = undefined {- {wrapped (pretty cName) :: Doc ()} -}
 
 
--- | vkGetPhysicalDeviceCalibrateableTimeDomainsEXT - Query calibrateable
--- time domains
---
--- = Parameters
---
--- -   @physicalDevice@ is the physical device from which to query the set
---     of calibrateable time domains.
---
--- -   @pTimeDomainCount@ is a pointer to an integer related to the number
---     of calibrateable time domains available or queried, as described
---     below.
---
--- -   @pTimeDomains@ is either @NULL@ or a pointer to an array of
---     'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.VkTimeDomainEXT'
---     values, indicating the supported calibrateable time domains.
---
--- = Description
---
--- If @pTimeDomains@ is @NULL@, then the number of calibrateable time
--- domains supported for the given @physicalDevice@ is returned in
--- @pTimeDomainCount@. Otherwise, @pTimeDomainCount@ /must/ point to a
--- variable set by the user to the number of elements in the @pTimeDomains@
--- array, and on return the variable is overwritten with the number of
--- values actually written to @pTimeDomains@. If the value of
--- @pTimeDomainCount@ is less than the number of calibrateable time domains
--- supported, at most @pTimeDomainCount@ values will be written to
--- @pTimeDomains@. If @pTimeDomainCount@ is smaller than the number of
--- calibrateable time domains supported for the given @physicalDevice@,
--- 'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE' will be returned instead
--- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS' to indicate that not all
--- the available values were returned.
---
--- == Valid Usage (Implicit)
---
--- -   @physicalDevice@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
---     handle
---
--- -   @pTimeDomainCount@ /must/ be a valid pointer to a @uint32_t@ value
---
--- -   If the value referenced by @pTimeDomainCount@ is not @0@, and
---     @pTimeDomains@ is not @NULL@, @pTimeDomains@ /must/ be a valid
---     pointer to an array of @pTimeDomainCount@
---     'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.VkTimeDomainEXT'
---     values
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.VkTimeDomainEXT'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceCalibrateableTimeDomainsEXT"
 getNumPhysicalDeviceCalibrateableTimeDomainsEXT :: PhysicalDevice ->  IO (VkResult, Word32)
-getNumPhysicalDeviceCalibrateableTimeDomainsEXT = \(PhysicalDevice physicalDevice' commandTable) -> alloca (\pTimeDomainCount' -> vkGetPhysicalDeviceCalibrateableTimeDomainsEXT commandTable physicalDevice' pTimeDomainCount' nullPtr >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>peek pTimeDomainCount')))
+getNumPhysicalDeviceCalibrateableTimeDomainsEXT = undefined {- {wrapped (pretty cName) :: Doc ()} -}
 
--- | vkGetPhysicalDeviceCalibrateableTimeDomainsEXT - Query calibrateable
--- time domains
---
--- = Parameters
---
--- -   @physicalDevice@ is the physical device from which to query the set
---     of calibrateable time domains.
---
--- -   @pTimeDomainCount@ is a pointer to an integer related to the number
---     of calibrateable time domains available or queried, as described
---     below.
---
--- -   @pTimeDomains@ is either @NULL@ or a pointer to an array of
---     'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.VkTimeDomainEXT'
---     values, indicating the supported calibrateable time domains.
---
--- = Description
---
--- If @pTimeDomains@ is @NULL@, then the number of calibrateable time
--- domains supported for the given @physicalDevice@ is returned in
--- @pTimeDomainCount@. Otherwise, @pTimeDomainCount@ /must/ point to a
--- variable set by the user to the number of elements in the @pTimeDomains@
--- array, and on return the variable is overwritten with the number of
--- values actually written to @pTimeDomains@. If the value of
--- @pTimeDomainCount@ is less than the number of calibrateable time domains
--- supported, at most @pTimeDomainCount@ values will be written to
--- @pTimeDomains@. If @pTimeDomainCount@ is smaller than the number of
--- calibrateable time domains supported for the given @physicalDevice@,
--- 'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE' will be returned instead
--- of 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS' to indicate that not all
--- the available values were returned.
---
--- == Valid Usage (Implicit)
---
--- -   @physicalDevice@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
---     handle
---
--- -   @pTimeDomainCount@ /must/ be a valid pointer to a @uint32_t@ value
---
--- -   If the value referenced by @pTimeDomainCount@ is not @0@, and
---     @pTimeDomains@ is not @NULL@, @pTimeDomains@ /must/ be a valid
---     pointer to an array of @pTimeDomainCount@
---     'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.VkTimeDomainEXT'
---     values
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.VkTimeDomainEXT'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceCalibrateableTimeDomainsEXT"
 getPhysicalDeviceCalibrateableTimeDomainsEXT :: PhysicalDevice ->  Word32 ->  IO (VkResult, Vector TimeDomainEXT)
-getPhysicalDeviceCalibrateableTimeDomainsEXT = \(PhysicalDevice physicalDevice' commandTable) -> \timeDomainCount' -> allocaArray (fromIntegral timeDomainCount') (\pTimeDomains' -> with timeDomainCount' (\pTimeDomainCount' -> vkGetPhysicalDeviceCalibrateableTimeDomainsEXT commandTable physicalDevice' pTimeDomainCount' pTimeDomains' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> ((,) <$> pure ret<*>(flip Data.Vector.generateM (peekElemOff pTimeDomains') =<< (fromIntegral <$> (peek pTimeDomainCount')))))))
+getPhysicalDeviceCalibrateableTimeDomainsEXT = undefined {- {wrapped (pretty cName) :: Doc ()} -}
 -- | Returns all the values available from 'getPhysicalDeviceCalibrateableTimeDomainsEXT'.
 getAllPhysicalDeviceCalibrateableTimeDomainsEXT :: PhysicalDevice ->  IO (Vector TimeDomainEXT)
 getAllPhysicalDeviceCalibrateableTimeDomainsEXT physicalDevice' =

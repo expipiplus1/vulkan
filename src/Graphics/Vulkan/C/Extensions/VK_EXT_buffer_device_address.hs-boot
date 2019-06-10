@@ -34,11 +34,7 @@ data VkBufferDeviceAddressCreateInfoEXT
 
 data VkBufferDeviceAddressInfoEXT
 
--- | VkDeviceAddress - Vulkan device address type
---
--- = See Also
---
--- 'VkBufferDeviceAddressCreateInfoEXT'
+-- No documentation found for TopLevel "VkDeviceAddress"
 type VkDeviceAddress = Word64
 
 -- No documentation found for TopLevel "VkPhysicalDeviceBufferAddressFeaturesEXT"

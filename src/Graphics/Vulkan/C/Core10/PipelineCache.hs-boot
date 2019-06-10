@@ -43,16 +43,7 @@ import {-# source #-} Graphics.Vulkan.C.Core10.DeviceInitialization
 
 -- | Dummy data to tag the 'Ptr' with
 data VkPipelineCache_T
--- | VkPipelineCache - Opaque handle to a pipeline cache object
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateComputePipelines',
--- 'Graphics.Vulkan.C.Core10.Pipeline.vkCreateGraphicsPipelines',
--- 'vkCreatePipelineCache',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.vkCreateRayTracingPipelinesNV',
--- 'vkDestroyPipelineCache', 'vkGetPipelineCacheData',
--- 'vkMergePipelineCaches'
+-- No documentation found for TopLevel "VkPipelineCache"
 type VkPipelineCache = Ptr VkPipelineCache_T
 
 data VkPipelineCacheCreateFlags

@@ -27,9 +27,9 @@ import {-# source #-} Graphics.Vulkan.C.Core10.Core
   , VkResult
   )
 import {-# source #-} Graphics.Vulkan.C.Core10.DeviceInitialization
-  ( VkImageTiling
+  ( VkImageCreateFlags
+  , VkImageTiling
   , VkImageType
-  , VkImageCreateFlags
   , VkImageUsageFlags
   , VkPhysicalDevice
   )
@@ -39,38 +39,12 @@ data VkExternalImageFormatPropertiesNV
 
 data VkExternalMemoryFeatureFlagBitsNV
 
--- | VkExternalMemoryFeatureFlagsNV - Bitmask of
--- VkExternalMemoryFeatureFlagBitsNV
---
--- = Description
---
--- 'VkExternalMemoryFeatureFlagsNV' is a bitmask type for setting a mask of
--- zero or more 'VkExternalMemoryFeatureFlagBitsNV'.
---
--- = See Also
---
--- 'VkExternalImageFormatPropertiesNV', 'VkExternalMemoryFeatureFlagBitsNV'
+-- No documentation found for TopLevel "VkExternalMemoryFeatureFlagsNV"
 type VkExternalMemoryFeatureFlagsNV = VkExternalMemoryFeatureFlagBitsNV
 
 data VkExternalMemoryHandleTypeFlagBitsNV
 
--- | VkExternalMemoryHandleTypeFlagsNV - Bitmask of
--- VkExternalMemoryHandleTypeFlagBitsNV
---
--- = Description
---
--- 'VkExternalMemoryHandleTypeFlagsNV' is a bitmask type for setting a mask
--- of zero or more 'VkExternalMemoryHandleTypeFlagBitsNV'.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory.VkExportMemoryAllocateInfoNV',
--- 'VkExternalImageFormatPropertiesNV',
--- 'VkExternalMemoryHandleTypeFlagBitsNV',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory.VkExternalMemoryImageCreateInfoNV',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32.VkImportMemoryWin32HandleInfoNV',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32.vkGetMemoryWin32HandleNV',
--- 'vkGetPhysicalDeviceExternalImageFormatPropertiesNV'
+-- No documentation found for TopLevel "VkExternalMemoryHandleTypeFlagsNV"
 type VkExternalMemoryHandleTypeFlagsNV = VkExternalMemoryHandleTypeFlagBitsNV
 
 type FN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV = ("physicalDevice" ::: VkPhysicalDevice) -> ("format" ::: VkFormat) -> ("type" ::: VkImageType) -> ("tiling" ::: VkImageTiling) -> ("usage" ::: VkImageUsageFlags) -> ("flags" ::: VkImageCreateFlags) -> ("externalHandleType" ::: VkExternalMemoryHandleTypeFlagsNV) -> ("pExternalImageFormatProperties" ::: Ptr VkExternalImageFormatPropertiesNV) -> IO VkResult

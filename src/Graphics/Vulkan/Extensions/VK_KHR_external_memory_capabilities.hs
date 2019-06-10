@@ -77,11 +77,11 @@ import Graphics.Vulkan.Core10.DeviceInitialization
 import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities
   ( ExternalBufferProperties(..)
   , ExternalImageFormatProperties(..)
-  , ExternalMemoryProperties(..)
   , PhysicalDeviceExternalBufferInfo(..)
   , PhysicalDeviceExternalImageFormatInfo(..)
   , PhysicalDeviceIDProperties(..)
   , getPhysicalDeviceExternalBufferProperties
+  , ExternalMemoryProperties(..)
   , pattern EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT
   , pattern EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT
   , pattern EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT

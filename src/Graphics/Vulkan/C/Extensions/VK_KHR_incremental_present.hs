@@ -39,28 +39,11 @@ import Graphics.Vulkan.C.Core10.Pipeline
   )
 
 
--- | VkPresentRegionKHR - Structure containing rectangular region changed by
--- vkQueuePresentKHR for a given VkImage
---
--- == Valid Usage (Implicit)
---
--- -   If @rectangleCount@ is not @0@, and @pRectangles@ is not @NULL@,
---     @pRectangles@ /must/ be a valid pointer to an array of
---     @rectangleCount@ valid 'VkRectLayerKHR' structures
---
--- = See Also
---
--- 'VkPresentRegionsKHR', 'VkRectLayerKHR'
+-- No documentation found for TopLevel "VkPresentRegionKHR"
 data VkPresentRegionKHR = VkPresentRegionKHR
-  { -- | @rectangleCount@ is the number of rectangles in @pRectangles@, or zero
-  -- if the entire image has changed and should be presented.
+  { -- No documentation found for Nested "VkPresentRegionKHR" "rectangleCount"
   vkRectangleCount :: Word32
-  , -- | @pRectangles@ is either @NULL@ or a pointer to an array of
-  -- 'VkRectLayerKHR' structures. The 'VkRectLayerKHR' structure is the
-  -- framebuffer coordinates, plus layer, of a portion of a presentable image
-  -- that has changed and /must/ be presented. If non-@NULL@, each entry in
-  -- @pRectangles@ is a rectangle of the given image that has changed since
-  -- the last image was presented to the given swapchain.
+  , -- No documentation found for Nested "VkPresentRegionKHR" "pRectangles"
   vkPRectangles :: Ptr VkRectLayerKHR
   }
   deriving (Eq, Show)
@@ -77,43 +60,15 @@ instance Zero VkPresentRegionKHR where
   zero = VkPresentRegionKHR zero
                             zero
 
--- | VkPresentRegionsKHR - Structure hint of rectangular regions changed by
--- vkQueuePresentKHR
---
--- == Valid Usage
---
--- -   @swapchainCount@ /must/ be the same value as
---     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkPresentInfoKHR'::@swapchainCount@,
---     where
---     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkPresentInfoKHR' is
---     in the @pNext@ chain of this 'VkPresentRegionsKHR' structure
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be 'VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR'
---
--- -   If @pRegions@ is not @NULL@, @pRegions@ /must/ be a valid pointer to
---     an array of @swapchainCount@ valid 'VkPresentRegionKHR' structures
---
--- -   @swapchainCount@ /must/ be greater than @0@
---
--- = See Also
---
--- 'VkPresentRegionKHR', 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkPresentRegionsKHR"
 data VkPresentRegionsKHR = VkPresentRegionsKHR
-  { -- | @sType@ is the type of this structure.
+  { -- No documentation found for Nested "VkPresentRegionsKHR" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkPresentRegionsKHR" "pNext"
   vkPNext :: Ptr ()
-  , -- | @swapchainCount@ is the number of swapchains being presented to by this
-  -- command.
+  , -- No documentation found for Nested "VkPresentRegionsKHR" "swapchainCount"
   vkSwapchainCount :: Word32
-  , -- | @pRegions@ is @NULL@ or a pointer to an array of 'VkPresentRegionKHR'
-  -- elements with @swapchainCount@ entries. If not @NULL@, each element of
-  -- @pRegions@ contains the region that has changed since the last present
-  -- to the swapchain in the corresponding entry in the
-  -- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkPresentInfoKHR'::@pSwapchains@
-  -- array.
+  , -- No documentation found for Nested "VkPresentRegionsKHR" "pRegions"
   vkPRegions :: Ptr VkPresentRegionKHR
   }
   deriving (Eq, Show)
@@ -136,38 +91,13 @@ instance Zero VkPresentRegionsKHR where
                              zero
                              zero
 
--- | VkRectLayerKHR - Structure containing a rectangle, including layer,
--- changed by vkQueuePresentKHR for a given VkImage
---
--- == Valid Usage
---
--- -   The sum of @offset@ and @extent@ /must/ be no greater than the
---     @imageExtent@ member of the
---     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR'
---     structure given to
---     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkCreateSwapchainKHR'.
---
--- -   @layer@ /must/ be less than @imageArrayLayers@ member of the
---     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR'
---     structure given to
---     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkCreateSwapchainKHR'.
---
--- Some platforms allow the size of a surface to change, and then scale the
--- pixels of the image to fit the surface. 'VkRectLayerKHR' specifies
--- pixels of the swapchain’s image(s), which will be constant for the life
--- of the swapchain.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Pipeline.VkExtent2D',
--- 'Graphics.Vulkan.C.Core10.Pipeline.VkOffset2D', 'VkPresentRegionKHR'
+-- No documentation found for TopLevel "VkRectLayerKHR"
 data VkRectLayerKHR = VkRectLayerKHR
-  { -- | @offset@ is the origin of the rectangle, in pixels.
+  { -- No documentation found for Nested "VkRectLayerKHR" "offset"
   vkOffset :: VkOffset2D
-  , -- | @extent@ is the size of the rectangle, in pixels.
+  , -- No documentation found for Nested "VkRectLayerKHR" "extent"
   vkExtent :: VkExtent2D
-  , -- | @layer@ is the layer of the image. For images with only one layer, the
-  -- value of @layer@ /must/ be 0.
+  , -- No documentation found for Nested "VkRectLayerKHR" "layer"
   vkLayer :: Word32
   }
   deriving (Eq, Show)

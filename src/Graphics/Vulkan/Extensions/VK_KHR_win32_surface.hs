@@ -1,13 +1,13 @@
 {-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
 {-# language DuplicateRecordFields #-}
+{-# language PatternSynonyms #-}
 
 module Graphics.Vulkan.Extensions.VK_KHR_win32_surface
   ( Win32SurfaceCreateFlagsKHR
-  , withCStructWin32SurfaceCreateInfoKHR
-  , fromCStructWin32SurfaceCreateInfoKHR
+#if defined(VK_USE_PLATFORM_GGP)
   , Win32SurfaceCreateInfoKHR(..)
+#endif
   , createWin32SurfaceKHR
   , getPhysicalDeviceWin32PresentationSupportKHR
   , pattern KHR_WIN32_SURFACE_EXTENSION_NAME
@@ -15,12 +15,6 @@ module Graphics.Vulkan.Extensions.VK_KHR_win32_surface
   , pattern STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR
   ) where
 
-import Control.Exception
-  ( throwIO
-  )
-import Control.Monad
-  ( when
-  )
 import Data.String
   ( IsString
   )
@@ -31,12 +25,8 @@ import Foreign.Marshal.Alloc
   ( alloca
   )
 import Foreign.Marshal.Utils
-  ( maybePeek
-  , maybeWith
+  ( maybeWith
   , with
-  )
-import Foreign.Ptr
-  ( castPtr
   )
 import Foreign.Storable
   ( peek
@@ -45,37 +35,41 @@ import Foreign.Storable
 
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
-  , Zero(..)
-  , pattern VK_SUCCESS
   )
+
+#if defined(VK_USE_PLATFORM_GGP)
+import Graphics.Vulkan.C.Core10.Core
+  ( Zero(..)
+  )
+#endif
 import Graphics.Vulkan.C.Extensions.VK_KHR_win32_surface
   ( VkWin32SurfaceCreateFlagsKHR(..)
-  , VkWin32SurfaceCreateInfoKHR(..)
-  , HINSTANCE
-  , HWND
   , vkCreateWin32SurfaceKHR
   , vkGetPhysicalDeviceWin32PresentationSupportKHR
   , pattern VK_KHR_WIN32_SURFACE_EXTENSION_NAME
   , pattern VK_KHR_WIN32_SURFACE_SPEC_VERSION
-  , pattern VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR
   )
+
+#if defined(VK_USE_PLATFORM_GGP)
+import Graphics.Vulkan.C.Extensions.VK_KHR_win32_surface
+  ( HINSTANCE
+  , HWND
+  )
+#endif
 import Graphics.Vulkan.Core10.DeviceInitialization
   ( AllocationCallbacks(..)
   , Instance(..)
   , PhysicalDevice(..)
-  , withCStructAllocationCallbacks
-  )
-import Graphics.Vulkan.Exception
-  ( VulkanException(..)
   )
 import Graphics.Vulkan.Extensions.VK_KHR_surface
   ( SurfaceKHR
   )
+
+#if defined(VK_USE_PLATFORM_GGP)
 import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   ( SomeVkStruct
-  , peekVkStruct
-  , withSomeVkStruct
   )
+#endif
 import Graphics.Vulkan.Core10.Core
   ( pattern STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR
   )
@@ -88,19 +82,11 @@ type Win32SurfaceCreateFlagsKHR = VkWin32SurfaceCreateFlagsKHR
 -- No complete pragma for Win32SurfaceCreateFlagsKHR as it has no patterns
 
 
--- | VkWin32SurfaceCreateInfoKHR - Structure specifying parameters of a newly
--- created Win32 surface object
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_win32_surface.VkWin32SurfaceCreateFlagsKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_win32_surface.vkCreateWin32SurfaceKHR'
+#if defined(VK_USE_PLATFORM_GGP)
+
+-- No documentation found for TopLevel "VkWin32SurfaceCreateInfoKHR"
 data Win32SurfaceCreateInfoKHR = Win32SurfaceCreateInfoKHR
-  { -- Univalued member elided
-  -- No documentation found for Nested "Win32SurfaceCreateInfoKHR" "pNext"
+  { -- No documentation found for Nested "Win32SurfaceCreateInfoKHR" "pNext"
   next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "Win32SurfaceCreateInfoKHR" "flags"
   flags :: Win32SurfaceCreateFlagsKHR
@@ -111,109 +97,23 @@ data Win32SurfaceCreateInfoKHR = Win32SurfaceCreateInfoKHR
   }
   deriving (Show, Eq)
 
--- | A function to temporarily allocate memory for a 'VkWin32SurfaceCreateInfoKHR' and
--- marshal a 'Win32SurfaceCreateInfoKHR' into it. The 'VkWin32SurfaceCreateInfoKHR' is only valid inside
--- the provided computation and must not be returned out of it.
-withCStructWin32SurfaceCreateInfoKHR :: Win32SurfaceCreateInfoKHR -> (VkWin32SurfaceCreateInfoKHR -> IO a) -> IO a
-withCStructWin32SurfaceCreateInfoKHR marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: Win32SurfaceCreateInfoKHR)) (\pPNext -> cont (VkWin32SurfaceCreateInfoKHR VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR pPNext (flags (marshalled :: Win32SurfaceCreateInfoKHR)) (hinstance (marshalled :: Win32SurfaceCreateInfoKHR)) (hwnd (marshalled :: Win32SurfaceCreateInfoKHR))))
-
--- | A function to read a 'VkWin32SurfaceCreateInfoKHR' and all additional
--- structures in the pointer chain into a 'Win32SurfaceCreateInfoKHR'.
-fromCStructWin32SurfaceCreateInfoKHR :: VkWin32SurfaceCreateInfoKHR -> IO Win32SurfaceCreateInfoKHR
-fromCStructWin32SurfaceCreateInfoKHR c = Win32SurfaceCreateInfoKHR <$> -- Univalued Member elided
-                                                                   maybePeek peekVkStruct (castPtr (vkPNext (c :: VkWin32SurfaceCreateInfoKHR)))
-                                                                   <*> pure (vkFlags (c :: VkWin32SurfaceCreateInfoKHR))
-                                                                   <*> pure (vkHinstance (c :: VkWin32SurfaceCreateInfoKHR))
-                                                                   <*> pure (vkHwnd (c :: VkWin32SurfaceCreateInfoKHR))
-
 instance Zero Win32SurfaceCreateInfoKHR where
   zero = Win32SurfaceCreateInfoKHR Nothing
                                    zero
                                    zero
                                    zero
 
+#endif
 
 
--- | vkCreateWin32SurfaceKHR - Create a
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' object for an
--- Win32 native window
---
--- = Parameters
---
--- -   @instance@ is the instance to associate the surface with.
---
--- -   @pCreateInfo@ is a pointer to an instance of the
---     'Graphics.Vulkan.C.Extensions.VK_KHR_win32_surface.VkWin32SurfaceCreateInfoKHR'
---     structure containing parameters affecting the creation of the
---     surface object.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     surface object when there is no more specific allocator available
---     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
---
--- -   @pSurface@ points to a
---     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
---     which the created surface object is returned.
---
--- == Valid Usage (Implicit)
---
--- -   @instance@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
---
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'Graphics.Vulkan.C.Extensions.VK_KHR_win32_surface.VkWin32SurfaceCreateInfoKHR'
---     structure
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
---     structure
---
--- -   @pSurface@ /must/ be a valid pointer to a
---     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_win32_surface.VkWin32SurfaceCreateInfoKHR'
+-- No documentation found for TopLevel "vkCreateWin32SurfaceKHR"
 createWin32SurfaceKHR :: Instance ->  Win32SurfaceCreateInfoKHR ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
-createWin32SurfaceKHR = \(Instance instance' commandTable) -> \createInfo' -> \allocator -> alloca (\pSurface' -> maybeWith (\marshalled -> withCStructAllocationCallbacks marshalled . flip with) allocator (\pAllocator -> (\marshalled -> withCStructWin32SurfaceCreateInfoKHR marshalled . flip with) createInfo' (\pCreateInfo' -> vkCreateWin32SurfaceKHR commandTable instance' pCreateInfo' pAllocator pSurface' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (peek pSurface')))))
+createWin32SurfaceKHR = undefined {- {wrapped (pretty cName) :: Doc ()} -}
 
 
--- | vkGetPhysicalDeviceWin32PresentationSupportKHR - query queue family
--- support for presentation on a Win32 display
---
--- = Parameters
---
--- -   @physicalDevice@ is the physical device.
---
--- -   @queueFamilyIndex@ is the queue family index.
---
--- = Description
---
--- This platform-specific function /can/ be called prior to creating a
--- surface.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceWin32PresentationSupportKHR"
 getPhysicalDeviceWin32PresentationSupportKHR :: PhysicalDevice ->  Word32 ->  IO (VkBool32)
-getPhysicalDeviceWin32PresentationSupportKHR = \(PhysicalDevice physicalDevice' commandTable) -> \queueFamilyIndex' -> vkGetPhysicalDeviceWin32PresentationSupportKHR commandTable physicalDevice' queueFamilyIndex' >>= (\ret -> pure ret)
+getPhysicalDeviceWin32PresentationSupportKHR = undefined {- {wrapped (pretty cName) :: Doc ()} -}
 
 -- No documentation found for TopLevel "VK_KHR_WIN32_SURFACE_EXTENSION_NAME"
 pattern KHR_WIN32_SURFACE_EXTENSION_NAME :: (Eq a, IsString a) => a

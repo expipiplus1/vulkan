@@ -57,76 +57,17 @@ import Graphics.Vulkan.NamedType
   )
 
 
--- | VkImageViewHandleInfoNVX - Structure specifying the image view for
--- handle queries
---
--- == Valid Usage
---
--- -   @descriptorType@ /must/ be
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE',
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE',
---     or
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
---
--- -   @sampler@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Sampler.VkSampler' if @descriptorType@ is
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
---
--- -   If descriptorType is
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE'
---     or
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
---     the image that @imageView@ was created from /must/ have been created
---     with the
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_SAMPLED_BIT'
---     usage bit set
---
--- -   If descriptorType is
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VK_DESCRIPTOR_TYPE_STORAGE_IMAGE',
---     the image that @imageView@ was created from /must/ have been created
---     with the
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_USAGE_STORAGE_BIT'
---     usage bit set
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be 'VK_STRUCTURE_TYPE_IMAGE_VIEW_HANDLE_INFO_NVX'
---
--- -   @pNext@ /must/ be @NULL@
---
--- -   @imageView@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.ImageView.VkImageView' handle
---
--- -   @descriptorType@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorType' value
---
--- -   If @sampler@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @sampler@
---     /must/ be a valid 'Graphics.Vulkan.C.Core10.Sampler.VkSampler'
---     handle
---
--- -   Both of @imageView@, and @sampler@ that are valid handles /must/
---     have been created, allocated, or retrieved from the same
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorType',
--- 'Graphics.Vulkan.C.Core10.ImageView.VkImageView',
--- 'Graphics.Vulkan.C.Core10.Sampler.VkSampler',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetImageViewHandleNVX'
+-- No documentation found for TopLevel "VkImageViewHandleInfoNVX"
 data VkImageViewHandleInfoNVX = VkImageViewHandleInfoNVX
-  { -- | @sType@ is the type of this structure.
+  { -- No documentation found for Nested "VkImageViewHandleInfoNVX" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkImageViewHandleInfoNVX" "pNext"
   vkPNext :: Ptr ()
-  , -- | @imageView@ is the image view to query.
+  , -- No documentation found for Nested "VkImageViewHandleInfoNVX" "imageView"
   vkImageView :: VkImageView
-  , -- | @descriptorType@ is the type of descriptor for which to query a handle.
+  , -- No documentation found for Nested "VkImageViewHandleInfoNVX" "descriptorType"
   vkDescriptorType :: VkDescriptorType
-  , -- | @sampler@ is the sampler to combine with the image view when generating
-  -- the handle.
+  , -- No documentation found for Nested "VkImageViewHandleInfoNVX" "sampler"
   vkSampler :: VkSampler
   }
   deriving (Eq, Show)
@@ -152,21 +93,7 @@ instance Zero VkImageViewHandleInfoNVX where
                                   zero
                                   zero
 
--- | vkGetImageViewHandleNVX - Get the handle for an image view for a
--- specific descriptor type
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the image view.
---
--- -   @pInfo@ describes the image view to query and type of handle.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
--- 'VkImageViewHandleInfoNVX'
+-- No documentation found for TopLevel "vkGetImageViewHandleNVX"
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)

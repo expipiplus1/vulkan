@@ -40,9 +40,9 @@ import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group
   , VkDeviceGroupRenderPassBeginInfo
   , VkDeviceGroupSubmitInfo
   , VkMemoryAllocateFlagBits
+  , VkMemoryAllocateFlags
   , VkMemoryAllocateFlagsInfo
   , VkPeerMemoryFeatureFlagBits
-  , VkMemoryAllocateFlags
   , VkPeerMemoryFeatureFlags
   )
 import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2

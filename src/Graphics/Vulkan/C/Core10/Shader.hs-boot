@@ -33,12 +33,7 @@ import {-# source #-} Graphics.Vulkan.C.Core10.DeviceInitialization
 
 -- | Dummy data to tag the 'Ptr' with
 data VkShaderModule_T
--- | VkShaderModule - Opaque handle to a shader module object
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineShaderStageCreateInfo',
--- 'vkCreateShaderModule', 'vkDestroyShaderModule'
+-- No documentation found for TopLevel "VkShaderModule"
 type VkShaderModule = Ptr VkShaderModule_T
 
 data VkShaderModuleCreateFlags

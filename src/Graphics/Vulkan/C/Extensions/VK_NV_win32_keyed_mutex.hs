@@ -37,69 +37,25 @@ import Graphics.Vulkan.C.Core10.Memory
   )
 
 
--- | VkWin32KeyedMutexAcquireReleaseInfoNV - use Windows keyex mutex
--- mechanism to synchronize work
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     'VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV'
---
--- -   If @acquireCount@ is not @0@, @pAcquireSyncs@ /must/ be a valid
---     pointer to an array of @acquireCount@ valid
---     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' handles
---
--- -   If @acquireCount@ is not @0@, @pAcquireKeys@ /must/ be a valid
---     pointer to an array of @acquireCount@ @uint64_t@ values
---
--- -   If @acquireCount@ is not @0@, @pAcquireTimeoutMilliseconds@ /must/
---     be a valid pointer to an array of @acquireCount@ @uint32_t@ values
---
--- -   If @releaseCount@ is not @0@, @pReleaseSyncs@ /must/ be a valid
---     pointer to an array of @releaseCount@ valid
---     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' handles
---
--- -   If @releaseCount@ is not @0@, @pReleaseKeys@ /must/ be a valid
---     pointer to an array of @releaseCount@ @uint64_t@ values
---
--- -   Both of the elements of @pAcquireSyncs@, and the elements of
---     @pReleaseSyncs@ that are valid handles /must/ have been created,
---     allocated, or retrieved from the same
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkWin32KeyedMutexAcquireReleaseInfoNV"
 data VkWin32KeyedMutexAcquireReleaseInfoNV = VkWin32KeyedMutexAcquireReleaseInfoNV
   { -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoNV" "sType"
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoNV" "pNext"
   vkPNext :: Ptr ()
-  , -- | @acquireCount@ is the number of entries in the @pAcquireSyncs@,
-  -- @pAcquireKeys@, and @pAcquireTimeoutMilliseconds@ arrays.
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoNV" "acquireCount"
   vkAcquireCount :: Word32
-  , -- | @pAcquireSyncs@ is a pointer to an array of
-  -- 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' objects which were
-  -- imported from Direct3D 11 resources.
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoNV" "pAcquireSyncs"
   vkPAcquireSyncs :: Ptr VkDeviceMemory
-  , -- | @pAcquireKeys@ is a pointer to an array of mutex key values to wait for
-  -- prior to beginning the submitted work. Entries refer to the keyed mutex
-  -- associated with the corresponding entries in @pAcquireSyncs@.
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoNV" "pAcquireKeys"
   vkPAcquireKeys :: Ptr Word64
-  , -- | @pAcquireTimeoutMilliseconds@ is an array of timeout values, in
-  -- millisecond units, for each acquire specified in @pAcquireKeys@.
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoNV" "pAcquireTimeoutMilliseconds"
   vkPAcquireTimeoutMilliseconds :: Ptr Word32
-  , -- | @releaseCount@ is the number of entries in the @pReleaseSyncs@ and
-  -- @pReleaseKeys@ arrays.
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoNV" "releaseCount"
   vkReleaseCount :: Word32
-  , -- | @pReleaseSyncs@ is a pointer to an array of
-  -- 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' objects which were
-  -- imported from Direct3D 11 resources.
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoNV" "pReleaseSyncs"
   vkPReleaseSyncs :: Ptr VkDeviceMemory
-  , -- | @pReleaseKeys@ is a pointer to an array of mutex key values to set when
-  -- the submitted work has completed. Entries refer to the keyed mutex
-  -- associated with the corresponding entries in @pReleaseSyncs@.
+  , -- No documentation found for Nested "VkWin32KeyedMutexAcquireReleaseInfoNV" "pReleaseKeys"
   vkPReleaseKeys :: Ptr Word64
   }
   deriving (Eq, Show)

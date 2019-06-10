@@ -14,15 +14,5 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_global_priority
   )
 
 
--- | VkQueueGlobalPriorityEXT - Values specifying a system-wide queue
--- priority
---
--- = Description
---
--- Priority values are sorted in ascending order. A comparison operation on
--- the enum values can be used to determine the priority order.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_global_priority.VkDeviceQueueGlobalPriorityCreateInfoEXT'
+-- No documentation found for TopLevel "QueueGlobalPriorityEXT"
 type QueueGlobalPriorityEXT = VkQueueGlobalPriorityEXT

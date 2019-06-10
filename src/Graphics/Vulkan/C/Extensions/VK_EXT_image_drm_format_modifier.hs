@@ -80,103 +80,13 @@ import Graphics.Vulkan.NamedType
   )
 
 
--- | VkDrmFormatModifierPropertiesEXT - Structure specifying properties of a
--- format when combined with a DRM format modifier
---
--- = Description
---
--- The returned @drmFormatModifierTilingFeatures@ /must/ contain at least
--- one bit.
---
--- The implementation /must/ not return @DRM_FORMAT_MOD_INVALID@ in
--- @drmFormatModifier@.
---
--- An image’s /memory planecount/ (as returned by
--- @drmFormatModifierPlaneCount@) is distinct from its /format planecount/
--- (in the sense of
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>
--- Y’CBCR formats). In
--- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkImageAspectFlags',
--- each @VK_IMAGE_ASPECT_MEMORY_PLANE@//i/_BIT_EXT represents a _memory
--- plane/ and each @VK_IMAGE_ASPECT_PLANE@//i/_BIT a _format plane/.
---
--- An image’s set of /format planes/ is an ordered partition of the image’s
--- __content__ into separable groups of format channels. The ordered
--- partition is encoded in the name of each
--- 'Graphics.Vulkan.C.Core10.Core.VkFormat'. For example,
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_G8_B8R8_2PLANE_420_UNORM'
--- contains two /format planes/; the first plane contains the green channel
--- and the second plane contains the blue channel and red channel. If the
--- format name does not contain @PLANE@, then the format contains a single
--- plane; for example,
--- 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8B8A8_UNORM'. Some commands,
--- such as
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdCopyBufferToImage',
--- do not operate on all format channels in the image, but instead operate
--- only on the /format planes/ explicitly chosen by the application and
--- operate on each /format plane/ independently.
---
--- An image’s set of /memory planes/ is an ordered partition of the image’s
--- __memory__ rather than the image’s __content__. Each /memory plane/ is a
--- contiguous range of memory. The union of an image’s /memory planes/ is
--- not necessarily contiguous.
---
--- If an image is
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#glossary-linear-resource linear>,
--- then the partition is the same for /memory planes/ and for /format
--- planes/. Therefore, if the returned @drmFormatModifier@ is
--- @DRM_FORMAT_MOD_LINEAR@, then @drmFormatModifierPlaneCount@ /must/ equal
--- the /format planecount/, and @drmFormatModifierTilingFeatures@ /must/ be
--- identical to the
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkFormatProperties2'::@linearTilingFeatures@
--- returned in the same @pNext@ chain.
---
--- If an image is
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#glossary-linear-resource non-linear>,
--- then the partition of the image’s __memory__ into /memory planes/ is
--- implementation-specific and /may/ be unrelated to the partition of the
--- image’s __content__ into /format planes/. For example, consider an image
--- whose @format@ is
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM',
--- @tiling@ is 'VK_IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT', whose
--- @drmFormatModifier@ is not @DRM_FORMAT_MOD_LINEAR@, and @flags@ lacks
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VK_IMAGE_CREATE_DISJOINT_BIT'.
--- The image has 3 /format planes/, and commands such
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdCopyBufferToImage'
--- act on each /format plane/ independently as if the data of each /format
--- plane/ were separable from the data of the other planes. In a
--- straightforward implementation, the implementation /may/ store the
--- image’s content in 3 adjacent /memory planes/ where each /memory plane/
--- corresponds exactly to a /format plane/. However, the implementation
--- /may/ also store the image’s content in a single /memory plane/ where
--- all format channels are combined using an implementation-private
--- block-compressed format; or the implementation /may/ store the image’s
--- content in a collection of 7 adjacent /memory planes/ using an
--- implementation-private sharding technique. Because the image is
--- non-linear and non-disjoint, the implementation has much freedom when
--- choosing the image’s placement in memory.
---
--- The /memory planecount/ applies to function parameters and structures
--- only when the API specifies an explicit requirement on
--- @drmFormatModifierPlaneCount@. In all other cases, the /memory
--- planecount/ is ignored.
---
--- = See Also
---
--- 'VkDrmFormatModifierPropertiesListEXT',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkFormatFeatureFlags'
+-- No documentation found for TopLevel "VkDrmFormatModifierPropertiesEXT"
 data VkDrmFormatModifierPropertiesEXT = VkDrmFormatModifierPropertiesEXT
-  { -- | @drmFormatModifier@ is a /Linux DRM format modifier/.
+  { -- No documentation found for Nested "VkDrmFormatModifierPropertiesEXT" "drmFormatModifier"
   vkDrmFormatModifier :: Word64
-  , -- | @drmFormatModifierPlaneCount@ is the number of /memory planes/ in any
-  -- image created with @format@ and @drmFormatModifier@. An image’s /memory
-  -- planecount/ is distinct from its /format planecount/, as explained
-  -- below.
+  , -- No documentation found for Nested "VkDrmFormatModifierPropertiesEXT" "drmFormatModifierPlaneCount"
   vkDrmFormatModifierPlaneCount :: Word32
-  , -- | @drmFormatModifierTilingFeatures@ is a bitmask of
-  -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkFormatFeatureFlagBits'
-  -- that are supported by any image created with @format@ and
-  -- @drmFormatModifier@.
+  , -- No documentation found for Nested "VkDrmFormatModifierPropertiesEXT" "drmFormatModifierTilingFeatures"
   vkDrmFormatModifierTilingFeatures :: VkFormatFeatureFlags
   }
   deriving (Eq, Show)
@@ -196,39 +106,15 @@ instance Zero VkDrmFormatModifierPropertiesEXT where
                                           zero
                                           zero
 
--- | VkDrmFormatModifierPropertiesListEXT - Structure specifying the list of
--- DRM format modifiers supported for a format
---
--- = Description
---
--- If @pDrmFormatModifierProperties@ is @NULL@, then the function returns
--- in @drmFormatModifierCount@ the number of modifiers compatible with the
--- queried @format@. Otherwise, the application /must/ set
--- @drmFormatModifierCount@ to the length of the array
--- @pDrmFormatModifierProperties@; the function will write at most
--- @drmFormatModifierCount@ elements to the array, and will return in
--- @drmFormatModifierCount@ the number of elements written.
---
--- Among the elements in array @pDrmFormatModifierProperties@, each
--- returned @drmFormatModifier@ /must/ be unique.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'VkDrmFormatModifierPropertiesEXT',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkDrmFormatModifierPropertiesListEXT"
 data VkDrmFormatModifierPropertiesListEXT = VkDrmFormatModifierPropertiesListEXT
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_EXT'
+  { -- No documentation found for Nested "VkDrmFormatModifierPropertiesListEXT" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkDrmFormatModifierPropertiesListEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- | @drmFormatModifierCount@ is an inout parameter related to the number of
-  -- modifiers compatible with the @format@, as described below.
+  , -- No documentation found for Nested "VkDrmFormatModifierPropertiesListEXT" "drmFormatModifierCount"
   vkDrmFormatModifierCount :: Word32
-  , -- | @pDrmFormatModifierProperties@ is either @NULL@ or an array of
-  -- 'VkDrmFormatModifierPropertiesEXT' structures.
+  , -- No documentation found for Nested "VkDrmFormatModifierPropertiesListEXT" "pDrmFormatModifierProperties"
   vkPDrmFormatModifierProperties :: Ptr VkDrmFormatModifierPropertiesEXT
   }
   deriving (Eq, Show)
@@ -251,84 +137,17 @@ instance Zero VkDrmFormatModifierPropertiesListEXT where
                                               zero
                                               zero
 
--- | VkImageDrmFormatModifierExplicitCreateInfoEXT - Specify that an image be
--- created with the provided DRM format modifier and explicit memory layout
---
--- = Description
---
--- The @i@th member of @pPlaneLayouts@ describes the layout of the image’s
--- @i@th /memory plane/ (that is,
--- @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@). In each element of
--- @pPlaneLayouts@, the implementation /must/ ignore @size@. The
--- implementation calculates the size of each plane, which the application
--- /can/ query with
--- 'Graphics.Vulkan.C.Core10.Image.vkGetImageSubresourceLayout'.
---
--- When creating an image with
--- 'VkImageDrmFormatModifierExplicitCreateInfoEXT', it is the application’s
--- responsibility to satisfy all Valid Usage requirements. However, the
--- implementation /must/ validate that the provided @pPlaneLayouts@, when
--- combined with the provided @drmFormatModifier@ and other creation
--- parameters in 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' and its
--- @pNext@ chain, produce a valid image. (This validation is necessarily
--- implementation-dependent and outside the scope of Vulkan, and therefore
--- not described by Valid Usage requirements). If this validation fails,
--- then 'Graphics.Vulkan.C.Core10.Image.vkCreateImage' returns
--- 'VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT'.
---
--- == Valid Usage
---
--- -   @drmFormatModifier@ must be compatible with the parameters in
---     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' and its @pNext@
---     chain, as determined by querying
---     'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2KHR'
---     extended with 'VkPhysicalDeviceImageDrmFormatModifierInfoEXT'.
---
--- -   @drmFormatModifierPlaneCount@ /must/ be equal to the
---     'VkDrmFormatModifierPropertiesEXT'::@drmFormatModifierPlaneCount@
---     associated with
---     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@format@ and
---     @drmFormatModifier@, as found by querying
---     'VkDrmFormatModifierPropertiesListEXT'.
---
--- -   For each element of @pPlaneLayouts@, @size@ /must/ be 0
---
--- -   For each element of @pPlaneLayouts@, @arrayPitch@ /must/ be 0 if
---     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@arrayLayers@ is
---     1.
---
--- -   For each element of @pPlaneLayouts@, @depthPitch@ /must/ be 0 if
---     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@extent@::@depth@
---     is 1.
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     'VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT'
---
--- -   If @drmFormatModifierPlaneCount@ is not @0@, @pPlaneLayouts@ /must/
---     be a valid pointer to an array of @drmFormatModifierPlaneCount@
---     'Graphics.Vulkan.C.Core10.Image.VkSubresourceLayout' structures
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'Graphics.Vulkan.C.Core10.Image.VkSubresourceLayout'
+-- No documentation found for TopLevel "VkImageDrmFormatModifierExplicitCreateInfoEXT"
 data VkImageDrmFormatModifierExplicitCreateInfoEXT = VkImageDrmFormatModifierExplicitCreateInfoEXT
-  { -- | @sType@ is the type of this structure.
+  { -- No documentation found for Nested "VkImageDrmFormatModifierExplicitCreateInfoEXT" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkImageDrmFormatModifierExplicitCreateInfoEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- | @drmFormatModifier@ is the /Linux DRM format modifier/ with which the
-  -- image will be created.
+  , -- No documentation found for Nested "VkImageDrmFormatModifierExplicitCreateInfoEXT" "drmFormatModifier"
   vkDrmFormatModifier :: Word64
-  , -- | @drmFormatModifierPlaneCount@ is the number of /memory planes/ in the
-  -- image (as reported by 'VkDrmFormatModifierPropertiesEXT') as well as the
-  -- length of the @pPlaneLayouts@ array.
+  , -- No documentation found for Nested "VkImageDrmFormatModifierExplicitCreateInfoEXT" "drmFormatModifierPlaneCount"
   vkDrmFormatModifierPlaneCount :: Word32
-  , -- | @pPlaneLayouts@ is an array of
-  -- 'Graphics.Vulkan.C.Core10.Image.VkSubresourceLayout' structures that
-  -- describe the image’s /memory planes/.
+  , -- No documentation found for Nested "VkImageDrmFormatModifierExplicitCreateInfoEXT" "pPlaneLayouts"
   vkPPlaneLayouts :: Ptr VkSubresourceLayout
   }
   deriving (Eq, Show)
@@ -354,39 +173,15 @@ instance Zero VkImageDrmFormatModifierExplicitCreateInfoEXT where
                                                        zero
                                                        zero
 
--- | VkImageDrmFormatModifierListCreateInfoEXT - Specify that an image must
--- be created with a DRM format modifier from the provided list
---
--- == Valid Usage
---
--- -   Each /modifier/ in @pDrmFormatModifiers@ must be compatible with the
---     parameters in 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo' and
---     its @pNext@ chain, as determined by querying
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2'
---     extended with 'VkPhysicalDeviceImageDrmFormatModifierInfoEXT'.
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     'VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_LIST_CREATE_INFO_EXT'
---
--- -   @pDrmFormatModifiers@ /must/ be a valid pointer to an array of
---     @drmFormatModifierCount@ @uint64_t@ values
---
--- -   @drmFormatModifierCount@ /must/ be greater than @0@
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkImageDrmFormatModifierListCreateInfoEXT"
 data VkImageDrmFormatModifierListCreateInfoEXT = VkImageDrmFormatModifierListCreateInfoEXT
-  { -- | @sType@ is the type of this structure.
+  { -- No documentation found for Nested "VkImageDrmFormatModifierListCreateInfoEXT" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkImageDrmFormatModifierListCreateInfoEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- | @drmFormatModifierCount@ is the length of the @pDrmFormatModifiers@
-  -- array.
+  , -- No documentation found for Nested "VkImageDrmFormatModifierListCreateInfoEXT" "drmFormatModifierCount"
   vkDrmFormatModifierCount :: Word32
-  , -- | @pDrmFormatModifiers@ is an array of /Linux DRM format modifiers/.
+  , -- No documentation found for Nested "VkImageDrmFormatModifierListCreateInfoEXT" "pDrmFormatModifiers"
   vkPDrmFormatModifiers :: Ptr Word64
   }
   deriving (Eq, Show)
@@ -409,36 +204,13 @@ instance Zero VkImageDrmFormatModifierListCreateInfoEXT where
                                                    zero
                                                    zero
 
--- | VkImageDrmFormatModifierPropertiesEXT - Properties of an image’s Linux
--- DRM format modifier
---
--- = Description
---
--- If the @image@ was created with
--- 'VkImageDrmFormatModifierListCreateInfoEXT', then the returned
--- @drmFormatModifier@ /must/ belong to the list of modifiers provided at
--- time of image creation in
--- 'VkImageDrmFormatModifierListCreateInfoEXT'::@pDrmFormatModifiers@. If
--- the @image@ was created with
--- 'VkImageDrmFormatModifierExplicitCreateInfoEXT', then the returned
--- @drmFormatModifier@ /must/ be the modifier provided at time of image
--- creation in
--- 'VkImageDrmFormatModifierExplicitCreateInfoEXT'::@drmFormatModifier@.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetImageDrmFormatModifierPropertiesEXT'
+-- No documentation found for TopLevel "VkImageDrmFormatModifierPropertiesEXT"
 data VkImageDrmFormatModifierPropertiesEXT = VkImageDrmFormatModifierPropertiesEXT
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_PROPERTIES_EXT'
+  { -- No documentation found for Nested "VkImageDrmFormatModifierPropertiesEXT" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- No documentation found for Nested "VkImageDrmFormatModifierPropertiesEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- | @drmFormatModifier@ returns the image’s
-  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#glossary-drm-format-modifier Linux DRM format modifier>.
+  , -- No documentation found for Nested "VkImageDrmFormatModifierPropertiesEXT" "drmFormatModifier"
   vkDrmFormatModifier :: Word64
   }
   deriving (Eq, Show)
@@ -458,69 +230,19 @@ instance Zero VkImageDrmFormatModifierPropertiesEXT where
                                                zero
                                                zero
 
--- | VkPhysicalDeviceImageDrmFormatModifierInfoEXT - Structure specifying a
--- DRM format modifier as image creation parameter
---
--- = Description
---
--- If the @drmFormatModifier@ is incompatible with the parameters specified
--- in
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2'
--- and its @pNext@ chain, then
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceImageFormatProperties2'
--- returns 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_FORMAT_NOT_SUPPORTED'.
--- The implementation /must/ support the query of any @drmFormatModifier@,
--- including unknown and invalid modifier values.
---
--- == Valid Usage
---
--- -   If @sharingMode@ is
---     'Graphics.Vulkan.C.Core10.Buffer.VK_SHARING_MODE_CONCURRENT', then
---     @pQueueFamilyIndices@ /must/ be a valid pointer to an array of
---     @queueFamilyIndexCount@ @uint32_t@ values.
---
--- -   If @sharingMode@ is
---     'Graphics.Vulkan.C.Core10.Buffer.VK_SHARING_MODE_CONCURRENT', then
---     @queueFamilyIndexCount@ /must/ be greater than @1@.
---
--- -   If @sharingMode@ is
---     'Graphics.Vulkan.C.Core10.Buffer.VK_SHARING_MODE_CONCURRENT', each
---     element of @pQueueFamilyIndices@ /must/ be unique and /must/ be less
---     than the @pQueueFamilyPropertyCount@ returned by
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceQueueFamilyProperties2'
---     for the @physicalDevice@ that was used to create @device@.
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT'
---
--- -   @sharingMode@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Buffer.VkSharingMode' value
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Buffer.VkSharingMode',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkPhysicalDeviceImageDrmFormatModifierInfoEXT"
 data VkPhysicalDeviceImageDrmFormatModifierInfoEXT = VkPhysicalDeviceImageDrmFormatModifierInfoEXT
-  { -- | @sType@ is the type of this structure.
+  { -- No documentation found for Nested "VkPhysicalDeviceImageDrmFormatModifierInfoEXT" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkPhysicalDeviceImageDrmFormatModifierInfoEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- | @drmFormatModifier@ is the image’s /Linux DRM format modifier/,
-  -- corresponding to
-  -- 'VkImageDrmFormatModifierExplicitCreateInfoEXT'::@modifier@ or to
-  -- 'VkImageDrmFormatModifierListCreateInfoEXT'::@pModifiers@.
+  , -- No documentation found for Nested "VkPhysicalDeviceImageDrmFormatModifierInfoEXT" "drmFormatModifier"
   vkDrmFormatModifier :: Word64
-  , -- | @sharingMode@ specifies how the image will be accessed by multiple queue
-  -- families.
+  , -- No documentation found for Nested "VkPhysicalDeviceImageDrmFormatModifierInfoEXT" "sharingMode"
   vkSharingMode :: VkSharingMode
-  , -- | @queueFamilyIndexCount@ is the number of entries in the
-  -- @pQueueFamilyIndices@ array.
+  , -- No documentation found for Nested "VkPhysicalDeviceImageDrmFormatModifierInfoEXT" "queueFamilyIndexCount"
   vkQueueFamilyIndexCount :: Word32
-  , -- | @pQueueFamilyIndices@ is a list of queue families that will access the
-  -- image (ignored if @sharingMode@ is not
-  -- 'Graphics.Vulkan.C.Core10.Buffer.VK_SHARING_MODE_CONCURRENT').
+  , -- No documentation found for Nested "VkPhysicalDeviceImageDrmFormatModifierInfoEXT" "pQueueFamilyIndices"
   vkPQueueFamilyIndices :: Ptr Word32
   }
   deriving (Eq, Show)
@@ -549,28 +271,7 @@ instance Zero VkPhysicalDeviceImageDrmFormatModifierInfoEXT where
                                                        zero
                                                        zero
 
--- | vkGetImageDrmFormatModifierPropertiesEXT - Returns an image’s DRM format
--- modifier
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the image.
---
--- -   @image@ is the queried image.
---
--- -   @pProperties@ will return properties of the image’s /DRM format
---     modifier/.
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
--- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage',
--- 'VkImageDrmFormatModifierPropertiesEXT'
+-- No documentation found for TopLevel "vkGetImageDrmFormatModifierPropertiesEXT"
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)

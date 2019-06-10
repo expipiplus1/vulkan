@@ -1,16 +1,18 @@
 {-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
 {-# language DuplicateRecordFields #-}
+{-# language PatternSynonyms #-}
 
 module Graphics.Vulkan.Extensions.VK_EXT_depth_clip_enable
-  ( withCStructPhysicalDeviceDepthClipEnableFeaturesEXT
-  , fromCStructPhysicalDeviceDepthClipEnableFeaturesEXT
-  , PhysicalDeviceDepthClipEnableFeaturesEXT(..)
-  , PipelineRasterizationDepthClipStateCreateFlagsEXT
-  , withCStructPipelineRasterizationDepthClipStateCreateInfoEXT
-  , fromCStructPipelineRasterizationDepthClipStateCreateInfoEXT
+  ( 
+#if defined(VK_USE_PLATFORM_GGP)
+  PhysicalDeviceDepthClipEnableFeaturesEXT(..)
+  , 
+#endif
+  PipelineRasterizationDepthClipStateCreateFlagsEXT
+#if defined(VK_USE_PLATFORM_GGP)
   , PipelineRasterizationDepthClipStateCreateInfoEXT(..)
+#endif
   , pattern EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME
   , pattern EXT_DEPTH_CLIP_ENABLE_SPEC_VERSION
   , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_ENABLE_FEATURES_EXT
@@ -20,36 +22,25 @@ module Graphics.Vulkan.Extensions.VK_EXT_depth_clip_enable
 import Data.String
   ( IsString
   )
-import Foreign.Marshal.Utils
-  ( maybePeek
-  , maybeWith
-  )
-import Foreign.Ptr
-  ( castPtr
-  )
 
 
+
+#if defined(VK_USE_PLATFORM_GGP)
 import Graphics.Vulkan.C.Core10.Core
   ( Zero(..)
   )
+#endif
 import Graphics.Vulkan.C.Extensions.VK_EXT_depth_clip_enable
-  ( VkPhysicalDeviceDepthClipEnableFeaturesEXT(..)
-  , VkPipelineRasterizationDepthClipStateCreateFlagsEXT(..)
-  , VkPipelineRasterizationDepthClipStateCreateInfoEXT(..)
+  ( VkPipelineRasterizationDepthClipStateCreateFlagsEXT(..)
   , pattern VK_EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME
   , pattern VK_EXT_DEPTH_CLIP_ENABLE_SPEC_VERSION
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_ENABLE_FEATURES_EXT
-  , pattern VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_DEPTH_CLIP_STATE_CREATE_INFO_EXT
   )
-import Graphics.Vulkan.Core10.Core
-  ( bool32ToBool
-  , boolToBool32
-  )
+
+#if defined(VK_USE_PLATFORM_GGP)
 import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   ( SomeVkStruct
-  , peekVkStruct
-  , withSomeVkStruct
   )
+#endif
 import Graphics.Vulkan.Core10.Core
   ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_ENABLE_FEATURES_EXT
   , pattern STRUCTURE_TYPE_PIPELINE_RASTERIZATION_DEPTH_CLIP_STATE_CREATE_INFO_EXT
@@ -57,91 +48,35 @@ import Graphics.Vulkan.Core10.Core
 
 
 
--- | VkPhysicalDeviceDepthClipEnableFeaturesEXT - Structure indicating
--- support for explicit enable of depth clip
---
--- = Members
---
--- The members of the
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_depth_clip_enable.VkPhysicalDeviceDepthClipEnableFeaturesEXT'
--- structure describe the following features:
---
--- = Description
---
--- If the
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_depth_clip_enable.VkPhysicalDeviceDepthClipEnableFeaturesEXT'
--- structure is included in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
--- it is filled with values indicating whether the feature is supported.
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_depth_clip_enable.VkPhysicalDeviceDepthClipEnableFeaturesEXT'
--- /can/ also be used in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable this
--- feature.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+#if defined(VK_USE_PLATFORM_GGP)
+
+-- No documentation found for TopLevel "VkPhysicalDeviceDepthClipEnableFeaturesEXT"
 data PhysicalDeviceDepthClipEnableFeaturesEXT = PhysicalDeviceDepthClipEnableFeaturesEXT
-  { -- Univalued member elided
-  -- No documentation found for Nested "PhysicalDeviceDepthClipEnableFeaturesEXT" "pNext"
+  { -- No documentation found for Nested "PhysicalDeviceDepthClipEnableFeaturesEXT" "pNext"
   next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDeviceDepthClipEnableFeaturesEXT" "depthClipEnable"
   depthClipEnable :: Bool
   }
   deriving (Show, Eq)
 
--- | A function to temporarily allocate memory for a 'VkPhysicalDeviceDepthClipEnableFeaturesEXT' and
--- marshal a 'PhysicalDeviceDepthClipEnableFeaturesEXT' into it. The 'VkPhysicalDeviceDepthClipEnableFeaturesEXT' is only valid inside
--- the provided computation and must not be returned out of it.
-withCStructPhysicalDeviceDepthClipEnableFeaturesEXT :: PhysicalDeviceDepthClipEnableFeaturesEXT -> (VkPhysicalDeviceDepthClipEnableFeaturesEXT -> IO a) -> IO a
-withCStructPhysicalDeviceDepthClipEnableFeaturesEXT marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PhysicalDeviceDepthClipEnableFeaturesEXT)) (\pPNext -> cont (VkPhysicalDeviceDepthClipEnableFeaturesEXT VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_ENABLE_FEATURES_EXT pPNext (boolToBool32 (depthClipEnable (marshalled :: PhysicalDeviceDepthClipEnableFeaturesEXT)))))
-
--- | A function to read a 'VkPhysicalDeviceDepthClipEnableFeaturesEXT' and all additional
--- structures in the pointer chain into a 'PhysicalDeviceDepthClipEnableFeaturesEXT'.
-fromCStructPhysicalDeviceDepthClipEnableFeaturesEXT :: VkPhysicalDeviceDepthClipEnableFeaturesEXT -> IO PhysicalDeviceDepthClipEnableFeaturesEXT
-fromCStructPhysicalDeviceDepthClipEnableFeaturesEXT c = PhysicalDeviceDepthClipEnableFeaturesEXT <$> -- Univalued Member elided
-                                                                                                 maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceDepthClipEnableFeaturesEXT)))
-                                                                                                 <*> pure (bool32ToBool (vkDepthClipEnable (c :: VkPhysicalDeviceDepthClipEnableFeaturesEXT)))
-
 instance Zero PhysicalDeviceDepthClipEnableFeaturesEXT where
   zero = PhysicalDeviceDepthClipEnableFeaturesEXT Nothing
                                                   False
 
+#endif
 
--- | VkPipelineRasterizationDepthClipStateCreateFlagsEXT - Reserved for
--- future use
---
--- = Description
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_depth_clip_enable.VkPipelineRasterizationDepthClipStateCreateFlagsEXT'
--- is a bitmask type for setting a mask, but is currently reserved for
--- future use.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_depth_clip_enable.VkPipelineRasterizationDepthClipStateCreateInfoEXT'
+-- No documentation found for TopLevel "PipelineRasterizationDepthClipStateCreateFlagsEXT"
 type PipelineRasterizationDepthClipStateCreateFlagsEXT = VkPipelineRasterizationDepthClipStateCreateFlagsEXT
 
 
 -- No complete pragma for PipelineRasterizationDepthClipStateCreateFlagsEXT as it has no patterns
 
 
--- | VkPipelineRasterizationDepthClipStateCreateInfoEXT - Structure
--- specifying depth clipping state
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_depth_clip_enable.VkPipelineRasterizationDepthClipStateCreateFlagsEXT',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+#if defined(VK_USE_PLATFORM_GGP)
+
+-- No documentation found for TopLevel "VkPipelineRasterizationDepthClipStateCreateInfoEXT"
 data PipelineRasterizationDepthClipStateCreateInfoEXT = PipelineRasterizationDepthClipStateCreateInfoEXT
-  { -- Univalued member elided
-  -- No documentation found for Nested "PipelineRasterizationDepthClipStateCreateInfoEXT" "pNext"
+  { -- No documentation found for Nested "PipelineRasterizationDepthClipStateCreateInfoEXT" "pNext"
   next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PipelineRasterizationDepthClipStateCreateInfoEXT" "flags"
   flags :: PipelineRasterizationDepthClipStateCreateFlagsEXT
@@ -150,25 +85,12 @@ data PipelineRasterizationDepthClipStateCreateInfoEXT = PipelineRasterizationDep
   }
   deriving (Show, Eq)
 
--- | A function to temporarily allocate memory for a 'VkPipelineRasterizationDepthClipStateCreateInfoEXT' and
--- marshal a 'PipelineRasterizationDepthClipStateCreateInfoEXT' into it. The 'VkPipelineRasterizationDepthClipStateCreateInfoEXT' is only valid inside
--- the provided computation and must not be returned out of it.
-withCStructPipelineRasterizationDepthClipStateCreateInfoEXT :: PipelineRasterizationDepthClipStateCreateInfoEXT -> (VkPipelineRasterizationDepthClipStateCreateInfoEXT -> IO a) -> IO a
-withCStructPipelineRasterizationDepthClipStateCreateInfoEXT marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PipelineRasterizationDepthClipStateCreateInfoEXT)) (\pPNext -> cont (VkPipelineRasterizationDepthClipStateCreateInfoEXT VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_DEPTH_CLIP_STATE_CREATE_INFO_EXT pPNext (flags (marshalled :: PipelineRasterizationDepthClipStateCreateInfoEXT)) (boolToBool32 (depthClipEnable (marshalled :: PipelineRasterizationDepthClipStateCreateInfoEXT)))))
-
--- | A function to read a 'VkPipelineRasterizationDepthClipStateCreateInfoEXT' and all additional
--- structures in the pointer chain into a 'PipelineRasterizationDepthClipStateCreateInfoEXT'.
-fromCStructPipelineRasterizationDepthClipStateCreateInfoEXT :: VkPipelineRasterizationDepthClipStateCreateInfoEXT -> IO PipelineRasterizationDepthClipStateCreateInfoEXT
-fromCStructPipelineRasterizationDepthClipStateCreateInfoEXT c = PipelineRasterizationDepthClipStateCreateInfoEXT <$> -- Univalued Member elided
-                                                                                                                 maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPipelineRasterizationDepthClipStateCreateInfoEXT)))
-                                                                                                                 <*> pure (vkFlags (c :: VkPipelineRasterizationDepthClipStateCreateInfoEXT))
-                                                                                                                 <*> pure (bool32ToBool (vkDepthClipEnable (c :: VkPipelineRasterizationDepthClipStateCreateInfoEXT)))
-
 instance Zero PipelineRasterizationDepthClipStateCreateInfoEXT where
   zero = PipelineRasterizationDepthClipStateCreateInfoEXT Nothing
                                                           zero
                                                           False
 
+#endif
 
 -- No documentation found for TopLevel "VK_EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME"
 pattern EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME :: (Eq a, IsString a) => a

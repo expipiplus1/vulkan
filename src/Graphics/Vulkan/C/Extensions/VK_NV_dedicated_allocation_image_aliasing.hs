@@ -31,40 +31,13 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- | VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV - Structure
--- describing dedicated allocation image aliasing features that can be
--- supported by an implementation
---
--- = Members
---
--- The members of the
--- 'VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV' structure
--- describe the following features:
---
--- = Description
---
--- If the 'VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV'
--- structure is included in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
--- it is filled with values indicating whether each feature is supported.
--- 'VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV' /can/ also
--- be used in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV"
 data VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV = VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEDICATED_ALLOCATION_IMAGE_ALIASING_FEATURES_NV'
+  { -- No documentation found for Nested "VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV" "sType"
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV" "pNext"
   vkPNext :: Ptr ()
-  , -- | @dedicatedAllocationImageAliasing@ indicates that the implementation
-  -- supports aliasing of compatible image objects on a dedicated allocation.
+  , -- No documentation found for Nested "VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV" "dedicatedAllocationImageAliasing"
   vkDedicatedAllocationImageAliasing :: VkBool32
   }
   deriving (Eq, Show)

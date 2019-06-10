@@ -30,8 +30,8 @@ import {-# source #-} Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkDevice
   )
 import {-# source #-} Graphics.Vulkan.C.Core10.Pipeline
-  ( VkShaderStageFlagBits
-  , VkPipeline
+  ( VkPipeline
+  , VkShaderStageFlagBits
   )
 
 

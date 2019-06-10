@@ -106,25 +106,17 @@ instance Read VkXcbSurfaceCreateFlagsKHR where
 
 
 
--- | VkXcbSurfaceCreateInfoKHR - Structure specifying parameters of a newly
--- created Xcb surface object
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'VkXcbSurfaceCreateFlagsKHR', 'vkCreateXcbSurfaceKHR'
+-- No documentation found for TopLevel "VkXcbSurfaceCreateInfoKHR"
 data VkXcbSurfaceCreateInfoKHR = VkXcbSurfaceCreateInfoKHR
-  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR'
+  { -- No documentation found for Nested "VkXcbSurfaceCreateInfoKHR" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- No documentation found for Nested "VkXcbSurfaceCreateInfoKHR" "pNext"
   vkPNext :: Ptr ()
-  , -- | @flags@ /must/ be @0@
+  , -- No documentation found for Nested "VkXcbSurfaceCreateInfoKHR" "flags"
   vkFlags :: VkXcbSurfaceCreateFlagsKHR
-  , -- | @connection@ /must/ point to a valid X11 @xcb_connection_t@.
+  , -- No documentation found for Nested "VkXcbSurfaceCreateInfoKHR" "connection"
   vkConnection :: Ptr Xcb_connection_t
-  , -- | @window@ /must/ be a valid X11 @xcb_window_t@.
+  , -- No documentation found for Nested "VkXcbSurfaceCreateInfoKHR" "window"
   vkWindow :: Xcb_window_t
   }
   deriving (Eq, Show)
@@ -161,59 +153,7 @@ type Xcb_visualid_t = Word32
 type Xcb_window_t = Word32
   
 
--- | vkCreateXcbSurfaceKHR - Create a
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' object for a
--- X11 window, using the XCB client-side library
---
--- = Parameters
---
--- -   @instance@ is the instance to associate the surface with.
---
--- -   @pCreateInfo@ is a pointer to an instance of the
---     'VkXcbSurfaceCreateInfoKHR' structure containing parameters
---     affecting the creation of the surface object.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     surface object when there is no more specific allocator available
---     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
---
--- -   @pSurface@ points to a
---     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
---     which the created surface object is returned.
---
--- == Valid Usage (Implicit)
---
--- -   @instance@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
---
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'VkXcbSurfaceCreateInfoKHR' structure
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
---     structure
---
--- -   @pSurface@ /must/ be a valid pointer to a
---     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR',
--- 'VkXcbSurfaceCreateInfoKHR'
+-- No documentation found for TopLevel "vkCreateXcbSurfaceKHR"
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -234,28 +174,7 @@ foreign import ccall
 type FN_vkCreateXcbSurfaceKHR = ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkXcbSurfaceCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
 type PFN_vkCreateXcbSurfaceKHR = FunPtr FN_vkCreateXcbSurfaceKHR
 
--- | vkGetPhysicalDeviceXcbPresentationSupportKHR - Query physical device for
--- presentation to X11 server using XCB
---
--- = Parameters
---
--- -   @physicalDevice@ is the physical device.
---
--- -   @queueFamilyIndex@ is the queue family index.
---
--- -   @connection@ is a pointer to an @xcb_connection_t@ to the X server.
---     @visual_id@ is an X11 visual (@xcb_visualid_t@).
---
--- = Description
---
--- This platform-specific function /can/ be called prior to creating a
--- surface.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceXcbPresentationSupportKHR"
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)

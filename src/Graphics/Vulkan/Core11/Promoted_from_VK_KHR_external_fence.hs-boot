@@ -17,30 +17,13 @@ import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fen
   )
 
 
--- | VkFenceImportFlagBits - Bitmask specifying additional parameters of
--- fence payload import
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence.VkFenceImportFlags'
+-- No documentation found for TopLevel "FenceImportFlagBits"
 type FenceImportFlagBits = VkFenceImportFlagBits
 
 -- No documentation found for TopLevel "FenceImportFlagBitsKHR"
 type FenceImportFlagBitsKHR = FenceImportFlagBits
 
--- | VkFenceImportFlags - Bitmask of VkFenceImportFlagBits
---
--- = Description
---
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence.VkFenceImportFlags'
--- is a bitmask type for setting a mask of zero or more
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence.VkFenceImportFlagBits'.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence.VkFenceImportFlagBits',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd.VkImportFenceFdInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.VkImportFenceWin32HandleInfoKHR'
+-- No documentation found for TopLevel "FenceImportFlags"
 type FenceImportFlags = FenceImportFlagBits
 
 -- No documentation found for TopLevel "FenceImportFlagsKHR"

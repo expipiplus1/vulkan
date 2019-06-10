@@ -65,67 +65,15 @@ import Graphics.Vulkan.NamedType
   )
 
 
--- | VkImportMemoryFdInfoKHR - import memory created on the same physical
--- device from a file descriptor
---
--- = Description
---
--- Importing memory from a file descriptor transfers ownership of the file
--- descriptor from the application to the Vulkan implementation. The
--- application /must/ not perform any operations on the file descriptor
--- after a successful import.
---
--- Applications /can/ import the same underlying memory into multiple
--- instances of Vulkan, into the same instance from which it was exported,
--- and multiple times into a given Vulkan instance. In all cases, each
--- import operation /must/ create a distinct
--- 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object.
---
--- == Valid Usage
---
--- -   If @handleType@ is not @0@, it /must/ be supported for import, as
---     reported by
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalImageFormatProperties'
---     or
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalBufferProperties'.
---
--- -   The memory from which @fd@ was exported /must/ have been created on
---     the same underlying physical device as @device@.
---
--- -   If @handleType@ is not @0@, it /must/ be defined as a POSIX file
---     descriptor handle.
---
--- -   If @handleType@ is not @0@, @fd@ /must/ be a valid handle of the
---     type specified by @handleType@.
---
--- -   The memory represented by @fd@ /must/ have been created from a
---     physical device and driver that is compatible with @device@ and
---     @handleType@, as described in
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#external-memory-handle-types-compatibility>.
---
--- -   @fd@ /must/ obey any requirements listed for @handleType@ in
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#external-memory-handle-types-compatibility external memory handle types compatibility>.
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be 'VK_STRUCTURE_TYPE_IMPORT_MEMORY_FD_INFO_KHR'
---
--- -   If @handleType@ is not @0@, @handleType@ /must/ be a valid
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits'
---     value
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkImportMemoryFdInfoKHR"
 data VkImportMemoryFdInfoKHR = VkImportMemoryFdInfoKHR
-  { -- | @sType@ is the type of this structure.
+  { -- No documentation found for Nested "VkImportMemoryFdInfoKHR" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkImportMemoryFdInfoKHR" "pNext"
   vkPNext :: Ptr ()
-  , -- | @handleType@ specifies the handle type of @fd@.
+  , -- No documentation found for Nested "VkImportMemoryFdInfoKHR" "handleType"
   vkHandleType :: VkExternalMemoryHandleTypeFlagBits
-  , -- | @fd@ is the external handle to import.
+  , -- No documentation found for Nested "VkImportMemoryFdInfoKHR" "fd"
   vkFd :: CInt
   }
   deriving (Eq, Show)
@@ -148,21 +96,13 @@ instance Zero VkImportMemoryFdInfoKHR where
                                  zero
                                  zero
 
--- | VkMemoryFdPropertiesKHR - Properties of External Memory File Descriptors
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetMemoryFdPropertiesKHR'
+-- No documentation found for TopLevel "VkMemoryFdPropertiesKHR"
 data VkMemoryFdPropertiesKHR = VkMemoryFdPropertiesKHR
-  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_MEMORY_FD_PROPERTIES_KHR'
+  { -- No documentation found for Nested "VkMemoryFdPropertiesKHR" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- No documentation found for Nested "VkMemoryFdPropertiesKHR" "pNext"
   vkPNext :: Ptr ()
-  , -- | @memoryTypeBits@ is a bitmask containing one bit set for every memory
-  -- type which the specified file descriptor /can/ be imported as.
+  , -- No documentation found for Nested "VkMemoryFdPropertiesKHR" "memoryTypeBits"
   vkMemoryTypeBits :: Word32
   }
   deriving (Eq, Show)
@@ -182,35 +122,15 @@ instance Zero VkMemoryFdPropertiesKHR where
                                  zero
                                  zero
 
--- | VkMemoryGetFdInfoKHR - Structure describing a POSIX FD semaphore export
--- operation
---
--- = Description
---
--- The properties of the file descriptor exported depend on the value of
--- @handleType@. See
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits'
--- for a description of the properties of the defined external memory
--- handle types.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType', 'vkGetMemoryFdKHR'
+-- No documentation found for TopLevel "VkMemoryGetFdInfoKHR"
 data VkMemoryGetFdInfoKHR = VkMemoryGetFdInfoKHR
-  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_MEMORY_GET_FD_INFO_KHR'
+  { -- No documentation found for Nested "VkMemoryGetFdInfoKHR" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- No documentation found for Nested "VkMemoryGetFdInfoKHR" "pNext"
   vkPNext :: Ptr ()
-  , -- | @memory@ /must/ be a valid
-  -- 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' handle
+  , -- No documentation found for Nested "VkMemoryGetFdInfoKHR" "memory"
   vkMemory :: VkDeviceMemory
-  , -- | @handleType@ /must/ be a valid
-  -- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits'
-  -- value
+  , -- No documentation found for Nested "VkMemoryGetFdInfoKHR" "handleType"
   vkHandleType :: VkExternalMemoryHandleTypeFlagBits
   }
   deriving (Eq, Show)
@@ -233,44 +153,7 @@ instance Zero VkMemoryGetFdInfoKHR where
                               zero
                               zero
 
--- | vkGetMemoryFdKHR - Get a POSIX file descriptor for a memory object
---
--- = Parameters
---
--- -   @device@ is the logical device that created the device memory being
---     exported.
---
--- -   @pGetFdInfo@ is a pointer to an instance of the
---     'VkMemoryGetFdInfoKHR' structure containing parameters of the export
---     operation.
---
--- -   @pFd@ will return a file descriptor representing the underlying
---     resources of the device memory object.
---
--- = Description
---
--- Each call to 'vkGetMemoryFdKHR' /must/ create a new file descriptor and
--- transfer ownership of it to the application. To avoid leaking resources,
--- the application /must/ release ownership of the file descriptor using
--- the @close@ system call when it is no longer needed, or by importing a
--- Vulkan memory object from it. Where supported by the operating system,
--- the implementation /must/ set the file descriptor to be closed
--- automatically when an @execve@ system call is made.
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_TOO_MANY_OBJECTS'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
--- 'VkMemoryGetFdInfoKHR'
+-- No documentation found for TopLevel "vkGetMemoryFdKHR"
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -291,33 +174,7 @@ foreign import ccall
 type FN_vkGetMemoryFdKHR = ("device" ::: VkDevice) -> ("pGetFdInfo" ::: Ptr VkMemoryGetFdInfoKHR) -> ("pFd" ::: Ptr CInt) -> IO VkResult
 type PFN_vkGetMemoryFdKHR = FunPtr FN_vkGetMemoryFdKHR
 
--- | vkGetMemoryFdPropertiesKHR - Get Properties of External Memory File
--- Descriptors
---
--- = Parameters
---
--- -   @device@ is the logical device that will be importing @fd@.
---
--- -   @handleType@ is the type of the handle @fd@.
---
--- -   @fd@ is the handle which will be imported.
---
--- -   @pMemoryFdProperties@ is a pointer to a 'VkMemoryFdPropertiesKHR'
---     structure in which the properties of the handle @fd@ are returned.
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VK_ERROR_INVALID_EXTERNAL_HANDLE'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits',
--- 'VkMemoryFdPropertiesKHR'
+-- No documentation found for TopLevel "vkGetMemoryFdPropertiesKHR"
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)

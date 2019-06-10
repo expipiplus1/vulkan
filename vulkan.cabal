@@ -328,6 +328,7 @@ library
                      , Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix
                      , Graphics.Vulkan.C.Extensions.VK_EXT_ycbcr_image_arrays
                      , Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive
+                     , Graphics.Vulkan.C.Extensions.VK_EXT_headless_surface
                      , Graphics.Vulkan.C.Extensions.VK_EXT_host_query_reset
                      , Graphics.Vulkan.C.Dynamic
                      , Graphics.Vulkan.Core10.Constants
@@ -527,9 +528,11 @@ library
                      , Graphics.Vulkan.Extensions.VK_NV_cooperative_matrix
                      , Graphics.Vulkan.Extensions.VK_EXT_ycbcr_image_arrays
                      , Graphics.Vulkan.Extensions.VK_EXT_full_screen_exclusive
+                     , Graphics.Vulkan.Extensions.VK_EXT_headless_surface
                      , Graphics.Vulkan.Extensions.VK_EXT_host_query_reset
                      , Graphics.Vulkan.Marshal.Utils
                      , Graphics.Vulkan.Marshal.SomeVkStruct
+                     , Graphics.Vulkan.Marshal.ToCStruct
                      , Graphics.Vulkan.Core10.Version
                      , Graphics.Vulkan.Core11.Version
                      , Graphics.Vulkan
@@ -632,6 +635,7 @@ library
 
   build-depends:       base >= 4.9 && < 5
                      , bytestring
+                     , transformers
                      , vector
                      , vector-sized >= 1.0.1
   default-language:    Haskell2010

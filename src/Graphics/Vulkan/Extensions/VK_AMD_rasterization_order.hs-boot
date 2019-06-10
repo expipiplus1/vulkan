@@ -14,10 +14,5 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_AMD_rasterization_order
   )
 
 
--- | VkRasterizationOrderAMD - Specify rasterization order for a graphics
--- pipeline
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_AMD_rasterization_order.VkPipelineRasterizationStateRasterizationOrderAMD'
+-- No documentation found for TopLevel "RasterizationOrderAMD"
 type RasterizationOrderAMD = VkRasterizationOrderAMD

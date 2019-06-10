@@ -14,11 +14,11 @@ module Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template
 
 
 import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template
-  ( VkDescriptorUpdateTemplateCreateFlags
+  ( VkDescriptorUpdateTemplate
+  , VkDescriptorUpdateTemplateCreateFlags
   , VkDescriptorUpdateTemplateCreateInfo
   , VkDescriptorUpdateTemplateEntry
   , VkDescriptorUpdateTemplateType
-  , VkDescriptorUpdateTemplate
   )
 
 

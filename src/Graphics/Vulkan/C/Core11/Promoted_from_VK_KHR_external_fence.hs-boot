@@ -18,16 +18,5 @@ data VkExportFenceCreateInfo
 
 data VkFenceImportFlagBits
 
--- | VkFenceImportFlags - Bitmask of VkFenceImportFlagBits
---
--- = Description
---
--- 'VkFenceImportFlags' is a bitmask type for setting a mask of zero or
--- more 'VkFenceImportFlagBits'.
---
--- = See Also
---
--- 'VkFenceImportFlagBits',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd.VkImportFenceFdInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.VkImportFenceWin32HandleInfoKHR'
+-- No documentation found for TopLevel "VkFenceImportFlags"
 type VkFenceImportFlags = VkFenceImportFlagBits

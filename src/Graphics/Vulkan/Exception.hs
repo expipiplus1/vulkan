@@ -85,24 +85,24 @@ instance Exception VulkanException where
 -- | A human understandable message for each VkResult
 resultString :: VkResult -> String
 resultString = \case
-  VK_SUCCESS -> "Command successfully completed"
-  VK_NOT_READY -> "A fence or query has not yet completed"
-  VK_TIMEOUT -> "A wait operation has not completed in the specified time"
-  VK_EVENT_SET -> "An event is signaled"
-  VK_EVENT_RESET -> "An event is unsignaled"
-  VK_INCOMPLETE -> "A return array was too small for the result"
-  VK_ERROR_OUT_OF_HOST_MEMORY -> "A host memory allocation has failed"
-  VK_ERROR_OUT_OF_DEVICE_MEMORY -> "A device memory allocation has failed"
-  VK_ERROR_INITIALIZATION_FAILED -> "Initialization of an object could not be completed for implementation-specific reasons"
-  VK_ERROR_DEVICE_LOST -> "The logical or physical device has been lost"
-  VK_ERROR_MEMORY_MAP_FAILED -> "Mapping of a memory object has failed"
-  VK_ERROR_LAYER_NOT_PRESENT -> "A requested layer is not present or could not be loaded"
-  VK_ERROR_EXTENSION_NOT_PRESENT -> "A requested extension is not supported"
-  VK_ERROR_FEATURE_NOT_PRESENT -> "A requested feature is not supported"
-  VK_ERROR_INCOMPATIBLE_DRIVER -> "The requested version of Vulkan is not supported by the driver or is otherwise incompatible for implementation-specific reasons"
-  VK_ERROR_TOO_MANY_OBJECTS -> "Too many objects of the type have already been created"
-  VK_ERROR_FORMAT_NOT_SUPPORTED -> "A requested format is not supported on this device"
-  VK_ERROR_FRAGMENTED_POOL -> "A pool allocation has failed due to fragmentation of the pool's memory"
+  VK_SUCCESS -> show VK_SUCCESS
+  VK_NOT_READY -> show VK_NOT_READY
+  VK_TIMEOUT -> show VK_TIMEOUT
+  VK_EVENT_SET -> show VK_EVENT_SET
+  VK_EVENT_RESET -> show VK_EVENT_RESET
+  VK_INCOMPLETE -> show VK_INCOMPLETE
+  VK_ERROR_OUT_OF_HOST_MEMORY -> show VK_ERROR_OUT_OF_HOST_MEMORY
+  VK_ERROR_OUT_OF_DEVICE_MEMORY -> show VK_ERROR_OUT_OF_DEVICE_MEMORY
+  VK_ERROR_INITIALIZATION_FAILED -> show VK_ERROR_INITIALIZATION_FAILED
+  VK_ERROR_DEVICE_LOST -> show VK_ERROR_DEVICE_LOST
+  VK_ERROR_MEMORY_MAP_FAILED -> show VK_ERROR_MEMORY_MAP_FAILED
+  VK_ERROR_LAYER_NOT_PRESENT -> show VK_ERROR_LAYER_NOT_PRESENT
+  VK_ERROR_EXTENSION_NOT_PRESENT -> show VK_ERROR_EXTENSION_NOT_PRESENT
+  VK_ERROR_FEATURE_NOT_PRESENT -> show VK_ERROR_FEATURE_NOT_PRESENT
+  VK_ERROR_INCOMPATIBLE_DRIVER -> show VK_ERROR_INCOMPATIBLE_DRIVER
+  VK_ERROR_TOO_MANY_OBJECTS -> show VK_ERROR_TOO_MANY_OBJECTS
+  VK_ERROR_FORMAT_NOT_SUPPORTED -> show VK_ERROR_FORMAT_NOT_SUPPORTED
+  VK_ERROR_FRAGMENTED_POOL -> show VK_ERROR_FRAGMENTED_POOL
   VK_ERROR_OUT_OF_POOL_MEMORY -> show VK_ERROR_OUT_OF_POOL_MEMORY
   VK_ERROR_INVALID_EXTERNAL_HANDLE -> show VK_ERROR_INVALID_EXTERNAL_HANDLE
   VK_ERROR_SURFACE_LOST_KHR -> show VK_ERROR_SURFACE_LOST_KHR

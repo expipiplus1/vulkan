@@ -13,33 +13,65 @@
 {-# language TypeOperators #-}
 
 module Graphics.Vulkan.Marshal.Utils
-  ( withVec
-  , withArray
+  ( 
+#if defined(VK_USE_PLATFORM_GGP)
+  withVec
+  , 
+  withArray
   , withSizedArray
   , byteStringToSizedVector
   , byteStringToNullTerminatedSizedVector
   , padSized
   , padVector
   , packCStringElemOff
+  , pokeFixedLengthByteString
+  , pokeFixedLengthNullTerminatedByteString
   , peekVkStruct
+#endif
   ) where
 
+
+#if defined(VK_USE_PLATFORM_GGP)
 import Data.ByteString
   ( ByteString
   , packCString
   , take
   , unpack
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
+import qualified Data.ByteString
+  ( length
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
+import Data.ByteString.Unsafe
+  ( unsafeUseAsCString
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
 import Data.Proxy
   ( Proxy(Proxy)
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
 import Data.Vector
   ( Vector
   , ifoldr
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
 import qualified Data.Vector
   ( length
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
 import qualified Data.Vector.Generic
   ( (++)
   , Vector
@@ -50,45 +82,85 @@ import qualified Data.Vector.Generic
   , snoc
   , take
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
 import qualified Data.Vector.Generic.Sized
   ( Vector
   , fromSized
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
 import qualified Data.Vector.Generic.Sized.Internal
   ( Vector(Vector)
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
 import qualified Data.Vector.Sized
   ( Vector
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
 import Data.Word
   ( Word8
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
 import Foreign.C.Types
   ( CChar(..)
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
 import Foreign.Marshal.Array
   ( allocaArray
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
+import Foreign.Marshal.Utils
+  ( copyBytes
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
 import Foreign.Ptr
   ( Ptr
+  , castPtr
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
 import Foreign.Storable
   ( Storable
   , peekElemOff
   , pokeElemOff
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_GGP)
 import GHC.TypeNats
   ( KnownNat
   , natVal
   , type (<=)
   )
+#endif
 
 
+
+#if defined(VK_USE_PLATFORM_GGP)
 import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   ( peekVkStruct
   )
+#endif
 
 
+
+#if defined(VK_USE_PLATFORM_GGP)
 packCStringElemOff :: Ptr (Ptr CChar) -> Int -> IO ByteString
 packCStringElemOff p o = packCString =<< peekElemOff p o
 
@@ -184,3 +256,20 @@ byteStringToSizedVector bs = padSized
     n                  = fromIntegral (natVal (Proxy @n))
     byteStringToVector = Data.Vector.Generic.fromList . Data.ByteString.unpack
 
+pokeFixedLengthNullTerminatedByteString :: Int -> Ptr CChar -> ByteString -> IO ()
+pokeFixedLengthNullTerminatedByteString maxLength to bs =
+  unsafeUseAsCString bs $ \from -> do
+    let len = min maxLength (Data.ByteString.length bs)
+        end = min (maxLength - 1) len
+    -- Copy the entire string into the buffer
+    copyBytes to from len
+    -- Make the last byte (the one following the string, or the
+    -- one at the end of the buffer)
+    pokeElemOff to end 0
+
+pokeFixedLengthByteString :: Int -> Ptr Word8 -> ByteString -> IO ()
+pokeFixedLengthByteString maxLength to bs =
+  unsafeUseAsCString bs $ \from -> do
+    let len = min maxLength (Data.ByteString.length bs)
+    copyBytes to (castPtr @CChar @Word8 from) len
+#endif

@@ -40,15 +40,19 @@ module Graphics.Vulkan.Extensions.VK_KHR_device_group
   , MemoryAllocateFlagBitsKHR
   , DeviceGroupPresentModeFlagBitsKHR
   , DeviceGroupPresentModeFlagsKHR
+#if defined(VK_USE_PLATFORM_GGP)
   , DeviceGroupPresentCapabilitiesKHR(..)
   , getDeviceGroupPresentCapabilitiesKHR
+#endif
   , getDeviceGroupSurfacePresentModesKHR
+#if defined(VK_USE_PLATFORM_GGP)
   , getPhysicalDevicePresentRectanglesKHR
   , ImageSwapchainCreateInfoKHR(..)
   , BindImageMemorySwapchainInfoKHR(..)
   , AcquireNextImageInfoKHR(..)
   , DeviceGroupPresentInfoKHR(..)
   , DeviceGroupSwapchainCreateInfoKHR(..)
+#endif
   , acquireNextImage2KHR
   , pattern STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO
   , pattern STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO
@@ -75,18 +79,6 @@ module Graphics.Vulkan.Extensions.VK_KHR_device_group
   , pattern SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR
   ) where
 
-
-#if defined(VK_USE_PLATFORM_WIN32)
-import Control.Exception
-  ( throwIO
-  )
-#endif
-
-#if defined(VK_USE_PLATFORM_WIN32)
-import Control.Monad
-  ( when
-  )
-#endif
 import Data.String
   ( IsString
   )
@@ -116,12 +108,6 @@ import Foreign.Storable
 import Graphics.Vulkan.C.Core10.Core
   ( VkStructureType(..)
   )
-
-#if defined(VK_USE_PLATFORM_WIN32)
-import Graphics.Vulkan.C.Core10.Core
-  ( pattern VK_SUCCESS
-  )
-#endif
 import Graphics.Vulkan.C.Core10.DeviceInitialization
   ( VkImageCreateFlagBits(..)
   )
@@ -190,15 +176,8 @@ import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_
   )
 
 #if defined(VK_USE_PLATFORM_WIN32)
-import Graphics.Vulkan.Exception
-  ( VulkanException(..)
-  )
-#endif
-
-#if defined(VK_USE_PLATFORM_WIN32)
 import Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2
   ( PhysicalDeviceSurfaceInfo2KHR(..)
-  , withCStructPhysicalDeviceSurfaceInfo2KHR
   )
 #endif
 
@@ -222,20 +201,25 @@ import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group
   , PeerMemoryFeatureFlagsKHR
   )
 import Graphics.Vulkan.Extensions.VK_KHR_swapchain
+  ( DeviceGroupPresentModeFlagBitsKHR
+  , DeviceGroupPresentModeFlagsKHR
+  , acquireNextImage2KHR
+  , getDeviceGroupSurfacePresentModesKHR
+  , pattern SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR
+  )
+
+#if defined(VK_USE_PLATFORM_GGP)
+import Graphics.Vulkan.Extensions.VK_KHR_swapchain
   ( AcquireNextImageInfoKHR(..)
   , BindImageMemorySwapchainInfoKHR(..)
   , DeviceGroupPresentCapabilitiesKHR(..)
   , DeviceGroupPresentInfoKHR(..)
   , DeviceGroupSwapchainCreateInfoKHR(..)
   , ImageSwapchainCreateInfoKHR(..)
-  , DeviceGroupPresentModeFlagBitsKHR
-  , DeviceGroupPresentModeFlagsKHR
-  , acquireNextImage2KHR
   , getDeviceGroupPresentCapabilitiesKHR
-  , getDeviceGroupSurfacePresentModesKHR
   , getPhysicalDevicePresentRectanglesKHR
-  , pattern SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR
   )
+#endif
 
 
 type BindBufferMemoryDeviceGroupInfoKHR = BindBufferMemoryDeviceGroupInfo
@@ -271,50 +255,9 @@ getDeviceGroupPeerMemoryFeaturesKHR = getDeviceGroupPeerMemoryFeatures
 
 #if defined(VK_USE_PLATFORM_WIN32)
 
--- | vkGetDeviceGroupSurfacePresentModes2EXT - Query device group present
--- capabilities for a surface
---
--- = Parameters
---
--- -   @device@ is the logical device.
---
--- -   @pSurfaceInfo@ points to an instance of the
---     VkPhysicalDeviceSurfaceInfo2KHR structure, describing the surface
---     and other fixed parameters that would be consumed by
---     vkCreateSwapchainKHR.
---
--- -   @pModes@ is a pointer to a value of type
---     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkDeviceGroupPresentModeFlagsKHR'
---     that is filled with the supported device group present modes for the
---     surface.
---
--- = Description
---
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_device_group.vkGetDeviceGroupSurfacePresentModes2EXT'
--- behaves similarly to
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkGetDeviceGroupSurfacePresentModesKHR',
--- with the ability to specify extended inputs via chained input
--- structures.
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_SURFACE_LOST_KHR'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkDeviceGroupPresentModeFlagsKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkPhysicalDeviceSurfaceInfo2KHR'
+-- No documentation found for TopLevel "vkGetDeviceGroupSurfacePresentModes2EXT"
 getDeviceGroupSurfacePresentModes2EXT :: Device ->  PhysicalDeviceSurfaceInfo2KHR ->  IO (DeviceGroupPresentModeFlagsKHR)
-getDeviceGroupSurfacePresentModes2EXT = \(Device device' commandTable) -> \surfaceInfo' -> alloca (\pModes' -> (\marshalled -> withCStructPhysicalDeviceSurfaceInfo2KHR marshalled . flip with) surfaceInfo' (\pSurfaceInfo' -> vkGetDeviceGroupSurfacePresentModes2EXT commandTable device' pSurfaceInfo' pModes' >>= (\ret -> when (ret < VK_SUCCESS) (throwIO (VulkanException ret)) *> (peek pModes'))))
+getDeviceGroupSurfacePresentModes2EXT = undefined {- {wrapped (pretty cName) :: Doc ()} -}
 #endif
 
 -- No documentation found for TopLevel "DEPENDENCY_DEVICE_GROUP_BIT_KHR"

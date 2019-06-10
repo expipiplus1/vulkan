@@ -31,28 +31,15 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- | VkPhysicalDeviceFloat16Int8FeaturesKHR - Structure describing features
--- supported by VK_KHR_shader_float16_int8
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkPhysicalDeviceFloat16Int8FeaturesKHR"
 data VkPhysicalDeviceFloat16Int8FeaturesKHR = VkPhysicalDeviceFloat16Int8FeaturesKHR
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT16_INT8_FEATURES_KHR'
+  { -- No documentation found for Nested "VkPhysicalDeviceFloat16Int8FeaturesKHR" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkPhysicalDeviceFloat16Int8FeaturesKHR" "pNext"
   vkPNext :: Ptr ()
-  , -- | @shaderFloat16@ indicates whether 16-bit floats (halfs) are supported in
-  -- shader code. This also indicates whether shader modules /can/ declare
-  -- the @Float16@ capability.
+  , -- No documentation found for Nested "VkPhysicalDeviceFloat16Int8FeaturesKHR" "shaderFloat16"
   vkShaderFloat16 :: VkBool32
-  , -- | @shaderInt8@ indicates whether 8-bit integers (signed and unsigned) are
-  -- supported in shader code. This also indicates whether shader modules
-  -- /can/ declare the @Int8@ capability.
+  , -- No documentation found for Nested "VkPhysicalDeviceFloat16Int8FeaturesKHR" "shaderInt8"
   vkShaderInt8 :: VkBool32
   }
   deriving (Eq, Show)

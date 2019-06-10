@@ -31,40 +31,17 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- | VkPhysicalDevice8BitStorageFeaturesKHR - Structure describing features
--- supported by VK_KHR_8bit_storage
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkPhysicalDevice8BitStorageFeaturesKHR"
 data VkPhysicalDevice8BitStorageFeaturesKHR = VkPhysicalDevice8BitStorageFeaturesKHR
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES_KHR'
+  { -- No documentation found for Nested "VkPhysicalDevice8BitStorageFeaturesKHR" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkPhysicalDevice8BitStorageFeaturesKHR" "pNext"
   vkPNext :: Ptr ()
-  , -- | @storageBuffer8BitAccess@ indicates whether objects in the
-  -- @StorageBuffer@ storage class with the @Block@ decoration /can/ have
-  -- 8-bit integer members. If this feature is not enabled, 8-bit integer
-  -- members /must/ not be used in such objects. This also indicates whether
-  -- shader modules /can/ declare the @StorageBuffer8BitAccess@ capability.
+  , -- No documentation found for Nested "VkPhysicalDevice8BitStorageFeaturesKHR" "storageBuffer8BitAccess"
   vkStorageBuffer8BitAccess :: VkBool32
-  , -- | @uniformAndStorageBuffer8BitAccess@ indicates whether objects in the
-  -- @Uniform@ storage class with the @Block@ decoration and in the
-  -- @StorageBuffer@ storage class with the same decoration /can/ have 8-bit
-  -- integer members. If this feature is not enabled, 8-bit integer members
-  -- /must/ not be used in such objects. This also indicates whether shader
-  -- modules /can/ declare the @UniformAndStorageBuffer8BitAccess@
-  -- capability.
+  , -- No documentation found for Nested "VkPhysicalDevice8BitStorageFeaturesKHR" "uniformAndStorageBuffer8BitAccess"
   vkUniformAndStorageBuffer8BitAccess :: VkBool32
-  , -- | @storagePushConstant8@ indicates whether objects in the @PushConstant@
-  -- storage class /can/ have 8-bit integer members. If this feature is not
-  -- enabled, 8-bit integer members /must/ not be used in such objects. This
-  -- also indicates whether shader modules /can/ declare the
-  -- @StoragePushConstant8@ capability.
+  , -- No documentation found for Nested "VkPhysicalDevice8BitStorageFeaturesKHR" "storagePushConstant8"
   vkStoragePushConstant8 :: VkBool32
   }
   deriving (Eq, Show)

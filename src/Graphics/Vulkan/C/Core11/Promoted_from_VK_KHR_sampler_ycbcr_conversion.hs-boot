@@ -48,15 +48,7 @@ data VkPhysicalDeviceSamplerYcbcrConversionFeatures
 
 -- | Dummy data to tag the 'Ptr' with
 data VkSamplerYcbcrConversion_T
--- | VkSamplerYcbcrConversion - Opaque handle to a device-specific sampler
--- Y’CBCR conversion description
---
--- = See Also
---
--- 'VkSamplerYcbcrConversionInfo', 'vkCreateSamplerYcbcrConversion',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_sampler_ycbcr_conversion.vkCreateSamplerYcbcrConversionKHR',
--- 'vkDestroySamplerYcbcrConversion',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_sampler_ycbcr_conversion.vkDestroySamplerYcbcrConversionKHR'
+-- No documentation found for TopLevel "VkSamplerYcbcrConversion"
 type VkSamplerYcbcrConversion = Ptr VkSamplerYcbcrConversion_T
 
 data VkSamplerYcbcrConversionCreateInfo

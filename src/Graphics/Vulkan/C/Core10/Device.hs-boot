@@ -40,17 +40,7 @@ data VkDeviceCreateInfo
 
 data VkDeviceQueueCreateFlagBits
 
--- | VkDeviceQueueCreateFlags - Bitmask of VkDeviceQueueCreateFlagBits
---
--- = Description
---
--- 'VkDeviceQueueCreateFlags' is a bitmask type for setting a mask of zero
--- or more 'VkDeviceQueueCreateFlagBits'.
---
--- = See Also
---
--- 'VkDeviceQueueCreateFlagBits', 'VkDeviceQueueCreateInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory.VkDeviceQueueInfo2'
+-- No documentation found for TopLevel "VkDeviceQueueCreateFlags"
 type VkDeviceQueueCreateFlags = VkDeviceQueueCreateFlagBits
 
 data VkDeviceQueueCreateInfo

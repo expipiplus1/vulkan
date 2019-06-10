@@ -39,23 +39,13 @@ import Graphics.Vulkan.C.Core10.MemoryManagement
   )
 
 
--- | VkDedicatedAllocationBufferCreateInfoNV - Specify that a buffer is bound
--- to a dedicated memory resource
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkDedicatedAllocationBufferCreateInfoNV"
 data VkDedicatedAllocationBufferCreateInfoNV = VkDedicatedAllocationBufferCreateInfoNV
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_BUFFER_CREATE_INFO_NV'
+  { -- No documentation found for Nested "VkDedicatedAllocationBufferCreateInfoNV" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkDedicatedAllocationBufferCreateInfoNV" "pNext"
   vkPNext :: Ptr ()
-  , -- | @dedicatedAllocation@ specifies whether the buffer will have a dedicated
-  -- allocation bound to it.
+  , -- No documentation found for Nested "VkDedicatedAllocationBufferCreateInfoNV" "dedicatedAllocation"
   vkDedicatedAllocation :: VkBool32
   }
   deriving (Eq, Show)
@@ -75,42 +65,13 @@ instance Zero VkDedicatedAllocationBufferCreateInfoNV where
                                                  zero
                                                  zero
 
--- | VkDedicatedAllocationImageCreateInfoNV - Specify that an image is bound
--- to a dedicated memory resource
---
--- = Description
---
--- __Note__
---
--- Using a dedicated allocation for color and depth\/stencil attachments or
--- other large images /may/ improve performance on some devices.
---
--- == Valid Usage
---
--- -   If @dedicatedAllocation@ is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE',
---     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@flags@ /must/
---     not include
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_CREATE_SPARSE_BINDING_BIT',
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_CREATE_SPARSE_RESIDENCY_BIT',
---     or
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_CREATE_SPARSE_ALIASED_BIT'
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     'VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkDedicatedAllocationImageCreateInfoNV"
 data VkDedicatedAllocationImageCreateInfoNV = VkDedicatedAllocationImageCreateInfoNV
-  { -- | @sType@ is the type of this structure.
+  { -- No documentation found for Nested "VkDedicatedAllocationImageCreateInfoNV" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkDedicatedAllocationImageCreateInfoNV" "pNext"
   vkPNext :: Ptr ()
-  , -- | @dedicatedAllocation@ specifies whether the image will have a dedicated
-  -- allocation bound to it.
+  , -- No documentation found for Nested "VkDedicatedAllocationImageCreateInfoNV" "dedicatedAllocation"
   vkDedicatedAllocation :: VkBool32
   }
   deriving (Eq, Show)
@@ -130,74 +91,15 @@ instance Zero VkDedicatedAllocationImageCreateInfoNV where
                                                 zero
                                                 zero
 
--- | VkDedicatedAllocationMemoryAllocateInfoNV - Specify a dedicated memory
--- allocation resource
---
--- == Valid Usage
---
--- -   At least one of @image@ and @buffer@ /must/ be
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE'
---
--- -   If @image@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', the image
---     /must/ have been created with
---     'VkDedicatedAllocationImageCreateInfoNV'::@dedicatedAllocation@
---     equal to 'Graphics.Vulkan.C.Core10.Core.VK_TRUE'
---
--- -   If @buffer@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', the buffer
---     /must/ have been created with
---     'VkDedicatedAllocationBufferCreateInfoNV'::@dedicatedAllocation@
---     equal to 'Graphics.Vulkan.C.Core10.Core.VK_TRUE'
---
--- -   If @image@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE',
---     'Graphics.Vulkan.C.Core10.Memory.VkMemoryAllocateInfo'::@allocationSize@
---     /must/ equal the
---     'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements'::@size@
---     of the image
---
--- -   If @buffer@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE',
---     'Graphics.Vulkan.C.Core10.Memory.VkMemoryAllocateInfo'::@allocationSize@
---     /must/ equal the
---     'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements'::@size@
---     of the buffer
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     'VK_STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV'
---
--- -   If @image@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @image@ /must/
---     be a valid 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage'
---     handle
---
--- -   If @buffer@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @buffer@ /must/
---     be a valid 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer'
---     handle
---
--- -   Both of @buffer@, and @image@ that are valid handles /must/ have
---     been created, allocated, or retrieved from the same
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',
--- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkDedicatedAllocationMemoryAllocateInfoNV"
 data VkDedicatedAllocationMemoryAllocateInfoNV = VkDedicatedAllocationMemoryAllocateInfoNV
-  { -- | @sType@ is the type of this structure.
+  { -- No documentation found for Nested "VkDedicatedAllocationMemoryAllocateInfoNV" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkDedicatedAllocationMemoryAllocateInfoNV" "pNext"
   vkPNext :: Ptr ()
-  , -- | @image@ is 'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE' or a
-  -- handle of an image which this memory will be bound to.
+  , -- No documentation found for Nested "VkDedicatedAllocationMemoryAllocateInfoNV" "image"
   vkImage :: VkImage
-  , -- | @buffer@ is 'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE' or a
-  -- handle of a buffer which this memory will be bound to.
+  , -- No documentation found for Nested "VkDedicatedAllocationMemoryAllocateInfoNV" "buffer"
   vkBuffer :: VkBuffer
   }
   deriving (Eq, Show)

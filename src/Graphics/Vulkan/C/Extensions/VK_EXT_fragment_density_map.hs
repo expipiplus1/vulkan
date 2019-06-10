@@ -68,58 +68,17 @@ import Graphics.Vulkan.C.Core10.Sampler
   )
 
 
--- | VkPhysicalDeviceFragmentDensityMapFeaturesEXT - Structure describing
--- fragment density map features that can be supported by an implementation
---
--- = Members
---
--- The members of the 'VkPhysicalDeviceFragmentDensityMapFeaturesEXT'
--- structure describe the following features:
---
--- = Description
---
--- If the 'VkPhysicalDeviceFragmentDensityMapFeaturesEXT' structure is
--- included in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2',
--- it is filled with values indicating whether each feature is supported.
--- 'VkPhysicalDeviceFragmentDensityMapFeaturesEXT' /can/ also be used in
--- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to
--- enable the features.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkPhysicalDeviceFragmentDensityMapFeaturesEXT"
 data VkPhysicalDeviceFragmentDensityMapFeaturesEXT = VkPhysicalDeviceFragmentDensityMapFeaturesEXT
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_FEATURES_EXT'
+  { -- No documentation found for Nested "VkPhysicalDeviceFragmentDensityMapFeaturesEXT" "sType"
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceFragmentDensityMapFeaturesEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- | @fragmentDensityMap@ specifies whether the implementation supports
-  -- render passes with a fragment density map attachment. If this feature is
-  -- not enabled and the @pNext@ chain of
-  -- 'Graphics.Vulkan.C.Core10.Pass.VkRenderPassCreateInfo' contains
-  -- 'VkRenderPassFragmentDensityMapCreateInfoEXT',
-  -- @fragmentDensityMapAttachment@ /must/ be
-  -- 'Graphics.Vulkan.C.Core10.Constants.VK_ATTACHMENT_UNUSED'.
+  , -- No documentation found for Nested "VkPhysicalDeviceFragmentDensityMapFeaturesEXT" "fragmentDensityMap"
   vkFragmentDensityMap :: VkBool32
-  , -- | @fragmentDensityMapDynamic@ specifies whether the implementation
-  -- supports dynamic fragment density map image views. If this feature is
-  -- not enabled, 'VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT'
-  -- /must/ not be included in
-  -- 'Graphics.Vulkan.C.Core10.ImageView.VkImageViewCreateInfo'::@flags@.
+  , -- No documentation found for Nested "VkPhysicalDeviceFragmentDensityMapFeaturesEXT" "fragmentDensityMapDynamic"
   vkFragmentDensityMapDynamic :: VkBool32
-  , -- | @fragmentDensityMapNonSubsampledImages@ specifies whether the
-  -- implementation supports regular non-subsampled image attachments with
-  -- fragment density map render passes. If this feature is not enabled,
-  -- render passes with a
-  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#renderpass-fragmentdensitymapattachment fragment density map attachment>
-  -- /must/ only have
-  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#resources-subsampledimages subsampled attachments>
-  -- bound.
+  , -- No documentation found for Nested "VkPhysicalDeviceFragmentDensityMapFeaturesEXT" "fragmentDensityMapNonSubsampledImages"
   vkFragmentDensityMapNonSubsampledImages :: VkBool32
   }
   deriving (Eq, Show)
@@ -145,41 +104,17 @@ instance Zero VkPhysicalDeviceFragmentDensityMapFeaturesEXT where
                                                        zero
                                                        zero
 
--- | VkPhysicalDeviceFragmentDensityMapPropertiesEXT - Structure describing
--- fragment density map properties that can be supported by an
--- implementation
---
--- = Members
---
--- The members of the 'VkPhysicalDeviceFragmentDensityMapPropertiesEXT'
--- structure describe the following implementation-dependent limits:
---
--- == Valid Usage (Implicit)
---
--- If the 'VkPhysicalDeviceFragmentDensityMapPropertiesEXT' structure is
--- included in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2KHR',
--- it is filled with the implementation-dependent limits and properties.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.Pipeline.VkExtent2D',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkPhysicalDeviceFragmentDensityMapPropertiesEXT"
 data VkPhysicalDeviceFragmentDensityMapPropertiesEXT = VkPhysicalDeviceFragmentDensityMapPropertiesEXT
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_DENSITY_MAP_PROPERTIES_EXT'
+  { -- No documentation found for Nested "VkPhysicalDeviceFragmentDensityMapPropertiesEXT" "sType"
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceFragmentDensityMapPropertiesEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- | @minFragmentDensityTexelSize@ is the minimum
-  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#glossary-fragment-density-texel-size fragment density texel size>.
+  , -- No documentation found for Nested "VkPhysicalDeviceFragmentDensityMapPropertiesEXT" "minFragmentDensityTexelSize"
   vkMinFragmentDensityTexelSize :: VkExtent2D
-  , -- | @maxFragmentDensityTexelSize@ is the maximum fragment density texel
-  -- size.
+  , -- No documentation found for Nested "VkPhysicalDeviceFragmentDensityMapPropertiesEXT" "maxFragmentDensityTexelSize"
   vkMaxFragmentDensityTexelSize :: VkExtent2D
-  , -- | @fragmentDensityInvocations@ specifies whether the implementation /may/
-  -- invoke additional fragment shader invocations for each covered sample.
+  , -- No documentation found for Nested "VkPhysicalDeviceFragmentDensityMapPropertiesEXT" "fragmentDensityInvocations"
   vkFragmentDensityInvocations :: VkBool32
   }
   deriving (Eq, Show)
@@ -205,79 +140,13 @@ instance Zero VkPhysicalDeviceFragmentDensityMapPropertiesEXT where
                                                          zero
                                                          zero
 
--- | VkRenderPassFragmentDensityMapCreateInfoEXT - Structure containing
--- fragment density map attachment for render pass
---
--- = Description
---
--- The fragment density map attachment is read at an
--- implementation-dependent time either by the host during
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBeginRenderPass' if
--- the attachment’s image view was not created with @flags@ containing
--- 'VK_IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT', or by the
--- device when drawing commands in the renderpass execute
--- 'VK_PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'.
---
--- If this structure is not present, it is as if
--- @fragmentDensityMapAttachment@ was given as
--- 'Graphics.Vulkan.C.Core10.Constants.VK_ATTACHMENT_UNUSED'.
---
--- == Valid Usage
---
--- -   If @fragmentDensityMapAttachment@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_ATTACHMENT_UNUSED',
---     @fragmentDensityMapAttachment@ /must/ be less than
---     'Graphics.Vulkan.C.Core10.Pass.VkRenderPassCreateInfo'::@attachmentCount@
---
--- -   If @fragmentDensityMapAttachment@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_ATTACHMENT_UNUSED',
---     @fragmentDensityMapAttachment@ /must/ not be an element of
---     'Graphics.Vulkan.C.Core10.Pass.VkSubpassDescription'::@pInputAttachments@,
---     'Graphics.Vulkan.C.Core10.Pass.VkSubpassDescription'::@pColorAttachments@,
---     'Graphics.Vulkan.C.Core10.Pass.VkSubpassDescription'::@pResolveAttachments@,
---     'Graphics.Vulkan.C.Core10.Pass.VkSubpassDescription'::@pDepthStencilAttachment@,
---     or
---     'Graphics.Vulkan.C.Core10.Pass.VkSubpassDescription'::@pPreserveAttachments@
---     for any subpass
---
--- -   If @fragmentDensityMapAttachment@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_ATTACHMENT_UNUSED', @layout@
---     /must/ be equal to
---     'VK_IMAGE_LAYOUT_FRAGMENT_DENSITY_MAP_OPTIMAL_EXT', or
---     'Graphics.Vulkan.C.Core10.Image.VK_IMAGE_LAYOUT_GENERAL'
---
--- -   If @fragmentDensityMapAttachment@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_ATTACHMENT_UNUSED',
---     @fragmentDensityMapAttachment@ /must/ reference an attachment with a
---     @loadOp@ equal to
---     'Graphics.Vulkan.C.Core10.Pass.VK_ATTACHMENT_LOAD_OP_LOAD' or
---     'Graphics.Vulkan.C.Core10.Pass.VK_ATTACHMENT_LOAD_OP_DONT_CARE'.
---
--- -   If @fragmentDensityMapAttachment@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_ATTACHMENT_UNUSED',
---     @fragmentDensityMapAttachment@ /must/ reference an attachment with a
---     @storeOp@ equal to
---     'Graphics.Vulkan.C.Core10.Pass.VK_ATTACHMENT_STORE_OP_DONT_CARE'.
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     'VK_STRUCTURE_TYPE_RENDER_PASS_FRAGMENT_DENSITY_MAP_CREATE_INFO_EXT'
---
--- -   @fragmentDensityMapAttachment@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Pass.VkAttachmentReference' structure
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Pass.VkAttachmentReference',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkRenderPassFragmentDensityMapCreateInfoEXT"
 data VkRenderPassFragmentDensityMapCreateInfoEXT = VkRenderPassFragmentDensityMapCreateInfoEXT
-  { -- | @sType@ is the type of this structure.
+  { -- No documentation found for Nested "VkRenderPassFragmentDensityMapCreateInfoEXT" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkRenderPassFragmentDensityMapCreateInfoEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- | @fragmentDensityMapAttachment@ is the fragment density map to use for
-  -- the render pass.
+  , -- No documentation found for Nested "VkRenderPassFragmentDensityMapCreateInfoEXT" "fragmentDensityMapAttachment"
   vkFragmentDensityMapAttachment :: VkAttachmentReference
   }
   deriving (Eq, Show)

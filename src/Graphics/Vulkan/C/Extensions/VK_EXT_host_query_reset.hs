@@ -52,38 +52,13 @@ import Graphics.Vulkan.NamedType
   )
 
 
--- | VkPhysicalDeviceHostQueryResetFeaturesEXT - Structure describing whether
--- queries can be reset from the host
---
--- = Members
---
--- The members of the 'VkPhysicalDeviceHostQueryResetFeaturesEXT' structure
--- describe the following features:
---
--- = Description
---
--- If the 'VkPhysicalDeviceHostQueryResetFeaturesEXT' structure is included
--- in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2',
--- it is filled with values indicating whether the feature is supported.
--- 'VkPhysicalDeviceHostQueryResetFeaturesEXT' /can/ also be used in the
--- @pNext@ chain of 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to
--- enable features.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkPhysicalDeviceHostQueryResetFeaturesEXT"
 data VkPhysicalDeviceHostQueryResetFeaturesEXT = VkPhysicalDeviceHostQueryResetFeaturesEXT
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES_EXT'
+  { -- No documentation found for Nested "VkPhysicalDeviceHostQueryResetFeaturesEXT" "sType"
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceHostQueryResetFeaturesEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- | @hostQueryReset@ indicates that the implementation supports resetting
-  -- queries from the host with 'vkResetQueryPoolEXT'.
+  , -- No documentation found for Nested "VkPhysicalDeviceHostQueryResetFeaturesEXT" "hostQueryReset"
   vkHostQueryReset :: VkBool32
   }
   deriving (Eq, Show)
@@ -103,49 +78,7 @@ instance Zero VkPhysicalDeviceHostQueryResetFeaturesEXT where
                                                    zero
                                                    zero
 
--- | vkResetQueryPoolEXT - Reset queries in a query pool
---
--- = Parameters
---
--- -   @queryPool@ is the handle of the query pool managing the queries
---     being reset.
---
--- -   @firstQuery@ is the initial query index to reset.
---
--- -   @queryCount@ is the number of queries to reset.
---
--- = Description
---
--- This command sets the status of query indices [@firstQuery@,
--- @firstQuery@ + @queryCount@ - 1] to unavailable.
---
--- == Valid Usage
---
--- -   The
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-hostQueryReset hostQueryReset>
---     feature /must/ be enabled
---
--- -   @firstQuery@ /must/ be less than the number of queries in
---     @queryPool@
---
--- -   The sum of @firstQuery@ and @queryCount@ /must/ be less than or
---     equal to the number of queries in @queryPool@
---
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
---
--- -   @queryPool@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Query.VkQueryPool' handle
---
--- -   @queryPool@ /must/ have been created, allocated, or retrieved from
---     @device@
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
--- 'Graphics.Vulkan.C.Core10.Query.VkQueryPool'
+-- No documentation found for TopLevel "vkResetQueryPoolEXT"
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)

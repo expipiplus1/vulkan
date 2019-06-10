@@ -51,33 +51,14 @@ data VkDeviceGroupSubmitInfo
 
 data VkMemoryAllocateFlagBits
 
--- | VkMemoryAllocateFlags - Bitmask of VkMemoryAllocateFlagBits
---
--- = Description
---
--- 'VkMemoryAllocateFlags' is a bitmask type for setting a mask of zero or
--- more 'VkMemoryAllocateFlagBits'.
---
--- = See Also
---
--- 'VkMemoryAllocateFlagBits', 'VkMemoryAllocateFlagsInfo'
+-- No documentation found for TopLevel "VkMemoryAllocateFlags"
 type VkMemoryAllocateFlags = VkMemoryAllocateFlagBits
 
 data VkMemoryAllocateFlagsInfo
 
 data VkPeerMemoryFeatureFlagBits
 
--- | VkPeerMemoryFeatureFlags - Bitmask of VkPeerMemoryFeatureFlagBits
---
--- = Description
---
--- 'VkPeerMemoryFeatureFlags' is a bitmask type for setting a mask of zero
--- or more 'VkPeerMemoryFeatureFlagBits'.
---
--- = See Also
---
--- 'VkPeerMemoryFeatureFlagBits', 'vkGetDeviceGroupPeerMemoryFeatures',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_device_group.vkGetDeviceGroupPeerMemoryFeaturesKHR'
+-- No documentation found for TopLevel "VkPeerMemoryFeatureFlags"
 type VkPeerMemoryFeatureFlags = VkPeerMemoryFeatureFlagBits
 
 type FN_vkCmdDispatchBase = ("commandBuffer" ::: VkCommandBuffer) -> ("baseGroupX" ::: Word32) -> ("baseGroupY" ::: Word32) -> ("baseGroupZ" ::: Word32) -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ()

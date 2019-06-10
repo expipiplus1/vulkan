@@ -61,62 +61,15 @@ import Graphics.Vulkan.C.Core10.DeviceInitialization
   )
 
 
--- | VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT - Structure describing
--- sampler filter minmax limits that can be supported by an implementation
---
--- = Members
---
--- The members of the 'VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT'
--- structure describe the following implementation-dependent limits:
---
--- = Description
---
--- If the 'VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT' structure is
--- included in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
---
--- If @filterMinmaxSingleComponentFormats@ is
--- 'Graphics.Vulkan.C.Core10.Core.VK_TRUE', the following formats /must/
--- support the 'VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT'
--- feature with
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_TILING_OPTIMAL',
--- if they support
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT'.
---
--- If the format is a depth\/stencil format, this bit only specifies that
--- the depth aspect (not the stencil aspect) of an image of this format
--- supports min\/max filtering, and that min\/max filtering of the depth
--- aspect is supported when depth compare is disabled in the sampler.
---
--- If @filterMinmaxImageComponentMapping@ is
--- 'Graphics.Vulkan.C.Core10.Core.VK_FALSE' the component mapping of the
--- image view used with min\/max filtering /must/ have been created with
--- the @r@ component set to
--- 'Graphics.Vulkan.C.Core10.ImageView.VK_COMPONENT_SWIZZLE_IDENTITY'. Only
--- the @r@ component of the sampled image value is defined and the other
--- component values are undefined. If @filterMinmaxImageComponentMapping@
--- is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' this restriction does not
--- apply and image component mapping works as normal.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT"
 data VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT = VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES_EXT'
+  { -- No documentation found for Nested "VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- | @filterMinmaxSingleComponentFormats@ is a boolean value indicating
-  -- whether a minimum set of required formats support min\/max filtering.
+  , -- No documentation found for Nested "VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT" "filterMinmaxSingleComponentFormats"
   vkFilterMinmaxSingleComponentFormats :: VkBool32
-  , -- | @filterMinmaxImageComponentMapping@ is a boolean value indicating
-  -- whether the implementation supports non-identity component mapping of
-  -- the image when doing min\/max filtering.
+  , -- No documentation found for Nested "VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT" "filterMinmaxImageComponentMapping"
   vkFilterMinmaxImageComponentMapping :: VkBool32
   }
   deriving (Eq, Show)
@@ -139,27 +92,13 @@ instance Zero VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT where
                                                           zero
                                                           zero
 
--- | VkSamplerReductionModeCreateInfoEXT - Structure specifying sampler
--- reduction mode
---
--- = Description
---
--- If this structure is not present, @reductionMode@ is considered to be
--- 'VK_SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_EXT'.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'VkSamplerReductionModeEXT',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkSamplerReductionModeCreateInfoEXT"
 data VkSamplerReductionModeCreateInfoEXT = VkSamplerReductionModeCreateInfoEXT
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO_EXT'
+  { -- No documentation found for Nested "VkSamplerReductionModeCreateInfoEXT" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkSamplerReductionModeCreateInfoEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- | @reductionMode@ /must/ be a valid 'VkSamplerReductionModeEXT' value
+  , -- No documentation found for Nested "VkSamplerReductionModeCreateInfoEXT" "reductionMode"
   vkReductionMode :: VkSamplerReductionModeEXT
   }
   deriving (Eq, Show)
@@ -181,11 +120,7 @@ instance Zero VkSamplerReductionModeCreateInfoEXT where
 
 -- ** VkSamplerReductionModeEXT
 
--- | VkSamplerReductionModeEXT - Specify reduction mode for texture filtering
---
--- = See Also
---
--- 'VkSamplerReductionModeCreateInfoEXT'
+-- No documentation found for TopLevel "VkSamplerReductionModeEXT"
 newtype VkSamplerReductionModeEXT = VkSamplerReductionModeEXT Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -207,22 +142,15 @@ instance Read VkSamplerReductionModeEXT where
                         )
                     )
 
--- | 'VK_SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_EXT' specifies that texel
--- values are combined by computing a weighted average of values in the
--- footprint, using weights as specified in
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures-unnormalized-to-integer the image operations chapter>.
+-- No documentation found for Nested "VkSamplerReductionModeEXT" "VK_SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_EXT"
 pattern VK_SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_EXT :: VkSamplerReductionModeEXT
 pattern VK_SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_EXT = VkSamplerReductionModeEXT 0
 
--- | 'VK_SAMPLER_REDUCTION_MODE_MIN_EXT' specifies that texel values are
--- combined by taking the component-wise minimum of values in the footprint
--- with non-zero weights.
+-- No documentation found for Nested "VkSamplerReductionModeEXT" "VK_SAMPLER_REDUCTION_MODE_MIN_EXT"
 pattern VK_SAMPLER_REDUCTION_MODE_MIN_EXT :: VkSamplerReductionModeEXT
 pattern VK_SAMPLER_REDUCTION_MODE_MIN_EXT = VkSamplerReductionModeEXT 1
 
--- | 'VK_SAMPLER_REDUCTION_MODE_MAX_EXT' specifies that texel values are
--- combined by taking the component-wise maximum of values in the footprint
--- with non-zero weights.
+-- No documentation found for Nested "VkSamplerReductionModeEXT" "VK_SAMPLER_REDUCTION_MODE_MAX_EXT"
 pattern VK_SAMPLER_REDUCTION_MODE_MAX_EXT :: VkSamplerReductionModeEXT
 pattern VK_SAMPLER_REDUCTION_MODE_MAX_EXT = VkSamplerReductionModeEXT 2
 

@@ -23,12 +23,12 @@ import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbc
   , VkChromaLocation
   , VkImagePlaneMemoryRequirementsInfo
   , VkPhysicalDeviceSamplerYcbcrConversionFeatures
+  , VkSamplerYcbcrConversion
   , VkSamplerYcbcrConversionCreateInfo
   , VkSamplerYcbcrConversionImageFormatProperties
   , VkSamplerYcbcrConversionInfo
   , VkSamplerYcbcrModelConversion
   , VkSamplerYcbcrRange
-  , VkSamplerYcbcrConversion
   )
 
 

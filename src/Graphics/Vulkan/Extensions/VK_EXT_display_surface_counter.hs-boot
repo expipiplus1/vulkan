@@ -15,25 +15,8 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counte
   )
 
 
--- | VkSurfaceCounterFlagBitsEXT - Surface-relative counter types
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter.VkSurfaceCounterFlagsEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.vkGetSwapchainCounterEXT'
+-- No documentation found for TopLevel "SurfaceCounterFlagBitsEXT"
 type SurfaceCounterFlagBitsEXT = VkSurfaceCounterFlagBitsEXT
 
--- | VkSurfaceCounterFlagsEXT - Bitmask of VkSurfaceCounterFlagBitsEXT
---
--- = Description
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter.VkSurfaceCounterFlagsEXT'
--- is a bitmask type for setting a mask of zero or more
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter.VkSurfaceCounterFlagBitsEXT'.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter.VkSurfaceCapabilities2EXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter.VkSurfaceCounterFlagBitsEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.VkSwapchainCounterCreateInfoEXT'
+-- No documentation found for TopLevel "SurfaceCounterFlagsEXT"
 type SurfaceCounterFlagsEXT = SurfaceCounterFlagBitsEXT

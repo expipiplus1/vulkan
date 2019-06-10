@@ -34,56 +34,15 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- | VkImageFormatListCreateInfoKHR - Specify that an image /can/ be used
--- with a particular set of formats
---
--- = Description
---
--- If @viewFormatCount@ is zero, @pViewFormats@ is ignored and the image is
--- created as if the 'VkImageFormatListCreateInfoKHR' structure were not
--- included in the @pNext@ list of
--- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'.
---
--- == Valid Usage
---
--- -   If @viewFormatCount@ is not @0@, all of the formats in the
---     @pViewFormats@ array /must/ be compatible with the format specified
---     in the @format@ field of
---     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo', as described in
---     the
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#formats-compatibility compatibility table>.
---
--- -   If 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@flags@ does
---     not contain
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT',
---     @viewFormatCount@ /must/ be @0@ or @1@.
---
--- -   If @viewFormatCount@ is not @0@,
---     'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'::@format@ /must/
---     be in @pViewFormats@.
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     'VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR'
---
--- -   If @viewFormatCount@ is not @0@, @pViewFormats@ /must/ be a valid
---     pointer to an array of @viewFormatCount@ valid
---     'Graphics.Vulkan.C.Core10.Core.VkFormat' values
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkFormat',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkImageFormatListCreateInfoKHR"
 data VkImageFormatListCreateInfoKHR = VkImageFormatListCreateInfoKHR
-  { -- | @sType@ is the type of this structure.
+  { -- No documentation found for Nested "VkImageFormatListCreateInfoKHR" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkImageFormatListCreateInfoKHR" "pNext"
   vkPNext :: Ptr ()
-  , -- | @viewFormatCount@ is the number of entries in the @pViewFormats@ array.
+  , -- No documentation found for Nested "VkImageFormatListCreateInfoKHR" "viewFormatCount"
   vkViewFormatCount :: Word32
-  , -- | @pViewFormats@ is an array which lists of all formats which /can/ be
-  -- used when creating views of this image.
+  , -- No documentation found for Nested "VkImageFormatListCreateInfoKHR" "pViewFormats"
   vkPViewFormats :: Ptr VkFormat
   }
   deriving (Eq, Show)

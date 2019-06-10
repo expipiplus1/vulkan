@@ -83,32 +83,14 @@ data VkIndirectCommandsLayoutCreateInfoNVX
 
 -- | Dummy data to tag the 'Ptr' with
 data VkIndirectCommandsLayoutNVX_T
--- | VkIndirectCommandsLayoutNVX - Opaque handle to an indirect commands
--- layout object
---
--- = See Also
---
--- 'VkCmdProcessCommandsInfoNVX', 'VkCmdReserveSpaceForCommandsInfoNVX',
--- 'vkCreateIndirectCommandsLayoutNVX',
--- 'vkDestroyIndirectCommandsLayoutNVX'
+-- No documentation found for TopLevel "VkIndirectCommandsLayoutNVX"
 type VkIndirectCommandsLayoutNVX = Ptr VkIndirectCommandsLayoutNVX_T
 
 data VkIndirectCommandsLayoutTokenNVX
 
 data VkIndirectCommandsLayoutUsageFlagBitsNVX
 
--- | VkIndirectCommandsLayoutUsageFlagsNVX - Bitmask of
--- VkIndirectCommandsLayoutUsageFlagBitsNVX
---
--- = Description
---
--- 'VkIndirectCommandsLayoutUsageFlagsNVX' is a bitmask type for setting a
--- mask of zero or more 'VkIndirectCommandsLayoutUsageFlagBitsNVX'.
---
--- = See Also
---
--- 'VkIndirectCommandsLayoutCreateInfoNVX',
--- 'VkIndirectCommandsLayoutUsageFlagBitsNVX'
+-- No documentation found for TopLevel "VkIndirectCommandsLayoutUsageFlagsNVX"
 type VkIndirectCommandsLayoutUsageFlagsNVX = VkIndirectCommandsLayoutUsageFlagBitsNVX
 
 data VkIndirectCommandsTokenNVX
@@ -119,19 +101,7 @@ data VkObjectEntryTypeNVX
 
 data VkObjectEntryUsageFlagBitsNVX
 
--- | VkObjectEntryUsageFlagsNVX - Bitmask of VkObjectEntryUsageFlagBitsNVX
---
--- = Description
---
--- 'VkObjectEntryUsageFlagsNVX' is a bitmask type for setting a mask of
--- zero or more 'VkObjectEntryUsageFlagBitsNVX'.
---
--- = See Also
---
--- 'VkObjectEntryUsageFlagBitsNVX', 'VkObjectTableCreateInfoNVX',
--- 'VkObjectTableDescriptorSetEntryNVX', 'VkObjectTableEntryNVX',
--- 'VkObjectTableIndexBufferEntryNVX', 'VkObjectTablePipelineEntryNVX',
--- 'VkObjectTablePushConstantEntryNVX', 'VkObjectTableVertexBufferEntryNVX'
+-- No documentation found for TopLevel "VkObjectEntryUsageFlagsNVX"
 type VkObjectEntryUsageFlagsNVX = VkObjectEntryUsageFlagBitsNVX
 
 data VkObjectTableCreateInfoNVX
@@ -144,13 +114,7 @@ data VkObjectTableIndexBufferEntryNVX
 
 -- | Dummy data to tag the 'Ptr' with
 data VkObjectTableNVX_T
--- | VkObjectTableNVX - Opaque handle to an object table
---
--- = See Also
---
--- 'VkCmdProcessCommandsInfoNVX', 'VkCmdReserveSpaceForCommandsInfoNVX',
--- 'vkCreateObjectTableNVX', 'vkDestroyObjectTableNVX',
--- 'vkRegisterObjectsNVX', 'vkUnregisterObjectsNVX'
+-- No documentation found for TopLevel "VkObjectTableNVX"
 type VkObjectTableNVX = Ptr VkObjectTableNVX_T
 
 data VkObjectTablePipelineEntryNVX

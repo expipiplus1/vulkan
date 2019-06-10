@@ -23,14 +23,13 @@ import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_mem
   ( VkExternalBufferProperties
   , VkExternalImageFormatProperties
   , VkExternalMemoryFeatureFlagBits
+  , VkExternalMemoryFeatureFlags
   , VkExternalMemoryHandleTypeFlagBits
+  , VkExternalMemoryHandleTypeFlags
   , VkExternalMemoryProperties
   , VkPhysicalDeviceExternalBufferInfo
   , VkPhysicalDeviceExternalImageFormatInfo
   , VkPhysicalDeviceIDProperties
-  , VK_LUID_SIZE
-  , VkExternalMemoryFeatureFlags
-  , VkExternalMemoryHandleTypeFlags
   )
 
 

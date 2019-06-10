@@ -3,7 +3,7 @@
 
 
 module Graphics.Vulkan.C.Dynamic
-  ( InstanceCmds
+  ( InstanceCmds(..)
   ) where
 
 

@@ -16,24 +16,8 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasteriza
   )
 
 
--- | VkConservativeRasterizationModeEXT - Specify the conservative
--- rasterization mode
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization.VkPipelineRasterizationConservativeStateCreateInfoEXT'
+-- No documentation found for TopLevel "ConservativeRasterizationModeEXT"
 type ConservativeRasterizationModeEXT = VkConservativeRasterizationModeEXT
 
--- | VkPipelineRasterizationConservativeStateCreateFlagsEXT - Reserved for
--- future use
---
--- = Description
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization.VkPipelineRasterizationConservativeStateCreateFlagsEXT'
--- is a bitmask type for setting a mask, but is currently reserved for
--- future use.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization.VkPipelineRasterizationConservativeStateCreateInfoEXT'
+-- No documentation found for TopLevel "PipelineRasterizationConservativeStateCreateFlagsEXT"
 type PipelineRasterizationConservativeStateCreateFlagsEXT = VkPipelineRasterizationConservativeStateCreateFlagsEXT

@@ -31,26 +31,15 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- | VkPhysicalDeviceShaderAtomicInt64FeaturesKHR - Structure describing
--- features supported by VK_KHR_shader_atomic_int64
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkPhysicalDeviceShaderAtomicInt64FeaturesKHR"
 data VkPhysicalDeviceShaderAtomicInt64FeaturesKHR = VkPhysicalDeviceShaderAtomicInt64FeaturesKHR
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES_KHR'
+  { -- No documentation found for Nested "VkPhysicalDeviceShaderAtomicInt64FeaturesKHR" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderAtomicInt64FeaturesKHR" "pNext"
   vkPNext :: Ptr ()
-  , -- | @shaderBufferInt64Atomics@ indicates whether shaders /can/ support
-  -- 64-bit unsigned and signed integer atomic operations on buffers.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderAtomicInt64FeaturesKHR" "shaderBufferInt64Atomics"
   vkShaderBufferInt64Atomics :: VkBool32
-  , -- | @shaderSharedInt64Atomics@ indicates whether shaders /can/ support
-  -- 64-bit unsigned and signed integer atomic operations on shared memory.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderAtomicInt64FeaturesKHR" "shaderSharedInt64Atomics"
   vkShaderSharedInt64Atomics :: VkBool32
   }
   deriving (Eq, Show)

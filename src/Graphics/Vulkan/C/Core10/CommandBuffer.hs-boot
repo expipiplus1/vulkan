@@ -62,46 +62,17 @@ data VkCommandBufferLevel
 
 data VkCommandBufferResetFlagBits
 
--- | VkCommandBufferResetFlags - Bitmask of VkCommandBufferResetFlagBits
---
--- = Description
---
--- 'VkCommandBufferResetFlags' is a bitmask type for setting a mask of zero
--- or more 'VkCommandBufferResetFlagBits'.
---
--- = See Also
---
--- 'VkCommandBufferResetFlagBits', 'vkResetCommandBuffer'
+-- No documentation found for TopLevel "VkCommandBufferResetFlags"
 type VkCommandBufferResetFlags = VkCommandBufferResetFlagBits
 
 data VkCommandBufferUsageFlagBits
 
--- | VkCommandBufferUsageFlags - Bitmask of VkCommandBufferUsageFlagBits
---
--- = Description
---
--- 'VkCommandBufferUsageFlags' is a bitmask type for setting a mask of zero
--- or more 'VkCommandBufferUsageFlagBits'.
---
--- = See Also
---
--- 'VkCommandBufferBeginInfo', 'VkCommandBufferUsageFlagBits'
+-- No documentation found for TopLevel "VkCommandBufferUsageFlags"
 type VkCommandBufferUsageFlags = VkCommandBufferUsageFlagBits
 
 data VkQueryControlFlagBits
 
--- | VkQueryControlFlags - Bitmask of VkQueryControlFlagBits
---
--- = Description
---
--- 'VkQueryControlFlags' is a bitmask type for setting a mask of zero or
--- more 'VkQueryControlFlagBits'.
---
--- = See Also
---
--- 'VkCommandBufferInheritanceInfo', 'VkQueryControlFlagBits',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBeginQuery',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdBeginQueryIndexedEXT'
+-- No documentation found for TopLevel "VkQueryControlFlags"
 type VkQueryControlFlags = VkQueryControlFlagBits
 
 type FN_vkAllocateCommandBuffers = ("device" ::: VkDevice) -> ("pAllocateInfo" ::: Ptr VkCommandBufferAllocateInfo) -> ("pCommandBuffers" ::: Ptr VkCommandBuffer) -> IO VkResult

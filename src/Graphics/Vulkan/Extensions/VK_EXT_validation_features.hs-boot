@@ -16,16 +16,8 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_validation_features
   )
 
 
--- | VkValidationFeatureDisableEXT - Specify validation features to disable
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VkValidationFeaturesEXT'
+-- No documentation found for TopLevel "ValidationFeatureDisableEXT"
 type ValidationFeatureDisableEXT = VkValidationFeatureDisableEXT
 
--- | VkValidationFeatureEnableEXT - Specify validation features to enable
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VkValidationFeaturesEXT'
+-- No documentation found for TopLevel "ValidationFeatureEnableEXT"
 type ValidationFeatureEnableEXT = VkValidationFeatureEnableEXT

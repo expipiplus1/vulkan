@@ -14,10 +14,5 @@ import {-# source #-} Graphics.Vulkan.C.Core10.Constants
   )
 
 
--- | VkPipelineCacheHeaderVersion - Encode pipeline cache version
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.PipelineCache.vkCreatePipelineCache',
--- 'Graphics.Vulkan.C.Core10.PipelineCache.vkGetPipelineCacheData'
+-- No documentation found for TopLevel "PipelineCacheHeaderVersion"
 type PipelineCacheHeaderVersion = VkPipelineCacheHeaderVersion

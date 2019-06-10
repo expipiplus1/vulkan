@@ -14,9 +14,5 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax
   )
 
 
--- | VkSamplerReductionModeEXT - Specify reduction mode for texture filtering
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax.VkSamplerReductionModeCreateInfoEXT'
+-- No documentation found for TopLevel "SamplerReductionModeEXT"
 type SamplerReductionModeEXT = VkSamplerReductionModeEXT

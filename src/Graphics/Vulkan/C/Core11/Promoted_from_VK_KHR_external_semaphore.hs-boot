@@ -18,16 +18,5 @@ data VkExportSemaphoreCreateInfo
 
 data VkSemaphoreImportFlagBits
 
--- | VkSemaphoreImportFlags - Bitmask of VkSemaphoreImportFlagBits
---
--- = Description
---
--- 'VkSemaphoreImportFlags' is a bitmask type for setting a mask of zero or
--- more 'VkSemaphoreImportFlagBits'.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd.VkImportSemaphoreFdInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32.VkImportSemaphoreWin32HandleInfoKHR',
--- 'VkSemaphoreImportFlagBits'
+-- No documentation found for TopLevel "VkSemaphoreImportFlags"
 type VkSemaphoreImportFlags = VkSemaphoreImportFlagBits

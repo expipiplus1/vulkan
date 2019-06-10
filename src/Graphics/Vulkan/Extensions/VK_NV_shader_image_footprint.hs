@@ -1,13 +1,15 @@
 {-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
 {-# language DuplicateRecordFields #-}
+{-# language PatternSynonyms #-}
 
 module Graphics.Vulkan.Extensions.VK_NV_shader_image_footprint
-  ( withCStructPhysicalDeviceShaderImageFootprintFeaturesNV
-  , fromCStructPhysicalDeviceShaderImageFootprintFeaturesNV
-  , PhysicalDeviceShaderImageFootprintFeaturesNV(..)
-  , pattern NV_SHADER_IMAGE_FOOTPRINT_EXTENSION_NAME
+  ( 
+#if defined(VK_USE_PLATFORM_GGP)
+  PhysicalDeviceShaderImageFootprintFeaturesNV(..)
+  , 
+#endif
+  pattern NV_SHADER_IMAGE_FOOTPRINT_EXTENSION_NAME
   , pattern NV_SHADER_IMAGE_FOOTPRINT_SPEC_VERSION
   , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_FOOTPRINT_FEATURES_NV
   ) where
@@ -15,90 +17,46 @@ module Graphics.Vulkan.Extensions.VK_NV_shader_image_footprint
 import Data.String
   ( IsString
   )
-import Foreign.Marshal.Utils
-  ( maybePeek
-  , maybeWith
-  )
-import Foreign.Ptr
-  ( castPtr
-  )
 
 
+
+#if defined(VK_USE_PLATFORM_GGP)
 import Graphics.Vulkan.C.Core10.Core
   ( Zero(..)
   )
+#endif
 import Graphics.Vulkan.C.Extensions.VK_NV_shader_image_footprint
-  ( VkPhysicalDeviceShaderImageFootprintFeaturesNV(..)
-  , pattern VK_NV_SHADER_IMAGE_FOOTPRINT_EXTENSION_NAME
+  ( pattern VK_NV_SHADER_IMAGE_FOOTPRINT_EXTENSION_NAME
   , pattern VK_NV_SHADER_IMAGE_FOOTPRINT_SPEC_VERSION
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_FOOTPRINT_FEATURES_NV
   )
-import Graphics.Vulkan.Core10.Core
-  ( bool32ToBool
-  , boolToBool32
-  )
+
+#if defined(VK_USE_PLATFORM_GGP)
 import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
   ( SomeVkStruct
-  , peekVkStruct
-  , withSomeVkStruct
   )
+#endif
 import Graphics.Vulkan.Core10.Core
   ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_FOOTPRINT_FEATURES_NV
   )
 
 
 
--- | VkPhysicalDeviceShaderImageFootprintFeaturesNV - Structure describing
--- shader image footprint features that can be supported by an
--- implementation
---
--- = Description
---
--- See
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures-footprint Texel Footprint Evaluation>
--- for more information.
---
--- If the
--- 'Graphics.Vulkan.C.Extensions.VK_NV_shader_image_footprint.VkPhysicalDeviceShaderImageFootprintFeaturesNV'
--- structure is included in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
--- it is filled with values indicating whether each feature is supported.
--- 'Graphics.Vulkan.C.Extensions.VK_NV_shader_image_footprint.VkPhysicalDeviceShaderImageFootprintFeaturesNV'
--- /can/ also be used in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable features.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+#if defined(VK_USE_PLATFORM_GGP)
+
+-- No documentation found for TopLevel "VkPhysicalDeviceShaderImageFootprintFeaturesNV"
 data PhysicalDeviceShaderImageFootprintFeaturesNV = PhysicalDeviceShaderImageFootprintFeaturesNV
-  { -- Univalued member elided
-  -- No documentation found for Nested "PhysicalDeviceShaderImageFootprintFeaturesNV" "pNext"
+  { -- No documentation found for Nested "PhysicalDeviceShaderImageFootprintFeaturesNV" "pNext"
   next :: Maybe SomeVkStruct
   , -- No documentation found for Nested "PhysicalDeviceShaderImageFootprintFeaturesNV" "imageFootprint"
   imageFootprint :: Bool
   }
   deriving (Show, Eq)
 
--- | A function to temporarily allocate memory for a 'VkPhysicalDeviceShaderImageFootprintFeaturesNV' and
--- marshal a 'PhysicalDeviceShaderImageFootprintFeaturesNV' into it. The 'VkPhysicalDeviceShaderImageFootprintFeaturesNV' is only valid inside
--- the provided computation and must not be returned out of it.
-withCStructPhysicalDeviceShaderImageFootprintFeaturesNV :: PhysicalDeviceShaderImageFootprintFeaturesNV -> (VkPhysicalDeviceShaderImageFootprintFeaturesNV -> IO a) -> IO a
-withCStructPhysicalDeviceShaderImageFootprintFeaturesNV marshalled cont = maybeWith withSomeVkStruct (next (marshalled :: PhysicalDeviceShaderImageFootprintFeaturesNV)) (\pPNext -> cont (VkPhysicalDeviceShaderImageFootprintFeaturesNV VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_IMAGE_FOOTPRINT_FEATURES_NV pPNext (boolToBool32 (imageFootprint (marshalled :: PhysicalDeviceShaderImageFootprintFeaturesNV)))))
-
--- | A function to read a 'VkPhysicalDeviceShaderImageFootprintFeaturesNV' and all additional
--- structures in the pointer chain into a 'PhysicalDeviceShaderImageFootprintFeaturesNV'.
-fromCStructPhysicalDeviceShaderImageFootprintFeaturesNV :: VkPhysicalDeviceShaderImageFootprintFeaturesNV -> IO PhysicalDeviceShaderImageFootprintFeaturesNV
-fromCStructPhysicalDeviceShaderImageFootprintFeaturesNV c = PhysicalDeviceShaderImageFootprintFeaturesNV <$> -- Univalued Member elided
-                                                                                                         maybePeek peekVkStruct (castPtr (vkPNext (c :: VkPhysicalDeviceShaderImageFootprintFeaturesNV)))
-                                                                                                         <*> pure (bool32ToBool (vkImageFootprint (c :: VkPhysicalDeviceShaderImageFootprintFeaturesNV)))
-
 instance Zero PhysicalDeviceShaderImageFootprintFeaturesNV where
   zero = PhysicalDeviceShaderImageFootprintFeaturesNV Nothing
                                                       False
 
+#endif
 
 -- No documentation found for TopLevel "VK_NV_SHADER_IMAGE_FOOTPRINT_EXTENSION_NAME"
 pattern NV_SHADER_IMAGE_FOOTPRINT_EXTENSION_NAME :: (Eq a, IsString a) => a

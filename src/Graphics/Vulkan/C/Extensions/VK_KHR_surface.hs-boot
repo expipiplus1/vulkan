@@ -52,18 +52,7 @@ data VkColorSpaceKHR
 
 data VkCompositeAlphaFlagBitsKHR
 
--- | VkCompositeAlphaFlagsKHR - Bitmask of VkCompositeAlphaFlagBitsKHR
---
--- = Description
---
--- 'VkCompositeAlphaFlagsKHR' is a bitmask type for setting a mask of zero
--- or more 'VkCompositeAlphaFlagBitsKHR'.
---
--- = See Also
---
--- 'VkCompositeAlphaFlagBitsKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter.VkSurfaceCapabilities2EXT',
--- 'VkSurfaceCapabilitiesKHR'
+-- No documentation found for TopLevel "VkCompositeAlphaFlagsKHR"
 type VkCompositeAlphaFlagsKHR = VkCompositeAlphaFlagBitsKHR
 
 data VkPresentModeKHR
@@ -74,58 +63,12 @@ data VkSurfaceFormatKHR
 
 -- | Dummy data to tag the 'Ptr' with
 data VkSurfaceKHR_T
--- | VkSurfaceKHR - Opaque handle to a surface object
---
--- = Description
---
--- The @VK_KHR_surface@ extension declares the 'VkSurfaceKHR' object, and
--- provides a function for destroying 'VkSurfaceKHR' objects. Separate
--- platform-specific extensions each provide a function for creating a
--- 'VkSurfaceKHR' object for the respective platform. From the
--- application’s perspective this is an opaque handle, just like the
--- handles of other Vulkan objects.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkPhysicalDeviceSurfaceInfo2KHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_android_surface.vkCreateAndroidSurfaceKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkCreateDisplayPlaneSurfaceKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_headless_surface.vkCreateHeadlessSurfaceEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_MVK_ios_surface.vkCreateIOSSurfaceMVK',
--- 'Graphics.Vulkan.C.Extensions.VK_FUCHSIA_imagepipe_surface.vkCreateImagePipeSurfaceFUCHSIA',
--- 'Graphics.Vulkan.C.Extensions.VK_MVK_macos_surface.vkCreateMacOSSurfaceMVK',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_metal_surface.vkCreateMetalSurfaceEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_GGP_stream_descriptor_surface.vkCreateStreamDescriptorSurfaceGGP',
--- 'Graphics.Vulkan.C.Extensions.VK_NN_vi_surface.vkCreateViSurfaceNN',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_wayland_surface.vkCreateWaylandSurfaceKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_win32_surface.vkCreateWin32SurfaceKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_xcb_surface.vkCreateXcbSurfaceKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface.vkCreateXlibSurfaceKHR',
--- 'vkDestroySurfaceKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkGetDeviceGroupSurfacePresentModesKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkGetPhysicalDevicePresentRectanglesKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter.vkGetPhysicalDeviceSurfaceCapabilities2EXT',
--- 'vkGetPhysicalDeviceSurfaceCapabilitiesKHR',
--- 'vkGetPhysicalDeviceSurfaceFormatsKHR',
--- 'vkGetPhysicalDeviceSurfacePresentModesKHR',
--- 'vkGetPhysicalDeviceSurfaceSupportKHR'
+-- No documentation found for TopLevel "VkSurfaceKHR"
 type VkSurfaceKHR = Ptr VkSurfaceKHR_T
 
 data VkSurfaceTransformFlagBitsKHR
 
--- | VkSurfaceTransformFlagsKHR - Bitmask of VkSurfaceTransformFlagBitsKHR
---
--- = Description
---
--- 'VkSurfaceTransformFlagsKHR' is a bitmask type for setting a mask of
--- zero or more 'VkSurfaceTransformFlagBitsKHR'.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayPropertiesKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter.VkSurfaceCapabilities2EXT',
--- 'VkSurfaceCapabilitiesKHR', 'VkSurfaceTransformFlagBitsKHR'
+-- No documentation found for TopLevel "VkSurfaceTransformFlagsKHR"
 type VkSurfaceTransformFlagsKHR = VkSurfaceTransformFlagBitsKHR
 
 type FN_vkDestroySurfaceKHR = ("instance" ::: VkInstance) -> ("surface" ::: VkSurfaceKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()

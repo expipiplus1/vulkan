@@ -40,18 +40,7 @@ import {-# source #-} Graphics.Vulkan.C.Core10.DeviceInitialization
 
 -- | Dummy data to tag the 'Ptr' with
 data VkDescriptorUpdateTemplate_T
--- | VkDescriptorUpdateTemplate - Opaque handle to a descriptor update
--- template
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.vkCmdPushDescriptorSetWithTemplateKHR',
--- 'vkCreateDescriptorUpdateTemplate',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template.vkCreateDescriptorUpdateTemplateKHR',
--- 'vkDestroyDescriptorUpdateTemplate',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template.vkDestroyDescriptorUpdateTemplateKHR',
--- 'vkUpdateDescriptorSetWithTemplate',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template.vkUpdateDescriptorSetWithTemplateKHR'
+-- No documentation found for TopLevel "VkDescriptorUpdateTemplate"
 type VkDescriptorUpdateTemplate = Ptr VkDescriptorUpdateTemplate_T
 
 data VkDescriptorUpdateTemplateCreateFlags

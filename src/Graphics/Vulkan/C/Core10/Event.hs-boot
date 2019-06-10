@@ -39,15 +39,7 @@ import {-# source #-} Graphics.Vulkan.C.Core10.DeviceInitialization
 
 -- | Dummy data to tag the 'Ptr' with
 data VkEvent_T
--- | VkEvent - Opaque handle to an event object
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdResetEvent',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdSetEvent',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdWaitEvents',
--- 'vkCreateEvent', 'vkDestroyEvent', 'vkGetEventStatus', 'vkResetEvent',
--- 'vkSetEvent'
+-- No documentation found for TopLevel "VkEvent"
 type VkEvent = Ptr VkEvent_T
 
 data VkEventCreateFlags

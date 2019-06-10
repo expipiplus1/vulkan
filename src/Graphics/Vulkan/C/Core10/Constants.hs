@@ -65,12 +65,7 @@ import Graphics.Vulkan.C.Core10.Core
 
 -- ** VkPipelineCacheHeaderVersion
 
--- | VkPipelineCacheHeaderVersion - Encode pipeline cache version
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.PipelineCache.vkCreatePipelineCache',
--- 'Graphics.Vulkan.C.Core10.PipelineCache.vkGetPipelineCacheData'
+-- No documentation found for TopLevel "VkPipelineCacheHeaderVersion"
 newtype VkPipelineCacheHeaderVersion = VkPipelineCacheHeaderVersion Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -88,8 +83,7 @@ instance Read VkPipelineCacheHeaderVersion where
                         )
                     )
 
--- | 'VK_PIPELINE_CACHE_HEADER_VERSION_ONE' specifies version one of the
--- pipeline cache.
+-- No documentation found for Nested "VkPipelineCacheHeaderVersion" "VK_PIPELINE_CACHE_HEADER_VERSION_ONE"
 pattern VK_PIPELINE_CACHE_HEADER_VERSION_ONE :: VkPipelineCacheHeaderVersion
 pattern VK_PIPELINE_CACHE_HEADER_VERSION_ONE = VkPipelineCacheHeaderVersion 1
 
@@ -101,11 +95,7 @@ pattern VK_ATTACHMENT_UNUSED = 0xffffffff
 pattern VK_LOD_CLAMP_NONE :: CFloat
 pattern VK_LOD_CLAMP_NONE = 1000.0
 
--- | VK_NULL_HANDLE - Reserved non-valid object handle
---
--- = See Also
---
--- No cross-references are available
+-- No documentation found for TopLevel "VK_NULL_HANDLE"
 pattern VK_NULL_HANDLE :: Ptr a
 pattern VK_NULL_HANDLE <- ((== nullPtr) -> True)
   where VK_NULL_HANDLE = nullPtr

@@ -14,10 +14,6 @@ import Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address
   )
 
 
--- | VkDeviceAddress - Vulkan device address type
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VkBufferDeviceAddressCreateInfoEXT'
+-- No documentation found for TopLevel "DeviceAddress"
 type DeviceAddress = VkDeviceAddress
   

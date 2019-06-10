@@ -6,8 +6,12 @@
 {-# language TypeApplications #-}
 
 module Graphics.Vulkan.C.Dynamic
-  ( initInstanceCmds
-  , initDeviceCmds
+  ( 
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+  initInstanceCmds
+  , 
+#endif
+  initDeviceCmds
   , DeviceCmds(..)
   , InstanceCmds(..)
   ) where
@@ -35,53 +39,90 @@ import qualified GHC.Ptr
   )
 
 
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import Graphics.Vulkan.C.Core10.Core
+  ( VkFormat(..)
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import Graphics.Vulkan.C.Core10.Core
   ( VkBool32(..)
-  , VkFormat(..)
-  , VkResult(..)
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import Graphics.Vulkan.C.Core10.Core
+  ( VkResult(..)
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import Graphics.Vulkan.NamedType
   ( (:::)
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core10.Buffer
-  ( VkBufferCreateInfo
-  , FN_vkCreateBuffer
+  ( FN_vkCreateBuffer
   , FN_vkDestroyBuffer
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Buffer
+  ( VkBufferCreateInfo
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.BufferView
+  ( FN_vkCreateBufferView
+  , FN_vkDestroyBufferView
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core10.BufferView
   ( VkBufferViewCreateInfo
-  , FN_vkCreateBufferView
-  , FN_vkDestroyBufferView
-  , VkBufferView
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.BufferView
+  ( VkBufferView
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core10.CommandBuffer
-  ( VkCommandBufferAllocateInfo
-  , VkCommandBufferBeginInfo
-  , FN_vkAllocateCommandBuffers
+  ( FN_vkAllocateCommandBuffers
   , FN_vkBeginCommandBuffer
   , FN_vkEndCommandBuffer
   , FN_vkFreeCommandBuffers
   , FN_vkResetCommandBuffer
-  , VkCommandBufferResetFlags
-  , VkQueryControlFlags
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.CommandBuffer
+  ( VkCommandBufferAllocateInfo
+  , VkCommandBufferBeginInfo
+  , VkCommandBufferResetFlags
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.CommandBuffer
+  ( VkQueryControlFlags
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core10.CommandBufferBuilding
-  ( VkBufferCopy
-  , VkBufferImageCopy
-  , VkBufferMemoryBarrier
-  , VkClearAttachment
-  , VkClearColorValue
-  , VkClearDepthStencilValue
-  , VkClearRect
-  , VkImageBlit
-  , VkImageCopy
-  , VkImageMemoryBarrier
-  , VkImageResolve
-  , VkIndexType
-  , VkMemoryBarrier
-  , VkRenderPassBeginInfo
-  , VkSubpassContents
-  , FN_vkCmdBeginQuery
+  ( FN_vkCmdBeginQuery
   , FN_vkCmdBeginRenderPass
   , FN_vkCmdBindDescriptorSets
   , FN_vkCmdBindIndexBuffer
@@ -125,24 +166,64 @@ import {-# source #-} Graphics.Vulkan.C.Core10.CommandBufferBuilding
   , FN_vkCmdUpdateBuffer
   , FN_vkCmdWaitEvents
   , FN_vkCmdWriteTimestamp
-  , VkStencilFaceFlags
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.CommandBufferBuilding
+  ( VkBufferCopy
+  , VkClearAttachment
+  , VkClearColorValue
+  , VkClearDepthStencilValue
+  , VkClearRect
+  , VkImageBlit
+  , VkImageCopy
+  , VkImageResolve
+  , VkIndexType
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.CommandBufferBuilding
+  ( VkBufferImageCopy
+  , VkBufferMemoryBarrier
+  , VkImageMemoryBarrier
+  , VkMemoryBarrier
+  , VkRenderPassBeginInfo
+  , VkSubpassContents
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.CommandBufferBuilding
+  ( VkStencilFaceFlags
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core10.CommandPool
-  ( VkCommandPoolCreateInfo
-  , FN_vkCreateCommandPool
+  ( FN_vkCreateCommandPool
   , FN_vkDestroyCommandPool
   , FN_vkResetCommandPool
-  , VkCommandPool
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.CommandPool
+  ( VkCommandPoolCreateInfo
   , VkCommandPoolResetFlags
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.CommandPool
+  ( VkCommandPool
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core10.DescriptorSet
-  ( VkCopyDescriptorSet
-  , VkDescriptorPoolCreateInfo
-  , VkDescriptorPoolResetFlags
-  , VkDescriptorSetAllocateInfo
-  , VkDescriptorSetLayoutCreateInfo
-  , VkWriteDescriptorSet
-  , FN_vkAllocateDescriptorSets
+  ( FN_vkAllocateDescriptorSets
   , FN_vkCreateDescriptorPool
   , FN_vkCreateDescriptorSetLayout
   , FN_vkDestroyDescriptorPool
@@ -150,26 +231,52 @@ import {-# source #-} Graphics.Vulkan.C.Core10.DescriptorSet
   , FN_vkFreeDescriptorSets
   , FN_vkResetDescriptorPool
   , FN_vkUpdateDescriptorSets
-  , VkDescriptorPool
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.DescriptorSet
+  ( VkCopyDescriptorSet
+  , VkDescriptorPoolCreateInfo
+  , VkDescriptorPoolResetFlags
+  , VkDescriptorSetAllocateInfo
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.DescriptorSet
+  ( VkDescriptorSetLayoutCreateInfo
+  , VkWriteDescriptorSet
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.DescriptorSet
+  ( VkDescriptorPool
   , VkDescriptorSet
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core10.Device
-  ( VkDeviceCreateInfo
-  , FN_vkCreateDevice
+  ( FN_vkCreateDevice
   , FN_vkDestroyDevice
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Device
+  ( VkDeviceCreateInfo
+  )
+#endif
 import {-# source #-} Graphics.Vulkan.C.Core10.DeviceInitialization
-  ( VkAllocationCallbacks
-  , VkFormatProperties
-  , VkImageFormatProperties
-  , VkImageTiling
-  , VkImageType
-  , VkPhysicalDeviceFeatures
-  , VkPhysicalDeviceMemoryProperties
-  , VkPhysicalDeviceProperties
-  , VkQueueFamilyProperties
-  , VkSampleCountFlagBits
-  , FN_vkDestroyInstance
+  ( VkDevice
+  , vkGetInstanceProcAddr
+  )
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.DeviceInitialization
+  ( FN_vkDestroyInstance
   , FN_vkEnumeratePhysicalDevices
   , FN_vkGetDeviceProcAddr
   , FN_vkGetInstanceProcAddr
@@ -179,221 +286,630 @@ import {-# source #-} Graphics.Vulkan.C.Core10.DeviceInitialization
   , FN_vkGetPhysicalDeviceMemoryProperties
   , FN_vkGetPhysicalDeviceProperties
   , FN_vkGetPhysicalDeviceQueueFamilyProperties
-  , PFN_vkVoidFunction
-  , VkDevice
-  , VkDeviceSize
-  , VkImageCreateFlags
-  , VkImageUsageFlags
-  , VkInstance
-  , VkPhysicalDevice
-  , vkGetInstanceProcAddr
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.DeviceInitialization
+  ( VkFormatProperties
+  , VkImageFormatProperties
+  , VkPhysicalDeviceFeatures
+  , VkPhysicalDeviceMemoryProperties
+  , VkPhysicalDeviceProperties
+  , VkQueueFamilyProperties
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.DeviceInitialization
+  ( PFN_vkVoidFunction
+  , VkImageCreateFlags
+  , VkSampleCountFlagBits
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.DeviceInitialization
+  ( VkImageTiling
+  , VkImageType
+  , VkImageUsageFlags
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.DeviceInitialization
+  ( VkInstance
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.DeviceInitialization
+  ( VkDeviceSize
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.DeviceInitialization
+  ( VkPhysicalDevice
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.DeviceInitialization
+  ( VkAllocationCallbacks
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core10.Event
-  ( VkEventCreateInfo
-  , FN_vkCreateEvent
+  ( FN_vkCreateEvent
   , FN_vkDestroyEvent
   , FN_vkGetEventStatus
   , FN_vkResetEvent
   , FN_vkSetEvent
-  , VkEvent
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Event
+  ( VkEventCreateInfo
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Event
+  ( VkEvent
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.ExtensionDiscovery
+  ( FN_vkEnumerateDeviceExtensionProperties
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core10.ExtensionDiscovery
   ( VkExtensionProperties
-  , FN_vkEnumerateDeviceExtensionProperties
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core10.Fence
-  ( VkFenceCreateInfo
-  , FN_vkCreateFence
+  ( FN_vkCreateFence
   , FN_vkDestroyFence
   , FN_vkGetFenceStatus
   , FN_vkResetFences
   , FN_vkWaitForFences
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Fence
+  ( VkFenceCreateInfo
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core10.Image
-  ( VkImageCreateInfo
-  , VkImageLayout
-  , VkSubresourceLayout
-  , FN_vkCreateImage
+  ( FN_vkCreateImage
   , FN_vkDestroyImage
   , FN_vkGetImageSubresourceLayout
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Image
+  ( VkImageCreateInfo
+  , VkSubresourceLayout
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Image
+  ( VkImageLayout
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.ImageView
+  ( FN_vkCreateImageView
+  , FN_vkDestroyImageView
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.ImageView
+  ( VkImageViewCreateInfo
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core10.ImageView
   ( VkImageSubresourceRange
-  , VkImageViewCreateInfo
-  , FN_vkCreateImageView
-  , FN_vkDestroyImageView
-  , VkImageView
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.ImageView
+  ( VkImageView
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.LayerDiscovery
+  ( FN_vkEnumerateDeviceLayerProperties
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core10.LayerDiscovery
   ( VkLayerProperties
-  , FN_vkEnumerateDeviceLayerProperties
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core10.Memory
-  ( VkMappedMemoryRange
-  , VkMemoryAllocateInfo
-  , VkMemoryMapFlags
-  , FN_vkAllocateMemory
+  ( FN_vkAllocateMemory
   , FN_vkFlushMappedMemoryRanges
   , FN_vkFreeMemory
   , FN_vkGetDeviceMemoryCommitment
   , FN_vkInvalidateMappedMemoryRanges
   , FN_vkMapMemory
   , FN_vkUnmapMemory
-  , VkDeviceMemory
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Memory
+  ( VkMemoryAllocateInfo
+  , VkMemoryMapFlags
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Memory
+  ( VkMappedMemoryRange
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Memory
+  ( VkDeviceMemory
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core10.MemoryManagement
-  ( VkMemoryRequirements
-  , FN_vkBindBufferMemory
+  ( FN_vkBindBufferMemory
   , FN_vkBindImageMemory
   , FN_vkGetBufferMemoryRequirements
   , FN_vkGetImageMemoryRequirements
-  , VkBuffer
-  , VkImage
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.MemoryManagement
+  ( VkMemoryRequirements
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.MemoryManagement
+  ( VkImage
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.MemoryManagement
+  ( VkBuffer
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core10.Pass
-  ( VkFramebufferCreateInfo
-  , VkPipelineBindPoint
-  , VkRenderPassCreateInfo
-  , FN_vkCreateFramebuffer
+  ( FN_vkCreateFramebuffer
   , FN_vkCreateRenderPass
   , FN_vkDestroyFramebuffer
   , FN_vkDestroyRenderPass
   , FN_vkGetRenderAreaGranularity
-  , VkDependencyFlags
-  , VkFramebuffer
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Pass
+  ( VkDependencyFlags
+  , VkFramebufferCreateInfo
+  , VkRenderPassCreateInfo
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Pass
+  ( VkFramebuffer
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Pass
+  ( VkPipelineBindPoint
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Pipeline
+  ( FN_vkCreateComputePipelines
+  , FN_vkCreateGraphicsPipelines
+  , FN_vkDestroyPipeline
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core10.Pipeline
   ( VkComputePipelineCreateInfo
   , VkExtent2D
   , VkGraphicsPipelineCreateInfo
-  , VkRect2D
   , VkShaderStageFlagBits
   , VkViewport
-  , FN_vkCreateComputePipelines
-  , FN_vkCreateGraphicsPipelines
-  , FN_vkDestroyPipeline
-  , VkPipeline
-  , VkPipelineLayout
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Pipeline
+  ( VkRect2D
   , VkRenderPass
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Pipeline
+  ( VkPipelineLayout
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Pipeline
+  ( VkPipeline
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core10.PipelineCache
-  ( VkPipelineCacheCreateInfo
-  , FN_vkCreatePipelineCache
+  ( FN_vkCreatePipelineCache
   , FN_vkDestroyPipelineCache
   , FN_vkGetPipelineCacheData
   , FN_vkMergePipelineCaches
-  , VkPipelineCache
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.PipelineCache
+  ( VkPipelineCacheCreateInfo
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.PipelineCache
+  ( VkPipelineCache
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.PipelineLayout
+  ( FN_vkCreatePipelineLayout
+  , FN_vkDestroyPipelineLayout
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core10.PipelineLayout
   ( VkPipelineLayoutCreateInfo
-  , FN_vkCreatePipelineLayout
-  , FN_vkDestroyPipelineLayout
-  , VkDescriptorSetLayout
   , VkShaderStageFlags
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.PipelineLayout
+  ( VkDescriptorSetLayout
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Query
+  ( FN_vkCreateQueryPool
+  , FN_vkDestroyQueryPool
+  , FN_vkGetQueryPoolResults
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core10.Query
   ( VkQueryPoolCreateInfo
   , VkQueryType
-  , FN_vkCreateQueryPool
-  , FN_vkDestroyQueryPool
-  , FN_vkGetQueryPoolResults
-  , VkQueryPool
-  , VkQueryResultFlags
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Query
+  ( VkQueryResultFlags
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Query
+  ( VkQueryPool
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core10.Queue
-  ( VkPipelineStageFlagBits
-  , VkSubmitInfo
-  , FN_vkDeviceWaitIdle
+  ( FN_vkDeviceWaitIdle
   , FN_vkGetDeviceQueue
   , FN_vkQueueSubmit
   , FN_vkQueueWaitIdle
-  , VkCommandBuffer
-  , VkFence
-  , VkPipelineStageFlags
-  , VkQueue
-  , VkSemaphore
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Queue
+  ( VkSubmitInfo
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Queue
+  ( VkPipelineStageFlagBits
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Queue
+  ( VkSemaphore
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Queue
+  ( VkPipelineStageFlags
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Queue
+  ( VkFence
+  , VkQueue
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Queue
+  ( VkCommandBuffer
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core10.QueueSemaphore
-  ( VkSemaphoreCreateInfo
-  , FN_vkCreateSemaphore
+  ( FN_vkCreateSemaphore
   , FN_vkDestroySemaphore
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.QueueSemaphore
+  ( VkSemaphoreCreateInfo
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Sampler
+  ( FN_vkCreateSampler
+  , FN_vkDestroySampler
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core10.Sampler
   ( VkFilter
   , VkSamplerCreateInfo
-  , FN_vkCreateSampler
-  , FN_vkDestroySampler
-  , VkSampler
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Sampler
+  ( VkSampler
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Shader
+  ( FN_vkCreateShaderModule
+  , FN_vkDestroyShaderModule
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core10.Shader
   ( VkShaderModuleCreateInfo
-  , FN_vkCreateShaderModule
-  , FN_vkDestroyShaderModule
-  , VkShaderModule
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.Shader
+  ( VkShaderModule
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement
+  ( FN_vkGetImageSparseMemoryRequirements
+  , FN_vkGetPhysicalDeviceSparseImageFormatProperties
+  , FN_vkQueueBindSparse
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement
   ( VkBindSparseInfo
   , VkImageSubresource
   , VkSparseImageFormatProperties
   , VkSparseImageMemoryRequirements
-  , FN_vkGetImageSparseMemoryRequirements
-  , FN_vkGetPhysicalDeviceSparseImageFormatProperties
-  , FN_vkQueueBindSparse
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory
+  ( FN_vkGetDeviceQueue2
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory
   ( VkDeviceQueueInfo2
-  , FN_vkGetDeviceQueue2
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2
+  ( FN_vkBindBufferMemory2
+  , FN_vkBindImageMemory2
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2
   ( VkBindBufferMemoryInfo
   , VkBindImageMemoryInfo
-  , FN_vkBindBufferMemory2
-  , FN_vkBindImageMemory2
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template
-  ( VkDescriptorUpdateTemplateCreateInfo
-  , FN_vkCreateDescriptorUpdateTemplate
+  ( FN_vkCreateDescriptorUpdateTemplate
   , FN_vkDestroyDescriptorUpdateTemplate
   , FN_vkUpdateDescriptorSetWithTemplate
-  , VkDescriptorUpdateTemplate
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template
+  ( VkDescriptorUpdateTemplateCreateInfo
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template
+  ( VkDescriptorUpdateTemplate
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group
   ( FN_vkCmdDispatchBase
   , FN_vkCmdSetDeviceMask
   , FN_vkGetDeviceGroupPeerMemoryFeatures
-  , VkPeerMemoryFeatureFlags
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group
+  ( VkPeerMemoryFeatureFlags
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation
+  ( FN_vkEnumeratePhysicalDeviceGroups
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation
   ( VkPhysicalDeviceGroupProperties
-  , FN_vkEnumeratePhysicalDeviceGroups
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities
+  ( FN_vkGetPhysicalDeviceExternalFenceProperties
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities
   ( VkExternalFenceProperties
   , VkPhysicalDeviceExternalFenceInfo
-  , FN_vkGetPhysicalDeviceExternalFenceProperties
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities
+  ( FN_vkGetPhysicalDeviceExternalBufferProperties
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities
   ( VkExternalBufferProperties
-  , VkExternalMemoryHandleTypeFlagBits
   , VkPhysicalDeviceExternalBufferInfo
-  , FN_vkGetPhysicalDeviceExternalBufferProperties
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities
+  ( VkExternalMemoryHandleTypeFlagBits
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities
+  ( FN_vkGetPhysicalDeviceExternalSemaphoreProperties
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities
   ( VkExternalSemaphoreProperties
   , VkPhysicalDeviceExternalSemaphoreInfo
-  , FN_vkGetPhysicalDeviceExternalSemaphoreProperties
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2
+  ( FN_vkGetBufferMemoryRequirements2
+  , FN_vkGetImageMemoryRequirements2
+  , FN_vkGetImageSparseMemoryRequirements2
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2
   ( VkBufferMemoryRequirementsInfo2
   , VkImageMemoryRequirementsInfo2
   , VkImageSparseMemoryRequirementsInfo2
-  , VkMemoryRequirements2
-  , VkSparseImageMemoryRequirements2
-  , FN_vkGetBufferMemoryRequirements2
-  , FN_vkGetImageMemoryRequirements2
-  , FN_vkGetImageSparseMemoryRequirements2
   , VkMemoryRequirements2KHR
+  , VkSparseImageMemoryRequirements2
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2
+  ( VkMemoryRequirements2
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2
+  ( FN_vkGetPhysicalDeviceFeatures2
+  , FN_vkGetPhysicalDeviceFormatProperties2
+  , FN_vkGetPhysicalDeviceImageFormatProperties2
+  , FN_vkGetPhysicalDeviceMemoryProperties2
+  , FN_vkGetPhysicalDeviceProperties2
+  , FN_vkGetPhysicalDeviceQueueFamilyProperties2
+  , FN_vkGetPhysicalDeviceSparseImageFormatProperties2
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2
   ( VkFormatProperties2
   , VkImageFormatProperties2
@@ -404,38 +920,75 @@ import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical
   , VkPhysicalDeviceSparseImageFormatInfo2
   , VkQueueFamilyProperties2
   , VkSparseImageFormatProperties2
-  , FN_vkGetPhysicalDeviceFeatures2
-  , FN_vkGetPhysicalDeviceFormatProperties2
-  , FN_vkGetPhysicalDeviceImageFormatProperties2
-  , FN_vkGetPhysicalDeviceMemoryProperties2
-  , FN_vkGetPhysicalDeviceProperties2
-  , FN_vkGetPhysicalDeviceQueueFamilyProperties2
-  , FN_vkGetPhysicalDeviceSparseImageFormatProperties2
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1
+  ( FN_vkTrimCommandPool
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance1
   ( VkCommandPoolTrimFlags
-  , FN_vkTrimCommandPool
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance3
+  ( FN_vkGetDescriptorSetLayoutSupport
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance3
   ( VkDescriptorSetLayoutSupport
-  , FN_vkGetDescriptorSetLayoutSupport
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion
+  ( FN_vkCreateSamplerYcbcrConversion
+  , FN_vkDestroySamplerYcbcrConversion
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion
   ( VkSamplerYcbcrConversionCreateInfo
-  , FN_vkCreateSamplerYcbcrConversion
-  , FN_vkDestroySamplerYcbcrConversion
-  , VkSamplerYcbcrConversion
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion
+  ( VkSamplerYcbcrConversion
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_AMD_buffer_marker
   ( FN_vkCmdWriteBufferMarkerAMD
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_AMD_display_native_hdr
   ( FN_vkSetLocalDimmingAMD
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_AMD_shader_info
+  ( FN_vkGetShaderInfoAMD
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_AMD_shader_info
   ( VkShaderInfoTypeAMD
-  , FN_vkGetShaderInfoAMD
   )
+#endif
 
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer
@@ -457,61 +1010,104 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_an
   )
 #endif
 
-#if defined(VK_USE_PLATFORM_XLIB_XRANDR_EXT)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_acquire_xlib_display
   ( FN_vkAcquireXlibDisplayEXT
   , FN_vkGetRandROutputDisplayEXT
   )
 #endif
 
-#if defined(VK_USE_PLATFORM_XLIB_XRANDR_EXT)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_acquire_xlib_display
   ( RROutput
   )
 #endif
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address
+  ( FN_vkGetBufferDeviceAddressEXT
+  )
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address
   ( VkBufferDeviceAddressInfoEXT
-  , FN_vkGetBufferDeviceAddressEXT
   , VkDeviceAddress
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps
+  ( FN_vkGetCalibratedTimestampsEXT
+  , FN_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps
   ( VkCalibratedTimestampInfoEXT
   , VkTimeDomainEXT
-  , FN_vkGetCalibratedTimestampsEXT
-  , FN_vkGetPhysicalDeviceCalibrateableTimeDomainsEXT
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_conditional_rendering
-  ( VkConditionalRenderingBeginInfoEXT
-  , FN_vkCmdBeginConditionalRenderingEXT
+  ( FN_vkCmdBeginConditionalRenderingEXT
   , FN_vkCmdEndConditionalRenderingEXT
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_conditional_rendering
+  ( VkConditionalRenderingBeginInfoEXT
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker
-  ( VkDebugMarkerMarkerInfoEXT
-  , VkDebugMarkerObjectNameInfoEXT
-  , VkDebugMarkerObjectTagInfoEXT
-  , FN_vkCmdDebugMarkerBeginEXT
+  ( FN_vkCmdDebugMarkerBeginEXT
   , FN_vkCmdDebugMarkerEndEXT
   , FN_vkCmdDebugMarkerInsertEXT
   , FN_vkDebugMarkerSetObjectNameEXT
   , FN_vkDebugMarkerSetObjectTagEXT
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker
+  ( VkDebugMarkerObjectNameInfoEXT
+  , VkDebugMarkerObjectTagInfoEXT
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker
+  ( VkDebugMarkerMarkerInfoEXT
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_debug_report
-  ( VkDebugReportCallbackCreateInfoEXT
-  , VkDebugReportObjectTypeEXT
-  , FN_vkCreateDebugReportCallbackEXT
+  ( FN_vkCreateDebugReportCallbackEXT
   , FN_vkDebugReportMessageEXT
   , FN_vkDestroyDebugReportCallbackEXT
-  , VkDebugReportCallbackEXT
-  , VkDebugReportFlagsEXT
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_debug_report
+  ( VkDebugReportCallbackCreateInfoEXT
+  , VkDebugReportFlagsEXT
+  , VkDebugReportObjectTypeEXT
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_debug_report
+  ( VkDebugReportCallbackEXT
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils
-  ( VkDebugUtilsLabelEXT
-  , VkDebugUtilsMessageSeverityFlagBitsEXT
-  , VkDebugUtilsMessengerCallbackDataEXT
-  , VkDebugUtilsMessengerCreateInfoEXT
-  , VkDebugUtilsObjectNameInfoEXT
-  , VkDebugUtilsObjectTagInfoEXT
-  , FN_vkCmdBeginDebugUtilsLabelEXT
+  ( FN_vkCmdBeginDebugUtilsLabelEXT
   , FN_vkCmdEndDebugUtilsLabelEXT
   , FN_vkCmdInsertDebugUtilsLabelEXT
   , FN_vkCreateDebugUtilsMessengerEXT
@@ -522,71 +1118,160 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils
   , FN_vkSetDebugUtilsObjectNameEXT
   , FN_vkSetDebugUtilsObjectTagEXT
   , FN_vkSubmitDebugUtilsMessageEXT
-  , VkDebugUtilsMessageTypeFlagsEXT
-  , VkDebugUtilsMessengerEXT
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils
+  ( VkDebugUtilsMessageSeverityFlagBitsEXT
+  , VkDebugUtilsMessageTypeFlagsEXT
+  , VkDebugUtilsMessengerCallbackDataEXT
+  , VkDebugUtilsMessengerCreateInfoEXT
+  , VkDebugUtilsObjectNameInfoEXT
+  , VkDebugUtilsObjectTagInfoEXT
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils
+  ( VkDebugUtilsMessengerEXT
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils
+  ( VkDebugUtilsLabelEXT
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_direct_mode_display
   ( FN_vkReleaseDisplayEXT
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_discard_rectangles
   ( FN_vkCmdSetDiscardRectangleEXT
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_display_control
-  ( VkDeviceEventInfoEXT
-  , VkDisplayEventInfoEXT
-  , VkDisplayPowerInfoEXT
-  , FN_vkDisplayPowerControlEXT
+  ( FN_vkDisplayPowerControlEXT
   , FN_vkGetSwapchainCounterEXT
   , FN_vkRegisterDeviceEventEXT
   , FN_vkRegisterDisplayEventEXT
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_display_control
+  ( VkDeviceEventInfoEXT
+  , VkDisplayEventInfoEXT
+  , VkDisplayPowerInfoEXT
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter
+  ( FN_vkGetPhysicalDeviceSurfaceCapabilities2EXT
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter
   ( VkSurfaceCapabilities2EXT
   , VkSurfaceCounterFlagBitsEXT
-  , FN_vkGetPhysicalDeviceSurfaceCapabilities2EXT
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_host
+  ( FN_vkGetMemoryHostPointerPropertiesEXT
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_host
   ( VkMemoryHostPointerPropertiesEXT
-  , FN_vkGetMemoryHostPointerPropertiesEXT
   )
+#endif
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive
   ( FN_vkAcquireFullScreenExclusiveModeEXT
-  , FN_vkGetPhysicalDeviceSurfacePresentModes2EXT
   , FN_vkReleaseFullScreenExclusiveModeEXT
   )
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive
+  ( FN_vkGetPhysicalDeviceSurfacePresentModes2EXT
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_hdr_metadata
+  ( FN_vkSetHdrMetadataEXT
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_hdr_metadata
   ( VkHdrMetadataEXT
-  , FN_vkSetHdrMetadataEXT
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_headless_surface
+  ( FN_vkCreateHeadlessSurfaceEXT
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_headless_surface
   ( VkHeadlessSurfaceCreateInfoEXT
-  , FN_vkCreateHeadlessSurfaceEXT
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_host_query_reset
   ( FN_vkResetQueryPoolEXT
   )
+#endif
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier
-  ( VkImageDrmFormatModifierPropertiesEXT
-  , FN_vkGetImageDrmFormatModifierPropertiesEXT
+  ( FN_vkGetImageDrmFormatModifierPropertiesEXT
   )
 
-#if defined(VK_USE_PLATFORM_METAL_EXT)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier
+  ( VkImageDrmFormatModifierPropertiesEXT
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_metal_surface
   ( FN_vkCreateMetalSurfaceEXT
   )
 #endif
 
-#if defined(VK_USE_PLATFORM_METAL_EXT)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_metal_surface
   ( VkMetalSurfaceCreateInfoEXT
   )
 #endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations
+  ( FN_vkCmdSetSampleLocationsEXT
+  , FN_vkGetPhysicalDeviceMultisamplePropertiesEXT
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations
   ( VkMultisamplePropertiesEXT
   , VkSampleLocationsInfoEXT
-  , FN_vkCmdSetSampleLocationsEXT
-  , FN_vkGetPhysicalDeviceMultisamplePropertiesEXT
   )
+#endif
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback
   ( FN_vkCmdBeginQueryIndexedEXT
   , FN_vkCmdBeginTransformFeedbackEXT
@@ -595,44 +1280,65 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback
   , FN_vkCmdEndQueryIndexedEXT
   , FN_vkCmdEndTransformFeedbackEXT
   )
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache
-  ( VkValidationCacheCreateInfoEXT
-  , FN_vkCreateValidationCacheEXT
+  ( FN_vkCreateValidationCacheEXT
   , FN_vkDestroyValidationCacheEXT
   , FN_vkGetValidationCacheDataEXT
   , FN_vkMergeValidationCachesEXT
-  , VkValidationCacheEXT
   )
+#endif
 
-#if defined(VK_USE_PLATFORM_FUCHSIA)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache
+  ( VkValidationCacheCreateInfoEXT
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache
+  ( VkValidationCacheEXT
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_FUCHSIA_imagepipe_surface
   ( FN_vkCreateImagePipeSurfaceFUCHSIA
   )
 #endif
 
-#if defined(VK_USE_PLATFORM_FUCHSIA)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_FUCHSIA_imagepipe_surface
   ( VkImagePipeSurfaceCreateInfoFUCHSIA
   )
 #endif
 
-#if defined(VK_USE_PLATFORM_GGP)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_GGP_stream_descriptor_surface
   ( FN_vkCreateStreamDescriptorSurfaceGGP
   )
 #endif
 
-#if defined(VK_USE_PLATFORM_GGP)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_GGP_stream_descriptor_surface
   ( VkStreamDescriptorSurfaceCreateInfoGGP
   )
 #endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing
+  ( FN_vkGetPastPresentationTimingGOOGLE
+  , FN_vkGetRefreshCycleDurationGOOGLE
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing
   ( VkPastPresentationTimingGOOGLE
   , VkRefreshCycleDurationGOOGLE
-  , FN_vkGetPastPresentationTimingGOOGLE
-  , FN_vkGetRefreshCycleDurationGOOGLE
   )
+#endif
 
 #if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_android_surface
@@ -645,18 +1351,45 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_android_surface
   ( VkAndroidSurfaceCreateInfoKHR
   )
 #endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2
-  ( VkRenderPassCreateInfo2KHR
-  , VkSubpassBeginInfoKHR
-  , VkSubpassEndInfoKHR
-  , FN_vkCmdBeginRenderPass2KHR
+  ( FN_vkCmdBeginRenderPass2KHR
   , FN_vkCmdEndRenderPass2KHR
   , FN_vkCmdNextSubpass2KHR
   , FN_vkCreateRenderPass2KHR
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2
+  ( VkRenderPassCreateInfo2KHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2
+  ( VkSubpassBeginInfoKHR
+  , VkSubpassEndInfoKHR
+  )
+#endif
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_device_group
   ( FN_vkGetDeviceGroupSurfacePresentModes2EXT
   )
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_display
+  ( FN_vkCreateDisplayModeKHR
+  , FN_vkCreateDisplayPlaneSurfaceKHR
+  , FN_vkGetDisplayModePropertiesKHR
+  , FN_vkGetDisplayPlaneCapabilitiesKHR
+  , FN_vkGetDisplayPlaneSupportedDisplaysKHR
+  , FN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR
+  , FN_vkGetPhysicalDeviceDisplayPropertiesKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_display
   ( VkDisplayModeCreateInfoKHR
   , VkDisplayModePropertiesKHR
@@ -664,125 +1397,199 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_display
   , VkDisplayPlanePropertiesKHR
   , VkDisplayPropertiesKHR
   , VkDisplaySurfaceCreateInfoKHR
-  , FN_vkCreateDisplayModeKHR
-  , FN_vkCreateDisplayPlaneSurfaceKHR
-  , FN_vkGetDisplayModePropertiesKHR
-  , FN_vkGetDisplayPlaneCapabilitiesKHR
-  , FN_vkGetDisplayPlaneSupportedDisplaysKHR
-  , FN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR
-  , FN_vkGetPhysicalDeviceDisplayPropertiesKHR
-  , VkDisplayKHR
-  , VkDisplayModeKHR
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_display
+  ( VkDisplayModeKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_display
+  ( VkDisplayKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_display_swapchain
   ( FN_vkCreateSharedSwapchainsKHR
   )
+#endif
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_draw_indirect_count
   ( FN_vkCmdDrawIndexedIndirectCountKHR
   , FN_vkCmdDrawIndirectCountKHR
   )
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd
+  ( FN_vkGetFenceFdKHR
+  , FN_vkImportFenceFdKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd
   ( VkFenceGetFdInfoKHR
   , VkImportFenceFdInfoKHR
-  , FN_vkGetFenceFdKHR
-  , FN_vkImportFenceFdKHR
   )
+#endif
 
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32
   ( FN_vkGetFenceWin32HandleKHR
   , FN_vkImportFenceWin32HandleKHR
   )
 #endif
 
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32
   ( VkFenceGetWin32HandleInfoKHR
   , VkImportFenceWin32HandleInfoKHR
   )
 #endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd
+  ( FN_vkGetMemoryFdKHR
+  , FN_vkGetMemoryFdPropertiesKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd
   ( VkMemoryFdPropertiesKHR
   , VkMemoryGetFdInfoKHR
-  , FN_vkGetMemoryFdKHR
-  , FN_vkGetMemoryFdPropertiesKHR
   )
+#endif
 
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32
   ( FN_vkGetMemoryWin32HandleKHR
   , FN_vkGetMemoryWin32HandlePropertiesKHR
   )
 #endif
 
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32
   ( VkMemoryGetWin32HandleInfoKHR
   , VkMemoryWin32HandlePropertiesKHR
   )
 #endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd
+  ( FN_vkGetSemaphoreFdKHR
+  , FN_vkImportSemaphoreFdKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd
   ( VkImportSemaphoreFdInfoKHR
   , VkSemaphoreGetFdInfoKHR
-  , FN_vkGetSemaphoreFdKHR
-  , FN_vkImportSemaphoreFdKHR
   )
+#endif
 
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32
   ( FN_vkGetSemaphoreWin32HandleKHR
   , FN_vkImportSemaphoreWin32HandleKHR
   )
 #endif
 
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32
   ( VkImportSemaphoreWin32HandleInfoKHR
   , VkSemaphoreGetWin32HandleInfoKHR
   )
 #endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2
+  ( FN_vkGetDisplayModeProperties2KHR
+  , FN_vkGetDisplayPlaneCapabilities2KHR
+  , FN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR
+  , FN_vkGetPhysicalDeviceDisplayProperties2KHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2
   ( VkDisplayModeProperties2KHR
   , VkDisplayPlaneCapabilities2KHR
   , VkDisplayPlaneInfo2KHR
   , VkDisplayPlaneProperties2KHR
   , VkDisplayProperties2KHR
-  , FN_vkGetDisplayModeProperties2KHR
-  , FN_vkGetDisplayPlaneCapabilities2KHR
-  , FN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR
-  , FN_vkGetPhysicalDeviceDisplayProperties2KHR
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2
-  ( VkPhysicalDeviceSurfaceInfo2KHR
-  , VkSurfaceCapabilities2KHR
-  , VkSurfaceFormat2KHR
-  , FN_vkGetPhysicalDeviceSurfaceCapabilities2KHR
+  ( FN_vkGetPhysicalDeviceSurfaceCapabilities2KHR
   , FN_vkGetPhysicalDeviceSurfaceFormats2KHR
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2
+  ( VkSurfaceCapabilities2KHR
+  , VkSurfaceFormat2KHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2
+  ( VkPhysicalDeviceSurfaceInfo2KHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor
   ( FN_vkCmdPushDescriptorSetKHR
   , FN_vkCmdPushDescriptorSetWithTemplateKHR
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image
   ( FN_vkGetSwapchainStatusKHR
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_surface
-  ( VkPresentModeKHR
-  , VkSurfaceCapabilitiesKHR
-  , VkSurfaceFormatKHR
-  , FN_vkDestroySurfaceKHR
+  ( FN_vkDestroySurfaceKHR
   , FN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR
   , FN_vkGetPhysicalDeviceSurfaceFormatsKHR
   , FN_vkGetPhysicalDeviceSurfacePresentModesKHR
   , FN_vkGetPhysicalDeviceSurfaceSupportKHR
-  , VkSurfaceKHR
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_surface
+  ( VkSurfaceCapabilitiesKHR
+  , VkSurfaceFormatKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_surface
+  ( VkPresentModeKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_surface
+  ( VkSurfaceKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_swapchain
-  ( VkAcquireNextImageInfoKHR
-  , VkDeviceGroupPresentCapabilitiesKHR
-  , VkPresentInfoKHR
-  , VkSwapchainCreateInfoKHR
-  , FN_vkAcquireNextImage2KHR
+  ( FN_vkAcquireNextImage2KHR
   , FN_vkAcquireNextImageKHR
   , FN_vkCreateSwapchainKHR
   , FN_vkDestroySwapchainKHR
@@ -791,45 +1598,65 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_swapchain
   , FN_vkGetPhysicalDevicePresentRectanglesKHR
   , FN_vkGetSwapchainImagesKHR
   , FN_vkQueuePresentKHR
-  , VkDeviceGroupPresentModeFlagsKHR
-  , VkSwapchainKHR
   )
+#endif
 
-#if defined(VK_USE_PLATFORM_WAYLAND_KHR)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_swapchain
+  ( VkAcquireNextImageInfoKHR
+  , VkDeviceGroupPresentCapabilitiesKHR
+  , VkPresentInfoKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_swapchain
+  ( VkDeviceGroupPresentModeFlagsKHR
+  , VkSwapchainCreateInfoKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_swapchain
+  ( VkSwapchainKHR
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_wayland_surface
   ( FN_vkCreateWaylandSurfaceKHR
   , FN_vkGetPhysicalDeviceWaylandPresentationSupportKHR
   )
 #endif
 
-#if defined(VK_USE_PLATFORM_WAYLAND_KHR)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_wayland_surface
   ( VkWaylandSurfaceCreateInfoKHR
   , Wl_display
   )
 #endif
 
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_win32_surface
   ( FN_vkCreateWin32SurfaceKHR
   , FN_vkGetPhysicalDeviceWin32PresentationSupportKHR
   )
 #endif
 
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_win32_surface
   ( VkWin32SurfaceCreateInfoKHR
   )
 #endif
 
-#if defined(VK_USE_PLATFORM_XCB_KHR)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_xcb_surface
   ( FN_vkCreateXcbSurfaceKHR
   , FN_vkGetPhysicalDeviceXcbPresentationSupportKHR
   )
 #endif
 
-#if defined(VK_USE_PLATFORM_XCB_KHR)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_xcb_surface
   ( VkXcbSurfaceCreateInfoKHR
   , Xcb_connection_t
@@ -837,61 +1664,77 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_xcb_surface
   )
 #endif
 
-#if defined(VK_USE_PLATFORM_XLIB_KHR)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface
   ( FN_vkCreateXlibSurfaceKHR
   , FN_vkGetPhysicalDeviceXlibPresentationSupportKHR
   )
 #endif
 
-#if defined(VK_USE_PLATFORM_XLIB_KHR)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface
-  ( VkXlibSurfaceCreateInfoKHR
-  , VisualID
+  ( VisualID
+  , VkXlibSurfaceCreateInfoKHR
   )
 #endif
 
-#if defined(VK_USE_PLATFORM_XLIB_KHR) || defined(VK_USE_PLATFORM_XLIB_XRANDR_EXT)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface
   ( Display
   )
 #endif
 
-#if defined(VK_USE_PLATFORM_IOS_MVK)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_MVK_ios_surface
   ( FN_vkCreateIOSSurfaceMVK
   )
 #endif
 
-#if defined(VK_USE_PLATFORM_IOS_MVK)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_MVK_ios_surface
   ( VkIOSSurfaceCreateInfoMVK
   )
 #endif
 
-#if defined(VK_USE_PLATFORM_MACOS_MVK)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_MVK_macos_surface
   ( FN_vkCreateMacOSSurfaceMVK
   )
 #endif
 
-#if defined(VK_USE_PLATFORM_MACOS_MVK)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_MVK_macos_surface
   ( VkMacOSSurfaceCreateInfoMVK
   )
 #endif
 
-#if defined(VK_USE_PLATFORM_VI_NN)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NN_vi_surface
   ( FN_vkCreateViSurfaceNN
   )
 #endif
 
-#if defined(VK_USE_PLATFORM_VI_NN)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NN_vi_surface
   ( VkViSurfaceCreateInfoNN
   )
 #endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands
+  ( FN_vkCmdProcessCommandsNVX
+  , FN_vkCmdReserveSpaceForCommandsNVX
+  , FN_vkCreateIndirectCommandsLayoutNVX
+  , FN_vkCreateObjectTableNVX
+  , FN_vkDestroyIndirectCommandsLayoutNVX
+  , FN_vkDestroyObjectTableNVX
+  , FN_vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX
+  , FN_vkRegisterObjectsNVX
+  , FN_vkUnregisterObjectsNVX
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands
   ( VkCmdProcessCommandsInfoNVX
   , VkCmdReserveSpaceForCommandsInfoNVX
@@ -901,48 +1744,89 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_comma
   , VkObjectEntryTypeNVX
   , VkObjectTableCreateInfoNVX
   , VkObjectTableEntryNVX
-  , FN_vkCmdProcessCommandsNVX
-  , FN_vkCmdReserveSpaceForCommandsNVX
-  , FN_vkCreateIndirectCommandsLayoutNVX
-  , FN_vkCreateObjectTableNVX
-  , FN_vkDestroyIndirectCommandsLayoutNVX
-  , FN_vkDestroyObjectTableNVX
-  , FN_vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX
-  , FN_vkRegisterObjectsNVX
-  , FN_vkUnregisterObjectsNVX
-  , VkIndirectCommandsLayoutNVX
-  , VkObjectTableNVX
   )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands
+  ( VkIndirectCommandsLayoutNVX
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands
+  ( VkObjectTableNVX
+  )
+#endif
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NVX_image_view_handle
-  ( VkImageViewHandleInfoNVX
-  , FN_vkGetImageViewHandleNVX
-  )
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_clip_space_w_scaling
-  ( VkViewportWScalingNV
-  , FN_vkCmdSetViewportWScalingNV
-  )
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix
-  ( VkCooperativeMatrixPropertiesNV
-  , FN_vkGetPhysicalDeviceCooperativeMatrixPropertiesNV
-  )
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_device_diagnostic_checkpoints
-  ( VkCheckpointDataNV
-  , FN_vkCmdSetCheckpointNV
-  , FN_vkGetQueueCheckpointDataNV
-  )
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities
-  ( VkExternalImageFormatPropertiesNV
-  , FN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV
-  , VkExternalMemoryHandleTypeFlagsNV
+  ( FN_vkGetImageViewHandleNVX
   )
 
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NVX_image_view_handle
+  ( VkImageViewHandleInfoNVX
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_clip_space_w_scaling
+  ( FN_vkCmdSetViewportWScalingNV
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_clip_space_w_scaling
+  ( VkViewportWScalingNV
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix
+  ( FN_vkGetPhysicalDeviceCooperativeMatrixPropertiesNV
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix
+  ( VkCooperativeMatrixPropertiesNV
+  )
+#endif
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_device_diagnostic_checkpoints
+  ( FN_vkCmdSetCheckpointNV
+  , FN_vkGetQueueCheckpointDataNV
+  )
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_device_diagnostic_checkpoints
+  ( VkCheckpointDataNV
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities
+  ( FN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities
+  ( VkExternalImageFormatPropertiesNV
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities
+  ( VkExternalMemoryHandleTypeFlagsNV
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32
   ( FN_vkGetMemoryWin32HandleNV
   )
 #endif
 
-#if defined(VK_USE_PLATFORM_WIN32_KHR)
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32
   ( HANDLE
   )
@@ -953,13 +1837,7 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader
   , FN_vkCmdDrawMeshTasksNV
   )
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing
-  ( VkAccelerationStructureCreateInfoNV
-  , VkAccelerationStructureInfoNV
-  , VkAccelerationStructureMemoryRequirementsInfoNV
-  , VkBindAccelerationStructureMemoryInfoNV
-  , VkCopyAccelerationStructureModeNV
-  , VkRayTracingPipelineCreateInfoNV
-  , FN_vkBindAccelerationStructureMemoryNV
+  ( FN_vkBindAccelerationStructureMemoryNV
   , FN_vkCmdBuildAccelerationStructureNV
   , FN_vkCmdCopyAccelerationStructureNV
   , FN_vkCmdTraceRaysNV
@@ -971,19 +1849,40 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing
   , FN_vkGetAccelerationStructureHandleNV
   , FN_vkGetAccelerationStructureMemoryRequirementsNV
   , FN_vkGetRayTracingShaderGroupHandlesNV
-  , VkAccelerationStructureNV
   )
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing
+  ( VkAccelerationStructureCreateInfoNV
+  , VkAccelerationStructureInfoNV
+  , VkAccelerationStructureMemoryRequirementsInfoNV
+  , VkBindAccelerationStructureMemoryInfoNV
+  , VkCopyAccelerationStructureModeNV
+  , VkRayTracingPipelineCreateInfoNV
+  )
+#endif
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing
+  ( VkAccelerationStructureNV
+  )
+#endif
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_scissor_exclusive
   ( FN_vkCmdSetExclusiveScissorNV
   )
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image
-  ( VkCoarseSampleOrderCustomNV
-  , VkCoarseSampleOrderTypeNV
-  , VkShadingRatePaletteNV
-  , FN_vkCmdBindShadingRateImageNV
+  ( FN_vkCmdBindShadingRateImageNV
   , FN_vkCmdSetCoarseSampleOrderNV
   , FN_vkCmdSetViewportShadingRatePaletteNV
   )
+
+#if defined(VK_USE_PLATFORM_ANDROID_KHR)
+import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image
+  ( VkCoarseSampleOrderCustomNV
+  , VkCoarseSampleOrderTypeNV
+  , VkShadingRatePaletteNV
+  )
+#endif
 
 
 data DeviceCmds = DeviceCmds

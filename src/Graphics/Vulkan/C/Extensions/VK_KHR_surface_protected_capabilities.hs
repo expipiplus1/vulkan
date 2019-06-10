@@ -31,27 +31,13 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- | VkSurfaceProtectedCapabilitiesKHR - Structure describing capability of a
--- surface to be protected
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkSurfaceProtectedCapabilitiesKHR"
 data VkSurfaceProtectedCapabilitiesKHR = VkSurfaceProtectedCapabilitiesKHR
-  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR'
+  { -- No documentation found for Nested "VkSurfaceProtectedCapabilitiesKHR" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkSurfaceProtectedCapabilitiesKHR" "pNext"
   vkPNext :: Ptr ()
-  , -- | @supportsProtected@ specifies whether a protected swapchain created from
-  -- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkPhysicalDeviceSurfaceInfo2KHR'::@surface@
-  -- for a particular windowing system /can/ be displayed on screen or not.
-  -- If @supportsProtected@ is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE', then
-  -- creation of swapchains with the
-  -- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR'
-  -- flag set /must/ be supported for @surface@.
+  , -- No documentation found for Nested "VkSurfaceProtectedCapabilitiesKHR" "supportsProtected"
   vkSupportsProtected :: VkBool32
   }
   deriving (Eq, Show)

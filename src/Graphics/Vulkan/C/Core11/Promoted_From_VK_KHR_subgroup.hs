@@ -63,63 +63,19 @@ import Graphics.Vulkan.C.Core10.PipelineLayout
   )
 
 
--- | VkPhysicalDeviceSubgroupProperties - Structure describing subgroup
--- support for an implementation
---
--- = Members
---
--- The members of the 'VkPhysicalDeviceSubgroupProperties' structure
--- describe the following implementation-dependent limits:
---
--- = Description
---
--- If the 'VkPhysicalDeviceSubgroupProperties' structure is included in the
--- @pNext@ chain of
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.PipelineLayout.VkShaderStageFlags',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'VkSubgroupFeatureFlags'
+-- No documentation found for TopLevel "VkPhysicalDeviceSubgroupProperties"
 data VkPhysicalDeviceSubgroupProperties = VkPhysicalDeviceSubgroupProperties
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES'
+  { -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "pNext"
   vkPNext :: Ptr ()
-  , -- | @subgroupSize@ is the number of invocations in each subgroup. This will
-  -- match any
-  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#interfaces-builtin-variables-sgs SubgroupSize>
-  -- decorated variable used in any shader module created on this device.
-  -- @subgroupSize@ is at least 1 if any of the physical device’s queues
-  -- support
-  -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_QUEUE_GRAPHICS_BIT' or
-  -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_QUEUE_COMPUTE_BIT'.
+  , -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "subgroupSize"
   vkSubgroupSize :: Word32
-  , -- | @supportedStages@ is a bitfield of
-  -- 'Graphics.Vulkan.C.Core10.Pipeline.VkShaderStageFlagBits' describing the
-  -- shader stages that subgroup operations are supported in.
-  -- @supportedStages@ will have the
-  -- 'Graphics.Vulkan.C.Core10.Pipeline.VK_SHADER_STAGE_COMPUTE_BIT' bit set
-  -- if any of the physical device’s queues support
-  -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_QUEUE_COMPUTE_BIT'.
+  , -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "supportedStages"
   vkSupportedStages :: VkShaderStageFlags
-  , -- | @supportedOperations@ is a bitmask of 'VkSubgroupFeatureFlagBits'
-  -- specifying the sets of subgroup operations supported on this device.
-  -- @supportedOperations@ will have the 'VK_SUBGROUP_FEATURE_BASIC_BIT' bit
-  -- set if any of the physical device’s queues support
-  -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_QUEUE_GRAPHICS_BIT' or
-  -- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VK_QUEUE_COMPUTE_BIT'.
+  , -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "supportedOperations"
   vkSupportedOperations :: VkSubgroupFeatureFlags
-  , -- | @quadOperationsInAllStages@ is a boolean that specifies whether
-  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-subgroup-quad quad subgroup operations>
-  -- are available in all stages, or are restricted to fragment and compute
-  -- stages.
+  , -- No documentation found for Nested "VkPhysicalDeviceSubgroupProperties" "quadOperationsInAllStages"
   vkQuadOperationsInAllStages :: VkBool32
   }
   deriving (Eq, Show)
@@ -150,12 +106,7 @@ instance Zero VkPhysicalDeviceSubgroupProperties where
 
 -- ** VkSubgroupFeatureFlagBits
 
--- | VkSubgroupFeatureFlagBits - Enum describing what subgroup operations are
--- supported
---
--- = See Also
---
--- 'VkSubgroupFeatureFlags'
+-- No documentation found for TopLevel "VkSubgroupFeatureFlagBits"
 newtype VkSubgroupFeatureFlagBits = VkSubgroupFeatureFlagBits VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -191,60 +142,39 @@ instance Read VkSubgroupFeatureFlagBits where
                         )
                     )
 
--- | 'VK_SUBGROUP_FEATURE_BASIC_BIT' specifies the device will accept SPIR-V
--- shader modules that contain the @GroupNonUniform@ capability.
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_BASIC_BIT"
 pattern VK_SUBGROUP_FEATURE_BASIC_BIT :: VkSubgroupFeatureFlagBits
 pattern VK_SUBGROUP_FEATURE_BASIC_BIT = VkSubgroupFeatureFlagBits 0x00000001
 
--- | 'VK_SUBGROUP_FEATURE_VOTE_BIT' specifies the device will accept SPIR-V
--- shader modules that contain the @GroupNonUniformVote@ capability.
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_VOTE_BIT"
 pattern VK_SUBGROUP_FEATURE_VOTE_BIT :: VkSubgroupFeatureFlagBits
 pattern VK_SUBGROUP_FEATURE_VOTE_BIT = VkSubgroupFeatureFlagBits 0x00000002
 
--- | 'VK_SUBGROUP_FEATURE_ARITHMETIC_BIT' specifies the device will accept
--- SPIR-V shader modules that contain the @GroupNonUniformArithmetic@
--- capability.
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_ARITHMETIC_BIT"
 pattern VK_SUBGROUP_FEATURE_ARITHMETIC_BIT :: VkSubgroupFeatureFlagBits
 pattern VK_SUBGROUP_FEATURE_ARITHMETIC_BIT = VkSubgroupFeatureFlagBits 0x00000004
 
--- | 'VK_SUBGROUP_FEATURE_BALLOT_BIT' specifies the device will accept SPIR-V
--- shader modules that contain the @GroupNonUniformBallot@ capability.
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_BALLOT_BIT"
 pattern VK_SUBGROUP_FEATURE_BALLOT_BIT :: VkSubgroupFeatureFlagBits
 pattern VK_SUBGROUP_FEATURE_BALLOT_BIT = VkSubgroupFeatureFlagBits 0x00000008
 
--- | 'VK_SUBGROUP_FEATURE_SHUFFLE_BIT' specifies the device will accept
--- SPIR-V shader modules that contain the @GroupNonUniformShuffle@
--- capability.
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_SHUFFLE_BIT"
 pattern VK_SUBGROUP_FEATURE_SHUFFLE_BIT :: VkSubgroupFeatureFlagBits
 pattern VK_SUBGROUP_FEATURE_SHUFFLE_BIT = VkSubgroupFeatureFlagBits 0x00000010
 
--- | 'VK_SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT' specifies the device will
--- accept SPIR-V shader modules that contain the
--- @GroupNonUniformShuffleRelative@ capability.
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT"
 pattern VK_SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT :: VkSubgroupFeatureFlagBits
 pattern VK_SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT = VkSubgroupFeatureFlagBits 0x00000020
 
--- | 'VK_SUBGROUP_FEATURE_CLUSTERED_BIT' specifies the device will accept
--- SPIR-V shader modules that contain the @GroupNonUniformClustered@
--- capability.
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_CLUSTERED_BIT"
 pattern VK_SUBGROUP_FEATURE_CLUSTERED_BIT :: VkSubgroupFeatureFlagBits
 pattern VK_SUBGROUP_FEATURE_CLUSTERED_BIT = VkSubgroupFeatureFlagBits 0x00000040
 
--- | 'VK_SUBGROUP_FEATURE_QUAD_BIT' specifies the device will accept SPIR-V
--- shader modules that contain the @GroupNonUniformQuad@ capability.
+-- No documentation found for Nested "VkSubgroupFeatureFlagBits" "VK_SUBGROUP_FEATURE_QUAD_BIT"
 pattern VK_SUBGROUP_FEATURE_QUAD_BIT :: VkSubgroupFeatureFlagBits
 pattern VK_SUBGROUP_FEATURE_QUAD_BIT = VkSubgroupFeatureFlagBits 0x00000080
 
--- | VkSubgroupFeatureFlags - Bitmask of VkSubgroupFeatureFlagBits
---
--- = Description
---
--- 'VkSubgroupFeatureFlags' is a bitmask type for setting a mask of zero or
--- more 'VkSubgroupFeatureFlagBits'.
---
--- = See Also
---
--- 'VkPhysicalDeviceSubgroupProperties', 'VkSubgroupFeatureFlagBits'
+-- No documentation found for TopLevel "VkSubgroupFeatureFlags"
 type VkSubgroupFeatureFlags = VkSubgroupFeatureFlagBits
 
 -- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES"

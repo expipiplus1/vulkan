@@ -59,16 +59,7 @@ import Graphics.Vulkan.C.Core10.Core
 
 -- ** VkPipelineCoverageToColorStateCreateFlagsNV
 
--- | VkPipelineCoverageToColorStateCreateFlagsNV - Reserved for future use
---
--- = Description
---
--- 'VkPipelineCoverageToColorStateCreateFlagsNV' is a bitmask type for
--- setting a mask, but is currently reserved for future use.
---
--- = See Also
---
--- 'VkPipelineCoverageToColorStateCreateInfoNV'
+-- No documentation found for TopLevel "VkPipelineCoverageToColorStateCreateFlagsNV"
 newtype VkPipelineCoverageToColorStateCreateFlagsNV = VkPipelineCoverageToColorStateCreateFlagsNV VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -88,79 +79,17 @@ instance Read VkPipelineCoverageToColorStateCreateFlagsNV where
 
 
 
--- | VkPipelineCoverageToColorStateCreateInfoNV - Structure specifying
--- whether fragment coverage replaces a color
---
--- = Description
---
--- If @coverageToColorEnable@ is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE',
--- the fragment coverage information is treated as a bitmask with one bit
--- for each sample (as in the
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fragops-samplemask Sample Mask>
--- section), and this bitmask replaces the first component of the color
--- value corresponding to the fragment shader output location with
--- @Location@ equal to @coverageToColorLocation@ and @Index@ equal to zero.
--- If the color attachment format has fewer bits than the sample coverage,
--- the low bits of the sample coverage bitmask are taken without any
--- clamping. If the color attachment format has more bits than the sample
--- coverage, the high bits of the sample coverage bitmask are filled with
--- zeros.
---
--- If
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#primsrast-sampleshading Sample Shading>
--- is in use, the coverage bitmask only has bits set for samples that
--- correspond to the fragment shader invocation that shades those samples.
---
--- This pipeline stage occurs after sample counting and before blending,
--- and is always performed after fragment shading regardless of the setting
--- of @EarlyFragmentTests@.
---
--- If @coverageToColorEnable@ is 'Graphics.Vulkan.C.Core10.Core.VK_FALSE',
--- these operations are skipped. If this structure is not present, it is as
--- if @coverageToColorEnable@ is 'Graphics.Vulkan.C.Core10.Core.VK_FALSE'.
---
--- == Valid Usage
---
--- -   If @coverageToColorEnable@ is
---     'Graphics.Vulkan.C.Core10.Core.VK_TRUE', then the render pass
---     subpass indicated by
---     'Graphics.Vulkan.C.Core10.Pipeline.VkGraphicsPipelineCreateInfo'::@renderPass@
---     and
---     'Graphics.Vulkan.C.Core10.Pipeline.VkGraphicsPipelineCreateInfo'::@subpass@
---     /must/ have a color attachment at the location selected by
---     @coverageToColorLocation@, with a
---     'Graphics.Vulkan.C.Core10.Core.VkFormat' of
---     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8_UINT',
---     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8_SINT',
---     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16_UINT',
---     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16_SINT',
---     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R32_UINT', or
---     'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R32_SINT'
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     'VK_STRUCTURE_TYPE_PIPELINE_COVERAGE_TO_COLOR_STATE_CREATE_INFO_NV'
---
--- -   @flags@ /must/ be @0@
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'VkPipelineCoverageToColorStateCreateFlagsNV',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkPipelineCoverageToColorStateCreateInfoNV"
 data VkPipelineCoverageToColorStateCreateInfoNV = VkPipelineCoverageToColorStateCreateInfoNV
-  { -- | @sType@ is the type of this structure
+  { -- No documentation found for Nested "VkPipelineCoverageToColorStateCreateInfoNV" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure
+  , -- No documentation found for Nested "VkPipelineCoverageToColorStateCreateInfoNV" "pNext"
   vkPNext :: Ptr ()
-  , -- | @flags@ is reserved for future use.
+  , -- No documentation found for Nested "VkPipelineCoverageToColorStateCreateInfoNV" "flags"
   vkFlags :: VkPipelineCoverageToColorStateCreateFlagsNV
-  , -- | @coverageToColorEnable@ controls whether the fragment coverage value
-  -- replaces a fragment color output.
+  , -- No documentation found for Nested "VkPipelineCoverageToColorStateCreateInfoNV" "coverageToColorEnable"
   vkCoverageToColorEnable :: VkBool32
-  , -- | @coverageToColorLocation@ controls which fragment shader color output
-  -- value is replaced.
+  , -- No documentation found for Nested "VkPipelineCoverageToColorStateCreateInfoNV" "coverageToColorLocation"
   vkCoverageToColorLocation :: Word32
   }
   deriving (Eq, Show)

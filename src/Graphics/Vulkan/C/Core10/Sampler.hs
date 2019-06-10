@@ -99,16 +99,7 @@ import Graphics.Vulkan.NamedType
 
 -- ** VkBorderColor
 
--- | VkBorderColor - Specify border color used for texture lookups
---
--- = Description
---
--- These colors are described in detail in
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures-texel-replacement Texel Replacement>.
---
--- = See Also
---
--- 'VkSamplerCreateInfo'
+-- No documentation found for TopLevel "VkBorderColor"
 newtype VkBorderColor = VkBorderColor Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -136,50 +127,33 @@ instance Read VkBorderColor where
                         )
                     )
 
--- | 'VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK' specifies a transparent,
--- floating-point format, black color.
+-- No documentation found for Nested "VkBorderColor" "VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK"
 pattern VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK :: VkBorderColor
 pattern VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK = VkBorderColor 0
 
--- | 'VK_BORDER_COLOR_INT_TRANSPARENT_BLACK' specifies a transparent, integer
--- format, black color.
+-- No documentation found for Nested "VkBorderColor" "VK_BORDER_COLOR_INT_TRANSPARENT_BLACK"
 pattern VK_BORDER_COLOR_INT_TRANSPARENT_BLACK :: VkBorderColor
 pattern VK_BORDER_COLOR_INT_TRANSPARENT_BLACK = VkBorderColor 1
 
--- | 'VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK' specifies an opaque, floating-point
--- format, black color.
+-- No documentation found for Nested "VkBorderColor" "VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK"
 pattern VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK :: VkBorderColor
 pattern VK_BORDER_COLOR_FLOAT_OPAQUE_BLACK = VkBorderColor 2
 
--- | 'VK_BORDER_COLOR_INT_OPAQUE_BLACK' specifies an opaque, integer format,
--- black color.
+-- No documentation found for Nested "VkBorderColor" "VK_BORDER_COLOR_INT_OPAQUE_BLACK"
 pattern VK_BORDER_COLOR_INT_OPAQUE_BLACK :: VkBorderColor
 pattern VK_BORDER_COLOR_INT_OPAQUE_BLACK = VkBorderColor 3
 
--- | 'VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE' specifies an opaque, floating-point
--- format, white color.
+-- No documentation found for Nested "VkBorderColor" "VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE"
 pattern VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE :: VkBorderColor
 pattern VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE = VkBorderColor 4
 
--- | 'VK_BORDER_COLOR_INT_OPAQUE_WHITE' specifies an opaque, integer format,
--- white color.
+-- No documentation found for Nested "VkBorderColor" "VK_BORDER_COLOR_INT_OPAQUE_WHITE"
 pattern VK_BORDER_COLOR_INT_OPAQUE_WHITE :: VkBorderColor
 pattern VK_BORDER_COLOR_INT_OPAQUE_WHITE = VkBorderColor 5
 
 -- ** VkFilter
 
--- | VkFilter - Specify filters used for texture lookups
---
--- = Description
---
--- These filters are described in detail in
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures-texel-filtering Texel Filtering>.
---
--- = See Also
---
--- 'VkSamplerCreateInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBlitImage'
+-- No documentation found for TopLevel "VkFilter"
 newtype VkFilter = VkFilter Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -203,34 +177,22 @@ instance Read VkFilter where
                         )
                     )
 
--- | 'VK_FILTER_NEAREST' specifies nearest filtering.
+-- No documentation found for Nested "VkFilter" "VK_FILTER_NEAREST"
 pattern VK_FILTER_NEAREST :: VkFilter
 pattern VK_FILTER_NEAREST = VkFilter 0
 
--- | 'VK_FILTER_LINEAR' specifies linear filtering.
+-- No documentation found for Nested "VkFilter" "VK_FILTER_LINEAR"
 pattern VK_FILTER_LINEAR :: VkFilter
 pattern VK_FILTER_LINEAR = VkFilter 1
 
 -- | Dummy data to tag the 'Ptr' with
 data VkSampler_T
--- | VkSampler - Opaque handle to a sampler object
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorImageInfo',
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutBinding',
--- 'Graphics.Vulkan.C.Extensions.VK_NVX_image_view_handle.VkImageViewHandleInfoNVX',
--- 'vkCreateSampler', 'vkDestroySampler'
+-- No documentation found for TopLevel "VkSampler"
 type VkSampler = Ptr VkSampler_T
 
 -- ** VkSamplerAddressMode
 
--- | VkSamplerAddressMode - Specify behavior of sampling with texture
--- coordinates outside an image
---
--- = See Also
---
--- 'VkSamplerCreateInfo'
+-- No documentation found for TopLevel "VkSamplerAddressMode"
 newtype VkSamplerAddressMode = VkSamplerAddressMode Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -258,34 +220,25 @@ instance Read VkSamplerAddressMode where
                         )
                     )
 
--- | 'VK_SAMPLER_ADDRESS_MODE_REPEAT' specifies that the repeat wrap mode
--- will be used.
+-- No documentation found for Nested "VkSamplerAddressMode" "VK_SAMPLER_ADDRESS_MODE_REPEAT"
 pattern VK_SAMPLER_ADDRESS_MODE_REPEAT :: VkSamplerAddressMode
 pattern VK_SAMPLER_ADDRESS_MODE_REPEAT = VkSamplerAddressMode 0
 
--- | 'VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT' specifies that the mirrored
--- repeat wrap mode will be used.
+-- No documentation found for Nested "VkSamplerAddressMode" "VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT"
 pattern VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT :: VkSamplerAddressMode
 pattern VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT = VkSamplerAddressMode 1
 
--- | 'VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE' specifies that the clamp to edge
--- wrap mode will be used.
+-- No documentation found for Nested "VkSamplerAddressMode" "VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE"
 pattern VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE :: VkSamplerAddressMode
 pattern VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE = VkSamplerAddressMode 2
 
--- | 'VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER' specifies that the clamp to
--- border wrap mode will be used.
+-- No documentation found for Nested "VkSamplerAddressMode" "VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER"
 pattern VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER :: VkSamplerAddressMode
 pattern VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER = VkSamplerAddressMode 3
 
 -- ** VkSamplerCreateFlagBits
 
--- | VkSamplerCreateFlagBits - Bitmask specifying additional parameters of
--- sampler
---
--- = See Also
---
--- 'VkSamplerCreateFlags'
+-- No documentation found for TopLevel "VkSamplerCreateFlagBits"
 newtype VkSamplerCreateFlagBits = VkSamplerCreateFlagBits VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -309,245 +262,46 @@ instance Read VkSamplerCreateFlagBits where
 
 
 
--- | VkSamplerCreateFlags - Reserved for future use
---
--- = Description
---
--- 'VkSamplerCreateFlags' is a bitmask type for setting a mask of zero or
--- more 'VkSamplerCreateFlagBits'.
---
--- = See Also
---
--- 'VkSamplerCreateFlagBits', 'VkSamplerCreateInfo'
+-- No documentation found for TopLevel "VkSamplerCreateFlags"
 type VkSamplerCreateFlags = VkSamplerCreateFlagBits
 
--- | VkSamplerCreateInfo - Structure specifying parameters of a newly created
--- sampler
---
--- = Description
---
--- __Note__
---
--- @magFilter@ values of 'VK_FILTER_NEAREST' and 'VK_FILTER_LINEAR'
--- directly correspond to @GL_NEAREST@ and @GL_LINEAR@ magnification
--- filters. @minFilter@ and @mipmapMode@ combine to correspond to the
--- similarly named OpenGL minification filter of
--- @GL_minFilter_MIPMAP_mipmapMode@ (e.g. @minFilter@ of 'VK_FILTER_LINEAR'
--- and @mipmapMode@ of 'VK_SAMPLER_MIPMAP_MODE_NEAREST' correspond to
--- @GL_LINEAR_MIPMAP_NEAREST@).
---
--- There are no Vulkan filter modes that directly correspond to OpenGL
--- minification filters of @GL_LINEAR@ or @GL_NEAREST@, but they /can/ be
--- emulated using 'VK_SAMPLER_MIPMAP_MODE_NEAREST', @minLod@ = 0, and
--- @maxLod@ = 0.25, and using @minFilter@ = 'VK_FILTER_LINEAR' or
--- @minFilter@ = 'VK_FILTER_NEAREST', respectively.
---
--- Note that using a @maxLod@ of zero would cause
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures-texel-filtering magnification>
--- to always be performed, and the @magFilter@ to always be used. This is
--- valid, just not an exact match for OpenGL behavior. Clamping the maximum
--- LOD to 0.25 allows the λ value to be non-zero and minification to be
--- performed, while still always rounding down to the base level. If the
--- @minFilter@ and @magFilter@ are equal, then using a @maxLod@ of zero
--- also works.
---
--- The maximum number of sampler objects which /can/ be simultaneously
--- created on a device is implementation-dependent and specified by the
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#limits-maxSamplerAllocationCount maxSamplerAllocationCount>
--- member of the
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'
--- structure. If @maxSamplerAllocationCount@ is exceeded, 'vkCreateSampler'
--- will return 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_TOO_MANY_OBJECTS'.
---
--- Since 'VkSampler' is a non-dispatchable handle type, implementations
--- /may/ return the same handle for sampler state vectors that are
--- identical. In such cases, all such objects would only count once against
--- the @maxSamplerAllocationCount@ limit.
---
--- == Valid Usage
---
--- -   The absolute value of @mipLodBias@ /must/ be less than or equal to
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxSamplerLodBias@
---
--- -   @maxLod@ /must/ be greater than or equal to @minLod@
---
--- -   If the
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#features-samplerAnisotropy anisotropic sampling>
---     feature is not enabled, @anisotropyEnable@ /must/ be
---     'Graphics.Vulkan.C.Core10.Core.VK_FALSE'
---
--- -   If @anisotropyEnable@ is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE',
---     @maxAnisotropy@ /must/ be between @1.0@ and
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@maxSamplerAnisotropy@,
---     inclusive
---
--- -   If @unnormalizedCoordinates@ is
---     'Graphics.Vulkan.C.Core10.Core.VK_TRUE', @minFilter@ and @magFilter@
---     /must/ be equal
---
--- -   If @unnormalizedCoordinates@ is
---     'Graphics.Vulkan.C.Core10.Core.VK_TRUE', @mipmapMode@ /must/ be
---     'VK_SAMPLER_MIPMAP_MODE_NEAREST'
---
--- -   If @unnormalizedCoordinates@ is
---     'Graphics.Vulkan.C.Core10.Core.VK_TRUE', @minLod@ and @maxLod@
---     /must/ be zero
---
--- -   If @unnormalizedCoordinates@ is
---     'Graphics.Vulkan.C.Core10.Core.VK_TRUE', @addressModeU@ and
---     @addressModeV@ /must/ each be either
---     'VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE' or
---     'VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER'
---
--- -   If @unnormalizedCoordinates@ is
---     'Graphics.Vulkan.C.Core10.Core.VK_TRUE', @anisotropyEnable@ /must/
---     be 'Graphics.Vulkan.C.Core10.Core.VK_FALSE'
---
--- -   If @unnormalizedCoordinates@ is
---     'Graphics.Vulkan.C.Core10.Core.VK_TRUE', @compareEnable@ /must/ be
---     'Graphics.Vulkan.C.Core10.Core.VK_FALSE'
---
--- -   If any of @addressModeU@, @addressModeV@ or @addressModeW@ are
---     'VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER', @borderColor@ /must/ be a
---     valid 'VkBorderColor' value
---
--- -   If the
---     @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.1-extensions\/html\/vkspec.html#VK_KHR_sampler_mirror_clamp_to_edge@
---     extension is not enabled, @addressModeU@, @addressModeV@ and
---     @addressModeW@ /must/ not be
---     'Graphics.Vulkan.C.Extensions.VK_KHR_sampler_mirror_clamp_to_edge.VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE'
---
--- -   If @compareEnable@ is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE',
---     @compareOp@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Pipeline.VkCompareOp' value
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO'
---
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
---     'Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax.VkSamplerReductionModeCreateInfoEXT'
---     or
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionInfo'
---
--- -   Each @sType@ member in the @pNext@ chain /must/ be unique
---
--- -   @flags@ /must/ be a valid combination of 'VkSamplerCreateFlagBits'
---     values
---
--- -   @magFilter@ /must/ be a valid 'VkFilter' value
---
--- -   @minFilter@ /must/ be a valid 'VkFilter' value
---
--- -   @mipmapMode@ /must/ be a valid 'VkSamplerMipmapMode' value
---
--- -   @addressModeU@ /must/ be a valid 'VkSamplerAddressMode' value
---
--- -   @addressModeV@ /must/ be a valid 'VkSamplerAddressMode' value
---
--- -   @addressModeW@ /must/ be a valid 'VkSamplerAddressMode' value
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32', 'VkBorderColor',
--- 'Graphics.Vulkan.C.Core10.Pipeline.VkCompareOp', 'VkFilter',
--- 'VkSamplerAddressMode', 'VkSamplerCreateFlags', 'VkSamplerMipmapMode',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType', 'vkCreateSampler'
+-- No documentation found for TopLevel "VkSamplerCreateInfo"
 data VkSamplerCreateInfo = VkSamplerCreateInfo
-  { -- | @sType@ is the type of this structure.
+  { -- No documentation found for Nested "VkSamplerCreateInfo" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "pNext"
   vkPNext :: Ptr ()
-  , -- | @flags@ is a bitmask of 'VkSamplerCreateFlagBits' describing additional
-  -- parameters of the sampler.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "flags"
   vkFlags :: VkSamplerCreateFlags
-  , -- | @magFilter@ is a 'VkFilter' value specifying the magnification filter to
-  -- apply to lookups.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "magFilter"
   vkMagFilter :: VkFilter
-  , -- | @minFilter@ is a 'VkFilter' value specifying the minification filter to
-  -- apply to lookups.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "minFilter"
   vkMinFilter :: VkFilter
-  , -- | @mipmapMode@ is a 'VkSamplerMipmapMode' value specifying the mipmap
-  -- filter to apply to lookups.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "mipmapMode"
   vkMipmapMode :: VkSamplerMipmapMode
-  , -- | @addressModeU@ is a 'VkSamplerAddressMode' value specifying the
-  -- addressing mode for outside [0..1] range for U coordinate.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "addressModeU"
   vkAddressModeU :: VkSamplerAddressMode
-  , -- | @addressModeV@ is a 'VkSamplerAddressMode' value specifying the
-  -- addressing mode for outside [0..1] range for V coordinate.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "addressModeV"
   vkAddressModeV :: VkSamplerAddressMode
-  , -- | @addressModeW@ is a 'VkSamplerAddressMode' value specifying the
-  -- addressing mode for outside [0..1] range for W coordinate.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "addressModeW"
   vkAddressModeW :: VkSamplerAddressMode
-  , -- | @mipLodBias@ is the bias to be added to mipmap LOD (level-of-detail)
-  -- calculation and bias provided by image sampling functions in SPIR-V, as
-  -- described in the
-  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures-level-of-detail-operation Level-of-Detail Operation>
-  -- section.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "mipLodBias"
   vkMipLodBias :: CFloat
-  , -- | @anisotropyEnable@ is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' to enable
-  -- anisotropic filtering, as described in the
-  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures-texel-anisotropic-filtering Texel Anisotropic Filtering>
-  -- section, or 'Graphics.Vulkan.C.Core10.Core.VK_FALSE' otherwise.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "anisotropyEnable"
   vkAnisotropyEnable :: VkBool32
-  , -- | @maxAnisotropy@ is the anisotropy value clamp used by the sampler when
-  -- @anisotropyEnable@ is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE'. If
-  -- @anisotropyEnable@ is 'Graphics.Vulkan.C.Core10.Core.VK_FALSE',
-  -- @maxAnisotropy@ is ignored.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "maxAnisotropy"
   vkMaxAnisotropy :: CFloat
-  , -- | @compareEnable@ is 'Graphics.Vulkan.C.Core10.Core.VK_TRUE' to enable
-  -- comparison against a reference value during lookups, or
-  -- 'Graphics.Vulkan.C.Core10.Core.VK_FALSE' otherwise.
-  --
-  -- -   Note: Some implementations will default to shader state if this
-  --     member does not match.
-  --
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "compareEnable"
   vkCompareEnable :: VkBool32
-  , -- | @compareOp@ is a 'Graphics.Vulkan.C.Core10.Pipeline.VkCompareOp' value
-  -- specifying the comparison function to apply to fetched data before
-  -- filtering as described in the
-  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures-depth-compare-operation Depth Compare Operation>
-  -- section.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "compareOp"
   vkCompareOp :: VkCompareOp
-  , -- | @minLod@ and @maxLod@ are the values used to clamp the computed LOD
-  -- value, as described in the
-  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures-level-of-detail-operation Level-of-Detail Operation>
-  -- section.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "minLod"
   vkMinLod :: CFloat
   , -- No documentation found for Nested "VkSamplerCreateInfo" "maxLod"
   vkMaxLod :: CFloat
-  , -- | @borderColor@ is a 'VkBorderColor' value specifying the predefined
-  -- border color to use.
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "borderColor"
   vkBorderColor :: VkBorderColor
-  , -- | @unnormalizedCoordinates@ controls whether to use unnormalized or
-  -- normalized texel coordinates to address texels of the image. When set to
-  -- 'Graphics.Vulkan.C.Core10.Core.VK_TRUE', the range of the image
-  -- coordinates used to lookup the texel is in the range of zero to the
-  -- image dimensions for x, y and z. When set to
-  -- 'Graphics.Vulkan.C.Core10.Core.VK_FALSE' the range of image coordinates
-  -- is zero to one.
-  --
-  -- When @unnormalizedCoordinates@ is
-  -- 'Graphics.Vulkan.C.Core10.Core.VK_TRUE', images the sampler is used with
-  -- in the shader have the following requirements:
-  --
-  -- -   The @viewType@ /must/ be either
-  --     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_1D' or
-  --     'Graphics.Vulkan.C.Core10.ImageView.VK_IMAGE_VIEW_TYPE_2D'.
-  --
-  -- -   The image view /must/ have a single layer and a single mip level.
-  --
-  -- When @unnormalizedCoordinates@ is
-  -- 'Graphics.Vulkan.C.Core10.Core.VK_TRUE', image built-in functions in the
-  -- shader that use the sampler have the following requirements:
-  --
-  -- -   The functions /must/ not use projection.
-  --
-  -- -   The functions /must/ not use offsets.
-  --
+  , -- No documentation found for Nested "VkSamplerCreateInfo" "unnormalizedCoordinates"
   vkUnnormalizedCoordinates :: VkBool32
   }
   deriving (Eq, Show)
@@ -614,16 +368,7 @@ instance Zero VkSamplerCreateInfo where
 
 -- ** VkSamplerMipmapMode
 
--- | VkSamplerMipmapMode - Specify mipmap mode used for texture lookups
---
--- = Description
---
--- These modes are described in detail in
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#textures-texel-filtering Texel Filtering>.
---
--- = See Also
---
--- 'VkSamplerCreateInfo'
+-- No documentation found for TopLevel "VkSamplerMipmapMode"
 newtype VkSamplerMipmapMode = VkSamplerMipmapMode Int32
   deriving (Eq, Ord, Storable, Zero)
 
@@ -643,63 +388,15 @@ instance Read VkSamplerMipmapMode where
                         )
                     )
 
--- | 'VK_SAMPLER_MIPMAP_MODE_NEAREST' specifies nearest filtering.
+-- No documentation found for Nested "VkSamplerMipmapMode" "VK_SAMPLER_MIPMAP_MODE_NEAREST"
 pattern VK_SAMPLER_MIPMAP_MODE_NEAREST :: VkSamplerMipmapMode
 pattern VK_SAMPLER_MIPMAP_MODE_NEAREST = VkSamplerMipmapMode 0
 
--- | 'VK_SAMPLER_MIPMAP_MODE_LINEAR' specifies linear filtering.
+-- No documentation found for Nested "VkSamplerMipmapMode" "VK_SAMPLER_MIPMAP_MODE_LINEAR"
 pattern VK_SAMPLER_MIPMAP_MODE_LINEAR :: VkSamplerMipmapMode
 pattern VK_SAMPLER_MIPMAP_MODE_LINEAR = VkSamplerMipmapMode 1
 
--- | vkCreateSampler - Create a new sampler object
---
--- = Parameters
---
--- -   @device@ is the logical device that creates the sampler.
---
--- -   @pCreateInfo@ is a pointer to an instance of the
---     'VkSamplerCreateInfo' structure specifying the state of the sampler
---     object.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- -   @pSampler@ points to a 'VkSampler' handle in which the resulting
---     sampler object is returned.
---
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
---
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'VkSamplerCreateInfo' structure
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
---     structure
---
--- -   @pSampler@ /must/ be a valid pointer to a 'VkSampler' handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_TOO_MANY_OBJECTS'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice', 'VkSampler',
--- 'VkSamplerCreateInfo'
+-- No documentation found for TopLevel "vkCreateSampler"
 #if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -720,58 +417,7 @@ foreign import ccall
 type FN_vkCreateSampler = ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkSamplerCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSampler" ::: Ptr VkSampler) -> IO VkResult
 type PFN_vkCreateSampler = FunPtr FN_vkCreateSampler
 
--- | vkDestroySampler - Destroy a sampler object
---
--- = Parameters
---
--- -   @device@ is the logical device that destroys the sampler.
---
--- -   @sampler@ is the sampler to destroy.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>
---     chapter.
---
--- == Valid Usage
---
--- -   All submitted commands that refer to @sampler@ /must/ have completed
---     execution
---
--- -   If
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
---     were provided when @sampler@ was created, a compatible set of
---     callbacks /must/ be provided here
---
--- -   If no
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
---     were provided when @sampler@ was created, @pAllocator@ /must/ be
---     @NULL@
---
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice' handle
---
--- -   If @sampler@ is not
---     'Graphics.Vulkan.C.Core10.Constants.VK_NULL_HANDLE', @sampler@
---     /must/ be a valid 'VkSampler' handle
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
---     structure
---
--- -   If @sampler@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
---
--- == Host Synchronization
---
--- -   Host access to @sampler@ /must/ be externally synchronized
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice', 'VkSampler'
+-- No documentation found for TopLevel "vkDestroySampler"
 #if defined(EXPOSE_CORE10_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)

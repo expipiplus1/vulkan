@@ -263,47 +263,7 @@ vkCmdSetDeviceMaskKHR = vkCmdSetDeviceMask
 vkGetDeviceGroupPeerMemoryFeaturesKHR :: DeviceCmds -> ("device" ::: VkDevice) -> ("heapIndex" ::: Word32) -> ("localDeviceIndex" ::: Word32) -> ("remoteDeviceIndex" ::: Word32) -> ("pPeerMemoryFeatures" ::: Ptr VkPeerMemoryFeatureFlags) -> IO ()
 vkGetDeviceGroupPeerMemoryFeaturesKHR = vkGetDeviceGroupPeerMemoryFeatures
 
--- | vkGetDeviceGroupSurfacePresentModes2EXT - Query device group present
--- capabilities for a surface
---
--- = Parameters
---
--- -   @device@ is the logical device.
---
--- -   @pSurfaceInfo@ points to an instance of the
---     VkPhysicalDeviceSurfaceInfo2KHR structure, describing the surface
---     and other fixed parameters that would be consumed by
---     vkCreateSwapchainKHR.
---
--- -   @pModes@ is a pointer to a value of type
---     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkDeviceGroupPresentModeFlagsKHR'
---     that is filled with the supported device group present modes for the
---     surface.
---
--- = Description
---
--- 'vkGetDeviceGroupSurfacePresentModes2EXT' behaves similarly to
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkGetDeviceGroupSurfacePresentModesKHR',
--- with the ability to specify extended inputs via chained input
--- structures.
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_SURFACE_LOST_KHR'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkDeviceGroupPresentModeFlagsKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkPhysicalDeviceSurfaceInfo2KHR'
+-- No documentation found for TopLevel "vkGetDeviceGroupSurfacePresentModes2EXT"
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)

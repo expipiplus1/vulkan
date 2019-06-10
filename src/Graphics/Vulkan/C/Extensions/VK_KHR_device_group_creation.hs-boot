@@ -14,7 +14,6 @@ module Graphics.Vulkan.C.Extensions.VK_KHR_device_group_creation
 import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation
   ( VkDeviceGroupDeviceCreateInfo
   , VkPhysicalDeviceGroupProperties
-  , VK_MAX_DEVICE_GROUP_SIZE
   )
 
 

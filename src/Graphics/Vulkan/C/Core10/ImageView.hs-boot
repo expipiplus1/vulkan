@@ -44,29 +44,12 @@ data VkImageSubresourceRange
 
 -- | Dummy data to tag the 'Ptr' with
 data VkImageView_T
--- | VkImageView - Opaque handle to an image view object
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorImageInfo',
--- 'Graphics.Vulkan.C.Core10.Pass.VkFramebufferCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_NVX_image_view_handle.VkImageViewHandleInfoNVX',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image.vkCmdBindShadingRateImageNV',
--- 'vkCreateImageView', 'vkDestroyImageView'
+-- No documentation found for TopLevel "VkImageView"
 type VkImageView = Ptr VkImageView_T
 
 data VkImageViewCreateFlagBits
 
--- | VkImageViewCreateFlags - Reserved for future use
---
--- = Description
---
--- 'VkImageViewCreateFlags' is a bitmask type for setting a mask of zero or
--- more 'VkImageViewCreateFlagBits'.
---
--- = See Also
---
--- 'VkImageViewCreateFlagBits', 'VkImageViewCreateInfo'
+-- No documentation found for TopLevel "VkImageViewCreateFlags"
 type VkImageViewCreateFlags = VkImageViewCreateFlagBits
 
 data VkImageViewCreateInfo

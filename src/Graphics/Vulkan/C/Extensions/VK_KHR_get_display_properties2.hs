@@ -74,24 +74,13 @@ import Graphics.Vulkan.NamedType
   )
 
 
--- | VkDisplayModeProperties2KHR - Structure describing an available display
--- mode
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayModePropertiesKHR',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetDisplayModeProperties2KHR'
+-- No documentation found for TopLevel "VkDisplayModeProperties2KHR"
 data VkDisplayModeProperties2KHR = VkDisplayModeProperties2KHR
-  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR'
+  { -- No documentation found for Nested "VkDisplayModeProperties2KHR" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- No documentation found for Nested "VkDisplayModeProperties2KHR" "pNext"
   vkPNext :: Ptr ()
-  , -- | @displayModeProperties@ is an instance of the
-  -- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayModePropertiesKHR'
-  -- structure.
+  , -- No documentation found for Nested "VkDisplayModeProperties2KHR" "displayModeProperties"
   vkDisplayModeProperties :: VkDisplayModePropertiesKHR
   }
   deriving (Eq, Show)
@@ -111,24 +100,13 @@ instance Zero VkDisplayModeProperties2KHR where
                                      zero
                                      zero
 
--- | VkDisplayPlaneCapabilities2KHR - Structure describing the capabilities
--- of a mode and plane combination
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayPlaneCapabilitiesKHR',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetDisplayPlaneCapabilities2KHR'
+-- No documentation found for TopLevel "VkDisplayPlaneCapabilities2KHR"
 data VkDisplayPlaneCapabilities2KHR = VkDisplayPlaneCapabilities2KHR
-  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_DISPLAY_PLANE_CAPABILITIES_2_KHR'
+  { -- No documentation found for Nested "VkDisplayPlaneCapabilities2KHR" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- No documentation found for Nested "VkDisplayPlaneCapabilities2KHR" "pNext"
   vkPNext :: Ptr ()
-  , -- | @capabilities@ is an instance of the
-  -- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayPlaneCapabilitiesKHR'
-  -- structure.
+  , -- No documentation found for Nested "VkDisplayPlaneCapabilities2KHR" "capabilities"
   vkCapabilities :: VkDisplayPlaneCapabilitiesKHR
   }
   deriving (Eq, Show)
@@ -148,48 +126,13 @@ instance Zero VkDisplayPlaneCapabilities2KHR where
                                         zero
                                         zero
 
--- | VkDisplayPlaneInfo2KHR - Structure defining the intended configuration
--- of a display plane
---
--- = Description
---
--- __Note__
---
--- This parameter also implicitly specifies a display.
---
--- -   @planeIndex@ is the plane which the application intends to use with
---     the display.
---
--- The members of 'VkDisplayPlaneInfo2KHR' correspond to the arguments to
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetDisplayPlaneCapabilitiesKHR',
--- with @sType@ and @pNext@ added for extensibility.
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be 'VK_STRUCTURE_TYPE_DISPLAY_PLANE_INFO_2_KHR'
---
--- -   @pNext@ /must/ be @NULL@
---
--- -   @mode@ /must/ be a valid
---     'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayModeKHR'
---     handle
---
--- == Host Synchronization
---
--- -   Host access to @mode@ /must/ be externally synchronized
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayModeKHR',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetDisplayPlaneCapabilities2KHR'
+-- No documentation found for TopLevel "VkDisplayPlaneInfo2KHR"
 data VkDisplayPlaneInfo2KHR = VkDisplayPlaneInfo2KHR
-  { -- | @sType@ is the type of this structure.
+  { -- No documentation found for Nested "VkDisplayPlaneInfo2KHR" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkDisplayPlaneInfo2KHR" "pNext"
   vkPNext :: Ptr ()
-  , -- | @mode@ is the display mode the application intends to program when using
-  -- the specified plane.
+  , -- No documentation found for Nested "VkDisplayPlaneInfo2KHR" "mode"
   vkMode :: VkDisplayModeKHR
   , -- No documentation found for Nested "VkDisplayPlaneInfo2KHR" "planeIndex"
   vkPlaneIndex :: Word32
@@ -214,24 +157,13 @@ instance Zero VkDisplayPlaneInfo2KHR where
                                 zero
                                 zero
 
--- | VkDisplayPlaneProperties2KHR - Structure describing an available display
--- plane
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayPlanePropertiesKHR',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetPhysicalDeviceDisplayPlaneProperties2KHR'
+-- No documentation found for TopLevel "VkDisplayPlaneProperties2KHR"
 data VkDisplayPlaneProperties2KHR = VkDisplayPlaneProperties2KHR
-  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_DISPLAY_PLANE_PROPERTIES_2_KHR'
+  { -- No documentation found for Nested "VkDisplayPlaneProperties2KHR" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- No documentation found for Nested "VkDisplayPlaneProperties2KHR" "pNext"
   vkPNext :: Ptr ()
-  , -- | @displayPlaneProperties@ is an instance of the
-  -- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayPlanePropertiesKHR'
-  -- structure.
+  , -- No documentation found for Nested "VkDisplayPlaneProperties2KHR" "displayPlaneProperties"
   vkDisplayPlaneProperties :: VkDisplayPlanePropertiesKHR
   }
   deriving (Eq, Show)
@@ -251,24 +183,13 @@ instance Zero VkDisplayPlaneProperties2KHR where
                                       zero
                                       zero
 
--- | VkDisplayProperties2KHR - Structure describing an available display
--- device
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayPropertiesKHR',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkGetPhysicalDeviceDisplayProperties2KHR'
+-- No documentation found for TopLevel "VkDisplayProperties2KHR"
 data VkDisplayProperties2KHR = VkDisplayProperties2KHR
-  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_DISPLAY_PROPERTIES_2_KHR'
+  { -- No documentation found for Nested "VkDisplayProperties2KHR" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- No documentation found for Nested "VkDisplayProperties2KHR" "pNext"
   vkPNext :: Ptr ()
-  , -- | @displayProperties@ is an instance of the
-  -- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayPropertiesKHR'
-  -- structure.
+  , -- No documentation found for Nested "VkDisplayProperties2KHR" "displayProperties"
   vkDisplayProperties :: VkDisplayPropertiesKHR
   }
   deriving (Eq, Show)
@@ -288,61 +209,7 @@ instance Zero VkDisplayProperties2KHR where
                                  zero
                                  zero
 
--- | vkGetDisplayModeProperties2KHR - Query information about the available
--- display modes.
---
--- = Parameters
---
--- -   @physicalDevice@ is the physical device associated with @display@.
---
--- -   @display@ is the display to query.
---
--- -   @pPropertyCount@ is a pointer to an integer related to the number of
---     display modes available or queried, as described below.
---
--- -   @pProperties@ is either @NULL@ or a pointer to an array of
---     'VkDisplayModeProperties2KHR' structures.
---
--- = Description
---
--- 'vkGetDisplayModeProperties2KHR' behaves similarly to
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetDisplayModePropertiesKHR',
--- with the ability to return extended information via chained output
--- structures.
---
--- == Valid Usage (Implicit)
---
--- -   @physicalDevice@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
---     handle
---
--- -   @display@ /must/ be a valid
---     'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayKHR' handle
---
--- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
---
--- -   If the value referenced by @pPropertyCount@ is not @0@, and
---     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
---     to an array of @pPropertyCount@ 'VkDisplayModeProperties2KHR'
---     structures
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayKHR',
--- 'VkDisplayModeProperties2KHR',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+-- No documentation found for TopLevel "vkGetDisplayModeProperties2KHR"
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -363,42 +230,7 @@ foreign import ccall
 type FN_vkGetDisplayModeProperties2KHR = ("physicalDevice" ::: VkPhysicalDevice) -> ("display" ::: VkDisplayKHR) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayModeProperties2KHR) -> IO VkResult
 type PFN_vkGetDisplayModeProperties2KHR = FunPtr FN_vkGetDisplayModeProperties2KHR
 
--- | vkGetDisplayPlaneCapabilities2KHR - Query capabilities of a mode and
--- plane combination
---
--- = Parameters
---
--- -   @physicalDevice@ is the physical device associated with
---     @pDisplayPlaneInfo@.
---
--- -   @pDisplayPlaneInfo@ is a pointer to an instance of the
---     'VkDisplayPlaneInfo2KHR' structure describing the plane and mode.
---
--- -   @pCapabilities@ is a pointer to a 'VkDisplayPlaneCapabilities2KHR'
---     structure in which the capabilities are returned.
---
--- = Description
---
--- 'vkGetDisplayPlaneCapabilities2KHR' behaves similarly to
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetDisplayPlaneCapabilitiesKHR',
--- with the ability to specify extended inputs via chained input
--- structures, and to return extended information via chained output
--- structures.
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'VkDisplayPlaneCapabilities2KHR', 'VkDisplayPlaneInfo2KHR',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+-- No documentation found for TopLevel "vkGetDisplayPlaneCapabilities2KHR"
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -419,55 +251,7 @@ foreign import ccall
 type FN_vkGetDisplayPlaneCapabilities2KHR = ("physicalDevice" ::: VkPhysicalDevice) -> ("pDisplayPlaneInfo" ::: Ptr VkDisplayPlaneInfo2KHR) -> ("pCapabilities" ::: Ptr VkDisplayPlaneCapabilities2KHR) -> IO VkResult
 type PFN_vkGetDisplayPlaneCapabilities2KHR = FunPtr FN_vkGetDisplayPlaneCapabilities2KHR
 
--- | vkGetPhysicalDeviceDisplayPlaneProperties2KHR - Query information about
--- the available display planes.
---
--- = Parameters
---
--- -   @physicalDevice@ is a physical device.
---
--- -   @pPropertyCount@ is a pointer to an integer related to the number of
---     display planes available or queried, as described below.
---
--- -   @pProperties@ is either @NULL@ or a pointer to an array of
---     'VkDisplayPlaneProperties2KHR' structures.
---
--- = Description
---
--- 'vkGetPhysicalDeviceDisplayPlaneProperties2KHR' behaves similarly to
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetPhysicalDeviceDisplayPlanePropertiesKHR',
--- with the ability to return extended information via chained output
--- structures.
---
--- == Valid Usage (Implicit)
---
--- -   @physicalDevice@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
---     handle
---
--- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
---
--- -   If the value referenced by @pPropertyCount@ is not @0@, and
---     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
---     to an array of @pPropertyCount@ 'VkDisplayPlaneProperties2KHR'
---     structures
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'VkDisplayPlaneProperties2KHR',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceDisplayPlaneProperties2KHR"
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -488,54 +272,7 @@ foreign import ccall
 type FN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR = ("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayPlaneProperties2KHR) -> IO VkResult
 type PFN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR = FunPtr FN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR
 
--- | vkGetPhysicalDeviceDisplayProperties2KHR - Query information about the
--- available displays
---
--- = Parameters
---
--- -   @physicalDevice@ is a physical device.
---
--- -   @pPropertyCount@ is a pointer to an integer related to the number of
---     display devices available or queried, as described below.
---
--- -   @pProperties@ is either @NULL@ or a pointer to an array of
---     'VkDisplayProperties2KHR' structures.
---
--- = Description
---
--- 'vkGetPhysicalDeviceDisplayProperties2KHR' behaves similarly to
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.vkGetPhysicalDeviceDisplayPropertiesKHR',
--- with the ability to return extended information via chained output
--- structures.
---
--- == Valid Usage (Implicit)
---
--- -   @physicalDevice@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
---     handle
---
--- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
---
--- -   If the value referenced by @pPropertyCount@ is not @0@, and
---     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
---     to an array of @pPropertyCount@ 'VkDisplayProperties2KHR' structures
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'VkDisplayProperties2KHR',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceDisplayProperties2KHR"
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)

@@ -13,39 +13,16 @@ module Graphics.Vulkan.Extensions.VK_EXT_validation_cache
 
 import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache
   ( VkValidationCacheCreateFlagsEXT
-  , VkValidationCacheHeaderVersionEXT
   , VkValidationCacheEXT
+  , VkValidationCacheHeaderVersionEXT
   )
 
 
--- | VkValidationCacheCreateFlagsEXT - Reserved for future use
---
--- = Description
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkValidationCacheCreateFlagsEXT'
--- is a bitmask type for setting a mask, but is currently reserved for
--- future use.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkValidationCacheCreateInfoEXT'
+-- No documentation found for TopLevel "ValidationCacheCreateFlagsEXT"
 type ValidationCacheCreateFlagsEXT = VkValidationCacheCreateFlagsEXT
 
--- | VkValidationCacheEXT - Opaque handle to a validation cache object
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkShaderModuleValidationCacheCreateInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkCreateValidationCacheEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkDestroyValidationCacheEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkGetValidationCacheDataEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkMergeValidationCachesEXT'
+-- No documentation found for TopLevel "ValidationCacheEXT"
 type ValidationCacheEXT = VkValidationCacheEXT
 
--- | VkValidationCacheHeaderVersionEXT - Encode validation cache version
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkCreateValidationCacheEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.vkGetValidationCacheDataEXT'
+-- No documentation found for TopLevel "ValidationCacheHeaderVersionEXT"
 type ValidationCacheHeaderVersionEXT = VkValidationCacheHeaderVersionEXT

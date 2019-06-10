@@ -21,77 +21,20 @@ import {-# source #-} Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement
   )
 
 
--- | VkImageAspectFlagBits - Bitmask specifying which aspects of an image are
--- included in a view
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkBindImagePlaneMemoryInfo',
--- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkImageAspectFlags',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkImagePlaneMemoryRequirementsInfo'
+-- No documentation found for TopLevel "ImageAspectFlagBits"
 type ImageAspectFlagBits = VkImageAspectFlagBits
 
--- | VkImageAspectFlags - Bitmask of VkImageAspectFlagBits
---
--- = Description
---
--- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkImageAspectFlags'
--- is a bitmask type for setting a mask of zero or more
--- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkImageAspectFlagBits'.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkAttachmentReference2KHR',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkClearAttachment',
--- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkImageAspectFlagBits',
--- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkImageSubresource',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkImageSubresourceLayers',
--- 'Graphics.Vulkan.C.Core10.ImageView.VkImageSubresourceRange',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VkInputAttachmentAspectReference',
--- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageFormatProperties'
+-- No documentation found for TopLevel "ImageAspectFlags"
 type ImageAspectFlags = ImageAspectFlagBits
 
--- | VkSparseImageFormatFlagBits - Bitmask specifying additional information
--- about a sparse image resource
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageFormatFlags'
+-- No documentation found for TopLevel "SparseImageFormatFlagBits"
 type SparseImageFormatFlagBits = VkSparseImageFormatFlagBits
 
--- | VkSparseImageFormatFlags - Bitmask of VkSparseImageFormatFlagBits
---
--- = Description
---
--- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageFormatFlags'
--- is a bitmask type for setting a mask of zero or more
--- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageFormatFlagBits'.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageFormatFlagBits',
--- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageFormatProperties'
+-- No documentation found for TopLevel "SparseImageFormatFlags"
 type SparseImageFormatFlags = SparseImageFormatFlagBits
 
--- | VkSparseMemoryBindFlagBits - Bitmask specifying usage of a sparse memory
--- binding operation
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseMemoryBindFlags'
+-- No documentation found for TopLevel "SparseMemoryBindFlagBits"
 type SparseMemoryBindFlagBits = VkSparseMemoryBindFlagBits
 
--- | VkSparseMemoryBindFlags - Bitmask of VkSparseMemoryBindFlagBits
---
--- = Description
---
--- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseMemoryBindFlags'
--- is a bitmask type for setting a mask of zero or more
--- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseMemoryBindFlagBits'.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseImageMemoryBind',
--- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseMemoryBind',
--- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkSparseMemoryBindFlagBits'
+-- No documentation found for TopLevel "SparseMemoryBindFlags"
 type SparseMemoryBindFlags = SparseMemoryBindFlagBits

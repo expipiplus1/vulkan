@@ -14,9 +14,5 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_validation_flags
   )
 
 
--- | VkValidationCheckEXT - Specify validation checks to disable
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_flags.VkValidationFlagsEXT'
+-- No documentation found for TopLevel "ValidationCheckEXT"
 type ValidationCheckEXT = VkValidationCheckEXT

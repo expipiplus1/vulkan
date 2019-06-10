@@ -39,34 +39,14 @@ import {-# source #-} Graphics.Vulkan.C.Core10.MemoryManagement
 
 data VkBufferCreateFlagBits
 
--- | VkBufferCreateFlags - Bitmask of VkBufferCreateFlagBits
---
--- = Description
---
--- 'VkBufferCreateFlags' is a bitmask type for setting a mask of zero or
--- more 'VkBufferCreateFlagBits'.
---
--- = See Also
---
--- 'VkBufferCreateFlagBits', 'VkBufferCreateInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkPhysicalDeviceExternalBufferInfo'
+-- No documentation found for TopLevel "VkBufferCreateFlags"
 type VkBufferCreateFlags = VkBufferCreateFlagBits
 
 data VkBufferCreateInfo
 
 data VkBufferUsageFlagBits
 
--- | VkBufferUsageFlags - Bitmask of VkBufferUsageFlagBits
---
--- = Description
---
--- 'VkBufferUsageFlags' is a bitmask type for setting a mask of zero or
--- more 'VkBufferUsageFlagBits'.
---
--- = See Also
---
--- 'VkBufferCreateInfo', 'VkBufferUsageFlagBits',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkPhysicalDeviceExternalBufferInfo'
+-- No documentation found for TopLevel "VkBufferUsageFlags"
 type VkBufferUsageFlags = VkBufferUsageFlagBits
 
 data VkSharingMode

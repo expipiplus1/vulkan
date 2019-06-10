@@ -15,24 +15,8 @@ import {-# source #-} Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup
   )
 
 
--- | VkSubgroupFeatureFlagBits - Enum describing what subgroup operations are
--- supported
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VkSubgroupFeatureFlags'
+-- No documentation found for TopLevel "SubgroupFeatureFlagBits"
 type SubgroupFeatureFlagBits = VkSubgroupFeatureFlagBits
 
--- | VkSubgroupFeatureFlags - Bitmask of VkSubgroupFeatureFlagBits
---
--- = Description
---
--- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VkSubgroupFeatureFlags'
--- is a bitmask type for setting a mask of zero or more
--- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VkSubgroupFeatureFlagBits'.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VkPhysicalDeviceSubgroupProperties',
--- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VkSubgroupFeatureFlagBits'
+-- No documentation found for TopLevel "SubgroupFeatureFlags"
 type SubgroupFeatureFlags = SubgroupFeatureFlagBits

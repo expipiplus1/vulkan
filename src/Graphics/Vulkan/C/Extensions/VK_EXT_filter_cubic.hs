@@ -50,42 +50,15 @@ import Graphics.Vulkan.C.Extensions.VK_IMG_filter_cubic
   )
 
 
--- | VkFilterCubicImageViewImageFormatPropertiesEXT - Structure for querying
--- cubic filtering capabilities of an image view type
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     'VK_STRUCTURE_TYPE_FILTER_CUBIC_IMAGE_VIEW_IMAGE_FORMAT_PROPERTIES_EXT'
---
--- == Valid Usage
---
--- -   If the @pNext@ chain of the
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkImageFormatProperties2'
---     structure contains an instance of
---     'VkFilterCubicImageViewImageFormatPropertiesEXT', the @pNext@ chain
---     of the
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2'
---     structure /must/ contain an instance of
---     'VkPhysicalDeviceImageViewImageFormatInfoEXT' with an
---     @imageViewType@ that is compatible with @imageType@.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkFilterCubicImageViewImageFormatPropertiesEXT"
 data VkFilterCubicImageViewImageFormatPropertiesEXT = VkFilterCubicImageViewImageFormatPropertiesEXT
-  { -- | @sType@ is the type of this structure.
+  { -- No documentation found for Nested "VkFilterCubicImageViewImageFormatPropertiesEXT" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkFilterCubicImageViewImageFormatPropertiesEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- | @filterCubic@ tells if image format, image type and image view type
-  -- /can/ be used with cubic filtering. This field is set by the
-  -- implementation. User-specified value is ignored.
+  , -- No documentation found for Nested "VkFilterCubicImageViewImageFormatPropertiesEXT" "filterCubic"
   vkFilterCubic :: VkBool32
-  , -- | @filterCubicMinmax@ tells if image format, image type and image view
-  -- type /can/ be used with cubic filtering and minmax filtering. This field
-  -- is set by the implementation. User-specified value is ignored.
+  , -- No documentation found for Nested "VkFilterCubicImageViewImageFormatPropertiesEXT" "filterCubicMinmax"
   vkFilterCubicMinmax :: VkBool32
   }
   deriving (Eq, Show)
@@ -108,23 +81,13 @@ instance Zero VkFilterCubicImageViewImageFormatPropertiesEXT where
                                                         zero
                                                         zero
 
--- | VkPhysicalDeviceImageViewImageFormatInfoEXT - Structure for providing
--- image view type
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.ImageView.VkImageViewType',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkPhysicalDeviceImageViewImageFormatInfoEXT"
 data VkPhysicalDeviceImageViewImageFormatInfoEXT = VkPhysicalDeviceImageViewImageFormatInfoEXT
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_VIEW_IMAGE_FORMAT_INFO_EXT'
+  { -- No documentation found for Nested "VkPhysicalDeviceImageViewImageFormatInfoEXT" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkPhysicalDeviceImageViewImageFormatInfoEXT" "pNext"
   vkPNext :: Ptr ()
-  , -- | @imageViewType@ /must/ be a valid
-  -- 'Graphics.Vulkan.C.Core10.ImageView.VkImageViewType' value
+  , -- No documentation found for Nested "VkPhysicalDeviceImageViewImageFormatInfoEXT" "imageViewType"
   vkImageViewType :: VkImageViewType
   }
   deriving (Eq, Show)

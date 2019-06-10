@@ -26,8 +26,8 @@ import {-# source #-} Graphics.Vulkan.C.Core10.MemoryManagement
   ( VkBuffer
   )
 import {-# source #-} Graphics.Vulkan.C.Core10.Queue
-  ( VkPipelineStageFlagBits
-  , VkCommandBuffer
+  ( VkCommandBuffer
+  , VkPipelineStageFlagBits
   )
 
 

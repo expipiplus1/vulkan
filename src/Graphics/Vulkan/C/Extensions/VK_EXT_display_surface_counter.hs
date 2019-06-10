@@ -85,32 +85,11 @@ import Graphics.Vulkan.NamedType
   )
 
 
--- | VkSurfaceCapabilities2EXT - Structure describing capabilities of a
--- surface
---
--- = Members
---
--- All members of 'VkSurfaceCapabilities2EXT' are identical to the
--- corresponding members of
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceCapabilitiesKHR'
--- where one exists. The remaining members are:
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkCompositeAlphaFlagsKHR',
--- 'Graphics.Vulkan.C.Core10.Pipeline.VkExtent2D',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkImageUsageFlags',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'VkSurfaceCounterFlagsEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceTransformFlagBitsKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceTransformFlagsKHR',
--- 'vkGetPhysicalDeviceSurfaceCapabilities2EXT'
+-- No documentation found for TopLevel "VkSurfaceCapabilities2EXT"
 data VkSurfaceCapabilities2EXT = VkSurfaceCapabilities2EXT
-  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT'
+  { -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "pNext"
   vkPNext :: Ptr ()
   , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "minImageCount"
   vkMinImageCount :: Word32
@@ -132,9 +111,7 @@ data VkSurfaceCapabilities2EXT = VkSurfaceCapabilities2EXT
   vkSupportedCompositeAlpha :: VkCompositeAlphaFlagsKHR
   , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "supportedUsageFlags"
   vkSupportedUsageFlags :: VkImageUsageFlags
-  , -- | @supportedSurfaceCounters@ /must/ not include
-  -- 'VK_SURFACE_COUNTER_VBLANK_EXT' unless the surface queried is a
-  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#wsi-display-surfaces display surface>.
+  , -- No documentation found for Nested "VkSurfaceCapabilities2EXT" "supportedSurfaceCounters"
   vkSupportedSurfaceCounters :: VkSurfaceCounterFlagsEXT
   }
   deriving (Eq, Show)
@@ -186,12 +163,7 @@ instance Zero VkSurfaceCapabilities2EXT where
 
 -- ** VkSurfaceCounterFlagBitsEXT
 
--- | VkSurfaceCounterFlagBitsEXT - Surface-relative counter types
---
--- = See Also
---
--- 'VkSurfaceCounterFlagsEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.vkGetSwapchainCounterEXT'
+-- No documentation found for TopLevel "VkSurfaceCounterFlagBitsEXT"
 newtype VkSurfaceCounterFlagBitsEXT = VkSurfaceCounterFlagBitsEXT VkFlags
   deriving (Eq, Ord, Storable, Bits, FiniteBits, Zero)
 
@@ -209,79 +181,14 @@ instance Read VkSurfaceCounterFlagBitsEXT where
                         )
                     )
 
--- | 'VK_SURFACE_COUNTER_VBLANK_EXT' specifies a counter incrementing once
--- every time a vertical blanking period occurs on the display associated
--- with the surface.
+-- No documentation found for Nested "VkSurfaceCounterFlagBitsEXT" "VK_SURFACE_COUNTER_VBLANK_EXT"
 pattern VK_SURFACE_COUNTER_VBLANK_EXT :: VkSurfaceCounterFlagBitsEXT
 pattern VK_SURFACE_COUNTER_VBLANK_EXT = VkSurfaceCounterFlagBitsEXT 0x00000001
 
--- | VkSurfaceCounterFlagsEXT - Bitmask of VkSurfaceCounterFlagBitsEXT
---
--- = Description
---
--- 'VkSurfaceCounterFlagsEXT' is a bitmask type for setting a mask of zero
--- or more 'VkSurfaceCounterFlagBitsEXT'.
---
--- = See Also
---
--- 'VkSurfaceCapabilities2EXT', 'VkSurfaceCounterFlagBitsEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.VkSwapchainCounterCreateInfoEXT'
+-- No documentation found for TopLevel "VkSurfaceCounterFlagsEXT"
 type VkSurfaceCounterFlagsEXT = VkSurfaceCounterFlagBitsEXT
 
--- | vkGetPhysicalDeviceSurfaceCapabilities2EXT - Query surface capabilities
---
--- = Parameters
---
--- -   @physicalDevice@ is the physical device that will be associated with
---     the swapchain to be created, as described for
---     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.vkCreateSwapchainKHR'.
---
--- -   @surface@ is the surface that will be associated with the swapchain.
---
--- -   @pSurfaceCapabilities@ is a pointer to an instance of the
---     'VkSurfaceCapabilities2EXT' structure in which the capabilities are
---     returned.
---
--- = Description
---
--- 'vkGetPhysicalDeviceSurfaceCapabilities2EXT' behaves similarly to
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.vkGetPhysicalDeviceSurfaceCapabilitiesKHR',
--- with the ability to return extended information by adding extension
--- structures to the @pNext@ chain of its @pSurfaceCapabilities@ parameter.
---
--- == Valid Usage (Implicit)
---
--- -   @physicalDevice@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice'
---     handle
---
--- -   @surface@ /must/ be a valid
---     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
---
--- -   @pSurfaceCapabilities@ /must/ be a valid pointer to a
---     'VkSurfaceCapabilities2EXT' structure
---
--- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
---     allocated, or retrieved from the same
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance'
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_SURFACE_LOST_KHR'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkPhysicalDevice',
--- 'VkSurfaceCapabilities2EXT',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR'
+-- No documentation found for TopLevel "vkGetPhysicalDeviceSurfaceCapabilities2EXT"
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)

@@ -1569,1515 +1569,934 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- | VkFormat - Available image formats
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkAndroidHardwareBufferFormatPropertiesANDROID',
--- 'Graphics.Vulkan.C.Core10.Pass.VkAttachmentDescription',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkAttachmentDescription2KHR',
--- 'Graphics.Vulkan.C.Core10.BufferView.VkBufferViewCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkGeometryTrianglesNV',
--- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_image_format_list.VkImageFormatListCreateInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_astc_decode_mode.VkImageViewASTCDecodeModeEXT',
--- 'Graphics.Vulkan.C.Core10.ImageView.VkImageViewCreateInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceSparseImageFormatInfo2',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceFormatKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR',
--- 'Graphics.Vulkan.C.Core10.Pipeline.VkVertexInputAttributeDescription',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.vkGetPhysicalDeviceExternalImageFormatPropertiesNV',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceFormatProperties',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceFormatProperties2',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceFormatProperties2KHR',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.vkGetPhysicalDeviceImageFormatProperties',
--- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.vkGetPhysicalDeviceSparseImageFormatProperties'
+-- No documentation found for TopLevel "Format"
 type Format = VkFormat
 
 
 {-# complete FORMAT_UNDEFINED, FORMAT_R4G4_UNORM_PACK8, FORMAT_R4G4B4A4_UNORM_PACK16, FORMAT_B4G4R4A4_UNORM_PACK16, FORMAT_R5G6B5_UNORM_PACK16, FORMAT_B5G6R5_UNORM_PACK16, FORMAT_R5G5B5A1_UNORM_PACK16, FORMAT_B5G5R5A1_UNORM_PACK16, FORMAT_A1R5G5B5_UNORM_PACK16, FORMAT_R8_UNORM, FORMAT_R8_SNORM, FORMAT_R8_USCALED, FORMAT_R8_SSCALED, FORMAT_R8_UINT, FORMAT_R8_SINT, FORMAT_R8_SRGB, FORMAT_R8G8_UNORM, FORMAT_R8G8_SNORM, FORMAT_R8G8_USCALED, FORMAT_R8G8_SSCALED, FORMAT_R8G8_UINT, FORMAT_R8G8_SINT, FORMAT_R8G8_SRGB, FORMAT_R8G8B8_UNORM, FORMAT_R8G8B8_SNORM, FORMAT_R8G8B8_USCALED, FORMAT_R8G8B8_SSCALED, FORMAT_R8G8B8_UINT, FORMAT_R8G8B8_SINT, FORMAT_R8G8B8_SRGB, FORMAT_B8G8R8_UNORM, FORMAT_B8G8R8_SNORM, FORMAT_B8G8R8_USCALED, FORMAT_B8G8R8_SSCALED, FORMAT_B8G8R8_UINT, FORMAT_B8G8R8_SINT, FORMAT_B8G8R8_SRGB, FORMAT_R8G8B8A8_UNORM, FORMAT_R8G8B8A8_SNORM, FORMAT_R8G8B8A8_USCALED, FORMAT_R8G8B8A8_SSCALED, FORMAT_R8G8B8A8_UINT, FORMAT_R8G8B8A8_SINT, FORMAT_R8G8B8A8_SRGB, FORMAT_B8G8R8A8_UNORM, FORMAT_B8G8R8A8_SNORM, FORMAT_B8G8R8A8_USCALED, FORMAT_B8G8R8A8_SSCALED, FORMAT_B8G8R8A8_UINT, FORMAT_B8G8R8A8_SINT, FORMAT_B8G8R8A8_SRGB, FORMAT_A8B8G8R8_UNORM_PACK32, FORMAT_A8B8G8R8_SNORM_PACK32, FORMAT_A8B8G8R8_USCALED_PACK32, FORMAT_A8B8G8R8_SSCALED_PACK32, FORMAT_A8B8G8R8_UINT_PACK32, FORMAT_A8B8G8R8_SINT_PACK32, FORMAT_A8B8G8R8_SRGB_PACK32, FORMAT_A2R10G10B10_UNORM_PACK32, FORMAT_A2R10G10B10_SNORM_PACK32, FORMAT_A2R10G10B10_USCALED_PACK32, FORMAT_A2R10G10B10_SSCALED_PACK32, FORMAT_A2R10G10B10_UINT_PACK32, FORMAT_A2R10G10B10_SINT_PACK32, FORMAT_A2B10G10R10_UNORM_PACK32, FORMAT_A2B10G10R10_SNORM_PACK32, FORMAT_A2B10G10R10_USCALED_PACK32, FORMAT_A2B10G10R10_SSCALED_PACK32, FORMAT_A2B10G10R10_UINT_PACK32, FORMAT_A2B10G10R10_SINT_PACK32, FORMAT_R16_UNORM, FORMAT_R16_SNORM, FORMAT_R16_USCALED, FORMAT_R16_SSCALED, FORMAT_R16_UINT, FORMAT_R16_SINT, FORMAT_R16_SFLOAT, FORMAT_R16G16_UNORM, FORMAT_R16G16_SNORM, FORMAT_R16G16_USCALED, FORMAT_R16G16_SSCALED, FORMAT_R16G16_UINT, FORMAT_R16G16_SINT, FORMAT_R16G16_SFLOAT, FORMAT_R16G16B16_UNORM, FORMAT_R16G16B16_SNORM, FORMAT_R16G16B16_USCALED, FORMAT_R16G16B16_SSCALED, FORMAT_R16G16B16_UINT, FORMAT_R16G16B16_SINT, FORMAT_R16G16B16_SFLOAT, FORMAT_R16G16B16A16_UNORM, FORMAT_R16G16B16A16_SNORM, FORMAT_R16G16B16A16_USCALED, FORMAT_R16G16B16A16_SSCALED, FORMAT_R16G16B16A16_UINT, FORMAT_R16G16B16A16_SINT, FORMAT_R16G16B16A16_SFLOAT, FORMAT_R32_UINT, FORMAT_R32_SINT, FORMAT_R32_SFLOAT, FORMAT_R32G32_UINT, FORMAT_R32G32_SINT, FORMAT_R32G32_SFLOAT, FORMAT_R32G32B32_UINT, FORMAT_R32G32B32_SINT, FORMAT_R32G32B32_SFLOAT, FORMAT_R32G32B32A32_UINT, FORMAT_R32G32B32A32_SINT, FORMAT_R32G32B32A32_SFLOAT, FORMAT_R64_UINT, FORMAT_R64_SINT, FORMAT_R64_SFLOAT, FORMAT_R64G64_UINT, FORMAT_R64G64_SINT, FORMAT_R64G64_SFLOAT, FORMAT_R64G64B64_UINT, FORMAT_R64G64B64_SINT, FORMAT_R64G64B64_SFLOAT, FORMAT_R64G64B64A64_UINT, FORMAT_R64G64B64A64_SINT, FORMAT_R64G64B64A64_SFLOAT, FORMAT_B10G11R11_UFLOAT_PACK32, FORMAT_E5B9G9R9_UFLOAT_PACK32, FORMAT_D16_UNORM, FORMAT_X8_D24_UNORM_PACK32, FORMAT_D32_SFLOAT, FORMAT_S8_UINT, FORMAT_D16_UNORM_S8_UINT, FORMAT_D24_UNORM_S8_UINT, FORMAT_D32_SFLOAT_S8_UINT, FORMAT_BC1_RGB_UNORM_BLOCK, FORMAT_BC1_RGB_SRGB_BLOCK, FORMAT_BC1_RGBA_UNORM_BLOCK, FORMAT_BC1_RGBA_SRGB_BLOCK, FORMAT_BC2_UNORM_BLOCK, FORMAT_BC2_SRGB_BLOCK, FORMAT_BC3_UNORM_BLOCK, FORMAT_BC3_SRGB_BLOCK, FORMAT_BC4_UNORM_BLOCK, FORMAT_BC4_SNORM_BLOCK, FORMAT_BC5_UNORM_BLOCK, FORMAT_BC5_SNORM_BLOCK, FORMAT_BC6H_UFLOAT_BLOCK, FORMAT_BC6H_SFLOAT_BLOCK, FORMAT_BC7_UNORM_BLOCK, FORMAT_BC7_SRGB_BLOCK, FORMAT_ETC2_R8G8B8_UNORM_BLOCK, FORMAT_ETC2_R8G8B8_SRGB_BLOCK, FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK, FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK, FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK, FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK, FORMAT_EAC_R11_UNORM_BLOCK, FORMAT_EAC_R11_SNORM_BLOCK, FORMAT_EAC_R11G11_UNORM_BLOCK, FORMAT_EAC_R11G11_SNORM_BLOCK, FORMAT_ASTC_4x4_UNORM_BLOCK, FORMAT_ASTC_4x4_SRGB_BLOCK, FORMAT_ASTC_5x4_UNORM_BLOCK, FORMAT_ASTC_5x4_SRGB_BLOCK, FORMAT_ASTC_5x5_UNORM_BLOCK, FORMAT_ASTC_5x5_SRGB_BLOCK, FORMAT_ASTC_6x5_UNORM_BLOCK, FORMAT_ASTC_6x5_SRGB_BLOCK, FORMAT_ASTC_6x6_UNORM_BLOCK, FORMAT_ASTC_6x6_SRGB_BLOCK, FORMAT_ASTC_8x5_UNORM_BLOCK, FORMAT_ASTC_8x5_SRGB_BLOCK, FORMAT_ASTC_8x6_UNORM_BLOCK, FORMAT_ASTC_8x6_SRGB_BLOCK, FORMAT_ASTC_8x8_UNORM_BLOCK, FORMAT_ASTC_8x8_SRGB_BLOCK, FORMAT_ASTC_10x5_UNORM_BLOCK, FORMAT_ASTC_10x5_SRGB_BLOCK, FORMAT_ASTC_10x6_UNORM_BLOCK, FORMAT_ASTC_10x6_SRGB_BLOCK, FORMAT_ASTC_10x8_UNORM_BLOCK, FORMAT_ASTC_10x8_SRGB_BLOCK, FORMAT_ASTC_10x10_UNORM_BLOCK, FORMAT_ASTC_10x10_SRGB_BLOCK, FORMAT_ASTC_12x10_UNORM_BLOCK, FORMAT_ASTC_12x10_SRGB_BLOCK, FORMAT_ASTC_12x12_UNORM_BLOCK, FORMAT_ASTC_12x12_SRGB_BLOCK, FORMAT_G8B8G8R8_422_UNORM, FORMAT_B8G8R8G8_422_UNORM, FORMAT_G8_B8_R8_3PLANE_420_UNORM, FORMAT_G8_B8R8_2PLANE_420_UNORM, FORMAT_G8_B8_R8_3PLANE_422_UNORM, FORMAT_G8_B8R8_2PLANE_422_UNORM, FORMAT_G8_B8_R8_3PLANE_444_UNORM, FORMAT_R10X6_UNORM_PACK16, FORMAT_R10X6G10X6_UNORM_2PACK16, FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16, FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16, FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16, FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16, FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16, FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16, FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16, FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16, FORMAT_R12X4_UNORM_PACK16, FORMAT_R12X4G12X4_UNORM_2PACK16, FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16, FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16, FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16, FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16, FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16, FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16, FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16, FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16, FORMAT_G16B16G16R16_422_UNORM, FORMAT_B16G16R16G16_422_UNORM, FORMAT_G16_B16_R16_3PLANE_420_UNORM, FORMAT_G16_B16R16_2PLANE_420_UNORM, FORMAT_G16_B16_R16_3PLANE_422_UNORM, FORMAT_G16_B16R16_2PLANE_422_UNORM, FORMAT_G16_B16_R16_3PLANE_444_UNORM, FORMAT_PVRTC1_2BPP_UNORM_BLOCK_IMG, FORMAT_PVRTC1_4BPP_UNORM_BLOCK_IMG, FORMAT_PVRTC2_2BPP_UNORM_BLOCK_IMG, FORMAT_PVRTC2_4BPP_UNORM_BLOCK_IMG, FORMAT_PVRTC1_2BPP_SRGB_BLOCK_IMG, FORMAT_PVRTC1_4BPP_SRGB_BLOCK_IMG, FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG, FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG :: Format #-}
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_UNDEFINED' specifies that the
--- format is not specified.
+-- No documentation found for Nested "Format" "FORMAT_UNDEFINED"
 pattern FORMAT_UNDEFINED :: (a ~ Format) => a
 pattern FORMAT_UNDEFINED = VK_FORMAT_UNDEFINED
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R4G4_UNORM_PACK8' specifies a
--- two-component, 8-bit packed unsigned normalized format that has a 4-bit
--- R component in bits 4..7, and a 4-bit G component in bits 0..3.
+-- No documentation found for Nested "Format" "FORMAT_R4G4_UNORM_PACK8"
 pattern FORMAT_R4G4_UNORM_PACK8 :: (a ~ Format) => a
 pattern FORMAT_R4G4_UNORM_PACK8 = VK_FORMAT_R4G4_UNORM_PACK8
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R4G4B4A4_UNORM_PACK16'
--- specifies a four-component, 16-bit packed unsigned normalized format
--- that has a 4-bit R component in bits 12..15, a 4-bit G component in bits
--- 8..11, a 4-bit B component in bits 4..7, and a 4-bit A component in bits
--- 0..3.
+-- No documentation found for Nested "Format" "FORMAT_R4G4B4A4_UNORM_PACK16"
 pattern FORMAT_R4G4B4A4_UNORM_PACK16 :: (a ~ Format) => a
 pattern FORMAT_R4G4B4A4_UNORM_PACK16 = VK_FORMAT_R4G4B4A4_UNORM_PACK16
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_B4G4R4A4_UNORM_PACK16'
--- specifies a four-component, 16-bit packed unsigned normalized format
--- that has a 4-bit B component in bits 12..15, a 4-bit G component in bits
--- 8..11, a 4-bit R component in bits 4..7, and a 4-bit A component in bits
--- 0..3.
+-- No documentation found for Nested "Format" "FORMAT_B4G4R4A4_UNORM_PACK16"
 pattern FORMAT_B4G4R4A4_UNORM_PACK16 :: (a ~ Format) => a
 pattern FORMAT_B4G4R4A4_UNORM_PACK16 = VK_FORMAT_B4G4R4A4_UNORM_PACK16
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R5G6B5_UNORM_PACK16' specifies
--- a three-component, 16-bit packed unsigned normalized format that has a
--- 5-bit R component in bits 11..15, a 6-bit G component in bits 5..10, and
--- a 5-bit B component in bits 0..4.
+-- No documentation found for Nested "Format" "FORMAT_R5G6B5_UNORM_PACK16"
 pattern FORMAT_R5G6B5_UNORM_PACK16 :: (a ~ Format) => a
 pattern FORMAT_R5G6B5_UNORM_PACK16 = VK_FORMAT_R5G6B5_UNORM_PACK16
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_B5G6R5_UNORM_PACK16' specifies
--- a three-component, 16-bit packed unsigned normalized format that has a
--- 5-bit B component in bits 11..15, a 6-bit G component in bits 5..10, and
--- a 5-bit R component in bits 0..4.
+-- No documentation found for Nested "Format" "FORMAT_B5G6R5_UNORM_PACK16"
 pattern FORMAT_B5G6R5_UNORM_PACK16 :: (a ~ Format) => a
 pattern FORMAT_B5G6R5_UNORM_PACK16 = VK_FORMAT_B5G6R5_UNORM_PACK16
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R5G5B5A1_UNORM_PACK16'
--- specifies a four-component, 16-bit packed unsigned normalized format
--- that has a 5-bit R component in bits 11..15, a 5-bit G component in bits
--- 6..10, a 5-bit B component in bits 1..5, and a 1-bit A component in bit
--- 0.
+-- No documentation found for Nested "Format" "FORMAT_R5G5B5A1_UNORM_PACK16"
 pattern FORMAT_R5G5B5A1_UNORM_PACK16 :: (a ~ Format) => a
 pattern FORMAT_R5G5B5A1_UNORM_PACK16 = VK_FORMAT_R5G5B5A1_UNORM_PACK16
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_B5G5R5A1_UNORM_PACK16'
--- specifies a four-component, 16-bit packed unsigned normalized format
--- that has a 5-bit B component in bits 11..15, a 5-bit G component in bits
--- 6..10, a 5-bit R component in bits 1..5, and a 1-bit A component in bit
--- 0.
+-- No documentation found for Nested "Format" "FORMAT_B5G5R5A1_UNORM_PACK16"
 pattern FORMAT_B5G5R5A1_UNORM_PACK16 :: (a ~ Format) => a
 pattern FORMAT_B5G5R5A1_UNORM_PACK16 = VK_FORMAT_B5G5R5A1_UNORM_PACK16
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_A1R5G5B5_UNORM_PACK16'
--- specifies a four-component, 16-bit packed unsigned normalized format
--- that has a 1-bit A component in bit 15, a 5-bit R component in bits
--- 10..14, a 5-bit G component in bits 5..9, and a 5-bit B component in
--- bits 0..4.
+-- No documentation found for Nested "Format" "FORMAT_A1R5G5B5_UNORM_PACK16"
 pattern FORMAT_A1R5G5B5_UNORM_PACK16 :: (a ~ Format) => a
 pattern FORMAT_A1R5G5B5_UNORM_PACK16 = VK_FORMAT_A1R5G5B5_UNORM_PACK16
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8_UNORM' specifies a
--- one-component, 8-bit unsigned normalized format that has a single 8-bit
--- R component.
+-- No documentation found for Nested "Format" "FORMAT_R8_UNORM"
 pattern FORMAT_R8_UNORM :: (a ~ Format) => a
 pattern FORMAT_R8_UNORM = VK_FORMAT_R8_UNORM
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8_SNORM' specifies a
--- one-component, 8-bit signed normalized format that has a single 8-bit R
--- component.
+-- No documentation found for Nested "Format" "FORMAT_R8_SNORM"
 pattern FORMAT_R8_SNORM :: (a ~ Format) => a
 pattern FORMAT_R8_SNORM = VK_FORMAT_R8_SNORM
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8_USCALED' specifies a
--- one-component, 8-bit unsigned scaled integer format that has a single
--- 8-bit R component.
+-- No documentation found for Nested "Format" "FORMAT_R8_USCALED"
 pattern FORMAT_R8_USCALED :: (a ~ Format) => a
 pattern FORMAT_R8_USCALED = VK_FORMAT_R8_USCALED
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8_SSCALED' specifies a
--- one-component, 8-bit signed scaled integer format that has a single
--- 8-bit R component.
+-- No documentation found for Nested "Format" "FORMAT_R8_SSCALED"
 pattern FORMAT_R8_SSCALED :: (a ~ Format) => a
 pattern FORMAT_R8_SSCALED = VK_FORMAT_R8_SSCALED
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8_UINT' specifies a
--- one-component, 8-bit unsigned integer format that has a single 8-bit R
--- component.
+-- No documentation found for Nested "Format" "FORMAT_R8_UINT"
 pattern FORMAT_R8_UINT :: (a ~ Format) => a
 pattern FORMAT_R8_UINT = VK_FORMAT_R8_UINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8_SINT' specifies a
--- one-component, 8-bit signed integer format that has a single 8-bit R
--- component.
+-- No documentation found for Nested "Format" "FORMAT_R8_SINT"
 pattern FORMAT_R8_SINT :: (a ~ Format) => a
 pattern FORMAT_R8_SINT = VK_FORMAT_R8_SINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8_SRGB' specifies a
--- one-component, 8-bit unsigned normalized format that has a single 8-bit
--- R component stored with sRGB nonlinear encoding.
+-- No documentation found for Nested "Format" "FORMAT_R8_SRGB"
 pattern FORMAT_R8_SRGB :: (a ~ Format) => a
 pattern FORMAT_R8_SRGB = VK_FORMAT_R8_SRGB
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8_UNORM' specifies a
--- two-component, 16-bit unsigned normalized format that has an 8-bit R
--- component in byte 0, and an 8-bit G component in byte 1.
+-- No documentation found for Nested "Format" "FORMAT_R8G8_UNORM"
 pattern FORMAT_R8G8_UNORM :: (a ~ Format) => a
 pattern FORMAT_R8G8_UNORM = VK_FORMAT_R8G8_UNORM
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8_SNORM' specifies a
--- two-component, 16-bit signed normalized format that has an 8-bit R
--- component in byte 0, and an 8-bit G component in byte 1.
+-- No documentation found for Nested "Format" "FORMAT_R8G8_SNORM"
 pattern FORMAT_R8G8_SNORM :: (a ~ Format) => a
 pattern FORMAT_R8G8_SNORM = VK_FORMAT_R8G8_SNORM
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8_USCALED' specifies a
--- two-component, 16-bit unsigned scaled integer format that has an 8-bit R
--- component in byte 0, and an 8-bit G component in byte 1.
+-- No documentation found for Nested "Format" "FORMAT_R8G8_USCALED"
 pattern FORMAT_R8G8_USCALED :: (a ~ Format) => a
 pattern FORMAT_R8G8_USCALED = VK_FORMAT_R8G8_USCALED
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8_SSCALED' specifies a
--- two-component, 16-bit signed scaled integer format that has an 8-bit R
--- component in byte 0, and an 8-bit G component in byte 1.
+-- No documentation found for Nested "Format" "FORMAT_R8G8_SSCALED"
 pattern FORMAT_R8G8_SSCALED :: (a ~ Format) => a
 pattern FORMAT_R8G8_SSCALED = VK_FORMAT_R8G8_SSCALED
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8_UINT' specifies a
--- two-component, 16-bit unsigned integer format that has an 8-bit R
--- component in byte 0, and an 8-bit G component in byte 1.
+-- No documentation found for Nested "Format" "FORMAT_R8G8_UINT"
 pattern FORMAT_R8G8_UINT :: (a ~ Format) => a
 pattern FORMAT_R8G8_UINT = VK_FORMAT_R8G8_UINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8_SINT' specifies a
--- two-component, 16-bit signed integer format that has an 8-bit R
--- component in byte 0, and an 8-bit G component in byte 1.
+-- No documentation found for Nested "Format" "FORMAT_R8G8_SINT"
 pattern FORMAT_R8G8_SINT :: (a ~ Format) => a
 pattern FORMAT_R8G8_SINT = VK_FORMAT_R8G8_SINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8_SRGB' specifies a
--- two-component, 16-bit unsigned normalized format that has an 8-bit R
--- component stored with sRGB nonlinear encoding in byte 0, and an 8-bit G
--- component stored with sRGB nonlinear encoding in byte 1.
+-- No documentation found for Nested "Format" "FORMAT_R8G8_SRGB"
 pattern FORMAT_R8G8_SRGB :: (a ~ Format) => a
 pattern FORMAT_R8G8_SRGB = VK_FORMAT_R8G8_SRGB
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8B8_UNORM' specifies a
--- three-component, 24-bit unsigned normalized format that has an 8-bit R
--- component in byte 0, an 8-bit G component in byte 1, and an 8-bit B
--- component in byte 2.
+-- No documentation found for Nested "Format" "FORMAT_R8G8B8_UNORM"
 pattern FORMAT_R8G8B8_UNORM :: (a ~ Format) => a
 pattern FORMAT_R8G8B8_UNORM = VK_FORMAT_R8G8B8_UNORM
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8B8_SNORM' specifies a
--- three-component, 24-bit signed normalized format that has an 8-bit R
--- component in byte 0, an 8-bit G component in byte 1, and an 8-bit B
--- component in byte 2.
+-- No documentation found for Nested "Format" "FORMAT_R8G8B8_SNORM"
 pattern FORMAT_R8G8B8_SNORM :: (a ~ Format) => a
 pattern FORMAT_R8G8B8_SNORM = VK_FORMAT_R8G8B8_SNORM
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8B8_USCALED' specifies a
--- three-component, 24-bit unsigned scaled format that has an 8-bit R
--- component in byte 0, an 8-bit G component in byte 1, and an 8-bit B
--- component in byte 2.
+-- No documentation found for Nested "Format" "FORMAT_R8G8B8_USCALED"
 pattern FORMAT_R8G8B8_USCALED :: (a ~ Format) => a
 pattern FORMAT_R8G8B8_USCALED = VK_FORMAT_R8G8B8_USCALED
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8B8_SSCALED' specifies a
--- three-component, 24-bit signed scaled format that has an 8-bit R
--- component in byte 0, an 8-bit G component in byte 1, and an 8-bit B
--- component in byte 2.
+-- No documentation found for Nested "Format" "FORMAT_R8G8B8_SSCALED"
 pattern FORMAT_R8G8B8_SSCALED :: (a ~ Format) => a
 pattern FORMAT_R8G8B8_SSCALED = VK_FORMAT_R8G8B8_SSCALED
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8B8_UINT' specifies a
--- three-component, 24-bit unsigned integer format that has an 8-bit R
--- component in byte 0, an 8-bit G component in byte 1, and an 8-bit B
--- component in byte 2.
+-- No documentation found for Nested "Format" "FORMAT_R8G8B8_UINT"
 pattern FORMAT_R8G8B8_UINT :: (a ~ Format) => a
 pattern FORMAT_R8G8B8_UINT = VK_FORMAT_R8G8B8_UINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8B8_SINT' specifies a
--- three-component, 24-bit signed integer format that has an 8-bit R
--- component in byte 0, an 8-bit G component in byte 1, and an 8-bit B
--- component in byte 2.
+-- No documentation found for Nested "Format" "FORMAT_R8G8B8_SINT"
 pattern FORMAT_R8G8B8_SINT :: (a ~ Format) => a
 pattern FORMAT_R8G8B8_SINT = VK_FORMAT_R8G8B8_SINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8B8_SRGB' specifies a
--- three-component, 24-bit unsigned normalized format that has an 8-bit R
--- component stored with sRGB nonlinear encoding in byte 0, an 8-bit G
--- component stored with sRGB nonlinear encoding in byte 1, and an 8-bit B
--- component stored with sRGB nonlinear encoding in byte 2.
+-- No documentation found for Nested "Format" "FORMAT_R8G8B8_SRGB"
 pattern FORMAT_R8G8B8_SRGB :: (a ~ Format) => a
 pattern FORMAT_R8G8B8_SRGB = VK_FORMAT_R8G8B8_SRGB
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_B8G8R8_UNORM' specifies a
--- three-component, 24-bit unsigned normalized format that has an 8-bit B
--- component in byte 0, an 8-bit G component in byte 1, and an 8-bit R
--- component in byte 2.
+-- No documentation found for Nested "Format" "FORMAT_B8G8R8_UNORM"
 pattern FORMAT_B8G8R8_UNORM :: (a ~ Format) => a
 pattern FORMAT_B8G8R8_UNORM = VK_FORMAT_B8G8R8_UNORM
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_B8G8R8_SNORM' specifies a
--- three-component, 24-bit signed normalized format that has an 8-bit B
--- component in byte 0, an 8-bit G component in byte 1, and an 8-bit R
--- component in byte 2.
+-- No documentation found for Nested "Format" "FORMAT_B8G8R8_SNORM"
 pattern FORMAT_B8G8R8_SNORM :: (a ~ Format) => a
 pattern FORMAT_B8G8R8_SNORM = VK_FORMAT_B8G8R8_SNORM
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_B8G8R8_USCALED' specifies a
--- three-component, 24-bit unsigned scaled format that has an 8-bit B
--- component in byte 0, an 8-bit G component in byte 1, and an 8-bit R
--- component in byte 2.
+-- No documentation found for Nested "Format" "FORMAT_B8G8R8_USCALED"
 pattern FORMAT_B8G8R8_USCALED :: (a ~ Format) => a
 pattern FORMAT_B8G8R8_USCALED = VK_FORMAT_B8G8R8_USCALED
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_B8G8R8_SSCALED' specifies a
--- three-component, 24-bit signed scaled format that has an 8-bit B
--- component in byte 0, an 8-bit G component in byte 1, and an 8-bit R
--- component in byte 2.
+-- No documentation found for Nested "Format" "FORMAT_B8G8R8_SSCALED"
 pattern FORMAT_B8G8R8_SSCALED :: (a ~ Format) => a
 pattern FORMAT_B8G8R8_SSCALED = VK_FORMAT_B8G8R8_SSCALED
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_B8G8R8_UINT' specifies a
--- three-component, 24-bit unsigned integer format that has an 8-bit B
--- component in byte 0, an 8-bit G component in byte 1, and an 8-bit R
--- component in byte 2.
+-- No documentation found for Nested "Format" "FORMAT_B8G8R8_UINT"
 pattern FORMAT_B8G8R8_UINT :: (a ~ Format) => a
 pattern FORMAT_B8G8R8_UINT = VK_FORMAT_B8G8R8_UINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_B8G8R8_SINT' specifies a
--- three-component, 24-bit signed integer format that has an 8-bit B
--- component in byte 0, an 8-bit G component in byte 1, and an 8-bit R
--- component in byte 2.
+-- No documentation found for Nested "Format" "FORMAT_B8G8R8_SINT"
 pattern FORMAT_B8G8R8_SINT :: (a ~ Format) => a
 pattern FORMAT_B8G8R8_SINT = VK_FORMAT_B8G8R8_SINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_B8G8R8_SRGB' specifies a
--- three-component, 24-bit unsigned normalized format that has an 8-bit B
--- component stored with sRGB nonlinear encoding in byte 0, an 8-bit G
--- component stored with sRGB nonlinear encoding in byte 1, and an 8-bit R
--- component stored with sRGB nonlinear encoding in byte 2.
+-- No documentation found for Nested "Format" "FORMAT_B8G8R8_SRGB"
 pattern FORMAT_B8G8R8_SRGB :: (a ~ Format) => a
 pattern FORMAT_B8G8R8_SRGB = VK_FORMAT_B8G8R8_SRGB
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8B8A8_UNORM' specifies a
--- four-component, 32-bit unsigned normalized format that has an 8-bit R
--- component in byte 0, an 8-bit G component in byte 1, an 8-bit B
--- component in byte 2, and an 8-bit A component in byte 3.
+-- No documentation found for Nested "Format" "FORMAT_R8G8B8A8_UNORM"
 pattern FORMAT_R8G8B8A8_UNORM :: (a ~ Format) => a
 pattern FORMAT_R8G8B8A8_UNORM = VK_FORMAT_R8G8B8A8_UNORM
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8B8A8_SNORM' specifies a
--- four-component, 32-bit signed normalized format that has an 8-bit R
--- component in byte 0, an 8-bit G component in byte 1, an 8-bit B
--- component in byte 2, and an 8-bit A component in byte 3.
+-- No documentation found for Nested "Format" "FORMAT_R8G8B8A8_SNORM"
 pattern FORMAT_R8G8B8A8_SNORM :: (a ~ Format) => a
 pattern FORMAT_R8G8B8A8_SNORM = VK_FORMAT_R8G8B8A8_SNORM
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8B8A8_USCALED' specifies a
--- four-component, 32-bit unsigned scaled format that has an 8-bit R
--- component in byte 0, an 8-bit G component in byte 1, an 8-bit B
--- component in byte 2, and an 8-bit A component in byte 3.
+-- No documentation found for Nested "Format" "FORMAT_R8G8B8A8_USCALED"
 pattern FORMAT_R8G8B8A8_USCALED :: (a ~ Format) => a
 pattern FORMAT_R8G8B8A8_USCALED = VK_FORMAT_R8G8B8A8_USCALED
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8B8A8_SSCALED' specifies a
--- four-component, 32-bit signed scaled format that has an 8-bit R
--- component in byte 0, an 8-bit G component in byte 1, an 8-bit B
--- component in byte 2, and an 8-bit A component in byte 3.
+-- No documentation found for Nested "Format" "FORMAT_R8G8B8A8_SSCALED"
 pattern FORMAT_R8G8B8A8_SSCALED :: (a ~ Format) => a
 pattern FORMAT_R8G8B8A8_SSCALED = VK_FORMAT_R8G8B8A8_SSCALED
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8B8A8_UINT' specifies a
--- four-component, 32-bit unsigned integer format that has an 8-bit R
--- component in byte 0, an 8-bit G component in byte 1, an 8-bit B
--- component in byte 2, and an 8-bit A component in byte 3.
+-- No documentation found for Nested "Format" "FORMAT_R8G8B8A8_UINT"
 pattern FORMAT_R8G8B8A8_UINT :: (a ~ Format) => a
 pattern FORMAT_R8G8B8A8_UINT = VK_FORMAT_R8G8B8A8_UINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8B8A8_SINT' specifies a
--- four-component, 32-bit signed integer format that has an 8-bit R
--- component in byte 0, an 8-bit G component in byte 1, an 8-bit B
--- component in byte 2, and an 8-bit A component in byte 3.
+-- No documentation found for Nested "Format" "FORMAT_R8G8B8A8_SINT"
 pattern FORMAT_R8G8B8A8_SINT :: (a ~ Format) => a
 pattern FORMAT_R8G8B8A8_SINT = VK_FORMAT_R8G8B8A8_SINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R8G8B8A8_SRGB' specifies a
--- four-component, 32-bit unsigned normalized format that has an 8-bit R
--- component stored with sRGB nonlinear encoding in byte 0, an 8-bit G
--- component stored with sRGB nonlinear encoding in byte 1, an 8-bit B
--- component stored with sRGB nonlinear encoding in byte 2, and an 8-bit A
--- component in byte 3.
+-- No documentation found for Nested "Format" "FORMAT_R8G8B8A8_SRGB"
 pattern FORMAT_R8G8B8A8_SRGB :: (a ~ Format) => a
 pattern FORMAT_R8G8B8A8_SRGB = VK_FORMAT_R8G8B8A8_SRGB
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_B8G8R8A8_UNORM' specifies a
--- four-component, 32-bit unsigned normalized format that has an 8-bit B
--- component in byte 0, an 8-bit G component in byte 1, an 8-bit R
--- component in byte 2, and an 8-bit A component in byte 3.
+-- No documentation found for Nested "Format" "FORMAT_B8G8R8A8_UNORM"
 pattern FORMAT_B8G8R8A8_UNORM :: (a ~ Format) => a
 pattern FORMAT_B8G8R8A8_UNORM = VK_FORMAT_B8G8R8A8_UNORM
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_B8G8R8A8_SNORM' specifies a
--- four-component, 32-bit signed normalized format that has an 8-bit B
--- component in byte 0, an 8-bit G component in byte 1, an 8-bit R
--- component in byte 2, and an 8-bit A component in byte 3.
+-- No documentation found for Nested "Format" "FORMAT_B8G8R8A8_SNORM"
 pattern FORMAT_B8G8R8A8_SNORM :: (a ~ Format) => a
 pattern FORMAT_B8G8R8A8_SNORM = VK_FORMAT_B8G8R8A8_SNORM
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_B8G8R8A8_USCALED' specifies a
--- four-component, 32-bit unsigned scaled format that has an 8-bit B
--- component in byte 0, an 8-bit G component in byte 1, an 8-bit R
--- component in byte 2, and an 8-bit A component in byte 3.
+-- No documentation found for Nested "Format" "FORMAT_B8G8R8A8_USCALED"
 pattern FORMAT_B8G8R8A8_USCALED :: (a ~ Format) => a
 pattern FORMAT_B8G8R8A8_USCALED = VK_FORMAT_B8G8R8A8_USCALED
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_B8G8R8A8_SSCALED' specifies a
--- four-component, 32-bit signed scaled format that has an 8-bit B
--- component in byte 0, an 8-bit G component in byte 1, an 8-bit R
--- component in byte 2, and an 8-bit A component in byte 3.
+-- No documentation found for Nested "Format" "FORMAT_B8G8R8A8_SSCALED"
 pattern FORMAT_B8G8R8A8_SSCALED :: (a ~ Format) => a
 pattern FORMAT_B8G8R8A8_SSCALED = VK_FORMAT_B8G8R8A8_SSCALED
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_B8G8R8A8_UINT' specifies a
--- four-component, 32-bit unsigned integer format that has an 8-bit B
--- component in byte 0, an 8-bit G component in byte 1, an 8-bit R
--- component in byte 2, and an 8-bit A component in byte 3.
+-- No documentation found for Nested "Format" "FORMAT_B8G8R8A8_UINT"
 pattern FORMAT_B8G8R8A8_UINT :: (a ~ Format) => a
 pattern FORMAT_B8G8R8A8_UINT = VK_FORMAT_B8G8R8A8_UINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_B8G8R8A8_SINT' specifies a
--- four-component, 32-bit signed integer format that has an 8-bit B
--- component in byte 0, an 8-bit G component in byte 1, an 8-bit R
--- component in byte 2, and an 8-bit A component in byte 3.
+-- No documentation found for Nested "Format" "FORMAT_B8G8R8A8_SINT"
 pattern FORMAT_B8G8R8A8_SINT :: (a ~ Format) => a
 pattern FORMAT_B8G8R8A8_SINT = VK_FORMAT_B8G8R8A8_SINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_B8G8R8A8_SRGB' specifies a
--- four-component, 32-bit unsigned normalized format that has an 8-bit B
--- component stored with sRGB nonlinear encoding in byte 0, an 8-bit G
--- component stored with sRGB nonlinear encoding in byte 1, an 8-bit R
--- component stored with sRGB nonlinear encoding in byte 2, and an 8-bit A
--- component in byte 3.
+-- No documentation found for Nested "Format" "FORMAT_B8G8R8A8_SRGB"
 pattern FORMAT_B8G8R8A8_SRGB :: (a ~ Format) => a
 pattern FORMAT_B8G8R8A8_SRGB = VK_FORMAT_B8G8R8A8_SRGB
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_A8B8G8R8_UNORM_PACK32'
--- specifies a four-component, 32-bit packed unsigned normalized format
--- that has an 8-bit A component in bits 24..31, an 8-bit B component in
--- bits 16..23, an 8-bit G component in bits 8..15, and an 8-bit R
--- component in bits 0..7.
+-- No documentation found for Nested "Format" "FORMAT_A8B8G8R8_UNORM_PACK32"
 pattern FORMAT_A8B8G8R8_UNORM_PACK32 :: (a ~ Format) => a
 pattern FORMAT_A8B8G8R8_UNORM_PACK32 = VK_FORMAT_A8B8G8R8_UNORM_PACK32
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_A8B8G8R8_SNORM_PACK32'
--- specifies a four-component, 32-bit packed signed normalized format that
--- has an 8-bit A component in bits 24..31, an 8-bit B component in bits
--- 16..23, an 8-bit G component in bits 8..15, and an 8-bit R component in
--- bits 0..7.
+-- No documentation found for Nested "Format" "FORMAT_A8B8G8R8_SNORM_PACK32"
 pattern FORMAT_A8B8G8R8_SNORM_PACK32 :: (a ~ Format) => a
 pattern FORMAT_A8B8G8R8_SNORM_PACK32 = VK_FORMAT_A8B8G8R8_SNORM_PACK32
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_A8B8G8R8_USCALED_PACK32'
--- specifies a four-component, 32-bit packed unsigned scaled integer format
--- that has an 8-bit A component in bits 24..31, an 8-bit B component in
--- bits 16..23, an 8-bit G component in bits 8..15, and an 8-bit R
--- component in bits 0..7.
+-- No documentation found for Nested "Format" "FORMAT_A8B8G8R8_USCALED_PACK32"
 pattern FORMAT_A8B8G8R8_USCALED_PACK32 :: (a ~ Format) => a
 pattern FORMAT_A8B8G8R8_USCALED_PACK32 = VK_FORMAT_A8B8G8R8_USCALED_PACK32
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_A8B8G8R8_SSCALED_PACK32'
--- specifies a four-component, 32-bit packed signed scaled integer format
--- that has an 8-bit A component in bits 24..31, an 8-bit B component in
--- bits 16..23, an 8-bit G component in bits 8..15, and an 8-bit R
--- component in bits 0..7.
+-- No documentation found for Nested "Format" "FORMAT_A8B8G8R8_SSCALED_PACK32"
 pattern FORMAT_A8B8G8R8_SSCALED_PACK32 :: (a ~ Format) => a
 pattern FORMAT_A8B8G8R8_SSCALED_PACK32 = VK_FORMAT_A8B8G8R8_SSCALED_PACK32
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_A8B8G8R8_UINT_PACK32' specifies
--- a four-component, 32-bit packed unsigned integer format that has an
--- 8-bit A component in bits 24..31, an 8-bit B component in bits 16..23,
--- an 8-bit G component in bits 8..15, and an 8-bit R component in bits
--- 0..7.
+-- No documentation found for Nested "Format" "FORMAT_A8B8G8R8_UINT_PACK32"
 pattern FORMAT_A8B8G8R8_UINT_PACK32 :: (a ~ Format) => a
 pattern FORMAT_A8B8G8R8_UINT_PACK32 = VK_FORMAT_A8B8G8R8_UINT_PACK32
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_A8B8G8R8_SINT_PACK32' specifies
--- a four-component, 32-bit packed signed integer format that has an 8-bit
--- A component in bits 24..31, an 8-bit B component in bits 16..23, an
--- 8-bit G component in bits 8..15, and an 8-bit R component in bits 0..7.
+-- No documentation found for Nested "Format" "FORMAT_A8B8G8R8_SINT_PACK32"
 pattern FORMAT_A8B8G8R8_SINT_PACK32 :: (a ~ Format) => a
 pattern FORMAT_A8B8G8R8_SINT_PACK32 = VK_FORMAT_A8B8G8R8_SINT_PACK32
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_A8B8G8R8_SRGB_PACK32' specifies
--- a four-component, 32-bit packed unsigned normalized format that has an
--- 8-bit A component in bits 24..31, an 8-bit B component stored with sRGB
--- nonlinear encoding in bits 16..23, an 8-bit G component stored with sRGB
--- nonlinear encoding in bits 8..15, and an 8-bit R component stored with
--- sRGB nonlinear encoding in bits 0..7.
+-- No documentation found for Nested "Format" "FORMAT_A8B8G8R8_SRGB_PACK32"
 pattern FORMAT_A8B8G8R8_SRGB_PACK32 :: (a ~ Format) => a
 pattern FORMAT_A8B8G8R8_SRGB_PACK32 = VK_FORMAT_A8B8G8R8_SRGB_PACK32
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_A2R10G10B10_UNORM_PACK32'
--- specifies a four-component, 32-bit packed unsigned normalized format
--- that has a 2-bit A component in bits 30..31, a 10-bit R component in
--- bits 20..29, a 10-bit G component in bits 10..19, and a 10-bit B
--- component in bits 0..9.
+-- No documentation found for Nested "Format" "FORMAT_A2R10G10B10_UNORM_PACK32"
 pattern FORMAT_A2R10G10B10_UNORM_PACK32 :: (a ~ Format) => a
 pattern FORMAT_A2R10G10B10_UNORM_PACK32 = VK_FORMAT_A2R10G10B10_UNORM_PACK32
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_A2R10G10B10_SNORM_PACK32'
--- specifies a four-component, 32-bit packed signed normalized format that
--- has a 2-bit A component in bits 30..31, a 10-bit R component in bits
--- 20..29, a 10-bit G component in bits 10..19, and a 10-bit B component in
--- bits 0..9.
+-- No documentation found for Nested "Format" "FORMAT_A2R10G10B10_SNORM_PACK32"
 pattern FORMAT_A2R10G10B10_SNORM_PACK32 :: (a ~ Format) => a
 pattern FORMAT_A2R10G10B10_SNORM_PACK32 = VK_FORMAT_A2R10G10B10_SNORM_PACK32
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_A2R10G10B10_USCALED_PACK32'
--- specifies a four-component, 32-bit packed unsigned scaled integer format
--- that has a 2-bit A component in bits 30..31, a 10-bit R component in
--- bits 20..29, a 10-bit G component in bits 10..19, and a 10-bit B
--- component in bits 0..9.
+-- No documentation found for Nested "Format" "FORMAT_A2R10G10B10_USCALED_PACK32"
 pattern FORMAT_A2R10G10B10_USCALED_PACK32 :: (a ~ Format) => a
 pattern FORMAT_A2R10G10B10_USCALED_PACK32 = VK_FORMAT_A2R10G10B10_USCALED_PACK32
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_A2R10G10B10_SSCALED_PACK32'
--- specifies a four-component, 32-bit packed signed scaled integer format
--- that has a 2-bit A component in bits 30..31, a 10-bit R component in
--- bits 20..29, a 10-bit G component in bits 10..19, and a 10-bit B
--- component in bits 0..9.
+-- No documentation found for Nested "Format" "FORMAT_A2R10G10B10_SSCALED_PACK32"
 pattern FORMAT_A2R10G10B10_SSCALED_PACK32 :: (a ~ Format) => a
 pattern FORMAT_A2R10G10B10_SSCALED_PACK32 = VK_FORMAT_A2R10G10B10_SSCALED_PACK32
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_A2R10G10B10_UINT_PACK32'
--- specifies a four-component, 32-bit packed unsigned integer format that
--- has a 2-bit A component in bits 30..31, a 10-bit R component in bits
--- 20..29, a 10-bit G component in bits 10..19, and a 10-bit B component in
--- bits 0..9.
+-- No documentation found for Nested "Format" "FORMAT_A2R10G10B10_UINT_PACK32"
 pattern FORMAT_A2R10G10B10_UINT_PACK32 :: (a ~ Format) => a
 pattern FORMAT_A2R10G10B10_UINT_PACK32 = VK_FORMAT_A2R10G10B10_UINT_PACK32
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_A2R10G10B10_SINT_PACK32'
--- specifies a four-component, 32-bit packed signed integer format that has
--- a 2-bit A component in bits 30..31, a 10-bit R component in bits 20..29,
--- a 10-bit G component in bits 10..19, and a 10-bit B component in bits
--- 0..9.
+-- No documentation found for Nested "Format" "FORMAT_A2R10G10B10_SINT_PACK32"
 pattern FORMAT_A2R10G10B10_SINT_PACK32 :: (a ~ Format) => a
 pattern FORMAT_A2R10G10B10_SINT_PACK32 = VK_FORMAT_A2R10G10B10_SINT_PACK32
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_A2B10G10R10_UNORM_PACK32'
--- specifies a four-component, 32-bit packed unsigned normalized format
--- that has a 2-bit A component in bits 30..31, a 10-bit B component in
--- bits 20..29, a 10-bit G component in bits 10..19, and a 10-bit R
--- component in bits 0..9.
+-- No documentation found for Nested "Format" "FORMAT_A2B10G10R10_UNORM_PACK32"
 pattern FORMAT_A2B10G10R10_UNORM_PACK32 :: (a ~ Format) => a
 pattern FORMAT_A2B10G10R10_UNORM_PACK32 = VK_FORMAT_A2B10G10R10_UNORM_PACK32
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_A2B10G10R10_SNORM_PACK32'
--- specifies a four-component, 32-bit packed signed normalized format that
--- has a 2-bit A component in bits 30..31, a 10-bit B component in bits
--- 20..29, a 10-bit G component in bits 10..19, and a 10-bit R component in
--- bits 0..9.
+-- No documentation found for Nested "Format" "FORMAT_A2B10G10R10_SNORM_PACK32"
 pattern FORMAT_A2B10G10R10_SNORM_PACK32 :: (a ~ Format) => a
 pattern FORMAT_A2B10G10R10_SNORM_PACK32 = VK_FORMAT_A2B10G10R10_SNORM_PACK32
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_A2B10G10R10_USCALED_PACK32'
--- specifies a four-component, 32-bit packed unsigned scaled integer format
--- that has a 2-bit A component in bits 30..31, a 10-bit B component in
--- bits 20..29, a 10-bit G component in bits 10..19, and a 10-bit R
--- component in bits 0..9.
+-- No documentation found for Nested "Format" "FORMAT_A2B10G10R10_USCALED_PACK32"
 pattern FORMAT_A2B10G10R10_USCALED_PACK32 :: (a ~ Format) => a
 pattern FORMAT_A2B10G10R10_USCALED_PACK32 = VK_FORMAT_A2B10G10R10_USCALED_PACK32
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_A2B10G10R10_SSCALED_PACK32'
--- specifies a four-component, 32-bit packed signed scaled integer format
--- that has a 2-bit A component in bits 30..31, a 10-bit B component in
--- bits 20..29, a 10-bit G component in bits 10..19, and a 10-bit R
--- component in bits 0..9.
+-- No documentation found for Nested "Format" "FORMAT_A2B10G10R10_SSCALED_PACK32"
 pattern FORMAT_A2B10G10R10_SSCALED_PACK32 :: (a ~ Format) => a
 pattern FORMAT_A2B10G10R10_SSCALED_PACK32 = VK_FORMAT_A2B10G10R10_SSCALED_PACK32
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_A2B10G10R10_UINT_PACK32'
--- specifies a four-component, 32-bit packed unsigned integer format that
--- has a 2-bit A component in bits 30..31, a 10-bit B component in bits
--- 20..29, a 10-bit G component in bits 10..19, and a 10-bit R component in
--- bits 0..9.
+-- No documentation found for Nested "Format" "FORMAT_A2B10G10R10_UINT_PACK32"
 pattern FORMAT_A2B10G10R10_UINT_PACK32 :: (a ~ Format) => a
 pattern FORMAT_A2B10G10R10_UINT_PACK32 = VK_FORMAT_A2B10G10R10_UINT_PACK32
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_A2B10G10R10_SINT_PACK32'
--- specifies a four-component, 32-bit packed signed integer format that has
--- a 2-bit A component in bits 30..31, a 10-bit B component in bits 20..29,
--- a 10-bit G component in bits 10..19, and a 10-bit R component in bits
--- 0..9.
+-- No documentation found for Nested "Format" "FORMAT_A2B10G10R10_SINT_PACK32"
 pattern FORMAT_A2B10G10R10_SINT_PACK32 :: (a ~ Format) => a
 pattern FORMAT_A2B10G10R10_SINT_PACK32 = VK_FORMAT_A2B10G10R10_SINT_PACK32
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16_UNORM' specifies a
--- one-component, 16-bit unsigned normalized format that has a single
--- 16-bit R component.
+-- No documentation found for Nested "Format" "FORMAT_R16_UNORM"
 pattern FORMAT_R16_UNORM :: (a ~ Format) => a
 pattern FORMAT_R16_UNORM = VK_FORMAT_R16_UNORM
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16_SNORM' specifies a
--- one-component, 16-bit signed normalized format that has a single 16-bit
--- R component.
+-- No documentation found for Nested "Format" "FORMAT_R16_SNORM"
 pattern FORMAT_R16_SNORM :: (a ~ Format) => a
 pattern FORMAT_R16_SNORM = VK_FORMAT_R16_SNORM
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16_USCALED' specifies a
--- one-component, 16-bit unsigned scaled integer format that has a single
--- 16-bit R component.
+-- No documentation found for Nested "Format" "FORMAT_R16_USCALED"
 pattern FORMAT_R16_USCALED :: (a ~ Format) => a
 pattern FORMAT_R16_USCALED = VK_FORMAT_R16_USCALED
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16_SSCALED' specifies a
--- one-component, 16-bit signed scaled integer format that has a single
--- 16-bit R component.
+-- No documentation found for Nested "Format" "FORMAT_R16_SSCALED"
 pattern FORMAT_R16_SSCALED :: (a ~ Format) => a
 pattern FORMAT_R16_SSCALED = VK_FORMAT_R16_SSCALED
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16_UINT' specifies a
--- one-component, 16-bit unsigned integer format that has a single 16-bit R
--- component.
+-- No documentation found for Nested "Format" "FORMAT_R16_UINT"
 pattern FORMAT_R16_UINT :: (a ~ Format) => a
 pattern FORMAT_R16_UINT = VK_FORMAT_R16_UINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16_SINT' specifies a
--- one-component, 16-bit signed integer format that has a single 16-bit R
--- component.
+-- No documentation found for Nested "Format" "FORMAT_R16_SINT"
 pattern FORMAT_R16_SINT :: (a ~ Format) => a
 pattern FORMAT_R16_SINT = VK_FORMAT_R16_SINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16_SFLOAT' specifies a
--- one-component, 16-bit signed floating-point format that has a single
--- 16-bit R component.
+-- No documentation found for Nested "Format" "FORMAT_R16_SFLOAT"
 pattern FORMAT_R16_SFLOAT :: (a ~ Format) => a
 pattern FORMAT_R16_SFLOAT = VK_FORMAT_R16_SFLOAT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16_UNORM' specifies a
--- two-component, 32-bit unsigned normalized format that has a 16-bit R
--- component in bytes 0..1, and a 16-bit G component in bytes 2..3.
+-- No documentation found for Nested "Format" "FORMAT_R16G16_UNORM"
 pattern FORMAT_R16G16_UNORM :: (a ~ Format) => a
 pattern FORMAT_R16G16_UNORM = VK_FORMAT_R16G16_UNORM
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16_SNORM' specifies a
--- two-component, 32-bit signed normalized format that has a 16-bit R
--- component in bytes 0..1, and a 16-bit G component in bytes 2..3.
+-- No documentation found for Nested "Format" "FORMAT_R16G16_SNORM"
 pattern FORMAT_R16G16_SNORM :: (a ~ Format) => a
 pattern FORMAT_R16G16_SNORM = VK_FORMAT_R16G16_SNORM
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16_USCALED' specifies a
--- two-component, 32-bit unsigned scaled integer format that has a 16-bit R
--- component in bytes 0..1, and a 16-bit G component in bytes 2..3.
+-- No documentation found for Nested "Format" "FORMAT_R16G16_USCALED"
 pattern FORMAT_R16G16_USCALED :: (a ~ Format) => a
 pattern FORMAT_R16G16_USCALED = VK_FORMAT_R16G16_USCALED
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16_SSCALED' specifies a
--- two-component, 32-bit signed scaled integer format that has a 16-bit R
--- component in bytes 0..1, and a 16-bit G component in bytes 2..3.
+-- No documentation found for Nested "Format" "FORMAT_R16G16_SSCALED"
 pattern FORMAT_R16G16_SSCALED :: (a ~ Format) => a
 pattern FORMAT_R16G16_SSCALED = VK_FORMAT_R16G16_SSCALED
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16_UINT' specifies a
--- two-component, 32-bit unsigned integer format that has a 16-bit R
--- component in bytes 0..1, and a 16-bit G component in bytes 2..3.
+-- No documentation found for Nested "Format" "FORMAT_R16G16_UINT"
 pattern FORMAT_R16G16_UINT :: (a ~ Format) => a
 pattern FORMAT_R16G16_UINT = VK_FORMAT_R16G16_UINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16_SINT' specifies a
--- two-component, 32-bit signed integer format that has a 16-bit R
--- component in bytes 0..1, and a 16-bit G component in bytes 2..3.
+-- No documentation found for Nested "Format" "FORMAT_R16G16_SINT"
 pattern FORMAT_R16G16_SINT :: (a ~ Format) => a
 pattern FORMAT_R16G16_SINT = VK_FORMAT_R16G16_SINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16_SFLOAT' specifies a
--- two-component, 32-bit signed floating-point format that has a 16-bit R
--- component in bytes 0..1, and a 16-bit G component in bytes 2..3.
+-- No documentation found for Nested "Format" "FORMAT_R16G16_SFLOAT"
 pattern FORMAT_R16G16_SFLOAT :: (a ~ Format) => a
 pattern FORMAT_R16G16_SFLOAT = VK_FORMAT_R16G16_SFLOAT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16B16_UNORM' specifies a
--- three-component, 48-bit unsigned normalized format that has a 16-bit R
--- component in bytes 0..1, a 16-bit G component in bytes 2..3, and a
--- 16-bit B component in bytes 4..5.
+-- No documentation found for Nested "Format" "FORMAT_R16G16B16_UNORM"
 pattern FORMAT_R16G16B16_UNORM :: (a ~ Format) => a
 pattern FORMAT_R16G16B16_UNORM = VK_FORMAT_R16G16B16_UNORM
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16B16_SNORM' specifies a
--- three-component, 48-bit signed normalized format that has a 16-bit R
--- component in bytes 0..1, a 16-bit G component in bytes 2..3, and a
--- 16-bit B component in bytes 4..5.
+-- No documentation found for Nested "Format" "FORMAT_R16G16B16_SNORM"
 pattern FORMAT_R16G16B16_SNORM :: (a ~ Format) => a
 pattern FORMAT_R16G16B16_SNORM = VK_FORMAT_R16G16B16_SNORM
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16B16_USCALED' specifies a
--- three-component, 48-bit unsigned scaled integer format that has a 16-bit
--- R component in bytes 0..1, a 16-bit G component in bytes 2..3, and a
--- 16-bit B component in bytes 4..5.
+-- No documentation found for Nested "Format" "FORMAT_R16G16B16_USCALED"
 pattern FORMAT_R16G16B16_USCALED :: (a ~ Format) => a
 pattern FORMAT_R16G16B16_USCALED = VK_FORMAT_R16G16B16_USCALED
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16B16_SSCALED' specifies a
--- three-component, 48-bit signed scaled integer format that has a 16-bit R
--- component in bytes 0..1, a 16-bit G component in bytes 2..3, and a
--- 16-bit B component in bytes 4..5.
+-- No documentation found for Nested "Format" "FORMAT_R16G16B16_SSCALED"
 pattern FORMAT_R16G16B16_SSCALED :: (a ~ Format) => a
 pattern FORMAT_R16G16B16_SSCALED = VK_FORMAT_R16G16B16_SSCALED
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16B16_UINT' specifies a
--- three-component, 48-bit unsigned integer format that has a 16-bit R
--- component in bytes 0..1, a 16-bit G component in bytes 2..3, and a
--- 16-bit B component in bytes 4..5.
+-- No documentation found for Nested "Format" "FORMAT_R16G16B16_UINT"
 pattern FORMAT_R16G16B16_UINT :: (a ~ Format) => a
 pattern FORMAT_R16G16B16_UINT = VK_FORMAT_R16G16B16_UINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16B16_SINT' specifies a
--- three-component, 48-bit signed integer format that has a 16-bit R
--- component in bytes 0..1, a 16-bit G component in bytes 2..3, and a
--- 16-bit B component in bytes 4..5.
+-- No documentation found for Nested "Format" "FORMAT_R16G16B16_SINT"
 pattern FORMAT_R16G16B16_SINT :: (a ~ Format) => a
 pattern FORMAT_R16G16B16_SINT = VK_FORMAT_R16G16B16_SINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16B16_SFLOAT' specifies a
--- three-component, 48-bit signed floating-point format that has a 16-bit R
--- component in bytes 0..1, a 16-bit G component in bytes 2..3, and a
--- 16-bit B component in bytes 4..5.
+-- No documentation found for Nested "Format" "FORMAT_R16G16B16_SFLOAT"
 pattern FORMAT_R16G16B16_SFLOAT :: (a ~ Format) => a
 pattern FORMAT_R16G16B16_SFLOAT = VK_FORMAT_R16G16B16_SFLOAT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16B16A16_UNORM' specifies a
--- four-component, 64-bit unsigned normalized format that has a 16-bit R
--- component in bytes 0..1, a 16-bit G component in bytes 2..3, a 16-bit B
--- component in bytes 4..5, and a 16-bit A component in bytes 6..7.
+-- No documentation found for Nested "Format" "FORMAT_R16G16B16A16_UNORM"
 pattern FORMAT_R16G16B16A16_UNORM :: (a ~ Format) => a
 pattern FORMAT_R16G16B16A16_UNORM = VK_FORMAT_R16G16B16A16_UNORM
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16B16A16_SNORM' specifies a
--- four-component, 64-bit signed normalized format that has a 16-bit R
--- component in bytes 0..1, a 16-bit G component in bytes 2..3, a 16-bit B
--- component in bytes 4..5, and a 16-bit A component in bytes 6..7.
+-- No documentation found for Nested "Format" "FORMAT_R16G16B16A16_SNORM"
 pattern FORMAT_R16G16B16A16_SNORM :: (a ~ Format) => a
 pattern FORMAT_R16G16B16A16_SNORM = VK_FORMAT_R16G16B16A16_SNORM
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16B16A16_USCALED' specifies
--- a four-component, 64-bit unsigned scaled integer format that has a
--- 16-bit R component in bytes 0..1, a 16-bit G component in bytes 2..3, a
--- 16-bit B component in bytes 4..5, and a 16-bit A component in bytes
--- 6..7.
+-- No documentation found for Nested "Format" "FORMAT_R16G16B16A16_USCALED"
 pattern FORMAT_R16G16B16A16_USCALED :: (a ~ Format) => a
 pattern FORMAT_R16G16B16A16_USCALED = VK_FORMAT_R16G16B16A16_USCALED
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16B16A16_SSCALED' specifies
--- a four-component, 64-bit signed scaled integer format that has a 16-bit
--- R component in bytes 0..1, a 16-bit G component in bytes 2..3, a 16-bit
--- B component in bytes 4..5, and a 16-bit A component in bytes 6..7.
+-- No documentation found for Nested "Format" "FORMAT_R16G16B16A16_SSCALED"
 pattern FORMAT_R16G16B16A16_SSCALED :: (a ~ Format) => a
 pattern FORMAT_R16G16B16A16_SSCALED = VK_FORMAT_R16G16B16A16_SSCALED
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16B16A16_UINT' specifies a
--- four-component, 64-bit unsigned integer format that has a 16-bit R
--- component in bytes 0..1, a 16-bit G component in bytes 2..3, a 16-bit B
--- component in bytes 4..5, and a 16-bit A component in bytes 6..7.
+-- No documentation found for Nested "Format" "FORMAT_R16G16B16A16_UINT"
 pattern FORMAT_R16G16B16A16_UINT :: (a ~ Format) => a
 pattern FORMAT_R16G16B16A16_UINT = VK_FORMAT_R16G16B16A16_UINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16B16A16_SINT' specifies a
--- four-component, 64-bit signed integer format that has a 16-bit R
--- component in bytes 0..1, a 16-bit G component in bytes 2..3, a 16-bit B
--- component in bytes 4..5, and a 16-bit A component in bytes 6..7.
+-- No documentation found for Nested "Format" "FORMAT_R16G16B16A16_SINT"
 pattern FORMAT_R16G16B16A16_SINT :: (a ~ Format) => a
 pattern FORMAT_R16G16B16A16_SINT = VK_FORMAT_R16G16B16A16_SINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R16G16B16A16_SFLOAT' specifies
--- a four-component, 64-bit signed floating-point format that has a 16-bit
--- R component in bytes 0..1, a 16-bit G component in bytes 2..3, a 16-bit
--- B component in bytes 4..5, and a 16-bit A component in bytes 6..7.
+-- No documentation found for Nested "Format" "FORMAT_R16G16B16A16_SFLOAT"
 pattern FORMAT_R16G16B16A16_SFLOAT :: (a ~ Format) => a
 pattern FORMAT_R16G16B16A16_SFLOAT = VK_FORMAT_R16G16B16A16_SFLOAT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R32_UINT' specifies a
--- one-component, 32-bit unsigned integer format that has a single 32-bit R
--- component.
+-- No documentation found for Nested "Format" "FORMAT_R32_UINT"
 pattern FORMAT_R32_UINT :: (a ~ Format) => a
 pattern FORMAT_R32_UINT = VK_FORMAT_R32_UINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R32_SINT' specifies a
--- one-component, 32-bit signed integer format that has a single 32-bit R
--- component.
+-- No documentation found for Nested "Format" "FORMAT_R32_SINT"
 pattern FORMAT_R32_SINT :: (a ~ Format) => a
 pattern FORMAT_R32_SINT = VK_FORMAT_R32_SINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R32_SFLOAT' specifies a
--- one-component, 32-bit signed floating-point format that has a single
--- 32-bit R component.
+-- No documentation found for Nested "Format" "FORMAT_R32_SFLOAT"
 pattern FORMAT_R32_SFLOAT :: (a ~ Format) => a
 pattern FORMAT_R32_SFLOAT = VK_FORMAT_R32_SFLOAT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R32G32_UINT' specifies a
--- two-component, 64-bit unsigned integer format that has a 32-bit R
--- component in bytes 0..3, and a 32-bit G component in bytes 4..7.
+-- No documentation found for Nested "Format" "FORMAT_R32G32_UINT"
 pattern FORMAT_R32G32_UINT :: (a ~ Format) => a
 pattern FORMAT_R32G32_UINT = VK_FORMAT_R32G32_UINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R32G32_SINT' specifies a
--- two-component, 64-bit signed integer format that has a 32-bit R
--- component in bytes 0..3, and a 32-bit G component in bytes 4..7.
+-- No documentation found for Nested "Format" "FORMAT_R32G32_SINT"
 pattern FORMAT_R32G32_SINT :: (a ~ Format) => a
 pattern FORMAT_R32G32_SINT = VK_FORMAT_R32G32_SINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R32G32_SFLOAT' specifies a
--- two-component, 64-bit signed floating-point format that has a 32-bit R
--- component in bytes 0..3, and a 32-bit G component in bytes 4..7.
+-- No documentation found for Nested "Format" "FORMAT_R32G32_SFLOAT"
 pattern FORMAT_R32G32_SFLOAT :: (a ~ Format) => a
 pattern FORMAT_R32G32_SFLOAT = VK_FORMAT_R32G32_SFLOAT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R32G32B32_UINT' specifies a
--- three-component, 96-bit unsigned integer format that has a 32-bit R
--- component in bytes 0..3, a 32-bit G component in bytes 4..7, and a
--- 32-bit B component in bytes 8..11.
+-- No documentation found for Nested "Format" "FORMAT_R32G32B32_UINT"
 pattern FORMAT_R32G32B32_UINT :: (a ~ Format) => a
 pattern FORMAT_R32G32B32_UINT = VK_FORMAT_R32G32B32_UINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R32G32B32_SINT' specifies a
--- three-component, 96-bit signed integer format that has a 32-bit R
--- component in bytes 0..3, a 32-bit G component in bytes 4..7, and a
--- 32-bit B component in bytes 8..11.
+-- No documentation found for Nested "Format" "FORMAT_R32G32B32_SINT"
 pattern FORMAT_R32G32B32_SINT :: (a ~ Format) => a
 pattern FORMAT_R32G32B32_SINT = VK_FORMAT_R32G32B32_SINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R32G32B32_SFLOAT' specifies a
--- three-component, 96-bit signed floating-point format that has a 32-bit R
--- component in bytes 0..3, a 32-bit G component in bytes 4..7, and a
--- 32-bit B component in bytes 8..11.
+-- No documentation found for Nested "Format" "FORMAT_R32G32B32_SFLOAT"
 pattern FORMAT_R32G32B32_SFLOAT :: (a ~ Format) => a
 pattern FORMAT_R32G32B32_SFLOAT = VK_FORMAT_R32G32B32_SFLOAT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R32G32B32A32_UINT' specifies a
--- four-component, 128-bit unsigned integer format that has a 32-bit R
--- component in bytes 0..3, a 32-bit G component in bytes 4..7, a 32-bit B
--- component in bytes 8..11, and a 32-bit A component in bytes 12..15.
+-- No documentation found for Nested "Format" "FORMAT_R32G32B32A32_UINT"
 pattern FORMAT_R32G32B32A32_UINT :: (a ~ Format) => a
 pattern FORMAT_R32G32B32A32_UINT = VK_FORMAT_R32G32B32A32_UINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R32G32B32A32_SINT' specifies a
--- four-component, 128-bit signed integer format that has a 32-bit R
--- component in bytes 0..3, a 32-bit G component in bytes 4..7, a 32-bit B
--- component in bytes 8..11, and a 32-bit A component in bytes 12..15.
+-- No documentation found for Nested "Format" "FORMAT_R32G32B32A32_SINT"
 pattern FORMAT_R32G32B32A32_SINT :: (a ~ Format) => a
 pattern FORMAT_R32G32B32A32_SINT = VK_FORMAT_R32G32B32A32_SINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R32G32B32A32_SFLOAT' specifies
--- a four-component, 128-bit signed floating-point format that has a 32-bit
--- R component in bytes 0..3, a 32-bit G component in bytes 4..7, a 32-bit
--- B component in bytes 8..11, and a 32-bit A component in bytes 12..15.
+-- No documentation found for Nested "Format" "FORMAT_R32G32B32A32_SFLOAT"
 pattern FORMAT_R32G32B32A32_SFLOAT :: (a ~ Format) => a
 pattern FORMAT_R32G32B32A32_SFLOAT = VK_FORMAT_R32G32B32A32_SFLOAT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R64_UINT' specifies a
--- one-component, 64-bit unsigned integer format that has a single 64-bit R
--- component.
+-- No documentation found for Nested "Format" "FORMAT_R64_UINT"
 pattern FORMAT_R64_UINT :: (a ~ Format) => a
 pattern FORMAT_R64_UINT = VK_FORMAT_R64_UINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R64_SINT' specifies a
--- one-component, 64-bit signed integer format that has a single 64-bit R
--- component.
+-- No documentation found for Nested "Format" "FORMAT_R64_SINT"
 pattern FORMAT_R64_SINT :: (a ~ Format) => a
 pattern FORMAT_R64_SINT = VK_FORMAT_R64_SINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R64_SFLOAT' specifies a
--- one-component, 64-bit signed floating-point format that has a single
--- 64-bit R component.
+-- No documentation found for Nested "Format" "FORMAT_R64_SFLOAT"
 pattern FORMAT_R64_SFLOAT :: (a ~ Format) => a
 pattern FORMAT_R64_SFLOAT = VK_FORMAT_R64_SFLOAT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R64G64_UINT' specifies a
--- two-component, 128-bit unsigned integer format that has a 64-bit R
--- component in bytes 0..7, and a 64-bit G component in bytes 8..15.
+-- No documentation found for Nested "Format" "FORMAT_R64G64_UINT"
 pattern FORMAT_R64G64_UINT :: (a ~ Format) => a
 pattern FORMAT_R64G64_UINT = VK_FORMAT_R64G64_UINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R64G64_SINT' specifies a
--- two-component, 128-bit signed integer format that has a 64-bit R
--- component in bytes 0..7, and a 64-bit G component in bytes 8..15.
+-- No documentation found for Nested "Format" "FORMAT_R64G64_SINT"
 pattern FORMAT_R64G64_SINT :: (a ~ Format) => a
 pattern FORMAT_R64G64_SINT = VK_FORMAT_R64G64_SINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R64G64_SFLOAT' specifies a
--- two-component, 128-bit signed floating-point format that has a 64-bit R
--- component in bytes 0..7, and a 64-bit G component in bytes 8..15.
+-- No documentation found for Nested "Format" "FORMAT_R64G64_SFLOAT"
 pattern FORMAT_R64G64_SFLOAT :: (a ~ Format) => a
 pattern FORMAT_R64G64_SFLOAT = VK_FORMAT_R64G64_SFLOAT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R64G64B64_UINT' specifies a
--- three-component, 192-bit unsigned integer format that has a 64-bit R
--- component in bytes 0..7, a 64-bit G component in bytes 8..15, and a
--- 64-bit B component in bytes 16..23.
+-- No documentation found for Nested "Format" "FORMAT_R64G64B64_UINT"
 pattern FORMAT_R64G64B64_UINT :: (a ~ Format) => a
 pattern FORMAT_R64G64B64_UINT = VK_FORMAT_R64G64B64_UINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R64G64B64_SINT' specifies a
--- three-component, 192-bit signed integer format that has a 64-bit R
--- component in bytes 0..7, a 64-bit G component in bytes 8..15, and a
--- 64-bit B component in bytes 16..23.
+-- No documentation found for Nested "Format" "FORMAT_R64G64B64_SINT"
 pattern FORMAT_R64G64B64_SINT :: (a ~ Format) => a
 pattern FORMAT_R64G64B64_SINT = VK_FORMAT_R64G64B64_SINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R64G64B64_SFLOAT' specifies a
--- three-component, 192-bit signed floating-point format that has a 64-bit
--- R component in bytes 0..7, a 64-bit G component in bytes 8..15, and a
--- 64-bit B component in bytes 16..23.
+-- No documentation found for Nested "Format" "FORMAT_R64G64B64_SFLOAT"
 pattern FORMAT_R64G64B64_SFLOAT :: (a ~ Format) => a
 pattern FORMAT_R64G64B64_SFLOAT = VK_FORMAT_R64G64B64_SFLOAT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R64G64B64A64_UINT' specifies a
--- four-component, 256-bit unsigned integer format that has a 64-bit R
--- component in bytes 0..7, a 64-bit G component in bytes 8..15, a 64-bit B
--- component in bytes 16..23, and a 64-bit A component in bytes 24..31.
+-- No documentation found for Nested "Format" "FORMAT_R64G64B64A64_UINT"
 pattern FORMAT_R64G64B64A64_UINT :: (a ~ Format) => a
 pattern FORMAT_R64G64B64A64_UINT = VK_FORMAT_R64G64B64A64_UINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R64G64B64A64_SINT' specifies a
--- four-component, 256-bit signed integer format that has a 64-bit R
--- component in bytes 0..7, a 64-bit G component in bytes 8..15, a 64-bit B
--- component in bytes 16..23, and a 64-bit A component in bytes 24..31.
+-- No documentation found for Nested "Format" "FORMAT_R64G64B64A64_SINT"
 pattern FORMAT_R64G64B64A64_SINT :: (a ~ Format) => a
 pattern FORMAT_R64G64B64A64_SINT = VK_FORMAT_R64G64B64A64_SINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_R64G64B64A64_SFLOAT' specifies
--- a four-component, 256-bit signed floating-point format that has a 64-bit
--- R component in bytes 0..7, a 64-bit G component in bytes 8..15, a 64-bit
--- B component in bytes 16..23, and a 64-bit A component in bytes 24..31.
+-- No documentation found for Nested "Format" "FORMAT_R64G64B64A64_SFLOAT"
 pattern FORMAT_R64G64B64A64_SFLOAT :: (a ~ Format) => a
 pattern FORMAT_R64G64B64A64_SFLOAT = VK_FORMAT_R64G64B64A64_SFLOAT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_B10G11R11_UFLOAT_PACK32'
--- specifies a three-component, 32-bit packed unsigned floating-point
--- format that has a 10-bit B component in bits 22..31, an 11-bit G
--- component in bits 11..21, an 11-bit R component in bits 0..10. See
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fundamentals-fp10>
--- and
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fundamentals-fp11>.
+-- No documentation found for Nested "Format" "FORMAT_B10G11R11_UFLOAT_PACK32"
 pattern FORMAT_B10G11R11_UFLOAT_PACK32 :: (a ~ Format) => a
 pattern FORMAT_B10G11R11_UFLOAT_PACK32 = VK_FORMAT_B10G11R11_UFLOAT_PACK32
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_E5B9G9R9_UFLOAT_PACK32'
--- specifies a three-component, 32-bit packed unsigned floating-point
--- format that has a 5-bit shared exponent in bits 27..31, a 9-bit B
--- component mantissa in bits 18..26, a 9-bit G component mantissa in bits
--- 9..17, and a 9-bit R component mantissa in bits 0..8.
+-- No documentation found for Nested "Format" "FORMAT_E5B9G9R9_UFLOAT_PACK32"
 pattern FORMAT_E5B9G9R9_UFLOAT_PACK32 :: (a ~ Format) => a
 pattern FORMAT_E5B9G9R9_UFLOAT_PACK32 = VK_FORMAT_E5B9G9R9_UFLOAT_PACK32
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_D16_UNORM' specifies a
--- one-component, 16-bit unsigned normalized format that has a single
--- 16-bit depth component.
+-- No documentation found for Nested "Format" "FORMAT_D16_UNORM"
 pattern FORMAT_D16_UNORM :: (a ~ Format) => a
 pattern FORMAT_D16_UNORM = VK_FORMAT_D16_UNORM
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_X8_D24_UNORM_PACK32' specifies
--- a two-component, 32-bit format that has 24 unsigned normalized bits in
--- the depth component and, optionally:, 8 bits that are unused.
+-- No documentation found for Nested "Format" "FORMAT_X8_D24_UNORM_PACK32"
 pattern FORMAT_X8_D24_UNORM_PACK32 :: (a ~ Format) => a
 pattern FORMAT_X8_D24_UNORM_PACK32 = VK_FORMAT_X8_D24_UNORM_PACK32
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_D32_SFLOAT' specifies a
--- one-component, 32-bit signed floating-point format that has 32-bits in
--- the depth component.
+-- No documentation found for Nested "Format" "FORMAT_D32_SFLOAT"
 pattern FORMAT_D32_SFLOAT :: (a ~ Format) => a
 pattern FORMAT_D32_SFLOAT = VK_FORMAT_D32_SFLOAT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_S8_UINT' specifies a
--- one-component, 8-bit unsigned integer format that has 8-bits in the
--- stencil component.
+-- No documentation found for Nested "Format" "FORMAT_S8_UINT"
 pattern FORMAT_S8_UINT :: (a ~ Format) => a
 pattern FORMAT_S8_UINT = VK_FORMAT_S8_UINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_D16_UNORM_S8_UINT' specifies a
--- two-component, 24-bit format that has 16 unsigned normalized bits in the
--- depth component and 8 unsigned integer bits in the stencil component.
+-- No documentation found for Nested "Format" "FORMAT_D16_UNORM_S8_UINT"
 pattern FORMAT_D16_UNORM_S8_UINT :: (a ~ Format) => a
 pattern FORMAT_D16_UNORM_S8_UINT = VK_FORMAT_D16_UNORM_S8_UINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_D24_UNORM_S8_UINT' specifies a
--- two-component, 32-bit packed format that has 8 unsigned integer bits in
--- the stencil component, and 24 unsigned normalized bits in the depth
--- component.
+-- No documentation found for Nested "Format" "FORMAT_D24_UNORM_S8_UINT"
 pattern FORMAT_D24_UNORM_S8_UINT :: (a ~ Format) => a
 pattern FORMAT_D24_UNORM_S8_UINT = VK_FORMAT_D24_UNORM_S8_UINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_D32_SFLOAT_S8_UINT' specifies a
--- two-component format that has 32 signed float bits in the depth
--- component and 8 unsigned integer bits in the stencil component. There
--- are optionally: 24-bits that are unused.
+-- No documentation found for Nested "Format" "FORMAT_D32_SFLOAT_S8_UINT"
 pattern FORMAT_D32_SFLOAT_S8_UINT :: (a ~ Format) => a
 pattern FORMAT_D32_SFLOAT_S8_UINT = VK_FORMAT_D32_SFLOAT_S8_UINT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC1_RGB_UNORM_BLOCK' specifies
--- a three-component, block-compressed format where each 64-bit compressed
--- texel block encodes a 4×4 rectangle of unsigned normalized RGB texel
--- data. This format has no alpha and is considered opaque.
+-- No documentation found for Nested "Format" "FORMAT_BC1_RGB_UNORM_BLOCK"
 pattern FORMAT_BC1_RGB_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_BC1_RGB_UNORM_BLOCK = VK_FORMAT_BC1_RGB_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC1_RGB_SRGB_BLOCK' specifies a
--- three-component, block-compressed format where each 64-bit compressed
--- texel block encodes a 4×4 rectangle of unsigned normalized RGB texel
--- data with sRGB nonlinear encoding. This format has no alpha and is
--- considered opaque.
+-- No documentation found for Nested "Format" "FORMAT_BC1_RGB_SRGB_BLOCK"
 pattern FORMAT_BC1_RGB_SRGB_BLOCK :: (a ~ Format) => a
 pattern FORMAT_BC1_RGB_SRGB_BLOCK = VK_FORMAT_BC1_RGB_SRGB_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC1_RGBA_UNORM_BLOCK' specifies
--- a four-component, block-compressed format where each 64-bit compressed
--- texel block encodes a 4×4 rectangle of unsigned normalized RGB texel
--- data, and provides 1 bit of alpha.
+-- No documentation found for Nested "Format" "FORMAT_BC1_RGBA_UNORM_BLOCK"
 pattern FORMAT_BC1_RGBA_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_BC1_RGBA_UNORM_BLOCK = VK_FORMAT_BC1_RGBA_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC1_RGBA_SRGB_BLOCK' specifies
--- a four-component, block-compressed format where each 64-bit compressed
--- texel block encodes a 4×4 rectangle of unsigned normalized RGB texel
--- data with sRGB nonlinear encoding, and provides 1 bit of alpha.
+-- No documentation found for Nested "Format" "FORMAT_BC1_RGBA_SRGB_BLOCK"
 pattern FORMAT_BC1_RGBA_SRGB_BLOCK :: (a ~ Format) => a
 pattern FORMAT_BC1_RGBA_SRGB_BLOCK = VK_FORMAT_BC1_RGBA_SRGB_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC2_UNORM_BLOCK' specifies a
--- four-component, block-compressed format where each 128-bit compressed
--- texel block encodes a 4×4 rectangle of unsigned normalized RGBA texel
--- data with the first 64 bits encoding alpha values followed by 64 bits
--- encoding RGB values.
+-- No documentation found for Nested "Format" "FORMAT_BC2_UNORM_BLOCK"
 pattern FORMAT_BC2_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_BC2_UNORM_BLOCK = VK_FORMAT_BC2_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC2_SRGB_BLOCK' specifies a
--- four-component, block-compressed format where each 128-bit compressed
--- texel block encodes a 4×4 rectangle of unsigned normalized RGBA texel
--- data with the first 64 bits encoding alpha values followed by 64 bits
--- encoding RGB values with sRGB nonlinear encoding.
+-- No documentation found for Nested "Format" "FORMAT_BC2_SRGB_BLOCK"
 pattern FORMAT_BC2_SRGB_BLOCK :: (a ~ Format) => a
 pattern FORMAT_BC2_SRGB_BLOCK = VK_FORMAT_BC2_SRGB_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC3_UNORM_BLOCK' specifies a
--- four-component, block-compressed format where each 128-bit compressed
--- texel block encodes a 4×4 rectangle of unsigned normalized RGBA texel
--- data with the first 64 bits encoding alpha values followed by 64 bits
--- encoding RGB values.
+-- No documentation found for Nested "Format" "FORMAT_BC3_UNORM_BLOCK"
 pattern FORMAT_BC3_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_BC3_UNORM_BLOCK = VK_FORMAT_BC3_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC3_SRGB_BLOCK' specifies a
--- four-component, block-compressed format where each 128-bit compressed
--- texel block encodes a 4×4 rectangle of unsigned normalized RGBA texel
--- data with the first 64 bits encoding alpha values followed by 64 bits
--- encoding RGB values with sRGB nonlinear encoding.
+-- No documentation found for Nested "Format" "FORMAT_BC3_SRGB_BLOCK"
 pattern FORMAT_BC3_SRGB_BLOCK :: (a ~ Format) => a
 pattern FORMAT_BC3_SRGB_BLOCK = VK_FORMAT_BC3_SRGB_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC4_UNORM_BLOCK' specifies a
--- one-component, block-compressed format where each 64-bit compressed
--- texel block encodes a 4×4 rectangle of unsigned normalized red texel
--- data.
+-- No documentation found for Nested "Format" "FORMAT_BC4_UNORM_BLOCK"
 pattern FORMAT_BC4_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_BC4_UNORM_BLOCK = VK_FORMAT_BC4_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC4_SNORM_BLOCK' specifies a
--- one-component, block-compressed format where each 64-bit compressed
--- texel block encodes a 4×4 rectangle of signed normalized red texel data.
+-- No documentation found for Nested "Format" "FORMAT_BC4_SNORM_BLOCK"
 pattern FORMAT_BC4_SNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_BC4_SNORM_BLOCK = VK_FORMAT_BC4_SNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC5_UNORM_BLOCK' specifies a
--- two-component, block-compressed format where each 128-bit compressed
--- texel block encodes a 4×4 rectangle of unsigned normalized RG texel data
--- with the first 64 bits encoding red values followed by 64 bits encoding
--- green values.
+-- No documentation found for Nested "Format" "FORMAT_BC5_UNORM_BLOCK"
 pattern FORMAT_BC5_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_BC5_UNORM_BLOCK = VK_FORMAT_BC5_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC5_SNORM_BLOCK' specifies a
--- two-component, block-compressed format where each 128-bit compressed
--- texel block encodes a 4×4 rectangle of signed normalized RG texel data
--- with the first 64 bits encoding red values followed by 64 bits encoding
--- green values.
+-- No documentation found for Nested "Format" "FORMAT_BC5_SNORM_BLOCK"
 pattern FORMAT_BC5_SNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_BC5_SNORM_BLOCK = VK_FORMAT_BC5_SNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC6H_UFLOAT_BLOCK' specifies a
--- three-component, block-compressed format where each 128-bit compressed
--- texel block encodes a 4×4 rectangle of unsigned floating-point RGB texel
--- data.
+-- No documentation found for Nested "Format" "FORMAT_BC6H_UFLOAT_BLOCK"
 pattern FORMAT_BC6H_UFLOAT_BLOCK :: (a ~ Format) => a
 pattern FORMAT_BC6H_UFLOAT_BLOCK = VK_FORMAT_BC6H_UFLOAT_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC6H_SFLOAT_BLOCK' specifies a
--- three-component, block-compressed format where each 128-bit compressed
--- texel block encodes a 4×4 rectangle of signed floating-point RGB texel
--- data.
+-- No documentation found for Nested "Format" "FORMAT_BC6H_SFLOAT_BLOCK"
 pattern FORMAT_BC6H_SFLOAT_BLOCK :: (a ~ Format) => a
 pattern FORMAT_BC6H_SFLOAT_BLOCK = VK_FORMAT_BC6H_SFLOAT_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC7_UNORM_BLOCK' specifies a
--- four-component, block-compressed format where each 128-bit compressed
--- texel block encodes a 4×4 rectangle of unsigned normalized RGBA texel
--- data.
+-- No documentation found for Nested "Format" "FORMAT_BC7_UNORM_BLOCK"
 pattern FORMAT_BC7_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_BC7_UNORM_BLOCK = VK_FORMAT_BC7_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_BC7_SRGB_BLOCK' specifies a
--- four-component, block-compressed format where each 128-bit compressed
--- texel block encodes a 4×4 rectangle of unsigned normalized RGBA texel
--- data with sRGB nonlinear encoding applied to the RGB components.
+-- No documentation found for Nested "Format" "FORMAT_BC7_SRGB_BLOCK"
 pattern FORMAT_BC7_SRGB_BLOCK :: (a ~ Format) => a
 pattern FORMAT_BC7_SRGB_BLOCK = VK_FORMAT_BC7_SRGB_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK'
--- specifies a three-component, ETC2 compressed format where each 64-bit
--- compressed texel block encodes a 4×4 rectangle of unsigned normalized
--- RGB texel data. This format has no alpha and is considered opaque.
+-- No documentation found for Nested "Format" "FORMAT_ETC2_R8G8B8_UNORM_BLOCK"
 pattern FORMAT_ETC2_R8G8B8_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ETC2_R8G8B8_UNORM_BLOCK = VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK'
--- specifies a three-component, ETC2 compressed format where each 64-bit
--- compressed texel block encodes a 4×4 rectangle of unsigned normalized
--- RGB texel data with sRGB nonlinear encoding. This format has no alpha
--- and is considered opaque.
+-- No documentation found for Nested "Format" "FORMAT_ETC2_R8G8B8_SRGB_BLOCK"
 pattern FORMAT_ETC2_R8G8B8_SRGB_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ETC2_R8G8B8_SRGB_BLOCK = VK_FORMAT_ETC2_R8G8B8_SRGB_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK'
--- specifies a four-component, ETC2 compressed format where each 64-bit
--- compressed texel block encodes a 4×4 rectangle of unsigned normalized
--- RGB texel data, and provides 1 bit of alpha.
+-- No documentation found for Nested "Format" "FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK"
 pattern FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK = VK_FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK'
--- specifies a four-component, ETC2 compressed format where each 64-bit
--- compressed texel block encodes a 4×4 rectangle of unsigned normalized
--- RGB texel data with sRGB nonlinear encoding, and provides 1 bit of
--- alpha.
+-- No documentation found for Nested "Format" "FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK"
 pattern FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK = VK_FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK'
--- specifies a four-component, ETC2 compressed format where each 128-bit
--- compressed texel block encodes a 4×4 rectangle of unsigned normalized
--- RGBA texel data with the first 64 bits encoding alpha values followed by
--- 64 bits encoding RGB values.
+-- No documentation found for Nested "Format" "FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK"
 pattern FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK = VK_FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK'
--- specifies a four-component, ETC2 compressed format where each 128-bit
--- compressed texel block encodes a 4×4 rectangle of unsigned normalized
--- RGBA texel data with the first 64 bits encoding alpha values followed by
--- 64 bits encoding RGB values with sRGB nonlinear encoding applied.
+-- No documentation found for Nested "Format" "FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK"
 pattern FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK = VK_FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_EAC_R11_UNORM_BLOCK' specifies
--- a one-component, ETC2 compressed format where each 64-bit compressed
--- texel block encodes a 4×4 rectangle of unsigned normalized red texel
--- data.
+-- No documentation found for Nested "Format" "FORMAT_EAC_R11_UNORM_BLOCK"
 pattern FORMAT_EAC_R11_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_EAC_R11_UNORM_BLOCK = VK_FORMAT_EAC_R11_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_EAC_R11_SNORM_BLOCK' specifies
--- a one-component, ETC2 compressed format where each 64-bit compressed
--- texel block encodes a 4×4 rectangle of signed normalized red texel data.
+-- No documentation found for Nested "Format" "FORMAT_EAC_R11_SNORM_BLOCK"
 pattern FORMAT_EAC_R11_SNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_EAC_R11_SNORM_BLOCK = VK_FORMAT_EAC_R11_SNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_EAC_R11G11_UNORM_BLOCK'
--- specifies a two-component, ETC2 compressed format where each 128-bit
--- compressed texel block encodes a 4×4 rectangle of unsigned normalized RG
--- texel data with the first 64 bits encoding red values followed by 64
--- bits encoding green values.
+-- No documentation found for Nested "Format" "FORMAT_EAC_R11G11_UNORM_BLOCK"
 pattern FORMAT_EAC_R11G11_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_EAC_R11G11_UNORM_BLOCK = VK_FORMAT_EAC_R11G11_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_EAC_R11G11_SNORM_BLOCK'
--- specifies a two-component, ETC2 compressed format where each 128-bit
--- compressed texel block encodes a 4×4 rectangle of signed normalized RG
--- texel data with the first 64 bits encoding red values followed by 64
--- bits encoding green values.
+-- No documentation found for Nested "Format" "FORMAT_EAC_R11G11_SNORM_BLOCK"
 pattern FORMAT_EAC_R11G11_SNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_EAC_R11G11_SNORM_BLOCK = VK_FORMAT_EAC_R11G11_SNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_4x4_UNORM_BLOCK' specifies
--- a four-component, ASTC compressed format where each 128-bit compressed
--- texel block encodes a 4×4 rectangle of unsigned normalized RGBA texel
--- data.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_4x4_UNORM_BLOCK"
 pattern FORMAT_ASTC_4x4_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_4x4_UNORM_BLOCK = VK_FORMAT_ASTC_4x4_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_4x4_SRGB_BLOCK' specifies
--- a four-component, ASTC compressed format where each 128-bit compressed
--- texel block encodes a 4×4 rectangle of unsigned normalized RGBA texel
--- data with sRGB nonlinear encoding applied to the RGB components.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_4x4_SRGB_BLOCK"
 pattern FORMAT_ASTC_4x4_SRGB_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_4x4_SRGB_BLOCK = VK_FORMAT_ASTC_4x4_SRGB_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_5x4_UNORM_BLOCK' specifies
--- a four-component, ASTC compressed format where each 128-bit compressed
--- texel block encodes a 5×4 rectangle of unsigned normalized RGBA texel
--- data.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_5x4_UNORM_BLOCK"
 pattern FORMAT_ASTC_5x4_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_5x4_UNORM_BLOCK = VK_FORMAT_ASTC_5x4_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_5x4_SRGB_BLOCK' specifies
--- a four-component, ASTC compressed format where each 128-bit compressed
--- texel block encodes a 5×4 rectangle of unsigned normalized RGBA texel
--- data with sRGB nonlinear encoding applied to the RGB components.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_5x4_SRGB_BLOCK"
 pattern FORMAT_ASTC_5x4_SRGB_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_5x4_SRGB_BLOCK = VK_FORMAT_ASTC_5x4_SRGB_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_5x5_UNORM_BLOCK' specifies
--- a four-component, ASTC compressed format where each 128-bit compressed
--- texel block encodes a 5×5 rectangle of unsigned normalized RGBA texel
--- data.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_5x5_UNORM_BLOCK"
 pattern FORMAT_ASTC_5x5_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_5x5_UNORM_BLOCK = VK_FORMAT_ASTC_5x5_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_5x5_SRGB_BLOCK' specifies
--- a four-component, ASTC compressed format where each 128-bit compressed
--- texel block encodes a 5×5 rectangle of unsigned normalized RGBA texel
--- data with sRGB nonlinear encoding applied to the RGB components.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_5x5_SRGB_BLOCK"
 pattern FORMAT_ASTC_5x5_SRGB_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_5x5_SRGB_BLOCK = VK_FORMAT_ASTC_5x5_SRGB_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_6x5_UNORM_BLOCK' specifies
--- a four-component, ASTC compressed format where each 128-bit compressed
--- texel block encodes a 6×5 rectangle of unsigned normalized RGBA texel
--- data.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_6x5_UNORM_BLOCK"
 pattern FORMAT_ASTC_6x5_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_6x5_UNORM_BLOCK = VK_FORMAT_ASTC_6x5_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_6x5_SRGB_BLOCK' specifies
--- a four-component, ASTC compressed format where each 128-bit compressed
--- texel block encodes a 6×5 rectangle of unsigned normalized RGBA texel
--- data with sRGB nonlinear encoding applied to the RGB components.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_6x5_SRGB_BLOCK"
 pattern FORMAT_ASTC_6x5_SRGB_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_6x5_SRGB_BLOCK = VK_FORMAT_ASTC_6x5_SRGB_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_6x6_UNORM_BLOCK' specifies
--- a four-component, ASTC compressed format where each 128-bit compressed
--- texel block encodes a 6×6 rectangle of unsigned normalized RGBA texel
--- data.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_6x6_UNORM_BLOCK"
 pattern FORMAT_ASTC_6x6_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_6x6_UNORM_BLOCK = VK_FORMAT_ASTC_6x6_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_6x6_SRGB_BLOCK' specifies
--- a four-component, ASTC compressed format where each 128-bit compressed
--- texel block encodes a 6×6 rectangle of unsigned normalized RGBA texel
--- data with sRGB nonlinear encoding applied to the RGB components.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_6x6_SRGB_BLOCK"
 pattern FORMAT_ASTC_6x6_SRGB_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_6x6_SRGB_BLOCK = VK_FORMAT_ASTC_6x6_SRGB_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_8x5_UNORM_BLOCK' specifies
--- a four-component, ASTC compressed format where each 128-bit compressed
--- texel block encodes an 8×5 rectangle of unsigned normalized RGBA texel
--- data.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_8x5_UNORM_BLOCK"
 pattern FORMAT_ASTC_8x5_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_8x5_UNORM_BLOCK = VK_FORMAT_ASTC_8x5_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_8x5_SRGB_BLOCK' specifies
--- a four-component, ASTC compressed format where each 128-bit compressed
--- texel block encodes an 8×5 rectangle of unsigned normalized RGBA texel
--- data with sRGB nonlinear encoding applied to the RGB components.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_8x5_SRGB_BLOCK"
 pattern FORMAT_ASTC_8x5_SRGB_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_8x5_SRGB_BLOCK = VK_FORMAT_ASTC_8x5_SRGB_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_8x6_UNORM_BLOCK' specifies
--- a four-component, ASTC compressed format where each 128-bit compressed
--- texel block encodes an 8×6 rectangle of unsigned normalized RGBA texel
--- data.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_8x6_UNORM_BLOCK"
 pattern FORMAT_ASTC_8x6_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_8x6_UNORM_BLOCK = VK_FORMAT_ASTC_8x6_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_8x6_SRGB_BLOCK' specifies
--- a four-component, ASTC compressed format where each 128-bit compressed
--- texel block encodes an 8×6 rectangle of unsigned normalized RGBA texel
--- data with sRGB nonlinear encoding applied to the RGB components.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_8x6_SRGB_BLOCK"
 pattern FORMAT_ASTC_8x6_SRGB_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_8x6_SRGB_BLOCK = VK_FORMAT_ASTC_8x6_SRGB_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_8x8_UNORM_BLOCK' specifies
--- a four-component, ASTC compressed format where each 128-bit compressed
--- texel block encodes an 8×8 rectangle of unsigned normalized RGBA texel
--- data.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_8x8_UNORM_BLOCK"
 pattern FORMAT_ASTC_8x8_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_8x8_UNORM_BLOCK = VK_FORMAT_ASTC_8x8_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_8x8_SRGB_BLOCK' specifies
--- a four-component, ASTC compressed format where each 128-bit compressed
--- texel block encodes an 8×8 rectangle of unsigned normalized RGBA texel
--- data with sRGB nonlinear encoding applied to the RGB components.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_8x8_SRGB_BLOCK"
 pattern FORMAT_ASTC_8x8_SRGB_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_8x8_SRGB_BLOCK = VK_FORMAT_ASTC_8x8_SRGB_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_10x5_UNORM_BLOCK'
--- specifies a four-component, ASTC compressed format where each 128-bit
--- compressed texel block encodes a 10×5 rectangle of unsigned normalized
--- RGBA texel data.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_10x5_UNORM_BLOCK"
 pattern FORMAT_ASTC_10x5_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_10x5_UNORM_BLOCK = VK_FORMAT_ASTC_10x5_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_10x5_SRGB_BLOCK' specifies
--- a four-component, ASTC compressed format where each 128-bit compressed
--- texel block encodes a 10×5 rectangle of unsigned normalized RGBA texel
--- data with sRGB nonlinear encoding applied to the RGB components.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_10x5_SRGB_BLOCK"
 pattern FORMAT_ASTC_10x5_SRGB_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_10x5_SRGB_BLOCK = VK_FORMAT_ASTC_10x5_SRGB_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_10x6_UNORM_BLOCK'
--- specifies a four-component, ASTC compressed format where each 128-bit
--- compressed texel block encodes a 10×6 rectangle of unsigned normalized
--- RGBA texel data.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_10x6_UNORM_BLOCK"
 pattern FORMAT_ASTC_10x6_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_10x6_UNORM_BLOCK = VK_FORMAT_ASTC_10x6_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_10x6_SRGB_BLOCK' specifies
--- a four-component, ASTC compressed format where each 128-bit compressed
--- texel block encodes a 10×6 rectangle of unsigned normalized RGBA texel
--- data with sRGB nonlinear encoding applied to the RGB components.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_10x6_SRGB_BLOCK"
 pattern FORMAT_ASTC_10x6_SRGB_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_10x6_SRGB_BLOCK = VK_FORMAT_ASTC_10x6_SRGB_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_10x8_UNORM_BLOCK'
--- specifies a four-component, ASTC compressed format where each 128-bit
--- compressed texel block encodes a 10×8 rectangle of unsigned normalized
--- RGBA texel data.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_10x8_UNORM_BLOCK"
 pattern FORMAT_ASTC_10x8_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_10x8_UNORM_BLOCK = VK_FORMAT_ASTC_10x8_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_10x8_SRGB_BLOCK' specifies
--- a four-component, ASTC compressed format where each 128-bit compressed
--- texel block encodes a 10×8 rectangle of unsigned normalized RGBA texel
--- data with sRGB nonlinear encoding applied to the RGB components.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_10x8_SRGB_BLOCK"
 pattern FORMAT_ASTC_10x8_SRGB_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_10x8_SRGB_BLOCK = VK_FORMAT_ASTC_10x8_SRGB_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_10x10_UNORM_BLOCK'
--- specifies a four-component, ASTC compressed format where each 128-bit
--- compressed texel block encodes a 10×10 rectangle of unsigned normalized
--- RGBA texel data.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_10x10_UNORM_BLOCK"
 pattern FORMAT_ASTC_10x10_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_10x10_UNORM_BLOCK = VK_FORMAT_ASTC_10x10_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_10x10_SRGB_BLOCK'
--- specifies a four-component, ASTC compressed format where each 128-bit
--- compressed texel block encodes a 10×10 rectangle of unsigned normalized
--- RGBA texel data with sRGB nonlinear encoding applied to the RGB
--- components.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_10x10_SRGB_BLOCK"
 pattern FORMAT_ASTC_10x10_SRGB_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_10x10_SRGB_BLOCK = VK_FORMAT_ASTC_10x10_SRGB_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_12x10_UNORM_BLOCK'
--- specifies a four-component, ASTC compressed format where each 128-bit
--- compressed texel block encodes a 12×10 rectangle of unsigned normalized
--- RGBA texel data.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_12x10_UNORM_BLOCK"
 pattern FORMAT_ASTC_12x10_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_12x10_UNORM_BLOCK = VK_FORMAT_ASTC_12x10_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_12x10_SRGB_BLOCK'
--- specifies a four-component, ASTC compressed format where each 128-bit
--- compressed texel block encodes a 12×10 rectangle of unsigned normalized
--- RGBA texel data with sRGB nonlinear encoding applied to the RGB
--- components.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_12x10_SRGB_BLOCK"
 pattern FORMAT_ASTC_12x10_SRGB_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_12x10_SRGB_BLOCK = VK_FORMAT_ASTC_12x10_SRGB_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_12x12_UNORM_BLOCK'
--- specifies a four-component, ASTC compressed format where each 128-bit
--- compressed texel block encodes a 12×12 rectangle of unsigned normalized
--- RGBA texel data.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_12x12_UNORM_BLOCK"
 pattern FORMAT_ASTC_12x12_UNORM_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_12x12_UNORM_BLOCK = VK_FORMAT_ASTC_12x12_UNORM_BLOCK
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_FORMAT_ASTC_12x12_SRGB_BLOCK'
--- specifies a four-component, ASTC compressed format where each 128-bit
--- compressed texel block encodes a 12×12 rectangle of unsigned normalized
--- RGBA texel data with sRGB nonlinear encoding applied to the RGB
--- components.
+-- No documentation found for Nested "Format" "FORMAT_ASTC_12x12_SRGB_BLOCK"
 pattern FORMAT_ASTC_12x12_SRGB_BLOCK :: (a ~ Format) => a
 pattern FORMAT_ASTC_12x12_SRGB_BLOCK = VK_FORMAT_ASTC_12x12_SRGB_BLOCK
 
@@ -3291,112 +2710,7 @@ pattern FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG = VK_FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG
 pattern FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG :: (a ~ Format) => a
 pattern FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG = VK_FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG
 
--- | VkObjectType - Specify an enumeration to track object handle types
---
--- = Description
---
--- \'
---
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VkObjectT | Vulkan Handle Type        |
--- > | ype'                                     |                           |
--- > +==========================================+===========================+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | Unknown\/Undefined Handle |
--- > | _TYPE_UNKNOWN'                           |                           |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | 'Graphics.Vulkan.C.Core10 |
--- > | _TYPE_INSTANCE'                          | .DeviceInitialization.VkI |
--- > |                                          | nstance'                  |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | 'Graphics.Vulkan.C.Core10 |
--- > | _TYPE_PHYSICAL_DEVICE'                   | .DeviceInitialization.VkP |
--- > |                                          | hysicalDevice'            |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | 'Graphics.Vulkan.C.Core10 |
--- > | _TYPE_DEVICE'                            | .DeviceInitialization.VkD |
--- > |                                          | evice'                    |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | 'Graphics.Vulkan.C.Core10 |
--- > | _TYPE_QUEUE'                             | .Queue.VkQueue'           |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | 'Graphics.Vulkan.C.Core10 |
--- > | _TYPE_SEMAPHORE'                         | .Queue.VkSemaphore'       |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | 'Graphics.Vulkan.C.Core10 |
--- > | _TYPE_COMMAND_BUFFER'                    | .Queue.VkCommandBuffer'   |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | 'Graphics.Vulkan.C.Core10 |
--- > | _TYPE_FENCE'                             | .Queue.VkFence'           |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | 'Graphics.Vulkan.C.Core10 |
--- > | _TYPE_DEVICE_MEMORY'                     | .Memory.VkDeviceMemory'   |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | 'Graphics.Vulkan.C.Core10 |
--- > | _TYPE_BUFFER'                            | .MemoryManagement.VkBuffe |
--- > |                                          | r'                        |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | 'Graphics.Vulkan.C.Core10 |
--- > | _TYPE_IMAGE'                             | .MemoryManagement.VkImage |
--- > |                                          | '                         |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | 'Graphics.Vulkan.C.Core10 |
--- > | _TYPE_EVENT'                             | .Event.VkEvent'           |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | 'Graphics.Vulkan.C.Core10 |
--- > | _TYPE_QUERY_POOL'                        | .Query.VkQueryPool'       |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | 'Graphics.Vulkan.C.Core10 |
--- > | _TYPE_BUFFER_VIEW'                       | .BufferView.VkBufferView' |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | 'Graphics.Vulkan.C.Core10 |
--- > | _TYPE_IMAGE_VIEW'                        | .ImageView.VkImageView'   |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | 'Graphics.Vulkan.C.Core10 |
--- > | _TYPE_SHADER_MODULE'                     | .Shader.VkShaderModule'   |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | 'Graphics.Vulkan.C.Core10 |
--- > | _TYPE_PIPELINE_CACHE'                    | .PipelineCache.VkPipeline |
--- > |                                          | Cache'                    |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | 'Graphics.Vulkan.C.Core10 |
--- > | _TYPE_PIPELINE_LAYOUT'                   | .Pipeline.VkPipelineLayou |
--- > |                                          | t'                        |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | 'Graphics.Vulkan.C.Core10 |
--- > | _TYPE_RENDER_PASS'                       | .Pipeline.VkRenderPass'   |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | 'Graphics.Vulkan.C.Core10 |
--- > | _TYPE_PIPELINE'                          | .Pipeline.VkPipeline'     |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | 'Graphics.Vulkan.C.Core10 |
--- > | _TYPE_DESCRIPTOR_SET_LAYOUT'             | .PipelineLayout.VkDescrip |
--- > |                                          | torSetLayout'             |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | 'Graphics.Vulkan.C.Core10 |
--- > | _TYPE_SAMPLER'                           | .Sampler.VkSampler'       |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | 'Graphics.Vulkan.C.Core10 |
--- > | _TYPE_DESCRIPTOR_POOL'                   | .DescriptorSet.VkDescript |
--- > |                                          | orPool'                   |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | 'Graphics.Vulkan.C.Core10 |
--- > | _TYPE_DESCRIPTOR_SET'                    | .DescriptorSet.VkDescript |
--- > |                                          | orSet'                    |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | 'Graphics.Vulkan.C.Core10 |
--- > | _TYPE_FRAMEBUFFER'                       | .Pass.VkFramebuffer'      |
--- > +------------------------------------------+---------------------------+
--- > | 'Graphics.Vulkan.C.Core10.Core.VK_OBJECT | 'Graphics.Vulkan.C.Core10 |
--- > | _TYPE_COMMAND_POOL'                      | .CommandPool.VkCommandPoo |
--- > |                                          | l'                        |
--- > +------------------------------------------+---------------------------+
--- >
--- > VkObjectType and Vulkan Handle Relationship
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.VkDebugUtilsObjectNameInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.VkDebugUtilsObjectTagInfoEXT'
+-- No documentation found for TopLevel "ObjectType"
 type ObjectType = VkObjectType
 
 
@@ -3592,143 +2906,99 @@ pattern OBJECT_TYPE_VALIDATION_CACHE_EXT = VK_OBJECT_TYPE_VALIDATION_CACHE_EXT
 pattern OBJECT_TYPE_ACCELERATION_STRUCTURE_NV :: (a ~ ObjectType) => a
 pattern OBJECT_TYPE_ACCELERATION_STRUCTURE_NV = VK_OBJECT_TYPE_ACCELERATION_STRUCTURE_NV
 
--- | VkResult - Vulkan command return codes
---
--- = Description
---
--- If a command returns a run time error, unless otherwise specified any
--- output parameters will have undefined contents, except that if the
--- output parameter is a structure with @sType@ and @pNext@ fields, those
--- fields will be unmodified. Any structures chained from @pNext@ will also
--- have undefined contents, except that @sType@ and @pNext@ will be
--- unmodified.
---
--- Out of memory errors do not damage any currently existing Vulkan
--- objects. Objects that have already been successfully created /can/ still
--- be used by the application.
---
--- Performance-critical commands generally do not have return codes. If a
--- run time error occurs in such commands, the implementation will defer
--- reporting the error until a specified point. For commands that record
--- into command buffers (@vkCmd*@) run time errors are reported by
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.vkEndCommandBuffer'.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkPresentInfoKHR'
+-- No documentation found for TopLevel "Result"
 type Result = VkResult
 
 
 {-# complete SUCCESS, NOT_READY, TIMEOUT, EVENT_SET, EVENT_RESET, INCOMPLETE, ERROR_OUT_OF_HOST_MEMORY, ERROR_OUT_OF_DEVICE_MEMORY, ERROR_INITIALIZATION_FAILED, ERROR_DEVICE_LOST, ERROR_MEMORY_MAP_FAILED, ERROR_LAYER_NOT_PRESENT, ERROR_EXTENSION_NOT_PRESENT, ERROR_FEATURE_NOT_PRESENT, ERROR_INCOMPATIBLE_DRIVER, ERROR_TOO_MANY_OBJECTS, ERROR_FORMAT_NOT_SUPPORTED, ERROR_FRAGMENTED_POOL, ERROR_OUT_OF_POOL_MEMORY, ERROR_INVALID_EXTERNAL_HANDLE, ERROR_SURFACE_LOST_KHR, ERROR_NATIVE_WINDOW_IN_USE_KHR, SUBOPTIMAL_KHR, ERROR_OUT_OF_DATE_KHR, ERROR_INCOMPATIBLE_DISPLAY_KHR, ERROR_VALIDATION_FAILED_EXT, ERROR_INVALID_SHADER_NV, ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT, ERROR_FRAGMENTATION_EXT, ERROR_NOT_PERMITTED_EXT, ERROR_INVALID_DEVICE_ADDRESS_EXT, ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT :: Result #-}
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS' Command successfully
--- completed
+-- No documentation found for Nested "Result" "SUCCESS"
 pattern SUCCESS :: (a ~ Result) => a
 pattern SUCCESS = VK_SUCCESS
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_NOT_READY' A fence or query has not
--- yet completed
+-- No documentation found for Nested "Result" "NOT_READY"
 pattern NOT_READY :: (a ~ Result) => a
 pattern NOT_READY = VK_NOT_READY
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_TIMEOUT' A wait operation has not
--- completed in the specified time
+-- No documentation found for Nested "Result" "TIMEOUT"
 pattern TIMEOUT :: (a ~ Result) => a
 pattern TIMEOUT = VK_TIMEOUT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_EVENT_SET' An event is signaled
+-- No documentation found for Nested "Result" "EVENT_SET"
 pattern EVENT_SET :: (a ~ Result) => a
 pattern EVENT_SET = VK_EVENT_SET
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_EVENT_RESET' An event is unsignaled
+-- No documentation found for Nested "Result" "EVENT_RESET"
 pattern EVENT_RESET :: (a ~ Result) => a
 pattern EVENT_RESET = VK_EVENT_RESET
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_INCOMPLETE' A return array was too
--- small for the result
+-- No documentation found for Nested "Result" "INCOMPLETE"
 pattern INCOMPLETE :: (a ~ Result) => a
 pattern INCOMPLETE = VK_INCOMPLETE
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY' A host
--- memory allocation has failed.
+-- No documentation found for Nested "Result" "ERROR_OUT_OF_HOST_MEMORY"
 pattern ERROR_OUT_OF_HOST_MEMORY :: (a ~ Result) => a
 pattern ERROR_OUT_OF_HOST_MEMORY = VK_ERROR_OUT_OF_HOST_MEMORY
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY' A device
--- memory allocation has failed.
+-- No documentation found for Nested "Result" "ERROR_OUT_OF_DEVICE_MEMORY"
 pattern ERROR_OUT_OF_DEVICE_MEMORY :: (a ~ Result) => a
 pattern ERROR_OUT_OF_DEVICE_MEMORY = VK_ERROR_OUT_OF_DEVICE_MEMORY
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_INITIALIZATION_FAILED'
--- Initialization of an object could not be completed for
--- implementation-specific reasons.
+-- No documentation found for Nested "Result" "ERROR_INITIALIZATION_FAILED"
 pattern ERROR_INITIALIZATION_FAILED :: (a ~ Result) => a
 pattern ERROR_INITIALIZATION_FAILED = VK_ERROR_INITIALIZATION_FAILED
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_DEVICE_LOST' The logical or
--- physical device has been lost. See
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>
+-- No documentation found for Nested "Result" "ERROR_DEVICE_LOST"
 pattern ERROR_DEVICE_LOST :: (a ~ Result) => a
 pattern ERROR_DEVICE_LOST = VK_ERROR_DEVICE_LOST
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_MEMORY_MAP_FAILED' Mapping of a
--- memory object has failed.
+-- No documentation found for Nested "Result" "ERROR_MEMORY_MAP_FAILED"
 pattern ERROR_MEMORY_MAP_FAILED :: (a ~ Result) => a
 pattern ERROR_MEMORY_MAP_FAILED = VK_ERROR_MEMORY_MAP_FAILED
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_LAYER_NOT_PRESENT' A requested
--- layer is not present or could not be loaded.
+-- No documentation found for Nested "Result" "ERROR_LAYER_NOT_PRESENT"
 pattern ERROR_LAYER_NOT_PRESENT :: (a ~ Result) => a
 pattern ERROR_LAYER_NOT_PRESENT = VK_ERROR_LAYER_NOT_PRESENT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_EXTENSION_NOT_PRESENT' A
--- requested extension is not supported.
+-- No documentation found for Nested "Result" "ERROR_EXTENSION_NOT_PRESENT"
 pattern ERROR_EXTENSION_NOT_PRESENT :: (a ~ Result) => a
 pattern ERROR_EXTENSION_NOT_PRESENT = VK_ERROR_EXTENSION_NOT_PRESENT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_FEATURE_NOT_PRESENT' A requested
--- feature is not supported.
+-- No documentation found for Nested "Result" "ERROR_FEATURE_NOT_PRESENT"
 pattern ERROR_FEATURE_NOT_PRESENT :: (a ~ Result) => a
 pattern ERROR_FEATURE_NOT_PRESENT = VK_ERROR_FEATURE_NOT_PRESENT
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_INCOMPATIBLE_DRIVER' The
--- requested version of Vulkan is not supported by the driver or is
--- otherwise incompatible for implementation-specific reasons.
+-- No documentation found for Nested "Result" "ERROR_INCOMPATIBLE_DRIVER"
 pattern ERROR_INCOMPATIBLE_DRIVER :: (a ~ Result) => a
 pattern ERROR_INCOMPATIBLE_DRIVER = VK_ERROR_INCOMPATIBLE_DRIVER
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_TOO_MANY_OBJECTS' Too many
--- objects of the type have already been created.
+-- No documentation found for Nested "Result" "ERROR_TOO_MANY_OBJECTS"
 pattern ERROR_TOO_MANY_OBJECTS :: (a ~ Result) => a
 pattern ERROR_TOO_MANY_OBJECTS = VK_ERROR_TOO_MANY_OBJECTS
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_FORMAT_NOT_SUPPORTED' A
--- requested format is not supported on this device.
+-- No documentation found for Nested "Result" "ERROR_FORMAT_NOT_SUPPORTED"
 pattern ERROR_FORMAT_NOT_SUPPORTED :: (a ~ Result) => a
 pattern ERROR_FORMAT_NOT_SUPPORTED = VK_ERROR_FORMAT_NOT_SUPPORTED
 
 
--- | 'Graphics.Vulkan.C.Core10.Core.VK_ERROR_FRAGMENTED_POOL' A pool
--- allocation has failed due to fragmentation of the pool’s memory. This
--- /must/ only be returned if no attempt to allocate host or device memory
--- was made to accommodate the new allocation.
+-- No documentation found for Nested "Result" "ERROR_FRAGMENTED_POOL"
 pattern ERROR_FRAGMENTED_POOL :: (a ~ Result) => a
 pattern ERROR_FRAGMENTED_POOL = VK_ERROR_FRAGMENTED_POOL
 
@@ -3802,364 +3072,7 @@ pattern ERROR_INVALID_DEVICE_ADDRESS_EXT = VK_ERROR_INVALID_DEVICE_ADDRESS_EXT
 pattern ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT :: (a ~ Result) => a
 pattern ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT = VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT
 
--- | VkStructureType - Vulkan structure types (@stype@)
---
--- = Description
---
--- Each value corresponds to a particular structure with a @sType@ member
--- with a matching name. As a general rule, the name of each
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType' value is obtained by
--- taking the name of the structure, stripping the leading @Vk@, prefixing
--- each capital letter with @_@, converting the entire resulting string to
--- upper case, and prefixing it with @VK_STRUCTURE_TYPE_@. For example,
--- structures of type 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo'
--- correspond to a 'Graphics.Vulkan.C.Core10.Core.VkStructureType' of
--- 'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO', and
--- thus its @sType@ member /must/ equal that when it is passed to the API.
---
--- The values
--- 'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO'
--- and
--- 'Graphics.Vulkan.C.Core10.Core.VK_STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO'
--- are reserved for internal use by the loader, and do not have
--- corresponding Vulkan structures in this Specification.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkAccelerationStructureCreateInfoNV',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkAccelerationStructureInfoNV',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkAccelerationStructureMemoryRequirementsInfoNV',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkAcquireNextImageInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkAndroidHardwareBufferFormatPropertiesANDROID',
--- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkAndroidHardwareBufferPropertiesANDROID',
--- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkAndroidHardwareBufferUsageANDROID',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_android_surface.VkAndroidSurfaceCreateInfoKHR',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkApplicationInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkAttachmentDescription2KHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkAttachmentReference2KHR',
--- 'Graphics.Vulkan.C.Core10.Core.VkBaseInStructure',
--- 'Graphics.Vulkan.C.Core10.Core.VkBaseOutStructure',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkBindAccelerationStructureMemoryInfoNV',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VkBindBufferMemoryDeviceGroupInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.VkBindBufferMemoryInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VkBindImageMemoryDeviceGroupInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_bind_memory2.VkBindImageMemoryInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkBindImageMemorySwapchainInfoKHR',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkBindImagePlaneMemoryInfo',
--- 'Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement.VkBindSparseInfo',
--- 'Graphics.Vulkan.C.Core10.Buffer.VkBufferCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VkBufferDeviceAddressCreateInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VkBufferDeviceAddressInfoEXT',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkBufferMemoryBarrier',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkBufferMemoryRequirementsInfo2',
--- 'Graphics.Vulkan.C.Core10.BufferView.VkBufferViewCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps.VkCalibratedTimestampInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_device_diagnostic_checkpoints.VkCheckpointDataNV',
--- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkCmdProcessCommandsInfoNVX',
--- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkCmdReserveSpaceForCommandsInfoNVX',
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferAllocateInfo',
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferBeginInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_conditional_rendering.VkCommandBufferInheritanceConditionalRenderingInfoEXT',
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferInheritanceInfo',
--- 'Graphics.Vulkan.C.Core10.CommandPool.VkCommandPoolCreateInfo',
--- 'Graphics.Vulkan.C.Core10.Pipeline.VkComputePipelineCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_conditional_rendering.VkConditionalRenderingBeginInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkCooperativeMatrixPropertiesNV',
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkCopyDescriptorSet',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32.VkD3D12FenceSubmitInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.VkDebugMarkerMarkerInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.VkDebugMarkerObjectNameInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_marker.VkDebugMarkerObjectTagInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_report.VkDebugReportCallbackCreateInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.VkDebugUtilsLabelEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.VkDebugUtilsMessengerCallbackDataEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.VkDebugUtilsMessengerCreateInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.VkDebugUtilsObjectNameInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils.VkDebugUtilsObjectTagInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationBufferCreateInfoNV',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationImageCreateInfoNV',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationMemoryAllocateInfoNV',
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorPoolCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VkDescriptorPoolInlineUniformBlockCreateInfoEXT',
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetAllocateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkDescriptorSetLayoutBindingFlagsCreateInfoEXT',
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkDescriptorSetLayoutCreateInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance3.VkDescriptorSetLayoutSupport',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkDescriptorSetVariableDescriptorCountAllocateInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkDescriptorSetVariableDescriptorCountLayoutSupportEXT',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplateCreateInfo',
--- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.VkDeviceEventInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkDeviceGeneratedCommandsFeaturesNVX',
--- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkDeviceGeneratedCommandsLimitsNVX',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.VkDeviceGroupBindSparseInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.VkDeviceGroupCommandBufferBeginInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation.VkDeviceGroupDeviceCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkDeviceGroupPresentCapabilitiesKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkDeviceGroupPresentInfoKHR',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.VkDeviceGroupRenderPassBeginInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.VkDeviceGroupSubmitInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkDeviceGroupSwapchainCreateInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_AMD_memory_overallocation_behavior.VkDeviceMemoryOverallocationCreateInfoAMD',
--- 'Graphics.Vulkan.C.Core10.Device.VkDeviceQueueCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_global_priority.VkDeviceQueueGlobalPriorityCreateInfoEXT',
--- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory.VkDeviceQueueInfo2',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.VkDisplayEventInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplayModeCreateInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.VkDisplayModeProperties2KHR',
--- 'Graphics.Vulkan.C.Extensions.VK_AMD_display_native_hdr.VkDisplayNativeHdrSurfaceCapabilitiesAMD',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.VkDisplayPlaneCapabilities2KHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.VkDisplayPlaneInfo2KHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.VkDisplayPlaneProperties2KHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.VkDisplayPowerInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_display_swapchain.VkDisplayPresentInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.VkDisplayProperties2KHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_display.VkDisplaySurfaceCreateInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VkDrmFormatModifierPropertiesListEXT',
--- 'Graphics.Vulkan.C.Core10.Event.VkEventCreateInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence.VkExportFenceCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.VkExportFenceWin32HandleInfoKHR',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VkExportMemoryAllocateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory.VkExportMemoryAllocateInfoNV',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32.VkExportMemoryWin32HandleInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32.VkExportMemoryWin32HandleInfoNV',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore.VkExportSemaphoreCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32.VkExportSemaphoreWin32HandleInfoKHR',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalBufferProperties',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkExternalFenceProperties',
--- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkExternalFormatANDROID',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalImageFormatProperties',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryBufferCreateInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryImageCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory.VkExternalMemoryImageCreateInfoNV',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkExternalSemaphoreProperties',
--- 'Graphics.Vulkan.C.Core10.Fence.VkFenceCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd.VkFenceGetFdInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.VkFenceGetWin32HandleInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_filter_cubic.VkFilterCubicImageViewImageFormatPropertiesEXT',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkFormatProperties2',
--- 'Graphics.Vulkan.C.Core10.Pass.VkFramebufferCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkGeometryAABBNV',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkGeometryNV',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkGeometryTrianglesNV',
--- 'Graphics.Vulkan.C.Core10.Pipeline.VkGraphicsPipelineCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_hdr_metadata.VkHdrMetadataEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_headless_surface.VkHeadlessSurfaceCreateInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_MVK_ios_surface.VkIOSSurfaceCreateInfoMVK',
--- 'Graphics.Vulkan.C.Core10.Image.VkImageCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VkImageDrmFormatModifierExplicitCreateInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VkImageDrmFormatModifierListCreateInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VkImageDrmFormatModifierPropertiesEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_image_format_list.VkImageFormatListCreateInfoKHR',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkImageFormatProperties2',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkImageMemoryBarrier',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkImageMemoryRequirementsInfo2',
--- 'Graphics.Vulkan.C.Extensions.VK_FUCHSIA_imagepipe_surface.VkImagePipeSurfaceCreateInfoFUCHSIA',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkImagePlaneMemoryRequirementsInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkImageSparseMemoryRequirementsInfo2',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_separate_stencil_usage.VkImageStencilUsageCreateInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkImageSwapchainCreateInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_astc_decode_mode.VkImageViewASTCDecodeModeEXT',
--- 'Graphics.Vulkan.C.Core10.ImageView.VkImageViewCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_NVX_image_view_handle.VkImageViewHandleInfoNVX',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VkImageViewUsageCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkImportAndroidHardwareBufferInfoANDROID',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_fd.VkImportFenceFdInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_fence_win32.VkImportFenceWin32HandleInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd.VkImportMemoryFdInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_host.VkImportMemoryHostPointerInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32.VkImportMemoryWin32HandleInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32.VkImportMemoryWin32HandleInfoNV',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd.VkImportSemaphoreFdInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32.VkImportSemaphoreWin32HandleInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkIndirectCommandsLayoutCreateInfoNVX',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstanceCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_MVK_macos_surface.VkMacOSSurfaceCreateInfoMVK',
--- 'Graphics.Vulkan.C.Core10.Memory.VkMappedMemoryRange',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group.VkMemoryAllocateFlagsInfo',
--- 'Graphics.Vulkan.C.Core10.Memory.VkMemoryAllocateInfo',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkMemoryBarrier',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedRequirements',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd.VkMemoryFdPropertiesKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkMemoryGetAndroidHardwareBufferInfoANDROID',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_fd.VkMemoryGetFdInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32.VkMemoryGetWin32HandleInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_host.VkMemoryHostPointerPropertiesEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_memory_priority.VkMemoryPriorityAllocateInfoEXT',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkMemoryRequirements2',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_memory_win32.VkMemoryWin32HandlePropertiesKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_metal_surface.VkMetalSurfaceCreateInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkMultisamplePropertiesEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_NVX_device_generated_commands.VkObjectTableCreateInfoNVX',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_16bit_storage.VkPhysicalDevice16BitStorageFeatures',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_8bit_storage.VkPhysicalDevice8BitStorageFeaturesKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_astc_decode_mode.VkPhysicalDeviceASTCDecodeFeaturesEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_blend_operation_advanced.VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_blend_operation_advanced.VkPhysicalDeviceBlendOperationAdvancedPropertiesEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_buffer_device_address.VkPhysicalDeviceBufferDeviceAddressFeaturesEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_compute_shader_derivatives.VkPhysicalDeviceComputeShaderDerivativesFeaturesNV',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_conditional_rendering.VkPhysicalDeviceConditionalRenderingFeaturesEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization.VkPhysicalDeviceConservativeRasterizationPropertiesEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkPhysicalDeviceCooperativeMatrixFeaturesNV',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_cooperative_matrix.VkPhysicalDeviceCooperativeMatrixPropertiesNV',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_corner_sampled_image.VkPhysicalDeviceCornerSampledImageFeaturesNV',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_dedicated_allocation_image_aliasing.VkPhysicalDeviceDedicatedAllocationImageAliasingFeaturesNV',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_depth_clip_enable.VkPhysicalDeviceDepthClipEnableFeaturesEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VkPhysicalDeviceDepthStencilResolvePropertiesKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingFeaturesEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_descriptor_indexing.VkPhysicalDeviceDescriptorIndexingPropertiesEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_discard_rectangles.VkPhysicalDeviceDiscardRectanglePropertiesEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_driver_properties.VkPhysicalDeviceDriverPropertiesKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_scissor_exclusive.VkPhysicalDeviceExclusiveScissorFeaturesNV',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkPhysicalDeviceExternalBufferInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_fence_capabilities.VkPhysicalDeviceExternalFenceInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkPhysicalDeviceExternalImageFormatInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_external_memory_host.VkPhysicalDeviceExternalMemoryHostPropertiesEXT',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_semaphore_capabilities.VkPhysicalDeviceExternalSemaphoreInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_shader_float16_int8.VkPhysicalDeviceFloat16Int8FeaturesKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_shader_float_controls.VkPhysicalDeviceFloatControlsPropertiesKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VkPhysicalDeviceFragmentDensityMapFeaturesEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VkPhysicalDeviceFragmentDensityMapPropertiesEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_fragment_shader_barycentric.VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_creation.VkPhysicalDeviceGroupProperties',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_host_query_reset.VkPhysicalDeviceHostQueryResetFeaturesEXT',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkPhysicalDeviceIDProperties',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_image_drm_format_modifier.VkPhysicalDeviceImageDrmFormatModifierInfoEXT',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceImageFormatInfo2',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_filter_cubic.VkPhysicalDeviceImageViewImageFormatInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VkPhysicalDeviceInlineUniformBlockFeaturesEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VkPhysicalDeviceInlineUniformBlockPropertiesEXT',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance3.VkPhysicalDeviceMaintenance3Properties',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_memory_budget.VkPhysicalDeviceMemoryBudgetPropertiesEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_memory_priority.VkPhysicalDeviceMemoryPriorityFeaturesEXT',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceMemoryProperties2',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.VkPhysicalDeviceMeshShaderFeaturesNV',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_mesh_shader.VkPhysicalDeviceMeshShaderPropertiesNV',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_multiview.VkPhysicalDeviceMultiviewFeatures',
--- 'Graphics.Vulkan.C.Extensions.VK_NVX_multiview_per_view_attributes.VkPhysicalDeviceMultiviewPerViewAttributesPropertiesNVX',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_multiview.VkPhysicalDeviceMultiviewProperties',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_pci_bus_info.VkPhysicalDevicePCIBusInfoPropertiesEXT',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VkPhysicalDevicePointClippingProperties',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
--- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory.VkPhysicalDeviceProtectedMemoryFeatures',
--- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory.VkPhysicalDeviceProtectedMemoryProperties',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_push_descriptor.VkPhysicalDevicePushDescriptorPropertiesKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkPhysicalDeviceRayTracingPropertiesNV',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_representative_fragment_test.VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkPhysicalDeviceSampleLocationsPropertiesEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax.VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkPhysicalDeviceSamplerYcbcrConversionFeatures',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_scalar_block_layout.VkPhysicalDeviceScalarBlockLayoutFeaturesEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_shader_atomic_int64.VkPhysicalDeviceShaderAtomicInt64FeaturesKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_AMD_shader_core_properties.VkPhysicalDeviceShaderCorePropertiesAMD',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_shader_draw_parameters.VkPhysicalDeviceShaderDrawParametersFeatures',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_shader_image_footprint.VkPhysicalDeviceShaderImageFootprintFeaturesNV',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image.VkPhysicalDeviceShadingRateImageFeaturesNV',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image.VkPhysicalDeviceShadingRateImagePropertiesNV',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceSparseImageFormatInfo2',
--- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_subgroup.VkPhysicalDeviceSubgroupProperties',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkPhysicalDeviceSurfaceInfo2KHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.VkPhysicalDeviceTransformFeedbackFeaturesEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.VkPhysicalDeviceTransformFeedbackPropertiesEXT',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_variable_pointers.VkPhysicalDeviceVariablePointersFeatures',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_vertex_attribute_divisor.VkPhysicalDeviceVertexAttributeDivisorFeaturesEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_vertex_attribute_divisor.VkPhysicalDeviceVertexAttributeDivisorPropertiesEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_vulkan_memory_model.VkPhysicalDeviceVulkanMemoryModelFeaturesKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_ycbcr_image_arrays.VkPhysicalDeviceYcbcrImageArraysFeaturesEXT',
--- 'Graphics.Vulkan.C.Core10.PipelineCache.VkPipelineCacheCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_blend_operation_advanced.VkPipelineColorBlendAdvancedStateCreateInfoEXT',
--- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineColorBlendStateCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_framebuffer_mixed_samples.VkPipelineCoverageModulationStateCreateInfoNV',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_fragment_coverage_to_color.VkPipelineCoverageToColorStateCreateInfoNV',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback.VkPipelineCreationFeedbackCreateInfoEXT',
--- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineDepthStencilStateCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_discard_rectangles.VkPipelineDiscardRectangleStateCreateInfoEXT',
--- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineDynamicStateCreateInfo',
--- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineInputAssemblyStateCreateInfo',
--- 'Graphics.Vulkan.C.Core10.PipelineLayout.VkPipelineLayoutCreateInfo',
--- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineMultisampleStateCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization.VkPipelineRasterizationConservativeStateCreateInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_depth_clip_enable.VkPipelineRasterizationDepthClipStateCreateInfoEXT',
--- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineRasterizationStateCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_AMD_rasterization_order.VkPipelineRasterizationStateRasterizationOrderAMD',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.VkPipelineRasterizationStateStreamCreateInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_representative_fragment_test.VkPipelineRepresentativeFragmentTestStateCreateInfoNV',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkPipelineSampleLocationsStateCreateInfoEXT',
--- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineShaderStageCreateInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VkPipelineTessellationDomainOriginStateCreateInfo',
--- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineTessellationStateCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_vertex_attribute_divisor.VkPipelineVertexInputDivisorStateCreateInfoEXT',
--- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineVertexInputStateCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image.VkPipelineViewportCoarseSampleOrderStateCreateInfoNV',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_scissor_exclusive.VkPipelineViewportExclusiveScissorStateCreateInfoNV',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_shading_rate_image.VkPipelineViewportShadingRateImageStateCreateInfoNV',
--- 'Graphics.Vulkan.C.Core10.Pipeline.VkPipelineViewportStateCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_viewport_swizzle.VkPipelineViewportSwizzleStateCreateInfoNV',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_clip_space_w_scaling.VkPipelineViewportWScalingStateCreateInfoNV',
--- 'Graphics.Vulkan.C.Extensions.VK_GGP_frame_token.VkPresentFrameTokenGGP',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkPresentInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_incremental_present.VkPresentRegionsKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_GOOGLE_display_timing.VkPresentTimesInfoGOOGLE',
--- 'Graphics.Vulkan.C.Core11.Promoted_From_VK_KHR_protected_memory.VkProtectedSubmitInfo',
--- 'Graphics.Vulkan.C.Core10.Query.VkQueryPoolCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_device_diagnostic_checkpoints.VkQueueFamilyCheckpointPropertiesNV',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkQueueFamilyProperties2',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkRayTracingPipelineCreateInfoNV',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkRayTracingShaderGroupCreateInfoNV',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.VkRenderPassBeginInfo',
--- 'Graphics.Vulkan.C.Core10.Pass.VkRenderPassCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkRenderPassCreateInfo2KHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_fragment_density_map.VkRenderPassFragmentDensityMapCreateInfoEXT',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_maintenance2.VkRenderPassInputAttachmentAspectCreateInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_multiview.VkRenderPassMultiviewCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkRenderPassSampleLocationsBeginInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_sample_locations.VkSampleLocationsInfoEXT',
--- 'Graphics.Vulkan.C.Core10.Sampler.VkSamplerCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_sampler_filter_minmax.VkSamplerReductionModeCreateInfoEXT',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionCreateInfo',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionImageFormatProperties',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkSamplerYcbcrConversionInfo',
--- 'Graphics.Vulkan.C.Core10.QueueSemaphore.VkSemaphoreCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_fd.VkSemaphoreGetFdInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_external_semaphore_win32.VkSemaphoreGetWin32HandleInfoKHR',
--- 'Graphics.Vulkan.C.Core10.Shader.VkShaderModuleCreateInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkShaderModuleValidationCacheCreateInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_shared_presentable_image.VkSharedPresentSurfaceCapabilitiesKHR',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkSparseImageFormatProperties2',
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_memory_requirements2.VkSparseImageMemoryRequirements2',
--- 'Graphics.Vulkan.C.Extensions.VK_GGP_stream_descriptor_surface.VkStreamDescriptorSurfaceCreateInfoGGP',
--- 'Graphics.Vulkan.C.Core10.Queue.VkSubmitInfo',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkSubpassBeginInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkSubpassDependency2KHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkSubpassDescription2KHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve.VkSubpassDescriptionDepthStencilResolveKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_create_renderpass2.VkSubpassEndInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter.VkSurfaceCapabilities2EXT',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkSurfaceCapabilities2KHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.VkSurfaceCapabilitiesFullScreenExclusiveEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_surface_capabilities2.VkSurfaceFormat2KHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.VkSurfaceFullScreenExclusiveInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive.VkSurfaceFullScreenExclusiveWin32InfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface_protected_capabilities.VkSurfaceProtectedCapabilitiesKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.VkSwapchainCounterCreateInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_AMD_display_native_hdr.VkSwapchainDisplayNativeHdrCreateInfoAMD',
--- 'Graphics.Vulkan.C.Extensions.VK_AMD_texture_gather_bias_lod.VkTextureLODGatherFormatPropertiesAMD',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache.VkValidationCacheCreateInfoEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_features.VkValidationFeaturesEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_validation_flags.VkValidationFlagsEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_NN_vi_surface.VkViSurfaceCreateInfoNN',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_wayland_surface.VkWaylandSurfaceCreateInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_win32_keyed_mutex.VkWin32KeyedMutexAcquireReleaseInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_win32_keyed_mutex.VkWin32KeyedMutexAcquireReleaseInfoNV',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_win32_surface.VkWin32SurfaceCreateInfoKHR',
--- 'Graphics.Vulkan.C.Core10.DescriptorSet.VkWriteDescriptorSet',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing.VkWriteDescriptorSetAccelerationStructureNV',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_inline_uniform_block.VkWriteDescriptorSetInlineUniformBlockEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_xcb_surface.VkXcbSurfaceCreateInfoKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface.VkXlibSurfaceCreateInfoKHR'
+-- No documentation found for TopLevel "StructureType"
 type StructureType = VkStructureType
 
 
@@ -5845,24 +4758,7 @@ pattern STRUCTURE_TYPE_HEADLESS_SURFACE_CREATE_INFO_EXT = VK_STRUCTURE_TYPE_HEAD
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES_EXT :: (a ~ StructureType) => a
 pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES_EXT = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_HOST_QUERY_RESET_FEATURES_EXT
 
--- | VkVendorId - Khronos vendor IDs
---
--- = Description
---
--- __Note__
---
--- Khronos vendor IDs may be allocated by vendors at any time. Only the
--- latest canonical versions of this Specification, of the corresponding
--- @vk.xml@ API Registry, and of the corresponding @vulkan_core.h@ header
--- file /must/ contain all reserved Khronos vendor IDs.
---
--- Only Khronos vendor IDs are given symbolic names at present. PCI vendor
--- IDs returned by the implementation can be looked up in the PCI-SIG
--- database.
---
--- = See Also
---
--- No cross-references are available
+-- No documentation found for TopLevel "VendorId"
 type VendorId = VkVendorId
 
 

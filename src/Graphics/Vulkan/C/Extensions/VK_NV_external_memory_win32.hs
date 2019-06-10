@@ -72,43 +72,15 @@ type HANDLE = Ptr ()
 -- | Opaque data
 data SECURITY_ATTRIBUTES
 
--- | VkExportMemoryWin32HandleInfoNV - specify security attributes and access
--- rights for Win32 memory handles
---
--- = Description
---
--- If this structure is not present, or if @pAttributes@ is set to @NULL@,
--- default security descriptor values will be used, and child processes
--- created by the application will not inherit the handle, as described in
--- the MSDN documentation for “Synchronization Object Security and Access
--- Rights”[1]. Further, if the structure is not present, the access rights
--- will be
---
--- > DXGI_SHARED_RESOURCE_READ | DXGI_SHARED_RESOURCE_WRITE
---
--- [1]
--- <https://msdn.microsoft.com/en-us/library/windows/desktop/ms686670.aspx>
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     'VK_STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV'
---
--- -   If @pAttributes@ is not @NULL@, @pAttributes@ /must/ be a valid
---     pointer to a valid 'SECURITY_ATTRIBUTES' value
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkExportMemoryWin32HandleInfoNV"
 data VkExportMemoryWin32HandleInfoNV = VkExportMemoryWin32HandleInfoNV
-  { -- | @sType@ is the type of this structure.
+  { -- No documentation found for Nested "VkExportMemoryWin32HandleInfoNV" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkExportMemoryWin32HandleInfoNV" "pNext"
   vkPNext :: Ptr ()
-  , -- | @pAttributes@ is a pointer to a Windows 'SECURITY_ATTRIBUTES' structure
-  -- specifying security attributes of the handle.
+  , -- No documentation found for Nested "VkExportMemoryWin32HandleInfoNV" "pAttributes"
   vkPAttributes :: Ptr SECURITY_ATTRIBUTES
-  , -- | @dwAccess@ is a 'DWORD' specifying access rights of the handle.
+  , -- No documentation found for Nested "VkExportMemoryWin32HandleInfoNV" "dwAccess"
   vkDwAccess :: DWORD
   }
   deriving (Eq, Show)
@@ -131,32 +103,15 @@ instance Zero VkExportMemoryWin32HandleInfoNV where
                                          zero
                                          zero
 
--- | VkImportMemoryWin32HandleInfoNV - import Win32 memory created on the
--- same physical device
---
--- = Description
---
--- If @handleType@ is @0@, this structure is ignored by consumers of the
--- 'Graphics.Vulkan.C.Core10.Memory.VkMemoryAllocateInfo' structure it is
--- chained from.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryHandleTypeFlagsNV',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkImportMemoryWin32HandleInfoNV"
 data VkImportMemoryWin32HandleInfoNV = VkImportMemoryWin32HandleInfoNV
-  { -- | @sType@ /must/ be 'VK_STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV'
+  { -- No documentation found for Nested "VkImportMemoryWin32HandleInfoNV" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkImportMemoryWin32HandleInfoNV" "pNext"
   vkPNext :: Ptr ()
-  , -- | @handleType@ /must/ be a valid combination of
-  -- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBitsNV'
-  -- values
+  , -- No documentation found for Nested "VkImportMemoryWin32HandleInfoNV" "handleType"
   vkHandleType :: VkExternalMemoryHandleTypeFlagsNV
-  , -- | @handle@ /must/ be a valid handle to memory, obtained as specified by
-  -- @handleType@.
+  , -- No documentation found for Nested "VkImportMemoryWin32HandleInfoNV" "handle"
   vkHandle :: HANDLE
   }
   deriving (Eq, Show)
@@ -179,38 +134,7 @@ instance Zero VkImportMemoryWin32HandleInfoNV where
                                          zero
                                          zero
 
--- | vkGetMemoryWin32HandleNV - retrieve Win32 handle to a device memory
--- object
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the memory.
---
--- -   @memory@ is the 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory'
---     object.
---
--- -   @handleType@ is a bitmask of
---     'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBitsNV'
---     containing a single bit specifying the type of handle requested.
---
--- -   @handle@ points to a Windows 'HANDLE' in which the handle is
---     returned.
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_TOO_MANY_OBJECTS'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice',
--- 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory',
--- 'Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities.VkExternalMemoryHandleTypeFlagsNV'
+-- No documentation found for TopLevel "vkGetMemoryWin32HandleNV"
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)

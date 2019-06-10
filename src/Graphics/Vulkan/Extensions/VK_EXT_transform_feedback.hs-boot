@@ -14,16 +14,5 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback
   )
 
 
--- | VkPipelineRasterizationStateStreamCreateFlagsEXT - Reserved for future
--- use
---
--- = Description
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.VkPipelineRasterizationStateStreamCreateFlagsEXT'
--- is a bitmask type for setting a mask, but is currently reserved for
--- future use.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.VkPipelineRasterizationStateStreamCreateInfoEXT'
+-- No documentation found for TopLevel "PipelineRasterizationStateStreamCreateFlagsEXT"
 type PipelineRasterizationStateStreamCreateFlagsEXT = VkPipelineRasterizationStateStreamCreateFlagsEXT

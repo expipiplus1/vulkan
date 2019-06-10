@@ -103,25 +103,15 @@ instance Read VkStreamDescriptorSurfaceCreateFlagsGGP where
 
 
 
--- | VkStreamDescriptorSurfaceCreateInfoGGP - Structure specifying parameters
--- of a newly created Google Games Platform stream surface object
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'VkStreamDescriptorSurfaceCreateFlagsGGP',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType',
--- 'vkCreateStreamDescriptorSurfaceGGP'
+-- No documentation found for TopLevel "VkStreamDescriptorSurfaceCreateInfoGGP"
 data VkStreamDescriptorSurfaceCreateInfoGGP = VkStreamDescriptorSurfaceCreateInfoGGP
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_STREAM_DESCRIPTOR_SURFACE_CREATE_INFO_GGP'
+  { -- No documentation found for Nested "VkStreamDescriptorSurfaceCreateInfoGGP" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ /must/ be @NULL@
+  , -- No documentation found for Nested "VkStreamDescriptorSurfaceCreateInfoGGP" "pNext"
   vkPNext :: Ptr ()
-  , -- | @flags@ /must/ be @0@
+  , -- No documentation found for Nested "VkStreamDescriptorSurfaceCreateInfoGGP" "flags"
   vkFlags :: VkStreamDescriptorSurfaceCreateFlagsGGP
-  , -- | @streamDescriptor@ /must/ be a valid 'GgpStreamDescriptor'
+  , -- No documentation found for Nested "VkStreamDescriptorSurfaceCreateInfoGGP" "streamDescriptor"
   vkStreamDescriptor :: GgpStreamDescriptor
   }
   deriving (Eq, Show)
@@ -144,61 +134,7 @@ instance Zero VkStreamDescriptorSurfaceCreateInfoGGP where
                                                 zero
                                                 zero
 
--- | vkCreateStreamDescriptorSurfaceGGP - Create a
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' object for a
--- Google Games Platform stream
---
--- = Parameters
---
--- -   @instance@ is the instance to associate with the surface.
---
--- -   @pCreateInfo@ is a pointer to an instance of the
---     'VkStreamDescriptorSurfaceCreateInfoGGP' structure containing
---     parameters that affect the creation of the surface object.
---
--- -   @pAllocator@ is the allocator used for host memory allocated for the
---     surface object when there is no more specific allocator available
---     (see
---     <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
---
--- -   @pSurface@ points to a
---     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle in
---     which the created surface object is returned.
---
--- == Valid Usage (Implicit)
---
--- -   @instance@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance' handle
---
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     'VkStreamDescriptorSurfaceCreateInfoGGP' structure
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks'
---     structure
---
--- -   @pSurface@ /must/ be a valid pointer to a
---     'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR' handle
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
---     -   'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VK_ERROR_NATIVE_WINDOW_IN_USE_KHR'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkInstance',
--- 'VkStreamDescriptorSurfaceCreateInfoGGP',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_surface.VkSurfaceKHR'
+-- No documentation found for TopLevel "vkCreateStreamDescriptorSurfaceGGP"
 #if defined(EXPOSE_STATIC_EXTENSION_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)

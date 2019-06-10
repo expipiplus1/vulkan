@@ -33,78 +33,39 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- | VkPhysicalDeviceShaderCorePropertiesAMD - Structure describing shader
--- core properties that can be supported by an implementation
---
--- = Members
---
--- The members of the 'VkPhysicalDeviceShaderCorePropertiesAMD' structure
--- describe the following implementation-dependent limits:
---
--- = Description
---
--- If the 'VkPhysicalDeviceShaderCorePropertiesAMD' structure is included
--- in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkPhysicalDeviceShaderCorePropertiesAMD"
 data VkPhysicalDeviceShaderCorePropertiesAMD = VkPhysicalDeviceShaderCorePropertiesAMD
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD'
+  { -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "pNext"
   vkPNext :: Ptr ()
-  , -- | @shaderEngineCount@ is an unsigned integer value indicating the number
-  -- of shader engines found inside the shader core of the physical device.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "shaderEngineCount"
   vkShaderEngineCount :: Word32
-  , -- | @shaderArraysPerEngineCount@ is an unsigned integer value indicating the
-  -- number of shader arrays inside a shader engine. Each shader array has
-  -- its own scan converter, set of compute units, and a render back end
-  -- (color and depth buffers). Shader arrays within a shader engine share
-  -- shader processor input (wave launcher) and shader export (export buffer)
-  -- units. Currently, a shader engine can have one or two shader arrays.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "shaderArraysPerEngineCount"
   vkShaderArraysPerEngineCount :: Word32
-  , -- | @computeUnitsPerShaderArray@ is an unsigned integer value indicating the
-  -- number of compute units within a shader array. A compute unit houses a
-  -- set of SIMDs along with a sequencer module and a local data store.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "computeUnitsPerShaderArray"
   vkComputeUnitsPerShaderArray :: Word32
-  , -- | @simdPerComputeUnit@ is an unsigned integer value indicating the number
-  -- of SIMDs inside a compute unit. Each SIMD processes a single instruction
-  -- at a time.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "simdPerComputeUnit"
   vkSimdPerComputeUnit :: Word32
   , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "wavefrontsPerSimd"
   vkWavefrontsPerSimd :: Word32
-  , -- | @wavefrontSize@ is an unsigned integer value indicating the number of
-  -- channels (or threads) in a wavefront.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "wavefrontSize"
   vkWavefrontSize :: Word32
-  , -- | @sgprsPerSimd@ is an unsigned integer value indicating the number of
-  -- physical Scalar General Purpose Registers (SGPRs) per SIMD.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "sgprsPerSimd"
   vkSgprsPerSimd :: Word32
-  , -- | @minSgprAllocation@ is an unsigned integer value indicating the minimum
-  -- number of SGPRs allocated for a wave.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "minSgprAllocation"
   vkMinSgprAllocation :: Word32
-  , -- | @maxSgprAllocation@ is an unsigned integer value indicating the maximum
-  -- number of SGPRs allocated for a wave.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "maxSgprAllocation"
   vkMaxSgprAllocation :: Word32
-  , -- | @sgprAllocationGranularity@ is an unsigned integer value indicating the
-  -- granularity of SGPR allocation for a wave.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "sgprAllocationGranularity"
   vkSgprAllocationGranularity :: Word32
-  , -- | @vgprsPerSimd@ is an unsigned integer value indicating the number of
-  -- physical Vector General Purpose Registers (VGPRs) per SIMD.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "vgprsPerSimd"
   vkVgprsPerSimd :: Word32
-  , -- | @minVgprAllocation@ is an unsigned integer value indicating the minimum
-  -- number of VGPRs allocated for a wave.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "minVgprAllocation"
   vkMinVgprAllocation :: Word32
-  , -- | @maxVgprAllocation@ is an unsigned integer value indicating the maximum
-  -- number of VGPRs allocated for a wave.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "maxVgprAllocation"
   vkMaxVgprAllocation :: Word32
-  , -- | @vgprAllocationGranularity@ is an unsigned integer value indicating the
-  -- granularity of VGPR allocation for a wave.
+  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "vgprAllocationGranularity"
   vkVgprAllocationGranularity :: Word32
   }
   deriving (Eq, Show)

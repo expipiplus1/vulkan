@@ -51,13 +51,7 @@ data VkValidationCacheCreateInfoEXT
 
 -- | Dummy data to tag the 'Ptr' with
 data VkValidationCacheEXT_T
--- | VkValidationCacheEXT - Opaque handle to a validation cache object
---
--- = See Also
---
--- 'VkShaderModuleValidationCacheCreateInfoEXT',
--- 'vkCreateValidationCacheEXT', 'vkDestroyValidationCacheEXT',
--- 'vkGetValidationCacheDataEXT', 'vkMergeValidationCachesEXT'
+-- No documentation found for TopLevel "VkValidationCacheEXT"
 type VkValidationCacheEXT = Ptr VkValidationCacheEXT_T
 
 data VkValidationCacheHeaderVersionEXT

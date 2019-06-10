@@ -33,42 +33,13 @@ import Graphics.Vulkan.C.Core10.Core
   )
 
 
--- | VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV - Structure
--- describing the representative fragment test features that can be
--- supported by an implementation
---
--- = Members
---
--- The members of the
--- 'VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV' structure
--- describe the following features:
---
--- = Description
---
--- If the 'VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV' structure
--- is included in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceFeatures2KHR',
--- it is filled with values indicating whether the feature is supported.
--- 'VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV' /can/ also be
--- used in the @pNext@ chain of
--- 'Graphics.Vulkan.C.Core10.Device.VkDeviceCreateInfo' to enable the
--- feature.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV"
 data VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV = VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_REPRESENTATIVE_FRAGMENT_TEST_FEATURES_NV'
+  { -- No documentation found for Nested "VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV" "sType"
   vkSType :: VkStructureType
   , -- No documentation found for Nested "VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV" "pNext"
   vkPNext :: Ptr ()
-  , -- | @representativeFragmentTest@ indicates whether the implementation
-  -- supports the representative fragment test. See
-  -- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fragops-rep-frag-test Representative Fragment Test>.
+  , -- No documentation found for Nested "VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV" "representativeFragmentTest"
   vkRepresentativeFragmentTest :: VkBool32
   }
   deriving (Eq, Show)
@@ -88,34 +59,13 @@ instance Zero VkPhysicalDeviceRepresentativeFragmentTestFeaturesNV where
                                                               zero
                                                               zero
 
--- | VkPipelineRepresentativeFragmentTestStateCreateInfoNV - Structure
--- specifying representative fragment test
---
--- = Description
---
--- If this structure is not present, @representativeFragmentTestEnable@ is
--- considered to be 'Graphics.Vulkan.C.Core10.Core.VK_FALSE', and the
--- representative fragment test is disabled.
---
--- If
--- <https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#fragops-early-mode early fragment tests>
--- are not enabled in the active fragment shader, the representative
--- fragment shader test has no effect, even if enabled.
---
--- == Valid Usage (Implicit)
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Core.VkBool32',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType'
+-- No documentation found for TopLevel "VkPipelineRepresentativeFragmentTestStateCreateInfoNV"
 data VkPipelineRepresentativeFragmentTestStateCreateInfoNV = VkPipelineRepresentativeFragmentTestStateCreateInfoNV
-  { -- | @sType@ /must/ be
-  -- 'VK_STRUCTURE_TYPE_PIPELINE_REPRESENTATIVE_FRAGMENT_TEST_STATE_CREATE_INFO_NV'
+  { -- No documentation found for Nested "VkPipelineRepresentativeFragmentTestStateCreateInfoNV" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkPipelineRepresentativeFragmentTestStateCreateInfoNV" "pNext"
   vkPNext :: Ptr ()
-  , -- | @representativeFragmentTestEnable@ controls whether the representative
-  -- fragment test is enabled.
+  , -- No documentation found for Nested "VkPipelineRepresentativeFragmentTestStateCreateInfoNV" "representativeFragmentTestEnable"
   vkRepresentativeFragmentTestEnable :: VkBool32
   }
   deriving (Eq, Show)

@@ -15,24 +15,8 @@ import {-# source #-} Graphics.Vulkan.C.Core10.Fence
   )
 
 
--- | VkFenceCreateFlagBits - Bitmask specifying initial state and behavior of
--- a fence
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Fence.VkFenceCreateFlags'
+-- No documentation found for TopLevel "FenceCreateFlagBits"
 type FenceCreateFlagBits = VkFenceCreateFlagBits
 
--- | VkFenceCreateFlags - Bitmask of VkFenceCreateFlagBits
---
--- = Description
---
--- 'Graphics.Vulkan.C.Core10.Fence.VkFenceCreateFlags' is a bitmask type
--- for setting a mask of zero or more
--- 'Graphics.Vulkan.C.Core10.Fence.VkFenceCreateFlagBits'.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Fence.VkFenceCreateFlagBits',
--- 'Graphics.Vulkan.C.Core10.Fence.VkFenceCreateInfo'
+-- No documentation found for TopLevel "FenceCreateFlags"
 type FenceCreateFlags = FenceCreateFlagBits

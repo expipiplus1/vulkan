@@ -58,78 +58,17 @@ import Graphics.Vulkan.NamedType
   )
 
 
--- | VkBindBufferMemoryInfo - Structure specifying how to bind a buffer to
--- memory
---
--- == Valid Usage
---
--- -   @buffer@ /must/ not already be backed by a memory object
---
--- -   @buffer@ /must/ not have been created with any sparse memory binding
---     flags
---
--- -   @memoryOffset@ /must/ be less than the size of @memory@
---
--- -   @memory@ /must/ have been allocated using one of the memory types
---     allowed in the @memoryTypeBits@ member of the
---     'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements'
---     structure returned from a call to
---     'Graphics.Vulkan.C.Core10.MemoryManagement.vkGetBufferMemoryRequirements'
---     with @buffer@
---
--- -   @memoryOffset@ /must/ be an integer multiple of the @alignment@
---     member of the
---     'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements'
---     structure returned from a call to
---     'Graphics.Vulkan.C.Core10.MemoryManagement.vkGetBufferMemoryRequirements'
---     with @buffer@
---
--- -   The @size@ member of the
---     'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements'
---     structure returned from a call to
---     'Graphics.Vulkan.C.Core10.MemoryManagement.vkGetBufferMemoryRequirements'
---     with @buffer@ /must/ be less than or equal to the size of @memory@
---     minus @memoryOffset@
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be 'VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO'
---
--- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VkBindBufferMemoryDeviceGroupInfo'
---
--- -   @buffer@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer' handle
---
--- -   @memory@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' handle
---
--- -   Both of @buffer@, and @memory@ /must/ have been created, allocated,
---     or retrieved from the same
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkBuffer',
--- 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType', 'vkBindBufferMemory2',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_bind_memory2.vkBindBufferMemory2KHR'
+-- No documentation found for TopLevel "VkBindBufferMemoryInfo"
 data VkBindBufferMemoryInfo = VkBindBufferMemoryInfo
-  { -- | @sType@ is the type of this structure.
+  { -- No documentation found for Nested "VkBindBufferMemoryInfo" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkBindBufferMemoryInfo" "pNext"
   vkPNext :: Ptr ()
-  , -- | @buffer@ is the buffer to be attached to memory.
+  , -- No documentation found for Nested "VkBindBufferMemoryInfo" "buffer"
   vkBuffer :: VkBuffer
-  , -- | @memory@ is a 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
-  -- describing the device memory to attach.
+  , -- No documentation found for Nested "VkBindBufferMemoryInfo" "memory"
   vkMemory :: VkDeviceMemory
-  , -- | @memoryOffset@ is the start offset of the region of @memory@ which is to
-  -- be bound to the buffer. The number of bytes returned in the
-  -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements'::@size@
-  -- member in @memory@, starting from @memoryOffset@ bytes, will be bound to
-  -- the specified buffer.
+  , -- No documentation found for Nested "VkBindBufferMemoryInfo" "memoryOffset"
   vkMemoryOffset :: VkDeviceSize
   }
   deriving (Eq, Show)
@@ -155,85 +94,17 @@ instance Zero VkBindBufferMemoryInfo where
                                 zero
                                 zero
 
--- | VkBindImageMemoryInfo - Structure specifying how to bind an image to
--- memory
---
--- == Valid Usage
---
--- -   @image@ /must/ not already be backed by a memory object
---
--- -   @image@ /must/ not have been created with any sparse memory binding
---     flags
---
--- -   @memoryOffset@ /must/ be less than the size of @memory@
---
--- -   @memory@ /must/ have been allocated using one of the memory types
---     allowed in the @memoryTypeBits@ member of the
---     'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements'
---     structure returned from a call to
---     'Graphics.Vulkan.C.Core10.MemoryManagement.vkGetImageMemoryRequirements'
---     with @image@
---
--- -   @memoryOffset@ /must/ be an integer multiple of the @alignment@
---     member of the
---     'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements'
---     structure returned from a call to
---     'Graphics.Vulkan.C.Core10.MemoryManagement.vkGetImageMemoryRequirements'
---     with @image@
---
--- -   The difference of the size of @memory@ and @memoryOffset@ /must/ be
---     greater than or equal to the @size@ member of the
---     'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements'
---     structure returned from a call to
---     'Graphics.Vulkan.C.Core10.MemoryManagement.vkGetImageMemoryRequirements'
---     with the same @image@
---
--- -   @memory@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' handle
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be 'VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO'
---
--- -   Each @pNext@ member of any structure (including this one) in the
---     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
---     instance of
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_device_group_and_VK_KHR_bind_memory2.VkBindImageMemoryDeviceGroupInfo',
---     'Graphics.Vulkan.C.Extensions.VK_KHR_swapchain.VkBindImageMemorySwapchainInfoKHR',
---     or
---     'Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_sampler_ycbcr_conversion.VkBindImagePlaneMemoryInfo'
---
--- -   Each @sType@ member in the @pNext@ chain /must/ be unique
---
--- -   @image@ /must/ be a valid
---     'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage' handle
---
--- -   Both of @image@, and @memory@ that are valid handles /must/ have
---     been created, allocated, or retrieved from the same
---     'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDeviceSize',
--- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkImage',
--- 'Graphics.Vulkan.C.Core10.Core.VkStructureType', 'vkBindImageMemory2',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_bind_memory2.vkBindImageMemory2KHR'
+-- No documentation found for TopLevel "VkBindImageMemoryInfo"
 data VkBindImageMemoryInfo = VkBindImageMemoryInfo
-  { -- | @sType@ is the type of this structure.
+  { -- No documentation found for Nested "VkBindImageMemoryInfo" "sType"
   vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+  , -- No documentation found for Nested "VkBindImageMemoryInfo" "pNext"
   vkPNext :: Ptr ()
-  , -- | @image@ is the image to be attached to memory.
+  , -- No documentation found for Nested "VkBindImageMemoryInfo" "image"
   vkImage :: VkImage
-  , -- | @memory@ is a 'Graphics.Vulkan.C.Core10.Memory.VkDeviceMemory' object
-  -- describing the device memory to attach.
+  , -- No documentation found for Nested "VkBindImageMemoryInfo" "memory"
   vkMemory :: VkDeviceMemory
-  , -- | @memoryOffset@ is the start offset of the region of @memory@ which is to
-  -- be bound to the image. The number of bytes returned in the
-  -- 'Graphics.Vulkan.C.Core10.MemoryManagement.VkMemoryRequirements'::@size@
-  -- member in @memory@, starting from @memoryOffset@ bytes, will be bound to
-  -- the specified image.
+  , -- No documentation found for Nested "VkBindImageMemoryInfo" "memoryOffset"
   vkMemoryOffset :: VkDeviceSize
   }
   deriving (Eq, Show)
@@ -259,36 +130,7 @@ instance Zero VkBindImageMemoryInfo where
                                zero
                                zero
 
--- | vkBindBufferMemory2 - Bind device memory to buffer objects
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the buffers and memory.
---
--- -   @bindInfoCount@ is the number of elements in @pBindInfos@.
---
--- -   @pBindInfos@ is a pointer to an array of structures of type
---     'VkBindBufferMemoryInfo', describing buffers and memory to bind.
---
--- = Description
---
--- On some implementations, it /may/ be more efficient to batch memory
--- bindings into a single command.
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'VkBindBufferMemoryInfo',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
+-- No documentation found for TopLevel "vkBindBufferMemory2"
 #if defined(EXPOSE_CORE11_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -309,36 +151,7 @@ foreign import ccall
 type FN_vkBindBufferMemory2 = ("device" ::: VkDevice) -> ("bindInfoCount" ::: Word32) -> ("pBindInfos" ::: Ptr VkBindBufferMemoryInfo) -> IO VkResult
 type PFN_vkBindBufferMemory2 = FunPtr FN_vkBindBufferMemory2
 
--- | vkBindImageMemory2 - Bind device memory to image objects
---
--- = Parameters
---
--- -   @device@ is the logical device that owns the images and memory.
---
--- -   @bindInfoCount@ is the number of elements in @pBindInfos@.
---
--- -   @pBindInfos@ is a pointer to an array of structures of type
---     'VkBindImageMemoryInfo', describing images and memory to bind.
---
--- = Description
---
--- On some implementations, it /may/ be more efficient to batch memory
--- bindings into a single command.
---
--- == Return Codes
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes Success>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_SUCCESS'
---
--- [<https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_HOST_MEMORY'
---
---     -   'Graphics.Vulkan.C.Core10.Core.VK_ERROR_OUT_OF_DEVICE_MEMORY'
---
--- = See Also
---
--- 'VkBindImageMemoryInfo',
--- 'Graphics.Vulkan.C.Core10.DeviceInitialization.VkDevice'
+-- No documentation found for TopLevel "vkBindImageMemory2"
 #if defined(EXPOSE_CORE11_COMMANDS)
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)

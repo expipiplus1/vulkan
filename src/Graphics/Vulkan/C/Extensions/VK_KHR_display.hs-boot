@@ -60,20 +60,7 @@ import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_surface
 
 -- | Dummy data to tag the 'Ptr' with
 data VkDisplayKHR_T
--- | VkDisplayKHR - Opaque handle to a display object
---
--- = See Also
---
--- 'VkDisplayPlanePropertiesKHR', 'VkDisplayPropertiesKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_acquire_xlib_display.vkAcquireXlibDisplayEXT',
--- 'vkCreateDisplayModeKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.vkDisplayPowerControlEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.vkGetDisplayModeProperties2KHR',
--- 'vkGetDisplayModePropertiesKHR',
--- 'vkGetDisplayPlaneSupportedDisplaysKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_acquire_xlib_display.vkGetRandROutputDisplayEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_display_control.vkRegisterDisplayEventEXT',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_direct_mode_display.vkReleaseDisplayEXT'
+-- No documentation found for TopLevel "VkDisplayKHR"
 type VkDisplayKHR = Ptr VkDisplayKHR_T
 
 data VkDisplayModeCreateFlagsKHR
@@ -82,14 +69,7 @@ data VkDisplayModeCreateInfoKHR
 
 -- | Dummy data to tag the 'Ptr' with
 data VkDisplayModeKHR_T
--- | VkDisplayModeKHR - Opaque handle to a display mode object
---
--- = See Also
---
--- 'VkDisplayModePropertiesKHR',
--- 'Graphics.Vulkan.C.Extensions.VK_KHR_get_display_properties2.VkDisplayPlaneInfo2KHR',
--- 'VkDisplaySurfaceCreateInfoKHR', 'vkCreateDisplayModeKHR',
--- 'vkGetDisplayPlaneCapabilitiesKHR'
+-- No documentation found for TopLevel "VkDisplayModeKHR"
 type VkDisplayModeKHR = Ptr VkDisplayModeKHR_T
 
 data VkDisplayModeParametersKHR
@@ -98,16 +78,7 @@ data VkDisplayModePropertiesKHR
 
 data VkDisplayPlaneAlphaFlagBitsKHR
 
--- | VkDisplayPlaneAlphaFlagsKHR - Bitmask of VkDisplayPlaneAlphaFlagBitsKHR
---
--- = Description
---
--- 'VkDisplayPlaneAlphaFlagsKHR' is a bitmask type for setting a mask of
--- zero or more 'VkDisplayPlaneAlphaFlagBitsKHR'.
---
--- = See Also
---
--- 'VkDisplayPlaneAlphaFlagBitsKHR', 'VkDisplayPlaneCapabilitiesKHR'
+-- No documentation found for TopLevel "VkDisplayPlaneAlphaFlagsKHR"
 type VkDisplayPlaneAlphaFlagsKHR = VkDisplayPlaneAlphaFlagBitsKHR
 
 data VkDisplayPlaneCapabilitiesKHR

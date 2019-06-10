@@ -23,76 +23,23 @@ import {-# source #-} Graphics.Vulkan.C.Core10.CommandBuffer
   )
 
 
--- | VkCommandBufferLevel - Enumerant specifying a command buffer level
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferAllocateInfo'
+-- No documentation found for TopLevel "CommandBufferLevel"
 type CommandBufferLevel = VkCommandBufferLevel
 
--- | VkCommandBufferResetFlagBits - Bitmask controlling behavior of a command
--- buffer reset
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferResetFlags'
+-- No documentation found for TopLevel "CommandBufferResetFlagBits"
 type CommandBufferResetFlagBits = VkCommandBufferResetFlagBits
 
--- | VkCommandBufferResetFlags - Bitmask of VkCommandBufferResetFlagBits
---
--- = Description
---
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferResetFlags' is a
--- bitmask type for setting a mask of zero or more
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferResetFlagBits'.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferResetFlagBits',
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.vkResetCommandBuffer'
+-- No documentation found for TopLevel "CommandBufferResetFlags"
 type CommandBufferResetFlags = CommandBufferResetFlagBits
 
--- | VkCommandBufferUsageFlagBits - Bitmask specifying usage behavior for
--- command buffer
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferUsageFlags'
+-- No documentation found for TopLevel "CommandBufferUsageFlagBits"
 type CommandBufferUsageFlagBits = VkCommandBufferUsageFlagBits
 
--- | VkCommandBufferUsageFlags - Bitmask of VkCommandBufferUsageFlagBits
---
--- = Description
---
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferUsageFlags' is a
--- bitmask type for setting a mask of zero or more
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferUsageFlagBits'.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferBeginInfo',
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferUsageFlagBits'
+-- No documentation found for TopLevel "CommandBufferUsageFlags"
 type CommandBufferUsageFlags = CommandBufferUsageFlagBits
 
--- | VkQueryControlFlagBits - Bitmask specifying constraints on a query
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkQueryControlFlags'
+-- No documentation found for TopLevel "QueryControlFlagBits"
 type QueryControlFlagBits = VkQueryControlFlagBits
 
--- | VkQueryControlFlags - Bitmask of VkQueryControlFlagBits
---
--- = Description
---
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkQueryControlFlags' is a
--- bitmask type for setting a mask of zero or more
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkQueryControlFlagBits'.
---
--- = See Also
---
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkCommandBufferInheritanceInfo',
--- 'Graphics.Vulkan.C.Core10.CommandBuffer.VkQueryControlFlagBits',
--- 'Graphics.Vulkan.C.Core10.CommandBufferBuilding.vkCmdBeginQuery',
--- 'Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback.vkCmdBeginQueryIndexedEXT'
+-- No documentation found for TopLevel "QueryControlFlags"
 type QueryControlFlags = QueryControlFlagBits
