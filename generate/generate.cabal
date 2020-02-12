@@ -117,7 +117,6 @@ executable generate
                      , directory >= 1.2
                      , extra
                      , filepath >= 1.4
-                     , haskell-src-exts-simple
                      , hxt >= 9.3
                      , inline-c >= 0.5
                      , interpolatedstring-perl6 >= 1.0
