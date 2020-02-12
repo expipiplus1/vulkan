@@ -221,7 +221,7 @@ voidDataWriteElement n =
       weProvides = [Unguarded $ WithoutConstructors (TypeName n)]
       weUndependableProvides = []
       weSourceDepends        = []
-      weBootElement          = Just WriteElement{..}
+      weBootElement          = Just (stripConstructorExports WriteElement{weBootElement=Nothing,..})
       weDepends = []
   in WriteElement{..}
 

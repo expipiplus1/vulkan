@@ -22,13 +22,15 @@ import           Write.Util
 writeBaseType :: BaseType -> Either [SpecError] WriteElement
 writeBaseType bt@BaseType {..} = do
   (weDoc, weImports, weExtensions) <- hDoc bt
-  let weName     = "BaseType: " <> btName
-      weProvides = [Unguarded $ TypeAlias btName]
-      weUndependableProvides = []
-      weSourceDepends        = []
-      weBootElement          = Just w
-      weDepends  = Unguarded <$> typeDepends btType
-      w = WriteElement {..}
+  let
+    weName                 = "BaseType: " <> btName
+    weProvides             = [Unguarded $ TypeAlias btName]
+    weUndependableProvides = []
+    weSourceDepends        = []
+    weBootElement          = Just
+      (stripConstructorExports WriteElement { weBootElement = Nothing, .. })
+    weDepends = Unguarded <$> typeDepends btType
+    w         = WriteElement { .. }
   pure w
 
 hDoc :: BaseType -> Either [SpecError] (DocMap -> Doc (), [Guarded Import], [Text])

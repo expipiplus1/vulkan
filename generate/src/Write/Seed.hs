@@ -102,17 +102,21 @@ bespokeSeedsLowPriority =
   [ ModuleSeed "Graphics.Vulkan.Marshal.Utils" [TermName "withVec"] [] Nothing
   , ModuleSeed
     "Graphics.Vulkan.Marshal.SomeVkStruct"
-    [ TypeName "ToCStruct"
-    , TypeName "FromCStruct"
+    [ TypeName "FromCStruct"
     , TypeName "SomeVkStruct"
     , TermName "SomeVkStruct"
     , TermName "fromSomeVkStruct"
     , TermName "fromSomeVkStructChain"
     , TermName "withSomeVkStruct"
     , TermName "peekVkStruct"
-    , TermName "withCStructPtr"
     , TermName "fromCStructPtr"
     , TermName "fromCStructPtrElem"
+    ]
+    []
+    Nothing
+  , ModuleSeed
+    "Graphics.Vulkan.Marshal.ToCStruct"
+    [ TypeName "ToCStruct"
     ]
     []
     Nothing

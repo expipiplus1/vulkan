@@ -50,9 +50,13 @@ writeEnum e@Enum {..} = runWE ("Enum:" T.<+> eName) $ do
     (  [TypeConstructor eName, Term eName]
     ++ [ Pattern eeName | EnumElement {..} <- eElements ]
     )
-  tellBootElem <=< liftWrite . runWE ("Enum: " <> eName <> " boot") $ do
-    tellExport (TypeConstructor eName)
-    pure $ \_ -> pretty $ "data" T.<+> eName
+  tellBootElem
+    .   stripConstructorExports
+    <=< liftWrite
+    .   runWE ("Enum: " <> eName <> " boot")
+    $   do
+          tellExport (TypeConstructor eName)
+          pure $ \_ -> pretty $ "data" T.<+> eName
   pure $ enumDoc e
 
 enumDoc :: Enum -> DocMap -> Doc ()

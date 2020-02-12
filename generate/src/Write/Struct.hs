@@ -40,9 +40,13 @@ writeStruct s@Struct {..} = case sStructOrUnion of
     tellImport "Foreign.Storable" "Storable(..)"
     tellExport (TypeConstructor sName)
     tellExport (Term sName)
-    tellBootElem <=< liftWrite . runWE ("Struct boot: " <> sName) $ do
-      tellExport (TypeConstructor sName)
-      pure $ \_ -> pretty $ "data" T.<+> sName
+    tellBootElem
+      .   stripConstructorExports
+      <=< liftWrite
+      .   runWE ("Struct boot: " <> sName)
+      $   do
+            tellExport (TypeConstructor sName)
+            pure $ \_ -> pretty $ "data" T.<+> sName
     tellDepend (WE.TypeName "Zero")
     let termDepends = \case
           Just vs -> PatternName <$> vs
@@ -58,9 +62,13 @@ writeStruct s@Struct {..} = case sStructOrUnion of
     let smNames = toConstructorName <$> (smName <$> sMembers)
     traverse_ tellExport $ TypeConstructor sName : (Term <$> smNames)
     tellDepends $ nubOrd (concatMap (typeDepends . smType) sMembers)
-    tellBootElem <=< liftWrite . runWE ("Union boot: " <> sName) $ do
-      tellExport (TypeConstructor sName)
-      pure $ \_ -> pretty $ "data" T.<+> sName
+    tellBootElem
+      .   stripConstructorExports
+      <=< liftWrite
+      .   runWE ("Union boot: " <> sName)
+      $   do
+            tellExport (TypeConstructor sName)
+            pure $ \_ -> pretty $ "data" T.<+> sName
     unionDoc s
 
 ----------------------------------------------------------------

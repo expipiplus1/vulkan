@@ -48,7 +48,7 @@ fixLookupM
   -- it up.
   --
   -- If there is an extra key and you look it up then you will get an
-  -- irrefutable pattern match.
+  -- irrefutable pattern match failure.
   -> (a -> k)
   -- ^ Get a key from an output
   -> ((k -> Maybe a) -> m (f a))

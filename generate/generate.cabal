@@ -87,12 +87,16 @@ executable generate
                      , Write.Loader
                      , Write.Marshal.Aliases
                      , Write.Marshal.Bracket
+                     , Write.Marshal.Command
                      , Write.Marshal.Exception
                      , Write.Marshal.Handle
-                     , Write.Marshal.Marshal
+                     , Write.Marshal.Marshallable
                      , Write.Marshal.SomeVkStruct
                      , Write.Marshal.Struct
                      , Write.Marshal.Struct.Utils
+                     , Write.Marshal.ToC
+                     , Write.Marshal.ToCStruct
+                     , Write.Marshal.Type
                      , Write.Marshal.Util
                      , Write.Marshal.Wrap
                      , Write.Module

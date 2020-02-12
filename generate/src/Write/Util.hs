@@ -8,6 +8,7 @@ module Write.Util
   , vcatPara
   , separatedSections
   , document
+  , documentUp
   , Documentee(..)
   , separatedWithGuards
   , guarded
@@ -82,12 +83,20 @@ separatedSections separator sections = vcat $ case nonEmptySections of
 
 -- Return a documentation rendering if possible, otherwise ""
 document :: (Documentee -> Maybe Haddock) -> Documentee -> Doc ()
-document getDoc n = case getDoc n of
+document = document' "|"
+
+-- Return a documentation rendering if possible, otherwise ""
+documentUp :: (Documentee -> Maybe Haddock) -> Documentee -> Doc ()
+documentUp = document' "^"
+
+-- Return a documentation rendering if possible, otherwise ""
+document' :: Doc () -> (Documentee -> Maybe Haddock) -> Documentee -> Doc ()
+document' direction getDoc n = case getDoc n of
   Nothing          -> "-- No documentation found for" <+> pretty (T.tShow n)
   Just (Haddock h) -> case T.lines h of
     []     -> "-- Empty Documentation Found for" <+> pretty (T.tShow n)
     x : xs -> vcat
-      (("-- |" <> pretty (space' x)) : (("--" <>) . pretty . space' <$> xs))
+      (("--" <+> direction <> pretty (space' x)) : (("--" <>) . pretty . space' <$> xs))
     where
       space' = \case
         "" -> ""

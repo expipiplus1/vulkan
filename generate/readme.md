@@ -141,3 +141,6 @@ options.
   - Write better names for the functions dealing with bytes
 
 - In PresentInfoKHR the vkPResults pointer is a return value!
+
+- `resolveAttachments` in `VkSubpassDescription` should be a `Maybe Vector` as
+  the length can be determined from the other vector with the same length

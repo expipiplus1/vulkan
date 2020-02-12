@@ -37,8 +37,9 @@ main = do
       hPutStr stderr "Failed to parse spec"
       exitFailure
     Just parsedSpec -> case spec parsedSpec of
-      Left e -> do
-        traverse_ (sayErr . prettySpecError) e
+      Left es -> do
+        traverse_ (sayErr . prettySpecError) es
+        sayErr $ tShow (Data.Foldable.length es) <> " errors"
         exitFailure
       Right s -> do
         let allExtensionNames = extName <$> sExtensions s

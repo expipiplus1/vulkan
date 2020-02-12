@@ -1,4 +1,5 @@
 {-# LANGUAGE ApplicativeDo     #-}
+{-# LANGUAGE TupleSections     #-}
 {-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards   #-}
@@ -17,7 +18,7 @@ import           Data.List.Extra
 import qualified Data.Map                      as Map
 import           Data.Maybe
 import           Data.Text                                ( Text )
-import qualified Data.Text                     as T
+import qualified Data.Text.Extra               as T
 import           Data.Text.Prettyprint.Doc         hiding ( brackets )
 import           Data.Text.Prettyprint.Doc.Render.String
 import           Say
@@ -54,12 +55,16 @@ import           Write.HeaderVersion
 import           Write.Loader
 import           Write.Marshal.Aliases
 import           Write.Marshal.Bracket
+import           Write.Marshal.Command
 import           Write.Marshal.Exception
 import           Write.Marshal.Handle
 import           Write.Marshal.SomeVkStruct
+import           Write.Marshal.ToCStruct
 import           Write.Marshal.Struct
 import           Write.Marshal.Struct.Utils
 import           Write.Marshal.Util
+import qualified Write.Marshal.ToC             as M
+import qualified Write.Marshal.Type            as M
 import           Write.Module
 import           Write.Module.Aggregate
 import           Write.Partition
@@ -69,8 +74,6 @@ import           Write.Type.Enum
 import           Write.Type.FuncPointer
 import           Write.Wrapper
 import           Write.Monad
-
-import           Write.Marshal.Marshal
 
 -- TODO: Better error handling
 writeSpec
@@ -111,7 +114,9 @@ writeSpec docs outDir cabalPath s = (printErrors =<<) $ runExceptT $ do
 
 printErrors :: Either [SpecError] () -> IO ()
 printErrors = \case
-  Left es -> traverse_ (sayErr . prettySpecError) es
+  Left es -> do
+    traverse_ (sayErr . prettySpecError) es
+    sayErr $ T.tShow (Data.Foldable.length es) <> " errors"
   Right a -> pure a
 
 saveModules
@@ -211,21 +216,22 @@ specWrapperWriteElements spec'@Spec {..} = do
           | (createName, bName) <- bracketConstructors
           , TermName commandName == createName
           ]
-    cs <- toE $ traverseV
-      (commandWrapper getHandle
-                      isBitmask
-                      isStruct
-                      getStructDispatchableHandle
-                      resolveAlias
-                      getBrackets
-      )
-      enabledCommands
+    -- cs <- toE $ traverseV
+    --   (commandWrapper getHandle
+    --                   isBitmask
+    --                   isStruct
+    --                   getStructDispatchableHandle
+    --                   resolveAlias
+    --                   getBrackets
+    --   )
+    --   enabledCommands
+    let marshalCommandWithBracket c = do
+          we : wes <- marshalCommand c
+          let b = Unguarded <$> getBrackets (dropVk (cName c))
+          pure $ we { weDepends = weDepends we ++ toList b } : wes
+    cs <- toELookup lookup $ traverseV marshalCommandWithBracket enabledCommands
+
     pure $ bs : cs
-  _ <- toVLookup lookup
-    $ traverseV marshalStructMembers enabledStructs
-  structWrappers <- toVLookup lookup $ traverseV
-    (structWrapper getHandle isBitmask isStruct enabledStructs)
-    enabledStructs
   handleWrappers <- toV $ traverseV handleWrapper dispatchableHandles
   aliases        <- writeAliases (makeMarshalledAliases spec')
   enumAliases <- traverse writeFullEnumAliases (makeMarshalledEnumAliases spec')
@@ -233,9 +239,18 @@ specWrapperWriteElements spec'@Spec {..} = do
     $ someVkStructWriteElement getHandle sPlatforms enabledStructs
   peekStructWE <- toV
     $ vkPeekStructWriteElement getHandle sPlatforms enabledStructs
+  structWEs <- toVLookup lookup $ do
+    marshalledStructs <- traverseV
+      sequence
+      [ (s, M.marshalStructMembers s) | s <- enabledStructs ]
+    structWrappers <- traverseV
+      (structWrapper getHandle isBitmask isStruct enabledStructs)
+      marshalledStructs
+    toCStructWE <- toCStructWriteElement marshalledStructs
+    pure (toCStructWE : concat structWrappers)
   pure
     (  concat
-        [ concat structWrappers
+        [ structWEs
         , concat bracketAndCommandWrappers
         , handleWrappers
         , aliases

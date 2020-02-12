@@ -128,13 +128,13 @@ wrapCommand getHandle isDefaultable isStruct structContainsDispatchableHandle re
         parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatchableHandle resolveAlias usage lengthPairs cParameters
   let printWrapped ::  Text -> [WrappingType] -> WE (DocMap -> Doc ann)
       printWrapped n wts = do
-        wrapped <- wrap c wts
+        -- wrapped <- wrap c wts
         t <- makeType wts
         tellDepend (TermName cName)
         pure $ \getDoc -> line <> [qci|
           {document getDoc (TopLevel cName)}
           {n} :: {t :: Doc ()}
-          {n} = {wrapped (pretty cName) :: Doc ()}|]
+          {n} = undefined \{- \{wrapped (pretty cName) :: Doc ()} -}|]
       makeType wts = wtsToSig KeepVkResult c wts
   (ds, aliases) <- if isDualUseCommand lengthPairs
     then do
@@ -303,17 +303,17 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
             getAlloc t = if isMarshalledStruct t
               then do
                 let Just tyName = simpleTypeName t
-                tellDepend (TermName ("withCStruct" <> tyName))
+                tellSourceDepend (WE.TypeName "ToCStruct")
                 tellImport "Foreign.Marshal.Utils" "with"
-                pure [qci|(\\marshalled -> withCStruct{tyName} marshalled . flip with)|]
+                pure "withCStruct"
               else do
                 tellImport "Foreign.Marshal.Utils" "with"
                 pure "with"
             getNonPtrAlloc t = if isMarshalledStruct t
               then do
                 let Just tyName = simpleTypeName t
-                tellDepend (TermName ("withCStruct" <> tyName))
-                pure ("withCStruct" <> tyName)
+                tellSourceDepend (WE.TypeName "ToCStruct")
+                pure "withCStruct"
               else do
                 tellImport "Data.Function" "(&)"
                 pure $ case getHandle t of
@@ -324,12 +324,12 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
             getPeek t = if isMarshalledStruct t
               then do
                 let Just tyName = simpleTypeName t
-                tellDepend (TermName ("fromCStruct" <> tyName))
+                tellSourceDepend (WE.TypeName "FromCStruct")
                 tellImport "Foreign.Storable" "peek"
                 tellImport "Control.Monad"    "(<=<)"
                 pure $ if structContainsDispatchableHandle t
-                  then [qci|(fromCStruct{tyName} commandTable <=< peek)|]
-                  else [qci|(fromCStruct{tyName} <=< peek)|]
+                  then [qci|(fromCStruct commandTable <=< peek)|]
+                  else [qci|(fromCStruct <=< peek)|]
               else do
                 tellImport "Foreign.Storable" "peek"
                 pure "peek"
@@ -350,12 +350,12 @@ parametersToWrappingTypes isDefaultable isStruct getHandle structContainsDispatc
               _ | isMarshalledStruct t
                 -> do
                   let Just tyName = simpleTypeName t
-                  tellDepend (TermName ("fromCStruct" <> tyName))
+                  tellSourceDepend (WE.TypeName "FromCStruct")
                   tellImport "Foreign.Storable" "peekElemOff"
                   tellImport "Control.Monad"    "(<=<)"
                   pure $ if structContainsDispatchableHandle t
-                    then [qci|(\\p -> fromCStruct{tyName} commandTable <=< peekElemOff p)|]
-                    else [qci|(\\p -> fromCStruct{tyName} <=< peekElemOff p)|]
+                    then [qci|(\\p -> fromCStruct commandTable <=< peekElemOff p)|]
+                    else [qci|(\\p -> fromCStruct <=< peekElemOff p)|]
               _ -> do
                 tellImport "Foreign.Storable" "peekElemOff"
                 pure "peekElemOff"

@@ -17,6 +17,7 @@ module Write.Monad
   , throw
   , forV
   , traverseV
+  , withContext
   , WE(..)
   , liftWrite
   , runWE
@@ -50,6 +51,7 @@ import           Data.List.Extra                          ( elem
                                                           , partition
                                                           )
 import           Control.Monad.Except
+import           Control.Monad.Fail
 import           Data.Either.Validation
 import           Data.Traversable
 import           Data.Monoid                              ( Ap(..) )
@@ -74,10 +76,9 @@ instance MonadError Text Write where
   throwError = Write . throwError . pure
   catchError (Write a) h =
     Write $ catchError a (unWrite . h . head)
-    -- case a of
-    -- Left  []      -> error "empty errors"
-    -- Left  (e : _) -> h e
-    -- Right r       -> Write (Right r)
+
+instance MonadFail Write where
+  fail = throwError . pack
 
 withContext :: Text -> Write a -> Write a
 withContext context (Write e) =

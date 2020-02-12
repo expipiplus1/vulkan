@@ -15,6 +15,7 @@ module Write.Module
 import           Control.Applicative
 import           Data.Char
 import           Data.Functor
+import           Data.Function                            ( on )
 import           Data.List.Extra
 import qualified Data.Map                      as Map
 import qualified Data.MultiMap                 as MultiMap
@@ -59,19 +60,14 @@ writeModules findDoc ms =
       getDoc = getModuleDoc findDoc moduleMap
   in  ms
         <&> (\m ->
-              let stripConstructorExports we = we
-                    { weProvides = fmap (WithoutConstructors . unExport)
-                                     <$> weProvides we
-                    }
-                  bootModule =
+              let bootModule =
                       case mapMaybe weBootElement (mWriteElements m) of
                         []  -> Nothing
-                        wes -> Just m
-                          { mWriteElements     = stripConstructorExports <$> wes
-                          , mSeedReexports     = []
-                          , mReexportedModules = []
+                        wes -> Just m { mWriteElements     = wes
+                                      , mSeedReexports     = []
+                                      , mReexportedModules = []
                                       --- ^ boot modules don't reexport things
-                          }
+                                      }
                   write = writeModule (getDoc (mName m)) moduleMapHN
               in  (write m, write <$> bootModule)
             )
@@ -98,7 +94,7 @@ getModuleDoc findDoc findModule' thisModule name = do
 
 writeModule
   :: (Documentee -> Maybe Haddock)
-  -> (HaskellName -> Maybe (Text, Guarded Export))
+  -> (HaskellName -> Maybe (Text, Guarded Export, Maybe (Guarded Export)))
   -> Module
   -> Doc ()
 writeModule getDoc getModule m@Module{..} = [qci|
@@ -121,7 +117,7 @@ writeModule getDoc getModule m@Module{..} = [qci|
 moduleExports :: Module -> [(Doc (), Maybe Text)]
 moduleExports Module {..} =
   mapMaybe
-      (exportHaskellName False)
+      exportHaskellName
       (  (weProvides =<< mWriteElements)
       ++ (weUndependableProvides =<< mWriteElements)
       ++ mSeedReexports
@@ -138,19 +134,17 @@ importReexportedModule ReexportedModule {..} = case rmGuard of
     |]
 
 exportHaskellName
-  :: Bool
-  -- ^ Is source import
-  -> Guarded Export
+  :: Guarded Export
   -> Maybe (Doc (), Maybe Text)
-exportHaskellName isSourceImport e =
+exportHaskellName e =
   let s = case unExport (unGuarded e) of
         TypeName n -> Just (pretty n)
         TermName n | isConstructor n -> Nothing
                    | otherwise       -> Just (pretty n)
         PatternName n -> Just ("pattern" <+> pretty n)
       doc = case unGuarded e of
-        WithConstructors _ | not isSourceImport -> (<> "(..)") <$> s
-        _                  -> s
+        WithConstructors _    -> (<> "(..)") <$> s
+        WithoutConstructors _ -> s
       cppGuard = case e of
         Unguarded _ -> Nothing
         Guarded g _ -> Just $ guardCPPGuard g
@@ -181,13 +175,20 @@ moduleImports Module {..} =
        |]
   in makeImport <$> Map.assocs importMap
 
-findModuleHN :: [Module] -> HaskellName -> Maybe (Text, Guarded Export)
+findModuleHN
+  :: [Module]
+  -> HaskellName
+  -> Maybe (Text, Guarded Export, Maybe (Guarded Export))
 findModuleHN ms =
   let nameMap = Map.fromList
-        [ (unExport (unGuarded e), (mName m, e))
-        | m  <- ms
-        , we <- mWriteElements m
-        , e  <- weProvides we
+        [ (unExport (unGuarded export), (mName m, export, sourceExport))
+        | m      <- ms
+        , we     <- mWriteElements m
+        , export <- weProvides we
+        , let sourceExport =
+                find (((==) `on` (unExport . unGuarded)) export)
+                  .   weProvides
+                  =<< weBootElement we
         ]
   in  (`Map.lookup` nameMap)
 
@@ -202,30 +203,31 @@ findModule ms =
   in  (`Map.lookup` nameMap)
 
 moduleInternalImports
-  :: (HaskellName -> Maybe (Text, Guarded Export))
+  :: (HaskellName -> Maybe (Text, Guarded Export, Maybe (Guarded Export)))
   -- ^ which module is this name from
   -> Module
   -> [Doc ()]
 moduleInternalImports nameModule Module {..} =
-  let nonSourceDeps = simplifyDependencies (weDepends =<< mWriteElements)
-      sourceDeps = simplifyDependencies (weSourceDepends =<< mWriteElements)
+  let nonSourceDeps  = simplifyDependencies (weDepends =<< mWriteElements)
+      sourceDeps     = simplifyDependencies (weSourceDepends =<< mWriteElements)
       reexportedDeps = simplifyDependencies (fmap unExport <$> mSeedReexports)
                        \\ nonSourceDeps
       -- A map between (ModuleName, Guards) and a list of exports
-      depends :: [(HaskellName, [Guard])] -> Map.Map (Text, [Text]) [Guarded Export]
-      depends deps = sort <$> Map.fromListWith
+      depends :: Bool -> [(HaskellName, [Guard])] -> Map.Map (Text, [Text]) [Guarded Export]
+      depends source deps = sort <$> Map.fromListWith
         (<>)
         [ ((m, (guardCPPGuard <$> gs)), [e])
-        | (n, gs)           <- deps
-        , Just (m, e) <- [nameModule n]
+        | (n, gs)     <- deps
+        , Just (m, nonSourceExport, sourceExport) <- pure $ nameModule n
+        , Just e <- pure $ if source then sourceExport else Just nonSourceExport
         , n `notElem` (unExport . unGuarded <$> (weProvides =<< mWriteElements))
         ]
       writeDeps :: Bool -> Doc () -> [(HaskellName, [Guard])] -> [Doc ()]
       writeDeps isSourceImport qualifier deps =
-        Map.assocs (depends deps) <&> \((moduleName, guards), is) ->
+        Map.assocs (depends isSourceImport deps) <&> \((moduleName, guards), is) ->
           guardedDisjunction guards [qci|
             import {qualifier}{pretty moduleName}
-              ( {indent (-2) . vcat . intercalatePrepend "," $ mapMaybe (fmap fst . exportHaskellName isSourceImport) is}
+              ( {indent (-2) . vcat . intercalatePrepend "," $ mapMaybe (fmap fst . exportHaskellName) is}
               )
           |]
   in concat [ writeDeps False "" nonSourceDeps

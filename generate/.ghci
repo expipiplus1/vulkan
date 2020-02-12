@@ -1,0 +1,1 @@
+:def g const . pure . unlines $ [":reload", "withArgs [\"/home/j/projects/vulkan/src/\", \"/home/j/projects/vulkan/vulkan.cabal\", \"/home/j/src/Vulkan-Docs\"] main"]

@@ -66,6 +66,8 @@ vkStructWriteElement =
             , Term "padSized"
             , Term "padVector"
             , Term "packCStringElemOff"
+            , Term "pokeFixedLengthByteString"
+            , Term "pokeFixedLengthNullTerminatedByteString"
             ]
     weUndependableProvides = [Unguarded (Term "peekVkStruct")]
     weSourceDepends        = [Unguarded (TermName "peekVkStruct")]
@@ -196,9 +198,6 @@ vkStructWriteElement =
         unsafeUseAsCString bs $ \from -> do
           let len = min maxLength (Data.ByteString.length bs)
           copyBytes to (castPtr @CChar @Word8 from) len
-
-      sameLength :: [Int] -> [Maybe Int] -> IO Int
-      sameLength required optional = _
     |]
   in WriteElement{..}
 

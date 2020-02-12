@@ -47,7 +47,8 @@ import           Write.Marshal.Struct.Utils
 import           Write.Marshal.Wrap
 import           Write.Util
 
-import qualified Write.Marshal.Marshal as M
+import qualified Write.Marshal.Marshallable    as M
+import qualified Write.Marshal.Scheme          as M
 
 
 {-# ANN module ("HLint: ignore Reduce duplication" :: String) #-}
@@ -61,73 +62,72 @@ structWrapper
   -- ^ Is this the name of a struct type
   -> [Struct]
   -- ^ A list of all structs
-  -> Struct
+  -> ( Struct
+     , [M.MarshalScheme StructMember]
+     )
   -> Write [WriteElement]
-structWrapper getHandle isBitmask isStruct allStructs struct = do
-  let
-    isNonDispatchableHandle n = case getHandle n of
-      Just h  -> hHandleType h == NonDispatchable
-      Nothing -> True
-    isMarshalledNonDispatchableHandle = isNonDispatchableHandle . ("Vk" <>)
-    isMarshalledBitmask               = isBitmask . ("Vk" <>)
-    isMarshalledStruct                = isStruct . ("Vk" <>)
-    isDefaultable t = maybe
-      False
-      (    isNonDispatchableHandle
-      <||> isMarshalledNonDispatchableHandle
-      <||> isBitmask
-      <||> isDefaultableForeignType
-      <||> isMarshalledBitmask
-      )
-      (simpleTypeName t)
-    isStructType t =
-      maybe False (isStruct <||> isMarshalledStruct) (simpleTypeName t)
-    getTypeHandle h = getHandle . ("Vk" <>) =<< simpleTypeName h
-    containsUnion              = doesStructContainUnion allStructs
-    containsDispatchableHandle = doesStructContainDispatchableHandle
-      (getHandle <=< simpleTypeName)
-      allStructs
-  (we, aliasWriteElements) <-
-    runWE' (sName struct T.<+> "wrapper") $ wrapStruct
-      isDefaultable
-      isStructType
-      getTypeHandle
-      (containsUnion (sName struct))
-      (containsDispatchableHandle (sName struct))
-      struct
-  pure (we : aliasWriteElements)
+structWrapper getHandle isBitmask isStruct allStructs (struct, marshalledMembers)
+  = do
+    let
+      isNonDispatchableHandle n = case getHandle n of
+        Just h  -> hHandleType h == NonDispatchable
+        Nothing -> True
+      isMarshalledNonDispatchableHandle = isNonDispatchableHandle . ("Vk" <>)
+      isMarshalledBitmask               = isBitmask . ("Vk" <>)
+      isMarshalledStruct                = isStruct . ("Vk" <>)
+      isDefaultable t = maybe
+        False
+        (    isNonDispatchableHandle
+        <||> isMarshalledNonDispatchableHandle
+        <||> isBitmask
+        <||> isDefaultableForeignType
+        <||> isMarshalledBitmask
+        )
+        (simpleTypeName t)
+      isStructType t =
+        maybe False (isStruct <||> isMarshalledStruct) (simpleTypeName t)
+      getTypeHandle h = getHandle . ("Vk" <>) =<< simpleTypeName h
+      containsUnion              = doesStructContainUnion allStructs
+      containsDispatchableHandle = doesStructContainDispatchableHandle
+        (getHandle <=< simpleTypeName)
+        allStructs
+    (we, aliasWriteElements) <-
+      runWE' (sName struct T.<+> "wrapper") $ wrapStruct
+        (containsUnion (sName struct))
+        (containsDispatchableHandle (sName struct))
+        struct
+        marshalledMembers
+    pure (we : aliasWriteElements)
 
 ----------------------------------------------------------------
 -- The wrapping commands
 ----------------------------------------------------------------
 
 wrapStruct
-  :: (Type -> Bool)
-  -- ^ Is a defaultable type
-  -> (Type -> Bool)
-  -- ^ Is this a struct
-  -> (Type -> Maybe Handle)
-  -- ^ Is this a handle
-  -> Bool
+  :: Bool
   -- ^ Does this struct contain a union
   -> Maybe Handle
   -- ^ Does this struct contain a dispatchable Handle
   -> Struct
+  -> [M.MarshalScheme StructMember]
   -> WE (DocMap -> Doc (), [WriteElement])
   -- ^ Returns the Docs for this struct, and any aliases
-wrapStruct isDefaultable isStruct getHandle containsUnion containsDispatchableHandle s = do
-  marshalled     <- marshallStruct isStruct isDefaultable getHandle s
-  toCStructDoc   <- writeToCStructInstance s marshalled
-  fromCStructDoc <- writeFromCStructInstance containsUnion containsDispatchableHandle marshalled
-  zeroDoc        <- writeZeroInstance marshalled
-  marshalledDoc  <- writeMarshalled s marshalled
-  tellExtension "DuplicateRecordFields"
-  tellExport (WithConstructors (WE.TypeName (dropVkType (sName s))))
-  tellExport (Term (dropVkType (sName s)))
-  let weDoc docMap =
-        vcatPara [marshalledDoc docMap, toCStructDoc, fromCStructDoc, zeroDoc]
-  aliases <- liftWrite $ traverseV (writeAlias (msMembers marshalled) s) (sAliases s)
-  pure (weDoc, aliases)
+wrapStruct containsUnion containsDispatchableHandle s schemes
+  = do
+    -- toCStructDoc   <- writeToCStructInstance s schemes
+    -- fromCStructDoc <- writeFromCStructInstance containsUnion
+    --                                            containsDispatchableHandle
+    --                                            marshalled
+    zeroDoc       <- writeZeroInstance s schemes
+    marshalledDoc <- writeMarshalled s schemes
+    tellExtension "DuplicateRecordFields"
+    tellExport (WithConstructors (WE.TypeName (dropVkType (sName s))))
+    tellExport (Term (dropVkType (sName s)))
+    let weDoc docMap = vcatPara
+          [marshalledDoc docMap, zeroDoc]
+    aliases <- liftWrite
+      $ traverseV (writeAlias s) (sAliases s)
+    pure (weDoc, aliases)
 
 ----------------------------------------------------------------
 --
@@ -367,7 +367,7 @@ marshallMember isStruct isDefaultable getHandle lengthRelation struct m = do
         Just tyName -> pure tyName
       pure
         ( do
-          tellDepend (TermName ("withCStruct" <> tyName))
+          error "A"
           pure . pretty $ "withCStruct" <> tyName
         , do
           tellDepend (TermName ("fromCStruct" <> tyName))
@@ -419,7 +419,7 @@ marshallMember isStruct isDefaultable getHandle lengthRelation struct m = do
         Just tyName -> pure tyName
       pure
         ( do
-          tellDepend (TermName ("withCStruct" <> tyName))
+          error "B"
           tellImport "Foreign.Marshal.Utils" "with"
           pure [qci|(\\a -> withCStruct{tyName} a . flip with)|]
         , do
@@ -485,7 +485,7 @@ marshallMember isStruct isDefaultable getHandle lengthRelation struct m = do
       , Just tyName <- simpleTypeName t
       -> if isStruct t
         then do
-          tellDepend (TermName ("withCStruct" <> tyName))
+          error "C"
           -- If this is a struct, use the marshalled version
           pure $ BitMaskVector countName
                                countType
@@ -609,7 +609,6 @@ marshallMember isStruct isDefaultable getHandle lengthRelation struct m = do
       -> do
         alloc <- if isStruct t
           then do
-            tellDepend (TermName ("withCStruct" <> tyName))
             -- If this is a struct, use the marshalled version
             pure (pretty $ "withCStruct" <> tyName)
           else fst =<< nonStructWithPeekElem t
@@ -760,56 +759,6 @@ marshallMember isStruct isDefaultable getHandle lengthRelation struct m = do
           )
   pure $ MarshalledMember (smName m) <$> ty
 
-writeToCStructInstance
-  :: Struct -> MarshalledStruct -> WE (Doc ())
-writeToCStructInstance s MarshalledStruct{..} = do
-  tellDepend (WE.TypeName ("Vk" <> msName))
-  tellExport (Term ("withCStruct" <> msName))
-  let marshalledName = "marshalled"
-      size = pretty . show . sSize $ s
-      align = pretty . show . sAlignment $ s
-  case msStructOrUnion of
-    AStruct -> do
-      wrapped <- wrap "cont" ("Vk" <> msName) msName marshalledName msMembers
-      schemes <- liftWrite $ M.marshalStructMembers s
-      tellImport "Control.Monad.IO.Class" "liftIO"
-      tellImport "Foreign.Marshal.Alloc" "allocaBytesAligned"
-      tellImport "Control.Monad.Trans.Cont" "ContT(..)"
-      tellExtension "RecordWildCards"
-      M.PokeSet {..} <- foldMap M.renderStructMemberPoke schemes
-      pure [qci|
-        -- | A function to temporarily allocate memory for a 'Vk{msName}' and
-        -- marshal a '{msName}' into it. The 'Vk{msName}' is only valid inside
-        -- the provided computation and must not be returned out of it.
-        withCStruct{msName} :: {msName} -> (Vk{msName} -> IO a) -> IO a
-        withCStruct{msName} {marshalledName} cont = {wrapped}
-
-        withCStruct{msName}' :: {msName} -> (Ptr Vk{msName} -> IO a) -> IO a
-        withCStruct{msName}' {msName}\{..} = runContT $ do
-        {indent 2 . vsep $ ("p <- ContT $ allocaBytesAligned" <+> size <+> align) : pokeSetContT}
-          liftIO $ do
-        {indent 4 . vsep $ pokeSetIO <> pokeSetPure <> pokeSetPoke}
-          pure p
-        |]
-    AUnion -> do
-      wrappedAlts <- for msMembers $ \case
-        -- These only work with single member sums
-        FixedArrayTuple n _ _ Nothing _ ->
-          pure [qci|{T.upperCaseFirst n} t -> cont ({"Vk" <> T.upperCaseFirst n} (fromTuple t))|]
-        PreservedMarshalled n t
-          | Just tyName <- simpleTypeName t
-          -> do tellDepend (TermName ("withCStruct" <> tyName))
-                pure [qci|{T.upperCaseFirst n} s -> withCStruct{tyName} s (cont . {"Vk" <> T.upperCaseFirst n})|]
-        m -> throwError ("Unhandled union member for wrapping:" T.<+> T.tShow m)
-
-      pure [qci|
-        -- | A function to temporarily allocate memory for a 'Vk{msName}' and
-        -- marshal a '{msName}' into it. The 'Vk{msName}' is only valid inside
-        -- the provided computation and must not be returned out of it.
-        withCStruct{msName} :: {msName} -> (Vk{msName} -> IO a) -> IO a
-        withCStruct{msName} {marshalledName} cont = case {marshalledName} of
-        {indent 2 $ vcat wrappedAlts}
-      |]
 
 wrap
   :: Text
@@ -915,7 +864,7 @@ memberWrapper fromType from =
     pure $ \cont e -> cont [qci|{e} ({accessHandle} {accessMember member})|]
   PreservedMarshalled memberName t
     | Just tyName <- simpleTypeName t
-    -> do tellDepend (TermName ("withCStruct" <> tyName))
+    -> do error "E"
           pure $ \cont e ->
             let paramName = makeParam $ memberName <> "'"
                 with  = [qci|withCStruct{tyName} {accessMember memberName} (\\{paramName} -> {e} {paramName}|]
@@ -1034,7 +983,7 @@ writeFromCStructInstance containsUnion containsDispatchableHandle MarshalledStru
                     -- | A function to read a 'Vk{msName}' and all additional
                     -- structures in the pointer chain into a '{msName}'.
                     fromCStruct{msName} :: {cmdTableType} -> Vk{msName} -> IO {msName}
-                    fromCStruct{msName} commandTable c = {msName} <$> {indent (-4) . vsep $ (intercalatePrependEither "<*>" $ members)}
+                    fromCStruct{msName} commandTable c = undefined \{- {msName} <$> {indent (-4) . vsep $ (intercalatePrependEither "<*>" $ members)} -}
                     |]
                Nothing -> do
                   members <- traverse (fromCStructMember "c" (pretty $ "Vk" <> msName)) msMembers
@@ -1043,7 +992,7 @@ writeFromCStructInstance containsUnion containsDispatchableHandle MarshalledStru
                     -- | A function to read a 'Vk{msName}' and all additional
                     -- structures in the pointer chain into a '{msName}'.
                     fromCStruct{msName} :: Vk{msName} -> IO {msName}
-                    fromCStruct{msName} c = {msName} <$> {indent (-4) . vsep $ (intercalatePrependEither "<*>" $ members)}
+                    fromCStruct{msName} c = undefined \{- {msName} <$> {indent (-4) . vsep $ (intercalatePrependEither "<*>" $ members)} -}
                     |]
     AUnion -> pure "-- No FromCStruct function for sum types"
 
@@ -1215,192 +1164,61 @@ getLengthRelation struct structMembers
 -- Writing marshalled structs
 ----------------------------------------------------------------
 
-writeMarshalled :: Struct -> MarshalledStruct -> WE (DocMap -> Doc ())
-writeMarshalled s MarshalledStruct {..} =
-  case msStructOrUnion of
+writeMarshalled
+  :: Struct
+  -> [M.MarshalScheme StructMember]
+  -> WE (DocMap -> Doc ())
+writeMarshalled s schemes =
+  let marshalledName = dropVkType (sName s)
+  in case sStructOrUnion s of
     AStruct -> do
-      memberDocs <- traverse
-        (writeMarshalledMember msName)
-        msMembers
-      mParams <- liftWrite $ M.marshalStructMembers s
-      mDocs <- sequenceA . mapMaybe (writeMarshalledParam msName) $ mParams
+      mDocs <- sequenceA . mapMaybe (uncurry (writeMarshalledType marshalledName)) $ (zip (sMembers s) schemes)
       pure $ \getDoc -> [qci|
-      {document getDoc (TopLevel ("Vk" <> msName))}
-      data {msName} = {msName}
+      {document getDoc (TopLevel (sName s))}
+      data {marshalledName} = {marshalledName}
         \{ {
             indent (-2) . vsep . intercalatePrepend "," . fmap ($ getDoc) $ mDocs}
         }
         deriving (Show, Eq)
       |]
     AUnion -> do
-      memberDocs <- traverse
-        writeMarshalledUnionMember
-        msMembers
+      memberDocs <- traverse (uncurry writeMarshalledUnionType) (zip (sMembers s) schemes)
       pure $ \getDoc -> [qci|
-      {document getDoc (TopLevel msName)}
-      data {msName}
+      {document getDoc (TopLevel (sName s))}
+      data {marshalledName}
         = {indent (-2) . vsep $
-           intercalatePrependEither "|" (($ getDoc) <$> memberDocs)}
+           intercalatePrepend "|" (($ getDoc) <$> memberDocs)}
         deriving (Show, Eq)
       |]
 
-writeMarshalledParam
-  :: Text -> M.MarshalScheme StructMember -> Maybe (WE (DocMap -> Doc ()))
-writeMarshalledParam parentName p = M.msMarshalledType p <&> \t -> do
-  type' <- t
-  pure $ \getDoc -> [qci|
-    {document getDoc (Nested parentName (M.unName (M.msUnmarshalledName p)))}
-    {M.unName (M.msMarshalledName p)} :: {type'}
-  |]
-
-writeMarshalledMember
+writeMarshalledType
   :: Text
-  -> MemberUsage MarshalledMember
-  -> WE (DocMap -> Either (Doc ()) (Doc ()))
-writeMarshalledMember parentName = \case
-  Univalued            _ -> pure $ \_ -> Left "-- Univalued member elided"
-  Length               _ -> pure $ \_ -> Left "-- Length valued member elided"
-  LengthMultiple     _ _ -> pure $ \_ -> Left "-- Length multiple valued member elided"
-  MinLength          _ _ -> pure $ \_ -> Left "-- Length valued member elided"
-  OptionalLength       _ -> pure $ \_ -> Left "-- Optional length valued member elided"
-  ByteStringLength     _ -> pure $ \_ -> Left "-- Bytestring length valued member elided"
-  FixedArrayValidCount _ -> pure $ \_ -> Left "-- Fixed array valid count member elided"
-  EnabledFlag          _ -> pure $ \_ -> Left "-- enable flag member elided"
-  NextPointer memberName -> do
-    tellSourceDepend (WE.TypeName "SomeVkStruct")
-    pure $ \getDoc -> Right [qci|
-      {document getDoc (Nested parentName memberName)}
-      {pretty (toMemberName memberName)} :: Maybe SomeVkStruct
-    |]
-  ByteString memberName -> do
-    tellImport "Data.ByteString" "ByteString"
-    pure $ \getDoc -> Right [qci|
-      {document getDoc (Nested parentName memberName)}
-      {pretty (toMemberName memberName)} :: ByteString
-    |]
-  ByteStringData _ memberName -> do
-    tellImport "Data.ByteString" "ByteString"
-    pure $ \getDoc -> Right [qci|
-      {document getDoc (Nested parentName memberName)}
-      {pretty (toMemberName memberName)} :: ByteString
-    |]
-  FixedArrayNullTerminated memberName _ -> do
-    tellImport "Data.ByteString" "ByteString"
-    pure $ \getDoc -> Right [qci|
-      {document getDoc (Nested parentName memberName)}
-      {pretty (toMemberName memberName)} :: ByteString
-    |]
-  FixedArrayZeroPadByteString memberName _ -> do
-    tellImport "Data.ByteString" "ByteString"
-    pure $ \getDoc -> Right [qci|
-      {document getDoc (Nested parentName memberName)}
-      {pretty (toMemberName memberName)} :: ByteString
-    |]
-  FixedArrayZeroPad memberName _ t -> do
-    tellImport "Data.Vector" "Vector"
-    tyName <- toHsType t
-    pure $ \getDoc -> Right [qci|
-      {document getDoc (Nested parentName memberName)}
-      {pretty (toMemberName memberName)} :: Vector {tyName}
-    |]
-  -- TODO: Abstract over Maybe here
-  MaybeByteString memberName -> do
-    tellImport "Data.ByteString" "ByteString"
-    pure $ \getDoc -> Right [qci|
-      {document getDoc (Nested parentName memberName)}
-      {pretty (toMemberName memberName)} :: Maybe ByteString
-    |]
-  Vector _ _ memberName t _ _ -> do
-    tyName <- toHsType t
-    tellImport "Data.Vector" "Vector"
-    pure $ \getDoc -> Right [qci|
-      {document getDoc (Nested parentName memberName)}
-      {pretty (toMemberName memberName)} :: Vector {tyName}
-    |]
-  BitMaskVector _ _ _ memberName t _ -> do
-    tyName <- toHsType t
-    tellImport "Data.Vector" "Vector"
-    pure $ \getDoc -> Right [qci|
-      {document getDoc (Nested parentName memberName)}
-      {pretty (toMemberName memberName)} :: Vector {tyName}
-    |]
-  FixedArray _ memberName _ t _ _ _ -> do
-    tyName <- toHsType t
-    tellImport "Data.Vector" "Vector"
-    pure $ \getDoc -> Right [qci|
-      {document getDoc (Nested parentName memberName)}
-      {pretty (toMemberName memberName)} :: Vector {tyName}
-    |]
-  FixedArrayTuple memberName len t _ _-> do
-    tyName <- toHsType t
-    pure $ \getDoc -> Right [qci|
-      {document getDoc (Nested parentName memberName)}
-      {pretty (toMemberName memberName)} :: {tupled (replicate (fromIntegral len) tyName)}
-    |]
-  OptionalVector _ memberName t _ _ -> do
-    tyName <- toHsType t
-    tellImport "Data.Vector" "Vector"
-    pure $ \getDoc -> Right [qci|
-      {document getDoc (Nested parentName memberName)}
-      {pretty (toMemberName memberName)} :: Maybe (Vector {tyName})
-    |]
-  Preserved MarshalledMember{..} ->
-    pure $ \getDoc -> Right [qci|
-      {document getDoc (Nested parentName mmName)}
-      {pretty (toMemberName mmName)} :: {mmType}
-    |]
-  DispatchableHandle memberName h ->
-    pure $ \getDoc -> Right [qci|
-      {document getDoc (Nested parentName memberName)}
-      {pretty (toMemberName memberName)} :: {dropVkType (hName h)}
-    |]
-  PreservedMarshalled memberName memberType -> do
-    tyName <- toHsType memberType
-    pure $ \getDoc -> Right [qci|
-      {document getDoc (Nested parentName memberName)}
-      {pretty (toMemberName memberName)} :: {tyName}
-    |]
-  Bool memberName ->
-    pure $ \getDoc -> Right [qci|
-      {document getDoc (Nested parentName memberName)}
-      {pretty (toMemberName memberName)} :: Bool
-    |]
-  OptionalPtr memberName t _ _ -> do
-    tyName <- toHsType t
-    pure $ \getDoc -> Right [qci|
-      {document getDoc (Nested parentName memberName)}
-      {pretty (toMemberName memberName)} :: Maybe {tyName}
-    |]
-  NonOptionalPtr memberName t _ _ -> do
-    tyName <- toHsType t
-    pure $ \getDoc -> Right [qci|
-      {document getDoc (Nested parentName memberName)}
-      {pretty (toMemberName memberName)} :: {tyName}
-    |]
-  OptionalZero memberName t -> do
-    tyName <- toHsType t
-    pure $ \getDoc -> Right [qci|
-      {document getDoc (Nested parentName memberName)}
-      {pretty (toMemberName memberName)} :: Maybe {tyName}
-    |]
-  SiblingVectorMaster {} -> error "Sibling vectors unimplemented"
-  SiblingVectorSlave  {} -> error "Sibling vectors unimplemented"
+  -> StructMember
+  -> M.MarshalScheme StructMember
+  -> Maybe (WE (DocMap -> Doc ()))
+writeMarshalledType parentName sm t =
+  case M.msMarshalledType t of
+    M.Elided      -> Nothing
+    M.Present t _ -> Just $ do
+      tDoc <- t
+      pure $ \getDoc -> [qci|
+        {document getDoc (Nested parentName (smName sm))}
+        {M.unName (M.getMarshalledName (M.Name (smName sm)))} :: {tDoc}
+      |]
 
-writeMarshalledUnionMember
-  :: MemberUsage MarshalledMember
-  -> WE (DocMap -> Either (Doc ()) (Doc ()))
-writeMarshalledUnionMember = \case
-  FixedArrayTuple n len t _ _-> do
-    tyName <- toHsType t
-    pure $ \_ -> Right [qci|
-      {T.upperCaseFirst n} {tupled (replicate (fromIntegral len) tyName)}
-    |]
-  PreservedMarshalled n t -> do
-    tyName <- toHsType t
-    pure $ \_ -> Right [qci|
-      {T.upperCaseFirst n} {tyName}
-    |]
-  m -> throwError ("Unhandled union member:" T.<+> T.tShow m)
+writeMarshalledUnionType
+  :: StructMember
+  -> M.MarshalScheme StructMember
+  -> WE (DocMap -> Doc ())
+writeMarshalledUnionType sm t =
+  case M.msMarshalledType t of
+    M.Elided      -> throwError "Elided member in union"
+    M.Present t _ -> do
+      let n = smName sm
+      tDoc <- t
+      pure $ \_ -> [qci|
+        {T.upperCaseFirst n} {tDoc}
+      |]
 
 ----------------------------------------------------------------
 -- Utils
@@ -1529,14 +1347,12 @@ isNonMarshalledType = \case
 ----------------------------------------------------------------
 
 writeAlias
-  :: [MemberUsage MarshalledMember]
-  -- ^ The types
-  -> Struct
+  :: Struct
   -- ^ The original Struct
   -> Text
   -- ^ The alias name
   -> Write WriteElement
-writeAlias _members Struct{..} name =
+writeAlias Struct{..} name =
   runWE (name T.<+> "alias" T.<+> sName) $ do
     tellExport (TypeAlias (dropVkType name))
     tellDepend (WE.TypeName (dropVkType sName))
@@ -1550,33 +1366,32 @@ writeAlias _members Struct{..} name =
 -- Zero instance
 ----------------------------------------------------------------
 
-writeZeroInstance :: MarshalledStruct -> WE (Doc ())
-writeZeroInstance MarshalledStruct{..} =
-  if hasNoZeroInstance msName
-    then pure ""
-    else do
-      tellDepend (WE.TypeName "Zero")
-      case msStructOrUnion of
-        AStruct -> do
-          zeros <- catMaybes <$> traverse writeMarshalledMemberZero msMembers
-          pure [qci|
-            instance Zero {msName} where
-              zero = {msName} {indent 0 $ vsep zeros}
-          |]
-        AUnion -> do
-          zero <- writeMarshalledMemberZero (head msMembers) >>= \case
-            Nothing -> throwError ("Unhandled union member for Zero instance:" T.<+> T.tShow (head msMembers))
-            Just z -> pure z
-          n <- case head msMembers of
-            FixedArrayTuple n _ _ Nothing _ ->
-              pure n
-            PreservedMarshalled n _ ->
-              pure n
-            m -> throwError ("Unhandled union member for Zero instance:" T.<+> T.tShow m)
-          pure [qci|
-            instance Zero {msName} where
-              zero = {T.upperCaseFirst n} {zero}
-          |]
+writeZeroInstance :: Struct -> [M.MarshalScheme StructMember] -> WE (Doc ())
+writeZeroInstance s schemes =
+  let marshalledName = dropVkType (sName s)
+  in  if hasNoZeroInstance marshalledName
+        then pure ""
+        else do
+          tellDepend (WE.TypeName "Zero")
+          case sStructOrUnion s of
+            AStruct -> do
+              zeros <- sequence $ mapMaybe M.renderZero schemes
+              pure [qci|
+                instance Zero {marshalledName} where
+                  zero = {marshalledName} {indent 0 $ vsep zeros}
+              |]
+            AUnion -> do
+              (con, zero) <-
+                sequence
+                  . head
+                  $ [ (T.upperCaseFirst . smName . M.msParam $ scheme, zero)
+                    | scheme    <- schemes
+                    , Just zero <- pure $ M.renderZero scheme
+                    ]
+              pure [qci|
+                instance Zero {marshalledName} where
+                  zero = {con} {zero}
+              |]
 
 
 writeMarshalledMemberZero

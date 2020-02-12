@@ -7,9 +7,8 @@
 {-# LANGUAGE QuasiQuotes       #-}
 {-# LANGUAGE RecordWildCards   #-}
 
-module Write.Marshal.SomeVkStruct
-  ( someVkStructWriteElement
-  , vkPeekStructWriteElement
+module Write.Marshal.FromCStruct
+  ( fromCStructWriteElement
   ) where
 
 import           Control.Arrow                            ( (&&&) )
@@ -39,6 +38,15 @@ import           Write.Monad
 import           Write.Marshal.Struct.Utils
 import           Write.Marshal.Util
 
+fromCStructWriteElement
+  :: [(Struct, [MarshalScheme StructMember])]
+  -> Write WriteElement
+fromCStructWriteElement =
+  runWE "FromCStruct class and instances" $ do
+
+
+
+
 someVkStructWriteElement
   :: (Text -> Maybe Handle)
   -- ^ Get a handle by name
@@ -58,7 +66,7 @@ someVkStructWriteElement getHandle platforms structs
         (`Map.lookup` Map.fromList
           ((Spec.Savvy.Platform.pName &&& pProtect) <$> platforms)
         )
-      name     = "SomeVkStruct"
+      name     = "ToCStruct class declaration"
       go       = do
         tellBootElem someVkStructBootElement
         tellImports
@@ -73,7 +81,8 @@ someVkStructWriteElement getHandle platforms structs
           ]
         traverse_ tellExport
           $
-          [ WithConstructors $ WE.TypeName "FromCStruct"
+          [ WithConstructors $ WE.TypeName "ToCStruct"
+          , WithConstructors $ WE.TypeName "FromCStruct"
           , WithConstructors $ WE.TypeName "SomeVkStruct"
           , WithConstructors $ WE.TypeName "HasNext"
           , Term "SomeVkStruct"
@@ -101,8 +110,25 @@ someVkStructWriteElement getHandle platforms structs
           ]
         instances <-
           traverse (writeSomeStructInstances guardMap containsUnion containsDispatchableHandle) structs
-        tellDepend (WE.TypeName "ToCStruct")
+        tellImport "Foreign.Marshal.Alloc" "alloca"
         pure $ \_ -> [qci|
+          -- | A class for types which can be marshalled into a C style
+          -- structure.
+          class ToCStruct marshalled c | marshalled -> c, c -> marshalled where
+            -- | Allocates a C type structure and all dependencies and passes
+            -- it to a continuation. The space is deallocated when this
+            -- continuation returns and the C type structure must not be
+            -- returned out of it.
+            withCStruct :: marshalled -> (Ptr c -> IO a) -> IO a
+            default withCStruct :: Storable c => marshalled -> (Ptr c -> IO a) -> IO a
+            withCStruct x f = alloca $ \p -> pokeCStruct p x (f p)
+
+            -- | Write a C type struct into some existing memory and run a
+            -- continuation. The pointed to structure is not necessarily valid
+            -- outside the continuation as additional allocations may have been
+            -- made.
+            pokeCStruct :: Ptr c -> marshalled -> IO a -> IO a
+
           -- | A class for converting C type structures to the marshalled types
           class FromCStruct marshalled c | marshalled -> c, c -> marshalled where
             -- | Read a C type structure and dependencies
@@ -150,7 +176,7 @@ someVkStructWriteElement getHandle platforms structs
           -- | Allocate space for the value contained in a 'SomeVkStruct' and
           -- use that in continuation.
           withSomeVkStruct :: SomeVkStruct -> (Ptr () -> IO a) -> IO a
-          withSomeVkStruct (SomeVkStruct s) f = withCStruct s (f . castPtr)
+          withSomeVkStruct (SomeVkStruct s) f = withCStructPtr s (f . castPtr)
 
           ----------------------------------------------------------------
           -- Instances
@@ -195,6 +221,7 @@ someVkStructBootElement =
                              , Unguarded $ Import "Foreign.Marshal.Alloc" ["alloca"] ]
     weProvides             = [ Unguarded (WithoutConstructors $ WE.TypeName "SomeVkStruct")
                              , Unguarded (Term "withSomeVkStruct")
+                             , Unguarded . WithConstructors $ WE.TypeName "ToCStruct"
                              , Unguarded . WithConstructors $ WE.TypeName "FromCStruct"
                              , Unguarded . WithConstructors $ WE.TypeName "HasNext"
                              ]
@@ -209,6 +236,13 @@ someVkStructBootElement =
       instance Eq SomeVkStruct
 
       withSomeVkStruct :: SomeVkStruct -> (Ptr () -> IO a) -> IO a
+
+      class ToCStruct marshalled c | marshalled -> c, c -> marshalled where
+        withCStruct :: marshalled -> (Ptr c -> IO a) -> IO a
+        default withCStruct :: Storable c => marshalled -> (Ptr c -> IO a) -> IO a
+        withCStruct x f = alloca $ \p -> pokeCStruct p x (f p)
+
+        pokeCStruct :: Ptr c -> marshalled -> IO a -> IO a
 
       class FromCStruct marshalled c | marshalled -> c, c -> marshalled where
         fromCStruct :: c -> IO marshalled
@@ -321,7 +355,7 @@ writeSomeStructPeek guardMap containsUnion containsDispatchableHandle s@Struct{.
             tellImport "Foreign.Storable" "peek"
             tellImport "Foreign.Ptr" "Ptr"
             tellImport "Foreign.Ptr" "castPtr"
-            pure [qci|{enum} -> undefined -- SomeVkStruct <$> (fromCStruct =<< peek (castPtr p :: Ptr {sName}))|]
+            pure [qci|{enum} -> SomeVkStruct <$> (fromCStruct =<< peek (castPtr p :: Ptr {sName}))|]
       _ -> pure Nothing
 
 peekBootElement :: WriteElement

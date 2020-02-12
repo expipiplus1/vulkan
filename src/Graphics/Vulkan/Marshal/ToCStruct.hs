@@ -35,9 +35,6 @@ import Data.Coerce
 import Data.Either
   ( either
   )
-import Data.Foldable
-  ( traverse_
-  )
 import Data.Int
   ( Int32
   )
@@ -76,7 +73,6 @@ import Foreign.Marshal.Utils
   )
 import Foreign.Ptr
   ( Ptr
-  , nullPtr
   , plusPtr
   )
 import Foreign.Storable
@@ -2347,7 +2343,7 @@ instance ToCStruct DeviceQueueCreateInfo VkDeviceQueueCreateInfo where
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pQueuePriorities <- ContT $ allocaArray @CFloat (Data.Vector.length queuePriorities)
     liftIO $ do
-      Data.Vector.imapM_ (\i -> pokeElemOff pQueuePriorities i . CFloat) queuePriorities
+      Data.Vector.imapM_ (\i e -> pokeElemOff @CFloat pQueuePriorities i (CFloat e)) queuePriorities
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr VkDeviceQueueCreateFlags) flags
@@ -2361,11 +2357,11 @@ instance ToCStruct DeviceCreateInfo VkDeviceCreateInfo where
   pokeCStruct p DeviceCreateInfo{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pQueueCreateInfos <- ContT $ allocaArray @VkDeviceQueueCreateInfo (Data.Vector.length queueCreateInfos)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pQueueCreateInfos `advancePtr` i) s . ($ ())) queueCreateInfos
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pQueueCreateInfos `advancePtr` i) e . ($ ())) queueCreateInfos
     ppEnabledLayerNames <- ContT $ allocaArray @(Ptr CChar) (Data.Vector.length enabledLayerNames)
-    Data.Vector.imapM_ (\i bs -> ContT (useAsCString bs) >>= (liftIO . pokeElemOff ppEnabledLayerNames i)) enabledLayerNames
+    Data.Vector.imapM_ (\i e -> ContT (useAsCString e) >>= (liftIO . pokeElemOff ppEnabledLayerNames i)) enabledLayerNames
     ppEnabledExtensionNames <- ContT $ allocaArray @(Ptr CChar) (Data.Vector.length enabledExtensionNames)
-    Data.Vector.imapM_ (\i bs -> ContT (useAsCString bs) >>= (liftIO . pokeElemOff ppEnabledExtensionNames i)) enabledExtensionNames
+    Data.Vector.imapM_ (\i e -> ContT (useAsCString e) >>= (liftIO . pokeElemOff ppEnabledExtensionNames i)) enabledExtensionNames
     pEnabledFeatures <- ContT $ maybeWith withCStruct enabledFeatures
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_DEVICE_CREATE_INFO :: VkStructureType)
@@ -2386,9 +2382,9 @@ instance ToCStruct InstanceCreateInfo VkInstanceCreateInfo where
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pApplicationInfo <- ContT $ maybeWith withCStruct applicationInfo
     ppEnabledLayerNames <- ContT $ allocaArray @(Ptr CChar) (Data.Vector.length enabledLayerNames)
-    Data.Vector.imapM_ (\i bs -> ContT (useAsCString bs) >>= (liftIO . pokeElemOff ppEnabledLayerNames i)) enabledLayerNames
+    Data.Vector.imapM_ (\i e -> ContT (useAsCString e) >>= (liftIO . pokeElemOff ppEnabledLayerNames i)) enabledLayerNames
     ppEnabledExtensionNames <- ContT $ allocaArray @(Ptr CChar) (Data.Vector.length enabledExtensionNames)
-    Data.Vector.imapM_ (\i bs -> ContT (useAsCString bs) >>= (liftIO . pokeElemOff ppEnabledExtensionNames i)) enabledExtensionNames
+    Data.Vector.imapM_ (\i e -> ContT (useAsCString e) >>= (liftIO . pokeElemOff ppEnabledExtensionNames i)) enabledExtensionNames
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_INSTANCE_CREATE_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -2413,8 +2409,8 @@ instance ToCStruct QueueFamilyProperties VkQueueFamilyProperties where
 instance ToCStruct PhysicalDeviceMemoryProperties VkPhysicalDeviceMemoryProperties where
   pokeCStruct :: Ptr VkPhysicalDeviceMemoryProperties -> PhysicalDeviceMemoryProperties -> IO a -> IO a
   pokeCStruct p PhysicalDeviceMemoryProperties{..} = (. const) . runContT $ do
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct ((p `plusPtr` 4) `advancePtr` i) s . ($ ())) (Data.Vector.take VK_MAX_MEMORY_TYPES memoryTypes)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct ((p `plusPtr` 264) `advancePtr` i) s . ($ ())) (Data.Vector.take VK_MAX_MEMORY_HEAPS memoryHeaps)
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct ((p `plusPtr` 4) `advancePtr` i) e . ($ ())) (Data.Vector.take VK_MAX_MEMORY_TYPES memoryTypes)
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct ((p `plusPtr` 264) `advancePtr` i) e . ($ ())) (Data.Vector.take VK_MAX_MEMORY_HEAPS memoryHeaps)
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr Word32) (fromIntegral $ Data.Vector.length memoryTypes :: Word32)
       poke (p `plusPtr` 260 :: Ptr Word32) (fromIntegral $ Data.Vector.length memoryHeaps :: Word32)
@@ -2531,13 +2527,13 @@ instance ToCStruct WriteDescriptorSet VkWriteDescriptorSet where
   pokeCStruct p WriteDescriptorSet{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pImageInfo <- ContT $ allocaArray @VkDescriptorImageInfo (Data.Vector.length imageInfo)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pImageInfo `advancePtr` i) s . ($ ())) imageInfo
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pImageInfo `advancePtr` i) e . ($ ())) imageInfo
     pBufferInfo <- ContT $ allocaArray @VkDescriptorBufferInfo (Data.Vector.length bufferInfo)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pBufferInfo `advancePtr` i) s . ($ ())) bufferInfo
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pBufferInfo `advancePtr` i) e . ($ ())) bufferInfo
     pTexelBufferView <- ContT $ allocaArray @VkBufferView (Data.Vector.length texelBufferView)
     liftIO $ do
       descriptorCount <- let l = Data.Vector.length imageInfo in if l == Data.Vector.length bufferInfo && l == Data.Vector.length texelBufferView then pure (fromIntegral l :: Word32) else throwIO $ IOError Nothing InvalidArgument "" "imageInfo, bufferInfo and texelBufferView must have the same length" Nothing Nothing
-      Data.Vector.imapM_ (pokeElemOff pTexelBufferView) texelBufferView
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkBufferView pTexelBufferView i e) texelBufferView
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr VkDescriptorSet) dstSet
@@ -2572,7 +2568,7 @@ instance ToCStruct BufferCreateInfo VkBufferCreateInfo where
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pQueueFamilyIndices <- ContT $ allocaArray @Word32 (Data.Vector.length queueFamilyIndices)
     liftIO $ do
-      Data.Vector.imapM_ (pokeElemOff pQueueFamilyIndices) queueFamilyIndices
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word32 pQueueFamilyIndices i e) queueFamilyIndices
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_BUFFER_CREATE_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr VkBufferCreateFlags) flags
@@ -2678,7 +2674,7 @@ instance ToCStruct ImageCreateInfo VkImageCreateInfo where
     ContT $ pokeCStruct (p `plusPtr` 28) extent . ($ ())
     pQueueFamilyIndices <- ContT $ allocaArray @Word32 (Data.Vector.length queueFamilyIndices)
     liftIO $ do
-      Data.Vector.imapM_ (pokeElemOff pQueueFamilyIndices) queueFamilyIndices
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word32 pQueueFamilyIndices i e) queueFamilyIndices
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_IMAGE_CREATE_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr VkImageCreateFlags) flags
@@ -2757,7 +2753,7 @@ instance ToCStruct SparseBufferMemoryBindInfo VkSparseBufferMemoryBindInfo where
   pokeCStruct :: Ptr VkSparseBufferMemoryBindInfo -> SparseBufferMemoryBindInfo -> IO a -> IO a
   pokeCStruct p SparseBufferMemoryBindInfo{..} = (. const) . runContT $ do
     pBinds <- ContT $ allocaArray @VkSparseMemoryBind (Data.Vector.length binds)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pBinds `advancePtr` i) s . ($ ())) binds
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pBinds `advancePtr` i) e . ($ ())) binds
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkBuffer) buffer
       poke (p `plusPtr` 8 :: Ptr Word32) (fromIntegral $ Data.Vector.length binds :: Word32)
@@ -2768,7 +2764,7 @@ instance ToCStruct SparseImageOpaqueMemoryBindInfo VkSparseImageOpaqueMemoryBind
   pokeCStruct :: Ptr VkSparseImageOpaqueMemoryBindInfo -> SparseImageOpaqueMemoryBindInfo -> IO a -> IO a
   pokeCStruct p SparseImageOpaqueMemoryBindInfo{..} = (. const) . runContT $ do
     pBinds <- ContT $ allocaArray @VkSparseMemoryBind (Data.Vector.length binds)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pBinds `advancePtr` i) s . ($ ())) binds
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pBinds `advancePtr` i) e . ($ ())) binds
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkImage) image
       poke (p `plusPtr` 8 :: Ptr Word32) (fromIntegral $ Data.Vector.length binds :: Word32)
@@ -2779,7 +2775,7 @@ instance ToCStruct SparseImageMemoryBindInfo VkSparseImageMemoryBindInfo where
   pokeCStruct :: Ptr VkSparseImageMemoryBindInfo -> SparseImageMemoryBindInfo -> IO a -> IO a
   pokeCStruct p SparseImageMemoryBindInfo{..} = (. const) . runContT $ do
     pBinds <- ContT $ allocaArray @VkSparseImageMemoryBind (Data.Vector.length binds)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pBinds `advancePtr` i) s . ($ ())) binds
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pBinds `advancePtr` i) e . ($ ())) binds
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkImage) image
       poke (p `plusPtr` 8 :: Ptr Word32) (fromIntegral $ Data.Vector.length binds :: Word32)
@@ -2792,15 +2788,15 @@ instance ToCStruct BindSparseInfo VkBindSparseInfo where
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pWaitSemaphores <- ContT $ allocaArray @VkSemaphore (Data.Vector.length waitSemaphores)
     pBufferBinds <- ContT $ allocaArray @VkSparseBufferMemoryBindInfo (Data.Vector.length bufferBinds)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pBufferBinds `advancePtr` i) s . ($ ())) bufferBinds
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pBufferBinds `advancePtr` i) e . ($ ())) bufferBinds
     pImageOpaqueBinds <- ContT $ allocaArray @VkSparseImageOpaqueMemoryBindInfo (Data.Vector.length imageOpaqueBinds)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pImageOpaqueBinds `advancePtr` i) s . ($ ())) imageOpaqueBinds
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pImageOpaqueBinds `advancePtr` i) e . ($ ())) imageOpaqueBinds
     pImageBinds <- ContT $ allocaArray @VkSparseImageMemoryBindInfo (Data.Vector.length imageBinds)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pImageBinds `advancePtr` i) s . ($ ())) imageBinds
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pImageBinds `advancePtr` i) e . ($ ())) imageBinds
     pSignalSemaphores <- ContT $ allocaArray @VkSemaphore (Data.Vector.length signalSemaphores)
     liftIO $ do
-      Data.Vector.imapM_ (pokeElemOff pWaitSemaphores) waitSemaphores
-      Data.Vector.imapM_ (pokeElemOff pSignalSemaphores) signalSemaphores
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkSemaphore pWaitSemaphores i e) waitSemaphores
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkSemaphore pSignalSemaphores i e) signalSemaphores
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_BIND_SPARSE_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr Word32) (fromIntegral $ Data.Vector.length waitSemaphores :: Word32)
@@ -2881,9 +2877,11 @@ instance ToCStruct ShaderModuleCreateInfo VkShaderModuleCreateInfo where
 instance ToCStruct DescriptorSetLayoutBinding VkDescriptorSetLayoutBinding where
   pokeCStruct :: Ptr VkDescriptorSetLayoutBinding -> DescriptorSetLayoutBinding -> IO a -> IO a
   pokeCStruct p DescriptorSetLayoutBinding{..} = (. const) . runContT $ do
-    pImmutableSamplers <- ContT $ either (const ($ nullPtr)) (allocaArray @VkSampler . Data.Vector.length) immutableSamplers
+    pImmutableSamplers <- ContT $ case immutableSamplers of
+      Left _ -> ($ nullPtr)
+      Right v -> allocaArray @VkSampler (Data.Vector.length v)
     liftIO $ do
-      either (const (pure ())) (Data.Vector.imapM_ (pokeElemOff pImmutableSamplers)) immutableSamplers
+      traverse_ (Data.Vector.imapM_ (\i e -> pokeElemOff @VkSampler pImmutableSamplers i e)) immutableSamplers
       poke (p `plusPtr` 0 :: Ptr Word32) binding
       poke (p `plusPtr` 4 :: Ptr VkDescriptorType) descriptorType
       poke (p `plusPtr` 8 :: Ptr Word32) (either id (fromIntegral . Data.Vector.length) immutableSamplers :: Word32)
@@ -2896,7 +2894,7 @@ instance ToCStruct DescriptorSetLayoutCreateInfo VkDescriptorSetLayoutCreateInfo
   pokeCStruct p DescriptorSetLayoutCreateInfo{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pBindings <- ContT $ allocaArray @VkDescriptorSetLayoutBinding (Data.Vector.length bindings)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pBindings `advancePtr` i) s . ($ ())) bindings
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pBindings `advancePtr` i) e . ($ ())) bindings
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -2918,7 +2916,7 @@ instance ToCStruct DescriptorPoolCreateInfo VkDescriptorPoolCreateInfo where
   pokeCStruct p DescriptorPoolCreateInfo{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pPoolSizes <- ContT $ allocaArray @VkDescriptorPoolSize (Data.Vector.length poolSizes)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pPoolSizes `advancePtr` i) s . ($ ())) poolSizes
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPoolSizes `advancePtr` i) e . ($ ())) poolSizes
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -2934,7 +2932,7 @@ instance ToCStruct DescriptorSetAllocateInfo VkDescriptorSetAllocateInfo where
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pSetLayouts <- ContT $ allocaArray @VkDescriptorSetLayout (Data.Vector.length setLayouts)
     liftIO $ do
-      Data.Vector.imapM_ (pokeElemOff pSetLayouts) setLayouts
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkDescriptorSetLayout pSetLayouts i e) setLayouts
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr VkDescriptorPool) descriptorPool
@@ -2955,7 +2953,7 @@ instance ToCStruct SpecializationInfo VkSpecializationInfo where
   pokeCStruct :: Ptr VkSpecializationInfo -> SpecializationInfo -> IO a -> IO a
   pokeCStruct p SpecializationInfo{..} = (. const) . runContT $ do
     pMapEntries <- ContT $ allocaArray @VkSpecializationMapEntry (Data.Vector.length mapEntries)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pMapEntries `advancePtr` i) s . ($ ())) mapEntries
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pMapEntries `advancePtr` i) e . ($ ())) mapEntries
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr Word32) (fromIntegral $ Data.Vector.length mapEntries :: Word32)
       poke (p `plusPtr` 8 :: Ptr (Ptr VkSpecializationMapEntry)) pMapEntries
@@ -3017,9 +3015,9 @@ instance ToCStruct PipelineVertexInputStateCreateInfo VkPipelineVertexInputState
   pokeCStruct p PipelineVertexInputStateCreateInfo{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pVertexBindingDescriptions <- ContT $ allocaArray @VkVertexInputBindingDescription (Data.Vector.length vertexBindingDescriptions)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pVertexBindingDescriptions `advancePtr` i) s . ($ ())) vertexBindingDescriptions
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pVertexBindingDescriptions `advancePtr` i) e . ($ ())) vertexBindingDescriptions
     pVertexAttributeDescriptions <- ContT $ allocaArray @VkVertexInputAttributeDescription (Data.Vector.length vertexAttributeDescriptions)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pVertexAttributeDescriptions `advancePtr` i) s . ($ ())) vertexAttributeDescriptions
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pVertexAttributeDescriptions `advancePtr` i) e . ($ ())) vertexAttributeDescriptions
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -3057,10 +3055,14 @@ instance ToCStruct PipelineViewportStateCreateInfo VkPipelineViewportStateCreate
   pokeCStruct :: Ptr VkPipelineViewportStateCreateInfo -> PipelineViewportStateCreateInfo -> IO a -> IO a
   pokeCStruct p PipelineViewportStateCreateInfo{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
-    pViewports <- ContT $ either (const ($ nullPtr)) (allocaArray @VkViewport . Data.Vector.length) viewports
-    either (const (pure ())) (Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pViewports `advancePtr` i) s . ($ ()))) viewports
-    pScissors <- ContT $ either (const ($ nullPtr)) (allocaArray @VkRect2D . Data.Vector.length) scissors
-    either (const (pure ())) (Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pScissors `advancePtr` i) s . ($ ()))) scissors
+    pViewports <- ContT $ case viewports of
+      Left _ -> ($ nullPtr)
+      Right v -> allocaArray @VkViewport (Data.Vector.length v)
+    traverse_ (Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pViewports `advancePtr` i) e . ($ ()))) viewports
+    pScissors <- ContT $ case scissors of
+      Left _ -> ($ nullPtr)
+      Right v -> allocaArray @VkRect2D (Data.Vector.length v)
+    traverse_ (Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pScissors `advancePtr` i) e . ($ ()))) scissors
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -3095,9 +3097,11 @@ instance ToCStruct PipelineMultisampleStateCreateInfo VkPipelineMultisampleState
   pokeCStruct :: Ptr VkPipelineMultisampleStateCreateInfo -> PipelineMultisampleStateCreateInfo -> IO a -> IO a
   pokeCStruct p PipelineMultisampleStateCreateInfo{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
-    pSampleMask <- ContT $ either (const ($ nullPtr)) (allocaArray @VkSampleMask . Data.Vector.length) sampleMask
+    pSampleMask <- ContT $ case sampleMask of
+      Left _ -> ($ nullPtr)
+      Right v -> allocaArray @VkSampleMask (Data.Vector.length v)
     liftIO $ do
-      either (const (pure ())) (Data.Vector.imapM_ (pokeElemOff pSampleMask)) sampleMask
+      traverse_ (Data.Vector.imapM_ (\i e -> pokeElemOff @VkSampleMask pSampleMask i e)) sampleMask
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr VkPipelineMultisampleStateCreateFlags) flags
@@ -3128,7 +3132,7 @@ instance ToCStruct PipelineColorBlendStateCreateInfo VkPipelineColorBlendStateCr
   pokeCStruct p PipelineColorBlendStateCreateInfo{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pAttachments <- ContT $ allocaArray @VkPipelineColorBlendAttachmentState (Data.Vector.length attachments)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pAttachments `advancePtr` i) s . ($ ())) attachments
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pAttachments `advancePtr` i) e . ($ ())) attachments
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -3151,7 +3155,7 @@ instance ToCStruct PipelineDynamicStateCreateInfo VkPipelineDynamicStateCreateIn
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pDynamicStates <- ContT $ allocaArray @VkDynamicState (Data.Vector.length dynamicStates)
     liftIO $ do
-      Data.Vector.imapM_ (pokeElemOff pDynamicStates) dynamicStates
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkDynamicState pDynamicStates i e) dynamicStates
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr VkPipelineDynamicStateCreateFlags) flags
@@ -3196,7 +3200,7 @@ instance ToCStruct GraphicsPipelineCreateInfo VkGraphicsPipelineCreateInfo where
   pokeCStruct p GraphicsPipelineCreateInfo{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pStages <- ContT $ allocaArray @VkPipelineShaderStageCreateInfo (Data.Vector.length stages)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pStages `advancePtr` i) s . ($ ())) stages
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pStages `advancePtr` i) e . ($ ())) stages
     pVertexInputState <- ContT $ maybeWith withCStruct vertexInputState
     pInputAssemblyState <- ContT $ maybeWith withCStruct inputAssemblyState
     pTessellationState <- ContT $ maybeWith withCStruct tessellationState
@@ -3256,9 +3260,9 @@ instance ToCStruct PipelineLayoutCreateInfo VkPipelineLayoutCreateInfo where
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pSetLayouts <- ContT $ allocaArray @VkDescriptorSetLayout (Data.Vector.length setLayouts)
     pPushConstantRanges <- ContT $ allocaArray @VkPushConstantRange (Data.Vector.length pushConstantRanges)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pPushConstantRanges `advancePtr` i) s . ($ ())) pushConstantRanges
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPushConstantRanges `advancePtr` i) e . ($ ())) pushConstantRanges
     liftIO $ do
-      Data.Vector.imapM_ (pokeElemOff pSetLayouts) setLayouts
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkDescriptorSetLayout pSetLayouts i e) setLayouts
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr VkPipelineLayoutCreateFlags) flags
@@ -3349,7 +3353,7 @@ instance ToCStruct RenderPassBeginInfo VkRenderPassBeginInfo where
     pNext <- ContT $ maybeWith withSomeVkStruct next
     ContT $ pokeCStruct (p `plusPtr` 32) renderArea . ($ ())
     pClearValues <- ContT $ allocaArray @VkClearValue (Data.Vector.length clearValues)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pClearValues `advancePtr` i) s . ($ ())) clearValues
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pClearValues `advancePtr` i) e . ($ ())) clearValues
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -3403,16 +3407,18 @@ instance ToCStruct SubpassDescription VkSubpassDescription where
   pokeCStruct :: Ptr VkSubpassDescription -> SubpassDescription -> IO a -> IO a
   pokeCStruct p SubpassDescription{..} = (. const) . runContT $ do
     pInputAttachments <- ContT $ allocaArray @VkAttachmentReference (Data.Vector.length inputAttachments)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pInputAttachments `advancePtr` i) s . ($ ())) inputAttachments
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pInputAttachments `advancePtr` i) e . ($ ())) inputAttachments
     pColorAttachments <- ContT $ allocaArray @VkAttachmentReference (Data.Vector.length colorAttachments)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pColorAttachments `advancePtr` i) s . ($ ())) colorAttachments
-    pResolveAttachments <- ContT $ either (const ($ nullPtr)) (allocaArray @VkAttachmentReference . Data.Vector.length) resolveAttachments
-    either (const (pure ())) (Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pResolveAttachments `advancePtr` i) s . ($ ()))) resolveAttachments
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pColorAttachments `advancePtr` i) e . ($ ())) colorAttachments
+    pResolveAttachments <- ContT $ case resolveAttachments of
+      Left _ -> ($ nullPtr)
+      Right v -> allocaArray @VkAttachmentReference (Data.Vector.length v)
+    traverse_ (Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pResolveAttachments `advancePtr` i) e . ($ ()))) resolveAttachments
     pDepthStencilAttachment <- ContT $ maybeWith withCStruct depthStencilAttachment
     pPreserveAttachments <- ContT $ allocaArray @Word32 (Data.Vector.length preserveAttachments)
     liftIO $ do
       colorAttachmentCount <- let l = Data.Vector.length colorAttachments in if (l == either fromIntegral Data.Vector.length resolveAttachments) then pure (fromIntegral l :: Word32) else throwIO $ IOError Nothing InvalidArgument "" "colorAttachments and resolveAttachments must have the same length" Nothing Nothing
-      Data.Vector.imapM_ (pokeElemOff pPreserveAttachments) preserveAttachments
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word32 pPreserveAttachments i e) preserveAttachments
       poke (p `plusPtr` 0 :: Ptr VkSubpassDescriptionFlags) flags
       poke (p `plusPtr` 4 :: Ptr VkPipelineBindPoint) pipelineBindPoint
       poke (p `plusPtr` 8 :: Ptr Word32) (fromIntegral $ Data.Vector.length inputAttachments :: Word32)
@@ -3443,11 +3449,11 @@ instance ToCStruct RenderPassCreateInfo VkRenderPassCreateInfo where
   pokeCStruct p RenderPassCreateInfo{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pAttachments <- ContT $ allocaArray @VkAttachmentDescription (Data.Vector.length attachments)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pAttachments `advancePtr` i) s . ($ ())) attachments
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pAttachments `advancePtr` i) e . ($ ())) attachments
     pSubpasses <- ContT $ allocaArray @VkSubpassDescription (Data.Vector.length subpasses)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pSubpasses `advancePtr` i) s . ($ ())) subpasses
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pSubpasses `advancePtr` i) e . ($ ())) subpasses
     pDependencies <- ContT $ allocaArray @VkSubpassDependency (Data.Vector.length dependencies)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pDependencies `advancePtr` i) s . ($ ())) dependencies
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pDependencies `advancePtr` i) e . ($ ())) dependencies
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -3713,7 +3719,7 @@ instance ToCStruct FramebufferCreateInfo VkFramebufferCreateInfo where
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pAttachments <- ContT $ allocaArray @VkImageView (Data.Vector.length attachments)
     liftIO $ do
-      Data.Vector.imapM_ (pokeElemOff pAttachments) attachments
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkImageView pAttachments i e) attachments
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr VkFramebufferCreateFlags) flags
@@ -3765,10 +3771,10 @@ instance ToCStruct SubmitInfo VkSubmitInfo where
     pSignalSemaphores <- ContT $ allocaArray @VkSemaphore (Data.Vector.length signalSemaphores)
     liftIO $ do
       waitSemaphoreCount <- let l = Data.Vector.length waitSemaphores in if l == Data.Vector.length waitDstStageMask then pure (fromIntegral l :: Word32) else throwIO $ IOError Nothing InvalidArgument "" "waitSemaphores and waitDstStageMask must have the same length" Nothing Nothing
-      Data.Vector.imapM_ (pokeElemOff pWaitSemaphores) waitSemaphores
-      Data.Vector.imapM_ (pokeElemOff pWaitDstStageMask) waitDstStageMask
-      Data.Vector.imapM_ (\i -> pokeElemOff pCommandBuffers i . commandBufferHandle) commandBuffers
-      Data.Vector.imapM_ (pokeElemOff pSignalSemaphores) signalSemaphores
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkSemaphore pWaitSemaphores i e) waitSemaphores
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkPipelineStageFlags pWaitDstStageMask i e) waitDstStageMask
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkCommandBuffer pCommandBuffers i (commandBufferHandle e)) commandBuffers
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkSemaphore pSignalSemaphores i e) signalSemaphores
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_SUBMIT_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr Word32) waitSemaphoreCount
@@ -3897,7 +3903,7 @@ instance ToCStruct AndroidSurfaceCreateInfoKHR VkAndroidSurfaceCreateInfoKHR whe
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr VkAndroidSurfaceCreateFlagsKHR) flags
-      poke (p `plusPtr` 24 :: Ptr (Ptr ANativeWindow)) (window :: Ptr ANativeWindow)
+      poke (p `plusPtr` 24 :: Ptr (Ptr ANativeWindow)) window
 
 
 instance ToCStruct ViSurfaceCreateInfoNN VkViSurfaceCreateInfoNN where
@@ -3919,8 +3925,8 @@ instance ToCStruct WaylandSurfaceCreateInfoKHR VkWaylandSurfaceCreateInfoKHR whe
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr VkWaylandSurfaceCreateFlagsKHR) flags
-      poke (p `plusPtr` 24 :: Ptr (Ptr Wl_display)) (display :: Ptr Wl_display)
-      poke (p `plusPtr` 32 :: Ptr (Ptr Wl_surface)) (surface :: Ptr Wl_surface)
+      poke (p `plusPtr` 24 :: Ptr (Ptr Wl_display)) display
+      poke (p `plusPtr` 32 :: Ptr (Ptr Wl_surface)) surface
 
 
 instance ToCStruct Win32SurfaceCreateInfoKHR VkWin32SurfaceCreateInfoKHR where
@@ -3943,7 +3949,7 @@ instance ToCStruct XlibSurfaceCreateInfoKHR VkXlibSurfaceCreateInfoKHR where
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr VkXlibSurfaceCreateFlagsKHR) flags
-      poke (p `plusPtr` 24 :: Ptr (Ptr Display)) (dpy :: Ptr Display)
+      poke (p `plusPtr` 24 :: Ptr (Ptr Display)) dpy
       poke (p `plusPtr` 32 :: Ptr Window) window
 
 
@@ -3955,7 +3961,7 @@ instance ToCStruct XcbSurfaceCreateInfoKHR VkXcbSurfaceCreateInfoKHR where
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr VkXcbSurfaceCreateFlagsKHR) flags
-      poke (p `plusPtr` 24 :: Ptr (Ptr Xcb_connection_t)) (connection :: Ptr Xcb_connection_t)
+      poke (p `plusPtr` 24 :: Ptr (Ptr Xcb_connection_t)) connection
       poke (p `plusPtr` 32 :: Ptr Xcb_window_t) window
 
 
@@ -3996,7 +4002,7 @@ instance ToCStruct SwapchainCreateInfoKHR VkSwapchainCreateInfoKHR where
     ContT $ pokeCStruct (p `plusPtr` 44) imageExtent . ($ ())
     pQueueFamilyIndices <- ContT $ allocaArray @Word32 (Data.Vector.length queueFamilyIndices)
     liftIO $ do
-      Data.Vector.imapM_ (pokeElemOff pQueueFamilyIndices) queueFamilyIndices
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word32 pQueueFamilyIndices i e) queueFamilyIndices
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr VkSwapchainCreateFlagsKHR) flags
@@ -4024,10 +4030,10 @@ instance ToCStruct PresentInfoKHR VkPresentInfoKHR where
     pSwapchains <- ContT $ allocaArray @VkSwapchainKHR (Data.Vector.length swapchains)
     pImageIndices <- ContT $ allocaArray @Word32 (Data.Vector.length imageIndices)
     liftIO $ do
-      Data.Vector.imapM_ (pokeElemOff pWaitSemaphores) waitSemaphores
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkSemaphore pWaitSemaphores i e) waitSemaphores
       swapchainCount <- let l = Data.Vector.length swapchains in if l == Data.Vector.length imageIndices then pure (fromIntegral l :: Word32) else throwIO $ IOError Nothing InvalidArgument "" "swapchains and imageIndices must have the same length" Nothing Nothing
-      Data.Vector.imapM_ (pokeElemOff pSwapchains) swapchains
-      Data.Vector.imapM_ (pokeElemOff pImageIndices) imageIndices
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkSwapchainKHR pSwapchains i e) swapchains
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word32 pImageIndices i e) imageIndices
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_PRESENT_INFO_KHR :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr Word32) (fromIntegral $ Data.Vector.length waitSemaphores :: Word32)
@@ -4035,7 +4041,7 @@ instance ToCStruct PresentInfoKHR VkPresentInfoKHR where
       poke (p `plusPtr` 32 :: Ptr Word32) swapchainCount
       poke (p `plusPtr` 40 :: Ptr (Ptr VkSwapchainKHR)) pSwapchains
       poke (p `plusPtr` 48 :: Ptr (Ptr Word32)) pImageIndices
-      poke (p `plusPtr` 56 :: Ptr (Ptr VkResult)) (results :: Ptr VkResult)
+      poke (p `plusPtr` 56 :: Ptr (Ptr VkResult)) pResults
 
 
 instance ToCStruct DebugReportCallbackCreateInfoEXT VkDebugReportCallbackCreateInfoEXT where
@@ -4056,7 +4062,7 @@ instance ToCStruct ValidationFlagsEXT VkValidationFlagsEXT where
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pDisabledValidationChecks <- ContT $ allocaArray @VkValidationCheckEXT (Data.Vector.length disabledValidationChecks)
     liftIO $ do
-      Data.Vector.imapM_ (pokeElemOff pDisabledValidationChecks) disabledValidationChecks
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkValidationCheckEXT pDisabledValidationChecks i e) disabledValidationChecks
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_VALIDATION_FLAGS_EXT :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr Word32) (fromIntegral $ Data.Vector.length disabledValidationChecks :: Word32)
@@ -4070,8 +4076,8 @@ instance ToCStruct ValidationFeaturesEXT VkValidationFeaturesEXT where
     pEnabledValidationFeatures <- ContT $ allocaArray @VkValidationFeatureEnableEXT (Data.Vector.length enabledValidationFeatures)
     pDisabledValidationFeatures <- ContT $ allocaArray @VkValidationFeatureDisableEXT (Data.Vector.length disabledValidationFeatures)
     liftIO $ do
-      Data.Vector.imapM_ (pokeElemOff pEnabledValidationFeatures) enabledValidationFeatures
-      Data.Vector.imapM_ (pokeElemOff pDisabledValidationFeatures) disabledValidationFeatures
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkValidationFeatureEnableEXT pEnabledValidationFeatures i e) enabledValidationFeatures
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkValidationFeatureDisableEXT pDisabledValidationFeatures i e) disabledValidationFeatures
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_VALIDATION_FEATURES_EXT :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr Word32) (fromIntegral $ Data.Vector.length enabledValidationFeatures :: Word32)
@@ -4213,7 +4219,7 @@ instance ToCStruct ExportMemoryWin32HandleInfoNV VkExportMemoryWin32HandleInfoNV
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
-      poke (p `plusPtr` 16 :: Ptr (Ptr SECURITY_ATTRIBUTES)) (attributes :: Ptr SECURITY_ATTRIBUTES)
+      poke (p `plusPtr` 16 :: Ptr (Ptr SECURITY_ATTRIBUTES)) pAttributes
       poke (p `plusPtr` 24 :: Ptr DWORD) dwAccess
 
 
@@ -4228,12 +4234,12 @@ instance ToCStruct Win32KeyedMutexAcquireReleaseInfoNV VkWin32KeyedMutexAcquireR
     pReleaseKeys <- ContT $ allocaArray @Word64 (Data.Vector.length releaseKeys)
     liftIO $ do
       acquireCount <- let l = Data.Vector.length acquireSyncs in if l == Data.Vector.length acquireKeys && l == Data.Vector.length acquireTimeoutMilliseconds then pure (fromIntegral l :: Word32) else throwIO $ IOError Nothing InvalidArgument "" "acquireSyncs, acquireKeys and acquireTimeoutMilliseconds must have the same length" Nothing Nothing
-      Data.Vector.imapM_ (pokeElemOff pAcquireSyncs) acquireSyncs
-      Data.Vector.imapM_ (pokeElemOff pAcquireKeys) acquireKeys
-      Data.Vector.imapM_ (pokeElemOff pAcquireTimeoutMilliseconds) acquireTimeoutMilliseconds
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkDeviceMemory pAcquireSyncs i e) acquireSyncs
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word64 pAcquireKeys i e) acquireKeys
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word32 pAcquireTimeoutMilliseconds i e) acquireTimeoutMilliseconds
       releaseCount <- let l = Data.Vector.length releaseSyncs in if l == Data.Vector.length releaseKeys then pure (fromIntegral l :: Word32) else throwIO $ IOError Nothing InvalidArgument "" "releaseSyncs and releaseKeys must have the same length" Nothing Nothing
-      Data.Vector.imapM_ (pokeElemOff pReleaseSyncs) releaseSyncs
-      Data.Vector.imapM_ (pokeElemOff pReleaseKeys) releaseKeys
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkDeviceMemory pReleaseSyncs i e) releaseSyncs
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word64 pReleaseKeys i e) releaseKeys
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr Word32) acquireCount
@@ -4293,7 +4299,7 @@ instance ToCStruct IndirectCommandsLayoutCreateInfoNVX VkIndirectCommandsLayoutC
   pokeCStruct p IndirectCommandsLayoutCreateInfoNVX{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pTokens <- ContT $ allocaArray @VkIndirectCommandsLayoutTokenNVX (Data.Vector.length tokens)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pTokens `advancePtr` i) s . ($ ())) tokens
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pTokens `advancePtr` i) e . ($ ())) tokens
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NVX :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -4308,7 +4314,7 @@ instance ToCStruct CmdProcessCommandsInfoNVX VkCmdProcessCommandsInfoNVX where
   pokeCStruct p CmdProcessCommandsInfoNVX{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pIndirectCommandsTokens <- ContT $ allocaArray @VkIndirectCommandsTokenNVX (Data.Vector.length indirectCommandsTokens)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pIndirectCommandsTokens `advancePtr` i) s . ($ ())) indirectCommandsTokens
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pIndirectCommandsTokens `advancePtr` i) e . ($ ())) indirectCommandsTokens
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_CMD_PROCESS_COMMANDS_INFO_NVX :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -4345,9 +4351,9 @@ instance ToCStruct ObjectTableCreateInfoNVX VkObjectTableCreateInfoNVX where
     pObjectEntryUsageFlags <- ContT $ allocaArray @VkObjectEntryUsageFlagsNVX (Data.Vector.length objectEntryUsageFlags)
     liftIO $ do
       objectCount <- let l = Data.Vector.length objectEntryTypes in if l == Data.Vector.length objectEntryCounts && l == Data.Vector.length objectEntryUsageFlags then pure (fromIntegral l :: Word32) else throwIO $ IOError Nothing InvalidArgument "" "objectEntryTypes, objectEntryCounts and objectEntryUsageFlags must have the same length" Nothing Nothing
-      Data.Vector.imapM_ (pokeElemOff pObjectEntryTypes) objectEntryTypes
-      Data.Vector.imapM_ (pokeElemOff pObjectEntryCounts) objectEntryCounts
-      Data.Vector.imapM_ (pokeElemOff pObjectEntryUsageFlags) objectEntryUsageFlags
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkObjectEntryTypeNVX pObjectEntryTypes i e) objectEntryTypes
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word32 pObjectEntryCounts i e) objectEntryCounts
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkObjectEntryUsageFlagsNVX pObjectEntryUsageFlags i e) objectEntryUsageFlags
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr Word32) objectCount
@@ -4552,8 +4558,10 @@ instance ToCStruct PresentRegionsKHR VkPresentRegionsKHR where
   pokeCStruct :: Ptr VkPresentRegionsKHR -> PresentRegionsKHR -> IO a -> IO a
   pokeCStruct p PresentRegionsKHR{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
-    pRegions <- ContT $ either (const ($ nullPtr)) (allocaArray @VkPresentRegionKHR . Data.Vector.length) regions
-    either (const (pure ())) (Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pRegions `advancePtr` i) s . ($ ()))) regions
+    pRegions <- ContT $ case regions of
+      Left _ -> ($ nullPtr)
+      Right v -> allocaArray @VkPresentRegionKHR (Data.Vector.length v)
+    traverse_ (Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pRegions `advancePtr` i) e . ($ ()))) regions
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_PRESENT_REGIONS_KHR :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -4564,8 +4572,10 @@ instance ToCStruct PresentRegionsKHR VkPresentRegionsKHR where
 instance ToCStruct PresentRegionKHR VkPresentRegionKHR where
   pokeCStruct :: Ptr VkPresentRegionKHR -> PresentRegionKHR -> IO a -> IO a
   pokeCStruct p PresentRegionKHR{..} = (. const) . runContT $ do
-    pRectangles <- ContT $ either (const ($ nullPtr)) (allocaArray @VkRectLayerKHR . Data.Vector.length) rectangles
-    either (const (pure ())) (Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pRectangles `advancePtr` i) s . ($ ()))) rectangles
+    pRectangles <- ContT $ case rectangles of
+      Left _ -> ($ nullPtr)
+      Right v -> allocaArray @VkRectLayerKHR (Data.Vector.length v)
+    traverse_ (Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pRectangles `advancePtr` i) e . ($ ()))) rectangles
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr Word32) (either id (fromIntegral . Data.Vector.length) rectangles :: Word32)
       poke (p `plusPtr` 8 :: Ptr (Ptr VkRectLayerKHR)) pRectangles
@@ -4705,7 +4715,7 @@ instance ToCStruct ExportMemoryWin32HandleInfoKHR VkExportMemoryWin32HandleInfoK
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_KHR :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
-      poke (p `plusPtr` 16 :: Ptr (Ptr SECURITY_ATTRIBUTES)) (attributes :: Ptr SECURITY_ATTRIBUTES)
+      poke (p `plusPtr` 16 :: Ptr (Ptr SECURITY_ATTRIBUTES)) pAttributes
       poke (p `plusPtr` 24 :: Ptr DWORD) dwAccess
       poke (p `plusPtr` 32 :: Ptr LPCWSTR) name
 
@@ -4774,12 +4784,12 @@ instance ToCStruct Win32KeyedMutexAcquireReleaseInfoKHR VkWin32KeyedMutexAcquire
     pReleaseKeys <- ContT $ allocaArray @Word64 (Data.Vector.length releaseKeys)
     liftIO $ do
       acquireCount <- let l = Data.Vector.length acquireSyncs in if l == Data.Vector.length acquireKeys && l == Data.Vector.length acquireTimeouts then pure (fromIntegral l :: Word32) else throwIO $ IOError Nothing InvalidArgument "" "acquireSyncs, acquireKeys and acquireTimeouts must have the same length" Nothing Nothing
-      Data.Vector.imapM_ (pokeElemOff pAcquireSyncs) acquireSyncs
-      Data.Vector.imapM_ (pokeElemOff pAcquireKeys) acquireKeys
-      Data.Vector.imapM_ (pokeElemOff pAcquireTimeouts) acquireTimeouts
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkDeviceMemory pAcquireSyncs i e) acquireSyncs
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word64 pAcquireKeys i e) acquireKeys
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word32 pAcquireTimeouts i e) acquireTimeouts
       releaseCount <- let l = Data.Vector.length releaseSyncs in if l == Data.Vector.length releaseKeys then pure (fromIntegral l :: Word32) else throwIO $ IOError Nothing InvalidArgument "" "releaseSyncs and releaseKeys must have the same length" Nothing Nothing
-      Data.Vector.imapM_ (pokeElemOff pReleaseSyncs) releaseSyncs
-      Data.Vector.imapM_ (pokeElemOff pReleaseKeys) releaseKeys
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkDeviceMemory pReleaseSyncs i e) releaseSyncs
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word64 pReleaseKeys i e) releaseKeys
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr Word32) acquireCount
@@ -4844,7 +4854,7 @@ instance ToCStruct ExportSemaphoreWin32HandleInfoKHR VkExportSemaphoreWin32Handl
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_EXPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
-      poke (p `plusPtr` 16 :: Ptr (Ptr SECURITY_ATTRIBUTES)) (attributes :: Ptr SECURITY_ATTRIBUTES)
+      poke (p `plusPtr` 16 :: Ptr (Ptr SECURITY_ATTRIBUTES)) pAttributes
       poke (p `plusPtr` 24 :: Ptr DWORD) dwAccess
       poke (p `plusPtr` 32 :: Ptr LPCWSTR) name
 
@@ -4853,11 +4863,15 @@ instance ToCStruct D3D12FenceSubmitInfoKHR VkD3D12FenceSubmitInfoKHR where
   pokeCStruct :: Ptr VkD3D12FenceSubmitInfoKHR -> D3D12FenceSubmitInfoKHR -> IO a -> IO a
   pokeCStruct p D3D12FenceSubmitInfoKHR{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
-    pWaitSemaphoreValues <- ContT $ either (const ($ nullPtr)) (allocaArray @Word64 . Data.Vector.length) waitSemaphoreValues
-    pSignalSemaphoreValues <- ContT $ either (const ($ nullPtr)) (allocaArray @Word64 . Data.Vector.length) signalSemaphoreValues
+    pWaitSemaphoreValues <- ContT $ case waitSemaphoreValues of
+      Left _ -> ($ nullPtr)
+      Right v -> allocaArray @Word64 (Data.Vector.length v)
+    pSignalSemaphoreValues <- ContT $ case signalSemaphoreValues of
+      Left _ -> ($ nullPtr)
+      Right v -> allocaArray @Word64 (Data.Vector.length v)
     liftIO $ do
-      either (const (pure ())) (Data.Vector.imapM_ (pokeElemOff pWaitSemaphoreValues)) waitSemaphoreValues
-      either (const (pure ())) (Data.Vector.imapM_ (pokeElemOff pSignalSemaphoreValues)) signalSemaphoreValues
+      traverse_ (Data.Vector.imapM_ (\i e -> pokeElemOff @Word64 pWaitSemaphoreValues i e)) waitSemaphoreValues
+      traverse_ (Data.Vector.imapM_ (\i e -> pokeElemOff @Word64 pSignalSemaphoreValues i e)) signalSemaphoreValues
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_D3D12_FENCE_SUBMIT_INFO_KHR :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr Word32) (either id (fromIntegral . Data.Vector.length) waitSemaphoreValues :: Word32)
@@ -4954,7 +4968,7 @@ instance ToCStruct ExportFenceWin32HandleInfoKHR VkExportFenceWin32HandleInfoKHR
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_EXPORT_FENCE_WIN32_HANDLE_INFO_KHR :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
-      poke (p `plusPtr` 16 :: Ptr (Ptr SECURITY_ATTRIBUTES)) (attributes :: Ptr SECURITY_ATTRIBUTES)
+      poke (p `plusPtr` 16 :: Ptr (Ptr SECURITY_ATTRIBUTES)) pAttributes
       poke (p `plusPtr` 24 :: Ptr DWORD) dwAccess
       poke (p `plusPtr` 32 :: Ptr LPCWSTR) name
 
@@ -5025,9 +5039,9 @@ instance ToCStruct RenderPassMultiviewCreateInfo VkRenderPassMultiviewCreateInfo
     pViewOffsets <- ContT $ allocaArray @Int32 (Data.Vector.length viewOffsets)
     pCorrelationMasks <- ContT $ allocaArray @Word32 (Data.Vector.length correlationMasks)
     liftIO $ do
-      Data.Vector.imapM_ (pokeElemOff pViewMasks) viewMasks
-      Data.Vector.imapM_ (pokeElemOff pViewOffsets) viewOffsets
-      Data.Vector.imapM_ (pokeElemOff pCorrelationMasks) correlationMasks
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word32 pViewMasks i e) viewMasks
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Int32 pViewOffsets i e) viewOffsets
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word32 pCorrelationMasks i e) correlationMasks
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr Word32) (fromIntegral $ Data.Vector.length viewMasks :: Word32)
@@ -5106,7 +5120,7 @@ instance ToCStruct PhysicalDeviceGroupProperties VkPhysicalDeviceGroupProperties
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr Word32) (fromIntegral $ Data.Vector.length physicalDevices :: Word32)
-      Data.Vector.imapM_ (\i -> pokeElemOff (p `plusPtr` 24) i . physicalDeviceHandle) (Data.Vector.take VK_MAX_DEVICE_GROUP_SIZE physicalDevices)
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkPhysicalDevice (p `plusPtr` 24) i (physicalDeviceHandle e)) (Data.Vector.take VK_MAX_DEVICE_GROUP_SIZE physicalDevices)
       poke (p `plusPtr` 280 :: Ptr VkBool32) (boolToBool32 subsetAllocation :: VkBool32)
 
 
@@ -5139,7 +5153,7 @@ instance ToCStruct BindBufferMemoryDeviceGroupInfo VkBindBufferMemoryDeviceGroup
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pDeviceIndices <- ContT $ allocaArray @Word32 (Data.Vector.length deviceIndices)
     liftIO $ do
-      Data.Vector.imapM_ (pokeElemOff pDeviceIndices) deviceIndices
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word32 pDeviceIndices i e) deviceIndices
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr Word32) (fromIntegral $ Data.Vector.length deviceIndices :: Word32)
@@ -5164,9 +5178,9 @@ instance ToCStruct BindImageMemoryDeviceGroupInfo VkBindImageMemoryDeviceGroupIn
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pDeviceIndices <- ContT $ allocaArray @Word32 (Data.Vector.length deviceIndices)
     pSplitInstanceBindRegions <- ContT $ allocaArray @VkRect2D (Data.Vector.length splitInstanceBindRegions)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pSplitInstanceBindRegions `advancePtr` i) s . ($ ())) splitInstanceBindRegions
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pSplitInstanceBindRegions `advancePtr` i) e . ($ ())) splitInstanceBindRegions
     liftIO $ do
-      Data.Vector.imapM_ (pokeElemOff pDeviceIndices) deviceIndices
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word32 pDeviceIndices i e) deviceIndices
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr Word32) (fromIntegral $ Data.Vector.length deviceIndices :: Word32)
@@ -5180,7 +5194,7 @@ instance ToCStruct DeviceGroupRenderPassBeginInfo VkDeviceGroupRenderPassBeginIn
   pokeCStruct p DeviceGroupRenderPassBeginInfo{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pDeviceRenderAreas <- ContT $ allocaArray @VkRect2D (Data.Vector.length deviceRenderAreas)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pDeviceRenderAreas `advancePtr` i) s . ($ ())) deviceRenderAreas
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pDeviceRenderAreas `advancePtr` i) e . ($ ())) deviceRenderAreas
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -5207,9 +5221,9 @@ instance ToCStruct DeviceGroupSubmitInfo VkDeviceGroupSubmitInfo where
     pCommandBufferDeviceMasks <- ContT $ allocaArray @Word32 (Data.Vector.length commandBufferDeviceMasks)
     pSignalSemaphoreDeviceIndices <- ContT $ allocaArray @Word32 (Data.Vector.length signalSemaphoreDeviceIndices)
     liftIO $ do
-      Data.Vector.imapM_ (pokeElemOff pWaitSemaphoreDeviceIndices) waitSemaphoreDeviceIndices
-      Data.Vector.imapM_ (pokeElemOff pCommandBufferDeviceMasks) commandBufferDeviceMasks
-      Data.Vector.imapM_ (pokeElemOff pSignalSemaphoreDeviceIndices) signalSemaphoreDeviceIndices
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word32 pWaitSemaphoreDeviceIndices i e) waitSemaphoreDeviceIndices
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word32 pCommandBufferDeviceMasks i e) commandBufferDeviceMasks
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word32 pSignalSemaphoreDeviceIndices i e) signalSemaphoreDeviceIndices
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr Word32) (fromIntegral $ Data.Vector.length waitSemaphoreDeviceIndices :: Word32)
@@ -5238,7 +5252,7 @@ instance ToCStruct DeviceGroupPresentCapabilitiesKHR VkDeviceGroupPresentCapabil
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_CAPABILITIES_KHR :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
-      Data.Vector.imapM_ (pokeElemOff (p `plusPtr` 16)) (Data.Vector.take VK_MAX_DEVICE_GROUP_SIZE presentMask)
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word32 (p `plusPtr` 16) i e) (Data.Vector.take VK_MAX_DEVICE_GROUP_SIZE presentMask)
       poke (p `plusPtr` 144 :: Ptr VkDeviceGroupPresentModeFlagsKHR) modes
 
 
@@ -5283,7 +5297,7 @@ instance ToCStruct DeviceGroupPresentInfoKHR VkDeviceGroupPresentInfoKHR where
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pDeviceMasks <- ContT $ allocaArray @Word32 (Data.Vector.length deviceMasks)
     liftIO $ do
-      Data.Vector.imapM_ (pokeElemOff pDeviceMasks) deviceMasks
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word32 pDeviceMasks i e) deviceMasks
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_INFO_KHR :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr Word32) (fromIntegral $ Data.Vector.length deviceMasks :: Word32)
@@ -5297,7 +5311,7 @@ instance ToCStruct DeviceGroupDeviceCreateInfo VkDeviceGroupDeviceCreateInfo whe
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pPhysicalDevices <- ContT $ allocaArray @VkPhysicalDevice (Data.Vector.length physicalDevices)
     liftIO $ do
-      Data.Vector.imapM_ (\i -> pokeElemOff pPhysicalDevices i . physicalDeviceHandle) physicalDevices
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkPhysicalDevice pPhysicalDevices i (physicalDeviceHandle e)) physicalDevices
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr Word32) (fromIntegral $ Data.Vector.length physicalDevices :: Word32)
@@ -5331,7 +5345,7 @@ instance ToCStruct DescriptorUpdateTemplateCreateInfo VkDescriptorUpdateTemplate
   pokeCStruct p DescriptorUpdateTemplateCreateInfo{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pDescriptorUpdateEntries <- ContT $ allocaArray @VkDescriptorUpdateTemplateEntry (Data.Vector.length descriptorUpdateEntries)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pDescriptorUpdateEntries `advancePtr` i) s . ($ ())) descriptorUpdateEntries
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pDescriptorUpdateEntries `advancePtr` i) e . ($ ())) descriptorUpdateEntries
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -5412,8 +5426,10 @@ instance ToCStruct PresentTimesInfoGOOGLE VkPresentTimesInfoGOOGLE where
   pokeCStruct :: Ptr VkPresentTimesInfoGOOGLE -> PresentTimesInfoGOOGLE -> IO a -> IO a
   pokeCStruct p PresentTimesInfoGOOGLE{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
-    pTimes <- ContT $ either (const ($ nullPtr)) (allocaArray @VkPresentTimeGOOGLE . Data.Vector.length) times
-    either (const (pure ())) (Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pTimes `advancePtr` i) s . ($ ()))) times
+    pTimes <- ContT $ case times of
+      Left _ -> ($ nullPtr)
+      Right v -> allocaArray @VkPresentTimeGOOGLE (Data.Vector.length v)
+    traverse_ (Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pTimes `advancePtr` i) e . ($ ()))) times
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -5459,7 +5475,7 @@ instance ToCStruct MetalSurfaceCreateInfoEXT VkMetalSurfaceCreateInfoEXT where
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr VkMetalSurfaceCreateFlagsEXT) flags
-      poke (p `plusPtr` 24 :: Ptr (Ptr CAMetalLayer)) (layer :: Ptr CAMetalLayer)
+      poke (p `plusPtr` 24 :: Ptr (Ptr CAMetalLayer)) pLayer
 
 
 instance ToCStruct ViewportWScalingNV VkViewportWScalingNV where
@@ -5474,8 +5490,10 @@ instance ToCStruct PipelineViewportWScalingStateCreateInfoNV VkPipelineViewportW
   pokeCStruct :: Ptr VkPipelineViewportWScalingStateCreateInfoNV -> PipelineViewportWScalingStateCreateInfoNV -> IO a -> IO a
   pokeCStruct p PipelineViewportWScalingStateCreateInfoNV{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
-    pViewportWScalings <- ContT $ either (const ($ nullPtr)) (allocaArray @VkViewportWScalingNV . Data.Vector.length) viewportWScalings
-    either (const (pure ())) (Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pViewportWScalings `advancePtr` i) s . ($ ()))) viewportWScalings
+    pViewportWScalings <- ContT $ case viewportWScalings of
+      Left _ -> ($ nullPtr)
+      Right v -> allocaArray @VkViewportWScalingNV (Data.Vector.length v)
+    traverse_ (Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pViewportWScalings `advancePtr` i) e . ($ ()))) viewportWScalings
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -5499,7 +5517,7 @@ instance ToCStruct PipelineViewportSwizzleStateCreateInfoNV VkPipelineViewportSw
   pokeCStruct p PipelineViewportSwizzleStateCreateInfoNV{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pViewportSwizzles <- ContT $ allocaArray @VkViewportSwizzleNV (Data.Vector.length viewportSwizzles)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pViewportSwizzles `advancePtr` i) s . ($ ())) viewportSwizzles
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pViewportSwizzles `advancePtr` i) e . ($ ())) viewportSwizzles
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -5522,8 +5540,10 @@ instance ToCStruct PipelineDiscardRectangleStateCreateInfoEXT VkPipelineDiscardR
   pokeCStruct :: Ptr VkPipelineDiscardRectangleStateCreateInfoEXT -> PipelineDiscardRectangleStateCreateInfoEXT -> IO a -> IO a
   pokeCStruct p PipelineDiscardRectangleStateCreateInfoEXT{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
-    pDiscardRectangles <- ContT $ either (const ($ nullPtr)) (allocaArray @VkRect2D . Data.Vector.length) discardRectangles
-    either (const (pure ())) (Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pDiscardRectangles `advancePtr` i) s . ($ ()))) discardRectangles
+    pDiscardRectangles <- ContT $ case discardRectangles of
+      Left _ -> ($ nullPtr)
+      Right v -> allocaArray @VkRect2D (Data.Vector.length v)
+    traverse_ (Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pDiscardRectangles `advancePtr` i) e . ($ ()))) discardRectangles
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_PIPELINE_DISCARD_RECTANGLE_STATE_CREATE_INFO_EXT :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -5557,7 +5577,7 @@ instance ToCStruct RenderPassInputAttachmentAspectCreateInfo VkRenderPassInputAt
   pokeCStruct p RenderPassInputAttachmentAspectCreateInfo{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pAspectReferences <- ContT $ allocaArray @VkInputAttachmentAspectReference (Data.Vector.length aspectReferences)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pAspectReferences `advancePtr` i) s . ($ ())) aspectReferences
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pAspectReferences `advancePtr` i) e . ($ ())) aspectReferences
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -5952,7 +5972,7 @@ instance ToCStruct SampleLocationsInfoEXT VkSampleLocationsInfoEXT where
     pNext <- ContT $ maybeWith withSomeVkStruct next
     ContT $ pokeCStruct (p `plusPtr` 20) sampleLocationGridSize . ($ ())
     pSampleLocations <- ContT $ allocaArray @VkSampleLocationEXT (Data.Vector.length sampleLocations)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pSampleLocations `advancePtr` i) s . ($ ())) sampleLocations
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pSampleLocations `advancePtr` i) e . ($ ())) sampleLocations
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -5982,9 +6002,9 @@ instance ToCStruct RenderPassSampleLocationsBeginInfoEXT VkRenderPassSampleLocat
   pokeCStruct p RenderPassSampleLocationsBeginInfoEXT{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pAttachmentInitialSampleLocations <- ContT $ allocaArray @VkAttachmentSampleLocationsEXT (Data.Vector.length attachmentInitialSampleLocations)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pAttachmentInitialSampleLocations `advancePtr` i) s . ($ ())) attachmentInitialSampleLocations
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pAttachmentInitialSampleLocations `advancePtr` i) e . ($ ())) attachmentInitialSampleLocations
     pPostSubpassSampleLocations <- ContT $ allocaArray @VkSubpassSampleLocationsEXT (Data.Vector.length postSubpassSampleLocations)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pPostSubpassSampleLocations `advancePtr` i) s . ($ ())) postSubpassSampleLocations
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPostSubpassSampleLocations `advancePtr` i) e . ($ ())) postSubpassSampleLocations
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_RENDER_PASS_SAMPLE_LOCATIONS_BEGIN_INFO_EXT :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -6129,9 +6149,11 @@ instance ToCStruct PipelineCoverageModulationStateCreateInfoNV VkPipelineCoverag
   pokeCStruct :: Ptr VkPipelineCoverageModulationStateCreateInfoNV -> PipelineCoverageModulationStateCreateInfoNV -> IO a -> IO a
   pokeCStruct p PipelineCoverageModulationStateCreateInfoNV{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
-    pCoverageModulationTable <- ContT $ either (const ($ nullPtr)) (allocaArray @CFloat . Data.Vector.length) coverageModulationTable
+    pCoverageModulationTable <- ContT $ case coverageModulationTable of
+      Left _ -> ($ nullPtr)
+      Right v -> allocaArray @CFloat (Data.Vector.length v)
     liftIO $ do
-      either (const (pure ())) (Data.Vector.imapM_ (\i -> pokeElemOff pCoverageModulationTable i . CFloat)) coverageModulationTable
+      traverse_ (Data.Vector.imapM_ (\i e -> pokeElemOff @CFloat pCoverageModulationTable i (CFloat e))) coverageModulationTable
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr VkPipelineCoverageModulationStateCreateFlagsNV) flags
@@ -6147,7 +6169,7 @@ instance ToCStruct ImageFormatListCreateInfoKHR VkImageFormatListCreateInfoKHR w
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pViewFormats <- ContT $ allocaArray @VkFormat (Data.Vector.length viewFormats)
     liftIO $ do
-      Data.Vector.imapM_ (pokeElemOff pViewFormats) viewFormats
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkFormat pViewFormats i e) viewFormats
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr Word32) (fromIntegral $ Data.Vector.length viewFormats :: Word32)
@@ -6358,11 +6380,11 @@ instance ToCStruct DebugUtilsMessengerCallbackDataEXT VkDebugUtilsMessengerCallb
     pMessageIdName <- ContT $ maybeWith useAsCString messageIdName
     pMessage <- ContT $ useAsCString message
     pQueueLabels <- ContT $ allocaArray @VkDebugUtilsLabelEXT (Data.Vector.length queueLabels)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pQueueLabels `advancePtr` i) s . ($ ())) queueLabels
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pQueueLabels `advancePtr` i) e . ($ ())) queueLabels
     pCmdBufLabels <- ContT $ allocaArray @VkDebugUtilsLabelEXT (Data.Vector.length cmdBufLabels)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pCmdBufLabels `advancePtr` i) s . ($ ())) cmdBufLabels
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pCmdBufLabels `advancePtr` i) e . ($ ())) cmdBufLabels
     pObjects <- ContT $ allocaArray @VkDebugUtilsObjectNameInfoEXT (Data.Vector.length objects)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pObjects `advancePtr` i) s . ($ ())) objects
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pObjects `advancePtr` i) e . ($ ())) objects
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -6537,9 +6559,11 @@ instance ToCStruct DescriptorSetLayoutBindingFlagsCreateInfoEXT VkDescriptorSetL
   pokeCStruct :: Ptr VkDescriptorSetLayoutBindingFlagsCreateInfoEXT -> DescriptorSetLayoutBindingFlagsCreateInfoEXT -> IO a -> IO a
   pokeCStruct p DescriptorSetLayoutBindingFlagsCreateInfoEXT{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
-    pBindingFlags <- ContT $ either (const ($ nullPtr)) (allocaArray @VkDescriptorBindingFlagsEXT . Data.Vector.length) bindingFlags
+    pBindingFlags <- ContT $ case bindingFlags of
+      Left _ -> ($ nullPtr)
+      Right v -> allocaArray @VkDescriptorBindingFlagsEXT (Data.Vector.length v)
     liftIO $ do
-      either (const (pure ())) (Data.Vector.imapM_ (pokeElemOff pBindingFlags)) bindingFlags
+      traverse_ (Data.Vector.imapM_ (\i e -> pokeElemOff @VkDescriptorBindingFlagsEXT pBindingFlags i e)) bindingFlags
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO_EXT :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr Word32) (either id (fromIntegral . Data.Vector.length) bindingFlags :: Word32)
@@ -6552,7 +6576,7 @@ instance ToCStruct DescriptorSetVariableDescriptorCountAllocateInfoEXT VkDescrip
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pDescriptorCounts <- ContT $ allocaArray @Word32 (Data.Vector.length descriptorCounts)
     liftIO $ do
-      Data.Vector.imapM_ (pokeElemOff pDescriptorCounts) descriptorCounts
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word32 pDescriptorCounts i e) descriptorCounts
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO_EXT :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr Word32) (fromIntegral $ Data.Vector.length descriptorCounts :: Word32)
@@ -6604,16 +6628,18 @@ instance ToCStruct SubpassDescription2KHR VkSubpassDescription2KHR where
   pokeCStruct p SubpassDescription2KHR{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pInputAttachments <- ContT $ allocaArray @VkAttachmentReference2KHR (Data.Vector.length inputAttachments)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pInputAttachments `advancePtr` i) s . ($ ())) inputAttachments
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pInputAttachments `advancePtr` i) e . ($ ())) inputAttachments
     pColorAttachments <- ContT $ allocaArray @VkAttachmentReference2KHR (Data.Vector.length colorAttachments)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pColorAttachments `advancePtr` i) s . ($ ())) colorAttachments
-    pResolveAttachments <- ContT $ either (const ($ nullPtr)) (allocaArray @VkAttachmentReference2KHR . Data.Vector.length) resolveAttachments
-    either (const (pure ())) (Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pResolveAttachments `advancePtr` i) s . ($ ()))) resolveAttachments
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pColorAttachments `advancePtr` i) e . ($ ())) colorAttachments
+    pResolveAttachments <- ContT $ case resolveAttachments of
+      Left _ -> ($ nullPtr)
+      Right v -> allocaArray @VkAttachmentReference2KHR (Data.Vector.length v)
+    traverse_ (Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pResolveAttachments `advancePtr` i) e . ($ ()))) resolveAttachments
     pDepthStencilAttachment <- ContT $ maybeWith withCStruct depthStencilAttachment
     pPreserveAttachments <- ContT $ allocaArray @Word32 (Data.Vector.length preserveAttachments)
     liftIO $ do
       colorAttachmentCount <- let l = Data.Vector.length colorAttachments in if (l == either fromIntegral Data.Vector.length resolveAttachments) then pure (fromIntegral l :: Word32) else throwIO $ IOError Nothing InvalidArgument "" "colorAttachments and resolveAttachments must have the same length" Nothing Nothing
-      Data.Vector.imapM_ (pokeElemOff pPreserveAttachments) preserveAttachments
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word32 pPreserveAttachments i e) preserveAttachments
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2_KHR :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr VkSubpassDescriptionFlags) flags
@@ -6651,14 +6677,14 @@ instance ToCStruct RenderPassCreateInfo2KHR VkRenderPassCreateInfo2KHR where
   pokeCStruct p RenderPassCreateInfo2KHR{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pAttachments <- ContT $ allocaArray @VkAttachmentDescription2KHR (Data.Vector.length attachments)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pAttachments `advancePtr` i) s . ($ ())) attachments
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pAttachments `advancePtr` i) e . ($ ())) attachments
     pSubpasses <- ContT $ allocaArray @VkSubpassDescription2KHR (Data.Vector.length subpasses)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pSubpasses `advancePtr` i) s . ($ ())) subpasses
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pSubpasses `advancePtr` i) e . ($ ())) subpasses
     pDependencies <- ContT $ allocaArray @VkSubpassDependency2KHR (Data.Vector.length dependencies)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pDependencies `advancePtr` i) s . ($ ())) dependencies
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pDependencies `advancePtr` i) e . ($ ())) dependencies
     pCorrelatedViewMasks <- ContT $ allocaArray @Word32 (Data.Vector.length correlatedViewMasks)
     liftIO $ do
-      Data.Vector.imapM_ (pokeElemOff pCorrelatedViewMasks) correlatedViewMasks
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word32 pCorrelatedViewMasks i e) correlatedViewMasks
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2_KHR :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr VkRenderPassCreateFlags) flags
@@ -6704,7 +6730,7 @@ instance ToCStruct PipelineVertexInputDivisorStateCreateInfoEXT VkPipelineVertex
   pokeCStruct p PipelineVertexInputDivisorStateCreateInfoEXT{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pVertexBindingDivisors <- ContT $ allocaArray @VkVertexInputBindingDivisorDescriptionEXT (Data.Vector.length vertexBindingDivisors)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pVertexBindingDivisors `advancePtr` i) s . ($ ())) vertexBindingDivisors
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pVertexBindingDivisors `advancePtr` i) e . ($ ())) vertexBindingDivisors
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_EXT :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -6742,7 +6768,7 @@ instance ToCStruct ImportAndroidHardwareBufferInfoANDROID VkImportAndroidHardwar
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_IMPORT_ANDROID_HARDWARE_BUFFER_INFO_ANDROID :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
-      poke (p `plusPtr` 16 :: Ptr (Ptr AHardwareBuffer)) (buffer :: Ptr AHardwareBuffer)
+      poke (p `plusPtr` 16 :: Ptr (Ptr AHardwareBuffer)) buffer
 
 
 instance ToCStruct AndroidHardwareBufferUsageANDROID VkAndroidHardwareBufferUsageANDROID where
@@ -7012,8 +7038,10 @@ instance ToCStruct PipelineViewportExclusiveScissorStateCreateInfoNV VkPipelineV
   pokeCStruct :: Ptr VkPipelineViewportExclusiveScissorStateCreateInfoNV -> PipelineViewportExclusiveScissorStateCreateInfoNV -> IO a -> IO a
   pokeCStruct p PipelineViewportExclusiveScissorStateCreateInfoNV{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
-    pExclusiveScissors <- ContT $ either (const ($ nullPtr)) (allocaArray @VkRect2D . Data.Vector.length) exclusiveScissors
-    either (const (pure ())) (Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pExclusiveScissors `advancePtr` i) s . ($ ()))) exclusiveScissors
+    pExclusiveScissors <- ContT $ case exclusiveScissors of
+      Left _ -> ($ nullPtr)
+      Right v -> allocaArray @VkRect2D (Data.Vector.length v)
+    traverse_ (Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pExclusiveScissors `advancePtr` i) e . ($ ()))) exclusiveScissors
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_EXCLUSIVE_SCISSOR_STATE_CREATE_INFO_NV :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -7077,7 +7105,7 @@ instance ToCStruct ShadingRatePaletteNV VkShadingRatePaletteNV where
   pokeCStruct p ShadingRatePaletteNV{..} = (. const) . runContT $ do
     pShadingRatePaletteEntries <- ContT $ allocaArray @VkShadingRatePaletteEntryNV (Data.Vector.length shadingRatePaletteEntries)
     liftIO $ do
-      Data.Vector.imapM_ (pokeElemOff pShadingRatePaletteEntries) shadingRatePaletteEntries
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkShadingRatePaletteEntryNV pShadingRatePaletteEntries i e) shadingRatePaletteEntries
       poke (p `plusPtr` 0 :: Ptr Word32) (fromIntegral $ Data.Vector.length shadingRatePaletteEntries :: Word32)
       poke (p `plusPtr` 8 :: Ptr (Ptr VkShadingRatePaletteEntryNV)) pShadingRatePaletteEntries
 
@@ -7086,8 +7114,10 @@ instance ToCStruct PipelineViewportShadingRateImageStateCreateInfoNV VkPipelineV
   pokeCStruct :: Ptr VkPipelineViewportShadingRateImageStateCreateInfoNV -> PipelineViewportShadingRateImageStateCreateInfoNV -> IO a -> IO a
   pokeCStruct p PipelineViewportShadingRateImageStateCreateInfoNV{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
-    pShadingRatePalettes <- ContT $ either (const ($ nullPtr)) (allocaArray @VkShadingRatePaletteNV . Data.Vector.length) shadingRatePalettes
-    either (const (pure ())) (Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pShadingRatePalettes `advancePtr` i) s . ($ ()))) shadingRatePalettes
+    pShadingRatePalettes <- ContT $ case shadingRatePalettes of
+      Left _ -> ($ nullPtr)
+      Right v -> allocaArray @VkShadingRatePaletteNV (Data.Vector.length v)
+    traverse_ (Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pShadingRatePalettes `advancePtr` i) e . ($ ()))) shadingRatePalettes
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_SHADING_RATE_IMAGE_STATE_CREATE_INFO_NV :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -7132,7 +7162,7 @@ instance ToCStruct CoarseSampleOrderCustomNV VkCoarseSampleOrderCustomNV where
   pokeCStruct :: Ptr VkCoarseSampleOrderCustomNV -> CoarseSampleOrderCustomNV -> IO a -> IO a
   pokeCStruct p CoarseSampleOrderCustomNV{..} = (. const) . runContT $ do
     pSampleLocations <- ContT $ allocaArray @VkCoarseSampleLocationNV (Data.Vector.length sampleLocations)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pSampleLocations `advancePtr` i) s . ($ ())) sampleLocations
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pSampleLocations `advancePtr` i) e . ($ ())) sampleLocations
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkShadingRatePaletteEntryNV) shadingRate
       poke (p `plusPtr` 4 :: Ptr Word32) sampleCount
@@ -7145,7 +7175,7 @@ instance ToCStruct PipelineViewportCoarseSampleOrderStateCreateInfoNV VkPipeline
   pokeCStruct p PipelineViewportCoarseSampleOrderStateCreateInfoNV{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pCustomSampleOrders <- ContT $ allocaArray @VkCoarseSampleOrderCustomNV (Data.Vector.length customSampleOrders)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pCustomSampleOrders `advancePtr` i) s . ($ ())) customSampleOrders
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pCustomSampleOrders `advancePtr` i) e . ($ ())) customSampleOrders
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_COARSE_SAMPLE_ORDER_STATE_CREATE_INFO_NV :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -7222,9 +7252,9 @@ instance ToCStruct RayTracingPipelineCreateInfoNV VkRayTracingPipelineCreateInfo
   pokeCStruct p RayTracingPipelineCreateInfoNV{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pStages <- ContT $ allocaArray @VkPipelineShaderStageCreateInfo (Data.Vector.length stages)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pStages `advancePtr` i) s . ($ ())) stages
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pStages `advancePtr` i) e . ($ ())) stages
     pGroups <- ContT $ allocaArray @VkRayTracingShaderGroupCreateInfoNV (Data.Vector.length groups)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pGroups `advancePtr` i) s . ($ ())) groups
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pGroups `advancePtr` i) e . ($ ())) groups
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_RAY_TRACING_PIPELINE_CREATE_INFO_NV :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -7297,7 +7327,7 @@ instance ToCStruct AccelerationStructureInfoNV VkAccelerationStructureInfoNV whe
   pokeCStruct p AccelerationStructureInfoNV{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pGeometries <- ContT $ allocaArray @VkGeometryNV (Data.Vector.length geometries)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pGeometries `advancePtr` i) s . ($ ())) geometries
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pGeometries `advancePtr` i) e . ($ ())) geometries
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_ACCELERATION_STRUCTURE_INFO_NV :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -7325,7 +7355,7 @@ instance ToCStruct BindAccelerationStructureMemoryInfoNV VkBindAccelerationStruc
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pDeviceIndices <- ContT $ allocaArray @Word32 (Data.Vector.length deviceIndices)
     liftIO $ do
-      Data.Vector.imapM_ (pokeElemOff pDeviceIndices) deviceIndices
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word32 pDeviceIndices i e) deviceIndices
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_BIND_ACCELERATION_STRUCTURE_MEMORY_INFO_NV :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr VkAccelerationStructureNV) accelerationStructure
@@ -7341,7 +7371,7 @@ instance ToCStruct WriteDescriptorSetAccelerationStructureNV VkWriteDescriptorSe
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pAccelerationStructures <- ContT $ allocaArray @VkAccelerationStructureNV (Data.Vector.length accelerationStructures)
     liftIO $ do
-      Data.Vector.imapM_ (pokeElemOff pAccelerationStructures) accelerationStructures
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkAccelerationStructureNV pAccelerationStructures i e) accelerationStructures
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_NV :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr Word32) (fromIntegral $ Data.Vector.length accelerationStructures :: Word32)
@@ -7384,7 +7414,7 @@ instance ToCStruct DrmFormatModifierPropertiesListEXT VkDrmFormatModifierPropert
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_DRM_FORMAT_MODIFIER_PROPERTIES_LIST_EXT :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr Word32) drmFormatModifierCount
-      poke (p `plusPtr` 24 :: Ptr (Ptr VkDrmFormatModifierPropertiesEXT)) (drmFormatModifierProperties :: Ptr VkDrmFormatModifierPropertiesEXT)
+      poke (p `plusPtr` 24 :: Ptr (Ptr VkDrmFormatModifierPropertiesEXT)) pDrmFormatModifierProperties
 
 
 instance ToCStruct DrmFormatModifierPropertiesEXT VkDrmFormatModifierPropertiesEXT where
@@ -7402,7 +7432,7 @@ instance ToCStruct PhysicalDeviceImageDrmFormatModifierInfoEXT VkPhysicalDeviceI
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pQueueFamilyIndices <- ContT $ allocaArray @Word32 (Data.Vector.length queueFamilyIndices)
     liftIO $ do
-      Data.Vector.imapM_ (pokeElemOff pQueueFamilyIndices) queueFamilyIndices
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word32 pQueueFamilyIndices i e) queueFamilyIndices
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr Word64) drmFormatModifier
@@ -7417,7 +7447,7 @@ instance ToCStruct ImageDrmFormatModifierListCreateInfoEXT VkImageDrmFormatModif
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pDrmFormatModifiers <- ContT $ allocaArray @Word64 (Data.Vector.length drmFormatModifiers)
     liftIO $ do
-      Data.Vector.imapM_ (pokeElemOff pDrmFormatModifiers) drmFormatModifiers
+      Data.Vector.imapM_ (\i e -> pokeElemOff @Word64 pDrmFormatModifiers i e) drmFormatModifiers
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_LIST_CREATE_INFO_EXT :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
       poke (p `plusPtr` 16 :: Ptr Word32) (fromIntegral $ Data.Vector.length drmFormatModifiers :: Word32)
@@ -7429,7 +7459,7 @@ instance ToCStruct ImageDrmFormatModifierExplicitCreateInfoEXT VkImageDrmFormatM
   pokeCStruct p ImageDrmFormatModifierExplicitCreateInfoEXT{..} = (. const) . runContT $ do
     pNext <- ContT $ maybeWith withSomeVkStruct next
     pPlaneLayouts <- ContT $ allocaArray @VkSubresourceLayout (Data.Vector.length planeLayouts)
-    Data.Vector.imapM_ (\i s -> ContT $ pokeCStruct (pPlaneLayouts `advancePtr` i) s . ($ ())) planeLayouts
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPlaneLayouts `advancePtr` i) e . ($ ())) planeLayouts
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_IMAGE_DRM_FORMAT_MODIFIER_EXPLICIT_CREATE_INFO_EXT :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
@@ -7550,8 +7580,8 @@ instance ToCStruct PhysicalDeviceMemoryBudgetPropertiesEXT VkPhysicalDeviceMemor
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
-      Data.Vector.imapM_ (pokeElemOff (p `plusPtr` 16)) (Data.Vector.take VK_MAX_MEMORY_HEAPS heapBudget)
-      Data.Vector.imapM_ (pokeElemOff (p `plusPtr` 144)) (Data.Vector.take VK_MAX_MEMORY_HEAPS heapUsage)
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkDeviceSize (p `plusPtr` 16) i e) (Data.Vector.take VK_MAX_MEMORY_HEAPS heapBudget)
+      Data.Vector.imapM_ (\i e -> pokeElemOff @VkDeviceSize (p `plusPtr` 144) i e) (Data.Vector.take VK_MAX_MEMORY_HEAPS heapUsage)
 
 
 instance ToCStruct PhysicalDeviceMemoryPriorityFeaturesEXT VkPhysicalDeviceMemoryPriorityFeaturesEXT where
@@ -7712,9 +7742,9 @@ instance ToCStruct PipelineCreationFeedbackCreateInfoEXT VkPipelineCreationFeedb
     liftIO $ do
       poke (p `plusPtr` 0 :: Ptr VkStructureType) (STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO_EXT :: VkStructureType)
       poke (p `plusPtr` 8 :: Ptr (Ptr ())) pNext
-      poke (p `plusPtr` 16 :: Ptr (Ptr VkPipelineCreationFeedbackEXT)) (pipelineCreationFeedback :: Ptr VkPipelineCreationFeedbackEXT)
+      poke (p `plusPtr` 16 :: Ptr (Ptr VkPipelineCreationFeedbackEXT)) pPipelineCreationFeedback
       poke (p `plusPtr` 24 :: Ptr Word32) pipelineStageCreationFeedbackCount
-      poke (p `plusPtr` 32 :: Ptr (Ptr VkPipelineCreationFeedbackEXT)) (pipelineStageCreationFeedbacks :: Ptr VkPipelineCreationFeedbackEXT)
+      poke (p `plusPtr` 32 :: Ptr (Ptr VkPipelineCreationFeedbackEXT)) pPipelineStageCreationFeedbacks
 
 
 instance ToCStruct SurfaceFullScreenExclusiveInfoEXT VkSurfaceFullScreenExclusiveInfoEXT where

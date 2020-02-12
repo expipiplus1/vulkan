@@ -20,6 +20,7 @@ module Write.Element
   , pattern TypeConstructor
   , pattern TypeAlias
   , DocMap
+  , stripConstructorExports
   ) where
 
 import           Data.List.Extra
@@ -159,3 +160,9 @@ instance Semigroup WriteElement where
         , weSourceDepends        = weSourceDepends we1 <> weSourceDepends we2
         , weBootElement          = weBootElement we1 <> weBootElement we2
         }
+
+stripConstructorExports :: WriteElement -> WriteElement
+stripConstructorExports we = we
+      { weProvides = fmap (WithoutConstructors . unExport)
+                       <$> weProvides we
+      }
