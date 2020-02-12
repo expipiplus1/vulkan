@@ -27,7 +27,6 @@ import           Data.Either.Validation
 import qualified Data.HashSet                             as HashSet
 import           Data.Maybe
 import           Data.Monoid                              hiding ((<>))
-import           Data.Semigroup
 import           Data.Text                                (Text)
 import qualified Data.Text                                as T
 import           Data.Traversable

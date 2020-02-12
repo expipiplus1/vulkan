@@ -6,7 +6,6 @@ module Spec.Savvy.Error
   , prettySpecError
   ) where
 
-import           Data.Semigroup
 import           Data.Text
 
 data SpecError
