@@ -1,0 +1,58 @@
+license-file: ../LICENSE
+maintainer: generator.i.ardly.know.er@monoid.al
+ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall
+default-extensions:
+- BangPatterns
+- BinaryLiterals
+- DataKinds
+- DeriveGeneric
+- DisambiguateRecordFields
+- DuplicateRecordFields
+- EmptyCase
+- FlexibleContexts
+- FlexibleInstances
+- FunctionalDependencies
+- GADTSyntax
+- InstanceSigs
+- KindSignatures
+- LambdaCase
+- MonadComprehensions
+- MultiParamTypeClasses
+- MultiWayIf
+- NoImplicitPrelude
+- OverloadedStrings
+- ParallelListComp
+- PartialTypeSignatures
+- PatternSynonyms
+- RankNTypes
+- RecordWildCards
+- RecursiveDo
+- ScopedTypeVariables
+- Strict
+- TupleSections
+- TypeApplications
+- TypeFamilies
+- TypeOperators
+- ViewPatterns
+name: generate-new
+synopsis: A program to generate the vulkan package from the vulkan docs.
+author: Joe Hermaszewski
+executables:
+  generate:
+    source-dirs: src
+    main: Main.hs
+    dependencies:
+    - unordered-containers
+    - base
+    - bytestring
+    - inline-c
+    - interpolatedstring-perl6
+    - polysemy
+    - pretty-show
+    - relude
+    - say
+    - tagsoup
+    - text
+    - vector
+    - xeno
+description: Please see README.md
