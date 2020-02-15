@@ -33,6 +33,7 @@ import           Write.Element
 data Features = Features
   { vulkan10Feature :: Feature
   , vulkan11Feature :: Feature
+  , vulkan12Feature :: Feature
   }
   deriving (Show)
 
@@ -74,6 +75,7 @@ specFeatures
 specFeatures P.Spec {..} = do
   vulkan10Feature <- extractFeature "VK_VERSION_1_0" sFeatures
   vulkan11Feature <- extractFeature "VK_VERSION_1_1" sFeatures
+  vulkan12Feature <- extractFeature "VK_VERSION_1_2" sFeatures
   pure Features{..}
 
 extractFeature :: Text -> [P.Feature] -> Validation [SpecError] Feature
@@ -122,6 +124,7 @@ fixTypeDomain = \case
   "VK_HEADER_VERSION"  -> PatternName "VK_HEADER_VERSION"
   "VK_NULL_HANDLE"     -> PatternName "VK_NULL_HANDLE"
   "VK_API_VERSION_1_1" -> PatternName "VK_API_VERSION_1_1"
+  "VK_API_VERSION_1_2" -> PatternName "VK_API_VERSION_1_2"
   "VK_VERSION_MAJOR"   -> TermName "_VK_VERSION_MAJOR"
   "VK_VERSION_MINOR"   -> TermName "_VK_VERSION_MINOR"
   "VK_VERSION_PATCH"   -> TermName "_VK_VERSION_PATCH"
@@ -141,6 +144,7 @@ extractEnumExtensions extNumber feature interfaces =
         Just "VK_VERSION_1_1" -> duplicateFilter -- These are sometimes accompanied by a
                                          -- comment mentioning the duplication.
                                          -- TODO!!! return the reexports!
+        Just "VK_VERSION_1_2" -> duplicateFilter
         _                     -> id
       exs = fmap catMaybes . for interfaces $ \case
         P.AnEnumExtension ex ->

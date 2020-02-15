@@ -59,6 +59,7 @@ neg = \case
 toHsType' :: Int -> Pos -> Type -> TypeM (Doc ())
 toHsType' prec pos = \case
   Float   -> useWithConstructors "Foreign.C.Types" "CFloat"
+  Double  -> useWithConstructors "Foreign.C.Types" "CDouble"
   Void    -> pure "()"
   Char    -> useWithConstructors "Foreign.C.Types" "CChar"
   Int     -> useWithConstructors "Foreign.C.Types" "CInt"

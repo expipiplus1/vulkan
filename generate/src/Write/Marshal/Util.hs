@@ -68,6 +68,7 @@ writePokes ptr ds = do
 isPassByValue :: Parameter -> Bool
 isPassByValue = pType >>> \case
   Float      -> True
+  Double     -> True
   Void       -> True
   Char       -> True
   Int        -> True
@@ -174,6 +175,7 @@ unReservedWord t = if t `elem` (keywords ++ preludeWords) then t <> "'" else t
 simpleTypeName :: Type -> Maybe Text
 simpleTypeName = \case
   Float      -> pure "Float"
+  Double     -> pure "Double"
   Void       -> Nothing
   Char       -> pure "CChar"
   Int        -> pure "CInt"
@@ -185,6 +187,7 @@ simpleTypeName = \case
 isSimpleType :: Type -> Bool
 isSimpleType = \case
   Float      -> True
+  Double     -> True
   Void       -> False
   Char       -> True
   Int        -> True

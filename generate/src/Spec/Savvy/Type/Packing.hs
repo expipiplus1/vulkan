@@ -29,6 +29,7 @@ typeSize
   -> Either [SpecError] Word
 typeSize namedType constantValue lookupSub = \case
   Float -> pure $ fromIntegral (sizeOf (undefined :: CFloat))
+  Double -> pure $ fromIntegral (sizeOf (undefined :: CDouble))
   Char -> pure $ fromIntegral (sizeOf (undefined :: CChar))
   Int -> pure $ fromIntegral (sizeOf (undefined :: CInt))
   Ptr _ _ -> pure $ fromIntegral (sizeOf (undefined :: Ptr ()))
@@ -53,6 +54,7 @@ typeAlignment
   -> Either [SpecError] Word
 typeAlignment namedType lookupSub = \case
   Float       -> pure $ fromIntegral (alignment (undefined :: CFloat))
+  Double      -> pure $ fromIntegral (alignment (undefined :: CDouble))
   Char        -> pure $ fromIntegral (alignment (undefined :: CChar))
   Int         -> pure $ fromIntegral (alignment (undefined :: CInt))
   Ptr _ _     -> pure $ fromIntegral (alignment (undefined :: Ptr ()))
@@ -66,9 +68,11 @@ typeAlignment namedType lookupSub = \case
 knownNames :: Text -> Maybe SomeStorable
 knownNames = \case
   "uint8_t"      -> Just (SomeStorable (0 :: Word8))
+  "uint16_t"     -> Just (SomeStorable (0 :: Word16))
   "uint32_t"     -> Just (SomeStorable (0 :: Word32))
   "uint64_t"     -> Just (SomeStorable (0 :: Word64))
   "int32_t"      -> Just (SomeStorable (0 :: Int32))
+  "int64_t"      -> Just (SomeStorable (0 :: Int64))
   "size_t"       -> Just (SomeStorable (0 :: CSize))
   -- Windows
   "HWND"         -> Just (SomeStorable (nullPtr :: Ptr ()))

@@ -44,6 +44,7 @@ specSeeds s =
           filter ((`notElem` bespokeSeedNames) . msName)
             $  featureToSeeds (vulkan10Feature (sFeatures s))
             ++ featureToSeeds (vulkan11Feature (sFeatures s))
+            ++ featureToSeeds (vulkan12Feature (sFeatures s))
             ++ (extensionToSeed <$> sExtensions s)
             ++ [dynamicLoaderSeed] -- It's important for this to come after the C
                                  -- modules to avoid pulling in every type
@@ -54,6 +55,9 @@ specSeeds s =
             ++ featureToMarshalledSeeds aliasNames
                                         isEnumerant
                                         (vulkan11Feature (sFeatures s))
+            ++ featureToMarshalledSeeds aliasNames
+                                        isEnumerant
+                                        (vulkan12Feature (sFeatures s))
             ++ (extensionToMarshalledSeed isEnumerant <$> sExtensions s)
   in  bespokeSeedsHighPriority ++ nonBespokeSeeds ++ bespokeSeedsLowPriority
 
@@ -93,6 +97,10 @@ bespokeSeedsHighPriority =
     Nothing
   , ModuleSeed (toCModuleName "Core11" "Version")
                [PatternName "VK_API_VERSION_1_1"]
+               []
+               Nothing
+  , ModuleSeed (toCModuleName "Core12" "Version")
+               [PatternName "VK_API_VERSION_1_2"]
                []
                Nothing
   ]
@@ -137,6 +145,12 @@ bespokeSeedsLowPriority =
     ]
     []
     Nothing
+  , ModuleSeed
+    (toModuleName "Core12" "Version")
+    [ PatternName "VK_API_VERSION_1_2"
+    ]
+    []
+    Nothing
   ]
 
 dynamicLoaderSeed :: ModuleSeed
@@ -151,6 +165,7 @@ featureToSeeds Feature {..} =
   , name
     `notElem` [ "Header boilerplate"
               , "Types not directly used by the API. Include e.g. structs that are not parameter types of commands, but still defined by the API."
+              , "These types are part of the API and should always be defined, even when no enabled features require them."
               ]
   , not ("has no API" `T.isSuffixOf` name)
   ]
@@ -174,6 +189,7 @@ featureToMarshalledSeeds aliasNames isEnumerant Feature {..} =
   , name
     `notElem` [ "Header boilerplate"
               , "Types not directly used by the API. Include e.g. structs that are not parameter types of commands, but still defined by the API."
+              , "These types are part of the API and should always be defined, even when no enabled features require them."
               ]
   , not ("has no API" `T.isSuffixOf` name)
   ]
@@ -210,7 +226,9 @@ unMarshalledNames =
   , PatternName "VK_LUID_SIZE_KHR"
   , PatternName "VK_QUEUE_FAMILY_FOREIGN_EXT"
   , PatternName "VK_SHADER_UNUSED_NV"
+  , PatternName "VK_MAX_DRIVER_NAME_SIZE"
   , PatternName "VK_MAX_DRIVER_NAME_SIZE_KHR"
+  , PatternName "VK_MAX_DRIVER_INFO_SIZE"
   , PatternName "VK_MAX_DRIVER_INFO_SIZE_KHR"
   ]
 

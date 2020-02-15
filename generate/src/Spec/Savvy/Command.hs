@@ -89,6 +89,9 @@ specCommands pc P.Spec {..} handles features extensions
       core11CommandNames :: Set.Set Text
       core11CommandNames = Set.fromList
         (rCommandNames =<< fRequirements (vulkan11Feature features))
+      core12CommandNames :: Set.Set Text
+      core12CommandNames = Set.fromList
+        (rCommandNames =<< fRequirements (vulkan12Feature features))
       extensionCommandNames :: Set.Set Text
       extensionCommandNames =
         Set.fromList (rCommandNames =<< extRequirements =<< extensions)
@@ -97,6 +100,7 @@ specCommands pc P.Spec {..} handles features extensions
       commandAvailability n
         | n `Set.member` core10CommandNames    = pure $ CoreCommand 1 0
         | n `Set.member` core11CommandNames    = pure $ CoreCommand 1 1
+        | n `Set.member` core12CommandNames    = pure $ CoreCommand 1 2
         | n `Set.member` extensionCommandNames = pure ExtensionCommand
         | otherwise                            = Nothing
 

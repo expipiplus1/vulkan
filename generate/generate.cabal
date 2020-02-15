@@ -1,154 +1,158 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 83a6e18cacf68fac70a99a9267927e25de878422af634a3e7450c825502d50cd
+
 name:                generate
-version:             0.2.1.0
+version:             0.0.0
 synopsis:            A program to generate the vulkan package from the vulkan docs.
 description:         Please see README.md
-homepage:            http://github.com/expipiplus1/vulkan#readme
 license:             BSD3
-license-file:        LICENSE
+license-file:        ../LICENSE
 author:              Joe Hermaszewski
 maintainer:          generator.i.ardly.know.er@monoid.al
-copyright:           2015 Joe Hermaszewski
-category:            Graphics
 build-type:          Simple
--- extra-source-files:
-cabal-version:       >=1.10
 
 executable generate
-  hs-source-dirs:      src
-  main-is:             Main.hs
-  other-modules:       Control.Monad.Fix.Extra
-                     , Data.Closure
-                     , Data.List.Extra2
-                     , Data.MultiMap.Extra
-                     , Data.Text.Extra
-                     , Documentation
-                     , Documentation.All
-                     , Documentation.Haddock
-                     , Documentation.RunAsciiDoctor
-                     , Parse.Bitmask
-                     , Parse.Command
-                     , Parse.Constant
-                     , Parse.Copyright
-                     , Parse.Enum
-                     , Parse.Extension
-                     , Parse.Feature
-                     , Parse.Platform
-                     , Parse.Spec
-                     , Parse.Tag
-                     , Parse.Type
-                     , Parse.Utils
-                     , Parse.VendorID
-                     , Spec.Bitmask
-                     , Spec.Command
-                     , Spec.Constant
-                     , Spec.Enum
-                     , Spec.Extension
-                     , Spec.ExtensionTag
-                     , Spec.Feature
-                     , Spec.Platform
-                     , Spec.Savvy.APIConstant
-                     , Spec.Savvy.Alias
-                     , Spec.Savvy.BaseType
-                     , Spec.Savvy.Command
-                     , Spec.Savvy.Define
-                     , Spec.Savvy.Enum
-                     , Spec.Savvy.Enum.Extension
-                     , Spec.Savvy.Error
-                     , Spec.Savvy.Extension
-                     , Spec.Savvy.Feature
-                     , Spec.Savvy.FuncPointer
-                     , Spec.Savvy.Handle
-                     , Spec.Savvy.HeaderVersion
-                     , Spec.Savvy.Platform
-                     , Spec.Savvy.Preprocess
-                     , Spec.Savvy.Spec
-                     , Spec.Savvy.Struct
-                     , Spec.Savvy.Type
-                     , Spec.Savvy.Type.Haskell
-                     , Spec.Savvy.Type.Packing
-                     , Spec.Savvy.TypeAlias
-                     , Spec.Spec
-                     , Spec.Tag
-                     , Spec.Type
-                     , Spec.VendorID
-                     , System.ProgressBar
-                     , Text.InterpolatedString.Perl6.Unindented
-                     , Write.Alias
-                     , Write.BaseType
-                     , Write.Bespoke
-                     , Write.Cabal
-                     , Write.Command
-                     , Write.Constant
-                     , Write.ConstantExtension
-                     , Write.Element
-                     , Write.EnumExtension
-                     , Write.Handle
-                     , Write.HeaderVersion
-                     , Write.Loader
-                     , Write.Marshal.Aliases
-                     , Write.Marshal.Bracket
-                     , Write.Marshal.Command
-                     , Write.Marshal.Exception
-                     , Write.Marshal.Handle
-                     , Write.Marshal.Marshallable
-                     , Write.Marshal.SomeVkStruct
-                     , Write.Marshal.Struct
-                     , Write.Marshal.Struct.Utils
-                     , Write.Marshal.ToC
-                     , Write.Marshal.ToCStruct
-                     , Write.Marshal.Type
-                     , Write.Marshal.Util
-                     , Write.Marshal.Wrap
-                     , Write.Module
-                     , Write.Module.Aggregate
-                     , Write.Monad
-                     , Write.Monad.Lookup
-                     , Write.Partition
-                     , Write.Seed
-                     , Write.Spec
-                     , Write.Struct
-                     , Write.Type.Enum
-                     , Write.Type.FuncPointer
-                     , Write.Util
-                     , Write.Wrapper
-  ghc-options:         -threaded -rtsopts -with-rtsopts=-N -Wall
-  build-depends:       base >= 4.8
-                     , control-bool >= 0.2.1
-                     , directory >= 1.2
-                     , extra
-                     , filepath >= 1.4
-                     , hxt >= 9.3
-                     , inline-c >= 0.5
-                     , interpolatedstring-perl6 >= 1.0
-                     , mtl >= 2.2.1
-                     , prettyprinter
-                     , safe >= 0.3
-                     , template-haskell
-                     , text
-                     , transformers >= 0.4.2
-                     , unordered-containers
-                     , containers
-                     , strict
-                     , data-default
-                     , ascii-progress
-                     , async-pool
-                     , either
-                     , multimap
-                     , pandoc
-                     , pandoc-types
-                     , parsec
-                     , pretty-show
-                     , say
-                     , text
-                     , typed-process
-                     , regex-applicative
-                     , hpp
-                     , inflections
-                     , exceptions
-                     , control-bool
-                     , filemanip
-  default-language:    Haskell2010
-
-source-repository head
-  type:     git
-  location: https://github.com/expipiplus1/vulkan
+  hs-source-dirs:
+      src
+  default-extensions: BangPatterns BinaryLiterals DataKinds DeriveGeneric DisambiguateRecordFields DuplicateRecordFields EmptyCase FlexibleContexts FlexibleInstances FunctionalDependencies GADTSyntax InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf OverloadedStrings ParallelListComp PartialTypeSignatures PatternSynonyms RankNTypes RecordWildCards RecursiveDo ScopedTypeVariables TupleSections TypeApplications TypeFamilies TypeOperators
+  main-is: Main.hs
+  other-modules:
+      Control.Monad.Fix.Extra
+      Data.Closure
+      Data.List.Extra2
+      Data.MultiMap.Extra
+      Data.Text.Extra
+      Documentation
+      Documentation.All
+      Documentation.Haddock
+      Documentation.RunAsciiDoctor
+      Parse.Bitmask
+      Parse.Command
+      Parse.Constant
+      Parse.Copyright
+      Parse.Enum
+      Parse.Extension
+      Parse.Feature
+      Parse.Platform
+      Parse.Spec
+      Parse.Tag
+      Parse.Type
+      Parse.Utils
+      Parse.VendorID
+      Spec.Bitmask
+      Spec.Command
+      Spec.Constant
+      Spec.Enum
+      Spec.Extension
+      Spec.ExtensionTag
+      Spec.Feature
+      Spec.Platform
+      Spec.Savvy.Alias
+      Spec.Savvy.APIConstant
+      Spec.Savvy.BaseType
+      Spec.Savvy.Command
+      Spec.Savvy.Define
+      Spec.Savvy.Enum
+      Spec.Savvy.Enum.Extension
+      Spec.Savvy.Error
+      Spec.Savvy.Extension
+      Spec.Savvy.Feature
+      Spec.Savvy.FuncPointer
+      Spec.Savvy.Handle
+      Spec.Savvy.HeaderVersion
+      Spec.Savvy.Platform
+      Spec.Savvy.Preprocess
+      Spec.Savvy.Spec
+      Spec.Savvy.Struct
+      Spec.Savvy.Type
+      Spec.Savvy.Type.Haskell
+      Spec.Savvy.Type.Packing
+      Spec.Savvy.TypeAlias
+      Spec.Spec
+      Spec.Tag
+      Spec.Type
+      Spec.VendorID
+      System.ProgressBar
+      Text.InterpolatedString.Perl6.Unindented
+      Write.Alias
+      Write.BaseType
+      Write.Bespoke
+      Write.Cabal
+      Write.Command
+      Write.Constant
+      Write.ConstantExtension
+      Write.Element
+      Write.EnumExtension
+      Write.Handle
+      Write.HeaderVersion
+      Write.Loader
+      Write.Marshal.Aliases
+      Write.Marshal.Bracket
+      Write.Marshal.Command
+      Write.Marshal.Exception
+      Write.Marshal.FromCStruct
+      Write.Marshal.Handle
+      Write.Marshal.Marshallable
+      Write.Marshal.Scheme
+      Write.Marshal.SomeVkStruct
+      Write.Marshal.Struct
+      Write.Marshal.Struct.Utils
+      Write.Marshal.ToC
+      Write.Marshal.ToCStruct
+      Write.Marshal.Type
+      Write.Marshal.Util
+      Write.Marshal.Wrap
+      Write.Module
+      Write.Module.Aggregate
+      Write.Monad
+      Write.Monad.Lookup
+      Write.Partition
+      Write.Seed
+      Write.Spec
+      Write.Struct
+      Write.Type.Enum
+      Write.Type.FuncPointer
+      Write.Util
+      Write.Wrapper
+      Paths_generate
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall
+  build-depends:
+      ascii-progress
+    , async-pool
+    , base >=4.8
+    , containers
+    , control-bool
+    , data-default
+    , directory >=1.2
+    , either
+    , exceptions
+    , extra
+    , filemanip
+    , filepath >=1.4
+    , hpp
+    , hxt >=9.3
+    , inflections
+    , inline-c >=0.5
+    , interpolatedstring-perl6 >=1.0
+    , mtl >=2.2.1
+    , multimap
+    , pandoc
+    , pandoc-types
+    , parsec
+    , pretty-show
+    , prettyprinter
+    , regex-applicative
+    , safe >=0.3
+    , say
+    , strict
+    , template-haskell
+    , text
+    , transformers >=0.4.2
+    , typed-process
+    , unordered-containers
+  default-language: Haskell2010

@@ -26,6 +26,7 @@ bespokeWriteElements =
     , versions
     , apiVersionWriteElement 1 0
     , apiVersionWriteElement 1 1
+    , apiVersionWriteElement 1 2
     , nullHandle
     , zero
     , bools

@@ -44,6 +44,7 @@ import qualified Write.Element                            as WE
 
 data Type
   = Float
+  | Double
   | Void
   | Char
   | Int
@@ -168,6 +169,7 @@ nameToType :: C.TypeSpecifier -> Either [SpecError] Type
 nameToType = \case
   (C.TypeName (C.unCIdentifier -> n)) -> pure $ TypeName (T.pack n)
   C.Float -> pure Float
+  C.Double -> pure Double
   C.Void -> pure Void
   C.Char Nothing -> pure Char
   C.Int C.Signed -> pure Int
@@ -189,7 +191,7 @@ showText = T.pack . show
 
 specParserContext :: P.Spec -> Either [SpecError] TypeParseContext
 specParserContext P.Spec {..} = validationToEither $ do
-  let disallowedNames = ["int", "void", "char", "float"]
+  let disallowedNames = ["int", "void", "char", "float", "double"]
   let specTypeNames = filter (`notElem` disallowedNames)
         $ catMaybes (P.typeDeclTypeName <$> sTypes)
         ++ [htName | P.AHandleType P.HandleType{..} <- sTypes]
@@ -211,6 +213,7 @@ typeStringWorkarounds =
 typeDepends :: Type -> [HaskellName]
 typeDepends = \case
   Float                           -> []
+  Double                          -> []
   Void                            -> []
   Char                            -> []
   Int                             -> []
@@ -222,9 +225,11 @@ typeDepends = \case
   TypeName "char"                 -> []
   TypeName "float"                -> []
   TypeName "uint8_t"              -> []
+  TypeName "uint16_t"              -> []
   TypeName "uint32_t"             -> []
   TypeName "uint64_t"             -> []
   TypeName "int32_t"              -> []
+  TypeName "int64_t"              -> []
   TypeName "size_t"               -> []
   TypeName "Bool"                 -> []
   TypeName "Float"                -> []

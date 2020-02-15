@@ -76,7 +76,7 @@ brackets handles = do
     , useCommandBuffer
     , registerObjectsNVX
     ]
-  let ignoredHandles   = ["PhysicalDevice", "Queue", "DisplayKHR", "DisplayModeKHR", "SurfaceKHR"]
+  let ignoredHandles   = ["PhysicalDevice", "Queue", "DisplayKHR", "DisplayModeKHR", "SurfaceKHR", "PerformanceConfigurationINTEL"]
       handleNames      = dropVkType . hName <$> handles
       bracketNames     = [ n | (TypeName n, _, _, _) <- rs ]
       unhandledHandles = handleNames \\ (bracketNames ++ ignoredHandles)

@@ -37,15 +37,14 @@ import           Write.Util
 import           Write.Monad
 import           Write.Marshal.Struct.Utils
 import           Write.Marshal.Util
+import           Write.Marshal.Scheme
 
 fromCStructWriteElement
   :: [(Struct, [MarshalScheme StructMember])]
   -> Write WriteElement
 fromCStructWriteElement =
-  runWE "FromCStruct class and instances" $ do
-
-
-
+    error "TODO"
+      runWE "FromCStruct class and instances"
 
 someVkStructWriteElement
   :: (Text -> Maybe Handle)

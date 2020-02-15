@@ -86,7 +86,7 @@ spec s = do
     requirements =
       (extRequirements =<< sExtensions)
         ++ (   fRequirements
-           =<< [vulkan10Feature sFeatures, vulkan11Feature sFeatures]
+           =<< [vulkan10Feature sFeatures, vulkan11Feature sFeatures, vulkan12Feature sFeatures]
            )
 
   (sCommands, sStructs) <-
