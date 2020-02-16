@@ -1,11 +1,10 @@
-module Spec.Parse
-  where
+{-# LANGUAGE QuantifiedConstraints #-}
+
+module Spec.Parse where
 
 import           Relude
 import           Xeno.DOM
 import           Data.Vector                    ( Vector )
-import qualified Data.Vector                   as V
-import           Relude.Extra.Validation
 import           Language.C.Types               ( cIdentifierFromString
                                                 , TypeNames
                                                 )
@@ -14,52 +13,14 @@ import           Data.List                      ( dropWhileEnd
                                                 , lookup
                                                 )
 import           Data.Char
+import           Polysemy
+import           Data.Text.Extra                ( (<+>) )
 
 import           CType
-
-type P = Either Text
-
-parseSpec :: ByteString -> P Spec
-parseSpec bs = do
-  n <- first show (parse bs)
-  case name n of
-    "registry" -> do
-      [ts] <- pure [ contents e | Element e <- contents n, name e == "types" ]
-      parseTypes ts
-    _ -> Left "This spec isn't a registry node"
-
-
-parseTypes :: [Content] -> P Spec
-parseTypes es = do
-  typeNames <- allTypeNames es
-  specStructs <- several
-    [ parseStruct typeNames n
-    | Element n <- es
-    , name n == "type"
-    , Just "struct" <- pure (lookup "category" (attributes n))
-    ]
-  pure Spec { .. }
-
-parseStruct :: TypeNames ->  Node -> P Struct
-parseStruct typeNames n = do
-  let attrs = attributes n
-  structName    <- note "Unable to get struct name" (lookup "name" attrs)
-  structMembers <- several
-    [ parseStructMember typeNames m | Element m <- contents n, name m == "member" ]
-  pure Struct { .. }
-
-parseStructMember :: TypeNames -> Node -> P StructMember
-parseStructMember typeNames m = do
-  smName <- expectOne
-    "struct member name"
-    [ n
-    | Element a <- contents m
-    , name a == "name"
-    , [Text n] <- pure (contents a)
-    ]
-  let typeString = allText m
-  smType <- parseCType typeNames typeString
-  pure StructMember { .. }
+import           Error
+import           Marshal.Name
+import qualified Marshal.Marshalable         as M
+import           Marshal.Marshalable          ( ParameterLength(..) )
 
 data Spec = Spec
   { specStructs :: Vector Struct
@@ -67,16 +28,76 @@ data Spec = Spec
   deriving (Show)
 
 data Struct = Struct
-  { structName :: ByteString
+  { structName :: Text
   , structMembers :: Vector StructMember
   }
   deriving (Show)
 
 data StructMember = StructMember
-  { smName :: ByteString
+  { smName :: Text
   , smType :: CType
+  , smValues :: Vector Text
+  , smLengths :: Vector M.ParameterLength
+  , smIsOptional :: Vector Bool
   }
   deriving (Show)
+
+instance M.Marshalable StructMember where
+  name       = Name . smName
+  type'      = smType
+  values     = smValues
+  lengths    = smLengths
+  isOptional = smIsOptional
+
+type P a = forall r . HasErr r => Sem r a
+
+parseSpec :: ByteString -> P Spec
+parseSpec bs = do
+  n <- fromEither (first show (parse bs))
+  case name n of
+    "registry" -> do
+      ts <-
+        expectOne "types"
+          $ [ contents e | Element e <- contents n, name e == "types" ]
+      parseTypes ts
+    _ -> throw "This spec isn't a registry node"
+
+parseTypes :: [Content] -> P Spec
+parseTypes es = do
+  typeNames   <- allTypeNames es
+  specStructs <-
+    several
+    . fromList
+    $ [ parseStruct typeNames n
+      | Element n <- es
+      , name n == "type"
+      , Just "struct" <- pure (getAttr "category" n)
+      ]
+  pure Spec { .. }
+
+parseStruct :: TypeNames -> Node -> P Struct
+parseStruct typeNames n = do
+  structName <- decode =<< note "Unable to get struct name" (getAttr "name" n)
+  structMembers <-
+    several
+    . fromList
+    $ [ parseStructMember typeNames m
+      | Element m <- contents n
+      , name m == "member"
+      ]
+  pure Struct { .. }
+
+parseStructMember :: TypeNames -> Node -> P StructMember
+parseStructMember typeNames m = do
+  smName <-
+    decode
+      =<< (maybe (throw "struct member without name") pure $ elemText "name" m)
+  let typeString = allText m
+  smType       <- parseCType typeNames typeString
+  smIsOptional <- boolListAttr "optional" m
+  smLengths    <- lenListAttr "len" m
+  smValues     <- listAttr decode "values" m
+  pure StructMember { .. }
 
 ----------------------------------------------------------------
 -- Getting all the type names
@@ -84,34 +105,22 @@ data StructMember = StructMember
 
 allTypeNames :: [Content] -> P TypeNames
 allTypeNames es = do
-  let nameText n = note
-        "Unable to get type name"
-        (lookup "name" (attributes n) <|> hush
-          (expectOne
-            "struct member name"
-            [ m
-            | Element a <- contents n
-            , name a == "name"
-            , [Text m] <- pure (contents a)
-            ]
-          )
-        )
+  let nameText :: Node -> P ByteString
+      nameText n =
+        note "Unable to get type name" (getAttr "name" n <|> elemText "name" n)
   categoryTypeNames <- several
     [ nameText n
     | Element n <- es
     , name n == "type"
-    , Just c <- pure (lookup "category" (attributes n))
+    , Just c <- pure (getAttr "category" n)
     , c `notElem` ["include", "define"]
     ]
   requiresTypeNames <- several
-    [ nameText n
-    | Element n <- es
-    , name n == "type"
-    , Just _ <- pure (lookup "requires" (attributes n))
-    ]
-  fromList . toList <$> several
+    [ nameText n | Element n <- es, name n == "type", hasAttr "requires" n ]
+  fromList <$> several
     ( fmap
-        ( first fromList
+        ( fromEither
+        . first fromList
         . cIdentifierFromString
         . dropWhileEnd isSpace
         . dropWhile isSpace
@@ -131,6 +140,17 @@ extraTypeNames = ["ANativeWindow", "AHardwareBuffer", "CAMetalLayer"]
 -- XML
 ----------------------------------------------------------------
 
+decode :: ByteString -> P Text
+decode bs = case decodeUtf8' bs of
+  Left  e -> throw $ show e
+  Right t -> pure t
+
+hasAttr :: ByteString -> Node -> Bool
+hasAttr a n = any ((== a) . fst) (attributes n)
+
+getAttr :: ByteString -> Node -> Maybe ByteString
+getAttr a n = lookup a (attributes n)
+
 allText :: Node -> ByteString
 allText =
   BS.unwords
@@ -142,18 +162,50 @@ allText =
         )
     . contents
 
+elemText :: ByteString -> Node -> Maybe ByteString
+elemText elemName node =
+  let r =
+          [ m
+          | Element a <- contents node
+          , name a == elemName
+          , [Text m] <- pure (contents a)
+          ]
+  in  case r of
+        [x] -> Just x
+        _   -> Nothing
+
+-- | Empty list if there is no such attribute
+listAttr :: (ByteString -> P a) -> ByteString -> Node -> P (Vector a)
+listAttr p a n = case getAttr a n of
+  Nothing -> pure mempty
+  Just bs -> do
+    traverse p . fromList . BS.split ',' $ bs
+
+boolListAttr :: ByteString -> Node -> P (Vector Bool)
+boolListAttr = listAttr $ \case
+  "true"  -> pure True
+  "false" -> pure False
+  b       -> throw $ "Can't parse bool:" <+> show b
+
+lenListAttr :: ByteString -> Node -> P (Vector ParameterLength)
+lenListAttr = listAttr $ \case
+  "null-terminated" -> pure NullTerminated
+  l | [param, member] <- tokenise "::" l ->
+    NamedMemberLength <$> decode param <*> decode member
+  l -> NamedLength <$> decode l
+
+tokenise :: ByteString -> ByteString -> [ByteString]
+tokenise x y = h
+  : if BS.null t then [] else tokenise x (BS.drop (BS.length x) t)
+  where (h, t) = BS.breakSubstring x y
+
+
 ----------------------------------------------------------------
 -- Utils
 ----------------------------------------------------------------
 
-several :: [P a] -> P (Vector a)
-several = fmap V.fromList . validationToEither . traverse eitherToValidation
-
-note = maybeToRight
-hush = rightToMaybe
-
 expectOne :: Text -> [a] -> P a
 expectOne m = \case
-  [] -> Left ("No " <> m <> " found")
+  []  -> throw ("No " <> m <> " found")
   [x] -> pure x
-  _ -> Left ("More than one " <> m <> " found")
+  _   -> throw ("More than one " <> m <> " found")

@@ -6,6 +6,8 @@ import Language.C.Types.Parse hiding (Proto, Array, TypeName)
 import qualified Language.C.Types as C
 import Data.ByteString.Char8 as BS
 
+import Error
+
 data CType
   = Float
   | Double
@@ -33,24 +35,24 @@ data Qualifier
 
 type C = C.Type C.CIdentifier
 
-parseCType :: TypeNames -> ByteString -> Either Text CType
+parseCType :: HasErr r => TypeNames -> ByteString -> Sem r CType
 parseCType typeNames bs =
-  let context = cCParserContext typeNames
+  let parseContext = cCParserContext typeNames
       -- Drop the 'struct' keyword, it confuses our C type parser.
       typeStringWorkarounds :: ByteString -> ByteString
       typeStringWorkarounds =
             -- dropWhileEnd (== ';')
           BS.unwords . Relude.filter (/= "struct") . BS.words
   in  case
-          runCParser context
+          runCParser parseContext
                      "no source"
                      (typeStringWorkarounds bs)
                      C.parseParameterDeclaration
         of
-          Left  err                          -> Left (show err)
+          Left  err                          -> throw (show err)
           Right (C.ParameterDeclaration _ t) -> cTypeToType t
 
-cTypeToType :: C -> Either Text CType
+cTypeToType :: HasErr r => C -> Sem r CType
 cTypeToType = \case
   C.TypeSpecifier (C.Specifiers [] [] []) t -> nameToType t
   C.TypeSpecifier (C.Specifiers [] [C.CONST] []) t -> nameToType t
@@ -59,9 +61,9 @@ cTypeToType = \case
   C.Ptr           [C.CONST] t  -> Ptr <$> typeQualifier t <*> cTypeToType t
   C.Array s t -> Array <$> typeQualifier t <*> arraySize s <*> cTypeToType t
   C.Proto ret ps -> Proto <$> cTypeToType ret <*> traverse cParamDeclToType ps
-  _                            -> Left "Unhandled C Type"
+  _                            -> throw "Unhandled C Type"
 
-typeQualifier :: C -> Either Text Qualifier
+typeQualifier :: HasErr r => C -> Sem r Qualifier
 typeQualifier = \case
   C.TypeSpecifier (C.Specifiers [] [] []) _ -> pure NonConst
   C.TypeSpecifier (C.Specifiers [] [C.CONST] []) _ -> pure Const
@@ -70,21 +72,24 @@ typeQualifier = \case
   C.Ptr           [C.CONST] _ -> pure Const
   C.Array         _         _ -> pure NonConst
   C.Proto         _         _ -> pure NonConst
-  _                           -> Left "Unhandled C Type"
+  _                           -> throw "Unhandled C Type"
 
 cParamDeclToType
-  :: C.ParameterDeclaration C.CIdentifier -> Either Text (Maybe Text, CType)
+  :: HasErr r
+  => C.ParameterDeclaration C.CIdentifier
+  -> Sem r (Maybe Text, CType)
 cParamDeclToType (C.ParameterDeclaration cId t) =
   (,) (fromString . unCIdentifier <$> cId) <$> cTypeToType t
 
-arraySize :: C.ArrayType C.CIdentifier -> Either Text ArraySize
+arraySize :: HasErr r => C.ArrayType C.CIdentifier -> Sem r ArraySize
 arraySize = \case
   C.SizedByInteger i | i >= 0    -> pure $ NumericArraySize (fromInteger i)
-                     | otherwise -> Left "Negative C array size"
-  C.SizedByIdentifier t -> pure $ SymbolicArraySize (fromString (unCIdentifier t))
-  _                     -> Left "Unhandled C Array size"
+                     | otherwise -> throw "Negative C array size"
+  C.SizedByIdentifier t ->
+    pure $ SymbolicArraySize (fromString (unCIdentifier t))
+  _ -> throw "Unhandled C Array size"
 
-nameToType :: C.TypeSpecifier -> Either Text CType
+nameToType :: HasErr r => C.TypeSpecifier -> Sem r CType
 nameToType = \case
   C.TypeName n    -> pure $ TypeName (fromString $ unCIdentifier n)
   C.Float         -> pure Float
@@ -92,5 +97,9 @@ nameToType = \case
   C.Void          -> pure Void
   C.Char Nothing  -> pure Char
   C.Int  C.Signed -> pure Int
-  _               -> Left "Unhandled C type specifier"
+  _               -> throw "Unhandled C type specifier"
 
+isPtrType :: CType -> Bool
+isPtrType = \case
+  Ptr _ _ -> True
+  _       -> False

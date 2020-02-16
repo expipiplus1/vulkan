@@ -1,11 +1,19 @@
 license-file: ../LICENSE
 maintainer: generator.i.ardly.know.er@monoid.al
-ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall
+ghc-options:
+- -threaded
+- -rtsopts
+- -with-rtsopts=-N
+- -Wall
+- -fno-warn-unticked-promoted-constructors
+- -fplugin=Polysemy.Plugin
 default-extensions:
 - BangPatterns
 - BinaryLiterals
+- ConstraintKinds
 - DataKinds
 - DeriveGeneric
+- DerivingVia
 - DisambiguateRecordFields
 - DuplicateRecordFields
 - EmptyCase
@@ -28,6 +36,7 @@ default-extensions:
 - RecordWildCards
 - RecursiveDo
 - ScopedTypeVariables
+- StandaloneDeriving
 - Strict
 - TupleSections
 - TypeApplications
@@ -42,17 +51,22 @@ executables:
     source-dirs: src
     main: Main.hs
     dependencies:
-    - unordered-containers
+    - th-orphans
+    - template-haskell
     - base
     - bytestring
     - inline-c
     - interpolatedstring-perl6
     - polysemy
+    - polysemy-plugin
     - pretty-show
+    - prettyprinter
     - relude
     - say
     - tagsoup
     - text
+    - uniplate
+    - unordered-containers
     - vector
     - xeno
 description: Please see README.md
