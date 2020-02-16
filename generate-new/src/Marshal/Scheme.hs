@@ -13,7 +13,6 @@ import           Polysemy.Fail
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
 
-import           Haskell
 import           Marshal.Marshalable
 import           Error
 import           CType
@@ -139,6 +138,11 @@ voidPointerScheme p = do
   Ptr _ Void <- pure $ type' p
   pure VoidPtr
 
+returnPointerScheme :: Marshalable a => a -> ND r (MarshalScheme c)
+returnPointerScheme p = do
+  t@(Ptr NonConst _) <- pure $ type' p
+  pure $ Returned (Normal t)
+
 -- | If we have a non-const pointer in a struct leave it as it is
 returnPointerInStructScheme
   :: Marshalable a => a -> ND r (MarshalScheme c)
@@ -253,7 +257,7 @@ isReturnPtr p' = case type' p' of
 -- | Get all the @a@s which are sized with this name
 getSizedWith :: Marshalable a => Name Unmarshaled -> Vector a -> Vector a
 getSizedWith lengthName = V.filter $ \v -> case lengths v of
-  (NamedLength len :<| _) | len == (unName lengthName) -> True
+  (NamedLength len :<| _) | len == unName lengthName -> True
   -- ^ TODO: Change this to [NamedLength len] and think about handling
   _ -> False
 

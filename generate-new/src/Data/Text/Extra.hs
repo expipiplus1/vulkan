@@ -11,12 +11,8 @@ module Data.Text.Extra
   , module Data.Text
   ) where
 
-import           Data.Char
-import           Data.Maybe
 import           Data.String    (IsString)
 import           Data.Text
-import qualified Data.Text      as T
-import qualified Text.Read      as R
 import Data.Semigroup
 
 -- -- | Read some text into a value

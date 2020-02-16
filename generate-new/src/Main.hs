@@ -2,43 +2,61 @@ module Main
   where
 
 import           Relude                  hiding ( runReader )
+import           Relude.Extra.Map
 import           Say
 import           Polysemy
 import           Polysemy.Reader
-import qualified Data.ByteString               as BS
-import           Data.Text.Prettyprint.Doc      ( vsep )
-import           Data.Text.Prettyprint.Doc.Render.Text
+import qualified Data.Vector                   as V
 
-import           Spec.Parse
-import           Error
-import           Marshal
 import           CType
 import           Data.Text.Extra                ( (<+>) )
-import           Render.Struct
+import           Error
+import           Marshal
 import           Marshal.Scheme
+import           Render.Command
+import           Render.Element
+import           Render.Struct
+import           Render.Type
+import           Spec.Parse
 
 main :: IO ()
 main = do
+  sayErr "Reading spec"
   specText <- readFileBS "./Vulkan-Docs/xml/vk.xml"
-  let rps = RenderParams id id id
-      mps = MarshalParams isDefaultable' isStruct' isPassAsPointerType'
-      r   = do
-        Spec {..} <- parseSpec specText
-        ss        <- traverseV marshalStruct specStructs
-        traverseV renderStruct ss
-  case run . runReader mps . runReader rps . runErr $ r of
+  let
+    rps :: RenderParams
+    rps = RenderParams id id id id id
+    r   = do
+      sayErr "Parsing spec"
+      Spec {..} <- parseSpec specText
+      let structNames :: HashSet Text
+          structNames =
+            fromList
+              . (extraStructNames <>)
+              . toList
+              . fmap structName
+              $ specStructs
+          isStruct' = (`member` structNames)
+          mps = MarshalParams isDefaultable' isStruct' isPassAsPointerType'
+      runReader mps $ do
+        sayErr "Marshaling structs"
+        ss <- traverseV marshalStruct specStructs
+        sayErr "Marshaling commands"
+        cs <- traverseV marshalCommand specCommands
+        sayErr "Rendering structs and commands"
+        sequenceV (fmap renderStruct ss <> fmap renderCommand cs)
+  (runM . runReader rps . runErr $ r) >>= \case
     Left es -> do
       traverse_ sayErr es
       sayErr (show (length es) <+> "errors")
-    Right r ->
-      withFile "out/Vulkan.hs" WriteMode $ \h -> (hPutDoc h) (vsep (toList r))
+    Right rs -> renderModule "out" (V.singleton "Vulkan") rs
 
 ----------------------------------------------------------------
 -- Bespoke Vulkan stuff
 ----------------------------------------------------------------
 
 isDefaultable' :: CType -> Bool
-isDefaultable' t = do
+isDefaultable' t =
   -- isBitmask'              <- (isJust .) <$> asks lIsBitmask
   -- isNonDispatchableHandle <-
   --   (maybe False (\h -> hHandleType h == NonDispatchable) .) <$> asks lIsHandle
@@ -78,12 +96,6 @@ isDefaultableForeignType =
           ]
   )
 
-isStruct' :: Text -> Bool
--- isStruct' = const False
-isStruct' t =
-  t == "VkBaseInStructure" || t == "VkPipelineRasterizationStateCreateInfo"
-
-
 -- | Is this a type we don't want to marshal
 isPassAsPointerType' :: CType -> Bool
 isPassAsPointerType' = \case
@@ -101,3 +113,7 @@ isPassAsPointerType' = \case
              ]
     -> True
   _ -> False
+
+-- TODO: Remove, extra union names and handle
+extraStructNames :: [Text]
+extraStructNames = ["VkClearColorValue", "VkSemaphore"]

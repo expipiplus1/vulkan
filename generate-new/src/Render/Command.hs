@@ -1,14 +1,12 @@
-{-# language QuasiQuotes #-}
-{-# language TemplateHaskell #-}
-module Render.Struct
+module Render.Command
   where
 
 import           Relude                  hiding ( Reader
                                                 , ask
                                                 , lift
                                                 )
-import           Text.InterpolatedString.Perl6.Unindented
 import           Data.Text.Prettyprint.Doc
+import           Language.Haskell.TH.Syntax
 import           Polysemy
 import           Polysemy.Reader
 import qualified Data.Vector                   as V
@@ -17,33 +15,35 @@ import           Spec.Parse
 import           Haskell                       as H
 import           Marshal
 import           Error
-import           Render.Utils
 import           Render.Element
 import           Render.Type
 import           Render.Scheme
 
-renderStruct
+renderCommand
   :: (HasErr r, Member (Reader RenderParams) r)
-  => MarshaledStruct
+  => MarshaledCommand
   -> Sem r RenderElement
-renderStruct MarshaledStruct {..} = do
+renderCommand MarshaledCommand {..} = do
   RenderParams {..} <- ask
-  genRe ("struct " <> msName) $ do
-    let n = mkTyName msName
-    ms <- V.mapMaybe id <$> traverseV renderStructMember msMembers
-    tellExport (EData n)
-    tellDoc [qqi|
-        data {n} = {mkConName msName}
-          {braceList ms}
-        |]
+  genRe ("command " <> mcName) $ do
+    let n = mkFunName mcName
+    tellExport (ETerm n)
+    ts <- V.mapMaybe id <$> traverseV paramType mcParams
+    r  <- cToHsType DoPreserve mcReturn
+    let t = foldr (~>) r ts
+    tellDoc
+      $   pretty n <+> "::" <+> indent 0 (renderType t)
+      <>  hardline
+      <>  pretty n <+> "=" <+> "undefined"
 
-renderStructMember
+paramType
   :: (HasErr r, Member (Reader RenderParams) r)
-  => MarshaledStructMember
-  -> Sem r (Maybe (Doc ()))
-renderStructMember MarshaledStructMember {..} = do
-  let StructMember {..} = msmStructMember
+  => MarshaledParam
+  -> Sem r (Maybe H.Type)
+paramType MarshaledParam {..} = do
   RenderParams {..} <- ask
-  fmap (\t -> [qqi|{mkMemberName smName} :: {renderType t}|])
-    <$> schemeType msmScheme
+  let Parameter {..} = mpParam
+  fmap (namedTy (mkParamName pName)) <$> schemeType mpScheme
 
+namedTy :: Text -> H.Type -> H.Type
+namedTy name = InfixT (LitT (StrTyLit (toString name))) (mkName ":::")

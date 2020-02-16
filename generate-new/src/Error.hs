@@ -8,7 +8,7 @@ module Error
   , contextShow
   , fromEither
   , note
-  , several
+  , sequenceV
   , traverseV
   , forV
   , HasErr
@@ -46,9 +46,9 @@ note e = \case
   Nothing -> throw e
   Just x  -> pure x
 
-several
+sequenceV
   :: forall f r a . (Traversable f, HasErr r) => f (Sem r a) -> Sem r (f a)
-several xs = do
+sequenceV xs = do
   vs <- traverse
     (\x -> E.catch @(Vector Text) (Success <$> x) (pure . Failure))
     xs
@@ -62,7 +62,7 @@ traverseV
   => (a -> Sem r b)
   -> f a
   -> Sem r (f b)
-traverseV f = several . fmap f
+traverseV f = sequenceV . fmap f
 
 forV
   :: forall f r a b
@@ -73,4 +73,5 @@ forV
 forV = flip traverseV
 
 infixr 5 <+>
+(<+>) :: (Semigroup a, IsString a) => a -> a -> a
 a <+> b = a <> " " <> b

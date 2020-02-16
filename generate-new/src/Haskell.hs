@@ -3,7 +3,7 @@ module Haskell
   , renderType
   , pattern (:@)
   , mkName
-  -- , conName
+  , (~>)
   )
   where
 
@@ -19,8 +19,5 @@ renderType = pretty . pprint . removeModules
 pattern (:@) :: Type -> Type -> Type
 pattern a :@ b = AppT a b
 
--- conName :: Text -> Name
--- conName n = mkNameG_d "" (toString m) (toString n)
-
--- tt :: QuasiQuoter
--- tt = QuasiQuoter { quoteExp = \s -> quoteExp t s }
+(~>) :: Type -> Type -> Type
+a ~> b = ArrowT :@ a :@ b

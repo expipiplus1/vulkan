@@ -2,7 +2,9 @@
 
 module Spec.Parse where
 
-import           Relude
+import           Relude                  hiding ( Reader
+                                                , runReader
+                                                )
 import           Xeno.DOM
 import           Data.Vector                    ( Vector )
 import           Language.C.Types               ( cIdentifierFromString
@@ -14,18 +16,24 @@ import           Data.List                      ( dropWhileEnd
                                                 )
 import           Data.Char
 import           Polysemy
+import           Polysemy.Reader
 import           Data.Text.Extra                ( (<+>) )
 
 import           CType
 import           Error
 import           Marshal.Name
-import qualified Marshal.Marshalable         as M
-import           Marshal.Marshalable          ( ParameterLength(..) )
+import qualified Marshal.Marshalable           as M
+import           Marshal.Marshalable            ( ParameterLength(..) )
 
 data Spec = Spec
   { specStructs :: Vector Struct
+  , specCommands :: Vector Command
   }
   deriving (Show)
+
+--
+-- Structs
+--
 
 data Struct = Struct
   { structName :: Text
@@ -49,85 +57,152 @@ instance M.Marshalable StructMember where
   lengths    = smLengths
   isOptional = smIsOptional
 
-type P a = forall r . HasErr r => Sem r a
+--
+-- Commands
+--
 
-parseSpec :: ByteString -> P Spec
+data Command = Command
+  { cName :: Text
+  , cReturnType :: CType
+  , cParameters :: Vector Parameter
+  -- , cCommandLevel :: HandleLevel
+  , cSuccessCodes :: Vector Text
+  , cErrorCodes :: Vector Text
+  }
+  deriving (Show, Eq)
+
+-- | The "level" of a handle, related to what it is descended from.
+data HandleLevel
+  = Instance
+  | PhysicalDevice
+  | Device
+  | NoHandleLevel
+  deriving (Show, Eq)
+
+data Parameter = Parameter
+  { pName       :: Text
+  , pType       :: CType
+  , pLengths    :: Vector M.ParameterLength
+  , pIsOptional :: Vector Bool
+  }
+  deriving (Show, Eq)
+
+instance M.Marshalable Parameter where
+  name       = Name . pName
+  type'      = pType
+  values     = const mempty
+  lengths    = pLengths
+  isOptional = pIsOptional
+
+----------------------------------------------------------------
+-- Parsing
+----------------------------------------------------------------
+
+type P a
+  = forall r . (MemberWithError (Reader TypeNames) r, HasErr r) => Sem r a
+
+parseSpec :: HasErr r => ByteString -> Sem r Spec
 parseSpec bs = do
   n <- fromEither (first show (parse bs))
   case name n of
     "registry" -> do
-      ts <-
-        expectOne "types"
-          $ [ contents e | Element e <- contents n, name e == "types" ]
-      parseTypes ts
+      types     <- contents <$> oneChild "types" n
+      typeNames <- allTypeNames types
+      runReader typeNames $ do
+        specStructs  <- parseStructs types
+        specCommands <- parseCommands . contents =<< oneChild "commands" n
+        pure Spec { .. }
     _ -> throw "This spec isn't a registry node"
 
-parseTypes :: [Content] -> P Spec
-parseTypes es = do
-  typeNames   <- allTypeNames es
-  specStructs <-
-    several
-    . fromList
-    $ [ parseStruct typeNames n
-      | Element n <- es
-      , name n == "type"
-      , Just "struct" <- pure (getAttr "category" n)
-      ]
-  pure Spec { .. }
+parseStructs :: [Content] -> P (Vector Struct)
+parseStructs es = fromList <$> traverse
+  parseStruct
+  [ n
+  | Element n <- es
+  , name n == "type"
+  , Just "struct" <- pure (getAttr "category" n)
+  ]
 
-parseStruct :: TypeNames -> Node -> P Struct
-parseStruct typeNames n = do
+parseStruct :: Node -> P Struct
+parseStruct n = do
   structName <- decode =<< note "Unable to get struct name" (getAttr "name" n)
   structMembers <-
-    several
-    . fromList
-    $ [ parseStructMember typeNames m
-      | Element m <- contents n
-      , name m == "member"
-      ]
+    fmap fromList
+    . traverseV parseStructMember
+    $ [ m | Element m <- contents n, name m == "member" ]
   pure Struct { .. }
 
-parseStructMember :: TypeNames -> Node -> P StructMember
-parseStructMember typeNames m = do
-  smName <-
-    decode
-      =<< (maybe (throw "struct member without name") pure $ elemText "name" m)
+parseStructMember :: Node -> P StructMember
+parseStructMember m = do
+  smName <- decode
+    =<< maybe (throw "struct member without name") pure (elemText "name" m)
   let typeString = allText m
-  smType       <- parseCType typeNames typeString
+  smType       <- parseCType typeString
   smIsOptional <- boolListAttr "optional" m
   smLengths    <- lenListAttr "len" m
   smValues     <- listAttr decode "values" m
   pure StructMember { .. }
 
+parseCommands :: [Content] -> P (Vector Command)
+parseCommands es =
+  fmap fromList
+    . traverseV parseCommand
+    $ [ n
+      | Element n <- es
+      , name n == "command"
+      , all ((/= "alias") . fst) (attributes n)
+      ]
+
+parseCommand :: Node -> P Command
+parseCommand n = do
+  cSuccessCodes <- listAttr decode "successcodes" n
+  cErrorCodes   <- listAttr decode "errorcodes" n
+  proto         <- oneChild "proto" n
+  cName         <- decode =<< note "Command has no name" (elemText "name" proto)
+  cReturnType   <- parseCType (allText proto)
+  cParameters <- fromList <$> traverseV parseParameter (manyChildren "param" n)
+  pure Command { .. }
+
+parseParameter :: Node -> P Parameter
+parseParameter m = do
+  pName <- decode
+    =<< maybe (throw "struct member without name") pure (elemText "name" m)
+  let typeString = allText m
+  pType       <- parseCType typeString
+  pIsOptional <- boolListAttr "optional" m
+  pLengths    <- lenListAttr "len" m
+  pure Parameter { .. }
+
 ----------------------------------------------------------------
 -- Getting all the type names
 ----------------------------------------------------------------
 
-allTypeNames :: [Content] -> P TypeNames
+allTypeNames :: forall r . HasErr r => [Content] -> Sem r TypeNames
 allTypeNames es = do
-  let nameText :: Node -> P ByteString
+  let nameText :: Node -> Sem r ByteString
       nameText n =
         note "Unable to get type name" (getAttr "name" n <|> elemText "name" n)
-  categoryTypeNames <- several
-    [ nameText n
+  categoryTypeNames <- traverseV
+    nameText
+    [ n
     | Element n <- es
     , name n == "type"
     , Just c <- pure (getAttr "category" n)
     , c `notElem` ["include", "define"]
     ]
-  requiresTypeNames <- several
-    [ nameText n | Element n <- es, name n == "type", hasAttr "requires" n ]
-  fromList <$> several
-    ( fmap
-        ( fromEither
-        . first fromList
-        . cIdentifierFromString
-        . dropWhileEnd isSpace
-        . dropWhile isSpace
-        . BS.unpack
-        )
-    . filter (`notElem` reservedTypeNames)
-    $ (extraTypeNames <> toList (categoryTypeNames <> requiresTypeNames))
+  requiresTypeNames <- traverseV
+    nameText
+    [ n | Element n <- es, name n == "type", hasAttr "requires" n ]
+  fromList <$> traverseV
+    ( fromEither
+    . first fromList
+    . cIdentifierFromString
+    . dropWhileEnd isSpace
+    . dropWhile isSpace
+    . BS.unpack
+    )
+    ( filter (`notElem` reservedTypeNames)
+    $ extraTypeNames <> toList (categoryTypeNames <> requiresTypeNames)
     )
 
 reservedTypeNames :: [ByteString]
@@ -178,8 +253,7 @@ elemText elemName node =
 listAttr :: (ByteString -> P a) -> ByteString -> Node -> P (Vector a)
 listAttr p a n = case getAttr a n of
   Nothing -> pure mempty
-  Just bs -> do
-    traverse p . fromList . BS.split ',' $ bs
+  Just bs -> traverse p . fromList . BS.split ',' $ bs
 
 boolListAttr :: ByteString -> Node -> P (Vector Bool)
 boolListAttr = listAttr $ \case
@@ -204,7 +278,13 @@ tokenise x y = h
 -- Utils
 ----------------------------------------------------------------
 
-expectOne :: Text -> [a] -> P a
+manyChildren :: ByteString -> Node -> [Node]
+manyChildren childName n = [ e | Element e <- contents n, name e == childName ]
+
+oneChild :: HasErr r => ByteString -> Node -> Sem r Node
+oneChild childName = expectOne (decodeUtf8 childName) . manyChildren childName
+
+expectOne :: HasErr r => Text -> [a] -> Sem r a
 expectOne m = \case
   []  -> throw ("No " <> m <> " found")
   [x] -> pure x

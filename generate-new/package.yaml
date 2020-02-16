@@ -7,6 +7,9 @@ ghc-options:
 - -Wall
 - -fno-warn-unticked-promoted-constructors
 - -fplugin=Polysemy.Plugin
+- -O2
+- -flate-specialise
+- -fspecialise-aggressively
 default-extensions:
 - BangPatterns
 - BinaryLiterals

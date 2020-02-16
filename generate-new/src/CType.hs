@@ -1,12 +1,20 @@
 module CType
   where
 
-import Relude hiding (Const)
-import Language.C.Types.Parse hiding (Proto, Array, TypeName)
-import qualified Language.C.Types as C
-import Data.ByteString.Char8 as BS
+import           Relude                  hiding ( Const
+                                                , Reader
+                                                , ask
+                                                )
+import           Language.C.Types.Parse  hiding ( Proto
+                                                , Array
+                                                , TypeName
+                                                )
+import qualified Language.C.Types              as C
+import           Data.ByteString.Char8         as BS
+import           Polysemy
+import           Polysemy.Reader
 
-import Error
+import           Error
 
 data CType
   = Float
@@ -35,22 +43,25 @@ data Qualifier
 
 type C = C.Type C.CIdentifier
 
-parseCType :: HasErr r => TypeNames -> ByteString -> Sem r CType
-parseCType typeNames bs =
-  let parseContext = cCParserContext typeNames
-      -- Drop the 'struct' keyword, it confuses our C type parser.
+parseCType
+  :: (MemberWithError (Reader TypeNames) r, HasErr r)
+  => ByteString
+  -> Sem r CType
+parseCType bs = do
+  parseContext <- cCParserContext <$> ask
+  let -- Drop the 'struct' keyword, it confuses our C type parser.
       typeStringWorkarounds :: ByteString -> ByteString
       typeStringWorkarounds =
             -- dropWhileEnd (== ';')
-          BS.unwords . Relude.filter (/= "struct") . BS.words
-  in  case
-          runCParser parseContext
-                     "no source"
-                     (typeStringWorkarounds bs)
-                     C.parseParameterDeclaration
-        of
-          Left  err                          -> throw (show err)
-          Right (C.ParameterDeclaration _ t) -> cTypeToType t
+        BS.unwords . Relude.filter (/= "struct") . BS.words
+  case
+      runCParser parseContext
+                 "no source"
+                 (typeStringWorkarounds bs)
+                 C.parseParameterDeclaration
+    of
+      Left  err                          -> throw (show err)
+      Right (C.ParameterDeclaration _ t) -> cTypeToType t
 
 cTypeToType :: HasErr r => C -> Sem r CType
 cTypeToType = \case

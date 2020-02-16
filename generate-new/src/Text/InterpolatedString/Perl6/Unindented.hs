@@ -16,6 +16,7 @@
 --   foo
 --   |]
 -- @
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 module Text.InterpolatedString.Perl6.Unindented (qqi, qci, qi, showQ)where
 
 import           Prelude
