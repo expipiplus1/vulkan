@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> { }, compiler ? null, hoogle ? true }:
+{ pkgs ? import <nixpkgs> { config.allowBroken = true; }, compiler ? null, hoogle ? true }:
 
 let
   # src = pkgs.nix-gitignore.gitignoreSource [ ] ./.;
@@ -15,18 +15,16 @@ let
   haskellPackages = with pkgs.haskell.lib;
     pkgs.haskell.packages.${compiler'}.override {
       overrides = self: super:
-        { } // pkgs.lib.optionalAttrs hoogle {
+        {
+          algebraic-graphs = dontCheck super.algebraic-graphs;
+        } // pkgs.lib.optionalAttrs hoogle {
           ghc = super.ghc // { withPackages = super.ghc.withHoogle; };
           ghcWithPackages = self.ghc.withPackages;
         };
     };
 
   # Any packages to appear in the environment provisioned by nix-shell
-  extraEnvPackages = with pkgs; [
-    python3
-    asciidoctor
-    lasem
-  ];
+  extraEnvPackages = with pkgs; [ python3 asciidoctor lasem ];
 
   # Generate a haskell derivation using the cabal2nix tool on `package.yaml`
   drv = let old = haskellPackages.callCabal2nix "" src { };

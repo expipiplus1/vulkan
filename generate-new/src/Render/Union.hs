@@ -1,6 +1,6 @@
 {-# language QuasiQuotes #-}
 {-# language TemplateHaskell #-}
-module Render.Struct
+module Render.Union
   where
 
 import           Relude                  hiding ( Reader
@@ -24,36 +24,28 @@ import           Render.Element
 import           Render.Type
 import           Render.Scheme
 
-renderStruct
-  :: (HasErr r, Member (Reader RenderParams) r)
-  => MarshaledStruct
-  -> Sem r RenderElement
-renderStruct MarshaledStruct {..} = do
+renderUnion
+  :: (HasErr r, Member (Reader RenderParams) r) => Union -> Sem r RenderElement
+renderUnion Struct {..} = context sName $ do
   RenderParams {..} <- ask
-  genRe ("struct " <> msName) $ do
-    let n = mkTyName msName
-    ms <- V.mapMaybe id <$> traverseV renderStructMember msMembers
+  genRe ("union " <> sName) $ do
+    let n = mkTyName sName
+    ms <- traverseV renderUnionMember sMembers
     tellExport (EData n)
-    tellDoc [qqi|
-        data {n} = {mkConName msName}
-          {braceList ms}
-        |]
+    tellDoc $ "data" <+> pretty n <> line <> indent
+      2
+      (vsep $ zipWith (<+>) ("=" : repeat "|") (toList ms))
 
-renderStructMember
+renderUnionMember
   :: ( HasErr r
      , MemberWithError (Reader RenderParams) r
      , MemberWithError (State RenderElement) r
      )
-  => MarshaledStructMember
-  -> Sem r (Maybe (Doc ()))
-renderStructMember MarshaledStructMember {..} = do
-  let StructMember {..} = msmStructMember
+  => StructMember
+  -> Sem r (Doc ())
+renderUnionMember StructMember {..} = do
   RenderParams {..} <- ask
-  m                 <- schemeType msmScheme
-  traverse
-    (\t -> do
-      tDoc <- renderType t
-      pure [qqi|{mkMemberName smName} :: {tDoc}|]
-    )
-    m
+  let n = mkConName smName
+  tDoc <- renderType =<< cToHsType DoPreserve smType
+  pure $ pretty n <+> tDoc
 

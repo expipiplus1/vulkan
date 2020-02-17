@@ -13,6 +13,9 @@ import qualified Language.C.Types              as C
 import           Data.ByteString.Char8         as BS
 import           Polysemy
 import           Polysemy.Reader
+import qualified Text.ParserCombinators.Parsec.Combinator as Parsec
+import qualified Text.Parsec.Char as Parsec
+
 
 import           Error
 
@@ -52,13 +55,16 @@ parseCType bs = do
   let -- Drop the 'struct' keyword, it confuses our C type parser.
       typeStringWorkarounds :: ByteString -> ByteString
       typeStringWorkarounds =
-            -- dropWhileEnd (== ';')
-        BS.unwords . Relude.filter (/= "struct") . BS.words
+        BS.unwords . Relude.filter (/= "struct") . BS.words . removeSubString
+          "VKAPI_PTR"
   case
-      runCParser parseContext
-                 "no source"
-                 (typeStringWorkarounds bs)
-                 C.parseParameterDeclaration
+      runCParser
+        parseContext
+        "no source"
+        (typeStringWorkarounds bs)
+        (  C.parseParameterDeclaration
+        <* (ReaderT (const (optional (Parsec.char ';') >> Parsec.eof)))
+        )
     of
       Left  err                          -> throw (show err)
       Right (C.ParameterDeclaration _ t) -> cTypeToType t
@@ -114,3 +120,13 @@ isPtrType :: CType -> Bool
 isPtrType = \case
   Ptr _ _ -> True
   _       -> False
+
+----------------------------------------------------------------
+-- Utils
+----------------------------------------------------------------
+
+-- | Just removes the first occurrence...
+removeSubString :: ByteString -> ByteString -> ByteString
+removeSubString n h =
+  let (b, a) = BS.breakSubstring n h in b <> (BS.drop (BS.length n) a)
+

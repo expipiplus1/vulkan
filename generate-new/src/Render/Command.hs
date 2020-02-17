@@ -36,10 +36,11 @@ renderCommand MarshaledCommand {..} = contextShow mcName $ do
     lastReturnType <- cToHsType DoPreserve mcReturn
     let r = makeReturnType (pts <> V.singleton lastReturnType)
     let t = foldr (~>) r nts
+    tString <- renderType t
     tellDoc
       $   pretty n
       <+> "::"
-      <+> indent 0 (renderType t)
+      <+> indent 0 tString
       <>  hardline
       <>  pretty n
       <+> "="
@@ -60,5 +61,3 @@ makeReturnType
   :: Vector H.Type -> H.Type
 makeReturnType ts = ConT ''IO :@ foldl' (:@) (TupleT (length ts)) ts
 
-namedTy :: Text -> H.Type -> H.Type
-namedTy name = InfixT (LitT (StrTyLit (toString name))) (mkName ":::")

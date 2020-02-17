@@ -11,6 +11,7 @@ module Error
   , sequenceV
   , traverseV
   , forV
+  , forV_
   , HasErr
   , Sem
   )
@@ -71,6 +72,14 @@ forV
   -> (a -> Sem r b)
   -> Sem r (f b)
 forV = flip traverseV
+
+forV_
+  :: forall f r a
+   . (Traversable f, HasErr r)
+  => f a
+  -> (a -> Sem r ())
+  -> Sem r ()
+forV_ s = void . forV s
 
 infixr 5 <+>
 (<+>) :: (Semigroup a, IsString a) => a -> a -> a

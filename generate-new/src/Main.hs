@@ -1,40 +1,45 @@
 module Main
   where
 
-import           Relude                  hiding ( runReader )
+import           Relude                  hiding ( runReader
+                                                , uncons
+                                                )
 import           Relude.Extra.Map
 import           Say
 import           Polysemy
 import           Polysemy.Reader
 import qualified Data.Vector                   as V
-import           Data.Text.Extra                ( (<+>) )
+import qualified Data.Text                     as T
+import           Data.Text.Extra                ( (<+>)
+                                                , cons
+                                                , uncons
+                                                )
+import           Data.Char
+import           Language.Haskell.TH            ( nameModule
+                                                , nameBase
+                                                )
 
 import           CType
 import           Error
 import           Marshal
 import           Marshal.Scheme
-import           Render.Command
 import           Render.Element
-import           Render.Enum
-import           Render.Struct
 import           Render.Type
+import           Render.Spec
 import           Spec.Parse
+import           Write.Segment
 
 main :: IO ()
 main = do
   sayErr "Reading spec"
   specText <- readFileBS "./Vulkan-Docs/xml/vk.xml"
   let
-    r   = do
+    r = do
       sayErr "Parsing spec"
-      Spec {..} <- parseSpec specText
+      spec@Spec {..} <- parseSpec specText
       let structNames :: HashSet Text
           structNames =
-            fromList
-              . (extraStructNames <>)
-              . toList
-              . fmap structName
-              $ specStructs
+            fromList . (extraStructNames <>) . toList . fmap sName $ specStructs
           isStruct' = (`member` structNames)
           mps = MarshalParams isDefaultable' isStruct' isPassAsPointerType'
       runReader mps $ do
@@ -42,31 +47,65 @@ main = do
         ss <- traverseV marshalStruct specStructs
         sayErr "Marshaling commands"
         cs <- traverseV marshalCommand specCommands
-        sayErr "Rendering structs, commands and enums"
-        sequenceV
-          (  fmap renderStruct  ss
-          <> fmap renderCommand cs
-          <> fmap renderEnum    specEnums
+        sayErr "Rendering"
+        renderElements <- renderSpec spec ss cs
+        sayErr "Segmenting"
+        let seeds = []
+        (segments, extras) <- segmentGraph
+          reName
+          show
+          (fmap exportName . V.toList . reExports)
+          ( fmap (toText . nameBase)
+          . filter (isNothing . nameModule)
+          . fmap importName
+          . toList
+          . reImports
           )
+          renderElements
+          mempty
+        traverse_ (sayErr . reName) extras
+        sayErr "Segments:"
+        traverse_ (sayErrShow . V.length) segments
+        sayErr "Extras"
+        sayErrShow . V.length $ extras
+        pure extras
   (runM . runReader renderParams . runErr $ r) >>= \case
     Left es -> do
       traverse_ sayErr es
       sayErr (show (length es) <+> "errors")
-    Right rs -> renderModule "out" (V.singleton "Vulkan") rs
+    Right rs -> do
+      sayErr "Writing"
+      renderModule "out" (V.singleton "Vulkan") rs
 
 ----------------------------------------------------------------
 -- Names
 ----------------------------------------------------------------
 
 renderParams :: RenderParams
-renderParams = RenderParams { mkTyName      = unReservedWord
-                            , mkConName     = unReservedWord
-                            , mkMemberName  = unReservedWord
-                            , mkFunName     = unReservedWord
-                            , mkParamName   = unReservedWord
-                            , mkPatternName = unReservedWord
+renderParams = RenderParams { mkTyName          = unReservedWord . upperCaseFirst
+                            , mkConName         = unReservedWord . upperCaseFirst
+                            , mkMemberName      = unReservedWord . lowerCaseFirst
+                            , mkFunName         = unReservedWord
+                            , mkParamName       = unReservedWord
+                            , mkPatternName     = unReservedWord
+                            , mkHandleName      = unReservedWord
+                            , mkFuncPointerName = unReservedWord . T.tail
                             }
 
+lowerCaseFirst :: Text -> Text
+lowerCaseFirst = onFirst Data.Char.toLower
+
+upperCaseFirst :: Text -> Text
+upperCaseFirst = onFirst Data.Char.toUpper
+
+onFirst :: (Char -> Char) -> Text -> Text
+onFirst f = \case
+  Cons c cs -> Cons (f c) cs
+  t         -> t
+
+pattern Cons :: Char -> Text -> Text
+pattern Cons c cs <- (uncons -> Just (c, cs))
+  where Cons c cs = cons c cs
 
 unReservedWord :: Text -> Text
 unReservedWord t = if t `elem` (keywords <> preludeWords) then t <> "'" else t

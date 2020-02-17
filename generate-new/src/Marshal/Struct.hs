@@ -30,9 +30,9 @@ marshalStruct
   :: (MemberWithError (Reader MarshalParams) r, HasErr r)
   => Struct
   -> Sem r MarshaledStruct
-marshalStruct s@Struct {..} = contextShow structName $ do
-  let msName = structName
-  msMembers <- forV structMembers $ \sm -> contextShow (smName sm) $ do
+marshalStruct s@Struct {..} = contextShow sName $ do
+  let msName = sName
+  msMembers <- forV sMembers $ \sm -> contextShow (smName sm) $ do
     scheme <- structMemberScheme s sm
     pure $ MarshaledStructMember sm scheme
   pure MarshaledStruct { .. }
@@ -46,7 +46,7 @@ structMemberScheme Struct {..} member = do
   let schemes =
         [ -- These two are for value constrained params:
           univaluedScheme
-        , lengthScheme structMembers
+        , lengthScheme sMembers
           -- Pointers to Void have some special handling
         , voidPointerScheme
           -- Pointers to return values in, unmarshaled at the moment

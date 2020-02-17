@@ -35,12 +35,14 @@ default-extensions:
 - ParallelListComp
 - PartialTypeSignatures
 - PatternSynonyms
+- PolyKinds
 - RankNTypes
 - RecordWildCards
 - RecursiveDo
 - ScopedTypeVariables
 - StandaloneDeriving
 - Strict
+- TemplateHaskellQuotes
 - TupleSections
 - TypeApplications
 - TypeFamilies
@@ -54,10 +56,11 @@ executables:
     source-dirs: src
     main: Main.hs
     dependencies:
-    - th-orphans
-    - template-haskell
+    - parsec
+    - algebraic-graphs
     - base
     - bytestring
+    - containers
     - inline-c
     - interpolatedstring-perl6
     - polysemy
@@ -67,9 +70,12 @@ executables:
     - relude
     - say
     - tagsoup
+    - template-haskell
     - text
+    - th-orphans
     - uniplate
     - unordered-containers
     - vector
+    - vector-sized
     - xeno
 description: Please see README.md

@@ -4,6 +4,7 @@ module Spec.Parse where
 
 import           Relude                  hiding ( Reader
                                                 , runReader
+                                                , Handle
                                                 )
 import           Xeno.DOM
 import           Data.Vector                    ( Vector )
@@ -15,6 +16,7 @@ import           Data.List                      ( dropWhileEnd
                                                 , lookup
                                                 )
 import qualified Data.Text                     as T
+import qualified Data.Vector                   as V
 import           Data.Char
 import           Polysemy
 import           Polysemy.Reader
@@ -28,19 +30,77 @@ import           Marshal.Marshalable            ( ParameterLength(..) )
 import           Data.Bits
 
 data Spec = Spec
-  { specStructs :: Vector Struct
-  , specCommands :: Vector Command
-  , specEnums :: Vector Enum'
+  { specHandles      :: Vector Handle
+  , specFuncPointers :: Vector FuncPointer
+  , specStructs      :: Vector Struct
+  , specUnions       :: Vector Union
+  , specCommands     :: Vector Command
+  , specEnums        :: Vector Enum'
+  , specAliases      :: Vector Alias
   }
+  deriving (Show)
+
+--
+-- Aliases
+--
+
+data Alias = Alias
+  { aName :: Text
+  , aTarget :: Text
+  , aType :: AliasType
+  }
+  deriving (Show)
+
+data AliasType
+  = TypeAlias
+  | TermAlias
+  | PatternAlias
+  deriving (Show)
+
+--
+-- Function Pointers
+--
+
+data FuncPointer = FuncPointer
+  { fpName :: Text
+  , fpType :: CType
+  }
+  deriving (Show)
+
+--
+-- Handles
+--
+
+data Handle = Handle
+  { hName :: Text
+  , hDispatchable :: Dispatchable
+  , hLevel :: HandleLevel
+  }
+  deriving (Show)
+
+-- | The "level" of a handle, related to what it is descended from.
+data HandleLevel
+  = Instance
+  | PhysicalDevice
+  | Device
+  | NoHandleLevel
+  deriving (Show, Eq)
+
+data Dispatchable = Dispatchable | NonDispatchable
   deriving (Show)
 
 --
 -- Structs
 --
 
-data Struct = Struct
-  { structName :: Text
-  , structMembers :: Vector StructMember
+
+type Struct = StructOrUnion AStruct
+type Union = StructOrUnion AUnion
+data StructOrUnionType = AStruct | AUnion
+
+data StructOrUnion (t :: StructOrUnionType) = Struct
+  { sName :: Text
+  , sMembers :: Vector StructMember
   }
   deriving (Show)
 
@@ -72,14 +132,6 @@ data Command = Command
   , cSuccessCodes :: Vector Text
   , cErrorCodes :: Vector Text
   }
-  deriving (Show, Eq)
-
--- | The "level" of a handle, related to what it is descended from.
-data HandleLevel
-  = Instance
-  | PhysicalDevice
-  | Device
-  | NoHandleLevel
   deriving (Show, Eq)
 
 data Parameter = Parameter
@@ -132,11 +184,114 @@ parseSpec bs = do
       types     <- contents <$> oneChild "types" n
       typeNames <- allTypeNames types
       runReader typeNames $ do
-        specStructs  <- parseStructs types
-        specCommands <- parseCommands . contents =<< oneChild "commands" n
-        specEnums <- parseEnums . contents $ n
+        specHandles      <- parseHandles types
+        specFuncPointers <- parseFuncPointers types
+        specStructs      <- parseStructs types
+        specUnions       <- parseUnions types
+        specCommands     <- parseCommands . contents =<< oneChild "commands" n
+        emptyBitmasks    <- parseEmptyBitmasks types
+        nonEmptyEnums    <- parseEnums . contents $ n
+        bitmaskAliases   <- parseBitmaskAliases types
+        typeAliases      <- parseAliases ["bitmask", "struct"] types
+        let specEnums   = extraEnums <> emptyBitmasks <> nonEmptyEnums
+            specAliases = bitmaskAliases <> typeAliases
         pure Spec { .. }
     _ -> throw "This spec isn't a registry node"
+
+----------------------------------------------------------------
+-- Aliases
+----------------------------------------------------------------
+
+parseBitmaskAliases :: [Content] -> P (Vector Alias)
+parseBitmaskAliases es =
+  fmap fromList
+    .  sequenceV
+    $  [ do
+           aName   <- nameElem "bitmask alias" n
+           aTarget <- decode requires
+           let aType = TypeAlias
+           pure Alias { .. }
+       | Element n <- es
+       , "type" == name n
+       , Just requires  <- pure $ getAttr "requires" n
+       , Just "bitmask" <- pure $ getAttr "category" n
+       ]
+
+parseAliases :: [ByteString] -> [Content] -> P (Vector Alias)
+parseAliases categories es =
+  fmap fromList
+    .  sequenceV
+    $ [ do
+           aName   <- nameAttr "struct alias" n
+           aTarget <- decode alias
+           let aType = TypeAlias
+           pure Alias { .. }
+       | Element n <- es
+       , "type" == name n
+       , Just alias     <- pure $ getAttr "alias" n
+       , Just c <- pure $ getAttr "category" n
+       , c `elem` categories
+       ]
+
+----------------------------------------------------------------
+-- Handles
+----------------------------------------------------------------
+
+parseHandles :: [Content] -> P (Vector Handle)
+parseHandles = onTypes "handle" parseHandle
+ where
+
+  parseHandle :: Node -> P Handle
+  parseHandle n = do
+    hName <- nameElem "handle" n
+    context hName $ do
+      typeString    <- note "Handle has no type" (elemText "type" n)
+      hDispatchable <- case typeString of
+        "VK_DEFINE_HANDLE" -> pure Dispatchable
+        "VK_DEFINE_NON_DISPATCHABLE_HANDLE" -> pure NonDispatchable
+        _                  -> throw "Unable to parse handle type"
+      hLevel <- case getAttr "parent" n of
+        Nothing -> pure NoHandleLevel
+        Just "VkInstance" -> pure Instance
+        Just "VkPhysicalDevice" -> pure PhysicalDevice
+        Just "VkDevice" -> pure Device
+        Just "VkCommandPool" -> pure Device
+        Just "VkDescriptorPool" -> pure Device
+        Just "VkPhysicalDevice,VkDisplayKHR" -> pure PhysicalDevice
+        Just "VkSurfaceKHR" -> pure Instance
+        _       -> throw "Unknown handle level"
+      pure Handle { .. }
+
+parseFuncPointers :: [Content] -> P (Vector FuncPointer)
+parseFuncPointers = onTypes "funcpointer" parseFuncPointer
+ where
+  parseFuncPointer :: Node -> P FuncPointer
+  parseFuncPointer n = do
+    fpName <- nameElem "funcpointer" n
+    context fpName $ do
+      let typeString = allTextOn ((`notElem` ["name", "comment"]) . name) n
+      fpType <- parseCType typeString
+      pure FuncPointer { .. }
+
+----------------------------------------------------------------
+-- Enums
+----------------------------------------------------------------
+
+parseEmptyBitmasks :: [Content] -> P (Vector Enum')
+parseEmptyBitmasks es = fromList <$> traverseV
+  parseEmptyBitmask
+  [ n
+  | Element n <- es
+  , "type" == name n
+  , not (isAlias n)
+  , Nothing        <- pure $ getAttr "requires" n
+  , Just "bitmask" <- pure $ getAttr "category" n
+  ]
+ where
+  parseEmptyBitmask :: Node -> P Enum'
+  parseEmptyBitmask n = do
+    eName <- nameElem "bitmask" n
+    pure Enum { eValues = mempty, eType = ABitmask, .. }
 
 parseEnums :: [Content] -> P (Vector Enum')
 parseEnums es = fromList <$> traverseV
@@ -153,7 +308,7 @@ parseEnums es = fromList <$> traverseV
  where
   parseEnum :: EnumType -> Node -> P Enum'
   parseEnum eType n = do
-    eName   <- decode =<< note "Unable to get enum name" (getAttr "name" n)
+    eName   <- nameAttr "enum" n
     eValues <- fromList <$> traverseV
       (context eName . parseValue)
       [ e | Element e <- contents n, name e == "enum", not (isAlias e) ]
@@ -161,7 +316,7 @@ parseEnums es = fromList <$> traverseV
 
   parseValue :: Node -> P EnumValue
   parseValue v = do
-    evName <- decode =<< note "Unable to get enum value name" (getAttr "name" v)
+    evName  <- nameAttr "enum value" v
     evValue <- case getAttr "value" v of
       Just b  -> readP b
       Nothing -> (0x1 `shiftL`) <$> readAttr "bitpos" v
@@ -172,30 +327,26 @@ parseEnums es = fromList <$> traverseV
 ----------------------------------------------------------------
 
 parseStructs :: [Content] -> P (Vector Struct)
-parseStructs es = fromList <$> traverseV
-  parseStruct
-  [ n
-  | Element n <- es
-  , name n == "type"
-  , not (isAlias n)
-  , Just "struct" <- pure (getAttr "category" n)
-  ]
- where
+parseStructs = onTypes "struct" parseStruct
 
-  parseStruct :: Node -> P Struct
-  parseStruct n = do
-    structName <- decode =<< note "Unable to get struct name" (getAttr "name" n)
-    structMembers <-
+parseUnions :: [Content] -> P (Vector Union)
+parseUnions = onTypes "union" parseStruct
+
+parseStruct :: Node -> P (StructOrUnion a)
+parseStruct n = do
+  sName <- nameAttr "struct" n
+  context sName $ do
+    sMembers <-
       fmap fromList
       . traverseV parseStructMember
       $ [ m | Element m <- contents n, name m == "member" ]
     pure Struct { .. }
+ where
 
   parseStructMember :: Node -> P StructMember
   parseStructMember m = do
-    smName <- decode
-      =<< maybe (throw "struct member without name") pure (elemText "name" m)
-    let typeString = allText m
+    smName <- nameElem "struct member" m
+    let typeString = allNonCommentText m
     smType       <- parseCType typeString
     smIsOptional <- boolListAttr "optional" m
     smLengths    <- lenListAttr "len" m
@@ -218,17 +369,16 @@ parseCommands es =
     cSuccessCodes <- listAttr decode "successcodes" n
     cErrorCodes   <- listAttr decode "errorcodes" n
     proto         <- oneChild "proto" n
-    cName <- decode =<< note "Command has no name" (elemText "name" proto)
-    cReturnType   <- parseCType (allText proto)
+    cName         <- nameElem "command" proto
+    cReturnType   <- parseCType (allNonCommentText proto)
     cParameters   <- fromList
       <$> traverseV parseParameter (manyChildren "param" n)
     pure Command { .. }
 
   parseParameter :: Node -> P Parameter
   parseParameter m = do
-    pName <- decode
-      =<< maybe (throw "struct member without name") pure (elemText "name" m)
-    let typeString = allText m
+    pName <- nameElem "parameter" m
+    let typeString = allNonCommentText m
     pType       <- parseCType typeString
     pIsOptional <- boolListAttr "optional" m
     pLengths    <- lenListAttr "len" m
@@ -262,8 +412,8 @@ allTypeNames es = do
     . dropWhile isSpace
     . BS.unpack
     )
-    ( filter (`notElem` reservedTypeNames)
-    $ extraTypeNames <> toList (categoryTypeNames <> requiresTypeNames)
+    (filter (`notElem` reservedTypeNames) $ extraTypeNames <> toList
+      (categoryTypeNames <> requiresTypeNames)
     )
 
 reservedTypeNames :: [ByteString]
@@ -272,6 +422,30 @@ reservedTypeNames = ["void", "char", "int", "float", "double"]
 ----------------------------------------------------------------
 -- Vulkan
 ----------------------------------------------------------------
+
+extraEnums :: Vector Enum'
+extraEnums = V.singleton Enum
+  { eName   = "VkBool32"
+  , eValues = V.fromList [EnumValue "VK_FALSE" 0, EnumValue "VK_TRUE" 1]
+  , eType   = AnEnum
+  }
+
+onTypes
+  :: HasErr r
+  => ByteString
+  -> (Node -> Sem r a)
+  -> [Content]
+  -> Sem r (Vector a)
+onTypes t f es = fromList <$> traverseV
+  f
+  [ n
+  | Element n <- es
+  , name n == "type"
+  , not (isAlias n)
+  , Just t' <- pure (getAttr "category" n)
+  , t' == t
+  ]
+
 
 isAlias :: Node -> Bool
 isAlias n = any ((== "alias") . fst) (attributes n)
@@ -307,12 +481,18 @@ getAttr :: ByteString -> Node -> Maybe ByteString
 getAttr a n = lookup a (attributes n)
 
 allText :: Node -> ByteString
-allText =
+allText = allTextOn (const True)
+
+allNonCommentText :: Node -> ByteString
+allNonCommentText = allTextOn ((/= "comment") . name)
+
+allTextOn :: (Node -> Bool) -> Node -> ByteString
+allTextOn p =
   BS.unwords
     . fmap
         (\case
           Text    t -> t
-          Element n -> allText n
+          Element n -> if p n then allText n else mempty
           CData   t -> t
         )
     . contents
@@ -328,6 +508,14 @@ elemText elemName node =
   in  case r of
         [x] -> Just x
         _   -> Nothing
+
+nameElem :: Text -> Node -> P Text
+nameElem debug n =
+  decode =<< note (debug <> " has no name") (elemText "name" n)
+
+nameAttr :: Text -> Node -> P Text
+nameAttr debug n =
+  decode =<< note (debug <> " has no name") (getAttr "name" n)
 
 -- | Empty list if there is no such attribute
 listAttr :: (ByteString -> P a) -> ByteString -> Node -> P (Vector a)
@@ -353,7 +541,6 @@ tokenise x y = h
   : if BS.null t then [] else tokenise x (BS.drop (BS.length x) t)
   where (h, t) = BS.breakSubstring x y
 
-
 ----------------------------------------------------------------
 -- Utils
 ----------------------------------------------------------------
@@ -369,3 +556,7 @@ expectOne m = \case
   []  -> throw ("No " <> m <> " found")
   [x] -> pure x
   _   -> throw ("More than one " <> m <> " found")
+
+(<&&>) :: Applicative f => f Bool -> f Bool -> f Bool
+(<&&>) = liftA2 (&&)
+infixr 3 <&&> -- same as (&&)

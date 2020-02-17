@@ -30,11 +30,12 @@ renderEnum Enum {..} = do
         conName = mkConName eName
         innerTy = case eType of
           AnEnum   -> ConT ''Int32
-          ABitmask -> ConT ''Word32
+          ABitmask -> ConT (mkName "VkFlags")
     (patterns, patternExports) <- V.unzip <$> traverseV (renderEnumValue conName eType) eValues
     tellExport (Export n True False patternExports)
+    tDoc <- renderType innerTy
     tellDoc [qqi|
-        newtype {n} = {conName} {renderType innerTy}
+        newtype {n} = {conName} {tDoc}
         {vsep (toList patterns)}
         |]
 
