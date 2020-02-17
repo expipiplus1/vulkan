@@ -4,6 +4,7 @@ module Render.Element
 import           Relude hiding (runState, State, modify')
 import           Data.Vector as V
 import           Data.Text as T
+import           Data.Text.IO as T
 import           Data.Text.Prettyprint.Doc
 import           Data.Text.Prettyprint.Doc.Render.Text
 import           Polysemy
@@ -64,7 +65,10 @@ renderModule :: FilePath -> Vector Text -> Vector RenderElement -> IO ()
 renderModule p modulePath es =
   let f = p <> "/" <> T.unpack
         (T.intercalate "/" (V.toList modulePath) <> ".hs")
-  in  withFile f WriteMode $ \h -> hPutDoc h contents
+  in  withFile f WriteMode $ \h -> T.hPutStr h $ renderStrict
+        (layoutPretty defaultLayoutOptions { layoutPageWidth = Unbounded }
+                      contents
+        )
  where
   modName = T.intercalate "." (V.toList modulePath)
   contents =

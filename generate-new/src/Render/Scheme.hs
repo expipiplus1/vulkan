@@ -33,19 +33,15 @@ schemeType s = do
     ElidedVoid        -> pure Nothing
     VoidPtr           -> pure . Just $ ConT ''Ptr :@ ConT ''()
     ByteString        -> pure . Just $ ConT ''ByteString
-    Maybe  e          -> fmap (ConT ''Maybe `AppT`) <$> schemeType e
-    Vector e          -> fmap (ConT ''V.Vector `AppT`) <$> schemeType e
+    Maybe  e          -> fmap (ConT ''Maybe :@) <$> schemeType e
+    Vector e          -> fmap (ConT ''V.Vector :@) <$> schemeType e
     EitherWord32 e ->
       fmap (\t -> ConT ''Either :@ ConT ''Word32 :@ (ConT ''V.Vector :@ t))
         <$> schemeType e
     Tupled n e ->
-      fmap
-          ( foldl' AppT (ConT (tupleTypeName (fromIntegral n)))
-          . replicate (fromIntegral n)
-          )
+      fmap (foldl' (:@) (TupleT (fromIntegral n)) . replicate (fromIntegral n))
         <$> schemeType e
     Returned _ -> pure Nothing
-
 
 schemeTypePositive
   :: (HasErr r, Member (Reader RenderParams) r, Show a)

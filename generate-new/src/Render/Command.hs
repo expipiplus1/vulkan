@@ -1,3 +1,4 @@
+{-# language TemplateHaskellQuotes #-}
 module Render.Command
   where
 
@@ -9,11 +10,13 @@ import           Data.Text.Prettyprint.Doc
 import           Language.Haskell.TH.Syntax
 import           Polysemy
 import           Polysemy.Reader
+import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
 
 import           Spec.Parse
 import           Haskell                       as H
 import           Marshal
+import           Marshal.Scheme
 import           Error
 import           Render.Element
 import           Render.Type
@@ -23,27 +26,39 @@ renderCommand
   :: (HasErr r, Member (Reader RenderParams) r)
   => MarshaledCommand
   -> Sem r RenderElement
-renderCommand MarshaledCommand {..} = do
+renderCommand MarshaledCommand {..} = contextShow mcName $ do
   RenderParams {..} <- ask
   genRe ("command " <> mcName) $ do
     let n = mkFunName mcName
     tellExport (ETerm n)
-    ts <- V.mapMaybe id <$> traverseV paramType mcParams
-    r  <- cToHsType DoPreserve mcReturn
-    let t = foldr (~>) r ts
+    nts <- V.mapMaybe id <$> traverseV (paramType schemeType) mcParams
+    pts <- V.mapMaybe id <$> traverseV (paramType schemeTypePositive) mcParams
+    lastReturnType <- cToHsType DoPreserve mcReturn
+    let r = makeReturnType (pts <> V.singleton lastReturnType)
+    let t = foldr (~>) r nts
     tellDoc
-      $   pretty n <+> "::" <+> indent 0 (renderType t)
+      $   pretty n
+      <+> "::"
+      <+> indent 0 (renderType t)
       <>  hardline
-      <>  pretty n <+> "=" <+> "undefined"
+      <>  pretty n
+      <+> "="
+      <+> "undefined"
 
 paramType
   :: (HasErr r, Member (Reader RenderParams) r)
-  => MarshaledParam
+  => (MarshalScheme Parameter -> Sem r (Maybe H.Type))
+  -> MarshaledParam
   -> Sem r (Maybe H.Type)
-paramType MarshaledParam {..} = do
+paramType st MarshaledParam {..} = contextShow (pName mpParam) $ do
   RenderParams {..} <- ask
   let Parameter {..} = mpParam
-  fmap (namedTy (mkParamName pName)) <$> schemeType mpScheme
+  n <- st mpScheme
+  pure $ namedTy (mkParamName pName) <$> n
+
+makeReturnType
+  :: Vector H.Type -> H.Type
+makeReturnType ts = ConT ''IO :@ foldl' (:@) (TupleT (length ts)) ts
 
 namedTy :: Text -> H.Type -> H.Type
 namedTy name = InfixT (LitT (StrTyLit (toString name))) (mkName ":::")

@@ -37,7 +37,8 @@ cToHsType preserve = \case
   Float -> pure $ case preserve of
     DoPreserve    -> ConT ''CFloat
     DoNotPreserve -> ConT ''Float
-  Ptr _ p -> do
+  Ptr _ Void -> pure $ ConT ''Ptr :@ TupleT 0
+  Ptr _ p    -> do
     t <- cToHsType preserve p
     pure $ ConT ''Ptr :@ t
   TypeName n -> pure $ ConT . mkName . toString $ n

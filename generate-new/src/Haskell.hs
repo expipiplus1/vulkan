@@ -7,13 +7,13 @@ module Haskell
   )
   where
 
-import           Relude                  hiding ( Type )
+import           Relude                  hiding ( Type, group )
 import           Language.Haskell.TH
 import           Data.Text.Prettyprint.Doc
 import           Data.Generics.Uniplate.Data
 
 renderType :: Type -> Doc ()
-renderType = pretty . pprint . removeModules
+renderType = group . pretty . pprint . removeModules
   where removeModules = transformBi (mkName . nameBase)
 
 pattern (:@) :: Type -> Type -> Type
