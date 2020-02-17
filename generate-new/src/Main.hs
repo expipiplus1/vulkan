@@ -7,14 +7,15 @@ import           Say
 import           Polysemy
 import           Polysemy.Reader
 import qualified Data.Vector                   as V
+import           Data.Text.Extra                ( (<+>) )
 
 import           CType
-import           Data.Text.Extra                ( (<+>) )
 import           Error
 import           Marshal
 import           Marshal.Scheme
 import           Render.Command
 import           Render.Element
+import           Render.Enum
 import           Render.Struct
 import           Render.Type
 import           Spec.Parse
@@ -24,8 +25,6 @@ main = do
   sayErr "Reading spec"
   specText <- readFileBS "./Vulkan-Docs/xml/vk.xml"
   let
-    rps :: RenderParams
-    rps = RenderParams id id id id id
     r   = do
       sayErr "Parsing spec"
       Spec {..} <- parseSpec specText
@@ -43,13 +42,70 @@ main = do
         ss <- traverseV marshalStruct specStructs
         sayErr "Marshaling commands"
         cs <- traverseV marshalCommand specCommands
-        sayErr "Rendering structs and commands"
-        sequenceV (fmap renderStruct ss <> fmap renderCommand cs)
-  (runM . runReader rps . runErr $ r) >>= \case
+        sayErr "Rendering structs, commands and enums"
+        sequenceV
+          (  fmap renderStruct  ss
+          <> fmap renderCommand cs
+          <> fmap renderEnum    specEnums
+          )
+  (runM . runReader renderParams . runErr $ r) >>= \case
     Left es -> do
       traverse_ sayErr es
       sayErr (show (length es) <+> "errors")
     Right rs -> renderModule "out" (V.singleton "Vulkan") rs
+
+----------------------------------------------------------------
+-- Names
+----------------------------------------------------------------
+
+renderParams :: RenderParams
+renderParams = RenderParams { mkTyName      = unReservedWord
+                            , mkConName     = unReservedWord
+                            , mkMemberName  = unReservedWord
+                            , mkFunName     = unReservedWord
+                            , mkParamName   = unReservedWord
+                            , mkPatternName = unReservedWord
+                            }
+
+
+unReservedWord :: Text -> Text
+unReservedWord t = if t `elem` (keywords <> preludeWords) then t <> "'" else t
+ where
+  keywords =
+    [ "as"
+    , "case"
+    , "class"
+    , "data family"
+    , "data instance"
+    , "data"
+    , "default"
+    , "deriving"
+    , "do"
+    , "else"
+    , "family"
+    , "forall"
+    , "foreign"
+    , "hiding"
+    , "if"
+    , "import"
+    , "in"
+    , "infix"
+    , "infixl"
+    , "infixr"
+    , "instance"
+    , "let"
+    , "mdo"
+    , "module"
+    , "newtype"
+    , "of"
+    , "proc"
+    , "qualified"
+    , "rec"
+    , "then"
+    , "type"
+    , "where"
+    ]
+  preludeWords = ["filter"]
 
 ----------------------------------------------------------------
 -- Bespoke Vulkan stuff

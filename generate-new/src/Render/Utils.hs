@@ -3,8 +3,7 @@ module Render.Utils
 
 import           Relude
 import           Data.Text.Prettyprint.Doc
-import qualified Data.Vector                   as V
-import           Data.Vector                    ( Vector )
+import           Data.Vector.Extra       hiding ( zipWith, toList )
 
 parenList :: Vector (Doc ()) -> Doc ()
 parenList = genericList "(" ")"
@@ -13,6 +12,7 @@ braceList :: Vector (Doc ()) -> Doc ()
 braceList = genericList "{" "}"
 
 genericList :: Doc () -> Doc () -> Vector (Doc ()) -> Doc ()
-genericList l r ds = if V.null ds
-  then l <> r
-  else align $ vsep $ (zipWith (<+>) (l : repeat ",") (toList ds)) <> [r]
+genericList l r = \case
+  Empty -> l <> r
+  Singleton d -> l <> d <> r
+  ds -> align $ vsep $ zipWith (<+>) (l : repeat ",") (toList ds) <> [r]

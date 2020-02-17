@@ -8,10 +8,14 @@ import           Relude                  hiding ( Const
                                                 )
 import           Polysemy
 import           Polysemy.Reader
-import           Polysemy.NonDet
+import           Polysemy.NonDet hiding (Empty)
 import           Polysemy.Fail
-import           Data.Vector                    ( Vector )
-import qualified Data.Vector                   as V
+import           Data.Vector.Extra              ( Vector
+                                                , pattern Empty
+                                                , pattern Singleton
+                                                , pattern (:<|)
+                                                )
+import qualified Data.Vector.Extra             as V
 
 import           Marshal.Marshalable
 import           Error
@@ -126,9 +130,9 @@ lengthScheme ps p = do
   guard (any (\v -> type' v /= Ptr Const Void) vs)
   case V.partition isTopOptional vs of
     -- Make sure they exist
-    (Nil, Nil)                     -> empty
-    (Nil, rs) | all isReturnPtr rs -> empty
-    (os, Nil) | length os > 1 ->
+    (Empty, Empty)                     -> empty
+    (Empty, rs) | all isReturnPtr rs -> empty
+    (os, Empty) | length os > 1 ->
       throw "TODO: Handle multiple optional vectors without any required ones"
     (os, rs) -> pure $ ElidedLength os rs
 
@@ -154,10 +158,10 @@ returnPointerInStructScheme p = do
 arrayScheme :: Marshalable a => a -> ND r (MarshalScheme c)
 arrayScheme p = case lengths p of
   -- Not an array
-  Nil                    -> empty
+  Empty                    -> empty
 
   -- A string of some kind
-  NullTerminated :<| Nil -> do
+  NullTerminated :<| Empty -> do
     Ptr Const c <- pure $ type' p
     guard $ isByteArrayElem c
     -- TODO: What's the impact of isTopOptional here
@@ -199,8 +203,8 @@ fixedArrayScheme p = do
 -- | An optional value with a default, so we don't need to wrap it in a Maybe
 optionalDefaultScheme :: Marshalable a => a -> ND r (MarshalScheme c)
 optionalDefaultScheme p = do
-  MarshalParams{..} <- ask
-  Singleton True <- pure $ isOptional p
+  MarshalParams {..} <- ask
+  Singleton True     <- pure $ isOptional p
   guard . V.null . lengths $ p
   guard $ isDefaultable (type' p)
   pure $ Normal (type' p)
@@ -245,8 +249,8 @@ unPtrType = \case
 -- | Is this optional at the top level
 isTopOptional :: Marshalable a => a -> Bool
 isTopOptional x = case isOptional x of
-                    Nil -> False
-                    b :<| _ -> b
+  Empty   -> False
+  b :<| _ -> b
 
 -- | Is this a non-const pointer
 isReturnPtr :: Marshalable a => a -> Bool
@@ -264,21 +268,3 @@ getSizedWith lengthName = V.filter $ \v -> case lengths v of
 -- | Element types for which arrays of should be translated into @ByteString@s
 isByteArrayElem :: CType -> Bool
 isByteArrayElem = (`elem` [Void, Char, TypeName "uint8_t", TypeName "int8_t"])
-
-{-# complete Nil, (:<|) #-}
-
-pattern Nil :: Vector a
-pattern Nil <- (V.null -> True) where Nil = V.empty
-
-uncons :: Vector a -> Maybe (a, Vector a)
-uncons Nil = Nothing
-uncons v   = Just (V.unsafeHead v, V.unsafeTail v)
-
-pattern (:<|)  :: a -> Vector a -> Vector a
-pattern x :<| xs <- (uncons -> Just (x, xs))
-  where (:<|) = V.cons
-
-pattern Singleton :: a -> Vector a
-pattern Singleton x <- (uncons -> Just (x, Nil))
-  where Singleton = V.singleton
-

@@ -13,7 +13,11 @@ import           Data.Text.Prettyprint.Doc
 import           Data.Generics.Uniplate.Data
 
 renderType :: Type -> Doc ()
-renderType = group . pretty . pprint . removeModules
+renderType =
+  group -- All on one line, to work around brittany #277
+    . pretty
+    . pprint
+    . removeModules
   where removeModules = transformBi (mkName . nameBase)
 
 pattern (:@) :: Type -> Type -> Type

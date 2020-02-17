@@ -1,10 +1,13 @@
 module Render.Element
   where
 
-import           Relude hiding (runState, State, modify')
-import           Data.Vector as V
-import           Data.Text as T
-import           Data.Text.IO as T
+import           Relude                  hiding ( runState
+                                                , State
+                                                , modify'
+                                                )
+import           Data.Vector.Extra             as V
+import           Data.Text                     as T
+import           Data.Text.IO                  as T
 import           Data.Text.Prettyprint.Doc
 import           Data.Text.Prettyprint.Doc.Render.Text
 import           Polysemy
@@ -20,25 +23,33 @@ data RenderElement = RenderElement
 
 data Export = Export
   { exportName      :: Text
-  , exportWith      :: Bool
+  , exportWithAll   :: Bool
   , exportIsPattern :: Bool
+  , exportWith      :: Vector Export
   }
   deriving (Show, Eq, Ord)
 
 pattern ETerm :: Text -> Export
-pattern ETerm n = Export n False False
+pattern ETerm n = Export n False False Empty
 
 pattern EPat :: Text -> Export
-pattern EPat n = Export n False True
+pattern EPat n = Export n False True Empty
 
 pattern EData :: Text -> Export
-pattern EData n = Export n True False
+pattern EData n = Export n True False Empty
 
 exportDoc :: Export -> Doc ()
 exportDoc Export {..} =
-  (if exportIsPattern then ("pattern" <+>) else id)
-    . (if exportWith then (<> "(..)") else id)
-    $ pretty exportName
+  let subExports = if V.null exportWith && not exportWithAll
+        then ""
+        else parenList
+          (  (exportDoc . (\e -> e { exportIsPattern = False }) <$> exportWith)
+              -- no need to specify "pattern" for sub exports
+          <> (if exportWithAll then V.singleton ".." else V.empty)
+          )
+  in  (if exportIsPattern then ("pattern" <+>) else id)
+        . (<> subExports)
+        $ pretty exportName
 
 ----------------------------------------------------------------
 -- Generating RenderElements

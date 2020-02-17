@@ -17,11 +17,12 @@ import           Haskell                       as H
 import           Error
 
 data RenderParams = RenderParams
-  { mkTyName :: Text -> Text
-  , mkConName :: Text -> Text
-  , mkMemberName :: Text -> Text
-  , mkFunName :: Text -> Text
-  , mkParamName :: Text -> Text
+  { mkTyName      :: Text -> Text
+  , mkConName     :: Text -> Text
+  , mkMemberName  :: Text -> Text
+  , mkFunName     :: Text -> Text
+  , mkParamName   :: Text -> Text
+  , mkPatternName :: Text -> Text
   }
 
 data Preserve = DoNotPreserve | DoPreserve

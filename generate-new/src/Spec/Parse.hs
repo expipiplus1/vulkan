@@ -14,6 +14,7 @@ import qualified Data.ByteString.Char8         as BS
 import           Data.List                      ( dropWhileEnd
                                                 , lookup
                                                 )
+import qualified Data.Text                     as T
 import           Data.Char
 import           Polysemy
 import           Polysemy.Reader
@@ -24,10 +25,12 @@ import           Error
 import           Marshal.Name
 import qualified Marshal.Marshalable           as M
 import           Marshal.Marshalable            ( ParameterLength(..) )
+import           Data.Bits
 
 data Spec = Spec
   { specStructs :: Vector Struct
   , specCommands :: Vector Command
+  , specEnums :: Vector Enum'
   }
   deriving (Show)
 
@@ -94,6 +97,26 @@ instance M.Marshalable Parameter where
   lengths    = pLengths
   isOptional = pIsOptional
 
+--
+-- Enums
+--
+
+data Enum' = Enum
+  { eName :: Text
+  , eValues :: Vector EnumValue
+  , eType :: EnumType
+  }
+  deriving (Show, Eq)
+
+data EnumValue = EnumValue
+  { evName  :: Text
+  , evValue :: Int64
+  }
+  deriving (Show, Eq)
+
+data EnumType = AnEnum | ABitmask
+  deriving (Show, Eq)
+
 ----------------------------------------------------------------
 -- Parsing
 ----------------------------------------------------------------
@@ -111,67 +134,105 @@ parseSpec bs = do
       runReader typeNames $ do
         specStructs  <- parseStructs types
         specCommands <- parseCommands . contents =<< oneChild "commands" n
+        specEnums <- parseEnums . contents $ n
         pure Spec { .. }
     _ -> throw "This spec isn't a registry node"
 
+parseEnums :: [Content] -> P (Vector Enum')
+parseEnums es = fromList <$> traverseV
+  (uncurry parseEnum)
+  [ (bool AnEnum ABitmask isBitmask, n)
+  | Element n <- es
+  , name n == "enums"
+  , Just t <- pure (getAttr "type" n)
+  , let isBitmask = t == "bitmask"
+        isEnum    = t == "enum"
+  , isBitmask || isEnum
+  ]
+
+ where
+  parseEnum :: EnumType -> Node -> P Enum'
+  parseEnum eType n = do
+    eName   <- decode =<< note "Unable to get enum name" (getAttr "name" n)
+    eValues <- fromList <$> traverseV
+      (context eName . parseValue)
+      [ e | Element e <- contents n, name e == "enum", not (isAlias e) ]
+    pure Enum { .. }
+
+  parseValue :: Node -> P EnumValue
+  parseValue v = do
+    evName <- decode =<< note "Unable to get enum value name" (getAttr "name" v)
+    evValue <- case getAttr "value" v of
+      Just b  -> readP b
+      Nothing -> (0x1 `shiftL`) <$> readAttr "bitpos" v
+    pure EnumValue { .. }
+
+----------------------------------------------------------------
+-- Structs
+----------------------------------------------------------------
+
 parseStructs :: [Content] -> P (Vector Struct)
-parseStructs es = fromList <$> traverse
+parseStructs es = fromList <$> traverseV
   parseStruct
   [ n
   | Element n <- es
   , name n == "type"
+  , not (isAlias n)
   , Just "struct" <- pure (getAttr "category" n)
   ]
+ where
 
-parseStruct :: Node -> P Struct
-parseStruct n = do
-  structName <- decode =<< note "Unable to get struct name" (getAttr "name" n)
-  structMembers <-
-    fmap fromList
-    . traverseV parseStructMember
-    $ [ m | Element m <- contents n, name m == "member" ]
-  pure Struct { .. }
+  parseStruct :: Node -> P Struct
+  parseStruct n = do
+    structName <- decode =<< note "Unable to get struct name" (getAttr "name" n)
+    structMembers <-
+      fmap fromList
+      . traverseV parseStructMember
+      $ [ m | Element m <- contents n, name m == "member" ]
+    pure Struct { .. }
 
-parseStructMember :: Node -> P StructMember
-parseStructMember m = do
-  smName <- decode
-    =<< maybe (throw "struct member without name") pure (elemText "name" m)
-  let typeString = allText m
-  smType       <- parseCType typeString
-  smIsOptional <- boolListAttr "optional" m
-  smLengths    <- lenListAttr "len" m
-  smValues     <- listAttr decode "values" m
-  pure StructMember { .. }
+  parseStructMember :: Node -> P StructMember
+  parseStructMember m = do
+    smName <- decode
+      =<< maybe (throw "struct member without name") pure (elemText "name" m)
+    let typeString = allText m
+    smType       <- parseCType typeString
+    smIsOptional <- boolListAttr "optional" m
+    smLengths    <- lenListAttr "len" m
+    smValues     <- listAttr decode "values" m
+    pure StructMember { .. }
+
+----------------------------------------------------------------
+-- Commands
+----------------------------------------------------------------
 
 parseCommands :: [Content] -> P (Vector Command)
 parseCommands es =
   fmap fromList
     . traverseV parseCommand
-    $ [ n
-      | Element n <- es
-      , name n == "command"
-      , all ((/= "alias") . fst) (attributes n)
-      ]
+    $ [ n | Element n <- es, name n == "command", not (isAlias n) ]
+ where
 
-parseCommand :: Node -> P Command
-parseCommand n = do
-  cSuccessCodes <- listAttr decode "successcodes" n
-  cErrorCodes   <- listAttr decode "errorcodes" n
-  proto         <- oneChild "proto" n
-  cName         <- decode =<< note "Command has no name" (elemText "name" proto)
-  cReturnType   <- parseCType (allText proto)
-  cParameters <- fromList <$> traverseV parseParameter (manyChildren "param" n)
-  pure Command { .. }
+  parseCommand :: Node -> P Command
+  parseCommand n = do
+    cSuccessCodes <- listAttr decode "successcodes" n
+    cErrorCodes   <- listAttr decode "errorcodes" n
+    proto         <- oneChild "proto" n
+    cName <- decode =<< note "Command has no name" (elemText "name" proto)
+    cReturnType   <- parseCType (allText proto)
+    cParameters   <- fromList
+      <$> traverseV parseParameter (manyChildren "param" n)
+    pure Command { .. }
 
-parseParameter :: Node -> P Parameter
-parseParameter m = do
-  pName <- decode
-    =<< maybe (throw "struct member without name") pure (elemText "name" m)
-  let typeString = allText m
-  pType       <- parseCType typeString
-  pIsOptional <- boolListAttr "optional" m
-  pLengths    <- lenListAttr "len" m
-  pure Parameter { .. }
+  parseParameter :: Node -> P Parameter
+  parseParameter m = do
+    pName <- decode
+      =<< maybe (throw "struct member without name") pure (elemText "name" m)
+    let typeString = allText m
+    pType       <- parseCType typeString
+    pIsOptional <- boolListAttr "optional" m
+    pLengths    <- lenListAttr "len" m
+    pure Parameter { .. }
 
 ----------------------------------------------------------------
 -- Getting all the type names
@@ -206,7 +267,14 @@ allTypeNames es = do
     )
 
 reservedTypeNames :: [ByteString]
-reservedTypeNames = ["void", "char", "float", "double"]
+reservedTypeNames = ["void", "char", "int", "float", "double"]
+
+----------------------------------------------------------------
+-- Vulkan
+----------------------------------------------------------------
+
+isAlias :: Node -> Bool
+isAlias n = any ((== "alias") . fst) (attributes n)
 
 extraTypeNames :: [ByteString]
 extraTypeNames = ["ANativeWindow", "AHardwareBuffer", "CAMetalLayer"]
@@ -219,6 +287,18 @@ decode :: ByteString -> P Text
 decode bs = case decodeUtf8' bs of
   Left  e -> throw $ show e
   Right t -> pure t
+
+readP :: Read a => ByteString -> P a
+readP b = do
+  t <- decode b
+  case readMaybe (T.unpack t) of
+    Nothing -> throw ("Unable to read: " <> t)
+    Just r  -> pure r
+
+readAttr :: Read a => ByteString -> Node -> P a
+readAttr a n = case getAttr a n of
+  Nothing -> throw ("No such attribute: " <> decodeUtf8 a)
+  Just b  -> readP b
 
 hasAttr :: ByteString -> Node -> Bool
 hasAttr a n = any ((== a) . fst) (attributes n)
