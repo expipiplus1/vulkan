@@ -16,6 +16,7 @@ import           Render.Enum
 import           Render.FuncPointer
 import           Render.Handle
 import           Render.Struct
+import           Render.Constant
 import           Render.Type
 import           Render.Union
 import           Spec.Parse
@@ -34,4 +35,5 @@ renderSpec Spec {..} ss cs = (<>) <$> bespokeElements <*> sequenceV
   <> fmap renderEnum        specEnums
   <> fmap renderAlias       specAliases
   <> fmap renderFuncPointer specFuncPointers
+  <> fmap renderConstant    specConstants
   )

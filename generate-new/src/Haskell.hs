@@ -17,12 +17,19 @@ import           Data.Text.Prettyprint.Doc
 import           Data.Generics.Uniplate.Data
 import           Polysemy
 import           Polysemy.State
+import           Data.Char                      ( isLower )
+import           Prelude                        ( head )
 
 import           Render.Element
 
 renderType :: MemberWithError (State RenderElement) r => Type -> Sem r (Doc ())
 renderType t = do
-  traverse_ tellImport [ Import n False | n <- childrenBi t ]
+  traverse_
+    tellImport
+    [ Import n False
+    | n <- childrenBi t
+    , not (isLower (Prelude.head (nameBase n)))
+    ] -- TODO: do this properly
   pure
     . group -- All on one line, to work around brittany #277
     . pretty

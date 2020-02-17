@@ -33,8 +33,9 @@ segmentGraph debugVertex debugName getNames getWants xs seeds = do
   let numbered = zip (toList xs) [0 :: Int ..]
       unNumber = (xs V.!)
       allNames = sortOn fst [ (n, a) | (x, a) <- numbered, n <- getNames x ]
-  assertUnique (debugVertex . (V.!) xs) debugName allNames
-  let nameMap = Map.fromDistinctAscList allNames
+  -- assertUnique (debugVertex . (V.!) xs) debugName allNames
+  -- let nameMap = Map.fromDistinctAscList allNames
+  let nameMap = Map.fromAscList allNames
       locate :: n -> Maybe Int
       locate = (`Map.lookup` nameMap)
       find n = case locate n of

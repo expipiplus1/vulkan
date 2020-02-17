@@ -29,5 +29,5 @@ renderHandle Handle {..} = context hName $ do
         t = ConT ''Ptr :@ ConT (mkName (toString p))
     tDoc <- renderType t
     tellExport (EType n)
-    tellExport (EType p) -- TODO: Remove
-    tellDoc $ "data" <+> pretty p <> line <> "type" <+> pretty n <+> tDoc
+    tellInternal (EType p)
+    tellDoc $ vsep ["data" <+> pretty p, "type" <+> pretty n <+> "=" <+> tDoc]

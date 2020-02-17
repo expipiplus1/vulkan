@@ -26,4 +26,10 @@ renderAlias Alias {..} = context aName $ do
       tellExport (EType n)
       tellImport (Import (mkName (toString t)) False)
       tellDoc $ "type" <+> pretty n <+> "=" <+> pretty t
+    PatternAlias -> do
+      let n = mkPatternName aName
+          t = mkPatternName aTarget
+      tellExport (EPat n)
+      tellImport (Import (mkName (toString t)) False)
+      tellDoc $ "pattern" <+> pretty n <+> "=" <+> pretty t
     _ -> throw "unhandled alias type"

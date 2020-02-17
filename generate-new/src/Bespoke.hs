@@ -1,15 +1,19 @@
+{-# language QuasiQuotes #-}
 module Bespoke
   where
 
-import           Relude hiding (Reader, ask)
+import           Relude                  hiding ( Reader
+                                                , ask
+                                                )
 import           Data.Text.Prettyprint.Doc
 import           Polysemy
 import           Polysemy.Reader
 import           Data.Vector                    ( Vector )
 import           Foreign.Ptr
 import           Foreign.C.Types
+import           Text.InterpolatedString.Perl6.Unindented
 
-import           Haskell as H
+import           Haskell                       as H
 import           Render.Element
 import           Render.Type
 import           Error
@@ -25,8 +29,9 @@ bespokeElements =
        , baseType "VkDeviceSize"    ''Word64
        , baseType "VkDeviceAddress" ''Word64
        ]
+    <> [ nullHandle
+       ]
     <> concat [win32, x11, xcb, wayland, zircon, ggp, metal, android]
-
 
 namedType :: Sem r RenderElement
 namedType = genRe "namedType" $ do
@@ -38,6 +43,20 @@ baseType n t = genRe ("base type " <> n) $ do
   tellExport (EType n)
   tDoc <- renderType (ConT t)
   tellDoc ("type" <+> pretty n <+> "=" <+> tDoc)
+
+----------------------------------------------------------------
+-- Base Vulkan stuff
+----------------------------------------------------------------
+
+nullHandle :: Member (Reader RenderParams) r => Sem r RenderElement
+nullHandle = genRe "null handle" $ do
+  tellExport (EPat "VK_NULL_HANDLE")
+  tellDoc [qi|
+    pattern VK_NULL_HANDLE :: Ptr a
+    pattern VK_NULL_HANDLE <- ((== nullPtr) -> True)
+      where VK_NULL_HANDLE = nullPtr
+  |]
+
 
 ----------------------------------------------------------------
 -- Platform specific nonsense

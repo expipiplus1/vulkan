@@ -22,10 +22,13 @@ import           Language.Haskell.TH            ( Name
 import           Render.Utils
 
 data RenderElement = RenderElement
-  { reName    :: Text
-  , reDoc     :: Doc ()
-  , reExports :: Vector Export
-  , reImports :: Set Import
+  { reName     :: Text
+  , reDoc      :: Doc ()
+  , reExports  :: Vector Export
+  , reInternal :: Vector Export
+    -- ^ Things which can only be "imported" from the same module, i.e.
+    -- declared names which arent exported
+  , reImports  :: Set Import
   }
 
 data Export = Export
@@ -76,16 +79,21 @@ exportDoc Export {..} =
 genRe :: Text -> Sem (State RenderElement : r) () -> Sem r RenderElement
 genRe n m = do
   (o, _) <- runState
-    RenderElement { reName    = n
-                  , reDoc     = mempty
-                  , reExports = mempty
-                  , reImports = mempty
+    RenderElement { reName     = n
+                  , reDoc      = mempty
+                  , reExports  = mempty
+                  , reInternal = mempty
+                  , reImports  = mempty
                   }
     m
   pure o
 
 tellExport :: MemberWithError (State RenderElement) r => Export -> Sem r ()
 tellExport e = modify' (\r -> r { reExports = reExports r <> V.singleton e })
+
+tellInternal :: MemberWithError (State RenderElement) r => Export -> Sem r ()
+tellInternal e =
+  modify' (\r -> r { reInternal = reInternal r <> V.singleton e })
 
 tellDoc :: MemberWithError (State RenderElement) r => Doc () -> Sem r ()
 tellDoc d = modify' (\r -> r { reDoc = reDoc r <> hardline <> d })

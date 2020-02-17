@@ -67,6 +67,7 @@ executables:
     - polysemy-plugin
     - pretty-show
     - prettyprinter
+    - regex-applicative
     - relude
     - say
     - tagsoup

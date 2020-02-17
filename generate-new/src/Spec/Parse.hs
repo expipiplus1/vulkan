@@ -7,11 +7,13 @@ import           Relude                  hiding ( Reader
                                                 , Handle
                                                 )
 import           Xeno.DOM
+import           Text.Read                      ( readMaybe )
 import           Data.Vector                    ( Vector )
 import           Language.C.Types               ( cIdentifierFromString
                                                 , TypeNames
                                                 )
 import qualified Data.ByteString.Char8         as BS
+import qualified Data.Map as Map
 import           Data.List                      ( dropWhileEnd
                                                 , lookup
                                                 )
@@ -22,6 +24,7 @@ import           Polysemy
 import           Polysemy.Reader
 import           Data.Text.Extra                ( (<+>) )
 
+import           Spec.APIConstant
 import           CType
 import           Error
 import           Marshal.Name
@@ -37,8 +40,47 @@ data Spec = Spec
   , specCommands     :: Vector Command
   , specEnums        :: Vector Enum'
   , specAliases      :: Vector Alias
+  , specFeatures     :: Vector Feature
+  , specExtensions   :: Vector Extension
+  , specConstants    :: Vector Constant
   }
   deriving (Show)
+
+--
+-- Features and Extensions
+--
+
+data Feature = Feature
+  { fName :: Text
+  , fRequires :: Vector Require
+  }
+  deriving (Show)
+
+data Extension = Extension
+  { exName     :: Text
+  , exNumber   :: Int
+  , exRequires :: Vector Require
+  }
+  deriving (Show)
+
+data Require = Require
+  { rComment        :: Maybe Text
+  , rCommandNames   :: Vector Text
+  , rTypeNames      :: Vector Text
+  , rEnumValueNames :: Vector Text
+  }
+  deriving (Show)
+
+--
+-- Constants
+--
+
+data Constant = Constant
+  { conName :: Text
+  , conValue :: ConstantValue
+  }
+  deriving (Show)
+
 
 --
 -- Aliases
@@ -161,8 +203,9 @@ data Enum' = Enum
   deriving (Show, Eq)
 
 data EnumValue = EnumValue
-  { evName  :: Text
-  , evValue :: Int64
+  { evName        :: Text
+  , evValue       :: Int64
+  , evIsExtension :: Bool
   }
   deriving (Show, Eq)
 
@@ -191,14 +234,104 @@ parseSpec bs = do
         specCommands     <- parseCommands . contents =<< oneChild "commands" n
         emptyBitmasks    <- parseEmptyBitmasks types
         nonEmptyEnums    <- parseEnums . contents $ n
+        requires         <- allRequires . contents $ n
+        enumExtensions   <- parseEnumExtensions requires
         bitmaskAliases   <- parseBitmaskAliases types
+        enumAliases      <- parseEnumAliases requires
         typeAliases      <- parseAliases ["bitmask", "struct"] types
-        let specEnums   = extraEnums <> emptyBitmasks <> nonEmptyEnums
-            specAliases = bitmaskAliases <> typeAliases
+        let specEnums = appendEnumExtensions
+              enumExtensions
+              (extraEnums <> emptyBitmasks <> nonEmptyEnums)
+            specAliases = bitmaskAliases <> typeAliases <> enumAliases
+        specFeatures   <- parseFeatures (contents n)
+        specExtensions <- parseExtensions . contents =<< oneChild "extensions" n
+        specConstants  <- parseConstants (contents n)
         pure Spec { .. }
     _ -> throw "This spec isn't a registry node"
 
 ----------------------------------------------------------------
+-- Features and extensions
+----------------------------------------------------------------
+
+parseFeatures :: [Content] -> P (Vector Feature)
+parseFeatures es = V.fromList
+  <$> sequenceV [ parseFeature e | Element e <- es, "feature" == name e ]
+ where
+  parseFeature :: Node -> P Feature
+  parseFeature n = do
+    fName     <- nameAttr "feature" n
+    fRequires <- parseRequires n
+    pure Feature { .. }
+
+parseExtensions :: [Content] -> P (Vector Extension)
+parseExtensions es = V.fromList
+  <$> sequenceV [ parseExtension e | Element e <- es, "extension" == name e ]
+ where
+  parseExtension :: Node -> P Extension
+  parseExtension n = do
+    exName     <- nameAttr "extension" n
+    exNumber   <- readAttr "number" n
+    exRequires <- parseRequires n
+    pure Extension { .. }
+
+parseRequires :: Node -> P (Vector Require)
+parseRequires n = V.fromList <$> traverseV
+  parseRequire
+  [ r | Element r <- contents n, "require" == name r ]
+ where
+  parseRequire :: Node -> P Require
+  parseRequire r = do
+    rComment   <- traverse decode (getAttr "comment" n)
+    rTypeNames <- V.fromList <$> sequenceV
+      [ nameAttr "require type" t | Element t <- contents r, "type" == name t ]
+    rCommandNames <- V.fromList <$> sequenceV
+      [ nameAttr "require commands" t
+      | Element t <- contents r
+      , "command" == name t
+      ]
+    rEnumValueNames <- V.fromList <$> sequenceV
+      [ nameAttr "require enum" t | Element t <- contents r, "enum" == name t ]
+    pure Require { .. }
+
+----------------------------------------------------------------
+-- Constants
+----------------------------------------------------------------
+
+parseConstants :: [Content] -> P (Vector Constant)
+parseConstants es = do
+  apiConstants <- V.fromList <$> sequenceV
+    [ do
+        n' <- decode n
+        context n' $ (Constant n' <$> parseConstant v)
+    | Element e <- es
+    , "enums" == name e
+    , Just "API Constants" <- pure $ getAttr "name" e
+    , (n, v)               <- someConstants e
+    ]
+  extensionConstants <- V.fromList <$> sequenceV
+    [ do
+        n' <- decode n
+        context n' $ (Constant n' <$> parseConstant v)
+    | Element e <- es
+    , "extensions" == name e
+    , Element ex <- contents e
+    , "extension" == name ex
+    , Element r <- contents ex
+    , "require" == name r
+    , (n, v) <- someConstants r
+    ]
+  pure (apiConstants <> extensionConstants)
+ where
+  someConstants r =
+    [ (n, v)
+    | Element ee <- contents r
+    , "enum" == name ee
+    , isNothing (getAttr "extends" ee)
+    , Just n <- pure (getAttr "name" ee)
+    , Just v <- pure (getAttr "value" ee)
+    ]
+
+---------------------------------------------------------------
 -- Aliases
 ----------------------------------------------------------------
 
@@ -232,6 +365,21 @@ parseAliases categories es =
        , Just c <- pure $ getAttr "category" n
        , c `elem` categories
        ]
+
+parseEnumAliases :: Vector (Node, Maybe Int) -> P (Vector Alias)
+parseEnumAliases rs =
+  fmap V.fromList
+    . sequenceV
+    $ [ do
+          aName   <- nameAttr "enum alias" ee
+          aTarget <- decode alias
+          let aType = PatternAlias
+          pure Alias { .. }
+      | (r, _)     <- toList rs
+      , Element ee <- contents r
+      , "enum" == name ee
+      , Just alias <- pure $ getAttr "alias" ee
+      ]
 
 ----------------------------------------------------------------
 -- Handles
@@ -295,7 +443,7 @@ parseEmptyBitmasks es = fromList <$> traverseV
 
 parseEnums :: [Content] -> P (Vector Enum')
 parseEnums es = fromList <$> traverseV
-  (uncurry parseEnum)
+  (uncurry (parseEnum False))
   [ (bool AnEnum ABitmask isBitmask, n)
   | Element n <- es
   , name n == "enums"
@@ -306,21 +454,91 @@ parseEnums es = fromList <$> traverseV
   ]
 
  where
-  parseEnum :: EnumType -> Node -> P Enum'
-  parseEnum eType n = do
+  parseEnum :: Bool -> EnumType -> Node -> P Enum'
+  parseEnum evIsExtension eType n = do
     eName   <- nameAttr "enum" n
     eValues <- fromList <$> traverseV
       (context eName . parseValue)
       [ e | Element e <- contents n, name e == "enum", not (isAlias e) ]
     pure Enum { .. }
+   where
+    parseValue :: Node -> P EnumValue
+    parseValue v = do
+      evName  <- nameAttr "enum value" v
+      evValue <- case getAttr "value" v of
+        Just b  -> readP b
+        Nothing -> (0x1 `shiftL`) <$> readAttr "bitpos" v
+      pure EnumValue { .. }
 
-  parseValue :: Node -> P EnumValue
-  parseValue v = do
-    evName  <- nameAttr "enum value" v
-    evValue <- case getAttr "value" v of
-      Just b  -> readP b
-      Nothing -> (0x1 `shiftL`) <$> readAttr "bitpos" v
-    pure EnumValue { .. }
+parseEnumExtensions :: Vector (Node, Maybe Int) -> P (Vector (Text, EnumValue))
+parseEnumExtensions rs =
+  fmap V.fromList
+    . sequenceV
+    $ [ do
+          v        <- enumValue number ee
+          extends' <- decode extends
+          pure (extends', v)
+      | (r, number) <- toList rs
+      , Element ee  <- contents r
+      , "enum" == name ee
+      , not (isAlias ee)
+      , Just extends <- pure (getAttr "extends" ee)
+      ]
+ where
+
+  enumValue :: Maybe Int -> Node -> P EnumValue
+  enumValue inheritedExNum ee = do
+    evName <- nameAttr "enum extension" ee
+    context evName $ do
+      evValue <- case getAttr "value" ee of
+        Just bs -> readP bs
+        Nothing -> case getAttr "bitpos" ee of
+          Just bs -> do
+            v <- readP bs
+            pure (0x1 `shiftL` v)
+          Nothing -> do
+            offset <- readAttr "offset" ee
+            sign   <- case getAttr "dir" ee of
+              Nothing  -> pure id
+              Just "-" -> pure negate
+              _        -> throw "Unhandled enum extension direction"
+            extNum <- case getAttr "extnumber" ee of
+              Just n  -> readP n
+              Nothing -> case inheritedExNum of
+                Just n  -> pure n
+                Nothing -> throw "couldn't find extension number"
+            pure $ enumExtensionValue extNum offset sign
+      let evIsExtension = True
+      pure EnumValue { .. }
+
+  enumExtensionValue
+    :: Int
+    -- ^ The extension number
+    -> Int
+    -- ^ Offset
+    -> (Int -> Int)
+    -- ^ The offset direction
+    -> Int64
+    -- ^ The enum value
+  enumExtensionValue extNumber offset sign =
+    let
+      extBlockSize = 1000
+      extBase      = 1000000000
+      n =
+        extBase
+          + pred (fromIntegral extNumber)
+          * extBlockSize
+          + fromIntegral offset
+    in
+      fromIntegral (sign n)
+
+appendEnumExtensions :: Vector (Text, EnumValue) -> Vector Enum' -> Vector Enum'
+appendEnumExtensions extensions =
+  let extensionMap :: Map.Map Text (Vector EnumValue)
+      extensionMap =
+          Map.fromListWith (<>) (toList (fmap V.singleton <$> extensions))
+      getExtensions n = Map.findWithDefault V.empty n extensionMap
+  in  fmap (\e@Enum {..} -> e { eValues = eValues <> getExtensions eName })
 
 ----------------------------------------------------------------
 -- Structs
@@ -420,13 +638,39 @@ reservedTypeNames :: [ByteString]
 reservedTypeNames = ["void", "char", "int", "float", "double"]
 
 ----------------------------------------------------------------
+-- Helpers
+----------------------------------------------------------------
+
+allRequires :: [Content] -> P (Vector (Node, Maybe Int))
+allRequires es =
+  fmap V.fromList
+    .  sequenceV
+    $  [ pure (r, Nothing)
+       | Element f <- es
+       , "feature" == name f
+       , Element r <- contents f
+       , "require" == name r
+       ]
+    <> [ do
+           n <- readAttr "number" ex
+           pure (r, Just n)
+       | Element e <- es
+       , "extensions" == name e
+       , Element ex <- contents e
+       , "extension" == name ex
+       , Element r <- contents ex
+       , "require" == name r
+       ]
+
+----------------------------------------------------------------
 -- Vulkan
 ----------------------------------------------------------------
 
 extraEnums :: Vector Enum'
 extraEnums = V.singleton Enum
   { eName   = "VkBool32"
-  , eValues = V.fromList [EnumValue "VK_FALSE" 0, EnumValue "VK_TRUE" 1]
+  , eValues = V.fromList
+                [EnumValue "VK_FALSE" 0 False, EnumValue "VK_TRUE" 1 False]
   , eType   = AnEnum
   }
 
@@ -456,11 +700,6 @@ extraTypeNames = ["ANativeWindow", "AHardwareBuffer", "CAMetalLayer"]
 ----------------------------------------------------------------
 -- XML
 ----------------------------------------------------------------
-
-decode :: ByteString -> P Text
-decode bs = case decodeUtf8' bs of
-  Left  e -> throw $ show e
-  Right t -> pure t
 
 readP :: Read a => ByteString -> P a
 readP b = do

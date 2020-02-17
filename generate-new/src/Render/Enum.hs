@@ -1,4 +1,3 @@
-{-# language QuasiQuotes #-}
 {-# language TemplateHaskell #-}
 module Render.Enum
   where
@@ -9,7 +8,6 @@ import           Relude                  hiding ( Reader
                                                 , ask
                                                 , lift
                                                 )
-import           Text.InterpolatedString.Perl6.Unindented
 import           Data.Text.Prettyprint.Doc
 import           Polysemy
 import           Polysemy.Reader
@@ -31,13 +29,30 @@ renderEnum Enum {..} = do
         innerTy = case eType of
           AnEnum   -> ConT ''Int32
           ABitmask -> ConT (mkName "VkFlags")
-    (patterns, patternExports) <- V.unzip <$> traverseV (renderEnumValue conName eType) eValues
+    (patterns, patternExports) <-
+      V.unzip <$> traverseV (renderEnumValue conName eType) eValues
     tellExport (Export n True False patternExports)
     tDoc <- renderType innerTy
-    tellDoc [qqi|
-        newtype {n} = {conName} {tDoc}
-        {vsep (toList patterns)}
-        |]
+    let complete = case eType of
+          AnEnum   -> completePragma n (mkPatternName . evName <$> eValues)
+          ABitmask -> Nothing
+    tellDoc
+      .  vsep
+      $  [ "newtype" <+> pretty n <+> "=" <+> pretty conName <+> tDoc
+         , vsep (toList patterns)
+         ]
+      ++ maybeToList complete
+
+completePragma :: Text -> V.Vector Text -> Maybe (Doc ())
+completePragma ty pats = if V.null pats
+  then Nothing
+  else
+    Just
+    $   "{-# complete"
+    <+> align (vsep (punctuate "," (pretty <$> V.toList pats)))
+    <+> "::"
+    <+> pretty ty
+    <+> "#-}"
 
 renderEnumValue
   :: (HasErr r, Member (Reader RenderParams) r)

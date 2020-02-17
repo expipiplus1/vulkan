@@ -50,11 +50,22 @@ main = do
         sayErr "Rendering"
         renderElements <- renderSpec spec ss cs
         sayErr "Segmenting"
-        let seeds = []
+        let
+          featureSeeds :: V.Vector (V.Vector Text)
+          featureSeeds = V.concatMap
+            ( fmap
+                (\re -> rCommandNames re <> rTypeNames re <> rEnumValueNames re)
+            . V.filter ((/= Just "Header boilerplate") . rComment)
+            . fRequires
+            )
+            specFeatures
+          seeds = featureSeeds
+          elementExports RenderElement {..} =
+            reInternal <> reExports <> V.concatMap exportWith reExports
         (segments, extras) <- segmentGraph
           reName
           show
-          (fmap exportName . V.toList . reExports)
+          (fmap exportName . V.toList . elementExports)
           ( fmap (toText . nameBase)
           . filter (isNothing . nameModule)
           . fmap importName
@@ -62,10 +73,13 @@ main = do
           . reImports
           )
           renderElements
-          mempty
+          seeds
         traverse_ (sayErr . reName) extras
         sayErr "Segments:"
-        traverse_ (sayErrShow . V.length) segments
+        traverse_ (\s -> do
+          sayErrShow . V.length $ s
+          sayErrShow (reName <$> s)
+         ) segments
         sayErr "Extras"
         sayErrShow . V.length $ extras
         pure extras
