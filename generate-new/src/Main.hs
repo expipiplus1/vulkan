@@ -15,6 +15,7 @@ import           Data.Text.Extra                ( (<+>)
                                                 , uncons
                                                 )
 import           Data.Char
+import           Text.Show.Pretty               ( ppShow )
 import           Language.Haskell.TH            ( nameModule
                                                 , nameBase
                                                 )
@@ -51,18 +52,35 @@ main = do
         renderElements <- renderSpec spec ss cs
         sayErr "Segmenting"
         let
-          featureSeeds :: V.Vector (V.Vector Text)
-          featureSeeds = V.concatMap
-            ( fmap
-                (\re -> rCommandNames re <> rTypeNames re <> rEnumValueNames re)
-            . V.filter ((/= Just "Header boilerplate") . rComment)
-            . fRequires
-            )
-            specFeatures
-          seeds = featureSeeds
+          featureSeeds :: V.Vector (SegmentGroup Text)
+          featureSeeds =
+            ( SegmentGroup
+              . fmap
+                  (\re ->
+                    SegmentSeed
+                      $  rCommandNames re
+                      <> rTypeNames re
+                      <> rEnumValueNames re
+                  )
+              . V.filter ((/= Just "Header boilerplate") . rComment)
+              . fRequires
+              )
+              <$> specFeatures
+          extSeeds :: SegmentGroup Text
+          extSeeds =
+            SegmentGroup
+              $   ( SegmentSeed
+                  . V.concatMap
+                      (\re ->
+                        rCommandNames re <> rTypeNames re <> rEnumValueNames re
+                      )
+                  . exRequires
+                  )
+              <$> specExtensions
+          seeds = featureSeeds <> V.singleton extSeeds
           elementExports RenderElement {..} =
             reInternal <> reExports <> V.concatMap exportWith reExports
-        (segments, extras) <- segmentGraph
+        groups <- segmentGraph
           reName
           show
           (fmap exportName . V.toList . elementExports)
@@ -73,16 +91,20 @@ main = do
           . reImports
           )
           renderElements
-          seeds
-        traverse_ (sayErr . reName) extras
-        sayErr "Segments:"
-        traverse_ (\s -> do
-          sayErrShow . V.length $ s
-          sayErrShow (reName <$> s)
-         ) segments
-        sayErr "Extras"
-        sayErrShow . V.length $ extras
-        pure extras
+          (SegmentGroups seeds)
+        sayErrString (ppShow (reName <$> groups))
+        -- traverse_ (sayErr . reName) extras
+        -- sayErr "Segments:"
+        -- traverse_
+        --   (\s -> do
+        --     sayErrShow . V.length $ s
+        --     sayErrShow (reName <$> s)
+        --   )
+        --   segments
+        -- sayErr "Extras"
+        -- sayErrShow . V.length $ extras
+        -- sayErrShow (reName <$> extras)
+        pure undefined
   (runM . runReader renderParams . runErr $ r) >>= \case
     Left es -> do
       traverse_ sayErr es

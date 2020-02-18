@@ -8,6 +8,7 @@ import           Relude                  hiding ( Reader
                                                 )
 import           Data.Text.Prettyprint.Doc
 import           Language.Haskell.TH.Syntax
+import           Text.Printf
 import           Polysemy
 import           Polysemy.Reader
 
@@ -25,7 +26,9 @@ renderConstant
 renderConstant Constant {..} = contextShow conName $ do
   RenderParams {..} <- ask
   genRe ("constant " <> conName) $ do
-    let n = mkPatternName conName
+    let n  = mkPatternName conName
+        tn = mkTyName conName
+    tellExport (EType tn)
     tellExport (EPat n)
     let (t, v) = case conValue of
           StrValue i ->
@@ -41,12 +44,13 @@ renderConstant Constant {..} = contextShow conName $ do
                 , viaShow i
                 )
           FloatValue  i -> (ConT ''Float, viaShow i)
-          Word32Value i -> (ConT ''Word32, viaShow i)
-          Word64Value i -> (ConT ''Word64, viaShow i)
+          Word32Value i -> (ConT ''Word32, pretty @String (printf "0x%x" i))
+          Word64Value i -> (ConT ''Word64, pretty @String (printf "0x%x" i))
 
     tDoc <- renderType t
     tellDoc $ vsep
-      [ "pattern" <+> pretty n <+> "::" <+> tDoc
+      [ "type" <+> pretty tn <+> "=" <+> v
+      , "pattern" <+> pretty n <+> "::" <+> tDoc
       , "pattern" <+> pretty n <+> "=" <+> v
       ]
 

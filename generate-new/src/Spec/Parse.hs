@@ -236,13 +236,23 @@ parseSpec bs = do
         nonEmptyEnums    <- parseEnums . contents $ n
         requires         <- allRequires . contents $ n
         enumExtensions   <- parseEnumExtensions requires
+        constantAliases  <- parseConstantAliases (contents n)
         bitmaskAliases   <- parseBitmaskAliases types
-        enumAliases      <- parseEnumAliases requires
-        typeAliases      <- parseAliases ["bitmask", "struct"] types
+        typeAliases      <- parseTypeAliases
+          ["handle", "enum", "bitmask", "struct"]
+          types
+        enumAliases    <- parseEnumAliases requires
+        commandAliases <-
+          parseCommandAliases . contents =<< oneChild "commands" n
         let specEnums = appendEnumExtensions
               enumExtensions
               (extraEnums <> emptyBitmasks <> nonEmptyEnums)
-            specAliases = bitmaskAliases <> typeAliases <> enumAliases
+            specAliases =
+              bitmaskAliases
+                <> typeAliases
+                <> enumAliases
+                <> commandAliases
+                <> constantAliases
         specFeatures   <- parseFeatures (contents n)
         specExtensions <- parseExtensions . contents =<< oneChild "extensions" n
         specConstants  <- parseConstants (contents n)
@@ -335,6 +345,22 @@ parseConstants es = do
 -- Aliases
 ----------------------------------------------------------------
 
+parseTypeAliases :: [ByteString] -> [Content] -> P (Vector Alias)
+parseTypeAliases categories es =
+  fmap fromList
+    .  sequenceV
+    $ [ do
+           aName   <- nameAttr "struct alias" n
+           aTarget <- decode alias
+           let aType = TypeAlias
+           pure Alias { .. }
+       | Element n <- es
+       , "type" == name n
+       , Just alias     <- pure $ getAttr "alias" n
+       , Just c <- pure $ getAttr "category" n
+       , c `elem` categories
+       ]
+
 parseBitmaskAliases :: [Content] -> P (Vector Alias)
 parseBitmaskAliases es =
   fmap fromList
@@ -350,22 +376,6 @@ parseBitmaskAliases es =
        , Just "bitmask" <- pure $ getAttr "category" n
        ]
 
-parseAliases :: [ByteString] -> [Content] -> P (Vector Alias)
-parseAliases categories es =
-  fmap fromList
-    .  sequenceV
-    $ [ do
-           aName   <- nameAttr "struct alias" n
-           aTarget <- decode alias
-           let aType = TypeAlias
-           pure Alias { .. }
-       | Element n <- es
-       , "type" == name n
-       , Just alias     <- pure $ getAttr "alias" n
-       , Just c <- pure $ getAttr "category" n
-       , c `elem` categories
-       ]
-
 parseEnumAliases :: Vector (Node, Maybe Int) -> P (Vector Alias)
 parseEnumAliases rs =
   fmap V.fromList
@@ -379,6 +389,38 @@ parseEnumAliases rs =
       , Element ee <- contents r
       , "enum" == name ee
       , Just alias <- pure $ getAttr "alias" ee
+      ]
+
+parseCommandAliases
+  :: [Content] -> P (Vector Alias)
+parseCommandAliases es =
+  fmap V.fromList
+    . sequenceV
+    $ [ do
+          aName   <- nameAttr "alias" ee
+          aTarget <- decode alias
+          let aType = TermAlias
+          pure Alias { .. }
+      | Element ee <- es
+      , "command" == name ee
+      , Just alias <- pure $ getAttr "alias" ee
+      ]
+
+parseConstantAliases :: [Content] -> P (Vector Alias)
+parseConstantAliases es =
+  fmap V.fromList
+    . sequenceV
+    $ [ do
+          aName   <- nameAttr "enum alias" ee
+          aTarget <- decode alias
+          pure Alias { .. }
+      | Element e <- es
+      , "enums" == name e
+      , Just    "API Constants" <- pure $ getAttr "name" e
+      , Element ee              <- contents e
+      , "enum" == name ee
+      , Just alias <- pure $ getAttr "alias" ee
+      , aType <- [TypeAlias, PatternAlias]
       ]
 
 ----------------------------------------------------------------
