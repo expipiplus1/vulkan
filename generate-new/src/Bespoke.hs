@@ -21,7 +21,6 @@ import           Haskell                       as H
 import           Render.Element
 import           Render.Type
 import           Error
-import           Spec.Parse
 
 ----------------------------------------------------------------
 -- Changes to the spec

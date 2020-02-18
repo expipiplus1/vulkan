@@ -262,8 +262,7 @@ renderModule out findModule findLocalModule (Segment (ModName modName) es) = do
       V.fromList . Set.toList . Set.unions . fmap reReexports . toList $ es
     contents =
       vsep
-        $   "{-# language PatternSynonyms #-}"
-        :   "module"
+        $   "module"
         <+> pretty modName
         <>  indent
               2
