@@ -1,0 +1,19 @@
+ghc-options:
+- -Wall
+- -Wno-unticked-promoted-constructors
+- -Wno-missing-signatures
+- -Wno-missing-pattern-synonym-signatures
+
+name: vulkan
+library:
+  source-dirs: .
+  dependencies:
+    - base
+    - bytestring
+    - vector
+    - vector-sized
+
+default-extensions:
+  - PatternSynonyms
+  - Strict
+  - TypeOperators

@@ -29,7 +29,7 @@ renderFuncPointer FuncPointer {..} = contextShow fpName $ do
     let p = mkTyName fpName
         n = mkFuncPointerName fpName
     tDoc    <- renderType =<< cToHsType DoPreserve =<< stripPtr fpType
-    tPtrDoc <- renderType (ConT ''FunPtr :@ ConT (mkName (toString n)))
+    tPtrDoc <- renderType (ConT ''FunPtr :@ ConT (typeName n))
     tellExport (EType p)
     tellExport (EType n)
     tellDoc

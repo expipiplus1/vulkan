@@ -25,13 +25,13 @@ renderEnum Enum {..} = do
   RenderParams {..} <- ask
   genRe ("enum " <> eName) $ do
     let n       = mkTyName eName
-        conName = mkConName eName
+        conName = mkConName eName eName
         innerTy = case eType of
           AnEnum   -> ConT ''Int32
-          ABitmask -> ConT (mkName "VkFlags")
+          ABitmask -> ConT (typeName "VkFlags")
     (patterns, patternExports) <-
       V.unzip <$> traverseV (renderEnumValue conName eType) eValues
-    tellExport (Export n True False patternExports)
+    tellExport (Export (TyConName n) True patternExports)
     tDoc <- renderType innerTy
     let complete = case eType of
           AnEnum   -> completePragma n (mkPatternName . evName <$> eValues)

@@ -24,17 +24,17 @@ renderAlias Alias {..} = context aName $ do
       let n = mkTyName aName
           t = mkTyName aTarget
       tellExport (EType n)
-      tellImport (Import (mkName (toString t)) False)
+      tellImport (TyConName t)
       tellDoc $ "type" <+> pretty n <+> "=" <+> pretty t
     TermAlias -> do
       let n = mkFunName aName
           t = mkFunName aTarget
       tellExport (ETerm n)
-      tellImport (Import (mkName (toString t)) False)
+      tellImport (TermName t)
       tellDoc $ pretty n <+> "=" <+> pretty t
     PatternAlias -> do
       let n = mkPatternName aName
           t = mkPatternName aTarget
       tellExport (EPat n)
-      tellImport (Import (mkName (toString t)) False)
+      tellImport (ConName t)
       tellDoc $ "pattern" <+> pretty n <+> "=" <+> pretty t

@@ -35,7 +35,7 @@ renderStruct MarshaledStruct {..} = do
     ms <- V.mapMaybe id <$> traverseV renderStructMember msMembers
     tellExport (EData n)
     tellDoc [qqi|
-        data {n} = {mkConName msName}
+        data {n} = {mkConName msName msName}
           {braceList ms}
         |]
 

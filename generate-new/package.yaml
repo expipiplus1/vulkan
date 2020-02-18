@@ -56,13 +56,17 @@ executables:
     source-dirs: src
     main: Main.hs
     dependencies:
-    - parsec
     - algebraic-graphs
     - base
     - bytestring
     - containers
+    - deepseq
+    - directory
+    - extra
+    - filepath
     - inline-c
     - interpolatedstring-perl6
+    - parsec
     - polysemy
     - polysemy-plugin
     - pretty-show
@@ -74,6 +78,7 @@ executables:
     - template-haskell
     - text
     - th-orphans
+    - timeit
     - uniplate
     - unordered-containers
     - vector

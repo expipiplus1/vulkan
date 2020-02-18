@@ -1,6 +1,10 @@
 {-# language QuasiQuotes #-}
+{-# language TemplateHaskellQuotes #-}
 module Bespoke
-  where
+  ( forbiddenConstants
+  , bespokeElements
+  )
+where
 
 import           Relude                  hiding ( Reader
                                                 , ask
@@ -17,9 +21,23 @@ import           Haskell                       as H
 import           Render.Element
 import           Render.Type
 import           Error
+import           Spec.Parse
+
+----------------------------------------------------------------
+-- Changes to the spec
+----------------------------------------------------------------
+
+-- | These constants are defined elsewhere
+forbiddenConstants :: [Text]
+forbiddenConstants = ["VK_TRUE", "VK_FALSE"]
+
+----------------------------------------------------------------
+-- Things which are easier to write by hand
+----------------------------------------------------------------
 
 bespokeElements
-  :: (HasErr r, Member (Reader RenderParams) r) => Sem r (Vector RenderElement)
+  :: (HasErr r, Member (Reader RenderParams) r)
+  => Sem r (Vector RenderElement)
 bespokeElements =
   fmap fromList
     .  sequenceV
@@ -38,7 +56,11 @@ namedType = genRe "namedType" $ do
   tellExport (EType ":::")
   tellDoc "-- | Annotate a type with a name\ntype (name :: k) ::: a = a"
 
-baseType :: Text -> Name -> Sem r RenderElement
+baseType
+  :: MemberWithError (Reader RenderParams) r
+  => Text
+  -> Name
+  -> Sem r RenderElement
 baseType n t = genRe ("base type " <> n) $ do
   tellExport (EType n)
   tDoc <- renderType (ConT t)
@@ -51,12 +73,13 @@ baseType n t = genRe ("base type " <> n) $ do
 nullHandle :: Member (Reader RenderParams) r => Sem r RenderElement
 nullHandle = genRe "null handle" $ do
   tellExport (EPat "VK_NULL_HANDLE")
-  tellDoc [qi|
-    pattern VK_NULL_HANDLE :: Ptr a
+  tellImport 'nullPtr
+  tDoc <- renderType (ConT ''Ptr :@ VarT (typeName "a"))
+  tellDoc [qqi|
+    pattern VK_NULL_HANDLE :: {tDoc}
     pattern VK_NULL_HANDLE <- ((== nullPtr) -> True)
       where VK_NULL_HANDLE = nullPtr
   |]
-
 
 ----------------------------------------------------------------
 -- Platform specific nonsense
@@ -139,8 +162,8 @@ selfPtr :: Member (Reader RenderParams) r => Text -> Sem r RenderElement
 selfPtr n = genRe ("data " <> n) $ do
   RenderParams {..} <- ask
   let n' = mkTyName n
-      c  = mkConName n
-      t  = ConT ''Ptr :@ ConT (mkName (toString n'))
+      c  = mkConName n n
+      t  = ConT ''Ptr :@ ConT (typeName n')
   tDoc <- renderType t
   tellExport (EData n')
   tellDoc

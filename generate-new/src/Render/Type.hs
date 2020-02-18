@@ -1,6 +1,11 @@
 {-# language TemplateHaskellQuotes #-}
 module Render.Type
-  where
+  ( Preserve(..)
+  , cToHsType
+  , namedTy
+  , module Render.Params
+  )
+where
 
 import           Relude                  hiding ( Reader
                                                 , ask
@@ -17,18 +22,7 @@ import qualified Data.Vector.Storable.Sized    as VSS
 import           CType
 import           Haskell                       as H
 import           Error
-
-data RenderParams = RenderParams
-  { mkTyName          :: Text -> Text
-  , mkConName         :: Text -> Text
-  , mkMemberName      :: Text -> Text
-  , mkFunName         :: Text -> Text
-  , mkParamName       :: Text -> Text
-  , mkPatternName     :: Text -> Text
-  , mkHandleName      :: Text -> Text
-  , mkFuncPointerName :: Text -> Text
-    -- ^ Should be distinct from mkTyName
-  }
+import           Render.Params
 
 data Preserve
   = DoNotPreserve
@@ -79,7 +73,7 @@ cToHsType preserve = \case
     DoNotPreserve -> ''Word64
   TypeName n -> do
     RenderParams {..} <- ask
-    pure $ ConT . mkName . toString . mkTyName $ n
+    pure $ ConT . typeName . mkTyName $ n
   Proto ret ps -> do
     retTy <- cToHsType preserve ret
     pTys  <- forV ps $ \(n, c) -> do
@@ -91,4 +85,4 @@ cToHsType preserve = \case
   c -> throw $ "Unable to get Haskell type for: " <> show c
 
 namedTy :: Text -> H.Type -> H.Type
-namedTy name = InfixT (LitT (StrTyLit (toString name))) (mkName ":::")
+namedTy name = InfixT (LitT (StrTyLit (toString name))) (typeName ":::")

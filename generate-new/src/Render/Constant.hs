@@ -23,34 +23,41 @@ renderConstant
   :: (HasErr r, Member (Reader RenderParams) r)
   => Constant
   -> Sem r RenderElement
-renderConstant Constant {..} = contextShow conName $ do
+renderConstant Constant {..} = contextShow constName $ do
   RenderParams {..} <- ask
-  genRe ("constant " <> conName) $ do
-    let n  = mkPatternName conName
-        tn = mkTyName conName
-    tellExport (EType tn)
-    tellExport (EPat n)
-    let (t, v) = case conValue of
-          StrValue i ->
-            let a = mkName "a"
-            in  ( ForallT [PlainTV a]
-                          [ConT ''Eq :@ VarT a, ConT ''IsString :@ VarT a]
-                          (VarT a)
-                , viaShow i
-                )
-          IntegralValue i ->
-            let a = mkName "a"
-            in  ( ForallT [PlainTV a] [ConT ''Integral :@ VarT a] (VarT a)
-                , viaShow i
-                )
-          FloatValue  i -> (ConT ''Float, viaShow i)
-          Word32Value i -> (ConT ''Word32, pretty @String (printf "0x%x" i))
-          Word64Value i -> (ConT ''Word64, pretty @String (printf "0x%x" i))
+  genRe ("constant " <> constName) $ do
+    let
+      n               = mkPatternName constName
+      tn              = mkTyName constName
+      (t, v, hasType) = case constValue of
+        StrValue i ->
+          let a = typeName "a"
+          in  ( ForallT [PlainTV a]
+                        [ConT ''Eq :@ VarT a, ConT ''IsString :@ VarT a]
+                        (VarT a)
+              , viaShow i
+              , True
+              )
+        IntegralValue i ->
+          let a = typeName "a"
+          in  ( ForallT [PlainTV a] [ConT ''Integral :@ VarT a] (VarT a)
+              , viaShow i
+              , True
+              )
+        FloatValue i -> (ConT ''Float, viaShow i, False)
+        Word32Value i ->
+          (ConT ''Word32, pretty @String (printf "0x%x" i), True)
+        Word64Value i ->
+          (ConT ''Word64, pretty @String (printf "0x%x" i), True)
 
+    when hasType $ do
+      tellExport (EType tn)
+      tellDoc $ "type" <+> pretty tn <+> "=" <+> v
+
+    tellExport (EPat n)
     tDoc <- renderType t
     tellDoc $ vsep
-      [ "type" <+> pretty tn <+> "=" <+> v
-      , "pattern" <+> pretty n <+> "::" <+> tDoc
+      [ "pattern" <+> pretty n <+> "::" <+> tDoc
       , "pattern" <+> pretty n <+> "=" <+> v
       ]
 

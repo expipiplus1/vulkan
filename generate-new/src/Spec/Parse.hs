@@ -1,5 +1,4 @@
-{-# LANGUAGE QuantifiedConstraints #-}
-
+{-# language DeriveFunctor, DeriveFoldable, DeriveTraversable #-}
 module Spec.Parse where
 
 import           Relude                  hiding ( Reader
@@ -9,11 +8,14 @@ import           Relude                  hiding ( Reader
 import           Xeno.DOM
 import           Text.Read                      ( readMaybe )
 import           Data.Vector                    ( Vector )
+import           Data.List.Extra                ( nubOrd )
+import           Text.ParserCombinators.ReadP
+import           Data.Version
 import           Language.C.Types               ( cIdentifierFromString
                                                 , TypeNames
                                                 )
 import qualified Data.ByteString.Char8         as BS
-import qualified Data.Map as Map
+import qualified Data.Map                      as Map
 import           Data.List                      ( dropWhileEnd
                                                 , lookup
                                                 )
@@ -23,6 +25,7 @@ import           Data.Char
 import           Polysemy
 import           Polysemy.Reader
 import           Data.Text.Extra                ( (<+>) )
+import           Data.Bits
 
 import           Spec.APIConstant
 import           CType
@@ -30,7 +33,7 @@ import           Error
 import           Marshal.Name
 import qualified Marshal.Marshalable           as M
 import           Marshal.Marshalable            ( ParameterLength(..) )
-import           Data.Bits
+import           Haskell.Name
 
 data Spec = Spec
   { specHandles      :: Vector Handle
@@ -52,22 +55,24 @@ data Spec = Spec
 
 data Feature = Feature
   { fName :: Text
+  , fVersion :: Version
   , fRequires :: Vector Require
   }
   deriving (Show)
 
 data Extension = Extension
-  { exName     :: Text
-  , exNumber   :: Int
-  , exRequires :: Vector Require
+  { exName      :: Text
+  , exNumber    :: Int
+  , exRequires  :: Vector Require
+  , exSupported :: Text
   }
   deriving (Show)
 
 data Require = Require
   { rComment        :: Maybe Text
-  , rCommandNames   :: Vector Text
-  , rTypeNames      :: Vector Text
-  , rEnumValueNames :: Vector Text
+  , rCommandNames   :: Vector HName
+  , rTypeNames      :: Vector HName
+  , rEnumValueNames :: Vector HName
   }
   deriving (Show)
 
@@ -76,8 +81,8 @@ data Require = Require
 --
 
 data Constant = Constant
-  { conName :: Text
-  , conValue :: ConstantValue
+  { constName :: Text
+  , constValue :: ConstantValue
   }
   deriving (Show)
 
@@ -207,7 +212,7 @@ data EnumValue = EnumValue
   , evValue       :: Int64
   , evIsExtension :: Bool
   }
-  deriving (Show, Eq)
+  deriving (Show, Eq, Ord)
 
 data EnumType = AnEnum | ABitmask
   deriving (Show, Eq)
@@ -269,19 +274,28 @@ parseFeatures es = V.fromList
  where
   parseFeature :: Node -> P Feature
   parseFeature n = do
-    fName     <- nameAttr "feature" n
-    fRequires <- parseRequires n
-    pure Feature { .. }
+    fName <- nameAttr "feature" n
+    context fName $ do
+      fVersion <- runReadP parseVersion
+        =<< note "feature has no version" (getAttr "number" n)
+      fRequires <- parseRequires n
+      pure Feature { .. }
 
 parseExtensions :: [Content] -> P (Vector Extension)
-parseExtensions es = V.fromList
-  <$> sequenceV [ parseExtension e | Element e <- es, "extension" == name e ]
+parseExtensions es = V.fromList <$> sequenceV
+  [ parseExtension e
+  | Element e <- es
+  , "extension" == name e
+  , Just "disabled" /= getAttr "supported" e
+  ]
  where
   parseExtension :: Node -> P Extension
   parseExtension n = do
-    exName     <- nameAttr "extension" n
-    exNumber   <- readAttr "number" n
-    exRequires <- parseRequires n
+    exName      <- nameAttr "extension" n
+    exNumber    <- readAttr "number" n
+    exRequires  <- parseRequires n
+    exSupported <- decode
+      =<< note "extension has no supported attr" (getAttr "supported" n)
     pure Extension { .. }
 
 parseRequires :: Node -> P (Vector Require)
@@ -291,15 +305,15 @@ parseRequires n = V.fromList <$> traverseV
  where
   parseRequire :: Node -> P Require
   parseRequire r = do
-    rComment   <- traverse decode (getAttr "comment" n)
-    rTypeNames <- V.fromList <$> sequenceV
+    rComment   <- traverse decode (getAttr "comment" r)
+    rTypeNames <- V.fromList . fmap TyConName <$> sequenceV
       [ nameAttr "require type" t | Element t <- contents r, "type" == name t ]
-    rCommandNames <- V.fromList <$> sequenceV
+    rCommandNames <- V.fromList . fmap TermName <$> sequenceV
       [ nameAttr "require commands" t
       | Element t <- contents r
       , "command" == name t
       ]
-    rEnumValueNames <- V.fromList <$> sequenceV
+    rEnumValueNames <- V.fromList . fmap ConName <$> sequenceV
       [ nameAttr "require enum" t | Element t <- contents r, "enum" == name t ]
     pure Require { .. }
 
@@ -576,11 +590,15 @@ parseEnumExtensions rs =
 
 appendEnumExtensions :: Vector (Text, EnumValue) -> Vector Enum' -> Vector Enum'
 appendEnumExtensions extensions =
-  let extensionMap :: Map.Map Text (Vector EnumValue)
-      extensionMap =
-          Map.fromListWith (<>) (toList (fmap V.singleton <$> extensions))
-      getExtensions n = Map.findWithDefault V.empty n extensionMap
-  in  fmap (\e@Enum {..} -> e { eValues = eValues <> getExtensions eName })
+  let
+    extensionMap :: Map.Map Text (Vector EnumValue)
+    extensionMap =
+      Map.fromListWith (<>) (toList (fmap V.singleton <$> extensions))
+    getExtensions n = Map.findWithDefault V.empty n extensionMap
+    vNubOrd = V.fromList . nubOrd . V.toList
+  in
+    fmap
+      (\e@Enum {..} -> e { eValues = vNubOrd $ eValues <> getExtensions eName })
 
 ----------------------------------------------------------------
 -- Structs
@@ -837,6 +855,12 @@ expectOne m = \case
   []  -> throw ("No " <> m <> " found")
   [x] -> pure x
   _   -> throw ("More than one " <> m <> " found")
+
+runReadP :: ReadP a -> ByteString -> P a
+runReadP p s = case filter (null . snd) (readP_to_S p (BS.unpack s)) of
+  []       -> throw "no parse"
+  [(x, _)] -> pure x
+  _        -> throw "ambiguous parse"
 
 (<&&>) :: Applicative f => f Bool -> f Bool -> f Bool
 (<&&>) = liftA2 (&&)

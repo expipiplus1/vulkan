@@ -10,6 +10,7 @@ module Error
   , note
   , sequenceV
   , traverseV
+  , traverseV_
   , forV
   , forV_
   , HasErr
@@ -64,6 +65,14 @@ traverseV
   -> f a
   -> Sem r (f b)
 traverseV f = sequenceV . fmap f
+
+traverseV_
+  :: forall f r a b
+   . (Traversable f, HasErr r)
+  => (a -> Sem r b)
+  -> f a
+  -> Sem r ()
+traverseV_ f = void . traverseV f
 
 forV
   :: forall f r a b

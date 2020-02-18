@@ -26,7 +26,7 @@ renderHandle Handle {..} = context hName $ do
   genRe ("handle " <> hName) $ do
     let n = mkHandleName hName
         p = n <> "_T"
-        t = ConT ''Ptr :@ ConT (mkName (toString p))
+        t = ConT ''Ptr :@ ConT (typeName p)
     tDoc <- renderType t
     tellExport (EType n)
     tellInternal (EType p)

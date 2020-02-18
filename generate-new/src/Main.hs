@@ -6,18 +6,15 @@ import           Relude                  hiding ( runReader
                                                 )
 import           Relude.Extra.Map
 import           Say
+import           System.TimeIt
 import           Polysemy
 import           Polysemy.Reader
+import qualified Data.Vector.Storable.Sized    as VSS
 import qualified Data.Vector                   as V
 import qualified Data.Text                     as T
-import           Data.Text.Extra                ( (<+>)
-                                                , cons
-                                                , uncons
-                                                )
-import           Data.Char
-import           Text.Show.Pretty               ( ppShow )
-import           Language.Haskell.TH            ( nameModule
-                                                , nameBase
+import           Data.Text.Extra                ( lowerCaseFirst
+                                                , upperCaseFirst
+                                                , (<+>)
                                                 )
 
 import           CType
@@ -25,123 +22,73 @@ import           Error
 import           Marshal
 import           Marshal.Scheme
 import           Render.Element
+import           Render.Aggregate
+import           Bespoke.Seeds
 import           Render.Type
 import           Render.Spec
 import           Spec.Parse
-import           Write.Segment
 
 main :: IO ()
-main = do
-  sayErr "Reading spec"
-  specText <- readFileBS "./Vulkan-Docs/xml/vk.xml"
-  let
-    r = do
-      sayErr "Parsing spec"
-      spec@Spec {..} <- parseSpec specText
-      let structNames :: HashSet Text
-          structNames =
-            fromList . (extraStructNames <>) . toList . fmap sName $ specStructs
-          isStruct' = (`member` structNames)
-          mps = MarshalParams isDefaultable' isStruct' isPassAsPointerType'
-      runReader mps $ do
-        sayErr "Marshaling structs"
-        ss <- traverseV marshalStruct specStructs
-        sayErr "Marshaling commands"
-        cs <- traverseV marshalCommand specCommands
-        sayErr "Rendering"
-        renderElements <- renderSpec spec ss cs
-        sayErr "Segmenting"
-        let
-          featureSeeds :: V.Vector (SegmentGroup Text)
-          featureSeeds =
-            ( SegmentGroup
-              . fmap
-                  (\re ->
-                    SegmentSeed
-                      $  rCommandNames re
-                      <> rTypeNames re
-                      <> rEnumValueNames re
-                  )
-              . V.filter ((/= Just "Header boilerplate") . rComment)
-              . fRequires
-              )
-              <$> specFeatures
-          extSeeds :: SegmentGroup Text
-          extSeeds =
-            SegmentGroup
-              $   ( SegmentSeed
-                  . V.concatMap
-                      (\re ->
-                        rCommandNames re <> rTypeNames re <> rEnumValueNames re
-                      )
-                  . exRequires
-                  )
-              <$> specExtensions
-          seeds = featureSeeds <> V.singleton extSeeds
-          elementExports RenderElement {..} =
-            reInternal <> reExports <> V.concatMap exportWith reExports
-        groups <- segmentGraph
-          reName
-          show
-          (fmap exportName . V.toList . elementExports)
-          ( fmap (toText . nameBase)
-          . filter (isNothing . nameModule)
-          . fmap importName
-          . toList
-          . reImports
-          )
-          renderElements
-          (SegmentGroups seeds)
-        sayErrString (ppShow (reName <$> groups))
-        -- traverse_ (sayErr . reName) extras
-        -- sayErr "Segments:"
-        -- traverse_
-        --   (\s -> do
-        --     sayErrShow . V.length $ s
-        --     sayErrShow (reName <$> s)
-        --   )
-        --   segments
-        -- sayErr "Extras"
-        -- sayErrShow . V.length $ extras
-        -- sayErrShow (reName <$> extras)
-        pure undefined
-  (runM . runReader renderParams . runErr $ r) >>= \case
-    Left es -> do
-      traverse_ sayErr es
-      sayErr (show (length es) <+> "errors")
-    Right rs -> do
-      sayErr "Writing"
-      renderModule "out" (V.singleton "Vulkan") rs
+main = (runM . runErr $ go) >>= \case
+  Left es -> do
+    traverse_ sayErr es
+    sayErr (show (length es) <+> "errors")
+  Right () -> pure ()
+ where
+  go = do
+    specText <- timeItNamed "Reading spec"
+      $ readFileBS "./Vulkan-Docs/xml/vk.xml"
+
+    spec@Spec {..} <- timeItNamed "Parsing spec" $ parseSpec specText
+
+    let structNames :: HashSet Text
+        structNames =
+          fromList . (extraStructNames <>) . toList . fmap sName $ specStructs
+        isStruct' = (`member` structNames)
+        mps       = MarshalParams isDefaultable' isStruct' isPassAsPointerType'
+
+    (ss, cs) <- runReader mps $ do
+      ss <- timeItNamed "Marshaling structs"
+        $ traverseV marshalStruct specStructs
+      cs <- timeItNamed "Marshaling commands"
+        $ traverseV marshalCommand specCommands
+      pure (ss, cs)
+
+    renderElements <-
+      timeItNamed "Rendering"
+      .   runReader renderParams
+      $   traverse evaluateWHNF
+      =<< renderSpec spec ss cs
+
+    groups <- timeItNamed "Segmenting" $ do
+      seeds <- specSeeds spec
+      segmentRenderElements show renderElements seeds
+
+    timeItNamed "writing"
+      $ withConMap specEnums (renderSegments "out" (mergeElements groups))
 
 ----------------------------------------------------------------
 -- Names
 ----------------------------------------------------------------
 
 renderParams :: RenderParams
-renderParams = RenderParams { mkTyName          = unReservedWord . upperCaseFirst
-                            , mkConName         = unReservedWord . upperCaseFirst
-                            , mkMemberName      = unReservedWord . lowerCaseFirst
-                            , mkFunName         = unReservedWord
-                            , mkParamName       = unReservedWord
-                            , mkPatternName     = unReservedWord
-                            , mkHandleName      = unReservedWord
-                            , mkFuncPointerName = unReservedWord . T.tail
-                            }
-
-lowerCaseFirst :: Text -> Text
-lowerCaseFirst = onFirst Data.Char.toLower
-
-upperCaseFirst :: Text -> Text
-upperCaseFirst = onFirst Data.Char.toUpper
-
-onFirst :: (Char -> Char) -> Text -> Text
-onFirst f = \case
-  Cons c cs -> Cons (f c) cs
-  t         -> t
-
-pattern Cons :: Char -> Text -> Text
-pattern Cons c cs <- (uncons -> Just (c, cs))
-  where Cons c cs = cons c cs
+renderParams = RenderParams
+  { mkTyName             = unReservedWord . upperCaseFirst
+  , mkConName            = \parent ->
+                             unReservedWord
+                               . (case parent of
+                                   "VkPerformanceCounterResultKHR" -> ("Counter" <>)
+                                   _ -> id
+                                 )
+                               . upperCaseFirst
+  , mkMemberName         = unReservedWord . lowerCaseFirst
+  , mkFunName            = unReservedWord
+  , mkParamName          = unReservedWord
+  , mkPatternName        = unReservedWord
+  , mkHandleName         = unReservedWord
+  , mkFuncPointerName    = unReservedWord . T.tail
+  , alwaysQualifiedNames = V.fromList [''VSS.Vector]
+  }
 
 unReservedWord :: Text -> Text
 unReservedWord t = if t `elem` (keywords <> preludeWords) then t <> "'" else t

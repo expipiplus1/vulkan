@@ -5,6 +5,7 @@ import           Relude                  hiding ( Reader )
 import           Polysemy
 import           Polysemy.Reader
 import           Data.Vector                    ( Vector )
+import qualified Data.Vector                   as V
 
 import           Bespoke
 import           Error
@@ -27,7 +28,7 @@ renderSpec
   -> Vector MarshaledStruct
   -> Vector MarshaledCommand
   -> Sem r (Vector RenderElement)
-renderSpec Spec {..} ss cs = (<>) <$> bespokeElements <*> sequenceV
+renderSpec Spec {..} ss cs = liftA2 (<>) bespokeElements $ sequenceV
   (  fmap renderHandle      specHandles
   <> fmap renderStruct      ss
   <> fmap renderUnion       specUnions
@@ -35,5 +36,8 @@ renderSpec Spec {..} ss cs = (<>) <$> bespokeElements <*> sequenceV
   <> fmap renderEnum        specEnums
   <> fmap renderAlias       specAliases
   <> fmap renderFuncPointer specFuncPointers
-  <> fmap renderConstant    specConstants
+  <> fmap
+       renderConstant
+       (V.filter ((`notElem` forbiddenConstants) . constName) specConstants)
   )
+
