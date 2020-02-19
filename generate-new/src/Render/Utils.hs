@@ -3,16 +3,18 @@ module Render.Utils
 
 import           Relude
 import           Data.Text.Prettyprint.Doc
-import           Data.Vector.Extra       hiding ( zipWith, toList )
 
-parenList :: Vector (Doc ()) -> Doc ()
+parenList :: Foldable f => f (Doc ()) -> Doc ()
 parenList = genericList "(" ")"
 
-braceList :: Vector (Doc ()) -> Doc ()
+braceList :: Foldable f => f (Doc ()) -> Doc ()
 braceList = genericList "{" "}"
 
-genericList :: Doc () -> Doc () -> Vector (Doc ()) -> Doc ()
-genericList l r = \case
-  Empty -> l <> r
-  Singleton d -> l <> d <> r
-  ds -> align $ vsep $ zipWith (<+>) (l : repeat ",") (toList ds) <> [r]
+genericList :: Foldable f => Doc () -> Doc () -> f (Doc ()) -> Doc ()
+genericList l r ds = case toList ds of
+  []  -> l <> r
+  [d] -> l <> d <> r
+  _   -> align $ vsep $ zipWith (<+>) (l : repeat ",") (toList ds) <> [r]
+
+appList :: Foldable f => f (Doc ()) -> Doc ()
+appList xs = align (vsep (zipWith (<+>) ("<$>" : repeat "<*>") (toList xs)))

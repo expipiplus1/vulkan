@@ -57,7 +57,7 @@ cToHsType preserve = \case
   Ptr _ p    -> do
     t <- cToHsType preserve p
     pure $ ConT ''Ptr :@ t
-  Array NonConst (NumericArraySize n) e -> do
+  Array _ (NumericArraySize n) e -> do
     e' <- cToHsType preserve e
     pure $ ConT ''VSS.Vector :@ LitT (NumTyLit (fromIntegral n)) :@ e'
   TypeName "uint8_t"  -> pure $ ConT ''Word8

@@ -69,6 +69,8 @@ renderTypeHighPrec = \case
 
 pattern (:@) :: Type -> Type -> Type
 pattern a :@ b = AppT a b
+infixl 2 :@
 
+infixr 1 ~>
 (~>) :: Type -> Type -> Type
 a ~> b = ArrowT :@ a :@ b

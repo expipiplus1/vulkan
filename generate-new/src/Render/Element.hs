@@ -9,6 +9,7 @@ import           Relude                  hiding ( runState
                                                 , asks
                                                 , ask
                                                 , runReader
+                                                , Handle
                                                 )
 import qualified Data.Map                      as Map
 import qualified Data.Set                      as Set
@@ -162,6 +163,21 @@ instance Importable HName where
   tellImport e = modify'
     (\r -> r { reLocalImports = insert (Import e False Empty) (reLocalImports r) })
 
+tellConImport
+  :: ( MemberWithError (State RenderElement) r
+     , MemberWithError (Reader RenderParams) r
+     )
+  => Name
+  -> Name
+  -> Sem r ()
+tellConImport parent dat = do
+  RenderParams {..} <- ask
+  let qual = V.elem dat alwaysQualifiedNames
+  modify'
+    (\r ->
+      r { reImports = insert (Import parent qual (pure dat)) (reImports r) }
+    )
+
 tellReexport :: MemberWithError (State RenderElement) r => ModName -> Sem r ()
 tellReexport e = modify' (\r -> r { reReexports = insert e (reReexports r) })
 
@@ -193,7 +209,7 @@ newtype ModName = ModName { unModName :: Text }
   deriving (Eq, Ord, Show)
 
 renderSegments
-  :: (HasErr r, MemberWithError (Embed IO) r, MemberWithError (Reader ConMap) r)
+  :: (HasErr r, MemberWithError (Embed IO) r, HasTypeInfo r)
   => FilePath
   -> [Segment ModName RenderElement]
   -> Sem r ()
@@ -219,7 +235,7 @@ renderSegments out segments = do
   traverseV_ (renderModule out findModule findLocalModule) segments
 
 renderModule
-  :: (MemberWithError (Embed IO) r, HasErr r, MemberWithError (Reader ConMap) r)
+  :: (MemberWithError (Embed IO) r, HasErr r, HasTypeInfo r)
   => FilePath
   -- ^ out directory
   -> (Import Name -> Sem r ModName)
@@ -244,7 +260,9 @@ renderModule out findModule findLocalModule (Segment (ModName modName) es) = do
     (renderImport findModule (T.pack . nameBase) (const Normal))
     ( mapMaybe
         (\i -> do
-          n <- fixOddImport (importName i)
+          n <- if V.null (importChildren i)
+            then fixOddImport (importName i)
+            else Just (importName i)
           pure i { importName = n }
         )
     . Relude.toList
@@ -287,7 +305,7 @@ allExports =
   V.concatMap (\Export {..} -> exportName `V.cons` allExports exportWith)
 
 renderImport
-  :: (HasErr r, MemberWithError (Reader ConMap) r)
+  :: (HasErr r, HasTypeInfo r)
   => (Import a -> Sem r ModName)
   -> (a -> Text)
   -> (a -> NameSpace)
@@ -332,6 +350,7 @@ fixOddImport n = fromMaybe (Just n) (lookup n fixes)
     , (''Word64    , Just (mkName "Data.Word.Word64"))
     , (''Ptr       , Just (mkName "Foreign.Ptr.Ptr"))
     , ('nullPtr    , Just (mkName "Foreign.Ptr.nullPtr"))
+    , ('castFunPtr, Just (mkName "Foreign.Ptr.castFunPtr"))
     ,
       -- Other
       (''ByteString, Just (mkName "Data.ByteString.ByteString"))
@@ -341,29 +360,49 @@ fixOddImport n = fromMaybe (Just n) (lookup n fixes)
 --
 ----------------------------------------------------------------
 
--- Sometimes we need to lookup the type of a constructor
-newtype ConMap = ConMap { unConMap :: HName -> Maybe HName }
+-- Sometimes we need to lookup the type of a constructor or the level of a handle
+data TypeInfo = TypeInfo
+  { tiConMap :: HName -> Maybe HName
+  , tiIsHandle :: HName -> Maybe Handle
+  , tiIsCommand :: HName -> Maybe Command
+  }
 
-withConMap :: Vector Enum' -> Sem (Reader ConMap ': r) a -> Sem r a
-withConMap enums =
-  let tyMap :: Map HName HName
-      tyMap = Map.fromList
-        [ (ConName evName, TyConName eName)
-        | Enum {..}      <- V.toList enums
-        , EnumValue {..} <- V.toList eValues
-        ]
-  in  runReader (ConMap (`Map.lookup` tyMap))
+type HasTypeInfo r = MemberWithError (Reader TypeInfo) r
 
-getConParent
-  :: MemberWithError (Reader ConMap) r => HName -> Sem r (Maybe HName)
-getConParent n = asks (`unConMap` n)
+withTypeInfo :: Spec -> Sem (Reader TypeInfo ': r) a -> Sem r a
+withTypeInfo Spec {..} =
+  let
+    tyMap :: Map HName HName
+    tyMap = Map.fromList
+      [ (ConName evName, TyConName eName)
+      | Enum {..}      <- V.toList specEnums
+      , EnumValue {..} <- V.toList eValues
+      ]
+    handleMap :: Map HName Handle
+    handleMap = Map.fromList
+      [ (TyConName hName, h) | h@Handle {..} <- V.toList specHandles ]
+    commandMap :: Map HName Command
+    commandMap = Map.fromList
+      [ (TermName cName, c) | c@Command {..} <- V.toList specCommands ]
+  in
+    runReader
+      (TypeInfo (`Map.lookup` tyMap)
+                (`Map.lookup` handleMap)
+                (`Map.lookup` commandMap)
+      )
 
-adoptConstructors
-  :: MemberWithError (Reader ConMap) r => Import HName -> Sem r (Import HName)
+adoptConstructors :: HasTypeInfo r => Import HName -> Sem r (Import HName)
 adoptConstructors = \case
   i@(Import n q cs) -> getConParent n >>= pure . \case
     Just p  -> Import p q (V.singleton n <> cs)
     Nothing -> i
+  where getConParent n = asks (`tiConMap` n)
+
+getHandle :: HasTypeInfo r => HName -> Sem r (Maybe Handle)
+getHandle n = asks (`tiIsHandle` n)
+
+getCommand :: HasTypeInfo r => HName -> Sem r (Maybe Command)
+getCommand n = asks (`tiIsCommand` n)
 
 ----------------------------------------------------------------
 -- Utils

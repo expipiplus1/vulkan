@@ -20,10 +20,11 @@ import           Render.Struct
 import           Render.Constant
 import           Render.Type
 import           Render.Union
+import           Render.Dynamic
 import           Spec.Parse
 
 renderSpec
-  :: (HasErr r, MemberWithError (Reader RenderParams) r)
+  :: (HasErr r, HasTypeInfo r, MemberWithError (Reader RenderParams) r)
   => Spec
   -> Vector MarshaledStruct
   -> Vector MarshaledCommand
@@ -39,5 +40,6 @@ renderSpec Spec {..} ss cs = liftA2 (<>) bespokeElements $ sequenceV
   <> fmap
        renderConstant
        (V.filter ((`notElem` forbiddenConstants) . constName) specConstants)
+  <> V.singleton (renderDynamicLoader cs)
   )
 

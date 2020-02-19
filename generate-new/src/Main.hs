@@ -52,20 +52,24 @@ main = (runM . runErr $ go) >>= \case
         $ traverseV marshalStruct specStructs
       cs <- timeItNamed "Marshaling commands"
         $ traverseV marshalCommand specCommands
+        -- TODO: Don't use all commands here, just those commands referenced by
+        -- features and extensions. Similarly for specs
       pure (ss, cs)
 
-    renderElements <-
-      timeItNamed "Rendering"
-      .   runReader renderParams
-      $   traverse evaluateWHNF
-      =<< renderSpec spec ss cs
+    withTypeInfo spec $ do
 
-    groups <- timeItNamed "Segmenting" $ do
-      seeds <- specSeeds spec
-      segmentRenderElements show renderElements seeds
+      renderElements <-
+        timeItNamed "Rendering"
+        .   runReader renderParams
+        $   traverse evaluateWHNF
+        =<< renderSpec spec ss cs
 
-    timeItNamed "writing"
-      $ withConMap specEnums (renderSegments "out" (mergeElements groups))
+      groups <- timeItNamed "Segmenting" $ do
+        seeds <- specSeeds spec
+        segmentRenderElements show renderElements seeds
+
+      timeItNamed "writing"
+        $ withTypeInfo spec (renderSegments "out" (mergeElements groups))
 
 ----------------------------------------------------------------
 -- Names
@@ -73,21 +77,22 @@ main = (runM . runErr $ go) >>= \case
 
 renderParams :: RenderParams
 renderParams = RenderParams
-  { mkTyName             = unReservedWord . upperCaseFirst
-  , mkConName            = \parent ->
-                             unReservedWord
-                               . (case parent of
-                                   "VkPerformanceCounterResultKHR" -> ("Counter" <>)
-                                   _ -> id
-                                 )
-                               . upperCaseFirst
-  , mkMemberName         = unReservedWord . lowerCaseFirst
-  , mkFunName            = unReservedWord
-  , mkParamName          = unReservedWord
-  , mkPatternName        = unReservedWord
-  , mkHandleName         = unReservedWord
-  , mkFuncPointerName    = unReservedWord . T.tail
-  , alwaysQualifiedNames = V.fromList [''VSS.Vector]
+  { mkTyName                = unReservedWord . upperCaseFirst
+  , mkConName               = \parent ->
+                                unReservedWord
+                                  . (case parent of
+                                      "VkPerformanceCounterResultKHR" -> ("Counter" <>)
+                                      _ -> id
+                                    )
+                                  . upperCaseFirst
+  , mkMemberName            = unReservedWord . lowerCaseFirst
+  , mkFunName               = unReservedWord
+  , mkParamName             = unReservedWord
+  , mkPatternName           = unReservedWord
+  , mkHandleName            = unReservedWord
+  , mkFuncPointerName       = unReservedWord . T.tail
+  , mkFuncPointerMemberName = unReservedWord . ("p" <>) . upperCaseFirst
+  , alwaysQualifiedNames    = V.fromList [''VSS.Vector]
   }
 
 unReservedWord :: Text -> Text

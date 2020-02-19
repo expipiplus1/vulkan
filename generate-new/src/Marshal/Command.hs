@@ -21,6 +21,7 @@ data MarshaledCommand = MarshaledCommand
   , mcParams :: Vector MarshaledParam
   , mcReturn :: CType
     -- ^ TOOD: Change
+  , mcCommand :: Command
   }
 
 data MarshaledParam =
@@ -34,8 +35,9 @@ marshalCommand
   => Command
   -> Sem r MarshaledCommand
 marshalCommand c@Command {..} = contextShow cName $ do
-  let mcName = cName
-      mcReturn = cReturnType
+  let mcName    = cName
+      mcReturn  = cReturnType
+      mcCommand = c
   mcParams <- forV cParameters $ \p -> contextShow (pName p) $ do
     scheme <- parameterScheme c p
     pure $ MarshaledParam p scheme

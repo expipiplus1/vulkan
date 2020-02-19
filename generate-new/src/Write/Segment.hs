@@ -35,14 +35,6 @@ data SegmentedGroup i a = SegmentedGroup
   }
   deriving (Functor, Foldable, Traversable, Show)
 
-traverseVGroupsSeeds
-  :: (HasErr r, Traversable t)
-  => (SegmentSeed i a -> Sem r (SegmentSeed i b))
-  -> t (SegmentGroup i a)
-  -> (Sem r (t (SegmentGroup i b)))
-traverseVGroupsSeeds f =
-  traverseV (\(SegmentGroup i ss) -> SegmentGroup i <$> traverseV f ss)
-
 -- - Find the transitive closure of the graph
 -- - Partition any vertices which are reachable from just one seed
 -- - Return these partitions along with the leftovers
@@ -149,3 +141,11 @@ assertUnique debugVertex debugName xs =
       <> debugVertex x1
       <> " and "
       <> debugVertex x2
+
+traverseVGroupsSeeds
+  :: (HasErr r, Traversable t)
+  => (SegmentSeed i a -> Sem r (SegmentSeed i b))
+  -> t (SegmentGroup i a)
+  -> Sem r (t (SegmentGroup i b))
+traverseVGroupsSeeds f =
+  traverseV (\(SegmentGroup i ss) -> SegmentGroup i <$> traverseV f ss)

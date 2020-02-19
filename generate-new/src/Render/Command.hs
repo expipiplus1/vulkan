@@ -18,6 +18,7 @@ import           Haskell                       as H
 import           Marshal
 import           Marshal.Scheme
 import           Error
+import           CType as C
 import           Render.Element
 import           Render.Type
 import           Render.Scheme
@@ -26,25 +27,19 @@ renderCommand
   :: (HasErr r, Member (Reader RenderParams) r)
   => MarshaledCommand
   -> Sem r RenderElement
-renderCommand MarshaledCommand {..} = contextShow mcName $ do
+renderCommand m@MarshaledCommand {..} = contextShow mcName $ do
   RenderParams {..} <- ask
   genRe ("command " <> mcName) $ do
     let n = mkFunName mcName
     tellExport (ETerm n)
     nts <- V.mapMaybe id <$> traverseV (paramType schemeType) mcParams
-    pts <- V.mapMaybe id <$> traverseV (paramType schemeTypePositive) mcParams
-    lastReturnType <- cToHsType DoPreserve mcReturn
-    let r = makeReturnType (pts <> V.singleton lastReturnType)
+    r <- makeReturnType m
     let t = foldr (~>) r nts
     tString <- renderType t
     tellDoc
-      $   pretty n
-      <+> "::"
-      <+> indent 0 tString
-      <>  hardline
-      <>  pretty n
-      <+> "="
-      <+> "undefined"
+      $  (pretty n <+> "::" <+> indent 0 tString)
+      <> hardline
+      <> (pretty n <+> "=" <+> "undefined")
 
 paramType
   :: (HasErr r, Member (Reader RenderParams) r)
@@ -58,6 +53,12 @@ paramType st MarshaledParam {..} = contextShow (pName mpParam) $ do
   pure $ namedTy (mkParamName pName) <$> n
 
 makeReturnType
-  :: Vector H.Type -> H.Type
-makeReturnType ts = ConT ''IO :@ foldl' (:@) (TupleT (length ts)) ts
+  :: (HasErr r, HasRenderParams r) => MarshaledCommand -> Sem r H.Type
+makeReturnType MarshaledCommand {..} = do
+  pts <- V.mapMaybe id <$> traverseV (paramType schemeTypePositive) mcParams
+  r   <- case mcReturn of
+    C.Void -> pure V.empty
+    r      -> V.singleton <$> cToHsType DoNotPreserve r
+  let ts = pts <> r
+  pure $ ConT ''IO :@ foldl' (:@) (TupleT (length ts)) ts
 

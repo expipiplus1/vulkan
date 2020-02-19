@@ -1,4 +1,3 @@
-{-# language DeriveFunctor, DeriveFoldable, DeriveTraversable #-}
 module Spec.Parse where
 
 import           Relude                  hiding ( Reader
