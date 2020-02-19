@@ -9,6 +9,8 @@ import           Say
 import           System.TimeIt
 import           Polysemy
 import           Polysemy.Reader
+import           Polysemy.Final
+import           Polysemy.Fixpoint
 import qualified Data.Vector.Storable.Sized    as VSS
 import qualified Data.Vector                   as V
 import qualified Data.Text                     as T
@@ -29,17 +31,18 @@ import           Render.Spec
 import           Spec.Parse
 
 main :: IO ()
-main = (runM . runErr $ go) >>= \case
+main = (runFinal . fixpointToFinal @IO . runErr $ go) >>= \case
   Left es -> do
     traverse_ sayErr es
     sayErr (show (length es) <+> "errors")
   Right () -> pure ()
  where
-  go = do
+  go = embedToFinal @IO $ do
     specText <- timeItNamed "Reading spec"
       $ readFileBS "./Vulkan-Docs/xml/vk.xml"
 
-    spec@Spec {..} <- timeItNamed "Parsing spec" $ parseSpec specText
+    spec@Spec {..} <- timeItNamed "Parsing spec"
+      $ parseSpec (Proxy @IO) specText
 
     let structNames :: HashSet Text
         structNames =

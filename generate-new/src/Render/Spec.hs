@@ -21,6 +21,7 @@ import           Render.Constant
 import           Render.Type
 import           Render.Union
 import           Render.Dynamic
+import           Render.ToCStruct
 import           Spec.Parse
 
 renderSpec
@@ -41,5 +42,6 @@ renderSpec Spec {..} ss cs = liftA2 (<>) bespokeElements $ sequenceV
        renderConstant
        (V.filter ((`notElem` forbiddenConstants) . constName) specConstants)
   <> V.singleton (renderDynamicLoader cs)
+  <> V.singleton toCStruct
   )
 

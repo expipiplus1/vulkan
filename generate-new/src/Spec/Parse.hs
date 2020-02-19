@@ -1,3 +1,4 @@
+{-# language RecursiveDo #-}
 module Spec.Parse where
 
 import           Relude                  hiding ( Reader
@@ -10,21 +11,20 @@ import           Data.Vector                    ( Vector )
 import           Data.List.Extra                ( nubOrd )
 import           Text.ParserCombinators.ReadP
 import           Data.Version
+import           Control.Monad.Fix
 import           Language.C.Types               ( cIdentifierFromString
                                                 , TypeNames
                                                 )
 import qualified Data.ByteString.Char8         as BS
 import qualified Data.Map                      as Map
-import           Data.List                      ( dropWhileEnd
-                                                , lookup
-                                                )
+import           Data.List                      ( lookup )
 import qualified Data.Text                     as T
 import qualified Data.Vector                   as V
-import           Data.Char
 import           Polysemy
 import           Polysemy.Reader
 import           Data.Text.Extra                ( (<+>) )
 import           Data.Bits
+import           Polysemy.Fixpoint
 
 import           Spec.APIConstant
 import           CType
@@ -145,8 +145,10 @@ type Union = StructOrUnion AUnion
 data StructOrUnionType = AStruct | AUnion
 
 data StructOrUnion (t :: StructOrUnionType) = Struct
-  { sName :: Text
-  , sMembers :: Vector StructMember
+  { sName      :: Text
+  , sMembers   :: Vector StructMember
+  , sSize      :: ~Int
+  , sAlignment :: ~Int
   }
   deriving (Show)
 
@@ -156,6 +158,7 @@ data StructMember = StructMember
   , smValues :: Vector Text
   , smLengths :: Vector M.ParameterLength
   , smIsOptional :: Vector Bool
+  , smOffset :: Int
   }
   deriving (Show)
 
@@ -223,26 +226,42 @@ data EnumType = AnEnum | ABitmask
 type P a
   = forall r . (MemberWithError (Reader TypeNames) r, HasErr r) => Sem r a
 
-parseSpec :: HasErr r => ByteString -> Sem r Spec
-parseSpec bs = do
+parseSpec
+  :: forall m r
+   . (MemberWithError (Final m) r, MonadFix m, HasErr r)
+  => Proxy m
+  -> ByteString
+  -> Sem r Spec
+parseSpec _ bs = do
   n <- fromEither (first show (parse bs))
   case name n of
     "registry" -> do
       types     <- contents <$> oneChild "types" n
       typeNames <- allTypeNames types
-      runReader typeNames $ do
+      cNames    <- cTypeNames typeNames
+      runReader cNames $ do
         specHandles      <- parseHandles types
         specFuncPointers <- parseFuncPointers types
-        specStructs      <- parseStructs types
-        specUnions       <- parseUnions types
-        specCommands     <- parseCommands . contents =<< oneChild "commands" n
-        emptyBitmasks    <- parseEmptyBitmasks types
-        nonEmptyEnums    <- parseEnums . contents $ n
-        requires         <- allRequires . contents $ n
-        enumExtensions   <- parseEnumExtensions requires
-        constantAliases  <- parseConstantAliases (contents n)
-        bitmaskAliases   <- parseBitmaskAliases types
-        typeAliases      <- parseTypeAliases
+        specStructs      <- fixpointToFinal @m $ mdo
+          let ~sizes = Map.fromList
+                [ (sName, (sSize, sAlignment))
+                | sName <- []
+                , let sSize      = 0
+                , let sAlignment = 0
+                ]
+                -- [ (sName, (sSize, sAlignment)) | Struct{..} <- V.toList ss ]
+          ss <- parseStructs sizes types
+          pure ss
+        -- specUnions      <- parseUnions types
+        let specUnions = mempty
+        specCommands    <- parseCommands . contents =<< oneChild "commands" n
+        emptyBitmasks   <- parseEmptyBitmasks types
+        nonEmptyEnums   <- parseEnums . contents $ n
+        requires        <- allRequires . contents $ n
+        enumExtensions  <- parseEnumExtensions requires
+        constantAliases <- parseConstantAliases (contents n)
+        bitmaskAliases  <- parseBitmaskAliases types
+        typeAliases     <- parseTypeAliases
           ["handle", "enum", "bitmask", "struct"]
           types
         enumAliases    <- parseEnumAliases requires
@@ -262,6 +281,14 @@ parseSpec bs = do
         specConstants  <- parseConstants (contents n)
         pure Spec { .. }
     _ -> throw "This spec isn't a registry node"
+
+typeSizes :: HasErr r => Vector Struct -> Text -> Sem r (Int, Int)
+typeSizes structs =
+  let sizes = Map.fromList
+        [ (sName, (sSize, sAlignment)) | Struct {..} <- V.toList structs ]
+  in  \n -> case Map.lookup n sizes of
+        Nothing -> throw "Getting the size of an unknown struct"
+        Just r  -> pure r
 
 ----------------------------------------------------------------
 -- Features and extensions
@@ -603,20 +630,28 @@ appendEnumExtensions extensions =
 -- Structs
 ----------------------------------------------------------------
 
-parseStructs :: [Content] -> P (Vector Struct)
-parseStructs = onTypes "struct" parseStruct
+parseStructs
+  :: Map.Map Text (Int, Int) -> [Content] -> P (Vector Struct)
+parseStructs ~g = onTypes "struct" (parseStruct g)
 
-parseUnions :: [Content] -> P (Vector Union)
-parseUnions = onTypes "union" parseStruct
+parseUnions
+  :: Map.Map Text (Int, Int) -> [Content] -> P (Vector Union)
+parseUnions ~g = onTypes "union" (parseStruct g)
 
-parseStruct :: Node -> P (StructOrUnion a)
-parseStruct n = do
+parseStruct
+  :: Map.Map Text (Int, Int) -> Node -> P (StructOrUnion a)
+parseStruct ~ss n = do
   sName <- nameAttr "struct" n
   context sName $ do
     sMembers <-
       fmap fromList
       . traverseV parseStructMember
       $ [ m | Element m <- contents n, name m == "member" ]
+    case Map.member "VkDevice" ss of
+      True -> pure 1
+      False -> pure 2
+    let ~sSize = Map.size ss
+        ~sAlignment = 0
     pure Struct { .. }
  where
 
@@ -628,6 +663,7 @@ parseStruct n = do
     smIsOptional <- boolListAttr "optional" m
     smLengths    <- lenListAttr "len" m
     smValues     <- listAttr decode "values" m
+    let smOffset = 0
     pure StructMember { .. }
 
 ----------------------------------------------------------------
@@ -665,7 +701,12 @@ parseCommands es =
 -- Getting all the type names
 ----------------------------------------------------------------
 
-allTypeNames :: forall r . HasErr r => [Content] -> Sem r TypeNames
+
+cTypeNames :: HasErr r => Vector Text -> Sem r TypeNames
+cTypeNames = fmap (fromList . toList)
+  . traverseV (fromEither . first fromList . cIdentifierFromString . T.unpack)
+
+allTypeNames :: forall r . HasErr r => [Content] -> Sem r (Vector Text)
 allTypeNames es = do
   let nameText :: Node -> Sem r ByteString
       nameText n =
@@ -682,13 +723,7 @@ allTypeNames es = do
     nameText
     [ n | Element n <- es, name n == "type", hasAttr "requires" n ]
   fromList <$> traverseV
-    ( fromEither
-    . first fromList
-    . cIdentifierFromString
-    . dropWhileEnd isSpace
-    . dropWhile isSpace
-    . BS.unpack
-    )
+    (fmap T.strip . decode)
     (filter (`notElem` reservedTypeNames) $ extraTypeNames <> toList
       (categoryTypeNames <> requiresTypeNames)
     )
@@ -864,3 +899,43 @@ runReadP p s = case filter (null . snd) (readP_to_S p (BS.unpack s)) of
 (<&&>) :: Applicative f => f Bool -> f Bool -> f Bool
 (<&&>) = liftA2 (&&)
 infixr 3 <&&> -- same as (&&)
+
+----------------------------------------------------------------
+-- Fixed point nonsense
+----------------------------------------------------------------
+
+-- | Run a commputation with the ability to look up elements in its own output
+--
+-- The catch is that you must specify the keys of the output elements ahead of
+-- time.
+--
+-- The usual things for fixed point computations hold.
+-- - Make sure that there are no dependency cycles in the output list.
+-- - Make sure that the dependent parameters in the output are sufficiently
+--   lazy
+fixLookupM
+  :: forall m r f k a b
+   . (HasErr r, MemberWithError (Final m) r, MonadFix m, Foldable f, Ord k)
+  => Proxy m
+  -> Vector k
+  -- ^ The keys associated with the output.
+  --
+  -- If there is an element missing from here then you will not be able to look
+  -- it up.
+  --
+  -- If there is an extra key and you look it up then you will get an
+  -- irrefutable pattern match failure.
+  -> ((k -> Maybe a) -> Sem r (f (k, a), b))
+  -- ^ A computation taking a function with which to look up its own output
+  -> Sem r b
+  -- ^ The fixed point
+fixLookupM _ keys make = fixpointToFinal @m $ mdo
+  let m = Map.fromList (toList made)
+      get' k = if k `V.elem` keys then knownJust (Map.lookup k m) else Nothing
+  (made, res) <- raise $ make get'
+  pure res
+
+-- | Make the 'Just' match irrefutable
+knownJust :: Maybe a -> Maybe a
+knownJust ~(Just x) = Just x
+

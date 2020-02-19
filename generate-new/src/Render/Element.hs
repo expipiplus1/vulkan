@@ -74,6 +74,7 @@ data Import n = Import
   { importName :: n
   , importQualified :: Bool
   , importChildren :: Vector n
+  , importWithAll :: Bool
   }
   deriving (Show, Eq, Ord)
 
@@ -85,6 +86,9 @@ pattern EPat n = Export (ConName n) False Empty
 
 pattern EData :: Text -> Export
 pattern EData n = Export (TyConName n) True Empty
+
+pattern EClass :: Text -> Export
+pattern EClass n = Export (TyConName n) True Empty
 
 pattern EType :: Text -> Export
 pattern EType n = Export (TyConName n) False Empty
@@ -156,12 +160,17 @@ instance Importable Name where
       RenderParams {..} <- ask
       let qual = V.elem e alwaysQualifiedNames
       modify'
-        (\r -> r { reImports = insert (Import e qual Empty) (reImports r) })
+        (\r ->
+          r { reImports = insert (Import e qual Empty False) (reImports r) }
+        )
     Nothing -> tellImport . TyConName . T.pack . nameBase $ e
 
 instance Importable HName where
   tellImport e = modify'
-    (\r -> r { reLocalImports = insert (Import e False Empty) (reLocalImports r) })
+    (\r -> r
+      { reLocalImports = insert (Import e False Empty False) (reLocalImports r)
+      }
+    )
 
 tellConImport
   :: ( MemberWithError (State RenderElement) r
@@ -174,8 +183,24 @@ tellConImport parent dat = do
   RenderParams {..} <- ask
   let qual = V.elem dat alwaysQualifiedNames
   modify'
-    (\r ->
-      r { reImports = insert (Import parent qual (pure dat)) (reImports r) }
+    (\r -> r
+      { reImports = insert (Import parent qual (pure dat) False) (reImports r)
+      }
+    )
+
+tellImportWithAll
+  :: ( MemberWithError (State RenderElement) r
+     , MemberWithError (Reader RenderParams) r
+     )
+  => HName
+  -> Sem r ()
+tellImportWithAll parent = do
+  RenderParams {..} <- ask
+  modify'
+    (\r -> r
+      { reLocalImports = insert (Import parent False mempty True)
+                                (reLocalImports r)
+      }
     )
 
 tellReexport :: MemberWithError (State RenderElement) r => ModName -> Sem r ()
@@ -224,11 +249,11 @@ renderSegments out segments = do
       , n <- exportName e : (exportName <$> V.toList (exportWith e))
       ]
     findLocalModule :: HasErr r => Import HName -> Sem r ModName
-    findLocalModule (Import n _ _) =
+    findLocalModule (Import n _ _ _) =
       maybe (throw ("Unable to find import " <> show n)) pure
         $ Map.lookup n exportMap
     findModule :: HasErr r => Import Name -> Sem r ModName
-    findModule (Import n _ _) = maybe
+    findModule (Import n _ _ _) = maybe
       (throw ("Unable to find import " <> show n))
       pure
       (ModName . T.pack <$> nameModule n)
@@ -255,7 +280,7 @@ renderModule out findModule findLocalModule (Segment (ModName modName) es) = do
       (\RenderElement {..} -> allExports (reExports <> reInternal))
       es
     importFilter =
-      Relude.filter (\(Import n _ _) -> n `V.notElem` declaredNames)
+      Relude.filter (\(Import n _ _ _) -> n `V.notElem` declaredNames)
   imports <- vsep <$> traverseV
     (renderImport findModule (T.pack . nameBase) (const Normal))
     ( mapMaybe
@@ -311,18 +336,21 @@ renderImport
   -> (a -> NameSpace)
   -> Import a
   -> Sem r (Doc ())
-renderImport findModule getName getNameSpace i@(Import n qual children) = do
-  ModName mod' <- findModule i
-  let
-    qualDoc     = bool "" " qualified" qual
-    base        = getName n
-    baseP       = wrapSymbol base
-    spec        = nameSpacePrefix (getNameSpace n)
-    childrenDoc = if V.null children
-      then ""
-      else parenList (wrapSymbol . getName <$> children)
-  pure $ "import" <> qualDoc <+> pretty mod' <+> parenList
-    (V.singleton (spec <> baseP <> childrenDoc))
+renderImport findModule getName getNameSpace i@(Import n qual children withAll)
+  = do
+    ModName mod' <- findModule i
+    let qualDoc     = bool "" " qualified" qual
+        base        = getName n
+        baseP       = wrapSymbol base
+        spec        = nameSpacePrefix (getNameSpace n)
+        childrenDoc = if V.null children && not withAll
+          then ""
+          else parenList
+            (  (wrapSymbol . getName <$> children)
+            <> (if withAll then V.singleton ".." else V.empty)
+            )
+    pure $ "import" <> qualDoc <+> pretty mod' <+> parenList
+      (V.singleton (spec <> baseP <> childrenDoc))
 
 fixOddImport :: Name -> Maybe Name
 fixOddImport n = fromMaybe (Just n) (lookup n fixes)
@@ -393,8 +421,8 @@ withTypeInfo Spec {..} =
 
 adoptConstructors :: HasTypeInfo r => Import HName -> Sem r (Import HName)
 adoptConstructors = \case
-  i@(Import n q cs) -> getConParent n >>= pure . \case
-    Just p  -> Import p q (V.singleton n <> cs)
+  i@(Import n q cs _) -> getConParent n >>= pure . \case
+    Just p  -> Import p q (V.singleton n <> cs) False
     Nothing -> i
   where getConParent n = asks (`tiConMap` n)
 

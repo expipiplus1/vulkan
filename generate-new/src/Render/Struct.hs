@@ -28,7 +28,7 @@ renderStruct
   :: (HasErr r, Member (Reader RenderParams) r)
   => MarshaledStruct
   -> Sem r RenderElement
-renderStruct MarshaledStruct {..} = do
+renderStruct s@MarshaledStruct {..} = do
   RenderParams {..} <- ask
   genRe ("struct " <> msName) $ do
     let n = mkTyName msName
@@ -38,6 +38,7 @@ renderStruct MarshaledStruct {..} = do
         data {n} = {mkConName msName msName}
           {braceList ms}
         |]
+    toCStructInstance s
 
 renderStructMember
   :: ( HasErr r
@@ -57,3 +58,21 @@ renderStructMember MarshaledStructMember {..} = do
     )
     m
 
+----------------------------------------------------------------
+-- Marshaling
+----------------------------------------------------------------
+
+toCStructInstance
+  :: ( HasErr r
+     , MemberWithError (Reader RenderParams) r
+     , MemberWithError (State RenderElement) r
+     )
+  => MarshaledStruct
+  -> Sem r ()
+toCStructInstance MarshaledStruct {..} = do
+  RenderParams {..} <- ask
+  tellImportWithAll (TyConName "ToCStruct")
+  let n = mkTyName msName
+  tellDoc $ "instance ToCStruct" <+> pretty n <+> "where" <> line <> indent
+    2
+    (vsep ["withCStruct =" <+> "undefined", "pokeCStruct =" <+> "undefined"])
