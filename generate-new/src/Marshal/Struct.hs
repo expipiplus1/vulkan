@@ -17,6 +17,7 @@ import Marshal.Scheme
 
 data MarshaledStruct = MarshaledStruct
   { msName :: Text
+  , msStruct :: Struct
   , msMembers :: Vector MarshaledStructMember
   }
 
@@ -32,6 +33,7 @@ marshalStruct
   -> Sem r MarshaledStruct
 marshalStruct s@Struct {..} = contextShow sName $ do
   let msName = sName
+      msStruct = s
   msMembers <- forV sMembers $ \sm -> contextShow (smName sm) $ do
     scheme <- structMemberScheme s sm
     pure $ MarshaledStructMember sm scheme

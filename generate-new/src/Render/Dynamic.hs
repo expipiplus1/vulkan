@@ -26,6 +26,7 @@ import           Spec.Parse
 import           Haskell                       as H
 import           Marshal
 import           Error
+import           Render.Element.Write
 import           Render.Element
 import           Render.Type
 import           Render.Utils

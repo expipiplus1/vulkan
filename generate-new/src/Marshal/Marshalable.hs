@@ -5,7 +5,6 @@ import           Relude
 import           Data.Vector                   as V
                                          hiding ( empty )
 
-import           Marshal.Name
 import           CType
 
 data ParameterLength
@@ -17,7 +16,7 @@ data ParameterLength
   deriving (Show, Eq)
 
 class Marshalable a where
-  name       :: a -> Name Unmarshaled
+  name       :: a -> Text
   type'      :: a -> CType
   values     :: a -> Vector Text
   lengths    :: a -> Vector ParameterLength

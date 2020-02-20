@@ -6,7 +6,7 @@ ghc-options:
 - -with-rtsopts=-N
 - -Wall
 - -fno-warn-unticked-promoted-constructors
-- -fplugin=Polysemy.Plugin
+# - -fplugin=Polysemy.Plugin
 - -O2
 - -flate-specialise
 - -fspecialise-aggressively
@@ -79,6 +79,7 @@ executables:
     - text
     - th-orphans
     - timeit
+    - transformers
     - uniplate
     - unordered-containers
     - vector

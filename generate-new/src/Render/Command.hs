@@ -10,7 +10,6 @@ import           Data.Text.Prettyprint.Doc
 import           Language.Haskell.TH.Syntax
 import           Polysemy
 import           Polysemy.Reader
-import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
 
 import           Spec.Parse

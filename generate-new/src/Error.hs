@@ -8,6 +8,7 @@ module Error
   , contextShow
   , fromEither
   , note
+  , hush
   , sequenceV
   , traverseV
   , traverseV_
@@ -42,6 +43,15 @@ contextShow = context . show
 
 fromEither :: MemberWithError Err r => Either Text a -> Sem r a
 fromEither = E.fromEither . first singleton
+
+hush :: Sem (Err ': r) a -> Sem r (Maybe a)
+hush =
+  fmap
+      (\case
+        Left  _ -> Nothing
+        Right r -> Just r
+      )
+    . runErr
 
 note :: MemberWithError Err r => Text -> Maybe a -> Sem r a
 note e = \case

@@ -16,3 +16,8 @@ Make sure it's easy to marshal types such as `VkDispatchIndirectCommand`
 
 Better module allocation by grouping segments and having a module for elements
 unique to that group.
+
+Make sure optional bitmasks aren't represented with Maybe (they are zeroable)
+
+non-optional arrays/structs can be allocated at the same time as their parent
+struct.

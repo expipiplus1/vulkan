@@ -3,6 +3,7 @@
 module Bespoke
   ( forbiddenConstants
   , bespokeElements
+  , bespokeSizes
   )
 where
 
@@ -19,7 +20,6 @@ import           Text.InterpolatedString.Perl6.Unindented
 
 import           Haskell                       as H
 import           Render.Element
-import           Render.Type
 import           Error
 
 ----------------------------------------------------------------
@@ -34,9 +34,18 @@ forbiddenConstants = ["VK_TRUE", "VK_FALSE"]
 -- Things which are easier to write by hand
 ----------------------------------------------------------------
 
+bespokeSizes :: [(Text, (Int, Int))]
+bespokeSizes =
+  (fst <$> concat [win32 @'[Reader RenderParams], x11, xcb2, zircon, ggp])
+    <> [ ("VkSampleMask"   , (4, 4))
+       , ("VkFlags"        , (4, 4))
+       , ("VkDeviceSize"   , (8, 8))
+       , ("VkDeviceAddress", (8, 8))
+       ]
+
+
 bespokeElements
-  :: (HasErr r, Member (Reader RenderParams) r)
-  => Sem r (Vector RenderElement)
+  :: (HasErr r, Member (Reader RenderParams) r) => Sem r (Vector RenderElement)
 bespokeElements =
   fmap fromList
     .  sequenceV
@@ -46,9 +55,9 @@ bespokeElements =
        , baseType "VkDeviceSize"    ''Word64
        , baseType "VkDeviceAddress" ''Word64
        ]
-    <> [ nullHandle
-       ]
-    <> concat [win32, x11, xcb, wayland, zircon, ggp, metal, android]
+    <> [nullHandle]
+    <> (snd <$> concat [win32, x11, xcb2, zircon, ggp])
+    <> concat [win32', xcb1, wayland, metal, android]
 
 namedType :: Sem r RenderElement
 namedType = genRe "namedType" $ do
@@ -84,36 +93,39 @@ nullHandle = genRe "null handle" $ do
 -- Platform specific nonsense
 ----------------------------------------------------------------
 
-win32 :: Member (Reader RenderParams) r => [Sem r RenderElement]
+type BespokeAlias r = ((Text, (Int, Int)), Sem r RenderElement)
+
+win32 :: Member (Reader RenderParams) r => [BespokeAlias r]
 win32 =
-  [ unitPtrAlias "HINSTANCE"
-  , unitPtrAlias "HWND"
-  , unitPtrAlias "HMONITOR"
-  , unitPtrAlias "HANDLE"
-  , voidData "SECURITY_ATTRIBUTES"
-  , alias (ConT ''Word32)              "DWORD"
-  , alias (ConT ''Ptr :@ ConT ''CWchar) "LPCWSTR"
+  [ alias (APtr ''()) "HINSTANCE"
+  , alias (APtr ''()) "HWND"
+  , alias (APtr ''()) "HMONITOR"
+  , alias (APtr ''()) "HANDLE"
+  , alias AWord32              "DWORD"
+  , alias (APtr ''CWchar) "LPCWSTR"
   ]
 
-x11 :: Member (Reader RenderParams) r => [Sem r RenderElement]
+win32' :: Member (Reader RenderParams) r => [Sem r RenderElement]
+win32' = [voidData "SECURITY_ATTRIBUTES"]
+
+x11 :: Member (Reader RenderParams) r => [BespokeAlias r]
 x11 =
-  [ selfPtr "Display"
-  , alias (ConT ''Word64) "VisualID"
-  , alias (ConT ''Word64) "Window"
-  , alias (ConT ''Word64) "RROutput"
+  [ alias (APtr ''()) "Display"
+  , alias AWord64 "VisualID"
+  , alias AWord64 "Window"
+  , alias AWord64 "RROutput"
   ]
 
-xcb :: Member (Reader RenderParams) r => [Sem r RenderElement]
-xcb =
-  [ voidData "Xcb_connection_t"
-  , alias (ConT ''Word32) "Xcb_visualid_t"
-  , alias (ConT ''Word32) "Xcb_window_t"
-  ]
+xcb1 :: Member (Reader RenderParams) r => [Sem r RenderElement]
+xcb1 = [voidData "xcb_connection_t"]
 
-ggp :: Member (Reader RenderParams) r => [Sem r RenderElement]
+xcb2 :: Member (Reader RenderParams) r => [BespokeAlias r]
+xcb2 = [alias AWord32 "xcb_visualid_t", alias AWord32 "xcb_window_t"]
+
+ggp :: Member (Reader RenderParams) r => [BespokeAlias r]
 ggp =
-  [ alias (ConT ''Word32) "GgpStreamDescriptor"
-  , alias (ConT ''Word32) "GgpFrameToken"
+  [ alias AWord32 "GgpStreamDescriptor"
+  , alias AWord32 "GgpFrameToken"
   ]
 
 metal :: Member (Reader RenderParams) r => [Sem r RenderElement]
@@ -123,13 +135,13 @@ metal =
 
 wayland :: Member (Reader RenderParams) r => [Sem r RenderElement]
 wayland =
-  [ voidData "Wl_display"
-  , voidData "Wl_surface"
+  [ voidData "wl_display"
+  , voidData "wl_surface"
   ]
 
-zircon :: Member (Reader RenderParams) r => [Sem r RenderElement]
+zircon :: Member (Reader RenderParams) r => [BespokeAlias r]
 zircon =
-  [alias (ConT ''Word32) "Zx_handle_t"]
+  [alias AWord32 "zx_handle_t"]
 
 android :: Member (Reader RenderParams) r => [Sem r RenderElement]
 android =
@@ -139,6 +151,20 @@ android =
 -- Helpers
 ----------------------------------------------------------------
 
+data AType = AWord32 | AWord64 | APtr Name
+
+aTypeSize :: AType -> (Int, Int)
+aTypeSize = \case
+  AWord32  -> (4, 4)
+  AWord64  -> (8, 8)
+  APtr _ -> (8, 8)
+
+aTypeType :: AType -> H.Type
+aTypeType = \case
+  AWord32 -> ConT ''Word32
+  AWord64 -> ConT ''Word64
+  APtr n  -> ConT ''Ptr :@ ConT n
+
 voidData :: Member (Reader RenderParams) r => Text -> Sem r RenderElement
 voidData n = genRe ("data " <> n) $ do
   RenderParams {..} <- ask
@@ -146,25 +172,25 @@ voidData n = genRe ("data " <> n) $ do
   tellExport (EType n')
   tellDoc $ "data" <+> pretty n'
 
-unitPtrAlias :: Member (Reader RenderParams) r => Text -> Sem r RenderElement
-unitPtrAlias = alias (ConT ''Ptr :@ TupleT 0)
+alias :: Member (Reader RenderParams) r => AType -> Text -> BespokeAlias r
+alias t n =
+  ( (n, aTypeSize t)
+  , genRe ("alias " <> n) $ do
+    RenderParams {..} <- ask
+    let n' = mkTyName n
+    tDoc <- renderType (aTypeType t)
+    tellExport (EType n')
+    tellDoc $ "type" <+> pretty n' <+> "=" <+> tDoc
+  )
 
-alias :: Member (Reader RenderParams) r => H.Type -> Text -> Sem r RenderElement
-alias t n = genRe ("alias " <> n) $ do
-  RenderParams {..} <- ask
-  let n' = mkTyName n
-  tDoc <- renderType t
-  tellExport (EType n')
-  tellDoc $ "type" <+> pretty n' <+> "=" <+> tDoc
-
-selfPtr :: Member (Reader RenderParams) r => Text -> Sem r RenderElement
-selfPtr n = genRe ("data " <> n) $ do
-  RenderParams {..} <- ask
-  let n' = mkTyName n
-      c  = mkConName n n
-      t  = ConT ''Ptr :@ ConT (typeName n')
-  tDoc <- renderType t
-  tellExport (EData n')
-  tellDoc
-    $   "newtype" <+> pretty n' <+> "="
-    <+> pretty c <+> "{" <+> "un" <>  pretty c <+> "::" <+> tDoc <+> "}"
+-- selfPtr :: Member (Reader RenderParams) r => Text -> Sem r RenderElement
+-- selfPtr n = genRe ("data " <> n) $ do
+--   RenderParams {..} <- ask
+--   let n' = mkTyName n
+--       c  = mkConName n n
+--       t  = ConT ''Ptr :@ ConT (typeName n')
+--   tDoc <- renderType t
+--   tellExport (EData n')
+--   tellDoc
+--     $   "newtype" <+> pretty n' <+> "="
+--     <+> pretty c <+> "{" <+> "un" <>  pretty c <+> "::" <+> tDoc <+> "}"

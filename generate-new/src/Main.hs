@@ -3,46 +3,52 @@ module Main
 
 import           Relude                  hiding ( runReader
                                                 , uncons
+                                                , Type
                                                 )
 import           Relude.Extra.Map
 import           Say
 import           System.TimeIt
 import           Polysemy
 import           Polysemy.Reader
-import           Polysemy.Final
-import           Polysemy.Fixpoint
 import qualified Data.Vector.Storable.Sized    as VSS
 import qualified Data.Vector                   as V
 import qualified Data.Text                     as T
+import qualified Data.List                     as List
 import           Data.Text.Extra                ( lowerCaseFirst
                                                 , upperCaseFirst
                                                 , (<+>)
                                                 )
+import           Data.Text.Prettyprint.Doc      ( pretty )
+import           Language.Haskell.TH            ( Name
+                                                , Type(..)
+                                                , nameBase
+                                                )
+
+import           Foreign.C.Types
 
 import           CType
 import           Error
 import           Marshal
 import           Marshal.Scheme
 import           Render.Element
+import           Render.Element.Write
 import           Render.Aggregate
 import           Bespoke.Seeds
-import           Render.Type
 import           Render.Spec
 import           Spec.Parse
 
 main :: IO ()
-main = (runFinal . fixpointToFinal @IO . runErr $ go) >>= \case
+main = (runM . runErr $ go) >>= \case
   Left es -> do
     traverse_ sayErr es
     sayErr (show (length es) <+> "errors")
   Right () -> pure ()
  where
-  go = embedToFinal @IO $ do
+  go = do
     specText <- timeItNamed "Reading spec"
       $ readFileBS "./Vulkan-Docs/xml/vk.xml"
 
-    spec@Spec {..} <- timeItNamed "Parsing spec"
-      $ parseSpec (Proxy @IO) specText
+    spec@Spec {..} <- timeItNamed "Parsing spec" $ parseSpec specText
 
     let structNames :: HashSet Text
         structNames =
@@ -96,7 +102,32 @@ renderParams = RenderParams
   , mkFuncPointerName       = unReservedWord . T.tail
   , mkFuncPointerMemberName = unReservedWord . ("p" <>) . upperCaseFirst
   , alwaysQualifiedNames    = V.fromList [''VSS.Vector]
+  , mkIdiomaticType         =
+    (`List.lookup` [ wrappedIdiomaticType ''Float  ''CFloat  'CFloat
+                   , wrappedIdiomaticType ''Int32  ''CInt    'CInt
+                   , wrappedIdiomaticType ''Double ''CDouble 'CDouble
+                   , wrappedIdiomaticType ''Word64 ''CSize   'CSize
+                   ]
+    )
   }
+
+wrappedIdiomaticType
+  :: Name
+  -- ^ Wrapped type
+  -> Name
+  -- ^ Wrapping type constructor
+  -> Name
+  -- ^ Wrapping constructor
+  -> (Type, IdiomaticType)
+wrappedIdiomaticType t w c =
+  ( ConT w
+  , IdiomaticType
+    (ConT t)
+    (do
+      tellConImport w c
+      pure (pretty (nameBase c))
+    )
+  )
 
 unReservedWord :: Text -> Text
 unReservedWord t = if t `elem` (keywords <> preludeWords) then t <> "'" else t

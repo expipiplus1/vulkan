@@ -28,7 +28,7 @@ import qualified Data.Vector                   as V
 import           Prelude                        ( head )
 
 import           Render.Element
-import           Render.Params
+import           Render.Element.Write
 import           Haskell.Name
 
 typeName :: Text -> Name

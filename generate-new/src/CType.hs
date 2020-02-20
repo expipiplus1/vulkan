@@ -130,3 +130,36 @@ removeSubString :: ByteString -> ByteString -> ByteString
 removeSubString n h =
   let (b, a) = BS.breakSubstring n h in b <> (BS.drop (BS.length n) a)
 
+----------------------------------------------------------------
+-- Sizing
+----------------------------------------------------------------
+
+cTypeSize
+  :: (Text -> Maybe Int)
+  -> (CType -> Maybe (Int, Int))
+  -> CType
+  -> Maybe (Int, Int)
+cTypeSize constantValue nonBaseSize = \case
+  TypeName "uint8_t"             -> Just (1, 1)
+  TypeName "uint16_t"            -> Just (2, 2)
+  TypeName "uint32_t"            -> Just (4, 4)
+  TypeName "uint64_t"            -> Just (8, 8)
+  TypeName "int8_t"              -> Just (1, 1)
+  TypeName "int16_t"             -> Just (2, 2)
+  TypeName "int32_t"             -> Just (4, 4)
+  TypeName "int64_t"             -> Just (8, 8)
+  TypeName "size_t"              -> Just (8, 8)
+  Char                           -> Just (1, 1)
+  Int                            -> Just (4, 4)
+  Float                          -> Just (4, 4)
+  Double                         -> Just (8, 8)
+  Ptr _ _                        -> Just (8, 8)
+  -- ^ TODO: 32 bit support
+  Array _ (NumericArraySize n) t -> do
+    ~(es, ea) <- cTypeSize constantValue nonBaseSize t
+    Just (es * fromIntegral n, ea)
+  Array _ (SymbolicArraySize s) t -> do
+    n        <- constantValue s
+    ~(es, ea) <- cTypeSize constantValue nonBaseSize t
+    Just (es * fromIntegral n, ea)
+  t -> nonBaseSize t

@@ -8,7 +8,7 @@ import           Relude                  hiding ( Const
                                                 )
 import           Polysemy
 import           Polysemy.Reader
-import           Polysemy.NonDet hiding (Empty)
+import           Polysemy.NonDet         hiding ( Empty )
 import           Polysemy.Fail
 import           Data.Vector.Extra              ( Vector
                                                 , pattern Empty
@@ -20,7 +20,6 @@ import qualified Data.Vector.Extra             as V
 import           Marshal.Marshalable
 import           Error
 import           CType
-import           Marshal.Name
 
 -- | @MarshalScheme a@ represents how we will marshal some @a@ (a struct
 -- member or a command parameter (both referred to as parameter here))
@@ -259,9 +258,9 @@ isReturnPtr p' = case type' p' of
   _              -> False
 
 -- | Get all the @a@s which are sized with this name
-getSizedWith :: Marshalable a => Name Unmarshaled -> Vector a -> Vector a
+getSizedWith :: Marshalable a => Text -> Vector a -> Vector a
 getSizedWith lengthName = V.filter $ \v -> case lengths v of
-  (NamedLength len :<| _) | len == unName lengthName -> True
+  (NamedLength len :<| _) | len == lengthName -> True
   -- ^ TODO: Change this to [NamedLength len] and think about handling
   _ -> False
 

@@ -1,223 +1,50 @@
-{-# language RecursiveDo #-}
-module Spec.Parse where
+module Spec.Parse
+  ( module Spec.Types
+  , parseSpec
+  )
+where
 
 import           Relude                  hiding ( Reader
                                                 , runReader
                                                 , Handle
+                                                , State
+                                                , get
+                                                , put
+                                                , runState
+                                                , evalState
+                                                , modify'
                                                 )
 import           Xeno.DOM
 import           Text.Read                      ( readMaybe )
 import           Data.Vector                    ( Vector )
 import           Data.List.Extra                ( nubOrd )
 import           Text.ParserCombinators.ReadP
+                                         hiding ( get )
 import           Data.Version
-import           Control.Monad.Fix
 import           Language.C.Types               ( cIdentifierFromString
                                                 , TypeNames
                                                 )
 import qualified Data.ByteString.Char8         as BS
 import qualified Data.Map                      as Map
-import           Data.List                      ( lookup )
+import           Polysemy.State
+import           Data.List                      ( dropWhileEnd
+                                                , lookup
+                                                )
 import qualified Data.Text                     as T
 import qualified Data.Vector                   as V
+import           Data.Char
 import           Polysemy
 import           Polysemy.Reader
 import           Data.Text.Extra                ( (<+>) )
 import           Data.Bits
-import           Polysemy.Fixpoint
 
 import           Spec.APIConstant
 import           CType
 import           Error
-import           Marshal.Name
-import qualified Marshal.Marshalable           as M
+import           Bespoke
 import           Marshal.Marshalable            ( ParameterLength(..) )
 import           Haskell.Name
-
-data Spec = Spec
-  { specHandles      :: Vector Handle
-  , specFuncPointers :: Vector FuncPointer
-  , specStructs      :: Vector Struct
-  , specUnions       :: Vector Union
-  , specCommands     :: Vector Command
-  , specEnums        :: Vector Enum'
-  , specAliases      :: Vector Alias
-  , specFeatures     :: Vector Feature
-  , specExtensions   :: Vector Extension
-  , specConstants    :: Vector Constant
-  }
-  deriving (Show)
-
---
--- Features and Extensions
---
-
-data Feature = Feature
-  { fName :: Text
-  , fVersion :: Version
-  , fRequires :: Vector Require
-  }
-  deriving (Show)
-
-data Extension = Extension
-  { exName      :: Text
-  , exNumber    :: Int
-  , exRequires  :: Vector Require
-  , exSupported :: Text
-  }
-  deriving (Show)
-
-data Require = Require
-  { rComment        :: Maybe Text
-  , rCommandNames   :: Vector HName
-  , rTypeNames      :: Vector HName
-  , rEnumValueNames :: Vector HName
-  }
-  deriving (Show)
-
---
--- Constants
---
-
-data Constant = Constant
-  { constName :: Text
-  , constValue :: ConstantValue
-  }
-  deriving (Show)
-
-
---
--- Aliases
---
-
-data Alias = Alias
-  { aName :: Text
-  , aTarget :: Text
-  , aType :: AliasType
-  }
-  deriving (Show)
-
-data AliasType
-  = TypeAlias
-  | TermAlias
-  | PatternAlias
-  deriving (Show)
-
---
--- Function Pointers
---
-
-data FuncPointer = FuncPointer
-  { fpName :: Text
-  , fpType :: CType
-  }
-  deriving (Show)
-
---
--- Handles
---
-
-data Handle = Handle
-  { hName :: Text
-  , hDispatchable :: Dispatchable
-  , hLevel :: HandleLevel
-  }
-  deriving (Show)
-
--- | The "level" of a handle, related to what it is descended from.
-data HandleLevel
-  = Instance
-  | PhysicalDevice
-  | Device
-  | NoHandleLevel
-  deriving (Show, Eq)
-
-data Dispatchable = Dispatchable | NonDispatchable
-  deriving (Show)
-
---
--- Structs
---
-
-
-type Struct = StructOrUnion AStruct
-type Union = StructOrUnion AUnion
-data StructOrUnionType = AStruct | AUnion
-
-data StructOrUnion (t :: StructOrUnionType) = Struct
-  { sName      :: Text
-  , sMembers   :: Vector StructMember
-  , sSize      :: ~Int
-  , sAlignment :: ~Int
-  }
-  deriving (Show)
-
-data StructMember = StructMember
-  { smName :: Text
-  , smType :: CType
-  , smValues :: Vector Text
-  , smLengths :: Vector M.ParameterLength
-  , smIsOptional :: Vector Bool
-  , smOffset :: Int
-  }
-  deriving (Show)
-
-instance M.Marshalable StructMember where
-  name       = Name . smName
-  type'      = smType
-  values     = smValues
-  lengths    = smLengths
-  isOptional = smIsOptional
-
---
--- Commands
---
-
-data Command = Command
-  { cName :: Text
-  , cReturnType :: CType
-  , cParameters :: Vector Parameter
-  -- , cCommandLevel :: HandleLevel
-  , cSuccessCodes :: Vector Text
-  , cErrorCodes :: Vector Text
-  }
-  deriving (Show, Eq)
-
-data Parameter = Parameter
-  { pName       :: Text
-  , pType       :: CType
-  , pLengths    :: Vector M.ParameterLength
-  , pIsOptional :: Vector Bool
-  }
-  deriving (Show, Eq)
-
-instance M.Marshalable Parameter where
-  name       = Name . pName
-  type'      = pType
-  values     = const mempty
-  lengths    = pLengths
-  isOptional = pIsOptional
-
---
--- Enums
---
-
-data Enum' = Enum
-  { eName :: Text
-  , eValues :: Vector EnumValue
-  , eType :: EnumType
-  }
-  deriving (Show, Eq)
-
-data EnumValue = EnumValue
-  { evName        :: Text
-  , evValue       :: Int64
-  , evIsExtension :: Bool
-  }
-  deriving (Show, Eq, Ord)
-
-data EnumType = AnEnum | ABitmask
-  deriving (Show, Eq)
+import           Spec.Types
 
 ----------------------------------------------------------------
 -- Parsing
@@ -226,42 +53,26 @@ data EnumType = AnEnum | ABitmask
 type P a
   = forall r . (MemberWithError (Reader TypeNames) r, HasErr r) => Sem r a
 
-parseSpec
-  :: forall m r
-   . (MemberWithError (Final m) r, MonadFix m, HasErr r)
-  => Proxy m
-  -> ByteString
-  -> Sem r Spec
-parseSpec _ bs = do
+parseSpec :: HasErr r => ByteString -> Sem r Spec
+parseSpec bs = do
   n <- fromEither (first show (parse bs))
   case name n of
     "registry" -> do
       types     <- contents <$> oneChild "types" n
       typeNames <- allTypeNames types
-      cNames    <- cTypeNames typeNames
-      runReader cNames $ do
+      runReader typeNames $ do
         specHandles      <- parseHandles types
         specFuncPointers <- parseFuncPointers types
-        specStructs      <- fixpointToFinal @m $ mdo
-          let ~sizes = Map.fromList
-                [ (sName, (sSize, sAlignment))
-                | sName <- []
-                , let sSize      = 0
-                , let sAlignment = 0
-                ]
-                -- [ (sName, (sSize, sAlignment)) | Struct{..} <- V.toList ss ]
-          ss <- parseStructs sizes types
-          pure ss
-        -- specUnions      <- parseUnions types
-        let specUnions = mempty
-        specCommands    <- parseCommands . contents =<< oneChild "commands" n
-        emptyBitmasks   <- parseEmptyBitmasks types
-        nonEmptyEnums   <- parseEnums . contents $ n
-        requires        <- allRequires . contents $ n
-        enumExtensions  <- parseEnumExtensions requires
-        constantAliases <- parseConstantAliases (contents n)
-        bitmaskAliases  <- parseBitmaskAliases types
-        typeAliases     <- parseTypeAliases
+        unsizedStructs   <- parseStructs types
+        unsizedUnions    <- parseUnions types
+        specCommands     <- parseCommands . contents =<< oneChild "commands" n
+        emptyBitmasks    <- parseEmptyBitmasks types
+        nonEmptyEnums    <- parseEnums . contents $ n
+        requires         <- allRequires . contents $ n
+        enumExtensions   <- parseEnumExtensions requires
+        constantAliases  <- parseConstantAliases (contents n)
+        bitmaskAliases   <- parseBitmaskAliases types
+        typeAliases      <- parseTypeAliases
           ["handle", "enum", "bitmask", "struct"]
           types
         enumAliases    <- parseEnumAliases requires
@@ -279,16 +90,126 @@ parseSpec _ bs = do
         specFeatures   <- parseFeatures (contents n)
         specExtensions <- parseExtensions . contents =<< oneChild "extensions" n
         specConstants  <- parseConstants (contents n)
+        let
+          sizeMap :: Map.Map Text (Int, Int)
+          sizeMap =
+            Map.fromList
+              $  bespokeSizes
+              <> [ (eName, (4, 4)) | Enum {..} <- V.toList specEnums ]
+              <> [ (aName, (4, 4)) | Alias {..} <- V.toList bitmaskAliases ]
+              <> [ (hName, (8, 8)) | Handle {..} <- V.toList specHandles ]
+              <> [ (fpName, (8, 8))
+                 | FuncPointer {..} <- V.toList specFuncPointers
+                 ]
+          lookupSize :: CType -> Maybe (Int, Int)
+          lookupSize = \case
+            TypeName n -> Map.lookup n sizeMap
+            _          -> Nothing
+          constantMap :: Map.Map Text Int
+          constantMap = Map.fromList
+            [ (n, (fromIntegral v))
+            | Constant n (IntegralValue v) <- V.toList specConstants
+            ]
+          constantValue v = Map.lookup v constantMap
+        (specUnions, specStructs) <- sizeAll sizeMap constantValue unsizedUnions unsizedStructs
         pure Spec { .. }
     _ -> throw "This spec isn't a registry node"
 
-typeSizes :: HasErr r => Vector Struct -> Text -> Sem r (Int, Int)
-typeSizes structs =
-  let sizes = Map.fromList
-        [ (sName, (sSize, sAlignment)) | Struct {..} <- V.toList structs ]
-  in  \n -> case Map.lookup n sizes of
-        Nothing -> throw "Getting the size of an unknown struct"
-        Just r  -> pure r
+----------------------------------------------------------------
+-- Sizes, alignments and offsets
+----------------------------------------------------------------
+
+sizeAll
+  :: forall r
+   . HasErr r
+  => Map.Map Text (Int, Int)
+  -> (Text -> Maybe Int)
+  -> Vector (StructOrUnion AUnion WithoutSize)
+  -> Vector (StructOrUnion AStruct WithoutSize)
+  -> Sem r (Vector Union, Vector Struct)
+sizeAll typeSizes constantMap unions structs = do
+  let
+    both    = (Left <$> unions) <> (Right <$> structs)
+    initial = typeSizes
+    try
+      :: Either
+           (StructOrUnion AUnion WithoutSize)
+           (StructOrUnion AStruct WithoutSize)
+      -> Sem
+           (State (Map.Map Text (Int, Int)) ': r)
+           (Maybe (Either Union Struct))
+    try s = do
+      m <- get
+      let getLocalSize = \case
+            TypeName n -> Map.lookup n m
+            _          -> Nothing
+          getSize = cTypeSize constantMap getLocalSize
+      case s of
+        Left u -> do
+          for (sizeUnion getSize u) $ \u' -> do
+            modify' (Map.insert (sName u') (sSize u', sAlignment u'))
+            pure (Left u')
+        Right s -> do
+          for (sizeStruct getSize s) $ \s' -> do
+            modify' (Map.insert (sName s') (sSize s', sAlignment s'))
+            pure (Right s')
+  r <- evalState initial $ trySeveralTimes 2 both try
+
+  let (failed, succeeded) = partitionEithers . V.toList $ r
+  forV_ failed
+    $ \s -> throw ("Unable to calculate size for " <> either sName sName s)
+  pure (first V.fromList . second V.fromList $ partitionEithers succeeded)
+
+sizeStruct
+  :: Monad m
+  => (CType -> m (Int, Int))
+  -- ^ Size and alignment
+  -> StructOrUnion AStruct WithoutSize
+  -> m Struct
+sizeStruct = sizeGeneric roundToAlignment (\_ m o -> m + o)
+
+sizeUnion
+  :: Monad m
+  => (CType -> m (Int, Int))
+  -- ^ Size and alignment
+  -> StructOrUnion AUnion WithoutSize
+  -> m Union
+sizeUnion = sizeGeneric (\_ _ -> 0) (\c m _ -> max c m)
+
+sizeGeneric
+  :: Monad m
+  => (Int -> Int -> Int)
+  -- ^ Member offset given member alignment and current size
+  -> (Int -> Int -> Int -> Int)
+  -- ^ Next size given current size, member size and offset
+  -> (CType -> m (Int, Int))
+  -- ^ Size and alignment
+  -> StructOrUnion t WithoutSize
+  -> m (StructOrUnion t 'WithSize)
+sizeGeneric getOffset getSize getTypeSize Struct {..} = do
+  ((newSize, newAlign), newMembers) <-
+    runM . runState (0, 1) . for sMembers $ \StructMember {..} -> do
+      (memberSize, memberAlign) <- embed $ getTypeSize smType
+      (totalSize , maxAlign   ) <- get
+      let newOffset = getOffset memberAlign totalSize
+      put (getSize totalSize memberSize newOffset, max maxAlign memberAlign)
+      pure StructMember { smOffset = newOffset, .. }
+  pure Struct { sSize      = roundToAlignment newAlign newSize
+              , sAlignment = newAlign
+              , sMembers   = newMembers
+              , ..
+              }
+
+-- | Find the next multiple of an alignment
+roundToAlignment
+  :: Int
+  -- ^ The alignment
+  -> Int
+  -- ^ The value to align
+  -> Int
+  -- ^ The next multiple of alignment
+roundToAlignment alignment value =
+  alignment * ((value + (alignment - 1)) `quot` alignment)
 
 ----------------------------------------------------------------
 -- Features and extensions
@@ -630,32 +551,26 @@ appendEnumExtensions extensions =
 -- Structs
 ----------------------------------------------------------------
 
-parseStructs
-  :: Map.Map Text (Int, Int) -> [Content] -> P (Vector Struct)
-parseStructs ~g = onTypes "struct" (parseStruct g)
+parseStructs :: [Content] -> P (Vector  (StructOrUnion AStruct WithoutSize))
+parseStructs = onTypes "struct" parseStruct
 
-parseUnions
-  :: Map.Map Text (Int, Int) -> [Content] -> P (Vector Union)
-parseUnions ~g = onTypes "union" (parseStruct g)
+parseUnions :: [Content] -> P (Vector (StructOrUnion AUnion WithoutSize))
+parseUnions = onTypes "union" parseStruct
 
-parseStruct
-  :: Map.Map Text (Int, Int) -> Node -> P (StructOrUnion a)
-parseStruct ~ss n = do
+parseStruct :: Node -> P (StructOrUnion a WithoutSize)
+parseStruct n = do
   sName <- nameAttr "struct" n
   context sName $ do
     sMembers <-
       fmap fromList
       . traverseV parseStructMember
       $ [ m | Element m <- contents n, name m == "member" ]
-    case Map.member "VkDevice" ss of
-      True -> pure 1
-      False -> pure 2
-    let ~sSize = Map.size ss
-        ~sAlignment = 0
+    let sSize      = ()
+        sAlignment = ()
     pure Struct { .. }
  where
 
-  parseStructMember :: Node -> P StructMember
+  parseStructMember :: Node -> P (StructMember' WithoutSize)
   parseStructMember m = do
     smName <- nameElem "struct member" m
     let typeString = allNonCommentText m
@@ -663,7 +578,7 @@ parseStruct ~ss n = do
     smIsOptional <- boolListAttr "optional" m
     smLengths    <- lenListAttr "len" m
     smValues     <- listAttr decode "values" m
-    let smOffset = 0
+    let smOffset = ()
     pure StructMember { .. }
 
 ----------------------------------------------------------------
@@ -701,12 +616,7 @@ parseCommands es =
 -- Getting all the type names
 ----------------------------------------------------------------
 
-
-cTypeNames :: HasErr r => Vector Text -> Sem r TypeNames
-cTypeNames = fmap (fromList . toList)
-  . traverseV (fromEither . first fromList . cIdentifierFromString . T.unpack)
-
-allTypeNames :: forall r . HasErr r => [Content] -> Sem r (Vector Text)
+allTypeNames :: forall r . HasErr r => [Content] -> Sem r TypeNames
 allTypeNames es = do
   let nameText :: Node -> Sem r ByteString
       nameText n =
@@ -723,7 +633,13 @@ allTypeNames es = do
     nameText
     [ n | Element n <- es, name n == "type", hasAttr "requires" n ]
   fromList <$> traverseV
-    (fmap T.strip . decode)
+    ( fromEither
+    . first fromList
+    . cIdentifierFromString
+    . dropWhileEnd isSpace
+    . dropWhile isSpace
+    . BS.unpack
+    )
     (filter (`notElem` reservedTypeNames) $ extraTypeNames <> toList
       (categoryTypeNames <> requiresTypeNames)
     )
@@ -901,41 +817,28 @@ runReadP p s = case filter (null . snd) (readP_to_S p (BS.unpack s)) of
 infixr 3 <&&> -- same as (&&)
 
 ----------------------------------------------------------------
--- Fixed point nonsense
+--
 ----------------------------------------------------------------
 
--- | Run a commputation with the ability to look up elements in its own output
---
--- The catch is that you must specify the keys of the output elements ahead of
--- time.
---
--- The usual things for fixed point computations hold.
--- - Make sure that there are no dependency cycles in the output list.
--- - Make sure that the dependent parameters in the output are sufficiently
---   lazy
-fixLookupM
-  :: forall m r f k a b
-   . (HasErr r, MemberWithError (Final m) r, MonadFix m, Foldable f, Ord k)
-  => Proxy m
-  -> Vector k
-  -- ^ The keys associated with the output.
-  --
-  -- If there is an element missing from here then you will not be able to look
-  -- it up.
-  --
-  -- If there is an extra key and you look it up then you will get an
-  -- irrefutable pattern match failure.
-  -> ((k -> Maybe a) -> Sem r (f (k, a), b))
-  -- ^ A computation taking a function with which to look up its own output
-  -> Sem r b
-  -- ^ The fixed point
-fixLookupM _ keys make = fixpointToFinal @m $ mdo
-  let m = Map.fromList (toList made)
-      get' k = if k `V.elem` keys then knownJust (Map.lookup k m) else Nothing
-  (made, res) <- raise $ make get'
-  pure res
+for :: (Traversable t, Applicative f) => t a -> (a -> f b) -> f (t b)
+for = flip traverse
 
--- | Make the 'Just' match irrefutable
-knownJust :: Maybe a -> Maybe a
-knownJust ~(Just x) = Just x
+trySeveralTimes
+  :: forall f a m b
+   . (Traversable f, Monad m)
+  => Int
+  -> f a
+  -> (a -> m (Maybe b))
+  -> m (f (Either a b))
+trySeveralTimes n xs f =
+  let xs' = Left <$> xs
+      go :: f (Either a b) -> m (f (Either a b))
+      go = traverse
+        (\case
+          Left x -> f x >>= pure . \case
+            Nothing -> Left x
+            Just r  -> Right r
+          Right r -> pure $ Right r
+        )
+  in  go =<< go xs'
 

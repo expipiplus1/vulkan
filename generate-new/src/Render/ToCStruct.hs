@@ -1,5 +1,5 @@
 {-# language QuasiQuotes #-}
-{-# language TemplateHaskell #-}
+{-# language TemplateHaskellQuotes #-}
 module Render.ToCStruct
   where
 
@@ -9,24 +9,16 @@ import           Relude                  hiding ( Reader
                                                 , State
                                                 )
 import           Text.InterpolatedString.Perl6.Unindented
-import           Data.Text.Prettyprint.Doc
 import           Polysemy
 import           Polysemy.Reader
-import           Polysemy.State
-import qualified Data.Vector                   as V
 
 import           Foreign.Ptr
 import           Foreign.Storable
 import           Foreign.Marshal.Alloc
 
-import           Spec.Parse
-import           Haskell                       as H
-import           Marshal
 import           Error
-import           Render.Utils
 import           Render.Element
 import           Render.Type
-import           Render.Scheme
 
 toCStruct
   :: (HasErr r, Member (Reader RenderParams) r)

@@ -17,6 +17,7 @@ import           Haskell                       as H
 import           Marshal.Scheme
 import           Error
 import           Render.Type
+import           Render.Element
 
 schemeType
   :: (HasErr r, Member (Reader RenderParams) r, Show a)

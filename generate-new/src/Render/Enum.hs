@@ -13,11 +13,12 @@ import           Polysemy
 import           Polysemy.Reader
 import qualified Data.Vector                   as V
 
+import           Foreign.Storable
+
 import           Spec.Parse
 import           Haskell                       as H
 import           Error
 import           Render.Element
-import           Render.Type
 
 renderEnum
   :: (HasErr r, Member (Reader RenderParams) r) => Enum' -> Sem r RenderElement
@@ -36,9 +37,20 @@ renderEnum Enum {..} = do
     let complete = case eType of
           AnEnum   -> completePragma n (mkPatternName . evName <$> eValues)
           ABitmask -> Nothing
+        derivedClasses = ["Eq", "Ord", "Storable"] <> case eType of
+          AnEnum   -> []
+          ABitmask -> ["Zero"]
+    tellImport ''Storable
+    tellImport (TyConName "Zero")
     tellDoc
       .  vsep
-      $  [ "newtype" <+> pretty n <+> "=" <+> pretty conName <+> tDoc
+      $  [ "newtype"
+         <+> pretty n
+         <+> "="
+         <+> pretty conName
+         <+> tDoc
+         <>  line
+         <>  indent 2 ("deriving newtype" <+> tupled derivedClasses)
          , vsep (toList patterns)
          ]
       ++ maybeToList complete
