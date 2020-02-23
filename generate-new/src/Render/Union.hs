@@ -171,8 +171,8 @@ peekUnionFunction UnionDiscriminator {..} MarshaledStruct {..} = do
     let addr = AddrDoc (parens ("castPtr @_ @" <> ptrTDoc <+> ptrName))
     tellImport (ConName pat')
     tellConImport (TyConName n) (ConName con')
-    let from    = smType msmStructMember
-        scheme  = msmScheme
+    let from   = smType msmStructMember
+        scheme = msmScheme
     subPeek <-
       note "Nothing to peek to fill union with"
         =<< renderPeek mempty from addr scheme

@@ -140,13 +140,12 @@ storablePeek
   => AddrDoc
   -> CType
   -> Sem r (Doc ())
-storablePeek (AddrDoc addr) fromPtr =
-  case fromPtr of
-    Ptr _ from -> do
-      tellImportWithAll ''Storable
-      tDoc <- renderTypeHighPrec =<< cToHsType DoPreserve from
-      pure $ "peek @" <> tDoc <+> addr
-    _ -> throw "Trying to generate a storable peek for a non-pointer"
+storablePeek (AddrDoc addr) fromPtr = case fromPtr of
+  Ptr _ from -> do
+    tellImportWithAll ''Storable
+    tDoc <- renderTypeHighPrec =<< cToHsType DoPreserve from
+    pure $ "peek @" <> tDoc <+> addr
+  _ -> throw "Trying to generate a storable peek for a non-pointer"
 
 normalPeek
   :: forall a r proxy
