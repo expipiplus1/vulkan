@@ -23,7 +23,6 @@ import           Data.Vector.Extra              ( Vector
                                                 , pattern Empty
                                                 , pattern Singleton
                                                 )
-import           Polysemy.Reader
 
 import qualified Data.Vector                   as V
 import           Foreign.Ptr
@@ -248,7 +247,7 @@ normalPoke
   -> CType
   -> Sem r (UnassignedPoke a)
 normalPoke valueName to from =
-  runNonDet (asum [same, inlineStruct, pointerStruct, unionPoke]) >>= \case
+  runNonDet (asum [same, inlineStruct, pointerStruct]) >>= \case
     Nothing ->
       throw ("Unhandled " <> show from <> " conversion to: " <> show to)
     Just ps -> pure ps
@@ -261,11 +260,10 @@ normalPoke valueName to from =
         guard . isNothing =<< getUnion n
       _ -> pure ()
     pure storablePoke
-  unionPoke = failToNonDet $ pure $ contTPoke $ \_ _ _ ->
-    pure "error \"TODO: union poking\""
+
   inlineStruct = failToNonDet $ do
     TypeName n <- pure to
-    Just     _ <- getStruct n
+    Just     _ <- liftA2 (<|>) (void <$> getStruct n) (void <$> getUnion n)
     pure $ contTPoke $ \_ (AddrDoc addr) (ValueDoc value) -> do
       tellImportWithAll (TyConName "ToCStruct")
       pure $ "pokeCStruct" <+> addr <+> value <+> ". ($ ())"

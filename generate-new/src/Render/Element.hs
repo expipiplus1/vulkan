@@ -142,6 +142,18 @@ data RenderParams = RenderParams
     -- ^ The name of function pointer members in the dynamic collection
   , alwaysQualifiedNames :: Vector Name
   , mkIdiomaticType   :: Type -> Maybe IdiomaticType
+  , unionDiscriminators :: Vector UnionDiscriminator
+  }
+
+data UnionDiscriminator = UnionDiscriminator
+  { udUnionType :: Text
+    -- ^ The type of the union value
+  , udSiblingType :: Text
+    -- ^ The (enum) type of the discriminator
+  , udSiblingName :: Text
+    -- ^ The struct member which contains the discriminator
+  , udValueConstructorMap :: [(Text, Text)]
+    -- ^ A map of (enumerant, union member) name
   }
 
 data IdiomaticType = IdiomaticType

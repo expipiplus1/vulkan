@@ -24,3 +24,5 @@ struct.
 
 `VkSubpassDescription` shouldn't have an `Either Word32 Vector..` member as
 that vector is constrained to be the same length.
+
+Make VkClearColorValue not use a tuple

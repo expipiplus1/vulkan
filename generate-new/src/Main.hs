@@ -103,14 +103,16 @@ main = (runM . runErr $ go) >>= \case
         isStruct'
         isPassAsPointerType'
 
-    (ss, cs) <- runReader mps $ do
+    (ss, us, cs) <- runReader mps $ do
       ss <- timeItNamed "Marshaling structs"
         $ traverseV marshalStruct specStructs
+      us <- timeItNamed "Marshaling unions"
+        $ traverseV marshalStruct specUnions
       cs <- timeItNamed "Marshaling commands"
         $ traverseV marshalCommand specCommands
         -- TODO: Don't use all commands here, just those commands referenced by
         -- features and extensions. Similarly for specs
-      pure (ss, cs)
+      pure (ss, us, cs)
 
     withTypeInfo spec $ do
 
@@ -118,7 +120,7 @@ main = (runM . runErr $ go) >>= \case
         timeItNamed "Rendering"
         .   runReader renderParams
         $   traverse evaluateWHNF
-        =<< renderSpec spec ss cs
+        =<< renderSpec spec ss us cs
 
       groups <- timeItNamed "Segmenting" $ do
         seeds <- specSeeds spec
@@ -156,6 +158,27 @@ renderParams = RenderParams
                    , wrappedIdiomaticType ''Word64 ''CSize   'CSize
                    ]
     )
+  , unionDiscriminators     = V.fromList
+    [ UnionDiscriminator
+      "VkPipelineExecutableStatisticValueKHR"
+      "VkPipelineExecutableStatisticFormatKHR"
+      "format"
+      [ ("VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR" , "b32")
+      , ("VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR"  , "i64")
+      , ("VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR" , "u64")
+      , ("VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR", "f64")
+      ]
+    , UnionDiscriminator
+      "VkPerformanceValueDataINTEL"
+      "VkPerformanceValueTypeINTEL"
+      "type"
+      [ ("VK_PERFORMANCE_VALUE_TYPE_UINT32_INTEL", "value32")
+      , ("VK_PERFORMANCE_VALUE_TYPE_UINT64_INTEL", "value64")
+      , ("VK_PERFORMANCE_VALUE_TYPE_FLOAT_INTEL" , "valueFloat")
+      , ("VK_PERFORMANCE_VALUE_TYPE_BOOL_INTEL"  , "valueBool")
+      , ("VK_PERFORMANCE_VALUE_TYPE_STRING_INTEL", "valueString")
+      ]
+    ]
   }
 
 wrappedIdiomaticType
@@ -224,13 +247,7 @@ unReservedWord t = if t `elem` (keywords <> preludeWords) then t <> "'" else t
 ----------------------------------------------------------------
 
 isDefaultable' :: CType -> Bool
-isDefaultable' t =
-  -- isBitmask'              <- (isJust .) <$> asks lIsBitmask
-  -- isNonDispatchableHandle <-
-  --   (maybe False (\h -> hHandleType h == NonDispatchable) .) <$> asks lIsHandle
-  isDefaultableForeignType t || isIntegral t
-    -- TODO
-    -- || isBitmask || isNonDispatchableHandle
+isDefaultable' t = isDefaultableForeignType t || isIntegral t
 
 isIntegral :: CType -> Bool
 isIntegral =

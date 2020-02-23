@@ -121,6 +121,19 @@ isPtrType = \case
   Ptr _ _ -> True
   _       -> False
 
+getAllTypeNames :: CType -> [Text]
+getAllTypeNames = \case
+  Float       -> []
+  Double      -> []
+  Void        -> []
+  Char        -> []
+  Int         -> []
+  Ptr _ t     -> getAllTypeNames t
+  Array _ _ t -> getAllTypeNames t
+  TypeName n  -> [n]
+  Proto t ts ->
+    getAllTypeNames t <> Relude.concatMap (getAllTypeNames . snd) ts
+
 ----------------------------------------------------------------
 -- Utils
 ----------------------------------------------------------------

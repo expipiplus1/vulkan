@@ -36,7 +36,7 @@ import           Render.Peek
 
 renderStruct
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)
-  => MarshaledStruct
+  => MarshaledStruct AStruct
   -> Sem r RenderElement
 renderStruct s@MarshaledStruct {..} = context msName $ do
   RenderParams {..} <- ask
@@ -90,31 +90,37 @@ renderStoreInstances
      , HasSpecInfo r
      , HasSiblingInfo StructMember r
      )
-  => MarshaledStruct
+  => MarshaledStruct AStruct
   -> Sem r ()
 renderStoreInstances ms@MarshaledStruct {..} = do
   RenderParams {..} <- ask
   pokes             <- forV msMembers $ \m@MarshaledStructMember {..} -> do
     p <- getPoke msmStructMember msmScheme
-    let
-      p' =
-        (\(Unassigned f) -> Assigned $ do
-            t <- cToHsType DoPreserve (smType msmStructMember)
-            tellImport 'plusPtr
-            mVal <- ValueDoc <$> memberValue m
-            f
-              t
-              (AddrDoc
-                (parens $ addrVar <+> "`plusPtr`" <+> viaShow
-                  (smOffset msmStructMember)
+    let p' =
+          (\(Unassigned f) -> Assigned $ do
+              t <- cToHsType DoPreserve (smType msmStructMember)
+              tellImport 'plusPtr
+              mVal <- ValueDoc <$> memberValue m
+              f
+                t
+                (AddrDoc
+                  (parens $ addrVar <+> "`plusPtr`" <+> viaShow
+                    (smOffset msmStructMember)
+                  )
                 )
-              ) mVal
-          )
-          <$> p
+                mVal
+            )
+            <$> p
     pure p'
-  when (all isIOPoke pokes) $ storableInstance ms
+
   toCStructInstance ms pokes
-  fromCStructInstance ms
+
+  let isDiscriminated u =
+        sName u `elem` (udUnionType <$> toList unionDiscriminators)
+  descendentUnions <- filter (not . isDiscriminated) <$> containsUnion msName
+  when (null descendentUnions) $ do
+    fromCStructInstance ms
+    when (all isIOPoke pokes) $ storableInstance ms
 
 -- TODO: Make this calculate the type locally and tell the depends
 -- TODO: Don't clutter the code with the type on the record if the accessor is
@@ -131,7 +137,7 @@ storableInstance
      , HasRenderParams r
      , HasRenderElem r
      )
-  => MarshaledStruct
+  => MarshaledStruct AStruct
   -> Sem r ()
 storableInstance MarshaledStruct{..} = do
   RenderParams{..} <- ask
@@ -143,7 +149,7 @@ storableInstance MarshaledStruct{..} = do
     instance Storable {n} where
       sizeOf ~_ = {sSize msStruct}
       alignment ~_ = {sAlignment msStruct}
-      peek = undefined
+      peek = peekCStruct
       poke ptr poked = pokeCStruct ptr poked (pure ())
   |]
 
@@ -153,7 +159,7 @@ toCStructInstance
      , HasRenderElem r
      , HasSiblingInfo StructMember r
      )
-  => MarshaledStruct
+  => MarshaledStruct AStruct
   -> Vector (AssignedPoke StructMember)
   -> Sem r ()
 toCStructInstance MarshaledStruct {..} pokes = do
@@ -187,7 +193,7 @@ fromCStructInstance
      , HasRenderParams r
      , HasSiblingInfo StructMember r
      )
-  => MarshaledStruct
+  => MarshaledStruct AStruct
   -> Sem r ()
 fromCStructInstance MarshaledStruct {..} = do
   RenderParams {..} <- ask

@@ -1,5 +1,6 @@
 module Render.Peek
   ( renderPeekStmt
+  , renderPeek
   )
   where
 
@@ -12,19 +13,14 @@ import           Relude                  hiding ( Type
                                                 , Reader
                                                 , runReader
                                                 )
-import           Text.Read (readMaybe)
-import           Data.List                      ( last
-                                                , init
-                                                )
+import qualified Data.Text                     as T
+import           Data.Text                      ( Text )
 import           Data.Text.Prettyprint.Doc
 import           Polysemy
 import           Polysemy.NonDet         hiding ( Empty )
 import           Polysemy.Fail
-import           Data.Vector.Extra              ( Vector
-                                                , pattern Empty
-                                                , pattern Singleton
-                                                , pattern (:<|)
-                                                )
+import           Data.Vector.Extra              ( pattern (:<|) )
+import           Data.Vector                    ( Vector )
 import           Polysemy.Reader
 
 import qualified Data.Vector                   as V
@@ -32,7 +28,6 @@ import           Foreign.Ptr
 import           Foreign.Storable
 import           Foreign.Marshal.Utils
 import           Foreign.Marshal.Array
-import           Foreign.Marshal.Alloc
 import qualified Data.ByteString               as BS
 
 import           Error
@@ -44,7 +39,7 @@ import           CType                         as C
 import           Marshal.Marshalable
 import           Haskell
 import           Spec.Types
-import Render.Poke
+import           Render.Poke
 
 renderPeekStmt
   :: ( HasErr r
@@ -70,54 +65,54 @@ renderPeekStmt getName a addr scheme = do
       Left  con -> pure (con <+> pretty (getName a) <+> "<-" <+>)
       Right fun -> pure (pretty (getName a) <+> "<-" <+> fun <+> "<$>" <+>)
   -- We run renderPeek with the pointer to something of a's type
-  fmap wrap <$> renderPeekWrapped a (Ptr Const (type' a)) addr scheme
+  fmap wrap <$> renderPeekWrapped (lengths a) (Ptr Const (type' a)) addr scheme
+
+type Lengths = Vector ParameterLength
 
 -- | Render a peek and don't do any unwrapping to idiomatic haskell types
 renderPeekWrapped
-  :: ( HasErr r
-     , Marshalable a
-     , Show a
+  :: forall a r
+   . ( HasErr r
      , HasRenderElem r
      , HasSpecInfo r
      , HasRenderParams r
      , HasSiblingInfo a r
+     , Show a
      )
-  => a
+  => Lengths
   -> CType
   -> AddrDoc
   -> MarshalScheme a
   -> Sem r (Maybe (Doc ()))
-renderPeekWrapped a fromType addr = \case
-  Normal   toType     -> Just <$> normalPeek addr toType fromType
+renderPeekWrapped lengths fromType addr = \case
+  Normal   toType     -> Just <$> normalPeek (Proxy @a) addr toType fromType
   Preserve toType     -> Just <$> storablePeek addr fromType
   ElidedVoid          -> pure Nothing
   ElidedLength _ _    -> Just <$> storablePeek addr fromType
   ElidedUnivalued _   -> pure Nothing
   ByteString          -> Just <$> byteStringPeek addr fromType
   VoidPtr             -> Just <$> storablePeek addr fromType
-  Maybe  toType       -> Just <$> maybePeek' a addr fromType toType
-  Vector toElem       -> Just <$> vectorPeek a addr fromType toElem
-  Tupled n toElem     -> Just <$> tuplePeek a addr fromType toElem
-  EitherWord32 toElem -> Just <$> eitherWord32Peek a addr fromType toElem
-  -- -- _                   -> pure (Just "undefined")
+  Maybe  toType       -> Just <$> maybePeek' lengths addr fromType toType
+  Vector toElem       -> Just <$> vectorPeek lengths addr fromType toElem
+  Tupled n toElem     -> Just <$> tuplePeek addr fromType toElem
+  EitherWord32 toElem -> Just <$> eitherWord32Peek lengths addr fromType toElem
   s                   -> throw ("Unhandled peek " <> show s)
 
 -- | Render a peek unwrap it to an idiomatic haskell type
 renderPeek
   :: ( HasErr r
-     , Marshalable a
-     , Show a
      , HasRenderElem r
      , HasSpecInfo r
      , HasRenderParams r
      , HasSiblingInfo a r
+     , Show a
      )
-  => a
+  => Lengths
   -> CType
   -> AddrDoc
   -> MarshalScheme a
   -> Sem r (Maybe (Doc ()))
-renderPeek a fromType addr scheme = do
+renderPeek lengths fromType addr scheme = do
   RenderParams {..} <- ask
   let unwrappedVar = "a"
 
@@ -133,7 +128,7 @@ renderPeek a fromType addr scheme = do
         )
       Right fun -> pure (fun <+> "<$>" <+>)
 
-  wrapped <- renderPeekWrapped a (Ptr Const fromType) addr scheme
+  wrapped <- renderPeekWrapped lengths (Ptr Const fromType) addr scheme
   pure (unwrap <$> wrapped)
 
 ----------------------------------------------------------------
@@ -154,12 +149,19 @@ storablePeek (AddrDoc addr) fromPtr =
     _ -> throw "Trying to generate a storable peek for a non-pointer"
 
 normalPeek
-  :: (HasErr r, HasRenderElem r, HasSpecInfo r, HasRenderParams r)
-  => AddrDoc
+  :: forall a r proxy
+   . ( HasErr r
+     , HasRenderElem r
+     , HasSpecInfo r
+     , HasRenderParams r
+     , HasSiblingInfo a r
+     )
+  => proxy a
+  -> AddrDoc
   -> CType
   -> CType
   -> Sem r (Doc ())
-normalPeek (AddrDoc addr) to fromPtr =
+normalPeek _ (AddrDoc addr) to fromPtr =
   runNonDet (asum [same, inlineStruct, pointerStruct, union]) >>= \case
     Nothing ->
       throw ("Unhandled " <> show fromPtr <> " conversion to: " <> show to)
@@ -193,10 +195,48 @@ normalPeek (AddrDoc addr) to fromPtr =
 
   union = failToNonDet $ do
     Ptr _ from <- pure fromPtr
-    guard (from == to)
     TypeName n <- pure from
-    Just _             <- getUnion n
-    pure "error \"TODO peeking unions\""
+    Just     u <- getUnion n
+    guard (from == to)
+    unionPeek (Proxy @a) (AddrDoc addr) u to fromPtr
+
+unionPeek
+  :: forall a r proxy
+   . ( HasErr r
+     , HasRenderElem r
+     , HasSpecInfo r
+     , HasRenderParams r
+     , HasSiblingInfo a r
+     )
+  => proxy a
+  -> AddrDoc
+  -> Union
+  -> CType
+  -> CType
+  -> Sem r (Doc ())
+unionPeek _ (AddrDoc addr) Struct {..} to fromPtr =
+  failToError (V.singleton . T.pack) $ do
+    RenderParams {..} <- ask
+    getSibling        <- ask @(Text -> Maybe (SiblingInfo a))
+    Ptr _ from        <- pure fromPtr
+    TypeName n        <- pure from
+
+    let discs :: [(UnionDiscriminator, SiblingInfo a)]
+        discs =
+          [ (d, sib)
+          | d@UnionDiscriminator {..} <- toList unionDiscriminators
+          , udUnionType == n
+          , Just sib <- pure $ getSibling udSiblingName
+          ]
+
+    (UnionDiscriminator {..}, discSibling) <- case discs of
+      []  -> throw ("Unable to find union discriminator for " <> n)
+      [d] -> pure d
+      ds  -> throw ("Found multiple union discriminators for " <> n)
+
+    let peekName = "peek" <> mkTyName n
+    tellImport (TermName peekName)
+    pure $ pretty peekName <+> (siReferrer discSibling) <+> addr
 
 -- TODO: Check lengths here for null termination
 byteStringPeek
@@ -227,25 +267,24 @@ byteStringPeek (AddrDoc addr) = \case
   t -> throw ("Unhandled conversion to ByteString from " <> show t)
 
 maybePeek'
-  :: ( Show a
-     , Marshalable a
-     , HasErr r
+  :: ( HasErr r
      , HasRenderElem r
      , HasSpecInfo r
      , HasRenderParams r
      , HasSiblingInfo a r
+     , Show a
      )
-  => a
+  => Lengths
   -> AddrDoc
   -> CType
   -> MarshalScheme a
   -> Sem r (Doc ())
-maybePeek' a (AddrDoc addr) fromPtr to = case fromPtr of
+maybePeek' lengths (AddrDoc addr) fromPtr to = case fromPtr of
   Ptr _ from@(Ptr _ fromElem) -> do
     tellImport 'maybePeek
     let addrDoc     = "j"
         maybePtrDoc = "m"
-    subPeek <- renderPeekWrapped a from (AddrDoc addrDoc) to >>= \case
+    subPeek <- renderPeekWrapped lengths from (AddrDoc addrDoc) to >>= \case
       Nothing -> throw "Nothing to peek to fill Maybe"
       Just p  -> pure p
     ptrTDoc <- renderTypeHighPrec =<< cToHsType DoPreserve from
@@ -259,22 +298,21 @@ maybePeek' a (AddrDoc addr) fromPtr to = case fromPtr of
 
 vectorPeek
   :: forall a r
-   . ( Show a
-     , Marshalable a
-     , HasErr r
+   . ( HasErr r
      , HasRenderElem r
      , HasSpecInfo r
      , HasRenderParams r
      , HasSiblingInfo a r
+     , Show a
      )
-  => a
+  => Vector ParameterLength
   -> AddrDoc
   -> CType
   -> MarshalScheme a
   -> Sem r (Doc ())
-vectorPeek a (AddrDoc addr) fromPtr toElem = case fromPtr of
+vectorPeek lengths (AddrDoc addr) fromPtr toElem = case fromPtr of
 
-  Ptr _ from@(Ptr _ fromElem) | (NamedLength len) :<| _ <- lengths a -> do
+  Ptr _ from@(Ptr _ fromElem) | NamedLength len :<| lenTail <- lengths -> do
     lenName <- siReferrer <$> getSiblingInfo @a len
 
     let ptrDoc = "v"
@@ -282,6 +320,7 @@ vectorPeek a (AddrDoc addr) fromPtr toElem = case fromPtr of
 
     gen     <- generate (AddrDoc ptrDoc)
                         fromElem
+                        lenTail
                         (parens ("fromIntegral" <+> lenName))
 
     pure $ doBlock [ptrDoc <+> "<- peek @" <> ptrTDoc <+> addr, gen]
@@ -298,22 +337,25 @@ vectorPeek a (AddrDoc addr) fromPtr toElem = case fromPtr of
 
     ptrTDoc <- renderTypeHighPrec =<< cToHsType DoPreserve (Ptr Const fromElem)
 
-    gen     <- generate (AddrDoc ptrDoc) fromElem (pretty lenName)
+    gen     <- generate (AddrDoc ptrDoc) fromElem V.empty (pretty lenName)
 
     pure $ doBlock [ptrDoc <+> "<- peek @" <> ptrTDoc <+> addr', gen]
 
   -- YUCK, do this initial pointer peeking elsewhere please!
-  Ptr _ fromElem | (NamedLength len) :<| _ <- lengths a -> do
+  Ptr _ fromElem | (NamedLength len) :<| lenTail <- lengths -> do
     lenName <- siReferrer <$> getSiblingInfo @a len
 
-    generate (AddrDoc addr) fromElem (parens ("fromIntegral" <+> lenName))
+    generate (AddrDoc addr)
+             fromElem
+             lenTail
+             (parens ("fromIntegral" <+> lenName))
 
 
   t -> throw ("Unhandled conversion to Vector from " <> show t)
 
  where
 
-  generate (AddrDoc addr) fromElem lenName = do
+  generate (AddrDoc addr) fromElem lenTail lenName = do
     let indexDoc = "i"
     tellImport 'V.generateM
 
@@ -337,7 +379,7 @@ vectorPeek a (AddrDoc addr) fromPtr toElem = case fromPtr of
         tellImport 'advancePtr
         pure (AddrDoc (parens (addr <+> "`advancePtr`" <+> indexDoc)))
 
-    subPeek <- renderPeek a fromElem advance toElem >>= \case
+    subPeek <- renderPeek lenTail fromElem advance toElem >>= \case
       Nothing -> throw "Unable to get vector element peek"
       Just p  -> pure p
 
@@ -347,44 +389,41 @@ vectorPeek a (AddrDoc addr) fromPtr toElem = case fromPtr of
 
 eitherWord32Peek
   :: forall a r
-   . ( Show a
-     , Marshalable a
-     , HasErr r
+   . ( HasErr r
      , HasRenderElem r
      , HasSpecInfo r
      , HasRenderParams r
      , HasSiblingInfo a r
+     , Show a
      )
-  => a
+  => Lengths
   -> AddrDoc
   -> CType
   -> MarshalScheme a
   -> Sem r (Doc ())
-eitherWord32Peek a addr fromPtr toElem = case fromPtr of
-  Ptr _ from@(Ptr _ fromElem) | (NamedLength len) :<| _ <- lengths a -> do
+eitherWord32Peek lengths addr fromPtr toElem = case fromPtr of
+  Ptr _ from@(Ptr _ fromElem) | (NamedLength len) :<| _ <- lengths -> do
     lenName <- siReferrer <$> getSiblingInfo @a len
     m       <-
       note "Unable to get wrapped peek for EitherWord32"
-        =<< renderPeekWrapped a fromPtr addr (Maybe (Vector toElem))
+        =<< renderPeekWrapped lengths fromPtr addr (Maybe (Vector toElem))
     pure $ "maybe" <+> parens ("Left" <+> lenName) <+> "Right <$>" <+> m
   t -> throw ("Unhandled conversion to EitherWord32 from " <> show t)
 
 tuplePeek
   :: forall a r
-   . ( Show a
-     , Marshalable a
-     , HasErr r
+   . ( HasErr r
      , HasRenderElem r
      , HasSpecInfo r
      , HasRenderParams r
      , HasSiblingInfo a r
+     , Show a
      )
-  => a
-  -> AddrDoc
+  => AddrDoc
   -> CType
   -> MarshalScheme a
   -> Sem r (Doc ())
-tuplePeek a (AddrDoc addr) fromPtr toElem = case fromPtr of
+tuplePeek (AddrDoc addr) fromPtr toElem = case fromPtr of
   Ptr _ (Array NonConst (NumericArraySize len) fromElem) -> do
     let elemDoc n = "e" <> viaShow n
         tupPtrDoc = "t"
@@ -410,7 +449,7 @@ tuplePeek a (AddrDoc addr) fromPtr toElem = case fromPtr of
           AddrDoc (parens (tupPtrDoc <+> "`advancePtr`" <+> viaShow i))
 
     subPeeks <- forV [0 .. len - 1] $ \i ->
-      renderPeek a fromElem (advance (fromIntegral i)) toElem >>= \case
+      renderPeek mempty fromElem (advance (fromIntegral i)) toElem >>= \case
         Nothing -> throw "Unable to get tuple element peek"
         Just p  -> pure (elemDoc i <+> "<-" <+> p)
 

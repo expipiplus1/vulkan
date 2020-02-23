@@ -15,9 +15,9 @@ import Spec.Parse
 import Error
 import Marshal.Scheme
 
-data MarshaledStruct = MarshaledStruct
+data MarshaledStruct t = MarshaledStruct
   { msName :: Text
-  , msStruct :: Struct
+  , msStruct :: StructOrUnion t 'WithSize
   , msMembers :: Vector MarshaledStructMember
   }
 
@@ -29,8 +29,8 @@ data MarshaledStructMember =
 
 marshalStruct
   :: (MemberWithError (Reader MarshalParams) r, HasErr r)
-  => Struct
-  -> Sem r MarshaledStruct
+  => StructOrUnion t 'WithSize
+  -> Sem r (MarshaledStruct t)
 marshalStruct s@Struct {..} = contextShow sName $ do
   let msName = sName
       msStruct = s
@@ -41,7 +41,7 @@ marshalStruct s@Struct {..} = contextShow sName $ do
 
 structMemberScheme
   :: (MemberWithError (Reader MarshalParams) r, HasErr r)
-  => Struct
+  => StructOrUnion t 'WithSize
   -> StructMember
   -> Sem r (MarshalScheme StructMember)
 structMemberScheme Struct {..} member = do
