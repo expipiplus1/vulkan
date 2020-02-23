@@ -185,7 +185,7 @@ resolveChainedPoke = \case
                  _        -> "<-"
            in
              (\(Assigned d) ->
-                 Assigned $ (unValueDoc intermediate <+> op <+>) <$> d
+                 Assigned $ ((unValueDoc intermediate <+> op) <+>) <$> d
                )
                <$> last initialPokeDocs
          ]

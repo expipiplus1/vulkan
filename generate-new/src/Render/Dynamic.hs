@@ -73,7 +73,7 @@ loader level handleTypeName commands = do
   memberDocs        <-
     forV commands $ \MarshaledCommand { mcCommand = Command {..} } -> do
       ty <- cToHsType
-        DoPreserve
+        DoLower
         (C.Proto
           cReturnType
           [ (Just pName, pType) | Parameter {..} <- V.toList cParameters ]
@@ -122,7 +122,7 @@ writeInitInstanceCmds instanceCommands = do
     . forV instanceCommands
     $ \MarshaledCommand { mcCommand = Command {..} } -> do
         fTyDoc <- renderTypeHighPrec =<< cToHsType
-          DoPreserve
+          DoLower
           (C.Proto
             cReturnType
             [ (Just pName, pType) | Parameter {..} <- V.toList cParameters ]
@@ -161,7 +161,7 @@ writeInitDeviceCmds deviceCommands = do
       maybe (throw "Unable to find vkGetDeviceProcAddr command") pure
         =<< getCommand (TermName "vkGetDeviceProcAddr")
     renderTypeHighPrec =<< cToHsType
-      DoPreserve
+      DoLower
       (C.Proto
         cReturnType
         [ (Just pName, pType) | Parameter {..} <- V.toList cParameters ]
@@ -171,7 +171,7 @@ writeInitDeviceCmds deviceCommands = do
     . forV deviceCommands
     $ \MarshaledCommand { mcCommand = Command {..} } -> do
         fTyDoc <- renderTypeHighPrec =<< cToHsType
-          DoPreserve
+          DoLower
           (C.Proto
             cReturnType
             [ (Just pName, pType) | Parameter {..} <- V.toList cParameters ]
@@ -208,7 +208,7 @@ writeGetInstanceProcAddr = do
     maybe (throw "Unable to find vkGetInstanceProcAddr command") pure
       =<< getCommand (TermName "vkGetInstanceProcAddr")
   ty <- cToHsType
-    DoPreserve
+    DoLower
     (C.Proto cReturnType
              [ (Just pName, pType) | Parameter {..} <- V.toList cParameters ]
     )
@@ -238,7 +238,7 @@ writeMkGetDeviceProcAddr = do
     maybe (throw "Unable to find vkGetDeviceProcAddr command") pure
       =<< getCommand (TermName "vkGetDeviceProcAddr")
   ty <- cToHsType
-    DoPreserve
+    DoLower
     (C.Proto cReturnType
              [ (Just pName, pType) | Parameter {..} <- V.toList cParameters ]
     )

@@ -4,6 +4,7 @@ module CType
 import           Relude                  hiding ( Const
                                                 , Reader
                                                 , ask
+                                                , asks
                                                 )
 import           Language.C.Types.Parse  hiding ( Proto
                                                 , Array
@@ -51,7 +52,8 @@ parseCType
   => ByteString
   -> Sem r CType
 parseCType bs = do
-  parseContext <- cCParserContext <$> ask
+  parseContext <- asks (cCParserContext False)
+  typenames <- ask @TypeNames
   let -- Drop the 'struct' keyword, it confuses our C type parser.
       typeStringWorkarounds :: ByteString -> ByteString
       typeStringWorkarounds =

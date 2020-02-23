@@ -631,7 +631,7 @@ allTypeNames es = do
   fromList <$> traverseV
     ( fromEither
     . first fromList
-    . cIdentifierFromString
+    . cIdentifierFromString False
     . dropWhileEnd isSpace
     . dropWhile isSpace
     . BS.unpack

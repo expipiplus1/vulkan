@@ -28,6 +28,8 @@ data Preserve
     -- ^ Use more idiomatic haskell types
   | DoPreserve
     -- ^ Use the types from Foreign.C.Types
+  | DoLower
+    -- ^ Use the types from Foreign.C.Types and lower arrays to pointers
 
 cToHsType
   :: forall r
@@ -41,17 +43,20 @@ cToHsType preserve t = do
   pure $ case preserve of
     DoNotPreserve -> maybe t' itType (mkIdiomaticType t')
     DoPreserve    -> t'
+    DoLower       -> t'
 
  where
   r :: Sem r H.Type
   r = case t of
     Void -> case preserve of
+      DoLower       -> pure (TupleT 0)
       DoPreserve    -> pure (TupleT 0)
       DoNotPreserve -> throw "Getting the unpreserved haskell type for void"
     Int    -> pure $ ConT ''CInt
     Float  -> pure $ ConT ''CFloat
     Double -> pure $ ConT ''CDouble
     Char   -> case preserve of
+      DoLower    -> pure $ ConT ''CChar
       DoPreserve -> pure $ ConT ''CChar
       DoNotPreserve ->
         throw
@@ -62,11 +67,15 @@ cToHsType preserve t = do
       pure $ ConT ''Ptr :@ t'
     Array _ (NumericArraySize n) e -> do
       e' <- cToHsType preserve e
-      pure $ ConT ''VSS.Vector :@ LitT (NumTyLit (fromIntegral n)) :@ e'
+      pure $ case preserve of
+        DoLower -> ConT ''Ptr :@ e'
+        _       -> ConT ''VSS.Vector :@ LitT (NumTyLit (fromIntegral n)) :@ e'
     Array _ (SymbolicArraySize n) e -> do
       RenderParams {..} <- ask
       e'                <- cToHsType preserve e
-      pure $ ConT ''VSS.Vector :@ ConT (typeName (mkTyName n)) :@ e'
+      pure $ case preserve of
+        DoLower -> ConT ''Ptr :@ e'
+        _       -> ConT ''VSS.Vector :@ ConT (typeName (mkTyName n)) :@ e'
     TypeName "uint8_t"  -> pure $ ConT ''Word8
     TypeName "uint16_t" -> pure $ ConT ''Word16
     TypeName "uint32_t" -> pure $ ConT ''Word32

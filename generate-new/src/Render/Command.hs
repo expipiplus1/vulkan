@@ -36,7 +36,7 @@ renderCommand m@MarshaledCommand {..} = contextShow mcName $ do
   let Command {..} = mcCommand
   genRe ("command " <> mcName) $ do
     ffiTy <- cToHsType
-      DoPreserve
+      DoLower
       (Proto cReturnType
              [ (Nothing, pType) | Parameter {..} <- toList cParameters ]
       )

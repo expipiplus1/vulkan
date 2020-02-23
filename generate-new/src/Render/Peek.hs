@@ -60,10 +60,10 @@ renderPeekStmt getName a addr scheme = do
   let fromType = type' a
   hsType <- cToHsType DoPreserve fromType
   wrap   <- case mkIdiomaticType hsType of
-    Nothing                     -> pure (pretty (getName a) <+> "<-" <+>)
+    Nothing                     -> pure ((pretty (getName a) <+> "<-") <+>)
     Just (IdiomaticType _ _ to) -> to >>= \case
-      Left  con -> pure (con <+> pretty (getName a) <+> "<-" <+>)
-      Right fun -> pure (pretty (getName a) <+> "<-" <+> fun <+> "<$>" <+>)
+      Left  con -> pure ((con <+> pretty (getName a) <+> "<-") <+>)
+      Right fun -> pure ((pretty (getName a) <+> "<-" <+> fun <+> "<$>") <+>)
   -- We run renderPeek with the pointer to something of a's type
   fmap wrap <$> renderPeekWrapped (lengths a) (Ptr Const (type' a)) addr scheme
 
@@ -122,11 +122,12 @@ renderPeek lengths fromType addr scheme = do
     Nothing                     -> pure id
     Just (IdiomaticType _ _ to) -> to >>= \case
       Left con -> pure
-        (parens
-            ("\\" <> parens (con <+> unwrappedVar) <+> "->" <+> unwrappedVar)
-          <+> "<$>" <+>
+        ((   parens
+             ("\\" <> parens (con <+> unwrappedVar) <+> "->" <+> unwrappedVar)
+         <+> "<$>"
+         ) <+>
         )
-      Right fun -> pure (fun <+> "<$>" <+>)
+      Right fun -> pure ((fun <+> "<$>") <+>)
 
   wrapped <- renderPeekWrapped lengths (Ptr Const fromType) addr scheme
   pure (unwrap <$> wrapped)
@@ -235,7 +236,7 @@ unionPeek _ (AddrDoc addr) Struct {..} to fromPtr =
 
     let peekName = "peek" <> mkTyName n
     tellImport (TermName peekName)
-    pure $ pretty peekName <+> (siReferrer discSibling) <+> addr
+    pure $ pretty peekName <+> siReferrer discSibling <+> addr
 
 -- TODO: Check lengths here for null termination
 byteStringPeek
