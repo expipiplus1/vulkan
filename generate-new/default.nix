@@ -1,4 +1,5 @@
-{ pkgs ? import <nixpkgs> { config.allowBroken = true; }, compiler ? null, hoogle ? true }:
+{ pkgs ? import <nixpkgs> { config.allowBroken = true; }, compiler ? "ghc882"
+, hoogle ? true }:
 
 let
   # src = pkgs.nix-gitignore.gitignoreSource [ ] ./.;
@@ -17,6 +18,24 @@ let
       overrides = self: super:
         {
           algebraic-graphs = dontCheck super.algebraic-graphs;
+          first-class-families = doJailbreak super.first-class-families;
+          inline-c = self.inline-c_0_9_0_0;
+          polysemy-plugin = self.callCabal2nix "" (
+              (pkgs.fetchFromGitHub {
+                owner = "polysemy-research";
+                repo = "polysemy";
+                rev = "72dc96fbd13dba6d8e9767253b7298e00a781bee";
+                sha256 = "09b1n71gjmhf4ggx2wlywxm11jl3qbmhnlmmchj8pyy3hczl6hb5";
+              } + "/polysemy-plugin")
+            ) { };
+          polysemy = self.callCabal2nix "" (
+              (pkgs.fetchFromGitHub {
+                owner = "polysemy-research";
+                repo = "polysemy";
+                rev = "72dc96fbd13dba6d8e9767253b7298e00a781bee";
+                sha256 = "09b1n71gjmhf4ggx2wlywxm11jl3qbmhnlmmchj8pyy3hczl6hb5";
+              })
+            ) { };
         } // pkgs.lib.optionalAttrs hoogle {
           ghc = super.ghc // { withPackages = super.ghc.withHoogle; };
           ghcWithPackages = self.ghc.withPackages;
