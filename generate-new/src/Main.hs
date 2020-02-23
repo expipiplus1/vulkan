@@ -9,6 +9,7 @@ import           Relude.Extra.Map
 import           Say
 import           System.TimeIt
 import           Polysemy
+import qualified Data.HashMap.Strict as Map
 import           Polysemy.Reader
 import qualified Data.Vector.Storable.Sized    as VSS
 import qualified Data.Vector                   as V
@@ -50,11 +51,57 @@ main = (runM . runErr $ go) >>= \case
 
     spec@Spec {..} <- timeItNamed "Parsing spec" $ parseSpec specText
 
-    let structNames :: HashSet Text
-        structNames =
-          fromList . (extraStructNames <>) . toList . fmap sName $ specStructs
-        isStruct' = (`member` structNames)
-        mps       = MarshalParams isDefaultable' isStruct' isPassAsPointerType'
+    let
+      aliasMap :: Map.HashMap Text Text
+      aliasMap =
+        fromList [ (aName, aTarget) | Alias {..} <- toList specAliases ]
+      resolveAlias :: Text -> Text
+      resolveAlias t = case Map.lookup t aliasMap of
+        Nothing -> t
+        Just t' -> resolveAlias t' -- TODO: handle cycles!
+      structNames :: HashSet Text
+      structNames =
+        fromList . (extraStructNames <>) . toList . fmap sName $ specStructs
+      isStruct' = (`member` structNames)
+      bitmaskNames :: HashSet Text
+      bitmaskNames =
+        fromList [ eName | Enum {..} <- toList specEnums, eType == ABitmask ]
+      isBitmask     = (`member` bitmaskNames)
+      isBitmaskType = \case
+        TypeName n -> isBitmask n || isBitmask (resolveAlias n)
+        _          -> False
+      nonDispatchableHandleNames :: HashSet Text
+      nonDispatchableHandleNames = fromList
+        [ hName
+        | Handle {..} <- toList specHandles
+        , hDispatchable == NonDispatchable
+        ]
+      isNonDispatchableHandle     = (`member` nonDispatchableHandleNames)
+      isNonDispatchableHandleType = \case
+        TypeName n ->
+          isNonDispatchableHandle n || isNonDispatchableHandle (resolveAlias n)
+        _ -> False
+      dispatchableHandleNames :: HashSet Text
+      dispatchableHandleNames = fromList
+        [ hName
+        | Handle {..} <- toList specHandles
+        , hDispatchable == Dispatchable
+        ]
+      -- TODO Remove, these will not be defaultable once we bundle the
+      -- command pointers
+      isDispatchableHandle     = (`member` dispatchableHandleNames)
+      isDispatchableHandleType = \case
+        TypeName n ->
+          isDispatchableHandle n || isDispatchableHandle (resolveAlias n)
+        _ -> False
+      mps = MarshalParams
+        (    isDefaultable'
+        <||> isBitmaskType
+        <||> isNonDispatchableHandleType
+        <||> isDispatchableHandleType
+        )
+        isStruct'
+        isPassAsPointerType'
 
     (ss, cs) <- runReader mps $ do
       ss <- timeItNamed "Marshaling structs"
@@ -126,6 +173,10 @@ wrappedIdiomaticType t w c =
     (do
       tellConImport w c
       pure (pretty (nameBase c))
+    )
+    (do
+      tellConImport w c
+      pure . Left . pretty . nameBase $ c
     )
   )
 
@@ -234,3 +285,10 @@ isPassAsPointerType' = \case
 -- TODO: Remove, extra union names and handle
 extraStructNames :: [Text]
 extraStructNames = ["VkClearColorValue", "VkSemaphore"]
+
+----------------------------------------------------------------
+-- Utils
+----------------------------------------------------------------
+
+(<||>) :: Applicative f => f Bool -> f Bool -> f Bool
+(<||>) = liftA2 (||)

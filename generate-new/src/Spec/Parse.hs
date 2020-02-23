@@ -101,10 +101,6 @@ parseSpec bs = do
               <> [ (fpName, (8, 8))
                  | FuncPointer {..} <- V.toList specFuncPointers
                  ]
-          lookupSize :: CType -> Maybe (Int, Int)
-          lookupSize = \case
-            TypeName n -> Map.lookup n sizeMap
-            _          -> Nothing
           constantMap :: Map.Map Text Int
           constantMap = Map.fromList
             [ (n, (fromIntegral v))
@@ -811,10 +807,6 @@ runReadP p s = case filter (null . snd) (readP_to_S p (BS.unpack s)) of
   []       -> throw "no parse"
   [(x, _)] -> pure x
   _        -> throw "ambiguous parse"
-
-(<&&>) :: Applicative f => f Bool -> f Bool -> f Bool
-(<&&>) = liftA2 (&&)
-infixr 3 <&&> -- same as (&&)
 
 ----------------------------------------------------------------
 --

@@ -39,10 +39,8 @@ cToHsType preserve t = do
   RenderParams {..} <- ask
   t'                <- r
   pure $ case preserve of
-    DoNotPreserve -> case mkIdiomaticType t' of
-      Nothing -> t'
-      Just i  -> itType i
-    DoPreserve -> t'
+    DoNotPreserve -> maybe t' itType (mkIdiomaticType t')
+    DoPreserve    -> t'
 
  where
   r :: Sem r H.Type
@@ -60,8 +58,8 @@ cToHsType preserve t = do
           "Getting the unpreserved haskell type for char. This case should be implemented if this char is not better represented by a bytestring"
     Ptr _ Void -> pure $ ConT ''Ptr :@ TupleT 0
     Ptr _ p    -> do
-      t <- cToHsType preserve p
-      pure $ ConT ''Ptr :@ t
+      t' <- cToHsType preserve p
+      pure $ ConT ''Ptr :@ t'
     Array _ (NumericArraySize n) e -> do
       e' <- cToHsType preserve e
       pure $ ConT ''VSS.Vector :@ LitT (NumTyLit (fromIntegral n)) :@ e'
@@ -84,12 +82,11 @@ cToHsType preserve t = do
     Proto ret ps -> do
       retTy <- cToHsType preserve ret
       pTys  <- forV ps $ \(n, c) -> do
-        t <- cToHsType preserve c
+        t' <- cToHsType preserve c
         pure $ case n of
-          Nothing   -> t
-          Just name -> namedTy name t
+          Nothing   -> t'
+          Just name -> namedTy name t'
       pure $ foldr (~>) (ConT ''IO :@ retTy) pTys
-    c -> throw $ "Unable to get Haskell type for: " <> show c
 
 namedTy :: Text -> H.Type -> H.Type
 namedTy name = InfixT (LitT (StrTyLit (toString name))) (typeName ":::")

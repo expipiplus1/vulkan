@@ -21,7 +21,7 @@ import           Render.Enum
 import           Render.FuncPointer
 import           Render.Handle
 import           Render.Struct
-import           Render.ToCStruct
+import           Render.CStruct
 import           Render.Union
 import           Render.SpecInfo
 import           Spec.Parse
@@ -45,7 +45,7 @@ renderSpec s@Spec {..} ss cs =
          renderConstant
          (V.filter ((`notElem` forbiddenConstants) . constName) specConstants)
     <> V.singleton (renderDynamicLoader cs)
-    <> V.singleton toCStruct
+    <> cStructDocs
     <> V.singleton marshalUtils
     <> V.singleton zeroClass
     )

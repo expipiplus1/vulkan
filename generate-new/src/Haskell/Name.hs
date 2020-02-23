@@ -3,10 +3,8 @@ module Haskell.Name
   )
 where
 
-import qualified Data.Text                     as T
 import           Data.Text                      ( Text )
 import           Relude
-import           Language.Haskell.TH.Syntax
 
 data HName
   = TermName { unName :: Text }

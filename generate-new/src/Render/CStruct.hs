@@ -1,7 +1,9 @@
 {-# language QuasiQuotes #-}
 {-# language TemplateHaskellQuotes #-}
-module Render.ToCStruct
-  where
+module Render.CStruct
+  ( cStructDocs
+  )
+where
 
 import           Relude                  hiding ( Reader
                                                 , ask
@@ -11,6 +13,8 @@ import           Relude                  hiding ( Reader
 import           Text.InterpolatedString.Perl6.Unindented
 import           Polysemy
 import           Polysemy.Reader
+import           Data.Vector                    ( Vector )
+import qualified Data.Vector                   as V
 
 import           Foreign.Ptr
 import           Foreign.Storable
@@ -18,7 +22,9 @@ import           Foreign.Marshal.Alloc
 
 import           Error
 import           Render.Element
-import           Render.Type
+
+cStructDocs :: (HasErr r, HasRenderParams r) => Vector (Sem r RenderElement)
+cStructDocs = V.fromList [toCStruct, fromCStruct]
 
 toCStruct
   :: (HasErr r, Member (Reader RenderParams) r)
@@ -47,4 +53,19 @@ toCStruct = do
         -- outside the continuation as additional allocations may have been
         -- made.
         pokeCStruct :: Ptr a -> a -> IO b -> IO b
+    |]
+
+fromCStruct
+  :: (HasErr r, Member (Reader RenderParams) r)
+  => Sem r RenderElement
+fromCStruct = do
+  RenderParams {..} <- ask
+  genRe "ToCStruct" $ do
+    tellExport (EClass "FromCStruct")
+    tellImport ''Ptr
+    tellDoc [qi|
+      -- | A class for types which can be marshalled from a C style
+      -- structure.
+      class FromCStruct a where
+        peekCStruct :: Ptr a -> IO a
     |]

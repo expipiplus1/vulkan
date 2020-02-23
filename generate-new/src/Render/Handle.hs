@@ -40,6 +40,7 @@ renderHandle Handle {..} = context hName $ do
             c = mkConName hName hName
         tDoc <- renderTypeHighPrec t
         tellExport (EData n)
+        tellImport (TyConName "Zero")
         tellImport ''Storable
         tellDoc
           $   "newtype"

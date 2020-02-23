@@ -5,6 +5,7 @@ module Render.Struct
 
 import           Relude                  hiding ( Reader
                                                 , ask
+                                                , runReader
                                                 , lift
                                                 , State
                                                 , Type
@@ -13,10 +14,9 @@ import           Text.InterpolatedString.Perl6.Unindented
 import           Data.Text.Prettyprint.Doc
 import           Polysemy
 import           Polysemy.Reader
-import           Polysemy.State
-import           Polysemy.Error
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
+import qualified Data.Map                      as Map
 
 import           Foreign.Marshal.Alloc
 import           Foreign.Ptr
@@ -32,12 +32,13 @@ import           Render.Type
 import           Render.Scheme
 import           Render.SpecInfo
 import           Render.Poke
+import           Render.Peek
 
 renderStruct
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)
   => MarshaledStruct
   -> Sem r RenderElement
-renderStruct s@MarshaledStruct {..} = do
+renderStruct s@MarshaledStruct {..} = context msName $ do
   RenderParams {..} <- ask
   genRe ("struct " <> msName) $ do
     let n = mkTyName msName
@@ -47,12 +48,20 @@ renderStruct s@MarshaledStruct {..} = do
         data {n} = {mkConName msName msName}
           {braceList ms}
         |]
-    renderStoreInstances s
+    memberMap <- sequenceV $ Map.fromList
+      [ ( smName (msmStructMember m)
+        , (\v -> SiblingInfo v (msmScheme m)) <$> memberValue m
+        )
+      | m <- V.toList msMembers
+      ]
+    let lookupMember :: Text -> Maybe (SiblingInfo StructMember)
+        lookupMember = (`Map.lookup` memberMap)
+    runReader lookupMember $ renderStoreInstances s
 
 renderStructMember
   :: ( HasErr r
-     , MemberWithError (Reader RenderParams) r
-     , MemberWithError (State RenderElement) r
+     , HasRenderParams r
+     , HasRenderElem r
      )
   => MarshaledStructMember
   -> Sem r (Maybe (Doc ()))
@@ -74,45 +83,53 @@ renderStructMember MarshaledStructMember {..} = do
 addrVar :: Doc ()
 addrVar = "p"
 
-valueVar :: Doc ()
-valueVar = "poked"
-
 renderStoreInstances
-  :: (HasErr r, HasRenderParams r, HasRenderElem r, HasSpecInfo r)
+  :: ( HasErr r
+     , HasRenderParams r
+     , HasRenderElem r
+     , HasSpecInfo r
+     , HasSiblingInfo StructMember r
+     )
   => MarshaledStruct
   -> Sem r ()
 renderStoreInstances ms@MarshaledStruct {..} = do
   RenderParams {..} <- ask
-  pokes <- forV msMembers $ \m@MarshaledStructMember {..} -> do
+  pokes             <- forV msMembers $ \m@MarshaledStructMember {..} -> do
     p <- getPoke msmStructMember msmScheme
     let
       p' =
         (\(Unassigned f) -> Assigned $ do
             t <- cToHsType DoPreserve (smType msmStructMember)
-            let member = mkMemberName (smName msmStructMember)
             tellImport 'plusPtr
-            tDoc <- renderTypeHighPrec (ConT (typeName msName))
+            mVal <- ValueDoc <$> memberValue m
             f
               t
               (AddrDoc
                 (parens $ addrVar <+> "`plusPtr`" <+> viaShow
                   (smOffset msmStructMember)
                 )
-              )
-              (ValueDoc
-                (parens $ pretty member <+> parens (valueVar <+> "::" <+> tDoc))
-              )
+              ) mVal
           )
           <$> p
     pure p'
-  when (all isIOPoke pokes) $ do
-    storableInstance ms
+  when (all isIOPoke pokes) $ storableInstance ms
   toCStructInstance ms pokes
+  fromCStructInstance ms
+
+-- TODO: Make this calculate the type locally and tell the depends
+-- TODO: Don't clutter the code with the type on the record if the accessor is
+-- not ambiguous
+memberValue
+  :: HasRenderParams r => MarshaledStructMember -> Sem r (Doc ())
+memberValue MarshaledStructMember {..} = do
+  RenderParams {..} <- ask
+  let m = mkMemberName (smName msmStructMember)
+  pure $ pretty m
 
 storableInstance
   :: ( HasErr r
-     , MemberWithError (Reader RenderParams) r
-     , MemberWithError (State RenderElement) r
+     , HasRenderParams r
+     , HasRenderElem r
      )
   => MarshaledStruct
   -> Sem r ()
@@ -120,7 +137,7 @@ storableInstance MarshaledStruct{..} = do
   RenderParams{..} <- ask
   let n = mkTyName msName
   -- Some member names clash with storable members "alignment" for instance
-  tellQualImportWithAll ''Storable
+  tellImportWithAll ''Storable
   tellImport ''Storable
   tellDoc [qqi|
     instance Storable {n} where
@@ -132,19 +149,25 @@ storableInstance MarshaledStruct{..} = do
 
 toCStructInstance
   :: ( HasErr r
-     , MemberWithError (Reader RenderParams) r
-     , MemberWithError (State RenderElement) r
+     , HasRenderParams r
+     , HasRenderElem r
+     , HasSiblingInfo StructMember r
      )
   => MarshaledStruct
-  -> Vector AssignedPoke
+  -> Vector (AssignedPoke StructMember)
   -> Sem r ()
 toCStructInstance MarshaledStruct {..} pokes = do
   RenderParams {..} <- ask
   tellImportWithAll (TyConName "ToCStruct")
   let n           = mkTyName msName
+      con         = mkConName msName msName
       Struct {..} = msStruct
+      structT     = ConT (typeName n)
+      aVar        = mkVar "a"
   tellImport 'allocaBytesAligned
-  pokeDoc <- renderPokesInIO pokes
+  pokeDoc         <- renderPokesInIO pokes
+  pokeCStructTDoc <- renderType
+    (ConT ''Ptr :@ structT ~> structT ~> ConT ''IO :@ aVar ~> ConT ''IO :@ aVar)
   tellDoc $ "instance ToCStruct" <+> pretty n <+> "where" <> line <> indent
     2
     (vsep
@@ -152,7 +175,48 @@ toCStructInstance MarshaledStruct {..} pokes = do
       <+> viaShow sSize
       <+> viaShow sAlignment
       <+> "$ \\p -> pokeCStruct p x (f p)"
-      , "pokeCStruct" <+> addrVar <+> valueVar <+> "=" <+> pokeDoc
+      , "pokeCStruct ::" <+> pokeCStructTDoc
+      , "pokeCStruct" <+> addrVar <+> pretty con <> "{..} =" <+> pokeDoc
+      ]
+    )
+
+fromCStructInstance
+  :: ( HasErr r
+     , HasRenderElem r
+     , HasSpecInfo r
+     , HasRenderParams r
+     , HasSiblingInfo StructMember r
+     )
+  => MarshaledStruct
+  -> Sem r ()
+fromCStructInstance MarshaledStruct {..} = do
+  RenderParams {..} <- ask
+  tellImportWithAll (TyConName "FromCStruct")
+  let
+    n           = mkTyName msName
+    con         = mkConName msName msName
+    Struct {..} = msStruct
+    structT     = ConT (typeName n)
+    offset o tDoc =
+      AddrDoc . parens $ addrVar <+> "`plusPtr`" <+> viaShow o <+> "::" <+> tDoc
+  tellImport 'plusPtr
+  peekDocs <- catMaybes <$> sequenceV
+    [ context (smName msmStructMember) $ do
+        hTy  <- cToHsType DoPreserve (smType msmStructMember)
+        tDoc <- renderType (ConT ''Ptr :@ hTy)
+        renderPeekStmt (mkMemberName . smName)
+                       msmStructMember
+                       (offset (smOffset msmStructMember) tDoc)
+                       msmScheme
+    | MarshaledStructMember {..} <- V.toList msMembers
+    ]
+  peekCStructTDoc <- renderType (ConT ''Ptr :@ structT ~> ConT ''IO :@ structT)
+  tellDoc $ "instance FromCStruct" <+> pretty n <+> "where" <> line <> indent
+    2
+    (vsep
+      [ "peekCStruct ::" <+> peekCStructTDoc
+      , "peekCStruct" <+> addrVar <+> "=" <+> doBlock
+        (peekDocs <> ["pure" <+> pretty con <+> "{..}"])
       ]
     )
 

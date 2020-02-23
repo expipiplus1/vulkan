@@ -147,6 +147,8 @@ data RenderParams = RenderParams
 data IdiomaticType = IdiomaticType
   { itType :: Type
   , itFrom :: forall r. (HasRenderElem r, HasRenderParams r) => Sem r (Doc ())
+  , itTo :: forall r. (HasRenderElem r, HasRenderParams r) => Sem r (Either (Doc ()) (Doc ()))
+    -- ^ Either a constructor for matching, or a term for applying
   }
 
 ----------------------------------------------------------------

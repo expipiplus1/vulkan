@@ -108,7 +108,7 @@ data HandleLevel
   deriving (Show, Eq)
 
 data Dispatchable = Dispatchable | NonDispatchable
-  deriving (Show)
+  deriving (Show, Eq)
 
 --
 -- Structs

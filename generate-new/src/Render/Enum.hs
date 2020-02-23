@@ -37,11 +37,12 @@ renderEnum Enum {..} = do
     let complete = case eType of
           AnEnum   -> completePragma n (mkPatternName . evName <$> eValues)
           ABitmask -> Nothing
-        derivedClasses = ["Eq", "Ord", "Storable"] <> case eType of
-          AnEnum   -> []
-          ABitmask -> ["Zero"]
+    derivedClasses <- (["Eq", "Ord", "Storable"] <>) <$> case eType of
+      AnEnum   -> pure []
+      ABitmask -> do
+        tellImport (TyConName "Zero")
+        pure ["Zero"]
     tellImport ''Storable
-    tellImport (TyConName "Zero")
     tellDoc
       .  vsep
       $  [ "newtype"

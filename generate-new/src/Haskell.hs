@@ -5,6 +5,7 @@ module Haskell
   , renderTypeHighPrec
   , pattern (:@)
   , typeName
+  , mkVar
   , (~>)
   , module Haskell.Name
   )
@@ -15,6 +16,8 @@ import           Relude                  hiding ( Type
                                                 , State
                                                 , Reader
                                                 , ask
+                                                , words
+                                                , unwords
                                                 )
 import           Language.Haskell.TH
 import           Data.Text.Prettyprint.Doc
@@ -25,14 +28,19 @@ import           Polysemy.Reader
 import           Data.Char                      ( isLower )
 import qualified Data.Text                     as T
 import qualified Data.Vector                   as V
-import           Prelude                        ( head )
+import           Prelude                        ( head
+                                                , words
+                                                , unwords
+                                                )
 
 import           Render.Element
-import           Render.Element.Write
 import           Haskell.Name
 
 typeName :: Text -> Name
 typeName = mkName . T.unpack
+
+mkVar :: Text -> Type
+mkVar = VarT . mkName . T.unpack
 
 renderType
   :: ( MemberWithError (State RenderElement) r
@@ -52,6 +60,8 @@ renderType t = do
   pure
     . group -- All on one line, to work around brittany #277
     . pretty
+    . unwords
+    . words
     . pprint
     . removeModules
     $ t

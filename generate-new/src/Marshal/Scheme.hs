@@ -52,6 +52,9 @@ data MarshalScheme a
   | EitherWord32 (MarshalScheme a)
     -- ^ On the haskell side this is either a length or a vector. It's
     -- necessary because the vector may be optional but the length is required.
+    -- Only used if the only way to get the corresponding length is from an
+    -- optional vector. This is assumed in "Poke" and @elidedLengthPoke@ should
+    -- be updated if this assumption changes
     -- The sub-scheme here is for elements
   | Tupled Word (MarshalScheme a)
     -- ^ A small fixed sized array, represented as a n-length tuple of the same

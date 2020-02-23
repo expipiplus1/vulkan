@@ -13,7 +13,6 @@ import           Spec.Parse
 import           Haskell                       as H
 import           Error
 import           Render.Element
-import           Render.Type
 
 renderAlias
   :: (HasErr r, Member (Reader RenderParams) r) => Alias -> Sem r RenderElement

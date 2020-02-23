@@ -21,3 +21,6 @@ Make sure optional bitmasks aren't represented with Maybe (they are zeroable)
 
 non-optional arrays/structs can be allocated at the same time as their parent
 struct.
+
+`VkSubpassDescription` shouldn't have an `Either Word32 Vector..` member as
+that vector is constrained to be the same length.

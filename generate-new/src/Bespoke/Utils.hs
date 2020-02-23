@@ -124,6 +124,7 @@ marshalUtils = genRe "marshal utils" $ do
     , 'BS.take
     , 'BS.unpack
     , 'BS.packCString
+    , 'BS.packCStringLen
     , 'BS.unsafeUseAsCString
     , ''V.Vector
     , 'V.ifoldr
@@ -137,6 +138,7 @@ marshalUtils = genRe "marshal utils" $ do
     , 'natVal
     , ''KnownNat
     , ''(<=)
+    , 'natVal
     ]
 
   traverseV_
@@ -170,6 +172,7 @@ marshalUtils = genRe "marshal utils" $ do
     , "packCStringElemOff"
     , "pokeFixedLengthByteString"
     , "pokeFixedLengthNullTerminatedByteString"
+    , "peekByteStringFromSizedVectorPtr"
     ]
 
   tellDoc [qi|
@@ -284,119 +287,13 @@ marshalUtils = genRe "marshal utils" $ do
       unsafeUseAsCString bs $ \from -> do
         let len = min maxLength (Data.ByteString.length bs)
         copyBytes to (castPtr @CChar @Word8 from) len
+
+    peekByteStringFromSizedVectorPtr
+      :: forall n
+       . KnownNat n
+      => Ptr (Data.Vector.Storable.Sized.Vector n Word8)
+      -> IO ByteString
+    peekByteStringFromSizedVectorPtr p = packCStringLen (castPtr p, fromIntegral (natVal (Proxy @n)))
+
   |]
 
-
--- {-# LANGUAGE FlexibleContexts  #-}
--- {-# LANGUAGE OverloadedStrings #-}
--- {-# LANGUAGE PatternSynonyms   #-}
--- {-# LANGUAGE QuasiQuotes       #-}
--- {-# LANGUAGE RecordWildCards   #-}
-
--- module Write.Marshal.Struct.Utils
---   ( vkStructWriteElement
---   , doesStructContainUnion
---   , doesStructContainDispatchableHandle
---   ) where
-
--- import           Control.Monad
--- import           Data.Closure
--- import           Data.Function
--- import           Data.Functor
--- import           Data.List.Extra
--- import qualified Data.Map                                 as Map
--- import           Data.Maybe
--- import qualified Data.MultiMap                            as MultiMap
--- import qualified Data.Set                                 as Set
--- import           Data.Text                                (Text)
--- import           Prelude                                  hiding (Enum)
--- import           Text.InterpolatedString.Perl6.Unindented
-
--- import           Spec.Savvy.Handle
--- import           Spec.Savvy.Struct
--- import           Spec.Savvy.Type
-
--- import           Write.Element                            hiding (TypeName)
--- import qualified Write.Element                            as WE
-
--- vkStructWriteElement :: WriteElement
--- vkStructWriteElement =
---   let
---     weName        = "ToCStruct class declaration"
---     weImports
---       = Unguarded <$>
---         ]
---     weProvides =
---       Unguarded
---         <$> [
---             ]
---     weUndependableProvides = [Unguarded (Term "peekVkStruct")]
---     weSourceDepends        = [Unguarded (TermName "peekVkStruct")]
---     weBootElement          = Nothing
---     weDepends = []
---     weExtensions =
---       [ "FunctionalDependencies"
---       , "DataKinds"
---       , "ExplicitNamespaces"
---       , "FlexibleContexts"
---       , "GADTs"
---       , "LambdaCase"
---       , "RankNTypes"
---       , "ScopedTypeVariables"
---       , "StandaloneDeriving"
---       , "TypeApplications"
---       , "TypeOperators"
---       ]
---     weDoc = pure [qci|
---     |]
---   in WriteElement{..}
-
--- -- | Returns the names of all structs containing unions
--- doesStructContainUnion :: [Struct] -> Text -> Bool
--- doesStructContainUnion structs =
---   let
---     unionNames = [ sName s | s <- structs, sStructOrUnion s == AUnion ]
-
---     -- The list of struct names which contain this type
---     contains :: Text -> [Text]
---     contains = (`MultiMap.lookup` m)
---       where
---         m = MultiMap.fromList
---           [ (containee, sName container)
---           | container <- structs
---           , WE.TypeName containee <- typeDepends . smType =<< sMembers container
---           ]
-
---     structWithUnions = closeL contains unionNames
---   in (`Set.member` Set.fromList structWithUnions)
-
--- -- | Returns the names of all structs containing unions
--- doesStructContainDispatchableHandle
---   :: (Type -> Maybe Handle) -> [Struct] -> Text -> Maybe Handle
--- doesStructContainDispatchableHandle getHandle structs =
---   let dispatchableHandleNames = nubOrd
---         [ hName h
---         | WE.TypeName t <- nubOrd
---           (typeDepends . smType =<< sMembers =<< structs)
---         , Just        h <- pure (getHandle (TypeName t))
---         , Dispatchable  <- pure (hHandleType h)
---         ]
-
---       -- The list of struct names which contain this type
---       contains :: Text -> [Text]
---       contains = (`MultiMap.lookup` m)
---         where
---           m = MultiMap.fromList
---             [ (containee, sName container)
---             | container             <- structs
---             , WE.TypeName containee <-
---               typeDepends . smType =<< sMembers container
---             ]
-
---       structsWithDispatchableHandles = Map.fromList
---         [ (s, n)
---         | h      <- dispatchableHandleNames
---         , s      <- closeNonReflexiveL contains [h]
---         , Just n <- pure $ getHandle (TypeName h)
---         ]
---   in  (`Map.lookup` structsWithDispatchableHandles)

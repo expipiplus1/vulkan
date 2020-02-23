@@ -32,7 +32,6 @@ import           Language.Haskell.TH            ( Name
                                                 )
 
 import qualified Data.Vector.Generic           as VG
-import qualified Data.Vector.Generic.Sized     as VGS
 
 import           Render.Utils
 import           Render.Element
