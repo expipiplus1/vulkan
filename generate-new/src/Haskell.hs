@@ -3,6 +3,7 @@ module Haskell
   , Name
   , renderType
   , renderTypeHighPrec
+  , allTypeNames
   , pattern (:@)
   , typeName
   , mkVar
@@ -23,7 +24,6 @@ import           Language.Haskell.TH
 import           Data.Text.Prettyprint.Doc
 import           Data.Generics.Uniplate.Data
 import           Polysemy
-import           Polysemy.State
 import           Polysemy.Reader
 import           Data.Char                      ( isLower )
 import qualified Data.Text                     as T
@@ -34,6 +34,7 @@ import           Prelude                        ( head
                                                 )
 
 import           Render.Element
+import           Render.SpecInfo
 import           Haskell.Name
 
 typeName :: Text -> Name
@@ -43,8 +44,8 @@ mkVar :: Text -> Type
 mkVar = VarT . mkName . T.unpack
 
 renderType
-  :: ( MemberWithError (State RenderElement) r
-     , MemberWithError (Reader RenderParams) r
+  :: ( HasRenderElem r
+     , HasRenderParams r
      )
   => Type
   -> Sem r (Doc ())
@@ -68,14 +69,17 @@ renderType t = do
 
 -- TODO, do this properly lol
 renderTypeHighPrec
-  :: ( MemberWithError (State RenderElement) r
-     , MemberWithError (Reader RenderParams) r
+  :: ( HasRenderElem r
+     , HasRenderParams r
      )
   => Type
   -> Sem r (Doc ())
 renderTypeHighPrec = \case
   t@(ConT _) -> renderType t
   t          -> parens <$> renderType t
+
+allTypeNames :: Type -> [Name]
+allTypeNames = childrenBi
 
 pattern (:@) :: Type -> Type -> Type
 pattern a :@ b = AppT a b

@@ -76,7 +76,7 @@ data AliasType
   = TypeAlias
   | TermAlias
   | PatternAlias
-  deriving (Show)
+  deriving (Show, Eq)
 
 --
 -- Function Pointers

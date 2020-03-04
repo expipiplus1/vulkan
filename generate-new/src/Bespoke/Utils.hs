@@ -13,7 +13,6 @@ import           Foreign.Ptr
 import           Foreign.C.Types
 import           Text.InterpolatedString.Perl6.Unindented
 
-import           Data.Proxy                     ( Proxy )
 import qualified Data.ByteString               as BS
 import qualified Data.ByteString.Unsafe        as BS
 import qualified Data.Vector                   as V

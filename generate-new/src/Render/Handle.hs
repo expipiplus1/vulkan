@@ -27,14 +27,6 @@ renderHandle Handle {..} = context hName $ do
   genRe ("handle " <> hName) $ do
     let n = mkHandleName hName
     case hDispatchable of
-      Dispatchable -> do
-        let p = n <> "_T"
-            t = ConT ''Ptr :@ ConT (typeName p)
-        tDoc <- renderType t
-        tellExport (EType n)
-        tellInternal (EType p)
-        tellDoc
-          $ vsep ["data" <+> pretty p, "type" <+> pretty n <+> "=" <+> tDoc]
       NonDispatchable -> do
         let t = ConT ''Word64
             c = mkConName hName hName
@@ -49,3 +41,11 @@ renderHandle Handle {..} = context hName $ do
           <+> pretty c
           <+> tDoc <> line
           <>  indent 2 "deriving newtype (Eq, Ord, Storable, Zero)"
+      Dispatchable -> do
+        let p = n <> "_T"
+            t = ConT ''Ptr :@ ConT (typeName p)
+        tDoc <- renderType t
+        tellExport (EType n)
+        tellInternal (EType p)
+        tellDoc
+          $ vsep ["data" <+> pretty p, "type" <+> pretty n <+> "=" <+> tDoc]

@@ -49,7 +49,7 @@ main = (runM . runErr $ go) >>= \case
     specText <- timeItNamed "Reading spec"
       $ readFileBS "./Vulkan-Docs/xml/vk.xml"
 
-    spec@Spec {..} <- timeItNamed "Parsing spec" $ parseSpec specText
+    (spec@Spec {..}, getSize) <- timeItNamed "Parsing spec" $ parseSpec specText
 
     let
       aliasMap :: Map.HashMap Text Text
@@ -106,8 +106,7 @@ main = (runM . runErr $ go) >>= \case
     (ss, us, cs) <- runReader mps $ do
       ss <- timeItNamed "Marshaling structs"
         $ traverseV marshalStruct specStructs
-      us <- timeItNamed "Marshaling unions"
-        $ traverseV marshalStruct specUnions
+      us <- timeItNamed "Marshaling unions" $ traverseV marshalStruct specUnions
       cs <- timeItNamed "Marshaling commands"
         $ traverseV marshalCommand specCommands
         -- TODO: Don't use all commands here, just those commands referenced by
@@ -120,7 +119,7 @@ main = (runM . runErr $ go) >>= \case
         timeItNamed "Rendering"
         .   runReader renderParams
         $   traverse evaluateWHNF
-        =<< renderSpec spec ss us cs
+        =<< renderSpec spec getSize ss us cs
 
       groups <- timeItNamed "Segmenting" $ do
         seeds <- specSeeds spec

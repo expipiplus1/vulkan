@@ -1,5 +1,6 @@
 module Data.Vector.Extra
   ( module Data.Vector
+  , uncons
   , pattern Empty
   , pattern (:<|)
   , pattern Singleton

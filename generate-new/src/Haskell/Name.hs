@@ -3,11 +3,10 @@ module Haskell.Name
   )
 where
 
-import           Data.Text                      ( Text )
 import           Relude
 
 data HName
-  = TermName { unName :: Text }
+  = TermName { unName :: (Text) }
   | TyConName { unName :: Text }
   | ConName  { unName :: Text }
   deriving(Eq, Ord, Show)

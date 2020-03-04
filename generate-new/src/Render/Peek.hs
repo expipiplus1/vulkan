@@ -22,8 +22,8 @@ import           Polysemy.Fail
 import           Data.Vector.Extra              ( pattern (:<|) )
 import           Data.Vector                    ( Vector )
 import           Polysemy.Reader
+import qualified Data.Vector.Extra             as V
 
-import qualified Data.Vector                   as V
 import           Foreign.Ptr
 import           Foreign.Storable
 import           Foreign.Marshal.Utils
@@ -342,13 +342,14 @@ vectorPeek lengths (AddrDoc addr) fromPtr toElem = case fromPtr of
     pure $ doBlock [ptrDoc <+> "<- peek @" <> ptrTDoc <+> addr', gen]
 
   -- YUCK, do this initial pointer peeking elsewhere please!
-  Ptr _ fromElem | (NamedLength len) :<| lenTail <- lengths -> do
-    lenName <- siReferrer <$> getSiblingInfo @a len
+  Ptr _ fromElem | (V.uncons -> Just ((NamedLength len), lenTail)) <- lengths ->
+    do
+      lenName <- siReferrer <$> getSiblingInfo @a len
 
-    generate (AddrDoc addr)
-             fromElem
-             lenTail
-             (parens ("fromIntegral" <+> lenName))
+      generate (AddrDoc addr)
+               fromElem
+               lenTail
+               (parens ("fromIntegral" <+> lenName))
 
 
   t -> throw ("Unhandled conversion to Vector from " <> show t)

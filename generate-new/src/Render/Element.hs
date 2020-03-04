@@ -107,6 +107,7 @@ nameSpacePrefix = \case
   Plain   -> ""
   Pattern -> "pattern "
   Module  -> "module "
+  -- hlint fails https://github.com/ndmitchell/hlint/issues/384
   Type    -> "type "
 
 nameNameSpace :: HName -> NameSpace

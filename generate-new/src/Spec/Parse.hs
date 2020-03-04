@@ -40,6 +40,7 @@ import           Data.Bits
 
 import           Spec.APIConstant
 import           CType
+import           CType.Size
 import           Error
 import           Bespoke
 import           Marshal.Marshalable            ( ParameterLength(..) )
@@ -53,7 +54,12 @@ import           Spec.Types
 type P a
   = forall r . (MemberWithError (Reader TypeNames) r, HasErr r) => Sem r a
 
-parseSpec :: HasErr r => ByteString -> Sem r Spec
+parseSpec
+  :: HasErr r
+  => ByteString
+  -- ^ The spec xml
+  -> Sem r (Spec, CType -> Maybe (Int, Int))
+  -- ^ Return the map from CType to size and alignment because it's useful later
 parseSpec bs = do
   n <- fromEither (first show (parse bs))
   case name n of
@@ -107,8 +113,11 @@ parseSpec bs = do
             | Constant n (IntegralValue v) <- V.toList specConstants
             ]
           constantValue v = Map.lookup v constantMap
-        (specUnions, specStructs) <- sizeAll sizeMap constantValue unsizedUnions unsizedStructs
-        pure Spec { .. }
+        (specUnions, specStructs, getSize) <- sizeAll sizeMap
+                                                      constantValue
+                                                      unsizedUnions
+                                                      unsizedStructs
+        pure (Spec { .. }, getSize)
     _ -> throw "This spec isn't a registry node"
 
 ----------------------------------------------------------------
@@ -122,7 +131,9 @@ sizeAll
   -> (Text -> Maybe Int)
   -> Vector (StructOrUnion AUnion WithoutSize)
   -> Vector (StructOrUnion AStruct WithoutSize)
-  -> Sem r (Vector Union, Vector Struct)
+  -> Sem
+       r
+       (Vector Union, Vector Struct, CType -> Maybe (Int, Int))
 sizeAll typeSizes constantMap unions structs = do
   let
     both    = (Left <$> unions) <> (Right <$> structs)
@@ -134,27 +145,29 @@ sizeAll typeSizes constantMap unions structs = do
       -> Sem
            (State (Map.Map Text (Int, Int)) ': r)
            (Maybe (Either Union Struct))
-    try s = do
-      m <- get
+    getSize m =
       let getLocalSize = \case
             TypeName n -> Map.lookup n m
             _          -> Nothing
-          getSize = cTypeSize constantMap getLocalSize
+      in  cTypeSize constantMap getLocalSize
+    try s = do
+      m <- get
+      let g = getSize m
       case s of
-        Left u -> do
-          for (sizeUnion getSize u) $ \u' -> do
-            modify' (Map.insert (sName u') (sSize u', sAlignment u'))
-            pure (Left u')
-        Right s -> do
-          for (sizeStruct getSize s) $ \s' -> do
-            modify' (Map.insert (sName s') (sSize s', sAlignment s'))
-            pure (Right s')
-  r <- evalState initial $ trySeveralTimes 2 both try
+        Left u -> for (sizeUnion g u) $ \u' -> do
+          modify' (Map.insert (sName u') (sSize u', sAlignment u'))
+          pure (Left u')
+        Right s -> for (sizeStruct g s) $ \s' -> do
+          modify' (Map.insert (sName s') (sSize s', sAlignment s'))
+          pure (Right s')
+  (m, r) <- runState initial $ trySeveralTimes 2 both try
 
   let (failed, succeeded) = partitionEithers . V.toList $ r
   forV_ failed
     $ \s -> throw ("Unable to calculate size for " <> either sName sName s)
-  pure (first V.fromList . second V.fromList $ partitionEithers succeeded)
+  let (us, ss) =
+        first V.fromList . second V.fromList $ partitionEithers succeeded
+  pure (us, ss, getSize m)
 
 sizeStruct
   :: Monad m
@@ -183,29 +196,17 @@ sizeGeneric
   -> StructOrUnion t WithoutSize
   -> m (StructOrUnion t 'WithSize)
 sizeGeneric getOffset getSize getTypeSize Struct {..} = do
-  ((newSize, newAlign), newMembers) <-
-    runM . runState (0, 1) . for sMembers $ \StructMember {..} -> do
-      (memberSize, memberAlign) <- embed $ getTypeSize smType
-      (totalSize , maxAlign   ) <- get
-      let newOffset = getOffset memberAlign totalSize
-      put (getSize totalSize memberSize newOffset, max maxAlign memberAlign)
-      pure StructMember { smOffset = newOffset, .. }
-  pure Struct { sSize      = roundToAlignment newAlign newSize
-              , sAlignment = newAlign
-              , sMembers   = newMembers
-              , ..
-              }
+  ((newSize, newAlign), memberOffsets) <- scanOffsets getOffset
+                                                      getSize
+                                                      (getTypeSize . smType)
+                                                      sMembers
+  pure Struct
+    { sSize      = roundToAlignment newAlign newSize
+    , sAlignment = newAlign
+    , sMembers   = V.zipWith (\o m -> m { smOffset = o }) memberOffsets sMembers
+    , ..
+    }
 
--- | Find the next multiple of an alignment
-roundToAlignment
-  :: Int
-  -- ^ The alignment
-  -> Int
-  -- ^ The value to align
-  -> Int
-  -- ^ The next multiple of alignment
-roundToAlignment alignment value =
-  alignment * ((value + (alignment - 1)) `quot` alignment)
 
 ----------------------------------------------------------------
 -- Features and extensions
@@ -812,9 +813,6 @@ runReadP p s = case filter (null . snd) (readP_to_S p (BS.unpack s)) of
 --
 ----------------------------------------------------------------
 
-for :: (Traversable t, Applicative f) => t a -> (a -> f b) -> f (t b)
-for = flip traverse
-
 trySeveralTimes
   :: forall f a m b
    . (Traversable f, Monad m)
@@ -834,3 +832,5 @@ trySeveralTimes n xs f =
         )
   in  go =<< go xs'
 
+for :: (Traversable t, Applicative f) => t a -> (a -> f b) -> f (t b)
+for = flip traverse

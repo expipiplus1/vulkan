@@ -120,7 +120,8 @@ renderStoreInstances ms@MarshaledStruct {..} = do
   descendentUnions <- filter (not . isDiscriminated) <$> containsUnion msName
   when (null descendentUnions) $ do
     fromCStructInstance ms
-    when (all isIOPoke pokes) $ storableInstance ms
+    -- TODO, this doesn't allow for pure or chained pokes (without contt)
+    unless (any containsContTPoke pokes) $ storableInstance ms
 
 -- TODO: Make this calculate the type locally and tell the depends
 -- TODO: Don't clutter the code with the type on the record if the accessor is
@@ -171,7 +172,7 @@ toCStructInstance MarshaledStruct {..} pokes = do
       structT     = ConT (typeName n)
       aVar        = mkVar "a"
   tellImport 'allocaBytesAligned
-  pokeDoc         <- renderPokesInIO pokes
+  pokeDoc         <- renderPokesWithRunContT pokes
   pokeCStructTDoc <- renderType
     (ConT ''Ptr :@ structT ~> structT ~> ConT ''IO :@ aVar ~> ConT ''IO :@ aVar)
   tellDoc $ "instance ToCStruct" <+> pretty n <+> "where" <> line <> indent

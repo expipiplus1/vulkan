@@ -29,12 +29,13 @@ import           Spec.Parse
 renderSpec
   :: (HasErr r, HasTypeInfo r, MemberWithError (Reader RenderParams) r)
   => Spec
+  -> SizeMap
   -> Vector (MarshaledStruct AStruct)
   -> Vector (MarshaledStruct AUnion)
   -> Vector MarshaledCommand
   -> Sem r (Vector RenderElement)
-renderSpec s@Spec {..} ss us cs =
-  withSpecInfo s $ liftA2 (<>) bespokeElements $ sequenceV
+renderSpec s@Spec {..} getSize ss us cs =
+  withSpecInfo s getSize $ liftA2 (<>) bespokeElements $ sequenceV
     (  fmap renderHandle      specHandles
     <> fmap renderStruct      ss
     <> fmap renderUnion       us
