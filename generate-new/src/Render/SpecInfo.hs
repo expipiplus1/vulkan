@@ -12,6 +12,7 @@ import qualified Data.HashSet                  as Set
 import           Polysemy.Reader
 import           Polysemy
 import           Algebra.Graph.Relation
+import           Algebra.Graph.ToGraph
 import           CType
 import           Error
 
@@ -59,9 +60,13 @@ withSpecInfo Spec {..} siTypeSize r = do
       , m           <- toList (smType <$> sMembers)
       , t           <- getAllTypeNames m
       ]
-    ancestorRelation = transitiveClosure typeParentRelation
-    siContainsUnion t =
-      [ u | u <- toList specUnions, hasEdge (sName u) t ancestorRelation ]
+    containsUnionMap = Map.fromListWith
+      (<>)
+      [ (t, [u])
+      | u <- toList specUnions
+      , t <- reachable (sName u) typeParentRelation
+      ]
+    siContainsUnion = fromMaybe mempty . (`Map.lookup` containsUnionMap)
     constructorMap =
       Map.fromList
         $  [ (n, n)
@@ -128,3 +133,12 @@ appearsInPositivePosition s = ($ s) <$> asks siAppearsInPositivePosition
 
 appearsInNegativePosition :: HasSpecInfo r => Text -> Sem r Bool
 appearsInNegativePosition s = ($ s) <$> asks siAppearsInNegativePosition
+
+containsDispatchableHandle :: HasSpecInfo r => Struct -> Sem r Bool
+containsDispatchableHandle = fmap (not . null) . dispatchableHandles
+
+dispatchableHandles :: HasSpecInfo r => Struct -> Sem r [Handle]
+dispatchableHandles Struct {..} =
+  fmap (filter ((== Dispatchable) . hDispatchable) . catMaybes)
+    . traverse getHandle
+    $ [ t | StructMember {..} <- toList sMembers, t <- getAllTypeNames smType ]

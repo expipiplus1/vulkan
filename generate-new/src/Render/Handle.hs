@@ -50,9 +50,7 @@ renderHandle Handle {..} = context hName $ do
         (cmdsMemberName, cmdsMemberTy) <- case hLevel of
           NoHandleLevel -> throw "Dispatchable handle without a level"
           Instance      -> pure ("instanceCmds", ConT (typeName "InstanceCmds"))
-          PhysicalDevice ->
-            pure ("instanceCmds", ConT (typeName "InstanceCmds"))
-          Device -> pure ("deviceCmds", ConT (typeName "DeviceCmds"))
+          Device        -> pure ("deviceCmds", ConT (typeName "DeviceCmds"))
         tDoc     <- renderType t
         cmdsTDoc <- renderType cmdsMemberTy
         tellExport (EType p)
@@ -60,12 +58,20 @@ renderHandle Handle {..} = context hName $ do
         tellInternal (EType p)
         tellDoc $ vsep
           [ "data" <+> pretty p
-          , "data" <+> pretty n <+> "=" <+> pretty c <> line <> indent
-            2
-            (vsep
-              [ "{" <+> pretty h <+> "::" <+> tDoc
-              , "," <+> cmdsMemberName <+> "::" <+> cmdsTDoc
-              , "}"
-              ]
-            )
+          , "data"
+          <+> pretty n
+          <+> "="
+          <+> pretty c
+          <>  line
+          <>  indent
+                2
+                (vsep
+                  [ "{" <+> pretty h <+> "::" <+> tDoc
+                  , "," <+> cmdsMemberName <+> "::" <+> cmdsTDoc
+                  , "}"
+                  ]
+                )
+          <>  line
+          -- TODO: Just compare on ptr
+          <>  indent 2 "deriving (Eq, Show)"
           ]

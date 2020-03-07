@@ -403,11 +403,11 @@ parseHandles = onTypes "handle" parseHandle
         _            -> case getAttr "parent" n of
           Nothing -> pure NoHandleLevel
           Just "VkInstance" -> pure Instance
-          Just "VkPhysicalDevice" -> pure PhysicalDevice
+          Just "VkPhysicalDevice" -> pure Instance
           Just "VkDevice" -> pure Device
           Just "VkCommandPool" -> pure Device
           Just "VkDescriptorPool" -> pure Device
-          Just "VkPhysicalDevice,VkDisplayKHR" -> pure PhysicalDevice
+          Just "VkPhysicalDevice,VkDisplayKHR" -> pure Instance
           Just "VkSurfaceKHR" -> pure Instance
           _       -> throw "Unknown handle level"
       pure Handle { .. }

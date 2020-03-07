@@ -16,6 +16,8 @@ import           Polysemy.State
 
 import           Foreign.Ptr
 import           Control.Monad.Trans.Cont       ( runContT )
+import           Foreign.Marshal.Alloc
+import           Control.Exception              ( bracket )
 
 import           Spec.Parse
 import           Haskell                       as H
@@ -122,7 +124,17 @@ toCStructInstance MarshaledStruct {..} = do
   pokeCStructTDoc <- renderType
     (ConT ''Ptr :@ structT ~> structT ~> ConT ''IO :@ aVar ~> ConT ''IO :@ aVar)
 
+  withZeroCStructTDoc <-
+    let retVar = VarT (typeName "b")
+    in  renderType
+          ((ConT ''Ptr :@ structT ~> ConT ''IO :@ retVar) ~> ConT ''IO :@ retVar
+          )
+
   tellImport 'runContT
+  tellImport 'bracket
+  tellImport 'callocBytes
+  tellImport 'free
+
   tellDoc $ "instance ToCStruct" <+> pretty n <+> "where" <> line <> indent
     2
     (vsep
@@ -136,6 +148,8 @@ toCStructInstance MarshaledStruct {..} = do
       <+> "= (. const) . runContT .  \\case"
       <>  line
       <>  indent 2 (vsep cases)
+      , "withZeroCStruct ::" <+> withZeroCStructTDoc
+      , "withZeroCStruct = bracket (callocBytes" <+> viaShow sSize <> ") free"
       ]
     )
 

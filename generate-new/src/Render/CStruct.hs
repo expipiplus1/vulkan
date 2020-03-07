@@ -53,6 +53,10 @@ toCStruct = do
         -- outside the continuation as additional allocations may have been
         -- made.
         pokeCStruct :: Ptr a -> a -> IO b -> IO b
+
+        -- | Allocate space for an "empty" @a@ and populate any univalied
+        -- members with their value.
+        withZeroCStruct :: (Ptr a -> IO b) -> IO b
     |]
 
 fromCStruct
@@ -71,8 +75,6 @@ fromCStruct = do
       --
       -- @ withZeroCStruct peekCStruct = pure zero @
       class FromCStruct a where
-        -- | allocate space for an "empty" @a@.
-        withZeroCStruct :: (Ptr a -> IO b) -> IO b
         -- | Read an @a@ and any other pointed to data from memory
         peekCStruct :: Ptr a -> IO a
     |]

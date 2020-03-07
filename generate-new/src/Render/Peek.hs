@@ -62,8 +62,11 @@ renderPeekStmt getName a addr scheme = do
   wrap   <- case mkIdiomaticType hsType of
     Nothing                     -> pure ((pretty (getName a) <+> "<-") <+>)
     Just (IdiomaticType _ _ to) -> to >>= \case
-      Left  con -> pure ((con <+> pretty (getName a) <+> "<-") <+>)
-      Right fun -> pure ((pretty (getName a) <+> "<-" <+> fun <+> "<$>") <+>)
+      Constructor con -> pure ((con <+> pretty (getName a) <+> "<-") <+>)
+      PureFunction fun ->
+        pure ((pretty (getName a) <+> "<-" <+> fun <+> "<$>") <+>)
+      IOFunction fun ->
+        pure ((pretty (getName a) <+> "<-" <+> fun <+> "=<<") <+>)
   -- We run renderPeek with the pointer to something of a's type
   fmap wrap <$> renderPeekWrapped (lengths a) (Ptr Const (type' a)) addr scheme
 
@@ -121,13 +124,14 @@ renderPeek lengths fromType addr scheme = do
   unwrap <- case mkIdiomaticType hsType of
     Nothing                     -> pure id
     Just (IdiomaticType _ _ to) -> to >>= \case
-      Left con -> pure
+      Constructor con -> pure
         ((   parens
              ("\\" <> parens (con <+> unwrappedVar) <+> "->" <+> unwrappedVar)
          <+> "<$>"
          ) <+>
         )
-      Right fun -> pure ((fun <+> "<$>") <+>)
+      PureFunction fun -> pure ((fun <+> "<$>") <+>)
+      IOFunction fun -> pure ((fun <+> "=<<") <+>)
 
   wrapped <- renderPeekWrapped lengths (Ptr Const fromType) addr scheme
   pure (unwrap <$> wrapped)
@@ -181,9 +185,20 @@ normalPeek _ (AddrDoc addr) to fromPtr =
   inlineStruct = failToNonDet $ do
     Ptr _ from@(TypeName n) <- pure fromPtr
     guard (from == to)
-    Just _ <- getStruct n
+    Just s <- getStruct n
     tDoc   <- renderTypeHighPrec =<< cToHsType DoPreserve from
-    pure $ "peekCStruct @" <> tDoc <+> addr
+    containsDispatchableHandle s >>= \case
+      True -> do
+        RenderParams {..} <- ask
+        let n       = mkTyName (sName s)
+            funName = "peekCStruct" <> n
+        tellImport (TermName funName)
+        -- eugh, where did cmds come from, an awkwardness in Render.Command,
+        -- that's where
+        pure $ pretty funName <+> "cmds" <+> addr
+      False -> do
+        tellImportWithAll (TyConName "FromCStruct")
+        pure $ "peekCStruct @" <> tDoc <+> addr
 
   pointerStruct = failToNonDet $ do
     Ptr _     from         <- pure fromPtr

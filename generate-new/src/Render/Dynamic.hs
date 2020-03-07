@@ -41,9 +41,7 @@ renderDynamicLoader cs = do
   RenderParams {..} <- ask
   genRe "dynamic loader" $ do
     deviceCommands   <- V.filterM (fmap (== Device) . getCommandLevel) cs
-    instanceCommands <- V.filterM
-      (fmap ((== Instance) <||> (== PhysicalDevice)) . getCommandLevel)
-      cs
+    instanceCommands <- V.filterM (fmap (== Instance) . getCommandLevel) cs
     loader "Instance"
            (ConT ''Ptr :@ ConT (typeName (mkEmptyDataName "VkInstance")))
            instanceCommands
@@ -101,6 +99,8 @@ loader level handleType commands = do
     <+> pretty conName
     <>  line
     <>  indent 2 (braceList (handleDoc : V.toList memberDocs))
+    <>  line
+    <>  indent 2 ("deriving (Eq, Show)")
 
 ----------------------------------------------------------------
 -- Filling out the structures

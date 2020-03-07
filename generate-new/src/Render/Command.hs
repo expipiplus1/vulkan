@@ -163,7 +163,7 @@ marshaledCommandCall dynName m@MarshaledCommand {..} = do
                 if isStruct
                   then do
                     tyDoc <- renderTypeHighPrec =<< cToHsType DoPreserve t
-                    tellImportWithAll (TyConName "FromCStruct")
+                    tellImportWithAll (TyConName "ToCStruct")
                     pure ("ContT" <+> parens ("withZeroCStruct @" <> tyDoc))
                   else do
                     tellImport 'free
@@ -282,21 +282,27 @@ getCCall c = do
           <+> "<$> vkGetInstanceProcAddr' nullPtr"
           <+> parens ("Ptr" <+> dquotes (pretty (cName c) <> "\\NUL") <> "#")
       )
-    cmdsFun ptrRecTyName getCmdsFun paramName paramType = pure $ Pure
-      DoNotInline
-      (Assigned $ do
-        let dynName    = getDynName c
-            memberName = mkFuncPointerMemberName (cName c)
-        tellImportWith ptrRecTyName (TermName memberName)
-        paramTDoc <- renderType =<< cToHsType DoNotPreserve paramType
-        pure $ pretty dynName <+> parens
-          (   pretty memberName
-          <+> parens
-                (   pretty getCmdsFun
-                <+> parens (pretty paramName <+> "::" <+> paramTDoc)
-                )
-          )
+    -- TODO: This is nasty, the "cmds" bound by the chained poke here is
+    -- implicitly used elsewhere for dispatchable parameter creation.
+    cmdsFun ptrRecTyName getCmdsFun paramName paramType = pure $ ChainedPoke
+      (ValueDoc "cmds")
+      (Pure
+        DoNotInline
+        (Assigned $ do
+          paramTDoc <- renderType =<< cToHsType DoNotPreserve paramType
+          pure $ pretty getCmdsFun <+> parens
+            (pretty paramName <+> "::" <+> paramTDoc)
+        )
       )
+      [ Pure
+          DoNotInline
+          (\(ValueDoc cmds) -> Assigned $ do
+            let dynName    = getDynName c
+                memberName = mkFuncPointerMemberName (cName c)
+            tellImportWith ptrRecTyName (TermName memberName)
+            pure $ pretty dynName <+> parens (pretty memberName <+> cmds)
+          )
+      ]
   commandHandle c >>= \case
     Nothing                            -> noHandle
     Just (Parameter {..}, Handle {..}) -> do
@@ -308,10 +314,9 @@ getCCall c = do
                                  pType
           paramName = mkParamName pName
       case hLevel of
-        NoHandleLevel  -> noHandle
-        Device         -> deviceHandle
-        PhysicalDevice -> instanceHandle
-        Instance       -> instanceHandle
+        NoHandleLevel -> noHandle
+        Device        -> deviceHandle
+        Instance      -> instanceHandle
 
 -- | The handle of a command is the (dispatchable handle) first parameter.
 commandHandle :: HasSpecInfo r => Command -> Sem r (Maybe (Parameter, Handle))

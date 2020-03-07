@@ -179,8 +179,27 @@ renderParams handles = r
                               let c = mkConName r name name
                               tellImportWith (TyConName (mkTyName r name))
                                              (ConName c)
-                              pure
-                                (Right $ "(\\h ->" <+> pretty c <+> "h cmds)")
+                              case name of
+                                "VkInstance" -> do
+                                  tellImport (TermName "initInstanceCmds")
+                                  pure
+                                    .   IOFunction
+                                    $   "(\\h ->"
+                                    <+> pretty c
+                                    <+> "h <$> initInstanceCmds h)"
+                                "VkDevice" -> do
+                                  tellImport (TermName "initDeviceCmds")
+                                  pure
+                                    .   IOFunction
+                                    $   "(\\h ->"
+                                    <+> pretty c
+                                    <+> "h <$> initDeviceCmds cmds h)"
+                                _ ->
+                                  pure
+                                    .   PureFunction
+                                    $   "(\\h ->"
+                                    <+> pretty c
+                                    <+> "h cmds)"
                             )
                           )
                         | name <- toList dispatchableHandleNames
@@ -234,7 +253,7 @@ wrappedIdiomaticType t w c =
     )
     (do
       tellImportWith w c
-      pure . Left . pretty . nameBase $ c
+      pure . Constructor . pretty . nameBase $ c
     )
   )
 

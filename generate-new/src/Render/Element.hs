@@ -174,9 +174,14 @@ data IdiomaticType = IdiomaticType
   , itTo
       :: forall r
        . (HasRenderElem r, HasRenderParams r)
-      => Sem r (Either (Doc ()) (Doc ()))
+      => Sem r IdiomaticTypeTo
     -- ^ Either a constructor for matching, or a term for applying, to go from CFloat to Float
   }
+
+data IdiomaticTypeTo
+  = Constructor (Doc ())
+  | PureFunction (Doc ())
+  | IOFunction (Doc ())
 
 ----------------------------------------------------------------
 -- Generating RenderElements

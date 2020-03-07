@@ -102,10 +102,9 @@ data Handle = Handle
 -- | The "level" of a handle, related to what it is descended from.
 data HandleLevel
   = Instance
-  | PhysicalDevice
   | Device
   | NoHandleLevel
-  deriving (Show, Eq)
+  deriving (Show, Eq, Ord)
 
 data Dispatchable = Dispatchable | NonDispatchable
   deriving (Show, Eq)
