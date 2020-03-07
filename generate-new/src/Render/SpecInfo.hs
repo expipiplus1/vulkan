@@ -7,7 +7,8 @@ import           Relude                  hiding ( Reader
                                                 , runReader
                                                 , Handle
                                                 )
-import qualified Data.Map                      as Map
+import qualified Data.HashMap.Strict           as Map
+import qualified Data.HashSet                  as Set
 import           Polysemy.Reader
 import           Polysemy
 import           Algebra.Graph.Relation
@@ -33,6 +34,8 @@ data SpecInfo = SpecInfo
     -- always the same name. As this deals with names as they appear in the
     -- generated source it takes and returns names after going through the
     -- mapping in RenderParams.
+  , siAppearsInPositivePosition :: Text -> Bool
+  , siAppearsInNegativePosition :: Text -> Bool
   }
 
 withSpecInfo
@@ -45,7 +48,8 @@ withSpecInfo Spec {..} siTypeSize r = do
   RenderParams {..} <- ask
   let
     mkLookup n f =
-      let m = Map.fromList [ (n s, s) | s <- toList f ] in (`Map.lookup` m)
+      let m = Map.fromList [ (n s, s) | s <- toList f ]
+      in  (`Map.lookup` m) . resolveAlias
     siIsUnion          = mkLookup sName specUnions
     siIsStruct         = mkLookup sName specStructs
     siIsHandle         = mkLookup hName specHandles
@@ -74,15 +78,30 @@ withSpecInfo Spec {..} siTypeSize r = do
            , NonDispatchable == hDispatchable
            , let n = mkTyName hName
            ]
-    -- TODO: Handle alias cycles!
     aliasMap = Map.fromList
       [ (aName, aTarget)
       | Alias {..} <- toList specAliases
       , TypeAlias == aType
       ]
+    -- TODO: Handle alias cycles!
+    resolveAlias :: Text -> Text
+    resolveAlias n = maybe n resolveAlias (Map.lookup n aliasMap)
     siGetConstructorParent n = case Map.lookup n aliasMap of
       Nothing -> Map.lookup n constructorMap
       Just n' -> siGetConstructorParent n'
+    negativeTypes = Set.fromList
+      [ t
+      | Command {..}   <- toList specCommands
+      , Parameter {..} <- toList cParameters
+      , t              <- getAllTypeNames pType
+      ]
+    positiveTypes = Set.fromList
+      [ t
+      | Command {..} <- toList specCommands
+      , t            <- getAllTypeNames cReturnType
+      ]
+    siAppearsInNegativePosition = (`Set.member` negativeTypes)
+    siAppearsInPositivePosition = (`Set.member` positiveTypes)
   runReader SpecInfo { .. } r
 
 getStruct :: HasSpecInfo r => Text -> Sem r (Maybe Struct)
@@ -104,3 +123,8 @@ getTypeSize t =
 getConstructorParent :: HasSpecInfo r => Text -> Sem r (Maybe Text)
 getConstructorParent s = ($ s) <$> asks siGetConstructorParent
 
+appearsInPositivePosition :: HasSpecInfo r => Text -> Sem r Bool
+appearsInPositivePosition s = ($ s) <$> asks siAppearsInPositivePosition
+
+appearsInNegativePosition :: HasSpecInfo r => Text -> Sem r Bool
+appearsInNegativePosition s = ($ s) <$> asks siAppearsInNegativePosition

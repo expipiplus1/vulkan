@@ -23,7 +23,7 @@ default-extensions:
 - FlexibleContexts
 - FlexibleInstances
 - FunctionalDependencies
-- GADTSyntax
+- GADTs
 - InstanceSigs
 - KindSignatures
 - LambdaCase
@@ -41,7 +41,6 @@ default-extensions:
 - RecursiveDo
 - ScopedTypeVariables
 - StandaloneDeriving
-- Strict
 - TemplateHaskellQuotes
 - TupleSections
 - TypeApplications

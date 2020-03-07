@@ -22,14 +22,7 @@ import           CType
 import           Haskell                       as H
 import           Error
 import           Render.Element
-
-data Preserve
-  = DoNotPreserve
-    -- ^ Use more idiomatic haskell types
-  | DoPreserve
-    -- ^ Use the types from Foreign.C.Types
-  | DoLower
-    -- ^ Use the types from Foreign.C.Types and lower arrays to pointers
+import           Render.Type.Preserve
 
 cToHsType
   :: forall r
@@ -39,11 +32,14 @@ cToHsType
   -> Sem r H.Type
 cToHsType preserve t = do
   RenderParams {..} <- ask
-  t'                <- r
-  pure $ case preserve of
-    DoNotPreserve -> maybe t' itType (mkIdiomaticType t')
-    DoPreserve    -> t'
-    DoLower       -> t'
+  case mkHsTypeOverride preserve t of
+    Just h  -> pure h
+    Nothing -> do
+      t' <- r
+      pure $ case preserve of
+        DoNotPreserve -> maybe t' itType (mkIdiomaticType t')
+        DoPreserve    -> t'
+        DoLower       -> t'
 
  where
   r :: Sem r H.Type

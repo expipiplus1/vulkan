@@ -39,13 +39,33 @@ renderHandle Handle {..} = context hName $ do
           <+> pretty n
           <+> "="
           <+> pretty c
-          <+> tDoc <> line
+          <+> tDoc
+          <>  line
           <>  indent 2 "deriving newtype (Eq, Ord, Storable, Zero)"
       Dispatchable -> do
-        let p = n <> "_T"
+        let p = mkEmptyDataName n
+            c = mkConName n n
+            h = mkDispatchableHandlePtrName n
             t = ConT ''Ptr :@ ConT (typeName p)
-        tDoc <- renderType t
-        tellExport (EType n)
+        (cmdsMemberName, cmdsMemberTy) <- case hLevel of
+          NoHandleLevel -> throw "Dispatchable handle without a level"
+          Instance      -> pure ("instanceCmds", ConT (typeName "InstanceCmds"))
+          PhysicalDevice ->
+            pure ("instanceCmds", ConT (typeName "InstanceCmds"))
+          Device -> pure ("deviceCmds", ConT (typeName "DeviceCmds"))
+        tDoc     <- renderType t
+        cmdsTDoc <- renderType cmdsMemberTy
+        tellExport (EType p)
+        tellExport (EData n)
         tellInternal (EType p)
-        tellDoc
-          $ vsep ["data" <+> pretty p, "type" <+> pretty n <+> "=" <+> tDoc]
+        tellDoc $ vsep
+          [ "data" <+> pretty p
+          , "data" <+> pretty n <+> "=" <+> pretty c <> line <> indent
+            2
+            (vsep
+              [ "{" <+> pretty h <+> "::" <+> tDoc
+              , "," <+> cmdsMemberName <+> "::" <+> cmdsTDoc
+              , "}"
+              ]
+            )
+          ]

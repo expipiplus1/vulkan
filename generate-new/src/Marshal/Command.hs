@@ -4,31 +4,35 @@ module Marshal.Command
   , MarshaledParam(..)
   ) where
 
-import Relude hiding(Reader)
-import Polysemy
-import Polysemy.NonDet
-import Polysemy.Reader
-import Polysemy.Fail
-import Data.Vector as V
+import           Relude                  hiding ( Reader
+                                                , ask
+                                                )
+import           Polysemy
+import           Polysemy.NonDet
+import           Polysemy.Reader
+import           Polysemy.Fail
+import qualified Data.Vector                   as V
 
-import CType
-import Spec.Parse
-import Error
-import Marshal.Scheme
+import           CType
+import           Spec.Parse
+import           Error
+import           Marshal.Scheme
 
 data MarshaledCommand = MarshaledCommand
-  { mcName :: Text
-  , mcParams :: Vector MarshaledParam
-  , mcReturn :: CType
+  { mcName    :: Text
+  , mcParams  :: V.Vector MarshaledParam
+  , mcReturn  :: CType
     -- ^ TOOD: Change
   , mcCommand :: Command
   }
+  deriving Show
 
 data MarshaledParam =
   MarshaledParam
     { mpParam :: Parameter
     , mpScheme :: MarshalScheme Parameter
     }
+  deriving (Show)
 
 marshalCommand
   :: (MemberWithError (Reader MarshalParams) r, HasErr r)
@@ -49,9 +53,11 @@ parameterScheme
   -> Parameter
   -> Sem r (MarshalScheme Parameter)
 parameterScheme Command {..} param = do
+  MarshalParams {..} <- ask
   let schemes =
-        [ -- These two are for value constrained params:
-          univaluedScheme
+        [ maybe empty pure . getBespokeScheme
+          -- These two are for value constrained params:
+        , univaluedScheme
         , lengthScheme cParameters
           -- Pointers to Void have some special handling
         , voidPointerScheme

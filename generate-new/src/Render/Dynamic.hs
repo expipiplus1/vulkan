@@ -7,6 +7,7 @@ import           Relude                  hiding ( Reader
                                                 , ask
                                                 , lift
                                                 , State
+                                                , Type
                                                 )
 import           Data.Text.Prettyprint.Doc
 import           Text.InterpolatedString.Perl6.Unindented
@@ -39,14 +40,18 @@ renderDynamicLoader
 renderDynamicLoader cs = do
   RenderParams {..} <- ask
   genRe "dynamic loader" $ do
-    deviceCommands <- V.filterM (fmap (== Device) . getCommandLevel) cs
+    deviceCommands   <- V.filterM (fmap (== Device) . getCommandLevel) cs
     instanceCommands <- V.filterM
       (fmap ((== Instance) <||> (== PhysicalDevice)) . getCommandLevel)
       cs
-    loader "Instance" "VkInstance" instanceCommands
+    loader "Instance"
+           (ConT ''Ptr :@ ConT (typeName (mkEmptyDataName "VkInstance")))
+           instanceCommands
     writeGetInstanceProcAddr
     writeInitInstanceCmds instanceCommands
-    loader "device" "VkDevice" deviceCommands
+    loader "device"
+           (ConT ''Ptr :@ ConT (typeName (mkEmptyDataName "VkDevice")))
+           deviceCommands
     writeMkGetDeviceProcAddr
     writeInitDeviceCmds deviceCommands
 
@@ -65,10 +70,10 @@ loader
      , MemberWithError (Reader RenderParams) r
      )
   => Text
-  -> Text
+  -> Type
   -> Vector MarshaledCommand
   -> Sem r ()
-loader level handleTypeName commands = do
+loader level handleType commands = do
   RenderParams {..} <- ask
   memberDocs        <-
     forV commands $ \MarshaledCommand { mcCommand = Command {..} } -> do
@@ -86,7 +91,7 @@ loader level handleTypeName commands = do
       tyName           = mkTyName n
       conName          = mkConName n n
       handleMemberName = mkMemberName (n <> "Handle")
-  handleTDoc <- renderType (ConT $ typeName handleTypeName)
+  handleTDoc <- renderType handleType
   let handleDoc = pretty handleMemberName <+> "::" <+> handleTDoc
   tellExport (EData tyName)
   tellDoc
@@ -113,7 +118,7 @@ writeInitInstanceCmds instanceCommands = do
   RenderParams {..} <- ask
   let n = mkFunName "initInstanceCmds"
   tDoc <- renderType
-    (  ConT (typeName (mkTyName "VkInstance"))
+    (  (ConT ''Ptr :@ ConT (typeName (mkEmptyDataName "VkInstance")))
     ~> (ConT ''IO :@ ConT (typeName (mkTyName "InstanceCmds")))
     )
   tellImport 'castFunPtr
@@ -127,7 +132,7 @@ writeInitInstanceCmds instanceCommands = do
             cReturnType
             [ (Just pName, pType) | Parameter {..} <- V.toList cParameters ]
           )
-        tellConImport ''GHC.Ptr.Ptr 'GHC.Ptr.Ptr
+        tellImportWith ''GHC.Ptr.Ptr 'GHC.Ptr.Ptr
         pure
           $ parens
               [qqi|castFunPtr @_ @{fTyDoc} <$> vkGetInstanceProcAddr' handle (Ptr "{cName}\\NUL"#)|]
@@ -151,11 +156,11 @@ writeInitDeviceCmds deviceCommands = do
   let n = mkFunName "initDeviceCmds"
   tDoc <- renderType
     (  ConT (typeName (mkTyName "InstanceCmds"))
-    ~> ConT (typeName (mkTyName "VkDevice"))
+    ~> (ConT ''Ptr :@ ConT (typeName (mkEmptyDataName "VkDevice")))
     ~> (ConT ''IO :@ ConT (typeName (mkTyName "DeviceCmds")))
     )
   tellImport 'castFunPtr
-  tellConImport ''GHC.Ptr.Ptr 'GHC.Ptr.Ptr
+  tellImportWith ''GHC.Ptr.Ptr 'GHC.Ptr.Ptr
   getDeviceProcAddrTDoc <- do
     Command {..} <-
       maybe (throw "Unable to find vkGetDeviceProcAddr command") pure
@@ -176,7 +181,7 @@ writeInitDeviceCmds deviceCommands = do
             cReturnType
             [ (Just pName, pType) | Parameter {..} <- V.toList cParameters ]
           )
-        tellConImport ''GHC.Ptr.Ptr 'GHC.Ptr.Ptr
+        tellImportWith ''GHC.Ptr.Ptr 'GHC.Ptr.Ptr
         pure
           $ parens
               [qqi|castFunPtr @_ @{fTyDoc} <$> getDeviceProcAddr' handle (Ptr "{cName}\\NUL"#)|]

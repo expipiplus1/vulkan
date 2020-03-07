@@ -9,6 +9,7 @@ import           Relude                  hiding ( Reader
                                                 , lift
                                                 , runReader
                                                 , Type
+                                                , Handle
                                                 )
 import           Data.Text.Prettyprint.Doc
 import           Data.Text.Extra                ( upperCaseFirst )
@@ -21,24 +22,25 @@ import qualified Data.Vector                   as V
 import qualified Data.Map                      as Map
 import           Language.Haskell.TH            ( nameBase )
 
+import           Control.Monad.Trans.Cont
 import           Foreign.C.Types
+import           Foreign.Marshal.Alloc
 import           Foreign.Ptr
-import           Control.Monad.Trans.Cont       ( ContT
-                                                , runContT
-                                                )
+import qualified GHC.Ptr
+import           Control.Exception              ( bracket )
 
-import           Spec.Parse
+import           CType                         as C
+import           Error
 import           Haskell                       as H
 import           Marshal
 import           Marshal.Scheme
-import           Error
-import           CType                         as C
-import           CType.Size
 import           Render.Element
-import           Render.Type
+import           Render.Peek
+import           Render.Poke
 import           Render.Scheme
 import           Render.SpecInfo
-import           Render.Poke
+import           Render.Type
+import           Spec.Parse
 
 renderCommand
   :: (HasErr r, Member (Reader RenderParams) r, HasSpecInfo r)
@@ -54,9 +56,8 @@ renderCommand m@MarshaledCommand {..} = contextShow mcName $ do
              [ (Nothing, pType) | Parameter {..} <- toList cParameters ]
       )
     let dynamicBindType = ConT ''FunPtr :@ ffiTy ~> ffiTy
+        dynName = getDynName mcCommand
     dynamicBindTypeDoc <- renderType dynamicBindType
-    let dynName = "mk" <> upperCaseFirst cName
-    marshaledCommandCall dynName m
     importConstructors dynamicBindType
     tellDoc $ vsep
       [ mempty
@@ -67,6 +68,7 @@ renderCommand m@MarshaledCommand {..} = contextShow mcName $ do
       , indent 2 "\"dynamic\"" <+> pretty dynName
       , indent 2 ("::" <+> dynamicBindTypeDoc)
       ]
+    marshaledCommandCall dynName m
 
 paramType
   :: (HasErr r, Member (Reader RenderParams) r)
@@ -86,8 +88,31 @@ makeReturnType MarshaledCommand {..} = do
   r   <- case mcReturn of
     C.Void -> pure V.empty
     r      -> V.singleton <$> cToHsType DoNotPreserve r
-  let ts = pts <> r
+  let ts = r <> pts
   pure $ ConT ''IO :@ foldl' (:@) (TupleT (length ts)) ts
+
+makeReturnPeeks
+  :: HasErr r => MarshaledCommand -> Sem r (V.Vector (AssignedPoke Parameter))
+makeReturnPeeks MarshaledCommand {..} =
+  fmap (V.mapMaybe id) . forV mcParams $ \case
+    MarshaledParam {..} | Returned (Normal (Ptr NonConst r)) <- mpScheme ->
+      pure
+        $   Just
+        $   IOPoke
+        $   Assigned
+        $   note "Unable to get peek for Returned value"
+        =<< renderPeekStmt
+              pName
+              mpParam
+                { pType = case pType mpParam of
+                            Ptr _ t -> t
+                            _       -> error "TODO, do this bit properly"
+                }
+              (AddrDoc (pretty (pName mpParam)))
+              (Normal r)
+    MarshaledParam {..} | Returned _ <- mpScheme ->
+      throw "Returned type isn't a nonconst pointer"
+    _ -> pure Nothing
 
 ----------------------------------------------------------------
 -- Calling this command
@@ -124,30 +149,33 @@ marshaledCommandCall dynName m@MarshaledCommand {..} = do
           Returned _        -> Nothing
           _                 -> Just p
         paramNames = toList (paramName <$> V.mapMaybe isArg mcParams)
-        call = pretty dynName <+> parens "error \"Fun Ptr\"" <+> sep paramNames
-
-    -- Mark all the parameters with a pure poke if they have one
-    -- i.e. parameters for which we don't have to allocate
-    let pureParams
-          :: V.Vector (Either (Text, Poke (Assigned Parameter)) MarshaledParam)
-        pureParams = mcParams <&> \mp@MarshaledParam {..} ->
-          let Parameter {..} = mpParam
-              to             = pType
-          in  first (pName, ) $ case mpScheme of
-                Normal from | from == to ->
-                  Left $ Pure DoInline $ Assigned $ pure $ paramName mp
-                Preserve from | from == to ->
-                  Left $ Pure DoInline $ Assigned $ pure $ paramName mp
-                VoidPtr | Ptr _ Void <- to ->
-                  Left $ Pure DoInline $ Assigned $ pure $ paramName mp
-                _ -> Right mp
 
     pokes :: V.Vector (Text, Poke (Assigned Parameter)) <-
-      forV pureParams $ \case
-        Left  purePoke              -> pure purePoke
-        Right m@MarshaledParam {..} -> (pName mpParam, ) <$> case mpScheme of
-          Returned s ->
-            pure $ Pure DoInline $ Assigned $ pure "error \"returned\""
+      forV mcParams $ \m@MarshaledParam {..} ->
+        (pName mpParam, ) <$> case mpScheme of
+          Returned _s -> case pType mpParam of
+            Ptr NonConst t -> do
+              isStruct <- case t of
+                TypeName n -> isJust <$> getStruct n
+                _          -> pure False
+              pure $ ContTPoke $ Assigned $ do
+                tellImportWithAll ''ContT
+                if isStruct
+                  then do
+                    tyDoc <- renderTypeHighPrec =<< cToHsType DoPreserve t
+                    tellImportWithAll (TyConName "FromCStruct")
+                    pure ("ContT" <+> parens ("withZeroCStruct @" <> tyDoc))
+                  else do
+                    tellImport 'free
+                    tellImport 'bracket
+                    tellImport 'calloc
+                    tyDoc <- renderTypeHighPrec =<< cToHsType DoPreserve t
+                    pure
+                      (   "ContT $ bracket"
+                      <+> parens ("calloc @" <> tyDoc)
+                      <+> "free"
+                      )
+            _ -> throw "Returned scheme with non NonConst Ptr type"
           _ -> do
             -- TODO: Move this to elsewhere
             let lowerType p = p
@@ -165,15 +193,43 @@ marshaledCommandCall dynName m@MarshaledCommand {..} = do
               <$> poke
               )
 
-    let
-      ps =
-        [ scanChainedPokes
-          (V.toList pokes)
-          (IOPoke $ \vs ->
-            Assigned $ pure "error \"call func\""
+    let cCallName  = ValueDoc "cCall"
+        returnName = "r"
+    cCall       <- getCCall mcCommand
+    returnPeeks <- toList <$> makeReturnPeeks m
+    let returnStmt = IOPoke $ Assigned $ pure $ "pure" <+> tupled
+          (  case mcReturn of
+              C.Void -> []
+              _      -> [returnName]
+          <> [ pretty (pName mpParam)
+             | MarshaledParam {..} <- toList mcParams
+             , Returned _          <- pure mpScheme
+             ]
           )
-        , IOPoke $ Assigned $ pure "error \"return\""
-        ]
+
+    let
+      (cCallRet, rets) = case mcReturn of
+        C.Void ->
+          ( IOPoke $ \(ValueDoc c) vs ->
+            Assigned $ pure $ c <+> sep (unValueDoc <$> vs)
+          , returnPeeks <> [returnStmt]
+          )
+        r ->
+          ( ChainedPoke
+            (ValueDoc returnName)
+            (IOPoke $ \(ValueDoc c) vs ->
+              Assigned $ pure $ c <+> sep (unValueDoc <$> vs)
+            )
+            (fmap (\f _ _ _ -> f) <$> returnPeeks <> [returnStmt])
+          , []
+          )
+
+    let ps =
+          [ scanChainedPokes
+              (V.toList pokes)
+              (ChainedPoke cCallName (const <$> cCall) [cCallRet])
+            ]
+            <> rets
 
     pokesDoc <- renderPokesContTRet @Parameter Nothing (V.fromList ps)
 
@@ -195,6 +251,73 @@ scanChainedPokes pokes go = case pokes of
     [ scanChainedPokes (second (fmap const) <$> xs)
                        ((\f vs v -> f (v : vs)) <$> go)
     ]
+
+----------------------------------------------------------------
+-- Getting C call
+----------------------------------------------------------------
+
+getCCall
+  :: (HasRenderParams r, HasSpecInfo r) => Command -> Sem r (AssignedPoke a)
+getCCall c = do
+  RenderParams {..} <- ask
+  let
+    -- TODO: Change this to a "global variable"
+    noHandle = pure $ IOPoke
+      (Assigned $ do
+        let dynName = getDynName c
+        tellImport (TermName "vkGetInstanceProcAddr'") -- TODO: Remove vulkan specific stuff here!
+        tellImport 'nullPtr
+        tellImport 'castFunPtr
+        tellImportWith ''GHC.Ptr.Ptr 'GHC.Ptr.Ptr
+        fTyDoc <- renderTypeHighPrec =<< cToHsType
+          DoLower
+          (C.Proto
+            (cReturnType c)
+            [ (Just pName, pType) | Parameter {..} <- V.toList (cParameters c) ]
+          )
+        pure
+          $   pretty dynName
+          <+> ". castFunPtr @_ @"
+          <>  fTyDoc
+          <+> "<$> vkGetInstanceProcAddr' nullPtr"
+          <+> parens ("Ptr" <+> dquotes (pretty (cName c) <> "\\NUL") <> "#")
+      )
+    cmdsFun ptrRecTyName getCmdsFun paramName paramType = pure $ Pure
+      DoNotInline
+      (Assigned $ do
+        let dynName    = getDynName c
+            memberName = mkFuncPointerMemberName (cName c)
+        tellImportWith ptrRecTyName (TermName memberName)
+        paramTDoc <- renderType =<< cToHsType DoNotPreserve paramType
+        pure $ pretty dynName <+> parens
+          (   pretty memberName
+          <+> parens
+                (   pretty getCmdsFun
+                <+> parens (pretty paramName <+> "::" <+> paramTDoc)
+                )
+          )
+      )
+  commandHandle c >>= \case
+    Nothing                            -> noHandle
+    Just (Parameter {..}, Handle {..}) -> do
+      let instanceHandle =
+            cmdsFun (TyConName "InstanceCmds") "instanceCmds" paramName pType
+          deviceHandle = cmdsFun (TyConName "DeviceCmds")
+                                 ("deviceCmds" :: Text)
+                                 paramName
+                                 pType
+          paramName = mkParamName pName
+      case hLevel of
+        NoHandleLevel  -> noHandle
+        Device         -> deviceHandle
+        PhysicalDevice -> instanceHandle
+        Instance       -> instanceHandle
+
+-- | The handle of a command is the (dispatchable handle) first parameter.
+commandHandle :: HasSpecInfo r => Command -> Sem r (Maybe (Parameter, Handle))
+commandHandle Command {..} = case cParameters V.!? 0 of
+  Just p@Parameter {..} | TypeName t <- pType -> fmap (p, ) <$> getHandle t
+  _ -> pure Nothing
 
 ----------------------------------------------------------------
 -- ImportConstructors
@@ -240,3 +363,10 @@ builtinConstructorParents =
   , ''CFloat
   , ''CDouble
   ]
+
+----------------------------------------------------------------
+-- Utils
+----------------------------------------------------------------
+
+getDynName :: Command -> Text
+getDynName = ("mk" <>) . upperCaseFirst . cName

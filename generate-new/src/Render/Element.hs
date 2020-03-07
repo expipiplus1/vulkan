@@ -22,11 +22,6 @@ import           Data.Char                      ( isAlpha )
 import           Polysemy
 import           Polysemy.State
 import           Polysemy.Reader
-import           Language.Haskell.TH            ( Name
-                                                , nameBase
-                                                , nameModule
-                                                , Type
-                                                )
 import           Language.Haskell.TH.Syntax
                                          hiding ( NameSpace
                                                 , ModName
@@ -35,6 +30,8 @@ import           Language.Haskell.TH.Syntax
 
 import           Render.Utils
 import           Haskell.Name
+import           CType
+import           Render.Type.Preserve
 
 data RenderElement = RenderElement
   { reName     :: Text
@@ -98,9 +95,10 @@ exportDoc Export {..} = renderExport
 
 renderExport :: NameSpace -> Text -> Vector Text -> Doc ()
 renderExport ns p cs =
-  let spec       = nameSpacePrefix ns
-      subExports = if V.null cs then "" else parenList . fmap wrapSymbol $ cs
-  in  (spec <>) . (<> subExports) . wrapSymbol $ p
+  let spec = nameSpacePrefix ns
+      subExports =
+        if V.null cs then "" else parenList . fmap (wrapSymbol ns) $ cs
+  in  (spec <>) . (<> subExports) . wrapSymbol ns $ p
 
 nameSpacePrefix :: NameSpace -> Doc ()
 nameSpacePrefix = \case
@@ -108,7 +106,7 @@ nameSpacePrefix = \case
   Pattern -> "pattern "
   Module  -> "module "
   -- hlint fails https://github.com/ndmitchell/hlint/issues/384
-  Type    -> "type "
+  Type    -> ""
 
 nameNameSpace :: HName -> NameSpace
 nameNameSpace = \case
@@ -128,30 +126,41 @@ thNameNamespace n = case nameSpace n of
 type HasRenderParams r = MemberWithError (Reader RenderParams) r
 
 data RenderParams = RenderParams
-  { mkTyName          :: Text -> Text
-  , mkConName         :: Text
-                      -- ^ Parent union or enum name
-                      -> Text -> Text
-  , mkMemberName      :: Text -> Text
-  , mkFunName         :: Text -> Text
-  , mkParamName       :: Text -> Text
-  , mkPatternName     :: Text -> Text
-  , mkHandleName      :: Text -> Text
-  , mkFuncPointerName :: Text -> Text
+  { mkTyName :: Text -> Text
+  , mkConName
+      :: Text
+      -- ^ Parent union or enum name
+      -> Text
+      -> Text
+  , mkMemberName            :: Text -> Text
+  , mkFunName               :: Text -> Text
+  , mkParamName             :: Text -> Text
+  , mkPatternName           :: Text -> Text
+  , mkHandleName            :: Text -> Text
+  , mkFuncPointerName       :: Text -> Text
     -- ^ Should be distinct from mkTyName
   , mkFuncPointerMemberName :: Text -> Text
     -- ^ The name of function pointer members in the dynamic collection
-  , alwaysQualifiedNames :: Vector Name
-  , mkIdiomaticType   :: Type -> Maybe IdiomaticType
-  , unionDiscriminators :: Vector UnionDiscriminator
+  , mkEmptyDataName         :: Text -> Text
+    -- ^ The name of the empty data declaration used to tag pointer to opaque
+    -- types
+  , mkDispatchableHandlePtrName         :: Text -> Text
+    -- ^ The record member name for the pointer member in dispatchable handles
+  , alwaysQualifiedNames    :: Vector Name
+  , mkIdiomaticType         :: Type -> Maybe IdiomaticType
+    -- ^ Overrides for using a different type than default on the Haskell side
+    -- than the C side
+  , mkHsTypeOverride        :: Preserve -> CType -> Maybe Type
+    -- ^ Override for using a different type than default on the Haskell sied
+  , unionDiscriminators     :: Vector UnionDiscriminator
   }
 
 data UnionDiscriminator = UnionDiscriminator
-  { udUnionType :: Text
+  { udUnionType           :: Text
     -- ^ The type of the union value
-  , udSiblingType :: Text
+  , udSiblingType         :: Text
     -- ^ The (enum) type of the discriminator
-  , udSiblingName :: Text
+  , udSiblingName         :: Text
     -- ^ The struct member which contains the discriminator
   , udValueConstructorMap :: [(Text, Text)]
     -- ^ A map of (enumerant, union member) name
@@ -159,9 +168,14 @@ data UnionDiscriminator = UnionDiscriminator
 
 data IdiomaticType = IdiomaticType
   { itType :: Type
-  , itFrom :: forall r. (HasRenderElem r, HasRenderParams r) => Sem r (Doc ())
-  , itTo :: forall r. (HasRenderElem r, HasRenderParams r) => Sem r (Either (Doc ()) (Doc ()))
-    -- ^ Either a constructor for matching, or a term for applying
+    -- Wrapped type, for example Float
+  , itFrom :: forall r . (HasRenderElem r, HasRenderParams r) => Sem r (Doc ())
+    -- A function to apply to go from Float to CFloat
+  , itTo
+      :: forall r
+       . (HasRenderElem r, HasRenderParams r)
+      => Sem r (Either (Doc ()) (Doc ()))
+    -- ^ Either a constructor for matching, or a term for applying, to go from CFloat to Float
   }
 
 ----------------------------------------------------------------
@@ -254,7 +268,7 @@ tellQualImportWithAll
   -> Sem r ()
 tellQualImportWithAll a = addImport (Import a True Empty True)
 
-tellConImport
+tellImportWith
   :: ( MemberWithError (State RenderElement) r
      , MemberWithError (Reader RenderParams) r
      , Importable a
@@ -262,7 +276,7 @@ tellConImport
   => a
   -> a
   -> Sem r ()
-tellConImport parent dat =
+tellImportWith parent dat =
   addImport (Import parent False (V.singleton dat) False)
 
 tellReexport :: MemberWithError (State RenderElement) r => ModName -> Sem r ()
@@ -272,7 +286,13 @@ tellReexport e = modify' (\r -> r { reReexports = insert e (reReexports r) })
 -- Utils
 ----------------------------------------------------------------
 
-wrapSymbol :: Text -> Doc ()
-wrapSymbol s = if isSymbol s && s /= ".." then parens (pretty s) else pretty s
+-- | Add parens around operaors, and a "type" namespace specifier for type
+-- operators
+wrapSymbol :: NameSpace -> Text -> Doc ()
+wrapSymbol ns s = if isSymbol s && s /= ".."
+  then if ns == Type && T.head s /= ':'
+    then "type" <> parens (pretty s)
+    else parens (pretty s)
+  else pretty s
   where isSymbol = not . (\x -> isAlpha x || (x == '_')) . T.head
 

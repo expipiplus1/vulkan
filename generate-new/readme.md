@@ -26,3 +26,9 @@ struct.
 that vector is constrained to be the same length.
 
 Make VkClearColorValue not use a tuple
+
+Make sure that `allocaEmptyCStruct peekCStruct` always works, and is equal to
+zero.
+
+Make `PFN_vkVoidFunction` not a `FunPtr` as it can't be called without casting
+anyway.

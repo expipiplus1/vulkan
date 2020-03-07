@@ -34,7 +34,6 @@ import           Prelude                        ( head
                                                 )
 
 import           Render.Element
-import           Render.SpecInfo
 import           Haskell.Name
 
 typeName :: Text -> Name

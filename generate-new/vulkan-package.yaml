@@ -1,8 +1,8 @@
 ghc-options:
 - -Wall
 - -Wno-unticked-promoted-constructors
-- -Wno-missing-signatures
 - -Wno-missing-pattern-synonym-signatures
+- -Wno-unused-imports
 
 name: vulkan
 library:
@@ -10,17 +10,31 @@ library:
   dependencies:
     - base
     - bytestring
+    - transformers
     - vector
     - vector-sized
 
 default-extensions:
   - CPP
   - DataKinds
+  - DefaultSignatures
+  - DerivingStrategies
   - DuplicateRecordFields
+  - FlexibleContexts
+  - FlexibleInstances
+  - GADTs
+  - GeneralizedNewtypeDeriving
+  - InstanceSigs
+  - LambdaCase
+  - MagicHash
   - OverloadedStrings
   - PatternSynonyms
   - PolyKinds
   - RankNTypes
+  - RecordWildCards
+  - ScopedTypeVariables
   - Strict
+  - TypeApplications
   - TypeOperators
+  - TypeSynonymInstances
   - ViewPatterns

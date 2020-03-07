@@ -60,9 +60,10 @@ zeroClass = genRe "zero class" $ do
     --
     -- Any instance should satisfy the following law:
     --
-    -- @ new zero = calloc @
+    -- @ new zero = calloc @ or @ with zero = withZeroCStruct @
     --
-    -- i.e. Marshaling @zero@ to memory yeilds only zero-valued bytes
+    -- i.e. Marshaling @zero@ to memory yeilds only zero-valued bytes, except
+    -- for structs which require a "type" tag
     --
     class Zero a where
       zero :: a

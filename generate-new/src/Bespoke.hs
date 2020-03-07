@@ -4,6 +4,8 @@ module Bespoke
   ( forbiddenConstants
   , bespokeElements
   , bespokeSizes
+  , bespokeSchemes
+  , BespokeScheme(..)
   )
 where
 
@@ -21,6 +23,9 @@ import           Text.InterpolatedString.Perl6.Unindented
 import           Haskell                       as H
 import           Render.Element
 import           Error
+import           Marshal.Scheme
+import           Marshal.Marshalable
+import           CType
 
 ----------------------------------------------------------------
 -- Changes to the spec
@@ -29,6 +34,21 @@ import           Error
 -- | These constants are defined elsewhere
 forbiddenConstants :: [Text]
 forbiddenConstants = ["VK_TRUE", "VK_FALSE"]
+
+----------------------------------------------------------------
+-- Schemes
+----------------------------------------------------------------
+
+data BespokeScheme where
+  BespokeScheme :: (forall a. Marshalable a => a -> Maybe (MarshalScheme a)) -> BespokeScheme
+
+bespokeSchemes :: [BespokeScheme]
+bespokeSchemes =
+  [ BespokeScheme $ \case
+      a | t@(Ptr _ (TypeName "xcb_connection_t")) <- type' a -> Just (Normal t)
+      a | t@(Ptr _ (TypeName "wl_display")) <- type' a -> Just (Normal t)
+      _ -> Nothing
+  ]
 
 ----------------------------------------------------------------
 -- Things which are easier to write by hand
@@ -97,11 +117,11 @@ type BespokeAlias r = ((Text, (Int, Int)), Sem r RenderElement)
 
 win32 :: Member (Reader RenderParams) r => [BespokeAlias r]
 win32 =
-  [ alias (APtr ''()) "HINSTANCE"
-  , alias (APtr ''()) "HWND"
-  , alias (APtr ''()) "HMONITOR"
-  , alias (APtr ''()) "HANDLE"
-  , alias AWord32              "DWORD"
+  [ alias (APtr ''())     "HINSTANCE"
+  , alias (APtr ''())     "HWND"
+  , alias (APtr ''())     "HMONITOR"
+  , alias (APtr ''())     "HANDLE"
+  , alias AWord32         "DWORD"
   , alias (APtr ''CWchar) "LPCWSTR"
   ]
 

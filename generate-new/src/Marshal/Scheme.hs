@@ -73,6 +73,8 @@ data MarshalParams = MarshalParams
   { isDefaultable       :: CType -> Bool
   , isStruct            :: Text -> Bool
   , isPassAsPointerType :: CType -> Bool
+  , getBespokeScheme
+      :: forall a . Marshalable a => a -> Maybe (MarshalScheme a)
   }
 
 ----------------------------------------------------------------
@@ -113,7 +115,7 @@ data MarshalParams = MarshalParams
 ----------------------------------------------------------------
 
 -- | Matches if this is constrained to have a single value
-univaluedScheme :: Marshalable a => a -> ND r (MarshalScheme c)
+univaluedScheme :: Marshalable a => a -> ND r (MarshalScheme a)
 univaluedScheme = fmap ElidedUnivalued . singleValue
 
 -- | Matches if this parameter is the length of one or more vectors

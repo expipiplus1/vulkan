@@ -54,6 +54,7 @@ type P s a
    . ( HasErr r
      , HasRenderElem r
      , HasRenderParams r
+     , HasSpecInfo r
      , HasSiblingInfo s r
        -- Needed to find the names of vectors to get their lengths
        -- TODO: This should return a Maybe (Sem q ValueDoc) where q HasRenderElem
@@ -512,10 +513,15 @@ maybePoke = \case
             tellImport 'maybeWith
             pure $ "maybeWith withCStruct" <+> value
           )
-  _ -> pure $ Pure DoInline $ Direct $ \_ (ValueDoc v) -> do
-    tellImport 'fromMaybe
-    tellImportWithAll (TyConName "Zero")
-    pure . parens $ "fromMaybe zero" <+> v
+  _ -> pure $ ChainedPoke
+    (ValueDoc "m")
+    (Pure DoInline $ Direct $ \_ (ValueDoc v) -> do
+      tellImport 'fromMaybe
+      tellImportWithAll (TyConName "Zero")
+      pure . parens $ "fromMaybe zero" <+> v
+    )
+    [idPokeIntermediate]
+
 
 elemPokeAndSize
   :: forall r a
@@ -834,21 +840,24 @@ constPoke inline c = Pure inline $ Direct $ \_ _ -> c
 
 storablePoke :: UnassignedPoke a
 storablePoke = ioPoke $ \ty (AddrDoc addr) (ValueDoc value) -> do
-  RenderParams {..} <- ask
-  tDoc              <- renderTypeHighPrec ty
-  tellConImport ''Storable 'poke
-  xDoc <- case mkIdiomaticType ty of
-    Nothing                       -> pure value
-    Just (IdiomaticType _ from _) -> do
-      fromDoc <- from
-      pure $ parens (fromDoc <+> value)
-  pure $ "poke @" <> tDoc <+> addr <+> xDoc
+  tDoc <- renderTypeHighPrec ty
+  tellImportWith ''Storable 'poke
+  pure $ "poke @" <> tDoc <+> addr <+> value
 
 directToUnassigned :: Direct a -> Unassigned a
 directToUnassigned (Direct f) = Unassigned $ \ty _ v -> f ty v
 
+-- | Might wrap types in their "idiomatic constructors" such as CSize for Word64
 idPoke :: DirectPoke a
-idPoke = Pure DoInline $ Direct $ \_ (ValueDoc value) -> pure value
+idPoke = Pure DoInline $ Direct $ \ty (ValueDoc value) -> do
+  RenderParams {..} <- ask
+  xDoc              <- case mkIdiomaticType ty of
+    Nothing                       -> pure value
+    Just (IdiomaticType _ from _) -> do
+      fromDoc <- from
+      pure $ parens (fromDoc <+> value)
+  pure xDoc
 
 idPokeIntermediate :: Poke (ValueDoc -> Direct a)
-idPokeIntermediate = Pure DoInline $ \(ValueDoc value) -> Direct $ \_ _ -> pure value
+idPokeIntermediate =
+  idPoke <&> \(Direct f :: Direct a) v -> Direct @a $ \ty _ -> f ty v

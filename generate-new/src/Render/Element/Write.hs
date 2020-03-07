@@ -137,22 +137,24 @@ renderModule out findModule findLocalModule (Segment (ModName modName) es) = do
       V.fromList . Set.toList . Set.unions . fmap reReexports . toList $ es
     contents =
       vsep
-        $   "module"
-        <+> pretty modName
-        <>  indent
-              2
-              (parenList
-                (  (exportDoc <$> V.concatMap reExports es)
-                <> (   (\(ModName m) -> renderExport Module m mempty)
-                   <$> allReexports
-                   )
+        $ "{-# language CPP #-}"
+        : (   "module"
+          <+> pretty modName
+          <>  indent
+                2
+                (parenList
+                  (  (exportDoc <$> V.concatMap reExports es)
+                  <> (   (\(ModName m) -> renderExport Module m mempty)
+                     <$> allReexports
+                     )
+                  )
                 )
-              )
-        <+> "where"
-        :   openImports
-        :   imports
-        :   localImports
-        :   V.toList (reDoc <$> es)
+          <+> "where"
+          )
+        : openImports
+        : imports
+        : localImports
+        : V.toList (reDoc <$> es)
   liftIO $ createDirectoryIfMissing True (takeDirectory f)
   liftIO $ withFile f WriteMode $ \h -> T.hPutStr h $ renderStrict
     (layoutPretty defaultLayoutOptions { layoutPageWidth = Unbounded } contents)
@@ -173,12 +175,13 @@ renderImport findModule getName getNameSpace i@(Import n qual children withAll)
     ModName mod' <- findModule i
     let qualDoc     = bool "" " qualified" qual
         base        = getName n
-        baseP       = wrapSymbol base
-        spec        = nameSpacePrefix (getNameSpace n)
+        ns          = getNameSpace n
+        baseP       = wrapSymbol ns base
+        spec        = nameSpacePrefix ns
         childrenDoc = if V.null children && not withAll
           then ""
           else parenList
-            (  (wrapSymbol . getName <$> children)
+            (  (wrapSymbol (getNameSpace n) . getName <$> children)
             <> (if withAll then V.singleton ".." else V.empty)
             )
     pure $ "import" <> qualDoc <+> pretty mod' <+> parenList

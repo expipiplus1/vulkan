@@ -21,18 +21,20 @@ import qualified Data.Map                      as Map
 import           Foreign.Marshal.Alloc
 import           Foreign.Ptr
 import           Foreign.Storable
+import           Control.Exception
 
-import           Spec.Parse
+import           CType
+import           Error
 import           Haskell                       as H
 import           Marshal
-import           Error
-import           Render.Utils
 import           Render.Element
-import           Render.Type
+import           Render.Peek
+import           Render.Poke
 import           Render.Scheme
 import           Render.SpecInfo
-import           Render.Poke
-import           Render.Peek
+import           Render.Type
+import           Render.Utils
+import           Spec.Parse
 
 renderStruct
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)
@@ -57,6 +59,7 @@ renderStruct s@MarshaledStruct {..} = context msName $ do
     let lookupMember :: Text -> Maybe (SiblingInfo StructMember)
         lookupMember = (`Map.lookup` memberMap)
     runReader lookupMember $ renderStoreInstances s
+    pure ()
 
 renderStructMember
   :: ( HasErr r
@@ -111,17 +114,18 @@ renderStoreInstances ms@MarshaledStruct {..} = do
                 mVal
             )
             <$> p
-    pure p'
+    pure (isUnivalued msmScheme, p')
 
-  toCStructInstance ms pokes
+  toCStructInstance ms (snd <$> pokes)
 
   let isDiscriminated u =
         sName u `elem` (udUnionType <$> toList unionDiscriminators)
   descendentUnions <- filter (not . isDiscriminated) <$> containsUnion msName
-  when (null descendentUnions) $ do
-    fromCStructInstance ms
+  containsDispatchable <- containsDispatchableHandle msStruct
+  when (null descendentUnions && not containsDispatchable) $ do
+    fromCStructInstance ms (snd <$> V.filter fst pokes)
     -- TODO, this doesn't allow for pure or chained pokes (without contt)
-    unless (any containsContTPoke pokes) $ storableInstance ms
+    unless (any (containsContTPoke . snd) pokes) $ storableInstance ms
 
 -- TODO: Make this calculate the type locally and tell the depends
 -- TODO: Don't clutter the code with the type on the record if the accessor is
@@ -159,6 +163,7 @@ toCStructInstance
      , HasRenderParams r
      , HasRenderElem r
      , HasSiblingInfo StructMember r
+     , HasSpecInfo r
      )
   => MarshaledStruct AStruct
   -> Vector (AssignedPoke StructMember)
@@ -195,8 +200,9 @@ fromCStructInstance
      , HasSiblingInfo StructMember r
      )
   => MarshaledStruct AStruct
+  -> Vector (AssignedPoke StructMember)
   -> Sem r ()
-fromCStructInstance MarshaledStruct {..} = do
+fromCStructInstance MarshaledStruct {..} pokes = do
   RenderParams {..} <- ask
   tellImportWithAll (TyConName "FromCStruct")
   let
@@ -218,12 +224,39 @@ fromCStructInstance MarshaledStruct {..} = do
     | MarshaledStructMember {..} <- V.toList msMembers
     ]
   peekCStructTDoc <- renderType (ConT ''Ptr :@ structT ~> ConT ''IO :@ structT)
+  withZeroCStructTDoc <-
+    let retVar = VarT (typeName "b")
+    in  renderType
+          ((ConT ''Ptr :@ structT ~> ConT ''IO :@ retVar) ~> ConT ''IO :@ retVar
+          )
+  tellImport 'bracket
+  tellImport 'callocBytes
+  tellImport 'free
+  pokeDoc <- renderPokesInIO
+    (pokes `V.snoc` IOPoke (Assigned $ pure ("f" <+> addrVar)))
   tellDoc $ "instance FromCStruct" <+> pretty n <+> "where" <> line <> indent
     2
     (vsep
-      [ "peekCStruct ::" <+> peekCStructTDoc
+      [ "withZeroCStruct ::" <+> withZeroCStructTDoc
+      , "withZeroCStruct f = bracket (callocBytes"
+      <+> viaShow sSize
+      <>  ") free $ \\"
+      <>  addrVar
+      <+> "->"
+      <+> pokeDoc
+      , "peekCStruct ::" <+> peekCStructTDoc
       , "peekCStruct" <+> addrVar <+> "=" <+> doBlock
         (peekDocs <> ["pure" <+> pretty con <+> "{..}"])
       ]
     )
+
+----------------------------------------------------------------
+-- Utils
+----------------------------------------------------------------
+
+containsDispatchableHandle :: HasSpecInfo r => Struct -> Sem r Bool
+containsDispatchableHandle Struct {..} =
+  fmap (any ((== Dispatchable) . hDispatchable) . catMaybes)
+    . traverse getHandle
+    $ [ t | StructMember {..} <- toList sMembers, t <- getAllTypeNames smType ]
 

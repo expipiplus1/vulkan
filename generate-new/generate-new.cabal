@@ -1,0 +1,99 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: b5ea25f24d31d335f2223e99f251a25ba3934055b9dfe0a20096a0cc25a206d0
+
+name:           generate-new
+version:        0.0.0
+synopsis:       A program to generate the vulkan package from the vulkan docs.
+description:    Please see README.md
+author:         Joe Hermaszewski
+maintainer:     generator.i.ardly.know.er@monoid.al
+license:        BSD3
+license-file:   ../LICENSE
+build-type:     Simple
+
+executable generate
+  main-is: Main.hs
+  other-modules:
+      Bespoke
+      Bespoke.Seeds
+      Bespoke.Utils
+      CType
+      CType.Size
+      Data.Text.Extra
+      Data.Vector.Extra
+      Error
+      Haskell
+      Haskell.Name
+      Marshal
+      Marshal.Command
+      Marshal.Marshalable
+      Marshal.Scheme
+      Marshal.Struct
+      Render.Aggregate
+      Render.Alias
+      Render.Command
+      Render.Constant
+      Render.CStruct
+      Render.Dynamic
+      Render.Element
+      Render.Element.Write
+      Render.Enum
+      Render.FuncPointer
+      Render.Handle
+      Render.Peek
+      Render.Poke
+      Render.Scheme
+      Render.Spec
+      Render.SpecInfo
+      Render.Struct
+      Render.Type
+      Render.Type.Preserve
+      Render.Union
+      Render.Utils
+      Spec.APIConstant
+      Spec.Parse
+      Spec.Types
+      Text.InterpolatedString.Perl6.Unindented
+      TrackDepends
+      Write.Segment
+      Paths_generate_new
+  hs-source-dirs:
+      src
+  default-extensions: BangPatterns BinaryLiterals ConstraintKinds DataKinds DeriveGeneric DerivingVia DisambiguateRecordFields DuplicateRecordFields EmptyCase FlexibleContexts FlexibleInstances FunctionalDependencies GADTs InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings ParallelListComp PartialTypeSignatures PatternSynonyms PolyKinds RankNTypes RecordWildCards RecursiveDo ScopedTypeVariables StandaloneDeriving TemplateHaskellQuotes TupleSections TypeApplications TypeFamilies TypeOperators ViewPatterns
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -fno-warn-unticked-promoted-constructors -O2 -flate-specialise -fspecialise-aggressively
+  build-depends:
+      algebraic-graphs
+    , base
+    , bytestring
+    , containers
+    , deepseq
+    , directory
+    , extra
+    , filepath
+    , inline-c
+    , interpolatedstring-perl6
+    , parsec
+    , polysemy
+    , polysemy-plugin
+    , pretty-show
+    , prettyprinter
+    , regex-applicative
+    , relude
+    , say
+    , tagsoup
+    , template-haskell
+    , text
+    , th-orphans
+    , timeit
+    , transformers
+    , uniplate
+    , unordered-containers
+    , vector
+    , vector-sized
+    , xeno
+  default-language: Haskell2010

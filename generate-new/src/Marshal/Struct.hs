@@ -4,21 +4,23 @@ module Marshal.Struct
   , MarshaledStructMember(..)
   ) where
 
-import Relude hiding(Reader)
-import Polysemy
-import Polysemy.NonDet
-import Polysemy.Reader
-import Polysemy.Fail
-import Data.Vector as V
+import           Relude                  hiding ( Reader
+                                                , ask
+                                                )
+import           Polysemy
+import           Polysemy.NonDet
+import           Polysemy.Reader
+import           Polysemy.Fail
+import qualified Data.Vector                   as V
 
-import Spec.Parse
-import Error
-import Marshal.Scheme
+import           Spec.Parse
+import           Error
+import           Marshal.Scheme
 
 data MarshaledStruct t = MarshaledStruct
-  { msName :: Text
-  , msStruct :: StructOrUnion t 'WithSize
-  , msMembers :: Vector MarshaledStructMember
+  { msName    :: Text
+  , msStruct  :: StructOrUnion t 'WithSize
+  , msMembers :: V.Vector MarshaledStructMember
   }
 
 data MarshaledStructMember =
@@ -45,8 +47,10 @@ structMemberScheme
   -> StructMember
   -> Sem r (MarshalScheme StructMember)
 structMemberScheme Struct {..} member = do
+  MarshalParams {..} <- ask
   let schemes =
-        [ -- These two are for value constrained params:
+        [ maybe empty pure . getBespokeScheme
+        , -- These two are for value constrained params:
           univaluedScheme
         , lengthScheme sMembers
           -- Pointers to Void have some special handling

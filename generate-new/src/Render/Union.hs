@@ -114,7 +114,7 @@ toCStructInstance MarshaledStruct {..} = do
         let con = mkConName sName smName
             ty  = mkTyName sName
         pokeDoc <- renderPokesContT (V.singleton poke)
-        tellConImport (TyConName ty) (ConName con)
+        tellImportWith (TyConName ty) (ConName con)
         pure $ pretty con <+> "v" <+> "->" <+> pokeDoc
 
   cases           <- zipWithM mkCase (toList sMembers) (toList pokes)
@@ -170,7 +170,7 @@ peekUnionFunction UnionDiscriminator {..} MarshaledStruct {..} = do
     tellImport 'castPtr
     let addr = AddrDoc (parens ("castPtr @_ @" <> ptrTDoc <+> ptrName))
     tellImport (ConName pat')
-    tellConImport (TyConName n) (ConName con')
+    tellImportWith (TyConName n) (ConName con')
     let from   = smType msmStructMember
         scheme = msmScheme
     subPeek <-

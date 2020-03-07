@@ -15,7 +15,6 @@ import           Relude                  hiding ( Reader
                                                 , modify'
                                                 )
 import           Xeno.DOM
-import           Text.Read                      ( readMaybe )
 import           Data.Vector                    ( Vector )
 import           Data.List.Extra                ( nubOrd )
 import           Text.ParserCombinators.ReadP
@@ -109,7 +108,7 @@ parseSpec bs = do
                  ]
           constantMap :: Map.Map Text Int
           constantMap = Map.fromList
-            [ (n, (fromIntegral v))
+            [ (n, fromIntegral v)
             | Constant n (IntegralValue v) <- V.toList specConstants
             ]
           constantValue v = Map.lookup v constantMap
@@ -166,7 +165,7 @@ sizeAll typeSizes constantMap unions structs = do
   forV_ failed
     $ \s -> throw ("Unable to calculate size for " <> either sName sName s)
   let (us, ss) =
-        first V.fromList . second V.fromList $ partitionEithers succeeded
+        bimap V.fromList V.fromList $ partitionEithers succeeded
   pure (us, ss, getSize m)
 
 sizeStruct
@@ -398,16 +397,19 @@ parseHandles = onTypes "handle" parseHandle
         "VK_DEFINE_HANDLE" -> pure Dispatchable
         "VK_DEFINE_NON_DISPATCHABLE_HANDLE" -> pure NonDispatchable
         _                  -> throw "Unable to parse handle type"
-      hLevel <- case getAttr "parent" n of
-        Nothing -> pure NoHandleLevel
-        Just "VkInstance" -> pure Instance
-        Just "VkPhysicalDevice" -> pure PhysicalDevice
-        Just "VkDevice" -> pure Device
-        Just "VkCommandPool" -> pure Device
-        Just "VkDescriptorPool" -> pure Device
-        Just "VkPhysicalDevice,VkDisplayKHR" -> pure PhysicalDevice
-        Just "VkSurfaceKHR" -> pure Instance
-        _       -> throw "Unknown handle level"
+      hLevel <- case hName of
+        "VkInstance" -> pure Instance
+        "VkDevice"   -> pure Device
+        _            -> case getAttr "parent" n of
+          Nothing -> pure NoHandleLevel
+          Just "VkInstance" -> pure Instance
+          Just "VkPhysicalDevice" -> pure PhysicalDevice
+          Just "VkDevice" -> pure Device
+          Just "VkCommandPool" -> pure Device
+          Just "VkDescriptorPool" -> pure Device
+          Just "VkPhysicalDevice,VkDisplayKHR" -> pure PhysicalDevice
+          Just "VkSurfaceKHR" -> pure Instance
+          _       -> throw "Unknown handle level"
       pure Handle { .. }
 
 parseFuncPointers :: [Content] -> P (Vector FuncPointer)

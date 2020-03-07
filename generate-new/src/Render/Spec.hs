@@ -26,6 +26,8 @@ import           Render.Union
 import           Render.SpecInfo
 import           Spec.Parse
 
+import           CType
+
 renderSpec
   :: (HasErr r, HasTypeInfo r, MemberWithError (Reader RenderParams) r)
   => Spec
@@ -34,8 +36,28 @@ renderSpec
   -> Vector (MarshaledStruct AUnion)
   -> Vector MarshaledCommand
   -> Sem r (Vector RenderElement)
-renderSpec s@Spec {..} getSize ss us cs =
-  withSpecInfo s getSize $ liftA2 (<>) bespokeElements $ sequenceV
+renderSpec s@Spec {..} getSize ss us cs = withSpecInfo s getSize $ do
+  -- TODO: neaten
+  -- If a struct containing an extendable struct appears in a positive position
+  -- then the SomeVkStruct thing will have to be rethought.
+  _ <- sequenceV
+    [ getStruct t >>= traverse
+        (\s2 -> forV
+          (sMembers s2)
+          (\m2 ->
+            when (smName m2 == "pNext")
+              $  whenM (appearsInPositivePosition (sName s1))
+              $  throw
+              $  (sName s1 <> "." <> smName m1)
+              <> " >>>> "
+              <> (sName s2 <> "." <> smName m2)
+          )
+        )
+    | s1 <- toList specStructs
+    , m1 <- toList (sMembers s1)
+    , t  <- getAllTypeNames (smType m1)
+    ]
+  liftA2 (<>) bespokeElements $ sequenceV
     (  fmap renderHandle      specHandles
     <> fmap renderStruct      ss
     <> fmap renderUnion       us

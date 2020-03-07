@@ -4,12 +4,14 @@ module Main
 import           Relude                  hiding ( runReader
                                                 , uncons
                                                 , Type
+                                                , Handle
                                                 )
 import           Relude.Extra.Map
 import           Say
 import           System.TimeIt
 import           Polysemy
-import qualified Data.HashMap.Strict as Map
+import qualified Data.HashMap.Strict           as Map
+import qualified Data.HashSet                  as Set
 import           Polysemy.Reader
 import qualified Data.Vector.Storable.Sized    as VSS
 import qualified Data.Vector                   as V
@@ -20,12 +22,10 @@ import           Data.Text.Extra                ( lowerCaseFirst
                                                 , (<+>)
                                                 )
 import           Data.Text.Prettyprint.Doc      ( pretty )
-import           Language.Haskell.TH            ( Name
-                                                , Type(..)
-                                                , nameBase
-                                                )
+import           Language.Haskell.TH            ( nameBase )
 
 import           Foreign.C.Types
+import           Foreign.Ptr
 
 import           CType
 import           Error
@@ -35,8 +35,13 @@ import           Render.Element
 import           Render.Element.Write
 import           Render.Aggregate
 import           Bespoke.Seeds
+import           Bespoke                        ( BespokeScheme(..)
+                                                , bespokeSchemes
+                                                )
 import           Render.Spec
 import           Spec.Parse
+import           Render.Type.Preserve
+import           Haskell
 
 main :: IO ()
 main = (runM . runErr $ go) >>= \case
@@ -56,9 +61,7 @@ main = (runM . runErr $ go) >>= \case
       aliasMap =
         fromList [ (aName, aTarget) | Alias {..} <- toList specAliases ]
       resolveAlias :: Text -> Text
-      resolveAlias t = case Map.lookup t aliasMap of
-        Nothing -> t
-        Just t' -> resolveAlias t' -- TODO: handle cycles!
+      resolveAlias t = maybe t resolveAlias (Map.lookup t aliasMap) -- TODO: handle cycles!
       structNames :: HashSet Text
       structNames =
         fromList . (extraStructNames <>) . toList . fmap sName $ specStructs
@@ -102,6 +105,7 @@ main = (runM . runErr $ go) >>= \case
         )
         isStruct'
         isPassAsPointerType'
+        (\a -> asum . fmap (\(BespokeScheme f) -> f a) $ bespokeSchemes)
 
     (ss, us, cs) <- runReader mps $ do
       ss <- timeItNamed "Marshaling structs"
@@ -117,7 +121,7 @@ main = (runM . runErr $ go) >>= \case
 
       renderElements <-
         timeItNamed "Rendering"
-        .   runReader renderParams
+        .   runReader (renderParams specHandles)
         $   traverse evaluateWHNF
         =<< renderSpec spec getSize ss us cs
 
@@ -132,53 +136,85 @@ main = (runM . runErr $ go) >>= \case
 -- Names
 ----------------------------------------------------------------
 
-renderParams :: RenderParams
-renderParams = RenderParams
-  { mkTyName                = unReservedWord . upperCaseFirst
-  , mkConName               = \parent ->
-                                unReservedWord
-                                  . (case parent of
-                                      "VkPerformanceCounterResultKHR" -> ("Counter" <>)
-                                      _ -> id
-                                    )
-                                  . upperCaseFirst
-  , mkMemberName            = unReservedWord . lowerCaseFirst
-  , mkFunName               = unReservedWord
-  , mkParamName             = unReservedWord
-  , mkPatternName           = unReservedWord
-  , mkHandleName            = unReservedWord
-  , mkFuncPointerName       = unReservedWord . T.tail
-  , mkFuncPointerMemberName = unReservedWord . ("p" <>) . upperCaseFirst
-  , alwaysQualifiedNames    = V.fromList [''VSS.Vector]
-  , mkIdiomaticType         =
-    (`List.lookup` [ wrappedIdiomaticType ''Float  ''CFloat  'CFloat
-                   , wrappedIdiomaticType ''Int32  ''CInt    'CInt
-                   , wrappedIdiomaticType ''Double ''CDouble 'CDouble
-                   , wrappedIdiomaticType ''Word64 ''CSize   'CSize
-                   ]
-    )
-  , unionDiscriminators     = V.fromList
-    [ UnionDiscriminator
-      "VkPipelineExecutableStatisticValueKHR"
-      "VkPipelineExecutableStatisticFormatKHR"
-      "format"
-      [ ("VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR" , "b32")
-      , ("VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR"  , "i64")
-      , ("VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR" , "u64")
-      , ("VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR", "f64")
+renderParams :: V.Vector Handle -> RenderParams
+renderParams handles = r
+ where
+  dispatchableHandleNames = Set.fromList
+    [ hName | Handle {..} <- toList handles, hDispatchable == Dispatchable ]
+  r = RenderParams
+    { mkTyName                    = unReservedWord . upperCaseFirst
+    , mkConName                   = \parent ->
+                                      unReservedWord
+                                        . (case parent of
+                                            "VkPerformanceCounterResultKHR" -> ("Counter" <>)
+                                            _ -> id
+                                          )
+                                        . upperCaseFirst
+    , mkMemberName                = unReservedWord . lowerCaseFirst
+    , mkFunName                   = unReservedWord
+    , mkParamName                 = unReservedWord
+    , mkPatternName               = unReservedWord
+    , mkHandleName                = unReservedWord
+    , mkFuncPointerName           = unReservedWord . T.tail
+    , mkFuncPointerMemberName     = unReservedWord . ("p" <>) . upperCaseFirst
+    , mkEmptyDataName             = (<> "_T")
+    , mkDispatchableHandlePtrName = (<> "Handle") . lowerCaseFirst . T.drop 2
+    , alwaysQualifiedNames        = V.fromList [''VSS.Vector]
+    , mkIdiomaticType             =
+      (`List.lookup` (  [ wrappedIdiomaticType ''Float  ''CFloat  'CFloat
+                        , wrappedIdiomaticType ''Int32  ''CInt    'CInt
+                        , wrappedIdiomaticType ''Double ''CDouble 'CDouble
+                        , wrappedIdiomaticType ''Word64 ''CSize   'CSize
+                        ]
+                     <> [ ( ConT ''Ptr
+                            :@ ConT (typeName $ mkEmptyDataName r name)
+                          , IdiomaticType
+                            (ConT (typeName name))
+                            (do
+                              let h = mkDispatchableHandlePtrName r name
+                              tellImportWithAll (TyConName (mkTyName r name))
+                              pure (pretty h)
+                            )
+                            (do
+                              let c = mkConName r name name
+                              tellImportWith (TyConName (mkTyName r name))
+                                             (ConName c)
+                              pure
+                                (Right $ "(\\h ->" <+> pretty c <+> "h cmds)")
+                            )
+                          )
+                        | name <- toList dispatchableHandleNames
+                        ]
+                     )
+      )
+    , mkHsTypeOverride            = \preserve t -> case preserve of
+      DoNotPreserve -> Nothing
+      _             -> case t of
+        TypeName n | Set.member n dispatchableHandleNames ->
+          Just $ ConT ''Ptr :@ ConT (typeName (mkEmptyDataName r n))
+        _ -> Nothing
+    , unionDiscriminators         = V.fromList
+      [ UnionDiscriminator
+        "VkPipelineExecutableStatisticValueKHR"
+        "VkPipelineExecutableStatisticFormatKHR"
+        "format"
+        [ ("VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_BOOL32_KHR" , "b32")
+        , ("VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_INT64_KHR"  , "i64")
+        , ("VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_UINT64_KHR" , "u64")
+        , ("VK_PIPELINE_EXECUTABLE_STATISTIC_FORMAT_FLOAT64_KHR", "f64")
+        ]
+      , UnionDiscriminator
+        "VkPerformanceValueDataINTEL"
+        "VkPerformanceValueTypeINTEL"
+        "type"
+        [ ("VK_PERFORMANCE_VALUE_TYPE_UINT32_INTEL", "value32")
+        , ("VK_PERFORMANCE_VALUE_TYPE_UINT64_INTEL", "value64")
+        , ("VK_PERFORMANCE_VALUE_TYPE_FLOAT_INTEL" , "valueFloat")
+        , ("VK_PERFORMANCE_VALUE_TYPE_BOOL_INTEL"  , "valueBool")
+        , ("VK_PERFORMANCE_VALUE_TYPE_STRING_INTEL", "valueString")
+        ]
       ]
-    , UnionDiscriminator
-      "VkPerformanceValueDataINTEL"
-      "VkPerformanceValueTypeINTEL"
-      "type"
-      [ ("VK_PERFORMANCE_VALUE_TYPE_UINT32_INTEL", "value32")
-      , ("VK_PERFORMANCE_VALUE_TYPE_UINT64_INTEL", "value64")
-      , ("VK_PERFORMANCE_VALUE_TYPE_FLOAT_INTEL" , "valueFloat")
-      , ("VK_PERFORMANCE_VALUE_TYPE_BOOL_INTEL"  , "valueBool")
-      , ("VK_PERFORMANCE_VALUE_TYPE_STRING_INTEL", "valueString")
-      ]
-    ]
-  }
+    }
 
 wrappedIdiomaticType
   :: Name
@@ -193,11 +229,11 @@ wrappedIdiomaticType t w c =
   , IdiomaticType
     (ConT t)
     (do
-      tellConImport w c
+      tellImportWith w c
       pure (pretty (nameBase c))
     )
     (do
-      tellConImport w c
+      tellImportWith w c
       pure . Left . pretty . nameBase $ c
     )
   )
