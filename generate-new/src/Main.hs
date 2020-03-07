@@ -233,6 +233,10 @@ renderParams handles = r
         , ("VK_PERFORMANCE_VALUE_TYPE_STRING_INTEL", "valueString")
         ]
       ]
+    , successCodeType             = TypeName "VkResult"
+    , isSuccessCodeReturned       = (/= "VK_SUCCESS")
+    , firstSuccessCode            = "VK_SUCCESS"
+    , exceptionTypeName           = "VulkanException"
     }
 
 wrappedIdiomaticType

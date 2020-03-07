@@ -3,6 +3,8 @@ module Render.Utils
 
 import           Relude
 import           Data.Text.Prettyprint.Doc
+import           Text.Wrap
+import qualified Data.Text                     as T
 
 parenList :: Foldable f => f (Doc ()) -> Doc ()
 parenList = genericList "(" ")"
@@ -18,3 +20,10 @@ genericList l r ds = case toList ds of
 
 appList :: Foldable f => f (Doc ()) -> Doc ()
 appList xs = align (vsep (zipWith (<+>) ("<$>" : repeat "<*>") (toList xs)))
+
+-- | Wrap text sensibly
+comment :: Text -> Doc ()
+comment c =
+  let ls = wrapTextToLines defaultWrapSettings 72 c
+      prependSpace t = if T.null t then t else " " <> t
+  in  vsep $ zipWith (<>) ("-- |" : repeat "--") (pretty . prependSpace <$> ls)

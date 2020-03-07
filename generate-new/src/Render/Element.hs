@@ -70,6 +70,17 @@ data Import n = Import
 newtype ModName = ModName { unModName :: Text }
   deriving (Eq, Ord, Show)
 
+instance Semigroup RenderElement where
+  r1 <> r2 = RenderElement
+    { reName         = reName r1 <> " and " <> reName r2
+    , reDoc          = reDoc r1 <> line <> reDoc r2
+    , reExports      = reExports r1 <> reExports r2
+    , reInternal     = reInternal r1 <> reInternal r2
+    , reImports      = reImports r1 <> reImports r2
+    , reLocalImports = reLocalImports r1 <> reLocalImports r2
+    , reReexports    = reReexports r1 <> reReexports r2
+    }
+
 pattern ETerm :: Text -> Export
 pattern ETerm n = Export (TermName n) False Empty
 
@@ -132,27 +143,36 @@ data RenderParams = RenderParams
       -- ^ Parent union or enum name
       -> Text
       -> Text
-  , mkMemberName            :: Text -> Text
-  , mkFunName               :: Text -> Text
-  , mkParamName             :: Text -> Text
-  , mkPatternName           :: Text -> Text
-  , mkHandleName            :: Text -> Text
-  , mkFuncPointerName       :: Text -> Text
+  , mkMemberName                :: Text -> Text
+  , mkFunName                   :: Text -> Text
+  , mkParamName                 :: Text -> Text
+  , mkPatternName               :: Text -> Text
+  , mkHandleName                :: Text -> Text
+  , mkFuncPointerName           :: Text -> Text
     -- ^ Should be distinct from mkTyName
-  , mkFuncPointerMemberName :: Text -> Text
+  , mkFuncPointerMemberName     :: Text -> Text
     -- ^ The name of function pointer members in the dynamic collection
-  , mkEmptyDataName         :: Text -> Text
+  , mkEmptyDataName             :: Text -> Text
     -- ^ The name of the empty data declaration used to tag pointer to opaque
     -- types
-  , mkDispatchableHandlePtrName         :: Text -> Text
+  , mkDispatchableHandlePtrName :: Text -> Text
     -- ^ The record member name for the pointer member in dispatchable handles
-  , alwaysQualifiedNames    :: Vector Name
-  , mkIdiomaticType         :: Type -> Maybe IdiomaticType
+  , alwaysQualifiedNames        :: Vector Name
+  , mkIdiomaticType             :: Type -> Maybe IdiomaticType
     -- ^ Overrides for using a different type than default on the Haskell side
     -- than the C side
-  , mkHsTypeOverride        :: Preserve -> CType -> Maybe Type
+  , mkHsTypeOverride            :: Preserve -> CType -> Maybe Type
     -- ^ Override for using a different type than default on the Haskell sied
-  , unionDiscriminators     :: Vector UnionDiscriminator
+  , unionDiscriminators         :: Vector UnionDiscriminator
+  , successCodeType             :: CType
+  , isSuccessCodeReturned       :: Text -> Bool
+    -- ^ Is this success code returned from a function (failure codes are thrown)
+    --
+    -- use @const True@ to always return success codes
+  , firstSuccessCode            :: Text
+    -- Any code less than this is an error code
+  , exceptionTypeName           :: Text
+    -- The name for the exception wrapper
   }
 
 data UnionDiscriminator = UnionDiscriminator

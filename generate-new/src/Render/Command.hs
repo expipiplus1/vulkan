@@ -20,14 +20,13 @@ import           Polysemy.Reader
 import qualified Data.Text                     as T
 import qualified Data.Vector                   as V
 import qualified Data.Map                      as Map
-import           Language.Haskell.TH            ( nameBase )
 
 import           Control.Monad.Trans.Cont
 import           Foreign.C.Types
 import           Foreign.Marshal.Alloc
 import           Foreign.Ptr
 import qualified GHC.Ptr
-import           Control.Exception              ( bracket )
+import           Control.Exception              ( bracket, throwIO )
 
 import           CType                         as C
 import           Error
@@ -43,7 +42,7 @@ import           Render.Type
 import           Spec.Parse
 
 renderCommand
-  :: (HasErr r, Member (Reader RenderParams) r, HasSpecInfo r)
+  :: (HasErr r, HasRenderParams r, HasSpecInfo r)
   => MarshaledCommand
   -> Sem r RenderElement
 renderCommand m@MarshaledCommand {..} = contextShow mcName $ do
@@ -82,12 +81,13 @@ paramType st MarshaledParam {..} = contextShow (pName mpParam) $ do
   pure $ namedTy (mkParamName pName) <$> n
 
 makeReturnType
-  :: (HasErr r, HasRenderParams r) => MarshaledCommand -> Sem r H.Type
-makeReturnType MarshaledCommand {..} = do
+  :: (HasErr r, HasRenderParams r) => Bool -> MarshaledCommand -> Sem r H.Type
+makeReturnType includeReturnType MarshaledCommand {..} = do
   pts <- V.mapMaybe id <$> traverseV (paramType schemeTypePositive) mcParams
   r   <- case mcReturn of
-    C.Void -> pure V.empty
-    r      -> V.singleton <$> cToHsType DoNotPreserve r
+    C.Void                    -> pure V.empty
+    _ | not includeReturnType -> pure V.empty
+    r                         -> V.singleton <$> cToHsType DoNotPreserve r
   let ts = r <> pts
   pure $ ConT ''IO :@ foldl' (:@) (TupleT (length ts)) ts
 
@@ -137,9 +137,15 @@ marshaledCommandCall dynName m@MarshaledCommand {..} = do
   runReader lookupSibling $ do
 
     let n = mkFunName mcName
+        includeReturnType =
+          mcReturn
+            /= C.Void
+            && (mcReturn == successCodeType --> any isSuccessCodeReturned
+                                                    (cSuccessCodes mcCommand)
+               )
     tellExport (ETerm n)
     nts <- V.mapMaybe id <$> traverseV (paramType schemeType) mcParams
-    r   <- makeReturnType m
+    r   <- makeReturnType includeReturnType m
     let t         = foldr (~>) r nts
         paramName = pretty . mkParamName . pName . mpParam
         isArg p = case mpScheme p of
@@ -197,31 +203,55 @@ marshaledCommandCall dynName m@MarshaledCommand {..} = do
         returnName = "r"
     cCall       <- getCCall mcCommand
     returnPeeks <- toList <$> makeReturnPeeks m
-    let returnStmt = IOPoke $ Assigned $ pure $ "pure" <+> tupled
-          (  case mcReturn of
-              C.Void -> []
-              _      -> [returnName]
-          <> [ pretty (pName mpParam)
-             | MarshaledParam {..} <- toList mcParams
-             , Returned _          <- pure mpScheme
-             ]
-          )
+    let
+      returnStmt = IOPoke $ Assigned $ pure $ "pure" <+> tupled
+        (  case mcReturn of
+            C.Void                    -> []
+            _ | not includeReturnType -> []
+            _                         -> [returnName]
+        <> [ pretty (pName mpParam)
+           | MarshaledParam {..} <- toList mcParams
+           , Returned _          <- pure mpScheme
+           ]
+        )
+      throwStmt =
+        if null (cErrorCodes mcCommand)
+           || cReturnType mcCommand
+           /= successCodeType
+        then
+          []
+        else
+          [ IOPoke $ \(ValueDoc r) -> Assigned $ do
+              tellImport 'when
+              tellImport 'throwIO
+              let pat = mkPatternName firstSuccessCode
+              tellImport (ConName pat)
+              tellImportWithAll (TyConName exceptionTypeName)
+              pure $ "when" <+> parens (r <+> "<" <+> pretty pat) <+> parens
+                ("throwIO" <+> parens (pretty exceptionTypeName <+> r))
+          ]
 
     let
-      (cCallRet, rets) = case mcReturn of
-        C.Void ->
-          ( IOPoke $ \(ValueDoc c) vs ->
-            Assigned $ pure $ c <+> sep (unValueDoc <$> vs)
-          , returnPeeks <> [returnStmt]
-          )
-        r ->
+      (cCallRet, rets) = if includeReturnType
+        then
           ( ChainedPoke
             (ValueDoc returnName)
             (IOPoke $ \(ValueDoc c) vs ->
               Assigned $ pure $ c <+> sep (unValueDoc <$> vs)
             )
-            (fmap (\f _ _ _ -> f) <$> returnPeeks <> [returnStmt])
+            (  (fmap (\f r _ _ -> f r) <$> throwStmt)
+            <> (fmap (\f _ _ _ -> f) <$> returnPeeks <> [returnStmt])
+            )
           , []
+          )
+        else
+          ( ChainedPoke
+            (ValueDoc returnName)
+            (IOPoke $ \(ValueDoc c) vs ->
+              Assigned $ pure $ c <+> sep (unValueDoc <$> vs)
+            )
+            (fmap (\f r _ _ -> f r) <$> throwStmt)
+          , returnPeeks <> [returnStmt]
           )
 
     let ps =
@@ -375,3 +405,7 @@ builtinConstructorParents =
 
 getDynName :: Command -> Text
 getDynName = ("mk" <>) . upperCaseFirst . cName
+
+infixr 2 -->
+(-->) :: Bool -> Bool -> Bool
+a --> b = not a || b

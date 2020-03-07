@@ -83,5 +83,6 @@ executables:
     - unordered-containers
     - vector
     - vector-sized
+    - word-wrap
     - xeno
 description: Please see README.md

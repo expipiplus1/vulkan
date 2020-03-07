@@ -13,6 +13,12 @@ library:
     - transformers
     - vector
     - vector-sized
+  when:
+    - condition: os(windows)
+      then:
+        extra-libraries: vulkan-1
+      else:
+        extra-libraries: vulkan
 
 default-extensions:
   - CPP

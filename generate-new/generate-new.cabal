@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b5ea25f24d31d335f2223e99f251a25ba3934055b9dfe0a20096a0cc25a206d0
+-- hash: 76e7b3e3613c2266eed4d2f08e6339c19e76220736f1a3b1cd76feb8daf865ff
 
 name:           generate-new
 version:        0.0.0
@@ -22,6 +22,7 @@ executable generate
       Bespoke
       Bespoke.Seeds
       Bespoke.Utils
+      Bracket
       CType
       CType.Size
       Data.Text.Extra
@@ -55,6 +56,7 @@ executable generate
       Render.Type.Preserve
       Render.Union
       Render.Utils
+      Render.VkException
       Spec.APIConstant
       Spec.Parse
       Spec.Types
@@ -95,5 +97,6 @@ executable generate
     , unordered-containers
     , vector
     , vector-sized
+    , word-wrap
     , xeno
   default-language: Haskell2010

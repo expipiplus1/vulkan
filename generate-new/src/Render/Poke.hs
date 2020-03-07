@@ -231,6 +231,7 @@ resolveChainedPoke
   => AssignedPoke a
   -> Sem r [AssignedPoke a]
 resolveChainedPoke = \case
+  ChainedPoke _            initialPoke []             -> pure [initialPoke]
   ChainedPoke intermediate initialPoke dependentPokes -> do
     initialPokeDocs <- resolveChainedPoke initialPoke
     let priorPokes = init initialPokeDocs

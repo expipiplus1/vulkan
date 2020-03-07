@@ -9,6 +9,16 @@ To prevent a name clash between the constructors of
 `VkClearColorValue` and `VkPerformanceCounterResultKHR` the latter have had
 `Counter` prefixed.
 
+## TODO Important
+
+generate `bracket create destroy` functions.
+
+generate `enumerateAll` and `gerNum` functions.
+
+throw exceptions instead of always returning vkresult.
+
+stop everything being dumped in `Core10.Extra`.
+
 ## TODO
 
 Make sure it's easy to marshal types such as `VkDispatchIndirectCommand`
