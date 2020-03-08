@@ -61,7 +61,7 @@ parameterScheme Command {..} param = do
         , lengthScheme cParameters
           -- Pointers to Void have some special handling
         , voidPointerScheme
-          -- Pointers to return values in, unmarshaled at the moment
+          -- Pointers to return values in
         , returnPointerScheme
           -- Optional and non optional arrays
         , arrayScheme

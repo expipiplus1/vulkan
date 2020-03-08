@@ -24,6 +24,7 @@ default-extensions:
 - FlexibleInstances
 - FunctionalDependencies
 - GADTs
+- GeneralizedNewtypeDeriving
 - InstanceSigs
 - KindSignatures
 - LambdaCase
@@ -60,6 +61,8 @@ executables:
     - bytestring
     - containers
     - deepseq
+    - dependent-sum
+    - dependent-map
     - directory
     - extra
     - filepath

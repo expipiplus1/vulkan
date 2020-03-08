@@ -27,3 +27,10 @@ comment c =
   let ls = wrapTextToLines defaultWrapSettings 72 c
       prependSpace t = if T.null t then t else " " <> t
   in  vsep $ zipWith (<>) ("-- |" : repeat "--") (pretty . prependSpace <$> ls)
+
+doBlock :: [Doc ()] -> Doc ()
+doBlock = \case
+  []    -> "pure ()"
+  [s]   -> s
+  stmts -> "do" <> line <> indent 2 (vsep stmts)
+

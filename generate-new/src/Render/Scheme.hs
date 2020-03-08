@@ -18,7 +18,6 @@ import           Marshal.Scheme
 import           Error
 import           Render.Type
 import           Render.Element
-import           CType
 
 schemeType
   :: (HasErr r, Member (Reader RenderParams) r, Show a)
@@ -50,12 +49,9 @@ schemeTypePositive
    . (HasErr r, Member (Reader RenderParams) r, Show a)
   => MarshalScheme a
   -> Sem r (Maybe H.Type)
-schemeTypePositive s = do
-  RenderParams {..} <- ask
-  case s of
-    Returned (Normal (Ptr NonConst t)) -> schemeType (Normal @a t)
-    Returned _ -> throw "Returned scheme with non NonConst pointer type"
-    _ -> pure Nothing
+schemeTypePositive s = case s of
+  Returned t -> schemeType t
+  _          -> pure Nothing
 
 isUnivalued :: MarshalScheme a -> Bool
 isUnivalued = \case

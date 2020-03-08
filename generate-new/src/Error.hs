@@ -19,11 +19,12 @@ module Error
   )
 where
 
-import Relude
-import Polysemy
-import Data.Vector as V
-import qualified Polysemy.Error as E
-import Relude.Extra.Validation
+import           Relude
+import           Polysemy
+import           Data.Vector                   as V
+                                         hiding ( toList )
+import qualified Polysemy.Error                as E
+import           Relude.Extra.Validation
 
 type Err = E.Error (Vector Text)
 type HasErr r = MemberWithError Err r
@@ -78,11 +79,11 @@ traverseV f = sequenceV . fmap f
 
 traverseV_
   :: forall f r a b
-   . (Traversable f, HasErr r)
+   . (Foldable f, HasErr r)
   => (a -> Sem r b)
   -> f a
   -> Sem r ()
-traverseV_ f = void . traverseV f
+traverseV_ f = void . traverseV f . toList
 
 forV
   :: forall f r a b
@@ -94,11 +95,11 @@ forV = flip traverseV
 
 forV_
   :: forall f r a
-   . (Traversable f, HasErr r)
+   . (Foldable f, HasErr r)
   => f a
   -> (a -> Sem r ())
   -> Sem r ()
-forV_ s = void . forV s
+forV_ = flip traverseV_
 
 infixr 5 <+>
 (<+>) :: (Semigroup a, IsString a) => a -> a -> a

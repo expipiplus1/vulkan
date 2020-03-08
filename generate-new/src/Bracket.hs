@@ -60,12 +60,12 @@ brackets handles = do
     , simpleBracket True  "SwapchainKHR"              (Just "VkDevice")
     , simpleBracket True  "DebugReportCallbackEXT"    (Just "VkInstance")
     , simpleBracket True  "DebugUtilsMessengerEXT"    (Just "VkInstance")
-    -- , allocateBracket True False (Just "commandPool") "CommandBuffer" Nothing
-    -- , allocateBracket False True Nothing "DeviceMemory" (Just "Memory")
-    -- , allocateBracket True False (Just "descriptorPool") "DescriptorSet" Nothing
-    -- , createPipeline "Compute"
-    -- , createPipeline "Graphics"
-    -- , mapMemory
+    , allocateBracket True False (Just "commandPool") "CommandBuffer" Nothing
+    , allocateBracket False True Nothing "DeviceMemory" (Just "Memory")
+    , allocateBracket True False (Just "descriptorPool") "DescriptorSet" Nothing
+    , createPipeline "Compute"
+    , createPipeline "Graphics"
+    , mapMemory
     -- , useCommandBuffer
     -- , registerObjectsNVX
     ]
@@ -77,7 +77,7 @@ brackets handles = do
         , "SurfaceKHR"
         , "PerformanceConfigurationINTEL"
         ]
-      handleNames      = hName <$> handles
+      handleNames = hName <$> handles
       -- bracketNames     = [ n | (TypeName n, _, _, _) <- rs ]
       -- unhandledHandles = handleNames \\ (bracketNames ++ ignoredHandles)
   -- unless (null unhandledHandles)
@@ -149,125 +149,126 @@ simpleBracket passDestructorParent innerType parentMaybe =
       )
       False
 
--- allocateBracket :: Bool -> Bool -> Maybe Text -> Text -> Maybe Text -> Bracket
--- allocateBracket plural useAllocationCallbacks poolMaybe innerTypeName functionNameFragment
---   = let
---       suffix = bool "" "s" plural
---       parent = "Device"
---       innerType = fromMaybe innerTypeName functionNameFragment
---       allocateInfoTerm =
---         (T.lowerCaseFirst innerType `appendWithVendor` "AllocateInfo")
---     in
---       Bracket
---         (bool Single Multiple plural (TypeName innerTypeName))
---         (TermName ("with" <> innerType <> suffix))
---         (TermName ("allocate" <> innerType <> suffix))
---         (TermName ("free" <> innerType <> suffix))
---         (  [ Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)
---            , Provided
---              (Single (TypeName (innerType `appendWithVendor` "AllocateInfo")))
---              allocateInfoTerm
---            ]
---         ++ [ Provided (Optional (TypeName "AllocationCallbacks"))
---                       "allocationCallbacks"
---            | useAllocationCallbacks
---            ]
---         )
---         (  [Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)]
---         ++ maybeToList ((`Member` allocateInfoTerm) <$> poolMaybe)
---         ++ [Resource]
---         ++ [ Provided (Optional (TypeName "AllocationCallbacks"))
---                       "allocationCallbacks"
---            | useAllocationCallbacks
---            ]
---         )
---         False
+allocateBracket :: Bool -> Bool -> Maybe Text -> Text -> Maybe Text -> Bracket
+allocateBracket plural useAllocationCallbacks poolMaybe innerTypeName functionNameFragment
+  = let
+      suffix    = bool "" "s" plural
+      parent    = "VkDevice"
+      innerType = fromMaybe innerTypeName functionNameFragment
+      allocateInfoTerm =
+        (T.lowerCaseFirst innerType `appendWithVendor` "AllocateInfo")
+    in
+      Bracket
+        (bool Single Multiple plural (TypeName ("Vk" <> innerTypeName)))
+        ("vkWith" <> innerType <> suffix)
+        ("vkAllocate" <> innerType <> suffix)
+        ("vkFree" <> innerType <> suffix)
+        (  [ Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)
+           , Provided
+             (Single (TypeName ("Vk" <> innerType `appendWithVendor` "AllocateInfo")))
+             allocateInfoTerm
+           ]
+        ++ [ Provided (Optional (TypeName "VkAllocationCallbacks"))
+                      "allocationCallbacks"
+           | useAllocationCallbacks
+           ]
+        )
+        (  [Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)]
+        ++ maybeToList ((`Member` allocateInfoTerm) <$> poolMaybe)
+        ++ [Resource]
+        ++ [ Provided (Optional (TypeName "VkAllocationCallbacks"))
+                      "allocationCallbacks"
+           | useAllocationCallbacks
+           ]
+        )
+        False
 
--- createPipeline :: Text -> Bracket
--- createPipeline createTypePrefix =
---   let
---     innerType = "Pipeline"
---     suffix    = "s"
---     parent    = "Device"
---     ciType    = (createTypePrefix <> innerType `appendWithVendor` "CreateInfo")
---     cacheType = (innerType `appendWithVendor` "Cache")
---   in
---     Bracket
---       (Multiple (TypeName innerType))
---       (TermName ("with" <> createTypePrefix <> innerType <> suffix))
---       (TermName ("create" <> createTypePrefix <> innerType <> suffix))
---       (TermName ("destroy" <> innerType))
---       [ Provided (Single (TypeName parent))    (T.lowerCaseFirst parent)
---       , Provided (Single (TypeName cacheType)) (T.lowerCaseFirst cacheType)
---       , Provided (Multiple (TypeName ciType))  (T.lowerCaseFirst ciType)
---       , Provided (Optional (TypeName "AllocationCallbacks"))
---                  "allocationCallbacks"
---       ]
---       [ Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)
---       , Resource
---       , Provided (Optional (TypeName "AllocationCallbacks"))
---                  "allocationCallbacks"
---       ]
---       True
+createPipeline :: Text -> Bracket
+createPipeline createTypePrefix =
+  let
+    innerType = "Pipeline"
+    suffix    = "s"
+    parent    = "VkDevice"
+    ciType =
+      ("Vk" <> createTypePrefix <> innerType `appendWithVendor` "CreateInfo")
+    cacheType = ("Vk" <> innerType `appendWithVendor` "Cache")
+  in
+    Bracket
+      (Multiple (TypeName ("Vk" <> innerType)))
+      ("vkWith" <> createTypePrefix <> innerType <> suffix)
+      ("vkCreate" <> createTypePrefix <> innerType <> suffix)
+      ("vkDestroy" <> innerType)
+      [ Provided (Single (TypeName parent))    (T.lowerCaseFirst parent)
+      , Provided (Single (TypeName cacheType)) (T.lowerCaseFirst cacheType)
+      , Provided (Multiple (TypeName ciType))  (T.lowerCaseFirst ciType)
+      , Provided (Optional (TypeName "VkAllocationCallbacks"))
+                 "allocationCallbacks"
+      ]
+      [ Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)
+      , Resource
+      , Provided (Optional (TypeName "VkAllocationCallbacks"))
+                 "allocationCallbacks"
+      ]
+      True
 
--- mapMemory :: Bracket
--- mapMemory =
---   let parent = "Device"
---       mem    = "DeviceMemory"
---   in  Bracket
---         (Single (Ptr NonConst Void))
---         (TermName "withMappedMemory")
---         (TermName "mapMemory")
---         (TermName "unmapMemory")
---         [ Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)
---         , Provided (Single (TypeName mem))              (T.lowerCaseFirst mem)
---         , Provided (Single (TypeName "DeviceSize"))     "offset'"
---         , Provided (Single (TypeName "DeviceSize"))     "size'"
---         , Provided (Single (TypeName "MemoryMapFlags")) "flags'"
---         ]
---         [ Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)
---         , Provided (Single (TypeName mem))    (T.lowerCaseFirst mem)
---         ]
---         False
+mapMemory :: Bracket
+mapMemory =
+  let parent = "VkDevice"
+      mem    = "VkDeviceMemory"
+  in  Bracket
+        (Single (Ptr NonConst Void))
+        "vkWithMappedMemory"
+        "vkMapMemory"
+        "vkUnmapMemory"
+        [ Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)
+        , Provided (Single (TypeName mem))                (T.lowerCaseFirst mem)
+        , Provided (Single (TypeName "VkDeviceSize"))     "offset'"
+        , Provided (Single (TypeName "VkDeviceSize"))     "size'"
+        , Provided (Single (TypeName "VkMemoryMapFlags")) "flags'"
+        ]
+        [ Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)
+        , Provided (Single (TypeName mem))    (T.lowerCaseFirst mem)
+        ]
+        False
 
--- useCommandBuffer :: Bracket
--- useCommandBuffer =
---   let buf       = "CommandBuffer"
---       beginInfo = "CommandBufferBeginInfo"
---   in  Bracket
---         (Single Void)
---         (TermName "useCommandBuffer")
---         (TermName "beginCommandBuffer")
---         (TermName "endCommandBuffer")
---         [ Provided (Single (TypeName buf))       (T.lowerCaseFirst buf)
---         , Provided (Single (TypeName beginInfo)) (T.lowerCaseFirst beginInfo)
---         ]
---         [Provided (Single (TypeName buf)) (T.lowerCaseFirst buf)]
---         False
+useCommandBuffer :: Bracket
+useCommandBuffer =
+  let buf       = "CommandBuffer"
+      beginInfo = "CommandBufferBeginInfo"
+  in  Bracket
+        (Single Void)
+        "vkUseCommandBuffer"
+        "vkBeginCommandBuffer"
+        "vkEndCommandBuffer"
+        [ Provided (Single (TypeName buf))       (T.lowerCaseFirst buf)
+        , Provided (Single (TypeName beginInfo)) (T.lowerCaseFirst beginInfo)
+        ]
+        [Provided (Single (TypeName buf)) (T.lowerCaseFirst buf)]
+        False
 
--- registerObjectsNVX :: Bracket
--- registerObjectsNVX =
---   let parent     = "Device"
---       table      = "ObjectTableNVX"
---       tableEntry = "ObjectTableEntryNVX"
---       entryType  = "ObjectEntryTypeNVX"
---   in  Bracket
---         (Single Void)
---         (TermName "withRegisteredObjectsNVX")
---         (TermName "registerObjectsNVX")
---         (TermName "unregisterObjectsNVX")
---         [ Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)
---         , Provided (Single (TypeName table))  (T.lowerCaseFirst table)
---         , Provided (Multiple (TypeName tableEntry))
---                    (T.lowerCaseFirst tableEntry)
---         , Provided (Multiple (TypeName "uint32_t")) "objectIndices"
---         ]
---         [ Provided (Single (TypeName parent))       (T.lowerCaseFirst parent)
---         , Provided (Single (TypeName table))        (T.lowerCaseFirst table)
---         , Provided (Multiple (TypeName entryType))  (T.lowerCaseFirst entryType)
---         , Provided (Multiple (TypeName "uint32_t")) "objectIndices"
---         ]
---         False
+registerObjectsNVX :: Bracket
+registerObjectsNVX =
+  let parent     = "Device"
+      table      = "ObjectTableNVX"
+      tableEntry = "ObjectTableEntryNVX"
+      entryType  = "ObjectEntryTypeNVX"
+  in  Bracket
+        (Single Void)
+        "vkWithRegisteredObjectsNVX"
+        "vkRegisterObjectsNVX"
+        "vkUnregisterObjectsNVX"
+        [ Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)
+        , Provided (Single (TypeName table))  (T.lowerCaseFirst table)
+        , Provided (Multiple (TypeName tableEntry))
+                   (T.lowerCaseFirst tableEntry)
+        , Provided (Multiple (TypeName "uint32_t")) "objectIndices"
+        ]
+        [ Provided (Single (TypeName parent))       (T.lowerCaseFirst parent)
+        , Provided (Single (TypeName table))        (T.lowerCaseFirst table)
+        , Provided (Multiple (TypeName entryType))  (T.lowerCaseFirst entryType)
+        , Provided (Multiple (TypeName "uint32_t")) "objectIndices"
+        ]
+        False
 
 writePair
   :: (HasErr r, HasRenderParams r)

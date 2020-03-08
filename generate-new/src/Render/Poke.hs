@@ -38,14 +38,15 @@ import qualified Data.ByteString               as BS
 import           GHC.IO.Exception
 import           Control.Exception              ( throwIO )
 
+import           CType                         as C
 import           Error
+import           Haskell
+import           Marshal.Marshalable
 import           Marshal.Scheme
 import           Render.Element
 import           Render.SpecInfo
 import           Render.Type
-import           CType                         as C
-import           Marshal.Marshalable
-import           Haskell
+import           Render.Utils
 import           Spec.Types
 
 
@@ -320,12 +321,6 @@ letBlock  = \case
   []   -> mempty
   lets -> "let" <+> align (vsep lets)
 
-doBlock :: [Doc ()] -> Doc ()
-doBlock = \case
-  []    -> "pure ()"
-  [s]   -> s
-  stmts -> "do" <> line <> indent 2 (vsep stmts)
-
 ----------------------------------------------------------------
 -- Pokes
 ----------------------------------------------------------------
@@ -397,7 +392,8 @@ elidedLengthPoke
 elidedLengthPoke Empty Empty = throw "No vectors to get length from"
 elidedLengthPoke os    rs    = do
   let
-    inline = if V.length os + V.length rs == 1 then DoInline else DoNotInline
+    -- inline = if V.length os + V.length rs == 1 then DoInline else DoNotInline
+    inline = DoNotInline
     getLength v = do
       SiblingInfo {..} <- getSiblingInfo @a (name v)
       (name v, ) <$> case siScheme of

@@ -162,7 +162,6 @@ data Command = Command
   { cName :: Text
   , cReturnType :: CType
   , cParameters :: Vector Parameter
-  -- , cCommandLevel :: HandleLevel
   , cSuccessCodes :: Vector Text
   , cErrorCodes :: Vector Text
   }

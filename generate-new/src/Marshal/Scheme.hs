@@ -146,10 +146,18 @@ voidPointerScheme p = do
   Ptr _ Void <- pure $ type' p
   pure VoidPtr
 
+-- | TODO: This should be fleshed out a bit more
+-- Add InOut scheme for (false, true) optionality
 returnPointerScheme :: Marshalable a => a -> ND r (MarshalScheme c)
 returnPointerScheme p = do
-  t@(Ptr NonConst _) <- pure $ type' p
-  pure $ Returned (Normal t)
+  Ptr NonConst t <- pure $ type' p
+  let normal = do
+        Empty <- pure $ lengths p
+        pure $ Returned (Normal t)
+      array = do
+        _ :<| _ <- pure $ lengths p
+        pure $ Returned (Vector (Normal t))
+  asum [normal, array]
 
 -- | If we have a non-const pointer in a struct leave it as it is
 returnPointerInStructScheme
@@ -174,6 +182,7 @@ arrayScheme p = case lengths p of
       _              -> ByteString
 
   -- TODO: Don't ignore the tail here
+  -- TODO: Handle NamedMemberLength here
   NamedLength _ :<| _ -> do
     -- It's a const pointer
     Ptr Const t <- pure $ type' p

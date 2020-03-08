@@ -95,7 +95,7 @@ makeReturnPeeks
   :: HasErr r => MarshaledCommand -> Sem r (V.Vector (AssignedPoke Parameter))
 makeReturnPeeks MarshaledCommand {..} =
   fmap (V.mapMaybe id) . forV mcParams $ \case
-    MarshaledParam {..} | Returned (Normal (Ptr NonConst r)) <- mpScheme ->
+    MarshaledParam {..} | Returned r <- mpScheme ->
       pure
         $   Just
         $   IOPoke
@@ -109,9 +109,7 @@ makeReturnPeeks MarshaledCommand {..} =
                             _       -> error "TODO, do this bit properly"
                 }
               (AddrDoc (pretty (pName mpParam)))
-              (Normal r)
-    MarshaledParam {..} | Returned _ <- mpScheme ->
-      throw "Returned type isn't a nonconst pointer"
+              r
     _ -> pure Nothing
 
 ----------------------------------------------------------------

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 76e7b3e3613c2266eed4d2f08e6339c19e76220736f1a3b1cd76feb8daf865ff
+-- hash: 9ffc89521036edec3274f7f3492a2bb4d0037dfddc1914205fb37fe215055683
 
 name:           generate-new
 version:        0.0.0
@@ -51,6 +51,7 @@ executable generate
       Render.Scheme
       Render.Spec
       Render.SpecInfo
+      Render.Stmts
       Render.Struct
       Render.Type
       Render.Type.Preserve
@@ -66,7 +67,7 @@ executable generate
       Paths_generate_new
   hs-source-dirs:
       src
-  default-extensions: BangPatterns BinaryLiterals ConstraintKinds DataKinds DeriveGeneric DerivingVia DisambiguateRecordFields DuplicateRecordFields EmptyCase FlexibleContexts FlexibleInstances FunctionalDependencies GADTs InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings ParallelListComp PartialTypeSignatures PatternSynonyms PolyKinds RankNTypes RecordWildCards RecursiveDo ScopedTypeVariables StandaloneDeriving TemplateHaskellQuotes TupleSections TypeApplications TypeFamilies TypeOperators ViewPatterns
+  default-extensions: BangPatterns BinaryLiterals ConstraintKinds DataKinds DeriveGeneric DerivingVia DisambiguateRecordFields DuplicateRecordFields EmptyCase FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings ParallelListComp PartialTypeSignatures PatternSynonyms PolyKinds RankNTypes RecordWildCards RecursiveDo ScopedTypeVariables StandaloneDeriving TemplateHaskellQuotes TupleSections TypeApplications TypeFamilies TypeOperators ViewPatterns
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -fno-warn-unticked-promoted-constructors -O2 -flate-specialise -fspecialise-aggressively
   build-depends:
       algebraic-graphs
@@ -74,6 +75,8 @@ executable generate
     , bytestring
     , containers
     , deepseq
+    , dependent-map
+    , dependent-sum
     , directory
     , extra
     , filepath
