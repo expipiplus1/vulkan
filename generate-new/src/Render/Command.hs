@@ -101,15 +101,16 @@ makeReturnPeeks MarshaledCommand {..} =
         $   IOPoke
         $   Assigned
         $   note "Unable to get peek for Returned value"
-        =<< renderPeekStmt
-              pName
-              mpParam
-                { pType = case pType mpParam of
-                            Ptr _ t -> t
-                            _       -> error "TODO, do this bit properly"
-                }
-              (AddrDoc (pretty (pName mpParam)))
-              r
+        $ Just "error \"TODO SHIP\""
+        -- =<< renderPeekStmt
+        --       pName
+        --       mpParam
+        --         { pType = case pType mpParam of
+        --                     Ptr _ t -> t
+        --                     _       -> error "TODO, do this bit properly"
+        --         }
+        --       (AddrDoc (pretty (pName mpParam)))
+        --       r
     _ -> pure Nothing
 
 ----------------------------------------------------------------

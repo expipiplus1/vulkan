@@ -24,14 +24,21 @@ import           Haskell                       as H
 import           Error
 import           Render.Element
 import           Render.Type
-import           Render.Poke
+import           Render.Poke             hiding ( Pure
+                                                , Inline(..)
+                                                )
 import           Render.Peek
+import           Render.Stmts
 import           Marshal.Struct
 import           Render.Scheme
 import           Render.SpecInfo
 
 renderUnion
-  :: (HasErr r, Member (Reader RenderParams) r, HasSpecInfo r)
+  :: ( HasErr r
+     , Member (Reader RenderParams) r
+     , HasSpecInfo r
+     , Member Fixpoint r
+     )
   => MarshaledStruct AUnion
   -> Sem r RenderElement
 renderUnion marshaled@MarshaledStruct {..} = context msName $ do
@@ -60,7 +67,7 @@ renderUnion marshaled@MarshaledStruct {..} = context msName $ do
         of
           []  -> pure ()
           [d] -> peekUnionFunction d marshaled
-          ds  -> throw ("Found multiple union discriminators for " <> n)
+          _ -> throw ("Found multiple union discriminators for " <> n)
 
 renderUnionMember
   :: ( HasErr r
@@ -160,6 +167,7 @@ peekUnionFunction
      , HasRenderElem r
      , HasSiblingInfo StructMember r
      , HasSpecInfo r
+     , Member Fixpoint r
      )
   => UnionDiscriminator
   -> MarshaledStruct AUnion
@@ -179,17 +187,19 @@ peekUnionFunction UnionDiscriminator {..} MarshaledStruct {..} = do
         $ find ((== smName msmStructMember) . snd) udValueConstructorMap
     let pat' = mkPatternName pat
         con' = mkConName n con
-    ptrTDoc <- renderTypeHighPrec
-      =<< cToHsType DoPreserve (smType msmStructMember)
+    ty    <- cToHsType DoPreserve (smType msmStructMember)
+    tyDoc <- renderTypeHighPrec ty
     tellImport 'castPtr
-    let addr = AddrDoc (parens ("castPtr @_ @" <> ptrTDoc <+> ptrName))
+    let addr = AddrDoc (parens ("castPtr @_ @" <> tyDoc <+> ptrName))
     tellImport (ConName pat')
     tellImportWith (TyConName n) (ConName con')
     let from   = smType msmStructMember
         scheme = msmScheme
-    subPeek <-
+    subPeek <- renderStmtsIO $ do
+      addrRef <- stmt $ do
+        pure $ StmtResult (Just $ ConT ''Ptr :@ ty) Nothing (Pure DoInline (addr))
       note "Nothing to peek to fill union with"
-        =<< renderPeek mempty from addr scheme
+        =<< peekStmt smName msmStructMember addrRef scheme
     pure $ pretty pat' <+> "->" <+> pretty con' <+> "<$>" <+> parens subPeek
 
   tDoc <- renderType (discTy ~> ConT ''Ptr :@ uTy ~> ConT ''IO :@ uTy)

@@ -4,8 +4,9 @@
 module Render.Stmts
   ( Stmts
   , Stmt
+  , HasStmt
   , Action(..)
-  , Inline
+  , Inline(..)
   , Ref
   , StmtResult(..)
   , renderStmtsContT
@@ -13,6 +14,7 @@ module Render.Stmts
   , stmt
   , after
   , use
+  , Fixpoint
 
   , LookupRef
   , StmtState
@@ -25,6 +27,7 @@ import           Relude                  hiding ( Type
                                                 , evalState
                                                 , gets
                                                 , Reader
+                                                , ask
                                                 , asks
                                                 , runReader
                                                 , execState
@@ -36,20 +39,28 @@ import           Polysemy.Reader
 import qualified Data.List.Extra               as List
 import           Polysemy.Fixpoint
 import           Data.Text.Prettyprint.Doc
-import qualified Data.Map                      as Map
+import           Data.Type.Equality
+import           Data.Typeable
+import qualified Data.GADT.Compare             as DMap
+import qualified Data.Dependent.Map            as DMap
+import           Data.Dependent.Map             ( DMap
+                                                , Some(..)
+                                                , DSum(..)
+                                                )
 import qualified Data.Set                      as Set
-import           Data.Vector                    ( Vector )
 
 import           Render.Utils
 import           Haskell
 import           Error
 
-type Stmts r a = Sem (State StmtsState ': Reader LookupRef ': r) a
+type Stmts r a = Member (State StmtsState) r => Sem r a
 
 type Stmt r a
   = (Member (State StmtState) r, Member (Reader LookupRef) r) => Sem r a
 
-type LookupRef = Ref -> (Doc (), StmtResult)
+type HasStmt r = (Member (State StmtState) r, Member (Reader LookupRef) r)
+
+newtype LookupRef = LookupRef (forall a. Ref a -> (a, StmtResultWithDepends a))
 
 data Action a
   = Pure Inline a
@@ -70,144 +81,238 @@ isIOAction = \case
 data Inline = DoInline | DoNotInline
   deriving (Show)
 
-newtype Ref = Ref Int
-  deriving newtype (Eq, Ord, Enum)
+data Ref (a :: *) where
+  Ref :: Typeable a => Int -> Ref a
 
-data StmtResult = StmtResult
-  { rType     :: Type
-  , rNameHint :: Maybe Text
-  , rAction   :: Action (Doc ())
+refVal :: Ref a -> Int
+refVal (Ref n) = n
+
+deriving instance Eq (Ref a)
+deriving instance Ord (Ref a)
+
+instance DMap.GEq Ref where
+  geq :: forall a b . Ref a -> Ref b -> Maybe (a :~: b)
+  geq (Ref a) (Ref b) = case eqT @a @b of
+    Just Refl | a == b -> Just Refl
+    _                  -> Nothing
+
+instance DMap.GCompare Ref where
+  gcompare :: forall a b . Ref a -> Ref b -> DMap.GOrdering a b
+  gcompare a@(Ref ai) b@(Ref bi) = case DMap.geq a b of
+    Just Refl -> DMap.GEQ
+    Nothing   -> case compare (ai, typeRep a) (bi, typeRep b) of
+      EQ -> error "impossible"
+      LT -> DMap.GLT
+      GT -> DMap.GGT
+
+data StmtResult (a :: *) where
+  StmtResult
+    :: Coercible (Doc ()) a
+    => { rType     :: Maybe Type
+       , rNameHint :: Maybe Text
+       , rAction   :: Action a
+       }
+    -> StmtResult a
+
+stmtResultAsDoc :: StmtResult a -> StmtResult (Doc ())
+stmtResultAsDoc = \case
+  r@StmtResult{} -> coerce r
+
+data StmtResultWithDepends a = StmtResultWithDepends
+  { result  :: StmtResult a
+  , depends :: Set (Some Ref)
   }
 
 data StmtsState = StmtsState
-  { nextRef :: Ref
-  , refMap  :: Map Ref (Set Ref, StmtResult)
+  { nextRef :: Int
+  , refMap  :: DMap Ref StmtResultWithDepends
+  , lookupRef :: LookupRef
   }
 
-newtype StmtState = StmtState { stmtDepends :: Set Ref }
+newtype StmtState = StmtState { stmtDepends :: Set (Some Ref) }
 
 data ReferencedTimes = None | Once | Many
 
 -- | Render a do block of these statements
-renderStmtsContT :: (Member Fixpoint r, HasErr r) => Stmts r a -> Sem r (Doc ())
+renderStmtsIO
+  :: (Member Fixpoint r, HasErr r, Coercible a (Doc ()))
+  => Sem (State StmtsState ': r) (Ref a)
+  -> Sem r (Doc ())
+renderStmtsIO a = renderStmtsIO' =<< resolveStmts a
+
+-- | Render a do block of these statements
+renderStmtsContT
+  :: (Member Fixpoint r, HasErr r, Coercible a (Doc ()))
+  => Sem (State StmtsState ': r) (Ref a)
+  -> Sem r (Doc ())
 renderStmtsContT a = do
   refMap <- resolveStmts a
-  let (contTSection, ioSection) =
-        List.breakEnd (isContTAction . rAction . snd . snd) refMap
-      useIOSection = any (isIOAction . rAction . snd . snd) ioSection
+  let
+    testAction
+      :: (forall a . Action a -> Bool) -> DSum Ref StmtResultWithDepends -> Bool
+    testAction p (_ :=> StmtResultWithDepends (StmtResult _ _ a) _) = p a
+    (contTSection, ioSection) = List.breakEnd (testAction isContTAction) refMap
+    useIOSection              = any (testAction isIOAction) ioSection
   let
     rendered refMap = catMaybes
       [ case rAction of
-          Pure _ d | isLast                           -> Just $ "pure $" <+> d
+          Pure _ d | isLast  -> Just $ "pure $" <+> d
           -- TODO: This still processes side effects even though the result is
           -- elided... Probably not the end of the world we shouldn't be
           -- generating unused things anyway.
-          Pure _ _ | None <- referencedTimes refMap r -> Nothing
-          Pure DoInline    _                          -> Nothing
-          Pure DoNotInline d -> Just $ "let" <+> pretty rNameHint <+> "=" <+> d
-          IOAction d | None <- referencedTimes refMap r ->
+          Pure _ _ | None <- referencedTimes refMap (This r) -> Nothing
+          Pure DoInline    _ -> Nothing
+          Pure DoNotInline d -> Just $ "let" <+> var <+> "=" <+> d
+          IOAction d | None <- referencedTimes refMap (This r) ->
             Just $ "liftIO $" <+> d
-          IOAction d    -> Just $ pretty rNameHint <+> "<- liftIO $" <+> d
-          ContTAction d | None <- referencedTimes refMap r -> Just d
-          ContTAction d -> Just $ pretty rNameHint <+> "<-" <+> d
-      | ((r, (_, StmtResult {..})), isLast) <- zip
+          IOAction d    -> Just $ var <+> "<- liftIO $" <+> d
+          ContTAction d | None <- referencedTimes refMap (This r) -> Just d
+          ContTAction d -> Just $ var <+> "<-" <+> d
+      | (r :=> StmtResultWithDepends {..}, isLast) <- zip
         refMap
         (replicate (length refMap - 1) False ++ [True])
+      , let StmtResult {..} = stmtResultAsDoc result
+      , let var = getVarNameAsDoc r result
       ]
   if useIOSection
     then do
       -- Render the IO section
-      ioSectionDoc <- renderStmtsIO ioSection
+      ioSectionDoc <- renderStmtsIO' ioSection
       -- Use the last IO action (the returned one) as a template for the action
       -- of this new doc.
       let lastIOAction = List.last ioSection
       pure $ doBlock
         (show <$> rendered
           (  contTSection
-          <> [ fmap (\r -> r { rAction = IOAction ioSectionDoc })
-                 <$> lastIOAction
+          <> [ (\(Ref r :=> s) -> Ref r :=> s
+                 { result = (stmtResultAsDoc (result s))
+                              { rAction = IOAction ioSectionDoc
+                              }
+                 }
+               )
+                 lastIOAction
              ]
           )
         )
     else pure $ doBlock (show <$> rendered refMap)
 
-renderStmtsIO
+renderStmtsIO'
   :: (Member Fixpoint r, HasErr r)
-  => [(Ref, (Set Ref, StmtResult))]
+  => [DSum Ref StmtResultWithDepends]
   -> Sem r (Doc ())
-renderStmtsIO refMap = do
+renderStmtsIO' refMap = do
   results <- sequenceV $ catMaybes
     [ case rAction of
         Pure _ d | isLast -> Just $ pure $ "pure $" <+> d
-        Pure _ _ | None <- referencedTimes refMap r -> Nothing
-        Pure DoInline _ -> Nothing
+        Pure _ _ | None <- referencedTimes refMap (This r) -> Nothing
+        Pure DoInline _   -> Nothing
         Pure DoNotInline d ->
           Just $ pure $ "let" <+> pretty rNameHint <+> "=" <+> d
-        IOAction d | None <- referencedTimes refMap r -> Just $ pure d
+        IOAction d | None <- referencedTimes refMap (This r) -> Just $ pure d
         IOAction d -> Just $ pure $ pretty rNameHint <+> "<-" <+> d
         ContTAction _ ->
           Just $ throw "ContT action while rendering IO statements"
-    | ((r, (_, StmtResult {..})), isLast) <- zip
+    | (r :=> StmtResultWithDepends {..}, isLast) <- zip
       refMap
       (replicate (length refMap - 1) False ++ [True])
+    , let StmtResult {..} = stmtResultAsDoc result
     ]
   pure $ doBlock (show <$> results)
 
 -- TODO: This incorrectly counts: uses of removed pure actions and uses
 -- for ordering only
-referencedTimes :: [(Ref, (Set Ref, StmtResult))] -> Ref -> ReferencedTimes
+referencedTimes
+  :: [DSum Ref StmtResultWithDepends] -> Some Ref -> ReferencedTimes
 referencedTimes refMap r =
-  case [ () | (_, (deps, _)) <- refMap, Set.member r deps ] of
+  case [ () | _ :=> x <- refMap, Set.member r (depends x) ] of
     []  -> None
     [_] -> Once
     _   -> Many
 
--- | Render a do block of these statements
+-- | Tie the loop and get all the statements along with their refs. Make sure
+-- the last statement returns the value given by the ref.
 resolveStmts
-  :: (Member Fixpoint r, HasErr r)
-  => Stmts r a
-  -> Sem r [(Ref, (Set Ref, StmtResult))]
+  :: forall r a
+   . (Member Fixpoint r, HasErr r, Coercible a (Doc ()))
+  => Sem (State StmtsState ': r) (Ref a)
+  -> Sem r [DSum Ref StmtResultWithDepends]
 resolveStmts a = mdo
-  StmtsState {..} <-
-    runReader lookupRef . execState (StmtsState (Ref 0) mempty) $ a
-  forV_ refMap $ \(deps, _) ->
-    forV_ deps $ \ref -> unless (Map.member ref refMap) (throw "missing ref")
-  let lookupRef r = case Map.lookup r refMap of
-        Nothing     -> error "Impossible, getting a nonexistent ref"
-        Just (_, x) -> case rAction x of
-          Pure DoInline d -> (parens d, x)
-          _               -> (pretty (rNameHint x), x)
-  pure (Map.toAscList refMap)
+  StmtsState {..} <- execState (StmtsState 0 mempty lookupRef') $ do
+    r@(Ref _) <- a
+    unlessM (isMostRecentRef r) $ do
+      _ <- stmt $ do
+        (t, w) <- useWithType r
+        pure $ StmtResult (Just t) Nothing (Pure DoInline w)
+      pure ()
+  forV_ (DMap.toList refMap) $ \(_ :=> StmtResultWithDepends _ deps) ->
+    forV_ deps
+      $ \(This ref) -> unless (DMap.member ref refMap) (throw "missing ref")
+  let lookupRef' = LookupRef $ \r -> case DMap.lookup r refMap of
+        Nothing -> error "Impossible, getting a nonexistent ref"
+        Just x  -> case result x of
+          StmtResult {..} -> case rAction of
+            Pure DoInline d -> (coerce (parens @()) d, x)
+            _               -> (getVarName r (result x), x)
+  pure $ DMap.toAscList refMap
 
-stmt :: Sem (State StmtState ': Reader LookupRef ': r) StmtResult -> Stmts r Ref
+getVarName :: forall a . Ref a -> StmtResult a -> a
+getVarName r StmtResult {..} = maybe
+  (coerce ("x" <> viaShow (refVal r) :: Doc ()))
+  (coerce (pretty @Text @()))
+  rNameHint
+
+getVarNameAsDoc :: forall a . Ref a -> StmtResult a -> Doc ()
+getVarNameAsDoc ref res@StmtResult{} = coerce $ getVarName ref res
+
+stmt
+  :: Typeable a
+  => Sem (State StmtState ': Reader LookupRef ': r) (StmtResult a)
+  -> Stmts r (Ref a)
 stmt s = do
-  (stmtState, res) <- raise . runState (StmtState mempty) $ s
+  lookupRef'       <- gets lookupRef
+  (stmtState, res) <- runReader lookupRef' . runState (StmtState mempty) $ s
   r                <- newRef
   modify'
-    (\st ->
-      st { refMap = Map.insert r (stmtDepends stmtState, res) (refMap st) }
+    (\st -> st
+      { refMap = DMap.insert
+                   r
+                   (StmtResultWithDepends res (stmtDepends stmtState))
+                   (refMap st)
+      }
     )
   pure r
 
-newRef :: Stmts r Ref
+newRef :: Typeable a => Stmts r (Ref a)
 newRef = do
   r <- gets nextRef
   modify' (\s -> s { nextRef = succ r })
-  pure r
+  pure (Ref r)
+
+isMostRecentRef :: Ref a -> Stmts r Bool
+isMostRecentRef (Ref i) = (== succ i) <$> gets nextRef
 
 -- | Insert a dependency on this ref in this statement, but don't use the value
 -- itself. Useful for enforcing ordering.
-after :: Ref -> Stmt t ()
-after ref = modify' (\s -> s { stmtDepends = Set.insert ref (stmtDepends s) })
+after :: Ref a -> Stmt t ()
+after ref =
+  modify' (\s -> s { stmtDepends = Set.insert (This ref) (stmtDepends s) })
 
 -- | Because we use MonadFix to generate either a bound variable or an inline
 -- representation here it's important that the @Stmt@ result is not strict in
 -- the @Doc ()@ returned here!
-use :: HasErr r => Ref -> Stmt r (Doc ())
-use ref = do
+use :: HasErr r => Ref a -> Stmt r a
+use = fmap snd . useWithType
+
+-- | Because we use MonadFix to generate either a bound variable or an inline
+-- representation here it's important that the @Stmt@ result is not strict in
+-- the @Doc ()@ returned here!
+useWithType :: HasErr r => Ref a -> Stmt r (Type, a)
+useWithType ref = do
   after ref
-  r <- asks ($ ref)
-  pure (fst @(Doc ()) @StmtResult r)
+  LookupRef l <- ask
+  let (d, StmtResultWithDepends {..}) = l ref
+  t <- note "No type registered for statement" $ rType result
+  pure (t, coerce d)
 
 ----------------------------------------------------------------
 -- Tests
@@ -265,21 +370,21 @@ use ref = do
 --     pure $ StmtResult (ConT ''()) (Just "b") (IOAction ("pure 2 + " <> a'))
 --   pure ()
 
--- test6 :: IO (Either (Vector Text) (Doc ()))
--- test6 = runFinal . fixpointToFinal @IO . embedToFinal @IO . runErr . renderStmtsContT $ do
---   a <- stmt $ do
---     liftIO (putStrLn "Generating a")
---     pure $ StmtResult (ConT ''()) (Just "a") (ContTAction "ContT undefined 1")
---   b <- stmt $ do
---     a' <- use a
---     liftIO (putStrLn "Generating b")
---     pure $ StmtResult (ConT ''()) (Just "b") (IOAction ("IO 2 + " <> a'))
---   _ <- stmt $ do
---     b' <- use b
---     liftIO (putStrLn "Generating unnamed")
---     pure $ StmtResult (ConT ''()) Nothing (IOAction ("IO 9 + " <> b'))
---   _ <- stmt $ do
---     a' <- use a
---     liftIO (putStrLn "Generating c")
---     pure $ StmtResult (ConT ''()) (Just "c") (Pure DoNotInline ("3 + " <> a'))
---   pure ()
+test6 :: IO (Either (_ Text) (Doc ()))
+test6 = runFinal . fixpointToFinal @IO . embedToFinal @IO . runErr . renderStmtsContT $ do
+  a <- stmt $ do
+    liftIO (putStrLn "Generating a")
+    pure $ StmtResult @(Doc ()) Nothing (Just "a") (ContTAction "ContT undefined 1")
+  b <- stmt $ do
+    a' <- use a
+    liftIO (putStrLn "Generating b")
+    pure $ StmtResult Nothing (Just "b") (IOAction ("IO 2 + " <> a'))
+  _ <- stmt $ do
+    b' <- use b
+    liftIO (putStrLn "Generating unnamed")
+    pure $ StmtResult Nothing Nothing (IOAction ("IO 9 + " <> b'))
+  _ <- stmt $ do
+    a' <- use a
+    liftIO (putStrLn "Generating c")
+    pure $ StmtResult Nothing (Just "c") (Pure DoNotInline ("3 + " <> a'))
+  pure b

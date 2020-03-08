@@ -1,6 +1,6 @@
 module Render.Peek
   ( peekStmt
-  , renderPeek
+  -- , renderPeek
   )
   where
 
@@ -57,13 +57,14 @@ peekStmt
      )
   => (a -> Text)
   -> a
-  -> AddrDoc
+  -> Ref AddrDoc
   -> MarshalScheme a
-  -> Stmt r StmtResult
+  -> Stmts r (Maybe (Ref ValueDoc))
 peekStmt getName a addr scheme = do
   RenderParams {..} <- ask
   let fromType = type' a
-  peekWrapped (lengths a) (Ptr Const (type' a)) addr scheme
+  runNonDetMaybe
+    $ stmt (peekWrapped (lengths a) (Ptr Const (type' a)) addr scheme)
   -- hsType <- cToHsType DoPreserve fromType
   -- wrap   <- case mkIdiomaticType hsType of
   --   -- TODO: Do this properly
@@ -89,17 +90,18 @@ peekWrapped
      , HasRenderParams r
      , HasSiblingInfo a r
      , Show a
-     , Member Fixpoint r
+     , HasStmt r
+     , Member NonDet r
      )
   => Lengths
   -> CType
-  -> Ref
+  -> Ref AddrDoc
   -> MarshalScheme a
-  -> Stmt r (Maybe StmtResult)
+  -> Sem r (StmtResult ValueDoc)
 peekWrapped lengths fromType addr = \case
-  Normal   toType     -> Just <$> normalPeek (Proxy @a) addr toType fromType
+  Normal toType -> normalPeek (Proxy @a) addr toType fromType
   -- Preserve toType     -> Just <$> storablePeek addr fromType
-  -- ElidedVoid          -> pure Nothing
+  ElidedVoid    -> empty
   -- ElidedLength _ _    -> Just <$> storablePeek addr fromType
   -- ElidedUnivalued _   -> pure Nothing
   -- ByteString          -> Just <$> byteStringPeek addr fromType
@@ -108,7 +110,7 @@ peekWrapped lengths fromType addr = \case
   -- Vector toElem       -> Just <$> vectorPeek lengths addr fromType toElem
   -- Tupled n toElem     -> Just <$> tuplePeek addr fromType toElem
   -- EitherWord32 toElem -> Just <$> eitherWord32Peek lengths addr fromType toElem
-  s                   -> throw ("Unhandled peek " <> show s)
+  s             -> throw ("Unhandled peek " <> show s)
 
 -- | Render a peek unwrap it to an idiomatic haskell type
 -- renderPeek
@@ -151,16 +153,18 @@ peekWrapped lengths fromType addr = \case
 
 storablePeek
   :: (HasErr r, HasRenderElem r, HasRenderParams r)
-  => Ref
+  => Ref AddrDoc
   -> CType
-  -> Stmt r StmtResult
+  -> Stmt r (StmtResult ValueDoc)
 storablePeek addr fromPtr = case fromPtr of
   Ptr _ from -> do
     tellImportWithAll ''Storable
-    t       <- cToHsType DoPreserve from
-    tDoc    <- renderTypeHighPrec t
-    addrDoc <- use addr
-    pure $ StmtResult t Nothing (IOAction ("peek @" <> tDoc <+> addrDoc))
+    t               <- cToHsType DoPreserve from
+    tDoc            <- renderTypeHighPrec t
+    AddrDoc addrDoc <- use addr
+    pure $ StmtResult (Just t)
+                      Nothing
+                      (IOAction (ValueDoc ("peek @" <> tDoc <+> addrDoc)))
   _ -> throw "Trying to generate a storable peek for a non-pointer"
 
 normalPeek
@@ -170,13 +174,12 @@ normalPeek
      , HasSpecInfo r
      , HasRenderParams r
      , HasSiblingInfo a r
-     , Member Fixpoint r
      )
   => proxy a
-  -> Ref
+  -> Ref AddrDoc
   -> CType
   -> CType
-  -> Stmt r StmtResult
+  -> Stmt r (StmtResult ValueDoc)
 normalPeek _ addrRef to fromPtr =
   -- runNonDet (asum [same, inlineStruct, pointerStruct, union]) >>= \case
                                   runNonDet (asum [same]) >>= \case

@@ -31,15 +31,18 @@ import           Haskell                       as H
 import           Marshal
 import           Render.Element
 import           Render.Peek
-import           Render.Poke
+import           Render.Poke             hiding ( Pure
+                                                , Inline(..)
+                                                )
 import           Render.Scheme
+import           Render.Stmts
 import           Render.SpecInfo
 import           Render.Type
 import           Render.Utils
 import           Spec.Parse
 
 renderStruct
-  :: (HasErr r, HasRenderParams r, HasSpecInfo r)
+  :: (HasErr r, HasRenderParams r, HasSpecInfo r, Member Fixpoint r)
   => MarshaledStruct AStruct
   -> Sem r RenderElement
 renderStruct s@MarshaledStruct {..} = context msName $ do
@@ -94,6 +97,7 @@ renderStoreInstances
      , HasRenderElem r
      , HasSpecInfo r
      , HasSiblingInfo StructMember r
+     , Member Fixpoint r
      )
   => MarshaledStruct AStruct
   -> Sem r ()
@@ -204,6 +208,7 @@ fromCStruct
      , HasSpecInfo r
      , HasRenderParams r
      , HasSiblingInfo StructMember r
+     , Member Fixpoint r
      )
   => MarshaledStruct AStruct
   -> Sem r ()
@@ -218,6 +223,7 @@ fromCStructInstance
      , HasSpecInfo r
      , HasRenderParams r
      , HasSiblingInfo StructMember r
+     , Member Fixpoint r
      )
   => MarshaledStruct AStruct
   -> Sem r ()
@@ -229,12 +235,12 @@ fromCStructInstance m@MarshaledStruct {..} = do
       structT     = ConT (typeName n)
   tellImport 'plusPtr
   peekCStructTDoc <- renderType (ConT ''Ptr :@ structT ~> ConT ''IO :@ structT)
-  peekStmts       <- peekCStructStmts m
+  peekStmts       <- peekCStructBody m
   tellDoc $ "instance FromCStruct" <+> pretty n <+> "where" <> line <> indent
     2
     (vsep
       [ "peekCStruct ::" <+> peekCStructTDoc
-      , "peekCStruct" <+> addrVar <+> "=" <+> doBlock peekStmts
+      , "peekCStruct" <+> addrVar <+> "=" <+> peekStmts
       ]
     )
 
@@ -244,6 +250,7 @@ fromCStructFunction
      , HasSpecInfo r
      , HasRenderParams r
      , HasSiblingInfo StructMember r
+     , Member Fixpoint r
      )
   => MarshaledStruct AStruct
   -> [Handle]
@@ -268,7 +275,7 @@ fromCStructFunction m@MarshaledStruct {..} handles = do
            (ConT ''IO :@ structT)
            (handleCommandTypes <> [ConT ''Ptr :@ structT])
     )
-  peekStmts <- peekCStructStmts m
+  peekStmts <- peekCStructBody m
   tellExport (ETerm funName)
   tellDoc $ vsep
     [ "-- |"
@@ -280,38 +287,47 @@ fromCStructFunction m@MarshaledStruct {..} handles = do
     <+> sep handleCommandNames
     <+> addrVar
     <+> "="
-    <+> doBlock peekStmts
+    <+> peekStmts
     ]
 
 
-peekCStructStmts
+peekCStructBody
   :: ( HasErr r
      , HasRenderElem r
      , HasSpecInfo r
      , HasRenderParams r
      , HasSiblingInfo StructMember r
+     , Member Fixpoint r
      )
   => MarshaledStruct AStruct
-  -> Sem r [Doc ()]
-peekCStructStmts MarshaledStruct {..} = do
+  -> Sem r (Doc ())
+peekCStructBody MarshaledStruct {..} = do
   RenderParams {..} <- ask
   let
     con         = mkConName msName msName
     Struct {..} = msStruct
     offset o tDoc =
       AddrDoc . parens $ addrVar <+> "`plusPtr`" <+> viaShow o <+> "::" <+> tDoc
-  peekDocs <- catMaybes <$> sequenceV
-    [ context (smName msmStructMember) $ do
-        hTy  <- cToHsType DoPreserve (smType msmStructMember)
-        tDoc <- renderType (ConT ''Ptr :@ hTy)
-        renderPeekStmt (mkMemberName . smName)
-                       msmStructMember
-                       (offset (smOffset msmStructMember) tDoc)
-                       msmScheme
-    | MarshaledStructMember {..} <- V.toList msMembers
-    ]
+  renderStmtsIO $ do
+    memberRefs <- forV msMembers $ \MarshaledStructMember {..} -> do
+      pure ()
+    stmt $ do
+      -- traverse_ (void . use) memberRefs
+      pure $ StmtResult Nothing Nothing $ Pure
+        DoInline
+        (pretty con <> "{..}" :: Doc ())
 
-  pure (peekDocs <> ["pure" <+> pretty con <+> "{..}"])
+
+--   peekDocs <- catMaybes <$> sequenceV
+--     [ context (smName msmStructMember) $ do
+--         hTy  <- cToHsType DoPreserve (smType msmStructMember)
+--         tDoc <- renderType (ConT ''Ptr :@ hTy)
+--         renderPeekStmt (mkMemberName . smName)
+--                        msmStructMember
+--                        (offset (smOffset msmStructMember) tDoc)
+--                        msmScheme
+--     | MarshaledStructMember {..} <- V.toList msMembers
+--     ]
 
 withZeroCStructDecl
   :: ( HasErr r

@@ -13,6 +13,7 @@ import           Polysemy
 import qualified Data.HashMap.Strict           as Map
 import qualified Data.HashSet                  as Set
 import           Polysemy.Reader
+import           Polysemy.Fixpoint
 import qualified Data.Vector.Storable.Sized    as VSS
 import qualified Data.Vector                   as V
 import qualified Data.Text                     as T
@@ -44,7 +45,7 @@ import           Render.Type.Preserve
 import           Haskell
 
 main :: IO ()
-main = (runM . runErr $ go) >>= \case
+main = (runFinal . fixpointToFinal @IO . embedToFinal @IO . runErr $ go) >>= \case
   Left es -> do
     traverse_ sayErr es
     sayErr (show (length es) <+> "errors")
