@@ -66,6 +66,7 @@ renderCommand m@MarshaledCommand {..} = contextShow mcName $ do
       , "#endif"
       , indent 2 "\"dynamic\"" <+> pretty dynName
       , indent 2 ("::" <+> dynamicBindTypeDoc)
+      , emptyDoc
       ]
     marshaledCommandCall dynName m
 
@@ -97,11 +98,11 @@ makeReturnPeeks MarshaledCommand {..} =
   fmap (V.mapMaybe id) . forV mcParams $ \case
     MarshaledParam {..} | Returned r <- mpScheme ->
       pure
-        $   Just
-        $   IOPoke
-        $   Assigned
-        $   note "Unable to get peek for Returned value"
-        $ Just "error \"TODO SHIP\""
+        $ Just
+        $ IOPoke
+        $ Assigned
+        $ note "Unable to get peek for Returned value"
+        $ Just (pretty (pName mpParam) <> " <- error \"TODO SHIP\"")
         -- =<< renderPeekStmt
         --       pName
         --       mpParam

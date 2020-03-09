@@ -34,3 +34,41 @@ doBlock = \case
   [s]   -> s
   stmts -> "do" <> line <> indent 2 (vsep stmts)
 
+unReservedWord :: Text -> Text
+unReservedWord t = if t `elem` (keywords <> preludeWords) then t <> "'" else t
+ where
+  keywords =
+    [ "as"
+    , "case"
+    , "class"
+    , "data family"
+    , "data instance"
+    , "data"
+    , "default"
+    , "deriving"
+    , "do"
+    , "else"
+    , "family"
+    , "forall"
+    , "foreign"
+    , "hiding"
+    , "if"
+    , "import"
+    , "in"
+    , "infix"
+    , "infixl"
+    , "infixr"
+    , "instance"
+    , "let"
+    , "mdo"
+    , "module"
+    , "newtype"
+    , "of"
+    , "proc"
+    , "qualified"
+    , "rec"
+    , "then"
+    , "type"
+    , "where"
+    ]
+  preludeWords = ["filter"]

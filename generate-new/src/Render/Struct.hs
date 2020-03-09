@@ -25,10 +25,10 @@ import           Foreign.Ptr
 import           Foreign.Storable
 import           Control.Exception              ( bracket )
 
-import           CType
 import           Error
 import           Haskell                       as H
 import           Marshal
+import           Marshal.Scheme
 import           Render.Element
 import           Render.Peek
 import           Render.Poke             hiding ( Pure
@@ -42,7 +42,7 @@ import           Render.Utils
 import           Spec.Parse
 
 renderStruct
-  :: (HasErr r, HasRenderParams r, HasSpecInfo r, Member Fixpoint r)
+  :: (HasErr r, HasRenderParams r, HasSpecInfo r)
   => MarshaledStruct AStruct
   -> Sem r RenderElement
 renderStruct s@MarshaledStruct {..} = context msName $ do
@@ -97,7 +97,6 @@ renderStoreInstances
      , HasRenderElem r
      , HasSpecInfo r
      , HasSiblingInfo StructMember r
-     , Member Fixpoint r
      )
   => MarshaledStruct AStruct
   -> Sem r ()
@@ -208,7 +207,6 @@ fromCStruct
      , HasSpecInfo r
      , HasRenderParams r
      , HasSiblingInfo StructMember r
-     , Member Fixpoint r
      )
   => MarshaledStruct AStruct
   -> Sem r ()
@@ -223,7 +221,6 @@ fromCStructInstance
      , HasSpecInfo r
      , HasRenderParams r
      , HasSiblingInfo StructMember r
-     , Member Fixpoint r
      )
   => MarshaledStruct AStruct
   -> Sem r ()
@@ -250,7 +247,6 @@ fromCStructFunction
      , HasSpecInfo r
      , HasRenderParams r
      , HasSiblingInfo StructMember r
-     , Member Fixpoint r
      )
   => MarshaledStruct AStruct
   -> [Handle]
@@ -297,7 +293,6 @@ peekCStructBody
      , HasSpecInfo r
      , HasRenderParams r
      , HasSiblingInfo StructMember r
-     , Member Fixpoint r
      )
   => MarshaledStruct AStruct
   -> Sem r (Doc ())
@@ -309,25 +304,20 @@ peekCStructBody MarshaledStruct {..} = do
     offset o tDoc =
       AddrDoc . parens $ addrVar <+> "`plusPtr`" <+> viaShow o <+> "::" <+> tDoc
   renderStmtsIO $ do
-    memberRefs <- forV msMembers $ \MarshaledStructMember {..} -> do
-      pure ()
+    memberRefs <-
+      fmap (V.mapMaybe id) . forV msMembers $ \MarshaledStructMember {..} ->
+        context (smName msmStructMember) $ do
+          hTy  <- cToHsType DoPreserve (smType msmStructMember)
+          tDoc <- renderType (ConT ''Ptr :@ hTy)
+          addr <- pureStmt hTy (offset (smOffset msmStructMember) tDoc)
+          fmap (isElided msmScheme, ) <$> peekStmt msmStructMember addr msmScheme
     stmt $ do
-      -- traverse_ (void . use) memberRefs
+      memberDocs <- traverse use [ r | (e, r) <- toList memberRefs, not e ]
       pure $ StmtResult Nothing Nothing $ Pure
         DoInline
-        (pretty con <> "{..}" :: Doc ())
+        (pretty con <+> align (sep (unValueDoc <$> memberDocs)))
 
 
---   peekDocs <- catMaybes <$> sequenceV
---     [ context (smName msmStructMember) $ do
---         hTy  <- cToHsType DoPreserve (smType msmStructMember)
---         tDoc <- renderType (ConT ''Ptr :@ hTy)
---         renderPeekStmt (mkMemberName . smName)
---                        msmStructMember
---                        (offset (smOffset msmStructMember) tDoc)
---                        msmScheme
---     | MarshaledStructMember {..} <- V.toList msMembers
---     ]
 
 withZeroCStructDecl
   :: ( HasErr r

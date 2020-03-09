@@ -13,7 +13,6 @@ import           Polysemy
 import qualified Data.HashMap.Strict           as Map
 import qualified Data.HashSet                  as Set
 import           Polysemy.Reader
-import           Polysemy.Fixpoint
 import qualified Data.Vector.Storable.Sized    as VSS
 import qualified Data.Vector                   as V
 import qualified Data.Text                     as T
@@ -33,6 +32,7 @@ import           Error
 import           Marshal
 import           Marshal.Scheme
 import           Render.Element
+import           Render.Utils
 import           Render.Element.Write
 import           Render.Aggregate
 import           Bespoke.Seeds
@@ -45,7 +45,7 @@ import           Render.Type.Preserve
 import           Haskell
 
 main :: IO ()
-main = (runFinal . fixpointToFinal @IO . embedToFinal @IO . runErr $ go) >>= \case
+main = (runM . runErr $ go) >>= \case
   Left es -> do
     traverse_ sayErr es
     sayErr (show (length es) <+> "errors")
@@ -262,44 +262,6 @@ wrappedIdiomaticType t w c =
     )
   )
 
-unReservedWord :: Text -> Text
-unReservedWord t = if t `elem` (keywords <> preludeWords) then t <> "'" else t
- where
-  keywords =
-    [ "as"
-    , "case"
-    , "class"
-    , "data family"
-    , "data instance"
-    , "data"
-    , "default"
-    , "deriving"
-    , "do"
-    , "else"
-    , "family"
-    , "forall"
-    , "foreign"
-    , "hiding"
-    , "if"
-    , "import"
-    , "in"
-    , "infix"
-    , "infixl"
-    , "infixr"
-    , "instance"
-    , "let"
-    , "mdo"
-    , "module"
-    , "newtype"
-    , "of"
-    , "proc"
-    , "qualified"
-    , "rec"
-    , "then"
-    , "type"
-    , "where"
-    ]
-  preludeWords = ["filter"]
 
 ----------------------------------------------------------------
 -- Bespoke Vulkan stuff

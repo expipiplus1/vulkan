@@ -4,7 +4,6 @@ module Render.Spec
 import           Relude                  hiding ( Reader, Enum, ask )
 import           Polysemy
 import           Polysemy.Reader
-import           Polysemy.Fixpoint
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
 import qualified Data.HashMap.Strict           as Map
@@ -33,7 +32,7 @@ import           Bracket
 import           CType
 
 renderSpec
-  :: (HasErr r, HasTypeInfo r, HasRenderParams r, Member Fixpoint r)
+  :: (HasErr r, HasTypeInfo r, HasRenderParams r)
   => Spec
   -> SizeMap
   -> Vector (MarshaledStruct AStruct)

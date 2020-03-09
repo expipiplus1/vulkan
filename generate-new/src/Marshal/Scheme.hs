@@ -281,3 +281,19 @@ getSizedWith lengthName = V.filter $ \v -> case lengths v of
 -- | Element types for which arrays of should be translated into @ByteString@s
 isByteArrayElem :: CType -> Bool
 isByteArrayElem = (`elem` [Void, Char, TypeName "uint8_t", TypeName "int8_t"])
+
+isElided :: MarshalScheme a -> Bool
+isElided = \case
+  Unit              -> False
+  Preserve _        -> False
+  Normal   _        -> False
+  ElidedLength _ _  -> True
+  ElidedUnivalued _ -> True
+  ElidedVoid        -> True
+  VoidPtr           -> False
+  ByteString        -> False
+  Maybe        _    -> False
+  Vector       _    -> False
+  EitherWord32 _    -> False
+  Tupled _ _        -> False
+  Returned _        -> False

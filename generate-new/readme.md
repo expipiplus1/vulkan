@@ -42,3 +42,15 @@ zero.
 
 Make `PFN_vkVoidFunction` not a `FunPtr` as it can't be called without casting
 anyway.
+
+## Stmts
+
+init -> Get a list = l of (Ref, Action)
+
+run an action
+  - it calls use r where (r, a) is in l, a is evaluated there and
+    then and the result stored so it doesn't rerun next time
+
+sibling info either by:
+  - knot tying
+  - topsorting and traversing siblings to get l, accumulating refs on the way
