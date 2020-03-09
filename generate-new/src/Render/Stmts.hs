@@ -106,7 +106,7 @@ renderStmtsContT _ a = fixpointToFinal @m $ mdo
         []  -> Zero
         [_] -> One
         _   -> Many
-  ActionsState {..} <- raise $ execState initialState $ use =<< a
+  ActionsState {..} <- raise $ execState initialState $ use' True =<< a
   doBlock <$> sequence
     [ renderStmtContT (bool (List.lookup ref asUsedRefs) Nothing end) v
     | ((ref, v), end) <- reverse (zip asStmts (True : repeat False))
@@ -129,7 +129,6 @@ renderStmt
   -> Value (Doc ())
   -> Sem r (Doc ())
 renderStmt renderContT renderIO bind = \case
-  Pure AlwaysInline _ -> throw "Trying to render an always inlined value"
   Pure _            d -> case bind of
     Nothing -> pure $ "pure $" <+> d
     Just b  -> pure $ "let" <+> pretty b <+> "=" <+> d
@@ -172,11 +171,19 @@ newRef = do
 -- | Insert a dependency on this ref in this statement, but don't use the value
 -- itself. Useful for enforcing ordering.
 after :: forall r a . HasErr r => Ref a -> Sem (State (ActionsState r) ': r) ()
-after = void . use'
+after = void . use' False
 
 use :: forall r a . HasErr r => Ref a -> Sem (State (ActionsState r) ': r) a
-use ref = do
-  (s@Stmt{}, v) <- use' ref
+use = use' False
+
+use'
+  :: forall r a
+   . HasErr r
+  => Bool
+  -> Ref a
+  -> Sem (State (ActionsState r) ': r) a
+use' forceRender ref = do
+  (s@Stmt{}, v) <- use'' forceRender ref
   let varName :: Text
       varName  = fromMaybe ("x" <> show (unRef ref)) (rNameHint s)
       varNameD = coerce @(Doc ()) (pretty varName)
@@ -193,12 +200,13 @@ use ref = do
     IOAction    _       -> varNameD
     ContTAction _       -> varNameD
 
-use'
+use''
   :: forall r a
    . HasErr r
-  => Ref a
+  => Bool
+  -> Ref a
   -> Sem (State (ActionsState r) ': r) (Stmt r a, Value a)
-use' ref = do
+use'' forceRender ref = do
   refMap   <- gets @(ActionsState r) asRefMap
   s@Stmt{} <- note "Trying to lookup a missing ref" $ DMap.lookup ref refMap
   used     <- gets @(ActionsState r) asTimesUsed
@@ -208,10 +216,10 @@ use' ref = do
     Right a -> do
       v <- a
       let s'       = s { rAction = Left v }
-          doRender = case v of
+          doRender = forceRender || case v of
             Pure AlwaysInline _ -> False
             Pure InlineOnce _ | One <- used (This ref) -> False
-            _ -> True
+            _                   -> True
       modify' @(ActionsState r)
         (\st -> st
           { asStmts  = if doRender
@@ -315,6 +323,14 @@ test2 =
       r2' <- use r2
       liftIO $ putStrLn "rendering r3"
       pure $ ContTAction $ "ContT world" <+> parens r2' <+> parens o'
+
+test3 :: IO (Either (Vector Text) (Doc ()))
+test3 =
+  runFinal . embedToFinal @IO . runErr . renderStmtsContT (Proxy @IO) $ do
+    o <- inlineNever
+    stmt Nothing (Just "r") $ do
+      use o
+      pure (Pure @(Doc ()) AlwaysInline "r + 1")
 
 
 {-
