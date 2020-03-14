@@ -13,6 +13,7 @@ import           Relude                  hiding ( Reader
                                                 )
 import           Text.InterpolatedString.Perl6.Unindented
 import           Data.Text.Prettyprint.Doc
+import           Data.Text.Extra                ( upperCaseFirst )
 import           Polysemy
 import           Polysemy.Reader
 import           Data.Vector                    ( Vector )
@@ -24,16 +25,18 @@ import           Foreign.Marshal.Alloc
 import           Foreign.Ptr
 import           Foreign.Storable
 import           Control.Exception              ( bracket )
+import           Control.Monad.Trans.Cont       ( ContT
+                                                , evalContT
+                                                )
 
 import           Error
 import           Haskell                       as H
 import           Marshal
 import           Marshal.Scheme
+import           Marshal.Struct
 import           Render.Element
 import           Render.Peek
-import           Render.Poke             hiding ( Pure
-                                                , Inline(..)
-                                                )
+import           Render.Stmts.Poke
 import           Render.Scheme
 import           Render.Stmts
 import           Render.SpecInfo
@@ -42,7 +45,7 @@ import           Render.Utils
 import           Spec.Parse
 
 renderStruct
-  :: (HasErr r, HasRenderParams r, HasSpecInfo r)
+  :: (HasErr r, HasRenderParams r, HasSpecInfo r, HasStmts r)
   => MarshaledStruct AStruct
   -> Sem r RenderElement
 renderStruct s@MarshaledStruct {..} = context msName $ do
@@ -88,8 +91,11 @@ renderStructMember MarshaledStructMember {..} = do
 -- Marshaling
 ----------------------------------------------------------------
 
-addrVar :: Doc ()
+addrVar :: Text
 addrVar = "p"
+
+contVar :: Text
+contVar = "f"
 
 renderStoreInstances
   :: ( HasErr r
@@ -97,46 +103,50 @@ renderStoreInstances
      , HasRenderElem r
      , HasSpecInfo r
      , HasSiblingInfo StructMember r
+     , HasStmts r
      )
   => MarshaledStruct AStruct
   -> Sem r ()
 renderStoreInstances ms@MarshaledStruct {..} = do
   RenderParams {..} <- ask
-  pokes             <- forV msMembers $ \m@MarshaledStructMember {..} -> do
-    p <- getPoke msmStructMember msmScheme
-    let p' =
-          (\(Unassigned f) -> Assigned $ do
-              t <- cToHsType DoPreserve (smType msmStructMember)
+  let forbiddenNames = fromList
+        (contVar : addrVar : toList (smName . msmStructMember <$> msMembers))
+  pokes <- renderStmts forbiddenNames $ do
+    values <- forV msMembers $ \m@MarshaledStructMember {..} -> do
+      ty <- schemeType msmScheme
+      v  <-
+        stmt ty (Just (smName msmStructMember))
+        $   Pure AlwaysInline
+        .   ValueDoc
+        <$> memberValue m
+      nameRef (smName msmStructMember) v
+      pure v
+    ps <-
+      forV (V.zip values msMembers) $ \(value, MarshaledStructMember {..}) -> do
+        addr <-
+          stmt Nothing (Just ("p" <> upperCaseFirst (smName msmStructMember)))
+          . fmap (Pure InlineOnce . AddrDoc)
+          $ do
               tellImport 'plusPtr
-              mVal <- ValueDoc <$> memberValue m
-              f
-                t
-                (AddrDoc
-                  (parens $ addrVar <+> "`plusPtr`" <+> viaShow
-                    (smOffset msmStructMember)
-                  )
-                )
-                mVal
-            )
-            <$> p
-    pure (isUnivalued msmScheme, p')
+              pure $ pretty addrVar <+> "`plusPtr`" <+> viaShow
+                (smOffset msmStructMember)
+        getPokeIndirect msmStructMember msmScheme value addr
+    traverse_ after ps
+    stmt Nothing Nothing . pure $ IOAction (pretty contVar :: Doc ())
 
   toCStructInstance ms pokes
 
   let isDiscriminated u =
         sName u `elem` (udUnionType <$> toList unionDiscriminators)
   descendentUnions <- filter (not . isDiscriminated) <$> containsUnion msName
-  containsDispatchable <- containsDispatchableHandle msStruct
-  when (null descendentUnions) $ do
-    fromCStruct ms
+  _containsDispatchable <- containsDispatchableHandle msStruct
+  when (null descendentUnions) $ fromCStruct ms
 
     -- TODO, this doesn't allow for pure or chained pokes (without contt)
-    unless (any (containsContTPoke . snd) pokes || containsDispatchable)
-      $ storableInstance ms
+    -- unless (any (containsContTPoke . snd) pokes || containsDispatchable)
+    --   $ storableInstance ms
 
--- TODO: Make this calculate the type locally and tell the depends
--- TODO: Don't clutter the code with the type on the record if the accessor is
--- not ambiguous
+-- | We use RecordWildCards, so just use the member name here
 memberValue
   :: HasRenderParams r => MarshaledStructMember -> Sem r (Doc ())
 memberValue MarshaledStructMember {..} = do
@@ -173,9 +183,9 @@ toCStructInstance
      , HasSpecInfo r
      )
   => MarshaledStruct AStruct
-  -> Vector (Bool, AssignedPoke StructMember)
+  -> RenderedStmts (Doc ())
   -> Sem r ()
-toCStructInstance m@MarshaledStruct {..} pokes = do
+toCStructInstance m@MarshaledStruct {..} pokeValue = do
   RenderParams {..} <- ask
   tellImportWithAll (TyConName "ToCStruct")
   let n           = mkTyName msName
@@ -184,10 +194,15 @@ toCStructInstance m@MarshaledStruct {..} pokes = do
       structT     = ConT (typeName n)
       aVar        = mkVar "a"
   tellImport 'allocaBytesAligned
-  pokeDoc         <- renderPokesWithRunContT (snd <$> pokes)
   pokeCStructTDoc <- renderType
     (ConT ''Ptr :@ structT ~> structT ~> ConT ''IO :@ aVar ~> ConT ''IO :@ aVar)
-  zero <- withZeroCStructDecl m (snd <$> V.filter fst pokes)
+  -- zero <- withZeroCStructDecl m (snd <$> V.filter fst pokes)
+  pokeDoc <- case pokeValue of
+    ContTStmts d -> do
+      tellImport 'evalContT
+      pure $ "evalContT $" <+> d
+    IOStmts d -> do
+      pure $ d
   tellDoc $ "instance ToCStruct" <+> pretty n <+> "where" <> line <> indent
     2
     (vsep
@@ -196,8 +211,14 @@ toCStructInstance m@MarshaledStruct {..} pokes = do
       <+> viaShow sAlignment
       <+> "$ \\p -> pokeCStruct p x (f p)"
       , "pokeCStruct ::" <+> pokeCStructTDoc
-      , "pokeCStruct" <+> addrVar <+> pretty con <> "{..} =" <+> pokeDoc
-      , zero
+      , "pokeCStruct"
+      <+> pretty addrVar
+      <+> pretty con
+      <>  "{..}"
+      <+> pretty contVar
+      <+> "="
+      <+> pokeDoc
+      -- , zero
       ]
     )
 
@@ -207,13 +228,13 @@ fromCStruct
      , HasSpecInfo r
      , HasRenderParams r
      , HasSiblingInfo StructMember r
+     , HasStmts r
      )
   => MarshaledStruct AStruct
   -> Sem r ()
-fromCStruct m@MarshaledStruct {..} = do
-  dispatchableHandles msStruct >>= \case
-    [] -> fromCStructInstance m
-    hs -> fromCStructFunction m hs
+fromCStruct m@MarshaledStruct {..} = dispatchableHandles msStruct >>= \case
+  [] -> fromCStructInstance m
+  hs -> fromCStructFunction m hs
 
 fromCStructInstance
   :: ( HasErr r
@@ -221,6 +242,7 @@ fromCStructInstance
      , HasSpecInfo r
      , HasRenderParams r
      , HasSiblingInfo StructMember r
+     , HasStmts r
      )
   => MarshaledStruct AStruct
   -> Sem r ()
@@ -237,7 +259,7 @@ fromCStructInstance m@MarshaledStruct {..} = do
     2
     (vsep
       [ "peekCStruct ::" <+> peekCStructTDoc
-      , "peekCStruct" <+> addrVar <+> "=" <+> peekStmts
+      , "peekCStruct" <+> pretty addrVar <+> "=" <+> peekStmts
       ]
     )
 
@@ -247,6 +269,7 @@ fromCStructFunction
      , HasSpecInfo r
      , HasRenderParams r
      , HasSiblingInfo StructMember r
+     , HasStmts r
      )
   => MarshaledStruct AStruct
   -> [Handle]
@@ -281,7 +304,7 @@ fromCStructFunction m@MarshaledStruct {..} handles = do
     , pretty funName <+> "::" <+> peekCStructTDoc
     , pretty funName
     <+> sep handleCommandNames
-    <+> addrVar
+    <+> pretty addrVar
     <+> "="
     <+> peekStmts
     ]
@@ -293,32 +316,47 @@ peekCStructBody
      , HasSpecInfo r
      , HasRenderParams r
      , HasSiblingInfo StructMember r
+     , HasStmts r
      )
   => MarshaledStruct AStruct
   -> Sem r (Doc ())
 peekCStructBody MarshaledStruct {..} = do
   RenderParams {..} <- ask
-  let
-    con         = mkConName msName msName
-    Struct {..} = msStruct
-    offset o tDoc =
-      AddrDoc . parens $ addrVar <+> "`plusPtr`" <+> viaShow o <+> "::" <+> tDoc
-  renderStmtsIO $ do
-    memberRefs <-
+  let con         = mkConName msName msName
+      Struct {..} = msStruct
+      offset o tDoc =
+        AddrDoc
+          .   parens
+          $   pretty addrVar
+          <+> "`plusPtr`"
+          <+> viaShow o
+          <+> "::"
+          <+> tDoc
+      forbiddenNames = fromList []
+  renderStmtsIO forbiddenNames $ do
+    memberRefs :: Vector (Bool, Ref _ ValueDoc) <-
       fmap (V.mapMaybe id) . forV msMembers $ \MarshaledStructMember {..} ->
         context (smName msmStructMember) $ do
-          hTy  <- cToHsType DoPreserve (smType msmStructMember)
-          tDoc <- renderType (ConT ''Ptr :@ hTy)
-          addr <- pureStmt hTy (offset (smOffset msmStructMember) tDoc)
-          fmap (isElided msmScheme, ) <$> peekStmt msmStructMember addr msmScheme
-    stmt $ do
+
+          hTy <- cToHsType DoPreserve (smType msmStructMember)
+
+          fmap (isElided msmScheme, ) <$> do
+
+            addr <- stmt (Just (ConT ''Ptr :@ hTy)) Nothing $ do
+              tDoc <- renderType (ConT ''Ptr :@ hTy)
+              pure $ Pure InlineOnce (offset (smOffset msmStructMember) tDoc)
+
+            p <- peekStmt msmStructMember addr msmScheme
+            for_ p (nameRef (smName msmStructMember))
+            pure (p :: Maybe (Ref _ ValueDoc))
+
+
+    stmt Nothing Nothing $ do
       memberDocs <- traverse use [ r | (e, r) <- toList memberRefs, not e ]
-      pure $ StmtResult Nothing Nothing $ Pure
-        DoInline
-        (pretty con <+> align (sep (unValueDoc <$> memberDocs)))
+      pure $ Pure InlineOnce $ pretty con <+> align
+        (sep (unValueDoc <$> memberDocs))
 
-
-
+{-
 withZeroCStructDecl
   :: ( HasErr r
      , HasRenderElem r
@@ -354,3 +392,4 @@ withZeroCStructDecl MarshaledStruct {..} pokes = do
     <+> pokeDoc
     ]
 
+-}

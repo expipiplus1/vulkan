@@ -6,6 +6,7 @@ ghc-options:
 - -with-rtsopts=-N
 - -Wall
 - -fno-warn-unticked-promoted-constructors
+- -fno-warn-name-shadowing
 # - -fplugin=Polysemy.Plugin
 - -O2
 - -flate-specialise
@@ -13,6 +14,7 @@ ghc-options:
 default-extensions:
 - BangPatterns
 - BinaryLiterals
+- BlockArguments
 - ConstraintKinds
 - DataKinds
 - DeriveGeneric
@@ -70,6 +72,7 @@ executables:
     - interpolatedstring-perl6
     - parsec
     - polysemy
+    - polysemy-zoo
     - polysemy-plugin
     - pretty-show
     - prettyprinter

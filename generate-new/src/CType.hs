@@ -53,7 +53,6 @@ parseCType
   -> Sem r CType
 parseCType bs = do
   parseContext <- asks (cCParserContext False)
-  typenames <- ask @TypeNames
   let -- Drop the 'struct' keyword, it confuses our C type parser.
       typeStringWorkarounds :: ByteString -> ByteString
       typeStringWorkarounds =
@@ -65,7 +64,7 @@ parseCType bs = do
         "no source"
         (typeStringWorkarounds bs)
         (  C.parseParameterDeclaration
-        <* (ReaderT (const (optional (Parsec.char ';') >> Parsec.eof)))
+        <* ReaderT (const (optional (Parsec.char ';') >> Parsec.eof))
         )
     of
       Left  err                          -> throw (show err)
@@ -143,7 +142,7 @@ getAllTypeNames = \case
 -- | Just removes the first occurrence...
 removeSubString :: ByteString -> ByteString -> ByteString
 removeSubString n h =
-  let (b, a) = BS.breakSubstring n h in b <> (BS.drop (BS.length n) a)
+  let (b, a) = BS.breakSubstring n h in b <> BS.drop (BS.length n) a
 
 ----------------------------------------------------------------
 -- Sizing

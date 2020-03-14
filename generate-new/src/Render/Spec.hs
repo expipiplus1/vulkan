@@ -26,13 +26,14 @@ import           Render.CStruct
 import           Render.Union
 import           Render.SpecInfo
 import           Render.VkException
+import           Render.Stmts
 import           Spec.Parse
 import           Bracket
 
 import           CType
 
 renderSpec
-  :: (HasErr r, HasTypeInfo r, HasRenderParams r)
+  :: (HasErr r, HasTypeInfo r, HasRenderParams r, HasStmts r)
   => Spec
   -> SizeMap
   -> Vector (MarshaledStruct AStruct)

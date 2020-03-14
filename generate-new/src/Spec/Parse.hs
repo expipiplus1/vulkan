@@ -822,7 +822,7 @@ trySeveralTimes
   -> f a
   -> (a -> m (Maybe b))
   -> m (f (Either a b))
-trySeveralTimes n xs f =
+trySeveralTimes _n xs f =
   let xs' = Left <$> xs
       go :: f (Either a b) -> m (f (Either a b))
       go = traverse

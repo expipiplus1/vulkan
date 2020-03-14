@@ -173,6 +173,7 @@ marshalUtils = genRe "marshal utils" $ do
     , "pokeFixedLengthByteString"
     , "pokeFixedLengthNullTerminatedByteString"
     , "peekByteStringFromSizedVectorPtr"
+    , "lowerArrayPtr"
     ]
 
   tellDoc [qi|
@@ -295,5 +296,11 @@ marshalUtils = genRe "marshal utils" $ do
       -> IO ByteString
     peekByteStringFromSizedVectorPtr p = packCStringLen (castPtr p, fromIntegral (natVal (Proxy @n)))
 
+    -- | Get the pointer to the first element in the array
+    lowerArrayPtr
+      :: forall a n
+       . Ptr (Data.Vector.Storable.Sized.Vector n a)
+      -> Ptr a
+    lowerArrayPtr = castPtr
   |]
 

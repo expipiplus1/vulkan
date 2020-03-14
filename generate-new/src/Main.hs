@@ -10,6 +10,7 @@ import           Relude.Extra.Map
 import           Say
 import           System.TimeIt
 import           Polysemy
+import           Polysemy.Fixpoint
 import qualified Data.HashMap.Strict           as Map
 import qualified Data.HashSet                  as Set
 import           Polysemy.Reader
@@ -45,7 +46,7 @@ import           Render.Type.Preserve
 import           Haskell
 
 main :: IO ()
-main = (runM . runErr $ go) >>= \case
+main = (runFinal . embedToFinal @IO . fixpointToFinal @IO . runErr $ go) >>= \case
   Left es -> do
     traverse_ sayErr es
     sayErr (show (length es) <+> "errors")
@@ -248,6 +249,7 @@ wrappedIdiomaticType
   -> Name
   -- ^ Wrapping constructor
   -> (Type, IdiomaticType)
+  -- ^ (Wrapping type (CFloat), idiomaticType)
 wrappedIdiomaticType t w c =
   ( ConT w
   , IdiomaticType

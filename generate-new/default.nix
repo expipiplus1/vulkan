@@ -20,22 +20,25 @@ let
           algebraic-graphs = dontCheck super.algebraic-graphs;
           first-class-families = doJailbreak super.first-class-families;
           inline-c = self.inline-c_0_9_0_0;
-          polysemy-plugin = self.callCabal2nix "" (
-              (pkgs.fetchFromGitHub {
-                owner = "polysemy-research";
-                repo = "polysemy";
-                rev = "72dc96fbd13dba6d8e9767253b7298e00a781bee";
-                sha256 = "09b1n71gjmhf4ggx2wlywxm11jl3qbmhnlmmchj8pyy3hczl6hb5";
-              } + "/polysemy-plugin")
-            ) { };
-          polysemy = self.callCabal2nix "" (
-              (pkgs.fetchFromGitHub {
-                owner = "polysemy-research";
-                repo = "polysemy";
-                rev = "72dc96fbd13dba6d8e9767253b7298e00a781bee";
-                sha256 = "09b1n71gjmhf4ggx2wlywxm11jl3qbmhnlmmchj8pyy3hczl6hb5";
-              })
-            ) { };
+          polysemy-plugin = self.callCabal2nix "" ((pkgs.fetchFromGitHub {
+            owner = "polysemy-research";
+            repo = "polysemy";
+            rev = "72dc96fbd13dba6d8e9767253b7298e00a781bee";
+            sha256 = "09b1n71gjmhf4ggx2wlywxm11jl3qbmhnlmmchj8pyy3hczl6hb5";
+          } + "/polysemy-plugin")) { };
+          polysemy = self.callCabal2nix "" ((pkgs.fetchFromGitHub {
+            owner = "polysemy-research";
+            repo = "polysemy";
+            rev = "72dc96fbd13dba6d8e9767253b7298e00a781bee";
+            sha256 = "09b1n71gjmhf4ggx2wlywxm11jl3qbmhnlmmchj8pyy3hczl6hb5";
+          })) { };
+          polysemy-zoo = dontCheck (self.callCabal2nix "" ((pkgs.fetchFromGitHub {
+            owner = "polysemy-research";
+            repo = "polysemy-zoo";
+            rev = "57c6012e196db7fe1ce7551f1f762cbddc71f095";
+            sha256 = "18smd2c66gdn9585sdkn60ykvdvkbvkxrnnl9zix687dca6h9jw0";
+          })) { });
+          compact = doJailbreak super.compact;
         } // pkgs.lib.optionalAttrs hoogle {
           ghc = super.ghc // { withPackages = super.ghc.withHoogle; };
           ghcWithPackages = self.ghc.withPackages;
@@ -43,7 +46,7 @@ let
     };
 
   # Any packages to appear in the environment provisioned by nix-shell
-  extraEnvPackages = with pkgs; [ python3 asciidoctor lasem ] ;
+  extraEnvPackages = with pkgs; [ python3 asciidoctor lasem ];
 
   # Generate a haskell derivation using the cabal2nix tool on `package.yaml`
   drv = let old = haskellPackages.callCabal2nix "" src { };

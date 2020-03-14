@@ -15,7 +15,6 @@ import           Data.List                      ( last
                                                 , init
                                                 )
 import           Data.Text.Prettyprint.Doc
-import qualified Data.List.NonEmpty            as NE
 import           Polysemy
 import           Polysemy.NonDet         hiding ( Empty )
 import           Polysemy.Reader
@@ -640,9 +639,9 @@ tupleToFixedArray
   -> CType
   -> Sem r (UnassignedPoke a)
 tupleToFixedArray vecName arrayLength fromElem toElem = do
-  (sizeMaybe, pokeConstructor, elemPoke) <- elemPokeAndSize vecName
-                                                            fromElem
-                                                            toElem
+  (_sizeMaybe, pokeConstructor, elemPoke) <- elemPokeAndSize vecName
+                                                             fromElem
+                                                             toElem
 
   toElemH    <- cToHsType DoPreserve toElem
   structSize <- case toElem of

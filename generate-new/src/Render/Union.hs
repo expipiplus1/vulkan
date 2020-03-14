@@ -37,6 +37,7 @@ renderUnion
   :: ( HasErr r
      , Member (Reader RenderParams) r
      , HasSpecInfo r
+     , HasStmts r
      )
   => MarshaledStruct AUnion
   -> Sem r RenderElement
@@ -166,6 +167,7 @@ peekUnionFunction
      , HasRenderElem r
      , HasSiblingInfo StructMember r
      , HasSpecInfo r
+     , HasStmts r
      )
   => UnionDiscriminator
   -> MarshaledStruct AUnion
@@ -193,8 +195,10 @@ peekUnionFunction UnionDiscriminator {..} MarshaledStruct {..} = do
     tellImportWith (TyConName n) (ConName con')
     let from   = smType msmStructMember
         scheme = msmScheme
-    subPeek <- renderStmtsIO $ do
-      addrRef <- pureStmt (ConT ''Ptr :@ ty) addr
+    subPeek <- renderStmtsIO mempty $ do
+      addrRef <- stmt (Just (ConT ''Ptr :@ ty)) (Just "p") $ pure $ Pure
+        InlineOnce
+        addr
       note "Nothing to peek to fill union with"
         =<< peekStmt msmStructMember addrRef scheme
     pure $ pretty pat' <+> "->" <+> pretty con' <+> "<$>" <+> parens subPeek
