@@ -31,11 +31,7 @@ import           Render.Scheme
 import           Render.SpecInfo
 
 renderUnion
-  :: ( HasErr r
-     , Member (Reader RenderParams) r
-     , HasSpecInfo r
-     , HasStmts r
-     )
+  :: (HasErr r, Member (Reader RenderParams) r, HasSpecInfo r, HasStmts r)
   => MarshaledStruct AUnion
   -> Sem r RenderElement
 renderUnion marshaled@MarshaledStruct {..} = context msName $ do
@@ -47,7 +43,7 @@ renderUnion marshaled@MarshaledStruct {..} = context msName $ do
     tellExport (EData n)
     tellDoc $ "data" <+> pretty n <> line <> indent
       2
-      (vsep $ zipWith (<+>) ("=" : repeat "|") (toList ms))
+      (vsep $ zipWith (<+>) ("=" : repeat "|") (toList ms) <> ["deriving (Show)"])
 
     let -- No useful information in the siblings in a union..
         lookupMember :: Text -> Maybe (SiblingInfo StructMember)
@@ -64,7 +60,7 @@ renderUnion marshaled@MarshaledStruct {..} = context msName $ do
         of
           []  -> pure ()
           [d] -> peekUnionFunction d marshaled
-          _ -> throw ("Found multiple union discriminators for " <> n)
+          _   -> throw ("Found multiple union discriminators for " <> n)
 
 renderUnionMember
   :: ( HasErr r

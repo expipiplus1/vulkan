@@ -57,6 +57,7 @@ renderStruct s@MarshaledStruct {..} = context msName $ do
     tellDoc [qqi|
         data {n} = {mkConName msName msName}
           {braceList ms}
+          deriving (Show)
         |]
     memberMap <- sequenceV $ Map.fromList
       [ ( smName (msmStructMember m)

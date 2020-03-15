@@ -41,7 +41,7 @@ renderHandle Handle {..} = context hName $ do
           <+> pretty c
           <+> tDoc
           <>  line
-          <>  indent 2 "deriving newtype (Eq, Ord, Storable, Zero)"
+          <>  indent 2 "deriving newtype (Show, Eq, Ord, Storable, Zero)"
       Dispatchable -> do
         let p = mkEmptyDataName n
             c = mkConName n n
