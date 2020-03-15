@@ -94,7 +94,7 @@ renderSpec s@Spec {..} getSize ss us cs = withSpecInfo s getSize $ do
     )
 
 commandWithBrackets
-  :: (HasErr r, HasRenderParams r, HasSpecInfo r)
+  :: (HasErr r, HasRenderParams r, HasSpecInfo r, HasStmts r)
   => (Text -> Maybe RenderElement)
   -> MarshaledCommand
   -> Sem r RenderElement

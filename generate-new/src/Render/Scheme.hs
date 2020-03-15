@@ -43,6 +43,7 @@ schemeType s = do
       fmap (foldl' (:@) (TupleT (fromIntegral n)) . replicate (fromIntegral n))
         <$> schemeType e
     Returned _ -> pure Nothing
+    InOut    s -> schemeType s
 
 schemeTypePositive
   :: forall r a
@@ -51,9 +52,15 @@ schemeTypePositive
   -> Sem r (Maybe H.Type)
 schemeTypePositive s = case s of
   Returned t -> schemeType t
+  InOut    t -> schemeType t
   _          -> pure Nothing
 
 isUnivalued :: MarshalScheme a -> Bool
 isUnivalued = \case
   ElidedUnivalued _ -> True
   _           -> False
+
+isInOut :: MarshalScheme a -> Bool
+isInOut = \case
+  InOut _ -> True
+  _       -> False

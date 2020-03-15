@@ -63,15 +63,17 @@ cToHsType preserve t = do
       pure $ ConT ''Ptr :@ t'
     Array _ (NumericArraySize n) e -> do
       e' <- cToHsType preserve e
+      let arrayTy = ConT ''VSS.Vector :@ LitT (NumTyLit (fromIntegral n)) :@ e'
       pure $ case preserve of
-        DoLower -> ConT ''Ptr :@ e'
-        _       -> ConT ''VSS.Vector :@ LitT (NumTyLit (fromIntegral n)) :@ e'
+        DoLower -> ConT ''Ptr :@ arrayTy
+        _       -> arrayTy
     Array _ (SymbolicArraySize n) e -> do
       RenderParams {..} <- ask
       e'                <- cToHsType preserve e
+      let arrayTy = ConT ''VSS.Vector :@ ConT (typeName (mkTyName n)) :@ e'
       pure $ case preserve of
-        DoLower -> ConT ''Ptr :@ e'
-        _       -> ConT ''VSS.Vector :@ ConT (typeName (mkTyName n)) :@ e'
+        DoLower -> ConT ''Ptr :@ arrayTy
+        _       -> arrayTy
     TypeName "uint8_t"  -> pure $ ConT ''Word8
     TypeName "uint16_t" -> pure $ ConT ''Word16
     TypeName "uint32_t" -> pure $ ConT ''Word32

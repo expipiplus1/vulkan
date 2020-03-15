@@ -315,7 +315,9 @@ peekCStructBody MarshaledStruct {..} = do
           <+> tDoc
       forbiddenNames = fromList []
   renderStmtsIO forbiddenNames $ do
-    memberRefs :: Vector (Bool, Ref _ ValueDoc) <-
+    cmdsRef <- pureStmt (CmdsDoc "cmds")
+    nameRef "cmds" cmdsRef
+    memberRefs <-
       fmap (V.mapMaybe id) . forV msMembers $ \MarshaledStructMember {..} ->
         context (smName msmStructMember) $ do
 
@@ -329,7 +331,7 @@ peekCStructBody MarshaledStruct {..} = do
 
             p <- peekStmt msmStructMember addr msmScheme
             for_ p (nameRef (smName msmStructMember))
-            pure (p :: Maybe (Ref _ ValueDoc))
+            pure p
 
 
     stmt Nothing Nothing $ do

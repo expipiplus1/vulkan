@@ -26,12 +26,15 @@ import           Language.Haskell.TH.Syntax
                                          hiding ( NameSpace
                                                 , ModName
                                                 , Module
+                                                , Stmt
                                                 )
 
+import           Error
 import           Render.Utils
 import           Haskell.Name
 import           CType
 import           Render.Type.Preserve
+import {-# SOURCE #-} Render.Stmts
 
 data RenderElement = RenderElement
   { reName     :: Text
@@ -173,6 +176,20 @@ data RenderParams = RenderParams
     -- Any code less than this is an error code
   , exceptionTypeName           :: Text
     -- The name for the exception wrapper
+  , complexMemberLengthFunction
+      :: forall r
+       . (HasRenderElem r, HasRenderParams r)
+      => Text
+      -- ^ Sibling name
+      -> Text
+      -- ^ Member name
+      -> Doc ()
+      -- ^ What you must use to refer to the sibling, as it may be different from the name
+      -> Maybe (Sem r (Doc ()))
+    -- Sometimes vectors are sized with the length of a member in an sibling
+    -- (other parameter or member). Sometimes also this isn't a trivial case of
+    -- getting that member of the struct, so use this field for writing those
+    -- complex overrides.
   }
 
 data UnionDiscriminator = UnionDiscriminator
@@ -189,12 +206,15 @@ data UnionDiscriminator = UnionDiscriminator
 data IdiomaticType = IdiomaticType
   { itType :: Type
     -- Wrapped type, for example Float
-  , itFrom :: forall r . (HasRenderElem r, HasRenderParams r) => Sem r (Doc ())
+  , itFrom
+      :: forall r k (s :: k)
+       . (HasRenderElem r, HasRenderParams r, HasErr r)
+      => Stmt s r (Doc ())
     -- A function to apply to go from Float to CFloat
   , itTo
-      :: forall r
-       . (HasRenderElem r, HasRenderParams r)
-      => Sem r IdiomaticTypeTo
+      :: forall r k (s :: k)
+       . (HasRenderElem r, HasRenderParams r, HasErr r)
+      => Stmt s r IdiomaticTypeTo
     -- ^ Either a constructor for matching, or a term for applying, to go from CFloat to Float
   }
 

@@ -1,6 +1,6 @@
 module Render.Peek
   ( peekStmt
-  -- , renderPeek
+  , peekStmtDirect
   )
   where
 
@@ -39,9 +39,7 @@ import           CType                         as C
 import           Marshal.Marshalable
 import           Haskell
 import           Spec.Types
-import           Render.Poke             hiding ( Poke(..)
-                                                , Inline(..)
-                                                )
+import           Render.Stmts.Poke
 import           Render.Stmts
 
 peekStmt
@@ -59,6 +57,22 @@ peekStmt
   -> Stmt s r (Maybe (Ref s ValueDoc))
 peekStmt a addr scheme = runNonDetMaybe
   $ peekIdiomatic (name a) (lengths a) (Ptr Const (type' a)) addr scheme
+
+peekStmtDirect
+  :: ( HasErr r
+     , Marshalable a
+     , Show a
+     , HasRenderElem r
+     , HasSpecInfo r
+     , HasRenderParams r
+     , HasStmts r
+     )
+  => a
+  -> Ref s AddrDoc
+  -> MarshalScheme a
+  -> Stmt s r (Maybe (Ref s ValueDoc))
+peekStmtDirect a addr scheme =
+  runNonDetMaybe $ peekIdiomatic (name a) (lengths a) (type' a) addr scheme
 
 type Lengths = Vector ParameterLength
 
@@ -418,28 +432,21 @@ vectorPeek name lengths addrRef fromPtr toElem = case fromPtr of
 
         -- Get the value of the pointer to this element
         elemAddrRef <- stmt Nothing Nothing $ do
-          structSize <- case fromElem of
-            TypeName n -> do
-              s <- fmap sSize <$> getStruct n
-              u <- fmap sSize <$> getUnion n
-              pure (s <|> u)
-            _ -> pure Nothing
-
-          indexDoc     <- use indexRef
+          (elemSize, _elemAlign) <- getTypeSize fromElem
+          indexDoc               <- use indexRef
           -- TODO: be able to coerce refs
-          AddrDoc addr <- raise $ use addrRef
+          AddrDoc addr           <- raise $ use addrRef
 
-          Pure InlineOnce . AddrDoc <$> case structSize of
-            Just elemSize -> do
-              tellImport 'plusPtr
-              pure
-                $ parens
-                    (addr <+> "`plusPtr`" <+> parens
-                      (viaShow elemSize <+> "*" <+> indexDoc)
-                    )
-            Nothing -> do
-              tellImport 'advancePtr
-              pure (parens (addr <+> "`advancePtr`" <+> indexDoc))
+          Pure InlineOnce . AddrDoc <$> do
+            tellImport 'plusPtr
+            elemPtrTyDoc <- renderType . (ConT ''Ptr :@) =<< cToHsType DoPreserve fromElem
+            pure $ parens
+              (   addr
+              <+> "`plusPtr`"
+              <+> parens (viaShow elemSize <+> "*" <+> indexDoc)
+              <+> "::"
+              <+> elemPtrTyDoc
+              )
 
         runNonDetMaybe
             (peekIdiomatic name lenTail (Ptr Const fromElem) elemAddrRef toElem)
@@ -502,14 +509,9 @@ tuplePeek
   -> Stmt s r (Ref s ValueDoc)
 tuplePeek name addrRef fromPtr toElem = case fromPtr of
   Ptr _ aTy@(Array NonConst (NumericArraySize len) fromElem) -> do
-    structSize <- case fromElem of
-      TypeName n -> do
-        s <- fmap sSize <$> getStruct n
-        u <- fmap sSize <$> getUnion n
-        pure (s <|> u)
-      _ -> pure Nothing
+    (elemSize, _elemAlign) <- getTypeSize fromElem
 
-    tupT <- cToHsType DoNotPreserve aTy
+    tupT                   <- cToHsType DoNotPreserve aTy
     stmt (Just tupT) (Just name) $ do
 
       -- Case the array pointer to a pointer to the first element
@@ -520,22 +522,20 @@ tuplePeek name addrRef fromPtr toElem = case fromPtr of
           AddrDoc addr <- use addrRef
           pure $ "lowerArrayPtr @" <> tDoc <+> addr
 
-      let
-        advance i =
-          stmt Nothing Nothing
-            . fmap (Pure InlineOnce . AddrDoc)
-            $ case structSize of
-                Just elemSize -> do
-                  tellImport 'plusPtr
-                  tupPtrDoc <- use tupPtrRef
-                  pure
-                    (parens
-                      (tupPtrDoc <+> "`plusPtr`" <+> viaShow (elemSize * i))
-                    )
-                Nothing -> do
-                  tellImport 'advancePtr
-                  tupPtrDoc <- use tupPtrRef
-                  pure (parens (tupPtrDoc <+> "`advancePtr`" <+> viaShow i))
+      let advance i =
+            stmt Nothing Nothing . fmap (Pure InlineOnce . AddrDoc) $ do
+              tellImport 'plusPtr
+              tupPtrDoc    <- use tupPtrRef
+              elemPtrTyDoc <- renderType . (ConT ''Ptr :@) =<< cToHsType DoPreserve fromElem
+              pure
+                (parens
+                  (   tupPtrDoc
+                  <+> "`plusPtr`"
+                  <+> viaShow (elemSize * i)
+                  <+> "::"
+                  <+> elemPtrTyDoc
+                  )
+                )
 
       subPeeks <- forV [0 .. len - 1] $ \i -> do
         elemPtrRef <- advance (fromIntegral i)

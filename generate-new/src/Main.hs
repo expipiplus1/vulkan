@@ -17,6 +17,7 @@ import           Polysemy.Reader
 import qualified Data.Vector.Storable.Sized    as VSS
 import qualified Data.Vector                   as V
 import qualified Data.Text                     as T
+import           Data.Tuple.Extra               ( curry3 )
 import qualified Data.List                     as List
 import           Data.Text.Extra                ( lowerCaseFirst
                                                 , upperCaseFirst
@@ -36,6 +37,8 @@ import           Render.Element
 import           Render.Utils
 import           Render.Element.Write
 import           Render.Aggregate
+import           Render.Stmts                   ( useViaName )
+import           Render.Stmts.Poke              ( CmdsDoc(..) )
 import           Bespoke.Seeds
 import           Bespoke                        ( BespokeScheme(..)
                                                 , bespokeSchemes
@@ -191,17 +194,23 @@ renderParams handles = r
                                     <+> "h <$> initInstanceCmds h)"
                                 "VkDevice" -> do
                                   tellImport (TermName "initDeviceCmds")
+                                  CmdsDoc cmds <- useViaName "cmds"
                                   pure
                                     .   IOFunction
                                     $   "(\\h ->"
                                     <+> pretty c
-                                    <+> "h <$> initDeviceCmds cmds h)"
-                                _ ->
+                                    <+> "h <$> initDeviceCmds"
+                                    <+> cmds
+                                    <+> "h)"
+                                _ -> do
+                                  CmdsDoc cmds <- useViaName "cmds"
                                   pure
                                     .   PureFunction
                                     $   "(\\h ->"
                                     <+> pretty c
-                                    <+> "h cmds)"
+                                    <+> "h"
+                                    <+> cmds
+                                    <+> ")"
                             )
                           )
                         | name <- toList dispatchableHandleNames
@@ -239,6 +248,16 @@ renderParams handles = r
     , isSuccessCodeReturned       = (/= "VK_SUCCESS")
     , firstSuccessCode            = "VK_SUCCESS"
     , exceptionTypeName           = "VulkanException"
+    , complexMemberLengthFunction = curry3 $ \case
+      ("pAllocateInfo", "descriptorSetCount", sibling) -> Just $ do
+        tellQualImport 'V.length
+        tellImportWithAll (TyConName (mkTyName r "VkDescriptorSetAllocateInfo"))
+        pure
+          $   "fromIntegral . Data.Vector.length ."
+          <+> pretty (mkMemberName r "pSetLayouts")
+          <+> "$"
+          <+> sibling
+      _ -> Nothing
     }
 
 wrappedIdiomaticType

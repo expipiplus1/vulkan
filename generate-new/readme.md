@@ -71,3 +71,11 @@ pokeCStruct p VkSubpassDescriptionDepthStencilResolve{..} f = evalContT $ do
   lift $ poke (p `plusPtr` 24) pDepthStencilResolveAttachment''
   lift $ f
 ```
+
+## check
+"vkCmdSetBlendConstants": Unhandled direct poke from Tupled 4 (Normal Float) to Ptr Const Float
+"vkCmdClearColorImage": Unhandled TypeName "VkClearColorValue" conversion to: Ptr Const (TypeName "VkClearColorValue")
+"vkAllocateDescriptorSets": TODO: allocating vector with member specified lenghts
+"vkAllocateCommandBuffers": TODO: allocating vector with member specified lenghts
+vkAllocateDescriptorSets
+

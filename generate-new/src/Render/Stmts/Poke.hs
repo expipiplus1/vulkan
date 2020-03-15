@@ -1,12 +1,18 @@
 {-# language AllowAmbiguousTypes #-}
 
 module Render.Stmts.Poke
-  ( getPokeIndirect
+  ( getPokeDirect
+  , getPokeDirectElided
+  , getPokeIndirect
   , ValueDoc(..)
   , AddrDoc(..)
+  , UnitDoc(..)
+  , FunDoc(..)
+  , CmdsDoc(..)
   , HasSiblingInfo
   , SiblingInfo(..)
   , getSiblingInfo
+  , allocArray
   ) where
 
 import           Relude                  hiding ( Type
@@ -50,26 +56,47 @@ import           Render.Type
 import           Spec.Types
 import           Render.Stmts
 import           Render.Scheme
-import           Render.Poke                    ( ValueDoc(..)
-                                                , AddrDoc(..)
-                                                , HasSiblingInfo
-                                                , SiblingInfo(..)
-                                                , getSiblingInfo
-                                                )
 
+-- TODO: Reduct this duplication
+newtype AddrDoc = AddrDoc { unAddrDoc  :: Doc () }
+  deriving Show
+newtype ValueDoc = ValueDoc { unValueDoc :: Doc () }
+  deriving Show
+newtype UnitDoc = UnitDoc { unUnitDoc :: Doc () }
+  deriving Show
+newtype FunDoc = FunDoc { unFunDoc :: Doc () }
+  deriving Show
+newtype CmdsDoc = CmdsDoc { unCmdsDoc :: Doc () }
+  deriving Show
+
+data SiblingInfo a = SiblingInfo
+  { siReferrer :: Doc ()
+    -- ^ How to refer to this sibling in code
+  , siScheme :: MarshalScheme a
+    -- ^ What type is this sibling
+  }
+
+type HasSiblingInfo a r = Member (Reader (Text -> Maybe (SiblingInfo a))) r
+
+getSiblingInfo
+  :: forall a r. (HasErr r, HasSiblingInfo a r) => Text -> Sem r (SiblingInfo a)
+getSiblingInfo n = note ("Unable to find info for: " <> n) =<< asks ($ n)
+
+type HasPoke a r
+  = ( Marshalable a
+    , HasRenderElem r
+    , HasRenderParams r
+    , HasErr r
+    , HasSpecInfo r
+    , HasSiblingInfo a r
+    , HasStmts r
+    , Show a
+    )
 
 -- | Generate a poke action which puts the given value at the given memory
 -- address
 getPokeIndirect
-  :: ( Marshalable a
-     , HasRenderElem r
-     , HasRenderParams r
-     , HasErr r
-     , HasSpecInfo r
-     , HasSiblingInfo a r
-     , HasStmts r
-     , Show a
-     )
+  :: HasPoke a r
   => a
   -> MarshalScheme a
   -> Ref s ValueDoc
@@ -80,15 +107,7 @@ getPokeIndirect a = getPokeIndirect' (name a) (type' a)
 -- | Generate a poke action which puts the given value at the given memory
 -- address
 getPokeIndirect'
-  :: ( Marshalable a
-     , HasRenderElem r
-     , HasRenderParams r
-     , HasErr r
-     , HasSpecInfo r
-     , HasSiblingInfo a r
-     , HasStmts r
-     , Show a
-     )
+  :: HasPoke a r
   => Text
   -> CType
   -> MarshalScheme a
@@ -116,31 +135,25 @@ getPokeIndirect' name toType scheme value addr = runNonDetMaybe go >>= \case
 -- Fixed arrays could be returned as Sized vectors, but then there's an
 -- overhead of vector construction and deconstruction which we should avoid.
 getPokeDirect
-  :: ( Marshalable a
-     , HasRenderElem r
-     , HasRenderParams r
-     , HasErr r
-     , HasSpecInfo r
-     , HasSiblingInfo a r
-     , HasStmts r
-     , Show a
-     )
+  :: HasPoke a r
   => a
   -> MarshalScheme a
   -> Ref s ValueDoc
   -> Stmt s r (Ref s ValueDoc)
 getPokeDirect a = getPokeDirect' (name a) (type' a)
 
+-- | Generate an action returning the C-side type for a value, this isn't
+-- always possible (for example fixed arrrays, or structs with complex pokes)
+-- and some values can only be poked indirectly
+--
+-- Fixed arrays could be returned as Sized vectors, but then there's an
+-- overhead of vector construction and deconstruction which we should avoid.
+getPokeDirectElided
+  :: HasPoke a r => a -> MarshalScheme a -> Stmt s r (Ref s ValueDoc)
+getPokeDirectElided a = getPokeDirectElided' (name a) (type' a)
+
 getPokeDirect'
-  :: ( Marshalable a
-     , HasRenderElem r
-     , HasRenderParams r
-     , HasErr r
-     , HasSpecInfo r
-     , HasSiblingInfo a r
-     , HasStmts r
-     , Show a
-     )
+  :: HasPoke a r
   => Text
   -> CType
   -> MarshalScheme a
@@ -158,8 +171,19 @@ getPokeDirect' name toType fromType value = case fromType of
   EitherWord32 fromElem   -> eitherWord32 name toType fromElem value
   Maybe        (Vector _) -> throw "TODO: optional vectors without length"
   Maybe        from       -> maybe' name toType from value
+  Tupled size fromElem    -> tuple name size toType fromElem value
   s -> throw $ "Unhandled direct poke from " <> show s <> " to " <> show toType
 
+getPokeDirectElided'
+  :: HasPoke a r
+  => Text
+  -> CType
+  -> MarshalScheme a
+  -> Stmt s r (Ref s ValueDoc)
+getPokeDirectElided' name toType fromType = case fromType of
+  ElidedLength os rs -> elidedLength name os rs
+  ElidedUnivalued value -> elidedUnivalued name toType value
+  s -> throw $ "Unhandled elided poke from " <> show s <> " to " <> show toType
 ----------------------------------------------------------------
 -- Pokes
 ----------------------------------------------------------------
@@ -194,8 +218,8 @@ normal name to from valueRef =
   indirectStruct = failToNonDet $ do
     Ptr Const toElem@(TypeName n) <- pure to
     guard (from == toElem)
-    Just _ <- getStruct n
-    ty     <- cToHsType DoNotPreserve to
+    guard =<< ((isJust <$> getStruct n) <||> (isJust <$> getUnion n))
+    ty <- cToHsType DoNotPreserve to
     raise2 $ stmt (Just ty) (Just name) . fmap (ContTAction . ValueDoc) $ do
       tellImportWithAll (TyConName "ToCStruct")
       tellImportWithAll ''ContT
@@ -216,8 +240,10 @@ elidedLength
   -> Stmt s r (Ref s ValueDoc)
 elidedLength _ Empty Empty = throw "No vectors to get length from"
 elidedLength _ os    rs    = do
-  rsLengthRefs <- forV rs $ \r -> (name r, False, ) <$> lenRefFromSibling @a (name r)
-  osLengthRefs <- forV os $ \o -> (name o, True, ) <$> lenRefFromSibling @a (name o)
+  rsLengthRefs <- forV rs
+    $ \r -> (name r, False, ) <$> lenRefFromSibling @a (name r)
+  osLengthRefs <- forV os
+    $ \o -> (name o, True, ) <$> lenRefFromSibling @a (name o)
   let assertSame
         :: (Text, Bool, Ref s (Doc ()))
         -> (Text, Bool, Ref s (Doc ()))
@@ -225,40 +251,26 @@ elidedLength _ os    rs    = do
       assertSame (n1, opt1, ref1) (n2, opt2, ref2) = unitStmt $ do
         when opt1
           $ throw "FIXME: handle comparing sizes of all optional vectors"
-        tellImport 'throwIO
-        tellImportWithAll ''IOException
-        tellImportWithAll ''IOErrorType
-        tellImport 'unless
+        let fi = if opt2 then ("fromIntegral" <+>) else id
         l1     <- use ref1
         l2     <- use ref2
-        l2'    <- use ref2
+        l2'    <- fi <$> use ref2
         orNull <- if opt2
           then do
             tellQualImport 'V.null
             pure $ " ||" <+> l2 <+> "== 0"
           else pure mempty
         let err :: Text
-            err = n2 <> " and " <> n1 <> " must have the same length"
-        pure
-          .   IOAction
-          $   "unless"
-          <+> parens (l2' <+> "==" <+> l1 <> orNull)
-          <+> "$"
-          <>  line
-          <>  indent
-                2
-                (   "throwIO $ IOError Nothing InvalidArgument"
-                <+> viaShow ("" :: Text) -- TODO: function name
-                <+> viaShow err
-                <+> "Nothing Nothing"
-                )
+            err  = n2 <> " and " <> n1 <> " must have the same length"
+            cond = parens (l2' <+> "==" <+> l1 <> orNull)
+        throwErrDoc err cond
   let firstLengthRef@(name1, _, len1) : otherLengthRefs =
         toList (rsLengthRefs <> osLengthRefs)
   assertions <- traverse (assertSame firstLengthRef) otherLengthRefs
-  stmt (Just (ConT ''Word32)) (Just name1) $ do
+  stmt (Just (ConT ''Word32)) (Just (name1 <> "Count")) $ do
     traverse_ after assertions
     l1 <- use len1
-    pure $ Pure AlwaysInline (ValueDoc l1)
+    pure . Pure AlwaysInline . ValueDoc $ "fromIntegral" <+> l1
 
 lenRefFromSibling
   :: forall a r s
@@ -269,18 +281,11 @@ lenRefFromSibling name = stmt Nothing (Just (name <> "Length")) $ do
   SiblingInfo {..} <- getSiblingInfo @a name
   tellQualImport 'V.length
   ValueDoc vec <- useViaName name
-  tyDoc        <- renderType (ConT ''Word32)
   case siScheme of
-    Vector _ -> pure $ Pure
-      InlineOnce
-      ("fromIntegral . Data.Vector.length $" <+> vec <+> "::" <+> tyDoc)
+    Vector       _ -> pure $ Pure InlineOnce ("Data.Vector.length $" <+> vec)
     EitherWord32 _ -> pure $ Pure
       InlineOnce
-      (   "either id (fromIntegral . Data.Vector.length)"
-      <+> vec
-      <+> "::"
-      <+> tyDoc
-      )
+      ("either id (fromIntegral . Data.Vector.length)" <+> vec)
     _ -> throw "Trying to get the length of a non vector type sibling"
 
 
@@ -388,49 +393,80 @@ vector
   -> Stmt s r (Ref s ValueDoc)
 vector name toType fromElem valueRef = case toType of
   Ptr Const toElem -> do
-    addrRef <- stmt Nothing (Just $ "p" <> T.upperCaseFirst name) $ do
-      sizeMaybe <- case toElem of
-        TypeName n -> do
-          s <- fmap (sSize &&& sAlignment) <$> getStruct n
-          u <- fmap (sSize &&& sAlignment) <$> getUnion n
-          pure $ s <|> u
-        _ -> pure Nothing
-
+    lenRef <- stmt Nothing Nothing $ do
       ValueDoc value <- use valueRef
       tellQualImport 'V.length
-      elemTyDoc <- renderTypeHighPrec =<< cToHsType DoPreserve toElem
-      let vecLengthDoc = "Data.Vector.length" <+> value
-      case sizeMaybe of
-        Nothing -> do
-          -- Use a storable instance
-          tellImportWithAll ''ContT
-          tellImport 'allocaArray
-          pure
-            .   ContTAction
-            .   AddrDoc
-            $   "ContT $ allocaArray @"
-            <>  elemTyDoc
-            <+> parens vecLengthDoc
-        Just (elemSize, elemAlignment) -> do
-          -- Size things explicitly
-          tellImportWithAll ''ContT
-          tellImport 'allocaBytesAligned
-          pure
-            .   ContTAction
-            .   AddrDoc
-            $   "ContT $ allocaBytesAligned @"
-            <>  elemTyDoc
-            <+> parens (viaShow elemSize <+> "*" <+> vecLengthDoc)
-            <+> viaShow elemAlignment
+      pure . Pure AlwaysInline . ValueDoc $ "Data.Vector.length" <+> value
 
-    store  <- vectorIndirect name toElem fromElem valueRef addrRef
-    elemTy <- cToHsType DoPreserve toElem
-    stmt (Just (ConT ''Ptr :@ elemTy)) Nothing $ do
-      AddrDoc addr <- use addrRef
-      after store
-      pure . Pure AlwaysInline . ValueDoc $ addr
-  _ -> throw $ "Unhandled vector conversion to " <> show toType
+    addrRef <- allocArray name toElem (Right lenRef)
+    store   <- vectorIndirect name toElem fromElem valueRef addrRef
+    addrWithStore toElem addrRef store
+  _ -> throw $ "Unhandled Vector conversion to " <> show toType
 
+tuple
+  :: ( HasRenderParams r
+     , HasRenderElem r
+     , HasErr r
+     , HasSpecInfo r
+     , HasSiblingInfo a r
+     , HasStmts r
+     , Marshalable a
+     , Show a
+     )
+  => Text
+  -> Word
+  -> CType
+  -> MarshalScheme a
+  -> Ref s ValueDoc
+  -> Stmt s r (Ref s ValueDoc)
+tuple name size toType fromElem valueRef = case toType of
+  Ptr Const toElem -> do
+    addrRef <- allocArray name toElem (Left size)
+    store   <- tupleIndirect name size toElem fromElem valueRef addrRef
+    addrWithStore toElem addrRef store
+  _ -> throw $ "Unhandled Tupled conversion to " <> show toType
+
+addrWithStore
+  :: (HasErr r, HasRenderParams r, HasRenderElem r)
+  => CType
+  -> Ref s AddrDoc
+  -> Ref s ValueDoc
+  -> Stmt s r (Ref s ValueDoc)
+addrWithStore toElem addrRef store = do
+  elemTy <- cToHsType DoPreserve toElem
+  stmt (Just (ConT ''Ptr :@ elemTy)) Nothing $ do
+    AddrDoc addr <- use addrRef
+    after store
+    pure . Pure AlwaysInline . ValueDoc $ addr
+
+-- | Generate a pointer which has some memory for elements allocated
+allocArray
+  :: (HasRenderParams r, HasRenderElem r, HasErr r, HasSpecInfo r)
+  => Text
+  -> CType
+  -> Either Word (Ref s ValueDoc)
+  -> Stmt s r (Ref s AddrDoc)
+allocArray name elemType size =
+  stmt Nothing (Just $ "p" <> T.upperCaseFirst name) $ do
+    (elemSize, elemAlign) <- getTypeSize elemType
+    elemTyDoc             <- renderTypeHighPrec =<< case size of
+      Left  n -> cToHsType DoPreserve (Array Const (NumericArraySize n) elemType)
+      Right _ -> cToHsType DoPreserve elemType
+
+    vecSizeDoc <- case size of
+      Left  i -> pure $ viaShow (elemSize * fromIntegral i)
+      Right v -> do
+        ValueDoc length <- use v
+        pure $ parens (length <+> "*" <+> viaShow elemSize)
+    tellImportWithAll ''ContT
+    tellImport 'allocaBytesAligned
+    pure
+      .   ContTAction
+      .   AddrDoc
+      $   "ContT $ allocaBytesAligned @"
+      <>  elemTyDoc
+      <+> vecSizeDoc
+      <+> viaShow elemAlign
 
 byteString
   :: (HasRenderParams r, HasRenderElem r, HasErr r)
@@ -570,23 +606,8 @@ fixedArrayIndirect name size toElem fromElem valueRef addrRef = do
             <> " is too long, a maximum of "
             <> maxSize
             <> " elements are allowed"
-    tellImport 'throwIO
-    tellImportWithAll ''IOException
-    tellImportWithAll ''IOErrorType
-    tellImport 'unless
-    pure
-      .   IOAction
-      $   "unless"
-      <+> parens (len <+> "<=" <+> pretty maxSize)
-      <+> "$"
-      <>  line
-      <>  indent
-            2
-            ("throwIO $ IOError Nothing InvalidArgument"
-            <+> viaShow ("" :: Text) -- TODO: function name
-            <+> viaShow err
-            <+> "Nothing Nothing" :: Doc ()
-            )
+        cond = parens (len <+> "<=" <+> pretty maxSize)
+    throwErrDoc err cond
   castAddrRef <- stmt Nothing (Just ("p" <> T.upperCaseFirst name)) $ do
     tellImport (TermName "lowerArrayPtr")
     AddrDoc addr <- use addrRef
@@ -659,37 +680,22 @@ elemAddrRef
   -- ^ The index
   -> Stmt s (StmtE s' r : r) (Ref s AddrDoc)
 elemAddrRef toElem addrRef index = stmt Nothing Nothing $ do
-  structSize <- case toElem of
-    TypeName n -> do
-      s <- fmap sSize <$> getStruct n
-      u <- fmap sSize <$> getUnion n
-      pure (s <|> u)
-    _ -> pure Nothing
+  (elemSize, _elemAlign) <- getTypeSize toElem
 
   -- TODO: be able to coerce refs
-  AddrDoc addr <- raise $ use addrRef
+  AddrDoc addr           <- raise $ use addrRef
 
-  Pure InlineOnce . AddrDoc <$> case structSize of
-    Just elemSize -> do
-      tellImport 'plusPtr
-      untyped <- case index of
-        Left  0 -> pure addr
-        Left  n -> pure $ addr <+> "`plusPtr`" <+> viaShow (elemSize * n)
-        Right r -> do
-          indexDoc <- raise $ use r
-          pure $ addr <+> "`plusPtr`" <+> parens
-            (viaShow elemSize <+> "*" <+> indexDoc)
-      pTyDoc <- renderType . (ConT ''Ptr :@) =<< cToHsType DoPreserve toElem
-      pure $ untyped <+> "::" <+> pTyDoc
-
-    Nothing -> do
-      tellImport 'advancePtr
-      case index of
-        Left  0 -> pure addr
-        Left  n -> pure (addr <+> "`advancePtr`" <+> viaShow n)
-        Right r -> do
-          indexDoc <- raise $ use r
-          pure (addr <+> "`advancePtr`" <+> indexDoc)
+  Pure InlineOnce . AddrDoc <$> do
+    tellImport 'plusPtr
+    untyped <- case index of
+      Left  0 -> pure addr
+      Left  n -> pure $ addr <+> "`plusPtr`" <+> viaShow (elemSize * n)
+      Right r -> do
+        indexDoc <- raise $ use r
+        pure $ addr <+> "`plusPtr`" <+> parens
+          (viaShow elemSize <+> "*" <+> indexDoc)
+    pTyDoc <- renderType . (ConT ''Ptr :@) =<< cToHsType DoPreserve toElem
+    pure $ untyped <+> "::" <+> pTyDoc
 
 ----------------------------------------------------------------
 -- Helpers
@@ -727,6 +733,26 @@ storablePoke addr value = do
       ValueDoc v <- use value
       pure . IOAction . ValueDoc $ "poke" <+> a <+> v
 
+-- | A doc which is an @IO a@ throwing an error as InvalidArgument unless some
+-- condition is met
+throwErrDoc
+  :: (HasRenderElem r, HasRenderParams r)
+  => Text
+  -> Doc ()
+  -> Sem r (Value (Doc ()))
+throwErrDoc err cond = do
+  tellImport 'throwIO
+  tellImportWithAll ''IOException
+  tellImportWithAll ''IOErrorType
+  tellImport 'unless
+  pure . IOAction $ "unless" <+> cond <+> "$" <> line <> indent
+    2
+    (   "throwIO $ IOError Nothing InvalidArgument"
+    <+> viaShow ("" :: Text) -- TODO: function name
+    <+> viaShow err
+    <+> "Nothing Nothing"
+    )
+
 ----------------------------------------------------------------
 -- Utils
 ----------------------------------------------------------------
@@ -737,586 +763,3 @@ storablePoke addr value = do
 raise2 :: Sem r a -> Sem (e1 : e2 : r) a
 raise2 = raise . raise
 
--- -- TODO: Make this into getPokeDirect which returns a poke whose value is the
--- -- pointed to element. This can then be poked into a value (via storable) if
--- -- necessary.
--- getPoke
---   :: ( Show a
---      , Marshalable a
---      , HasErr r
---      , HasSpecInfo r
---      , HasRenderParams r
---      , HasSiblingInfo a r
---      )
---   => a
---   -> MarshalScheme a
---   -> Sem r (UnassignedPoke a)
--- getPoke a = getPoke' (type' a) (name a)
-
--- getPokeDirect
---   :: ( Show a
---      , Marshalable a
---      , HasErr r
---      , HasSpecInfo r
---      , HasRenderParams r
---      , HasSiblingInfo a r
---      )
---   => a
---   -> MarshalScheme a
---   -> Sem r (DirectPoke a)
--- getPokeDirect a s =
---   note ("Unable to get direct poke for " <> show a <> " from " <> show s)
---     =<< getPokeDirect' (type' a) (name a) s
-
--- getPoke'
---   :: ( Show a
---      , Marshalable a
---      , HasErr r
---      , HasSpecInfo r
---      , HasRenderParams r
---      , HasSiblingInfo a r
---      )
---   => CType
---   -- ^ The type we are translating to, i.e. the C-side type
---   -> Text
---   -- ^ The name of the thing being poked
---   -> MarshalScheme a
---   -> Sem r (UnassignedPoke a)
--- getPoke' toType valueName s = do
---   getPokeDirect' toType valueName s >>= \case
---     Just directPoke -> pure $ ChainedPoke
---       (ValueDoc (pretty ("p" <> valueName)))
---       (directToUnassigned <$> directPoke)
---       [intermediateStorablePoke]
---     Nothing -> case s of
---       Unit            -> throw "Getting poke for a unit member"
---       Normal from     -> normalPokeIndirect toType from
---       ByteString      -> byteStringPokeIndirect toType
---       Vector fromElem -> case toType of
---         Array NonConst (SymbolicArraySize n) toElem ->
---           vectorToFixedArray valueName n fromElem toElem
---         t -> throw $ "Unhandled Vector conversion to: " <> show t
---       Tupled n fromElem -> case toType of
---         Array _ (NumericArraySize n') toElem | n == n' ->
---           tupleToFixedArray valueName n fromElem toElem
---         t ->
---           throw $ "Unhandled Tupled " <> show n <> " conversion to: " <> show t
---       scheme -> throw ("Unhandled scheme: " <> show scheme)
-
--- getPokeDirect'
---   :: ( Show a
---      , Marshalable a
---      , HasErr r
---      , HasSpecInfo r
---      , HasRenderParams r
---      , HasSiblingInfo a r
---      )
---   => CType
---   -- ^ The type we are translating to, i.e. the C-side type
---   -> Text
---   -- ^ The name of the thing being poked
---   -> MarshalScheme a
---   -> Sem r (Maybe (DirectPoke a))
--- getPokeDirect' toType valueName s = do
---   RenderParams {..} <- ask
---   case s of
---     Unit                  -> throw "Getting poke for a unit member"
---     Normal          from  -> normalPoke toType from
---     ElidedUnivalued value -> do
---       let vName = mkPatternName value
---       pure . Just $ constPoke DoInline $ do
---         tellImport (ConName vName)
---         pure (pretty vName)
---     ElidedLength os rs -> Just <$> elidedLengthPoke os rs
---     ByteString         -> byteStringPoke toType
---     Maybe ByteString   -> Just <$> maybeByteStringPoke toType
---     Maybe _            -> Just <$> maybePoke toType
---     VoidPtr            -> pure . Just $ idPoke
---     Vector fromElem    -> case toType of
---       Array NonConst (SymbolicArraySize _) _ -> pure $ Nothing
---       Ptr Const toElem -> Just <$> vectorToPointer valueName fromElem toElem
---       t                -> throw $ "Unhandled Vector conversion to: " <> show t
---     Tupled n fromElem -> case toType of
---       Ptr _ toElem -> do
---         let a = ContTPoke $ Direct $ \_ _ -> do
---               tellImport 'allocaArray
---               tyDoc <- renderTypeHighPrec =<< cToHsType DoPreserve toElem
---               pure $ "ContT $ allocaArray @" <> tyDoc <+> viaShow n
---         u <- tupleToFixedArray valueName n fromElem toElem
---         pure . Just $ ChainedPoke
---           (ValueDoc ("p" <> pretty (T.upperCaseFirst valueName)))
---           a
---           [ u <&> \(Unassigned f) (ValueDoc p) ->
---             Direct $ \ty v -> f ty (AddrDoc p) v
---           , Pure DoInline $ \(ValueDoc v) -> Direct $ \_ _ -> pure v
---           ]
---       _ -> pure Nothing
---     EitherWord32 fromElem -> case toType of
---       Ptr Const toElem -> Just <$> eitherLengthVec valueName fromElem toElem
---       t -> throw $ "Unhandled EitherWord32 conversion to: " <> show t
---     Preserve fromType | fromType == toType -> pure . Just $ idPoke
---     _ -> pure Nothing
-
-----------------------------------------------------------------
--- Pokes
-----------------------------------------------------------------
-
-{-
-
-normalPoke
-  :: (HasErr r, HasSpecInfo r)
-  => CType
-  -> CType
-  -> Sem r (Maybe (DirectPoke a))
-normalPoke to from = runNonDet (asum [same, pointed, pointerStruct])
- where
-  same = failToNonDet $ do
-    guard (from == to)
-    case to of
-      TypeName n -> do
-        guard . isNothing =<< getStruct n
-        guard . isNothing =<< getUnion n
-      _ -> pure ()
-    pure $ idPoke
-
-  pointed = failToNonDet $ do
-    Ptr Const to' <- pure to
-    guard (from == to')
-    case to' of
-      TypeName n -> do
-        guard . isNothing =<< getStruct n
-        guard . isNothing =<< getUnion n
-      _ -> pure ()
-    pure $ contTPokeDirect $ \ty (ValueDoc value) -> do
-      tellImport 'with
-      tDoc <- renderTypeHighPrec ty
-      pure $ "with @" <> tDoc <+> value
-
-  pointerStruct = failToNonDet $ do
-    Ptr Const (TypeName toName) <- pure to
-    TypeName fromName           <- pure from
-    guard (toName == fromName)
-    Just _ <- liftA2 (<|>)
-                     (void <$> getStruct toName)
-                     (void <$> getUnion toName)
-    pure $ contTPokeDirect $ \_  (ValueDoc value) -> do
-      tellImportWithAll (TyConName "ToCStruct")
-      pure $ "withCStruct" <+> value
-
-normalPokeIndirect
-  :: (HasErr r, HasSpecInfo r)
-  => CType
-  -> CType
-  -> Sem r (UnassignedPoke a)
-normalPokeIndirect to from = runNonDet inlineStruct >>= \case
-  Nothing -> throw ("Unhandled " <> show from <> " conversion to: " <> show to)
-  Just ps -> pure ps
- where
-  inlineStruct = failToNonDet $ do
-    TypeName n <- pure to
-    Just     _ <- liftA2 (<|>) (void <$> getStruct n) (void <$> getUnion n)
-    pure $ contTPoke $ \_ (AddrDoc addr) (ValueDoc value) -> do
-      tellImportWithAll (TyConName "ToCStruct")
-      pure $ "pokeCStruct" <+> addr <+> value <+> ". ($ ())"
-
-elidedLengthPoke
-  :: forall a r
-   . (HasErr r, HasSpecInfo r, Marshalable a, HasSiblingInfo a r, Show a)
-  => Vector a
-  -> Vector a
-  -> Sem r (DirectPoke a)
-elidedLengthPoke Empty Empty = throw "No vectors to get length from"
-elidedLengthPoke os    rs    = do
-  let
-    -- inline = if V.length os + V.length rs == 1 then DoInline else DoNotInline
-    inline = DoNotInline
-    getLength v = do
-      SiblingInfo {..} <- getSiblingInfo @a (name v)
-      (name v, ) <$> case siScheme of
-        Vector _ -> pure $ constPoke inline $ do
-          tellQualImport 'V.length
-          pure $ "fromIntegral . Data.Vector.length $" <+> siReferrer
-        EitherWord32 _ -> pure $ constPoke inline $ do
-          tellImport 'either
-          tellQualImport 'V.length
-          pure $ "either id (fromIntegral . Data.Vector.length)" <+> siReferrer
-        Maybe (Vector _) -> pure $ constPoke inline $ do
-          tellQualImport 'V.length
-          tellQualImport 'maybe
-          pure $ "maybe 0 (fromIntegral . Data.Vector.length)" <+> siReferrer
-        s ->
-          throw
-            ("Don't know how to get length for vector with scheme: " <> show s)
-  optionalLengths <- traverseV getLength os
-  requiredLengths <- traverseV getLength rs
-  let
-    allLengths                     = requiredLengths <> optionalLengths
-    (firstVecName, firstVecLength) = V.head allLengths
-    assertSamePoke
-      :: Bool -> (Text, Poke (Direct a)) -> Poke (ValueDoc -> Direct a)
-    assertSamePoke isOptVector (n, p) = ChainedPoke
-      (ValueDoc (pretty (n <> "Length")))
-      (const <$> p)
-      [ IOPoke $ \(ValueDoc otherVecLength) (ValueDoc firstVecLength') ->
-          Direct $ \_ _ -> do
-            tellImport 'throwIO
-            tellImportWithAll ''IOException
-            tellImportWithAll ''IOErrorType
-            tellImport 'unless
-            orNull <- if isOptVector
-              then do
-                tellQualImport 'V.null
-                pure $ " ||" <+> otherVecLength <+> "== 0"
-              else pure mempty
-            let err :: Text
-                err =
-                  n <> " and " <> firstVecName <> " must have the same length"
-            pure
-              $   "unless"
-              <+> parens
-                    (otherVecLength <+> "==" <+> firstVecLength' <> orNull)
-              <+> "$"
-              <>  line
-              <>  indent
-                    2
-                    (   "throwIO $ IOError Nothing InvalidArgument"
-                    <+> viaShow ("" :: Text) -- TODO: function name
-                    <+> viaShow err
-                    <+> "Nothing Nothing"
-                    )
-      ]
-  pure $ ChainedPoke
-    (ValueDoc (pretty (firstVecName <> "Length")))
-    firstVecLength
-    (  V.toList
-    .  V.tail
-    $  (assertSamePoke False <$> requiredLengths)
-    <> (assertSamePoke True <$> optionalLengths)
-    <> V.singleton idPokeIntermediate
-    )
-
-byteStringPoke
-  :: (HasErr r, HasSpecInfo r) => CType -> Sem r (Maybe (DirectPoke a))
-byteStringPoke = \case
-  Ptr Const Char -> pure . Just $ contTPokeDirect $ \_ (ValueDoc value) -> do
-    tellImport 'BS.useAsCString
-    pure $ "useAsCString" <+> value
-
-  _ -> pure Nothing
-
-byteStringPokeIndirect
-  :: (HasErr r, HasSpecInfo r) => CType -> Sem r (UnassignedPoke a)
-byteStringPokeIndirect = \case
-  Array _ (SymbolicArraySize n) toElem ->
-    pure $ ioPoke $ \_ (AddrDoc addr) (ValueDoc value) -> do
-      f <- case toElem of
-        Char -> do
-          let fn = "pokeFixedLengthNullTerminatedByteString"
-          tellImport (TermName fn)
-          pure fn
-        _ -> do
-          let fn = "pokeFixedLengthByteString"
-          tellImport (TermName fn)
-          pure fn
-      tellImport (ConName n)
-      pure $ pretty f <+> pretty n <+> addr <+> value
-
-  t -> throw $ "Unhandled ByteString conversion to: " <> show t
-
-maybeByteStringPoke
-  :: (HasErr r, HasSpecInfo r) => CType -> Sem r (DirectPoke a)
-maybeByteStringPoke = \case
-  Ptr Const Char ->
-    pure
-      $ (contTPokeDirect $ \_ (ValueDoc value) -> do
-          tellImport 'BS.useAsCString
-          tellImport 'maybeWith
-          pure $ "maybeWith useAsCString" <+> value
-        )
-  t -> throw $ "Unhandled Maybe Bytestring conversion to: " <> show t
-
-maybePoke :: (HasErr r, HasSpecInfo r) => CType -> Sem r (DirectPoke a)
-maybePoke = \case
-  Ptr Const t@(TypeName n) -> getStruct n >>= \case
-    Nothing -> throw $ "Unhandled Maybe conversion to: " <> show t
-    Just _ ->
-      pure
-        $ (contTPokeDirect $ \_ (ValueDoc value) -> do
-            tellImportWithAll (TyConName "ToCStruct")
-            tellImport 'maybeWith
-            pure $ "maybeWith withCStruct" <+> value
-          )
-  _ -> pure $ ChainedPoke
-    (ValueDoc "m")
-    (Pure DoInline $ Direct $ \_ (ValueDoc v) -> do
-      tellImport 'fromMaybe
-      tellImportWithAll (TyConName "Zero")
-      pure . parens $ "fromMaybe zero" <+> v
-    )
-    [idPokeIntermediate]
-
-
-elemPokeAndSize
-  :: forall r a
-   . ( Show a
-     , Marshalable a
-     , HasErr r
-     , HasSpecInfo r
-     , HasRenderParams r
-     , HasSiblingInfo a r
-     )
-  => Text
-  -> MarshalScheme a
-  -> CType
-  -> Sem
-       r
-       (Maybe Int, Unassigned a -> UnassignedPoke a, Unassigned a)
-elemPokeAndSize vecName fromElem toElem = do
-  sizeMaybe <- case toElem of
-    TypeName n -> do
-      s <- fmap sSize <$> getStruct n
-      u <- fmap sSize <$> getUnion n
-      pure (s <|> u)
-    _ -> pure Nothing
-  chainedElem                 <- getPoke' toElem (vecName <> "Elem") fromElem
-
-  (pokeConstructor, elemPoke) <- case chainedElem of
-    Pure _ _           -> throw "Pure poke as vector element?"
-    IOPoke    elemPoke -> pure (IOPoke, elemPoke)
-    ContTPoke elemPoke -> pure (ContTPoke, elemPoke)
-    p@ChainedPoke{} ->
-      let inContT  = containsContTPoke $ p
-          elemPoke = Unassigned $ \ty addr value -> do
-            let assigned =
-                  (\(Unassigned f) -> Assigned @a $ f ty addr value) <$> p
-            unchained <- resolveChainedPoke assigned
-            (bool renderPokesInIO renderPokesContT inContT)
-              (V.fromList . toList $ unchained)
-      in  pure (bool IOPoke ContTPoke inContT, elemPoke)
-
-  pure (sizeMaybe, pokeConstructor, elemPoke)
-
-vectorToArray
-  :: forall r a
-   . ( Show a
-     , Marshalable a
-     , HasErr r
-     , HasSpecInfo r
-     , HasRenderParams r
-     , HasSiblingInfo a r
-     )
-  => Text
-  -> MarshalScheme a
-  -> CType
-  -> Sem r (UnassignedPoke a)
-vectorToArray vecName fromElem toElem = do
-  (sizeMaybe, pokeConstructor, Unassigned elemPoke) <- elemPokeAndSize
-    vecName
-    fromElem
-    toElem
-
-  pure $ pokeConstructor $ Unassigned $ \_ (AddrDoc addr) (ValueDoc value) -> do
-    let elemValue = ValueDoc "v"
-    elemAddr <- case sizeMaybe of
-      Nothing -> do
-        tellImport 'advancePtr
-        pure $ AddrDoc (parens (addr <+> "`advancePtr` i"))
-      Just elemSize -> do
-        tellImport 'plusPtr
-        pure
-          $ AddrDoc
-              (parens
-                (addr <+> "`plusPtr`" <+> parens (viaShow elemSize <+> "* i"))
-              )
-    tellQualImport 'V.imapM_
-    toElemHType <- cToHsType DoPreserve toElem
-    elemPokeDoc <- elemPoke toElemHType elemAddr elemValue
-    pure
-      $   "Data.Vector.imapM_"
-      <+> parens ("\\i v ->" <+> elemPokeDoc)
-      <+> value
-
-vectorToFixedArray
-  :: forall r a
-   . ( Show a
-     , Marshalable a
-     , HasErr r
-     , HasSpecInfo r
-     , HasRenderParams r
-     , HasSiblingInfo a r
-     )
-  => Text
-  -> Text
-  -> MarshalScheme a
-  -> CType
-  -> Sem r (UnassignedPoke a)
-vectorToFixedArray vecName arrayLength fromElem toElem = do
-  -- TODO: Error on truncation! Easy to implement with ChainedPoke
-  toArray <- vectorToArray vecName fromElem toElem
-  pure $ mapPokeValue
-    (\(ValueDoc v) -> do
-      tellImport (ConName arrayLength)
-      tellQualImport 'V.take
-      pure . ValueDoc $ parens ("Data.Vector.take" <+> pretty arrayLength <+> v)
-    )
-    toArray
-
-tupleToFixedArray
-  :: forall r a
-   . ( Show a
-     , Marshalable a
-     , HasErr r
-     , HasSpecInfo r
-     , HasRenderParams r
-     , HasSiblingInfo a r
-     )
-  => Text
-  -> Word
-  -> MarshalScheme a
-  -> CType
-  -> Sem r (UnassignedPoke a)
-tupleToFixedArray vecName arrayLength fromElem toElem = do
-  (sizeMaybe, pokeConstructor, elemPoke) <- elemPokeAndSize vecName
-                                                            fromElem
-                                                            toElem
-
-  toElemH    <- cToHsType DoPreserve toElem
-  structSize <- case toElem of
-    TypeName n -> do
-      s <- fmap sSize <$> getStruct n
-      u <- fmap sSize <$> getUnion n
-      pure (s <|> u)
-    _ -> pure Nothing
-
-  pure $ pokeConstructor $ Unassigned $ \_ (AddrDoc addr) (ValueDoc value) -> do
-    let
-      precalaulated = do
-        structSize'     <- structSize
-        addrWord :: Int <- readMaybe (show addr)
-        pure $ pure (\n -> AddrDoc (show (addrWord + n * structSize')))
-      dynamic = case structSize of
-        Just elemSize -> do
-          tellImport 'plusPtr
-          pure $ \n -> AddrDoc
-            (parens
-              (addr <+> "`plusPtr`" <+> parens
-                (viaShow elemSize <+> "*" <+> viaShow n)
-              )
-            )
-        Nothing -> do
-          tellImport 'advancePtr
-          pure (\n -> AddrDoc (parens (addr <+> "`advancePtr`" <+> viaShow n)))
-    getAddr <- fromMaybe dynamic precalaulated
-    let elemName n = "e" <> viaShow n
-        pokeElem n = pokeConstructor elemPoke <&> \(Unassigned f) ->
-          Assigned @a $ f toElemH (getAddr n) (ValueDoc (elemName n))
-    ps <- renderPokesContT (V.generate (fromIntegral arrayLength) pokeElem)
-    pure $ "case" <+> value <+> "of" <> line <> indent
-      2
-      (tupled [ elemName n | n <- [0 .. arrayLength - 1] ] <+> "->" <+> ps)
-
-
-vectorToPointer
-  :: forall r a
-   . ( Show a
-     , Marshalable a
-     , HasErr r
-     , HasSpecInfo r
-     , HasRenderParams r
-     , HasSiblingInfo a r
-     )
-  => Text
-  -> MarshalScheme a
-  -> CType
-  -> Sem r (DirectPoke a)
-vectorToPointer vecName fromElem toElem = do
-  (alloc, writeElems) <- vectorToPointerPokes vecName fromElem toElem
-  pure $ ChainedPoke
-    (ValueDoc $ "p" <> pretty vecName)
-    alloc
-    [writeElems, Pure DoInline $ \(ValueDoc v) -> Direct $ \_ _ -> pure v]
-
-vectorToPointerPokes
-  :: forall r a
-   . ( Show a
-     , Marshalable a
-     , HasErr r
-     , HasSpecInfo r
-     , HasRenderParams r
-     , HasSiblingInfo a r
-     )
-  => Text
-  -> MarshalScheme a
-  -> CType
-  -> Sem r (DirectPoke a, Poke (ValueDoc -> Direct a))
-  -- ^ (alloc, write elems)
-vectorToPointerPokes vecName fromElem toElem = do
-  toArray   <- vectorToArray vecName fromElem toElem
-  sizeMaybe <- case toElem of
-    TypeName n -> do
-      s <- fmap (sSize &&& sAlignment) <$> getStruct n
-      u <- fmap (sSize &&& sAlignment) <$> getUnion n
-      pure $ s <|> u
-    _ -> pure Nothing
-  pure
-    ( contTPokeDirect $ \_ (ValueDoc value) -> do
-      tellQualImport 'V.length
-      elemTyDoc <- renderTypeHighPrec =<< cToHsType DoPreserve toElem
-      let vecLengthDoc = "Data.Vector.length" <+> value
-      case sizeMaybe of
-        Nothing -> do
-          -- Use a storable instance
-          tellImport 'allocaArray
-          pure $ "allocaArray @" <> elemTyDoc <+> parens vecLengthDoc
-        Just (elemSize, elemAlignment) -> do
-          -- Size things explicitly
-          tellImport 'allocaBytesAligned
-          pure
-            $   "allocaBytesAligned @"
-            <>  elemTyDoc
-            <+> parens (viaShow elemSize <+> "*" <+> vecLengthDoc)
-            <+> viaShow elemAlignment
-    , (\(Unassigned p) (ValueDoc addr) ->
-        Direct $ \ty value -> p ty (AddrDoc addr) value
-      )
-      <$> toArray
-    )
-
-eitherLengthVec
-  :: forall r a
-   . ( Show a
-     , Marshalable a
-     , HasErr r
-     , HasSpecInfo r
-     , HasRenderParams r
-     , HasSiblingInfo a r
-     )
-  => Text
-  -> MarshalScheme a
-  -> CType
-  -> Sem r (DirectPoke a)
-eitherLengthVec vecName fromElem toElem = do
-  (alloc, writeElems) <- vectorToPointerPokes vecName fromElem toElem
-  let
-    allocAndWrite = ContTPoke $ Direct $ \ty (ValueDoc value) -> do
-      tellImport 'nullPtr
-      let
-        vecVar                = "vec"
-        ptrVar                = "pVec"
-        allocAndWriteChained  = ChainedPoke (ValueDoc ptrVar) alloc [writeElems]
-        allocAndWriteAssigned = allocAndWriteChained
-          <&> \(Direct f) -> Assigned @a (f ty (ValueDoc vecVar))
-      allocAndWriteDoc <- renderPokesContTRet
-        (Just ("pure" <+> ptrVar))
-        (V.singleton allocAndWriteAssigned)
-      pure $ "case" <+> value <+> "of" <> line <> indent
-        2
-        (vsep
-          [ "Left _ -> pure nullPtr"
-          , "Right" <+> vecVar <+> "->" <+> allocAndWriteDoc
-          ]
-        )
-
-  pure $ allocAndWrite
-
--}

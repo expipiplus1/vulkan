@@ -72,11 +72,10 @@ import           Error
 ----------------------------------------------------------------
 
 type HasStmts r = (Member Fixpoint r, HasErr r)
-type Stmt s r = Sem (StmtE s r ': r)
+type Stmt s (r :: [Effect]) = Sem (StmtE s r ': r)
+type StmtE s (r :: [Effect]) = State (ActionsState s r)
 
-type StmtE s r = State (ActionsState s r)
-
-data ActionsState s r = ActionsState
+data ActionsState s (r :: [Effect]) = ActionsState
   { asRefMap           :: DMap (Ref s) (Value' s r)
     -- ^ We keep a map of references to values
   , asNextRefVal       :: Int

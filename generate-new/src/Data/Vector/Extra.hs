@@ -22,6 +22,7 @@ uncons v   = Just (V.unsafeHead v, V.unsafeTail v)
 pattern (:<|)  :: a -> Vector a -> Vector a
 pattern x :<| xs <- (uncons -> Just (x, xs))
   where (:<|) = V.cons
+infixr :<|
 
 pattern Singleton :: a -> Vector a
 pattern Singleton x <- (uncons -> Just (x, Empty))

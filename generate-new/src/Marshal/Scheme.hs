@@ -63,6 +63,10 @@ data MarshalScheme a
     -- ^ A non-const pointer to some allocated memory, used to return
     -- additional values.
     -- Not typically used for structs
+  | InOut (MarshalScheme a)
+    -- ^ A non-const pointer to some allocated memory, used to send and return
+    -- additional values.
+    -- Not typically used for structs
   deriving (Show)
 
 type ND r a
@@ -147,17 +151,20 @@ voidPointerScheme p = do
   pure VoidPtr
 
 -- | TODO: This should be fleshed out a bit more
--- Add InOut scheme for (false, true) optionality
 returnPointerScheme :: Marshalable a => a -> ND r (MarshalScheme c)
 returnPointerScheme p = do
   Ptr NonConst t <- pure $ type' p
-  let normal = do
+  let inout = do
+        Empty                <- pure $ lengths p
+        False :<| True :<| _ <- pure $ isOptional p
+        pure $ InOut (Normal t)
+      normal = do
         Empty <- pure $ lengths p
         pure $ Returned (Normal t)
       array = do
         _ :<| _ <- pure $ lengths p
         pure $ Returned (Vector (Normal t))
-  asum [normal, array]
+  asum [inout, normal, array]
 
 -- | If we have a non-const pointer in a struct leave it as it is
 returnPointerInStructScheme
@@ -265,7 +272,7 @@ isTopOptional x = case isOptional x of
   Empty   -> False
   b :<| _ -> b
 
--- | Is this a non-const pointer
+-- | Is this a non-const pointer only used for returning
 isReturnPtr :: Marshalable a => a -> Bool
 isReturnPtr p' = case type' p' of
   Ptr NonConst _ -> True
