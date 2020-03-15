@@ -16,8 +16,13 @@ import           Language.Haskell.TH.Syntax     ( nameBase )
 import           Data.List.Extra                ( nubOrd )
 import           Polysemy
 import           Polysemy.Reader
+import           Control.Arrow                  ( (***) )
 import qualified Data.Text                     as T
 import qualified Data.Vector                   as V
+import           Data.Vector                    ( Vector )
+import           Data.Vector.Extra              ( pattern Empty
+                                                , pattern (:<|)
+                                                )
 import qualified Data.Map                      as Map
 
 import           Control.Monad.Trans.Cont
@@ -33,8 +38,10 @@ import           CType                         as C
 import           Error
 import           Haskell                       as H
 import           Marshal
+import           Marshal.Marshalable
 import           Marshal.Scheme
 import           Render.Element
+import           Render.Peek
 import           Render.Stmts
 import           Render.Stmts.Poke
 import           Render.Stmts.Alloc
@@ -70,9 +77,20 @@ renderCommand m@MarshaledCommand {..} = contextShow mcName $ do
       , indent 2 ("::" <+> dynamicBindTypeDoc)
       , emptyDoc
       ]
-    if any (isInOut . mpScheme) mcParams
-      then marshaledDualPurposeCommandCall dynName m
-      else marshaledCommandCall dynName m
+
+    let siblingMap = Map.fromList
+          [ (n, SiblingInfo (pretty n) (mpScheme p))
+          | p <- V.toList mcParams
+          , let n = pName . mpParam $ p
+          ]
+    let lookupSibling :: Text -> Maybe (SiblingInfo Parameter)
+        lookupSibling = (`Map.lookup` siblingMap)
+
+
+    let commandName = mkFunName mcName
+    runReader lookupSibling $ if any (isInOut . mpScheme) mcParams
+      then marshaledDualPurposeCommandCall commandName m
+      else marshaledCommandCall commandName m
 
 paramType
   :: (HasErr r, Member (Reader RenderParams) r)
@@ -86,9 +104,16 @@ paramType st MarshaledParam {..} = contextShow (pName mpParam) $ do
   pure $ namedTy (mkParamName pName) <$> n
 
 makeReturnType
-  :: (HasErr r, HasRenderParams r) => Bool -> MarshaledCommand -> Sem r H.Type
-makeReturnType includeReturnType MarshaledCommand {..} = do
-  pts <- V.mapMaybe id <$> traverseV (paramType schemeTypePositive) mcParams
+  :: (HasErr r, HasRenderParams r)
+  => Bool
+  -> Bool
+  -> MarshaledCommand
+  -> Sem r H.Type
+makeReturnType includeInOutTypes includeReturnType MarshaledCommand {..} = do
+  let pos = \case
+        InOut _ | not includeInOutTypes -> pure Nothing
+        s                               -> schemeTypePositive s
+  pts <- V.mapMaybe id <$> traverseV (paramType pos) mcParams
   r   <- case mcReturn of
     C.Void                    -> pure V.empty
     _ | not includeReturnType -> pure V.empty
@@ -96,160 +121,133 @@ makeReturnType includeReturnType MarshaledCommand {..} = do
   let ts = r <> pts
   pure $ ConT ''IO :@ foldl' (:@) (TupleT (length ts)) ts
 
-makeReturnPeeks
-  :: HasErr r => MarshaledCommand -> Stmt s r (V.Vector (Ref s ValueDoc))
-makeReturnPeeks MarshaledCommand {..} =
-  sequence . V.mapMaybe id $ mcParams <&> \case
-    MarshaledParam {..} | Returned r <- mpScheme ->
-      Just $ stmt Nothing Nothing $ pure $ IOAction
-        (ValueDoc "error \"return peek\"")
-
---       pure
---         $ Just
---         $ IOPoke
---         $ Assigned
---         $ note "Unable to get peek for Returned value"
---         $ Just (pretty (pName mpParam) <> " <- error \"TODO SHIP\"")
---         -- =<< renderPeekStmt
---         --       pName
---         --       mpParam
---         --         { pType = case pType mpParam of
---         --                     Ptr _ t -> t
---         --                     _       -> error "TODO, do this bit properly"
---         --         }
---         --       (AddrDoc (pretty (pName mpParam)))
---         --       r
-    _ -> Nothing
-
 ----------------------------------------------------------------
 -- Calling this command
 ----------------------------------------------------------------
 
 marshaledCommandCall
-  :: (HasErr r, HasSpecInfo r, HasRenderParams r, HasRenderElem r, HasStmts r)
+  :: ( HasErr r
+     , HasSpecInfo r
+     , HasRenderParams r
+     , HasRenderElem r
+     , HasStmts r
+     , HasSiblingInfo Parameter r
+     )
   => Text
   -> MarshaledCommand
   -> Sem r ()
-marshaledCommandCall dynName m@MarshaledCommand {..} = do
+marshaledCommandCall commandName m@MarshaledCommand {..} = do
   RenderParams {..} <- ask
 
-  let siblingMap = Map.fromList
-        [ (n, SiblingInfo (pretty n) (mpScheme p))
-        | p <- V.toList mcParams
-        , let n = pName . mpParam $ p
-        ]
-  let lookupSibling :: Text -> Maybe (SiblingInfo Parameter)
-      lookupSibling = (`Map.lookup` siblingMap)
+  includeReturnType <- shouldIncludeReturnType m
 
-  runReader lookupSibling $ do
+  tellExport (ETerm commandName)
+  nts <- V.mapMaybe id <$> traverseV (paramType schemeType) mcParams
+  r   <- makeReturnType True includeReturnType m
+  let t         = foldr (~>) r nts
+      paramName = pretty . mkParamName . pName . mpParam
+      isArg p = case mpScheme p of
+        ElidedLength _ _  -> Nothing
+        ElidedUnivalued _ -> Nothing
+        ElidedVoid        -> Nothing
+        Returned _        -> Nothing
+        _                 -> Just p
+      paramNames = toList (paramName <$> V.mapMaybe isArg mcParams)
 
-    let commandName = mkFunName mcName
-        includeReturnType =
-          mcReturn
-            /= C.Void
-            && (mcReturn == successCodeType --> any isSuccessCodeReturned
-                                                    (cSuccessCodes mcCommand)
-               )
-    tellExport (ETerm commandName)
-    nts <- V.mapMaybe id <$> traverseV (paramType schemeType) mcParams
-    r   <- makeReturnType includeReturnType m
-    let t         = foldr (~>) r nts
-        paramName = pretty . mkParamName . pName . mpParam
-        isArg p = case mpScheme p of
-          ElidedLength _ _  -> Nothing
-          ElidedUnivalued _ -> Nothing
-          ElidedVoid        -> Nothing
-          Returned _        -> Nothing
-          _                 -> Just p
-        paramNames = toList (paramName <$> V.mapMaybe isArg mcParams)
+  let badNames = mempty
+  stmtsDoc <- renderStmts badNames $ do
+    -- Load the function from the pointer
+    funRef    <- getCCall mcCommand
 
-    let badNames = mempty
-    stmtsDoc <- renderStmts badNames $ do
-      -- Load the function from the pointer
-      funRef    <- getCCall mcCommand
+    -- Generate references to the parameters to use later
+    paramRefs <- forV mcParams $ \MarshaledParam {..} -> if isElided mpScheme
+      then pure Nothing
+      else Just <$> do
+        ty       <- schemeType mpScheme
+        valueRef <-
+          stmt ty (Just (mkParamName (pName mpParam)))
+          . pure
+          . Pure AlwaysInline
+          . ValueDoc
+          . pretty
+          . mkParamName
+          $ pName mpParam
+        nameRef (pName mpParam) valueRef
+        pure valueRef
 
-      -- Generate references to the parameters to use later
-      paramRefs <- forV mcParams $ \MarshaledParam {..} -> if isElided mpScheme
-        then pure Nothing
-        else Just <$> do
-          ty       <- schemeType mpScheme
-          valueRef <-
-            stmt ty (Just (mkParamName (pName mpParam)))
-            . pure
-            . Pure AlwaysInline
-            . ValueDoc
-            . pretty
-            . mkParamName
-            $ pName mpParam
-          nameRef (pName mpParam) valueRef
-          pure valueRef
+    -- poke all the parameters
+    (pokeRefs, peekRefs) <- V.unzip <$> V.zipWithM getPoke paramRefs mcParams
 
-      -- poke all the parameters
-      (pokeRefs, peekRefs) <- V.unzip <$> V.zipWithM getPoke paramRefs mcParams
+    -- Run the command and capture the result
+    retRef               <- stmt Nothing (Just "r") $ do
+      FunDoc fun <- use funRef
+      pokes      <- traverseV use pokeRefs
+      -- call the command
+      pure . IOAction . ValueDoc $ sep (fun : (unValueDoc <$> toList pokes))
 
-      -- Run the command and capture the result
-      retRef               <- stmt Nothing (Just "r") $ do
-        FunDoc fun <- use funRef
-        pokes      <- traverseV use pokeRefs
-        -- call the command
-        pure . IOAction . ValueDoc $ sep (fun : (unValueDoc <$> toList pokes))
+    -- check the result
+    checkedResult <- checkResultMaybe mcCommand retRef
 
-      -- check the result
-      checkedResult <-
-        if null (cErrorCodes mcCommand)
-           || cReturnType mcCommand
-           /= successCodeType
-        then
-          pure Nothing
-        else
-          Just <$> checkResult retRef
+    unitStmt $ do
+      after checkedResult
+      let peeks = catMaybes (toList peekRefs)
+      rets <- traverse use $ if includeReturnType then retRef : peeks else peeks
+      pure . Pure NeverInline $ tupled @() (unValueDoc <$> rets)
 
-      unitStmt $ do
-        after retRef
-        -- TODO: Enforce the ordering here!
-        traverse_ after checkedResult
-        let peeks = catMaybes (toList peekRefs)
-        rets <- traverse use
-          $ if includeReturnType then retRef : peeks else peeks
-        pure . Pure NeverInline $ tupled @() (unValueDoc <$> rets)
-
-    rhs <- case stmtsDoc of
-      IOStmts    d -> pure d
-      ContTStmts d -> do
-        tellImport 'evalContT
-        pure $ "evalContT $" <+> d
+  rhs <- case stmtsDoc of
+    IOStmts    d -> pure d
+    ContTStmts d -> do
+      tellImport 'evalContT
+      pure $ "evalContT $" <+> d
 
 
-    tDoc <- renderType t
-    tellImport 'evalContT
-    tellDoc
-      . vsep
-      $ [ pretty commandName <+> "::" <+> indent 0 tDoc
-        , pretty commandName <+> sep paramNames <+> "=" <+> rhs
-        ]
+  tDoc <- renderType t
+  tellImport 'evalContT
+  tellDoc
+    . vsep
+    $ [ pretty commandName <+> "::" <+> indent 0 tDoc
+      , pretty commandName <+> sep paramNames <+> "=" <+> rhs
+      ]
 
 ----------------------------------------------------------------
 -- Checking the result and throwing an exception if something went wrong
 ----------------------------------------------------------------
 
-checkResult
-  :: (HasErr r, HasRenderParams r, HasRenderElem r)
-  => Ref s ValueDoc
-  -> Stmt s r (Ref s UnitDoc)
-checkResult retRef = unitStmt $ do
+-- | Check the result if it has one
+checkResultMaybe
+  :: (HasErr r, HasRenderParams r, HasRenderElem r, HasSiblingInfo Parameter r)
+  => Command
+  -> Ref s ValueDoc
+  -> Stmt s r (Ref s ValueDoc)
+checkResultMaybe Command {..} retRef = do
   RenderParams {..} <- ask
-  ValueDoc ret      <- use retRef
-  tellImport 'when
-  tellImport 'throwIO
-  let pat = mkPatternName firstSuccessCode
-  tellImport (ConName pat)
-  tellImportWithAll (TyConName exceptionTypeName)
-  pure
-    .   IOAction
-    .   UnitDoc
-    $   "when"
-    <+> parens (ret <+> "<" <+> pretty pat)
-    <+> parens ("throwIO" <+> parens (pretty exceptionTypeName <+> ret))
+  if null cErrorCodes || cReturnType /= successCodeType
+    then pure retRef
+    else checkResult retRef
+
+checkResult
+  :: (HasErr r, HasRenderParams r, HasRenderElem r, HasSiblingInfo Parameter r)
+  => Ref s ValueDoc
+  -> Stmt s r (Ref s ValueDoc)
+checkResult retRef = do
+  check <- unitStmt $ do
+    RenderParams {..} <- ask
+    ValueDoc ret      <- use retRef
+    tellImport 'when
+    tellImport 'throwIO
+    let pat = mkPatternName firstSuccessCode
+    tellImport (ConName pat)
+    tellImportWithAll (TyConName exceptionTypeName)
+    pure
+      .   IOAction
+      .   UnitDoc
+      $   "when"
+      <+> parens (ret <+> "<" <+> pretty pat)
+      <+> parens ("throwIO" <+> parens (pretty exceptionTypeName <+> ret))
+  stmt Nothing Nothing $ do
+    after check
+    r <- use retRef
+    pure . Pure AlwaysInline $ r
 
 ----------------------------------------------------------------
 -- Dual purpose calls
@@ -273,15 +271,299 @@ checkResult retRef = unitStmt $ do
 ----------------------------------------------------------------
 
 marshaledDualPurposeCommandCall
-  :: (HasErr r, HasSpecInfo r, HasRenderParams r, HasRenderElem r, HasStmts r)
+  :: ( HasErr r
+     , HasSpecInfo r
+     , HasRenderParams r
+     , HasRenderElem r
+     , HasStmts r
+     , HasSiblingInfo Parameter r
+     )
   => Text
   -> MarshaledCommand
   -> Sem r ()
-marshaledDualPurposeCommandCall dynName m@MarshaledCommand {..} = do
+marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
   RenderParams {..} <- ask
-  let commandName = mkFunName mcName
   tellExport (ETerm commandName)
-  tellDoc $ pretty commandName <> " = undefined"
+
+  --
+  -- Find the parameters we want to fiddle with
+  --
+  countParamIndex <- case V.findIndices (isInOut . mpScheme) mcParams of
+    Empty ->
+      throw "Trying to render a dual purpose command with no InOut parameter"
+    i :<| Empty -> pure i
+    _           -> throw
+      "Trying to render a dual purpose command with multiple InOut parameters"
+  let countParam     = mcParams V.! countParamIndex
+      countParamName = pName (mpParam countParam)
+      isCounted p = pLengths p == V.singleton (NamedLength countParamName)
+  vecParamIndices <- case V.findIndices (isCounted . mpParam) mcParams of
+    Empty ->
+      throw "Trying to render a dual purpose command with no output vector"
+    is -> pure is
+
+  -- Unpack some useful things
+  (countScheme, countType) <- case mpScheme countParam of
+    InOut s@(Normal t) -> pure (s, t)
+    _                  -> throw "Count does not have type InOut (Normal _)"
+
+  --
+  -- Get the type of this function
+  --
+  includeReturnType <- shouldIncludeReturnType m
+  let negativeSchemeType = \case
+        InOut _ -> pure Nothing
+        s       -> schemeType s
+  nts <- V.mapMaybe id <$> traverseV (paramType negativeSchemeType) mcParams
+  returnType <- makeReturnType False includeReturnType m
+  let commandType = foldr (~>) returnType nts
+
+  --
+  -- Get var names for the LHS
+  --
+  let paramName = pretty . mkParamName . pName . mpParam
+      isArg p = case mpScheme p of
+        ElidedLength _ _  -> Nothing
+        ElidedUnivalued _ -> Nothing
+        ElidedVoid        -> Nothing
+        Returned _        -> Nothing
+        InOut    _        -> Nothing
+        _                 -> Just p
+      paramNames = toList (paramName <$> V.mapMaybe isArg mcParams)
+
+
+  let badNames = mempty
+  stmtsDoc <- renderStmts badNames $ do
+
+    --
+    -- Load the function from the pointer
+    --
+    funRef <- getCCall mcCommand
+
+    --
+    -- Run once to get the length
+    --
+    (getLengthPokes, getLengthPeeks, countAddr, countPeek) <-
+      pokesForGettingCount mcParams countParamIndex vecParamIndices
+    ret1        <- runWithPokes m funRef getLengthPokes
+
+    filledCount <- stmt Nothing Nothing $ do
+      after ret1
+      ValueDoc v <- use countPeek
+      pure . Pure AlwaysInline . ValueDoc $ "fromIntegral" <+> v
+    nameRef (pName (mpParam countParam)) filledCount
+
+    (getVectorsPokes, getVectorsPeeks) <- pokesForGettingResults
+      mcParams
+      getLengthPokes
+      getLengthPeeks
+      countAddr
+      countParamIndex
+      vecParamIndices
+
+    ret2          <- runWithPokes m funRef getVectorsPokes
+
+    finalCountRef <- stmt Nothing Nothing $ do
+      after ret2
+      countScheme <- case mpScheme countParam of
+        InOut s -> pure s
+        _       -> throw "Trying to peek count without inout scheme"
+      peekCount <-
+        note "Unable to get peek for count"
+          =<< peekStmtDirect (mpParam countParam) countAddr countScheme
+      Pure InlineOnce <$> use peekCount
+    -- TODO: disgusting, this stringly typed stuff
+    nameRef (pName (mpParam countParam) <> "::2") finalCountRef
+
+    unitStmt $ do
+      after ret2
+      let peeks = catMaybes (toList getVectorsPeeks)
+      rets <- traverse use $ if includeReturnType then ret2 : peeks else peeks
+      pure . Pure NeverInline $ tupled @() (unValueDoc <$> rets)
+
+  rhs <- case stmtsDoc of
+    IOStmts    d -> pure d
+    ContTStmts d -> do
+      tellImport 'evalContT
+      pure $ "evalContT $" <+> d
+
+
+  tDoc <- renderType commandType
+  tellImport 'evalContT
+  tellDoc
+    . vsep
+    $ [ pretty commandName <+> "::" <+> indent 0 tDoc
+      , pretty commandName <+> sep paramNames <+> "=" <+> rhs
+      ]
+
+pokesForGettingCount
+  :: ( HasErr r
+     , HasRenderParams r
+     , HasRenderElem r
+     , HasSpecInfo r
+     , HasStmts r
+     , HasSiblingInfo Parameter r
+     )
+  => Vector MarshaledParam
+  -> Int
+  -> Vector Int
+  -> Stmt
+       s
+       r
+       ( Vector (Ref s ValueDoc)
+       , Vector (Maybe (Ref s ValueDoc))
+       , Ref s AddrDoc
+       , Ref s ValueDoc
+       )
+pokesForGettingCount params countIndex vecIndices = do
+  countOverride <- case params V.!? countIndex of
+    Nothing -> throw "Couldn't find count parameter for getting count"
+    Just p
+      | InOut s <- mpScheme p -> do
+        (addrRef, peek) <- allocate (mpParam p) s
+        pure (countIndex, (addrRef, peek))
+      | otherwise -> throw "Count doesn't have inout type"
+  vecOverrides <- forV vecIndices $ \i -> case params V.!? i of
+    Nothing -> throw "Couldn't find vector parameter for getting count"
+    Just p
+      | Returned _ <- mpScheme p -> pure
+        (i, Right p { mpScheme = ElidedUnivalued "nullPtr" })
+      | otherwise -> throw "Vector doesn't have Returned type"
+  let gettingCountParams =
+        (Right <$> params)
+          V.// (second Left countOverride : V.toList vecOverrides)
+
+  pokes <- forV (V.indexed gettingCountParams) $ \case
+    (i, Left (addrRef, peek)) -> do
+      poke <- castRef addrRef
+      pure (poke, Just peek)
+    (i, Right m@MarshaledParam {..}) -> if isElided mpScheme
+      then getPoke Nothing m
+      else do
+        -- Don't name the count ref, because we want to count read after the
+        -- second call to have this name.
+        ref <- if i == countIndex then paramRefUnnamed m else paramRef m
+        getPoke (Just ref) m
+
+  let (countAddr, countPeek) = case countOverride of
+        (_, (addr, peek)) -> (addr, peek)
+
+  pure (fst <$> pokes, snd <$> pokes, countAddr, countPeek)
+
+pokesForGettingResults
+  :: ( HasErr r
+     , HasRenderParams r
+     , HasRenderElem r
+     , HasSpecInfo r
+     , HasStmts r
+     , HasSiblingInfo Parameter r
+     )
+  => Vector MarshaledParam
+  -> Vector (Ref s ValueDoc)
+  -> Vector (Maybe (Ref s ValueDoc))
+  -> Ref s AddrDoc
+  -> Int
+  -> Vector Int
+  -> Stmt
+       s
+       r
+       ( Vector (Ref s ValueDoc)
+       , Vector (Maybe (Ref s ValueDoc))
+       )
+  -- ^ Pokes for this call, peeks for this call
+pokesForGettingResults params oldPokes oldPeeks countAddr countIndex vecIndices
+  = do
+    countOverride                        <- (countIndex, ) <$> castRef countAddr
+    (vecPokeOverrides, vecPeekOverrides) <-
+      fmap V.unzip . forV vecIndices $ \i -> do
+        MarshaledParam {..} <- note "Unable to find vector for returning"
+                                    (params V.!? i)
+        let lowered        = lowerParamType mpParam
+            usingSecondLen = lowered
+              { pLengths = case pLengths lowered of
+                             NamedLength n :<| t ->
+                               NamedLength (n <> "::2") :<| t
+                             t -> t
+              }
+        addr   <- allocateVector lowered
+        addr'  <- castRef addr
+        scheme <- case mpScheme of
+          Returned s -> pure s
+          _          -> throw "Vector without a return scheme"
+        peek <-
+          note "Unable to get peek for returned value"
+            =<< peekStmtDirect usingSecondLen addr scheme
+        pure ((i, addr'), (i, Just peek))
+    let newPokes = oldPokes V.// (countOverride : toList vecPokeOverrides)
+        newPeeks =
+          oldPeeks V.// ((countIndex, Nothing) : toList vecPeekOverrides)
+    pure (newPokes, newPeeks)
+
+
+runWithPokes
+  :: (HasErr r, HasRenderParams r, HasRenderElem r, HasSiblingInfo Parameter r)
+  => MarshaledCommand
+  -> Ref s FunDoc
+  -> Vector (Ref s ValueDoc)
+  -> Stmt s r (Ref s ValueDoc)
+runWithPokes MarshaledCommand {..} funRef pokes = do
+  -- Run the command again to populate the array
+  retRef <- stmt Nothing (Just "r") $ do
+    FunDoc fun <- use funRef
+    pokes      <- traverseV use pokes
+    -- call the command
+    pure . IOAction . ValueDoc $ sep (fun : (unValueDoc <$> toList pokes))
+
+  checkResultMaybe mcCommand retRef
+
+----------------------------------------------------------------
+--
+----------------------------------------------------------------
+
+paramRef
+  :: (HasRenderParams r, HasRenderElem r, HasErr r)
+  => MarshaledParam
+  -> Stmt s r (Ref s ValueDoc)
+paramRef mp@MarshaledParam {..} = do
+  valueRef <- paramRefUnnamed mp
+  nameRef (pName mpParam) valueRef
+  pure valueRef
+
+paramRefUnnamed
+  :: (HasRenderParams r, HasRenderElem r, HasErr r)
+  => MarshaledParam
+  -> Stmt s r (Ref s ValueDoc)
+paramRefUnnamed MarshaledParam {..} = do
+  RenderParams {..} <- ask
+  ty                <- schemeType mpScheme
+  stmt ty (Just (mkParamName (pName mpParam)))
+    . pure
+    . Pure AlwaysInline
+    . ValueDoc
+    . pretty
+    . mkParamName
+    $ pName mpParam
+
+shouldIncludeReturnType :: HasRenderParams r => MarshaledCommand -> Sem r Bool
+shouldIncludeReturnType MarshaledCommand {..} = do
+  RenderParams {..} <- ask
+  pure
+    $  mcReturn
+    /= C.Void
+    && (mcReturn == successCodeType --> any isSuccessCodeReturned
+                                            (cSuccessCodes mcCommand)
+       )
+
+castRef
+  :: forall a b r s
+   . HasErr r
+  => (Typeable b, Coercible a b, Coercible b (Doc ()))
+  => Ref s a
+  -> Stmt s r (Ref s b)
+castRef ref = do
+  stmt Nothing Nothing $ do
+    r <- use ref
+    pure . Pure AlwaysInline . coerce $ r
 
 ----------------------------------------------------------------
 -- Getting C call
@@ -382,6 +664,7 @@ getPoke
   -- ^ Might be nothing if this is elided
   -> MarshaledParam
   -> Stmt s r (Ref s ValueDoc, Maybe (Ref s ValueDoc))
+  -- ^ (poke, peek if it's a returned value)
 getPoke valueRef MarshaledParam {..} = do
   RenderParams {..} <- ask
   case mpScheme of
@@ -461,3 +744,6 @@ getDynName = ("mk" <>) . upperCaseFirst . cName
 infixr 2 -->
 (-->) :: Bool -> Bool -> Bool
 a --> b = not a || b
+
+(<||>) :: Applicative f => f Bool -> f Bool -> f Bool
+(<||>) = liftA2 (||)

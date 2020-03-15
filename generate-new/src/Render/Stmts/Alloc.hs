@@ -1,6 +1,7 @@
 {-# language AllowAmbiguousTypes #-}
 module Render.Stmts.Alloc
   ( allocate
+  , allocateVector
   ) where
 
 import           Relude                  hiding ( Type
@@ -53,9 +54,9 @@ allocate
   -> Stmt s r (Ref s AddrDoc, Ref s ValueDoc)
 allocate a scheme = do
   alloc <- case scheme of
-    Normal fromTy -> normal (name a) (type' a) fromTy
-    Vector (Normal _)      -> vector  a
-    s             -> throw $ "Unhandled allocation for type " <> show s
+    Normal fromTy     -> normal (name a) (type' a) fromTy
+    Vector (Normal _) -> allocateVector a
+    s                 -> throw $ "Unhandled allocation for type " <> show s
   peek <-
     note "Unable to get peek for returned value"
       =<< peekStmtDirect a alloc scheme
@@ -98,7 +99,7 @@ normal name toTy fromTy = do
               pure
                 ("ContT $ bracket" <+> parens ("calloc @" <> tyDoc) <+> "free")
 
-vector
+allocateVector
   :: forall a r s
    . ( HasErr r
      , HasRenderElem r
@@ -110,7 +111,7 @@ vector
      )
   => a
   -> Stmt s r (Ref s AddrDoc)
-vector vec = do
+allocateVector vec = do
   RenderParams {..} <- ask
   let name' = name vec
       toTy  = type' vec

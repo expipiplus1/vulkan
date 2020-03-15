@@ -304,3 +304,4 @@ isElided = \case
   EitherWord32 _    -> False
   Tupled _ _        -> False
   Returned _        -> False
+  InOut    _        -> False

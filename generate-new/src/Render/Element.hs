@@ -261,7 +261,6 @@ class Importable a where
     => Import a
     -> Sem r ()
 
--- TODO Reduce duplication here..
 instance Importable Name where
   addImport (Import i qual children withAll) = case nameModule i of
     Just _ -> do

@@ -29,6 +29,7 @@ import           Polysemy
 import           Polysemy.NonDet         hiding ( Empty )
 import           Polysemy.Reader
 import           Polysemy.Fail
+import           Data.Char                      ( isUpper )
 import           Language.Haskell.TH            ( nameBase )
 import           Data.Vector.Extra              ( Vector
                                                 , pattern Empty
@@ -38,7 +39,6 @@ import qualified Data.Text.Extra               as T
 import qualified Data.Vector                   as V
 import           Foreign.Ptr
 import           Foreign.Storable
-import           Foreign.Marshal.Array
 import           Foreign.Marshal.Alloc
 import           Control.Monad.Trans.Cont       ( ContT )
 import qualified Data.ByteString               as BS
@@ -53,7 +53,6 @@ import           Marshal.Scheme
 import           Render.Element
 import           Render.SpecInfo
 import           Render.Type
-import           Spec.Types
 import           Render.Stmts
 import           Render.Scheme
 
@@ -299,9 +298,18 @@ elidedUnivalued name to value = do
   RenderParams {..} <- ask
   ty                <- cToHsType DoPreserve to
   stmt (Just ty) (Just name) $ do
-    let vName = mkPatternName value
-    tellImport (ConName vName)
-    pure . Pure InlineOnce . ValueDoc . pretty $ value
+    vName <- case value of
+      "nullPtr" -> do
+        tellImport 'nullPtr
+        pure value
+      _ | isUpper (T.head value) -> do
+        let vName = mkPatternName value
+        tellImport (ConName vName)
+        pure vName
+      _ -> do
+        tellImport (TermName value)
+        pure value
+    pure . Pure InlineOnce . ValueDoc . pretty $ vName
 
 eitherWord32
   :: ( HasRenderParams r
