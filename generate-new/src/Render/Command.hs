@@ -34,8 +34,8 @@ import           Haskell                       as H
 import           Marshal
 import           Marshal.Scheme
 import           Render.Element
-import           Render.Peek
-import           Render.Poke
+import           Render.Stmts
+import           Render.Stmts.Poke
 import           Render.Scheme
 import           Render.SpecInfo
 import           Render.Type

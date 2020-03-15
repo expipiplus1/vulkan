@@ -18,18 +18,12 @@ import           Relude                  hiding ( Type
                                                 , Const
                                                 , Reader
                                                 )
-import           Data.List                      ( last
-                                                , init
-                                                , head
-                                                )
 import           Data.Text.Prettyprint.Doc
-import qualified Data.List.NonEmpty            as NE
 import           Polysemy
 import           Polysemy.NonDet         hiding ( Empty )
 import           Polysemy.Reader
 import           Polysemy.Fail
-import Polysemy.Input
-import Language.Haskell.TH (nameBase)
+import           Language.Haskell.TH            ( nameBase )
 import           Data.Vector.Extra              ( Vector
                                                 , pattern Empty
                                                 )
@@ -38,12 +32,9 @@ import qualified Data.Text.Extra               as T
 import qualified Data.Vector                   as V
 import           Foreign.Ptr
 import           Foreign.Storable
-import           Foreign.Marshal.Utils
 import           Foreign.Marshal.Array
 import           Foreign.Marshal.Alloc
-import           Control.Monad.Trans.Cont       ( ContT
-                                                , runContT
-                                                )
+import           Control.Monad.Trans.Cont       ( ContT )
 import qualified Data.ByteString               as BS
 import           GHC.IO.Exception
 import           Control.Exception              ( throwIO )
@@ -56,7 +47,6 @@ import           Marshal.Scheme
 import           Render.Element
 import           Render.SpecInfo
 import           Render.Type
-import           Render.Utils
 import           Spec.Types
 import           Render.Stmts
 import           Render.Scheme
@@ -471,7 +461,7 @@ byteStringFixedArrayIndirect
   -> Ref s AddrDoc
   -> Stmt s r (Ref s ValueDoc)
 byteStringFixedArrayIndirect _name size toElem valueRef addrRef = case size of
-  SymbolicArraySize n -> unitStmt $ do
+  SymbolicArraySize _ -> unitStmt $ do
     RenderParams {..} <- ask
     fn                <- case toElem of
       Char -> do
@@ -482,10 +472,9 @@ byteStringFixedArrayIndirect _name size toElem valueRef addrRef = case size of
         let fn = "pokeFixedLengthByteString"
         tellImport (TermName fn)
         pure fn
-    tellImport (ConName (mkPatternName n))
     AddrDoc  addr  <- use addrRef
     ValueDoc value <- use valueRef
-    pure . IOAction . ValueDoc $ pretty fn <+> pretty n <+> addr <+> value
+    pure . IOAction . ValueDoc $ pretty fn <+> addr <+> value
 
   t -> throw $ "Unhandled indirect ByteString conversion to: " <> show t
 
@@ -506,11 +495,16 @@ tupleIndirect
   -> Ref s ValueDoc
   -> Ref s AddrDoc
   -> Stmt s r (Ref s ValueDoc)
-tupleIndirect name size toElem fromElem valueRef addrRef =
+tupleIndirect name size toElem fromElem valueRef firstAddrRef =
   stmt Nothing (Just name) $ do
     let indices = [0 .. size - 1]
         elemName n = "e" <> show n :: Text
         elemNames = [ elemName n | n <- indices ]
+
+    castFirstAddrRef <- stmt Nothing (Just ("p" <> T.upperCaseFirst name)) $ do
+      tellImport (TermName "lowerArrayPtr")
+      AddrDoc addr <- use firstAddrRef
+      pure . Pure InlineOnce . AddrDoc $ "lowerArrayPtr" <+> addr
 
     subPokes <- renderSubStmts $ do
 
@@ -524,7 +518,7 @@ tupleIndirect name size toElem fromElem valueRef addrRef =
           . pretty
           . elemName
           $ i
-        addrRef <- elemAddrRef toElem addrRef (Left (fromIntegral i))
+        addrRef <- elemAddrRef toElem castFirstAddrRef (Left (fromIntegral i))
         getPokeIndirect' (name <> show i) toElem fromElem valueRef addrRef
 
       unitStmt $ do
@@ -593,7 +587,11 @@ fixedArrayIndirect name size toElem fromElem valueRef addrRef = do
             <+> viaShow err
             <+> "Nothing Nothing" :: Doc ()
             )
-  pokeVector <- vectorIndirect name toElem fromElem valueRef addrRef
+  castAddrRef <- stmt Nothing (Just ("p" <> T.upperCaseFirst name)) $ do
+    tellImport (TermName "lowerArrayPtr")
+    AddrDoc addr <- use addrRef
+    pure . Pure InlineOnce . AddrDoc $ "lowerArrayPtr" <+> addr
+  pokeVector <- vectorIndirect name toElem fromElem valueRef castAddrRef
   -- check length
   -- poke vector indirect
   stmt Nothing (Just name) $ do
@@ -674,14 +672,15 @@ elemAddrRef toElem addrRef index = stmt Nothing Nothing $ do
   Pure InlineOnce . AddrDoc <$> case structSize of
     Just elemSize -> do
       tellImport 'plusPtr
-      case index of
-        Left 0 -> pure addr
-        Left n ->
-          pure $ addr <+> "`plusPtr`" <+> parens (viaShow (elemSize * n))
+      untyped <- case index of
+        Left  0 -> pure addr
+        Left  n -> pure $ addr <+> "`plusPtr`" <+> viaShow (elemSize * n)
         Right r -> do
           indexDoc <- raise $ use r
           pure $ addr <+> "`plusPtr`" <+> parens
             (viaShow elemSize <+> "*" <+> indexDoc)
+      pTyDoc <- renderType . (ConT ''Ptr :@) =<< cToHsType DoPreserve toElem
+      pure $ untyped <+> "::" <+> pTyDoc
 
     Nothing -> do
       tellImport 'advancePtr

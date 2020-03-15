@@ -4,7 +4,6 @@ module Render.Union
 import           Relude                  hiding ( Reader
                                                 , ask
                                                 , runReader
-                                                , lift
                                                 , State
                                                 , Type
                                                 )
@@ -24,9 +23,7 @@ import           Haskell                       as H
 import           Error
 import           Render.Element
 import           Render.Type
-import           Render.Poke             hiding ( Pure
-                                                , Inline(..)
-                                                )
+import           Render.Stmts.Poke
 import           Render.Peek
 import           Render.Stmts
 import           Marshal.Struct
@@ -93,40 +90,52 @@ toCStructInstance
      , HasRenderElem r
      , HasSiblingInfo StructMember r
      , HasSpecInfo r
+     , HasStmts r
      )
   => MarshaledStruct AUnion
   -> Sem r ()
 toCStructInstance MarshaledStruct {..} = do
   let addrVar = "p"
-  pokes <- forV msMembers $ \MarshaledStructMember {..} -> do
-    p <- getPoke msmStructMember msmScheme
-    let p' =
-          (\(Unassigned f) -> Assigned $ do
-              t <- cToHsType DoPreserve (smType msmStructMember)
-              unless (smOffset msmStructMember == 0)
-                $ throw "Union has member with non-zero offset"
-              tellImport 'castPtr
-              let mVal = ValueDoc "v"
-              f t (AddrDoc (parens ("castPtr" <+> addrVar))) mVal
-            )
-            <$> p
-    pure p'
-
   RenderParams {..} <- ask
   tellImportWithAll (TyConName "ToCStruct")
-  let Struct {..} = msStruct
-      n           = mkTyName sName
-      aVar        = mkVar "a"
-      structT     = ConT (typeName n)
-      mkCase :: StructMember -> AssignedPoke StructMember -> Sem r (Doc ())
-      mkCase StructMember {..} poke = do
-        let con = mkConName sName smName
-            ty  = mkTyName sName
-        pokeDoc <- renderPokesContT (V.singleton poke)
-        tellImportWith (TyConName ty) (ConName con)
-        pure $ pretty con <+> "v" <+> "->" <+> pokeDoc
+  let
+    Struct {..} = msStruct
+    n           = mkTyName sName
+    aVar        = mkVar "a"
+    mVar        = "v"
+    structT     = ConT (typeName n)
+    mkCase :: MarshaledStructMember -> Sem r (Doc ())
+    mkCase MarshaledStructMember {..} = do
+      let con      = mkConName sName (smName msmStructMember)
+          ty       = mkTyName sName
+          badNames = fromList [mVar]
 
-  cases           <- zipWithM mkCase (toList sMembers) (toList pokes)
+      pokeVal <- renderStmts badNames $ do
+        addrRef <- stmt Nothing Nothing $ do
+          unless (smOffset msmStructMember == 0)
+            $ throw "Union has member with non-zero offset"
+          tellImport 'castPtr
+          pTyDoc <- renderTypeHighPrec
+            =<< cToHsType DoPreserve (smType msmStructMember)
+          pure
+            . Pure AlwaysInline
+            . AddrDoc
+            $ ("castPtr @_ @" <> pTyDoc <+> addrVar)
+        ty       <- schemeType msmScheme
+        valueRef <-
+          stmt ty Nothing . pure . Pure AlwaysInline . ValueDoc . pretty $ mVar
+        getPokeIndirect msmStructMember msmScheme valueRef addrRef
+
+      pokeDoc <- case pokeVal of
+        IOStmts d -> do
+          tellImport 'lift
+          pure $ "lift $" <+> d
+        ContTStmts d -> pure d
+
+      tellImportWith (TyConName ty) (ConName con)
+      pure $ pretty con <+> "v" <+> "->" <+> pokeDoc
+
+  cases           <- traverseV mkCase (toList msMembers)
 
   pokeCStructTDoc <- renderType
     (ConT ''Ptr :@ structT ~> structT ~> ConT ''IO :@ aVar ~> ConT ''IO :@ aVar)

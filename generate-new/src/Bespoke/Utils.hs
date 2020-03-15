@@ -272,22 +272,45 @@ marshalUtils = genRe "marshal utils" $ do
         n                  = fromIntegral (natVal (Proxy @n))
         byteStringToVector = Data.Vector.Generic.fromList . Data.ByteString.unpack
 
-    pokeFixedLengthNullTerminatedByteString :: Int -> Ptr CChar -> ByteString -> IO ()
-    pokeFixedLengthNullTerminatedByteString maxLength to bs =
+    -- | Store a 'ByteString' in a fixed amount of space inserting a null
+    -- character at the end and truncating if necessary.
+    --
+    -- If the 'ByteString' is not long enough to fill the space the remaining
+    -- bytes are unchanged
+    --
+    -- Note that if the 'ByteString' is exactly long enough the last byte will
+    -- still be replaced with 0
+    pokeFixedLengthNullTerminatedByteString
+      :: forall n
+       . KnownNat n
+      => Ptr (Data.Vector.Storable.Sized.Vector n CChar)
+      -> ByteString
+      -> IO ()
+    pokeFixedLengthNullTerminatedByteString to bs =
       unsafeUseAsCString bs $ \from -> do
-        let len = min maxLength (Data.ByteString.length bs)
-            end = min (maxLength - 1) len
+        let maxLength = fromIntegral (natVal (Proxy @n))
+            len       = min maxLength (Data.ByteString.length bs)
+            end       = min (maxLength - 1) len
         -- Copy the entire string into the buffer
-        copyBytes to from len
+        copyBytes (lowerArrayPtr to) from len
         -- Make the last byte (the one following the string, or the
         -- one at the end of the buffer)
-        pokeElemOff to end 0
+        pokeElemOff (lowerArrayPtr to) end 0
 
-    pokeFixedLengthByteString :: Int -> Ptr Word8 -> ByteString -> IO ()
-    pokeFixedLengthByteString maxLength to bs =
-      unsafeUseAsCString bs $ \from -> do
-        let len = min maxLength (Data.ByteString.length bs)
-        copyBytes to (castPtr @CChar @Word8 from) len
+    -- | Store a 'ByteString' in a fixed amount of space, truncating if necessary.
+    --
+    -- If the 'ByteString' is not long enough to fill the space the remaining
+    -- bytes are unchanged
+    pokeFixedLengthByteString
+      :: forall n
+       . KnownNat n
+      => Ptr (Data.Vector.Storable.Sized.Vector n Word8)
+      -> ByteString
+      -> IO ()
+    pokeFixedLengthByteString to bs = unsafeUseAsCString bs $ \from -> do
+      let maxLength = fromIntegral (natVal (Proxy @n))
+          len       = min maxLength (Data.ByteString.length bs)
+      copyBytes (lowerArrayPtr to) (castPtr @CChar @Word8 from) len
 
     peekByteStringFromSizedVectorPtr
       :: forall n

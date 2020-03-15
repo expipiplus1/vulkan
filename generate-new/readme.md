@@ -55,8 +55,6 @@ sibling info either by:
   - knot tying
   - topsorting and traversing siblings to get l, accumulating refs on the way
 
-use lift over liftio
-
 for pokes annotate the pointer with the type
 
 Groups of `lift`ed actions which don't return anything can be grouped under one lift:
@@ -72,5 +70,4 @@ pokeCStruct p VkSubpassDescriptionDepthStencilResolve{..} f = evalContT $ do
     Just j -> ContT $ withCStruct (j)
   lift $ poke (p `plusPtr` 24) pDepthStencilResolveAttachment''
   lift $ f
-
 ```
