@@ -63,9 +63,9 @@ data MarshalScheme a
     -- ^ A non-const pointer to some allocated memory, used to return
     -- additional values.
     -- Not typically used for structs
-  | InOut (MarshalScheme a)
-    -- ^ A non-const pointer to some allocated memory, used to send and return
-    -- additional values.
+  | InOutCount (MarshalScheme a)
+    -- ^ A non-const pointer to some count value, used to send and return
+    -- additional the length of a vector.
     -- Not typically used for structs
   deriving (Show)
 
@@ -78,7 +78,7 @@ data MarshalParams = MarshalParams
   , isStruct            :: Text -> Bool
   , isPassAsPointerType :: CType -> Bool
   , getBespokeScheme
-      :: forall a . Marshalable a => a -> Maybe (MarshalScheme a)
+      :: forall a . Marshalable a => Text -> a -> Maybe (MarshalScheme a)
   }
 
 ----------------------------------------------------------------
@@ -157,7 +157,9 @@ returnPointerScheme p = do
   let inout = do
         Empty                <- pure $ lengths p
         False :<| True :<| _ <- pure $ isOptional p
-        pure $ InOut (Normal t)
+        -- FIXME: Check if any siblings are sized by this
+        guard (t == TypeName "uint32_t" || t == TypeName "size_t")
+        pure $ InOutCount (Normal t)
       normal = do
         Empty <- pure $ lengths p
         pure $ Returned (Normal t)
@@ -303,5 +305,5 @@ isElided = \case
   Vector       _    -> False
   EitherWord32 _    -> False
   Tupled _ _        -> False
-  Returned _        -> False
-  InOut    _        -> False
+  Returned   _      -> False
+  InOutCount _      -> False

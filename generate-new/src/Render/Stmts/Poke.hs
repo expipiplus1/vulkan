@@ -456,13 +456,20 @@ allocArray
   -> Stmt s r (Ref s AddrDoc)
 allocArray name elemType size =
   stmt Nothing (Just $ "p" <> T.upperCaseFirst name) $ do
-    (elemSize, elemAlign) <- getTypeSize elemType
-    elemTyDoc             <- renderTypeHighPrec =<< case size of
-      Left  n -> cToHsType DoPreserve (Array Const (NumericArraySize n) elemType)
+    (elemSize, elemAlign) <- case elemType of
+      Void -> pure (1, 1)
+      _    -> getTypeSize elemType
+    elemTyDoc <- renderTypeHighPrec =<< case size of
+      Left n ->
+        cToHsType DoPreserve (Array Const (NumericArraySize n) elemType)
       Right _ -> cToHsType DoPreserve elemType
 
     vecSizeDoc <- case size of
-      Left  i -> pure $ viaShow (elemSize * fromIntegral i)
+      Left 1                  -> pure $ viaShow elemSize
+      Left i                  -> pure $ viaShow (elemSize * fromIntegral i)
+      Right v | elemSize == 1 -> do
+        ValueDoc length <- use v
+        pure length
       Right v -> do
         ValueDoc length <- use v
         pure $ parens (length <+> "*" <+> viaShow elemSize)

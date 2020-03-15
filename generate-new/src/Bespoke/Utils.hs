@@ -35,6 +35,7 @@ zeroClass = genRe "zero class" $ do
   traverseV_
     tellImport
     [ 'nullPtr
+    , 'nullFunPtr
     , ''CFloat
     , ''CChar
     , ''CSize
@@ -70,6 +71,9 @@ zeroClass = genRe "zero class" $ do
 
     instance (KnownNat n, Storable a, Zero a) => Zero (Data.Vector.Storable.Sized.Vector n a) where
       zero = Data.Vector.Storable.Sized.replicate zero
+
+    instance Zero (FunPtr a) where
+      zero = nullFunPtr
 
     instance Zero (Ptr a) where
       zero = nullPtr

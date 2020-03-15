@@ -25,9 +25,9 @@ import           Polysemy.Reader
 import qualified Data.Vector.Extra             as V
 
 import           Foreign.Ptr
+import           Foreign.C.Types                ( CChar )
 import           Foreign.Storable
 import           Foreign.Marshal.Utils
-import           Foreign.Marshal.Array
 import qualified Data.ByteString               as BS
 
 import           Error
@@ -136,7 +136,7 @@ peekWrapped name lengths fromType addr = \case
   ElidedVoid        -> empty
   ElidedLength _ _  -> raise $ storablePeek name addr fromType
   ElidedUnivalued _ -> empty
-  ByteString        -> raise $ byteStringPeek name addr fromType
+  ByteString        -> raise $ byteStringPeek name lengths addr fromType
   VoidPtr           -> raise $ storablePeek name addr fromType
   Maybe  toType     -> raise $ maybePeek' name lengths addr fromType toType
   Vector toElem     -> raise $ vectorPeek name lengths addr fromType toElem
@@ -281,10 +281,11 @@ unionPeek name addrRef Struct {..} _to fromPtr =
 byteStringPeek
   :: (HasErr r, HasRenderElem r, HasSpecInfo r, HasRenderParams r)
   => Text
+  -> Lengths
   -> Ref s AddrDoc
   -> CType
   -> Stmt s r (Ref s ValueDoc)
-byteStringPeek name addrRef =
+byteStringPeek name lengths addrRef =
   stmt (Just (ConT ''ByteString)) (Just name) . \case
     Ptr _ (Ptr Const Char) -> do
       AddrDoc addr <- use addrRef
@@ -298,11 +299,23 @@ byteStringPeek name addrRef =
       AddrDoc addr <- use addrRef
       pure . IOAction $ ValueDoc ("packCString " <+> addr)
 
+    Ptr _ Void | NamedLength len :<| V.Empty <- lengths -> do
+      lenRef <- lenRefFromSibling len
+      tellImport 'BS.packCStringLen
+      tellImport 'castPtr
+      tellImport ''CChar
+      AddrDoc addr <- use addrRef
+      lenVal       <- use lenRef
+      let castAddr = "castPtr @() @CChar" <+> addr
+      pure . IOAction $ ValueDoc
+        ("packCStringLen " <+> tupled [castAddr, lenVal])
+
     Ptr _ (Array NonConst (SymbolicArraySize _) Char) -> do
       tellImport 'BS.packCString
       tellImport (TermName "lowerArrayPtr")
       AddrDoc addr <- use addrRef
-      pure . IOAction $ ValueDoc ("packCString" <+> parens ("lowerArrayPtr" <+> addr))
+      pure . IOAction $ ValueDoc
+        ("packCString" <+> parens ("lowerArrayPtr" <+> addr))
 
     Ptr _ (Array NonConst (SymbolicArraySize _) (TypeName "uint8_t")) -> do
       let fn = "peekByteStringFromSizedVectorPtr"
@@ -411,13 +424,6 @@ vectorPeek name lengths addrRef fromPtr toElem = case fromPtr of
   t -> throw ("Unhandled conversion to Vector from " <> show t)
 
  where
-  lenRefFromSibling :: Text -> Stmt s r (Ref s (Doc ()))
-  lenRefFromSibling len =
-    stmt @_ @r Nothing Nothing
-      $   Pure InlineOnce
-      .   ("fromIntegral" <+>)
-      .   unValueDoc
-      <$> useViaName len
 
   generate addrRef fromElem lenTail lenRef = do
     t <- cToHsType DoPreserve fromElem
@@ -457,6 +463,15 @@ vectorPeek name lengths addrRef fromPtr toElem = case fromPtr of
       tellImport 'V.generateM
       pure . IOAction . ValueDoc $ "generateM" <+> lenDoc <+> parens
         ("\\" <> indexVar <+> "->" <+> subPeek)
+
+lenRefFromSibling
+  :: forall r s . (HasErr r) => Text -> Stmt s r (Ref s (Doc ()))
+lenRefFromSibling len =
+  stmt @_ @r Nothing Nothing
+    $   Pure InlineOnce
+    .   ("fromIntegral" <+>)
+    .   unValueDoc
+    <$> useViaName len
 
 eitherWord32Peek
   :: forall a r s

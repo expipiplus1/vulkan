@@ -49,7 +49,7 @@ structMemberScheme
 structMemberScheme Struct {..} member = do
   MarshalParams {..} <- ask
   let schemes =
-        [ maybe empty pure . getBespokeScheme
+        [ maybe empty pure . getBespokeScheme sName
         , -- These two are for value constrained params:
           univaluedScheme
         , lengthScheme sMembers

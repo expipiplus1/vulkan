@@ -40,14 +40,28 @@ forbiddenConstants = ["VK_TRUE", "VK_FALSE"]
 ----------------------------------------------------------------
 
 data BespokeScheme where
-  BespokeScheme :: (forall a. Marshalable a => a -> Maybe (MarshalScheme a)) -> BespokeScheme
+  BespokeScheme :: (forall a. Marshalable a => Text -> a -> Maybe (MarshalScheme a)) -> BespokeScheme
+  -- Parent name -> Type -> Scheme
+
 
 bespokeSchemes :: [BespokeScheme]
 bespokeSchemes =
-  [ BespokeScheme $ \case
-      a | t@(Ptr _ (TypeName "xcb_connection_t")) <- type' a -> Just (Normal t)
-      a | t@(Ptr _ (TypeName "wl_display")) <- type' a -> Just (Normal t)
-      _ -> Nothing
+  [ BespokeScheme $ const $ \case
+    a | t@(Ptr _ (TypeName "xcb_connection_t")) <- type' a -> Just (Normal t)
+    a | t@(Ptr _ (TypeName "wl_display")) <- type' a -> Just (Normal t)
+    _ -> Nothing
+  , -- So we render the dual purpose command properly
+    BespokeScheme $ \case
+    c
+      | c `elem` ["vkGetPipelineCacheData", "vkGetValidationCacheDataEXT"] -> \case
+        a | (Ptr NonConst Void) <- type' a, "pData" <- name a ->
+          Just (Returned ByteString)
+        _ -> Nothing
+      | c == "vkGetShaderInfoAMD" -> \case
+        a | (Ptr NonConst Void) <- type' a, "pInfo" <- name a ->
+          Just (Returned ByteString)
+        _ -> Nothing
+    _ -> const Nothing
   ]
 
 ----------------------------------------------------------------

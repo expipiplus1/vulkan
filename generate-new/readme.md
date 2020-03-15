@@ -11,18 +11,9 @@ To prevent a name clash between the constructors of
 
 ## TODO Important
 
-generate `bracket create destroy` functions.
-
-generate `enumerateAll` and `gerNum` functions.
-
-throw exceptions instead of always returning vkresult.
-
 stop everything being dumped in `Core10.Extra`.
 
 ## TODO
-
-Make sure it's easy to marshal types such as `VkDispatchIndirectCommand`
-(`Storable` instance).
 
 Better module allocation by grouping segments and having a module for elements
 unique to that group.
@@ -45,32 +36,7 @@ anyway.
 
 ## Stmts
 
-init -> Get a list = l of (Ref, Action)
-
-run an action
-  - it calls use r where (r, a) is in l, a is evaluated there and
-    then and the result stored so it doesn't rerun next time
-
-sibling info either by:
-  - knot tying
-  - topsorting and traversing siblings to get l, accumulating refs on the way
-
-for pokes annotate the pointer with the type
-
 Groups of `lift`ed actions which don't return anything can be grouped under one lift:
-
-```haskell
-pokeCStruct p VkSubpassDescriptionDepthStencilResolve{..} f = evalContT $ do
-  lift $ poke (p `plusPtr` 0) (VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE)
-  lift $ poke (p `plusPtr` 8) (pNext)
-  lift $ poke (p `plusPtr` 16) (depthResolveMode)
-  lift $ poke (p `plusPtr` 20) (stencilResolveMode)
-  pDepthStencilResolveAttachment'' <- case (pDepthStencilResolveAttachment) of
-    Nothing -> pure nullPtr
-    Just j -> ContT $ withCStruct (j)
-  lift $ poke (p `plusPtr` 24) pDepthStencilResolveAttachment''
-  lift $ f
-```
 
 ## check
 "vkCmdSetBlendConstants": Unhandled direct poke from Tupled 4 (Normal Float) to Ptr Const Float

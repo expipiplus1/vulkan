@@ -55,7 +55,7 @@ parameterScheme
 parameterScheme Command {..} param = do
   MarshalParams {..} <- ask
   let schemes =
-        [ maybe empty pure . getBespokeScheme
+        [ maybe empty pure . getBespokeScheme cName
           -- These two are for value constrained params:
         , univaluedScheme
         , lengthScheme cParameters

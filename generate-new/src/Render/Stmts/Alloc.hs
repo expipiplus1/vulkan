@@ -1,7 +1,7 @@
 {-# language AllowAmbiguousTypes #-}
 module Render.Stmts.Alloc
   ( allocate
-  , allocateVector
+  , allocateAndPeek
   ) where
 
 import           Relude                  hiding ( Type
@@ -38,8 +38,8 @@ import           Render.Stmts.Poke
 import           Render.Scheme
 import           Render.Peek
 
--- | Allocated memory in the first ref, and peeks from it in the second
-allocate
+-- | Allocates memory in the first ref, and peeks from it in the second
+allocateAndPeek
   :: ( HasErr r
      , Marshalable a
      , Show a
@@ -52,15 +52,32 @@ allocate
   => a
   -> MarshalScheme a
   -> Stmt s r (Ref s AddrDoc, Ref s ValueDoc)
-allocate a scheme = do
-  alloc <- case scheme of
-    Normal fromTy     -> normal (name a) (type' a) fromTy
-    Vector (Normal _) -> allocateVector a
-    s                 -> throw $ "Unhandled allocation for type " <> show s
-  peek <-
+allocateAndPeek a scheme = do
+  alloc <- allocate a scheme
+  peek  <-
     note "Unable to get peek for returned value"
       =<< peekStmtDirect a alloc scheme
   pure (alloc, peek)
+
+-- | Allocates memory for some type
+allocate
+  :: ( HasErr r
+     , Marshalable a
+     , Show a
+     , HasRenderElem r
+     , HasSpecInfo r
+     , HasRenderParams r
+     , HasSiblingInfo a r
+     , HasStmts r
+     )
+  => a
+  -> MarshalScheme a
+  -> Stmt s r (Ref s AddrDoc)
+allocate a = \case
+  Normal fromTy     -> normal (name a) (type' a) fromTy
+  Vector (Normal _) -> allocateVector a
+  ByteString        -> allocateByteString a
+  s                 -> throw $ "Unhandled allocation for type " <> show s
 
 normal
   :: (HasErr r, HasRenderElem r, HasRenderParams r, HasSpecInfo r)
@@ -116,8 +133,40 @@ allocateVector vec = do
   let name' = name vec
       toTy  = type' vec
   toElem <- unPtr toTy
-  lenRef <- stmt Nothing Nothing $ case lengths vec of
-    Empty -> throw "Trying to allocate vector with no length"
+  lenRef <- getLenRef vec
+  allocArray name' toElem (Right lenRef)
+
+-- Currently the same implementation as allocateVector
+allocateByteString
+  :: forall a r s
+   . ( HasErr r
+     , HasRenderElem r
+     , HasRenderParams r
+     , HasSpecInfo r
+     , HasSiblingInfo a r
+     , Marshalable a
+     , Show a
+     )
+  => a
+  -> Stmt s r (Ref s AddrDoc)
+allocateByteString = allocateVector
+
+getLenRef
+  :: forall a r s
+   . ( HasErr r
+     , HasRenderElem r
+     , HasRenderParams r
+     , HasSpecInfo r
+     , HasSiblingInfo a r
+     , Marshalable a
+     , Show a
+     )
+  => a
+  -> Stmt s r (Ref s ValueDoc)
+getLenRef a = do
+  RenderParams {..} <- ask
+  stmt Nothing Nothing $ case lengths a of
+    Empty -> throw "Trying to allocate something with no length"
     NamedLength len :<| Empty -> do
       ValueDoc value <- useViaName len
       pure . Pure AlwaysInline . ValueDoc $ value
@@ -140,7 +189,7 @@ allocateVector vec = do
           structTyDoc <-
             renderType
             =<< note
-                  "Unable to get type for struct with length specifying member for vector allocation"
+                  "Unable to get type for struct with length specifying member for allocation"
             =<< schemeType siScheme
           tellImportWithAll (TyConName structName)
           pure
@@ -150,9 +199,7 @@ allocateVector vec = do
             <+> pretty (mkMemberName member)
             <+> parens (structValue <+> "::" <+> structTyDoc)
     NullTerminated :<| Empty -> throw "Trying to allocate a null terminated"
-    _ -> throw "Trying to allocate vector with multiple lengths"
-
-  allocArray name' toElem (Right lenRef)
+    _ -> throw "Trying to allocate something with multiple lengths"
 
 
 unPtr :: HasErr r => CType -> Sem r CType

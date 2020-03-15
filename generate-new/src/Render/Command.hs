@@ -88,7 +88,7 @@ renderCommand m@MarshaledCommand {..} = contextShow mcName $ do
 
 
     let commandName = mkFunName mcName
-    runReader lookupSibling $ if any (isInOut . mpScheme) mcParams
+    runReader lookupSibling $ if any (isInOutCount . mpScheme) mcParams
       then marshaledDualPurposeCommandCall commandName m
       else marshaledCommandCall commandName m
 
@@ -109,9 +109,9 @@ makeReturnType
   -> Bool
   -> MarshaledCommand
   -> Sem r H.Type
-makeReturnType includeInOutTypes includeReturnType MarshaledCommand {..} = do
+makeReturnType includeInOutCountTypes includeReturnType MarshaledCommand {..} = do
   let pos = \case
-        InOut _ | not includeInOutTypes -> pure Nothing
+        InOutCount _ | not includeInOutCountTypes -> pure Nothing
         s                               -> schemeTypePositive s
   pts <- V.mapMaybe id <$> traverseV (paramType pos) mcParams
   r   <- case mcReturn of
@@ -288,12 +288,13 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
   --
   -- Find the parameters we want to fiddle with
   --
-  countParamIndex <- case V.findIndices (isInOut . mpScheme) mcParams of
-    Empty ->
-      throw "Trying to render a dual purpose command with no InOut parameter"
+  countParamIndex <- case V.findIndices (isInOutCount . mpScheme) mcParams of
+    Empty -> throw
+      "Trying to render a dual purpose command with no InOutCount parameter"
     i :<| Empty -> pure i
-    _           -> throw
-      "Trying to render a dual purpose command with multiple InOut parameters"
+    _ ->
+      throw
+        "Trying to render a dual purpose command with multiple InOutCount parameters"
   let countParam     = mcParams V.! countParamIndex
       countParamName = pName (mpParam countParam)
       isCounted p = pLengths p == V.singleton (NamedLength countParamName)
@@ -304,16 +305,16 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
 
   -- Unpack some useful things
   (countScheme, countType) <- case mpScheme countParam of
-    InOut s@(Normal t) -> pure (s, t)
-    _                  -> throw "Count does not have type InOut (Normal _)"
+    InOutCount s@(Normal t) -> pure (s, t)
+    _ -> throw "Count does not have type InOutCount (Normal _)"
 
   --
   -- Get the type of this function
   --
   includeReturnType <- shouldIncludeReturnType m
   let negativeSchemeType = \case
-        InOut _ -> pure Nothing
-        s       -> schemeType s
+        InOutCount _ -> pure Nothing
+        s            -> schemeType s
   nts <- V.mapMaybe id <$> traverseV (paramType negativeSchemeType) mcParams
   returnType <- makeReturnType False includeReturnType m
   let commandType = foldr (~>) returnType nts
@@ -326,8 +327,8 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
         ElidedLength _ _  -> Nothing
         ElidedUnivalued _ -> Nothing
         ElidedVoid        -> Nothing
-        Returned _        -> Nothing
-        InOut    _        -> Nothing
+        Returned   _      -> Nothing
+        InOutCount _      -> Nothing
         _                 -> Just p
       paramNames = toList (paramName <$> V.mapMaybe isArg mcParams)
 
@@ -366,8 +367,8 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
     finalCountRef <- stmt Nothing Nothing $ do
       after ret2
       countScheme <- case mpScheme countParam of
-        InOut s -> pure s
-        _       -> throw "Trying to peek count without inout scheme"
+        InOutCount s -> pure s
+        _            -> throw "Trying to peek count without inout scheme"
       peekCount <-
         note "Unable to get peek for count"
           =<< peekStmtDirect (mpParam countParam) countAddr countScheme
@@ -419,8 +420,8 @@ pokesForGettingCount params countIndex vecIndices = do
   countOverride <- case params V.!? countIndex of
     Nothing -> throw "Couldn't find count parameter for getting count"
     Just p
-      | InOut s <- mpScheme p -> do
-        (addrRef, peek) <- allocate (mpParam p) s
+      | InOutCount s <- mpScheme p -> do
+        (addrRef, peek) <- allocateAndPeek (mpParam p) s
         pure (countIndex, (addrRef, peek))
       | otherwise -> throw "Count doesn't have inout type"
   vecOverrides <- forV vecIndices $ \i -> case params V.!? i of
@@ -428,13 +429,14 @@ pokesForGettingCount params countIndex vecIndices = do
     Just p
       | Returned _ <- mpScheme p -> pure
         (i, Right p { mpScheme = ElidedUnivalued "nullPtr" })
-      | otherwise -> throw "Vector doesn't have Returned type"
+      | otherwise -> throw $ "Vector doesn't have Returned type, has " <> show
+        (mpScheme p)
   let gettingCountParams =
         (Right <$> params)
           V.// (second Left countOverride : V.toList vecOverrides)
 
   pokes <- forV (V.indexed gettingCountParams) $ \case
-    (i, Left (addrRef, peek)) -> do
+    (_, Left (addrRef, peek)) -> do
       poke <- castRef addrRef
       pure (poke, Just peek)
     (i, Right m@MarshaledParam {..}) -> if isElided mpScheme
@@ -485,12 +487,12 @@ pokesForGettingResults params oldPokes oldPeeks countAddr countIndex vecIndices
                                NamedLength (n <> "::2") :<| t
                              t -> t
               }
-        addr   <- allocateVector lowered
-        addr'  <- castRef addr
         scheme <- case mpScheme of
           Returned s -> pure s
           _          -> throw "Vector without a return scheme"
-        peek <-
+        addr  <- allocate lowered scheme
+        addr' <- castRef addr
+        peek  <-
           note "Unable to get peek for returned value"
             =<< peekStmtDirect usingSecondLen addr scheme
         pure ((i, addr'), (i, Just peek))
@@ -669,7 +671,7 @@ getPoke valueRef MarshaledParam {..} = do
   RenderParams {..} <- ask
   case mpScheme of
     Returned s -> do
-      (addrRef, peek) <- allocate (lowerParamType mpParam) s
+      (addrRef, peek) <- allocateAndPeek (lowerParamType mpParam) s
       -- TODO: implement ref casting
       addrRef'        <- stmt Nothing Nothing $ do
         AddrDoc addr <- use addrRef

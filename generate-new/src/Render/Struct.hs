@@ -15,8 +15,8 @@ import           Text.InterpolatedString.Perl6.Unindented
 import           Data.Text.Prettyprint.Doc
 import           Data.Text.Extra                ( upperCaseFirst )
 import           Polysemy
+import           Polysemy.NonDet
 import           Polysemy.Reader
-import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
 import qualified Data.Map                      as Map
 import           Data.List.Extra                ( nubOrd )
@@ -25,15 +25,12 @@ import           Foreign.Marshal.Alloc
 import           Foreign.Ptr
 import           Foreign.Storable
 import           Control.Exception              ( bracket )
-import           Control.Monad.Trans.Cont       ( ContT
-                                                , evalContT
-                                                )
+import           Control.Monad.Trans.Cont       ( evalContT )
 
 import           Error
 import           Haskell                       as H
 import           Marshal
 import           Marshal.Scheme
-import           Marshal.Struct
 import           Render.Element
 import           Render.Peek
 import           Render.Stmts.Poke
@@ -127,6 +124,8 @@ renderStoreInstances ms@MarshaledStruct {..} = do
     case pokes of
       IOStmts _ | not containsDispatchable -> storableInstance ms
       _ -> pure ()
+
+  zeroInstanceDecl ms
 
 -- | We use RecordWildCards, so just use the member name here
 memberValue
@@ -383,6 +382,48 @@ withZeroCStructDecl ms@MarshaledStruct {..} = do
     <+> "->"
     <+> pokeDoc
     ]
+
+zeroInstanceDecl
+  :: ( HasErr r
+     , HasRenderElem r
+     , HasSpecInfo r
+     , HasRenderParams r
+     , HasSiblingInfo StructMember r
+     , HasStmts r
+     )
+  => MarshaledStruct AStruct
+  -> Sem r ()
+zeroInstanceDecl MarshaledStruct {..} = do
+  RenderParams {..} <- ask
+  let n   = mkTyName msName
+      con = mkConName msName msName
+  zeroMembers <- catMaybes . toList <$> forV msMembers (zeroScheme . msmScheme)
+  tellDoc $ "instance Zero" <+> pretty n <+> "where" <> line <> indent
+    2
+    (vsep ["zero =" <+> pretty con <> line <> indent 2 (vsep zeroMembers)])
+
+zeroScheme
+  :: MarshalScheme a
+  -> Sem r (Maybe (Doc ()))
+zeroScheme = runNonDetMaybe . go
+ where
+  go = \case
+    Unit              -> pure "()"
+    Preserve _        -> pure "zero"
+    Normal   _        -> pure "zero"
+    ElidedLength _ _  -> empty
+    ElidedUnivalued _ -> empty
+    ElidedVoid        -> empty
+    VoidPtr           -> pure "zero"
+    ByteString        -> pure "mempty"
+    Maybe        _    -> pure "Nothing"
+    Vector       _    -> pure "mempty"
+    EitherWord32 _    -> pure $ parens "Left 0"
+    Tupled n s        -> do
+      z <- go s
+      pure $ tupled (replicate (fromIntegral n) z)
+    Returned   _ -> empty
+    InOutCount _ -> empty
 
 renderPokes
   :: ( HasErr r

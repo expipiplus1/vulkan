@@ -49,11 +49,12 @@ import           Render.Type.Preserve
 import           Haskell
 
 main :: IO ()
-main = (runFinal . embedToFinal @IO . fixpointToFinal @IO . runErr $ go) >>= \case
-  Left es -> do
-    traverse_ sayErr es
-    sayErr (show (length es) <+> "errors")
-  Right () -> pure ()
+main =
+  (runFinal . embedToFinal @IO . fixpointToFinal @IO . runErr $ go) >>= \case
+    Left es -> do
+      traverse_ sayErr es
+      sayErr (show (length es) <+> "errors")
+    Right () -> pure ()
  where
   go = do
     specText <- timeItNamed "Reading spec"
@@ -110,7 +111,7 @@ main = (runFinal . embedToFinal @IO . fixpointToFinal @IO . runErr $ go) >>= \ca
         )
         isStruct'
         isPassAsPointerType'
-        (\a -> asum . fmap (\(BespokeScheme f) -> f a) $ bespokeSchemes)
+        (\p a -> asum . fmap (\(BespokeScheme f) -> f p a) $ bespokeSchemes)
 
     (ss, us, cs) <- runReader mps $ do
       ss <- timeItNamed "Marshaling structs"
