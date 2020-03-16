@@ -11,7 +11,6 @@ import           Relude                  hiding ( Reader
                                                 )
 import           Data.Text.Prettyprint.Doc
 import           Text.InterpolatedString.Perl6.Unindented
-import           Language.Haskell.TH.Syntax
 import           Polysemy
 import           Polysemy.Reader
 import           Polysemy.State
@@ -40,6 +39,7 @@ renderDynamicLoader
 renderDynamicLoader cs = do
   RenderParams {..} <- ask
   genRe "dynamic loader" $ do
+    tellExplicitModule (ModName "Graphics.Vulkan.Dynamic")
     deviceCommands   <- V.filterM (fmap (== Device) . getCommandLevel) cs
     instanceCommands <- V.filterM (fmap (== Instance) . getCommandLevel) cs
     loader "Instance"

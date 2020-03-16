@@ -17,30 +17,23 @@ import           Render.Element
 import           Write.Segment
 
 mergeElements
-  :: Vector (SegmentedGroup ModName RenderElement)
-  -> [Segment ModName RenderElement]
-mergeElements groups =
-  let unpackedSegments =
-          [ (m, rs)
-          | SegmentedGroup xs x  <- V.toList groups
-          , Segment        m  rs <- x : V.toList xs
-          , not (V.null rs) -- Don't write empty segments
-          ]
-      allModNames = fst <$> unpackedSegments
-      aggregates  = makeAggregateRenderElements allModNames
+  :: [(ModName, Vector RenderElement)] -> [Segment ModName RenderElement]
+mergeElements ss =
+  let unpackedSegments = [ (m, rs) | (m, rs) <- ss, not (V.null rs) ] -- Don't write empty segments
+      allModNames      = fst <$> unpackedSegments
+      aggregates       = makeAggregateRenderElements allModNames
 
       -- Merge segments with the same module
       segments =
-          fmap (uncurry Segment)
-            . Map.toList
-            . Map.fromListWith (<>)
-            $ (unpackedSegments <> (fmap V.singleton <$> aggregates))
-  in
-  segments
+        fmap (uncurry Segment)
+          . Map.toList
+          . Map.fromListWith (<>)
+          $ (unpackedSegments <> (fmap V.singleton <$> aggregates))
+  in  segments
 
 makeAggregateRenderElements :: [ModName] -> [(ModName, RenderElement)]
 makeAggregateRenderElements ms =
-  [ let re = run . genRe "aggregate" $ tellReexport m
+  [ let re = run . genRe "aggregate" $ tellReexportMod m
     in  (ModName (intercalate "." ancestor), re)
   | m        <- nubOrd ms
   , -- drop 2 for empty name and "Graphics"

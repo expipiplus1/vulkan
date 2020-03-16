@@ -1,7 +1,7 @@
 module Bespoke.Seeds
   ( specSeeds
-  )
-where
+  , ModulePlacement(..)
+  ) where
 
 import           Relude                  hiding ( runReader
                                                 , uncons
@@ -10,8 +10,10 @@ import           Polysemy
 import           Data.Version
 import qualified Data.Map                      as Map
 import qualified Data.Vector                   as V
+import           Data.Vector                    ( Vector )
 import qualified Data.Text                     as T
 import           Data.Text.Extra                ( upperCaseFirst )
+import           Algebra.Graph.AdjacencyIntMap
 
 import           Error
 import           Spec.Parse
@@ -19,16 +21,35 @@ import           Write.Segment
 import           Render.Element
 import           Haskell.Name
 
-specSeeds :: HasErr r => Spec -> Sem r (V.Vector (SegmentGroup ModName HName))
+-- specSeeds
+--   :: HasErr r
+--   => Spec
+--   -> Vector RenderElement
+--   -> Sem r (V.Vector (SegmentGroup ModName HName))
+-- specSeeds _ elements = do
+--   (lookupElement, lookupProvider, relation) <- buildRelation elements
+--   let featureSeeds = V.singleton (SegmentGroup (ModName "FixMe") mempty)
+--       extSeeds     = V.singleton (SegmentGroup (ModName "FixMe") mempty)
+--       bespokeSeeds = V.singleton (SegmentGroup (ModName "FixMe") mempty)
+--   pure $ featureSeeds <> extSeeds <> bespokeSeeds
+
+
+data ModulePlacement
+  = CoreMod Version Text
+  | ExtensionMod Text
+  | BespokeMod Text
+  deriving(Show)
+
+specSeeds
+  :: HasErr r => Spec -> Sem r (V.Vector (SegmentGroup ModulePlacement HName))
 specSeeds Spec {..} = do
   let
-
     featureSeeds =
       (\Feature {..} ->
-          SegmentGroup (ModName (featureModulePrefix fVersion <> ".Extra"))
+          SegmentGroup (CoreMod fVersion "Extra")
             . fmap
                 (\re ->
-                  SegmentSeed (featureCommentToModuleName fVersion (rComment re))
+                  SegmentSeed (featureCommentToModulePlacement fVersion (rComment re))
                     .  seedFilter
                     $  rCommandNames re
                     <> rTypeNames re
@@ -41,9 +62,9 @@ specSeeds Spec {..} = do
 
     extSeeds =
       (\(groupName, es) ->
-          SegmentGroup (ModName (extensionModulePrefix <> "." <> groupName))
+          SegmentGroup (ExtensionMod groupName)
             $   (\Extension {..} ->
-                  SegmentSeed (extensionNameToModuleName exName)
+                  SegmentSeed (ExtensionMod exName)
                     . V.concatMap
                         (\re ->
                           rCommandNames re <> rTypeNames re <> rEnumValueNames re
@@ -55,13 +76,13 @@ specSeeds Spec {..} = do
         <$> groupExtensions specExtensions
   pure $ featureSeeds <> extSeeds <> bespokeSeeds
 
-bespokeSeeds :: V.Vector (SegmentGroup ModName HName)
+bespokeSeeds :: V.Vector (SegmentGroup ModulePlacement HName)
 bespokeSeeds = V.fromList
   [ SegmentGroup
-      (ModName "Graphics.Vulkan.Dynamic")
+      (BespokeMod "Dynamic")
       (V.fromList
         [ SegmentSeed
-            (ModName "Graphics.Vulkan.Dynamic")
+            (BespokeMod "Dynamic")
             (V.fromList [TyConName "DeviceCmds", TyConName "InstanceCmds"])
         ]
       )
@@ -98,16 +119,11 @@ extensionGroup Extension {..} = case exName of
 -- Module name making
 ----------------------------------------------------------------
 
-featureModulePrefix :: Version -> Text
-featureModulePrefix v =
-  "Graphics.Vulkan.Core" <> foldMap show (versionBranch v)
-
-featureCommentToModuleName :: Version -> Maybe Text -> ModName
-featureCommentToModuleName v = \case
-  Nothing -> ModName $ featureModulePrefix v
+featureCommentToModulePlacement :: Version -> Maybe Text -> ModulePlacement
+featureCommentToModulePlacement v = \case
+  Nothing -> CoreMod v "Unnamed"
   Just t ->
-    ModName
-      . ((featureModulePrefix v <> ".") <>)
+    CoreMod v
       . mconcat
       . fmap (upperCaseFirst . replaceSymbols)
       . dropLast "commands"
@@ -127,9 +143,6 @@ featureCommentMap = \case
 
 extensionModulePrefix :: Text
 extensionModulePrefix = "Graphics.Vulkan.Extensions"
-
-extensionNameToModuleName :: Text -> ModName
-extensionNameToModuleName = ModName . ((extensionModulePrefix <> ".") <>)
 
 removeParens :: Text -> Text
 removeParens t =

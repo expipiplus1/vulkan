@@ -7,6 +7,7 @@ import           Relude                  hiding ( runState
                                                 , Reader
                                                 , asks
                                                 , ask
+                                                , gets
                                                 , runReader
                                                 , Handle
                                                 , Type
@@ -37,15 +38,17 @@ import           Render.Type.Preserve
 import {-# SOURCE #-} Render.Stmts
 
 data RenderElement = RenderElement
-  { reName     :: Text
-  , reDoc      :: Doc ()
-  , reExports  :: Vector Export
-  , reInternal :: Vector Export
+  { reName              :: Text
+  , reDoc               :: Doc ()
+  , reExports           :: Vector Export
+  , reInternal          :: Vector Export
     -- ^ Things which can only be "imported" from the same module, i.e.
     -- declared names which arent exported
-  , reImports      :: Set (Import Name)
-  , reLocalImports :: Set (Import HName)
-  , reReexports    :: Set ModName
+  , reImports           :: Set (Import Name)
+  , reLocalImports      :: Set (Import HName)
+  , reReexportedModules :: Set ModName
+  , reReexportedNames   :: Vector (Export)
+  , reExplicitModule    :: Maybe ModName
   }
 
 data Export = Export
@@ -75,13 +78,15 @@ newtype ModName = ModName { unModName :: Text }
 
 instance Semigroup RenderElement where
   r1 <> r2 = RenderElement
-    { reName         = reName r1 <> " and " <> reName r2
-    , reDoc          = reDoc r1 <> line <> reDoc r2
-    , reExports      = reExports r1 <> reExports r2
-    , reInternal     = reInternal r1 <> reInternal r2
-    , reImports      = reImports r1 <> reImports r2
-    , reLocalImports = reLocalImports r1 <> reLocalImports r2
-    , reReexports    = reReexports r1 <> reReexports r2
+    { reName              = reName r1 <> " and " <> reName r2
+    , reDoc               = reDoc r1 <> line <> reDoc r2
+    , reExports           = reExports r1 <> reExports r2
+    , reInternal          = reInternal r1 <> reInternal r2
+    , reImports           = reImports r1 <> reImports r2
+    , reLocalImports      = reLocalImports r1 <> reLocalImports r2
+    , reReexportedModules = reReexportedModules r1 <> reReexportedModules r2
+    , reReexportedNames   = reReexportedNames r1 <> reReexportedNames r2
+    , reExplicitModule    = reExplicitModule r1 <|> reExplicitModule r2
     }
 
 pattern ETerm :: Text -> Export
@@ -232,16 +237,25 @@ type HasRenderElem r = MemberWithError (State RenderElement) r
 genRe :: Text -> Sem (State RenderElement : r) () -> Sem r RenderElement
 genRe n m = do
   (o, _) <- runState
-    RenderElement { reName         = n
-                  , reDoc          = mempty
-                  , reExports      = mempty
-                  , reInternal     = mempty
-                  , reImports      = mempty
-                  , reLocalImports = mempty
-                  , reReexports    = mempty
+    RenderElement { reName              = n
+                  , reDoc               = mempty
+                  , reExports           = mempty
+                  , reInternal          = mempty
+                  , reImports           = mempty
+                  , reLocalImports      = mempty
+                  , reReexportedModules = mempty
+                  , reReexportedNames   = mempty
+                  , reExplicitModule    = Nothing
                   }
     m
   pure o
+
+tellExplicitModule :: (HasRenderElem r, HasErr r) => ModName -> Sem r ()
+tellExplicitModule mod = do
+  gets reExplicitModule >>= \case
+    Nothing -> modify' (\r -> r { reExplicitModule = Just mod })
+    Just m | m == mod -> pure ()
+    _ -> throw "Render element has been given two explicit modules"
 
 tellExport :: MemberWithError (State RenderElement) r => Export -> Sem r ()
 tellExport e = modify' (\r -> r { reExports = reExports r <> V.singleton e })
@@ -323,8 +337,10 @@ tellImportWith
 tellImportWith parent dat =
   addImport (Import parent False (V.singleton dat) False)
 
-tellReexport :: MemberWithError (State RenderElement) r => ModName -> Sem r ()
-tellReexport e = modify' (\r -> r { reReexports = insert e (reReexports r) })
+tellReexportMod
+  :: MemberWithError (State RenderElement) r => ModName -> Sem r ()
+tellReexportMod e =
+  modify' (\r -> r { reReexportedModules = insert e (reReexportedModules r) })
 
 ----------------------------------------------------------------
 -- Utils

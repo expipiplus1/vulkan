@@ -342,7 +342,7 @@ maybePeek'
 maybePeek' name lengths addrRef fromPtr to = case fromPtr of
   Ptr _ from@(Ptr _ fromElem) -> do
     let maybePtrDoc   = name
-        notNullPtrDoc = "p"
+        notNullPtrDoc = "j"
     ptrTy <- cToHsType DoPreserve from
 
     -- Load the pointer which might be null

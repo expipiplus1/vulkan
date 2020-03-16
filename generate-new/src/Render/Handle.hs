@@ -53,8 +53,8 @@ renderHandle Handle {..} = context hName $ do
           Device        -> pure ("deviceCmds", ConT (typeName "DeviceCmds"))
         tDoc     <- renderType t
         cmdsTDoc <- renderType cmdsMemberTy
-        tellExport (EType p)
         tellExport (EData n)
+        tellExport (EType p)
         tellInternal (EType p)
         tellDoc $ vsep
           [ "data" <+> pretty p

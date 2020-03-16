@@ -1,3 +1,4 @@
+{-# language DeriveFunctor, DeriveFoldable, DeriveTraversable #-}
 module Render.Spec
   where
 
@@ -32,6 +33,18 @@ import           Bracket
 
 import           CType
 
+data RenderedSpec a = RenderedSpec
+  { rsHandles          :: Vector a
+  , rsStructsAndUnions :: Vector a
+  , rsCommands         :: Vector a
+  , rsEnums            :: Vector a
+  , rsAliases          :: Vector a
+  , rsFuncPointers     :: Vector a
+  , rsConstants        :: Vector a
+  , rsOthers           :: Vector a
+  }
+  deriving (Functor, Foldable, Traversable)
+
 renderSpec
   :: (HasErr r, HasTypeInfo r, HasRenderParams r, HasStmts r)
   => Spec
@@ -39,7 +52,7 @@ renderSpec
   -> Vector (MarshaledStruct AStruct)
   -> Vector (MarshaledStruct AUnion)
   -> Vector MarshaledCommand
-  -> Sem r (Vector RenderElement)
+  -> Sem r (RenderedSpec RenderElement)
 renderSpec s@Spec {..} getSize ss us cs = withSpecInfo s getSize $ do
   RenderParams {..} <- ask
 
@@ -75,23 +88,24 @@ renderSpec s@Spec {..} getSize ss us cs = withSpecInfo s getSize $ do
   bs <- brackets specHandles
   let bracketMap     = Map.fromList [ (n, b) | (n, _, b) <- toList bs ]
       renderCommand' = commandWithBrackets (`Map.lookup` bracketMap)
-  liftA2 (<>) bespokeElements $ sequenceV
-    (  fmap renderHandle      specHandles
-    <> fmap renderStruct      ss
-    <> fmap renderUnion       us
-    <> fmap renderCommand'    cs
-    <> fmap renderEnum        specEnums
-    <> fmap renderAlias       specAliases
-    <> fmap renderFuncPointer specFuncPointers
-    <> fmap
-         renderConstant
-         (V.filter ((`notElem` forbiddenConstants) . constName) specConstants)
-    <> V.singleton (renderDynamicLoader cs)
-    <> cStructDocs
-    <> V.singleton marshalUtils
-    <> V.singleton zeroClass
-    <> V.singleton (vkExceptionRenderElement vkResult)
-    )
+  sequenceV RenderedSpec
+    { rsHandles          = renderHandle <$> specHandles
+    , rsStructsAndUnions = fmap renderStruct ss <> fmap renderUnion us
+    , rsCommands         = renderCommand' <$> cs
+    , rsEnums            = renderEnum <$> specEnums
+    , rsAliases          = renderAlias <$> specAliases
+    , rsFuncPointers     = renderFuncPointer <$> specFuncPointers
+    , rsConstants        = renderConstant
+                             <$> V.filter
+                                   ((`notElem` forbiddenConstants) . constName)
+                                   specConstants
+    , rsOthers           = bespokeElements
+                           <> V.singleton (renderDynamicLoader cs)
+                           <> cStructDocs
+                           <> V.singleton marshalUtils
+                           <> V.singleton zeroClass
+                           <> V.singleton (vkExceptionRenderElement vkResult)
+    }
 
 commandWithBrackets
   :: (HasErr r, HasRenderParams r, HasSpecInfo r, HasStmts r)

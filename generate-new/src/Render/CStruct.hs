@@ -32,6 +32,7 @@ toCStruct
 toCStruct = do
   RenderParams {..} <- ask
   genRe "ToCStruct" $ do
+    tellExplicitModule (ModName "Graphics.Vulkan.CStruct")
     tellExport (EClass "ToCStruct")
     tellImport ''Ptr
     tellImport ''Storable
@@ -65,6 +66,7 @@ fromCStruct
 fromCStruct = do
   RenderParams {..} <- ask
   genRe "ToCStruct" $ do
+    tellExplicitModule (ModName "Graphics.Vulkan.CStruct")
     tellExport (EClass "FromCStruct")
     tellImport ''Ptr
     tellDoc [qi|

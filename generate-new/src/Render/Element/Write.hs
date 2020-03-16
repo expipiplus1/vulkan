@@ -25,6 +25,7 @@ import           Polysemy
 import           Polysemy.Reader
 import           Data.List                      ( lookup )
 import           Foreign.Ptr
+import           Data.Version
 import           Language.Haskell.TH            ( Name
                                                 , nameBase
                                                 , nameModule
@@ -39,7 +40,7 @@ import           Error
 import           Write.Segment
 import           Spec.Types
 import           Haskell.Name
-
+import           Bespoke.Seeds
 
 ----------------------------------------------------------------
 -- Segmenting
@@ -60,6 +61,39 @@ segmentRenderElements debugI =
         debugI
         (fmap exportName . V.toList . elementExports)
         (fmap importName . toList . reLocalImports)
+
+separateTypes
+  :: Vector (SegmentedGroup ModulePlacement RenderElement)
+  -> [Segment ModName RenderElement]
+separateTypes segmented =
+  [ ss'
+  | SegmentedGroup segments extras <- toList segmented
+  , ss                             <- extras : toList segments
+  , ss'                            <- makeModName ss
+  ]
+
+makeModName
+  :: Segment ModulePlacement RenderElement -> [Segment ModName RenderElement]
+makeModName (Segment placement es) = case placement of
+  BespokeMod mod        -> [Segment (ModName ("Graphics.Vulkan." <> mod)) es]
+  CoreMod ver component ->
+    let prefix = "Graphics.Vulkan.Core" <> (foldMap show (versionBranch ver)) <> "."
+    in splitTypes prefix component es
+  ExtensionMod component ->
+    let prefix = "Graphics.Vulkan.Extensions."
+    in splitTypes prefix component es
+
+splitTypes
+  :: Text -> Text -> Vector RenderElement -> [Segment ModName RenderElement]
+splitTypes prefix component es = toList es <&> \re ->
+  case mapMaybe getTyConName (exportName <$> toList (reExports re)) of
+    []    -> Segment (ModName (prefix <> component)) (V.singleton re)
+    x : _ -> Segment (ModName (prefix <> "Types." <> x)) (V.singleton re)
+
+getTyConName :: HName -> Maybe Text
+getTyConName = \case
+  TyConName n -> Just n
+  _ -> Nothing
 
 ----------------------------------------------------------------
 -- Rendering
@@ -106,7 +140,7 @@ renderModule out findModule findLocalModule (Segment (ModName modName) es) = do
       ( fmap (\(ModName n) -> "import" <+> pretty n)
       . Set.toList
       . Set.unions
-      $ (reReexports <$> V.toList es)
+      $ (reReexportedModules <$> V.toList es)
       )
     declaredNames = V.concatMap
       (\RenderElement {..} -> allExports (reExports <> reInternal))
@@ -134,7 +168,7 @@ renderModule out findModule findLocalModule (Segment (ModName modName) es) = do
     (importFilter parentedImports)
   let
     allReexports =
-      V.fromList . Set.toList . Set.unions . fmap reReexports . toList $ es
+      V.fromList . Set.toList . Set.unions . fmap reReexportedModules . toList $ es
     contents =
       vsep
         $ "{-# language CPP #-}"

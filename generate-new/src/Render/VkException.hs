@@ -26,9 +26,11 @@ vkExceptionRenderElement -- getDocumentation
                          vkResultEnum = do
   let getDocumentation = const Nothing
   genRe "VulkanException declaration" $ do
+    tellExplicitModule (ModName "Graphics.Vulkan.Exception")
     RenderParams {..} <- ask
     tellImportWithAll ''Control.Exception.Exception
     vkResultTyDoc <- renderType =<< cToHsType DoNotPreserve successCodeType
+    tellImportWithAll (TyConName (mkTyName (eName vkResultEnum)))
     tellExport (EData exceptionTypeName)
     let resultPatterns = evName <$> eValues vkResultEnum
     tellDoc [qci|

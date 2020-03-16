@@ -41,8 +41,6 @@ forbiddenConstants = ["VK_TRUE", "VK_FALSE"]
 
 data BespokeScheme where
   BespokeScheme :: (forall a. Marshalable a => Text -> a -> Maybe (MarshalScheme a)) -> BespokeScheme
-  -- Parent name -> Type -> Scheme
-
 
 bespokeSchemes :: [BespokeScheme]
 bespokeSchemes =
@@ -79,10 +77,9 @@ bespokeSizes =
 
 
 bespokeElements
-  :: (HasErr r, Member (Reader RenderParams) r) => Sem r (Vector RenderElement)
+  :: (HasErr r, Member (Reader RenderParams) r) => Vector (Sem r RenderElement)
 bespokeElements =
-  fmap fromList
-    .  sequenceV
+  fromList
     $  [ namedType
        , baseType "VkSampleMask"    ''Word32
        , baseType "VkFlags"         ''Word32
@@ -90,20 +87,28 @@ bespokeElements =
        , baseType "VkDeviceAddress" ''Word64
        ]
     <> [nullHandle]
-    <> (snd <$> concat [win32, x11, xcb2, zircon, ggp])
-    <> concat [win32', xcb1, wayland, metal, android]
+    <> wsiTypes
 
-namedType :: Sem r RenderElement
+wsiTypes :: (HasErr r, Member (Reader RenderParams) r) => [Sem r RenderElement]
+wsiTypes =
+  putInWSI <$> (snd <$> concat [win32, x11, xcb2, zircon, ggp]) <> concat
+    [win32', xcb1, wayland, metal, android]
+ where
+  putInWSI = fmap $ \re -> re
+    { reExplicitModule = reExplicitModule re
+      <|> Just (ModName "Graphics.Vulkan.Extensions.WSITypes")
+    }
+
+
+namedType :: HasErr r => Sem r RenderElement
 namedType = genRe "namedType" $ do
+  tellExplicitModule (ModName "Graphics.Vulkan.NamedType")
   tellExport (EType ":::")
   tellDoc "-- | Annotate a type with a name\ntype (name :: k) ::: a = a"
 
-baseType
-  :: MemberWithError (Reader RenderParams) r
-  => Text
-  -> Name
-  -> Sem r RenderElement
+baseType :: (HasRenderParams r, HasErr r) => Text -> Name -> Sem r RenderElement
 baseType n t = genRe ("base type " <> n) $ do
+  tellExplicitModule (ModName "Graphics.Vulkan.BaseType")
   tellExport (EType n)
   tDoc <- renderType (ConT t)
   tellDoc ("type" <+> pretty n <+> "=" <+> tDoc)
@@ -216,15 +221,3 @@ alias t n =
     tellExport (EType n')
     tellDoc $ "type" <+> pretty n' <+> "=" <+> tDoc
   )
-
--- selfPtr :: Member (Reader RenderParams) r => Text -> Sem r RenderElement
--- selfPtr n = genRe ("data " <> n) $ do
---   RenderParams {..} <- ask
---   let n' = mkTyName n
---       c  = mkConName n n
---       t  = ConT ''Ptr :@ ConT (typeName n')
---   tDoc <- renderType t
---   tellExport (EData n')
---   tellDoc
---     $   "newtype" <+> pretty n' <+> "="
---     <+> pretty c <+> "{" <+> "un" <>  pretty c <+> "::" <+> tDoc <+> "}"

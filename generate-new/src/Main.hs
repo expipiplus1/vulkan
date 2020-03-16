@@ -47,6 +47,7 @@ import           Render.Spec
 import           Spec.Parse
 import           Render.Type.Preserve
 import           Haskell
+import           AssignModules
 
 main :: IO ()
 main =
@@ -123,17 +124,19 @@ main =
         -- features and extensions. Similarly for specs
       pure (ss, us, cs)
 
-    withTypeInfo spec $ do
+    runReader (renderParams specHandles) . withTypeInfo spec $ do
 
       renderElements <-
         timeItNamed "Rendering"
-        .   runReader (renderParams specHandles)
         $   traverse evaluateWHNF
         =<< renderSpec spec getSize ss us cs
 
       groups <- timeItNamed "Segmenting" $ do
-        seeds <- specSeeds spec
-        segmentRenderElements show renderElements seeds
+        assignModules spec renderElements
+
+        -- seeds <- specSeeds spec
+        -- segmented <- segmentRenderElements show renderElements seeds
+        -- pure $ separateTypes segmented
 
       timeItNamed "writing"
         $ withTypeInfo spec (renderSegments "out" (mergeElements groups))

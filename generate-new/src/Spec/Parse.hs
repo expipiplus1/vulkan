@@ -159,13 +159,12 @@ sizeAll typeSizes constantMap unions structs = do
         Right s -> for (sizeStruct g s) $ \s' -> do
           modify' (Map.insert (sName s') (sSize s', sAlignment s'))
           pure (Right s')
-  (m, r) <- runState initial $ trySeveralTimes 2 both try
+  (m, r) <- runState initial $ tryTwice both try
 
   let (failed, succeeded) = partitionEithers . V.toList $ r
   forV_ failed
     $ \s -> throw ("Unable to calculate size for " <> either sName sName s)
-  let (us, ss) =
-        bimap V.fromList V.fromList $ partitionEithers succeeded
+  let (us, ss) = bimap V.fromList V.fromList $ partitionEithers succeeded
   pure (us, ss, getSize m)
 
 sizeStruct
@@ -226,11 +225,7 @@ parseFeatures es = V.fromList
 
 parseExtensions :: [Content] -> P (Vector Extension)
 parseExtensions es = V.fromList <$> sequenceV
-  [ parseExtension e
-  | Element e <- es
-  , "extension" == name e
-  , Just "disabled" /= getAttr "supported" e
-  ]
+  [ parseExtension e | Element e <- es, "extension" == name e, notDisabled e ]
  where
   parseExtension :: Node -> P Extension
   parseExtension n = do
@@ -283,6 +278,7 @@ parseConstants es = do
     , "extensions" == name e
     , Element ex <- contents e
     , "extension" == name ex
+    , notDisabled ex
     , Element r <- contents ex
     , "require" == name r
     , (n, v) <- someConstants r
@@ -706,6 +702,10 @@ isAlias n = any ((== "alias") . fst) (attributes n)
 extraTypeNames :: [ByteString]
 extraTypeNames = ["ANativeWindow", "AHardwareBuffer", "CAMetalLayer"]
 
+notDisabled :: Node -> Bool
+notDisabled e =
+  Just "disabled" /= getAttr "supported" e
+
 ----------------------------------------------------------------
 -- XML
 ----------------------------------------------------------------
@@ -815,14 +815,13 @@ runReadP p s = case filter (null . snd) (readP_to_S p (BS.unpack s)) of
 --
 ----------------------------------------------------------------
 
-trySeveralTimes
+tryTwice
   :: forall f a m b
    . (Traversable f, Monad m)
-  => Int
-  -> f a
+  => f a
   -> (a -> m (Maybe b))
   -> m (f (Either a b))
-trySeveralTimes _n xs f =
+tryTwice xs f =
   let xs' = Left <$> xs
       go :: f (Either a b) -> m (f (Either a b))
       go = traverse

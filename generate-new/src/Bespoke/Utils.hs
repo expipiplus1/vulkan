@@ -50,11 +50,14 @@ zeroClass = genRe "zero class" $ do
     , ''Word64
     , ''KnownNat
     , ''Storable
+    , ''FunPtr
+    , ''Ptr
     ]
 
   traverseV_ tellQualImport [''VSS.Vector, 'VSS.replicate]
 
   tellExport (EClass "Zero")
+  tellExplicitModule (ModName "Graphics.Vulkan.CStruct")
 
   tellDoc [qi|
     -- | A class for initializing things with all zero data

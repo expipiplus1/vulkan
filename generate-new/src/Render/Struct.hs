@@ -398,9 +398,11 @@ zeroInstanceDecl MarshaledStruct {..} = do
   let n   = mkTyName msName
       con = mkConName msName msName
   zeroMembers <- catMaybes . toList <$> forV msMembers (zeroScheme . msmScheme)
+  tellImportWithAll (TyConName "Zero")
   tellDoc $ "instance Zero" <+> pretty n <+> "where" <> line <> indent
     2
-    (vsep ["zero =" <+> pretty con <> line <> indent 2 (vsep zeroMembers)])
+    -- (vsep ["zero =" <+> pretty con <> line <> indent 2 (vsep zeroMembers)])
+    (vsep ["zero = undefined"])
 
 zeroScheme
   :: MarshalScheme a
