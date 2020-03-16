@@ -10,18 +10,19 @@ import qualified Marshal.Marshalable           as M
 import           Haskell.Name
 
 data Spec = Spec
-  { specHandles      :: Vector Handle
-  , specFuncPointers :: Vector FuncPointer
-  , specStructs      :: Vector Struct
-  , specUnions       :: Vector Union
-  , specCommands     :: Vector Command
-  , specEnums        :: Vector Enum'
-  , specAliases      :: Vector Alias
-  , specFeatures     :: Vector Feature
-  , specExtensions   :: Vector Extension
-  , specConstants    :: Vector Constant
+  { specHandles            :: Vector Handle
+  , specFuncPointers       :: Vector FuncPointer
+  , specStructs            :: Vector Struct
+  , specUnions             :: Vector Union
+  , specCommands           :: Vector Command
+  , specEnums              :: Vector Enum'
+  , specAliases            :: Vector Alias
+  , specFeatures           :: Vector Feature
+  , specExtensions         :: Vector Extension
+  , specAPIConstants       :: Vector Constant
+  , specExtensionConstants :: Vector Constant
   }
-  deriving (Show)
+  deriving Show
 
 --
 -- Features and Extensions

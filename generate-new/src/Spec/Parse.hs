@@ -92,9 +92,10 @@ parseSpec bs = do
                 <> enumAliases
                 <> commandAliases
                 <> constantAliases
-        specFeatures   <- parseFeatures (contents n)
+        specFeatures           <- parseFeatures (contents n)
         specExtensions <- parseExtensions . contents =<< oneChild "extensions" n
-        specConstants  <- parseConstants (contents n)
+        specAPIConstants       <- parseAPIConstants (contents n)
+        specExtensionConstants <- parseExtensionConstants (contents n)
         let
           sizeMap :: Map.Map Text (Int, Int)
           sizeMap =
@@ -109,7 +110,8 @@ parseSpec bs = do
           constantMap :: Map.Map Text Int
           constantMap = Map.fromList
             [ (n, fromIntegral v)
-            | Constant n (IntegralValue v) <- V.toList specConstants
+            | Constant n (IntegralValue v) <- V.toList
+              (specAPIConstants <> specExtensionConstants)
             ]
           constantValue v = Map.lookup v constantMap
         (specUnions, specStructs, getSize) <- sizeAll sizeMap
@@ -259,9 +261,9 @@ parseRequires n = V.fromList <$> traverseV
 -- Constants
 ----------------------------------------------------------------
 
-parseConstants :: [Content] -> P (Vector Constant)
-parseConstants es = do
-  apiConstants <- V.fromList <$> sequenceV
+parseAPIConstants :: [Content] -> P (Vector Constant)
+parseAPIConstants es = do
+  V.fromList <$> sequenceV
     [ do
         n' <- decode n
         context n' $ (Constant n' <$> parseConstant v)
@@ -270,7 +272,10 @@ parseConstants es = do
     , Just "API Constants" <- pure $ getAttr "name" e
     , (n, v)               <- someConstants e
     ]
-  extensionConstants <- V.fromList <$> sequenceV
+
+parseExtensionConstants :: [Content] -> P (Vector Constant)
+parseExtensionConstants es = do
+  V.fromList <$> sequenceV
     [ do
         n' <- decode n
         context n' $ (Constant n' <$> parseConstant v)
@@ -283,16 +288,16 @@ parseConstants es = do
     , "require" == name r
     , (n, v) <- someConstants r
     ]
-  pure (apiConstants <> extensionConstants)
- where
-  someConstants r =
-    [ (n, v)
-    | Element ee <- contents r
-    , "enum" == name ee
-    , isNothing (getAttr "extends" ee)
-    , Just n <- pure (getAttr "name" ee)
-    , Just v <- pure (getAttr "value" ee)
-    ]
+
+someConstants :: Node -> [(ByteString, ByteString)]
+someConstants r =
+  [ (n, v)
+  | Element ee <- contents r
+  , "enum" == name ee
+  , isNothing (getAttr "extends" ee)
+  , Just n <- pure (getAttr "name" ee)
+  , Just v <- pure (getAttr "value" ee)
+  ]
 
 ---------------------------------------------------------------
 -- Aliases

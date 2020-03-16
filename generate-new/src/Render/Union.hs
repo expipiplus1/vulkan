@@ -7,7 +7,6 @@ import           Relude                  hiding ( Reader
                                                 , State
                                                 , Type
                                                 )
-import qualified Data.Vector                   as V
 import           Data.Text.Prettyprint.Doc
 import           Polysemy
 import           Polysemy.Reader

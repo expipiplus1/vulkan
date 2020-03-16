@@ -72,12 +72,8 @@ assignModules spec@Spec {..} rs@RenderedSpec {..} = do
       allNames     = Map.keys exporterMap
       initialState = mempty :: S
 
-  exports <- execState initialState $ assign (raise . lookupRe)
-                                             (raise . getExporter)
-                                             rel
-                                             (transitiveClosure rel)
-                                             spec
-                                             indexed
+  exports <- execState initialState
+    $ assign (raise . getExporter) rel (transitiveClosure rel) spec indexed
 
   --
   -- Check that everything is exported
@@ -118,14 +114,13 @@ type S = IntMap ExportLocation
 assign
   :: forall r
    . (HasErr r, Member (State S) r, HasRenderParams r)
-  => (Int -> Sem r RenderElement)
-  -> (HName -> Sem r Int)
+  => (HName -> Sem r Int)
   -> AdjacencyIntMap
   -> AdjacencyIntMap
   -> Spec
   -> RenderedSpec (Int, RenderElement)
   -> Sem r ()
-assign lookupRe getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
+assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
   RenderParams {..} <- ask
 
   let allEnums        = IntMap.fromList (toList rsEnums)
@@ -138,10 +133,10 @@ assign lookupRe getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
   forV_ rs $ \(i, re) -> forV_ (reExplicitModule re) $ \m -> export m i
 
   ----------------------------------------------------------------
-  -- Constants
+  -- API Constants
   ----------------------------------------------------------------
-  let constantModule = ModName $ modPrefix <> ".Constants"
-  forV_ rsConstants $ \(i, _) -> export constantModule i
+  let constantModule = ModName $ modPrefix <> ".Core10.APIConstants"
+  forV_ rsAPIConstants $ \(i, _) -> export constantModule i
 
   let
     exportReachable namedSubmodule prefix world reachable = do
