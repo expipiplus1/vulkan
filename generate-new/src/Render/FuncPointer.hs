@@ -25,17 +25,23 @@ renderFuncPointer
   -> Sem r RenderElement
 renderFuncPointer FuncPointer {..} = contextShow fpName $ do
   RenderParams {..} <- ask
-  genRe ("func pointer " <> fpName) $ do
+  fmap identicalBoot . genRe ("func pointer " <> fpName) $ do
     let p = mkTyName fpName
         n = mkFuncPointerName fpName
-    tDoc    <- renderType =<< cToHsType DoPreserve =<< stripPtr fpType
-    tPtrDoc <- renderType (ConT ''FunPtr :@ ConT (typeName n))
+    tDoc    <- renderTypeSource =<< cToHsType DoPreserve =<< stripPtr fpType
+    tPtrDoc <- renderTypeSource (ConT ''FunPtr :@ ConT (typeName n))
     tellExport (EType p)
     tellExport (EType n)
     tellDoc
-      $   "type" <+> pretty n <+> "=" <+> tDoc
+      $   "type"
+      <+> pretty n
+      <+> "="
+      <+> tDoc
       <>  line
-      <>  "type" <+> pretty p <+> "=" <+> tPtrDoc
+      <>  "type"
+      <+> pretty p
+      <+> "="
+      <+> tPtrDoc
 
 stripPtr :: HasErr r => CType -> Sem r CType
 stripPtr = \case

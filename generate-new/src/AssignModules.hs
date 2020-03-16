@@ -16,7 +16,7 @@ import           Relude                  hiding ( runState
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector.Extra             as V
 import           Data.Version
-import qualified Data.List                     as List
+import qualified Data.List.Extra               as List
 import qualified Data.Map                      as Map
 import qualified Data.IntMap.Strict            as IntMap
 import qualified Data.IntSet                   as Set
@@ -85,7 +85,7 @@ assignModules spec@Spec {..} rs@RenderedSpec {..} = do
   forV indexed $ \(i, re) -> case IntMap.lookup i exports of
     Nothing -> do
       let exportedNames = exportName <$> toList (reExports re)
-      forV_ (exportedNames List.\\ unexportedNames)
+      forV_ (List.nubOrd exportedNames List.\\ unexportedNames)
         $ \n -> throw $ show n <> " is not exported from any module"
     Just _ -> pure ()
 

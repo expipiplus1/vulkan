@@ -33,6 +33,9 @@ renderEnum Enum {..} = do
     (patterns, patternExports) <-
       V.unzip <$> traverseV (renderEnumValue conName eType) eValues
     tellExport (Export (TyConName n) True patternExports)
+    tellBoot $ do
+      tellExport (EType n)
+      tellDoc $ "data" <+> pretty n
     tDoc <- renderType innerTy
     let complete = case eType of
           AnEnum   -> completePragma n (mkPatternName . evName <$> eValues)

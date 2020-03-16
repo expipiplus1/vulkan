@@ -50,7 +50,7 @@ renderStruct s@MarshaledStruct {..} = context msName $ do
   genRe ("struct " <> msName) $ do
     let n = mkTyName msName
     ms <- V.mapMaybe id <$> traverseV renderStructMember msMembers
-    tellExport (EData n)
+    tellDataExport n
     tellDoc [qqi|
         data {n} = {mkConName msName msName}
           {braceList ms}

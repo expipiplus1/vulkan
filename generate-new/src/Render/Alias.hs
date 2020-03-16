@@ -22,9 +22,15 @@ renderAlias Alias {..} = context aName $ do
     TypeAlias -> do
       let n = mkTyName aName
           t = mkTyName aTarget
-      tellExport (EType n)
       tellImport (TyConName t)
-      tellDoc $ "type" <+> pretty n <+> "=" <+> pretty t
+      let syn :: forall r . HasRenderElem r => Sem r ()
+          syn = do
+            tellDoc $ "type" <+> pretty n <+> "=" <+> pretty t
+            tellExport (EType n)
+      syn
+      tellBoot $ do
+        syn
+        tellSourceImport (TyConName t)
     TermAlias -> do
       let n = mkFunName aName
           t = mkFunName aTarget

@@ -40,7 +40,7 @@ renderUnion marshaled@MarshaledStruct {..} = context msName $ do
   genRe ("union " <> sName) $ do
     let n = mkTyName sName
     ms <- traverseV (renderUnionMember sName) msMembers
-    tellExport (EData n)
+    tellDataExport n
     tellDoc $ "data" <+> pretty n <> line <> indent
       2
       (vsep $ zipWith (<+>) ("=" : repeat "|") (toList ms) <> ["deriving (Show)"])

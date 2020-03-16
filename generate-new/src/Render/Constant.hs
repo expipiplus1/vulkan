@@ -25,7 +25,7 @@ renderConstant
   -> Sem r RenderElement
 renderConstant Constant {..} = contextShow constName $ do
   RenderParams {..} <- ask
-  genRe ("constant " <> constName) $ do
+  fmap identicalBoot . genRe ("constant " <> constName) $ do
     let
       n               = mkPatternName constName
       tn              = mkTyName constName
@@ -51,8 +51,12 @@ renderConstant Constant {..} = contextShow constName $ do
           (ConT ''Word64, pretty @String (printf "0x%x" i), True)
 
     when hasType $ do
+      -- let syn :: HasRenderElem r => Sem r ()
+      --     syn = do
       tellExport (EType tn)
       tellDoc $ "type" <+> pretty tn <+> "=" <+> v
+      -- syn
+      -- tellBoot syn
 
     tellExport (EPat n)
     tDoc <- renderType t

@@ -2,7 +2,9 @@ module Haskell
   ( Type(..)
   , Name
   , renderType
+  , renderTypeSource
   , renderTypeHighPrec
+  , renderTypeHighPrecSource
   , allTypeNames
   , pattern (:@)
   , typeName
@@ -42,20 +44,27 @@ typeName = mkName . T.unpack
 mkVar :: Text -> Type
 mkVar = VarT . mkName . T.unpack
 
-renderType
-  :: ( HasRenderElem r
-     , HasRenderParams r
-     )
-  => Type
+renderType, renderTypeSource :: (HasRenderElem r, HasRenderParams r) => Type -> Sem r (Doc ())
+renderType = renderType' tellImport
+renderTypeSource = renderType'
+  (\case
+    n | n `elem` neverBootTypes -> tellImport n
+    n                           -> tellSourceImport n
+  )
+
+renderType'
+  :: (HasRenderElem r, HasRenderParams r)
+  => (Name -> Sem r ())
+  -> Type
   -> Sem r (Doc ())
-renderType t = do
+renderType' importer t = do
   RenderParams {..} <- ask
   let removeModules = transformBi
         (\n ->
           if V.elem n alwaysQualifiedNames then n else mkName . nameBase $ n
         )
   traverse_
-    tellImport
+    importer
     [ n | n <- childrenBi t, not (isLower (Prelude.head (nameBase n))) ] -- TODO: do this properly
   pure
     . group -- All on one line, to work around brittany #277
@@ -67,7 +76,7 @@ renderType t = do
     $ t
 
 -- TODO, do this properly lol
-renderTypeHighPrec
+renderTypeHighPrec, renderTypeHighPrecSource
   :: ( HasRenderElem r
      , HasRenderParams r
      )
@@ -76,6 +85,13 @@ renderTypeHighPrec
 renderTypeHighPrec = \case
   t@(ConT _) -> renderType t
   t          -> parens <$> renderType t
+
+renderTypeHighPrecSource = \case
+  t@(ConT _) -> renderTypeSource t
+  t          -> parens <$> renderTypeSource t
+
+neverBootTypes :: [Name]
+neverBootTypes = [typeName ":::"]
 
 allTypeNames :: Type -> [Name]
 allTypeNames = childrenBi

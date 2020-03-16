@@ -123,6 +123,7 @@ zeroClass = genRe "zero class" $ do
 
 marshalUtils :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 marshalUtils = genRe "marshal utils" $ do
+  tellExplicitModule (ModName "Graphics.Vulkan.CStruct")
   traverseV_ tellImportWithAll [''Proxy, ''CChar]
   traverseV_
     tellImport

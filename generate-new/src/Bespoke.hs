@@ -2,6 +2,7 @@
 {-# language TemplateHaskellQuotes #-}
 module Bespoke
   ( forbiddenConstants
+  , assignBespokeModules
   , bespokeElements
   , bespokeSizes
   , bespokeSchemes
@@ -15,6 +16,7 @@ import           Relude                  hiding ( Reader
 import           Data.Text.Prettyprint.Doc
 import           Polysemy
 import           Polysemy.Reader
+import qualified Data.List.Extra               as List
 import           Data.Vector                    ( Vector )
 import           Foreign.Ptr
 import           Foreign.C.Types
@@ -34,6 +36,45 @@ import           CType
 -- | These constants are defined elsewhere
 forbiddenConstants :: [Text]
 forbiddenConstants = ["VK_TRUE", "VK_FALSE"]
+
+----------------------------------------------------------------
+-- Module assignments
+----------------------------------------------------------------
+
+assignBespokeModules
+  :: (HasErr r, Traversable t) => t RenderElement -> Sem r (t RenderElement)
+assignBespokeModules = traverse $ \case
+  r@RenderElement {..}
+    | exports <- fmap exportName . toList $ reExports
+    , bespokeMods <-
+      List.nubOrd . catMaybes . fmap (`List.lookup` bespokeModules) $ exports
+    -> case bespokeMods of
+      []  -> pure r
+      [x] -> case reExplicitModule of
+        Just m | m /= x -> throw "Render element already has an explicit module"
+        _               -> pure $ r { reExplicitModule = Just x }
+      xs -> throw "Multiple bespoke module names found for render element"
+  r -> pure r
+
+
+bespokeModules :: [(HName, ModName)]
+bespokeModules =
+  [ ( TyConName "VkAllocationCallbacks"
+    , ModName "Graphics.Vulkan.Core10.AllocationCallbacks"
+    )
+    ]
+    <> (   core10Base
+       <$> [ "VkExtent2D"
+           , "VkExtent3D"
+           , "VkOffset2D"
+           , "VkOffset3D"
+           , "VkImageSubresourceLayers"
+           , "VkClearValue"
+           , "VkClearColorValue"
+           , "VkClearDepthStencilValue"
+           ]
+       )
+  where core10Base n = (TyConName n, ModName "Graphics.Vulkan.Core10.BaseType")
 
 ----------------------------------------------------------------
 -- Schemes
@@ -107,7 +148,7 @@ namedType = genRe "namedType" $ do
   tellDoc "-- | Annotate a type with a name\ntype (name :: k) ::: a = a"
 
 baseType :: (HasRenderParams r, HasErr r) => Text -> Name -> Sem r RenderElement
-baseType n t = genRe ("base type " <> n) $ do
+baseType n t = fmap identicalBoot . genRe ("base type " <> n) $ do
   tellExplicitModule (ModName "Graphics.Vulkan.BaseType")
   tellExport (EType n)
   tDoc <- renderType (ConT t)
@@ -205,7 +246,7 @@ aTypeType = \case
   APtr n  -> ConT ''Ptr :@ ConT n
 
 voidData :: Member (Reader RenderParams) r => Text -> Sem r RenderElement
-voidData n = genRe ("data " <> n) $ do
+voidData n = fmap identicalBoot . genRe ("data " <> n) $ do
   RenderParams {..} <- ask
   let n' = mkTyName n
   tellExport (EType n')
@@ -214,7 +255,7 @@ voidData n = genRe ("data " <> n) $ do
 alias :: Member (Reader RenderParams) r => AType -> Text -> BespokeAlias r
 alias t n =
   ( (n, aTypeSize t)
-  , genRe ("alias " <> n) $ do
+  , fmap identicalBoot . genRe ("alias " <> n) $ do
     RenderParams {..} <- ask
     let n' = mkTyName n
     tDoc <- renderType (aTypeType t)

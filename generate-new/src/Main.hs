@@ -39,9 +39,9 @@ import           Render.Element.Write
 import           Render.Aggregate
 import           Render.Stmts                   ( useViaName )
 import           Render.Stmts.Poke              ( CmdsDoc(..) )
-import           Bespoke.Seeds
 import           Bespoke                        ( BespokeScheme(..)
                                                 , bespokeSchemes
+                                                , assignBespokeModules
                                                 )
 import           Render.Spec
 import           Spec.Parse
@@ -132,7 +132,7 @@ main =
         =<< renderSpec spec getSize ss us cs
 
       groups <- timeItNamed "Segmenting" $ do
-        assignModules spec renderElements
+        assignModules spec =<< assignBespokeModules renderElements
 
         -- seeds <- specSeeds spec
         -- segmented <- segmentRenderElements show renderElements seeds

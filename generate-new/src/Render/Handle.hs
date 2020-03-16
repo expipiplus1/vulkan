@@ -31,7 +31,7 @@ renderHandle Handle {..} = context hName $ do
         let t = ConT ''Word64
             c = mkConName hName hName
         tDoc <- renderTypeHighPrec t
-        tellExport (EData n)
+        tellDataExport n
         tellImport (TyConName "Zero")
         tellImport ''Storable
         tellDoc
@@ -53,8 +53,11 @@ renderHandle Handle {..} = context hName $ do
           Device        -> pure ("deviceCmds", ConT (typeName "DeviceCmds"))
         tDoc     <- renderType t
         cmdsTDoc <- renderType cmdsMemberTy
-        tellExport (EData n)
+        tellDataExport n
         tellExport (EType p)
+        tellBoot $ do
+          tellDoc $ "data" <+> pretty p
+          tellExport (EType p)
         tellInternal (EType p)
         tellDoc $ vsep
           [ "data" <+> pretty p
