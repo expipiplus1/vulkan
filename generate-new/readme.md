@@ -9,16 +9,7 @@ To prevent a name clash between the constructors of
 `VkClearColorValue` and `VkPerformanceCounterResultKHR` the latter have had
 `Counter` prefixed.
 
-## TODO Important
-
-stop everything being dumped in `Core10.Extra`.
-
 ## TODO
-
-Better module allocation by grouping segments and having a module for elements
-unique to that group.
-
-Make sure optional bitmasks aren't represented with Maybe (they are zeroable)
 
 non-optional arrays/structs can be allocated at the same time as their parent
 struct.
@@ -39,8 +30,6 @@ anyway.
 Groups of `lift`ed actions which don't return anything can be grouped under one lift:
 
 ## check
-"vkCmdSetBlendConstants": Unhandled direct poke from Tupled 4 (Normal Float) to Ptr Const Float
-"vkCmdClearColorImage": Unhandled TypeName "VkClearColorValue" conversion to: Ptr Const (TypeName "VkClearColorValue")
 "vkAllocateDescriptorSets": TODO: allocating vector with member specified lenghts
 "vkAllocateCommandBuffers": TODO: allocating vector with member specified lenghts
 vkAllocateDescriptorSets

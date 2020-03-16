@@ -133,7 +133,7 @@ allocateVector vec = do
   let name' = name vec
       toTy  = type' vec
   toElem <- unPtr toTy
-  lenRef <- getLenRef vec
+  lenRef <- getLenRef @a (lengths vec)
   allocArray name' toElem (Right lenRef)
 
 -- Currently the same implementation as allocateVector
@@ -150,57 +150,6 @@ allocateByteString
   => a
   -> Stmt s r (Ref s AddrDoc)
 allocateByteString = allocateVector
-
-getLenRef
-  :: forall a r s
-   . ( HasErr r
-     , HasRenderElem r
-     , HasRenderParams r
-     , HasSpecInfo r
-     , HasSiblingInfo a r
-     , Marshalable a
-     , Show a
-     )
-  => a
-  -> Stmt s r (Ref s ValueDoc)
-getLenRef a = do
-  RenderParams {..} <- ask
-  stmt Nothing Nothing $ case lengths a of
-    Empty -> throw "Trying to allocate something with no length"
-    NamedLength len :<| Empty -> do
-      ValueDoc value <- useViaName len
-      pure . Pure AlwaysInline . ValueDoc $ value
-    NamedMemberLength struct member :<| Empty -> do
-      ValueDoc structValue <- useViaName struct
-      case complexMemberLengthFunction struct member structValue of
-        Just complex -> Pure InlineOnce . ValueDoc <$> complex
-        Nothing      -> do
-          SiblingInfo {..} <- getSiblingInfo @a struct
-          structName       <-
-            let nonStruct =
-                  throw
-                    $  "Trying to get length member from a non-struct type "
-                    <> show siScheme
-            in  case siScheme of
-                  Normal (TypeName n) -> getStruct n >>= \case
-                    Nothing -> nonStruct
-                    Just _  -> pure n
-                  _ -> nonStruct
-          structTyDoc <-
-            renderType
-            =<< note
-                  "Unable to get type for struct with length specifying member for allocation"
-            =<< schemeType siScheme
-          tellImportWithAll (TyConName structName)
-          pure
-            .   Pure AlwaysInline
-            .   ValueDoc
-            $   "fromIntegral $"
-            <+> pretty (mkMemberName member)
-            <+> parens (structValue <+> "::" <+> structTyDoc)
-    NullTerminated :<| Empty -> throw "Trying to allocate a null terminated"
-    _ -> throw "Trying to allocate something with multiple lengths"
-
 
 unPtr :: HasErr r => CType -> Sem r CType
 unPtr = \case

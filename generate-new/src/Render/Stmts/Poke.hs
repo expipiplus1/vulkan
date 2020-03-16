@@ -269,7 +269,9 @@ elidedLength _ os    rs    = do
   stmt (Just (ConT ''Word32)) (Just (name1 <> "Count")) $ do
     traverse_ after assertions
     l1 <- use len1
-    pure . Pure AlwaysInline . ValueDoc $ "fromIntegral" <+> l1
+    tellImport ''Word32
+    pure . Pure AlwaysInline . ValueDoc $ parens
+      ("fromIntegral" <+> l1 <+> ":: Word32")
 
 lenRefFromSibling
   :: forall a r s

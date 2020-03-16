@@ -351,7 +351,7 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
     filledCount <- stmt Nothing Nothing $ do
       after ret1
       ValueDoc v <- use countPeek
-      pure . Pure AlwaysInline . ValueDoc $ "fromIntegral" <+> v
+      pure . Pure AlwaysInline . ValueDoc $ v
     nameRef (pName (mpParam countParam)) filledCount
 
     (getVectorsPokes, getVectorsPeeks) <- pokesForGettingResults
@@ -583,7 +583,7 @@ getCCall
 getCCall c = do
   RenderParams {..} <- ask
   let -- What to do in the case that this command isn't dispatched from a handle
-      noHandle = stmt Nothing (Just (cName c)) $ do
+      noHandle = stmt Nothing (Just (cName c <> "'")) $ do
         -- TODO: Change this function pointer to a "global variable" with ioref and
         -- unsafePerformIO
         tellImport (TermName "vkGetInstanceProcAddr'") -- TODO: Remove vulkan specific stuff here!
@@ -614,7 +614,7 @@ getCCall c = do
           pure . Pure InlineOnce . CmdsDoc $ getCmds <+> parens
             (pretty paramName <+> "::" <+> paramTDoc)
         nameRef "cmds" cmdsRef
-        stmt Nothing (Just (cName c)) $ do
+        stmt Nothing (Just (cName c <> "'")) $ do
           let dynName    = getDynName c
               memberName = mkFuncPointerMemberName (cName c)
           tellImportWith ptrRecTyName (TermName memberName)
