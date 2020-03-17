@@ -149,32 +149,36 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
           else pure (ModName prefix)
         export @r modName i
 
-    exportRequire prefix commentToName Require {..} = do
+    exportRequire separateTypeSubmodule prefix commentToName Require {..} = do
       let componentModule = commentToName rComment
 
       commands   <- traverseV getExporter rCommandNames
       types      <- traverseV getExporter rTypeNames
       enumValues <- traverseV getExporter rEnumValueNames
 
-      let directExporters = commands <> types <> enumValues
+      when separateTypeSubmodule $ do
+        let directExporters = commands <> types <> enumValues
 
-      let reachable =
-            Set.unions . toList $ (`postIntSet` closedRel) <$> directExporters
+        let reachable =
+              Set.unions . toList $ (`postIntSet` closedRel) <$> directExporters
 
-      ----------------------------------------------------------------
-      -- Reachable Enums
-      ----------------------------------------------------------------
-      exportReachable True (prefix <> ".Enums") allEnums reachable
+        ----------------------------------------------------------------
+        -- Reachable Enums
+        ----------------------------------------------------------------
+        exportReachable True  (prefix <> ".Enums")   allEnums   reachable
 
-      ----------------------------------------------------------------
-      -- Reachable Handles
-      ----------------------------------------------------------------
-      exportReachable False (prefix <> ".Handles") allHandles reachable
+        ----------------------------------------------------------------
+        -- Reachable Handles
+        ----------------------------------------------------------------
+        exportReachable False (prefix <> ".Handles") allHandles reachable
 
-      ----------------------------------------------------------------
-      -- Reachable FuncPointers
-      ----------------------------------------------------------------
-      exportReachable False (prefix <> ".FuncPointers") allFuncPointers reachable
+        ----------------------------------------------------------------
+        -- Reachable FuncPointers
+        ----------------------------------------------------------------
+        exportReachable False
+                        (prefix <> ".FuncPointers")
+                        allFuncPointers
+                        reachable
 
       ----------------------------------------------------------------
       -- Commands
@@ -192,21 +196,23 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
       forV_ enumValues $ export componentModule
 
       ----------------------------------------------------------------
-      -- Types directly referred to by the commands
+      -- Types directly referred to by the commands and types
       ----------------------------------------------------------------
-      forV_ commands $ \i -> exportMany componentModule (postIntSet i rel)
+      forV_ (commands <> types <> enumValues)
+        $ \i -> exportMany componentModule (postIntSet i rel)
 
 
   forV_ specFeatures $ \Feature {..} -> do
     let prefix =
           modPrefix <> ".Core" <> (foldMap show (versionBranch fVersion))
 
-    forV_ fRequires $ exportRequire prefix (featureCommentToModuleName prefix)
+    forV_ (sortOn (isNothing . rComment) . toList $ fRequires)
+      $ exportRequire True prefix (featureCommentToModuleName prefix)
 
-  forV_ specExtensions $ \Extension {..} -> do
-    forV_ exRequires $ exportRequire
-      extensionModulePrefix
-      (const (extensionNameToModuleName exName))
+  forV_ specExtensions $ \Extension {..} -> forV_ exRequires $ exportRequire
+    False
+    extensionModulePrefix
+    (const (extensionNameToModuleName exName))
 
   ----------------------------------------------------------------
   -- Assign aliases to be with their targets if possible
