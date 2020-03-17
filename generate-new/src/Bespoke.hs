@@ -118,8 +118,8 @@ bespokeSizes =
 
 
 bespokeElements
-  :: (HasErr r, Member (Reader RenderParams) r) => Vector (Sem r RenderElement)
-bespokeElements =
+  :: (HasErr r, HasRenderParams r) => Vector (Sem r RenderElement)
+bespokeElements = do
   fromList
     $  [ namedType
        , baseType "VkSampleMask"    ''Word32
@@ -149,10 +149,12 @@ namedType = genRe "namedType" $ do
 
 baseType :: (HasRenderParams r, HasErr r) => Text -> Name -> Sem r RenderElement
 baseType n t = fmap identicalBoot . genRe ("base type " <> n) $ do
+  RenderParams{..} <- ask
+  let n' = mkTyName n
   tellExplicitModule (ModName "Graphics.Vulkan.BaseType")
-  tellExport (EType n)
+  tellExport (EType n')
   tDoc <- renderType (ConT t)
-  tellDoc ("type" <+> pretty n <+> "=" <+> tDoc)
+  tellDoc ("type" <+> pretty n' <+> "=" <+> tDoc)
 
 ----------------------------------------------------------------
 -- Base Vulkan stuff

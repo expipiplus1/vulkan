@@ -43,9 +43,9 @@ renderHandle Handle {..} = context hName $ do
           <>  line
           <>  indent 2 "deriving newtype (Show, Eq, Ord, Storable, Zero)"
       Dispatchable -> do
-        let p = mkEmptyDataName n
-            c = mkConName n n
-            h = mkDispatchableHandlePtrName n
+        let p = mkEmptyDataName hName
+            c = mkConName hName hName
+            h = mkDispatchableHandlePtrName hName
             t = ConT ''Ptr :@ ConT (typeName p)
         (cmdsMemberName, cmdsMemberTy) <- case hLevel of
           NoHandleLevel -> throw "Dispatchable handle without a level"

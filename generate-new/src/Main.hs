@@ -135,8 +135,10 @@ main =
             $   traverse evaluateWHNF
             =<< renderSpec spec ss us cs
 
-          groups <- timeItNamed "Segmenting" $ do
-            assignModules spec =<< assignBespokeModules renderElements
+          groups <-
+            timeItNamed "Segmenting"
+            $   assignModules spec
+            =<< assignBespokeModules renderElements
 
           timeItNamed "writing" $ renderSegments "out" (mergeElements groups)
 
@@ -177,7 +179,7 @@ renderParams handles = r
                      <> [ ( ConT ''Ptr
                             :@ ConT (typeName $ mkEmptyDataName r name)
                           , IdiomaticType
-                            (ConT (typeName name))
+                            (ConT (typeName $ mkHandleName r name))
                             (do
                               let h = mkDispatchableHandlePtrName r name
                               tellImportWithAll (TyConName (mkTyName r name))

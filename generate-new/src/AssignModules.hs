@@ -33,6 +33,7 @@ import           Error
 import           Spec.Types
 import           Render.Element
 import           Render.Spec
+import           Render.SpecInfo
 import           Haskell
 
 -- | The following rules are applied in order:
@@ -49,11 +50,12 @@ import           Haskell
 
 assignModules
   :: forall r
-   . (HasErr r, HasRenderParams r)
+   . (HasErr r, HasRenderParams r, HasSpecInfo r)
   => Spec
   -> RenderedSpec RenderElement
   -> Sem r [(ModName, Vector RenderElement)]
 assignModules spec@Spec {..} rs@RenderedSpec {..} = do
+  RenderParams{..} <- ask
   let indexed = run . evalState (0 :: Int) $ traverse
         (\r -> do
           i <- get @Int
@@ -66,9 +68,14 @@ assignModules spec@Spec {..} rs@RenderedSpec {..} = do
         Nothing     -> throw "Unable to find element at index"
         Just (_, e) -> pure e
   (exporterMap, rel) <- buildRelation (fromList . toList $ indexed)
-  let getExporter n =
-        note ("Unable to find " <> show n <> " in any render element")
-          $ Map.lookup n exporterMap
+  let getExporter n = do
+        n' <- case n of
+          TyConName t -> getHandle t <&> \case
+            Nothing -> TyConName $ mkTyName t
+            Just _  -> TyConName $ mkHandleName t
+          t -> pure t
+        note ("Unable to find " <> show n' <> " in any render element")
+          $ Map.lookup n' exporterMap
       allNames     = Map.keys exporterMap
       initialState = mempty :: S
 
@@ -78,6 +85,7 @@ assignModules spec@Spec {..} rs@RenderedSpec {..} = do
   --
   -- Check that everything is exported
   --
+  unexportedNames <- unexportedNames
   forV indexed $ \(i, re) -> case IntMap.lookup i exports of
     Nothing -> do
       let exportedNames = exportName <$> toList (reExports re)
@@ -341,7 +349,7 @@ buildRelation elements = do
         ]
       nameMap = Map.fromAscList allNames
       lookup n = case Map.lookup n nameMap of
-        Nothing -> throw $ "Unable to find " <> show n <> " in any vertex"
+        Nothing -> pure 0 -- throw $ "Unable to find " <> show n <> " in any vertex"
         Just i  -> pure i
 
   es <- concat
@@ -374,19 +382,21 @@ dropLast x l = case nonEmpty l of
 -- Ignored unexported names
 ----------------------------------------------------------------
 
-unexportedNames :: [HName]
-unexportedNames =
-  [ TermName "vkGetSwapchainGrallocUsageANDROID"
-  , TermName "vkGetSwapchainGrallocUsage2ANDROID"
-  , TermName "vkAcquireImageANDROID"
-  , TermName "vkQueueSignalReleaseImageANDROID"
-  , TyConName "VkNativeBufferUsage2ANDROID"
-  , TyConName "VkNativeBufferANDROID"
-  , TyConName "VkSwapchainImageCreateInfoANDROID"
-  , TyConName "VkPhysicalDevicePresentationPropertiesANDROID"
-    -- TODO: Export these
-  , TyConName "VkSemaphoreCreateFlagBits"
-  ]
+unexportedNames :: HasRenderParams r => Sem r [HName]
+unexportedNames = do
+  RenderParams {..} <- ask
+  pure
+    [ TermName $ mkFunName "vkGetSwapchainGrallocUsageANDROID"
+    , TermName $ mkFunName "vkGetSwapchainGrallocUsage2ANDROID"
+    , TermName $ mkFunName "vkAcquireImageANDROID"
+    , TermName $ mkFunName "vkQueueSignalReleaseImageANDROID"
+    , TyConName $ mkTyName "VkNativeBufferUsage2ANDROID"
+    , TyConName $ mkTyName "VkNativeBufferANDROID"
+    , TyConName $ mkTyName "VkSwapchainImageCreateInfoANDROID"
+    , TyConName $ mkTyName "VkPhysicalDevicePresentationPropertiesANDROID"
+      -- TODO: Export these
+    , TyConName $ mkTyName "VkSemaphoreCreateFlagBits"
+    ]
 
 
 
