@@ -104,7 +104,7 @@ paramType st MarshaledParam {..} = contextShow (pName mpParam) $ do
   pure $ namedTy (mkParamName pName) <$> n
 
 makeReturnType
-  :: (HasErr r, HasRenderParams r)
+  :: (HasErr r, HasRenderParams r, HasSpecInfo r)
   => Bool
   -> Bool
   -> MarshaledCommand
@@ -523,7 +523,7 @@ runWithPokes MarshaledCommand {..} funRef pokes = do
 ----------------------------------------------------------------
 
 paramRef
-  :: (HasRenderParams r, HasRenderElem r, HasErr r)
+  :: (HasRenderParams r, HasRenderElem r, HasErr r, HasSpecInfo r)
   => MarshaledParam
   -> Stmt s r (Ref s ValueDoc)
 paramRef mp@MarshaledParam {..} = do
@@ -532,7 +532,7 @@ paramRef mp@MarshaledParam {..} = do
   pure valueRef
 
 paramRefUnnamed
-  :: (HasRenderParams r, HasRenderElem r, HasErr r)
+  :: (HasRenderParams r, HasRenderElem r, HasErr r, HasSpecInfo r)
   => MarshaledParam
   -> Stmt s r (Ref s ValueDoc)
 paramRefUnnamed MarshaledParam {..} = do
@@ -627,7 +627,7 @@ getCCall c = do
     Just (Parameter {..}, Handle {..}) -> do
       let
         withImport member = do
-          tellImportWithAll (TyConName (mkTyName hName))
+          tellImportWithAll (TyConName (mkHandleName hName))
           pure $ pretty (member :: Text)
         instanceHandle = cmdsFun (TyConName "InstanceCmds")
                                  (withImport "instanceCmds")

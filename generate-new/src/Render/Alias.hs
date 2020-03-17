@@ -13,15 +13,20 @@ import           Spec.Parse
 import           Haskell                       as H
 import           Error
 import           Render.Element
+import           Render.SpecInfo
 
 renderAlias
-  :: (HasErr r, Member (Reader RenderParams) r) => Alias -> Sem r RenderElement
+  :: (HasErr r, HasRenderParams r, HasSpecInfo r)
+  => Alias
+  -> Sem r RenderElement
 renderAlias Alias {..} = context aName $ do
   RenderParams {..} <- ask
   genRe ("alias " <> aName) $ case aType of
     TypeAlias -> do
+      t <- getHandle aTarget <&> \case
+        Nothing -> mkTyName aTarget
+        Just _  -> mkHandleName aTarget
       let n = mkTyName aName
-          t = mkTyName aTarget
       tellImport (TyConName t)
       let syn :: forall r . HasRenderElem r => Sem r ()
           syn = do

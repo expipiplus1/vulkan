@@ -19,13 +19,14 @@ import qualified Control.Exception
 import           Render.Element
 import           Render.Type
 import           Render.Utils
+import           Render.SpecInfo
 import           Spec.Parse
 import           Haskell                       as H
 import           Error
 import           CType
 
 brackets
-  :: (HasErr r, HasRenderParams r)
+  :: (HasErr r, HasRenderParams r, HasSpecInfo r)
   => Vector Handle
   -> Sem r (Vector (Text, Text, RenderElement))
   -- ^ (Creating command, Bracket command, RenderElem)
@@ -101,7 +102,7 @@ data ConstructedType
   deriving (Eq, Ord)
 
 renderConstructedType
-  :: (HasErr r, HasRenderElem r, HasRenderParams r)
+  :: (HasErr r, HasRenderElem r, HasRenderParams r, HasSpecInfo r)
   => ConstructedType
   -> Sem r (Doc ())
 renderConstructedType = \case
@@ -271,7 +272,7 @@ registerObjectsNVX =
         False
 
 writePair
-  :: (HasErr r, HasRenderParams r)
+  :: (HasErr r, HasRenderParams r, HasSpecInfo r)
   => Bracket
   -> Sem r (CType, Text, Text, RenderElement)
 writePair Bracket {..} =

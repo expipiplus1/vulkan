@@ -39,6 +39,7 @@ import           Language.Haskell.TH            ( Name
 import qualified Data.Vector.Generic           as VG
 
 import           Render.Utils
+import           Render.SpecInfo
 import           Render.Element
 import           Error
 import           Write.Segment
@@ -105,7 +106,7 @@ getTyConName = \case
 
 renderSegments
   :: forall r
-   . (HasErr r, MemberWithError (Embed IO) r, HasTypeInfo r)
+   . (HasErr r, MemberWithError (Embed IO) r, HasSpecInfo r, HasTypeInfo r)
   => FilePath
   -> [Segment ModName RenderElement]
   -> Sem r ()
@@ -179,7 +180,7 @@ renderSegments out segments = do
              requiredBootSegments
 
 renderModule
-  :: (MemberWithError (Embed IO) r, HasErr r, HasTypeInfo r)
+  :: (MemberWithError (Embed IO) r, HasErr r, HasSpecInfo r, HasTypeInfo r)
   => FilePath
   -- ^ out directory
   -> Bool
@@ -262,7 +263,7 @@ allExports =
   V.concatMap (\Export {..} -> exportName `V.cons` allExports exportWith)
 
 renderImport
-  :: (HasErr r, HasTypeInfo r)
+  :: (HasErr r, HasSpecInfo r)
   => (Import a -> Sem r ModName)
   -> (a -> Text)
   -> (a -> NameSpace)
@@ -363,11 +364,6 @@ adoptConstructors = \case
     Nothing -> i
   where getConParent n = asks (`tiConMap` n)
 
-getHandle :: HasTypeInfo r => HName -> Sem r (Maybe Handle)
-getHandle n = asks (`tiIsHandle` n)
-
-getCommand :: HasTypeInfo r => HName -> Sem r (Maybe Command)
-getCommand n = asks (`tiIsCommand` n)
 
 ----------------------------------------------------------------
 --

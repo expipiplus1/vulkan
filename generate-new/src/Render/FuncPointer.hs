@@ -17,10 +17,11 @@ import           Haskell                       as H
 import           Error
 import           Render.Element
 import           Render.Type
+import           Render.SpecInfo
 import           CType
 
 renderFuncPointer
-  :: (HasErr r, Member (Reader RenderParams) r)
+  :: (HasErr r, Member (Reader RenderParams) r, HasSpecInfo r)
   => FuncPointer
   -> Sem r RenderElement
 renderFuncPointer FuncPointer {..} = contextShow fpName $ do

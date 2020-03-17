@@ -18,6 +18,7 @@ import           Foreign.C.Types
 import           Foreign.Ptr
 import qualified Data.Vector.Storable.Sized    as VSS
 
+import           Render.SpecInfo
 import           CType
 import           Haskell                       as H
 import           Error
@@ -26,7 +27,7 @@ import           Render.Type.Preserve
 
 cToHsType
   :: forall r
-   . (HasErr r, MemberWithError (Reader RenderParams) r)
+   . (HasErr r, HasRenderParams r, HasSpecInfo r)
   => Preserve
   -> CType
   -> Sem r H.Type
@@ -85,7 +86,9 @@ cToHsType preserve t = do
     TypeName "size_t"   -> pure $ ConT ''CSize
     TypeName n          -> do
       RenderParams {..} <- ask
-      pure $ ConT . typeName . mkTyName $ n
+      getHandle n >>= \case
+        Just _ -> pure $ ConT . typeName . mkHandleName $ n
+        Nothing -> pure $ ConT . typeName . mkTyName $ n
     Proto ret ps -> do
       retTy <- cToHsType preserve ret
       pTys  <- forV ps $ \(n, c) -> do

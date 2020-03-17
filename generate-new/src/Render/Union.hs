@@ -10,7 +10,6 @@ import           Relude                  hiding ( Reader
 import           Data.Text.Prettyprint.Doc
 import           Polysemy
 import           Polysemy.Reader
-import           Polysemy.State
 
 import           Foreign.Ptr
 import           Control.Monad.Trans.Cont       ( runContT )
@@ -62,10 +61,7 @@ renderUnion marshaled@MarshaledStruct {..} = context msName $ do
           _   -> throw ("Found multiple union discriminators for " <> n)
 
 renderUnionMember
-  :: ( HasErr r
-     , MemberWithError (Reader RenderParams) r
-     , MemberWithError (State RenderElement) r
-     )
+  :: (HasErr r, HasRenderParams r, HasRenderElem r, HasSpecInfo r)
   => Text
   -- ^ union type name
   -> MarshaledStructMember

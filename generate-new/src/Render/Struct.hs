@@ -71,6 +71,7 @@ renderStructMember
   :: ( HasErr r
      , HasRenderParams r
      , HasRenderElem r
+     , HasSpecInfo r
      )
   => MarshaledStructMember
   -> Sem r (Maybe (Doc ()))

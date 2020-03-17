@@ -34,6 +34,7 @@ import           Error
 import           Marshal
 import           Marshal.Scheme
 import           Render.Element
+import           Render.SpecInfo
 import           Render.Utils
 import           Render.Element.Write
 import           Render.Aggregate
@@ -124,22 +125,20 @@ main =
         -- features and extensions. Similarly for specs
       pure (ss, us, cs)
 
-    runReader (renderParams specHandles) . withTypeInfo spec $ do
+    runReader (renderParams specHandles)
+      . withSpecInfo spec getSize
+      . withTypeInfo spec
+      $ do
 
-      renderElements <-
-        timeItNamed "Rendering"
-        $   traverse evaluateWHNF
-        =<< renderSpec spec getSize ss us cs
+          renderElements <-
+            timeItNamed "Rendering"
+            $   traverse evaluateWHNF
+            =<< renderSpec spec ss us cs
 
-      groups <- timeItNamed "Segmenting" $ do
-        assignModules spec =<< assignBespokeModules renderElements
+          groups <- timeItNamed "Segmenting" $ do
+            assignModules spec =<< assignBespokeModules renderElements
 
-        -- seeds <- specSeeds spec
-        -- segmented <- segmentRenderElements show renderElements seeds
-        -- pure $ separateTypes segmented
-
-      timeItNamed "writing"
-        $ withTypeInfo spec (renderSegments "out" (mergeElements groups))
+          timeItNamed "writing" $ renderSegments "out" (mergeElements groups)
 
 ----------------------------------------------------------------
 -- Names
@@ -291,6 +290,11 @@ wrappedIdiomaticType t w c =
 ----------------------------------------------------------------
 -- Bespoke Vulkan stuff
 ----------------------------------------------------------------
+
+dropVk :: Text -> Text
+dropVk t = if "vk" `T.isPrefixOf` T.toLower t
+  then T.dropWhile (== '_') . T.drop 2 $ t
+  else t
 
 isDefaultable' :: CType -> Bool
 isDefaultable' t = isDefaultableForeignType t || isIntegral t

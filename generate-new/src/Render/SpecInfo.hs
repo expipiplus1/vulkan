@@ -9,6 +9,7 @@ import           Relude                  hiding ( Reader
                                                 )
 import qualified Data.HashMap.Strict           as Map
 import qualified Data.HashSet                  as Set
+import           Data.Vector                    ( Vector )
 import           Polysemy.Reader
 import           Polysemy
 import           Algebra.Graph.Relation
@@ -24,12 +25,14 @@ type HasSpecInfo r = MemberWithError (Reader SpecInfo) r
 type SizeMap = CType -> Maybe (Int, Int)
 
 data SpecInfo = SpecInfo
-  { siIsUnion       :: Text -> Maybe Union
-  , siIsStruct      :: Text -> Maybe Struct
-  , siIsHandle      :: Text -> Maybe Handle
-  , siContainsUnion :: Text -> [Union]
-  , siTypeSize      :: SizeMap
-  , siGetConstructorParent :: Text -> Maybe Text
+  { -- TODO: make these take HNames
+    siIsUnion                   :: Text -> Maybe Union
+  , siIsStruct                  :: Text -> Maybe Struct
+  , siIsHandle                  :: Text -> Maybe Handle
+  , siIsCommand                 :: Text -> Maybe Command
+  , siContainsUnion             :: Text -> [Union]
+  , siTypeSize                  :: SizeMap
+  , siGetConstructorParent      :: Text -> Maybe Text
     -- ^ If we want the constructors for @s@ in scope then we should import
     -- @(siGetConstructorParent s)(..)@, Due to type synonyms this is not
     -- always the same name. As this deals with names as they appear in the
@@ -54,6 +57,7 @@ withSpecInfo Spec {..} siTypeSize r = do
     siIsUnion          = mkLookup sName specUnions
     siIsStruct         = mkLookup sName specStructs
     siIsHandle         = mkLookup hName specHandles
+    siIsCommand        = mkLookup cName specCommands
     typeParentRelation = edges
       [ (t, sName)
       | Struct {..} <- toList specStructs
@@ -121,6 +125,9 @@ containsUnion t = ($ t) <$> asks siContainsUnion
 getHandle :: HasSpecInfo r => Text -> Sem r (Maybe Handle)
 getHandle t = ($ t) <$> asks siIsHandle
 
+getCommand :: HasSpecInfo r => Text -> Sem r (Maybe Command)
+getCommand t = ($ t) <$> asks siIsCommand
+
 getTypeSize :: (HasErr r, HasSpecInfo r) => CType -> Sem r (Int, Int)
 getTypeSize t =
   note ("Unable to get size for " <> show t) =<< ($ t) <$> asks siTypeSize
@@ -142,3 +149,5 @@ dispatchableHandles Struct {..} =
   fmap (filter ((== Dispatchable) . hDispatchable) . catMaybes)
     . traverse getHandle
     $ [ t | StructMember {..} <- toList sMembers, t <- getAllTypeNames smType ]
+
+

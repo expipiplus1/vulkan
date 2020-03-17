@@ -188,7 +188,7 @@ getPokeDirectElided' name toType fromType = case fromType of
 ----------------------------------------------------------------
 
 normal
-  :: (HasRenderElem r, HasRenderParams r, HasErr r, HasSpecInfo r)
+  :: (HasErr r, HasRenderParams r, HasRenderElem r, HasSpecInfo r)
   => Text
   -> CType
   -> CType
@@ -227,12 +227,7 @@ normal name to from valueRef =
 
 elidedLength
   :: forall r a s
-   . ( HasRenderParams r
-     , HasRenderElem r
-     , Marshalable a
-     , HasErr r
-     , HasSiblingInfo a r
-     )
+   . HasPoke a r
   => Text
   -> Vector a
   -> Vector a
@@ -275,7 +270,7 @@ elidedLength _ os    rs    = do
 
 lenRefFromSibling
   :: forall a r s
-   . (HasRenderParams r, HasRenderElem r, HasErr r, HasSiblingInfo a r)
+   . HasPoke a r
   => Text
   -> Stmt s r (Ref s (Doc ()))
 lenRefFromSibling name = stmt Nothing (Just (name <> "Length")) $ do
@@ -291,7 +286,7 @@ lenRefFromSibling name = stmt Nothing (Just (name <> "Length")) $ do
 
 
 elidedUnivalued
-  :: (HasRenderParams r, HasRenderElem r, HasErr r)
+  :: (HasRenderParams r, HasRenderElem r, HasErr r, HasSpecInfo r)
   => Text
   -> CType
   -> Text
@@ -314,15 +309,7 @@ elidedUnivalued name to value = do
     pure . Pure InlineOnce . ValueDoc . pretty $ vName
 
 eitherWord32
-  :: ( HasRenderParams r
-     , HasRenderElem r
-     , HasErr r
-     , HasSpecInfo r
-     , HasSiblingInfo a r
-     , Marshalable a
-     , HasStmts r
-     , Show a
-     )
+  :: HasPoke a r
   => Text
   -> CType
   -> MarshalScheme a
@@ -351,15 +338,7 @@ eitherWord32 name toType fromElem valueRef = case toType of
 
 -- TODO: Reduce duplication here with eitherWord32
 maybe'
-  :: ( HasRenderParams r
-     , HasRenderElem r
-     , HasErr r
-     , HasSpecInfo r
-     , HasSiblingInfo a r
-     , Marshalable a
-     , HasStmts r
-     , Show a
-     )
+  :: HasPoke a r
   => Text
   -> CType
   -> MarshalScheme a
@@ -387,15 +366,7 @@ maybe' name toTypePtr fromType valueRef = case toTypePtr of
   _ -> throw $ "Unhandled Maybe conversion to " <> show toTypePtr
 
 vector
-  :: ( HasRenderParams r
-     , HasRenderElem r
-     , HasErr r
-     , HasSpecInfo r
-     , HasSiblingInfo a r
-     , Marshalable a
-     , HasStmts r
-     , Show a
-     )
+  :: HasPoke a r
   => Text
   -> CType
   -> MarshalScheme a
@@ -414,15 +385,7 @@ vector name toType fromElem valueRef = case toType of
   _ -> throw $ "Unhandled Vector conversion to " <> show toType
 
 tuple
-  :: ( HasRenderParams r
-     , HasRenderElem r
-     , HasErr r
-     , HasSpecInfo r
-     , HasSiblingInfo a r
-     , HasStmts r
-     , Marshalable a
-     , Show a
-     )
+  :: HasPoke a r
   => Text
   -> Word
   -> CType
@@ -437,7 +400,7 @@ tuple name size toType fromElem valueRef = case toType of
   _ -> throw $ "Unhandled Tupled conversion to " <> show toType
 
 addrWithStore
-  :: (HasErr r, HasRenderParams r, HasRenderElem r)
+  :: (HasErr r, HasRenderParams r, HasRenderElem r, HasSpecInfo r)
   => CType
   -> Ref s AddrDoc
   -> Ref s ValueDoc
@@ -486,7 +449,7 @@ allocArray name elemType size =
       <+> viaShow elemAlign
 
 byteString
-  :: (HasRenderParams r, HasRenderElem r, HasErr r)
+  :: (HasRenderParams r, HasRenderElem r, HasErr r, HasSpecInfo r)
   => Text
   -> CType
   -> Ref s ValueDoc
@@ -506,7 +469,7 @@ byteString name to valueRef = case to of
 ----------------------------------------------------------------
 
 byteStringFixedArrayIndirect
-  :: (HasRenderElem r, HasRenderParams r, HasErr r)
+  :: (HasRenderElem r, HasRenderParams r, HasErr r, HasSpecInfo r)
   => Text
   -> ArraySize
   -> CType
@@ -532,15 +495,7 @@ byteStringFixedArrayIndirect _name size toElem valueRef addrRef = case size of
   t -> throw $ "Unhandled indirect ByteString conversion to: " <> show t
 
 tupleIndirect
-  :: ( HasRenderElem r
-     , HasRenderParams r
-     , HasErr r
-     , HasSpecInfo r
-     , Marshalable a
-     , HasSiblingInfo a r
-     , HasStmts r
-     , Show a
-     )
+  :: HasPoke a r
   => Text
   -> Word
   -> CType
@@ -591,15 +546,7 @@ tupleIndirect name size toElem fromElem valueRef firstAddrRef =
 
 fixedArrayIndirect
   :: forall a r s
-   . ( HasRenderElem r
-     , HasRenderParams r
-     , HasErr r
-     , HasSpecInfo r
-     , Marshalable a
-     , HasSiblingInfo a r
-     , HasStmts r
-     , Show a
-     )
+   . HasPoke a r
   => Text
   -> ArraySize
   -> CType
@@ -640,15 +587,7 @@ fixedArrayIndirect name size toElem fromElem valueRef addrRef = do
     pure $ Pure AlwaysInline (ValueDoc "()")
 
 vectorIndirect
-  :: ( HasRenderElem r
-     , HasRenderParams r
-     , HasErr r
-     , HasSpecInfo r
-     , Marshalable a
-     , HasSiblingInfo a r
-     , HasStmts r
-     , Show a
-     )
+  :: HasPoke a r
   => Text
   -> CType
   -> MarshalScheme a

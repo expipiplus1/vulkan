@@ -18,9 +18,10 @@ import           Marshal.Scheme
 import           Error
 import           Render.Type
 import           Render.Element
+import           Render.SpecInfo
 
 schemeType
-  :: (HasErr r, Member (Reader RenderParams) r, Show a)
+  :: (HasErr r, HasRenderParams r, Show a, HasSpecInfo r)
   => MarshalScheme a
   -> Sem r (Maybe H.Type)
 schemeType s = do
@@ -47,7 +48,7 @@ schemeType s = do
 
 schemeTypePositive
   :: forall r a
-   . (HasErr r, Member (Reader RenderParams) r, Show a)
+   . (HasErr r, HasRenderParams r, Show a, HasSpecInfo r)
   => MarshalScheme a
   -> Sem r (Maybe H.Type)
 schemeTypePositive s = case s of

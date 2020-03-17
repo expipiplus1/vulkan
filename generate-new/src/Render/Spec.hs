@@ -47,14 +47,13 @@ data RenderedSpec a = RenderedSpec
   deriving (Functor, Foldable, Traversable)
 
 renderSpec
-  :: (HasErr r, HasTypeInfo r, HasRenderParams r, HasStmts r)
+  :: (HasErr r, HasTypeInfo r, HasRenderParams r, HasStmts r, HasSpecInfo r)
   => Spec
-  -> SizeMap
   -> Vector (MarshaledStruct AStruct)
   -> Vector (MarshaledStruct AUnion)
   -> Vector MarshaledCommand
   -> Sem r (RenderedSpec RenderElement)
-renderSpec s@Spec {..} getSize ss us cs = withSpecInfo s getSize $ do
+renderSpec s@Spec {..} ss us cs = do
   RenderParams {..} <- ask
 
   -- TODO: neaten

@@ -29,11 +29,12 @@ import           Error
 import           Render.Element.Write
 import           Render.Element
 import           Render.Type
+import           Render.SpecInfo
 import           Render.Utils
 import qualified CType                         as C
 
 renderDynamicLoader
-  :: (HasErr r, Member (Reader RenderParams) r, HasTypeInfo r)
+  :: (HasErr r, HasRenderParams r, HasTypeInfo r, HasSpecInfo r)
   => Vector MarshaledCommand
   -> Sem r RenderElement
 renderDynamicLoader cs = do
@@ -53,19 +54,21 @@ renderDynamicLoader cs = do
     writeMkGetDeviceProcAddr
     writeInitDeviceCmds deviceCommands
 
-getCommandLevel :: HasTypeInfo r => MarshaledCommand -> Sem r HandleLevel
+getCommandLevel
+  :: HasSpecInfo r => MarshaledCommand -> Sem r HandleLevel
 getCommandLevel MarshaledCommand { mcCommand = Command {..} } =
   case cParameters of
     Parameter { pType = C.TypeName n } :<| _ ->
-      getHandle (TyConName n) >>= \case
+      getHandle n >>= \case
         Just h  -> pure $ hLevel h
         Nothing -> pure NoHandleLevel
     _ -> pure NoHandleLevel
 
 loader
   :: ( HasErr r
-     , MemberWithError (State RenderElement) r
-     , MemberWithError (Reader RenderParams) r
+     , HasRenderParams r
+     , HasRenderElem r
+     , HasSpecInfo r
      )
   => Text
   -> Type
@@ -109,8 +112,9 @@ loader level handleType commands = do
 writeInitInstanceCmds
   :: ( HasTypeInfo r
      , HasErr r
-     , MemberWithError (State RenderElement) r
+     , HasRenderElem r
      , HasRenderParams r
+     , HasSpecInfo r
      )
   => Vector MarshaledCommand
   -> Sem r ()
@@ -145,6 +149,7 @@ writeInitInstanceCmds instanceCommands = do
 
 writeInitDeviceCmds
   :: ( HasTypeInfo r
+     , HasSpecInfo r
      , HasErr r
      , MemberWithError (State RenderElement) r
      , HasRenderParams r
@@ -164,7 +169,7 @@ writeInitDeviceCmds deviceCommands = do
   getDeviceProcAddrTDoc <- do
     Command {..} <-
       maybe (throw "Unable to find vkGetDeviceProcAddr command") pure
-        =<< getCommand (TermName "vkGetDeviceProcAddr")
+        =<< getCommand "vkGetDeviceProcAddr"
     renderTypeHighPrecSource =<< cToHsType
       DoLower
       (C.Proto
@@ -202,6 +207,7 @@ writeInitDeviceCmds deviceCommands = do
 
 writeGetInstanceProcAddr
   :: ( HasTypeInfo r
+     , HasSpecInfo r
      , HasErr r
      , MemberWithError (State RenderElement) r
      , HasRenderParams r
@@ -211,7 +217,7 @@ writeGetInstanceProcAddr = do
   RenderParams {..} <- ask
   Command {..}      <-
     maybe (throw "Unable to find vkGetInstanceProcAddr command") pure
-      =<< getCommand (TermName "vkGetInstanceProcAddr")
+      =<< getCommand "vkGetInstanceProcAddr"
   ty <- cToHsType
     DoLower
     (C.Proto cReturnType
@@ -232,6 +238,7 @@ writeGetInstanceProcAddr = do
 
 writeMkGetDeviceProcAddr
   :: ( HasTypeInfo r
+     , HasSpecInfo r
      , HasErr r
      , MemberWithError (State RenderElement) r
      , HasRenderParams r
@@ -241,7 +248,7 @@ writeMkGetDeviceProcAddr = do
   RenderParams {..} <- ask
   Command {..}      <-
     maybe (throw "Unable to find vkGetDeviceProcAddr command") pure
-      =<< getCommand (TermName "vkGetDeviceProcAddr")
+      =<< getCommand "vkGetDeviceProcAddr"
   ty <- cToHsType
     DoLower
     (C.Proto cReturnType

@@ -163,6 +163,7 @@ storablePeek
    . ( HasErr r
      , HasRenderElem r
      , HasRenderParams r
+     , HasSpecInfo r
      , Coercible a (Doc ())
      , Typeable a
      )
@@ -225,8 +226,9 @@ normalPeek name addrRef to fromPtr =
           let funName = "peekCStruct" <> mkTyName (sName s)
           tellImport (TermName funName)
           AddrDoc addr <- use addrRef
+          CmdsDoc cmds <- useViaName "cmds"
           pure $ IOAction
-            (ValueDoc (pretty funName <+> parens "error \"cmds\"" <+> addr))
+            (ValueDoc (pretty funName <+> cmds <+> addr))
 
         False -> do
           AddrDoc addr <- use addrRef
