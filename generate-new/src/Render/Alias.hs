@@ -22,10 +22,8 @@ renderAlias Alias {..} = context (unCName aName) $ do
   RenderParams {..} <- ask
   genRe ("alias " <> unCName aName) $ case aType of
     TypeAlias -> do
-      isHandle <- isJust <$> getHandle aTarget
-      let mkName = if isHandle then mkHandleName else mkTyName
-          t      = mkName aTarget
-          n      = mkName aName
+      let t = mkTyName aTarget
+          n = mkTyName aName
       tellImport t
       let syn :: forall r . HasRenderElem r => Sem r ()
           syn = do

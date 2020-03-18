@@ -78,13 +78,6 @@ main =
               fromList [ (aName, aTarget) | Alias {..} <- toList specAliases ]
             resolveAlias :: CName -> CName
             resolveAlias t = maybe t resolveAlias (Map.lookup t aliasMap) -- TODO: handle cycles!
-            structNames :: HashSet CName
-            structNames =
-              fromList
-                . (extraStructNames <>)
-                . toList
-                . fmap sName
-                $ specStructs
             bitmaskNames :: HashSet CName
             bitmaskNames = fromList
               [ eName | Enum {..} <- toList specEnums, eType == ABitmask ]
@@ -164,7 +157,7 @@ renderParams handles = r
   dispatchableHandleNames = Set.fromList
     [ hName | Handle {..} <- toList handles, hDispatchable == Dispatchable ]
   r = RenderParams
-    { mkTyName = TyConName . unReservedWord . upperCaseFirst . unCName
+    { mkTyName = TyConName . unReservedWord . upperCaseFirst . unCName -- . dropVk
     , mkConName                   = \parent ->
                                       ConName
                                         . unReservedWord
@@ -178,7 +171,6 @@ renderParams handles = r
     , mkFunName                   = TermName . unReservedWord . unCName
     , mkParamName                 = TermName . unReservedWord . unCName
     , mkPatternName               = ConName . unReservedWord . unCName
-    , mkHandleName                = TyConName . unReservedWord . unCName
     , mkFuncPointerName = TyConName . unReservedWord . T.tail . unCName
     , mkFuncPointerMemberName     = TermName
                                     . unReservedWord
@@ -200,7 +192,7 @@ renderParams handles = r
                      <> [ ( ConT ''Ptr
                             :@ ConT (typeName $ mkEmptyDataName r name)
                           , IdiomaticType
-                            (ConT (typeName $ mkHandleName r name))
+                            (ConT (typeName $ mkTyName r name))
                             (do
                               let h = mkDispatchableHandlePtrName r name
                               tellImportWithAll (mkTyName r name)

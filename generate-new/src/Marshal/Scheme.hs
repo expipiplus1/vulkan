@@ -200,14 +200,13 @@ arrayScheme p = case lengths p of
     let isOpt = case isOptional p of
           True :<| _ -> True
           _          -> False
-        elemType = case t of
+    elemType <- case t of
           -- If it's an array of bytes use a ByteString
-          Ptr Const c | isByteArrayElem c -> case isOptional p of
-            Singleton True -> Maybe ByteString
-            _              -> ByteString
-          _ -> Normal t
-        vType = elemType
-    pure $ if isOpt then EitherWord32 vType else Vector vType
+      Ptr Const c | isByteArrayElem c -> pure $ case isOptional p of
+        Singleton True -> Maybe ByteString
+        _              -> ByteString
+      _ -> Normal <$> dropPtrToStruct t
+    pure $ if isOpt then EitherWord32 elemType else Vector elemType
 
   _ -> empty
 
@@ -243,14 +242,7 @@ optionalScheme p = do
 scalarScheme :: Marshalable a => a -> ND r (MarshalScheme c)
 scalarScheme p = do
   MarshalParams {..} <- ask
-  -- Sometimes pointers to non-optional structs are used, remove these for the
-  -- marshalled version.
-  t                  <- case type' p of
-    t'@(Ptr Const (TypeName n)) ->
-      liftA2 (||) (isJust <$> getStruct n) (isJust <$> getUnion n) <&> \case
-        True  -> TypeName n
-        False -> t'
-    t' -> pure t'
+  t                  <- dropPtrToStruct (type' p)
   -- Some sanity checking
   guard . V.null . values $ p
   guard . V.null . lengths $ p
@@ -262,6 +254,20 @@ scalarScheme p = do
   guard . (/= Void) $ t
   guard $ not (isPtrType t) || isPassAsPointerType (unPtrType t)
   pure . Normal $ t
+
+-- Sometimes pointers to non-optional structs are used, remove these for the
+-- marshalled version.
+dropPtrToStruct :: HasSpecInfo r => CType -> Sem r CType
+dropPtrToStruct t = do
+  let stripConstPtr = \case
+        Ptr Const t -> stripConstPtr t
+        t           -> t
+  case stripConstPtr t of
+    TypeName n ->
+      liftA2 (||) (isJust <$> getStruct n) (isJust <$> getUnion n) <&> \case
+        True  -> TypeName n
+        False -> t
+    _ -> pure t
 
 ----------------------------------------------------------------
 -- Utils

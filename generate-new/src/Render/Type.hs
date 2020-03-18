@@ -86,9 +86,7 @@ cToHsType preserve t = do
     TypeName "size_t"   -> pure $ ConT ''CSize
     TypeName n          -> do
       RenderParams {..} <- ask
-      getHandle n >>= \case
-        Just _ -> pure $ ConT . typeName . mkHandleName $ n
-        Nothing -> pure $ ConT . typeName . mkTyName $ n
+      pure $ ConT . typeName . mkTyName $ n
     Proto ret ps -> do
       retTy <- cToHsType preserve ret
       pTys  <- forV ps $ \(n, c) -> do

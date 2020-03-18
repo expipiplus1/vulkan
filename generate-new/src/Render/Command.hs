@@ -630,7 +630,7 @@ getCCall c = do
     Just (Parameter {..}, Handle {..}) -> do
       let
         withImport member = do
-          tellImportWithAll (mkHandleName hName)
+          tellImportWithAll (mkTyName hName)
           pure $ pretty (member :: Text)
         instanceHandle = cmdsFun (TyConName "InstanceCmds")
                                  (withImport "instanceCmds")

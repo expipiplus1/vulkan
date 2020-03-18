@@ -202,7 +202,6 @@ data RenderParams = RenderParams
   , mkFunName                   :: CName -> HName
   , mkParamName                 :: CName -> HName
   , mkPatternName               :: CName -> HName
-  , mkHandleName                :: CName -> HName
   , mkFuncPointerName           :: CName -> HName
     -- ^ Should be distinct from mkTyName
   , mkFuncPointerMemberName     :: CName -> HName

@@ -26,7 +26,7 @@ renderHandle
 renderHandle Handle {..} = context (unCName hName) $ do
   RenderParams {..} <- ask
   genRe ("handle " <> unCName hName) $ do
-    let n = mkHandleName hName
+    let n = mkTyName hName
     case hDispatchable of
       NonDispatchable -> do
         let t = ConT ''Word64

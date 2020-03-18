@@ -5,7 +5,9 @@ import           Relude                  hiding ( Handle
                                                 , Type
                                                 , ask
                                                 )
-import           Data.List.Extra                ( nubOrd )
+import           Data.List.Extra                ( nubOrd
+                                                , (\\)
+                                                )
 import qualified Data.Text.Extra               as T
 import           Data.Char                      ( isUpper )
 import           Data.Text.Prettyprint.Doc
@@ -69,22 +71,22 @@ brackets handles = do
     , createPipeline "Compute"
     , createPipeline "Graphics"
     , mapMemory
-    -- , useCommandBuffer
-    -- , registerObjectsNVX
+    , useCommandBuffer
+    , registerObjectsNVX
     ]
   let ignoredHandles =
-        [ "PhysicalDevice"
-        , "Queue"
-        , "DisplayKHR"
-        , "DisplayModeKHR"
-        , "SurfaceKHR"
-        , "PerformanceConfigurationINTEL"
+        [ "VkPhysicalDevice"
+        , "VkQueue"
+        , "VkDisplayKHR"
+        , "VkDisplayModeKHR"
+        , "VkSurfaceKHR"
+        , "VkPerformanceConfigurationINTEL"
         ]
-      handleNames = hName <$> handles
-      -- bracketNames     = [ n | (TypeName n, _, _, _) <- rs ]
-      -- unhandledHandles = handleNames \\ (bracketNames ++ ignoredHandles)
-  -- unless (null unhandledHandles)
-    -- $ throwError ("Unbracketed handles: " <> T.tShow unhandledHandles)
+      handleNames      = hName <$> handles
+      bracketNames     = [ n | (TypeName n, _, _, _) <- rs ]
+      unhandledHandles = toList handleNames \\ (bracketNames ++ ignoredHandles)
+  unless (null unhandledHandles)
+    $ throw ("Unbracketed handles: " <> show unhandledHandles)
   pure $ fromList [ (c, b, w) | (_, c, b, w) <- rs ]
 
 data Bracket = Bracket
@@ -111,8 +113,9 @@ renderConstructedType
   => ConstructedType
   -> Sem r (Doc ())
 renderConstructedType = \case
-  Single   t -> renderType =<< cToHsType DoNotPreserve t
-  Optional t -> do
+  Single   Void -> renderType (ConT ''())
+  Single   t    -> renderType =<< cToHsType DoNotPreserve t
+  Optional t    -> do
     tDoc <- renderTypeHighPrec =<< cToHsType DoNotPreserve t
     pure ("Maybe" <+> tDoc)
   Multiple t -> do
@@ -330,7 +333,6 @@ writePair Bracket {..} =
         let
           noDestructorResource = Resource `notElem` bDestroyArguments
           noResource = bInnerType == Single Void && noDestructorResource
-          bracketDoc = if noResource then "bracket_" else "bracket"
           cont =
             if noResource then "IO a" else "(" <> innerHsType <> " -> IO a)"
           wrapperArguments = punctuate " ->" (argHsTypes ++ [cont, "IO a"])
@@ -339,17 +341,23 @@ writePair Bracket {..} =
             (if noResource then emptyDoc else "\\" <> resourcePattern <+> "->")
               <+> pretty destroy
               <+> hsep destroyArgVars
-        tellImport 'Control.Exception.bracket
+        bracketDoc <- if noResource
+          then do
+            tellImport 'Control.Exception.bracket_
+            pure "bracket_"
+          else do
+            tellImport 'Control.Exception.bracket
+            pure "bracket"
         tellDoc $ vsep
           [ comment
             (T.unlines
-              [ "A safe wrapper for @"
+              [ "A safe wrapper for '"
               <> unName create
-              <> "@ and @"
+              <> "' and '"
               <> unName destroy
-              <> "@ using @"
+              <> "' using '"
               <> bracketDoc
-              <> "@"
+              <> "'"
               , ""
               , "The allocated value must not be returned from the provided computation"
               ]
