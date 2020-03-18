@@ -3,6 +3,7 @@ module Bracket
 
 import           Relude                  hiding ( Handle
                                                 , Type
+                                                , ask
                                                 )
 import           Data.List.Extra                ( nubOrd )
 import qualified Data.Text.Extra               as T
@@ -12,6 +13,7 @@ import           Data.Text.Prettyprint.Doc
                                                 , plural
                                                 )
 import           Polysemy
+import           Polysemy.Reader                ( ask )
 import           Data.Vector                    ( Vector )
 
 import qualified Control.Exception
@@ -28,7 +30,7 @@ import           CType
 brackets
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)
   => Vector Handle
-  -> Sem r (Vector (Text, Text, RenderElement))
+  -> Sem r (Vector (CName, CName, RenderElement))
   -- ^ (Creating command, Bracket command, RenderElem)
 brackets handles = do
   rs <- traverseV
@@ -87,9 +89,9 @@ brackets handles = do
 
 data Bracket = Bracket
   { bInnerType :: ConstructedType
-  , bWrapperName :: Text
-  , bCreate :: Text
-  , bDestroy :: Text
+  , bWrapperName :: CName
+  , bCreate :: CName
+  , bDestroy :: CName
   , bCreateArguments :: [Argument]
   , bDestroyArguments :: [Argument]
   , bDestroyIndividually :: Bool
@@ -100,6 +102,9 @@ data ConstructedType
   | Optional { unConstructedType :: CType }
   | Multiple { unConstructedType :: CType }
   deriving (Eq, Ord)
+
+pattern SingleTypeName :: Text -> ConstructedType
+pattern SingleTypeName t = Single (TypeName (CName t))
 
 renderConstructedType
   :: (HasErr r, HasRenderElem r, HasRenderParams r, HasSpecInfo r)
@@ -122,67 +127,78 @@ data Argument
   deriving (Eq, Ord)
 
 -- | A bracket consuming a "CreateInfo" and "AllocationCallbacks"
-simpleBracket :: Bool -> Text -> Maybe Text -> Bracket
+simpleBracket
+  :: Bool
+  -> Text
+  -- ^ Type name with no Vk Prefix
+  -> Maybe CName
+  -> Bracket
 simpleBracket passDestructorParent innerType parentMaybe =
   let parentArg =
-        [ Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)
-        | Just parent <- [parentMaybe]
+        [ Provided (Single (TypeName parent))
+                   (paramName parent)
+        | Just parent <- pure parentMaybe
         ]
-  in
-    Bracket
-      (Single (TypeName ("Vk" <> innerType)))
-      ("vkWith" <> innerType)
-      ("vkCreate" <> innerType)
-      ("vkDestroy" <> innerType)
-      (  parentArg
-      ++ [ Provided
-           (Single (TypeName ("Vk" <> innerType `appendWithVendor` "CreateInfo")))
-           (T.lowerCaseFirst innerType `appendWithVendor` "CreateInfo")
-         , Provided (Optional (TypeName "VkAllocationCallbacks"))
-                    "allocationCallbacks"
-         ]
-      )
-      (  [ a | passDestructorParent, a <- parentArg ]
-      ++ [ Resource
-         , Provided (Optional (TypeName "VkAllocationCallbacks"))
-                    "allocationCallbacks"
-         ]
-      )
-      False
-
-allocateBracket :: Bool -> Bool -> Maybe Text -> Text -> Maybe Text -> Bracket
-allocateBracket plural useAllocationCallbacks poolMaybe innerTypeName functionNameFragment
-  = let
-      suffix    = bool "" "s" plural
-      parent    = "VkDevice"
-      innerType = fromMaybe innerTypeName functionNameFragment
-      allocateInfoTerm =
-        (T.lowerCaseFirst innerType `appendWithVendor` "AllocateInfo")
-    in
-      Bracket
-        (bool Single Multiple plural (TypeName ("Vk" <> innerTypeName)))
-        ("vkWith" <> innerType <> suffix)
-        ("vkAllocate" <> innerType <> suffix)
-        ("vkFree" <> innerType <> suffix)
-        (  [ Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)
-           , Provided
-             (Single (TypeName ("Vk" <> innerType `appendWithVendor` "AllocateInfo")))
-             allocateInfoTerm
-           ]
-        ++ [ Provided (Optional (TypeName "VkAllocationCallbacks"))
+  in  Bracket
+        (SingleTypeName ("Vk" <> innerType))
+        (CName $ "vkWith" <> innerType)
+        (CName $ "vkCreate" <> innerType)
+        (CName $ "vkDestroy" <> innerType)
+        (  parentArg
+        ++ [ Provided
+             (SingleTypeName
+               ("Vk" <> innerType `appendWithVendor` "CreateInfo")
+             )
+             (T.lowerCaseFirst innerType `appendWithVendor` "CreateInfo")
+           , Provided (Optional (TypeName "VkAllocationCallbacks"))
                       "allocationCallbacks"
-           | useAllocationCallbacks
            ]
         )
-        (  [Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)]
-        ++ maybeToList ((`Member` allocateInfoTerm) <$> poolMaybe)
-        ++ [Resource]
-        ++ [ Provided (Optional (TypeName "VkAllocationCallbacks"))
+        (  [ a | passDestructorParent, a <- parentArg ]
+        ++ [ Resource
+           , Provided (Optional (TypeName "VkAllocationCallbacks"))
                       "allocationCallbacks"
-           | useAllocationCallbacks
            ]
         )
         False
+
+allocateBracket :: Bool -> Bool -> Maybe Text -> Text -> Maybe Text -> Bracket
+allocateBracket plural useAllocationCallbacks poolMaybe innerTypeName functionNameFragment
+  = let suffix    = bool "" "s" plural
+        parent    = "VkDevice"
+        innerType = fromMaybe innerTypeName functionNameFragment
+        allocateInfoTerm =
+          (T.lowerCaseFirst innerType `appendWithVendor` "AllocateInfo")
+    in  Bracket
+          (bool Single
+                Multiple
+                plural
+                (TypeName (CName ("Vk" <> innerTypeName)))
+          )
+          (CName $ "vkWith" <> innerType <> suffix)
+          (CName $ "vkAllocate" <> innerType <> suffix)
+          (CName $ "vkFree" <> innerType <> suffix)
+          (  [ Provided (Single (TypeName parent)) (paramName parent)
+             , Provided
+               (SingleTypeName
+                 ("Vk" <> innerType `appendWithVendor` "AllocateInfo")
+               )
+               allocateInfoTerm
+             ]
+          ++ [ Provided (Optional (TypeName "VkAllocationCallbacks"))
+                        "allocationCallbacks"
+             | useAllocationCallbacks
+             ]
+          )
+          (  [Provided (Single (TypeName parent)) (paramName parent)]
+          ++ maybeToList ((`Member` allocateInfoTerm) <$> poolMaybe)
+          ++ [Resource]
+          ++ [ Provided (Optional (TypeName "VkAllocationCallbacks"))
+                        "allocationCallbacks"
+             | useAllocationCallbacks
+             ]
+          )
+          False
 
 createPipeline :: Text -> Bracket
 createPipeline createTypePrefix =
@@ -191,21 +207,25 @@ createPipeline createTypePrefix =
     suffix    = "s"
     parent    = "VkDevice"
     ciType =
-      ("Vk" <> createTypePrefix <> innerType `appendWithVendor` "CreateInfo")
-    cacheType = ("Vk" <> innerType `appendWithVendor` "Cache")
+      CName
+        $                  "Vk"
+        <>                 createTypePrefix
+        <>                 innerType
+        `appendWithVendor` "CreateInfo"
+    cacheType = CName $ "Vk" <> innerType `appendWithVendor` "Cache"
   in
     Bracket
-      (Multiple (TypeName ("Vk" <> innerType)))
-      ("vkWith" <> createTypePrefix <> innerType <> suffix)
-      ("vkCreate" <> createTypePrefix <> innerType <> suffix)
-      ("vkDestroy" <> innerType)
-      [ Provided (Single (TypeName parent))    (T.lowerCaseFirst parent)
-      , Provided (Single (TypeName cacheType)) (T.lowerCaseFirst cacheType)
-      , Provided (Multiple (TypeName ciType))  (T.lowerCaseFirst ciType)
+      (Multiple (TypeName (CName $ "Vk" <> innerType)))
+      (CName $ "vkWith" <> createTypePrefix <> innerType <> suffix)
+      (CName $ "vkCreate" <> createTypePrefix <> innerType <> suffix)
+      (CName $ "vkDestroy" <> innerType)
+      [ Provided (Single (TypeName parent))    (paramName parent)
+      , Provided (Single (TypeName cacheType)) (paramName cacheType)
+      , Provided (Multiple (TypeName ciType))  (paramName ciType)
       , Provided (Optional (TypeName "VkAllocationCallbacks"))
                  "allocationCallbacks"
       ]
-      [ Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)
+      [ Provided (Single (TypeName parent)) (paramName parent)
       , Resource
       , Provided (Optional (TypeName "VkAllocationCallbacks"))
                  "allocationCallbacks"
@@ -221,52 +241,51 @@ mapMemory =
         "vkWithMappedMemory"
         "vkMapMemory"
         "vkUnmapMemory"
-        [ Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)
-        , Provided (Single (TypeName mem))                (T.lowerCaseFirst mem)
+        [ Provided (Single (TypeName parent))             (paramName parent)
+        , Provided (Single (TypeName mem))                (paramName mem)
         , Provided (Single (TypeName "VkDeviceSize"))     "offset'"
         , Provided (Single (TypeName "VkDeviceSize"))     "size'"
         , Provided (Single (TypeName "VkMemoryMapFlags")) "flags'"
         ]
-        [ Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)
-        , Provided (Single (TypeName mem))    (T.lowerCaseFirst mem)
+        [ Provided (Single (TypeName parent)) (paramName parent)
+        , Provided (Single (TypeName mem))    (paramName mem)
         ]
         False
 
 useCommandBuffer :: Bracket
 useCommandBuffer =
-  let buf       = "CommandBuffer"
-      beginInfo = "CommandBufferBeginInfo"
+  let buf       = "VkCommandBuffer"
+      beginInfo = "VkCommandBufferBeginInfo"
   in  Bracket
         (Single Void)
         "vkUseCommandBuffer"
         "vkBeginCommandBuffer"
         "vkEndCommandBuffer"
-        [ Provided (Single (TypeName buf))       (T.lowerCaseFirst buf)
-        , Provided (Single (TypeName beginInfo)) (T.lowerCaseFirst beginInfo)
+        [ Provided (Single (TypeName buf))       (paramName buf)
+        , Provided (Single (TypeName beginInfo)) (paramName beginInfo)
         ]
-        [Provided (Single (TypeName buf)) (T.lowerCaseFirst buf)]
+        [Provided (Single (TypeName buf)) (paramName buf)]
         False
 
 registerObjectsNVX :: Bracket
 registerObjectsNVX =
-  let parent     = "Device"
-      table      = "ObjectTableNVX"
-      tableEntry = "ObjectTableEntryNVX"
-      entryType  = "ObjectEntryTypeNVX"
+  let parent     = "VkDevice"
+      table      = "VkObjectTableNVX"
+      tableEntry = "VkObjectTableEntryNVX"
+      entryType  = "VkObjectEntryTypeNVX"
   in  Bracket
         (Single Void)
         "vkWithRegisteredObjectsNVX"
         "vkRegisterObjectsNVX"
         "vkUnregisterObjectsNVX"
-        [ Provided (Single (TypeName parent)) (T.lowerCaseFirst parent)
-        , Provided (Single (TypeName table))  (T.lowerCaseFirst table)
-        , Provided (Multiple (TypeName tableEntry))
-                   (T.lowerCaseFirst tableEntry)
+        [ Provided (Single (TypeName parent))       (paramName parent)
+        , Provided (Single (TypeName table))        (paramName table)
+        , Provided (Multiple (TypeName tableEntry)) (paramName tableEntry)
         , Provided (Multiple (TypeName "uint32_t")) "objectIndices"
         ]
-        [ Provided (Single (TypeName parent))       (T.lowerCaseFirst parent)
-        , Provided (Single (TypeName table))        (T.lowerCaseFirst table)
-        , Provided (Multiple (TypeName entryType))  (T.lowerCaseFirst entryType)
+        [ Provided (Single (TypeName parent))       (paramName parent)
+        , Provided (Single (TypeName table))        (paramName table)
+        , Provided (Multiple (TypeName entryType))  (paramName entryType)
         , Provided (Multiple (TypeName "uint32_t")) "objectIndices"
         ]
         False
@@ -274,16 +293,20 @@ registerObjectsNVX =
 writePair
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)
   => Bracket
-  -> Sem r (CType, Text, Text, RenderElement)
+  -> Sem r (CType, CName, CName, RenderElement)
 writePair Bracket {..} =
   let arguments = nubOrd (bCreateArguments ++ bDestroyArguments)
   in
     fmap (unConstructedType bInnerType, bCreate, bWrapperName, )
-    . genRe ("bracket " <> bWrapperName)
+    . genRe ("bracket " <> unCName bWrapperName)
     $ do
-        tellExport (ETerm bWrapperName)
-        tellImport (TermName bCreate)
-        tellImport (TermName bDestroy)
+        RenderParams {..} <- ask
+        let create      = mkFunName bCreate
+            destroy     = mkFunName bDestroy
+            wrapperName = mkFunName bWrapperName
+        tellExport (ETerm wrapperName)
+        tellImport create
+        tellImport destroy
         argHsTypes <- traverseV renderConstructedType
                                 [ t | Provided t _ <- arguments ]
         let argHsVars = [ pretty v | Provided _ v <- arguments ]
@@ -314,16 +337,16 @@ writePair Bracket {..} =
           resourcePattern  = if noDestructorResource then "_" else "o"
           callDestructor =
             (if noResource then emptyDoc else "\\" <> resourcePattern <+> "->")
-              <+> pretty bDestroy
+              <+> pretty destroy
               <+> hsep destroyArgVars
         tellImport 'Control.Exception.bracket
         tellDoc $ vsep
           [ comment
             (T.unlines
               [ "A safe wrapper for @"
-              <> bCreate
+              <> unName create
               <> "@ and @"
-              <> bDestroy
+              <> unName destroy
               <> "@ using @"
               <> bracketDoc
               <> "@"
@@ -331,13 +354,13 @@ writePair Bracket {..} =
               , "The allocated value must not be returned from the provided computation"
               ]
             )
-          , pretty bWrapperName <+> "::" <+> sep wrapperArguments
-          , pretty bWrapperName <+> sep argHsVars <+> "=" <> line <> indent
+          , pretty wrapperName <+> "::" <+> sep wrapperArguments
+          , pretty wrapperName <+> sep argHsVars <+> "=" <> line <> indent
             2
             (pretty bracketDoc <> line <> indent
               2
               (vsep
-                [ parens (pretty bCreate <+> sep createArgVars)
+                [ parens (pretty create <+> sep createArgVars)
                 , bool mempty "(traverse " bDestroyIndividually
                 <> parens callDestructor
                 <> bool mempty ")" bDestroyIndividually
@@ -351,3 +374,11 @@ appendWithVendor a b =
   let prefix = T.dropWhileEnd isUpper a
       vendor = T.takeWhileEnd isUpper a
   in  prefix <> b <> vendor
+
+dropVk :: CName -> Text
+dropVk (CName t) = if "vk" `T.isPrefixOf` T.toLower t
+  then T.dropWhile (== '_') . T.drop 2 $ t
+  else t
+
+paramName :: CName -> Text
+paramName = unReservedWord . T.lowerCaseFirst . dropVk

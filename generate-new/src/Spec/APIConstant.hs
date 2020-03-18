@@ -2,6 +2,7 @@ module Spec.APIConstant
   ( ConstantValue(..)
   , parseConstant
   , decode
+  , decodeName
   ) where
 
 import           Relude
@@ -13,6 +14,7 @@ import qualified Data.ByteString.Char8         as BS
 import qualified Data.Text                     as T
 
 import           Error
+import           Spec.Name
 
 data ConstantValue
   = StrValue Text
@@ -74,6 +76,9 @@ readSpec :: (HasErr r, Read a) => String -> Sem r a
 readSpec s = case readMaybe s of
   Nothing -> throw (T.pack s)
   Just x  -> pure x
+
+decodeName :: HasErr r => ByteString -> Sem r CName
+decodeName = fmap CName . decode
 
 decode :: HasErr r => ByteString -> Sem r Text
 decode bs = case decodeUtf8' bs of

@@ -16,9 +16,10 @@ import qualified Data.Vector                   as V
 import           Spec.Parse
 import           Error
 import           Marshal.Scheme
+import           Render.SpecInfo
 
 data MarshaledStruct t = MarshaledStruct
-  { msName    :: Text
+  { msName    :: CName
   , msStruct  :: StructOrUnion t 'WithSize
   , msMembers :: V.Vector MarshaledStructMember
   }
@@ -30,7 +31,7 @@ data MarshaledStructMember =
     }
 
 marshalStruct
-  :: (MemberWithError (Reader MarshalParams) r, HasErr r)
+  :: (MemberWithError (Reader MarshalParams) r, HasErr r, HasSpecInfo r)
   => StructOrUnion t 'WithSize
   -> Sem r (MarshaledStruct t)
 marshalStruct s@Struct {..} = contextShow sName $ do
@@ -42,7 +43,7 @@ marshalStruct s@Struct {..} = contextShow sName $ do
   pure MarshaledStruct { .. }
 
 structMemberScheme
-  :: (MemberWithError (Reader MarshalParams) r, HasErr r)
+  :: (MemberWithError (Reader MarshalParams) r, HasErr r, HasSpecInfo r)
   => StructOrUnion t 'WithSize
   -> StructMember
   -> Sem r (MarshalScheme StructMember)

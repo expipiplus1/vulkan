@@ -22,6 +22,7 @@ import           Foreign.Marshal.Alloc
 
 import           Error
 import           Render.Element
+import           Haskell.Name
 
 cStructDocs :: (HasErr r, HasRenderParams r) => Vector (Sem r RenderElement)
 cStructDocs = V.fromList [toCStruct, fromCStruct]
@@ -33,7 +34,7 @@ toCStruct = do
   RenderParams {..} <- ask
   genRe "ToCStruct" $ do
     tellExplicitModule (ModName "Graphics.Vulkan.CStruct")
-    tellExport (EClass "ToCStruct")
+    tellExport (EClass (TyConName "ToCStruct"))
     tellImport ''Ptr
     tellImport ''Storable
     tellImport 'alloca
@@ -67,7 +68,7 @@ fromCStruct = do
   RenderParams {..} <- ask
   genRe "ToCStruct" $ do
     tellExplicitModule (ModName "Graphics.Vulkan.CStruct")
-    tellExport (EClass "FromCStruct")
+    tellExport (EClass (TyConName "FromCStruct"))
     tellImport ''Ptr
     tellDoc [qi|
       -- | A class for types which can be marshalled from a C style

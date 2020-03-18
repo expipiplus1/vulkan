@@ -11,6 +11,7 @@ import           Relude                  hiding ( Reader
 import           Data.Text.Prettyprint.Doc
 import           Polysemy
 import           Polysemy.Reader
+import           Language.Haskell.TH            ( mkName )
 
 import           Foreign.Ptr
 import           Foreign.Storable
@@ -22,9 +23,9 @@ import           Render.Element
 
 renderHandle
   :: (HasErr r, Member (Reader RenderParams) r) => Handle -> Sem r RenderElement
-renderHandle Handle {..} = context hName $ do
+renderHandle Handle {..} = context (unCName hName) $ do
   RenderParams {..} <- ask
-  genRe ("handle " <> hName) $ do
+  genRe ("handle " <> unCName hName) $ do
     let n = mkHandleName hName
     case hDispatchable of
       NonDispatchable -> do
@@ -49,8 +50,8 @@ renderHandle Handle {..} = context hName $ do
             t = ConT ''Ptr :@ ConT (typeName p)
         (cmdsMemberName, cmdsMemberTy) <- case hLevel of
           NoHandleLevel -> throw "Dispatchable handle without a level"
-          Instance      -> pure ("instanceCmds", ConT (typeName "InstanceCmds"))
-          Device        -> pure ("deviceCmds", ConT (typeName "DeviceCmds"))
+          Instance      -> pure ("instanceCmds", ConT (mkName "InstanceCmds"))
+          Device        -> pure ("deviceCmds", ConT (mkName "DeviceCmds"))
         tDoc     <- renderType t
         cmdsTDoc <- renderType cmdsMemberTy
         tellDataExport n

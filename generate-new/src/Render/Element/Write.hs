@@ -30,8 +30,7 @@ import           Polysemy.Reader
 import           Data.List                      ( lookup )
 import           Foreign.Ptr
 import           Data.Version
-import           Language.Haskell.TH            ( Name
-                                                , nameBase
+import           Language.Haskell.TH            ( nameBase
                                                 , nameModule
                                                 , mkName
                                                 )
@@ -39,6 +38,7 @@ import           Language.Haskell.TH            ( Name
 import qualified Data.Vector.Generic           as VG
 
 import           Render.Utils
+import           Render.Names
 import           Render.SpecInfo
 import           Render.Element
 import           Error
@@ -106,7 +106,12 @@ getTyConName = \case
 
 renderSegments
   :: forall r
-   . (HasErr r, MemberWithError (Embed IO) r, HasSpecInfo r, HasTypeInfo r)
+   . ( HasErr r
+     , MemberWithError (Embed IO) r
+     , HasSpecInfo r
+     , HasTypeInfo r
+     , HasRenderedNames r
+     )
   => FilePath
   -> [Segment ModName RenderElement]
   -> Sem r ()
@@ -180,7 +185,12 @@ renderSegments out segments = do
              requiredBootSegments
 
 renderModule
-  :: (MemberWithError (Embed IO) r, HasErr r, HasSpecInfo r, HasTypeInfo r)
+  :: ( MemberWithError (Embed IO) r
+     , HasErr r
+     , HasSpecInfo r
+     , HasTypeInfo r
+     , HasRenderedNames r
+     )
   => FilePath
   -- ^ out directory
   -> Bool
@@ -206,7 +216,7 @@ renderModule out boot findModule findLocalModule (Segment (ModName modName) es)
       importFilter =
         Relude.filter (\(Import n _ _ _ _) -> n `V.notElem` declaredNames)
     imports <- vsep <$> traverseV
-      (renderImport findModule (T.pack . nameBase) thNameNamespace)
+      (renderImport findModule (T.pack . nameBase) thNameNamespace id)
       ( mapMaybe
           (\i -> do
             n <- if V.null (importChildren i)
@@ -220,9 +230,10 @@ renderModule out boot findModule findLocalModule (Segment (ModName modName) es)
       )
     let allLocalImports =
           Relude.toList . unions . fmap reLocalImports . V.toList $ es
+    resolveAlias    <- getResolveAlias
     parentedImports <- traverse adoptConstructors allLocalImports
     localImports    <- vsep <$> traverseV
-      (renderImport findLocalModule unName nameNameSpace)
+      (renderImport findLocalModule unName nameNameSpace resolveAlias)
       (importFilter parentedImports)
     let
       allReexports =
@@ -262,14 +273,42 @@ allExports :: Vector Export -> Vector HName
 allExports =
   V.concatMap (\Export {..} -> exportName `V.cons` allExports exportWith)
 
+-- | If we are importing constructors of a type alias, resolve the alias and
+-- import the constructors with the resolved name.
 renderImport
-  :: (HasErr r, HasSpecInfo r)
+  :: (HasErr r, HasSpecInfo r, Eq a)
+  => (Import a -> Sem r ModName)
+  -> (a -> Text)
+  -> (a -> NameSpace)
+  -> (a -> a)
+  -> Import a
+  -> Sem r (Doc ())
+renderImport findModule getName getNameSpace resolveAlias i =
+  let resolved          = resolveAlias (importName i)
+      importsNoChildren = V.null (importChildren i) && not (importWithAll i)
+  in  if importsNoChildren || resolved == importName i
+        then renderImport' findModule getName getNameSpace i
+        else do
+          a <- renderImport'
+            findModule
+            getName
+            getNameSpace
+            i { importWithAll = False, importChildren = mempty }
+          c <- renderImport' findModule
+                             getName
+                             getNameSpace
+                             i { importName = resolved }
+          pure $ vsep [a, c]
+
+
+renderImport'
+  :: (HasErr r, HasSpecInfo r, Eq a)
   => (Import a -> Sem r ModName)
   -> (a -> Text)
   -> (a -> NameSpace)
   -> Import a
   -> Sem r (Doc ())
-renderImport findModule getName getNameSpace i@(Import n qual children withAll source)
+renderImport' findModule getName getNameSpace i@(Import n qual children withAll source)
   = do
     ModName mod' <- findModule i
     let sourceDoc   = bool "" " {-# SOURCE #-}" source
@@ -335,27 +374,29 @@ data TypeInfo = TypeInfo
 
 type HasTypeInfo r = MemberWithError (Reader TypeInfo) r
 
-withTypeInfo :: Spec -> Sem (Reader TypeInfo ': r) a -> Sem r a
-withTypeInfo Spec {..} =
+withTypeInfo
+  :: HasRenderParams r => Spec -> Sem (Reader TypeInfo ': r) a -> Sem r a
+withTypeInfo Spec {..} a = do
+  RenderParams {..} <- ask
   let
     tyMap :: Map HName HName
     tyMap = Map.fromList
-      [ (ConName evName, TyConName eName)
+      [ (mkConName eName evName, mkTyName eName)
       | Enum {..}      <- V.toList specEnums
       , EnumValue {..} <- V.toList eValues
       ]
     handleMap :: Map HName Handle
     handleMap = Map.fromList
-      [ (TyConName hName, h) | h@Handle {..} <- V.toList specHandles ]
+      [ (mkTyName hName, h) | h@Handle {..} <- V.toList specHandles ]
     commandMap :: Map HName Command
     commandMap = Map.fromList
-      [ (TermName cName, c) | c@Command {..} <- V.toList specCommands ]
-  in
-    runReader
-      (TypeInfo (`Map.lookup` tyMap)
-                (`Map.lookup` handleMap)
-                (`Map.lookup` commandMap)
-      )
+      [ (mkFunName cName, c) | c@Command {..} <- V.toList specCommands ]
+  runReader
+    (TypeInfo (`Map.lookup` tyMap)
+              (`Map.lookup` handleMap)
+              (`Map.lookup` commandMap)
+    )
+    a
 
 adoptConstructors :: HasTypeInfo r => Import HName -> Sem r (Import HName)
 adoptConstructors = \case

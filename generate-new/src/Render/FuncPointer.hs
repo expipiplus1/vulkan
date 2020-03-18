@@ -24,9 +24,9 @@ renderFuncPointer
   :: (HasErr r, Member (Reader RenderParams) r, HasSpecInfo r)
   => FuncPointer
   -> Sem r RenderElement
-renderFuncPointer FuncPointer {..} = contextShow fpName $ do
+renderFuncPointer FuncPointer {..} = contextShow (unCName fpName) $ do
   RenderParams {..} <- ask
-  fmap identicalBoot . genRe ("func pointer " <> fpName) $ do
+  fmap identicalBoot . genRe ("func pointer " <> unCName fpName) $ do
     let p = mkTyName fpName
         n = mkFuncPointerName fpName
     tDoc    <- renderTypeSource =<< cToHsType DoPreserve =<< stripPtr fpType

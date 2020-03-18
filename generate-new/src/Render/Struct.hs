@@ -20,6 +20,7 @@ import           Polysemy.Reader
 import qualified Data.Vector                   as V
 import qualified Data.Map                      as Map
 import           Data.List.Extra                ( nubOrd )
+import           Language.Haskell.TH            ( mkName )
 
 import           Foreign.Marshal.Alloc
 import           Foreign.Ptr
@@ -39,15 +40,21 @@ import           Render.Stmts
 import           Render.SpecInfo
 import           Render.Type
 import           Render.Utils
+import           Render.Names
 import           Spec.Parse
 
 renderStruct
-  :: (HasErr r, HasRenderParams r, HasSpecInfo r, HasStmts r)
+  :: ( HasErr r
+     , HasRenderParams r
+     , HasSpecInfo r
+     , HasStmts r
+     , HasRenderedNames r
+     )
   => MarshaledStruct AStruct
   -> Sem r RenderElement
-renderStruct s@MarshaledStruct {..} = context msName $ do
+renderStruct s@MarshaledStruct {..} = context (unCName msName) $ do
   RenderParams {..} <- ask
-  genRe ("struct " <> msName) $ do
+  genRe ("struct " <> unCName msName) $ do
     let n = mkTyName msName
     ms <- V.mapMaybe id <$> traverseV renderStructMember msMembers
     tellDataExport n
@@ -62,7 +69,7 @@ renderStruct s@MarshaledStruct {..} = context msName $ do
         )
       | m <- V.toList msMembers
       ]
-    let lookupMember :: Text -> Maybe (SiblingInfo StructMember)
+    let lookupMember :: CName -> Maybe (SiblingInfo StructMember)
         lookupMember = (`Map.lookup` memberMap)
     runReader lookupMember $ renderStoreInstances s
     pure ()
@@ -103,6 +110,7 @@ renderStoreInstances
      , HasSpecInfo r
      , HasSiblingInfo StructMember r
      , HasStmts r
+     , HasRenderedNames r
      )
   => MarshaledStruct AStruct
   -> Sem r ()
@@ -164,6 +172,7 @@ toCStructInstance
      , HasSiblingInfo StructMember r
      , HasSpecInfo r
      , HasStmts r
+     , HasRenderedNames r
      )
   => MarshaledStruct AStruct
   -> RenderedStmts (Doc ())
@@ -262,12 +271,12 @@ fromCStructFunction m@MarshaledStruct {..} handles = do
   let n            = mkTyName msName
       Struct {..}  = msStruct
       structT      = ConT (typeName n)
-      funName      = "peekCStruct" <> n
+      funName      = TermName $ "peekCStruct" <> unName n
       handleLevels = nubOrd (hLevel <$> handles)
   handleCommandTypes <- forV handleLevels $ \case
     NoHandleLevel -> throw "Dispatchable handle with no level" -- TODO: use types for this
-    Device        -> pure $ ConT (typeName "DeviceCmds")
-    Instance      -> pure $ ConT (typeName "InstanceCmds")
+    Device        -> pure $ ConT (typeName (TyConName "DeviceCmds"))
+    Instance      -> pure $ ConT (typeName (TyConName "InstanceCmds"))
   handleCommandNames <- case handleLevels of
     [_] -> pure ["cmds"]
     _   -> throw "TODO: fromCStruct with multiple cmd levels"
@@ -320,7 +329,7 @@ peekCStructBody MarshaledStruct {..} = do
     nameRef "cmds" cmdsRef
     memberRefs <-
       fmap (V.mapMaybe id) . forV msMembers $ \MarshaledStructMember {..} ->
-        context (smName msmStructMember) $ do
+        context (unCName $ smName msmStructMember) $ do
 
           hTy <- cToHsType DoPreserve (smType msmStructMember)
 
@@ -331,7 +340,7 @@ peekCStructBody MarshaledStruct {..} = do
               pure $ Pure InlineOnce (offset (smOffset msmStructMember) tDoc)
 
             p <- peekStmt msmStructMember addr msmScheme
-            for_ p (nameRef (smName msmStructMember))
+            for_ p (nameRef (unCName $ smName msmStructMember))
             pure p
 
 
@@ -347,6 +356,7 @@ withZeroCStructDecl
      , HasRenderParams r
      , HasSiblingInfo StructMember r
      , HasStmts r
+     , HasRenderedNames r
      )
   => MarshaledStruct AStruct
   -> Sem r (Doc ())
@@ -367,7 +377,7 @@ withZeroCStructDecl ms@MarshaledStruct {..} = do
       Struct {..} = msStruct
       structT     = ConT (typeName n)
   withZeroCStructTDoc <-
-    let retVar = VarT (typeName "b")
+    let retVar = VarT (mkName "b")
     in  renderType
           ((ConT ''Ptr :@ structT ~> ConT ''IO :@ retVar) ~> ConT ''IO :@ retVar
           )
@@ -435,6 +445,7 @@ renderPokes
      , HasSiblingInfo StructMember r
      , HasSpecInfo r
      , HasStmts r
+     , HasRenderedNames r
      )
   => (MarshaledStructMember -> Bool)
   -- ^ A predicate for which members we should poke
@@ -444,18 +455,20 @@ renderPokes
   -> Sem r (RenderedStmts (Doc ()))
 renderPokes p end MarshaledStruct {..} = do
   let forbiddenNames = fromList
-        (contVar : addrVar : toList (smName . msmStructMember <$> msMembers))
+        (contVar : addrVar : toList
+          (unCName . smName . msmStructMember <$> msMembers)
+        )
   renderStmts forbiddenNames $ do
     -- Make and name all the values first so that they can all be referred to
     -- by name.
     values <- forV msMembers $ \m@MarshaledStructMember {..} -> do
       ty <- schemeType msmScheme
       v  <-
-        stmt ty (Just (smName msmStructMember))
+        stmt ty (Just . unCName . smName $ msmStructMember)
         $   Pure AlwaysInline
         .   ValueDoc
         <$> memberValue m
-      nameRef (smName msmStructMember) v
+      nameRef (unCName $ smName msmStructMember) v
       pure v
     ps <-
       fmap (V.mapMaybe id)
@@ -463,8 +476,10 @@ renderPokes p end MarshaledStruct {..} = do
       $ \(value, msm@MarshaledStructMember {..}) -> if p msm
           then Just <$> do
             addr <-
-              stmt Nothing
-                   (Just ("p" <> upperCaseFirst (smName msmStructMember)))
+              stmt
+                Nothing
+                (Just ("p" <> upperCaseFirst (unCName $ smName msmStructMember))
+                )
               . fmap (Pure InlineOnce . AddrDoc)
               $ do
                   pTyDoc <- renderType . (ConT ''Ptr :@) =<< cToHsType

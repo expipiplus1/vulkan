@@ -19,20 +19,26 @@ import           Spec.Parse
 import           Haskell                       as H
 import           Error
 import           Render.Element
+import           CType                          ( CType(TypeName) )
+import           Render.Type
+import           Render.SpecInfo
 
 renderEnum
-  :: (HasErr r, Member (Reader RenderParams) r) => Enum' -> Sem r RenderElement
+  :: (HasErr r, HasRenderParams r, HasSpecInfo r)
+  => Enum'
+  -> Sem r RenderElement
 renderEnum Enum {..} = do
   RenderParams {..} <- ask
-  genRe ("enum " <> eName) $ do
+  genRe ("enum " <> unCName eName) $ do
     let n       = mkTyName eName
         conName = mkConName eName eName
-        innerTy = case eType of
-          AnEnum   -> ConT ''Int32
-          ABitmask -> ConT (typeName "VkFlags")
+    innerTy <- case eType of
+      AnEnum   -> pure $ ConT ''Int32
+      -- TODO: remove vulkan specific stuff
+      ABitmask -> cToHsType DoNotPreserve (TypeName "VkFlags")
     (patterns, patternExports) <-
       V.unzip <$> traverseV (renderEnumValue conName eType) eValues
-    tellExport (Export (TyConName n) True patternExports)
+    tellExport (Export n True patternExports)
     tellBoot $ do
       tellExport (EType n)
       tellDoc $ "data" <+> pretty n
@@ -63,7 +69,7 @@ renderEnum Enum {..} = do
          ]
       ++ maybeToList complete
 
-completePragma :: Text -> V.Vector Text -> Maybe (Doc ())
+completePragma :: HName -> V.Vector HName -> Maybe (Doc ())
 completePragma ty pats = if V.null pats
   then Nothing
   else
@@ -76,7 +82,7 @@ completePragma ty pats = if V.null pats
 
 renderEnumValue
   :: (HasErr r, Member (Reader RenderParams) r)
-  => Text
+  => HName
   -- ^ Constructor name
   -> EnumType
   -> EnumValue

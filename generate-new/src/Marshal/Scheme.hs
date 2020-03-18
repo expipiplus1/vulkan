@@ -18,6 +18,7 @@ import           Data.Vector.Extra              ( Vector
 import qualified Data.Vector.Extra             as V
 
 import           Marshal.Marshalable
+import           Render.SpecInfo
 import           Error
 import           CType
 
@@ -70,15 +71,15 @@ data MarshalScheme a
   deriving (Show)
 
 type ND r a
-  = (MemberWithError (Reader MarshalParams) r) => Sem (Fail ': NonDet ': r) a
+  =  (MemberWithError (Reader MarshalParams) r, HasSpecInfo r)
+  => Sem (Fail ': NonDet ': r) a
 
 -- | Some functions to control the marshaling
 data MarshalParams = MarshalParams
   { isDefaultable       :: CType -> Bool
-  , isStruct            :: Text -> Bool
   , isPassAsPointerType :: CType -> Bool
   , getBespokeScheme
-      :: forall a . Marshalable a => Text -> a -> Maybe (MarshalScheme a)
+      :: forall a . Marshalable a => CName -> a -> Maybe (MarshalScheme a)
   }
 
 ----------------------------------------------------------------
@@ -244,9 +245,12 @@ scalarScheme p = do
   MarshalParams {..} <- ask
   -- Sometimes pointers to non-optional structs are used, remove these for the
   -- marshalled version.
-  let t = case type' p of
-        (Ptr Const (TypeName n)) | isStruct n -> TypeName n
-        t' -> t'
+  t                  <- case type' p of
+    t'@(Ptr Const (TypeName n)) ->
+      liftA2 (||) (isJust <$> getStruct n) (isJust <$> getUnion n) <&> \case
+        True  -> TypeName n
+        False -> t'
+    t' -> pure t'
   -- Some sanity checking
   guard . V.null . values $ p
   guard . V.null . lengths $ p
@@ -281,7 +285,7 @@ isReturnPtr p' = case type' p' of
   _              -> False
 
 -- | Get all the @a@s which are sized with this name
-getSizedWith :: Marshalable a => Text -> Vector a -> Vector a
+getSizedWith :: Marshalable a => CName -> Vector a -> Vector a
 getSizedWith lengthName = V.filter $ \v -> case lengths v of
   (NamedLength len :<| _) | len == lengthName -> True
   -- ^ TODO: Change this to [NamedLength len] and think about handling

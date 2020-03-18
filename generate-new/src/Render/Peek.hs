@@ -92,7 +92,7 @@ peekIdiomatic
      , Show a
      , HasStmts r
      )
-  => Text
+  => CName
   -> Lengths
   -> CType
   -> Ref s AddrDoc
@@ -104,7 +104,7 @@ peekIdiomatic name lengths fromType addr scheme = do
   t                 <- raise $ refType r
   case mkIdiomaticType t of
     Nothing                     -> pure r
-    Just (IdiomaticType w _ to) -> raise $ stmt (Just w) (Just name) $ do
+    Just (IdiomaticType w _ to) -> raise $ stmtC (Just w) name $ do
       ValueDoc d <- use r
       to <&> \case
         Constructor con ->
@@ -133,7 +133,7 @@ peekWrapped
      , Show a
      , HasStmts r
      )
-  => Text
+  => CName
   -> Lengths
   -> CType
   -> Ref s AddrDoc
@@ -167,14 +167,14 @@ storablePeek
      , Coercible a (Doc ())
      , Typeable a
      )
-  => Text
+  => CName
   -> Ref s AddrDoc
   -> CType
   -> Stmt s r (Ref s a)
 storablePeek name addr fromPtr = case fromPtr of
   Ptr _ from -> do
     t <- cToHsType DoLower from
-    stmt @a (Just t) (Just name) $ do
+    stmtC @a (Just t) name $ do
       tDoc <- renderTypeHighPrec t
       tellImportWithAll ''Storable
       AddrDoc addrDoc <- use addr
@@ -184,13 +184,13 @@ storablePeek name addr fromPtr = case fromPtr of
 normalPeek
   :: forall r s
    . (HasErr r, HasRenderElem r, HasRenderParams r, HasSpecInfo r)
-  => Text
+  => CName
   -> Ref s AddrDoc
   -> CType
   -> CType
   -> Stmt s r (Ref s ValueDoc)
 normalPeek name addrRef to fromPtr =
-  context name
+  context (unCName name)
     $   runNonDet (asum [same, inlineStruct, pointerStruct, union])
     >>= \case
           Nothing -> throw
@@ -218,17 +218,16 @@ normalPeek name addrRef to fromPtr =
     guard (from == to)
     Just s <- getStruct n
     ty     <- cToHsType DoPreserve from
-    raise2 $ stmt (Just ty) (Just name) $ do
+    raise2 $ stmtC (Just ty) name $ do
       tDoc <- renderTypeHighPrec ty
       containsDispatchableHandle s >>= \case
         True -> do
           RenderParams {..} <- ask
-          let funName = "peekCStruct" <> mkTyName (sName s)
+          let funName = "peekCStruct" <> unName (mkTyName (sName s))
           tellImport (TermName funName)
           AddrDoc addr <- use addrRef
           CmdsDoc cmds <- useViaName "cmds"
-          pure $ IOAction
-            (ValueDoc (pretty funName <+> cmds <+> addr))
+          pure $ IOAction (ValueDoc (pretty funName <+> cmds <+> addr))
 
         False -> do
           AddrDoc addr <- use addrRef
@@ -241,7 +240,7 @@ normalPeek name addrRef to fromPtr =
     guard (TypeName n == to)
     Just _ <- getStruct n
     ty     <- cToHsType DoPreserve (TypeName n)
-    raise2 $ stmt (Just ty) (Just name) $ do
+    raise2 $ stmtC (Just ty) name $ do
       tDoc         <- renderTypeHighPrec ty
       AddrDoc addr <- use addrRef
       pure $ IOAction
@@ -257,7 +256,7 @@ normalPeek name addrRef to fromPtr =
 unionPeek
   :: forall r s
    . (HasErr r, HasRenderElem r, HasSpecInfo r, HasRenderParams r)
-  => Text
+  => CName
   -> Ref s AddrDoc
   -> Union
   -> CType
@@ -270,22 +269,22 @@ unionPeek name addrRef Struct {..} _to fromPtr =
     TypeName n        <- pure from
     ty                <- cToHsType DoPreserve from
 
-    raise $ stmt (Just ty) (Just name) $ do
+    raise $ stmtC (Just ty) name $ do
       discs <- catMaybes <$> sequenceV
-        [ useViaNameMaybe udSiblingName
+        [ useViaNameMaybe (unCName udSiblingName)
         | UnionDiscriminator {..} <- toList unionDiscriminators
         , udUnionType == n
         ]
 
       ValueDoc discDoc <- case discs of
-        []  -> throw ("Unable to find union discriminator for " <> n)
+        []  -> throw ("Unable to find union discriminator for " <> unCName n)
         [d] -> pure d
-        _   -> throw ("Found multiple union discriminators for " <> n)
+        _   -> throw ("Found multiple union discriminators for " <> unCName n)
 
-      let peekName = "peek" <> mkTyName n
+      let peekName = TermName $ "peek" <> unName (mkTyName n)
 
       AddrDoc addr <- use addrRef
-      tellImport (TermName peekName)
+      tellImport peekName
       pure $ IOAction (ValueDoc (pretty peekName <+> discDoc <+> addr))
 
 -- TODO: Check lengths here for null termination
@@ -298,13 +297,13 @@ byteStringPeek
      , HasSiblingInfo a r
      , Show a
      )
-  => Text
+  => CName
   -> Lengths
   -> Ref s AddrDoc
   -> CType
   -> Stmt s r (Ref s ValueDoc)
 byteStringPeek name lengths addrRef =
-  stmt (Just (ConT ''ByteString)) (Just name) . \case
+  stmtC (Just (ConT ''ByteString)) name . \case
     Ptr _ (Ptr Const Char) -> do
       AddrDoc addr <- use addrRef
       tellImport 'BS.packCString
@@ -352,7 +351,7 @@ maybePeek'
      , Show a
      , HasStmts r
      )
-  => Text
+  => CName
   -> Lengths
   -> Ref s AddrDoc
   -> CType
@@ -365,7 +364,7 @@ maybePeek' name lengths addrRef fromPtr to = case fromPtr of
     ptrTy <- cToHsType DoPreserve from
 
     -- Load the pointer which might be null
-    ptr   <- stmt (Just ptrTy) (Just maybePtrDoc) $ do
+    ptr   <- stmtC (Just ptrTy) maybePtrDoc $ do
       AddrDoc addr <- use addrRef
       ptrTDoc      <- renderTypeHighPrec =<< cToHsType DoPreserve from
       tellImportWithAll ''Storable
@@ -373,7 +372,7 @@ maybePeek' name lengths addrRef fromPtr to = case fromPtr of
 
     elemTy <- cToHsType DoPreserve fromElem
 
-    stmt (Just (ConT ''Maybe :@ elemTy)) (Just name) $ do
+    stmtC (Just (ConT ''Maybe :@ elemTy)) name $ do
       AddrDoc ptrDoc <- use ptr
       subPeek        <- renderSubStmtsIO $ do
         ptrRef <- pureStmt (AddrDoc notNullPtrDoc)
@@ -401,7 +400,7 @@ vectorPeek
      , Show a
      , HasStmts r
      )
-  => Text
+  => CName
   -> Vector ParameterLength
   -> Ref s AddrDoc
   -> CType
@@ -422,7 +421,7 @@ vectorPeek name lengths addrRef fromPtr toElem = case fromPtr of
 
     castedAddrRef <- stmt Nothing Nothing $ Pure InlineOnce <$> do
       tellImport (TermName "lowerArrayPtr")
-      tellImport (ConName lenName)
+      tellImport lenName
       AddrDoc addr <- use addrRef
       pure . AddrDoc $ "lowerArrayPtr @" <> tDoc <+> addr
 
@@ -440,7 +439,7 @@ vectorPeek name lengths addrRef fromPtr toElem = case fromPtr of
 
   generate addrRef fromElem lenTail lenRef = do
     t <- cToHsType DoPreserve fromElem
-    stmt (Just (ConT ''Vector :@ t)) (Just name) $ do
+    stmtC (Just (ConT ''Vector :@ t)) name $ do
       let indexVar = "i"
       ValueDoc lenDoc <- use lenRef
 
@@ -488,7 +487,7 @@ eitherWord32Peek
      , Show a
      , HasStmts r
      )
-  => Text
+  => CName
   -> Lengths
   -> Ref s AddrDoc
   -> CType
@@ -500,11 +499,11 @@ eitherWord32Peek name lengths addr fromPtr toElem = case fromPtr of
       note "Unable to get wrapped peek for EitherWord32" =<< runNonDetMaybe
         (peekIdiomatic name lengths fromPtr addr (Maybe (Vector toElem)))
     elemTy <- cToHsType DoPreserve fromElem
-    stmt (Just (ConT ''Either :@ ConT ''Word32 :@ (ConT ''Vector :@ elemTy)))
-         (Just name)
+    stmtC (Just (ConT ''Either :@ ConT ''Word32 :@ (ConT ''Vector :@ elemTy)))
+          name
       . fmap (Pure NeverInline)
       $ do
-          ValueDoc lenName <- useViaName len
+          ValueDoc lenName <- useViaName (unCName len)
           ValueDoc m       <- use mRef
           pure
             .   ValueDoc
@@ -524,7 +523,7 @@ tuplePeek
      , Show a
      , HasStmts r
      )
-  => Text
+  => CName
   -> Ref s AddrDoc
   -> CType
   -> MarshalScheme a
@@ -534,35 +533,37 @@ tuplePeek name addrRef fromPtr toElem = case fromPtr of
     (elemSize, _elemAlign) <- getTypeSize fromElem
 
     tupT                   <- cToHsType DoNotPreserve aTy
-    stmt (Just tupT) (Just name) $ do
+    stmtC (Just tupT) name $ do
 
       -- Case the array pointer to a pointer to the first element
       tupPtrRef <-
-        stmt Nothing (Just ("p" <> name)) . fmap (Pure InlineOnce) $ do
+        stmt Nothing (Just ("p" <> unCName name)) . fmap (Pure InlineOnce) $ do
           tellImport (TermName "lowerArrayPtr")
           tDoc         <- renderTypeHighPrec =<< cToHsType DoPreserve fromElem
           AddrDoc addr <- use addrRef
           pure $ "lowerArrayPtr @" <> tDoc <+> addr
 
-      let advance i =
-            stmt Nothing Nothing . fmap (Pure InlineOnce . AddrDoc) $ do
-              tellImport 'plusPtr
-              tupPtrDoc    <- use tupPtrRef
-              elemPtrTyDoc <- renderType . (ConT ''Ptr :@) =<< cToHsType DoPreserve fromElem
-              pure
-                (parens
-                  (   tupPtrDoc
-                  <+> "`plusPtr`"
-                  <+> viaShow (elemSize * i)
-                  <+> "::"
-                  <+> elemPtrTyDoc
-                  )
+      let
+        advance i =
+          stmt Nothing Nothing . fmap (Pure InlineOnce . AddrDoc) $ do
+            tellImport 'plusPtr
+            tupPtrDoc    <- use tupPtrRef
+            elemPtrTyDoc <-
+              renderType . (ConT ''Ptr :@) =<< cToHsType DoPreserve fromElem
+            pure
+              (parens
+                (   tupPtrDoc
+                <+> "`plusPtr`"
+                <+> viaShow (elemSize * i)
+                <+> "::"
+                <+> elemPtrTyDoc
                 )
+              )
 
       subPeeks <- forV [0 .. len - 1] $ \i -> do
         elemPtrRef <- advance (fromIntegral i)
         note "Unable to get tuple element peek" =<< runNonDetMaybe
-          (peekIdiomatic (name <> show i)
+          (peekIdiomatic (CName (unCName name <> show i))
                          mempty
                          (Ptr Const fromElem)
                          elemPtrRef
@@ -594,10 +595,10 @@ getLenRef lengths = do
   stmt Nothing Nothing $ case lengths of
     Empty                 -> throw "Trying to allocate something with no length"
     NamedLength len :<| _ -> do
-      ValueDoc value <- useViaName len
+      ValueDoc value <- useViaName (unCName len)
       pure . Pure AlwaysInline . ValueDoc $ "fromIntegral" <+> value
     NamedMemberLength struct member :<| _ -> do
-      ValueDoc structValue <- useViaName struct
+      ValueDoc structValue <- useViaName (unCName struct)
       case complexMemberLengthFunction struct member structValue of
         Just complex -> Pure InlineOnce . ValueDoc <$> complex
         Nothing      -> do
@@ -617,7 +618,7 @@ getLenRef lengths = do
             =<< note
                   "Unable to get type for struct with length specifying member for allocation"
             =<< schemeType siScheme
-          tellImportWithAll (TyConName structName)
+          tellImportWithAll (mkTyName structName)
           pure
             .   Pure AlwaysInline
             .   ValueDoc
@@ -626,3 +627,16 @@ getLenRef lengths = do
             <+> parens (structValue <+> "::" <+> structTyDoc)
     NullTerminated :<| _ -> throw "Trying to allocate a null terminated"
     -- _ -> throw "Trying to allocate something with multiple lengths"
+
+----------------------------------------------------------------
+-- Utils
+----------------------------------------------------------------
+
+stmtC
+  :: forall a r s
+   . (Typeable a, Coercible a (Doc ()))
+  => Maybe Type
+  -> CName
+  -> Stmt s r (Value a)
+  -> Stmt s r (Ref s a)
+stmtC t n = stmt t (Just (unCName n))

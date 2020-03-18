@@ -22,13 +22,11 @@ import qualified Data.IntMap.Strict            as IntMap
 import qualified Data.IntSet                   as Set
 import qualified Data.Text.Extra               as T
 import           Polysemy
-import           Polysemy.NonDet
 import           Polysemy.Reader
 import           Polysemy.State
 import           Algebra.Graph.AdjacencyIntMap
                                          hiding ( empty )
 
-import           Write.Segment                  ( Segment(..) )
 import           Error
 import           Spec.Types
 import           Render.Element
@@ -55,7 +53,7 @@ assignModules
   -> RenderedSpec RenderElement
   -> Sem r [(ModName, Vector RenderElement)]
 assignModules spec@Spec {..} rs@RenderedSpec {..} = do
-  RenderParams{..} <- ask
+  RenderParams {..} <- ask
   let indexed = run . evalState (0 :: Int) $ traverse
         (\r -> do
           i <- get @Int
@@ -68,14 +66,9 @@ assignModules spec@Spec {..} rs@RenderedSpec {..} = do
         Nothing     -> throw "Unable to find element at index"
         Just (_, e) -> pure e
   (exporterMap, rel) <- buildRelation (fromList . toList $ indexed)
-  let getExporter n = do
-        n' <- case n of
-          TyConName t -> getHandle t <&> \case
-            Nothing -> TyConName $ mkTyName t
-            Just _  -> TyConName $ mkHandleName t
-          t -> pure t
-        note ("Unable to find " <> show n' <> " in any render element")
-          $ Map.lookup n' exporterMap
+  let getExporter n =
+        note ("Unable to find " <> show n <> " in any render element")
+          $ Map.lookup n exporterMap
       allNames     = Map.keys exporterMap
       initialState = mempty :: S
 
@@ -160,9 +153,9 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
     exportRequire separateTypeSubmodule prefix commentToName Require {..} = do
       let componentModule = commentToName rComment
 
-      commands   <- traverseV getExporter rCommandNames
-      types      <- traverseV getExporter rTypeNames
-      enumValues <- traverseV getExporter rEnumValueNames
+      commands   <- traverseV (getExporter . mkFunName) rCommandNames
+      types      <- traverseV (getExporter . mkTyName) rTypeNames
+      enumValues <- traverseV (getExporter . mkPatternName) rEnumValueNames
 
       when separateTypeSubmodule $ do
         let directExporters = commands <> types <> enumValues
@@ -211,8 +204,7 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
 
 
   forV_ specFeatures $ \Feature {..} -> do
-    let prefix =
-          modPrefix <> ".Core" <> (foldMap show (versionBranch fVersion))
+    let prefix = modPrefix <> ".Core" <> foldMap show (versionBranch fVersion)
 
     forV_ (sortOn (isNothing . rComment) . toList $ fRequires)
       $ exportRequire True prefix (featureCommentToModuleName prefix)
@@ -227,9 +219,9 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
   ----------------------------------------------------------------
   forV_ specAliases $ \Alias {..} -> do
     let mkName = case aType of
-          TypeAlias    -> TyConName
-          TermAlias    -> TermName
-          PatternAlias -> ConName
+          TypeAlias    -> mkTyName
+          TermAlias    -> mkFunName -- TODO, terms other than functions?
+          PatternAlias -> mkPatternName
     i <- getExporter (mkName aName)
     j <- getExporter (mkName aTarget)
     gets @S (IntMap.lookup j) >>= \case
@@ -244,8 +236,8 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
     exportRequire2 prefix commentToName Require {..} = do
       let componentModule = commentToName rComment
 
-      commands <- traverseV getExporter rCommandNames
-      types    <- traverseV getExporter rTypeNames
+      commands <- traverseV (getExporter . mkFunName) rCommandNames
+      types    <- traverseV (getExporter . mkTyName) rTypeNames
 
       ----------------------------------------------------------------
       -- Types indirectly referred to by the commands or types
@@ -254,8 +246,7 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
         $ \i -> exportManyNoReexport componentModule (postIntSet i closedRel)
 
   forV_ specFeatures $ \Feature {..} -> do
-    let prefix =
-          modPrefix <> ".Core" <> (foldMap show (versionBranch fVersion))
+    let prefix = modPrefix <> ".Core" <> foldMap show (versionBranch fVersion)
 
     forV_ fRequires $ exportRequire2 prefix (featureCommentToModuleName prefix)
 
@@ -386,16 +377,16 @@ unexportedNames :: HasRenderParams r => Sem r [HName]
 unexportedNames = do
   RenderParams {..} <- ask
   pure
-    [ TermName $ mkFunName "vkGetSwapchainGrallocUsageANDROID"
-    , TermName $ mkFunName "vkGetSwapchainGrallocUsage2ANDROID"
-    , TermName $ mkFunName "vkAcquireImageANDROID"
-    , TermName $ mkFunName "vkQueueSignalReleaseImageANDROID"
-    , TyConName $ mkTyName "VkNativeBufferUsage2ANDROID"
-    , TyConName $ mkTyName "VkNativeBufferANDROID"
-    , TyConName $ mkTyName "VkSwapchainImageCreateInfoANDROID"
-    , TyConName $ mkTyName "VkPhysicalDevicePresentationPropertiesANDROID"
+    [ mkFunName "vkGetSwapchainGrallocUsageANDROID"
+    , mkFunName "vkGetSwapchainGrallocUsage2ANDROID"
+    , mkFunName "vkAcquireImageANDROID"
+    , mkFunName "vkQueueSignalReleaseImageANDROID"
+    , mkTyName "VkNativeBufferUsage2ANDROID"
+    , mkTyName "VkNativeBufferANDROID"
+    , mkTyName "VkSwapchainImageCreateInfoANDROID"
+    , mkTyName "VkPhysicalDevicePresentationPropertiesANDROID"
       -- TODO: Export these
-    , TyConName $ mkTyName "VkSemaphoreCreateFlagBits"
+    , mkTyName "VkSemaphoreCreateFlagBits"
     ]
 
 

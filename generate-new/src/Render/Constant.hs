@@ -24,13 +24,13 @@ renderConstant
   -> Sem r RenderElement
 renderConstant Constant {..} = contextShow constName $ do
   RenderParams {..} <- ask
-  genRe ("constant " <> constName) $ do
+  genRe ("constant " <> unCName constName) $ do
     let
       n               = mkPatternName constName
       tn              = mkTyName constName
       (t, v, hasType) = case constValue of
         StrValue i ->
-          let a = typeName "a"
+          let a = mkName "a"
           in  ( ForallT [PlainTV a]
                         [ConT ''Eq :@ VarT a, ConT ''IsString :@ VarT a]
                         (VarT a)
@@ -38,7 +38,7 @@ renderConstant Constant {..} = contextShow constName $ do
               , True
               )
         IntegralValue i ->
-          let a = typeName "a"
+          let a = mkName "a"
           in  ( ForallT [PlainTV a] [ConT ''Integral :@ VarT a] (VarT a)
               , viaShow i
               , True

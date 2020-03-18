@@ -17,9 +17,10 @@ import           CType
 import           Spec.Parse
 import           Error
 import           Marshal.Scheme
+import           Render.SpecInfo
 
 data MarshaledCommand = MarshaledCommand
-  { mcName    :: Text
+  { mcName    :: CName
   , mcParams  :: V.Vector MarshaledParam
   , mcReturn  :: CType
     -- ^ TOOD: Change
@@ -35,7 +36,7 @@ data MarshaledParam =
   deriving (Show)
 
 marshalCommand
-  :: (MemberWithError (Reader MarshalParams) r, HasErr r)
+  :: (MemberWithError (Reader MarshalParams) r, HasErr r, HasSpecInfo r)
   => Command
   -> Sem r MarshaledCommand
 marshalCommand c@Command {..} = contextShow cName $ do
@@ -48,7 +49,7 @@ marshalCommand c@Command {..} = contextShow cName $ do
   pure MarshaledCommand { .. }
 
 parameterScheme
-  :: (MemberWithError (Reader MarshalParams) r, HasErr r)
+  :: (MemberWithError (Reader MarshalParams) r, HasErr r, HasSpecInfo r)
   => Command
   -> Parameter
   -> Sem r (MarshalScheme Parameter)

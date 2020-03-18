@@ -16,9 +16,6 @@ import           Relude                  hiding ( Type
 import           Data.Text.Prettyprint.Doc
 import           Polysemy
 import           Polysemy.Reader
-import           Data.Vector.Extra              ( pattern Empty
-                                                , pattern (:<|)
-                                                )
 import qualified Data.Text.Extra               as T
 
 import           Foreign.Marshal.Alloc
@@ -35,7 +32,6 @@ import           Render.SpecInfo
 import           Render.Type
 import           Render.Stmts
 import           Render.Stmts.Poke
-import           Render.Scheme
 import           Render.Peek
 
 -- | Allocates memory in the first ref, and peeks from it in the second
@@ -81,7 +77,7 @@ allocate a = \case
 
 normal
   :: (HasErr r, HasRenderElem r, HasRenderParams r, HasSpecInfo r)
-  => Text
+  => CName
   -> CType
   -> CType
   -> Stmt s r (Ref s AddrDoc)
@@ -98,7 +94,7 @@ normal name toTy fromTy = do
     TypeName n -> isJust <$> getStruct n
     _          -> pure False
 
-  stmt Nothing (Just . ("p" <>) . T.upperCaseFirst $ name)
+  stmt Nothing (Just . ("p" <>) . T.upperCaseFirst $ unCName name)
     $   ContTAction
     .   AddrDoc
     <$> do

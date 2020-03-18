@@ -9,7 +9,6 @@ import           Relude                  hiding ( Reader
                                                 )
 import qualified Data.HashMap.Strict           as Map
 import qualified Data.HashSet                  as Set
-import           Data.Vector                    ( Vector )
 import           Polysemy.Reader
 import           Polysemy
 import           Algebra.Graph.Relation
@@ -25,21 +24,15 @@ type HasSpecInfo r = MemberWithError (Reader SpecInfo) r
 type SizeMap = CType -> Maybe (Int, Int)
 
 data SpecInfo = SpecInfo
-  { -- TODO: make these take HNames
-    siIsUnion                   :: Text -> Maybe Union
-  , siIsStruct                  :: Text -> Maybe Struct
-  , siIsHandle                  :: Text -> Maybe Handle
-  , siIsCommand                 :: Text -> Maybe Command
-  , siContainsUnion             :: Text -> [Union]
+  { siIsUnion                   :: CName -> Maybe Union
+  , siIsStruct                  :: CName -> Maybe Struct
+  , siIsHandle                  :: CName -> Maybe Handle
+  , siIsCommand                 :: CName -> Maybe Command
+  , siIsEnum                    :: CName -> Maybe Enum'
+  , siContainsUnion             :: CName -> [Union]
   , siTypeSize                  :: SizeMap
-  , siGetConstructorParent      :: Text -> Maybe Text
-    -- ^ If we want the constructors for @s@ in scope then we should import
-    -- @(siGetConstructorParent s)(..)@, Due to type synonyms this is not
-    -- always the same name. As this deals with names as they appear in the
-    -- generated source it takes and returns names after going through the
-    -- mapping in RenderParams.
-  , siAppearsInPositivePosition :: Text -> Bool
-  , siAppearsInNegativePosition :: Text -> Bool
+  , siAppearsInPositivePosition :: CName -> Bool
+  , siAppearsInNegativePosition :: CName -> Bool
   }
 
 withSpecInfo
@@ -58,6 +51,7 @@ withSpecInfo Spec {..} siTypeSize r = do
     siIsStruct         = mkLookup sName specStructs
     siIsHandle         = mkLookup hName specHandles
     siIsCommand        = mkLookup cName specCommands
+    siIsEnum           = mkLookup eName specEnums
     typeParentRelation = edges
       [ (t, sName)
       | Struct {..} <- toList specStructs
@@ -71,33 +65,14 @@ withSpecInfo Spec {..} siTypeSize r = do
       , t <- reachable (sName u) typeParentRelation
       ]
     siContainsUnion = fromMaybe mempty . (`Map.lookup` containsUnionMap)
-    constructorMap =
-      Map.fromList
-        $  [ (n, n)
-           | Struct {..} <- toList specStructs
-           , let n = mkTyName sName
-           ]
-        <> [ (n, n)
-           | Struct {..} <- toList specUnions
-           , let n = mkTyName sName
-           ]
-        <> [ (n, n) | Enum {..} <- toList specEnums, let n = mkTyName eName ]
-        <> [ (n, n)
-           | Handle {..} <- toList specHandles
-           , NonDispatchable == hDispatchable
-           , let n = mkTyName hName
-           ]
     aliasMap = Map.fromList
       [ (aName, aTarget)
       | Alias {..} <- toList specAliases
       , TypeAlias == aType
       ]
     -- TODO: Handle alias cycles!
-    resolveAlias :: Text -> Text
+    resolveAlias :: CName -> CName
     resolveAlias n = maybe n resolveAlias (Map.lookup n aliasMap)
-    siGetConstructorParent n = case Map.lookup n aliasMap of
-      Nothing -> Map.lookup n constructorMap
-      Just n' -> siGetConstructorParent n'
     negativeTypes = Set.fromList
       [ t
       | Command {..}   <- toList specCommands
@@ -113,32 +88,32 @@ withSpecInfo Spec {..} siTypeSize r = do
     siAppearsInPositivePosition = (`Set.member` positiveTypes)
   runReader SpecInfo { .. } r
 
-getStruct :: HasSpecInfo r => Text -> Sem r (Maybe Struct)
+getStruct :: HasSpecInfo r => CName -> Sem r (Maybe Struct)
 getStruct t = ($ t) <$> asks siIsStruct
 
-getUnion :: HasSpecInfo r => Text -> Sem r (Maybe Union)
+getUnion :: HasSpecInfo r => CName -> Sem r (Maybe Union)
 getUnion t = ($ t) <$> asks siIsUnion
 
-containsUnion :: HasSpecInfo r => Text -> Sem r [Union]
+containsUnion :: HasSpecInfo r => CName -> Sem r [Union]
 containsUnion t = ($ t) <$> asks siContainsUnion
 
-getHandle :: HasSpecInfo r => Text -> Sem r (Maybe Handle)
+getHandle :: HasSpecInfo r => CName -> Sem r (Maybe Handle)
 getHandle t = ($ t) <$> asks siIsHandle
 
-getCommand :: HasSpecInfo r => Text -> Sem r (Maybe Command)
+getCommand :: HasSpecInfo r => CName -> Sem r (Maybe Command)
 getCommand t = ($ t) <$> asks siIsCommand
+
+getEnum :: HasSpecInfo r => CName -> Sem r (Maybe Enum')
+getEnum t = ($ t) <$> asks siIsEnum
 
 getTypeSize :: (HasErr r, HasSpecInfo r) => CType -> Sem r (Int, Int)
 getTypeSize t =
   note ("Unable to get size for " <> show t) =<< ($ t) <$> asks siTypeSize
 
-getConstructorParent :: HasSpecInfo r => Text -> Sem r (Maybe Text)
-getConstructorParent s = ($ s) <$> asks siGetConstructorParent
-
-appearsInPositivePosition :: HasSpecInfo r => Text -> Sem r Bool
+appearsInPositivePosition :: HasSpecInfo r => CName -> Sem r Bool
 appearsInPositivePosition s = ($ s) <$> asks siAppearsInPositivePosition
 
-appearsInNegativePosition :: HasSpecInfo r => Text -> Sem r Bool
+appearsInNegativePosition :: HasSpecInfo r => CName -> Sem r Bool
 appearsInNegativePosition s = ($ s) <$> asks siAppearsInNegativePosition
 
 containsDispatchableHandle :: HasSpecInfo r => Struct -> Sem r Bool

@@ -21,6 +21,7 @@ import           Data.Vector                    ( Vector )
 import           Foreign.Ptr
 import           Foreign.C.Types
 import           Text.InterpolatedString.Perl6.Unindented
+import           Language.Haskell.TH            ( mkName )
 
 import           Haskell                       as H
 import           Render.Element
@@ -34,7 +35,7 @@ import           CType
 ----------------------------------------------------------------
 
 -- | These constants are defined elsewhere
-forbiddenConstants :: [Text]
+forbiddenConstants :: [CName]
 forbiddenConstants = ["VK_TRUE", "VK_FALSE"]
 
 ----------------------------------------------------------------
@@ -47,14 +48,13 @@ assignBespokeModules = traverse $ \case
   r@RenderElement {..}
     | exports <- fmap exportName . toList $ reExports
     , bespokeMods <-
-      List.nubOrd . catMaybes . fmap (`List.lookup` bespokeModules) $ exports
+      List.nubOrd . mapMaybe (`List.lookup` bespokeModules) $ exports
     -> case bespokeMods of
       []  -> pure r
       [x] -> case reExplicitModule of
         Just m | m /= x -> throw "Render element already has an explicit module"
         _               -> pure $ r { reExplicitModule = Just x }
-      xs -> throw "Multiple bespoke module names found for render element"
-  r -> pure r
+      _ -> throw "Multiple bespoke module names found for render element"
 
 
 bespokeModules :: [(HName, ModName)]
@@ -81,7 +81,7 @@ bespokeModules =
 ----------------------------------------------------------------
 
 data BespokeScheme where
-  BespokeScheme :: (forall a. Marshalable a => Text -> a -> Maybe (MarshalScheme a)) -> BespokeScheme
+  BespokeScheme ::(forall a. Marshalable a => CName -> a -> Maybe (MarshalScheme a)) -> BespokeScheme
 
 bespokeSchemes :: [BespokeScheme]
 bespokeSchemes =
@@ -107,7 +107,7 @@ bespokeSchemes =
 -- Things which are easier to write by hand
 ----------------------------------------------------------------
 
-bespokeSizes :: [(Text, (Int, Int))]
+bespokeSizes :: [(CName, (Int, Int))]
 bespokeSizes =
   (fst <$> concat [win32 @'[Reader RenderParams], x11, xcb2, zircon, ggp])
     <> [ ("VkSampleMask"   , (4, 4))
@@ -117,9 +117,8 @@ bespokeSizes =
        ]
 
 
-bespokeElements
-  :: (HasErr r, HasRenderParams r) => Vector (Sem r RenderElement)
-bespokeElements = do
+bespokeElements :: (HasErr r, HasRenderParams r) => Vector (Sem r RenderElement)
+bespokeElements =
   fromList
     $  [ namedType
        , baseType "VkSampleMask"    ''Word32
@@ -144,12 +143,13 @@ wsiTypes =
 namedType :: HasErr r => Sem r RenderElement
 namedType = genRe "namedType" $ do
   tellExplicitModule (ModName "Graphics.Vulkan.NamedType")
-  tellExport (EType ":::")
+  tellExport (EType (TyConName ":::"))
   tellDoc "-- | Annotate a type with a name\ntype (name :: k) ::: a = a"
 
-baseType :: (HasRenderParams r, HasErr r) => Text -> Name -> Sem r RenderElement
-baseType n t = fmap identicalBoot . genRe ("base type " <> n) $ do
-  RenderParams{..} <- ask
+baseType
+  :: (HasRenderParams r, HasErr r) => CName -> Name -> Sem r RenderElement
+baseType n t = fmap identicalBoot . genRe ("base type " <> unCName n) $ do
+  RenderParams {..} <- ask
   let n' = mkTyName n
   tellExplicitModule (ModName "Graphics.Vulkan.BaseType")
   tellExport (EType n')
@@ -162,9 +162,10 @@ baseType n t = fmap identicalBoot . genRe ("base type " <> n) $ do
 
 nullHandle :: Member (Reader RenderParams) r => Sem r RenderElement
 nullHandle = genRe "null handle" $ do
-  tellExport (EPat "VK_NULL_HANDLE")
+  RenderParams {..} <- ask
+  tellExport (EPat (mkConName "" "VK_NULL_HANDLE"))
   tellImport 'nullPtr
-  tDoc <- renderType (ConT ''Ptr :@ VarT (typeName "a"))
+  tDoc <- renderType (ConT ''Ptr :@ VarT (mkName "a"))
   tellDoc [qqi|
     pattern VK_NULL_HANDLE :: {tDoc}
     pattern VK_NULL_HANDLE <- ((== nullPtr) -> True)
@@ -175,7 +176,8 @@ nullHandle = genRe "null handle" $ do
 -- Platform specific nonsense
 ----------------------------------------------------------------
 
-type BespokeAlias r = ((Text, (Int, Int)), Sem r RenderElement)
+type BespokeAlias r = ((CName, (Int, Int)), Sem r RenderElement)
+-- C name, size, alignment, render element
 
 win32 :: Member (Reader RenderParams) r => [BespokeAlias r]
 win32 =
@@ -247,17 +249,17 @@ aTypeType = \case
   AWord64 -> ConT ''Word64
   APtr n  -> ConT ''Ptr :@ ConT n
 
-voidData :: Member (Reader RenderParams) r => Text -> Sem r RenderElement
-voidData n = fmap identicalBoot . genRe ("data " <> n) $ do
+voidData :: Member (Reader RenderParams) r => CName -> Sem r RenderElement
+voidData n = fmap identicalBoot . genRe ("data " <> unCName n) $ do
   RenderParams {..} <- ask
   let n' = mkTyName n
   tellExport (EType n')
   tellDoc $ "data" <+> pretty n'
 
-alias :: Member (Reader RenderParams) r => AType -> Text -> BespokeAlias r
+alias :: Member (Reader RenderParams) r => AType -> CName -> BespokeAlias r
 alias t n =
   ( (n, aTypeSize t)
-  , fmap identicalBoot . genRe ("alias " <> n) $ do
+  , fmap identicalBoot . genRe ("alias " <> unCName n) $ do
     RenderParams {..} <- ask
     let n' = mkTyName n
     tDoc <- renderType (aTypeType t)

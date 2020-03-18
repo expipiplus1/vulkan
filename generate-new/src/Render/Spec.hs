@@ -28,6 +28,7 @@ import           Render.Union
 import           Render.SpecInfo
 import           Render.VkException
 import           Render.Stmts
+import           Render.Names
 import           Spec.Parse
 import           Bracket
 
@@ -47,7 +48,13 @@ data RenderedSpec a = RenderedSpec
   deriving (Functor, Foldable, Traversable)
 
 renderSpec
-  :: (HasErr r, HasTypeInfo r, HasRenderParams r, HasStmts r, HasSpecInfo r)
+  :: ( HasErr r
+     , HasTypeInfo r
+     , HasRenderParams r
+     , HasStmts r
+     , HasSpecInfo r
+     , HasRenderedNames r
+     )
   => Spec
   -> Vector (MarshaledStruct AStruct)
   -> Vector (MarshaledStruct AUnion)
@@ -67,9 +74,9 @@ renderSpec s@Spec {..} ss us cs = do
             when (smName m2 == "pNext")
               $  whenM (appearsInPositivePosition (sName s1))
               $  throw
-              $  (sName s1 <> "." <> smName m1)
+              $  (unCName (sName s1) <> "." <> unCName (smName m1))
               <> " >>>> "
-              <> (sName s2 <> "." <> smName m2)
+              <> (unCName (sName s2) <> "." <> unCName (smName m2))
           )
         )
     | s1 <- toList specStructs
@@ -107,9 +114,15 @@ renderSpec s@Spec {..} ss us cs = do
                              <> V.singleton (vkExceptionRenderElement vkResult)
     }
 
+-- | Render a command along with any associated bracketing function
 commandWithBrackets
-  :: (HasErr r, HasRenderParams r, HasSpecInfo r, HasStmts r)
-  => (Text -> Maybe RenderElement)
+  :: ( HasErr r
+     , HasRenderParams r
+     , HasSpecInfo r
+     , HasStmts r
+     , HasRenderedNames r
+     )
+  => (CName -> Maybe RenderElement)
   -> MarshaledCommand
   -> Sem r RenderElement
 commandWithBrackets getBracket cmd = do

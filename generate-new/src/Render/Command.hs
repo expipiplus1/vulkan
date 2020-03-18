@@ -16,7 +16,6 @@ import           Language.Haskell.TH.Syntax     ( nameBase )
 import           Data.List.Extra                ( nubOrd )
 import           Polysemy
 import           Polysemy.Reader
-import           Control.Arrow                  ( (***) )
 import qualified Data.Text                     as T
 import qualified Data.Vector                   as V
 import           Data.Vector                    ( Vector )
@@ -27,12 +26,9 @@ import qualified Data.Map                      as Map
 
 import           Control.Monad.Trans.Cont
 import           Foreign.C.Types
-import           Foreign.Marshal.Alloc
 import           Foreign.Ptr
 import qualified GHC.Ptr
-import           Control.Exception              ( bracket
-                                                , throwIO
-                                                )
+import           Control.Exception              ( throwIO )
 
 import           CType                         as C
 import           Error
@@ -42,6 +38,7 @@ import           Marshal.Marshalable
 import           Marshal.Scheme
 import           Render.Element
 import           Render.Peek
+import           Render.Names
 import           Render.Stmts
 import           Render.Stmts.Poke
 import           Render.Stmts.Alloc
@@ -51,13 +48,18 @@ import           Render.Type
 import           Spec.Parse
 
 renderCommand
-  :: (HasErr r, HasRenderParams r, HasSpecInfo r, HasStmts r)
+  :: ( HasErr r
+     , HasRenderParams r
+     , HasSpecInfo r
+     , HasStmts r
+     , HasRenderedNames r
+     )
   => MarshaledCommand
   -> Sem r RenderElement
-renderCommand m@MarshaledCommand {..} = contextShow mcName $ do
+renderCommand m@MarshaledCommand {..} = contextShow (unCName mcName) $ do
   RenderParams {..} <- ask
   let Command {..} = mcCommand
-  genRe ("command " <> mcName) $ do
+  genRe ("command " <> unCName mcName) $ do
     ffiTy <- cToHsType
       DoLower
       (Proto cReturnType
@@ -79,11 +81,11 @@ renderCommand m@MarshaledCommand {..} = contextShow mcName $ do
       ]
 
     let siblingMap = Map.fromList
-          [ (n, SiblingInfo (pretty n) (mpScheme p))
+          [ (n, SiblingInfo (pretty . unCName $ n) (mpScheme p))
           | p <- V.toList mcParams
           , let n = pName . mpParam $ p
           ]
-    let lookupSibling :: Text -> Maybe (SiblingInfo Parameter)
+    let lookupSibling :: CName -> Maybe (SiblingInfo Parameter)
         lookupSibling = (`Map.lookup` siblingMap)
 
 
@@ -101,7 +103,7 @@ paramType st MarshaledParam {..} = contextShow (pName mpParam) $ do
   RenderParams {..} <- ask
   let Parameter {..} = mpParam
   n <- st mpScheme
-  pure $ namedTy (mkParamName pName) <$> n
+  pure $ namedTy (unName $ mkParamName pName) <$> n
 
 makeReturnType
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)
@@ -132,8 +134,9 @@ marshaledCommandCall
      , HasRenderElem r
      , HasStmts r
      , HasSiblingInfo Parameter r
+     , HasRenderedNames r
      )
-  => Text
+  => HName
   -> MarshaledCommand
   -> Sem r ()
 marshaledCommandCall commandName m@MarshaledCommand {..} = do
@@ -165,14 +168,14 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
       else Just <$> do
         ty       <- schemeType mpScheme
         valueRef <-
-          stmt ty (Just (mkParamName (pName mpParam)))
+          stmt ty (Just . unName . mkParamName . pName $ mpParam)
           . pure
           . Pure AlwaysInline
           . ValueDoc
           . pretty
           . mkParamName
           $ pName mpParam
-        nameRef (pName mpParam) valueRef
+        nameRef (unCName $ pName mpParam) valueRef
         pure valueRef
 
     -- poke all the parameters
@@ -236,8 +239,8 @@ checkResult retRef = do
     tellImport 'when
     tellImport 'throwIO
     let pat = mkPatternName firstSuccessCode
-    tellImport (ConName pat)
-    tellImportWithAll (TyConName exceptionTypeName)
+    tellImport pat
+    tellImportWithAll exceptionTypeName
     pure
       .   IOAction
       .   UnitDoc
@@ -277,8 +280,9 @@ marshaledDualPurposeCommandCall
      , HasRenderElem r
      , HasStmts r
      , HasSiblingInfo Parameter r
+     , HasRenderedNames r
      )
-  => Text
+  => HName
   -> MarshaledCommand
   -> Sem r ()
 marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
@@ -302,11 +306,6 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
     Empty ->
       throw "Trying to render a dual purpose command with no output vector"
     is -> pure is
-
-  -- Unpack some useful things
-  (countScheme, countType) <- case mpScheme countParam of
-    InOutCount s@(Normal t) -> pure (s, t)
-    _ -> throw "Count does not have type InOutCount (Normal _)"
 
   --
   -- Get the type of this function
@@ -352,7 +351,7 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
       after ret1
       ValueDoc v <- use countPeek
       pure . Pure AlwaysInline . ValueDoc $ v
-    nameRef (pName (mpParam countParam)) filledCount
+    nameRef (unCName $ pName (mpParam countParam)) filledCount
 
     (getVectorsPokes, getVectorsPeeks) <- pokesForGettingResults
       mcParams
@@ -374,7 +373,7 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
           =<< peekStmtDirect (mpParam countParam) countAddr countScheme
       Pure InlineOnce <$> use peekCount
     -- TODO: disgusting, this stringly typed stuff
-    nameRef (pName (mpParam countParam) <> "::2") finalCountRef
+    nameRef (unCName (pName (mpParam countParam)) <> "::2") finalCountRef
 
     unitStmt $ do
       after ret2
@@ -404,6 +403,7 @@ pokesForGettingCount
      , HasSpecInfo r
      , HasStmts r
      , HasSiblingInfo Parameter r
+     , HasRenderedNames r
      )
   => Vector MarshaledParam
   -> Int
@@ -484,7 +484,8 @@ pokesForGettingResults params oldPokes oldPeeks countAddr countIndex vecIndices
             usingSecondLen = lowered
               { pLengths = case pLengths lowered of
                              NamedLength n :<| t ->
-                               NamedLength (n <> "::2") :<| t
+                               -- YUCK
+                               NamedLength (CName (unCName n <> "::2")) :<| t
                              t -> t
               }
         scheme <- case mpScheme of
@@ -528,7 +529,7 @@ paramRef
   -> Stmt s r (Ref s ValueDoc)
 paramRef mp@MarshaledParam {..} = do
   valueRef <- paramRefUnnamed mp
-  nameRef (pName mpParam) valueRef
+  nameRef (unCName $ pName mpParam) valueRef
   pure valueRef
 
 paramRefUnnamed
@@ -538,7 +539,7 @@ paramRefUnnamed
 paramRefUnnamed MarshaledParam {..} = do
   RenderParams {..} <- ask
   ty                <- schemeType mpScheme
-  stmt ty (Just (mkParamName (pName mpParam)))
+  stmt ty (Just . unName . mkParamName . pName $ mpParam)
     . pure
     . Pure AlwaysInline
     . ValueDoc
@@ -562,10 +563,9 @@ castRef
   => (Typeable b, Coercible a b, Coercible b (Doc ()))
   => Ref s a
   -> Stmt s r (Ref s b)
-castRef ref = do
-  stmt Nothing Nothing $ do
-    r <- use ref
-    pure . Pure AlwaysInline . coerce $ r
+castRef ref = stmt Nothing Nothing $ do
+  r <- use ref
+  pure . Pure AlwaysInline . coerce $ r
 
 ----------------------------------------------------------------
 -- Getting C call
@@ -583,51 +583,54 @@ getCCall
 getCCall c = do
   RenderParams {..} <- ask
   let -- What to do in the case that this command isn't dispatched from a handle
-      noHandle = stmt Nothing (Just (cName c <> "'")) $ do
-        -- TODO: Change this function pointer to a "global variable" with ioref and
-        -- unsafePerformIO
-        tellImport (TermName "vkGetInstanceProcAddr'") -- TODO: Remove vulkan specific stuff here!
-        tellImport 'nullPtr
-        tellImport 'castFunPtr
-        tellImportWith ''GHC.Ptr.Ptr 'GHC.Ptr.Ptr
-        let dynName = getDynName c
-        fTyDoc <- renderTypeHighPrec =<< cToHsType
-          DoLower
-          (C.Proto
-            (cReturnType c)
-            [ (Just pName, pType) | Parameter {..} <- V.toList (cParameters c) ]
-          )
-        pure
-          .   IOAction
-          .   FunDoc
-          $   pretty dynName
-          <+> ". castFunPtr @_ @"
-          <>  fTyDoc
-          <+> "<$> vkGetInstanceProcAddr' nullPtr"
-          <+> parens ("Ptr" <+> dquotes (pretty (cName c) <> "\\NUL") <> "#")
+    noHandle = stmt Nothing (Just (unCName (cName c) <> "'")) $ do
+      -- TODO: Change this function pointer to a "global variable" with ioref and
+      -- unsafePerformIO
+      tellImport (TermName "vkGetInstanceProcAddr'") -- TODO: Remove vulkan specific stuff here!
+      tellImport 'nullPtr
+      tellImport 'castFunPtr
+      tellImportWith ''GHC.Ptr.Ptr 'GHC.Ptr.Ptr
+      let dynName = getDynName c
+      fTyDoc <- renderTypeHighPrec =<< cToHsType
+        DoLower
+        (C.Proto
+          (cReturnType c)
+          [ (Just (unCName pName), pType)
+          | Parameter {..} <- V.toList (cParameters c)
+          ]
+        )
+      pure
+        .   IOAction
+        .   FunDoc
+        $   pretty dynName
+        <+> ". castFunPtr @_ @"
+        <>  fTyDoc
+        <+> "<$> vkGetInstanceProcAddr' nullPtr"
+        <+> parens
+              ("Ptr" <+> dquotes (pretty (unCName (cName c)) <> "\\NUL") <> "#")
 
-      -- What do do if we need to extract the command pointer from a parameter
-      cmdsFun ptrRecTyName getCmdsFun paramName paramType = do
-        cmdsRef <- stmt Nothing (Just "cmds") $ do
-          paramTDoc <- renderType =<< cToHsType DoNotPreserve paramType
-          getCmds   <- getCmdsFun
-          pure . Pure InlineOnce . CmdsDoc $ getCmds <+> parens
-            (pretty paramName <+> "::" <+> paramTDoc)
-        nameRef "cmds" cmdsRef
-        stmt Nothing (Just (cName c <> "'")) $ do
-          let dynName    = getDynName c
-              memberName = mkFuncPointerMemberName (cName c)
-          tellImportWith ptrRecTyName (TermName memberName)
-          CmdsDoc cmds <- use cmdsRef
-          pure . Pure NeverInline . FunDoc $ pretty dynName <+> parens
-            (pretty memberName <+> cmds)
+    -- What do do if we need to extract the command pointer from a parameter
+    cmdsFun ptrRecTyName getCmdsFun paramName paramType = do
+      cmdsRef <- stmt Nothing (Just "cmds") $ do
+        paramTDoc <- renderType =<< cToHsType DoNotPreserve paramType
+        getCmds   <- getCmdsFun
+        pure . Pure InlineOnce . CmdsDoc $ getCmds <+> parens
+          (pretty paramName <+> "::" <+> paramTDoc)
+      nameRef "cmds" cmdsRef
+      stmt Nothing (Just (unCName (cName c) <> "'")) $ do
+        let dynName    = getDynName c
+            memberName = mkFuncPointerMemberName (cName c)
+        tellImportWith ptrRecTyName memberName
+        CmdsDoc cmds <- use cmdsRef
+        pure . Pure NeverInline . FunDoc $ pretty dynName <+> parens
+          (pretty memberName <+> cmds)
 
   commandHandle c >>= \case
     Nothing                            -> noHandle
     Just (Parameter {..}, Handle {..}) -> do
       let
         withImport member = do
-          tellImportWithAll (TyConName (mkHandleName hName))
+          tellImportWithAll (mkHandleName hName)
           pure $ pretty (member :: Text)
         instanceHandle = cmdsFun (TyConName "InstanceCmds")
                                  (withImport "instanceCmds")
@@ -661,6 +664,7 @@ getPoke
      , HasSpecInfo r
      , HasStmts r
      , HasSiblingInfo Parameter r
+     , HasRenderedNames r
      )
   => Maybe (Ref s ValueDoc)
   -- ^ Might be nothing if this is elided
@@ -681,7 +685,7 @@ getPoke valueRef MarshaledParam {..} = do
       Nothing -> do
         -- Give the refs names now as they didn't get one earlier
         r <- getPokeDirectElided (lowerParamType mpParam) mpScheme
-        nameRef (pName mpParam) r
+        nameRef (unCName $ pName mpParam) r
         pure r
       Just valueRef -> getPokeDirect (lowerParamType mpParam) mpScheme valueRef
 
@@ -697,17 +701,20 @@ lowerParamType p@Parameter {..} = case pType of
 
 -- | Foreign imports require constructors in scope for newtypes
 importConstructors
-  :: (HasSpecInfo r, HasRenderElem r, HasRenderParams r) => Type -> Sem r ()
+  :: forall r
+   . (HasSpecInfo r, HasRenderElem r, HasRenderParams r, HasRenderedNames r)
+  => Type
+  -> Sem r ()
 importConstructors t = do
+  RenderParams {..} <- ask
   let names = nubOrd $ allTypeNames t
-  for_ names $ \n -> if n `elem` builtinConstructorParents
-    then tellImportWithAll n
-    else
-      traverse_ (tellImportWithAll . TyConName)
-        =<< (getConstructorParent . T.pack . nameBase $ n)
+      isNewtype' :: Name -> Sem r Bool
+      isNewtype' n = pure (n `elem` builtinNewtypes)
+        <||> isNewtype (TyConName . T.pack . nameBase $ n)
+  for_ names $ \n -> whenM (isNewtype' n) $ tellImportWithAll n
 
-builtinConstructorParents :: [Name]
-builtinConstructorParents =
+builtinNewtypes :: [Name]
+builtinNewtypes =
   [ ''CChar
   , ''CSChar
   , ''CUChar
@@ -741,7 +748,7 @@ builtinConstructorParents =
 ----------------------------------------------------------------
 
 getDynName :: Command -> Text
-getDynName = ("mk" <>) . upperCaseFirst . cName
+getDynName = ("mk" <>) . upperCaseFirst . unCName . cName
 
 infixr 2 -->
 (-->) :: Bool -> Bool -> Bool

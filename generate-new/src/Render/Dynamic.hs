@@ -24,6 +24,7 @@ import           GHC.Ptr
 
 import           Spec.Parse
 import           Haskell                       as H
+import           Haskell.Name                   ( )
 import           Marshal
 import           Error
 import           Render.Element.Write
@@ -65,11 +66,7 @@ getCommandLevel MarshaledCommand { mcCommand = Command {..} } =
     _ -> pure NoHandleLevel
 
 loader
-  :: ( HasErr r
-     , HasRenderParams r
-     , HasRenderElem r
-     , HasSpecInfo r
-     )
+  :: (HasErr r, HasRenderParams r, HasRenderElem r, HasSpecInfo r)
   => Text
   -> Type
   -> Vector MarshaledCommand
@@ -77,21 +74,16 @@ loader
 loader level handleType commands = do
   RenderParams {..} <- ask
   memberDocs        <-
-    forV commands $ \MarshaledCommand { mcCommand = Command {..} } -> do
-      ty <- cToHsType
-        DoLower
-        (C.Proto
-          cReturnType
-          [ (Just pName, pType) | Parameter {..} <- V.toList cParameters ]
-        )
+    forV commands $ \MarshaledCommand { mcCommand = c@Command {..} } -> do
+      ty <- commandType c
       let pTy = ConT ''FunPtr :@ ty
       tDoc <- renderTypeSource pTy
       let memberName = mkFuncPointerMemberName cName
       pure $ pretty memberName <+> "::" <+> tDoc
-  let n                = level <> "Cmds"
+  let n                = CName $ level <> "Cmds"
       tyName           = mkTyName n
       conName          = mkConName n n
-      handleMemberName = mkMemberName (n <> "Handle")
+      handleMemberName = mkDispatchableHandlePtrName n
   handleTDoc <- renderTypeSource handleType
   let handleDoc = pretty handleMemberName <+> "::" <+> handleTDoc
   tellDataExport tyName
@@ -103,7 +95,7 @@ loader level handleType commands = do
     <>  line
     <>  indent 2 (braceList (handleDoc : V.toList memberDocs))
     <>  line
-    <>  indent 2 ("deriving (Eq, Show)")
+    <>  indent 2 "deriving (Eq, Show)"
 
 ----------------------------------------------------------------
 -- Filling out the structures
@@ -129,17 +121,13 @@ writeInitInstanceCmds instanceCommands = do
   apps <-
     fmap (indent 2 . appList)
     . forV instanceCommands
-    $ \MarshaledCommand { mcCommand = Command {..} } -> do
-        fTyDoc <- renderTypeHighPrecSource =<< cToHsType
-          DoLower
-          (C.Proto
-            cReturnType
-            [ (Just pName, pType) | Parameter {..} <- V.toList cParameters ]
-          )
+    $ \MarshaledCommand { mcCommand = c@Command {..} } -> do
+        fTyDoc <- renderTypeHighPrecSource =<<
+          commandType c
         tellImportWith ''GHC.Ptr.Ptr 'GHC.Ptr.Ptr
         pure
           $ parens
-              [qqi|castFunPtr @_ @{fTyDoc} <$> vkGetInstanceProcAddr' handle (Ptr "{cName}\\NUL"#)|]
+              [qqi|castFunPtr @_ @{fTyDoc} <$> vkGetInstanceProcAddr' handle (Ptr "{unCName cName}\\NUL"#)|]
   tellExport (ETerm n)
   tellDoc [qqi|
     {n} :: {tDoc}
@@ -167,29 +155,19 @@ writeInitDeviceCmds deviceCommands = do
   tellImport 'castFunPtr
   tellImportWith ''GHC.Ptr.Ptr 'GHC.Ptr.Ptr
   getDeviceProcAddrTDoc <- do
-    Command {..} <-
+    c@Command {..} <-
       maybe (throw "Unable to find vkGetDeviceProcAddr command") pure
         =<< getCommand "vkGetDeviceProcAddr"
-    renderTypeHighPrecSource =<< cToHsType
-      DoLower
-      (C.Proto
-        cReturnType
-        [ (Just pName, pType) | Parameter {..} <- V.toList cParameters ]
-      )
+    renderTypeHighPrecSource =<< commandType c
   apps <-
     fmap (indent 2 . appList)
     . forV deviceCommands
-    $ \MarshaledCommand { mcCommand = Command {..} } -> do
-        fTyDoc <- renderTypeHighPrecSource =<< cToHsType
-          DoLower
-          (C.Proto
-            cReturnType
-            [ (Just pName, pType) | Parameter {..} <- V.toList cParameters ]
-          )
+    $ \MarshaledCommand { mcCommand = c@Command {..} } -> do
+        fTyDoc <- renderTypeHighPrecSource =<< commandType c
         tellImportWith ''GHC.Ptr.Ptr 'GHC.Ptr.Ptr
         pure
           $ parens
-              [qqi|castFunPtr @_ @{fTyDoc} <$> getDeviceProcAddr' handle (Ptr "{cName}\\NUL"#)|]
+              [qqi|castFunPtr @_ @{fTyDoc} <$> getDeviceProcAddr' handle (Ptr "{unCName cName}\\NUL"#)|]
   tellExport (ETerm n)
   tellDoc [qqi|
     {n} :: {tDoc}
@@ -215,14 +193,10 @@ writeGetInstanceProcAddr
   => Sem r ()
 writeGetInstanceProcAddr = do
   RenderParams {..} <- ask
-  Command {..}      <-
+  c@Command {..}    <-
     maybe (throw "Unable to find vkGetInstanceProcAddr command") pure
       =<< getCommand "vkGetInstanceProcAddr"
-  ty <- cToHsType
-    DoLower
-    (C.Proto cReturnType
-             [ (Just pName, pType) | Parameter {..} <- V.toList cParameters ]
-    )
+  ty   <- commandType c
   tDoc <- renderTypeSource ty
   let n = mkFunName "vkGetInstanceProcAddr'"
   tellExport (ETerm n)
@@ -246,14 +220,10 @@ writeMkGetDeviceProcAddr
   => Sem r ()
 writeMkGetDeviceProcAddr = do
   RenderParams {..} <- ask
-  Command {..}      <-
+  c@Command {..}    <-
     maybe (throw "Unable to find vkGetDeviceProcAddr command") pure
       =<< getCommand "vkGetDeviceProcAddr"
-  ty <- cToHsType
-    DoLower
-    (C.Proto cReturnType
-             [ (Just pName, pType) | Parameter {..} <- V.toList cParameters ]
-    )
+  ty   <- commandType c
   tDoc <- renderTypeSource (ConT ''FunPtr :@ ty ~> ty)
   tellDoc [qqi|
     foreign import ccall
@@ -267,6 +237,18 @@ writeMkGetDeviceProcAddr = do
 ----------------------------------------------------------------
 -- Utils
 ----------------------------------------------------------------
+
+commandType
+  :: forall r
+   . (HasErr r, HasRenderParams r, HasSpecInfo r)
+  => Command
+  -> Sem r H.Type
+commandType Command {..} = cToHsType
+  DoLower
+  (C.Proto
+    cReturnType
+    [ (Just (unCName pName), pType) | Parameter {..} <- V.toList cParameters ]
+  )
 
 (<||>) :: Applicative f => f Bool -> f Bool -> f Bool
 (<||>) = liftA2 (||)

@@ -99,4 +99,5 @@ cToHsType preserve t = do
       pure $ foldr (~>) (ConT ''IO :@ retTy) pTys
 
 namedTy :: Text -> H.Type -> H.Type
-namedTy name = InfixT (LitT (StrTyLit (toString name))) (typeName ":::")
+namedTy name =
+  InfixT (LitT (StrTyLit (toString name))) (typeName (TyConName ":::"))

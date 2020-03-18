@@ -38,8 +38,8 @@ import           Prelude                        ( head
 import           Render.Element
 import           Haskell.Name
 
-typeName :: Text -> Name
-typeName = mkName . T.unpack
+typeName :: HName -> Name
+typeName = mkName . T.unpack . unName
 
 mkVar :: Text -> Type
 mkVar = VarT . mkName . T.unpack
@@ -91,7 +91,7 @@ renderTypeHighPrecSource = \case
   t          -> parens <$> renderTypeSource t
 
 neverBootTypes :: [Name]
-neverBootTypes = [typeName ":::"]
+neverBootTypes = [typeName (TyConName ":::")]
 
 allTypeNames :: Type -> [Name]
 allTypeNames = childrenBi

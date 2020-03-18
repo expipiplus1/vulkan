@@ -1,22 +1,25 @@
 module Marshal.Marshalable
-  where
+  ( module Marshal.Marshalable
+  , CName(..)
+  ) where
 
 import           Relude
 import           Data.Vector                   as V
                                          hiding ( empty )
 
 import           CType
+import           Spec.Name
 
 data ParameterLength
   = NullTerminated
-  | NamedLength Text
-  | NamedMemberLength Text Text
+  | NamedLength CName
+  | NamedMemberLength CName CName
     -- ^ The length is specified by a member of another (struct) parameter, an
     -- example is vkAllocateCommandBuffers
   deriving (Show, Eq)
 
 class Marshalable a where
-  name       :: a -> Text
+  name       :: a -> CName
   type'      :: a -> CType
   values     :: a -> Vector Text
   lengths    :: a -> Vector ParameterLength

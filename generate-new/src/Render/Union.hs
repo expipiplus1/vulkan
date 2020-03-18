@@ -15,6 +15,7 @@ import           Foreign.Ptr
 import           Control.Monad.Trans.Cont       ( runContT )
 import           Foreign.Marshal.Alloc
 import           Control.Exception              ( bracket )
+import           Language.Haskell.TH            ( mkName )
 
 import           Spec.Parse
 import           Haskell                       as H
@@ -27,24 +28,33 @@ import           Render.Stmts
 import           Marshal.Struct
 import           Render.Scheme
 import           Render.SpecInfo
+import           Render.Names
 
 renderUnion
-  :: (HasErr r, Member (Reader RenderParams) r, HasSpecInfo r, HasStmts r)
+  :: ( HasErr r
+     , HasRenderParams r
+     , HasSpecInfo r
+     , HasStmts r
+     , HasRenderedNames r
+     )
   => MarshaledStruct AUnion
   -> Sem r RenderElement
-renderUnion marshaled@MarshaledStruct {..} = context msName $ do
+renderUnion marshaled@MarshaledStruct {..} = context (unCName msName) $ do
   RenderParams {..} <- ask
   let Struct {..} = msStruct
-  genRe ("union " <> sName) $ do
+  genRe ("union " <> unCName sName) $ do
     let n = mkTyName sName
     ms <- traverseV (renderUnionMember sName) msMembers
     tellDataExport n
     tellDoc $ "data" <+> pretty n <> line <> indent
       2
-      (vsep $ zipWith (<+>) ("=" : repeat "|") (toList ms) <> ["deriving (Show)"])
+      (  vsep
+      $  zipWith (<+>) ("=" : repeat "|") (toList ms)
+      <> ["deriving (Show)"]
+      )
 
     let -- No useful information in the siblings in a union..
-        lookupMember :: Text -> Maybe (SiblingInfo StructMember)
+        lookupMember :: CName -> Maybe (SiblingInfo StructMember)
         lookupMember = const Nothing
     runReader lookupMember $ do
 
@@ -58,18 +68,19 @@ renderUnion marshaled@MarshaledStruct {..} = context msName $ do
         of
           []  -> pure ()
           [d] -> peekUnionFunction d marshaled
-          _   -> throw ("Found multiple union discriminators for " <> n)
+          _ ->
+            throw ("Found multiple union discriminators for " <> unCName sName)
 
 renderUnionMember
   :: (HasErr r, HasRenderParams r, HasRenderElem r, HasSpecInfo r)
-  => Text
+  => CName
   -- ^ union type name
   -> MarshaledStructMember
   -> Sem r (Doc ())
 renderUnionMember tyName MarshaledStructMember {..} = do
   RenderParams {..} <- ask
   let StructMember {..} = msmStructMember
-  let con                 = mkConName tyName smName
+  let con               = mkConName tyName smName
   t    <- note "Union member is elided" =<< schemeType msmScheme
   tDoc <- renderTypeHighPrec t
   pure $ pretty con <+> tDoc
@@ -82,6 +93,7 @@ toCStructInstance
      , HasSiblingInfo StructMember r
      , HasSpecInfo r
      , HasStmts r
+     , HasRenderedNames r
      )
   => MarshaledStruct AUnion
   -> Sem r ()
@@ -123,7 +135,7 @@ toCStructInstance MarshaledStruct {..} = do
           pure $ "lift $" <+> d
         ContTStmts d -> pure d
 
-      tellImportWith (TyConName ty) (ConName con)
+      tellImportWith ty con
       pure $ pretty con <+> "v" <+> "->" <+> pokeDoc
 
   cases           <- traverseV mkCase (toList msMembers)
@@ -132,7 +144,7 @@ toCStructInstance MarshaledStruct {..} = do
     (ConT ''Ptr :@ structT ~> structT ~> ConT ''IO :@ aVar ~> ConT ''IO :@ aVar)
 
   withZeroCStructTDoc <-
-    let retVar = VarT (typeName "b")
+    let retVar = VarT (mkName "b")
     in  renderType
           ((ConT ''Ptr :@ structT ~> ConT ''IO :@ retVar) ~> ConT ''IO :@ retVar
           )
@@ -176,7 +188,7 @@ peekUnionFunction UnionDiscriminator {..} MarshaledStruct {..} = do
   RenderParams {..} <- ask
   let n        = mkTyName msName
       uTy      = ConT (typeName n)
-      fName    = "peek" <> n
+      fName    = TermName ("peek" <> unName n)
       discTy   = ConT (typeName (mkTyName udSiblingType))
       discName = "tag"
       ptrName  = "p"
@@ -186,21 +198,19 @@ peekUnionFunction UnionDiscriminator {..} MarshaledStruct {..} = do
       note "Unable to find union constructor in discriminant map"
         $ find ((== smName msmStructMember) . snd) udValueConstructorMap
     let pat' = mkPatternName pat
-        con' = mkConName n con
+        con' = mkConName msName con
     ty    <- cToHsType DoPreserve (smType msmStructMember)
     tyDoc <- renderTypeHighPrec ty
     tellImport 'castPtr
     let addr = AddrDoc ("castPtr @_ @" <> tyDoc <+> ptrName)
-    tellImport (ConName pat')
-    tellImportWith (TyConName n) (ConName con')
-    let from   = smType msmStructMember
-        scheme = msmScheme
+    tellImport pat'
+    tellImportWith n con'
     subPeek <- renderStmtsIO mempty $ do
       addrRef <- stmt (Just (ConT ''Ptr :@ ty)) (Just "p") $ pure $ Pure
         InlineOnce
         addr
       note "Nothing to peek to fill union with"
-        =<< peekStmt msmStructMember addrRef scheme
+        =<< peekStmt msmStructMember addrRef msmScheme
     pure $ pretty pat' <+> "->" <+> pretty con' <+> "<$>" <+> parens subPeek
 
   tDoc <- renderType (discTy ~> ConT ''Ptr :@ uTy ~> ConT ''IO :@ uTy)

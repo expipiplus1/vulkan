@@ -1,13 +1,16 @@
-module Spec.Types where
+module Spec.Types
+  ( CName(..)
+  , module Spec.Types
+  ) where
 
 import           Relude                  hiding ( Handle )
 import           Data.Vector                    ( Vector )
 import           Data.Version
 
+import           Spec.Name
 import           Spec.APIConstant
 import           CType
 import qualified Marshal.Marshalable           as M
-import           Haskell.Name
 
 data Spec = Spec
   { specHandles            :: Vector Handle
@@ -29,7 +32,7 @@ data Spec = Spec
 --
 
 data Feature = Feature
-  { fName :: Text
+  { fName :: CName
   , fVersion :: Version
   , fRequires :: Vector Require
   }
@@ -45,9 +48,9 @@ data Extension = Extension
 
 data Require = Require
   { rComment        :: Maybe Text
-  , rCommandNames   :: Vector HName
-  , rTypeNames      :: Vector HName
-  , rEnumValueNames :: Vector HName
+  , rCommandNames   :: Vector CName
+  , rTypeNames      :: Vector CName
+  , rEnumValueNames :: Vector CName
   }
   deriving (Show)
 
@@ -56,7 +59,7 @@ data Require = Require
 --
 
 data Constant = Constant
-  { constName :: Text
+  { constName :: CName
   , constValue :: ConstantValue
   }
   deriving (Show)
@@ -67,8 +70,8 @@ data Constant = Constant
 --
 
 data Alias = Alias
-  { aName :: Text
-  , aTarget :: Text
+  { aName :: CName
+  , aTarget :: CName
   , aType :: AliasType
   }
   deriving (Show)
@@ -84,7 +87,7 @@ data AliasType
 --
 
 data FuncPointer = FuncPointer
-  { fpName :: Text
+  { fpName :: CName
   , fpType :: CType
   }
   deriving (Show)
@@ -94,7 +97,7 @@ data FuncPointer = FuncPointer
 --
 
 data Handle = Handle
-  { hName :: Text
+  { hName :: CName
   , hDispatchable :: Dispatchable
   , hLevel :: HandleLevel
   }
@@ -127,7 +130,7 @@ type family SizeType (a :: WithSize) where
   SizeType 'WithoutSize = ()
 
 data StructOrUnion (t :: StructOrUnionType) (s :: WithSize) = Struct
-  { sName :: Text
+  { sName :: CName
   , sMembers :: Vector (StructMember' s)
   , sSize :: SizeType s
   , sAlignment :: SizeType s
@@ -136,7 +139,7 @@ data StructOrUnion (t :: StructOrUnionType) (s :: WithSize) = Struct
 deriving instance Show (StructOrUnion t 'WithSize)
 
 data StructMember' (s :: WithSize) = StructMember
-  { smName :: Text
+  { smName :: CName
   , smType :: CType
   , smValues :: Vector Text
   , smLengths :: Vector M.ParameterLength
@@ -160,7 +163,7 @@ instance M.Marshalable StructMember where
 --
 
 data Command = Command
-  { cName :: Text
+  { cName :: CName
   , cReturnType :: CType
   , cParameters :: Vector Parameter
   , cSuccessCodes :: Vector Text
@@ -169,7 +172,7 @@ data Command = Command
   deriving (Show, Eq)
 
 data Parameter = Parameter
-  { pName       :: Text
+  { pName       :: CName
   , pType       :: CType
   , pLengths    :: Vector M.ParameterLength
   , pIsOptional :: Vector Bool
@@ -188,14 +191,14 @@ instance M.Marshalable Parameter where
 --
 
 data Enum' = Enum
-  { eName :: Text
+  { eName :: CName
   , eValues :: Vector EnumValue
   , eType :: EnumType
   }
   deriving (Show, Eq)
 
 data EnumValue = EnumValue
-  { evName        :: Text
+  { evName        :: CName
   , evValue       :: Int64
   , evIsExtension :: Bool
   }

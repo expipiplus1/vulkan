@@ -36,6 +36,7 @@ import           Marshal.Scheme
 import           Render.Element
 import           Render.SpecInfo
 import           Render.Utils
+import           Render.Names
 import           Render.Element.Write
 import           Render.Aggregate
 import           Render.Stmts                   ( useViaName )
@@ -58,77 +59,84 @@ main =
       sayErr (show (length es) <+> "errors")
     Right () -> pure ()
  where
+  go :: Sem '[Err , Fixpoint , Embed IO , Final IO] ()
   go = do
     specText <- timeItNamed "Reading spec"
       $ readFileBS "./Vulkan-Docs/xml/vk.xml"
 
     (spec@Spec {..}, getSize) <- timeItNamed "Parsing spec" $ parseSpec specText
 
-    let
-      aliasMap :: Map.HashMap Text Text
-      aliasMap =
-        fromList [ (aName, aTarget) | Alias {..} <- toList specAliases ]
-      resolveAlias :: Text -> Text
-      resolveAlias t = maybe t resolveAlias (Map.lookup t aliasMap) -- TODO: handle cycles!
-      structNames :: HashSet Text
-      structNames =
-        fromList . (extraStructNames <>) . toList . fmap sName $ specStructs
-      isStruct' = (`member` structNames)
-      bitmaskNames :: HashSet Text
-      bitmaskNames =
-        fromList [ eName | Enum {..} <- toList specEnums, eType == ABitmask ]
-      isBitmask     = (`member` bitmaskNames)
-      isBitmaskType = \case
-        TypeName n -> isBitmask n || isBitmask (resolveAlias n)
-        _          -> False
-      nonDispatchableHandleNames :: HashSet Text
-      nonDispatchableHandleNames = fromList
-        [ hName
-        | Handle {..} <- toList specHandles
-        , hDispatchable == NonDispatchable
-        ]
-      isNonDispatchableHandle     = (`member` nonDispatchableHandleNames)
-      isNonDispatchableHandleType = \case
-        TypeName n ->
-          isNonDispatchableHandle n || isNonDispatchableHandle (resolveAlias n)
-        _ -> False
-      dispatchableHandleNames :: HashSet Text
-      dispatchableHandleNames = fromList
-        [ hName
-        | Handle {..} <- toList specHandles
-        , hDispatchable == Dispatchable
-        ]
-      -- TODO Remove, these will not be defaultable once we bundle the
-      -- command pointers
-      isDispatchableHandle     = (`member` dispatchableHandleNames)
-      isDispatchableHandleType = \case
-        TypeName n ->
-          isDispatchableHandle n || isDispatchableHandle (resolveAlias n)
-        _ -> False
-      mps = MarshalParams
-        (    isDefaultable'
-        <||> isBitmaskType
-        <||> isNonDispatchableHandleType
-        <||> isDispatchableHandleType
-        )
-        isStruct'
-        isPassAsPointerType'
-        (\p a -> asum . fmap (\(BespokeScheme f) -> f p a) $ bespokeSchemes)
-
-    (ss, us, cs) <- runReader mps $ do
-      ss <- timeItNamed "Marshaling structs"
-        $ traverseV marshalStruct specStructs
-      us <- timeItNamed "Marshaling unions" $ traverseV marshalStruct specUnions
-      cs <- timeItNamed "Marshaling commands"
-        $ traverseV marshalCommand specCommands
-        -- TODO: Don't use all commands here, just those commands referenced by
-        -- features and extensions. Similarly for specs
-      pure (ss, us, cs)
-
     runReader (renderParams specHandles)
+      . withRenderedNames spec
       . withSpecInfo spec getSize
       . withTypeInfo spec
       $ do
+
+          let
+            aliasMap :: Map.HashMap CName CName
+            aliasMap =
+              fromList [ (aName, aTarget) | Alias {..} <- toList specAliases ]
+            resolveAlias :: CName -> CName
+            resolveAlias t = maybe t resolveAlias (Map.lookup t aliasMap) -- TODO: handle cycles!
+            structNames :: HashSet CName
+            structNames =
+              fromList
+                . (extraStructNames <>)
+                . toList
+                . fmap sName
+                $ specStructs
+            bitmaskNames :: HashSet CName
+            bitmaskNames = fromList
+              [ eName | Enum {..} <- toList specEnums, eType == ABitmask ]
+            isBitmask     = (`member` bitmaskNames)
+            isBitmaskType = \case
+              TypeName n -> isBitmask n || isBitmask (resolveAlias n)
+              _          -> False
+            nonDispatchableHandleNames :: HashSet CName
+            nonDispatchableHandleNames = fromList
+              [ hName
+              | Handle {..} <- toList specHandles
+              , hDispatchable == NonDispatchable
+              ]
+            isNonDispatchableHandle     = (`member` nonDispatchableHandleNames)
+            isNonDispatchableHandleType = \case
+              TypeName n -> isNonDispatchableHandle n
+                || isNonDispatchableHandle (resolveAlias n)
+              _ -> False
+            dispatchableHandleNames :: HashSet CName
+            dispatchableHandleNames = fromList
+              [ hName
+              | Handle {..} <- toList specHandles
+              , hDispatchable == Dispatchable
+              ]
+            -- TODO Remove, these will not be defaultable once we bundle the
+            -- command pointers
+            isDispatchableHandle     = (`member` dispatchableHandleNames)
+            isDispatchableHandleType = \case
+              TypeName n ->
+                isDispatchableHandle n || isDispatchableHandle (resolveAlias n)
+              _ -> False
+            mps = MarshalParams
+              (    isDefaultable'
+              <||> isBitmaskType
+              <||> isNonDispatchableHandleType
+              <||> isDispatchableHandleType
+              )
+              isPassAsPointerType'
+              (\p a ->
+                asum . fmap (\(BespokeScheme f) -> f p a) $ bespokeSchemes
+              )
+
+          (ss, us, cs) <- runReader mps $ do
+            ss <- timeItNamed "Marshaling structs"
+              $ traverseV marshalStruct specStructs
+            us <- timeItNamed "Marshaling unions"
+              $ traverseV marshalStruct specUnions
+            cs <- timeItNamed "Marshaling commands"
+              $ traverseV marshalCommand specCommands
+              -- TODO: Don't use all commands here, just those commands referenced by
+              -- features and extensions. Similarly for specs
+            pure (ss, us, cs)
 
           renderElements <-
             timeItNamed "Rendering"
@@ -143,7 +151,11 @@ main =
           timeItNamed "writing" $ renderSegments "out" (mergeElements groups)
 
 ----------------------------------------------------------------
--- Names
+-- Marshal Params
+----------------------------------------------------------------
+
+----------------------------------------------------------------
+-- Render Params
 ----------------------------------------------------------------
 
 renderParams :: V.Vector Handle -> RenderParams
@@ -152,23 +164,32 @@ renderParams handles = r
   dispatchableHandleNames = Set.fromList
     [ hName | Handle {..} <- toList handles, hDispatchable == Dispatchable ]
   r = RenderParams
-    { mkTyName                    = unReservedWord . upperCaseFirst
+    { mkTyName = TyConName . unReservedWord . upperCaseFirst . unCName
     , mkConName                   = \parent ->
-                                      unReservedWord
+                                      ConName
+                                        . unReservedWord
                                         . (case parent of
                                             "VkPerformanceCounterResultKHR" -> ("Counter" <>)
                                             _ -> id
                                           )
                                         . upperCaseFirst
-    , mkMemberName                = unReservedWord . lowerCaseFirst
-    , mkFunName                   = unReservedWord
-    , mkParamName                 = unReservedWord
-    , mkPatternName               = unReservedWord
-    , mkHandleName                = unReservedWord
-    , mkFuncPointerName           = unReservedWord . T.tail
-    , mkFuncPointerMemberName     = unReservedWord . ("p" <>) . upperCaseFirst
-    , mkEmptyDataName             = (<> "_T")
-    , mkDispatchableHandlePtrName = (<> "Handle") . lowerCaseFirst . T.drop 2
+                                        . unCName
+    , mkMemberName = TermName . unReservedWord . lowerCaseFirst . unCName
+    , mkFunName                   = TermName . unReservedWord . unCName
+    , mkParamName                 = TermName . unReservedWord . unCName
+    , mkPatternName               = ConName . unReservedWord . unCName
+    , mkHandleName                = TyConName . unReservedWord . unCName
+    , mkFuncPointerName = TyConName . unReservedWord . T.tail . unCName
+    , mkFuncPointerMemberName     = TermName
+                                    . unReservedWord
+                                    . ("p" <>)
+                                    . upperCaseFirst
+                                    . unCName
+    , mkEmptyDataName             = TyConName . (<> "_T") . unCName
+    , mkDispatchableHandlePtrName = TermName
+                                    . (<> "Handle")
+                                    . lowerCaseFirst
+                                    . dropVk
     , alwaysQualifiedNames        = V.fromList [''VSS.Vector]
     , mkIdiomaticType             =
       (`List.lookup` (  [ wrappedIdiomaticType ''Float  ''CFloat  'CFloat
@@ -182,13 +203,12 @@ renderParams handles = r
                             (ConT (typeName $ mkHandleName r name))
                             (do
                               let h = mkDispatchableHandlePtrName r name
-                              tellImportWithAll (TyConName (mkTyName r name))
+                              tellImportWithAll (mkTyName r name)
                               pure (pretty h)
                             )
                             (do
                               let c = mkConName r name name
-                              tellImportWith (TyConName (mkTyName r name))
-                                             (ConName c)
+                              tellImportWith (mkTyName r name) c
                               case name of
                                 "VkInstance" -> do
                                   tellImport (TermName "initInstanceCmds")
@@ -252,11 +272,11 @@ renderParams handles = r
     , successCodeType             = TypeName "VkResult"
     , isSuccessCodeReturned       = (/= "VK_SUCCESS")
     , firstSuccessCode            = "VK_SUCCESS"
-    , exceptionTypeName           = "VulkanException"
+    , exceptionTypeName           = TyConName "VulkanException"
     , complexMemberLengthFunction = curry3 $ \case
       ("pAllocateInfo", "descriptorSetCount", sibling) -> Just $ do
         tellQualImport 'V.length
-        tellImportWithAll (TyConName (mkTyName r "VkDescriptorSetAllocateInfo"))
+        tellImportWithAll (mkTyName r "VkDescriptorSetAllocateInfo")
         pure
           $   "fromIntegral . Data.Vector.length ."
           <+> pretty (mkMemberName r "pSetLayouts")
@@ -293,8 +313,8 @@ wrappedIdiomaticType t w c =
 -- Bespoke Vulkan stuff
 ----------------------------------------------------------------
 
-dropVk :: Text -> Text
-dropVk t = if "vk" `T.isPrefixOf` T.toLower t
+dropVk :: CName -> Text
+dropVk (CName t) = if "vk" `T.isPrefixOf` T.toLower t
   then T.dropWhile (== '_') . T.drop 2 $ t
   else t
 
@@ -352,7 +372,7 @@ isPassAsPointerType' = \case
   _ -> False
 
 -- TODO: Remove, extra union names and handle
-extraStructNames :: [Text]
+extraStructNames :: [CName]
 extraStructNames = ["VkClearColorValue", "VkSemaphore"]
 
 ----------------------------------------------------------------

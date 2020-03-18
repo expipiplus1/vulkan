@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: d9856f8c272b961261e3dee1f30c03dedcdcadb731b30fe717bef53b1ce1d2e2
+-- hash: 57df901bd2301da39bec371bcd5daaf39fbfceb7d615d4046ff2f334354e6130
 
 name:           generate-new
 version:        0.0.0
@@ -19,6 +19,7 @@ build-type:     Simple
 executable generate
   main-is: Main.hs
   other-modules:
+      AssignModules
       Bespoke
       Bespoke.Seeds
       Bespoke.Utils
@@ -47,6 +48,7 @@ executable generate
       Render.Enum
       Render.FuncPointer
       Render.Handle
+      Render.Names
       Render.Peek
       Render.Scheme
       Render.Spec
@@ -61,6 +63,7 @@ executable generate
       Render.Utils
       Render.VkException
       Spec.APIConstant
+      Spec.Name
       Spec.Parse
       Spec.Types
       Text.InterpolatedString.Perl6.Unindented

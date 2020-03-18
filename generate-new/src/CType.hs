@@ -14,8 +14,10 @@ import qualified Language.C.Types              as C
 import           Data.ByteString.Char8         as BS
 import           Polysemy
 import           Polysemy.Reader
-import qualified Text.ParserCombinators.Parsec.Combinator as Parsec
-import qualified Text.Parsec.Char as Parsec
+import qualified Text.ParserCombinators.Parsec.Combinator
+                                               as Parsec
+import qualified Text.Parsec.Char              as Parsec
+import           Spec.Name
 
 
 import           Error
@@ -31,13 +33,13 @@ data CType
     -- ^ Qualifies the pointed to type
   | Array Qualifier ArraySize CType
     -- ^ Qualifies the pointed to type
-  | TypeName Text
+  | TypeName CName
   | Proto CType [(Maybe Text, CType)]
   deriving (Show, Eq, Ord)
 
 data ArraySize
   = NumericArraySize Word
-  | SymbolicArraySize Text
+  | SymbolicArraySize CName
   deriving (Show, Eq, Ord)
 
 data Qualifier
@@ -104,12 +106,12 @@ arraySize = \case
   C.SizedByInteger i | i >= 0    -> pure $ NumericArraySize (fromInteger i)
                      | otherwise -> throw "Negative C array size"
   C.SizedByIdentifier t ->
-    pure $ SymbolicArraySize (fromString (unCIdentifier t))
+    pure $ SymbolicArraySize (CName . fromString . unCIdentifier $ t)
   _ -> throw "Unhandled C Array size"
 
 nameToType :: HasErr r => C.TypeSpecifier -> Sem r CType
 nameToType = \case
-  C.TypeName n    -> pure $ TypeName (fromString $ unCIdentifier n)
+  C.TypeName n    -> pure $ TypeName (CName . fromString . unCIdentifier $ n)
   C.Float         -> pure Float
   C.Double        -> pure Double
   C.Void          -> pure Void
@@ -122,7 +124,7 @@ isPtrType = \case
   Ptr _ _ -> True
   _       -> False
 
-getAllTypeNames :: CType -> [Text]
+getAllTypeNames :: CType -> [CName]
 getAllTypeNames = \case
   Float       -> []
   Double      -> []
@@ -149,7 +151,7 @@ removeSubString n h =
 ----------------------------------------------------------------
 
 cTypeSize
-  :: (Text -> Maybe Int)
+  :: (CName -> Maybe Int)
   -> (CType -> Maybe (Int, Int))
   -> CType
   -> Maybe (Int, Int)
@@ -173,7 +175,7 @@ cTypeSize constantValue nonBaseSize = \case
     ~(es, ea) <- cTypeSize constantValue nonBaseSize t
     Just (es * fromIntegral n, ea)
   Array _ (SymbolicArraySize s) t -> do
-    n        <- constantValue s
+    n         <- constantValue s
     ~(es, ea) <- cTypeSize constantValue nonBaseSize t
     Just (es * fromIntegral n, ea)
   t -> nonBaseSize t

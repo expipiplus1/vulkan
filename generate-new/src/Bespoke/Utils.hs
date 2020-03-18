@@ -29,6 +29,7 @@ import           GHC.TypeNats
 
 import           Render.Element
 import           Error
+import           Haskell.Name
 
 zeroClass :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 zeroClass = genRe "zero class" $ do
@@ -56,7 +57,7 @@ zeroClass = genRe "zero class" $ do
 
   traverseV_ tellQualImport [''VSS.Vector, 'VSS.replicate]
 
-  tellExport (EClass "Zero")
+  tellExport (EClass (TyConName "Zero"))
   tellExplicitModule (ModName "Graphics.Vulkan.CStruct")
 
   tellDoc [qi|
@@ -169,7 +170,7 @@ marshalUtils = genRe "marshal utils" $ do
   tellQualImportWithAll ''VGSI.Vector
 
   traverseV_
-    (tellExport . ETerm)
+    (tellExport . ETerm . TermName)
     [ "withVec"
     , "withArray"
     , "withSizedArray"

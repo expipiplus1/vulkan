@@ -17,22 +17,22 @@ import           Haskell                       as H
 import           Render.Element
 import           Render.SpecInfo
 import           Render.Type
+import           Haskell.Name                   ( )
 
 vkExceptionRenderElement
-  :: (HasErr r, HasRenderParams r, HasSpecInfo r) =>
-  -- (Documentee -> Maybe Documentation) ->
-                                                     Enum' -> Sem r RenderElement
-vkExceptionRenderElement -- getDocumentation
-                         vkResultEnum = do
+  :: (HasErr r, HasRenderParams r, HasSpecInfo r)
+  => Enum'
+  -> Sem r RenderElement
+vkExceptionRenderElement vkResultEnum = do
   let getDocumentation = const Nothing
   genRe "VulkanException declaration" $ do
     tellExplicitModule (ModName "Graphics.Vulkan.Exception")
     RenderParams {..} <- ask
     tellImportWithAll ''Control.Exception.Exception
     vkResultTyDoc <- renderType =<< cToHsType DoNotPreserve successCodeType
-    tellImportWithAll (TyConName (mkTyName (eName vkResultEnum)))
+    tellImportWithAll (mkTyName (eName vkResultEnum))
     tellExport (EData exceptionTypeName)
-    let resultPatterns = evName <$> eValues vkResultEnum
+    let resultPatterns = mkPatternName . evName <$> eValues vkResultEnum
     tellDoc [qci|
         -- | This exception is thrown from calls to marshalled Vulkan commands
         -- which return a negative VkResult.
@@ -52,8 +52,8 @@ vkExceptionRenderElement -- getDocumentation
 data Documentee
 data Documentation
 
-displayExceptionCase :: (Documentee -> Maybe Documentation) -> Text -> Doc ()
-displayExceptionCase getDocumentation pat = [qci|
+displayExceptionCase :: (Documentee -> Maybe Documentation) -> HName -> Doc ()
+displayExceptionCase _getDocumentation pat = [qci|
   {pat} -> {fromMaybe ("show" <+> pretty pat) Nothing}
   |]
   -- {pat} -> {fromMaybe ("show" <+> pretty pat) (documentationToString =<< getDocumentation (Nested "VkResult" pat))}

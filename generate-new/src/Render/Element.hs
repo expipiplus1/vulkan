@@ -73,6 +73,7 @@ import           Render.Utils
 import           Haskell.Name
 import           CType
 import           Render.Type.Preserve
+import           Spec.Name
 import {-# SOURCE #-} Render.Stmts
 
 -- It would be nice to distinguish the type of render element and boot to
@@ -133,20 +134,22 @@ instance Semigroup RenderElement where
     , reExplicitModule    = reExplicitModule r1 <|> reExplicitModule r2
     }
 
-pattern ETerm :: Text -> Export
-pattern ETerm n = Export (TermName n) False Empty
+pattern ETerm :: HName -> Export
+pattern ETerm n = Export n False Empty
 
-pattern EPat :: Text -> Export
-pattern EPat n = Export (ConName n) False Empty
+pattern EPat :: HName -> Export
+pattern EPat n = Export n False Empty
 
-pattern EData :: Text -> Export
-pattern EData n = Export (TyConName n) True Empty
+pattern EType :: HName -> Export
+pattern EType n = Export n False Empty
 
-pattern EClass :: Text -> Export
-pattern EClass n = Export (TyConName n) True Empty
+-- | Exports with (..)
+pattern EData :: HName -> Export
+pattern EData n = Export n True Empty
 
-pattern EType :: Text -> Export
-pattern EType n = Export (TyConName n) False Empty
+-- | Exports with (..)
+pattern EClass :: HName -> Export
+pattern EClass n = Export n True Empty
 
 exportDoc :: Export -> Doc ()
 exportDoc Export {..} = renderExport
@@ -189,25 +192,25 @@ thNameNamespace n = case nameSpace n of
 type HasRenderParams r = MemberWithError (Reader RenderParams) r
 
 data RenderParams = RenderParams
-  { mkTyName :: Text -> Text
+  { mkTyName :: CName -> HName
   , mkConName
-      :: Text
+      :: CName
       -- ^ Parent union or enum name
-      -> Text
-      -> Text
-  , mkMemberName                :: Text -> Text
-  , mkFunName                   :: Text -> Text
-  , mkParamName                 :: Text -> Text
-  , mkPatternName               :: Text -> Text
-  , mkHandleName                :: Text -> Text
-  , mkFuncPointerName           :: Text -> Text
+      -> CName
+      -> HName
+  , mkMemberName                :: CName -> HName
+  , mkFunName                   :: CName -> HName
+  , mkParamName                 :: CName -> HName
+  , mkPatternName               :: CName -> HName
+  , mkHandleName                :: CName -> HName
+  , mkFuncPointerName           :: CName -> HName
     -- ^ Should be distinct from mkTyName
-  , mkFuncPointerMemberName     :: Text -> Text
+  , mkFuncPointerMemberName     :: CName -> HName
     -- ^ The name of function pointer members in the dynamic collection
-  , mkEmptyDataName             :: Text -> Text
+  , mkEmptyDataName             :: CName -> HName
     -- ^ The name of the empty data declaration used to tag pointer to opaque
     -- types
-  , mkDispatchableHandlePtrName :: Text -> Text
+  , mkDispatchableHandlePtrName :: CName -> HName
     -- ^ The record member name for the pointer member in dispatchable handles
   , alwaysQualifiedNames        :: Vector Name
   , mkIdiomaticType             :: Type -> Maybe IdiomaticType
@@ -221,16 +224,16 @@ data RenderParams = RenderParams
     -- ^ Is this success code returned from a function (failure codes are thrown)
     --
     -- use @const True@ to always return success codes
-  , firstSuccessCode            :: Text
+  , firstSuccessCode            :: CName
     -- Any code less than this is an error code
-  , exceptionTypeName           :: Text
+  , exceptionTypeName           :: HName
     -- The name for the exception wrapper
   , complexMemberLengthFunction
       :: forall r
        . (HasRenderElem r, HasRenderParams r)
-      => Text
+      => CName
       -- ^ Sibling name
-      -> Text
+      -> CName
       -- ^ Member name
       -> Doc ()
       -- ^ What you must use to refer to the sibling, as it may be different from the name
@@ -242,13 +245,13 @@ data RenderParams = RenderParams
   }
 
 data UnionDiscriminator = UnionDiscriminator
-  { udUnionType           :: Text
+  { udUnionType           :: CName
     -- ^ The type of the union value
-  , udSiblingType         :: Text
+  , udSiblingType         :: CName
     -- ^ The (enum) type of the discriminator
-  , udSiblingName         :: Text
+  , udSiblingName         :: CName
     -- ^ The struct member which contains the discriminator
-  , udValueConstructorMap :: [(Text, Text)]
+  , udValueConstructorMap :: [(CName, CName)]
     -- ^ A map of (enumerant, union member) name
   }
 
@@ -317,7 +320,7 @@ tellExport e = modify' (\r -> r { reExports = reExports r <> V.singleton e })
 
 -- | A convenience for declaraing a data declaration and also putting it in the
 -- hs boot file
-tellDataExport :: MemberWithError (State RenderElement) r => Text -> Sem r ()
+tellDataExport :: MemberWithError (State RenderElement) r => HName -> Sem r ()
 tellDataExport e = do
   let dat = EData e
   modify' (\r -> r { reExports = reExports r <> V.singleton dat })

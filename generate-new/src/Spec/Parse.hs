@@ -43,7 +43,6 @@ import           CType.Size
 import           Error
 import           Bespoke
 import           Marshal.Marshalable            ( ParameterLength(..) )
-import           Haskell.Name
 import           Spec.Types
 
 ----------------------------------------------------------------
@@ -97,7 +96,7 @@ parseSpec bs = do
         specAPIConstants       <- parseAPIConstants (contents n)
         specExtensionConstants <- parseExtensionConstants (contents n)
         let
-          sizeMap :: Map.Map Text (Int, Int)
+          sizeMap :: Map.Map CName (Int, Int)
           sizeMap =
             Map.fromList
               $  bespokeSizes
@@ -107,7 +106,7 @@ parseSpec bs = do
               <> [ (fpName, (8, 8))
                  | FuncPointer {..} <- V.toList specFuncPointers
                  ]
-          constantMap :: Map.Map Text Int
+          constantMap :: Map.Map CName Int
           constantMap = Map.fromList
             [ (n, fromIntegral v)
             | Constant n (IntegralValue v) <- V.toList
@@ -128,8 +127,8 @@ parseSpec bs = do
 sizeAll
   :: forall r
    . HasErr r
-  => Map.Map Text (Int, Int)
-  -> (Text -> Maybe Int)
+  => Map.Map CName (Int, Int)
+  -> (CName -> Maybe Int)
   -> Vector (StructOrUnion AUnion WithoutSize)
   -> Vector (StructOrUnion AStruct WithoutSize)
   -> Sem
@@ -144,7 +143,7 @@ sizeAll typeSizes constantMap unions structs = do
            (StructOrUnion AUnion WithoutSize)
            (StructOrUnion AStruct WithoutSize)
       -> Sem
-           (State (Map.Map Text (Int, Int)) ': r)
+           (State (Map.Map CName (Int, Int)) ': r)
            (Maybe (Either Union Struct))
     getSize m =
       let getLocalSize = \case
@@ -164,8 +163,8 @@ sizeAll typeSizes constantMap unions structs = do
   (m, r) <- runState initial $ tryTwice both try
 
   let (failed, succeeded) = partitionEithers . V.toList $ r
-  forV_ failed
-    $ \s -> throw ("Unable to calculate size for " <> either sName sName s)
+  forV_ failed $ \s -> throw
+    ("Unable to calculate size for " <> (unCName . either sName sName) s)
   let (us, ss) = bimap V.fromList V.fromList $ partitionEithers succeeded
   pure (us, ss, getSize m)
 
@@ -219,7 +218,7 @@ parseFeatures es = V.fromList
   parseFeature :: Node -> P Feature
   parseFeature n = do
     fName <- nameAttr "feature" n
-    context fName $ do
+    context (unCName fName) $ do
       fVersion <- runReadP parseVersion
         =<< note "feature has no version" (getAttr "number" n)
       fRequires <- parseRequires n
@@ -231,7 +230,7 @@ parseExtensions es = V.fromList <$> sequenceV
  where
   parseExtension :: Node -> P Extension
   parseExtension n = do
-    exName      <- nameAttr "extension" n
+    exName      <- decode =<< note "extension has no name" (getAttr "name" n)
     exNumber    <- readAttr "number" n
     exRequires  <- parseRequires n
     exSupported <- decode
@@ -246,14 +245,14 @@ parseRequires n = V.fromList <$> traverseV
   parseRequire :: Node -> P Require
   parseRequire r = do
     rComment   <- traverse decode (getAttr "comment" r)
-    rTypeNames <- V.fromList . fmap TyConName <$> sequenceV
+    rTypeNames <- V.fromList <$> sequenceV
       [ nameAttr "require type" t | Element t <- contents r, "type" == name t ]
-    rCommandNames <- V.fromList . fmap TermName <$> sequenceV
+    rCommandNames <- V.fromList <$> sequenceV
       [ nameAttr "require commands" t
       | Element t <- contents r
       , "command" == name t
       ]
-    rEnumValueNames <- V.fromList . fmap ConName <$> sequenceV
+    rEnumValueNames <- V.fromList <$> sequenceV
       [ nameAttr "require enum" t | Element t <- contents r, "enum" == name t ]
     pure Require { .. }
 
@@ -262,32 +261,30 @@ parseRequires n = V.fromList <$> traverseV
 ----------------------------------------------------------------
 
 parseAPIConstants :: [Content] -> P (Vector Constant)
-parseAPIConstants es = do
-  V.fromList <$> sequenceV
-    [ do
-        n' <- decode n
-        context n' $ (Constant n' <$> parseConstant v)
-    | Element e <- es
-    , "enums" == name e
-    , Just "API Constants" <- pure $ getAttr "name" e
-    , (n, v)               <- someConstants e
-    ]
+parseAPIConstants es = V.fromList <$> sequenceV
+  [ do
+      n' <- decode n
+      context n' (Constant (CName n') <$> parseConstant v)
+  | Element e <- es
+  , "enums" == name e
+  , Just "API Constants" <- pure $ getAttr "name" e
+  , (n, v)               <- someConstants e
+  ]
 
 parseExtensionConstants :: [Content] -> P (Vector Constant)
-parseExtensionConstants es = do
-  V.fromList <$> sequenceV
-    [ do
-        n' <- decode n
-        context n' $ (Constant n' <$> parseConstant v)
-    | Element e <- es
-    , "extensions" == name e
-    , Element ex <- contents e
-    , "extension" == name ex
-    , notDisabled ex
-    , Element r <- contents ex
-    , "require" == name r
-    , (n, v) <- someConstants r
-    ]
+parseExtensionConstants es = V.fromList <$> sequenceV
+  [ do
+      n' <- decode n
+      context n' $ (Constant (CName n') <$> parseConstant v)
+  | Element e <- es
+  , "extensions" == name e
+  , Element ex <- contents e
+  , "extension" == name ex
+  , notDisabled ex
+  , Element r <- contents ex
+  , "require" == name r
+  , (n, v) <- someConstants r
+  ]
 
 someConstants :: Node -> [(ByteString, ByteString)]
 someConstants r =
@@ -309,7 +306,7 @@ parseTypeAliases categories es =
     .  sequenceV
     $ [ do
            aName   <- nameAttr "struct alias" n
-           aTarget <- decode alias
+           aTarget <- decodeName alias
            let aType = TypeAlias
            pure Alias { .. }
        | Element n <- es
@@ -322,17 +319,17 @@ parseTypeAliases categories es =
 parseBitmaskAliases :: [Content] -> P (Vector Alias)
 parseBitmaskAliases es =
   fmap fromList
-    .  sequenceV
-    $  [ do
-           aName   <- nameElem "bitmask alias" n
-           aTarget <- decode requires
-           let aType = TypeAlias
-           pure Alias { .. }
-       | Element n <- es
-       , "type" == name n
-       , Just requires  <- pure $ getAttr "requires" n
-       , Just "bitmask" <- pure $ getAttr "category" n
-       ]
+    . sequenceV
+    $ [ do
+          aName   <- nameElem "bitmask alias" n
+          aTarget <- decodeName requires
+          let aType = TypeAlias
+          pure Alias { .. }
+      | Element n <- es
+      , "type" == name n
+      , Just requires  <- pure $ getAttr "requires" n
+      , Just "bitmask" <- pure $ getAttr "category" n
+      ]
 
 parseEnumAliases :: Vector (Node, Maybe Int) -> P (Vector Alias)
 parseEnumAliases rs =
@@ -340,7 +337,7 @@ parseEnumAliases rs =
     . sequenceV
     $ [ do
           aName   <- nameAttr "enum alias" ee
-          aTarget <- decode alias
+          aTarget <- decodeName alias
           let aType = PatternAlias
           pure Alias { .. }
       | (r, _)     <- toList rs
@@ -356,7 +353,7 @@ parseCommandAliases es =
     . sequenceV
     $ [ do
           aName   <- nameAttr "alias" ee
-          aTarget <- decode alias
+          aTarget <- decodeName alias
           let aType = TermAlias
           pure Alias { .. }
       | Element ee <- es
@@ -370,7 +367,7 @@ parseConstantAliases es =
     . sequenceV
     $ [ do
           aName   <- nameAttr "enum alias" ee
-          aTarget <- decode alias
+          aTarget <- decodeName alias
           pure Alias { .. }
       | Element e <- es
       , "enums" == name e
@@ -392,7 +389,7 @@ parseHandles = onTypes "handle" parseHandle
   parseHandle :: Node -> P Handle
   parseHandle n = do
     hName <- nameElem "handle" n
-    context hName $ do
+    context (unCName hName) $ do
       typeString    <- note "Handle has no type" (elemText "type" n)
       hDispatchable <- case typeString of
         "VK_DEFINE_HANDLE" -> pure Dispatchable
@@ -419,7 +416,7 @@ parseFuncPointers = onTypes "funcpointer" parseFuncPointer
   parseFuncPointer :: Node -> P FuncPointer
   parseFuncPointer n = do
     fpName <- nameElem "funcpointer" n
-    context fpName $ do
+    context (unCName fpName) $ do
       let typeString = allTextOn ((`notElem` ["name", "comment"]) . name) n
       fpType <- parseCType typeString
       pure FuncPointer { .. }
@@ -461,7 +458,7 @@ parseEnums es = fromList <$> traverseV
   parseEnum evIsExtension eType n = do
     eName   <- nameAttr "enum" n
     eValues <- fromList <$> traverseV
-      (context eName . parseValue)
+      (context (unCName eName) . parseValue)
       [ e | Element e <- contents n, name e == "enum", not (isAlias e) ]
     pure Enum { .. }
    where
@@ -473,13 +470,13 @@ parseEnums es = fromList <$> traverseV
         Nothing -> (0x1 `shiftL`) <$> readAttr "bitpos" v
       pure EnumValue { .. }
 
-parseEnumExtensions :: Vector (Node, Maybe Int) -> P (Vector (Text, EnumValue))
+parseEnumExtensions :: Vector (Node, Maybe Int) -> P (Vector (CName, EnumValue))
 parseEnumExtensions rs =
   fmap V.fromList
     . sequenceV
     $ [ do
           v        <- enumValue number ee
-          extends' <- decode extends
+          extends' <- decodeName extends
           pure (extends', v)
       | (r, number) <- toList rs
       , Element ee  <- contents r
@@ -492,7 +489,7 @@ parseEnumExtensions rs =
   enumValue :: Maybe Int -> Node -> P EnumValue
   enumValue inheritedExNum ee = do
     evName <- nameAttr "enum extension" ee
-    context evName $ do
+    context (unCName evName) $ do
       evValue <- case getAttr "value" ee of
         Just bs -> readP bs
         Nothing -> case getAttr "bitpos" ee of
@@ -535,10 +532,10 @@ parseEnumExtensions rs =
     in
       fromIntegral (sign n)
 
-appendEnumExtensions :: Vector (Text, EnumValue) -> Vector Enum' -> Vector Enum'
+appendEnumExtensions :: Vector (CName, EnumValue) -> Vector Enum' -> Vector Enum'
 appendEnumExtensions extensions =
   let
-    extensionMap :: Map.Map Text (Vector EnumValue)
+    extensionMap :: Map.Map CName (Vector EnumValue)
     extensionMap =
       Map.fromListWith (<>) (toList (fmap V.singleton <$> extensions))
     getExtensions n = Map.findWithDefault V.empty n extensionMap
@@ -560,7 +557,7 @@ parseUnions = onTypes "union" parseStruct
 parseStruct :: Node -> P (StructOrUnion a WithoutSize)
 parseStruct n = do
   sName <- nameAttr "struct" n
-  context sName $ do
+  context (unCName sName) $ do
     sMembers <-
       fmap fromList
       . traverseV parseStructMember
@@ -762,13 +759,13 @@ elemText elemName node =
         [x] -> Just x
         _   -> Nothing
 
-nameElem :: Text -> Node -> P Text
+nameElem :: Text -> Node -> P CName
 nameElem debug n =
-  decode =<< note (debug <> " has no name") (elemText "name" n)
+  fmap CName $ decode =<< note (debug <> " has no name") (elemText "name" n)
 
-nameAttr :: Text -> Node -> P Text
+nameAttr :: Text -> Node -> P CName
 nameAttr debug n =
-  decode =<< note (debug <> " has no name") (getAttr "name" n)
+  fmap CName $ decode =<< note (debug <> " has no name") (getAttr "name" n)
 
 -- | Empty list if there is no such attribute
 listAttr :: (ByteString -> P a) -> ByteString -> Node -> P (Vector a)
@@ -784,10 +781,12 @@ boolListAttr = listAttr $ \case
 
 lenListAttr :: ByteString -> Node -> P (Vector ParameterLength)
 lenListAttr = listAttr $ \case
-  "null-terminated" -> pure NullTerminated
-  l | [param, member] <- tokenise "::" l ->
-    NamedMemberLength <$> decode param <*> decode member
-  l -> NamedLength <$> decode l
+  "null-terminated"                      -> pure NullTerminated
+  l | [param, member] <- tokenise "::" l -> do
+    s <- decode param
+    m <- decode member
+    pure $ NamedMemberLength (CName s) (CName m)
+  l -> NamedLength <$> decodeName l
 
 tokenise :: ByteString -> ByteString -> [ByteString]
 tokenise x y = h
@@ -831,7 +830,7 @@ tryTwice xs f =
       go :: f (Either a b) -> m (f (Either a b))
       go = traverse
         (\case
-          Left x -> f x >>= pure . \case
+          Left x -> f x <&> \case
             Nothing -> Left x
             Just r  -> Right r
           Right r -> pure $ Right r
