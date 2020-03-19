@@ -11,6 +11,7 @@ import           Relude                  hiding ( Reader
                                                 )
 import           Data.Text.Prettyprint.Doc
 import           Text.InterpolatedString.Perl6.Unindented
+import qualified Data.List.Extra               as List
 import           Polysemy
 import           Polysemy.Reader
 import           Polysemy.State
@@ -92,8 +93,11 @@ loader level handleType commands = do
   handleTDoc <- renderTypeSource handleType
   let handleDoc = pretty handleMemberName <+> "::" <+> handleTDoc
   tellDataExport tyName
-  tellDoc
-    $   "data"
+  tellImportWithAll (TyConName "Zero")
+  tellImport 'nullPtr
+  tellImport 'nullFunPtr
+  tellDoc $ vsep
+    [ "data"
     <+> pretty tyName
     <+> "="
     <+> pretty conName
@@ -101,6 +105,16 @@ loader level handleType commands = do
     <>  indent 2 (braceList (handleDoc : V.toList memberDocs))
     <>  line
     <>  indent 2 "deriving (Eq, Show)"
+    , "instance Zero" <+> pretty tyName <+> "where" <> line <> indent
+      2
+      ("zero =" <+> pretty conName <> line <> indent
+        2
+        (vsep . fmap sep $ List.chunksOf
+          8
+          ("nullPtr" : ("nullFunPtr" <$ V.toList memberDocs))
+        )
+      )
+    ]
 
 ----------------------------------------------------------------
 -- Filling out the structures
@@ -123,16 +137,16 @@ writeInitInstanceCmds instanceCommands = do
     ~> (ConT ''IO :@ ConT (typeName (mkTyName "InstanceCmds")))
     )
   tellImport 'castFunPtr
+  let getInstanceProcAddr' = mkFunName "vkGetInstanceProcAddr'"
   apps <-
     fmap (indent 2 . appList)
     . forV instanceCommands
     $ \MarshaledCommand { mcCommand = c@Command {..} } -> do
-        fTyDoc <- renderTypeHighPrecSource =<<
-          commandType c
+        fTyDoc <- renderTypeHighPrecSource =<< commandType c
         tellImportWith ''GHC.Ptr.Ptr 'GHC.Ptr.Ptr
         pure
           $ parens
-              [qqi|castFunPtr @_ @{fTyDoc} <$> vkGetInstanceProcAddr' handle (Ptr "{unCName cName}\\NUL"#)|]
+              [qqi|castFunPtr @_ @{fTyDoc} <$> {getInstanceProcAddr'} handle (Ptr "{unCName cName}\\NUL"#)|]
   tellExport (ETerm n)
   tellDoc [qqi|
     {n} :: {tDoc}
@@ -174,11 +188,12 @@ writeInitDeviceCmds deviceCommands = do
           $ parens
               [qqi|castFunPtr @_ @{fTyDoc} <$> getDeviceProcAddr' handle (Ptr "{unCName cName}\\NUL"#)|]
   tellExport (ETerm n)
+  let getInstanceProcAddr' = mkFunName "vkGetInstanceProcAddr'"
   tellDoc [qqi|
     {n} :: {tDoc}
     {n} instanceCmds handle = do
       pGetDeviceProcAddr <- castFunPtr @_ @{getDeviceProcAddrTDoc}
-          <$> vkGetInstanceProcAddr' (instanceCmdsHandle instanceCmds) (GHC.Ptr.Ptr "vkGetDeviceProcAddr\\NUL"#)
+          <$> {getInstanceProcAddr'} (instanceCmdsHandle instanceCmds) (GHC.Ptr.Ptr "vkGetDeviceProcAddr\\NUL"#)
       let getDeviceProcAddr' = mkVkGetDeviceProcAddr pGetDeviceProcAddr
       DeviceCmds handle
         {apps}
@@ -206,8 +221,8 @@ writeGetInstanceProcAddr = do
   let n = mkFunName "vkGetInstanceProcAddr'"
   tellExport (ETerm n)
   tellDoc [qqi|
-    -- | A version of 'vkGetInstanceProcAddr' which can be called with a
-    -- null pointer for the instance.
+    -- | A version of '{mkFunName "vkGetInstanceProcAddr"}' which can be called
+    -- with a null pointer for the instance.
     foreign import ccall
     #if !defined(SAFE_FOREIGN_CALLS)
       unsafe

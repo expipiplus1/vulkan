@@ -8,6 +8,7 @@ import           Relude                  hiding ( runReader
                                                 )
 import           Relude.Extra.Map
 import           Say
+import           Data.Char                      ( isLower )
 import           System.TimeIt
 import           Polysemy
 import           Polysemy.Fixpoint
@@ -144,10 +145,6 @@ main =
           timeItNamed "writing" $ renderSegments "out" (mergeElements groups)
 
 ----------------------------------------------------------------
--- Marshal Params
-----------------------------------------------------------------
-
-----------------------------------------------------------------
 -- Render Params
 ----------------------------------------------------------------
 
@@ -166,18 +163,22 @@ renderParams handles = r
                                             _ -> id
                                           )
                                         . upperCaseFirst
-                                        . unCName
-    , mkMemberName = TermName . unReservedWord . lowerCaseFirst . unCName
-    , mkFunName                   = TermName . unReservedWord . unCName
-    , mkParamName                 = TermName . unReservedWord . unCName
-    , mkPatternName               = ConName . unReservedWord . unCName
+                                        . dropVk
+    , mkMemberName                = TermName
+                                    . unReservedWord
+                                    . lowerCaseFirst
+                                    . dropPointer
+                                    . unCName
+    , mkFunName = TermName . unReservedWord . lowerCaseFirst . dropVk
+    , mkParamName = TermName . unReservedWord . dropPointer . unCName
+    , mkPatternName               = ConName . unReservedWord . dropVk
     , mkFuncPointerName = TyConName . unReservedWord . T.tail . unCName
     , mkFuncPointerMemberName     = TermName
                                     . unReservedWord
                                     . ("p" <>)
                                     . upperCaseFirst
                                     . unCName
-    , mkEmptyDataName             = TyConName . (<> "_T") . unCName
+    , mkEmptyDataName             = TyConName . (<> "_T") . dropVk
     , mkDispatchableHandlePtrName = TermName
                                     . (<> "Handle")
                                     . lowerCaseFirst
@@ -309,6 +310,13 @@ dropVk :: CName -> Text
 dropVk (CName t) = if "vk" `T.isPrefixOf` T.toLower t
   then T.dropWhile (== '_') . T.drop 2 $ t
   else t
+
+dropPointer :: Text -> Text
+dropPointer =
+  lowerCaseFirst
+    . uncurry (<>)
+    . first (\p -> if T.all (== 'p') p then "" else p)
+    . T.span isLower
 
 isDefaultable' :: CType -> Bool
 isDefaultable' t = isDefaultableForeignType t || isIntegral t

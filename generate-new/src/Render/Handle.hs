@@ -60,6 +60,7 @@ renderHandle Handle {..} = context (unCName hName) $ do
           tellDoc $ "data" <+> pretty p
           tellExport (EType p)
         tellInternal (EType p)
+        tellImportWithAll (TyConName "Zero")
         tellDoc $ vsep
           [ "data" <+> pretty p
           , "data"
@@ -78,4 +79,7 @@ renderHandle Handle {..} = context (unCName hName) $ do
           <>  line
           -- TODO: Just compare on ptr
           <>  indent 2 "deriving (Eq, Show)"
+          , "instance Zero" <+> pretty n <+> "where" <> line <> indent
+            2
+            ("zero =" <+> pretty c <+> "zero zero")
           ]

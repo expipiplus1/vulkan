@@ -33,16 +33,10 @@ renderFuncPointer FuncPointer {..} = contextShow (unCName fpName) $ do
     tPtrDoc <- renderType (ConT ''FunPtr :@ ConT (typeName n))
     tellExport (EType p)
     tellExport (EType n)
-    tellDoc
-      $   "type"
-      <+> pretty n
-      <+> "="
-      <+> tDoc
-      <>  line
-      <>  "type"
-      <+> pretty p
-      <+> "="
-      <+> tPtrDoc
+    tellDoc $ vsep
+      [ "type" <+> pretty n <+> "=" <+> tDoc
+      , "type" <+> pretty p <+> "=" <+> tPtrDoc
+      ]
 
 stripPtr :: HasErr r => CType -> Sem r CType
 stripPtr = \case

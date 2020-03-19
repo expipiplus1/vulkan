@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 57df901bd2301da39bec371bcd5daaf39fbfceb7d615d4046ff2f334354e6130
+-- hash: 05ca262bbd29d59b81af9e3fe276048b9e44c3fc6483fed7b4a8d17af63b5828
 
 name:           generate-new
 version:        0.0.0
@@ -36,6 +36,7 @@ executable generate
       Marshal.Command
       Marshal.Marshalable
       Marshal.Scheme
+      Marshal.Scheme.Zero
       Marshal.Struct
       Render.Aggregate
       Render.Alias

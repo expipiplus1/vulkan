@@ -46,15 +46,13 @@ renderEnum Enum {..} = do
     let complete = case eType of
           AnEnum   -> completePragma n (mkPatternName . evName <$> eValues)
           ABitmask -> Nothing
-    derivedClasses <-
-      (["Eq", "Ord", "Storable", "Read", "Show"] <>) <$> case eType of
-        AnEnum | any ((== 0) . evValue) eValues -> do
-          tellImport (TyConName "Zero")
-          pure ["Zero"]
-        AnEnum   -> pure []
-        ABitmask -> do
-          tellImport (TyConName "Zero")
-          pure ["Zero"]
+    tellImport (TyConName "Zero")
+    let
+      derivedClasses = ["Eq", "Ord", "Storable", "Read", "Show", "Zero"]
+      zeroComment    = case eType of
+        AnEnum | all ((/= 0) . evValue) eValues -> do
+          "-- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error" <> line
+        _ -> mempty
     tellImport ''Storable
     tellDoc
       .  vsep
@@ -65,6 +63,7 @@ renderEnum Enum {..} = do
          <+> tDoc
          <>  line
          <>  indent 2 ("deriving newtype" <+> tupled derivedClasses)
+         , zeroComment
          , vsep (toList patterns)
          ]
       ++ maybeToList complete

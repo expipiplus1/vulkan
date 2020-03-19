@@ -67,7 +67,7 @@ bespokeModules = do
   RenderParams {..} <- ask
   let core10Base n = (mkTyName n, ModName "Graphics.Vulkan.Core10.BaseType")
   pure
-    $  [ ( TyConName "VkAllocationCallbacks"
+    $  [ ( mkTyName "VkAllocationCallbacks"
          , ModName "Graphics.Vulkan.Core10.AllocationCallbacks"
          )
        ]
@@ -171,13 +171,14 @@ baseType n t = fmap identicalBoot . genRe ("base type " <> unCName n) $ do
 nullHandle :: Member (Reader RenderParams) r => Sem r RenderElement
 nullHandle = genRe "null handle" $ do
   RenderParams {..} <- ask
-  tellExport (EPat (mkConName "" "VK_NULL_HANDLE"))
+  let patName = mkPatternName "VK_NULL_HANDLE"
+  tellExport (EPat patName)
   tellImport 'nullPtr
   tDoc <- renderType (ConT ''Ptr :@ VarT (mkName "a"))
   tellDoc [qqi|
-    pattern VK_NULL_HANDLE :: {tDoc}
-    pattern VK_NULL_HANDLE <- ((== nullPtr) -> True)
-      where VK_NULL_HANDLE = nullPtr
+    pattern {patName} :: {tDoc}
+    pattern {patName} <- ((== nullPtr) -> True)
+      where {patName} = nullPtr
   |]
 
 ----------------------------------------------------------------

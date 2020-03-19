@@ -15,7 +15,6 @@ import           Text.InterpolatedString.Perl6.Unindented
 import           Data.Text.Prettyprint.Doc
 import           Data.Text.Extra                ( upperCaseFirst )
 import           Polysemy
-import           Polysemy.NonDet
 import           Polysemy.Reader
 import qualified Data.Vector                   as V
 import qualified Data.Map                      as Map
@@ -32,6 +31,7 @@ import           Error
 import           Haskell                       as H
 import           Marshal
 import           Marshal.Scheme
+import           Marshal.Scheme.Zero
 import           Render.Element
 import           Render.Peek
 import           Render.Stmts.Poke
@@ -412,31 +412,7 @@ zeroInstanceDecl MarshaledStruct {..} = do
   tellImportWithAll (TyConName "Zero")
   tellDoc $ "instance Zero" <+> pretty n <+> "where" <> line <> indent
     2
-    -- (vsep ["zero =" <+> pretty con <> line <> indent 2 (vsep zeroMembers)])
-    (vsep ["zero = undefined"])
-
-zeroScheme
-  :: MarshalScheme a
-  -> Sem r (Maybe (Doc ()))
-zeroScheme = runNonDetMaybe . go
- where
-  go = \case
-    Unit              -> pure "()"
-    Preserve _        -> pure "zero"
-    Normal   _        -> pure "zero"
-    ElidedLength _ _  -> empty
-    ElidedUnivalued _ -> empty
-    ElidedVoid        -> empty
-    VoidPtr           -> pure "zero"
-    ByteString        -> pure "mempty"
-    Maybe        _    -> pure "Nothing"
-    Vector       _    -> pure "mempty"
-    EitherWord32 _    -> pure $ parens "Left 0"
-    Tupled n s        -> do
-      z <- go s
-      pure $ tupled (replicate (fromIntegral n) z)
-    Returned   _ -> empty
-    InOutCount _ -> empty
+    (vsep ["zero =" <+> pretty con <> line <> indent 2 (vsep zeroMembers)])
 
 renderPokes
   :: ( HasErr r

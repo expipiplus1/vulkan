@@ -9,6 +9,7 @@ import           Relude                  hiding ( Reader
                                                 )
 import           Data.Text.Prettyprint.Doc
 import           Polysemy
+import           Polysemy.NonDet
 import           Polysemy.Reader
 
 import           Foreign.Ptr
@@ -20,12 +21,15 @@ import           Language.Haskell.TH            ( mkName )
 import           Spec.Parse
 import           Haskell                       as H
 import           Error
+import           CType
 import           Render.Element
 import           Render.Type
 import           Render.Stmts.Poke
 import           Render.Peek
 import           Render.Stmts
 import           Marshal.Struct
+import           Marshal.Scheme
+import           Marshal.Scheme.Zero
 import           Render.Scheme
 import           Render.SpecInfo
 import           Render.Names
@@ -59,6 +63,7 @@ renderUnion marshaled@MarshaledStruct {..} = context (unCName msName) $ do
     runReader lookupMember $ do
 
       toCStructInstance marshaled
+      zeroInstance marshaled
 
       case
           [ d
@@ -171,6 +176,54 @@ toCStructInstance MarshaledStruct {..} = do
       , "withZeroCStruct = bracket (callocBytes" <+> viaShow sSize <> ") free"
       ]
     )
+
+zeroInstance
+  :: forall r
+   . ( HasErr r
+     , HasRenderParams r
+     , HasRenderElem r
+     , HasSiblingInfo StructMember r
+     , HasSpecInfo r
+     , HasStmts r
+     , HasRenderedNames r
+     )
+  => MarshaledStruct AUnion
+  -> Sem r ()
+zeroInstance MarshaledStruct {..} = do
+  RenderParams {..} <- ask
+  let n = mkTyName msName
+  -- Use the first member with size equal to the struct
+  zeroableMembers <-
+    fmap catMaybes
+    . forV (toList msMembers)
+    $ runNonDetMaybe
+    . \MarshaledStructMember {..} -> do
+        (unionSize, _) <- getTypeSize (TypeName msName)
+        zero           <- zeroScheme msmScheme >>= \case
+          Nothing -> empty
+          Just z  -> pure z
+        let con = pretty (mkConName msName (smName msmStructMember))
+        size <- case msmScheme of
+          Normal t -> fst <$> getTypeSize t
+          Preserve t -> fst <$> getTypeSize t
+          Tupled n (Normal e) -> do
+            (tSize, _) <- getTypeSize e
+            pure $ tSize * fromIntegral n
+          Tupled n (Preserve e) -> do
+            (tSize, _) <- getTypeSize e
+            pure $ tSize * fromIntegral n
+          _ -> empty
+        guard (size == unionSize)
+        pure (con <+> zero)
+  zeroMember <- case zeroableMembers of
+    [] ->
+      throw
+        "Unable to find a simply-typed union constructor with size equal to the union"
+    (x : _) -> pure x
+  tellImportWithAll (TyConName "Zero")
+  tellDoc $ "instance Zero" <+> pretty n <+> "where" <> line <> indent
+    2
+    ("zero =" <+> zeroMember)
 
 peekUnionFunction
   :: forall r

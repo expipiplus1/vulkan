@@ -586,7 +586,8 @@ getCCall c = do
     noHandle = stmt Nothing (Just (unCName (cName c) <> "'")) $ do
       -- TODO: Change this function pointer to a "global variable" with ioref and
       -- unsafePerformIO
-      tellImport (TermName "vkGetInstanceProcAddr'") -- TODO: Remove vulkan specific stuff here!
+      let getInstanceProcAddr' = mkFunName "vkGetInstanceProcAddr'" -- TODO: Remove vulkan specific stuff here!
+      tellImport getInstanceProcAddr' -- TODO: Remove vulkan specific stuff here!
       tellImport 'nullPtr
       tellImport 'castFunPtr
       tellImportWith ''GHC.Ptr.Ptr 'GHC.Ptr.Ptr
@@ -605,7 +606,9 @@ getCCall c = do
         $   pretty dynName
         <+> ". castFunPtr @_ @"
         <>  fTyDoc
-        <+> "<$> vkGetInstanceProcAddr' nullPtr"
+        <+> "<$>"
+        <+> pretty getInstanceProcAddr'
+        <+> "nullPtr"
         <+> parens
               ("Ptr" <+> dquotes (pretty (unCName (cName c)) <> "\\NUL") <> "#")
 

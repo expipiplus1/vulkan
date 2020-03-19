@@ -29,6 +29,8 @@ anyway.
 
 Groups of `lift`ed actions which don't return anything can be grouped under one lift:
 
+## Make note of illegal zero instances
+
 ## check
 "vkAllocateDescriptorSets": TODO: allocating vector with member specified lenghts
 "vkAllocateCommandBuffers": TODO: allocating vector with member specified lenghts
