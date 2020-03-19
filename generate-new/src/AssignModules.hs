@@ -69,11 +69,10 @@ assignModules spec@Spec {..} rs@RenderedSpec {..} = do
   let getExporter n =
         note ("Unable to find " <> show n <> " in any render element")
           $ Map.lookup n exporterMap
-      allNames     = Map.keys exporterMap
       initialState = mempty :: S
 
   exports <- execState initialState
-    $ assign (raise . getExporter) rel (transitiveClosure rel) spec indexed
+    $ assign (raise . getExporter) rel (closure rel) spec indexed
 
   --
   -- Check that everything is exported
@@ -102,6 +101,13 @@ data ExportLocation = ExportLocation
 
 type S = IntMap ExportLocation
 
+data ReqDeps = ReqDeps
+  { commands   :: Vector Int
+  , types      :: Vector Int
+  , enumValues :: Vector Int
+  }
+
+
 -- The type is put into the first rule that applies, and reexported from any
 -- subsequent matching rules in that feature.
 --
@@ -124,9 +130,69 @@ assign
 assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
   RenderParams {..} <- ask
 
-  let allEnums        = IntMap.fromList (toList rsEnums)
-      allHandles      = IntMap.fromList (toList rsHandles)
-      allFuncPointers = IntMap.fromList (toList rsFuncPointers)
+  let
+    allEnums        = IntMap.fromList (toList rsEnums)
+    allHandles      = IntMap.fromList (toList rsHandles)
+    allFuncPointers = IntMap.fromList (toList rsFuncPointers)
+    -- Handy for debugging
+    elemName        = let l = toList rs in \i -> reName <$> List.lookup i l
+
+    --
+    -- Perform an action over all Features
+    --
+    forFeatures
+      :: (Feature -> Text -> (Maybe Text -> ModName) -> Sem r ()) -> Sem r ()
+    forFeatures f = forV_ specFeatures $ \feat@Feature {..} -> do
+      let prefix =
+            modPrefix <> ".Core" <> foldMap show (versionBranch fVersion)
+      f feat prefix (featureCommentToModuleName prefix)
+
+    forExtensionRequires
+      :: (Text -> ModName -> ReqDeps -> Require -> Sem r ()) -> Sem r ()
+    forExtensionRequires f = forV_ specExtensions $ \Extension {..} ->
+      forRequires exRequires (const $ extensionNameToModuleName exName)
+        $ \modname -> f extensionModulePrefix modname
+
+    forRequires
+      :: Foldable f
+      => f Require
+      -> (Maybe Text -> ModName)
+      -> (ModName -> ReqDeps -> Require -> Sem r ())
+      -> Sem r ()
+    forRequires requires commentToModName f =
+      forV_ (sortOn (isNothing . rComment) . toList $ requires) $ \r -> do
+        commands   <- traverseV (getExporter . mkFunName) (rCommandNames r)
+        types      <- traverseV (getExporter . mkTyName) (rTypeNames r)
+        enumValues <- traverseV (getExporter . mkPatternName)
+                                (rEnumValueNames r)
+        f (commentToModName (rComment r)) ReqDeps { .. } r
+
+    --
+    -- Perform an action over all 'Require's of all features and elements
+    --
+    forFeaturesAndExtensions
+      :: (Text -> ModName -> Bool -> ReqDeps -> Require -> Sem r ()) -> Sem r ()
+    forFeaturesAndExtensions f = do
+      forFeatures $ \feat prefix commentToModName ->
+        forRequires (fRequires feat) commentToModName
+          $ \modname -> f prefix modname True
+      forExtensionRequires $ \prefix modname -> f prefix modname False
+
+    --
+    -- Export all elements both in world and reachable, optionally from a
+    -- specifically named submodule.
+    --
+    exportReachable
+      :: Bool -> Text -> IntMap RenderElement -> IntSet -> Sem r ()
+    exportReachable namedSubmodule prefix world reachable = do
+      let reachableWorld = world `IntMap.restrictKeys` reachable
+      forV_ (IntMap.toList reachableWorld) $ \(i, re) -> do
+        modName <- if namedSubmodule
+          then do
+            name <- firstTypeName re
+            pure (ModName (prefix <> "." <> name))
+          else pure (ModName prefix)
+        export modName i
 
   ----------------------------------------------------------------
   -- Explicit elements
@@ -139,83 +205,69 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
   let constantModule = ModName $ modPrefix <> ".Core10.APIConstants"
   forV_ rsAPIConstants $ \(i, _) -> export constantModule i
 
-  let
-    exportReachable namedSubmodule prefix world reachable = do
-      let reachableWorld = world `IntMap.restrictKeys` reachable
-      forV_ (IntMap.toList reachableWorld) $ \(i, re) -> do
-        modName <- if namedSubmodule
-          then do
-            name <- firstTypeName re
-            pure (ModName (prefix <> "." <> name))
-          else pure (ModName prefix)
-        export @r modName i
+  ----------------------------------------------------------------
+  -- Explicit Enums, Handles and FuncPointers for each feature
+  ----------------------------------------------------------------
 
-    exportRequire separateTypeSubmodule prefix commentToName Require {..} = do
-      let componentModule = commentToName rComment
+  forFeaturesAndExtensions $ \prefix _ isFeature ReqDeps {..} _ -> do
+    let directExporters = commands <> types <> enumValues
+        reachable =
+          Set.unions . toList $ (`postIntSet` closedRel) <$> directExporters
+    ----------------------------------------------------------------
+    -- Reachable Enums
+    ----------------------------------------------------------------
+    when isFeature
+      $ exportReachable True (prefix <> ".Enums") allEnums reachable
 
-      commands   <- traverseV (getExporter . mkFunName) rCommandNames
-      types      <- traverseV (getExporter . mkTyName) rTypeNames
-      enumValues <- traverseV (getExporter . mkPatternName) rEnumValueNames
+    ----------------------------------------------------------------
+    -- Reachable Handles
+    ----------------------------------------------------------------
+    exportReachable False (prefix <> ".Handles") allHandles reachable
 
-      when separateTypeSubmodule $ do
-        let directExporters = commands <> types <> enumValues
-
-        let reachable =
-              Set.unions . toList $ (`postIntSet` closedRel) <$> directExporters
-
-        ----------------------------------------------------------------
-        -- Reachable Enums
-        ----------------------------------------------------------------
-        exportReachable True  (prefix <> ".Enums")   allEnums   reachable
-
-        ----------------------------------------------------------------
-        -- Reachable Handles
-        ----------------------------------------------------------------
-        exportReachable False (prefix <> ".Handles") allHandles reachable
-
-        ----------------------------------------------------------------
-        -- Reachable FuncPointers
-        ----------------------------------------------------------------
-        exportReachable False
-                        (prefix <> ".FuncPointers")
-                        allFuncPointers
-                        reachable
-
-      ----------------------------------------------------------------
-      -- Commands
-      ----------------------------------------------------------------
-      forV_ commands $ export componentModule
-
-      ----------------------------------------------------------------
-      -- Explicit Types
-      ----------------------------------------------------------------
-      forV_ types $ export componentModule
-
-      ----------------------------------------------------------------
-      -- Enum Values
-      ----------------------------------------------------------------
-      forV_ enumValues $ export componentModule
-
-      ----------------------------------------------------------------
-      -- Types directly referred to by the commands and types
-      ----------------------------------------------------------------
-      forV_ (commands <> types <> enumValues)
-        $ \i -> exportMany componentModule (postIntSet i rel)
-
-
-  forV_ specFeatures $ \Feature {..} -> do
-    let prefix = modPrefix <> ".Core" <> foldMap show (versionBranch fVersion)
-
-    forV_ (sortOn (isNothing . rComment) . toList $ fRequires)
-      $ exportRequire True prefix (featureCommentToModuleName prefix)
-
-  forV_ specExtensions $ \Extension {..} -> forV_ exRequires $ exportRequire
-    False
-    extensionModulePrefix
-    (const (extensionNameToModuleName exName))
+    ----------------------------------------------------------------
+    -- Reachable FuncPointers
+    ----------------------------------------------------------------
+    when isFeature $ exportReachable False
+                                     (prefix <> ".FuncPointers")
+                                     allFuncPointers
+                                     reachable
 
   ----------------------------------------------------------------
-  -- Assign aliases to be with their targets if possible
+  -- Explicit exports of all features and extensions
+  ----------------------------------------------------------------
+  forFeaturesAndExtensions $ \_ modname isFeature ReqDeps {..} _ -> do
+    let directExporters = commands <> types <> bool mempty enumValues isFeature
+    forV_ directExporters $ export modname
+
+  ----------------------------------------------------------------
+  -- Go over the features one by one and close them
+  ----------------------------------------------------------------
+
+  forFeatures $ \feat _ getModName -> do
+    -- Types directly referred to by the commands and types
+    forRequires (fRequires feat) getModName $ \modname ReqDeps {..} _ -> do
+      let directExporters = commands <> types <> enumValues
+      forV_ directExporters $ \i -> exportMany modname (i `postIntSet` rel)
+    -- Types indirectly referred to by the commands and types
+    forRequires (fRequires feat) getModName $ \modname ReqDeps {..} _ -> do
+      let directExporters = commands <> types <> enumValues
+      forV_ directExporters
+        $ \i -> exportManyNoReexport modname (i `postIntSet` closedRel)
+
+  ----------------------------------------------------------------
+  -- Close the extensions
+  ----------------------------------------------------------------
+  forExtensionRequires $ \_ modname ReqDeps {..} _ -> do
+    let directExporters = commands <> types <> enumValues
+    forV_ directExporters $ \i -> exportMany modname (i `postIntSet` rel)
+
+  forExtensionRequires $ \_ modname ReqDeps {..} _ -> do
+    let directExporters = commands <> types <> enumValues
+    forV_ directExporters
+      $ \i -> exportManyNoReexport modname (i `postIntSet` closedRel)
+
+  ----------------------------------------------------------------
+  -- Assign aliases to be with their targets if they're not already assigned
   ----------------------------------------------------------------
   forV_ specAliases $ \Alias {..} -> do
     let mkName = case aType of
@@ -225,41 +277,13 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
     i <- getExporter (mkName aName)
     j <- getExporter (mkName aTarget)
     gets @S (IntMap.lookup j) >>= \case
-      Just jMod -> modify' (IntMap.insert i jMod)
-      Nothing   -> pure ()
-
-  ----------------------------------------------------------------
-  -- Not everything will have been exported by now as it isn't immediately
-  -- reachable, assign everything reachable within several steps
-  ----------------------------------------------------------------
-  let
-    exportRequire2 prefix commentToName Require {..} = do
-      let componentModule = commentToName rComment
-
-      commands <- traverseV (getExporter . mkFunName) rCommandNames
-      types    <- traverseV (getExporter . mkTyName) rTypeNames
-
-      ----------------------------------------------------------------
-      -- Types indirectly referred to by the commands or types
-      ----------------------------------------------------------------
-      forV_ (commands <> types)
-        $ \i -> exportManyNoReexport componentModule (postIntSet i closedRel)
-
-  forV_ specFeatures $ \Feature {..} -> do
-    let prefix = modPrefix <> ".Core" <> foldMap show (versionBranch fVersion)
-
-    forV_ fRequires $ exportRequire2 prefix (featureCommentToModuleName prefix)
-
-  forV_ specExtensions $ \Extension {..} -> do
-    forV_ exRequires $ exportRequire2
-      extensionModulePrefix
-      (const (extensionNameToModuleName exName))
-
-  pure ()
+      Just (ExportLocation jMod _) ->
+        modify' (IntMap.insert i (ExportLocation jMod []))
+      Nothing -> pure ()
 
 firstTypeName :: HasErr r => RenderElement -> Sem r Text
 firstTypeName re =
-  case V.mapMaybe getTyConName (exportName <$> (reExports re)) of
+  case V.mapMaybe getTyConName (exportName <$> reExports re) of
     V.Empty   -> throw "Unable to get type name from RenderElement"
     x V.:<| _ -> pure x
 
@@ -281,7 +305,7 @@ exportManyNoReexport :: Member (State S) r => ModName -> IntSet -> Sem r ()
 exportManyNoReexport m is =
   let newMap = IntMap.fromSet (const (ExportLocation m [])) is
   in  modify' (\s -> IntMap.unionWith ins s newMap)
-  where ins (ExportLocation r rs) (ExportLocation n _) = ExportLocation r rs
+  where ins (ExportLocation r rs) (ExportLocation _ _) = ExportLocation r rs
 
 ----------------------------------------------------------------
 -- Making module names
@@ -330,9 +354,10 @@ buildRelation
 buildRelation elements = do
   let elementExports RenderElement {..} =
         reInternal <> reExports <> V.concatMap exportWith reExports
-      elementImports = fmap importName . toList . reLocalImports
-      numbered       = elements
-      allNames       = sortOn
+      elementImports =
+        fmap importName . filter (not . importSource) . toList . reLocalImports
+      numbered = elements
+      allNames = sortOn
         fst
         [ (n, i)
         | (i, x) <- toList numbered
@@ -348,7 +373,7 @@ buildRelation elements = do
 
   let relation = vertices (fst <$> toList numbered) `overlay` edges es
 
-  pure $ (nameMap, relation)
+  pure (nameMap, relation)
 
 getTyConName :: HName -> Maybe Text
 getTyConName = \case
@@ -381,6 +406,8 @@ unexportedNames = do
     , mkFunName "vkGetSwapchainGrallocUsage2ANDROID"
     , mkFunName "vkAcquireImageANDROID"
     , mkFunName "vkQueueSignalReleaseImageANDROID"
+    , mkTyName "VkSwapchainImageUsageFlagBitsANDROID"
+    , mkTyName "VkSwapchainImageUsageFlagsANDROID"
     , mkTyName "VkNativeBufferUsage2ANDROID"
     , mkTyName "VkNativeBufferANDROID"
     , mkTyName "VkSwapchainImageCreateInfoANDROID"

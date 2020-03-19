@@ -42,8 +42,13 @@ renderDynamicLoader cs = do
   RenderParams {..} <- ask
   genRe "dynamic loader" $ do
     tellExplicitModule (ModName "Graphics.Vulkan.Dynamic")
-    deviceCommands   <- V.filterM (fmap (== Device) . getCommandLevel) cs
-    instanceCommands <- V.filterM (fmap (== Instance) . getCommandLevel) cs
+    enabledCommands <- V.filterM
+      (fmap isNothing . getDisabledCommand . cName . mcCommand)
+      cs
+    deviceCommands <- V.filterM (fmap (== Device) . getCommandLevel)
+                                enabledCommands
+    instanceCommands <- V.filterM (fmap (== Instance) . getCommandLevel)
+                                  enabledCommands
     loader "Instance"
            (ConT ''Ptr :@ ConT (typeName (mkEmptyDataName "VkInstance")))
            instanceCommands

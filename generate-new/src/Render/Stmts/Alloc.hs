@@ -107,10 +107,14 @@ normal name toTy fromTy = do
             else do
               tellImport 'free
               tellImport 'bracket
-              tellImport 'calloc
+              tellImport 'callocBytes
               tyDoc <- renderTypeHighPrec =<< cToHsType DoPreserve toElem
+              (size, _align) <- getTypeSize toElem
               pure
-                ("ContT $ bracket" <+> parens ("calloc @" <> tyDoc) <+> "free")
+                (   "ContT $ bracket"
+                <+> parens ("callocBytes @" <> tyDoc <+> viaShow size)
+                <+> "free"
+                )
 
 allocateVector
   :: forall a r s

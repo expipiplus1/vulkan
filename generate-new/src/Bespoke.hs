@@ -43,38 +43,46 @@ forbiddenConstants = ["VK_TRUE", "VK_FALSE"]
 ----------------------------------------------------------------
 
 assignBespokeModules
-  :: (HasErr r, Traversable t) => t RenderElement -> Sem r (t RenderElement)
-assignBespokeModules = traverse $ \case
-  r@RenderElement {..}
-    | exports <- fmap exportName . toList $ reExports
-    , bespokeMods <-
-      List.nubOrd . mapMaybe (`List.lookup` bespokeModules) $ exports
-    -> case bespokeMods of
-      []  -> pure r
-      [x] -> case reExplicitModule of
-        Just m | m /= x -> throw "Render element already has an explicit module"
-        _               -> pure $ r { reExplicitModule = Just x }
-      _ -> throw "Multiple bespoke module names found for render element"
+  :: (HasErr r, HasRenderParams r, Traversable t)
+  => t RenderElement
+  -> Sem r (t RenderElement)
+assignBespokeModules es = do
+  bespokeModules <- bespokeModules
+  forV es $ \case
+    r@RenderElement {..}
+      | exports <- fmap exportName . toList $ reExports
+      , bespokeMods <-
+        List.nubOrd . mapMaybe (`List.lookup` bespokeModules) $ exports
+      -> case bespokeMods of
+        []  -> pure r
+        [x] -> case reExplicitModule of
+          Just m | m /= x ->
+            throw "Render element already has an explicit module"
+          _ -> pure $ r { reExplicitModule = Just x }
+        _ -> throw "Multiple bespoke module names found for render element"
 
 
-bespokeModules :: [(HName, ModName)]
-bespokeModules =
-  [ ( TyConName "VkAllocationCallbacks"
-    , ModName "Graphics.Vulkan.Core10.AllocationCallbacks"
-    )
-    ]
+bespokeModules :: HasRenderParams r => Sem r [(HName, ModName)]
+bespokeModules = do
+  RenderParams {..} <- ask
+  let core10Base n = (mkTyName n, ModName "Graphics.Vulkan.Core10.BaseType")
+  pure
+    $  [ ( TyConName "VkAllocationCallbacks"
+         , ModName "Graphics.Vulkan.Core10.AllocationCallbacks"
+         )
+       ]
     <> (   core10Base
        <$> [ "VkExtent2D"
            , "VkExtent3D"
            , "VkOffset2D"
            , "VkOffset3D"
            , "VkImageSubresourceLayers"
+           , "VkImageSubresourceRange"
            , "VkClearValue"
            , "VkClearColorValue"
            , "VkClearDepthStencilValue"
            ]
        )
-  where core10Base n = (TyConName n, ModName "Graphics.Vulkan.Core10.BaseType")
 
 ----------------------------------------------------------------
 -- Schemes

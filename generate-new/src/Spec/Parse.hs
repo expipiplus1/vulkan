@@ -91,8 +91,11 @@ parseSpec bs = do
                 <> enumAliases
                 <> commandAliases
                 <> constantAliases
-        specFeatures           <- parseFeatures (contents n)
-        specExtensions <- parseExtensions . contents =<< oneChild "extensions" n
+        specFeatures   <- parseFeatures (contents n)
+        specExtensions <-
+          parseExtensions NotDisabled . contents =<< oneChild "extensions" n
+        specDisabledExtensions <-
+          parseExtensions OnlyDisabled . contents =<< oneChild "extensions" n
         specAPIConstants       <- parseAPIConstants (contents n)
         specExtensionConstants <- parseExtensionConstants (contents n)
         let
@@ -224,9 +227,11 @@ parseFeatures es = V.fromList
       fRequires <- parseRequires n
       pure Feature { .. }
 
-parseExtensions :: [Content] -> P (Vector Extension)
-parseExtensions es = V.fromList <$> sequenceV
-  [ parseExtension e | Element e <- es, "extension" == name e, notDisabled e ]
+data ParseDisabled = OnlyDisabled | NotDisabled
+
+parseExtensions :: ParseDisabled -> [Content] -> P (Vector Extension)
+parseExtensions parseDisabled es = V.fromList <$> sequenceV
+  [ parseExtension e | Element e <- es, "extension" == name e, disabled parseDisabled e ]
  where
   parseExtension :: Node -> P Extension
   parseExtension n = do
@@ -705,8 +710,14 @@ extraTypeNames :: [ByteString]
 extraTypeNames = ["ANativeWindow", "AHardwareBuffer", "CAMetalLayer"]
 
 notDisabled :: Node -> Bool
-notDisabled e =
-  Just "disabled" /= getAttr "supported" e
+notDisabled = disabled NotDisabled
+
+disabled :: ParseDisabled -> Node -> Bool
+disabled p e =
+  let comp = case p of
+        NotDisabled  -> (/=)
+        OnlyDisabled -> (==)
+  in  Just "disabled" `comp` getAttr "supported" e
 
 ----------------------------------------------------------------
 -- XML

@@ -28,6 +28,7 @@ data SpecInfo = SpecInfo
   , siIsStruct                  :: CName -> Maybe Struct
   , siIsHandle                  :: CName -> Maybe Handle
   , siIsCommand                 :: CName -> Maybe Command
+  , siIsDisabledCommand         :: CName -> Maybe Command
   , siIsEnum                    :: CName -> Maybe Enum'
   , siContainsUnion             :: CName -> [Union]
   , siTypeSize                  :: SizeMap
@@ -47,10 +48,19 @@ withSpecInfo Spec {..} siTypeSize r = do
     mkLookup n f =
       let m = Map.fromList [ (n s, s) | s <- toList f ]
       in  (`Map.lookup` m) . resolveAlias
-    siIsUnion          = mkLookup sName specUnions
-    siIsStruct         = mkLookup sName specStructs
-    siIsHandle         = mkLookup hName specHandles
-    siIsCommand        = mkLookup cName specCommands
+    siIsUnion   = mkLookup sName specUnions
+    siIsStruct  = mkLookup sName specStructs
+    siIsHandle  = mkLookup hName specHandles
+    siIsCommand = mkLookup cName specCommands
+    siIsDisabledCommand =
+      let disabledCommandNames = Set.fromList
+            [ c
+            | Extension { ..} <- toList (specDisabledExtensions)
+            , Require {..} <- toList exRequires
+            , c            <- toList rCommandNames
+            ]
+      in  \n ->
+            if Set.member n disabledCommandNames then siIsCommand n else Nothing
     siIsEnum           = mkLookup eName specEnums
     typeParentRelation = edges
       [ (t, sName)
@@ -65,7 +75,7 @@ withSpecInfo Spec {..} siTypeSize r = do
       , t <- reachable (sName u) typeParentRelation
       ]
     siContainsUnion = fromMaybe mempty . (`Map.lookup` containsUnionMap)
-    aliasMap = Map.fromList
+    aliasMap        = Map.fromList
       [ (aName, aTarget)
       | Alias {..} <- toList specAliases
       , TypeAlias == aType
@@ -102,6 +112,9 @@ getHandle t = ($ t) <$> asks siIsHandle
 
 getCommand :: HasSpecInfo r => CName -> Sem r (Maybe Command)
 getCommand t = ($ t) <$> asks siIsCommand
+
+getDisabledCommand :: HasSpecInfo r => CName -> Sem r (Maybe Command)
+getDisabledCommand t = ($ t) <$> asks siIsDisabledCommand
 
 getEnum :: HasSpecInfo r => CName -> Sem r (Maybe Enum')
 getEnum t = ($ t) <$> asks siIsEnum

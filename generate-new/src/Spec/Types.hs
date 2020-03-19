@@ -22,6 +22,7 @@ data Spec = Spec
   , specAliases            :: Vector Alias
   , specFeatures           :: Vector Feature
   , specExtensions         :: Vector Extension
+  , specDisabledExtensions :: Vector Extension
   , specAPIConstants       :: Vector Constant
   , specExtensionConstants :: Vector Constant
   }

@@ -157,7 +157,7 @@ renderParams handles = r
   dispatchableHandleNames = Set.fromList
     [ hName | Handle {..} <- toList handles, hDispatchable == Dispatchable ]
   r = RenderParams
-    { mkTyName = TyConName . unReservedWord . upperCaseFirst . unCName -- . dropVk
+    { mkTyName = TyConName . unReservedWord . upperCaseFirst . dropVk
     , mkConName                   = \parent ->
                                       ConName
                                         . unReservedWord
