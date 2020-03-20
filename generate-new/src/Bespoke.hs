@@ -205,7 +205,6 @@ bespokeSchemes =
               let sampleTy = mkTyName "VkSampleCountFlagBits"
                   sampleCon =
                     mkConName "VkSampleCountFlagBits" "VkSampleCountFlagBits"
-                  cond = parens "requiredLen == fromIntegral vecLen"
               tellImportWith sampleTy sampleCon
               len <-
                 pureStmt

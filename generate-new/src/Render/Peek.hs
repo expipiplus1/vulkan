@@ -180,7 +180,7 @@ storablePeek name addr fromPtr = case fromPtr of
     t <- cToHsType DoLower from
     stmtC @a (Just t) name $ do
       tDoc <- renderTypeHighPrec t
-      tellImportWithAll ''Storable
+      tellImportWith ''Storable 'peek
       AddrDoc addrDoc <- use addr
       pure $ IOAction (coerce ("peek @" <> tDoc <+> addrDoc))
   _ -> throw "Trying to generate a storable peek for a non-pointer"
@@ -311,7 +311,7 @@ byteStringPeek name lengths addrRef =
     Ptr _ (Ptr Const Char) -> do
       AddrDoc addr <- use addrRef
       tellImport 'BS.packCString
-      tellImportWithAll ''Storable
+      tellImportWith ''Storable 'peek
       pure . IOAction $ ValueDoc ("packCString =<< peek" <+> addr)
 
     -- TODO: abstract away this repetition
@@ -371,7 +371,7 @@ maybePeek' name lengths addrRef fromPtr to = case fromPtr of
     ptr   <- stmtC (Just ptrTy) maybePtrDoc $ do
       AddrDoc addr <- use addrRef
       ptrTDoc      <- renderTypeHighPrec =<< cToHsType DoPreserve from
-      tellImportWithAll ''Storable
+      tellImportWith ''Storable 'peek
       pure $ IOAction (AddrDoc ("peek @" <> ptrTDoc <+> addr))
 
     elemTy <- cToHsType DoPreserve fromElem
@@ -487,7 +487,12 @@ vectorPeekWithLenRef name toElem addrRef fromElem lenTail lenRef = do
             )
 
       runNonDetMaybe
-          (peekIdiomatic name lenTail (Ptr Const fromElem) elemAddrRef toElem)
+          (peekIdiomatic (CName (unCName name <> "Elem"))
+                         lenTail
+                         (Ptr Const fromElem)
+                         elemAddrRef
+                         toElem
+          )
         >>= \case
               Nothing -> throw "Nothing to peek to fill Vector"
               Just p  -> pure p

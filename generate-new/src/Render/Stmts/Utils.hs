@@ -58,7 +58,7 @@ storablePoke addr value = do
         <+> v
         <+> ". ($ ())"
     else unitStmt $ do
-      tellImportWithAll ''Storable
+      tellImportWith ''Storable 'poke
       AddrDoc  a <- use addr
       ValueDoc v <- use value
       pure . IOAction . ValueDoc $ "poke" <+> a <+> v

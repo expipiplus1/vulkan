@@ -181,8 +181,15 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
     -- poke all the parameters
     (pokeRefs, peekRefs) <- V.unzip <$> V.zipWithM getPoke paramRefs mcParams
 
+    -- Bind the result to _ if it can only return success
+    let useEmptyBinder =
+          not includeReturnType
+            && null (cErrorCodes mcCommand)
+            && cReturnType mcCommand
+            /= Void
+
     -- Run the command and capture the result
-    retRef               <- stmt Nothing (Just "r") $ do
+    retRef <- stmt Nothing (Just (bool "r" "_" useEmptyBinder)) $ do
       FunDoc fun <- use funRef
       pokes      <- traverseV use pokeRefs
       -- call the command
@@ -205,7 +212,6 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
 
 
   tDoc <- renderType t
-  tellImport 'evalContT
   tellDoc
     . vsep
     $ [ pretty commandName <+> "::" <+> indent 0 tDoc
@@ -345,7 +351,7 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
     --
     (getLengthPokes, getLengthPeeks, countAddr, countPeek) <-
       pokesForGettingCount mcParams countParamIndex vecParamIndices
-    ret1        <- runWithPokes m funRef getLengthPokes
+    ret1        <- runWithPokes False m funRef getLengthPokes
 
     filledCount <- stmt Nothing Nothing $ do
       after ret1
@@ -361,7 +367,7 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
       countParamIndex
       vecParamIndices
 
-    ret2          <- runWithPokes m funRef getVectorsPokes
+    ret2          <- runWithPokes includeReturnType m funRef getVectorsPokes
 
     finalCountRef <- stmt Nothing Nothing $ do
       after ret2
@@ -389,7 +395,6 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
 
 
   tDoc <- renderType commandType
-  tellImport 'evalContT
   tellDoc
     . vsep
     $ [ pretty commandName <+> "::" <+> indent 0 tDoc
@@ -505,13 +510,19 @@ pokesForGettingResults params oldPokes oldPeeks countAddr countIndex vecIndices
 
 runWithPokes
   :: (HasErr r, HasRenderParams r, HasRenderElem r, HasSiblingInfo Parameter r)
-  => MarshaledCommand
+  => Bool
+  -> MarshaledCommand
   -> Ref s FunDoc
   -> Vector (Ref s ValueDoc)
   -> Stmt s r (Ref s ValueDoc)
-runWithPokes MarshaledCommand {..} funRef pokes = do
-  -- Run the command again to populate the array
-  retRef <- stmt Nothing (Just "r") $ do
+runWithPokes includeReturnType MarshaledCommand {..} funRef pokes = do
+  -- Bind the result to _ if it can only return success
+  let useEmptyBinder =
+        not includeReturnType
+          && null (cErrorCodes mcCommand)
+          && cReturnType mcCommand
+          /= Void
+  retRef <- stmt Nothing (Just (bool "r" "_" useEmptyBinder)) $ do
     FunDoc fun <- use funRef
     pokes      <- traverseV use pokes
     -- call the command

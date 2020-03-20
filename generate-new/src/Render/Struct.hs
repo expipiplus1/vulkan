@@ -155,8 +155,8 @@ storableInstance MarshaledStruct{..} = do
   RenderParams{..} <- ask
   let n = mkTyName msName
   -- Some member names clash with storable members "alignment" for instance
-  tellImportWithAll ''Storable
   tellImport ''Storable
+  tellQualImportWithAll ''Storable
   tellDoc [qqi|
     instance Storable {n} where
       sizeOf ~_ = {sSize msStruct}

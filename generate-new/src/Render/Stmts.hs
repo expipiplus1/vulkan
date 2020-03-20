@@ -202,8 +202,12 @@ renderStmts' lift parentRef badNames a = do
           -> x2 : xs
         xs -> xs
 
+  -- Always render "_" binders
+  let binder (This ref) end = case DMap.lookup ref asRefMap of
+        Just Value' { rNameHint = Just "_" } | not end -> Just "_"
+        _ -> bool (List.lookup (This ref) asUsedRefs) Nothing end
   con . doBlock <$> sequence
-    [ r (bool (List.lookup ref asUsedRefs) Nothing end) v
+    [ r (binder ref end) v
     | ((ref, v), end) <- reverse (zip neatenedStmts (True : repeat False))
     ]
 
@@ -401,9 +405,11 @@ varName ref hint = do
   -- Check if this reference already has a name
   usedRefs <- gets @(ActionsState s r) asUsedRefs
   case Prelude.lookup (This ref) usedRefs of
-    Just v  -> pure v
+    Just v                     -> pure v
 
-    Nothing -> do
+    Nothing | Just "_" <- hint -> pure "_"
+
+    Nothing                    -> do
       -- If it doesn't make one up which isn't in 'usedNames'
       usedNames <- gets @(ActionsState s r) asUsedNames
       let proposed =
