@@ -3,8 +3,9 @@ module Render.Peek
   ( peekStmt
   , peekStmtDirect
   , getLenRef
-  )
-  where
+  , storablePeek
+  , vectorPeekWithLenRef
+  ) where
 
 import           Relude                  hiding ( Type
                                                 , ask
@@ -152,7 +153,10 @@ peekWrapped name lengths fromType addr = \case
   Tupled _ toElem   -> raise $ tuplePeek name addr fromType toElem
   EitherWord32 toElem ->
     raise $ eitherWord32Peek name lengths addr fromType toElem
-  s -> throw ("Unhandled peek " <> show s)
+  ElidedCustom CustomSchemeElided {..} ->
+    maybe (const empty) (raise .) csePeek addr
+  Custom CustomScheme {..} -> raise $ csPeek addr
+  s                        -> throw ("Unhandled peek " <> show s)
 
 ----------------------------------------------------------------
 -- Peeks
@@ -411,7 +415,7 @@ vectorPeek name lengths addrRef fromPtr toElem = case fromPtr of
   Ptr _ (Ptr _ fromElem) | NamedLength _ :<| lenTail <- lengths -> do
     elemPtrRef <- storablePeek name addrRef fromPtr
     lenRef     <- getLenRef @a lengths
-    generate elemPtrRef fromElem lenTail lenRef
+    vectorPeekWithLenRef name toElem elemPtrRef fromElem lenTail lenRef
 
   Ptr _ (Array _ (SymbolicArraySize len) fromElem) -> do
     RenderParams {..} <- ask
@@ -426,56 +430,71 @@ vectorPeek name lengths addrRef fromPtr toElem = case fromPtr of
       pure . AddrDoc $ "lowerArrayPtr @" <> tDoc <+> addr
 
     lenRef <- pureStmt (ValueDoc (pretty lenName))
-    generate castedAddrRef fromElem V.empty lenRef
+    vectorPeekWithLenRef name toElem castedAddrRef fromElem V.empty lenRef
 
   -- YUCK, do this initial pointer peeking elsewhere please!
   Ptr _ fromElem | (V.uncons -> Just (_, lenTail)) <- lengths -> do
     lenRef <- getLenRef @a lengths
-    generate addrRef fromElem lenTail lenRef
+    vectorPeekWithLenRef name toElem addrRef fromElem lenTail lenRef
 
   t -> throw ("Unhandled conversion to Vector from " <> show t)
 
- where
+vectorPeekWithLenRef
+  :: forall a r s
+   . ( HasErr r
+     , HasRenderElem r
+     , HasSpecInfo r
+     , HasRenderParams r
+     , HasSiblingInfo a r
+     , Show a
+     , HasStmts r
+     )
+  => CName
+  -> MarshalScheme a
+  -> Ref s AddrDoc
+  -> CType
+  -> Vector ParameterLength
+  -> Ref s ValueDoc
+  -> Stmt s r (Ref s ValueDoc)
+vectorPeekWithLenRef name toElem addrRef fromElem lenTail lenRef = do
+  t <- cToHsType DoPreserve fromElem
+  stmtC (Just (ConT ''Vector :@ t)) name $ do
+    let indexVar = "i"
+    ValueDoc lenDoc <- use lenRef
 
-  generate addrRef fromElem lenTail lenRef = do
-    t <- cToHsType DoPreserve fromElem
-    stmtC (Just (ConT ''Vector :@ t)) name $ do
-      let indexVar = "i"
-      ValueDoc lenDoc <- use lenRef
+    -- Render a peeker for the elements
+    subPeek         <- renderSubStmtsIO $ do
+      -- Get a name for the index variable
+      indexRef    <- pureStmt indexVar
 
-      -- Render a peeker for the elements
-      subPeek         <- renderSubStmtsIO $ do
-        -- Get a name for the index variable
-        indexRef    <- pureStmt indexVar
+      -- Get the value of the pointer to this element
+      elemAddrRef <- stmt Nothing Nothing $ do
+        (elemSize, _elemAlign) <- getTypeSize fromElem
+        indexDoc               <- use indexRef
+        -- TODO: be able to coerce refs
+        AddrDoc addr           <- raise $ use addrRef
 
-        -- Get the value of the pointer to this element
-        elemAddrRef <- stmt Nothing Nothing $ do
-          (elemSize, _elemAlign) <- getTypeSize fromElem
-          indexDoc               <- use indexRef
-          -- TODO: be able to coerce refs
-          AddrDoc addr           <- raise $ use addrRef
+        Pure InlineOnce . AddrDoc <$> do
+          tellImport 'plusPtr
+          elemPtrTyDoc <-
+            renderType . (ConT ''Ptr :@) =<< cToHsType DoPreserve fromElem
+          pure $ parens
+            (   addr
+            <+> "`plusPtr`"
+            <+> parens (viaShow elemSize <+> "*" <+> indexDoc)
+            <+> "::"
+            <+> elemPtrTyDoc
+            )
 
-          Pure InlineOnce . AddrDoc <$> do
-            tellImport 'plusPtr
-            elemPtrTyDoc <-
-              renderType . (ConT ''Ptr :@) =<< cToHsType DoPreserve fromElem
-            pure $ parens
-              (   addr
-              <+> "`plusPtr`"
-              <+> parens (viaShow elemSize <+> "*" <+> indexDoc)
-              <+> "::"
-              <+> elemPtrTyDoc
-              )
+      runNonDetMaybe
+          (peekIdiomatic name lenTail (Ptr Const fromElem) elemAddrRef toElem)
+        >>= \case
+              Nothing -> throw "Nothing to peek to fill Vector"
+              Just p  -> pure p
 
-        runNonDetMaybe
-            (peekIdiomatic name lenTail (Ptr Const fromElem) elemAddrRef toElem)
-          >>= \case
-                Nothing -> throw "Nothing to peek to fill Vector"
-                Just p  -> pure p
-
-      tellImport 'V.generateM
-      pure . IOAction . ValueDoc $ "generateM" <+> lenDoc <+> parens
-        ("\\" <> indexVar <+> "->" <+> subPeek)
+    tellImport 'V.generateM
+    pure . IOAction . ValueDoc $ "generateM" <+> lenDoc <+> parens
+      ("\\" <> indexVar <+> "->" <+> subPeek)
 
 eitherWord32Peek
   :: forall a r s

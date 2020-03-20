@@ -1,4 +1,3 @@
-{-# language DeriveFunctor, DeriveFoldable, DeriveTraversable #-}
 module AssignModules
   ( assignModules
   ) where
@@ -78,25 +77,24 @@ assignModules spec@Spec {..} rs@RenderedSpec {..} = do
   -- Check that everything is exported
   --
   unexportedNames <- unexportedNames
-  forV indexed $ \(i, re) -> case IntMap.lookup i exports of
+  forV_ indexed $ \(i, re) -> case IntMap.lookup i exports of
     Nothing -> do
       let exportedNames = exportName <$> toList (reExports re)
       forV_ (List.nubOrd exportedNames List.\\ unexportedNames)
         $ \n -> throw $ show n <> " is not exported from any module"
     Just _ -> pure ()
 
-  let declaredNames =
-        (Map.fromListWith (<>))
-          $ (   (IntMap.toList exports)
-            <&> \(n, ExportLocation d _) -> (d, Set.singleton n)
-            )
+  let declaredNames = (Map.fromListWith (<>))
+        (   IntMap.toList exports
+        <&> \(n, ExportLocation d _) -> (d, Set.singleton n)
+        )
 
   Map.toList
     <$> traverseV (traverseV lookupRe . fromList . Set.toList) declaredNames
 
 data ExportLocation = ExportLocation
-  { elDeclaringModule    :: ModName
-  , elReExportingModules :: [ModName]
+  { _elDeclaringModule    :: ModName
+  , _elReExportingModules :: [ModName]
   }
 
 type S = IntMap ExportLocation
@@ -135,7 +133,7 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
     allHandles      = IntMap.fromList (toList rsHandles)
     allFuncPointers = IntMap.fromList (toList rsFuncPointers)
     -- Handy for debugging
-    elemName        = let l = toList rs in \i -> reName <$> List.lookup i l
+    _elemName       = let l = toList rs in \i -> reName <$> List.lookup i l
 
     --
     -- Perform an action over all Features
@@ -415,6 +413,3 @@ unexportedNames = do
       -- TODO: Export these
     , mkTyName "VkSemaphoreCreateFlagBits"
     ]
-
-
-

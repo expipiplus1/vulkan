@@ -141,7 +141,7 @@ renderSegments out segments = do
     --
     allBootSegments :: [Segment ModName RenderElement]
     allBootSegments =
-      Relude.filter (\(Segment m es) -> not (V.null es))
+      Relude.filter (\(Segment _ es) -> not (V.null es))
         $   segments
         <&> \(Segment m es) -> Segment m (V.mapMaybe reBoot es)
 

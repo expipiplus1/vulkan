@@ -53,22 +53,6 @@ withRenderedNames Spec {..} a = do
       ]
     -- TODO: Handle alias cycles!
     rnResolveAlias n = maybe n rnResolveAlias (Map.lookup n aliasMap)
-    rnConstructorParents =
-      Map.fromList
-        $  [ (n, n)
-           | Struct {..} <- toList specStructs
-           , let n = mkTyName sName
-           ]
-        <> [ (n, n)
-           | Struct {..} <- toList specUnions
-           , let n = mkTyName sName
-           ]
-        <> [ (n, n) | Enum {..} <- toList specEnums, let n = mkTyName eName ]
-        <> [ (n, n)
-           | Handle {..} <- toList specHandles
-           , NonDispatchable == hDispatchable
-           , let n = mkTyName hName
-           ]
   runInputConst RenderedNames { .. } a
 
 isStructOrUnion :: HasRenderedNames r => HName -> Sem r Bool
@@ -85,17 +69,4 @@ isNewtype n = do
 
 getResolveAlias :: HasRenderedNames r => Sem r (HName -> HName)
 getResolveAlias = rnResolveAlias <$> input
-
-    -- aliasMap = Map.fromList
-    --   [ (aName, aTarget)
-    --   | Alias {..} <- toList specAliases
-    --   , TypeAlias == aType
-    --   ]
-    -- -- TODO: Handle alias cycles!
-    -- resolveAlias :: Text -> Text
-    -- resolveAlias :: CName -> CName
-    -- resolveAlias n = maybe n resolveAlias (Map.lookup n aliasMap)
-    -- siGetConstructorParent n = case Map.lookup n aliasMap of
-    --   Nothing -> Map.lookup n constructorMap
-    --   Just n' -> siGetConstructorParent n'
 

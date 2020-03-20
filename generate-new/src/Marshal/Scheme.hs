@@ -6,6 +6,7 @@ import           Relude                  hiding ( Const
                                                 , Reader
                                                 , ask
                                                 )
+import qualified Prelude                       as P
 import           Polysemy
 import           Polysemy.Reader
 import           Polysemy.NonDet         hiding ( Empty )
@@ -16,11 +17,17 @@ import           Data.Vector.Extra              ( Vector
                                                 , pattern (:<|)
                                                 )
 import qualified Data.Vector.Extra             as V
+import           Data.Text.Prettyprint.Doc
 
 import           Marshal.Marshalable
+import           Render.Stmts
+import           Render.Element
 import           Render.SpecInfo
+import           Render.Names
+import           Render.Stmts.Poke.SiblingInfo
 import           Error
 import           CType
+import           Haskell                       as H
 
 -- | @MarshalScheme a@ represents how we will marshal some @a@ (a struct
 -- member or a command parameter (both referred to as parameter here))
@@ -68,7 +75,88 @@ data MarshalScheme a
     -- ^ A non-const pointer to some count value, used to send and return
     -- additional the length of a vector.
     -- Not typically used for structs
+  | Custom (CustomScheme a)
+    -- ^ A non-elided scheme with some complex behavior
+  | ElidedCustom (CustomSchemeElided a)
+    -- ^ An elided scheme with some complex behavior
   deriving (Show)
+
+data CustomScheme a = CustomScheme
+  { csName :: Text
+    -- ^ A name for debugging
+  , csZero :: Maybe (Doc ())
+    -- ^ The 'zero' value for this scheme if possible
+  , csType
+      :: forall r
+       . (HasErr r, HasRenderParams r, HasSpecInfo r)
+      => Sem r H.Type
+  , csDirectPoke
+      :: forall k (s :: k) r
+       . ( Marshalable a
+         , HasRenderElem r
+         , HasRenderParams r
+         , HasErr r
+         , HasSpecInfo r
+         , HasSiblingInfo a r
+         , HasStmts r
+         , HasRenderedNames r
+         , Show a
+         )
+      => Ref s ValueDoc
+      -> Stmt s r (Ref s ValueDoc)
+  , csPeek
+      :: forall k r (s :: k)
+       . ( HasErr r
+         , HasRenderElem r
+         , HasSpecInfo r
+         , HasRenderParams r
+         , HasSiblingInfo a r
+         , HasStmts r
+         , Show a
+         )
+      => Ref s AddrDoc
+      -> Stmt s r (Ref s ValueDoc)
+  }
+
+data CustomSchemeElided a = CustomSchemeElided
+  { cseName :: Text
+  , cseDirectPoke
+      :: forall k (s :: k) r
+       . ( Marshalable a
+         , HasRenderElem r
+         , HasRenderParams r
+         , HasErr r
+         , HasSpecInfo r
+         , HasStmts r
+         , HasRenderedNames r
+         , Show a
+         )
+      => Stmt s r (Ref s ValueDoc)
+  , csePeek
+      :: forall k r (s :: k)
+       . ( HasErr r
+         , HasRenderElem r
+         , HasSpecInfo r
+         , HasRenderParams r
+         , HasStmts r
+         )
+      => Maybe (Ref s AddrDoc -> Stmt s r (Ref s ValueDoc))
+  }
+
+instance P.Show (CustomScheme a) where
+  showsPrec d (CustomScheme name _ _ _ _) =
+    P.showParen (d > 10)
+      $ P.showString "CustomScheme "
+      . P.showsPrec 11 name
+      . P.showString " _ _ _ _"
+
+instance P.Show (CustomSchemeElided a) where
+  showsPrec d (CustomSchemeElided name _ _) =
+    P.showParen (d > 10)
+      $ P.showString "CustomSchemeElided "
+      . P.showsPrec 11 name
+      . P.showString " _ _"
+
 
 type ND r a
   =  (MemberWithError (Reader MarshalParams) r, HasSpecInfo r)
@@ -315,5 +403,7 @@ isElided = \case
   Vector       _    -> False
   EitherWord32 _    -> False
   Tupled _ _        -> False
-  Returned   _      -> False
-  InOutCount _      -> False
+  Returned     _    -> False
+  InOutCount   _    -> False
+  Custom       _    -> False
+  ElidedCustom _    -> True

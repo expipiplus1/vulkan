@@ -22,8 +22,12 @@ module Render.Stmts
   , use
   , after
   , refType
-  )
-where
+  , ValueDoc(..)
+  , AddrDoc(..)
+  , UnitDoc(..)
+  , FunDoc(..)
+  , CmdsDoc(..)
+  ) where
 
 import           Relude                  hiding ( Type
                                                 , State
@@ -65,6 +69,22 @@ import           Render.Element
 import           Render.Utils
 import           Haskell
 import           Error
+
+----------------------------------------------------------------
+-- Some handy newtypes for tagging results
+----------------------------------------------------------------
+-- TODO: Reduce duplication
+newtype AddrDoc = AddrDoc { unAddrDoc  :: Doc () }
+  deriving Show
+newtype ValueDoc = ValueDoc { unValueDoc :: Doc () }
+  deriving Show
+newtype UnitDoc = UnitDoc { unUnitDoc :: Doc () }
+  deriving Show
+newtype FunDoc = FunDoc { unFunDoc :: Doc () }
+  deriving Show
+newtype CmdsDoc = CmdsDoc { unCmdsDoc :: Doc () }
+  deriving Show
+
 
 ----------------------------------------------------------------
 -- Statements are written in a monad where one can lookup 'Ref's

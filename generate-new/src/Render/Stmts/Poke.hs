@@ -13,6 +13,7 @@ module Render.Stmts.Poke
   , SiblingInfo(..)
   , getSiblingInfo
   , allocArray
+  , getVectorPoke
   ) where
 
 import           Relude                  hiding ( Type
@@ -30,7 +31,6 @@ import           Polysemy.NonDet         hiding ( Empty )
 import           Polysemy.Reader
 import           Polysemy.Fail
 import           Data.Char                      ( isUpper )
-import           Language.Haskell.TH            ( nameBase )
 import           Data.Vector.Extra              ( Vector
                                                 , pattern Empty
                                                 )
@@ -38,12 +38,9 @@ import qualified Data.Text.Extra               as T
 
 import qualified Data.Vector                   as V
 import           Foreign.Ptr
-import           Foreign.Storable
 import           Foreign.Marshal.Alloc
 import           Control.Monad.Trans.Cont       ( ContT )
 import qualified Data.ByteString               as BS
-import           GHC.IO.Exception
-import           Control.Exception              ( throwIO )
 
 import           CType                         as C
 import           Error
@@ -54,36 +51,10 @@ import           Render.Element
 import           Render.SpecInfo
 import           Render.Type
 import           Render.Stmts
+import           Render.Stmts.Utils
 import           Render.Scheme
 import           Render.Names
-
--- TODO: Reduct this duplication
-newtype AddrDoc = AddrDoc { unAddrDoc  :: Doc () }
-  deriving Show
-newtype ValueDoc = ValueDoc { unValueDoc :: Doc () }
-  deriving Show
-newtype UnitDoc = UnitDoc { unUnitDoc :: Doc () }
-  deriving Show
-newtype FunDoc = FunDoc { unFunDoc :: Doc () }
-  deriving Show
-newtype CmdsDoc = CmdsDoc { unCmdsDoc :: Doc () }
-  deriving Show
-
-data SiblingInfo a = SiblingInfo
-  { siReferrer :: Doc ()
-    -- ^ How to refer to this sibling in code
-  , siScheme :: MarshalScheme a
-    -- ^ What type is this sibling
-  }
-
-type HasSiblingInfo a r = Member (Reader (CName -> Maybe (SiblingInfo a))) r
-
-getSiblingInfo
-  :: forall a r
-   . (HasErr r, HasSiblingInfo a r)
-  => CName
-  -> Sem r (SiblingInfo a)
-getSiblingInfo n = note ("Unable to find info for: " <> unCName n) =<< asks ($ n)
+import           Render.Stmts.Poke.SiblingInfo
 
 type HasPoke a r
   = ( Marshalable a
@@ -176,6 +147,8 @@ getPokeDirect' name toType fromType value = case fromType of
   Maybe        (Vector _) -> throw "TODO: optional vectors without length"
   Maybe        from       -> maybe' name toType from value
   Tupled size fromElem    -> tuple name size toType fromElem value
+  Custom CustomScheme {..} -> csDirectPoke value
+  ElidedCustom CustomSchemeElided {..} -> cseDirectPoke
   s -> throw $ "Unhandled direct poke from " <> show s <> " to " <> show toType
 
 getPokeDirectElided'
@@ -372,7 +345,7 @@ maybe' name toTypePtr fromType valueRef = case toTypePtr of
 
   _ -> throw $ "Unhandled Maybe conversion to " <> show toTypePtr
 
-vector
+vector, getVectorPoke
   :: HasPoke a r
   => CName
   -> CType
@@ -390,6 +363,9 @@ vector name toType fromElem valueRef = case toType of
     store   <- vectorIndirect name toElem fromElem valueRef addrRef
     addrWithStore toElem addrRef store
   _ -> throw $ "Unhandled Vector conversion to " <> show toType
+
+-- A nicer name for exporting
+getVectorPoke = vector
 
 tuple
   :: HasPoke a r
@@ -667,65 +643,6 @@ elemAddrRef toElem addrRef index = stmt Nothing Nothing $ do
     pure $ untyped <+> "::" <+> pTyDoc
 
 ----------------------------------------------------------------
--- Helpers
-----------------------------------------------------------------
-
--- Store using regular ol' poke
-storablePoke
-  :: ( HasRenderElem r
-     , HasRenderParams r
-     , HasRenderedNames r
-     , HasErr r
-     , HasSpecInfo r
-     )
-  => Ref s AddrDoc
-  -> Ref s ValueDoc
-  -> Stmt s r (Ref s ValueDoc)
-storablePoke addr value = do
-  ty              <- refType value
-  isStructOrUnion <- case ty of
-    ConT n -> isStructOrUnion (TyConName . T.pack . nameBase $ n)
-    _      -> pure False
-  if isStructOrUnion
-    then unitStmt $ do
-      AddrDoc  a <- use addr
-      ValueDoc v <- use value
-      tellImportWithAll (TyConName "ToCStruct")
-      tellImportWithAll ''ContT
-      pure
-        .   ContTAction
-        .   ValueDoc
-        $   "ContT $ pokeCStruct"
-        <+> a
-        <+> v
-        <+> ". ($ ())"
-    else unitStmt $ do
-      tellImportWithAll ''Storable
-      AddrDoc  a <- use addr
-      ValueDoc v <- use value
-      pure . IOAction . ValueDoc $ "poke" <+> a <+> v
-
--- | A doc which is an @IO a@ throwing an error as InvalidArgument unless some
--- condition is met
-throwErrDoc
-  :: (HasRenderElem r, HasRenderParams r)
-  => Text
-  -> Doc ()
-  -> Sem r (Value (Doc ()))
-throwErrDoc err cond = do
-  tellImport 'throwIO
-  tellImportWithAll ''IOException
-  tellImportWithAll ''IOErrorType
-  tellImport 'unless
-  pure . IOAction $ "unless" <+> cond <+> "$" <> line <> indent
-    2
-    (   "throwIO $ IOError Nothing InvalidArgument"
-    <+> viaShow ("" :: Text) -- TODO: function name
-    <+> viaShow err
-    <+> "Nothing Nothing"
-    )
-
-----------------------------------------------------------------
 -- Utils
 ----------------------------------------------------------------
 
@@ -735,11 +652,3 @@ throwErrDoc err cond = do
 raise2 :: Sem r a -> Sem (e1 : e2 : r) a
 raise2 = raise . raise
 
-stmtC
-  :: forall k a (s :: k) (r :: [Effect])
-   . (Typeable a, Coercible a (Doc ()))
-  => Maybe Type
-  -> CName
-  -> Stmt s r (Value a)
-  -> Stmt s r (Ref s a)
-stmtC t n = stmt t (Just (unCName n))

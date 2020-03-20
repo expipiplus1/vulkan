@@ -60,7 +60,7 @@ renderSpec
   -> Vector (MarshaledStruct AUnion)
   -> Vector MarshaledCommand
   -> Sem r (RenderedSpec RenderElement)
-renderSpec s@Spec {..} ss us cs = do
+renderSpec Spec {..} ss us cs = do
   RenderParams {..} <- ask
 
   -- TODO: neaten

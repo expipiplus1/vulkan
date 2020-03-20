@@ -43,8 +43,10 @@ schemeType s = do
     Tupled n e ->
       fmap (foldl' (:@) (TupleT (fromIntegral n)) . replicate (fromIntegral n))
         <$> schemeType e
-    Returned   _ -> pure Nothing
-    InOutCount s -> schemeType s
+    Returned     _                 -> pure Nothing
+    InOutCount   s                 -> schemeType s
+    Custom       CustomScheme {..} -> Just <$> csType
+    ElidedCustom _                 -> pure Nothing
 
 schemeTypePositive
   :: forall r a

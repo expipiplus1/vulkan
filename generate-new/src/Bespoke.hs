@@ -12,19 +12,36 @@ where
 
 import           Relude                  hiding ( Reader
                                                 , ask
+                                                , Const
                                                 )
 import           Data.Text.Prettyprint.Doc
 import           Polysemy
 import           Polysemy.Reader
+import qualified Data.Text                     as T
 import qualified Data.List.Extra               as List
 import           Data.Vector                    ( Vector )
+import qualified Data.Vector                   as V
 import           Foreign.Ptr
 import           Foreign.C.Types
 import           Text.InterpolatedString.Perl6.Unindented
 import           Language.Haskell.TH            ( mkName )
 
+import           Foreign.Marshal.Alloc
+import           Foreign.Marshal.Utils
+import           Control.Monad.Trans.Cont       ( ContT )
+import qualified Data.ByteString               as BS
+import qualified Data.ByteString.Unsafe        as BS
+import           Data.Bits                      ( (.&.) )
+
 import           Haskell                       as H
 import           Render.Element
+import           Render.Utils
+import           Render.Stmts
+import           Render.Stmts.Utils
+import           Render.Stmts.Poke              ( getVectorPoke )
+import           Render.Peek                    ( storablePeek
+                                                , vectorPeekWithLenRef
+                                                )
 import           Error
 import           Marshal.Scheme
 import           Marshal.Marshalable
@@ -90,6 +107,7 @@ bespokeModules = do
 
 data BespokeScheme where
   BespokeScheme ::(forall a. Marshalable a => CName -> a -> Maybe (MarshalScheme a)) -> BespokeScheme
+  -- ^ Parent name -> child -> scheme
 
 bespokeSchemes :: [BespokeScheme]
 bespokeSchemes =
@@ -108,6 +126,209 @@ bespokeSchemes =
         a | (Ptr NonConst Void) <- type' a, "pInfo" <- name a ->
           Just (Returned ByteString)
         _ -> Nothing
+    _ -> const Nothing
+  , BespokeScheme $ \case
+    "VkPipelineMultisampleStateCreateInfo" -> \case
+      p | "rasterizationSamples" <- name p -> Just $ Normal (type' p)
+      (p :: a) | "pSampleMask" <- name p   -> Just . Custom $ CustomScheme
+        { csName       = "Sample mask array"
+        , csZero       = Just "mempty"
+        , csType       = do
+                           RenderParams {..} <- ask
+                           let TyConName sm = mkTyName "VkSampleMask"
+                           pure $ ConT ''Vector :@ ConT (mkName (T.unpack sm))
+        , csDirectPoke = \vecRef -> do
+          RenderParams {..} <- ask
+          stmt (Just (ConT ''Ptr :@ ConT ''Word32)) (Just "pSampleMask") $ do
+            tellQualImport 'V.length
+            tellQualImport 'nullPtr
+            ValueDoc vec     <- use vecRef
+            ValueDoc samples <- useViaName "rasterizationSamples"
+            let
+              sampleTy = mkTyName "VkSampleCountFlagBits"
+              sampleCon =
+                mkConName "VkSampleCountFlagBits" "VkSampleCountFlagBits"
+              cond = parens "requiredLen == fromIntegral vecLen"
+              err
+                = "sampleMask must be either empty or contain enough bits to cover all the sample specified by 'rasterizationSamples'"
+            tellImportWith sampleTy sampleCon
+            throwErr <- renderSubStmtsIO (unitStmt (throwErrDoc err cond))
+            vecPoke  <- renderSubStmts $ do
+              vecRef' <- pureStmt =<< raise (use vecRef)
+              getVectorPoke @a "pSampleMask"
+                               (Ptr Const (TypeName "VkSampleMask"))
+                               (Normal (TypeName "VkSampleMask"))
+                               vecRef'
+            vecPokeDoc <- case vecPoke of
+              ContTStmts d -> pure d
+              IOStmts    d -> do
+                tellImportWithAll 'lift
+                pure $ "lift $" <+> d
+            pure
+              .   ContTAction
+              .   ValueDoc
+              $   "case Data.Vector.length"
+              <+> vec
+              <+> "of"
+              <>  line
+              <>  indent
+                    2
+                    (vsep
+                      [ "0      -> pure nullPtr"
+                      , "vecLen -> " <+> doBlock
+                        [ "let" <+> indent
+                          0
+                          (   "requiredLen ="
+                          <+> "case"
+                          <+> samples
+                          <+> "of"
+                          <>  line
+                          <>  indent
+                                2
+                                (pretty sampleCon <+> "n -> (n + 31) `quot` 32")
+                          )
+                        , "lift $" <+> throwErr
+                        , vecPokeDoc
+                        ]
+                      ]
+                    )
+        , csPeek       = \addrRef -> do
+          RenderParams {..} <- ask
+          stmt (Just (ConT ''Vector :@ ConT ''Word32)) (Just "pSampleMask") $ do
+            ptr <- use =<< storablePeek
+              "pSampleMask"
+              addrRef
+              (Ptr Const (Ptr Const (TypeName "VkSampleMask")))
+            vecPeek <- renderSubStmtsIO $ do
+              addrRef          <- pureStmt (AddrDoc ptr)
+              ValueDoc samples <- useViaName "rasterizationSamples"
+              let sampleTy = mkTyName "VkSampleCountFlagBits"
+                  sampleCon =
+                    mkConName "VkSampleCountFlagBits" "VkSampleCountFlagBits"
+                  cond = parens "requiredLen == fromIntegral vecLen"
+              tellImportWith sampleTy sampleCon
+              len <-
+                pureStmt
+                .   ValueDoc
+                $   "case"
+                <+> samples
+                <+> "of"
+                <>  line
+                <>  indent
+                      2
+                      (   pretty sampleCon
+                      <+> "n -> (fromIntegral n + 31) `quot` 32"
+                      )
+              vectorPeekWithLenRef @a "sampleMask"
+                                      (Normal (TypeName "VkSampleMask"))
+                                      addrRef
+                                      (TypeName "VkSampleMask")
+                                      mempty
+                                      len
+            pure
+              .   IOAction
+              .   ValueDoc
+              $   "if"
+              <+> ptr
+              <+> "== nullPtr"
+              <>  line
+              <>  indent 2 (vsep ["then pure mempty", "else" <+> vecPeek])
+        }
+      _ -> Nothing
+    _ -> const Nothing
+  , BespokeScheme $ \case
+    "VkShaderModuleCreateInfo" -> \case
+      p | "codeSize" <- name p -> Just . ElidedCustom $ CustomSchemeElided
+        { cseName       = "Shader code length"
+        , cseDirectPoke = stmt (Just (ConT ''Int)) (Just "codeSizeBytes") $ do
+                            tellQualImport 'BS.length
+                            ValueDoc bs <- useViaName "pCode"
+                            pure
+                              .   Pure InlineOnce
+                              .   ValueDoc
+                              $   "fromIntegral $ Data.ByteString.length"
+                              <+> bs
+        , csePeek       = Just $ \addrRef ->
+          storablePeek "codeSize" addrRef (Ptr Const (TypeName "size_t"))
+        }
+      p | "pCode" <- name p -> Just . Custom $ CustomScheme
+        { csName       = "Shader code"
+        , csZero       = Just "mempty"
+        , csType       = pure $ ConT ''ByteString
+        , csDirectPoke = \bsRef -> do
+          assertMul4 <- unitStmt $ do
+            ValueDoc bs <- use bsRef
+            tellQualImport 'BS.length
+            tellImport '(.&.)
+            let err = "code size must be a multiple of 4"
+                cond =
+                  parens $ "Data.ByteString.length" <+> bs <+> ".&. 3 == 0"
+            throwErrDoc err cond
+          stmt (Just (ConT ''Ptr :@ ConT ''Word32)) (Just "pCode") $ do
+            after assertMul4
+            ValueDoc bs  <- use bsRef
+            maybeAligned <- use =<< stmt
+              Nothing
+              (Just "unalignedCode")
+              (do
+                tellImportWithAll ''ContT
+                tellImport 'BS.unsafeUseAsCString
+                pure . ContTAction $ "ContT $ unsafeUseAsCString" <+> bs
+              )
+            tellImport 'ptrToWordPtr
+            tellImport '(.&.)
+            tellImport 'castPtr
+            tellImport ''CChar
+            tellImport ''Word32
+            tellImportWithAll ''ContT
+            tellImport 'allocaBytesAligned
+            tellImport 'lift
+            tellQualImport 'BS.length
+            tellImport 'copyBytes
+            let len = "Data.ByteString.length" <+> bs
+            pure
+              .   ContTAction
+              .   ValueDoc
+              $   "if ptrToWordPtr"
+              <+> maybeAligned
+              <+> ".&. 3 == 0"
+              <>  line
+              <>  indent
+                    2
+                    (vsep
+                      [ "-- If this pointer is already aligned properly then use it"
+                      , "then pure $ castPtr @CChar @Word32" <+> maybeAligned
+                      , "-- Otherwise allocate and copy the bytes"
+                      , "else" <+> doBlock
+                        [ "let len =" <+> len
+                        , "mem <- ContT $ allocaBytesAligned @Word32"
+                        <+> "len"
+                        <+> "4"
+                        , "lift $ copyBytes mem (castPtr @CChar @Word32"
+                        <+> maybeAligned
+                        <>  ")"
+                        <+> "len"
+                        , "pure mem"
+                        ]
+                      ]
+                    )
+        , csPeek       = \addrRef ->
+          stmt (Just (ConT ''ByteString)) (Just "code") $ do
+            ValueDoc len <- useViaName "codeSize"
+            let bytes = "fromIntegral $" <+> len <+> "* 4"
+            ptr <- use =<< storablePeek
+              "pCode"
+              addrRef
+              (Ptr Const (Ptr Const (TypeName "uint32_t")))
+            tellImport 'castPtr
+            tellImport ''Word32
+            tellImport ''CChar
+            let castPtr = "castPtr @Word32 @CChar" <+> ptr
+            tellImport 'BS.packCStringLen
+            pure . IOAction . ValueDoc $ "packCStringLen" <+> tupled
+              [castPtr, bytes]
+        }
+      _ -> Nothing
     _ -> const Nothing
   ]
 

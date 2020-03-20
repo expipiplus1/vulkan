@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 05ca262bbd29d59b81af9e3fe276048b9e44c3fc6483fed7b4a8d17af63b5828
+-- hash: 7b8a582926118a4629591ee1e759284273d3a23b173cc21a529747c1a65c3c52
 
 name:           generate-new
 version:        0.0.0
@@ -24,7 +24,6 @@ executable generate
       Bespoke.Seeds
       Bespoke.Utils
       Bracket
-      Cont
       CType
       CType.Size
       Data.Text.Extra
