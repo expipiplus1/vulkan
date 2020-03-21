@@ -355,6 +355,8 @@ fixOddImport n = fromMaybe (Just n) (lookup n fixes)
     , ('nullPtr    , Just (mkName "Foreign.Ptr.nullPtr"))
     , ('castFunPtr, Just (mkName "Foreign.Ptr.castFunPtr"))
     , ('plusPtr    , Just (mkName "Foreign.Ptr.plusPtr"))
+    , (''Type      , Just (mkName "Data.Kind.Type"))
+    , (''Constraint, Just (mkName "Data.Kind.Constraint"))
     ,
       -- Other
       (''ByteString, Just (mkName "Data.ByteString.ByteString"))

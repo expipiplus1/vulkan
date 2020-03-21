@@ -29,6 +29,7 @@ import           Control.Monad.Trans.Cont       ( evalContT )
 
 import           Error
 import           Haskell                       as H
+import           CType
 import           Marshal
 import           Marshal.Scheme
 import           Marshal.Scheme.Zero
@@ -194,6 +195,7 @@ toCStructInstance m@MarshaledStruct {..} pokeValue = do
       tellImport 'evalContT
       pure $ "evalContT $" <+> d
     IOStmts d -> pure d
+  (size, alignment) <- getTypeSize (TypeName msName)
   tellDoc $ "instance ToCStruct" <+> pretty n <+> "where" <> line <> indent
     2
     (vsep
@@ -209,6 +211,8 @@ toCStructInstance m@MarshaledStruct {..} pokeValue = do
       <+> pretty contVar
       <+> "="
       <+> pokeDoc
+      , "cStructSize =" <+> viaShow size
+      , "cStructAlignment =" <+> viaShow alignment
       , zero
       ]
     )

@@ -11,9 +11,11 @@ import qualified Data.HashMap.Strict           as Map
 
 import           Bespoke
 import           Bespoke.Utils
+import           Bracket
 import           Error
 import           Marshal
 import           Render.Alias
+import           Render.CStruct
 import           Render.Command
 import           Render.Constant
 import           Render.Dynamic
@@ -22,15 +24,15 @@ import           Render.Element.Write
 import           Render.Enum
 import           Render.FuncPointer
 import           Render.Handle
-import           Render.Struct
-import           Render.CStruct
-import           Render.Union
-import           Render.SpecInfo
-import           Render.VkException
-import           Render.Stmts
 import           Render.Names
+import           Render.SpecInfo
+import           Render.Spec.Versions
+import           Render.Spec.Extends
+import           Render.Stmts
+import           Render.Struct
+import           Render.Union
+import           Render.VkException
 import           Spec.Parse
-import           Bracket
 
 import           CType
 
@@ -60,7 +62,7 @@ renderSpec
   -> Vector (MarshaledStruct AUnion)
   -> Vector MarshaledCommand
   -> Sem r (RenderedSpec RenderElement)
-renderSpec Spec {..} ss us cs = do
+renderSpec spec@Spec {..} ss us cs = do
   RenderParams {..} <- ask
 
   -- TODO: neaten
@@ -112,6 +114,8 @@ renderSpec Spec {..} ss us cs = do
                              <> V.singleton marshalUtils
                              <> V.singleton zeroClass
                              <> V.singleton (vkExceptionRenderElement vkResult)
+                             <> specVersions spec
+                             <> V.singleton (structExtends spec)
     }
 
 -- | Render a command along with any associated bracketing function

@@ -159,6 +159,7 @@ toCStructInstance MarshaledStruct {..} = do
   tellImport 'callocBytes
   tellImport 'free
 
+  (size, alignment) <- getTypeSize (TypeName msName)
   tellDoc $ "instance ToCStruct" <+> pretty n <+> "where" <> line <> indent
     2
     (vsep
@@ -174,6 +175,8 @@ toCStructInstance MarshaledStruct {..} = do
       <>  indent 2 (vsep cases)
       , "withZeroCStruct ::" <+> withZeroCStructTDoc
       , "withZeroCStruct = bracket (callocBytes" <+> viaShow sSize <> ") free"
+      , "cStructSize =" <+> viaShow size
+      , "cStructAlignment =" <+> viaShow alignment
       ]
     )
 

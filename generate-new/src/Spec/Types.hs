@@ -1,3 +1,4 @@
+{-# language UndecidableInstances #-}
 module Spec.Types
   ( CName(..)
   , module Spec.Types
@@ -13,7 +14,8 @@ import           CType
 import qualified Marshal.Marshalable           as M
 
 data Spec = Spec
-  { specHandles            :: Vector Handle
+  { specHeaderVersion      :: Word
+  , specHandles            :: Vector Handle
   , specFuncPointers       :: Vector FuncPointer
   , specStructs            :: Vector Struct
   , specUnions             :: Vector Union
@@ -119,8 +121,8 @@ data Dispatchable = Dispatchable | NonDispatchable
 --
 
 
-type Struct = StructOrUnion AStruct 'WithSize
-type Union = StructOrUnion AUnion 'WithSize
+type Struct = StructOrUnion AStruct 'WithSize 'WithChildren
+type Union = StructOrUnion AUnion 'WithSize 'WithChildren
 
 data StructOrUnionType = AStruct | AUnion
 
@@ -130,14 +132,24 @@ type family SizeType (a :: WithSize) where
   SizeType 'WithSize = Int
   SizeType 'WithoutSize = ()
 
-data StructOrUnion (t :: StructOrUnionType) (s :: WithSize) = Struct
-  { sName :: CName
-  , sMembers :: Vector (StructMember' s)
-  , sSize :: SizeType s
-  , sAlignment :: SizeType s
-  }
+data WithChildren = WithChildren | WithoutChildren
 
-deriving instance Show (StructOrUnion t 'WithSize)
+type family ChildrenType (su :: StructOrUnionType) (a :: WithChildren) where
+  ChildrenType AStruct 'WithChildren    = Vector CName
+  ChildrenType t       'WithoutChildren = ()
+  ChildrenType AUnion  c                = ()
+
+data StructOrUnion (t :: StructOrUnionType) (s :: WithSize) (c :: WithChildren)
+  = Struct
+    { sName       :: CName
+    , sMembers    :: Vector (StructMember' s)
+    , sSize       :: SizeType s
+    , sAlignment  :: SizeType s
+    , sExtends    :: Vector CName
+    , sExtendedBy :: ChildrenType t c
+    }
+
+deriving instance Show (ChildrenType t 'WithChildren) => Show (StructOrUnion t 'WithSize 'WithChildren)
 
 data StructMember' (s :: WithSize) = StructMember
   { smName :: CName

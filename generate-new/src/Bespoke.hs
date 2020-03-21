@@ -27,11 +27,11 @@ import           Text.InterpolatedString.Perl6.Unindented
 import           Language.Haskell.TH            ( mkName )
 
 import           Foreign.Marshal.Alloc
+import           Data.Bits
 import           Foreign.Marshal.Utils
 import           Control.Monad.Trans.Cont       ( ContT )
 import qualified Data.ByteString               as BS
 import qualified Data.ByteString.Unsafe        as BS
-import           Data.Bits                      ( (.&.) )
 
 import           Haskell                       as H
 import           Render.Element

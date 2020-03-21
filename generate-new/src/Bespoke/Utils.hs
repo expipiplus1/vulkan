@@ -124,7 +124,7 @@ zeroClass = genRe "zero class" $ do
 
 marshalUtils :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 marshalUtils = genRe "marshal utils" $ do
-  tellExplicitModule (ModName "Graphics.Vulkan.CStruct")
+  tellExplicitModule (ModName "Graphics.Vulkan.CStruct.Utils")
   traverseV_ tellImportWithAll [''Proxy, ''CChar]
   traverseV_
     tellImport
@@ -165,6 +165,7 @@ marshalUtils = genRe "marshal utils" $ do
     , 'VGS.fromSized
     , ''VS.Vector
     , 'BS.length
+    , ''VSS.Vector
     ]
 
   tellQualImportWithAll ''VGSI.Vector

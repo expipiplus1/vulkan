@@ -76,7 +76,7 @@ assignModules spec@Spec {..} rs@RenderedSpec {..} = do
   --
   -- Check that everything is exported
   --
-  unexportedNames <- unexportedNames
+  unexportedNames <- unexportedNames spec
   forV_ indexed $ \(i, re) -> case IntMap.lookup i exports of
     Nothing -> do
       let exportedNames = exportName <$> toList (reExports re)
@@ -326,6 +326,7 @@ featureCommentToModuleName prefix = \case
       $ ((prefix <> ".") <>)
       . mconcat
       . fmap (T.upperCaseFirst . replaceSymbols)
+      . dropLast "API"
       . dropLast "commands"
       . T.words
       . T.replace "Promoted from" "Promoted_From_"
@@ -396,20 +397,25 @@ dropLast x l = case nonEmpty l of
 -- Ignored unexported names
 ----------------------------------------------------------------
 
-unexportedNames :: HasRenderParams r => Sem r [HName]
-unexportedNames = do
+unexportedNames :: HasRenderParams r => Spec -> Sem r [HName]
+unexportedNames Spec {..} = do
   RenderParams {..} <- ask
+  let apiVersions = toList specFeatures <&> \Feature {..} ->
+        let major : minor : _ = versionBranch fVersion
+        in  mkTyName
+              (CName $ "VK_API_VERSION_" <> show major <> "_" <> show minor)
   pure
-    [ mkFunName "vkGetSwapchainGrallocUsageANDROID"
-    , mkFunName "vkGetSwapchainGrallocUsage2ANDROID"
-    , mkFunName "vkAcquireImageANDROID"
-    , mkFunName "vkQueueSignalReleaseImageANDROID"
-    , mkTyName "VkSwapchainImageUsageFlagBitsANDROID"
-    , mkTyName "VkSwapchainImageUsageFlagsANDROID"
-    , mkTyName "VkNativeBufferUsage2ANDROID"
-    , mkTyName "VkNativeBufferANDROID"
-    , mkTyName "VkSwapchainImageCreateInfoANDROID"
-    , mkTyName "VkPhysicalDevicePresentationPropertiesANDROID"
-      -- TODO: Export these
-    , mkTyName "VkSemaphoreCreateFlagBits"
-    ]
+    $  [ mkFunName "vkGetSwapchainGrallocUsageANDROID"
+       , mkFunName "vkGetSwapchainGrallocUsage2ANDROID"
+       , mkFunName "vkAcquireImageANDROID"
+       , mkFunName "vkQueueSignalReleaseImageANDROID"
+       , mkTyName "VkSwapchainImageUsageFlagBitsANDROID"
+       , mkTyName "VkSwapchainImageUsageFlagsANDROID"
+       , mkTyName "VkNativeBufferUsage2ANDROID"
+       , mkTyName "VkNativeBufferANDROID"
+       , mkTyName "VkSwapchainImageCreateInfoANDROID"
+       , mkTyName "VkPhysicalDevicePresentationPropertiesANDROID"
+         -- TODO: Export these
+       , mkTyName "VkSemaphoreCreateFlagBits"
+       ]
+    <> apiVersions

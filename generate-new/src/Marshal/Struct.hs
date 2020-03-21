@@ -20,7 +20,7 @@ import           Render.SpecInfo
 
 data MarshaledStruct t = MarshaledStruct
   { msName    :: CName
-  , msStruct  :: StructOrUnion t 'WithSize
+  , msStruct  :: StructOrUnion t 'WithSize 'WithChildren
   , msMembers :: V.Vector MarshaledStructMember
   }
 
@@ -32,7 +32,7 @@ data MarshaledStructMember =
 
 marshalStruct
   :: (MemberWithError (Reader MarshalParams) r, HasErr r, HasSpecInfo r)
-  => StructOrUnion t 'WithSize
+  => StructOrUnion t 'WithSize 'WithChildren
   -> Sem r (MarshaledStruct t)
 marshalStruct s@Struct {..} = contextShow sName $ do
   let msName = sName
@@ -44,7 +44,7 @@ marshalStruct s@Struct {..} = contextShow sName $ do
 
 structMemberScheme
   :: (MemberWithError (Reader MarshalParams) r, HasErr r, HasSpecInfo r)
-  => StructOrUnion t 'WithSize
+  => StructOrUnion t 'WithSize 'WithChildren
   -> StructMember
   -> Sem r (MarshalScheme StructMember)
 structMemberScheme Struct {..} member = do

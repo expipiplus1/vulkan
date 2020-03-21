@@ -59,6 +59,13 @@ toCStruct = do
         -- | Allocate space for an "empty" @a@ and populate any univalied
         -- members with their value.
         withZeroCStruct :: (Ptr a -> IO b) -> IO b
+
+        -- | The size of this struct, note that this doesn't account for any
+        -- extra pointed-to data
+        cStructSize :: Int
+
+        -- | The required memory alignment for this type
+        cStructAlignment :: Int
     |]
 
 fromCStruct

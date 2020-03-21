@@ -17,6 +17,7 @@ import           Relude                  hiding ( Reader
 import           Xeno.DOM
 import           Data.Vector                    ( Vector )
 import           Data.List.Extra                ( nubOrd )
+import           Control.Monad.Extra            ( mapMaybeM )
 import           Text.ParserCombinators.ReadP
                                          hiding ( get )
 import           Data.Version
@@ -65,18 +66,19 @@ parseSpec bs = do
       types     <- contents <$> oneChild "types" n
       typeNames <- allTypeNames types
       runReader typeNames $ do
-        specHandles      <- parseHandles types
-        specFuncPointers <- parseFuncPointers types
-        unsizedStructs   <- parseStructs types
-        unsizedUnions    <- parseUnions types
-        specCommands     <- parseCommands . contents =<< oneChild "commands" n
-        emptyBitmasks    <- parseEmptyBitmasks types
-        nonEmptyEnums    <- parseEnums . contents $ n
-        requires         <- allRequires . contents $ n
-        enumExtensions   <- parseEnumExtensions requires
-        constantAliases  <- parseConstantAliases (contents n)
-        bitmaskAliases   <- parseBitmaskAliases types
-        typeAliases      <- parseTypeAliases
+        specHeaderVersion <- parseHeaderVersion types
+        specHandles       <- parseHandles types
+        specFuncPointers  <- parseFuncPointers types
+        unsizedStructs    <- parseStructs types
+        unsizedUnions     <- parseUnions types
+        specCommands      <- parseCommands . contents =<< oneChild "commands" n
+        emptyBitmasks     <- parseEmptyBitmasks types
+        nonEmptyEnums     <- parseEnums . contents $ n
+        requires          <- allRequires . contents $ n
+        enumExtensions    <- parseEnumExtensions requires
+        constantAliases   <- parseConstantAliases (contents n)
+        bitmaskAliases    <- parseBitmaskAliases types
+        typeAliases       <- parseTypeAliases
           ["handle", "enum", "bitmask", "struct"]
           types
         enumAliases    <- parseEnumAliases requires
@@ -116,10 +118,24 @@ parseSpec bs = do
               (specAPIConstants <> specExtensionConstants)
             ]
           constantValue v = Map.lookup v constantMap
+          isDisabledType =
+            let disabledNames =
+                  [ tyName
+                  | Extension {..} <- toList specDisabledExtensions
+                  , Require {..}   <- toList exRequires
+                  , tyName         <- toList rTypeNames
+                  ]
+            in  (`elem` disabledNames)
+          structsWithChildren =
+            fmap (withChildren unsizedStructs) unsizedStructs
+          nonDisabledStructs =
+            V.filter (not . isDisabledType . sName) structsWithChildren
+          unionsWithChildren =
+            (\Struct {..} -> Struct { .. }) <$> unsizedUnions
         (specUnions, specStructs, getSize) <- sizeAll sizeMap
                                                       constantValue
-                                                      unsizedUnions
-                                                      unsizedStructs
+                                                      unionsWithChildren
+                                                      nonDisabledStructs
         pure (Spec { .. }, getSize)
     _ -> throw "This spec isn't a registry node"
 
@@ -128,41 +144,48 @@ parseSpec bs = do
 ----------------------------------------------------------------
 
 sizeAll
-  :: forall r
+  :: forall r uc sc
    . HasErr r
   => Map.Map CName (Int, Int)
   -> (CName -> Maybe Int)
-  -> Vector (StructOrUnion AUnion WithoutSize)
-  -> Vector (StructOrUnion AStruct WithoutSize)
+  -> Vector (StructOrUnion AUnion WithoutSize uc)
+  -> Vector (StructOrUnion AStruct WithoutSize sc)
   -> Sem
        r
-       (Vector Union, Vector Struct, CType -> Maybe (Int, Int))
+       ( Vector (StructOrUnion AUnion 'WithSize uc)
+       , Vector (StructOrUnion AStruct 'WithSize sc)
+       , CType -> Maybe (Int, Int)
+       )
 sizeAll typeSizes constantMap unions structs = do
-  let
-    both    = (Left <$> unions) <> (Right <$> structs)
-    initial = typeSizes
-    try
-      :: Either
-           (StructOrUnion AUnion WithoutSize)
-           (StructOrUnion AStruct WithoutSize)
-      -> Sem
-           (State (Map.Map CName (Int, Int)) ': r)
-           (Maybe (Either Union Struct))
-    getSize m =
-      let getLocalSize = \case
-            TypeName n -> Map.lookup n m
-            _          -> Nothing
-      in  cTypeSize constantMap getLocalSize
-    try s = do
-      m <- get
-      let g = getSize m
-      case s of
-        Left u -> for (sizeUnion g u) $ \u' -> do
-          modify' (Map.insert (sName u') (sSize u', sAlignment u'))
-          pure (Left u')
-        Right s -> for (sizeStruct g s) $ \s' -> do
-          modify' (Map.insert (sName s') (sSize s', sAlignment s'))
-          pure (Right s')
+  let both    = (Left <$> unions) <> (Right <$> structs)
+      initial = typeSizes
+      try
+        :: Either
+             (StructOrUnion AUnion WithoutSize uc)
+             (StructOrUnion AStruct WithoutSize sc)
+        -> Sem
+             (State (Map.Map CName (Int, Int)) ': r)
+             ( Maybe
+                 ( Either
+                     (StructOrUnion AUnion 'WithSize uc)
+                     (StructOrUnion AStruct 'WithSize sc)
+                 )
+             )
+      getSize m =
+        let getLocalSize = \case
+              TypeName n -> Map.lookup n m
+              _          -> Nothing
+        in  cTypeSize constantMap getLocalSize
+      try s = do
+        m <- get
+        let g = getSize m
+        case s of
+          Left u -> for (sizeUnion g u) $ \u' -> do
+            modify' (Map.insert (sName u') (sSize u', sAlignment u'))
+            pure (Left u')
+          Right s -> for (sizeStruct g s) $ \s' -> do
+            modify' (Map.insert (sName s') (sSize s', sAlignment s'))
+            pure (Right s')
   (m, r) <- runState initial $ tryTwice both try
 
   let (failed, succeeded) = partitionEithers . V.toList $ r
@@ -175,16 +198,16 @@ sizeStruct
   :: Monad m
   => (CType -> m (Int, Int))
   -- ^ Size and alignment
-  -> StructOrUnion AStruct WithoutSize
-  -> m Struct
+  -> StructOrUnion AStruct WithoutSize sc
+  -> m (StructOrUnion AStruct 'WithSize sc)
 sizeStruct = sizeGeneric roundToAlignment (\_ m o -> m + o)
 
 sizeUnion
   :: Monad m
   => (CType -> m (Int, Int))
   -- ^ Size and alignment
-  -> StructOrUnion AUnion WithoutSize
-  -> m Union
+  -> StructOrUnion AUnion WithoutSize sc
+  -> m (StructOrUnion AUnion 'WithSize sc)
 sizeUnion = sizeGeneric (\_ _ -> 0) (\c m _ -> max c m)
 
 sizeGeneric
@@ -195,8 +218,8 @@ sizeGeneric
   -- ^ Next size given current size, member size and offset
   -> (CType -> m (Int, Int))
   -- ^ Size and alignment
-  -> StructOrUnion t WithoutSize
-  -> m (StructOrUnion t 'WithSize)
+  -> StructOrUnion t WithoutSize c
+  -> m (StructOrUnion t 'WithSize c)
 sizeGeneric getOffset getSize getTypeSize Struct {..} = do
   ((newSize, newAlign), memberOffsets) <- scanOffsets getOffset
                                                       getSize
@@ -209,6 +232,25 @@ sizeGeneric getOffset getSize getTypeSize Struct {..} = do
     , ..
     }
 
+
+----------------------------------------------------------------
+-- Assigning children
+----------------------------------------------------------------
+
+withChildren
+  :: Vector (StructOrUnion AStruct s WithoutChildren)
+  -> StructOrUnion AStruct s WithoutChildren
+  -> StructOrUnion AStruct s 'WithChildren
+withChildren ss =
+  let extendedByMap = Map.fromListWith
+        (<>)
+        [ (e, V.singleton (sName s1))
+        | s1 <- toList ss
+        , e  <- toList (sExtends s1)
+        ]
+  in
+    \s ->
+      s { sExtendedBy = fromMaybe mempty (Map.lookup (sName s) extendedByMap) }
 
 ----------------------------------------------------------------
 -- Features and extensions
@@ -250,7 +292,7 @@ parseRequires n = V.fromList <$> traverseV
   parseRequire :: Node -> P Require
   parseRequire r = do
     rComment   <- traverse decode (getAttr "comment" r)
-    rTypeNames <- V.fromList <$> sequenceV
+    rTypeNames <- V.fromList . filter (not . isForbidden) <$> sequenceV
       [ nameAttr "require type" t | Element t <- contents r, "type" == name t ]
     rCommandNames <- V.fromList <$> sequenceV
       [ nameAttr "require commands" t
@@ -382,6 +424,32 @@ parseConstantAliases es =
       , Just alias <- pure $ getAttr "alias" ee
       , aType <- [TypeAlias, PatternAlias]
       ]
+
+----------------------------------------------------------------
+-- Defines
+----------------------------------------------------------------
+
+parseHeaderVersion :: [Content] -> P Word
+parseHeaderVersion es = do
+  let defines :: [Node]
+      defines =
+        [ n
+        | Element n <- es
+        , name n == "type"
+        , Just "define" <- pure (getAttr "category" n)
+        ]
+  vers <- flip mapMaybeM defines $ \d -> do
+    name <- nameElemMaybe d
+    if name /= Just "VK_HEADER_VERSION"
+      then pure Nothing
+      else do
+        allText <- decode $ allText d
+        let ver = T.takeWhileEnd isNumber allText
+        pure $ readMaybe (T.unpack ver)
+  case vers of
+    []  -> throw "No header version found in spec"
+    [v] -> pure v
+    vs  -> throw $ "Multiple header versions found in spec: " <> show vs
 
 ----------------------------------------------------------------
 -- Handles
@@ -553,13 +621,14 @@ appendEnumExtensions extensions =
 -- Structs
 ----------------------------------------------------------------
 
-parseStructs :: [Content] -> P (Vector  (StructOrUnion AStruct WithoutSize))
+parseStructs
+  :: [Content] -> P (Vector (StructOrUnion AStruct WithoutSize WithoutChildren))
 parseStructs = onTypes "struct" parseStruct
 
-parseUnions :: [Content] -> P (Vector (StructOrUnion AUnion WithoutSize))
+parseUnions :: [Content] -> P (Vector (StructOrUnion AUnion WithoutSize WithoutChildren))
 parseUnions = onTypes "union" parseStruct
 
-parseStruct :: Node -> P (StructOrUnion a WithoutSize)
+parseStruct :: Node -> P (StructOrUnion a WithoutSize WithoutChildren)
 parseStruct n = do
   sName <- nameAttr "struct" n
   context (unCName sName) $ do
@@ -567,8 +636,10 @@ parseStruct n = do
       fmap fromList
       . traverseV parseStructMember
       $ [ m | Element m <- contents n, name m == "member" ]
-    let sSize      = ()
-        sAlignment = ()
+    let sSize       = ()
+        sAlignment  = ()
+        sExtendedBy = ()
+    sExtends <- listAttr (fmap CName . decode) "structextends" n
     pure Struct { .. }
  where
 
@@ -686,6 +757,20 @@ extraEnums = V.singleton Enum
   , eType   = AnEnum
   }
 
+isForbidden :: CName -> Bool
+isForbidden n =
+  (      n
+    `elem` [ "vk_platform"
+           , "VK_API_VERSION"
+           , "VK_VERSION_MAJOR"
+           , "VK_VERSION_MINOR"
+           , "VK_VERSION_PATCH"
+           , "VK_HEADER_VERSION"
+           ]
+    )
+    ||             "VK_API_VERSION_"
+    `T.isPrefixOf` unCName n
+
 onTypes
   :: HasErr r
   => ByteString
@@ -771,8 +856,11 @@ elemText elemName node =
         _   -> Nothing
 
 nameElem :: Text -> Node -> P CName
-nameElem debug n =
-  fmap CName $ decode =<< note (debug <> " has no name") (elemText "name" n)
+nameElem debug n = note (debug <> " has no name") =<< nameElemMaybe n
+
+nameElemMaybe :: Node -> P (Maybe CName)
+nameElemMaybe n =
+  fmap (fmap CName) $ traverse decode (elemText "name" n)
 
 nameAttr :: Text -> Node -> P CName
 nameAttr debug n =
