@@ -101,7 +101,8 @@ normal name toTy fromTy = do
           tellImportWithAll ''ContT
           if isStruct
             then do
-              tyDoc <- renderTypeHighPrec =<< cToHsType DoPreserve toElem
+              tyDoc <-
+                renderTypeHighPrec =<< cToHsTypeWithHoles DoPreserve toElem
               tellImportWithAll (TyConName "ToCStruct")
               pure ("ContT" <+> parens ("withZeroCStruct @" <> tyDoc))
             else do

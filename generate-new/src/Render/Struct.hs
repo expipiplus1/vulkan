@@ -8,7 +8,6 @@ import           Relude                  hiding ( Reader
                                                 , runReader
                                                 , lift
                                                 , State
-                                                , Type
                                                 , Handle
                                                 )
 import           Text.InterpolatedString.Perl6.Unindented
@@ -29,6 +28,7 @@ import           Control.Monad.Trans.Cont       ( evalContT )
 
 import           Error
 import           Haskell                       as H
+                                         hiding ( Type )
 import           CType
 import           Marshal
 import           Marshal.Scheme
@@ -43,6 +43,7 @@ import           Render.Type
 import           Render.Utils
 import           Render.Names
 import           Spec.Parse
+import           Bespoke
 
 renderStruct
   :: ( HasErr r
@@ -58,11 +59,24 @@ renderStruct s@MarshaledStruct {..} = context (unCName msName) $ do
   genRe ("struct " <> unCName msName) $ do
     let n = mkTyName msName
     ms <- V.mapMaybe id <$> traverseV renderStructMember msMembers
-    tellDataExport n
+    tellImport ''Type
+    let childVar = if hasChildren msStruct
+          then " (" <> pretty structChainVar <+> ":: [Type])"
+          else ""
+        derivedInstances =
+          if hasChildren msStruct then "" else "deriving (Show)" :: Doc ()
+    tellExport (EData n)
+    tellBoot $ do
+      tellExport (EType n)
+      tellImport ''Type
+      tellDoc $ vsep
+        (  [ "type role" <+> pretty n <+> "nominal" | hasChildren msStruct ]
+        <> ["data" <+> pretty n <> childVar]
+        )
     tellDoc [qqi|
-        data {n} = {mkConName msName msName}
+        data {n}{childVar} = {mkConName msName msName}
           {braceList ms}
-          deriving (Show)
+          {derivedInstances}
         |]
     memberMap <- sequenceV $ Map.fromList
       [ ( smName (msmStructMember m)
@@ -186,6 +200,14 @@ toCStructInstance m@MarshaledStruct {..} pokeValue = do
       Struct {..} = msStruct
       structT     = ConT (typeName n)
       aVar        = mkVar "a"
+      tDoc        = if hasChildren msStruct
+        then parens (pretty n <+> pretty structChainVar)
+        else pretty n
+  head <- if hasChildren msStruct
+    then do
+      tellImport (TyConName "PokeChain")
+      pure $ " PokeChain" <+> pretty structChainVar <+> "=>"
+    else pure ""
   tellImport 'allocaBytesAligned
   pokeCStructTDoc <- renderType
     (ConT ''Ptr :@ structT ~> structT ~> ConT ''IO :@ aVar ~> ConT ''IO :@ aVar)
@@ -196,26 +218,28 @@ toCStructInstance m@MarshaledStruct {..} pokeValue = do
       pure $ "evalContT $" <+> d
     IOStmts d -> pure d
   (size, alignment) <- getTypeSize (TypeName msName)
-  tellDoc $ "instance ToCStruct" <+> pretty n <+> "where" <> line <> indent
-    2
-    (vsep
-      [ "withCStruct x f = allocaBytesAligned"
-      <+> viaShow sSize
-      <+> viaShow sAlignment
-      <+> "$ \\p -> pokeCStruct p x (f p)"
-      , "pokeCStruct ::" <+> pokeCStructTDoc
-      , "pokeCStruct"
-      <+> pretty addrVar
-      <+> pretty con
-      <>  "{..}"
-      <+> pretty contVar
-      <+> "="
-      <+> pokeDoc
-      , "cStructSize =" <+> viaShow size
-      , "cStructAlignment =" <+> viaShow alignment
-      , zero
-      ]
-    )
+  tellDoc
+    $  ("instance" <> head <+> "ToCStruct" <+> tDoc <+> "where")
+    <> line
+    <> indent
+         2
+         (vsep
+           [ "withCStruct x f = allocaBytesAligned"
+           <+> viaShow sSize
+           <+> viaShow sAlignment
+           <+> "$ \\p -> pokeCStruct p x (f p)"
+           , "pokeCStruct"
+           <+> pretty addrVar
+           <+> pretty con
+           <>  "{..}"
+           <+> pretty contVar
+           <+> "="
+           <+> pokeDoc
+           , "cStructSize =" <+> viaShow size
+           , "cStructAlignment =" <+> viaShow alignment
+           , zero
+           ]
+         )
 
 fromCStruct
   :: ( HasErr r
@@ -247,16 +271,21 @@ fromCStructInstance m@MarshaledStruct {..} = do
   let n           = mkTyName msName
       Struct {..} = msStruct
       structT     = ConT (typeName n)
+      tDoc        = if hasChildren msStruct
+        then parens (pretty n <+> pretty structChainVar)
+        else pretty n
+  head <- if hasChildren msStruct
+    then do
+      tellImport (TyConName "PeekChain")
+      pure $ " PeekChain" <+> pretty structChainVar <+> "=>"
+    else pure ""
   tellImport 'plusPtr
   peekCStructTDoc <- renderType (ConT ''Ptr :@ structT ~> ConT ''IO :@ structT)
   peekStmts       <- peekCStructBody m
-  tellDoc $ "instance FromCStruct" <+> pretty n <+> "where" <> line <> indent
-    2
-    (vsep
-      [ "peekCStruct ::" <+> peekCStructTDoc
-      , "peekCStruct" <+> pretty addrVar <+> "=" <+> peekStmts
-      ]
-    )
+  tellDoc
+    $  ("instance" <> head <+> "FromCStruct" <+> tDoc <+> "where")
+    <> line
+    <> indent 2 (vsep ["peekCStruct" <+> pretty addrVar <+> "=" <+> peekStmts])
 
 fromCStructFunction
   :: ( HasErr r
@@ -272,11 +301,20 @@ fromCStructFunction
 fromCStructFunction m@MarshaledStruct {..} handles = do
   RenderParams {..} <- ask
   tellImportWithAll (TyConName "FromCStruct")
-  let n            = mkTyName msName
-      Struct {..}  = msStruct
-      structT      = ConT (typeName n)
+  let n           = mkTyName msName
+      Struct {..} = msStruct
+      structT     = if hasChildren msStruct
+        then ConT (typeName n) :@ VarT (mkName structChainVar)
+        else ConT (typeName n)
       funName      = TermName $ "peekCStruct" <> unName n
       handleLevels = nubOrd (hLevel <$> handles)
+  addContext <- if hasChildren msStruct
+    then do
+      tellImport (TyConName "PeekChain")
+      pure $ ForallT
+        []
+        [ConT (mkName "PeekChain") :@ VarT (mkName structChainVar)]
+    else pure id
   handleCommandTypes <- forV handleLevels $ \case
     NoHandleLevel -> throw "Dispatchable handle with no level" -- TODO: use types for this
     Device        -> pure $ ConT (typeName (TyConName "DeviceCmds"))
@@ -284,11 +322,11 @@ fromCStructFunction m@MarshaledStruct {..} handles = do
   handleCommandNames <- case handleLevels of
     [_] -> pure ["cmds"]
     _   -> throw "TODO: fromCStruct with multiple cmd levels"
-  peekCStructTDoc <- renderType
-    (foldr (~>)
-           (ConT ''IO :@ structT)
-           (handleCommandTypes <> [ConT ''Ptr :@ structT])
-    )
+  peekCStructTDoc <- renderType . addContext $ foldr
+    (~>)
+    (ConT ''IO :@ structT)
+    (handleCommandTypes <> [ConT ''Ptr :@ structT])
+
   peekStmts <- peekCStructBody m
   tellExport (ETerm funName)
   tellDoc $ vsep
@@ -389,8 +427,9 @@ withZeroCStructDecl ms@MarshaledStruct {..} = do
   tellImport 'callocBytes
   tellImport 'free
   pure $ vsep
-    [ "withZeroCStruct ::" <+> withZeroCStructTDoc
-    , "withZeroCStruct f = bracket (callocBytes"
+    [
+    -- "withZeroCStruct ::" <+> withZeroCStructTDoc
+      "withZeroCStruct f = bracket (callocBytes"
     <+> viaShow sSize
     <>  ") free $ \\"
     <>  pretty addrVar
@@ -410,11 +449,17 @@ zeroInstanceDecl
   -> Sem r ()
 zeroInstanceDecl MarshaledStruct {..} = do
   RenderParams {..} <- ask
-  let n   = mkTyName msName
-      con = mkConName msName msName
+  let n    = mkTyName msName
+      con  = mkConName msName msName
+      head = if hasChildren msStruct
+        then " " <> pretty structChainVar <> " ~ '[] =>"
+        else ""
+      tDoc = if hasChildren msStruct
+        then parens (pretty n <+> pretty structChainVar)
+        else pretty n
   zeroMembers <- catMaybes . toList <$> forV msMembers (zeroScheme . msmScheme)
   tellImportWithAll (TyConName "Zero")
-  tellDoc $ "instance Zero" <+> pretty n <+> "where" <> line <> indent
+  tellDoc $ "instance" <> head <+> "Zero" <+> tDoc <+> "where" <> line <> indent
     2
     (vsep ["zero =" <+> pretty con <> line <> indent 2 (vsep zeroMembers)])
 
@@ -478,3 +523,10 @@ renderPokes p end MarshaledStruct {..} = do
     stmt Nothing Nothing $ do
       traverse_ after ps
       pure end
+
+----------------------------------------------------------------
+-- Utils
+----------------------------------------------------------------
+
+hasChildren :: Struct -> Bool
+hasChildren = not . V.null . sExtendedBy

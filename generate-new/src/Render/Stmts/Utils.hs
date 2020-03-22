@@ -42,8 +42,9 @@ storablePoke
 storablePoke addr value = do
   ty              <- refType value
   isStructOrUnion <- case ty of
-    ConT n -> isStructOrUnion (TyConName . T.pack . nameBase $ n)
-    _      -> pure False
+    ConT n :@ VarT _ -> isStructOrUnion (TyConName . T.pack . nameBase $ n)
+    ConT n           -> isStructOrUnion (TyConName . T.pack . nameBase $ n)
+    _                -> pure False
   if isStructOrUnion
     then unitStmt $ do
       AddrDoc  a <- use addr

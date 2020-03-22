@@ -2,6 +2,8 @@
 module Render.Type
   ( Preserve(..)
   , cToHsType
+  , cToHsTypeWithHoles
+  , cToHsTypeQuantified
   , namedTy
   )
 where
@@ -9,21 +11,60 @@ where
 import           Relude                  hiding ( Reader
                                                 , ask
                                                 , lift
+                                                , State
+                                                , modify'
+                                                , get
+                                                , put
+                                                , runState
+                                                , Type
                                                 )
 import           Language.Haskell.TH
 import           Language.Haskell.TH.Instances  ( )
+import qualified Data.Vector                   as V
 import           Polysemy
+import           Polysemy.State
+import           Polysemy.Input
 import           Polysemy.Reader
 import           Foreign.C.Types
 import           Foreign.Ptr
 import qualified Data.Vector.Storable.Sized    as VSS
 
 import           Render.SpecInfo
+import           Spec.Types
 import           CType
 import           Haskell                       as H
 import           Error
 import           Render.Element
 import           Render.Type.Preserve
+
+-- | The same as 'cToHsType' except type variables are written as @_@
+cToHsTypeWithHoles
+  :: forall r
+   . (HasErr r, HasRenderParams r, HasSpecInfo r)
+  => Preserve
+  -> CType
+  -> Sem r H.Type
+cToHsTypeWithHoles preserve t = runInputList holes $ cToHsType' preserve t
+
+-- | The same as 'cToHsType' except type variables are quantified with forall.
+cToHsTypeQuantified
+  :: forall r
+   . (HasErr r, HasRenderParams r, HasSpecInfo r)
+  => Preserve
+  -> CType
+  -> Sem r H.Type
+cToHsTypeQuantified preserve t = do
+  let nextVar = do
+        (u, i) <- get
+        let name = mkName [i]
+        case i of
+          'q' -> pure Nothing
+          _ -> do
+            put (name : u, succ i)
+            pure $ Just (VarT name)
+  ((usedVarNames, _), t) <-
+    runState ([], 'a') . runInputSem nextVar $ cToHsType' preserve t
+  pure $ ForallT (PlainTV <$> reverse usedVarNames) [] t
 
 cToHsType
   :: forall r
@@ -31,7 +72,15 @@ cToHsType
   => Preserve
   -> CType
   -> Sem r H.Type
-cToHsType preserve t = do
+cToHsType preserve t = runInputList allVars $ cToHsType' preserve t
+
+cToHsType'
+  :: forall r
+   . (HasErr r, HasRenderParams r, HasSpecInfo r, Member NextVar r)
+  => Preserve
+  -> CType
+  -> Sem r H.Type
+cToHsType' preserve t = do
   RenderParams {..} <- ask
   case mkHsTypeOverride preserve t of
     Just h  -> pure h
@@ -60,17 +109,17 @@ cToHsType preserve t = do
           "Getting the unpreserved haskell type for char. This case should be implemented if this char is not better represented by a bytestring"
     Ptr _ Void -> pure $ ConT ''Ptr :@ TupleT 0
     Ptr _ p    -> do
-      t' <- cToHsType preserve p
+      t' <- cToHsType' preserve p
       pure $ ConT ''Ptr :@ t'
     Array _ (NumericArraySize n) e -> do
-      e' <- cToHsType preserve e
+      e' <- cToHsType' preserve e
       let arrayTy = ConT ''VSS.Vector :@ LitT (NumTyLit (fromIntegral n)) :@ e'
       pure $ case preserve of
         DoLower -> ConT ''Ptr :@ arrayTy
         _       -> arrayTy
     Array _ (SymbolicArraySize n) e -> do
       RenderParams {..} <- ask
-      e'                <- cToHsType preserve e
+      e'                <- cToHsType' preserve e
       let arrayTy = ConT ''VSS.Vector :@ ConT (typeName (mkTyName n)) :@ e'
       pure $ case preserve of
         DoLower -> ConT ''Ptr :@ arrayTy
@@ -86,11 +135,16 @@ cToHsType preserve t = do
     TypeName "size_t"   -> pure $ ConT ''CSize
     TypeName n          -> do
       RenderParams {..} <- ask
-      pure $ ConT . typeName . mkTyName $ n
+      let con = ConT . typeName . mkTyName $ n
+      getStruct n >>= \case
+        Just s | not (V.null (sExtendedBy s)) -> do
+          var <- nextVar
+          pure $ con :@ var
+        _ -> pure con
     Proto ret ps -> do
-      retTy <- cToHsType preserve ret
+      retTy <- cToHsType' preserve ret
       pTys  <- forV ps $ \(n, c) -> do
-        t' <- cToHsType preserve c
+        t' <- cToHsType' preserve c
         pure $ case n of
           Nothing   -> t'
           Just name -> namedTy name t'
@@ -99,3 +153,18 @@ cToHsType preserve t = do
 namedTy :: Text -> H.Type -> H.Type
 namedTy name =
   InfixT (LitT (StrTyLit (toString name))) (typeName (TyConName ":::"))
+
+type NextVar = Input (Maybe Type)
+
+nextVar :: (HasErr r, Member NextVar r) => Sem r Type
+nextVar =
+  input @(Maybe Type) >>= \case
+    Nothing -> throw "Run out of variables"
+    Just v ->  pure v
+
+-- 'r' is used elsewhere for return types
+allVars :: [Type]
+allVars = (\c -> VarT (mkName [c])) <$> ['a' .. 'q']
+
+holes :: [Type]
+holes = repeat WildCardT

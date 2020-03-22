@@ -334,8 +334,8 @@ writePair Bracket {..} =
           noDestructorResource = Resource `notElem` bDestroyArguments
           noResource = bInnerType == Single Void && noDestructorResource
           cont =
-            if noResource then "IO a" else "(" <> innerHsType <> " -> IO a)"
-          wrapperArguments = punctuate " ->" (argHsTypes ++ [cont, "IO a"])
+            if noResource then "IO r" else "(" <> innerHsType <> " -> IO r)"
+          wrapperArguments = punctuate " ->" (argHsTypes ++ [cont, "IO r"])
           resourcePattern  = if noDestructorResource then "_" else "o"
           callDestructor =
             (if noResource then emptyDoc else "\\" <> resourcePattern <+> "->")
@@ -363,18 +363,19 @@ writePair Bracket {..} =
               ]
             )
           , pretty wrapperName <+> "::" <+> sep wrapperArguments
-          , pretty wrapperName <+> sep argHsVars <+> "=" <> line <> indent
-            2
-            (pretty bracketDoc <> line <> indent
-              2
-              (vsep
-                [ parens (pretty create <+> sep createArgVars)
-                , bool mempty "(traverse " bDestroyIndividually
-                <> parens callDestructor
-                <> bool mempty ")" bDestroyIndividually
-                ]
-              )
-            )
+          , pretty wrapperName <+> sep argHsVars <+> "= undefined"
+          -- , pretty wrapperName <+> sep argHsVars <+> "=" <> line <> indent
+          --   2
+          --   (pretty bracketDoc <> line <> indent
+          --     2
+          --     (vsep
+          --       [ parens (pretty create <+> sep createArgVars)
+          --       , bool mempty "(traverse " bDestroyIndividually
+          --       <> parens callDestructor
+          --       <> bool mempty ")" bDestroyIndividually
+          --       ]
+          --     )
+          --   )
           ]
 
 appendWithVendor :: Text -> Text -> Text

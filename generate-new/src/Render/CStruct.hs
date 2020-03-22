@@ -80,10 +80,6 @@ fromCStruct = do
     tellDoc [qi|
       -- | A class for types which can be marshalled from a C style
       -- structure.
-      --
-      -- Any instance should satisfy the following law:
-      --
-      -- @ withZeroCStruct peekCStruct = pure zero @
       class FromCStruct a where
         -- | Read an @a@ and any other pointed to data from memory
         peekCStruct :: Ptr a -> IO a

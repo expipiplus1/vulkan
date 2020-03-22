@@ -2,6 +2,7 @@ module Render.Names
   ( HasRenderedNames
   , withRenderedNames
   , isStructOrUnion
+  , getRenderedStruct
   , isNewtype
   , getResolveAlias
   ) where
@@ -21,7 +22,7 @@ import           Spec.Types
 type HasRenderedNames r = MemberWithError (Input RenderedNames) r
 
 data RenderedNames = RenderedNames
-  { rnStructs                :: HashSet HName
+  { rnStructs                :: HashMap HName Struct
   , rnUnions                 :: HashSet HName
   , rnEnums                  :: HashSet HName
   , rnNonDispatchableHandles :: HashSet HName
@@ -38,7 +39,7 @@ withRenderedNames
 withRenderedNames Spec {..} a = do
   RenderParams {..} <- ask
   let
-    rnStructs = Set.fromList (mkTyName . sName <$> toList specStructs)
+    rnStructs = Map.fromList [(mkTyName . sName $ s, s) | s <-  toList specStructs]
     rnUnions  = Set.fromList (mkTyName . sName <$> toList specUnions)
     rnEnums   = Set.fromList (mkTyName . eName <$> toList specEnums)
     (dispHandles, nonDispHandles) =
@@ -59,7 +60,13 @@ isStructOrUnion :: HasRenderedNames r => HName -> Sem r Bool
 isStructOrUnion n = do
   RenderedNames {..} <- input
   let n' = rnResolveAlias n
-  pure (Set.member n' rnStructs || Set.member n' rnUnions)
+  pure (Map.member n' rnStructs || Set.member n' rnUnions)
+
+getRenderedStruct :: HasRenderedNames r => HName -> Sem r (Maybe Struct)
+getRenderedStruct n = do
+  RenderedNames {..} <- input
+  let n' = rnResolveAlias n
+  pure (Map.lookup n' rnStructs)
 
 isNewtype :: HasRenderedNames r => HName -> Sem r Bool
 isNewtype n = do

@@ -178,9 +178,9 @@ normal name to from valueRef =
  where
   idiomatic = failToNonDet $ do
     RenderParams {..}                     <- ask
-    toTy                                  <- cToHsType DoPreserve to
+    toTy                                  <- cToHsTypeWithHoles DoPreserve to
     Just (IdiomaticType fromTy fromFun _) <- pure $ mkIdiomaticType toTy
-    fromTy'                               <- cToHsType DoNotPreserve from
+    fromTy'                               <- cToHsTypeWithHoles DoNotPreserve from
     guard (fromTy == fromTy')
     raise2 $ stmtC (Just toTy) name $ do
       fromDoc        <- fromFun
@@ -196,7 +196,7 @@ normal name to from valueRef =
     Ptr Const toElem@(TypeName n) <- pure to
     guard (from == toElem)
     guard =<< ((isJust <$> getStruct n) <||> (isJust <$> getUnion n))
-    ty <- cToHsType DoNotPreserve to
+    ty <- cToHsTypeWithHoles DoNotPreserve to
     raise2 $ stmtC (Just ty) name . fmap (ContTAction . ValueDoc) $ do
       tellImportWithAll (TyConName "ToCStruct")
       tellImportWithAll ''ContT
@@ -274,7 +274,7 @@ elidedUnivalued
   -> Stmt s r (Ref s ValueDoc)
 elidedUnivalued name to value = do
   RenderParams {..} <- ask
-  ty                <- cToHsType DoPreserve to
+  ty                <- cToHsTypeWithHoles DoPreserve to
   stmtC (Just ty) name $ do
     vName <- case value of
       "nullPtr" -> do
@@ -297,7 +297,7 @@ eitherWord32
   -> Stmt s r (Ref s ValueDoc)
 eitherWord32 name toType fromElem valueRef = case toType of
   Ptr Const toElem -> do
-    elemTy <- cToHsType DoPreserve toElem
+    elemTy <- cToHsTypeWithHoles DoPreserve toElem
     stmtC (Just (ConT ''Ptr :@ elemTy)) name $ do
       ValueDoc value <- use valueRef
       let vecName = "v"
@@ -326,7 +326,7 @@ maybe'
   -> Stmt s r (Ref s ValueDoc)
 maybe' name toTypePtr fromType valueRef = case toTypePtr of
   Ptr Const toType -> do
-    elemTy <- cToHsType DoPreserve toType
+    elemTy <- cToHsTypeWithHoles DoPreserve toType
     stmtC (Just (ConT ''Ptr :@ elemTy)) name $ do
       ValueDoc value <- use valueRef
       let justName = "j"
@@ -389,7 +389,7 @@ addrWithStore
   -> Ref s ValueDoc
   -> Stmt s r (Ref s ValueDoc)
 addrWithStore toElem addrRef store = do
-  elemTy <- cToHsType DoPreserve toElem
+  elemTy <- cToHsTypeWithHoles DoPreserve toElem
   stmt (Just (ConT ''Ptr :@ elemTy)) Nothing $ do
     AddrDoc addr <- use addrRef
     after store
@@ -408,9 +408,10 @@ allocArray name elemType size =
       Void -> pure (1, 1)
       _    -> getTypeSize elemType
     elemTyDoc <- renderTypeHighPrec =<< case size of
-      Left n ->
-        cToHsType DoPreserve (Array Const (NumericArraySize n) elemType)
-      Right _ -> cToHsType DoPreserve elemType
+      Left n -> cToHsTypeWithHoles
+        DoPreserve
+        (Array Const (NumericArraySize n) elemType)
+      Right _ -> cToHsTypeWithHoles DoPreserve elemType
 
     vecSizeDoc <- case size of
       Left 1                  -> pure $ viaShow elemSize
@@ -439,7 +440,7 @@ byteString
   -> Stmt s r (Ref s ValueDoc)
 byteString name to valueRef = case to of
   Ptr Const Char -> do
-    ty <- cToHsType DoPreserve to
+    ty <- cToHsTypeWithHoles DoPreserve to
     stmtC (Just ty) name $ do
       tellImport 'BS.useAsCString
       tellImportWithAll ''ContT
@@ -639,7 +640,8 @@ elemAddrRef toElem addrRef index = stmt Nothing Nothing $ do
         indexDoc <- raise $ use r
         pure $ addr <+> "`plusPtr`" <+> parens
           (viaShow elemSize <+> "*" <+> indexDoc)
-    pTyDoc <- renderType . (ConT ''Ptr :@) =<< cToHsType DoPreserve toElem
+    pTyDoc <-
+      renderType . (ConT ''Ptr :@) =<< cToHsTypeWithHoles DoPreserve toElem
     pure $ untyped <+> "::" <+> pTyDoc
 
 ----------------------------------------------------------------

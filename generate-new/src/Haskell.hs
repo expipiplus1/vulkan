@@ -10,6 +10,7 @@ module Haskell
   , typeName
   , mkVar
   , (~>)
+  , arrowUniqueVars
   , module Haskell.Name
   )
 where
@@ -28,6 +29,7 @@ import           Data.Generics.Uniplate.Data
 import           Polysemy
 import           Polysemy.Reader
 import           Data.Char                      ( isLower )
+import qualified Data.List.Extra               as List
 import qualified Data.Text                     as T
 import qualified Data.Vector                   as V
 import           Prelude                        ( head
@@ -100,6 +102,18 @@ pattern (:@) :: Type -> Type -> Type
 pattern a :@ b = AppT a b
 infixl 2 :@
 
-infixr 1 ~>
+infixr 1 ~>, `arrowUniqueVars`
 (~>) :: Type -> Type -> Type
 a ~> b = ArrowT :@ a :@ b
+
+arrowUniqueVars :: Type -> Type -> Type
+arrowUniqueVars l r =
+  let lVars           = List.nubOrd [ n | VarT n <- universe l ]
+      rVars           = List.nubOrd [ n | VarT n <- universe r ]
+      overlappingVars = List.intersect lVars rVars
+      newVars = (mkName . pure <$> ['a' .. 'q']) List.\\ (lVars <> rVars)
+      -- TODO, important, make sure we don't run out of names here
+      varMap          = zip overlappingVars newVars
+      newMap :: Name -> Name
+      newMap v = fromMaybe v (List.lookup v varMap)
+  in  l ~> transformBi newMap r

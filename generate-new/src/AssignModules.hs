@@ -100,9 +100,11 @@ data ExportLocation = ExportLocation
 type S = IntMap ExportLocation
 
 data ReqDeps = ReqDeps
-  { commands   :: Vector Int
-  , types      :: Vector Int
-  , enumValues :: Vector Int
+  { commands        :: Vector Int
+  , types           :: Vector Int
+  , enumValues      :: Vector Int
+  , directExporters :: Vector Int
+    -- ^ The union of all the above
   }
 
 
@@ -163,6 +165,7 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
         types      <- traverseV (getExporter . mkTyName) (rTypeNames r)
         enumValues <- traverseV (getExporter . mkPatternName)
                                 (rEnumValueNames r)
+        let directExporters = commands <> types <> enumValues
         f (commentToModName (rComment r)) ReqDeps { .. } r
 
     --
@@ -208,8 +211,7 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
   ----------------------------------------------------------------
 
   forFeaturesAndExtensions $ \prefix _ isFeature ReqDeps {..} _ -> do
-    let directExporters = commands <> types <> enumValues
-        reachable =
+    let reachable =
           Set.unions . toList $ (`postIntSet` closedRel) <$> directExporters
     ----------------------------------------------------------------
     -- Reachable Enums
@@ -235,6 +237,11 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
   ----------------------------------------------------------------
   forFeaturesAndExtensions $ \_ modname isFeature ReqDeps {..} _ -> do
     let directExporters = commands <> types <> bool mempty enumValues isFeature
+    when
+        (modname == ModName
+          "Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_capabilities"
+        )
+      $ traceShowM (_elemName <$> types)
     forV_ directExporters $ export modname
 
   ----------------------------------------------------------------
@@ -243,26 +250,21 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
 
   forFeatures $ \feat _ getModName -> do
     -- Types directly referred to by the commands and types
-    forRequires (fRequires feat) getModName $ \modname ReqDeps {..} _ -> do
-      let directExporters = commands <> types <> enumValues
+    forRequires (fRequires feat) getModName $ \modname ReqDeps {..} _ ->
       forV_ directExporters $ \i -> exportMany modname (i `postIntSet` rel)
     -- Types indirectly referred to by the commands and types
-    forRequires (fRequires feat) getModName $ \modname ReqDeps {..} _ -> do
-      let directExporters = commands <> types <> enumValues
+    forRequires (fRequires feat) getModName $ \modname ReqDeps {..} _ ->
       forV_ directExporters
         $ \i -> exportManyNoReexport modname (i `postIntSet` closedRel)
 
   ----------------------------------------------------------------
   -- Close the extensions
   ----------------------------------------------------------------
-  forExtensionRequires $ \_ modname ReqDeps {..} _ -> do
-    let directExporters = commands <> types <> enumValues
+  forExtensionRequires $ \_ modname ReqDeps {..} _ ->
     forV_ directExporters $ \i -> exportMany modname (i `postIntSet` rel)
 
-  forExtensionRequires $ \_ modname ReqDeps {..} _ -> do
-    let directExporters = commands <> types <> enumValues
-    forV_ directExporters
-      $ \i -> exportManyNoReexport modname (i `postIntSet` closedRel)
+  forExtensionRequires $ \_ modname ReqDeps {..} _ -> forV_ directExporters
+    $ \i -> exportManyNoReexport modname (i `postIntSet` closedRel)
 
   ----------------------------------------------------------------
   -- Assign aliases to be with their targets if they're not already assigned

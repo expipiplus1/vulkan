@@ -12,7 +12,9 @@ import           Relude                  hiding ( Reader
                                                 )
 import           Data.Text.Prettyprint.Doc
 import           Data.Text.Extra                ( upperCaseFirst )
-import           Language.Haskell.TH.Syntax     ( nameBase )
+import           Language.Haskell.TH.Syntax     ( nameBase
+                                                , TyVarBndr(..)
+                                                )
 import           Data.List.Extra                ( nubOrd )
 import           Polysemy
 import           Polysemy.Reader
@@ -123,6 +125,41 @@ makeReturnType includeInOutCountTypes includeReturnType MarshaledCommand {..} = 
   let ts = r <> pts
   pure $ ConT ''IO :@ foldl' (:@) (TupleT (length ts)) ts
 
+constrainStructVariables
+  :: (HasErr r, HasRenderParams r, HasRenderElem r, HasRenderedNames r)
+  => Type
+  -> Sem r Type
+constrainStructVariables t = do
+  (ns, ps) <- structVariables t
+  unless (null ns) $ tellImport (TyConName "PokeChain")
+  unless (null ps) $ tellImport (TyConName "PeekChain")
+  pure $ ForallT
+    []
+    (  ((ConT (typeName (TyConName "PokeChain")) :@) . VarT <$> (ns <> ps))
+    <> ((ConT (typeName (TyConName "PeekChain")) :@) . VarT <$> ps)
+    )
+    t
+
+structVariables
+  :: (HasErr r, HasRenderedNames r) => Type -> Sem r ([Name], [Name])
+  -- ^ negative, positive
+structVariables = \case
+  ArrowT :@ l :@ r -> do
+    (nl, pl) <- structVariables l
+    (nr, pr) <- structVariables r
+    pure (pl <> nr, nl <> pr)
+  InfixT _ i t | i == typeName (TyConName ":::") -> structVariables t
+  ConT n :@ VarT v ->
+    getRenderedStruct (TyConName (T.pack (nameBase n))) <&> \case
+      Just s | not (V.null (sExtendedBy s)) -> ([], [v])
+      _ -> ([], [])
+  ConT n :@ _ | n == ''Ptr -> pure ([], [])
+  f :@ x                  -> liftA2 (<>) (structVariables f) (structVariables x)
+  ConT   _                -> pure ([], [])
+  TupleT _                -> pure ([], [])
+  t ->
+    throw $ "Unhandled Type constructor in negativeStructVariables: " <> show t
+
 ----------------------------------------------------------------
 -- Calling this command
 ----------------------------------------------------------------
@@ -145,17 +182,6 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
   includeReturnType <- shouldIncludeReturnType m
 
   tellExport (ETerm commandName)
-  nts <- V.mapMaybe id <$> traverseV (paramType schemeType) mcParams
-  r   <- makeReturnType True includeReturnType m
-  let t         = foldr (~>) r nts
-      paramName = pretty . mkParamName . pName . mpParam
-      isArg p = case mpScheme p of
-        ElidedLength _ _  -> Nothing
-        ElidedUnivalued _ -> Nothing
-        ElidedVoid        -> Nothing
-        Returned _        -> Nothing
-        _                 -> Just p
-      paramNames = toList (paramName <$> V.mapMaybe isArg mcParams)
 
   let badNames = mempty
   stmtsDoc <- renderStmts badNames $ do
@@ -210,8 +236,23 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
       tellImport 'evalContT
       pure $ "evalContT $" <+> d
 
+  ----------------------------------------------------------------
+  -- The type of this command
+  ----------------------------------------------------------------
+  nts <- V.mapMaybe id <$> traverseV (paramType schemeType) mcParams
+  r   <- makeReturnType True includeReturnType m
+  let t         = foldr arrowUniqueVars r nts
+      paramName = pretty . mkParamName . pName . mpParam
+      isArg p = case mpScheme p of
+        ElidedLength _ _  -> Nothing
+        ElidedUnivalued _ -> Nothing
+        ElidedVoid        -> Nothing
+        Returned _        -> Nothing
+        _                 -> Just p
+      paramNames = toList (paramName <$> V.mapMaybe isArg mcParams)
+  tDoc <- renderType =<< constrainStructVariables t
 
-  tDoc <- renderType t
+
   tellDoc
     . vsep
     $ [ pretty commandName <+> "::" <+> indent 0 tDoc
@@ -394,7 +435,7 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
       pure $ "evalContT $" <+> d
 
 
-  tDoc <- renderType commandType
+  tDoc <- renderType =<< constrainStructVariables commandType
   tellDoc
     . vsep
     $ [ pretty commandName <+> "::" <+> indent 0 tDoc
@@ -603,7 +644,7 @@ getCCall c = do
       tellImport 'castFunPtr
       tellImportWith ''GHC.Ptr.Ptr 'GHC.Ptr.Ptr
       let dynName = getDynName c
-      fTyDoc <- renderTypeHighPrec =<< cToHsType
+      fTyDoc <- renderTypeHighPrec =<< cToHsTypeWithHoles
         DoLower
         (C.Proto
           (cReturnType c)

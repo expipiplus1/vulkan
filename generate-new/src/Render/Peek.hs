@@ -177,7 +177,7 @@ storablePeek
   -> Stmt s r (Ref s a)
 storablePeek name addr fromPtr = case fromPtr of
   Ptr _ from -> do
-    t <- cToHsType DoLower from
+    t <- cToHsTypeWithHoles DoLower from
     stmtC @a (Just t) name $ do
       tDoc <- renderTypeHighPrec t
       tellImportWith ''Storable 'peek
@@ -221,7 +221,7 @@ normalPeek name addrRef to fromPtr =
     Ptr _ from@(TypeName n) <- pure fromPtr
     guard (from == to)
     Just s <- getStruct n
-    ty     <- cToHsType DoPreserve from
+    ty     <- cToHsTypeWithHoles DoPreserve from
     raise2 $ stmtC (Just ty) name $ do
       tDoc <- renderTypeHighPrec ty
       containsDispatchableHandle s >>= \case
@@ -243,7 +243,7 @@ normalPeek name addrRef to fromPtr =
     Ptr Const (TypeName n) <- pure from
     guard (TypeName n == to)
     Just _ <- getStruct n
-    ty     <- cToHsType DoPreserve (TypeName n)
+    ty     <- cToHsTypeWithHoles DoPreserve (TypeName n)
     raise2 $ stmtC (Just ty) name $ do
       tDoc         <- renderTypeHighPrec ty
       AddrDoc addr <- use addrRef
@@ -271,7 +271,7 @@ unionPeek name addrRef Struct {..} _to fromPtr =
     RenderParams {..} <- ask
     Ptr _ from        <- pure fromPtr
     TypeName n        <- pure from
-    ty                <- cToHsType DoPreserve from
+    ty                <- cToHsTypeWithHoles DoPreserve from
 
     raise $ stmtC (Just ty) name $ do
       discs <- catMaybes <$> sequenceV
@@ -365,16 +365,16 @@ maybePeek' name lengths addrRef fromPtr to = case fromPtr of
   Ptr _ from@(Ptr _ fromElem) -> do
     let maybePtrDoc   = name
         notNullPtrDoc = "j"
-    ptrTy <- cToHsType DoPreserve from
+    ptrTy <- cToHsTypeWithHoles DoPreserve from
 
     -- Load the pointer which might be null
     ptr   <- stmtC (Just ptrTy) maybePtrDoc $ do
       AddrDoc addr <- use addrRef
-      ptrTDoc      <- renderTypeHighPrec =<< cToHsType DoPreserve from
+      ptrTDoc      <- renderTypeHighPrec =<< cToHsTypeWithHoles DoPreserve from
       tellImportWith ''Storable 'peek
       pure $ IOAction (AddrDoc ("peek @" <> ptrTDoc <+> addr))
 
-    elemTy <- cToHsType DoPreserve fromElem
+    elemTy <- cToHsTypeWithHoles DoPreserve fromElem
 
     stmtC (Just (ConT ''Maybe :@ elemTy)) name $ do
       AddrDoc ptrDoc <- use ptr
@@ -419,7 +419,7 @@ vectorPeek name lengths addrRef fromPtr toElem = case fromPtr of
 
   Ptr _ (Array _ (SymbolicArraySize len) fromElem) -> do
     RenderParams {..} <- ask
-    tDoc              <- renderTypeHighPrec =<< cToHsType DoPreserve fromElem
+    tDoc              <- renderTypeHighPrec =<< cToHsTypeWithHoles DoPreserve fromElem
 
     let lenName = mkPatternName len
 
@@ -457,7 +457,7 @@ vectorPeekWithLenRef
   -> Ref s ValueDoc
   -> Stmt s r (Ref s ValueDoc)
 vectorPeekWithLenRef name toElem addrRef fromElem lenTail lenRef = do
-  t <- cToHsType DoPreserve fromElem
+  t <- cToHsTypeWithHoles DoPreserve fromElem
   stmtC (Just (ConT ''Vector :@ t)) name $ do
     let indexVar = "i"
     ValueDoc lenDoc <- use lenRef
@@ -477,7 +477,7 @@ vectorPeekWithLenRef name toElem addrRef fromElem lenTail lenRef = do
         Pure InlineOnce . AddrDoc <$> do
           tellImport 'plusPtr
           elemPtrTyDoc <-
-            renderType . (ConT ''Ptr :@) =<< cToHsType DoPreserve fromElem
+            renderType . (ConT ''Ptr :@) =<< cToHsTypeWithHoles DoPreserve fromElem
           pure $ parens
             (   addr
             <+> "`plusPtr`"
@@ -522,7 +522,7 @@ eitherWord32Peek name lengths addr fromPtr toElem = case fromPtr of
     mRef <-
       note "Unable to get wrapped peek for EitherWord32" =<< runNonDetMaybe
         (peekIdiomatic name lengths fromPtr addr (Maybe (Vector toElem)))
-    elemTy <- cToHsType DoPreserve fromElem
+    elemTy <- cToHsTypeWithHoles DoPreserve fromElem
     stmtC (Just (ConT ''Either :@ ConT ''Word32 :@ (ConT ''Vector :@ elemTy)))
           name
       . fmap (Pure NeverInline)
@@ -556,14 +556,14 @@ tuplePeek name addrRef fromPtr toElem = case fromPtr of
   Ptr _ aTy@(Array NonConst (NumericArraySize len) fromElem) -> do
     (elemSize, _elemAlign) <- getTypeSize fromElem
 
-    tupT                   <- cToHsType DoNotPreserve aTy
+    tupT                   <- cToHsTypeWithHoles DoNotPreserve aTy
     stmtC (Just tupT) name $ do
 
       -- Case the array pointer to a pointer to the first element
       tupPtrRef <-
         stmt Nothing (Just ("p" <> unCName name)) . fmap (Pure InlineOnce) $ do
           tellImport (TermName "lowerArrayPtr")
-          tDoc         <- renderTypeHighPrec =<< cToHsType DoPreserve fromElem
+          tDoc         <- renderTypeHighPrec =<< cToHsTypeWithHoles DoPreserve fromElem
           AddrDoc addr <- use addrRef
           pure $ "lowerArrayPtr @" <> tDoc <+> addr
 
@@ -573,7 +573,7 @@ tuplePeek name addrRef fromPtr toElem = case fromPtr of
             tellImport 'plusPtr
             tupPtrDoc    <- use tupPtrRef
             elemPtrTyDoc <-
-              renderType . (ConT ''Ptr :@) =<< cToHsType DoPreserve fromElem
+              renderType . (ConT ''Ptr :@) =<< cToHsTypeWithHoles DoPreserve fromElem
             pure
               (parens
                 (   tupPtrDoc

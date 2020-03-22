@@ -7,6 +7,7 @@ module Bespoke
   , bespokeSizes
   , bespokeSchemes
   , BespokeScheme(..)
+  , structChainVar
   )
 where
 
@@ -20,7 +21,8 @@ import           Polysemy.Reader
 import qualified Data.Text                     as T
 import qualified Data.List.Extra               as List
 import           Data.Vector                    ( Vector )
-import qualified Data.Vector                   as V
+import qualified Data.Vector.Extra             as V
+import qualified Data.Map                      as Map
 import           Foreign.Ptr
 import           Foreign.C.Types
 import           Text.InterpolatedString.Perl6.Unindented
@@ -34,6 +36,7 @@ import qualified Data.ByteString               as BS
 import qualified Data.ByteString.Unsafe        as BS
 
 import           Haskell                       as H
+import           Spec.Types
 import           Render.Element
 import           Render.Utils
 import           Render.Stmts
@@ -109,25 +112,84 @@ data BespokeScheme where
   BespokeScheme ::(forall a. Marshalable a => CName -> a -> Maybe (MarshalScheme a)) -> BespokeScheme
   -- ^ Parent name -> child -> scheme
 
-bespokeSchemes :: [BespokeScheme]
-bespokeSchemes =
-  [ BespokeScheme $ const $ \case
-    a | t@(Ptr _ (TypeName "xcb_connection_t")) <- type' a -> Just (Normal t)
-    a | t@(Ptr _ (TypeName "wl_display")) <- type' a -> Just (Normal t)
-    _ -> Nothing
-  , -- So we render the dual purpose command properly
-    BespokeScheme $ \case
-    c
-      | c `elem` ["vkGetPipelineCacheData", "vkGetValidationCacheDataEXT"] -> \case
-        a | (Ptr NonConst Void) <- type' a, "pData" <- name a ->
-          Just (Returned ByteString)
-        _ -> Nothing
-      | c == "vkGetShaderInfoAMD" -> \case
-        a | (Ptr NonConst Void) <- type' a, "pInfo" <- name a ->
-          Just (Returned ByteString)
-        _ -> Nothing
-    _ -> const Nothing
-  , BespokeScheme $ \case
+bespokeSchemes :: Spec -> Sem r [BespokeScheme]
+bespokeSchemes spec =
+  pure
+    $  [wsiScheme, dualPurposeBytestrings, nextPointers spec]
+    <> difficultLengths
+
+data NextType = NextElided | NextChain
+
+nextPointers :: Spec -> BespokeScheme
+nextPointers Spec {..} =
+  let schemeMap :: Map (CName, CName) NextType
+      schemeMap = Map.fromList
+        [ ((sName s, m), scheme)
+        | s <- toList specStructs
+        , let m = "pNext"
+        , let scheme = case sExtendedBy s of
+                V.Empty -> NextElided
+                _       -> NextChain
+        ]
+  in  BespokeScheme $ \n c -> case Map.lookup (n, name c) schemeMap of
+        Nothing         -> Nothing
+        Just NextElided -> Just (ElidedUnivalued "nullPtr")
+        Just NextChain  -> Just (Custom chainScheme)
+ where
+  chainVarT   = VarT (mkName structChainVar)
+  chainT      = ConT (mkName "Chain") :@ chainVarT
+  chainScheme = CustomScheme
+    { csName       = "Chain"
+    , csZero       = Just "()"
+    -- , csType = pure $ ForallT [] [ConT (mkName "PokeChain") :@ chainVarT] chainT
+    , csType       = pure $ ForallT [] [] chainT
+    , csDirectPoke = \chainRef ->
+      stmt (Just (ConT ''Ptr :@ chainT)) (Just "pNext") $ do
+        tellImportWithAll (TyConName "PokeChain")
+        tellImport (TyConName "Chain")
+        tellImport 'castPtr
+        ValueDoc chain <- use chainRef
+        pure
+          .   ContTAction
+          .   ValueDoc
+          $   "fmap castPtr . ContT $ withChain"
+          <+> chain
+    , csPeek       = \addrRef -> stmt (Just chainT) (Just "next") $ do
+      chainPtr <- use
+        =<< storablePeek "pNext" addrRef (Ptr Const (Ptr Const Void))
+      tellImportWithAll (TyConName "PeekChain")
+      tellImport (TyConName "Chain")
+      tellImport 'castPtr
+      pure $ IOAction . ValueDoc $ "peekChain" <+> parens
+        ("castPtr" <+> chainPtr)
+    }
+
+structChainVar :: String
+structChainVar = "es"
+
+wsiScheme :: BespokeScheme
+wsiScheme = BespokeScheme $ const $ \case
+  a | t@(Ptr _ (TypeName "xcb_connection_t")) <- type' a -> Just (Normal t)
+  a | t@(Ptr _ (TypeName "wl_display")) <- type' a -> Just (Normal t)
+  _ -> Nothing
+
+-- So we render the dual purpose command properly
+dualPurposeBytestrings :: BespokeScheme
+dualPurposeBytestrings = BespokeScheme $ \case
+  c
+    | c `elem` ["vkGetPipelineCacheData", "vkGetValidationCacheDataEXT"] -> \case
+      a | (Ptr NonConst Void) <- type' a, "pData" <- name a ->
+        Just (Returned ByteString)
+      _ -> Nothing
+    | c == "vkGetShaderInfoAMD" -> \case
+      a | (Ptr NonConst Void) <- type' a, "pInfo" <- name a ->
+        Just (Returned ByteString)
+      _ -> Nothing
+  _ -> const Nothing
+
+difficultLengths :: [BespokeScheme]
+difficultLengths =
+  [ BespokeScheme $ \case
     "VkPipelineMultisampleStateCreateInfo" -> \case
       p | "rasterizationSamples" <- name p -> Just $ Normal (type' p)
       (p :: a) | "pSampleMask" <- name p   -> Just . Custom $ CustomScheme

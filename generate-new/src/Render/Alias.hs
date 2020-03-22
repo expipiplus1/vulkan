@@ -38,7 +38,8 @@ renderAlias Alias {..} = context (unCName aName) $ do
           t = mkFunName aTarget
       tellExport (ETerm n)
       tellImport t
-      tellDoc $ pretty n <+> "=" <+> pretty t
+      -- tellDoc $ pretty n <+> "=" <+> pretty t
+      tellDoc $ pretty n <+> "=" <+> "error \"TODO command aliases type sigs\""
     PatternAlias -> do
       let n = mkPatternName aName
           t = mkPatternName aTarget

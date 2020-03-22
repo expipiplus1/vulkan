@@ -67,16 +67,12 @@ main =
 
     (spec@Spec {..}, getSize) <- timeItNamed "Parsing spec" $ parseSpec specText
 
-    forV_ specStructs $ \s -> do
-      sayShow (sName s, sExtends s, sExtendedBy s)
-      if sExtends s /= mempty && sExtendedBy s /= mempty then say "Both" else pure ()
-
     runReader (renderParams specHandles)
       . withRenderedNames spec
       . withSpecInfo spec getSize
       . withTypeInfo spec
       $ do
-
+          bespokeSchemes <- bespokeSchemes spec
           let
             aliasMap :: Map.HashMap CName CName
             aliasMap =
