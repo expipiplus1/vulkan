@@ -49,24 +49,30 @@ structMemberScheme
   -> Sem r (MarshalScheme StructMember)
 structMemberScheme Struct {..} member = do
   MarshalParams {..} <- ask
-  let schemes =
-        [ maybe empty pure . getBespokeScheme sName
-        , -- These two are for value constrained params:
-          univaluedScheme
-        , lengthScheme sMembers
-          -- Pointers to Void have some special handling
-        , voidPointerScheme
-          -- Pointers to return values in, unmarshaled at the moment
-        , returnPointerInStructScheme
-          -- Optional and non optional arrays
-        , arrayScheme
-        , fixedArrayScheme
-          -- Optional things:
-        , optionalDefaultScheme
-        , optionalScheme
-          -- Everything left over is treated as a boring scalar parameter
-        , scalarScheme
-        ]
+  let
+    schemes =
+      [ maybe empty pure . getBespokeScheme sName
+      , -- These two are for value constrained params:
+        univaluedScheme
+      , lengthScheme sMembers
+        -- Pointers to Void have some special handling
+      , voidPointerScheme
+        -- Pointers to return values in, unmarshaled at the moment
+      , returnPointerInStructScheme
+        -- Optional and non optional arrays
+      , arrayScheme WrapExtensibleStructs DoNotWrapDispatchableHandles
+      , fixedArrayScheme WrapExtensibleStructs DoNotWrapDispatchableHandles
+        -- Optional things:
+      , optionalDefaultScheme WrapExtensibleStructs DoNotWrapDispatchableHandles
+      , optionalScheme WrapExtensibleStructs DoNotWrapDispatchableHandles
+        -- Structs which can be extended, so need to be wrapped in a GADT
+      , extensibleStruct
+        -- Structs don't have wrapped handles because it's annoying to pass
+        -- the command record into the peek functions
+      , rawDispatchableHandles
+        -- Everything left over is treated as a boring scalar parameter
+      , scalarScheme
+      ]
   m <- runNonDet . failToNonDet . asum . fmap ($ member) $ schemes
   case m of
     Just x  -> pure x

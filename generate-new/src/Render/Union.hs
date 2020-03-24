@@ -148,11 +148,10 @@ toCStructInstance MarshaledStruct {..} = do
   pokeCStructTDoc <- renderType
     (ConT ''Ptr :@ structT ~> structT ~> ConT ''IO :@ aVar ~> ConT ''IO :@ aVar)
 
-  withZeroCStructTDoc <-
+  pokeZeroCStructTDoc <-
     let retVar = VarT (mkName "b")
     in  renderType
-          ((ConT ''Ptr :@ structT ~> ConT ''IO :@ retVar) ~> ConT ''IO :@ retVar
-          )
+          (ConT ''Ptr :@ structT ~> ConT ''IO :@ retVar ~> ConT ''IO :@ retVar)
 
   tellImport 'runContT
   tellImport 'bracket
@@ -173,8 +172,8 @@ toCStructInstance MarshaledStruct {..} = do
       <+> "= (. const) . runContT .  \\case"
       <>  line
       <>  indent 2 (vsep cases)
-      , "withZeroCStruct ::" <+> withZeroCStructTDoc
-      , "withZeroCStruct = bracket (callocBytes" <+> viaShow sSize <> ") free"
+      , "pokeZeroCStruct ::" <+> pokeZeroCStructTDoc
+      , "pokeZeroCStruct _ f = f"
       , "cStructSize =" <+> viaShow size
       , "cStructAlignment =" <+> viaShow alignment
       ]

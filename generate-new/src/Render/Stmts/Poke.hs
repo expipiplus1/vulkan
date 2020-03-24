@@ -13,6 +13,7 @@ module Render.Stmts.Poke
   , SiblingInfo(..)
   , getSiblingInfo
   , allocArray
+  , AllocType(..)
   , getVectorPoke
   ) where
 
@@ -41,6 +42,7 @@ import           Foreign.Ptr
 import           Foreign.Marshal.Alloc
 import           Control.Monad.Trans.Cont       ( ContT )
 import qualified Data.ByteString               as BS
+import           Control.Exception              ( bracket )
 
 import           CType                         as C
 import           Error
@@ -100,6 +102,8 @@ getPokeIndirect' name toType scheme value addr = runNonDetMaybe go >>= \case
       raise $ tupleIndirect name size toElem fromElem value addr
     ByteString | Array _ size toElem <- toType ->
       raise $ byteStringFixedArrayIndirect name size toElem value addr
+    WrappedStruct from ->
+      raise $ wrappedStructIndirect name toType from value addr
     _ -> empty
 
 
@@ -147,6 +151,7 @@ getPokeDirect' name toType fromType value = case fromType of
   Maybe        (Vector _) -> throw "TODO: optional vectors without length"
   Maybe        from       -> maybe' name toType from value
   Tupled size fromElem    -> tuple name size toType fromElem value
+  WrappedStruct fromName  -> wrappedStruct name toType fromName value
   Custom CustomScheme {..} -> csDirectPoke value
   ElidedCustom CustomSchemeElided {..} -> cseDirectPoke
   s -> throw $ "Unhandled direct poke from " <> show s <> " to " <> show toType
@@ -202,6 +207,70 @@ normal name to from valueRef =
       tellImportWithAll ''ContT
       ValueDoc value <- use valueRef
       pure $ "ContT $ withCStruct" <+> value
+
+wrappedStructIndirect
+  :: ( HasErr r
+     , HasRenderParams r
+     , HasRenderElem r
+     , HasSpecInfo r
+     , HasRenderedNames r
+     )
+  => CName
+  -> CType
+  -> CName
+  -> Ref s ValueDoc
+  -> Ref s AddrDoc
+  -> Stmt s r (Ref s ValueDoc)
+wrappedStructIndirect name toType fromName valueRef addrRef = case toType of
+  Ptr Const (TypeName n) | n == fromName -> do
+    storablePoke addrRef =<< wrappedStruct name (toType) fromName valueRef
+  TypeName n | n == fromName -> do
+    ty <- cToHsTypeWithHoles DoNotPreserve toType
+    stmtC (Just ty) name $ do
+      tellImport (TermName "pokeSomeCStruct")
+      tellImport (TermName "forgetExtensions")
+      AddrDoc  addr <- use addrRef
+      ValueDoc val  <- use valueRef
+      pure
+        .   ContTAction
+        .   ValueDoc
+        $   "ContT $ pokeSomeCStruct"
+        <+> parens ("forgetExtensions" <+> addr)
+        <+> val
+        <+> ". ($ ())"
+  _ -> throw $ "Unhandled WrappedStruct conversion to " <> show toType
+
+wrappedStruct
+  :: (HasErr r, HasRenderParams r, HasRenderElem r, HasSpecInfo r)
+  => CName
+  -> CType
+  -> CName
+  -> Ref s ValueDoc
+  -> Stmt s r (Ref s ValueDoc)
+wrappedStruct name toType fromName valueRef = case toType of
+  Ptr Const (TypeName n) | n == fromName -> do
+    RenderParams {..} <- ask
+    ty                <- cToHsTypeWithHoles DoNotPreserve toType
+    stmtC (Just ty) name $ do
+      ValueDoc val <- use valueRef
+      tellImport (TermName "withSomeCStruct")
+      tellImport 'castPtr
+      tellImportWithAll ''ContT
+      headTDoc       <- renderTypeHighPrec $ ConT (typeName (mkTyName n))
+      unextendedTDoc <-
+        renderTypeHighPrec
+        $  ConT ''Ptr
+        :@ (ConT (typeName (mkTyName n)) :@ PromotedNilT)
+      pure
+        .   ContTAction
+        .   ValueDoc
+        $   "ContT @_ @_ @"
+        <>  unextendedTDoc
+        <+> "$ \\f -> withSomeCStruct @"
+        <>  headTDoc
+        <+> val
+        <+> "(f . castPtr)"
+  _ -> throw $ "Unhandled WrappedStruct conversion to " <> show toType
 
 elidedLength
   :: forall r a s
@@ -359,7 +428,7 @@ vector name toType fromElem valueRef = case toType of
       tellQualImport 'V.length
       pure . Pure AlwaysInline . ValueDoc $ "Data.Vector.length" <+> value
 
-    addrRef <- allocArray name toElem (Right lenRef)
+    addrRef <- allocArray Uninitialized name toElem (Right lenRef)
     store   <- vectorIndirect name toElem fromElem valueRef addrRef
     addrWithStore toElem addrRef store
   _ -> throw $ "Unhandled Vector conversion to " <> show toType
@@ -377,7 +446,7 @@ tuple
   -> Stmt s r (Ref s ValueDoc)
 tuple name size toType fromElem valueRef = case toType of
   Ptr Const toElem -> do
-    addrRef <- allocArray name toElem (Left size)
+    addrRef <- allocArray Uninitialized name toElem (Left size)
     store   <- tupleIndirect name size toElem fromElem valueRef addrRef
     addrWithStore toElem addrRef store
   _ -> throw $ "Unhandled Tupled conversion to " <> show toType
@@ -395,18 +464,21 @@ addrWithStore toElem addrRef store = do
     after store
     pure . Pure AlwaysInline . ValueDoc $ addr
 
+data AllocType = Uninitialized | Zeroed
+
 -- | Generate a pointer which has some memory for elements allocated
 allocArray
   :: (HasRenderParams r, HasRenderElem r, HasErr r, HasSpecInfo r)
-  => CName
+  => AllocType
+  -> CName
   -> CType
   -> Either Word (Ref s ValueDoc)
   -> Stmt s r (Ref s AddrDoc)
-allocArray name elemType size =
-  stmt Nothing (Just $ "p" <> T.upperCaseFirst (unCName name)) $ do
-    (elemSize, elemAlign) <- case elemType of
-      Void -> pure (1, 1)
-      _    -> getTypeSize elemType
+allocArray allocType name elemType size = do
+  (elemSize, elemAlign) <- case elemType of
+    Void -> pure (1, 1)
+    _    -> getTypeSize elemType
+  mem <- stmt Nothing (Just $ "p" <> T.upperCaseFirst (unCName name)) $ do
     elemTyDoc <- renderTypeHighPrec =<< case size of
       Left n -> cToHsTypeWithHoles
         DoPreserve
@@ -423,14 +495,65 @@ allocArray name elemType size =
         ValueDoc length <- use v
         pure $ parens (length <+> "*" <+> viaShow elemSize)
     tellImportWithAll ''ContT
-    tellImport 'allocaBytesAligned
-    pure
-      .   ContTAction
-      .   AddrDoc
-      $   "ContT $ allocaBytesAligned @"
-      <>  elemTyDoc
-      <+> vecSizeDoc
-      <+> viaShow elemAlign
+    alloc <- case allocType of
+      Uninitialized -> do
+        tellImport 'allocaBytesAligned
+        pure
+          $   "allocaBytesAligned @"
+          <>  elemTyDoc
+          <+> vecSizeDoc
+          <+> viaShow elemAlign
+      Zeroed -> do
+        tellImport 'callocBytes
+        tellImport 'free
+        tellImport 'bracket
+        pure
+          $   "bracket"
+          <+> parens ("callocBytes @" <> elemTyDoc <+> vecSizeDoc)
+          <+> "free"
+    pure . ContTAction . AddrDoc $ "ContT $" <+> alloc
+  case allocType of
+    Uninitialized -> pure mem
+    Zeroed        -> case elemType of
+      TypeName n -> getStruct n >>= \case
+        Nothing -> pure mem
+        Just _  -> do
+          init <- stmt Nothing (Just "_") $ do
+            let indexDoc = "i"
+            lastElem <- case size of
+              Left  n -> pure $ viaShow (n - 1)
+              Right v -> do
+                ValueDoc n <- use v
+                pure (n <+> "- 1")
+            AddrDoc mem <- use mem
+            tellImport 'plusPtr
+            elemPtrTyDoc <-
+              renderType
+              .   (ConT ''Ptr :@)
+              =<< cToHsTypeWithHoles DoPreserve elemType
+            tellImport (TermName "advancePtrBytes")
+            let offset = indexDoc <+> "*" <+> viaShow elemSize
+                elemPtr =
+                  mem
+                    <+> "`advancePtrBytes`"
+                    <+> parens offset
+                    <+> "::"
+                    <+> elemPtrTyDoc
+            pure
+              .   ContTAction @(Doc ())
+              $   "traverse (\\"
+              <>  indexDoc
+              <+> "-> ContT $ pokeZeroCStruct"
+              <+> parens elemPtr
+              <+> ". ($ ())) [0.."
+              <>  lastElem
+              <>  "]"
+
+          stmt Nothing Nothing $ do
+            after init
+            mem <- use mem
+            pure $ Pure AlwaysInline mem
+      _ -> pure mem
 
 byteString
   :: (HasRenderParams r, HasRenderElem r, HasErr r, HasSpecInfo r)

@@ -103,25 +103,29 @@ peekIdiomatic name lengths fromType addr scheme = do
   RenderParams {..} <- ask
   r                 <- peekWrapped name lengths fromType addr scheme
   t                 <- raise $ refType r
-  case mkIdiomaticType t of
-    Nothing                     -> pure r
-    Just (IdiomaticType w _ to) -> raise $ stmtC (Just w) name $ do
-      ValueDoc d <- use r
-      to <&> \case
-        Constructor con ->
-          let unwrappedVar = "a"
-          in
-            Pure AlwaysInline $ ValueDoc
-              (   parens
-                  (   "\\"
-                  <>  parens (con <+> unwrappedVar)
-                  <+> "->"
-                  <+> unwrappedVar
-                  )
-              <+> d
-              )
-        PureFunction fun -> Pure InlineOnce $ ValueDoc (fun <+> d)
-        IOFunction   fun -> IOAction $ ValueDoc (fun <+> d)
+  toTy              <- schemeType scheme
+  -- If this is already the correct type don't try wrapping it
+  if Just t == toTy
+    then pure r
+    else case mkIdiomaticType t of
+      Nothing                     -> pure r
+      Just (IdiomaticType w _ to) -> raise $ stmtC (Just w) name $ do
+        ValueDoc d <- use r
+        to <&> \case
+          Constructor con ->
+            let unwrappedVar = "a"
+            in
+              Pure AlwaysInline $ ValueDoc
+                (   parens
+                    (   "\\"
+                    <>  parens (con <+> unwrappedVar)
+                    <+> "->"
+                    <+> unwrappedVar
+                    )
+                <+> d
+                )
+          PureFunction fun -> Pure InlineOnce $ ValueDoc (fun <+> d)
+          IOFunction   fun -> IOAction $ ValueDoc (fun <+> d)
 
 -- | Render a peek and don't do any unwrapping to idiomatic haskell types
 peekWrapped
@@ -151,6 +155,7 @@ peekWrapped name lengths fromType addr = \case
   Maybe  toType     -> raise $ maybePeek' name lengths addr fromType toType
   Vector toElem     -> raise $ vectorPeek name lengths addr fromType toElem
   Tupled _ toElem   -> raise $ tuplePeek name addr fromType toElem
+  WrappedStruct toName -> raise $ wrappedStructPeek name addr toName fromType
   EitherWord32 toElem ->
     raise $ eitherWord32Peek name lengths addr fromType toElem
   ElidedCustom CustomSchemeElided {..} ->
@@ -224,19 +229,9 @@ normalPeek name addrRef to fromPtr =
     ty     <- cToHsTypeWithHoles DoPreserve from
     raise2 $ stmtC (Just ty) name $ do
       tDoc <- renderTypeHighPrec ty
-      containsDispatchableHandle s >>= \case
-        True -> do
-          RenderParams {..} <- ask
-          let funName = "peekCStruct" <> unName (mkTyName (sName s))
-          tellImport (TermName funName)
-          AddrDoc addr <- use addrRef
-          CmdsDoc cmds <- useViaName "cmds"
-          pure $ IOAction (ValueDoc (pretty funName <+> cmds <+> addr))
-
-        False -> do
-          AddrDoc addr <- use addrRef
-          tellImportWithAll (TyConName "FromCStruct")
-          pure $ IOAction (ValueDoc ("peekCStruct @" <> tDoc <+> addr))
+      AddrDoc addr <- use addrRef
+      tellImportWithAll (TyConName "FromCStruct")
+      pure $ IOAction (ValueDoc ("peekCStruct @" <> tDoc <+> addr))
 
   pointerStruct = failToNonDet $ do
     Ptr _     from         <- pure fromPtr
@@ -256,6 +251,37 @@ normalPeek name addrRef to fromPtr =
     Just     u <- getUnion n
     guard (from == to)
     raise2 $ unionPeek name addrRef u to fromPtr
+
+wrappedStructPeek
+  :: forall r s
+   . (HasErr r, HasRenderElem r, HasRenderParams r, HasSpecInfo r)
+  => CName
+  -> Ref s AddrDoc
+  -> CName
+  -> CType
+  -> Stmt s r (Ref s ValueDoc)
+wrappedStructPeek name addrRef toName fromPtr = case fromPtr of
+  Ptr _ from@(TypeName n) | n == toName -> do
+    ty <- cToHsTypeWithHoles DoPreserve from
+    stmtC (Just ty) name $ do
+      AddrDoc addr <- use addrRef
+      tellImport (TermName "peekSomeCStruct")
+      tellImport (TermName "forgetExtensions")
+      pure
+        $ IOAction
+            (ValueDoc
+              ("peekSomeCStruct" <+> parens ("forgetExtensions" <+> addr))
+            )
+  Ptr _ from@(Ptr Const (TypeName n)) | n == toName -> do
+    ty <- cToHsTypeWithHoles DoPreserve from
+    stmtC (Just ty) name $ do
+      AddrDoc addr <- use addrRef
+      tellImport (TermName "peekSomeCStruct")
+      tellImport (TermName "forgetExtensions")
+      tellImportWith ''Storable 'peek
+      pure $ IOAction
+        (ValueDoc ("peekSomeCStruct . forgetExtensions =<< peek" <+> addr))
+  _ -> throw $ "Unhandled WrappedStruct peek from " <> show fromPtr
 
 unionPeek
   :: forall r s
@@ -475,12 +501,14 @@ vectorPeekWithLenRef name toElem addrRef fromElem lenTail lenRef = do
         AddrDoc addr           <- raise $ use addrRef
 
         Pure InlineOnce . AddrDoc <$> do
-          tellImport 'plusPtr
+          tellImport (TermName "advancePtrBytes")
           elemPtrTyDoc <-
-            renderType . (ConT ''Ptr :@) =<< cToHsTypeWithHoles DoPreserve fromElem
+            renderType
+            .   (ConT ''Ptr :@)
+            =<< cToHsTypeWithHoles DoPreserve fromElem
           pure $ parens
             (   addr
-            <+> "`plusPtr`"
+            <+> "`advancePtrBytes`"
             <+> parens (viaShow elemSize <+> "*" <+> indexDoc)
             <+> "::"
             <+> elemPtrTyDoc
@@ -563,21 +591,23 @@ tuplePeek name addrRef fromPtr toElem = case fromPtr of
       tupPtrRef <-
         stmt Nothing (Just ("p" <> unCName name)) . fmap (Pure InlineOnce) $ do
           tellImport (TermName "lowerArrayPtr")
-          tDoc         <- renderTypeHighPrec =<< cToHsTypeWithHoles DoPreserve fromElem
+          tDoc <- renderTypeHighPrec =<< cToHsTypeWithHoles DoPreserve fromElem
           AddrDoc addr <- use addrRef
           pure $ "lowerArrayPtr @" <> tDoc <+> addr
 
       let
         advance i =
           stmt Nothing Nothing . fmap (Pure InlineOnce . AddrDoc) $ do
-            tellImport 'plusPtr
+            tellImport (TermName "advancePtrBytes")
             tupPtrDoc    <- use tupPtrRef
             elemPtrTyDoc <-
-              renderType . (ConT ''Ptr :@) =<< cToHsTypeWithHoles DoPreserve fromElem
+              renderType
+              .   (ConT ''Ptr :@)
+              =<< cToHsTypeWithHoles DoPreserve fromElem
             pure
               (parens
                 (   tupPtrDoc
-                <+> "`plusPtr`"
+                <+> "`advancePtrBytes`"
                 <+> viaShow (elemSize * i)
                 <+> "::"
                 <+> elemPtrTyDoc

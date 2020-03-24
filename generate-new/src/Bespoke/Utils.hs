@@ -148,6 +148,7 @@ marshalUtils = genRe "marshal utils" $ do
     , ''KnownNat
     , ''(<=)
     , 'natVal
+    , 'plusPtr
     ]
 
   traverseV_
@@ -184,6 +185,7 @@ marshalUtils = genRe "marshal utils" $ do
     , "pokeFixedLengthNullTerminatedByteString"
     , "peekByteStringFromSizedVectorPtr"
     , "lowerArrayPtr"
+    , "advancePtrBytes"
     ]
 
   tellDoc [qi|
@@ -335,5 +337,9 @@ marshalUtils = genRe "marshal utils" $ do
        . Ptr (Data.Vector.Storable.Sized.Vector n a)
       -> Ptr a
     lowerArrayPtr = castPtr
+
+    -- | A type restricted 'plusPtr'
+    advancePtrBytes :: Ptr a -> Int -> Ptr a
+    advancePtrBytes = plusPtr
   |]
 

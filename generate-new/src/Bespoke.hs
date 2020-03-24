@@ -8,6 +8,7 @@ module Bespoke
   , bespokeSchemes
   , BespokeScheme(..)
   , structChainVar
+  , zeroNextPointer
   )
 where
 
@@ -90,6 +91,12 @@ bespokeModules = do
     $  [ ( mkTyName "VkAllocationCallbacks"
          , ModName "Graphics.Vulkan.Core10.AllocationCallbacks"
          )
+       , ( mkTyName "VkBaseInStructure"
+         , ModName "Graphics.Vulkan.CStruct.Extends"
+         )
+       , ( mkTyName "VkBaseOutStructure"
+         , ModName "Graphics.Vulkan.CStruct.Extends"
+         )
        ]
     <> (   core10Base
        <$> [ "VkExtent2D"
@@ -115,8 +122,16 @@ data BespokeScheme where
 bespokeSchemes :: Spec -> Sem r [BespokeScheme]
 bespokeSchemes spec =
   pure
-    $  [wsiScheme, dualPurposeBytestrings, nextPointers spec]
+    $  [baseInOut, wsiScheme, dualPurposeBytestrings, nextPointers spec]
     <> difficultLengths
+
+baseInOut :: BespokeScheme
+baseInOut = BespokeScheme $ \case
+  n | n `elem` ["VkBaseInStructure", "VkBaseOutStructure"] -> \case
+    m | "pNext" <- name m -> Just $ Normal (type' m)
+    _                     -> Nothing
+  _ -> const Nothing
+
 
 data NextType = NextElided | NextChain
 
@@ -164,8 +179,24 @@ nextPointers Spec {..} =
         ("castPtr" <+> chainPtr)
     }
 
-structChainVar :: String
-structChainVar = "es"
+-- | A special poke which writes a zero chain
+zeroNextPointer
+  :: forall r s
+   . (HasRenderElem r, HasRenderParams r, HasErr r, HasStmts r)
+  => Stmt s r (Ref s ValueDoc)
+zeroNextPointer = do
+  let chainVarT = VarT (mkName structChainVar)
+      chainT    = ConT (mkName "Chain") :@ chainVarT
+  varTDoc <- renderTypeHighPrec chainVarT
+  stmt (Just (ConT ''Ptr :@ chainT)) (Just "pNext") $ do
+    tellImportWithAll (TyConName "PokeChain")
+    tellImport (TyConName "Chain")
+    tellImport 'castPtr
+    pure
+      .  ContTAction
+      .  ValueDoc
+      $  "fmap castPtr . ContT $ withZeroChain @"
+      <> varTDoc
 
 wsiScheme :: BespokeScheme
 wsiScheme = BespokeScheme $ const $ \case
@@ -392,6 +423,9 @@ difficultLengths =
       _ -> Nothing
     _ -> const Nothing
   ]
+
+structChainVar :: String
+structChainVar = "es"
 
 ----------------------------------------------------------------
 -- Things which are easier to write by hand

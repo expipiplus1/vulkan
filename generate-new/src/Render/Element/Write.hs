@@ -36,6 +36,7 @@ import           Language.Haskell.TH            ( nameBase
                                                 )
 
 import qualified Data.Vector.Generic           as VG
+import           Type.Reflection
 
 import           Render.Utils
 import           Render.Names
@@ -357,6 +358,9 @@ fixOddImport n = fromMaybe (Just n) (lookup n fixes)
     , ('plusPtr    , Just (mkName "Foreign.Ptr.plusPtr"))
     , (''Type      , Just (mkName "Data.Kind.Type"))
     , (''Constraint, Just (mkName "Data.Kind.Constraint"))
+    , (''Typeable, Just (mkName "Data.Typeable.Typeable"))
+    , ('typeRep, Just (mkName "Type.Reflection.typeRep"))
+    , (''TypeRep, Just (mkName "Type.Reflection.TypeRep"))
     ,
       -- Other
       (''ByteString, Just (mkName "Data.ByteString.ByteString"))

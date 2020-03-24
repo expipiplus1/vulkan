@@ -135,7 +135,7 @@ allocateVector vec = do
       toTy  = type' vec
   toElem <- unPtr toTy
   lenRef <- getLenRef @a (lengths vec)
-  allocArray name' toElem (Right lenRef)
+  allocArray Zeroed name' toElem (Right lenRef)
 
 -- Currently the same implementation as allocateVector
 allocateByteString

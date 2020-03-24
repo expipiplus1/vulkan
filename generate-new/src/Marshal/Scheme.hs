@@ -25,6 +25,7 @@ import           Render.Element
 import           Render.SpecInfo
 import           Render.Names
 import           Render.Stmts.Poke.SiblingInfo
+import           Spec.Types
 import           Error
 import           CType
 import           Haskell                       as H
@@ -67,6 +68,8 @@ data MarshalScheme a
   | Tupled Word (MarshalScheme a)
     -- ^ A small fixed sized array, represented as a n-length tuple of the same
     -- element
+  | WrappedStruct CName
+    -- ^ A struct to be wrapped in a GADT to hide a variable
   | Returned (MarshalScheme a)
     -- ^ A non-const pointer to some allocated memory, used to return
     -- additional values.
@@ -234,13 +237,13 @@ lengthScheme ps p = do
     (os, rs) -> pure $ ElidedLength os rs
 
 -- | Matches const and non-const void pointers, exposes them as 'Ptr ()'
-voidPointerScheme :: Marshalable a => a -> ND r (MarshalScheme c)
+voidPointerScheme :: Marshalable a => a -> ND r (MarshalScheme a)
 voidPointerScheme p = do
   Ptr _ Void <- pure $ type' p
   pure VoidPtr
 
 -- | TODO: This should be fleshed out a bit more
-returnPointerScheme :: Marshalable a => a -> ND r (MarshalScheme c)
+returnPointerScheme :: Marshalable a => a -> ND r (MarshalScheme a)
 returnPointerScheme p = do
   Ptr NonConst t <- pure $ type' p
   let inout = do
@@ -259,14 +262,19 @@ returnPointerScheme p = do
 
 -- | If we have a non-const pointer in a struct leave it as it is
 returnPointerInStructScheme
-  :: Marshalable a => a -> ND r (MarshalScheme c)
+  :: Marshalable a => a -> ND r (MarshalScheme a)
 returnPointerInStructScheme p = do
   t@(Ptr NonConst _) <- pure $ type' p
   pure $ Preserve t
 
 -- | Matches pointers with lengths
-arrayScheme :: Marshalable a => a -> ND r (MarshalScheme c)
-arrayScheme p = case lengths p of
+arrayScheme
+  :: Marshalable a
+  => WrapExtensibleStructs
+  -> WrapDispatchableHandles
+  -> a
+  -> ND r (MarshalScheme a)
+arrayScheme wes wdh p = case lengths p of
   -- Not an array
   Empty                    -> empty
 
@@ -293,44 +301,83 @@ arrayScheme p = case lengths p of
       Ptr Const c | isByteArrayElem c -> pure $ case isOptional p of
         Singleton True -> Maybe ByteString
         _              -> ByteString
-      _ -> Normal <$> dropPtrToStruct t
+      _ -> dropPtrToStruct t >>= innerType wes wdh
     pure $ if isOpt then EitherWord32 elemType else Vector elemType
 
   _ -> empty
 
 -- | Arrays with a predetermined length
-fixedArrayScheme :: Marshalable a => a -> ND r (MarshalScheme c)
-fixedArrayScheme p = do
+fixedArrayScheme
+  :: Marshalable a
+  => WrapExtensibleStructs
+  -> WrapDispatchableHandles
+  -> a
+  -> ND r (MarshalScheme a)
+fixedArrayScheme wes wdh p = do
   guard . V.null . lengths $ p
   case type' p of
-    Array _ (SymbolicArraySize _) t | isByteArrayElem t -> pure ByteString
-                                    | otherwise -> pure $ Vector (Normal t)
-    Array _ (NumericArraySize n) t ->
-      let e = if isByteArrayElem t then ByteString else Normal t
-      in  pure $ Tupled n e
+    Array _ (SymbolicArraySize _) t
+      | isByteArrayElem t -> pure ByteString
+      | otherwise         -> Vector <$> innerType wes wdh t
+    Array _ (NumericArraySize n) t -> do
+      e <- if isByteArrayElem t then pure ByteString else innerType wes wdh t
+      pure $ Tupled n e
     _ -> empty
 
 -- | An optional value with a default, so we don't need to wrap it in a Maybe
-optionalDefaultScheme :: Marshalable a => a -> ND r (MarshalScheme c)
-optionalDefaultScheme p = do
+optionalDefaultScheme
+  :: Marshalable a
+  => WrapExtensibleStructs
+  -> WrapDispatchableHandles
+  -> a
+  -> ND r (MarshalScheme a)
+optionalDefaultScheme wes wds p = do
   MarshalParams {..} <- ask
   Singleton True     <- pure $ isOptional p
   guard . V.null . lengths $ p
   guard $ isDefaultable (type' p)
-  pure $ Normal (type' p)
+  innerType wes wds (type' p)
 
 -- | An optional value to be wrapped in a Maybe
-optionalScheme :: Marshalable a => a -> ND r (MarshalScheme c)
-optionalScheme p = do
+optionalScheme
+  :: Marshalable a
+  => WrapExtensibleStructs
+  -> WrapDispatchableHandles
+  -> a
+  -> ND r (MarshalScheme a)
+optionalScheme wes wdh p = do
   Singleton True <- pure $ isOptional p
   guard . V.null . lengths $ p
-  pure $ Maybe (Normal . unPtrType . type' $ p)
+  Maybe <$> innerType wes wdh (unPtrType (type' p))
+
+-- | A struct to be wrapped in "SomeStruct"
+extensibleStruct :: Marshalable a => a -> ND r (MarshalScheme a)
+extensibleStruct p = do
+  MarshalParams {..} <- ask
+  TypeName n         <- dropPtrToStruct (type' p)
+  Just     s         <- getStruct n
+  guard (not (V.null (sExtendedBy s)))
+  pure $ WrappedStruct n
+
+rawDispatchableHandles :: Marshalable a => a -> ND r (MarshalScheme a)
+rawDispatchableHandles p = do
+  MarshalParams {..} <- ask
+  t@(TypeName n)     <- dropPtrToStruct (type' p)
+  Just h             <- getHandle n
+  guard (Dispatchable == hDispatchable h)
+  normalCheck t p
+  pure . Preserve $ t
 
 -- | The "default" method of marshalling something, store as ordinary member
-scalarScheme :: Marshalable a => a -> ND r (MarshalScheme c)
+scalarScheme :: Marshalable a => a -> ND r (MarshalScheme a)
 scalarScheme p = do
+  t <- dropPtrToStruct (type' p)
+  normalCheck t p
+  pure $ Normal t
+
+normalCheck :: Marshalable a => CType -> a -> ND r ()
+normalCheck t p = do
   MarshalParams {..} <- ask
-  t                  <- dropPtrToStruct (type' p)
   -- Some sanity checking
   guard . V.null . values $ p
   guard . V.null . lengths $ p
@@ -341,7 +388,7 @@ scalarScheme p = do
     )
   guard . (/= Void) $ t
   guard $ not (isPtrType t) || isPassAsPointerType (unPtrType t)
-  pure . Normal $ t
+
 
 -- Sometimes pointers to non-optional structs are used, remove these for the
 -- marshalled version.
@@ -356,6 +403,47 @@ dropPtrToStruct t = do
         True  -> TypeName n
         False -> t
     _ -> pure t
+
+----------------------------------------------------------------
+-- Extensible structs
+----------------------------------------------------------------
+
+data WrapExtensibleStructs = WrapExtensibleStructs | DoNotWrapExtensibleStructs
+  deriving (Eq)
+data WrapDispatchableHandles = WrapDispatchableHandles | DoNotWrapDispatchableHandles
+  deriving (Eq)
+
+innerType
+  :: WrapExtensibleStructs
+  -> WrapDispatchableHandles
+  -> CType
+  -> ND r (MarshalScheme a)
+innerType wes wdh t = do
+  r <-
+    runNonDetMaybe
+    .  asum @[]
+    $  [ unwrapDispatchableHandles t | wdh == DoNotWrapDispatchableHandles ]
+    <> [ wrapExtensibleStruct t | wes == WrapExtensibleStructs ]
+
+  pure $ fromMaybe (Normal t) r
+
+unwrapDispatchableHandles
+  :: (Member NonDet r, HasSpecInfo r) => CType -> Sem r (MarshalScheme a)
+unwrapDispatchableHandles t = failToNonDet $ do
+  TypeName n <- pure t
+  Just     h <- getHandle n
+  pure $ case hDispatchable h of
+    Dispatchable    -> Preserve t
+    NonDispatchable -> Normal t
+
+-- If this is an extensible struct, wrap it, otherwise return Normal
+wrapExtensibleStruct
+  :: (Member NonDet r, HasSpecInfo r) => CType -> Sem r (MarshalScheme a)
+wrapExtensibleStruct t = failToNonDet $ do
+  TypeName n <- dropPtrToStruct t
+  Just     s <- getStruct n
+  guard (not (V.null (sExtendedBy s)))
+  pure $ WrappedStruct n
 
 ----------------------------------------------------------------
 -- Utils
@@ -403,7 +491,8 @@ isElided = \case
   Vector       _    -> False
   EitherWord32 _    -> False
   Tupled _ _        -> False
-  Returned     _    -> False
-  InOutCount   _    -> False
-  Custom       _    -> False
-  ElidedCustom _    -> True
+  Returned      _   -> False
+  InOutCount    _   -> False
+  WrappedStruct _   -> False
+  Custom        _   -> False
+  ElidedCustom  _   -> True

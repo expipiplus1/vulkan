@@ -1,10 +1,5 @@
-ghc-options:
-- -Wall
-- -Wno-unticked-promoted-constructors
-- -Wno-missing-pattern-synonym-signatures
-- -Wno-unused-imports
-
 name: vulkan
+
 library:
   source-dirs: .
   dependencies:
@@ -19,8 +14,28 @@ library:
         extra-libraries: vulkan-1
       else:
         extra-libraries: vulkan
+    - condition: flag(safe-foreign-calls)
+      then:
+        cpp-options: -DSAFE_FOREIGN_CALLS
+      else: {}
+  ghc-options:
+    - -Wall
+    - -Wno-unticked-promoted-constructors
+    - -Wno-missing-pattern-synonym-signatures
+    - -Wno-unused-imports
+    - -Wno-missing-signatures
+
+flags:
+  safe-foreign-calls:
+    description:
+      Do not mark foreign imports as 'unsafe'. This means that
+      callbacks from Vulkan to Haskell will work. If you are using
+      these then make sure this flag is enabled.
+    default: yes
+    manual: no
 
 default-extensions:
+  - AllowAmbiguousTypes
   - CPP
   - DataKinds
   - DefaultSignatures
@@ -38,9 +53,12 @@ default-extensions:
   - PolyKinds
   - RankNTypes
   - RecordWildCards
+  - RoleAnnotations
   - ScopedTypeVariables
   - Strict
   - TypeApplications
+  - TypeFamilyDependencies
   - TypeOperators
   - TypeSynonymInstances
+  - UndecidableInstances
   - ViewPatterns

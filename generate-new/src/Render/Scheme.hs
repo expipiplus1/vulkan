@@ -43,6 +43,9 @@ schemeType s = do
     Tupled n e ->
       fmap (foldl' (:@) (TupleT (fromIntegral n)) . replicate (fromIntegral n))
         <$> schemeType e
+    WrappedStruct n ->
+      pure . Just $ ConT (typeName (TyConName "SomeStruct")) :@ ConT
+        (typeName (mkTyName n))
     Returned     _                 -> pure Nothing
     InOutCount   s                 -> schemeType s
     Custom       CustomScheme {..} -> Just <$> csType

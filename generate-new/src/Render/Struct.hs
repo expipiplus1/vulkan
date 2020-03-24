@@ -15,7 +15,7 @@ import           Data.Text.Prettyprint.Doc
 import           Data.Text.Extra                ( upperCaseFirst )
 import           Polysemy
 import           Polysemy.Reader
-import qualified Data.Vector                   as V
+import qualified Data.Vector.Extra             as V
 import qualified Data.Map                      as Map
 import           Data.List.Extra                ( nubOrd )
 import           Language.Haskell.TH            ( mkName )
@@ -23,10 +23,10 @@ import           Language.Haskell.TH            ( mkName )
 import           Foreign.Marshal.Alloc
 import           Foreign.Ptr
 import           Foreign.Storable
-import           Control.Exception              ( bracket )
 import           Control.Monad.Trans.Cont       ( evalContT )
 
 import           Error
+import           Data.Typeable
 import           Haskell                       as H
                                          hiding ( Type )
 import           CType
@@ -60,11 +60,11 @@ renderStruct s@MarshaledStruct {..} = context (unCName msName) $ do
     let n = mkTyName msName
     ms <- V.mapMaybe id <$> traverseV renderStructMember msMembers
     tellImport ''Type
+    showStub <- showInstanceStub tellImport msStruct
     let childVar = if hasChildren msStruct
           then " (" <> pretty structChainVar <+> ":: [Type])"
           else ""
-        derivedInstances =
-          if hasChildren msStruct then "" else "deriving (Show)" :: Doc ()
+        derivingDecl = "deriving" <+> showStub
     tellExport (EData n)
     tellBoot $ do
       tellExport (EType n)
@@ -73,17 +73,20 @@ renderStruct s@MarshaledStruct {..} = context (unCName msName) $ do
         (  [ "type role" <+> pretty n <+> "nominal" | hasChildren msStruct ]
         <> ["data" <+> pretty n <> childVar]
         )
+    tellImport ''Typeable
     tellDoc [qqi|
         data {n}{childVar} = {mkConName msName msName}
           {braceList ms}
-          {derivedInstances}
+          deriving (Typeable)
+        {derivingDecl}
         |]
     memberMap <- sequenceV $ Map.fromList
       [ ( smName (msmStructMember m)
-        , (\v -> SiblingInfo v (msmScheme m)) <$> memberValue m
+        , (\v -> SiblingInfo v (msmScheme m)) <$> recordWildCardsMemberVal m
         )
       | m <- V.toList msMembers
       ]
+    renderExtensibleInstance s
     let lookupMember :: CName -> Maybe (SiblingInfo StructMember)
         lookupMember = (`Map.lookup` memberMap)
     runReader lookupMember $ renderStoreInstances s
@@ -109,6 +112,44 @@ renderStructMember MarshaledStructMember {..} = do
     m
 
 ----------------------------------------------------------------
+-- Extending
+----------------------------------------------------------------
+
+renderExtensibleInstance
+  :: (HasErr r, HasRenderParams r, HasRenderElem r, HasSpecInfo r)
+  => MarshaledStruct AStruct
+  -> Sem r ()
+renderExtensibleInstance MarshaledStruct {..} = do
+  RenderParams {..} <- ask
+  let n   = mkTyName (sName msStruct)
+      con = mkConName (sName msStruct) (sName msStruct)
+  unless (V.null (sExtendedBy msStruct)) $ do
+    tellImportWithAll (TyConName "Extensible")
+    tellImport (TyConName "Extends")
+    tellImport ''Typeable
+    tellImportWith ''(:~:) 'Refl
+    tellImport 'eqT
+    matches <- forV (sExtendedBy msStruct) $ \childName -> do
+      child <- note "Unable to find extending struct" =<< getStruct childName
+      childTDoc <- renderTypeHighPrecSource $ if V.null (sExtendedBy child)
+        then ConT (typeName (mkTyName childName))
+        else ConT (typeName (mkTyName childName)) :@ PromotedNilT
+      pure $ "| Just Refl <- eqT @e @" <> childTDoc <+> "= Just f"
+    let noMatch = "| otherwise = Nothing"
+        cases   = toList matches ++ [noMatch]
+    tellDoc $ "instance Extensible" <+> pretty n <+> "where" <> line <> indent
+      2
+      (vsep
+        [ "setNext x next = x{next = next}"
+        , "getNext" <+> pretty con <> "{..} = next"
+        , "extends :: forall e b proxy. Typeable e => proxy e -> (Extends"
+        <+> pretty n
+        <+> "e => b) -> Maybe b"
+        , "extends _ f" <> line <> indent 2 (vsep cases)
+        ]
+      )
+
+----------------------------------------------------------------
 -- Marshaling
 ----------------------------------------------------------------
 
@@ -132,7 +173,14 @@ renderStoreInstances
 renderStoreInstances ms@MarshaledStruct {..} = do
   RenderParams {..} <- ask
 
-  pokes             <- renderPokes (const True) (IOAction $ pretty contVar) ms
+  tellBoot $ tellDoc . vsep =<< sequenceV
+    [ toCStructInstanceStub tellSourceImport msStruct
+    , showInstanceStub tellSourceImport msStruct
+    ]
+
+  pokes <- renderPokes (fmap Just . recordWildCardsMemberVal)
+                       (IOAction $ pretty contVar)
+                       ms
 
   toCStructInstance ms pokes
 
@@ -141,23 +189,14 @@ renderStoreInstances ms@MarshaledStruct {..} = do
   descendentUnions <- filter (not . isDiscriminated) <$> containsUnion msName
 
   when (null descendentUnions) $ do
-    fromCStruct ms
+    fromCStructInstance ms
 
     -- Render a Storable instance if it's safe to do so
-    containsDispatchable <- containsDispatchableHandle msStruct
     case pokes of
-      IOStmts _ | not containsDispatchable -> storableInstance ms
-      _ -> pure ()
+      IOStmts _ -> storableInstance ms
+      _         -> pure ()
 
   zeroInstanceDecl ms
-
--- | We use RecordWildCards, so just use the member name here
-memberValue
-  :: HasRenderParams r => MarshaledStructMember -> Sem r (Doc ())
-memberValue MarshaledStructMember {..} = do
-  RenderParams {..} <- ask
-  let m = mkMemberName (smName msmStructMember)
-  pure $ pretty m
 
 storableInstance
   :: ( HasErr r
@@ -195,65 +234,37 @@ toCStructInstance
 toCStructInstance m@MarshaledStruct {..} pokeValue = do
   RenderParams {..} <- ask
   tellImportWithAll (TyConName "ToCStruct")
-  let n           = mkTyName msName
-      con         = mkConName msName msName
+  let con         = mkConName msName msName
       Struct {..} = msStruct
-      structT     = ConT (typeName n)
-      aVar        = mkVar "a"
-      tDoc        = if hasChildren msStruct
-        then parens (pretty n <+> pretty structChainVar)
-        else pretty n
-  head <- if hasChildren msStruct
-    then do
-      tellImport (TyConName "PokeChain")
-      pure $ " PokeChain" <+> pretty structChainVar <+> "=>"
-    else pure ""
   tellImport 'allocaBytesAligned
-  pokeCStructTDoc <- renderType
-    (ConT ''Ptr :@ structT ~> structT ~> ConT ''IO :@ aVar ~> ConT ''IO :@ aVar)
-  zero    <- withZeroCStructDecl m
+  zero    <- pokeZeroCStructDecl m
   pokeDoc <- case pokeValue of
     ContTStmts d -> do
       tellImport 'evalContT
       pure $ "evalContT $" <+> d
     IOStmts d -> pure d
   (size, alignment) <- getTypeSize (TypeName msName)
-  tellDoc
-    $  ("instance" <> head <+> "ToCStruct" <+> tDoc <+> "where")
-    <> line
-    <> indent
-         2
-         (vsep
-           [ "withCStruct x f = allocaBytesAligned"
-           <+> viaShow sSize
-           <+> viaShow sAlignment
-           <+> "$ \\p -> pokeCStruct p x (f p)"
-           , "pokeCStruct"
-           <+> pretty addrVar
-           <+> pretty con
-           <>  "{..}"
-           <+> pretty contVar
-           <+> "="
-           <+> pokeDoc
-           , "cStructSize =" <+> viaShow size
-           , "cStructAlignment =" <+> viaShow alignment
-           , zero
-           ]
-         )
-
-fromCStruct
-  :: ( HasErr r
-     , HasRenderElem r
-     , HasSpecInfo r
-     , HasRenderParams r
-     , HasSiblingInfo StructMember r
-     , HasStmts r
-     )
-  => MarshaledStruct AStruct
-  -> Sem r ()
-fromCStruct m@MarshaledStruct {..} = dispatchableHandles msStruct >>= \case
-  [] -> fromCStructInstance m
-  hs -> fromCStructFunction m hs
+  let unpack = if all (isElided . msmScheme) msMembers then "" else "{..}"
+  stub <- toCStructInstanceStub tellImport msStruct
+  tellDoc $ (stub <+> "where") <> line <> indent
+    2
+    (vsep
+      [ "withCStruct x f = allocaBytesAligned"
+      <+> viaShow sSize
+      <+> viaShow sAlignment
+      <+> "$ \\p -> pokeCStruct p x (f p)"
+      , "pokeCStruct"
+      <+> pretty addrVar
+      <+> pretty con
+      <>  unpack
+      <+> pretty contVar
+      <+> "="
+      <+> pokeDoc
+      , "cStructSize =" <+> viaShow size
+      , "cStructAlignment =" <+> viaShow alignment
+      , zero
+      ]
+    )
 
 fromCStructInstance
   :: ( HasErr r
@@ -268,24 +279,13 @@ fromCStructInstance
 fromCStructInstance m@MarshaledStruct {..} = do
   RenderParams {..} <- ask
   tellImportWithAll (TyConName "FromCStruct")
-  let n           = mkTyName msName
-      Struct {..} = msStruct
-      structT     = ConT (typeName n)
-      tDoc        = if hasChildren msStruct
-        then parens (pretty n <+> pretty structChainVar)
-        else pretty n
-  head <- if hasChildren msStruct
-    then do
-      tellImport (TyConName "PeekChain")
-      pure $ " PeekChain" <+> pretty structChainVar <+> "=>"
-    else pure ""
   tellImport 'plusPtr
-  peekCStructTDoc <- renderType (ConT ''Ptr :@ structT ~> ConT ''IO :@ structT)
-  peekStmts       <- peekCStructBody m
-  tellDoc
-    $  ("instance" <> head <+> "FromCStruct" <+> tDoc <+> "where")
-    <> line
-    <> indent 2 (vsep ["peekCStruct" <+> pretty addrVar <+> "=" <+> peekStmts])
+  peekStmts <- peekCStructBody m
+  stub      <- fromCStructInstanceStub tellImport msStruct
+  tellBoot $ tellDoc =<< fromCStructInstanceStub tellSourceImport msStruct
+  tellDoc $ (stub <+> "where") <> line <> indent
+    2
+    (vsep ["peekCStruct" <+> pretty addrVar <+> "=" <+> peekStmts])
 
 fromCStructFunction
   :: ( HasErr r
@@ -367,8 +367,6 @@ peekCStructBody MarshaledStruct {..} = do
           <+> tDoc
       forbiddenNames = fromList []
   renderStmtsIO forbiddenNames $ do
-    cmdsRef <- pureStmt (CmdsDoc "cmds")
-    nameRef "cmds" cmdsRef
     memberRefs <-
       fmap (V.mapMaybe id) . forV msMembers $ \MarshaledStructMember {..} ->
         context (unCName $ smName msmStructMember) $ do
@@ -391,7 +389,7 @@ peekCStructBody MarshaledStruct {..} = do
       pure $ Pure InlineOnce $ pretty con <+> align
         (sep (unValueDoc <$> memberDocs))
 
-withZeroCStructDecl
+pokeZeroCStructDecl
   :: ( HasErr r
      , HasRenderElem r
      , HasSpecInfo r
@@ -402,40 +400,27 @@ withZeroCStructDecl
      )
   => MarshaledStruct AStruct
   -> Sem r (Doc ())
-withZeroCStructDecl ms@MarshaledStruct {..} = do
+pokeZeroCStructDecl ms@MarshaledStruct {..} = do
   RenderParams {..} <- ask
 
-  pokeDoc           <-
-    renderPokes (isUnivalued . msmScheme)
-                (IOAction $ pretty contVar <+> pretty addrVar)
-                ms
-      >>= \case
-            ContTStmts d -> do
-              tellImport 'evalContT
-              pure $ "evalContT $" <+> d
-            IOStmts d -> pure d
+  let replaceWithZeroChainPoke m = case msmScheme m of
+        Custom s@(CustomScheme "Chain" _ _ _ _) ->
+          m { msmScheme = Custom s { csDirectPoke = const zeroNextPointer } }
+        _ -> m
+      ms' = ms { msMembers = replaceWithZeroChainPoke <$> msMembers }
+  pokeDoc <- renderPokes zeroMemberVal (IOAction $ pretty contVar) ms' >>= \case
+    ContTStmts d -> do
+      tellImport 'evalContT
+      pure $ "evalContT $" <+> d
+    IOStmts d -> pure d
 
-  let n           = mkTyName msName
-      Struct {..} = msStruct
-      structT     = ConT (typeName n)
-  withZeroCStructTDoc <-
-    let retVar = VarT (mkName "b")
-    in  renderType
-          ((ConT ''Ptr :@ structT ~> ConT ''IO :@ retVar) ~> ConT ''IO :@ retVar
-          )
-  tellImport 'bracket
-  tellImport 'callocBytes
-  tellImport 'free
-  pure $ vsep
-    [
-    -- "withZeroCStruct ::" <+> withZeroCStructTDoc
-      "withZeroCStruct f = bracket (callocBytes"
-    <+> viaShow sSize
-    <>  ") free $ \\"
-    <>  pretty addrVar
-    <+> "->"
+  let Struct {..} = msStruct
+  pure
+    $   "pokeZeroCStruct"
+    <+> pretty addrVar
+    <+> pretty contVar
+    <+> "="
     <+> pokeDoc
-    ]
 
 zeroInstanceDecl
   :: ( HasErr r
@@ -472,13 +457,13 @@ renderPokes
      , HasStmts r
      , HasRenderedNames r
      )
-  => (MarshaledStructMember -> Bool)
+  => (MarshaledStructMember -> Sem r (Maybe (Doc ())))
   -- ^ A predicate for which members we should poke
   -> Value (Doc ())
   -- ^ The value to return at the end
   -> MarshaledStruct AStruct
   -> Sem r (RenderedStmts (Doc ()))
-renderPokes p end MarshaledStruct {..} = do
+renderPokes memberDoc end MarshaledStruct {..} = do
   let forbiddenNames = fromList
         (contVar : addrVar : toList
           (unCName . smName . msmStructMember <$> msMembers)
@@ -486,20 +471,14 @@ renderPokes p end MarshaledStruct {..} = do
   renderStmts forbiddenNames $ do
     -- Make and name all the values first so that they can all be referred to
     -- by name.
-    values <- forV msMembers $ \m@MarshaledStructMember {..} -> do
-      ty <- schemeType msmScheme
-      v  <-
-        stmt ty (Just . unCName . smName $ msmStructMember)
-        $   Pure AlwaysInline
-        .   ValueDoc
-        <$> memberValue m
-      nameRef (unCName $ smName msmStructMember) v
-      pure v
+    values <- forV msMembers $ \m -> raise (memberDoc m) >>= \case
+      Nothing -> pure Nothing
+      Just d  -> Just <$> memberVal m d
     ps <-
       fmap (V.mapMaybe id)
       . forV (V.zip values msMembers)
-      $ \(value, msm@MarshaledStructMember {..}) -> if p msm
-          then Just <$> do
+      $ \(valueMaybe, MarshaledStructMember {..}) -> case valueMaybe of
+          Just value -> Just <$> do
             addr <-
               stmt
                 Nothing
@@ -507,7 +486,7 @@ renderPokes p end MarshaledStruct {..} = do
                 )
               . fmap (Pure InlineOnce . AddrDoc)
               $ do
-                  pTyDoc <- renderType . (ConT ''Ptr :@) =<< cToHsType
+                  pTyDoc <- renderType . (ConT ''Ptr :@) =<< cToHsTypeWithHoles
                     DoPreserve
                     (smType msmStructMember)
                   tellImport 'plusPtr
@@ -519,10 +498,102 @@ renderPokes p end MarshaledStruct {..} = do
                     <+> pTyDoc
                     )
             getPokeIndirect msmStructMember msmScheme value addr
-          else pure Nothing
+          Nothing -> pure Nothing
     stmt Nothing Nothing $ do
       traverse_ after ps
       pure end
+
+memberVal
+  :: (HasErr r, HasSpecInfo r, HasRenderParams r)
+  => MarshaledStructMember
+  -> Doc ()
+  -> Stmt s r (Ref s ValueDoc)
+memberVal m@MarshaledStructMember {..} doc = do
+  ty <- schemeType msmScheme
+  v  <-
+    stmt ty (Just . unCName . smName $ msmStructMember)
+    . pure
+    . Pure AlwaysInline
+    . ValueDoc
+    $ doc
+  nameRef (unCName $ smName msmStructMember) v
+  pure v
+
+-- | We use RecordWildCards, so just use the member name here
+recordWildCardsMemberVal
+  :: HasRenderParams r => MarshaledStructMember -> Sem r (Doc ())
+recordWildCardsMemberVal MarshaledStructMember {..} = do
+  RenderParams {..} <- ask
+  let m = mkMemberName (smName msmStructMember)
+  pure $ pretty m
+
+zeroMemberVal
+  :: (HasRenderElem r, HasRenderParams r)
+  => MarshaledStructMember
+  -> Sem r (Maybe (Doc ()))
+  -- ^ Returns nothing if this is just 0 bytes and doesn't need poking
+zeroMemberVal MarshaledStructMember {..} = case msmScheme of
+  ElidedUnivalued _ ->
+    pure $ Just "error \"This should never appear in the generated source\""
+  _ | True V.:<| _ <- smIsOptional msmStructMember -> pure Nothing
+  s -> zeroScheme s
+
+----------------------------------------------------------------
+-- Instance decls
+----------------------------------------------------------------
+
+fromCStructInstanceStub
+  :: (HasRenderParams r, HasRenderElem r)
+  => (HName -> Sem r ())
+  -> Struct
+  -> Sem r (Doc ())
+fromCStructInstanceStub tellSourceImport s = do
+  RenderParams {..} <- ask
+  let n    = mkTyName (sName s)
+      tDoc = if hasChildren s
+        then parens (pretty n <+> pretty structChainVar)
+        else pretty n
+  head <- if hasChildren s
+    then do
+      tellSourceImport (TyConName "PeekChain")
+      pure $ " PeekChain" <+> pretty structChainVar <+> "=>"
+    else pure ""
+  tellImport (TyConName "FromCStruct")
+  pure $ "instance" <> head <+> "FromCStruct" <+> tDoc
+
+toCStructInstanceStub
+  :: (HasRenderParams r, HasRenderElem r)
+  => (HName -> Sem r ())
+  -> Struct
+  -> Sem r (Doc ())
+toCStructInstanceStub tellSourceImport s = do
+  RenderParams {..} <- ask
+  let n    = mkTyName (sName s)
+      tDoc = if hasChildren s
+        then parens (pretty n <+> pretty structChainVar)
+        else pretty n
+  head <- if hasChildren s
+    then do
+      tellSourceImport (TyConName "PokeChain")
+      pure $ " PokeChain" <+> pretty structChainVar <+> "=>"
+    else pure ""
+  tellImport (TyConName "ToCStruct")
+  pure $ "instance" <> head <+> "ToCStruct" <+> tDoc
+
+showInstanceStub
+  :: (HasRenderParams r, HasRenderElem r)
+  => (HName -> Sem r ())
+  -> Struct
+  -> Sem r (Doc ())
+showInstanceStub tellSourceImport s = do
+  RenderParams {..} <- ask
+  let n = mkTyName (sName s)
+  if hasChildren s
+    then do
+      tellSourceImport (TyConName "Chain")
+      pure $ "instance Show (Chain es) => Show (" <> pretty n <+> "es)"
+    else pure $ "instance Show" <+> pretty n
+
 
 ----------------------------------------------------------------
 -- Utils

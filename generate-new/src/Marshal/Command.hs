@@ -55,24 +55,25 @@ parameterScheme
   -> Sem r (MarshalScheme Parameter)
 parameterScheme Command {..} param = do
   MarshalParams {..} <- ask
-  let schemes =
-        [ maybe empty pure . getBespokeScheme cName
-          -- These two are for value constrained params:
-        , univaluedScheme
-        , lengthScheme cParameters
-          -- Pointers to Void have some special handling
-        , voidPointerScheme
-          -- Pointers to return values in
-        , returnPointerScheme
-          -- Optional and non optional arrays
-        , arrayScheme
-        , fixedArrayScheme
-          -- Optional things:
-        , optionalDefaultScheme
-        , optionalScheme
-          -- Everything left over is treated as a boring scalar parameter
-        , scalarScheme
-        ]
+  let
+    schemes =
+      [ maybe empty pure . getBespokeScheme cName
+        -- These two are for value constrained params:
+      , univaluedScheme
+      , lengthScheme cParameters
+        -- Pointers to Void have some special handling
+      , voidPointerScheme
+        -- Pointers to return values in
+      , returnPointerScheme
+        -- Optional and non optional arrays
+      , arrayScheme DoNotWrapExtensibleStructs WrapDispatchableHandles
+      , fixedArrayScheme DoNotWrapExtensibleStructs WrapDispatchableHandles
+        -- Optional things:
+      , optionalDefaultScheme DoNotWrapExtensibleStructs WrapDispatchableHandles
+      , optionalScheme DoNotWrapExtensibleStructs WrapDispatchableHandles
+        -- Everything left over is treated as a boring scalar parameter
+      , scalarScheme
+      ]
   m <- runNonDet . failToNonDet . asum . fmap ($ param) $ schemes
   case m of
     Just x  -> pure x

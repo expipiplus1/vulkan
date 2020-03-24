@@ -10,6 +10,7 @@ import           Data.List.Extra                ( nubOrd
                                                 )
 import qualified Data.Text.Extra               as T
 import           Data.Char                      ( isUpper )
+import           Language.Haskell.TH            ( mkName )
 import           Data.Text.Prettyprint.Doc
                                          hiding ( brackets
                                                 , plural
@@ -24,13 +25,15 @@ import           Render.Element
 import           Render.Type
 import           Render.Utils
 import           Render.SpecInfo
+import           Render.Command
+import           Render.Names
 import           Spec.Parse
 import           Haskell                       as H
 import           Error
 import           CType
 
 brackets
-  :: (HasErr r, HasRenderParams r, HasSpecInfo r)
+  :: (HasErr r, HasRenderParams r, HasSpecInfo r, HasRenderedNames r)
   => Vector Handle
   -> Sem r (Vector (CName, CName, RenderElement))
   -- ^ (Creating command, Bracket command, RenderElem)
@@ -108,20 +111,19 @@ data ConstructedType
 pattern SingleTypeName :: Text -> ConstructedType
 pattern SingleTypeName t = Single (TypeName (CName t))
 
-renderConstructedType
+getConstructedType
   :: (HasErr r, HasRenderElem r, HasRenderParams r, HasSpecInfo r)
   => ConstructedType
-  -> Sem r (Doc ())
-renderConstructedType = \case
-  Single   Void -> renderType (ConT ''())
-  Single   t    -> renderType =<< cToHsType DoNotPreserve t
+  -> Sem r Type
+getConstructedType = \case
+  Single   Void -> pure (ConT ''())
+  Single   t    -> cToHsType DoNotPreserve t
   Optional t    -> do
-    tDoc <- renderTypeHighPrec =<< cToHsType DoNotPreserve t
-    pure ("Maybe" <+> tDoc)
+    t <- cToHsType DoNotPreserve t
+    pure (ConT ''Maybe :@ t)
   Multiple t -> do
-    tellImport ''Vector
-    tDoc <- renderTypeHighPrec =<< cToHsType DoNotPreserve t
-    pure ("Vector" <+> tDoc)
+    t <- cToHsType DoNotPreserve t
+    pure (ConT ''Vector :@ t)
 
 data Argument
   = Provided ConstructedType Text
@@ -294,7 +296,7 @@ registerObjectsNVX =
         False
 
 writePair
-  :: (HasErr r, HasRenderParams r, HasSpecInfo r)
+  :: (HasErr r, HasRenderParams r, HasSpecInfo r, HasRenderedNames r)
   => Bracket
   -> Sem r (CType, CName, CName, RenderElement)
 writePair Bracket {..} =
@@ -310,7 +312,7 @@ writePair Bracket {..} =
         tellExport (ETerm wrapperName)
         tellImport create
         tellImport destroy
-        argHsTypes <- traverseV renderConstructedType
+        argHsTypes <- traverseV getConstructedType
                                 [ t | Provided t _ <- arguments ]
         let argHsVars = [ pretty v | Provided _ v <- arguments ]
         createArgVars <- forV bCreateArguments $ \case
@@ -322,26 +324,30 @@ writePair Bracket {..} =
           Resource     -> pure "o"
           Member member argument
             | [t] <- [ t | Provided (Single t) v <- arguments, v == argument ] -> do
-              argTyDoc <- renderType =<< cToHsType DoNotPreserve t
+              argTyDoc <- renderType =<< cToHsTypeWithHoles DoNotPreserve t
               pure
                 $ parens
                     (   pretty member
                     <+> parens (pretty argument <+> "::" <+> argTyDoc)
                     )
             | otherwise -> throw "Can't find single argument for member"
-        innerHsType <- renderConstructedType bInnerType
+        innerHsType <- getConstructedType bInnerType
         let
           noDestructorResource = Resource `notElem` bDestroyArguments
           noResource = bInnerType == Single Void && noDestructorResource
-          cont =
-            if noResource then "IO r" else "(" <> innerHsType <> " -> IO r)"
-          wrapperArguments = punctuate " ->" (argHsTypes ++ [cont, "IO r"])
-          resourcePattern  = if noDestructorResource then "_" else "o"
+          cont = if noResource
+            then ConT ''IO :@ VarT (mkName "r")
+            else innerHsType ~> ConT ''IO :@ VarT (mkName "r")
+          wrapperType =
+            foldr (~>) (ConT ''IO :@ VarT (mkName "r")) (argHsTypes ++ [cont])
+          resourcePattern = if noDestructorResource then "_" else "o"
           callDestructor =
             (if noResource then emptyDoc else "\\" <> resourcePattern <+> "->")
               <+> pretty destroy
               <+> hsep destroyArgVars
-        bracketDoc <- if noResource
+        constrainedType <- constrainStructVariables wrapperType
+        wrapperTDoc     <- renderType constrainedType
+        bracketDoc      <- if noResource
           then do
             tellImport 'Control.Exception.bracket_
             pure "bracket_"
@@ -362,20 +368,19 @@ writePair Bracket {..} =
               , "The allocated value must not be returned from the provided computation"
               ]
             )
-          , pretty wrapperName <+> "::" <+> sep wrapperArguments
-          , pretty wrapperName <+> sep argHsVars <+> "= undefined"
-          -- , pretty wrapperName <+> sep argHsVars <+> "=" <> line <> indent
-          --   2
-          --   (pretty bracketDoc <> line <> indent
-          --     2
-          --     (vsep
-          --       [ parens (pretty create <+> sep createArgVars)
-          --       , bool mempty "(traverse " bDestroyIndividually
-          --       <> parens callDestructor
-          --       <> bool mempty ")" bDestroyIndividually
-          --       ]
-          --     )
-          --   )
+          , pretty wrapperName <+> "::" <+> wrapperTDoc
+          , pretty wrapperName <+> sep argHsVars <+> "=" <> line <> indent
+            2
+            (pretty bracketDoc <> line <> indent
+              2
+              (vsep
+                [ parens (pretty create <+> sep createArgVars)
+                , bool mempty "(traverse " bDestroyIndividually
+                <> parens callDestructor
+                <> bool mempty ")" bDestroyIndividually
+                ]
+              )
+            )
           ]
 
 appendWithVendor :: Text -> Text -> Text

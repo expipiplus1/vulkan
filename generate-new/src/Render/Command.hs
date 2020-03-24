@@ -1,6 +1,7 @@
 {-# language TemplateHaskellQuotes #-}
 module Render.Command
   ( renderCommand
+  , constrainStructVariables
   ) where
 
 import           Relude                  hiding ( Reader

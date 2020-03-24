@@ -6,6 +6,8 @@ To prevent a name clash between the constructors of
 
 ## TODO
 
+Complete zero writing, we write some unnecessary zero bytes
+
 non-optional arrays/structs can be allocated at the same time as their parent
 struct.
 

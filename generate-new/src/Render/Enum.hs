@@ -14,6 +14,7 @@ import           Polysemy.Reader
 import qualified Data.Vector                   as V
 
 import           Foreign.Storable
+import           Data.Bits
 
 import           Spec.Parse
 import           Haskell                       as H
@@ -47,13 +48,22 @@ renderEnum Enum {..} = do
           AnEnum   -> completePragma n (mkPatternName . evName <$> eValues)
           ABitmask -> Nothing
     tellImport (TyConName "Zero")
+    derivedClasses <- do
+      tellImport ''Storable
+      let always = ["Eq", "Ord", "Storable", "Read", "Show", "Zero"]
+      special <- case eType of
+        AnEnum   -> pure []
+        ABitmask -> do
+          tellImport ''Bits
+          pure ["Bits"]
+      pure (always <> special)
     let
-      derivedClasses = ["Eq", "Ord", "Storable", "Read", "Show", "Zero"]
-      zeroComment    = case eType of
+
+      zeroComment = case eType of
         AnEnum | all ((/= 0) . evValue) eValues -> do
-          "-- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error" <> line
+          "-- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error"
+            <> line
         _ -> mempty
-    tellImport ''Storable
     tellDoc
       .  vsep
       $  [ "newtype"

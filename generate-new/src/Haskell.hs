@@ -86,6 +86,7 @@ renderTypeHighPrec, renderTypeHighPrecSource
   -> Sem r (Doc ())
 renderTypeHighPrec = \case
   t@(ConT _) -> renderType t
+  t@(VarT _) -> renderType t
   t          -> parens <$> renderType t
 
 renderTypeHighPrecSource = \case
