@@ -5,18 +5,18 @@ module Data.Text.Extra
   -- , pattern Cons
     upperCaseFirst
   , lowerCaseFirst
-  -- , dropPrefix
+  , dropPrefix
   -- , dropPrefix'
   , (<+>)
-  , module Data.Text
+  , module T
   )
 where
 
 import           Data.String                    ( IsString )
-import           Data.Text
+import           Data.Text as T
 import           Data.Semigroup
 import           Data.Char
-import Prelude
+import           Prelude
 
 -- -- | Read some text into a value
 -- readMaybe :: Read a => Text -> Maybe a
@@ -26,10 +26,10 @@ import Prelude
 -- tShow :: Show a => a -> Text
 -- tShow = pack . show
 
--- dropPrefix :: Text -> Text -> Maybe Text
--- dropPrefix prefix s = if prefix `T.isPrefixOf` s
---                         then Just (T.drop (T.length prefix) s)
---                         else Nothing
+dropPrefix :: Text -> Text -> Maybe Text
+dropPrefix prefix s = if prefix `isPrefixOf` s
+                        then Just (T.drop (T.length prefix) s)
+                        else Nothing
 
 -- dropPrefix' :: Text -> Text -> Text
 -- dropPrefix' prefix s = fromMaybe s (dropPrefix prefix s)

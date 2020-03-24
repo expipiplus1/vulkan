@@ -59,21 +59,26 @@ executables:
     main: Main.hs
     dependencies:
     - algebraic-graphs
+    - ascii-progress
+    - async-pool
     - base
     - bytestring
     - containers
+    - data-default
     - deepseq
-    - dependent-sum
     - dependent-map
+    - dependent-sum
     - directory
     - extra
     - filepath
     - inline-c
     - interpolatedstring-perl6
+    - mtl
+    - pandoc
     - parsec
     - polysemy
-    - polysemy-zoo
     - polysemy-plugin
+    - polysemy-zoo
     - pretty-show
     - prettyprinter
     - regex-applicative
@@ -85,10 +90,10 @@ executables:
     - th-orphans
     - timeit
     - transformers
+    - typed-process
     - uniplate
     - unordered-containers
     - vector
     - vector-sized
     - word-wrap
     - xeno
-description: Please see README.md

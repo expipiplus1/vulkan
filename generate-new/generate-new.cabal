@@ -4,12 +4,11 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a265f66bb5afd1c7f62dbdf59df267672af2236ed009e180a8dba10cbca9e86a
+-- hash: a484aaf046ec03532c0fe3501d54e3b6ed9435e8af715759a91feb4dabb5b9af
 
 name:           generate-new
 version:        0.0.0
 synopsis:       A program to generate the vulkan package from the vulkan docs.
-description:    Please see README.md
 author:         Joe Hermaszewski
 maintainer:     generator.i.ardly.know.er@monoid.al
 license:        BSD3
@@ -28,6 +27,10 @@ executable generate
       CType.Size
       Data.Text.Extra
       Data.Vector.Extra
+      Documentation
+      Documentation.All
+      Documentation.Haddock
+      Documentation.RunAsciiDoctor
       Error
       Haskell
       Haskell.Name
@@ -80,9 +83,12 @@ executable generate
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -fno-warn-unticked-promoted-constructors -fno-warn-name-shadowing -O2 -flate-specialise -fspecialise-aggressively
   build-depends:
       algebraic-graphs
+    , ascii-progress
+    , async-pool
     , base
     , bytestring
     , containers
+    , data-default
     , deepseq
     , dependent-map
     , dependent-sum
@@ -91,6 +97,8 @@ executable generate
     , filepath
     , inline-c
     , interpolatedstring-perl6
+    , mtl
+    , pandoc
     , parsec
     , polysemy
     , polysemy-plugin
@@ -106,6 +114,7 @@ executable generate
     , th-orphans
     , timeit
     , transformers
+    , typed-process
     , uniplate
     , unordered-containers
     , vector

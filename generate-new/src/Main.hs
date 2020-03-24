@@ -51,6 +51,7 @@ import           Spec.Parse
 import           Render.Type.Preserve
 import           Haskell
 import           AssignModules
+import           Documentation.All
 
 main :: IO ()
 main =
@@ -64,6 +65,9 @@ main =
   go = do
     specText <- timeItNamed "Reading spec"
       $ readFileBS "./Vulkan-Docs/xml/vk.xml"
+
+    document <- liftIO
+      $ loadAllDocumentation [] "./Vulkan-Docs" "./Vulkan-Docs/man"
 
     (spec@Spec {..}, getSize) <- timeItNamed "Parsing spec" $ parseSpec specText
 
