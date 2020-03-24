@@ -15,6 +15,8 @@ import           Language.Haskell.TH            ( mkName )
 
 import           Foreign.Ptr
 import           Foreign.Storable
+import           Numeric
+import           Text.Show
 
 import           Spec.Parse
 import           Haskell                       as H
@@ -35,14 +37,28 @@ renderHandle Handle {..} = context (unCName hName) $ do
         tellDataExport n
         tellImport (TyConName "Zero")
         tellImport ''Storable
-        tellDoc
-          $   "newtype"
+        tellImport 'showHex
+        tellImport 'showParen
+        tellDoc $ vsep
+          [ "newtype"
           <+> pretty n
           <+> "="
           <+> pretty c
           <+> tDoc
           <>  line
-          <>  indent 2 "deriving newtype (Show, Eq, Ord, Storable, Zero)"
+          <>  indent 2 "deriving newtype (Eq, Ord, Storable, Zero)"
+          , "instance Show" <+> pretty n <+> "where" <> line <> indent
+            2
+            (   "showsPrec p"
+            <+> parens (pretty c <+> "x")
+            <+> "= showParen (p >= 11)"
+            <+> parens
+                  (   "showString"
+                  <+> viaShow (unName c <> " 0x")
+                  <+> ". showHex x"
+                  )
+            )
+          ]
       Dispatchable -> do
         let p = mkEmptyDataName hName
             c = mkConName hName hName
