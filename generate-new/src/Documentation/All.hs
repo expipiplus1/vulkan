@@ -54,23 +54,7 @@ loadAllDocumentation extensions vkDocs manDir = do
     traverse_ sayErr errors
   let allDocumentations = concat documentations
       docMap = Map.fromList ((dDocumentee &&& id) <$> allDocumentations)
-  -- traverse_ sayShow (Map.assocs docMap)
-  pure
-    (\n ->
-      let -- TODO: this is lazy, add duplicates to the map instead
-          prefixes = ["vk", "Vk", "VK_"]
-      in  asum
-            [ Map.lookup n' docMap
-            | n' <-
-              n
-              :  [ TopLevel (p <> t) | TopLevel t <- [n], p <- prefixes ]
-              ++ [ Nested (pa <> a) (pb <> b)
-                 | Nested a b <- [n]
-                 , pa         <- prefixes
-                 , pb         <- prefixes
-                 ]
-            ]
-    )
+  pure (`Map.lookup` docMap)
 
 loadDocumentation
   :: [Text]

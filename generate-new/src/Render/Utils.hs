@@ -7,15 +7,24 @@ import           Text.Wrap
 import qualified Data.Text                     as T
 
 parenList :: Foldable f => f (Doc ()) -> Doc ()
-parenList = genericList "(" ")"
+parenList = genericList (<>) "(" ")"
 
 braceList :: Foldable f => f (Doc ()) -> Doc ()
-braceList = genericList "{" "}"
+braceList = genericList (<>) "{" "}"
 
-genericList :: Foldable f => Doc () -> Doc () -> f (Doc ()) -> Doc ()
-genericList l r ds = case toList ds of
+braceList' :: Foldable f => f (Doc ()) -> Doc ()
+braceList' = genericList (<+>) "{" "}"
+
+genericList
+  :: Foldable f
+  => (Doc () -> Doc () -> Doc ())
+  -> Doc ()
+  -> Doc ()
+  -> f (Doc ())
+  -> Doc ()
+genericList s l r ds = case toList ds of
   []  -> l <> r
-  [d] -> l <> d <> r
+  [d] -> l `s` d `s` r
   _   -> align $ vsep $ zipWith (<+>) (l : repeat ",") (toList ds) <> [r]
 
 appList :: Foldable f => f (Doc ()) -> Doc ()
@@ -25,6 +34,12 @@ appList xs = align (vsep (zipWith (<+>) ("<$>" : repeat "<*>") (toList xs)))
 comment :: Text -> Doc ()
 comment c =
   let ls = wrapTextToLines defaultWrapSettings 72 c
+      prependSpace t = if T.null t then t else " " <> t
+  in  vsep $ zipWith (<>) ("-- |" : repeat "--") (pretty . prependSpace <$> ls)
+
+commentNoWrap :: Text -> Doc ()
+commentNoWrap c =
+  let ls = T.lines c
       prependSpace t = if T.null t then t else " " <> t
   in  vsep $ zipWith (<>) ("-- |" : repeat "--") (pretty . prependSpace <$> ls)
 

@@ -19,6 +19,7 @@ import           Render.Element
 import           Render.Type
 import           Render.SpecInfo
 import           CType
+import           Documentation
 
 renderFuncPointer
   :: (HasErr r, Member (Reader RenderParams) r, HasSpecInfo r)
@@ -33,8 +34,9 @@ renderFuncPointer FuncPointer {..} = contextShow (unCName fpName) $ do
     tPtrDoc <- renderType (ConT ''FunPtr :@ ConT (typeName n))
     tellExport (EType p)
     tellExport (EType n)
-    tellDoc $ vsep
+    tellDocWithHaddock $ \getDoc -> vsep
       [ "type" <+> pretty n <+> "=" <+> tDoc
+      , getDoc (TopLevel fpName)
       , "type" <+> pretty p <+> "=" <+> tPtrDoc
       ]
 

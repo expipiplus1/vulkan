@@ -11,17 +11,20 @@ import qualified Data.Text.Extra               as T
 import           Text.Pandoc
 
 import           Documentation
+import           Spec.Name
+import           Render.Element                 ( ModName(..) )
+import           Haskell.Name
 
 newtype Haddock = Haddock { unHaddock :: Text }
   deriving (Show)
 
 data DocumenteeLocation
   = Unknown
-  | ThisModule
-  | OtherModule Text
+  | ThisModule HName
+  | OtherModule ModName HName
 
 documentationToHaddock
-  :: (Text -> DocumenteeLocation)
+  :: (CName -> DocumenteeLocation)
   -- ^ Find which module a documentee lives in
   -> Documentation
   -- ^ The documentation to render
@@ -64,15 +67,16 @@ prepareForHaddock =
 
       b -> b
 
-fixLinks :: (Text -> DocumenteeLocation) -> Pandoc -> Pandoc
+fixLinks :: (CName -> DocumenteeLocation) -> Pandoc -> Pandoc
 fixLinks findDocs = topDown fixInlines
  where
   fixInlines = \case
     Link ("", [], []) [Str name] (tag, "") | tag == "#" <> name ->
-      case findDocs name of
-        Unknown       -> Code ("", [], []) name
-        ThisModule    -> RawInline "haddock" ("'" <> name <> "'")
-        OtherModule m -> RawInline "haddock" ("'" <> m <> "." <> name <> "'")
+      case findDocs (CName name) of
+        Unknown      -> Code ("", [], []) name
+        ThisModule n -> RawInline "haddock" ("'" <> unName n <> "'")
+        OtherModule (ModName m) n ->
+          RawInline "haddock" ("'" <> m <> "." <> unName n <> "'")
     -- Because of https://github.com/haskell/haddock/issues/802 the best we
     -- can do is link to the spec
     Link attrs t (tag, title) | Just fragment <- T.dropPrefix "#" tag ->
@@ -82,10 +86,11 @@ fixLinks findDocs = topDown fixInlines
         attrs
         t
         (externalSpecHTML <> "#" <> fragment, title)
-    i@(Code _ name) -> case findDocs name of
-      Unknown       -> i
-      ThisModule    -> RawInline "haddock" ("'" <> name <> "'")
-      OtherModule m -> RawInline "haddock" ("'" <> m <> "." <> name <> "'")
+    i@(Code _ name) -> case findDocs (CName name) of
+      Unknown      -> i
+      ThisModule n -> RawInline "haddock" ("'" <> unName n <> "'")
+      OtherModule (ModName m) n ->
+        RawInline "haddock" ("'" <> m <> "." <> unName n <> "'")
     i -> i
 
 externalSpecHTML :: Text

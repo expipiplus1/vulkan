@@ -1,5 +1,3 @@
-{-# language QuasiQuotes #-}
-{-# language TemplateHaskell #-}
 module Render.Handle
   where
 
@@ -22,6 +20,7 @@ import           Spec.Parse
 import           Haskell                       as H
 import           Error
 import           Render.Element
+import           Documentation
 
 renderHandle
   :: (HasErr r, Member (Reader RenderParams) r) => Handle -> Sem r RenderElement
@@ -39,8 +38,9 @@ renderHandle Handle {..} = context (unCName hName) $ do
         tellImport ''Storable
         tellImport 'showHex
         tellImport 'showParen
-        tellDoc $ vsep
-          [ "newtype"
+        tellDocWithHaddock $ \getDoc -> vsep
+          [ getDoc (TopLevel hName)
+          , "newtype"
           <+> pretty n
           <+> "="
           <+> pretty c

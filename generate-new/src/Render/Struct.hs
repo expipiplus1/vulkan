@@ -44,6 +44,7 @@ import           Render.Utils
 import           Render.Names
 import           Spec.Parse
 import           Bespoke
+import           Documentation
 
 renderStruct
   :: ( HasErr r
@@ -58,7 +59,7 @@ renderStruct s@MarshaledStruct {..} = context (unCName msName) $ do
   RenderParams {..} <- ask
   genRe ("struct " <> unCName msName) $ do
     let n = mkTyName msName
-    ms <- V.mapMaybe id <$> traverseV renderStructMember msMembers
+    ms <- V.mapMaybe id <$> traverseV (renderStructMember msName) msMembers
     tellImport ''Type
     showStub <- showInstanceStub tellImport msStruct
     let childVar = if hasChildren msStruct
@@ -74,9 +75,10 @@ renderStruct s@MarshaledStruct {..} = context (unCName msName) $ do
         <> ["data" <+> pretty n <> childVar]
         )
     tellImport ''Typeable
-    tellDoc [qqi|
+    tellDocWithHaddock $ \getDoc -> [qqi|
+        {getDoc (TopLevel msName)}
         data {n}{childVar} = {mkConName msName msName}
-          {braceList ms}
+          {braceList' (($ getDoc) <$> ms)}
           deriving (Typeable)
         {derivingDecl}
         |]
@@ -93,21 +95,23 @@ renderStruct s@MarshaledStruct {..} = context (unCName msName) $ do
     pure ()
 
 renderStructMember
-  :: ( HasErr r
-     , HasRenderParams r
-     , HasRenderElem r
-     , HasSpecInfo r
-     )
-  => MarshaledStructMember
-  -> Sem r (Maybe (Doc ()))
-renderStructMember MarshaledStructMember {..} = do
+  :: (HasErr r, HasRenderParams r, HasRenderElem r, HasSpecInfo r)
+  => CName
+  -> MarshaledStructMember
+  -> Sem r (Maybe ((Documentee -> Doc ()) -> Doc ()))
+renderStructMember sName MarshaledStructMember {..} = do
   let StructMember {..} = msmStructMember
   RenderParams {..} <- ask
   m                 <- schemeType msmScheme
   traverse
     (\t -> do
       tDoc <- renderType t
-      pure [qqi|{mkMemberName smName} :: {tDoc}|]
+      pure $ \getDoc -> align
+        (vsep
+          [ getDoc (Nested sName smName)
+          , pretty (mkMemberName smName) <+> "::" <+> tDoc
+          ]
+        )
     )
     m
 

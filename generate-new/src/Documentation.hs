@@ -10,9 +10,7 @@ module Documentation
 
 import           Control.Monad
 import           Data.Default
--- import           Data.Either.Combinators
 import           Data.Foldable
--- import           Data.List.Extra2
 import           Data.Maybe
 import qualified Data.Text.Extra               as T
 import           Documentation.RunAsciiDoctor
@@ -23,6 +21,7 @@ import           Relude                  hiding ( rem
 import           Say
 import           System.Environment
 import           Text.Pandoc
+import           Spec.Name
 
 data Documentation = Documentation
   { dDocumentee    :: Documentee
@@ -33,8 +32,8 @@ data Documentation = Documentation
   deriving (Show)
 
 data Documentee
-  = TopLevel Text
-  | Nested Text Text
+  = TopLevel CName
+  | Nested CName CName
   deriving (Show, Eq, Ord)
 
 docBookToDocumentation
@@ -48,7 +47,7 @@ docBookToDocumentation db = mdo
   name               <- guessDocumentee removed
   pure $ Documentation (TopLevel name) removed : subDocs
 
-guessDocumentee :: Pandoc -> Either Text Text
+guessDocumentee :: Pandoc -> Either Text CName
 guessDocumentee (Pandoc _ bs) = do
   firstWord <- case bs of
     Para (Str n : _) : _ -> pure n
@@ -57,14 +56,14 @@ guessDocumentee (Pandoc _ bs) = do
        `T.isPrefixOf` T.toLower firstWord
        ||             "pfn_"
        `T.isPrefixOf` T.toLower firstWord
-    then pure firstWord
+    then pure (CName firstWord)
     else Left "First word of documentation doesn't begin with \"vk\" or \"pfn\""
 
 -- | If the description is a bullet list of "enames" then remove those from the
 -- original documentation and return them separately.
 --
 -- Return the original documentation with the new document sections removed
-splitDocumentation :: Text -> Pandoc -> Either Text (Pandoc, [Documentation])
+splitDocumentation :: CName -> Pandoc -> Either Text (Pandoc, [Documentation])
 splitDocumentation parent (Pandoc meta bs) = do
   (es, bs') <- iterateSuffixesM (splitPrefix meta) bs
   pure (Pandoc meta bs', join (catMaybes es))
@@ -118,7 +117,7 @@ isHeaderLE n = \case
 
 -- Handle struct members, enum docs and function parameter documentation
 memberDocs
-  :: Text
+  :: CName
   -- ^ Parent name
   -> Meta
   -> [Block]
@@ -130,10 +129,9 @@ memberDocs parent m blocks =
           let enumDoc :: [Block] -> Either Text Documentation
               enumDoc = \case
                 p@(Para (Code ("", [], []) memberName : _)) : ps -> pure
-                  Documentation
-                    { dDocumentee    = Nested parent memberName
-                    , dDocumentation = Pandoc m (p : ps)
-                    }
+                  Documentation { dDocumentee = Nested parent (CName memberName)
+                                , dDocumentation = Pandoc m (p : ps)
+                                }
                 _ -> Left "Unhandled member documentation declaration"
           in  (, []) <$> traverse enumDoc bullets
         d -> Right ([], [d])

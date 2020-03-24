@@ -28,6 +28,7 @@ import           Render.Utils
 import           CType                          ( CType(TypeName) )
 import           Render.Type
 import           Render.SpecInfo
+import           Documentation
 
 renderEnum
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)
@@ -43,7 +44,7 @@ renderEnum e@Enum {..} = do
       -- TODO: remove vulkan specific stuff
       ABitmask -> cToHsType DoNotPreserve (TypeName "VkFlags")
     (patterns, patternExports) <-
-      V.unzip <$> traverseV (renderEnumValue conName eType) eValues
+      V.unzip <$> traverseV (renderEnumValue eName conName eType) eValues
     tellExport (Export n True patternExports)
     tellBoot $ do
       tellExport (EType n)
@@ -69,19 +70,20 @@ renderEnum e@Enum {..} = do
           "-- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error"
             <> line
         _ -> mempty
-    tellDoc
-      .  vsep
-      $  [ "newtype"
-         <+> pretty n
-         <+> "="
-         <+> pretty conName
-         <+> tDoc
-         <>  line
-         <>  indent 2 ("deriving newtype" <+> tupled derivedClasses)
-         , zeroComment
-         , vsep (toList patterns)
-         ]
-      ++ maybeToList complete
+    tellDocWithHaddock $ \getDoc ->
+      vsep
+        $  [ getDoc (TopLevel eName)
+           , "newtype"
+           <+> pretty n
+           <+> "="
+           <+> pretty conName
+           <+> tDoc
+           <>  line
+           <>  indent 2 ("deriving newtype" <+> tupled derivedClasses)
+           , zeroComment
+           , vsep (toList (($ getDoc) <$> patterns))
+           ]
+        ++ maybeToList complete
     renderShowInstance e
     renderReadInstance e
 
@@ -98,23 +100,23 @@ completePragma ty pats = if V.null pats
 
 renderEnumValue
   :: (HasErr r, Member (Reader RenderParams) r)
-  => HName
+  => CName
+  -> HName
   -- ^ Constructor name
   -> EnumType
   -> EnumValue
-  -> Sem r (Doc (), Export)
-renderEnumValue conName enumType EnumValue {..} = do
+  -> Sem r ((Documentee -> Doc ()) -> Doc (), Export)
+renderEnumValue eName conName enumType EnumValue {..} = do
   RenderParams {..} <- ask
   let n = mkPatternName evName
       v = case enumType of
-            AnEnum -> showsPrec 9 evValue ""
-            ABitmask -> printf "0x%08x" evValue
+        AnEnum   -> showsPrec 9 evValue ""
+        ABitmask -> printf "0x%08x" evValue
   pure
-    ( "pattern"
-    <+> pretty n
-    <+> "="
-    <+> pretty conName
-    <+> pretty v
+    ( \getDoc -> vsep
+      [ getDoc (Nested eName evName)
+      , "pattern" <+> pretty n <+> "=" <+> pretty conName <+> pretty v
+      ]
     , EPat n
     )
 

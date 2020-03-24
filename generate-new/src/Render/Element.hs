@@ -18,6 +18,7 @@ module Render.Element
   , UnionDiscriminator(..)
   , ModName(..)
   , tellDoc
+  , tellDocWithHaddock
   , tellBoot
   , identicalBoot
   , tellExport
@@ -75,6 +76,7 @@ import           CType
 import           Render.Type.Preserve
 import           Spec.Name
 import {-# SOURCE #-} Render.Stmts
+import           Documentation
 
 -- It would be nice to distinguish the type of render element and boot to
 -- prevent nesting, however without the polysemy plugin (doesn't work for me in
@@ -82,7 +84,7 @@ import {-# SOURCE #-} Render.Stmts
 data RenderElement = RenderElement
   { reName              :: Text
   , reBoot              :: Maybe RenderElement
-  , reDoc               :: Doc ()
+  , reDoc               :: (Documentee -> Doc ()) -> Doc ()
   , reExports           :: Vector Export
   , reInternal          :: Vector Export
     -- ^ Things which can only be "imported" from the same module, i.e.
@@ -90,7 +92,7 @@ data RenderElement = RenderElement
   , reImports           :: Set (Import Name)
   , reLocalImports      :: Set (Import HName)
   , reReexportedModules :: Set ModName
-  , reReexportedNames   :: Vector (Export)
+  , reReexportedNames   :: Vector Export
   , reExplicitModule    :: Maybe ModName
   }
 
@@ -118,13 +120,13 @@ data Import n = Import
   deriving (Show, Eq, Ord)
 
 newtype ModName = ModName { unModName :: Text }
-  deriving (Eq, Ord, Show)
+  deriving (Eq, Ord, Show, Pretty)
 
 instance Semigroup RenderElement where
   r1 <> r2 = RenderElement
     { reName              = reName r1 <> " and " <> reName r2
     , reBoot              = reBoot r1 <> reBoot r2
-    , reDoc               = reDoc r1 <> line <> reDoc r2
+    , reDoc               = \h -> reDoc r1 h <> line <> reDoc r2 h
     , reExports           = reExports r1 <> reExports r2
     , reInternal          = reInternal r1 <> reInternal r2
     , reImports           = reImports r1 <> reImports r2
@@ -308,11 +310,10 @@ initState n = RenderElement { reName              = n
                             }
 
 tellExplicitModule :: (HasRenderElem r, HasErr r) => ModName -> Sem r ()
-tellExplicitModule mod = do
-  gets reExplicitModule >>= \case
-    Nothing -> modify' (\r -> r { reExplicitModule = Just mod })
-    Just m | m == mod -> pure ()
-    _ -> throw "Render element has been given two explicit modules"
+tellExplicitModule mod = gets reExplicitModule >>= \case
+  Nothing -> modify' (\r -> r { reExplicitModule = Just mod })
+  Just m | m == mod -> pure ()
+  _ -> throw "Render element has been given two explicit modules"
 
 tellExport :: MemberWithError (State RenderElement) r => Export -> Sem r ()
 tellExport e = modify' (\r -> r { reExports = reExports r <> V.singleton e })
@@ -332,7 +333,14 @@ tellInternal e =
   modify' (\r -> r { reInternal = reInternal r <> V.singleton e })
 
 tellDoc :: MemberWithError (State RenderElement) r => Doc () -> Sem r ()
-tellDoc d = modify' (\r -> r { reDoc = reDoc r <> hardline <> d })
+tellDoc d = modify' (\r -> r { reDoc = \h -> reDoc r h <> hardline <> d })
+
+tellDocWithHaddock
+  :: MemberWithError (State RenderElement) r
+  => ((Documentee -> Doc ()) -> Doc ())
+  -> Sem r ()
+tellDocWithHaddock d =
+  modify' (\r -> r { reDoc = \h -> reDoc r h <> hardline <> d h })
 
 class Importable a where
   addImport

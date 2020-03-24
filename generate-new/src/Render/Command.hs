@@ -13,9 +13,7 @@ import           Relude                  hiding ( Reader
                                                 )
 import           Data.Text.Prettyprint.Doc
 import           Data.Text.Extra                ( upperCaseFirst )
-import           Language.Haskell.TH.Syntax     ( nameBase
-                                                , TyVarBndr(..)
-                                                )
+import           Language.Haskell.TH.Syntax     ( nameBase )
 import           Data.List.Extra                ( nubOrd )
 import           Polysemy
 import           Polysemy.Reader
@@ -49,6 +47,7 @@ import           Render.Scheme
 import           Render.SpecInfo
 import           Render.Type
 import           Spec.Parse
+import           Documentation
 
 renderCommand
   :: ( HasErr r
@@ -254,11 +253,11 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
   tDoc <- renderType =<< constrainStructVariables t
 
 
-  tellDoc
-    . vsep
-    $ [ pretty commandName <+> "::" <+> indent 0 tDoc
-      , pretty commandName <+> sep paramNames <+> "=" <+> rhs
-      ]
+  tellDocWithHaddock $ \getDoc -> vsep
+    [ getDoc (TopLevel (cName mcCommand))
+    , pretty commandName <+> "::" <+> indent 0 tDoc
+    , pretty commandName <+> sep paramNames <+> "=" <+> rhs
+    ]
 
 ----------------------------------------------------------------
 -- Checking the result and throwing an exception if something went wrong

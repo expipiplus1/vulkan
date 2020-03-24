@@ -47,6 +47,8 @@ import           Write.Segment
 import           Spec.Types
 import           Haskell.Name
 import           Bespoke.Seeds
+import           Documentation
+import           Documentation.Haddock
 
 ----------------------------------------------------------------
 -- Segmenting
@@ -112,61 +114,57 @@ renderSegments
      , HasSpecInfo r
      , HasTypeInfo r
      , HasRenderedNames r
+     , HasRenderParams r
      )
-  => FilePath
+  => (Documentee -> Maybe Documentation)
+  -> FilePath
   -> [Segment ModName RenderElement]
   -> Sem r ()
-renderSegments out segments = do
-  let
-    exportMap :: Map.Map HName ModName
-    exportMap = Map.fromList
-      [ (n, m)
-      | Segment m rs <- segments
-      , r            <- toList rs
-      , e            <- toList (reExports r)
-      , n <- exportName e : (exportName <$> V.toList (exportWith e))
-      ]
-    findLocalModule :: HasErr r => Import HName -> Sem r ModName
-    findLocalModule (Import n _ _ _ _) =
-      maybe (throw ("Unable to find import " <> show n)) pure
-        $ Map.lookup n exportMap
-    findModule :: HasErr r => Import Name -> Sem r ModName
-    findModule (Import n _ _ _ _) = maybe
-      (throw ("Unable to find import " <> show n))
-      pure
-      (ModName . T.pack <$> nameModule n)
+renderSegments getDoc out segments = do
+  let exportMap :: Map.Map HName ModName
+      exportMap = Map.fromList
+        [ (n, m)
+        | Segment m rs <- segments
+        , r            <- toList rs
+        , e            <- toList (reExports r)
+        , n <- exportName e : (exportName <$> V.toList (exportWith e))
+        ]
+      findLocalModule :: HName -> Maybe ModName
+      findLocalModule n = Map.lookup n exportMap
+      findModule :: Name -> Maybe ModName
+      findModule n = ModName . T.pack <$> nameModule n
 
-    --
-    -- Boot module handling
-    -- TODO, move this checking elsewhere
-    --
-    allBootSegments :: [Segment ModName RenderElement]
-    allBootSegments =
-      Relude.filter (\(Segment _ es) -> not (V.null es))
-        $   segments
-        <&> \(Segment m es) -> Segment m (V.mapMaybe reBoot es)
+      --
+      -- Boot module handling
+      -- TODO, move this checking elsewhere
+      --
+      allBootSegments :: [Segment ModName RenderElement]
+      allBootSegments =
+        Relude.filter (\(Segment _ es) -> not (V.null es))
+          $   segments
+          <&> \(Segment m es) -> Segment m (V.mapMaybe reBoot es)
 
-    findBootElems :: HName -> Sem r (ModName, RenderElement)
-    findBootElems =
-      let bootElemMap :: Map HName (ModName, RenderElement)
-          bootElemMap = Map.fromList
-            [ (n, (m, re))
-            | Segment m res <- allBootSegments
-            , re            <- toList res
-            , e             <- toList (reExports re)
-            , n <- exportName e : (exportName <$> V.toList (exportWith e))
-            ]
-      in  \n ->
-            note @r ("Unable to find boot element for " <> show n)
-              $ Map.lookup n bootElemMap
+      findBootElems :: HName -> Sem r (ModName, RenderElement)
+      findBootElems =
+        let bootElemMap :: Map HName (ModName, RenderElement)
+            bootElemMap = Map.fromList
+              [ (n, (m, re))
+              | Segment m res <- allBootSegments
+              , re            <- toList res
+              , e             <- toList (reExports re)
+              , n <- exportName e : (exportName <$> V.toList (exportWith e))
+              ]
+        in  \n ->
+              note @r ("Unable to find boot element for " <> show n)
+                $ Map.lookup n bootElemMap
 
-    sourceImportNames = nubOrd
-      [ n
-      | Segment _ res <- segments
-      , re            <- toList res
-      , Import { importName = n, importSource = True } <- toList
-        (reLocalImports re <> maybe mempty reLocalImports (reBoot re))
-      ]
+      sourceImportNames = nubOrd
+        [ n
+        | Segment _ res <- segments
+        , re            <- toList res
+        , Import { importName = n, importSource = True } <- toList
+          (reLocalImports re <> maybe mempty reLocalImports (reBoot re))
+        ]
 
   -- TODO: do this segmentation properly, nubbing here is nasty
   requiredBootElements <-
@@ -181,8 +179,8 @@ renderSegments out segments = do
   --
   -- Write the files
   --
-  traverseV_ (renderModule out False findModule findLocalModule) segments
-  traverseV_ (renderModule out True findModule findLocalModule)
+  traverseV_ (renderModule out False getDoc findModule findLocalModule) segments
+  traverseV_ (renderModule out True getDoc findModule findLocalModule)
              requiredBootSegments
 
 renderModule
@@ -191,20 +189,26 @@ renderModule
      , HasSpecInfo r
      , HasTypeInfo r
      , HasRenderedNames r
+     , HasRenderParams r
      )
   => FilePath
   -- ^ out directory
   -> Bool
   -- ^ Is a boot file
-  -> (Import Name -> Sem r ModName)
-  -> (Import HName -> Sem r ModName)
+  -> (Documentee -> Maybe Documentation)
+  -> (Name -> Maybe ModName)
+  -> (HName -> Maybe ModName)
   -> Segment ModName RenderElement
   -> Sem r ()
-renderModule out boot findModule findLocalModule (Segment (ModName modName) es)
-  = do
+renderModule out boot getDoc findModule findLocalModule (Segment modName es) =
+  do
+    RenderParams {..} <- ask
     let
       ext = bool ".hs" ".hs-boot" boot
-      f = toString (out <> "/" <> T.unpack (T.replace "." "/" modName <> ext))
+      f =
+        toString
+          (out <> "/" <> T.unpack (T.replace "." "/" (unModName modName) <> ext)
+          )
       openImports = vsep
         ( fmap (\(ModName n) -> "import" <+> pretty n)
         . Set.toList
@@ -216,8 +220,12 @@ renderModule out boot findModule findLocalModule (Segment (ModName modName) es)
         es
       importFilter =
         Relude.filter (\(Import n _ _ _ _) -> n `V.notElem` declaredNames)
+      findModule' n =
+        note ("Unable to find module for " <> show n) (findModule n)
+      findLocalModule' n =
+        note ("Unable to find module for " <> show n) (findLocalModule n)
     imports <- vsep <$> traverseV
-      (renderImport findModule (T.pack . nameBase) thNameNamespace id)
+      (renderImport findModule' (T.pack . nameBase) thNameNamespace id)
       ( mapMaybe
           (\i -> do
             n <- if V.null (importChildren i)
@@ -234,9 +242,27 @@ renderModule out boot findModule findLocalModule (Segment (ModName modName) es)
     resolveAlias    <- getResolveAlias
     parentedImports <- traverse adoptConstructors allLocalImports
     localImports    <- vsep <$> traverseV
-      (renderImport findLocalModule unName nameNameSpace resolveAlias)
+      (renderImport findLocalModule' unName nameNameSpace resolveAlias)
       (importFilter parentedImports)
     let
+      locate :: CName -> DocumenteeLocation
+      locate n =
+        let names = [mkTyName n, mkFunName n, mkPatternName n]
+        in  case asum ((\n -> (n, ) <$> findLocalModule n) <$> names) of
+              Just (n, m) | m == modName -> ThisModule n
+              Just (n, m)                -> OtherModule m n
+              Nothing                    -> Unknown
+
+      getDocumentation :: Documentee -> Doc ()
+      getDocumentation target = case getDoc target of
+        Nothing -> "-- No documentation found for" <+> viaShow target
+        Just d  -> case documentationToHaddock locate d of
+          Left e ->
+            "-- Error getting documentation for"
+              <+> viaShow target
+              <>  ":"
+              <+> viaShow e
+          Right (Haddock t) -> commentNoWrap t
       allReexports =
         V.fromList
           . Set.toList
@@ -263,7 +289,7 @@ renderModule out boot findModule findLocalModule (Segment (ModName modName) es)
           : openImports
           : imports
           : localImports
-          : V.toList (reDoc <$> es)
+          : V.toList (($ getDocumentation) . reDoc <$> es)
     liftIO $ createDirectoryIfMissing True (takeDirectory f)
     liftIO $ withFile f WriteMode $ \h -> T.hPutStr h $ renderStrict
       (layoutPretty defaultLayoutOptions { layoutPageWidth = Unbounded }
@@ -278,7 +304,7 @@ allExports =
 -- import the constructors with the resolved name.
 renderImport
   :: (HasErr r, HasSpecInfo r, Eq a)
-  => (Import a -> Sem r ModName)
+  => (a -> Sem r ModName)
   -> (a -> Text)
   -> (a -> NameSpace)
   -> (a -> a)
@@ -304,14 +330,14 @@ renderImport findModule getName getNameSpace resolveAlias i =
 
 renderImport'
   :: (HasErr r, HasSpecInfo r, Eq a)
-  => (Import a -> Sem r ModName)
+  => (a -> Sem r ModName)
   -> (a -> Text)
   -> (a -> NameSpace)
   -> Import a
   -> Sem r (Doc ())
-renderImport' findModule getName getNameSpace i@(Import n qual children withAll source)
+renderImport' findModule getName getNameSpace (Import n qual children withAll source)
   = do
-    ModName mod' <- findModule i
+    ModName mod' <- findModule n
     let sourceDoc   = bool "" " {-# SOURCE #-}" source
         qualDoc     = bool "" " qualified" qual
         base        = getName n

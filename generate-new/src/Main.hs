@@ -66,7 +66,7 @@ main =
     specText <- timeItNamed "Reading spec"
       $ readFileBS "./Vulkan-Docs/xml/vk.xml"
 
-    document <- liftIO
+    getDocumentation <- liftIO
       $ loadAllDocumentation [] "./Vulkan-Docs" "./Vulkan-Docs/man"
 
     (spec@Spec {..}, getSize) <- timeItNamed "Parsing spec" $ parseSpec specText
@@ -146,7 +146,8 @@ main =
             $   assignModules spec
             =<< assignBespokeModules renderElements
 
-          timeItNamed "writing" $ renderSegments "out" (mergeElements groups)
+          timeItNamed "writing"
+            $ renderSegments getDocumentation "out" (mergeElements groups)
 
 ----------------------------------------------------------------
 -- Render Params
