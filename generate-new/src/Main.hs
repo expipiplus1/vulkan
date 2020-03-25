@@ -26,6 +26,7 @@ import           Data.Text.Extra                ( lowerCaseFirst
                                                 )
 import           Data.Text.Prettyprint.Doc      ( pretty )
 import           Language.Haskell.TH            ( nameBase )
+import           Data.Version
 
 import           Foreign.C.Types
 import           Foreign.Ptr
@@ -66,10 +67,21 @@ main =
     specText <- timeItNamed "Reading spec"
       $ readFileBS "./Vulkan-Docs/xml/vk.xml"
 
-    getDocumentation <- liftIO
-      $ loadAllDocumentation [] "./Vulkan-Docs" "./Vulkan-Docs/man"
-
     (spec@Spec {..}, getSize) <- timeItNamed "Parsing spec" $ parseSpec specText
+
+    let allExtensionNames =
+          toList (exName <$> specExtensions)
+            <> [ "VK_VERSION_" <> show major <> "_" <> show minor
+               | Feature {..}      <- toList specFeatures
+               , major : minor : _ <- pure $ versionBranch fVersion
+               ]
+        doLoadDocs = True
+    getDocumentation <- if doLoadDocs
+      then liftIO $ loadAllDocumentation allExtensionNames
+                                         "./Vulkan-Docs"
+                                         "./Vulkan-Docs/man"
+      else pure (const Nothing)
+
 
     runReader (renderParams specHandles)
       . withRenderedNames spec
@@ -139,7 +151,7 @@ main =
           renderElements <-
             timeItNamed "Rendering"
             $   traverse evaluateWHNF
-            =<< renderSpec spec ss us cs
+            =<< renderSpec spec getDocumentation ss us cs
 
           groups <-
             timeItNamed "Segmenting"

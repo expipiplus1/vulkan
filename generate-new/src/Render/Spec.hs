@@ -33,8 +33,8 @@ import           Render.Struct
 import           Render.Union
 import           Render.VkException
 import           Spec.Parse
-
 import           CType
+import           Documentation
 
 data RenderedSpec a = RenderedSpec
   { rsHandles            :: Vector a
@@ -58,11 +58,12 @@ renderSpec
      , HasRenderedNames r
      )
   => Spec
+  -> (Documentee -> Maybe Documentation)
   -> Vector (MarshaledStruct AStruct)
   -> Vector (MarshaledStruct AUnion)
   -> Vector MarshaledCommand
   -> Sem r (RenderedSpec RenderElement)
-renderSpec spec@Spec {..} ss us cs = do
+renderSpec spec@Spec {..} getDoc ss us cs = do
   RenderParams {..} <- ask
 
   -- TODO: neaten
@@ -113,7 +114,7 @@ renderSpec spec@Spec {..} ss us cs = do
                              <> cStructDocs
                              <> V.singleton marshalUtils
                              <> V.singleton zeroClass
-                             <> V.singleton (vkExceptionRenderElement vkResult)
+                             <> V.singleton (vkExceptionRenderElement getDoc vkResult)
                              <> specVersions spec
                              <> V.singleton (structExtends spec)
     }

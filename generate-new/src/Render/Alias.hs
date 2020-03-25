@@ -27,7 +27,11 @@ renderAlias Alias {..} = context (unCName aName) $ do
       tellImport t
       let syn :: forall r . HasRenderElem r => Sem r ()
           syn = do
-            tellDoc $ "type" <+> pretty n <+> "=" <+> pretty t
+            tellDocWithHaddock $ \getDoc ->
+              vsep
+                [ getDoc (TopLevel aName)
+                , "type" <+> pretty n <+> "=" <+> pretty t
+                ]
             tellExport (EType n)
       syn
       tellBoot $ do
@@ -38,11 +42,13 @@ renderAlias Alias {..} = context (unCName aName) $ do
           t = mkFunName aTarget
       tellExport (ETerm n)
       tellImport t
-      -- tellDoc $ pretty n <+> "=" <+> pretty t
-      tellDoc $ pretty n <+> "=" <+> "error \"TODO command aliases type sigs\""
+      tellDocWithHaddock $ \getDoc ->
+        vsep [getDoc (TopLevel aName), pretty n <+> "=" <+> pretty t]
     PatternAlias -> do
       let n = mkPatternName aName
           t = mkPatternName aTarget
       tellExport (EPat n)
       tellImport t
-      tellDoc $ "pattern" <+> pretty n <+> "=" <+> pretty t
+      tellDocWithHaddock $ \getDoc ->
+        vsep
+          [getDoc (TopLevel aName), "pattern" <+> pretty n <+> "=" <+> pretty t]

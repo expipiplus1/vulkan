@@ -266,10 +266,10 @@ wrappedStruct name toType fromName valueRef = case toType of
         .   ValueDoc
         $   "ContT @_ @_ @"
         <>  unextendedTDoc
-        <+> "$ \\f -> withSomeCStruct @"
+        <+> "$ \\cont -> withSomeCStruct @"
         <>  headTDoc
         <+> val
-        <+> "(f . castPtr)"
+        <+> "(cont . castPtr)"
   _ -> throw $ "Unhandled WrappedStruct conversion to " <> show toType
 
 elidedLength

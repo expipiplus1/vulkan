@@ -47,7 +47,6 @@ import           Render.Scheme
 import           Render.SpecInfo
 import           Render.Type
 import           Spec.Parse
-import           Documentation
 
 renderCommand
   :: ( HasErr r
@@ -436,11 +435,11 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
 
 
   tDoc <- renderType =<< constrainStructVariables commandType
-  tellDoc
-    . vsep
-    $ [ pretty commandName <+> "::" <+> indent 0 tDoc
-      , pretty commandName <+> sep paramNames <+> "=" <+> rhs
-      ]
+  tellDocWithHaddock $ \getDoc -> vsep
+    [ getDoc (TopLevel (cName mcCommand))
+    , pretty commandName <+> "::" <+> indent 0 tDoc
+    , pretty commandName <+> sep paramNames <+> "=" <+> rhs
+    ]
 
 pokesForGettingCount
   :: ( HasErr r

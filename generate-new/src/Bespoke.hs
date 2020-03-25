@@ -478,7 +478,8 @@ baseType n t = fmap identicalBoot . genRe ("base type " <> unCName n) $ do
   tellExplicitModule (ModName "Graphics.Vulkan.BaseType")
   tellExport (EType n')
   tDoc <- renderType (ConT t)
-  tellDoc ("type" <+> pretty n' <+> "=" <+> tDoc)
+  tellDocWithHaddock $ \getDoc ->
+    vsep [getDoc (TopLevel n), "type" <+> pretty n' <+> "=" <+> tDoc]
 
 ----------------------------------------------------------------
 -- Base Vulkan stuff

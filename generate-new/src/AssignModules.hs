@@ -237,11 +237,6 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
   ----------------------------------------------------------------
   forFeaturesAndExtensions $ \_ modname isFeature ReqDeps {..} _ -> do
     let directExporters = commands <> types <> bool mempty enumValues isFeature
-    when
-        (modname == ModName
-          "Graphics.Vulkan.Extensions.VK_KHR_external_semaphore_capabilities"
-        )
-      $ traceShowM (_elemName <$> types)
     forV_ directExporters $ export modname
 
   ----------------------------------------------------------------
@@ -276,10 +271,13 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
           PatternAlias -> mkPatternName
     i <- getExporter (mkName aName)
     j <- getExporter (mkName aTarget)
+    -- gets @S (IntMap.lookup i) >>= \case
+    --   Just _  -> pure ()
+    --   Nothing ->
     gets @S (IntMap.lookup j) >>= \case
-      Just (ExportLocation jMod _) ->
-        modify' (IntMap.insert i (ExportLocation jMod []))
-      Nothing -> pure ()
+        Just (ExportLocation jMod _) ->
+          modify' (IntMap.insert i (ExportLocation jMod []))
+        Nothing -> pure ()
 
 firstTypeName :: HasErr r => RenderElement -> Sem r Text
 firstTypeName re =

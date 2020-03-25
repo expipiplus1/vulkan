@@ -17,6 +17,7 @@ import           System.Console.AsciiProgress   ( Options(..)
                                                 , newProgressBar
                                                 , tick
                                                 )
+import           GHC.Conc                       ( numCapabilities )
 
 import           Documentation
 import           Documentation.RunAsciiDoctor
@@ -39,7 +40,7 @@ loadAllDocumentation extensions vkDocs manDir = do
     .   filter (".txt" `List.isSuffixOf`)
     <$> listDirectory manDir
   let numDocumentationThreads :: Int
-      numDocumentationThreads = 16
+      numDocumentationThreads = numCapabilities
   sayErr
     $   "Loading Documentation with"
     <+> show numDocumentationThreads

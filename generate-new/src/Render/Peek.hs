@@ -225,10 +225,10 @@ normalPeek name addrRef to fromPtr =
   inlineStruct = failToNonDet $ do
     Ptr _ from@(TypeName n) <- pure fromPtr
     guard (from == to)
-    Just s <- getStruct n
+    Just _ <- getStruct n
     ty     <- cToHsTypeWithHoles DoPreserve from
     raise2 $ stmtC (Just ty) name $ do
-      tDoc <- renderTypeHighPrec ty
+      tDoc         <- renderTypeHighPrec ty
       AddrDoc addr <- use addrRef
       tellImportWithAll (TyConName "FromCStruct")
       pure $ IOAction (ValueDoc ("peekCStruct @" <> tDoc <+> addr))

@@ -44,7 +44,6 @@ import           Render.Utils
 import           Render.Names
 import           Spec.Parse
 import           Bespoke
-import           Documentation
 
 renderStruct
   :: ( HasErr r
@@ -139,12 +138,23 @@ renderExtensibleInstance MarshaledStruct {..} = do
         then ConT (typeName (mkTyName childName))
         else ConT (typeName (mkTyName childName)) :@ PromotedNilT
       pure $ "| Just Refl <- eqT @e @" <> childTDoc <+> "= Just f"
-    let noMatch = "| otherwise = Nothing"
-        cases   = toList matches ++ [noMatch]
+    let
+      noMatch = "| otherwise = Nothing"
+      cases   = toList matches ++ [noMatch]
+      structTypes =
+        [ v
+        | MarshaledStructMember { msmStructMember = StructMember { smName = "sType" }, msmScheme = ElidedUnivalued v } <-
+          toList msMembers
+        ]
+    structType <- case structTypes of
+      []  -> throw "Unable to find type enum of extensible struct"
+      [v] -> pure v
+      vs  -> throw $ "Found multiple struct type enums " <> show vs
     tellDoc $ "instance Extensible" <+> pretty n <+> "where" <> line <> indent
       2
       (vsep
-        [ "setNext x next = x{next = next}"
+        [ "extensibleType =" <+> pretty (mkPatternName (CName structType))
+        , "setNext x next = x{next = next}"
         , "getNext" <+> pretty con <> "{..} = next"
         , "extends :: forall e b proxy. Typeable e => proxy e -> (Extends"
         <+> pretty n
@@ -287,9 +297,11 @@ fromCStructInstance m@MarshaledStruct {..} = do
   peekStmts <- peekCStructBody m
   stub      <- fromCStructInstanceStub tellImport msStruct
   tellBoot $ tellDoc =<< fromCStructInstanceStub tellSourceImport msStruct
+  let addrVar' =
+        if V.all (isElided . msmScheme) msMembers then "_" else addrVar
   tellDoc $ (stub <+> "where") <> line <> indent
     2
-    (vsep ["peekCStruct" <+> pretty addrVar <+> "=" <+> peekStmts])
+    (vsep ["peekCStruct" <+> pretty addrVar' <+> "=" <+> peekStmts])
 
 fromCStructFunction
   :: ( HasErr r
@@ -419,9 +431,10 @@ pokeZeroCStructDecl ms@MarshaledStruct {..} = do
     IOStmts d -> pure d
 
   let Struct {..} = msStruct
+  addrVar' <- bool "_" addrVar . V.any isJust <$> forV msMembers zeroMemberVal
   pure
     $   "pokeZeroCStruct"
-    <+> pretty addrVar
+    <+> pretty addrVar'
     <+> pretty contVar
     <+> "="
     <+> pokeDoc
@@ -512,7 +525,7 @@ memberVal
   => MarshaledStructMember
   -> Doc ()
   -> Stmt s r (Ref s ValueDoc)
-memberVal m@MarshaledStructMember {..} doc = do
+memberVal MarshaledStructMember {..} doc = do
   ty <- schemeType msmScheme
   v  <-
     stmt ty (Just . unCName . smName $ msmStructMember)

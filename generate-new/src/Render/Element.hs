@@ -17,6 +17,7 @@ module Render.Element
   , IdiomaticTypeTo(..)
   , UnionDiscriminator(..)
   , ModName(..)
+  , Documentee(..)
   , tellDoc
   , tellDocWithHaddock
   , tellBoot

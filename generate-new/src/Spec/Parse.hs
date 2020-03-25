@@ -74,7 +74,7 @@ parseSpec bs = do
         specCommands      <- parseCommands . contents =<< oneChild "commands" n
         emptyBitmasks     <- parseEmptyBitmasks types
         nonEmptyEnums     <- parseEnums . contents $ n
-        requires          <- allRequires . contents $ n
+        requires          <- allRequires NotDisabled . contents $ n
         enumExtensions    <- parseEnumExtensions requires
         constantAliases   <- parseConstantAliases (contents n)
         bitmaskAliases    <- parseBitmaskAliases types
@@ -724,8 +724,8 @@ reservedTypeNames = ["void", "char", "int", "float", "double"]
 -- Helpers
 ----------------------------------------------------------------
 
-allRequires :: [Content] -> P (Vector (Node, Maybe Int))
-allRequires es =
+allRequires :: ParseDisabled -> [Content] -> P (Vector (Node, Maybe Int))
+allRequires parseDisabled es =
   fmap V.fromList
     .  sequenceV
     $  [ pure (r, Nothing)
@@ -741,6 +741,7 @@ allRequires es =
        , "extensions" == name e
        , Element ex <- contents e
        , "extension" == name ex
+       , disabled parseDisabled ex
        , Element r <- contents ex
        , "require" == name r
        ]

@@ -20,6 +20,9 @@ import           Control.Monad.Trans.Cont       ( ContT
 import           Foreign.Ptr
 import           Foreign.Storable
 import           GHC.TypeLits
+import           GHC.IO.Exception
+import           Control.Exception              ( throwIO )
+import           Type.Reflection
 
 import           Error
 import           CType
@@ -109,6 +112,11 @@ classes Spec {..} = do
   tellImportWithAll ''ContT
   tellImportWith ''Storable 'peek
   tellImportWith ''Storable 'poke
+  tellImport 'throwIO
+  tellImportWithAll ''IOException
+  tellImportWithAll ''IOErrorType
+  tellImport 'typeRep
+  tellImport 'fromMaybe
   peekChainCases <- fmap (V.mapMaybe id) . forV specStructs $ \Struct {..} ->
     if V.null sExtends
       then pure Nothing
@@ -179,9 +187,9 @@ classes Spec {..} = do
       => Ptr (SomeStruct a)
       -> IO (SomeStruct a)
     peekSomeCStruct p = do
-      head  <- peekCStruct (castPtr @_ @(a '[]) p)
+      head'  <- peekCStruct (castPtr @_ @(a '[]) p)
       pNext <- peek @(Ptr BaseOutStructure) (p `plusPtr` 8)
-      peekSomeChain @a pNext $ \\tail -> SomeStruct (setNext head tail)
+      peekSomeChain @a pNext $ \\tail' -> SomeStruct (setNext head' tail')
 
     peekSomeChain
       :: forall
@@ -202,8 +210,8 @@ classes Spec {..} = do
         join
           $ peekChainHead @a (sType (baseOut :: BaseOutStructure))
                              (castPtr @BaseOutStructure @() p)
-          $ \\head -> peekSomeChain @a (next (baseOut :: BaseOutStructure))
-                                      (\\tail -> c (head, tail))
+          $ \\head' -> peekSomeChain @a (next (baseOut :: BaseOutStructure))
+                                      (\\tail' -> c (head', tail'))
 
 
     peekChainHead
@@ -215,17 +223,30 @@ classes Spec {..} = do
       -> IO b
     peekChainHead ty p c = case ty of
     {indent 2 (vsep (toList peekChainCases))}
+      t -> throwIO $ IOError Nothing InvalidArgument "peekChainHead" ("Unrecognized struct type: " <> show t) Nothing Nothing
      where
       go :: forall e . (Typeable e, FromCStruct e, ToCStruct e, Show e) => IO b
       go =
         let r = extends @a @e Proxy $ do
-              head <- peekCStruct @e (castPtr p)
-              pure $ c head
-        in  case r of
-              Nothing -> error "bad extends"
-              Just r  -> r
+              head' <- peekCStruct @e (castPtr p)
+              pure $ c head'
+        in  fromMaybe
+              (throwIO $ IOError
+                Nothing
+                InvalidArgument
+                "peekChainHead"
+                (  "Illegal struct extension of "
+                <> show (extensibleType @a)
+                <> " with "
+                <> show ty
+                )
+                Nothing
+                Nothing
+              )
+              r
 
     class Extensible (a :: [Type] -> Type) where
+      extensibleType :: StructureType
       getNext :: a es -> Chain es
       setNext :: a ds -> Chain es -> a es
       extends :: forall e b proxy. Typeable e => proxy e -> (Extends a e => b) -> Maybe b
@@ -272,5 +293,5 @@ classes Spec {..} = do
         pure (h, t)
 
     linkChain :: Ptr a -> Ptr b -> IO ()
-    linkChain head tail = poke (head `plusPtr` 8) tail
+    linkChain head' tail' = poke (head' `plusPtr` 8) tail'
   |]

@@ -4,5 +4,6 @@ module Spec.Name
 import           Relude
 
 newtype CName = CName { unCName :: Text }
-  deriving (Show, Eq, Ord, IsString, Hashable)
+  deriving stock (Eq, Ord)
+  deriving newtype (Show, IsString, Hashable)
 

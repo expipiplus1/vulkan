@@ -32,13 +32,15 @@ let
             rev = "72dc96fbd13dba6d8e9767253b7298e00a781bee";
             sha256 = "09b1n71gjmhf4ggx2wlywxm11jl3qbmhnlmmchj8pyy3hczl6hb5";
           })) { };
-          polysemy-zoo = dontCheck (self.callCabal2nix "" ((pkgs.fetchFromGitHub {
-            owner = "polysemy-research";
-            repo = "polysemy-zoo";
-            rev = "57c6012e196db7fe1ce7551f1f762cbddc71f095";
-            sha256 = "18smd2c66gdn9585sdkn60ykvdvkbvkxrnnl9zix687dca6h9jw0";
-          })) { });
+          polysemy-zoo = dontCheck (self.callCabal2nix ""
+            ((pkgs.fetchFromGitHub {
+              owner = "polysemy-research";
+              repo = "polysemy-zoo";
+              rev = "57c6012e196db7fe1ce7551f1f762cbddc71f095";
+              sha256 = "18smd2c66gdn9585sdkn60ykvdvkbvkxrnnl9zix687dca6h9jw0";
+            })) { });
           compact = doJailbreak super.compact;
+          pandoc = appendPatch super.pandoc ./patches/pandoc-haddock-tables.patch;
         } // pkgs.lib.optionalAttrs hoogle {
           ghc = super.ghc // { withPackages = super.ghc.withHoogle; };
           ghcWithPackages = self.ghc.withPackages;

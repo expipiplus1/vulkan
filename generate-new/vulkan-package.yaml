@@ -24,6 +24,7 @@ library:
     - -Wno-missing-pattern-synonym-signatures
     - -Wno-unused-imports
     - -Wno-missing-signatures
+    - -Wno-partial-type-signatures
 
 flags:
   safe-foreign-calls:
@@ -48,13 +49,17 @@ default-extensions:
   - InstanceSigs
   - LambdaCase
   - MagicHash
+  - NoMonomorphismRestriction
   - OverloadedStrings
+  - PartialTypeSignatures
   - PatternSynonyms
   - PolyKinds
+  - QuantifiedConstraints
   - RankNTypes
   - RecordWildCards
   - RoleAnnotations
   - ScopedTypeVariables
+  - StandaloneDeriving
   - Strict
   - TypeApplications
   - TypeFamilyDependencies

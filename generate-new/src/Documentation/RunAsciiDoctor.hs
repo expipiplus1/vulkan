@@ -5,7 +5,6 @@ module Documentation.RunAsciiDoctor
 
 import           Relude
 import qualified Data.List                     as L
-import           Data.Text
 import qualified Data.Text                     as T
 import qualified Data.Text.Lazy                as T
                                                 ( toStrict )
@@ -15,6 +14,7 @@ import           System.Environment
 import           System.Exit
 import           System.FilePath
 import           System.Process.Typed
+import           System.Directory
 
 -- | Convert a man page from the Vulkan-Docs repo into docbook format using
 -- 'asciidoctor'
@@ -41,9 +41,11 @@ asciidoctor
   -> FilePath
   -- ^ The path to the man page to translate
   -> IO (Either Text Text)
-asciidoctor extensions vkPath manTxt = do
+asciidoctor extensions vkPathRelative manTxt = do
+  vkPath <- makeAbsolute vkPathRelative
   let asciidoctorPath = "asciidoctor"
-      -- This is mimicing the Makefile in Vulkan-Docs
+      -- This is mimicing the Makefile in Vulkan-Docs but generates docbook5
+      -- output.
       extAttribs      = preceedAll "-a" (T.unpack <$> extensions)
       -- TODO: Version information here
       attribOpts =
@@ -54,24 +56,27 @@ asciidoctor extensions vkPath manTxt = do
         , "-a"
         , "generated=" <> vkPath <> "/gen"
         ]
-      noteOpts        = []
+      noteOpts = []
       adocExts =
         [ "-r"
         , vkPath </> "config/spec-macros.rb"
         , "-r"
         , vkPath </> "config/tilde_open_block.rb"
         ]
-      adocOpts         = attribOpts ++ noteOpts ++ adocExts
-      mathemeticalOpts = []
-        -- [ "-r"
-        -- , "asciidoctor-mathematical"
-        -- , "-r"
-        -- , vkPath </> "config/asciidoctor-mathematical-ext.rb"
-        -- , "-a"
-        -- , "mathematical-format=png"
-        -- , "-a"
-        -- , "mathematical-ppi=100"
-        -- ]
+      adocOpts           = attribOpts ++ noteOpts ++ adocExts
+      mathAsInlineImages = False
+      mathemeticalOpts   = if mathAsInlineImages
+        then
+          [ "-r"
+          , "asciidoctor-mathematical"
+          , "-r"
+          , vkPath </> "config/asciidoctor-mathematical-ext.rb"
+          , "-a"
+          , "mathematical-format=png"
+          , "-a"
+          , "mathematical-ppi=100"
+          ]
+        else []
       args =
         attribOpts
           ++ extAttribs

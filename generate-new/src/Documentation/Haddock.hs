@@ -95,4 +95,4 @@ fixLinks findDocs = topDown fixInlines
 
 externalSpecHTML :: Text
 externalSpecHTML =
-  "https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html"
+  "https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html"
