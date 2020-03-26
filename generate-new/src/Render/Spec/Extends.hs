@@ -38,6 +38,7 @@ structExtends
   -> Sem r RenderElement
 structExtends spec = genRe "Extends type family" $ do
   tellExplicitModule (ModName "Graphics.Vulkan.CStruct.Extends")
+  tellNotReexportable
   typeFamily spec
   classes spec
 

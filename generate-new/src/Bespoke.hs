@@ -86,7 +86,7 @@ assignBespokeModules es = do
 bespokeModules :: HasRenderParams r => Sem r [(HName, ModName)]
 bespokeModules = do
   RenderParams {..} <- ask
-  let core10Base n = (mkTyName n, ModName "Graphics.Vulkan.Core10.BaseType")
+  let core10Base n = (mkTyName n, ModName "Graphics.Vulkan.Core10.SharedTypes")
   pure
     $  [ ( mkTyName "VkAllocationCallbacks"
          , ModName "Graphics.Vulkan.Core10.AllocationCallbacks"
@@ -108,6 +108,12 @@ bespokeModules = do
            , "VkClearValue"
            , "VkClearColorValue"
            , "VkClearDepthStencilValue"
+           ]
+       )
+    <> (   (, ModName "Graphics.Vulkan.Core10.BaseType")
+       <$> [ mkTyName "VkBool32"
+           , TermName "boolToBool32"
+           , TermName "bool32ToBool"
            ]
        )
 
@@ -202,6 +208,7 @@ wsiScheme :: BespokeScheme
 wsiScheme = BespokeScheme $ const $ \case
   a | t@(Ptr _ (TypeName "xcb_connection_t")) <- type' a -> Just (Normal t)
   a | t@(Ptr _ (TypeName "wl_display")) <- type' a -> Just (Normal t)
+  a | t@(Ptr _ (TypeName "Display")) <- type' a -> Just (Normal t)
   _ -> Nothing
 
 -- So we render the dual purpose command properly
@@ -449,9 +456,31 @@ bespokeElements =
        , baseType "VkFlags"         ''Word32
        , baseType "VkDeviceSize"    ''Word64
        , baseType "VkDeviceAddress" ''Word64
+       , nullHandle
+       , boolConversion
        ]
-    <> [nullHandle]
     <> wsiTypes
+
+boolConversion :: HasRenderParams r => Sem r RenderElement
+boolConversion = genRe "Bool conversion" $ do
+  RenderParams {..} <- ask
+  tellNotReexportable
+  let true   = mkPatternName "VK_TRUE"
+      false  = mkPatternName "VK_FALSE"
+      bool32 = mkTyName "VkBool32"
+  tellExport (ETerm (TermName "boolToBool32"))
+  tellExport (ETerm (TermName "bool32ToBool"))
+  tellImport 'bool
+  tellDoc [qqi|
+    boolToBool32 :: Bool -> {bool32}
+    boolToBool32 = bool {false} {true}
+
+    bool32ToBool :: {bool32} -> Bool
+    bool32ToBool = \\case
+      {false} -> False
+      {true}  -> True
+  |]
+
 
 wsiTypes :: (HasErr r, Member (Reader RenderParams) r) => [Sem r RenderElement]
 wsiTypes =
@@ -467,6 +496,7 @@ wsiTypes =
 namedType :: HasErr r => Sem r RenderElement
 namedType = genRe "namedType" $ do
   tellExplicitModule (ModName "Graphics.Vulkan.NamedType")
+  tellNotReexportable
   tellExport (EType (TyConName ":::"))
   tellDoc "-- | Annotate a type with a name\ntype (name :: k) ::: a = a"
 
@@ -475,7 +505,7 @@ baseType
 baseType n t = fmap identicalBoot . genRe ("base type " <> unCName n) $ do
   RenderParams {..} <- ask
   let n' = mkTyName n
-  tellExplicitModule (ModName "Graphics.Vulkan.BaseType")
+  tellExplicitModule (ModName "Graphics.Vulkan.Core10.BaseType")
   tellExport (EType n')
   tDoc <- renderType (ConT t)
   tellDocWithHaddock $ \getDoc ->

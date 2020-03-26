@@ -55,9 +55,9 @@ withSpecInfo Spec {..} siTypeSize r = do
     siIsDisabledCommand =
       let disabledCommandNames = Set.fromList
             [ c
-            | Extension { ..} <- toList (specDisabledExtensions)
-            , Require {..} <- toList exRequires
-            , c            <- toList rCommandNames
+            | Extension {..} <- toList specDisabledExtensions
+            , Require {..}   <- toList exRequires
+            , c              <- toList rCommandNames
             ]
       in  \n ->
             if Set.member n disabledCommandNames then siIsCommand n else Nothing

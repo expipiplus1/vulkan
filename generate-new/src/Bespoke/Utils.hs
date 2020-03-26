@@ -58,7 +58,8 @@ zeroClass = genRe "zero class" $ do
   traverseV_ tellQualImport [''VSS.Vector, 'VSS.replicate]
 
   tellExport (EClass (TyConName "Zero"))
-  tellExplicitModule (ModName "Graphics.Vulkan.CStruct")
+  tellExplicitModule (ModName "Graphics.Vulkan.Zero")
+  tellNotReexportable
 
   tellDoc [qi|
     -- | A class for initializing things with all zero data
@@ -75,6 +76,9 @@ zeroClass = genRe "zero class" $ do
 
     instance (KnownNat n, Storable a, Zero a) => Zero (Data.Vector.Storable.Sized.Vector n a) where
       zero = Data.Vector.Storable.Sized.replicate zero
+
+    instance Zero Bool where
+      zero = False
 
     instance Zero (FunPtr a) where
       zero = nullFunPtr
@@ -125,6 +129,7 @@ zeroClass = genRe "zero class" $ do
 marshalUtils :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 marshalUtils = genRe "marshal utils" $ do
   tellExplicitModule (ModName "Graphics.Vulkan.CStruct.Utils")
+  tellNotReexportable
   traverseV_ tellImportWithAll [''Proxy, ''CChar]
   traverseV_
     tellImport

@@ -33,3 +33,5 @@ Groups of `lift`ed actions which don't return anything can be grouped under one 
 "vkAllocateCommandBuffers": TODO: allocating vector with member specified lenghts
 vkAllocateDescriptorSets
 
+
+getPhysicalDeviceXlibPresentationSupportKHR -- wrong

@@ -121,16 +121,16 @@ renderSegments
   -> [Segment ModName RenderElement]
   -> Sem r ()
 renderSegments getDoc out segments = do
-  let exportMap :: Map.Map HName ModName
+  let exportMap :: Map.Map HName (Export, ModName)
       exportMap = Map.fromList
-        [ (n, m)
+        [ (n, (e, m))
         | Segment m rs <- segments
         , r            <- toList rs
         , e            <- toList (reExports r)
         , n <- exportName e : (exportName <$> V.toList (exportWith e))
         ]
       findLocalModule :: HName -> Maybe ModName
-      findLocalModule n = Map.lookup n exportMap
+      findLocalModule n = snd <$> Map.lookup n exportMap
       findModule :: Name -> Maybe ModName
       findModule n = ModName . T.pack <$> nameModule n
 
@@ -200,8 +200,11 @@ renderModule
   -> (HName -> Maybe ModName)
   -> Segment ModName RenderElement
   -> Sem r ()
-renderModule out boot getDoc findModule findLocalModule (Segment modName es) =
-  do
+renderModule out boot getDoc findModule findLocalModule (Segment modName unsortedElements)
+  = do
+    -- let exportsType = V.any (isTyConName . exportName) . reExports
+    --     es          = fromList . sortOn exportsType . toList $ unsortedElements
+    let es = unsortedElements
     RenderParams {..} <- ask
     let
       ext = bool ".hs" ".hs-boot" boot
@@ -237,11 +240,22 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName es) =
       . unions
       $ (reImports <$> V.toList es)
       )
-    let allLocalImports =
-          Relude.toList . unions . fmap reLocalImports . V.toList $ es
+    let
+      exportToImport (Export name withAll with _) =
+        Import name False (exportName <$> with) (withAll && V.null with) False
+      allReexportImports =
+        fmap exportToImport
+          . Relude.toList
+          . unions
+          . fmap reReexportedNames
+          . V.toList
+          $ es
+      allLocalImports =
+        Relude.toList . unions . fmap reLocalImports . V.toList $ es
     resolveAlias    <- getResolveAlias
-    parentedImports <- traverse adoptConstructors allLocalImports
-    localImports    <- vsep <$> traverseV
+    parentedImports <- traverse adoptConstructors
+                                (allLocalImports <> allReexportImports)
+    localImports <- vsep <$> traverseV
       (renderImport findLocalModule' unName nameNameSpace resolveAlias)
       (importFilter parentedImports)
     let
@@ -277,12 +291,23 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName es) =
             <+> pretty modName
             <>  indent
                   2
-                  (parenList
-                    (  (exportDoc <$> V.concatMap reExports es)
-                    <> (   (\(ModName m) -> renderExport Module m mempty)
-                       <$> allReexports
+                  (  parenList
+                  $  (fmap exportDoc . nubOrdOnV exportName $ V.concatMap
+                       (\re -> reExports re <> V.fromList
+                         (   (\(Export name withAll with reexportable) -> Export
+                               name
+                               (withAll || not (V.null with))
+                               mempty
+                               reexportable
+                             )
+                         <$> toList (reReexportedNames re)
+                         )
                        )
-                    )
+                       es
+                     )
+                  <> (   (\(ModName m) -> renderExport Module m mempty)
+                     <$> allReexports
+                     )
                   )
             <+> "where"
             )
@@ -367,6 +392,7 @@ fixOddImport n = fromMaybe (Just n) (lookup n fixes)
     , (''Float     , Nothing)
     , (''Double    , Nothing)
     , (''Int       , Nothing)
+    , (''Bool      , Nothing)
     ,
       -- Base
       (''Int8      , Just (mkName "Data.Int.Int8"))
@@ -413,8 +439,11 @@ withTypeInfo Spec {..} a = do
   let
     tyMap :: Map HName HName
     tyMap = Map.fromList
-      [ (mkConName eName evName, mkTyName eName)
-      | Enum {..}      <- V.toList specEnums
+      [ (mkConName eExportedName evName, mkTyName eExportedName)
+      | Enum {..} <- V.toList specEnums
+      , let eExportedName = case eType of
+              AnEnum         -> eName
+              ABitmask flags -> flags
       , EnumValue {..} <- V.toList eValues
       ]
     handleMap :: Map HName Handle
@@ -437,7 +466,9 @@ adoptConstructors = \case
     Nothing -> i
   where getConParent n = asks (`tiConMap` n)
 
-
 ----------------------------------------------------------------
 --
 ----------------------------------------------------------------
+
+nubOrdOnV :: Ord b => (a -> b) -> Vector a -> Vector a
+nubOrdOnV p = fromList . nubOrdOn p . toList

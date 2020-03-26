@@ -217,6 +217,9 @@ data EnumValue = EnumValue
   }
   deriving (Show, Eq, Ord)
 
-data EnumType = AnEnum | ABitmask
+data EnumType
+  = AnEnum
+  | ABitmask CName
+  -- ^ Stores the name of the "Flags" type
   deriving (Show, Eq)
 

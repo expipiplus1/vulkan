@@ -20,7 +20,6 @@ import           Spec.Parse
 import           Haskell                       as H
 import           Error
 import           Render.Element
-import           Documentation
 
 renderHandle
   :: (HasErr r, Member (Reader RenderParams) r) => Handle -> Sem r RenderElement
@@ -71,14 +70,18 @@ renderHandle Handle {..} = context (unCName hName) $ do
         tDoc     <- renderType t
         cmdsTDoc <- renderType cmdsMemberTy
         tellDataExport n
-        tellExport (EType p)
+        tellExport (EType p) { exportReexportable = NotReexportable }
         tellBoot $ do
           tellDoc $ "data" <+> pretty p
           tellExport (EType p)
         tellInternal (EType p)
         tellImportWithAll (TyConName "Zero")
-        tellDoc $ vsep
-          [ "data" <+> pretty p
+        tellDocWithHaddock $ \getDoc -> vsep
+          [ "-- | An opaque type for representing pointers to"
+          <+> pretty (unCName hName)
+          <+> "handles"
+          , "data" <+> pretty p
+          , getDoc (TopLevel hName)
           , "data"
           <+> pretty n
           <+> "="

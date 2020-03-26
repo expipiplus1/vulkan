@@ -402,8 +402,8 @@ peekCStructBody MarshaledStruct {..} = do
 
     stmt Nothing Nothing $ do
       memberDocs <- traverse use [ r | (e, r) <- toList memberRefs, not e ]
-      pure $ Pure InlineOnce $ pretty con <+> align
-        (sep (unValueDoc <$> memberDocs))
+      pure $ Pure InlineOnce $ align
+        (pretty con <> line <> indent 2 (sep (unValueDoc <$> memberDocs)))
 
 pokeZeroCStructDecl
   :: ( HasErr r
@@ -463,7 +463,9 @@ zeroInstanceDecl MarshaledStruct {..} = do
   tellImportWithAll (TyConName "Zero")
   tellDoc $ "instance" <> head <+> "Zero" <+> tDoc <+> "where" <> line <> indent
     2
-    (vsep ["zero =" <+> pretty con <> line <> indent 2 (vsep zeroMembers)])
+    (vsep
+      ["zero =" <+> align (pretty con <> line <> indent 2 (vsep zeroMembers))]
+    )
 
 renderPokes
   :: ( HasErr r

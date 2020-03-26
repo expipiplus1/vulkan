@@ -75,7 +75,7 @@ main =
                | Feature {..}      <- toList specFeatures
                , major : minor : _ <- pure $ versionBranch fVersion
                ]
-        doLoadDocs = True
+        doLoadDocs = False
     getDocumentation <- if doLoadDocs
       then liftIO $ loadAllDocumentation allExtensionNames
                                          "./Vulkan-Docs"
@@ -97,7 +97,11 @@ main =
             resolveAlias t = maybe t resolveAlias (Map.lookup t aliasMap) -- TODO: handle cycles!
             bitmaskNames :: HashSet CName
             bitmaskNames = fromList
-              [ eName | Enum {..} <- toList specEnums, eType == ABitmask ]
+              [ n
+              | Enum {..}      <- toList specEnums
+              , ABitmask flags <- pure eType
+              , n              <- [eName, flags]
+              ]
             isBitmask     = (`member` bitmaskNames)
             isBitmaskType = \case
               TypeName n -> isBitmask n || isBitmask (resolveAlias n)
@@ -206,6 +210,19 @@ renderParams handles = r
                         , wrappedIdiomaticType ''Int32  ''CInt    'CInt
                         , wrappedIdiomaticType ''Double ''CDouble 'CDouble
                         , wrappedIdiomaticType ''Word64 ''CSize   'CSize
+                        ]
+                     <> [ ( ConT (typeName $ mkTyName r "VkBool32")
+                          , IdiomaticType
+                            (ConT ''Bool)
+                            (do
+                              tellImport (TermName "boolToBool32")
+                              pure "boolToBool32"
+                            )
+                            (do
+                              tellImport (TermName "bool32ToBool")
+                              pure $ PureFunction "bool32ToBool"
+                            )
+                          )
                         ]
                      <> [ ( ConT ''Ptr
                             :@ ConT (typeName $ mkEmptyDataName r name)

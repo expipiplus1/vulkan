@@ -19,7 +19,6 @@ import           Render.Element
 import           Render.Type
 import           Render.SpecInfo
 import           CType
-import           Documentation
 
 renderFuncPointer
   :: (HasErr r, Member (Reader RenderParams) r, HasSpecInfo r)

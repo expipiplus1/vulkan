@@ -27,10 +27,6 @@ data RenderedNames = RenderedNames
   , rnEnums                  :: HashSet HName
   , rnNonDispatchableHandles :: HashSet HName
   , rnDispatchableHandles    :: HashSet HName
-  -- , rnConstructorParents     :: HashMap HName HName
-  --   -- ^ To import the constructors of a type @T@ we can't just import @T(..)@
-  --   -- because @T@ might be a type alias, this maps typenames to resolved
-  --   -- typenames.
   , rnResolveAlias           :: HName -> HName
   }
 
@@ -39,19 +35,30 @@ withRenderedNames
 withRenderedNames Spec {..} a = do
   RenderParams {..} <- ask
   let
-    rnStructs = Map.fromList [(mkTyName . sName $ s, s) | s <-  toList specStructs]
-    rnUnions  = Set.fromList (mkTyName . sName <$> toList specUnions)
-    rnEnums   = Set.fromList (mkTyName . eName <$> toList specEnums)
+    rnStructs =
+      Map.fromList [ (mkTyName . sName $ s, s) | s <- toList specStructs ]
+    rnUnions = Set.fromList (mkTyName . sName <$> toList specUnions)
+    rnEnums  = Set.fromList
+      [ mkTyName n
+      | Enum {..} <- toList specEnums
+      , n <- eName : [ flags | ABitmask flags <- pure eType ]
+      ]
     (dispHandles, nonDispHandles) =
       partition ((== Dispatchable) . hDispatchable) $ toList specHandles
     rnDispatchableHandles = Set.fromList (mkTyName . hName <$> dispHandles)
     rnNonDispatchableHandles =
       Set.fromList (mkTyName . hName <$> nonDispHandles)
     aliasMap = Map.fromList
-      [ (mkTyName aName, mkTyName aTarget)
-      | Alias {..} <- toList specAliases
-      , TypeAlias == aType
-      ]
+      (  [ (mkTyName aName, mkTyName aTarget)
+         | Alias {..} <- toList specAliases
+         , TypeAlias == aType
+         ]
+      <> [ (mkTyName flags, mkTyName eName)
+         | Enum {..}      <- toList specEnums
+         , ABitmask flags <- pure eType
+         , flags /= eName
+         ]
+      )
     -- TODO: Handle alias cycles!
     rnResolveAlias n = maybe n rnResolveAlias (Map.lookup n aliasMap)
   runInputConst RenderedNames { .. } a

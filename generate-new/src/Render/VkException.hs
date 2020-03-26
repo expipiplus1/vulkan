@@ -31,6 +31,7 @@ vkExceptionRenderElement
 vkExceptionRenderElement getDocumentation vkResultEnum =
   genRe "VulkanException declaration" $ do
     tellExplicitModule (ModName "Graphics.Vulkan.Exception")
+    tellNotReexportable
     RenderParams {..} <- ask
     tellImportWithAll ''Control.Exception.Exception
     vkResultTyDoc <- renderType =<< cToHsType DoNotPreserve successCodeType

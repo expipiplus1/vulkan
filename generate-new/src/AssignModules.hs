@@ -19,6 +19,7 @@ import qualified Data.List.Extra               as List
 import qualified Data.Map                      as Map
 import qualified Data.IntMap.Strict            as IntMap
 import qualified Data.IntSet                   as Set
+import qualified Data.Set
 import qualified Data.Text.Extra               as T
 import           Polysemy
 import           Polysemy.Reader
@@ -84,13 +85,38 @@ assignModules spec@Spec {..} rs@RenderedSpec {..} = do
         $ \n -> throw $ show n <> " is not exported from any module"
     Just _ -> pure ()
 
-  let declaredNames = (Map.fromListWith (<>))
+  let declaredNames = Map.fromListWith
+        (<>)
         (   IntMap.toList exports
         <&> \(n, ExportLocation d _) -> (d, Set.singleton n)
         )
+      reexportingMap = Map.fromListWith
+        (<>)
+        [ (m, Set.singleton n)
+        | (n, ExportLocation _ ms) <- IntMap.toList exports
+        , m                        <- toList ms
+        ]
 
-  Map.toList
-    <$> traverseV (traverseV lookupRe . fromList . Set.toList) declaredNames
+  forV (Map.toList declaredNames) $ \(modname, is) -> do
+    declaringRenderElements   <- traverseV lookupRe (fromList (Set.toList is))
+    reexportingRenderElements <- case Map.lookup modname reexportingMap of
+      Nothing -> pure mempty
+      Just is -> do
+        res <-
+          filter (getAll . reReexportable) <$> forV (Set.toList is) lookupRe
+        pure
+          $ (reexportingRenderElement . Data.Set.fromList . toList . reExports)
+          <$> res
+    pure
+      (modname, declaringRenderElements <> fromList reexportingRenderElements)
+
+reexportingRenderElement :: Data.Set.Set Export -> RenderElement
+reexportingRenderElement exports =
+  (emptyRenderElement ("reexporting " <> show exports))
+    { reReexportedNames = Data.Set.filter
+                            ((== Reexportable) . exportReexportable)
+                            exports
+    }
 
 data ExportLocation = ExportLocation
   { _elDeclaringModule    :: ModName
@@ -141,26 +167,28 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
     -- Perform an action over all Features
     --
     forFeatures
-      :: (Feature -> Text -> (Maybe Text -> ModName) -> Sem r ()) -> Sem r ()
-    forFeatures f = forV_ specFeatures $ \feat@Feature {..} -> do
+      :: (Feature -> Text -> (Maybe Text -> ModName) -> Sem r a)
+      -> Sem r (Vector a)
+    forFeatures f = forV specFeatures $ \feat@Feature {..} -> do
       let prefix =
             modPrefix <> ".Core" <> foldMap show (versionBranch fVersion)
       f feat prefix (featureCommentToModuleName prefix)
+    forFeatures_ = void . forFeatures
 
     forExtensionRequires
       :: (Text -> ModName -> ReqDeps -> Require -> Sem r ()) -> Sem r ()
     forExtensionRequires f = forV_ specExtensions $ \Extension {..} ->
-      forRequires exRequires (const $ extensionNameToModuleName exName)
+      forRequires_ exRequires (const $ extensionNameToModuleName exName)
         $ \modname -> f extensionModulePrefix modname
 
     forRequires
-      :: Foldable f
+      :: Traversable f
       => f Require
       -> (Maybe Text -> ModName)
-      -> (ModName -> ReqDeps -> Require -> Sem r ())
-      -> Sem r ()
+      -> (ModName -> ReqDeps -> Require -> Sem r a)
+      -> Sem r [a]
     forRequires requires commentToModName f =
-      forV_ (sortOn (isNothing . rComment) . toList $ requires) $ \r -> do
+      forV (sortOn (isNothing . rComment) . toList $ requires) $ \r -> do
         commands   <- traverseV (getExporter . mkFunName) (rCommandNames r)
         types      <- traverseV (getExporter . mkTyName) (rTypeNames r)
         enumValues <- traverseV (getExporter . mkPatternName)
@@ -168,14 +196,17 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
         let directExporters = commands <> types <> enumValues
         f (commentToModName (rComment r)) ReqDeps { .. } r
 
+    forRequires_ requires commentToModName =
+      void . forRequires requires commentToModName
+
     --
     -- Perform an action over all 'Require's of all features and elements
     --
     forFeaturesAndExtensions
       :: (Text -> ModName -> Bool -> ReqDeps -> Require -> Sem r ()) -> Sem r ()
     forFeaturesAndExtensions f = do
-      forFeatures $ \feat prefix commentToModName ->
-        forRequires (fRequires feat) commentToModName
+      forFeatures_ $ \feat prefix commentToModName ->
+        forRequires_ (fRequires feat) commentToModName
           $ \modname -> f prefix modname True
       forExtensionRequires $ \prefix modname -> f prefix modname False
 
@@ -194,6 +225,14 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
             pure (ModName (prefix <> "." <> name))
           else pure (ModName prefix)
         export modName i
+
+  allCoreExports <-
+    fmap (Set.unions . concat . toList)
+    . forFeatures
+    $ \Feature {..} _ mkName ->
+        forRequires fRequires mkName $ \_ ReqDeps {..} _ ->
+          let direct = Set.fromList (toList directExporters)
+          in  pure $ direct `postIntSets` closedRel
 
   ----------------------------------------------------------------
   -- Explicit elements
@@ -235,31 +274,8 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
   ----------------------------------------------------------------
   -- Explicit exports of all features and extensions
   ----------------------------------------------------------------
-  forFeaturesAndExtensions $ \_ modname isFeature ReqDeps {..} _ -> do
-    let directExporters = commands <> types <> bool mempty enumValues isFeature
-    forV_ directExporters $ export modname
-
-  ----------------------------------------------------------------
-  -- Go over the features one by one and close them
-  ----------------------------------------------------------------
-
-  forFeatures $ \feat _ getModName -> do
-    -- Types directly referred to by the commands and types
-    forRequires (fRequires feat) getModName $ \modname ReqDeps {..} _ ->
-      forV_ directExporters $ \i -> exportMany modname (i `postIntSet` rel)
-    -- Types indirectly referred to by the commands and types
-    forRequires (fRequires feat) getModName $ \modname ReqDeps {..} _ ->
-      forV_ directExporters
-        $ \i -> exportManyNoReexport modname (i `postIntSet` closedRel)
-
-  ----------------------------------------------------------------
-  -- Close the extensions
-  ----------------------------------------------------------------
-  forExtensionRequires $ \_ modname ReqDeps {..} _ ->
-    forV_ directExporters $ \i -> exportMany modname (i `postIntSet` rel)
-
-  forExtensionRequires $ \_ modname ReqDeps {..} _ -> forV_ directExporters
-    $ \i -> exportManyNoReexport modname (i `postIntSet` closedRel)
+  forFeaturesAndExtensions
+    $ \_ modname _ ReqDeps {..} _ -> forV_ directExporters $ export modname
 
   ----------------------------------------------------------------
   -- Assign aliases to be with their targets if they're not already assigned
@@ -271,13 +287,41 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
           PatternAlias -> mkPatternName
     i <- getExporter (mkName aName)
     j <- getExporter (mkName aTarget)
-    -- gets @S (IntMap.lookup i) >>= \case
-    --   Just _  -> pure ()
-    --   Nothing ->
-    gets @S (IntMap.lookup j) >>= \case
+    gets @S (IntMap.lookup i) >>= \case
+      Just _  -> pure ()
+      Nothing -> gets @S (IntMap.lookup j) >>= \case
         Just (ExportLocation jMod _) ->
           modify' (IntMap.insert i (ExportLocation jMod []))
         Nothing -> pure ()
+
+  ----------------------------------------------------------------
+  -- Go over the features one by one and close them
+  ----------------------------------------------------------------
+
+  forFeatures_ $ \feat _ getModName -> do
+    -- Types directly referred to by the commands and types
+    forRequires_ (fRequires feat) getModName $ \modname ReqDeps {..} _ ->
+      forV_ directExporters $ \i -> do
+        exportManyNoReexport modname (i `postIntSet` rel)
+        exportMany
+          modname
+          ((i `postIntSet` rel) `Set.intersection` (IntMap.keysSet allHandles))
+    -- Types indirectly referred to by the commands and types
+    forRequires_ (fRequires feat) getModName $ \modname ReqDeps {..} _ ->
+      forV_ directExporters
+        $ \i -> exportManyNoReexport modname (i `postIntSet` closedRel)
+
+  ----------------------------------------------------------------
+  -- Close the extensions
+  ----------------------------------------------------------------
+  forExtensionRequires $ \_ modname ReqDeps {..} _ ->
+    forV_ directExporters $ \i -> do
+      exportManyNoReexport modname (i `postIntSet` rel)
+      exportMany modname ((i `postIntSet` rel) `Set.difference` allCoreExports)
+
+  forExtensionRequires $ \_ modname ReqDeps {..} _ -> forV_ directExporters
+    $ \i -> exportManyNoReexport modname (i `postIntSet` closedRel)
+
 
 firstTypeName :: HasErr r => RenderElement -> Sem r Text
 firstTypeName re =
@@ -393,6 +437,9 @@ dropLast x l = case nonEmpty l of
   Nothing -> []
   Just xs -> if last xs == x then init xs else toList xs
 
+postIntSets :: IntSet -> AdjacencyIntMap -> IntSet
+postIntSets is rel = Set.unions $ (`postIntSet` rel) <$> Set.toList is
+
 ----------------------------------------------------------------
 -- Ignored unexported names
 ----------------------------------------------------------------
@@ -419,3 +466,4 @@ unexportedNames Spec {..} = do
        , mkTyName "VkSemaphoreCreateFlagBits"
        ]
     <> apiVersions
+

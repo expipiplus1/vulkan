@@ -2,6 +2,7 @@
 
 module Haskell.Name
   ( HName(..)
+  , isTyConName
   )
 where
 
@@ -15,6 +16,11 @@ data HName
   | TyConName { unName :: Text }
   | ConName  { unName :: Text }
   deriving(Eq, Ord, Show, Generic, Hashable)
+
+isTyConName :: HName -> Bool
+isTyConName = \case
+  TyConName _ -> True
+  _           -> False
 
 instance Pretty HName where
   pretty = pretty . unName

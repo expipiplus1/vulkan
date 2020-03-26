@@ -43,6 +43,7 @@ renderDynamicLoader cs = do
   RenderParams {..} <- ask
   genRe "dynamic loader" $ do
     tellExplicitModule (ModName "Graphics.Vulkan.Dynamic")
+    tellNotReexportable
     enabledCommands <- V.filterM
       (fmap isNothing . getDisabledCommand . cName . mcCommand)
       cs

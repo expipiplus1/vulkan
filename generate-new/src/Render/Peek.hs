@@ -5,6 +5,7 @@ module Render.Peek
   , getLenRef
   , storablePeek
   , vectorPeekWithLenRef
+  , unwrapIdiomaticType
   ) where
 
 import           Relude                  hiding ( Type
@@ -107,25 +108,36 @@ peekIdiomatic name lengths fromType addr scheme = do
   -- If this is already the correct type don't try wrapping it
   if Just t == toTy
     then pure r
-    else case mkIdiomaticType t of
-      Nothing                     -> pure r
-      Just (IdiomaticType w _ to) -> raise $ stmtC (Just w) name $ do
-        ValueDoc d <- use r
-        to <&> \case
-          Constructor con ->
-            let unwrappedVar = "a"
-            in
-              Pure AlwaysInline $ ValueDoc
-                (   parens
-                    (   "\\"
-                    <>  parens (con <+> unwrappedVar)
-                    <+> "->"
-                    <+> unwrappedVar
-                    )
-                <+> d
-                )
-          PureFunction fun -> Pure InlineOnce $ ValueDoc (fun <+> d)
-          IOFunction   fun -> IOAction $ ValueDoc (fun <+> d)
+    else raise $ unwrapIdiomaticType (Just (unCName name)) r
+
+-- | Make a type idiomatic, CFloat to Float for example
+unwrapIdiomaticType
+  :: (HasRenderParams r, HasErr r, HasRenderElem r)
+  => Maybe Text
+  -> Ref s ValueDoc
+  -> Stmt s r (Ref s ValueDoc)
+unwrapIdiomaticType name value = do
+  RenderParams {..} <- ask
+  t                 <- refType value
+  case mkIdiomaticType t of
+    Nothing                     -> pure value
+    Just (IdiomaticType w _ to) -> stmt (Just w) name $ do
+      ValueDoc d <- use value
+      to <&> \case
+        Constructor con ->
+          let unwrappedVar = "a"
+          in
+            Pure AlwaysInline $ ValueDoc
+              (   parens
+                  (   "\\"
+                  <>  parens (con <+> unwrappedVar)
+                  <+> "->"
+                  <+> unwrappedVar
+                  )
+              <+> d
+              )
+        PureFunction fun -> Pure InlineOnce $ ValueDoc (fun <+> d)
+        IOFunction   fun -> IOAction $ ValueDoc (fun <+> d)
 
 -- | Render a peek and don't do any unwrapping to idiomatic haskell types
 peekWrapped

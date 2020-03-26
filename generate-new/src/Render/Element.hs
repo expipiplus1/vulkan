@@ -1,10 +1,12 @@
 module Render.Element
   ( genRe
+  , emptyRenderElement
   , HasRenderElem
   , HasRenderParams
   , RenderElement(..)
   , RenderParams(..)
   , Export(..)
+  , ExportReexportable(..)
   , pattern ETerm
   , pattern EPat
   , pattern EData
@@ -33,6 +35,7 @@ module Render.Element
   , tellQualImportWithAll
   , tellImport
   , tellImportWith
+  , tellNotReexportable
   , wrapSymbol
   , exportDoc
   , renderExport
@@ -93,15 +96,20 @@ data RenderElement = RenderElement
   , reImports           :: Set (Import Name)
   , reLocalImports      :: Set (Import HName)
   , reReexportedModules :: Set ModName
-  , reReexportedNames   :: Vector Export
+  , reReexportedNames   :: Set Export
   , reExplicitModule    :: Maybe ModName
+  , reReexportable      :: All
   }
 
 data Export = Export
-  { exportName    :: HName
-  , exportWithAll :: Bool
-  , exportWith    :: Vector Export
+  { exportName         :: HName
+  , exportWithAll      :: Bool
+  , exportWith         :: Vector Export
+  , exportReexportable :: ExportReexportable
   }
+  deriving (Show, Eq, Ord)
+
+data ExportReexportable = NotReexportable | Reexportable
   deriving (Show, Eq, Ord)
 
 data NameSpace
@@ -135,24 +143,25 @@ instance Semigroup RenderElement where
     , reReexportedModules = reReexportedModules r1 <> reReexportedModules r2
     , reReexportedNames   = reReexportedNames r1 <> reReexportedNames r2
     , reExplicitModule    = reExplicitModule r1 <|> reExplicitModule r2
+    , reReexportable      = reReexportable r1 <> reReexportable r2
     }
 
 pattern ETerm :: HName -> Export
-pattern ETerm n = Export n False Empty
+pattern ETerm n = Export n False Empty Reexportable
 
 pattern EPat :: HName -> Export
-pattern EPat n = Export n False Empty
+pattern EPat n = Export n False Empty Reexportable
 
 pattern EType :: HName -> Export
-pattern EType n = Export n False Empty
+pattern EType n = Export n False Empty Reexportable
 
 -- | Exports with (..)
 pattern EData :: HName -> Export
-pattern EData n = Export n True Empty
+pattern EData n = Export n True Empty Reexportable
 
 -- | Exports with (..)
 pattern EClass :: HName -> Export
-pattern EClass n = Export n True Empty
+pattern EClass n = Export n True Empty Reexportable
 
 exportDoc :: Export -> Doc ()
 exportDoc Export {..} = renderExport
@@ -285,20 +294,20 @@ type HasRenderElem r = MemberWithError (State RenderElement) r
 
 genRe :: Text -> Sem (State RenderElement : r) () -> Sem r RenderElement
 genRe n m = do
-  (o, _) <- runState (initState n) m
+  (o, _) <- runState (emptyRenderElement n) m
   pure o
 
 tellBoot :: HasRenderElem r => Sem (State RenderElement : r) () -> Sem r ()
 tellBoot m = do
   n      <- gets reName
-  (b, _) <- runState (initState (n <> " boot")) m
+  (b, _) <- runState (emptyRenderElement (n <> " boot")) m
   modify' (\r -> r { reBoot = reBoot r <> Just b })
 
 identicalBoot :: RenderElement -> RenderElement
 identicalBoot re = re { reBoot = Just re }
 
-initState :: Text -> RenderElement
-initState n = RenderElement { reName              = n
+emptyRenderElement :: Text -> RenderElement
+emptyRenderElement n = RenderElement { reName              = n
                             , reBoot              = Nothing
                             , reDoc               = mempty
                             , reExports           = mempty
@@ -308,6 +317,7 @@ initState n = RenderElement { reName              = n
                             , reReexportedModules = mempty
                             , reReexportedNames   = mempty
                             , reExplicitModule    = Nothing
+                            , reReexportable      = mempty
                             }
 
 tellExplicitModule :: (HasRenderElem r, HasErr r) => ModName -> Sem r ()
@@ -397,6 +407,9 @@ tellReexportMod
   :: MemberWithError (State RenderElement) r => ModName -> Sem r ()
 tellReexportMod e =
   modify' (\r -> r { reReexportedModules = insert e (reReexportedModules r) })
+
+tellNotReexportable :: MemberWithError (State RenderElement) r => Sem r ()
+tellNotReexportable = modify' (\r -> r { reReexportable = All False })
 
 ----------------------------------------------------------------
 -- Utils

@@ -47,7 +47,7 @@ featureVersion
 featureVersion Feature {..} = genRe "feature version" $ do
   RenderParams {..} <- ask
   let major : minor : _ = versionBranch fVersion
-      pat = mkPatternName
+      pat               = mkPatternName
         (CName $ "VK_API_VERSION_" <> show major <> "_" <> show minor)
       make = mkPatternName "VK_MAKE_VERSION"
   tellExport (EPat pat)

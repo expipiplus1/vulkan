@@ -28,7 +28,6 @@ import           Render.Utils
 import           CType                          ( CType(TypeName) )
 import           Render.Type
 import           Render.SpecInfo
-import           Documentation
 
 renderEnum
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)
@@ -37,29 +36,29 @@ renderEnum
 renderEnum e@Enum {..} = do
   RenderParams {..} <- ask
   genRe ("enum " <> unCName eName) $ do
+    innerTy <- case eType of
+      AnEnum     -> pure $ ConT ''Int32
+      -- TODO: remove vulkan specific stuff
+      ABitmask _ -> cToHsType DoNotPreserve (TypeName "VkFlags")
     let n       = mkTyName eName
         conName = mkConName eName eName
-    innerTy <- case eType of
-      AnEnum   -> pure $ ConT ''Int32
-      -- TODO: remove vulkan specific stuff
-      ABitmask -> cToHsType DoNotPreserve (TypeName "VkFlags")
     (patterns, patternExports) <-
       V.unzip <$> traverseV (renderEnumValue eName conName eType) eValues
-    tellExport (Export n True patternExports)
+    tellExport (Export n True patternExports Reexportable)
     tellBoot $ do
       tellExport (EType n)
       tellDoc $ "data" <+> pretty n
     tDoc <- renderType innerTy
     let complete = case eType of
-          AnEnum   -> completePragma n (mkPatternName . evName <$> eValues)
-          ABitmask -> Nothing
+          AnEnum     -> completePragma n (mkPatternName . evName <$> eValues)
+          ABitmask _ -> Nothing
     tellImport (TyConName "Zero")
     derivedClasses <- do
       tellImport ''Storable
       let always = ["Eq", "Ord", "Storable", "Zero"]
       special <- case eType of
-        AnEnum   -> pure []
-        ABitmask -> do
+        AnEnum     -> pure []
+        ABitmask _ -> do
           tellImport ''Bits
           pure ["Bits"]
       pure (always <> special)
@@ -84,6 +83,16 @@ renderEnum e@Enum {..} = do
            , vsep (toList (($ getDoc) <$> patterns))
            ]
         ++ maybeToList complete
+    case eType of
+      ABitmask flags | flags /= eName -> do
+        let flagsName = mkTyName flags
+        let syn :: HasRenderElem r => Sem r ()
+            syn = do
+              tellExport (EType flagsName)
+              tellDoc $ "type" <+> pretty flagsName <+> "=" <+> pretty n
+        syn
+        tellBoot syn
+      _ -> pure ()
     renderShowInstance e
     renderReadInstance e
 
@@ -101,6 +110,7 @@ completePragma ty pats = if V.null pats
 renderEnumValue
   :: (HasErr r, Member (Reader RenderParams) r)
   => CName
+  -- ^ Enum name for fetching documentation
   -> HName
   -- ^ Constructor name
   -> EnumType
@@ -110,8 +120,8 @@ renderEnumValue eName conName enumType EnumValue {..} = do
   RenderParams {..} <- ask
   let n = mkPatternName evName
       v = case enumType of
-        AnEnum   -> showsPrec 9 evValue ""
-        ABitmask -> printf "0x%08x" evValue
+        AnEnum     -> showsPrec 9 evValue ""
+        ABitmask _ -> printf "0x%08x" evValue
   pure
     ( \getDoc -> vsep
       [ getDoc (Nested eName evName)
@@ -128,27 +138,27 @@ renderShowInstance
   :: (HasErr r, HasRenderParams r, HasRenderElem r) => Enum' -> Sem r ()
 renderShowInstance Enum {..} = do
   RenderParams {..} <- ask
-  let n   = mkTyName eName
-      con = mkConName eName eName
+  let n       = mkTyName eName
+      conName = mkConName eName eName
   valueCases <- forV eValues $ \EnumValue {..} -> do
     let pat = mkPatternName evName
     tellImport pat
     tellImport 'showString
     pure $ pretty pat <+> "-> showString" <+> viaShow (unName pat)
   defaultCase <- do
-    tellImportWith n con
+    tellImportWith n conName
     tellImport 'showParen
     tellImport 'showString
     (prefix, shows) <- case eType of
       AnEnum -> do
         tellImport 'showsPrec
         pure ("", "showsPrec 11")
-      ABitmask -> do
+      ABitmask _ -> do
         tellImport 'showHex
         pure ("0x", "showHex")
-    pure $ pretty con <+> "x -> showParen (p >= 11)" <+> parens
+    pure $ pretty conName <+> "x -> showParen (p >= 11)" <+> parens
       (   "showString"
-      <+> viaShow (unName con <> " " <> prefix)
+      <+> viaShow (unName conName <> " " <> prefix)
       <+> "."
       <+> shows
       <+> "x"
@@ -162,8 +172,8 @@ renderReadInstance
   :: (HasErr r, HasRenderParams r, HasRenderElem r) => Enum' -> Sem r ()
 renderReadInstance Enum {..} = do
   RenderParams {..} <- ask
-  let n   = mkTyName eName
-      con = mkConName eName eName
+  let n       = mkTyName eName
+      conName = mkConName eName eName
   matchTuples <- forV eValues $ \EnumValue {..} -> do
     let pat = mkPatternName evName
     tellImport pat
@@ -186,9 +196,9 @@ renderReadInstance Enum {..} = do
           , "+++"
           , "prec 10" <+> parens
             (doBlock
-              [ "expectP" <+> parens ("Ident" <+> viaShow (unName con))
+              [ "expectP" <+> parens ("Ident" <+> viaShow (unName conName))
               , "v <- step readPrec"
-              , "pure" <+> parens (pretty con <+> "v")
+              , "pure" <+> parens (pretty conName <+> "v")
               ]
             )
           ]

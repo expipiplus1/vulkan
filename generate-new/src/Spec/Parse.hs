@@ -73,11 +73,10 @@ parseSpec bs = do
         unsizedUnions     <- parseUnions types
         specCommands      <- parseCommands . contents =<< oneChild "commands" n
         emptyBitmasks     <- parseEmptyBitmasks types
-        nonEmptyEnums     <- parseEnums . contents $ n
+        nonEmptyEnums     <- parseEnums types . contents $ n
         requires          <- allRequires NotDisabled . contents $ n
         enumExtensions    <- parseEnumExtensions requires
         constantAliases   <- parseConstantAliases (contents n)
-        bitmaskAliases    <- parseBitmaskAliases types
         typeAliases       <- parseTypeAliases
           ["handle", "enum", "bitmask", "struct"]
           types
@@ -88,11 +87,7 @@ parseSpec bs = do
               enumExtensions
               (extraEnums <> emptyBitmasks <> nonEmptyEnums)
             specAliases =
-              bitmaskAliases
-                <> typeAliases
-                <> enumAliases
-                <> commandAliases
-                <> constantAliases
+              typeAliases <> enumAliases <> commandAliases <> constantAliases
         specFeatures   <- parseFeatures (contents n)
         specExtensions <-
           parseExtensions NotDisabled . contents =<< oneChild "extensions" n
@@ -106,7 +101,9 @@ parseSpec bs = do
             Map.fromList
               $  bespokeSizes
               <> [ (eName, (4, 4)) | Enum {..} <- V.toList specEnums ]
-              <> [ (aName, (4, 4)) | Alias {..} <- V.toList bitmaskAliases ]
+              <> [ (n, (4, 4))
+                 | Enum { eType = ABitmask n } <- V.toList specEnums
+                 ]
               <> [ (hName, (8, 8)) | Handle {..} <- V.toList specHandles ]
               <> [ (fpName, (8, 8))
                  | FuncPointer {..} <- V.toList specFuncPointers
@@ -363,21 +360,6 @@ parseTypeAliases categories es =
        , c `elem` categories
        ]
 
-parseBitmaskAliases :: [Content] -> P (Vector Alias)
-parseBitmaskAliases es =
-  fmap fromList
-    . sequenceV
-    $ [ do
-          aName   <- nameElem "bitmask alias" n
-          aTarget <- decodeName requires
-          let aType = TypeAlias
-          pure Alias { .. }
-      | Element n <- es
-      , "type" == name n
-      , Just requires  <- pure $ getAttr "requires" n
-      , Just "bitmask" <- pure $ getAttr "category" n
-      ]
-
 parseEnumAliases :: Vector (Node, Maybe Int) -> P (Vector Alias)
 parseEnumAliases rs =
   fmap V.fromList
@@ -512,27 +494,40 @@ parseEmptyBitmasks es = fromList <$> traverseV
   parseEmptyBitmask :: Node -> P Enum'
   parseEmptyBitmask n = do
     eName <- nameElem "bitmask" n
-    pure Enum { eValues = mempty, eType = ABitmask, .. }
+    pure Enum { eValues = mempty, eType = ABitmask eName, .. }
 
-parseEnums :: [Content] -> P (Vector Enum')
-parseEnums es = fromList <$> traverseV
-  (uncurry (parseEnum False))
-  [ (bool AnEnum ABitmask isBitmask, n)
-  | Element n <- es
-  , name n == "enums"
-  , Just t <- pure (getAttr "type" n)
-  , let isBitmask = t == "bitmask"
-        isEnum    = t == "enum"
-  , isBitmask || isEnum
-  ]
+parseEnums :: [Content] -> [Content] -> P (Vector Enum')
+parseEnums types es = do
+  flagNameMap <- Map.fromList <$> sequence
+    [ liftA2 (,) (decodeName bits) (nameElem "bitmask" n)
+    | Element n <- types
+    , "type" == name n
+    , not (isAlias n)
+    , Just bits      <- pure $ getAttr "requires" n
+    , Just "bitmask" <- pure $ getAttr "category" n
+    ]
+  fromList <$> traverseV
+    (uncurry (parseEnum (`Map.lookup` flagNameMap) False))
+    [ (isBitmask, n)
+    | Element n <- es
+    , name n == "enums"
+    , Just t <- pure (getAttr "type" n)
+    , let isBitmask = t == "bitmask"
+          isEnum    = t == "enum"
+    , isBitmask || isEnum
+    ]
 
  where
-  parseEnum :: Bool -> EnumType -> Node -> P Enum'
-  parseEnum evIsExtension eType n = do
+  parseEnum :: (CName -> Maybe CName) -> Bool -> Bool -> Node -> P Enum'
+  parseEnum getFlagsName evIsExtension isBitmask n = do
     eName   <- nameAttr "enum" n
     eValues <- fromList <$> traverseV
       (context (unCName eName) . parseValue)
       [ e | Element e <- contents n, name e == "enum", not (isAlias e) ]
+    let eType = if isBitmask
+          then -- If we can't find the flags name, use the bits name
+               ABitmask (fromMaybe eName (getFlagsName eName))
+          else AnEnum
     pure Enum { .. }
    where
     parseValue :: Node -> P EnumValue
@@ -860,8 +855,7 @@ nameElem :: Text -> Node -> P CName
 nameElem debug n = note (debug <> " has no name") =<< nameElemMaybe n
 
 nameElemMaybe :: Node -> P (Maybe CName)
-nameElemMaybe n =
-  fmap (fmap CName) $ traverse decode (elemText "name" n)
+nameElemMaybe n = fmap CName <$> traverse decode (elemText "name" n)
 
 nameAttr :: Text -> Node -> P CName
 nameAttr debug n =

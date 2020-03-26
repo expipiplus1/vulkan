@@ -214,11 +214,14 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
             /= Void
 
     -- Run the command and capture the result
-    retRef <- stmt Nothing (Just (bool "r" "_" useEmptyBinder)) $ do
+    let name = bool "r" "_" useEmptyBinder
+    rTy        <- cToHsType DoLower (cReturnType mcCommand)
+    wrappedRef <- stmt (Just rTy) (Just name) $ do
       FunDoc fun <- use funRef
       pokes      <- traverseV use pokeRefs
       -- call the command
       pure . IOAction . ValueDoc $ sep (fun : (unValueDoc <$> toList pokes))
+    retRef        <- unwrapIdiomaticType (Just name) wrappedRef
 
     -- check the result
     checkedResult <- checkResultMaybe mcCommand retRef
@@ -391,7 +394,7 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
     --
     (getLengthPokes, getLengthPeeks, countAddr, countPeek) <-
       pokesForGettingCount mcParams countParamIndex vecParamIndices
-    ret1        <- runWithPokes False m funRef getLengthPokes
+    ret1 <- runWithPokes False m funRef getLengthPokes
 
     filledCount <- stmt Nothing Nothing $ do
       after ret1

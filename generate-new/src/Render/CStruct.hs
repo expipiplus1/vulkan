@@ -32,6 +32,7 @@ toCStruct = do
   RenderParams {..} <- ask
   genRe "ToCStruct" $ do
     tellExplicitModule (ModName "Graphics.Vulkan.CStruct")
+    tellNotReexportable
     tellExport (EClass (TyConName "ToCStruct"))
     tellImport ''Ptr
     tellImport 'allocaBytesAligned
@@ -56,13 +57,13 @@ toCStruct = do
         -- made.
         pokeCStruct :: Ptr a -> a -> IO b -> IO b
 
-        -- | Allocate space for an "empty" @a@ and populate any univalied
+        -- | Allocate space for an "empty" @a@ and populate any univalued
         -- members with their value.
         withZeroCStruct :: (Ptr a -> IO b) -> IO b
         withZeroCStruct f =
           bracket (callocBytes @a (cStructSize @a)) free $ \p -> pokeZeroCStruct p (f p)
 
-        -- | And populate any univalied members with their value, run a
+        -- | And populate any univalued members with their value, run a
         -- function and then clean up any allocated resources.
         pokeZeroCStruct :: Ptr a -> IO b -> IO b
 
@@ -81,6 +82,7 @@ fromCStruct = do
   RenderParams {..} <- ask
   genRe "ToCStruct" $ do
     tellExplicitModule (ModName "Graphics.Vulkan.CStruct")
+    tellNotReexportable
     tellExport (EClass (TyConName "FromCStruct"))
     tellImport ''Ptr
     tellDoc [qi|
