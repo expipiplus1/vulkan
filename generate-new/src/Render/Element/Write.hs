@@ -202,9 +202,8 @@ renderModule
   -> Sem r ()
 renderModule out boot getDoc findModule findLocalModule (Segment modName unsortedElements)
   = do
-    -- let exportsType = V.any (isTyConName . exportName) . reExports
-    --     es          = fromList . sortOn exportsType . toList $ unsortedElements
-    let es = unsortedElements
+    let exportsType = V.any (isTyConName . exportName) . reExports
+        es          = fromList . sortOn exportsType . toList $ unsortedElements
     RenderParams {..} <- ask
     let
       ext = bool ".hs" ".hs-boot" boot
@@ -277,13 +276,23 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
               <>  ":"
               <+> viaShow e
           Right (Haddock t) -> commentNoWrap t
-      allReexports =
+      allReexportedModules =
         V.fromList
           . Set.toList
           . Set.unions
           . fmap reReexportedModules
           . toList
           $ es
+      exports   = V.concatMap reExports es
+      reexports = V.concatMap
+        (\re -> V.fromList
+          (   (\(Export name withAll with reexportable) ->
+                Export name (withAll || not (V.null with)) mempty reexportable
+              )
+          <$> toList (reReexportedNames re)
+          )
+        )
+        es
       contents =
         vsep
           $ "{-# language CPP #-}"
@@ -292,21 +301,12 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
             <>  indent
                   2
                   (  parenList
-                  $  (fmap exportDoc . nubOrdOnV exportName $ V.concatMap
-                       (\re -> reExports re <> V.fromList
-                         (   (\(Export name withAll with reexportable) -> Export
-                               name
-                               (withAll || not (V.null with))
-                               mempty
-                               reexportable
-                             )
-                         <$> toList (reReexportedNames re)
-                         )
-                       )
-                       es
+                  $  ( fmap exportDoc
+                     . nubOrdOnV exportName
+                     $ (exports <> reexports)
                      )
                   <> (   (\(ModName m) -> renderExport Module m mempty)
-                     <$> allReexports
+                     <$> allReexportedModules
                      )
                   )
             <+> "where"
@@ -314,7 +314,11 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
           : openImports
           : imports
           : localImports
-          : V.toList (($ getDocumentation) . reDoc <$> es)
+          : V.toList
+              (   (<> (line <> line))
+              <$> V.mapMaybe (($ getDocumentation) . reDoc) es
+              )
+
     liftIO $ createDirectoryIfMissing True (takeDirectory f)
     liftIO $ withFile f WriteMode $ \h -> T.hPutStr h $ renderStrict
       (layoutPretty defaultLayoutOptions { layoutPageWidth = Unbounded }

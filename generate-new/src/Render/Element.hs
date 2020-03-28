@@ -88,7 +88,7 @@ import           Documentation
 data RenderElement = RenderElement
   { reName              :: Text
   , reBoot              :: Maybe RenderElement
-  , reDoc               :: (Documentee -> Doc ()) -> Doc ()
+  , reDoc               :: (Documentee -> Doc ()) -> Maybe (Doc ())
   , reExports           :: Vector Export
   , reInternal          :: Vector Export
     -- ^ Things which can only be "imported" from the same module, i.e.
@@ -135,7 +135,7 @@ instance Semigroup RenderElement where
   r1 <> r2 = RenderElement
     { reName              = reName r1 <> " and " <> reName r2
     , reBoot              = reBoot r1 <> reBoot r2
-    , reDoc               = \h -> reDoc r1 h <> line <> reDoc r2 h
+    , reDoc               = \h -> reDoc r1 h `lineMaybe` reDoc r2 h
     , reExports           = reExports r1 <> reExports r2
     , reInternal          = reInternal r1 <> reInternal r2
     , reImports           = reImports r1 <> reImports r2
@@ -145,6 +145,10 @@ instance Semigroup RenderElement where
     , reExplicitModule    = reExplicitModule r1 <|> reExplicitModule r2
     , reReexportable      = reReexportable r1 <> reReexportable r2
     }
+
+lineMaybe :: Maybe (Doc ()) -> Maybe (Doc ()) -> Maybe (Doc ())
+lineMaybe (Just d1) (Just d2) = Just (d1 <> line <> line <> d2)
+lineMaybe d1        d2        = d1 <> d2
 
 pattern ETerm :: HName -> Export
 pattern ETerm n = Export n False Empty Reexportable
@@ -344,14 +348,15 @@ tellInternal e =
   modify' (\r -> r { reInternal = reInternal r <> V.singleton e })
 
 tellDoc :: MemberWithError (State RenderElement) r => Doc () -> Sem r ()
-tellDoc d = modify' (\r -> r { reDoc = \h -> reDoc r h <> hardline <> d })
+tellDoc d =
+  modify' (\r -> r { reDoc = \h -> reDoc r h `lineMaybe` Just d })
 
 tellDocWithHaddock
   :: MemberWithError (State RenderElement) r
   => ((Documentee -> Doc ()) -> Doc ())
   -> Sem r ()
 tellDocWithHaddock d =
-  modify' (\r -> r { reDoc = \h -> reDoc r h <> hardline <> d h })
+  modify' (\r -> r { reDoc = \h -> reDoc r h `lineMaybe` Just (d h) })
 
 class Importable a where
   addImport

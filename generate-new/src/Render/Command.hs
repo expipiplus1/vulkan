@@ -71,14 +71,12 @@ renderCommand m@MarshaledCommand {..} = contextShow (unCName mcName) $ do
     dynamicBindTypeDoc <- renderType dynamicBindType
     importConstructors dynamicBindType
     tellDoc $ vsep
-      [ mempty
-      , "foreign import ccall"
+      [ "foreign import ccall"
       , "#if !defined(SAFE_FOREIGN_CALLS)"
       , indent 2 "unsafe"
       , "#endif"
       , indent 2 "\"dynamic\"" <+> pretty dynName
       , indent 2 ("::" <+> dynamicBindTypeDoc)
-      , emptyDoc
       ]
 
     let siblingMap = Map.fromList
