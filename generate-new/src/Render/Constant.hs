@@ -59,8 +59,9 @@ renderConstant Constant {..} = contextShow constName $ do
 
     tellExport (EPat n)
     tDoc <- renderType t
-    tellDoc $ vsep
-      [ "pattern" <+> pretty n <+> "::" <+> tDoc
+    tellDocWithHaddock $ \getDoc -> vsep
+      [ getDoc (TopLevel constName)
+      , "pattern" <+> pretty n <+> "::" <+> tDoc
       , "pattern" <+> pretty n <+> "=" <+> v
       ]
 

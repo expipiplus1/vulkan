@@ -515,17 +515,23 @@ baseType n t = fmap identicalBoot . genRe ("base type " <> unCName n) $ do
 -- Base Vulkan stuff
 ----------------------------------------------------------------
 
-nullHandle :: Member (Reader RenderParams) r => Sem r RenderElement
+nullHandle :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 nullHandle = genRe "null handle" $ do
   RenderParams {..} <- ask
   let patName = mkPatternName "VK_NULL_HANDLE"
+  tellExplicitModule (ModName "Graphics.Vulkan.Core10.APIConstants")
+  tellNotReexportable
   tellExport (EPat patName)
-  tellImport 'nullPtr
-  tDoc <- renderType (ConT ''Ptr :@ VarT (mkName "a"))
-  tellDoc [qqi|
-    pattern {patName} :: {tDoc}
-    pattern {patName} <- ((== nullPtr) -> True)
-      where {patName} = nullPtr
+  tellExport (EType (TyConName "IsHandle"))
+  tellImportWithAll (TyConName "Zero")
+  tellDocWithHaddock $ \getDoc -> [qqi|
+    {getDoc (TopLevel "VK_NULL_HANDLE")}
+    pattern {patName} :: IsHandle a => a
+    pattern {patName} <- ((== zero) -> True)
+      where {patName} = zero
+
+    -- | A class for things which can be created with '{patName}'
+    class (Eq a, Zero a) => IsHandle a where
   |]
 
 ----------------------------------------------------------------

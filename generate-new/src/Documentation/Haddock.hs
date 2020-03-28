@@ -39,33 +39,42 @@ documentationToHaddock getModule Documentation {..} =
 
 prepareForHaddock :: Pandoc -> Pandoc
 prepareForHaddock =
-  topDown haddock801 . topDown removeEmptySections . topDown fixupBlock
-  where
-    haddock801 :: [Block] -> [Block]
-    haddock801 = foldr go []
-      where
-        dummy = Para [Str "'"]
-        go :: Block -> [Block] -> [Block]
-        go h@Header{} (t@Table{} : bs) = h : dummy : t : bs
-        go b          bs               = b : bs
+  bottomUp emptyBeforeBullet
+    . topDown haddock801
+    . topDown removeEmptySections
+    . topDown fixupBlock
+ where
 
-    removeEmptySections :: [Block] -> [Block]
-    removeEmptySections = foldr go []
-      where
-        go :: Block -> [Block] -> [Block]
-        go (Header n1 _ _) (h@(Header n2 _ _) : bs) | n1 <= n2 = h : bs
-        go b               bs                       = b : bs
+  emptyBeforeBullet :: [Block] -> [Block]
+  emptyBeforeBullet = \case
+    [bu@BulletList{}] -> [Para [Str ""], bu]
+    bs                -> bs
 
-    fixupBlock :: Block -> Block
-    fixupBlock = \case
-      -- Remove idents from headers
-      Header n (_, cs, kvs) is -> Header n ("", cs, kvs) is
+  haddock801 :: [Block] -> [Block]
+  haddock801 = foldr go []
+   where
+    dummy = Para [Str "'"]
+    go :: Block -> [Block] -> [Block]
+    go h@Header{} (t@Table{} : bs) = h : dummy : t : bs
+    go b          bs               = b : bs
 
-      -- Change definition lists to bullets
-      DefinitionList ds | all (null . fst) ds, all ((== 1) . length . snd) ds ->
-        BulletList (List.head . snd <$> ds)
+  removeEmptySections :: [Block] -> [Block]
+  removeEmptySections = foldr go []
+   where
+    go :: Block -> [Block] -> [Block]
+    go (Header n1 _ _) (h@(Header n2 _ _) : bs) | n1 <= n2 = h : bs
+    go b bs = b : bs
 
-      b -> b
+  fixupBlock :: Block -> Block
+  fixupBlock = \case
+    -- Remove idents from headers
+    Header n (_, cs, kvs) is -> Header n ("", cs, kvs) is
+
+    -- Change definition lists to bullets
+    DefinitionList ds | all (null . fst) ds, all ((== 1) . length . snd) ds ->
+      BulletList (List.head . snd <$> ds)
+
+    b -> b
 
 fixLinks :: (CName -> DocumenteeLocation) -> Pandoc -> Pandoc
 fixLinks findDocs = topDown fixInlines

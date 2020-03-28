@@ -37,7 +37,6 @@ import           Marshal
 import           Marshal.Scheme
 import           Render.Element
 import           Render.SpecInfo
-import           Render.Utils
 import           Render.Names
 import           Render.Element.Write
 import           Render.Aggregate

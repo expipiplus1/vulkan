@@ -34,18 +34,15 @@ renderHandle Handle {..} = context (unCName hName) $ do
         tDoc <- renderTypeHighPrec t
         tellDataExport n
         tellImport (TyConName "Zero")
+        tellImport (TyConName "IsHandle")
         tellImport ''Storable
         tellImport 'showHex
         tellImport 'showParen
         tellDocWithHaddock $ \getDoc -> vsep
           [ getDoc (TopLevel hName)
-          , "newtype"
-          <+> pretty n
-          <+> "="
-          <+> pretty c
-          <+> tDoc
-          <>  line
-          <>  indent 2 "deriving newtype (Eq, Ord, Storable, Zero)"
+          , "newtype" <+> pretty n <+> "=" <+> pretty c <+> tDoc
+          , indent 2 "deriving newtype (Eq, Ord, Storable, Zero)"
+          , indent 2 "deriving anyclass (IsHandle)"
           , "instance Show" <+> pretty n <+> "where" <> line <> indent
             2
             (   "showsPrec p"
@@ -76,28 +73,25 @@ renderHandle Handle {..} = context (unCName hName) $ do
           tellExport (EType p)
         tellInternal (EType p)
         tellImportWithAll (TyConName "Zero")
+        tellImport (TyConName "IsHandle")
         tellDocWithHaddock $ \getDoc -> vsep
           [ "-- | An opaque type for representing pointers to"
           <+> pretty (unCName hName)
           <+> "handles"
           , "data" <+> pretty p
           , getDoc (TopLevel hName)
-          , "data"
-          <+> pretty n
-          <+> "="
-          <+> pretty c
-          <>  line
-          <>  indent
-                2
-                (vsep
-                  [ "{" <+> pretty h <+> "::" <+> tDoc
-                  , "," <+> cmdsMemberName <+> "::" <+> cmdsTDoc
-                  , "}"
-                  ]
-                )
-          <>  line
+          , "data" <+> pretty n <+> "=" <+> pretty c
+          , indent
+            2
+            (vsep
+              [ "{" <+> pretty h <+> "::" <+> tDoc
+              , "," <+> cmdsMemberName <+> "::" <+> cmdsTDoc
+              , "}"
+              ]
+            )
           -- TODO: Just compare on ptr
-          <>  indent 2 "deriving (Eq, Show)"
+          , indent 2 "deriving stock (Eq, Show)"
+          , indent 2 "deriving anyclass (IsHandle)"
           , "instance Zero" <+> pretty n <+> "where" <> line <> indent
             2
             ("zero =" <+> pretty c <+> "zero zero")

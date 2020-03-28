@@ -762,6 +762,7 @@ isForbidden n =
            , "VK_VERSION_MINOR"
            , "VK_VERSION_PATCH"
            , "VK_HEADER_VERSION"
+           , "VK_NULL_HANDLE"
            ]
     )
     ||             "VK_API_VERSION_"
