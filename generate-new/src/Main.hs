@@ -75,7 +75,7 @@ main =
                | Feature {..}      <- toList specFeatures
                , major : minor : _ <- pure $ versionBranch fVersion
                ]
-        doLoadDocs = False
+        doLoadDocs = True
     getDocumentation <- if doLoadDocs
       then liftIO $ loadAllDocumentation allExtensionNames
                                          "./Vulkan-Docs"

@@ -301,11 +301,8 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
   forFeatures_ $ \feat _ getModName -> do
     -- Types directly referred to by the commands and types
     forRequires_ (fRequires feat) getModName $ \modname ReqDeps {..} _ ->
-      forV_ directExporters $ \i -> do
-        exportManyNoReexport modname (i `postIntSet` rel)
-        exportMany
-          modname
-          ((i `postIntSet` rel) `Set.intersection` (IntMap.keysSet allHandles))
+      forV_ directExporters
+        $ \i -> exportManyNoReexport modname (i `postIntSet` rel)
     -- Types indirectly referred to by the commands and types
     forRequires_ (fRequires feat) getModName $ \modname ReqDeps {..} _ ->
       forV_ directExporters
