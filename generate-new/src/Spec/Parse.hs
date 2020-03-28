@@ -98,16 +98,26 @@ parseSpec bs = do
         let
           sizeMap :: Map.Map CName (Int, Int)
           sizeMap =
-            Map.fromList
-              $  bespokeSizes
-              <> [ (eName, (4, 4)) | Enum {..} <- V.toList specEnums ]
-              <> [ (n, (4, 4))
-                 | Enum { eType = ABitmask n } <- V.toList specEnums
-                 ]
-              <> [ (hName, (8, 8)) | Handle {..} <- V.toList specHandles ]
-              <> [ (fpName, (8, 8))
-                 | FuncPointer {..} <- V.toList specFuncPointers
-                 ]
+            let
+              baseMap =
+                Map.fromList
+                  $  bespokeSizes
+                  <> [ (eName, (4, 4)) | Enum {..} <- V.toList specEnums ]
+                  <> [ (n, (4, 4))
+                     | Enum { eType = ABitmask n } <- V.toList specEnums
+                     ]
+                  <> [ (hName, (8, 8)) | Handle {..} <- V.toList specHandles ]
+                  <> [ (fpName, (8, 8))
+                     | FuncPointer {..} <- V.toList specFuncPointers
+                     ]
+              aliasMap =
+                Map.fromList
+                  $ [ (aName, v)
+                    | Alias {..} <- toList typeAliases
+                    , Just v     <- pure $ Map.lookup aTarget baseMap
+                    ]
+            in
+              baseMap <> aliasMap
           constantMap :: Map.Map CName Int
           constantMap = Map.fromList
             [ (n, fromIntegral v)
@@ -455,6 +465,7 @@ parseHandles = onTypes "handle" parseHandle
         "VkDevice"   -> pure Device
         _            -> case getAttr "parent" n of
           Nothing -> pure NoHandleLevel
+          -- TODO: derive this from the spec
           Just "VkInstance" -> pure Instance
           Just "VkPhysicalDevice" -> pure Instance
           Just "VkDevice" -> pure Device
