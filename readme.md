@@ -23,6 +23,14 @@ import `Graphics.Vulkan.Zero` too.
 
 ## Things to know
 
+- Documentation is included more or less verbatim from the Vulkan C API
+  documentation. The parameters it references might not map one-to-one with
+  what's in these bindings. It should be obvious in most cases what it's trying
+  to say.
+
+- Parameters are named with the `:::` operator where it would be useful; this
+  operator simply ignores the string on the left.
+
 - There exists a `Zero` type class defined in
   [Graphics.Vulkan.Zero](src/Graphics/Vulkan/Zero.hs). This is a class for
   initializing values with all zero contents and empty arrays. It's very handy
@@ -56,6 +64,21 @@ import `Graphics.Vulkan.Zero` too.
     instance level and device level commands respectively. These tables can be
     initialized with the `initInstanceCmds` and `initDeviceCmds` found in
     [Graphics.Vulkan.Dynamic](src/Graphics/Vulkan/Dynamic.hs).
+
+- There are nice `Read` and `Show` instances for the enums and bitmasks. These
+  will, where possible, print and parse the pattern synonyms. For example one
+  can do the following:
+
+    ```haskell
+    > show COMPARE_OP_LESS
+    "COMPARE_OP_LESS"
+    ```
+
+# Minor things
+
+- To prevent a name clash between the constructors of
+  `VkClearColorValue` and `VkPerformanceCounterResultKHR` the latter have had
+  `Counter` prefixed.
 
 ## How the C types relate to Haskell types
 

@@ -21,6 +21,7 @@ import           Relude                  hiding ( Reader
 import           Language.Haskell.TH
 import           Language.Haskell.TH.Instances  ( )
 import qualified Data.Vector                   as V
+import qualified Data.Text                     as T
 import           Polysemy
 import           Polysemy.State
 import           Polysemy.Input
@@ -150,9 +151,22 @@ cToHsType' preserve t = do
           Just name -> namedTy name t'
       pure $ foldr (~>) (ConT ''IO :@ retTy) pTys
 
+-- TODO: Remove vulkan specific stuff here
 namedTy :: Text -> H.Type -> H.Type
-namedTy name =
-  InfixT (LitT (StrTyLit (toString name))) (typeName (TyConName ":::"))
+namedTy name ty =
+  let lowerName = Just . T.toLower . T.pack . nameBase
+      tyName    = case ty of
+        ConT n                       -> lowerName n
+        ConT n :@ VarT _             -> lowerName n
+        ConT w :@ ConT n | w == ''Ptr -> lowerName n
+        _                            -> Nothing
+  in  case tyName of
+        Just n | T.toLower name `T.isInfixOf` n -> ty
+        -- If the name contains no more information than the type, don't include
+        -- it
+        _ -> InfixT (LitT (StrTyLit (toString name)))
+                    (typeName (TyConName ":::"))
+                    ty
 
 type NextVar = Input (Maybe Type)
 

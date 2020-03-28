@@ -102,7 +102,7 @@ paramType st MarshaledParam {..} = contextShow (pName mpParam) $ do
   RenderParams {..} <- ask
   let Parameter {..} = mpParam
   n <- st mpScheme
-  pure $ namedTy (unName $ mkParamName pName) <$> n
+  pure $ namedTy (unName . mkParamName $ pName) <$> n
 
 makeReturnType
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)

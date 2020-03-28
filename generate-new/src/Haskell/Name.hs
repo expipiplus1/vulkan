@@ -11,6 +11,8 @@ import           Data.Text.Prettyprint.Doc
 import           Text.InterpolatedString.Perl6
 import           Data.Text
 
+import           Render.Utils                   ( unReservedWord )
+
 data HName
   = TermName { unName :: Text }
   | TyConName { unName :: Text }
@@ -23,8 +25,8 @@ isTyConName = \case
   _           -> False
 
 instance Pretty HName where
-  pretty = pretty . unName
+  pretty = pretty . unReservedWord . unName
 
 instance ShowQ HName where
-  showQ = unpack . unName
+  showQ = unpack . unReservedWord . unName
 

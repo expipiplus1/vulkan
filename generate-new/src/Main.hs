@@ -175,30 +175,21 @@ renderParams handles = r
   dispatchableHandleNames = Set.fromList
     [ hName | Handle {..} <- toList handles, hDispatchable == Dispatchable ]
   r = RenderParams
-    { mkTyName = TyConName . unReservedWord . upperCaseFirst . dropVk
+    { mkTyName                    = TyConName . upperCaseFirst . dropVk
     , mkConName                   = \parent ->
                                       ConName
-                                        . unReservedWord
                                         . (case parent of
                                             "VkPerformanceCounterResultKHR" -> ("Counter" <>)
                                             _ -> id
                                           )
                                         . upperCaseFirst
                                         . dropVk
-    , mkMemberName                = TermName
-                                    . unReservedWord
-                                    . lowerCaseFirst
-                                    . dropPointer
-                                    . unCName
-    , mkFunName = TermName . unReservedWord . lowerCaseFirst . dropVk
-    , mkParamName = TermName . unReservedWord . dropPointer . unCName
-    , mkPatternName               = ConName . unReservedWord . dropVk
-    , mkFuncPointerName = TyConName . unReservedWord . T.tail . unCName
-    , mkFuncPointerMemberName     = TermName
-                                    . unReservedWord
-                                    . ("p" <>)
-                                    . upperCaseFirst
-                                    . unCName
+    , mkMemberName = TermName . lowerCaseFirst . dropPointer . unCName
+    , mkFunName                   = TermName . lowerCaseFirst . dropVk
+    , mkParamName                 = TermName . dropPointer . unCName
+    , mkPatternName               = ConName . dropVk
+    , mkFuncPointerName           = TyConName . T.tail . unCName
+    , mkFuncPointerMemberName = TermName . ("p" <>) . upperCaseFirst . unCName
     , mkEmptyDataName             = TyConName . (<> "_T") . dropVk
     , mkDispatchableHandlePtrName = TermName
                                     . (<> "Handle")
