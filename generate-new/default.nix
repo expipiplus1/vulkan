@@ -40,7 +40,8 @@ let
               sha256 = "18smd2c66gdn9585sdkn60ykvdvkbvkxrnnl9zix687dca6h9jw0";
             })) { });
           compact = doJailbreak super.compact;
-          pandoc = appendPatch super.pandoc ./patches/pandoc-haddock-tables.patch;
+          pandoc =
+            appendPatch super.pandoc ./patches/pandoc-haddock-tables.patch;
         } // pkgs.lib.optionalAttrs hoogle {
           ghc = super.ghc // { withPackages = super.ghc.withHoogle; };
           ghcWithPackages = self.ghc.withPackages;
@@ -48,7 +49,7 @@ let
     };
 
   # Any packages to appear in the environment provisioned by nix-shell
-  extraEnvPackages = with pkgs; [ python3 asciidoctor lasem ];
+  extraEnvPackages = with pkgs; [ ];
 
   # Generate a haskell derivation using the cabal2nix tool on `package.yaml`
   drv = let old = haskellPackages.callCabal2nix "" src { };

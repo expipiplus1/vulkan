@@ -241,7 +241,7 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
       )
     let
       exportToImport (Export name withAll with _) =
-        Import name False (exportName <$> with) (withAll && V.null with) False
+        Import name False mempty (withAll || not (V.null with)) False
       allReexportImports =
         fmap exportToImport
           . Relude.toList

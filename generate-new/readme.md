@@ -34,3 +34,10 @@ vkAllocateDescriptorSets
 
 
 getPhysicalDeviceXlibPresentationSupportKHR -- wrong
+
+## To generate the docs in Vulkan-Docs
+
+```bash
+cd Vulkan-Docs
+nix-shell -p python3 asciidoctor gnumake --run './makeAllExts allman'
+```

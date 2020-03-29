@@ -34,18 +34,7 @@ import           Render.Spec
 import           Render.SpecInfo
 import           Haskell
 
--- | The following rules are applied in order:
---
--- - If a render element specifies where it should go, put it there
--- - Handles are put in a "Handles" module
--- - Enums are put in an "Enums" module
--- - If the features or extensions of a spec mention a name directly then it is
---   put in that module
--- - Constants are put in a "Constants" module
--- - If a type is mentioned directly by a command it is put in the same module
---   as the command
--- - An error is thrown if we matched none of the above
-
+-- | Assign all render elements a module
 assignModules
   :: forall r
    . (HasErr r, HasRenderParams r, HasSpecInfo r)
@@ -274,8 +263,14 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
   ----------------------------------------------------------------
   -- Explicit exports of all features and extensions
   ----------------------------------------------------------------
-  forFeaturesAndExtensions
-    $ \_ modname _ ReqDeps {..} _ -> forV_ directExporters $ export modname
+  forFeaturesAndExtensions $ \_ modname isFeature ReqDeps {..} _ -> if isFeature
+    then forV_ directExporters $ export modname
+    else
+      let noCore = Set.toList
+            (                Set.fromList (toList directExporters)
+            `Set.difference` allCoreExports
+            )
+      in  forV_ noCore $ export modname
 
   ----------------------------------------------------------------
   -- Assign aliases to be with their targets if they're not already assigned
@@ -316,8 +311,10 @@ assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
       exportManyNoReexport modname (i `postIntSet` rel)
       exportMany modname ((i `postIntSet` rel) `Set.difference` allCoreExports)
 
-  forExtensionRequires $ \_ modname ReqDeps {..} _ -> forV_ directExporters
-    $ \i -> exportManyNoReexport modname (i `postIntSet` closedRel)
+  forExtensionRequires $ \_ modname ReqDeps {..} _ ->
+    forV_ directExporters $ \i -> exportMany
+      modname
+      ((i `postIntSet` closedRel) `Set.difference` allCoreExports)
 
 
 firstTypeName :: HasErr r => RenderElement -> Sem r Text

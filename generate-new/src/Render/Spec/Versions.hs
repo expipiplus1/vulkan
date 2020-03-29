@@ -9,6 +9,7 @@ import           Relude                  hiding ( Reader
 import           Polysemy
 import           Polysemy.Reader
 import           Data.Vector                    ( Vector )
+import qualified Data.Vector                   as V
 import           Text.InterpolatedString.Perl6.Unindented
 import           Data.Version
 
@@ -26,6 +27,8 @@ specVersions
   -> Vector (Sem r RenderElement)
 specVersions Spec {..} = fromList
   ( headerVersion specHeaderVersion
+  : headerVersionComplete (fVersion (V.last specFeatures))
+                          specHeaderVersion
   : versionConstruction
   : (featureVersion <$> toList specFeatures)
   )
@@ -40,6 +43,22 @@ headerVersion version = genRe "header version" $ do
   tellDoc [qqi|
     pattern {pat} :: Word32
     pattern {pat} = {version}
+  |]
+
+headerVersionComplete
+  :: (HasErr r, HasRenderParams r) => Version -> Word -> Sem r RenderElement
+headerVersionComplete lastFeatureVersion headerVersion =
+  genRe "header version complete" $ do
+    RenderParams {..} <- ask
+    tellExplicitModule (ModName "Graphics.Vulkan.Version")
+    let pat               = mkPatternName "VK_HEADER_VERSION_COMPLETE"
+        major : minor : _ = versionBranch lastFeatureVersion
+        makeVersion       = mkPatternName "VK_MAKE_VERSION"
+    tellExport (EPat pat)
+    tellImport ''Word32
+    tellDoc [qqi|
+    pattern {pat} :: Word32
+    pattern {pat} = {makeVersion} {major} {minor} {headerVersion}
   |]
 
 featureVersion
