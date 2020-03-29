@@ -1,18 +1,13 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_NN_vi_surface  (ViSurfaceCreateInfoNN) where
 
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data ViSurfaceCreateInfoNN
 
-module Graphics.Vulkan.Extensions.VK_NN_vi_surface
-  ( ViSurfaceCreateFlagsNN
-  ) where
+instance ToCStruct ViSurfaceCreateInfoNN
+instance Show ViSurfaceCreateInfoNN
 
+instance FromCStruct ViSurfaceCreateInfoNN
 
-
-
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NN_vi_surface
-  ( VkViSurfaceCreateFlagsNN
-  )
-
-
--- No documentation found for TopLevel "ViSurfaceCreateFlagsNN"
-type ViSurfaceCreateFlagsNN = VkViSurfaceCreateFlagsNN

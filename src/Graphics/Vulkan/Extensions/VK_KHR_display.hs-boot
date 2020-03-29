@@ -1,42 +1,68 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_KHR_display  ( DisplayModeCreateInfoKHR
+                                                  , DisplayModeParametersKHR
+                                                  , DisplayModePropertiesKHR
+                                                  , DisplayPlaneCapabilitiesKHR
+                                                  , DisplayPlanePropertiesKHR
+                                                  , DisplayPropertiesKHR
+                                                  , DisplaySurfaceCreateInfoKHR
+                                                  ) where
+
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data DisplayModeCreateInfoKHR
+
+instance ToCStruct DisplayModeCreateInfoKHR
+instance Show DisplayModeCreateInfoKHR
+
+instance FromCStruct DisplayModeCreateInfoKHR
 
 
-module Graphics.Vulkan.Extensions.VK_KHR_display
-  ( DisplayKHR
-  , DisplayModeCreateFlagsKHR
-  , DisplayModeKHR
-  , DisplayPlaneAlphaFlagBitsKHR
-  , DisplayPlaneAlphaFlagsKHR
-  , DisplaySurfaceCreateFlagsKHR
-  ) where
+data DisplayModeParametersKHR
+
+instance ToCStruct DisplayModeParametersKHR
+instance Show DisplayModeParametersKHR
+
+instance FromCStruct DisplayModeParametersKHR
 
 
+data DisplayModePropertiesKHR
+
+instance ToCStruct DisplayModePropertiesKHR
+instance Show DisplayModePropertiesKHR
+
+instance FromCStruct DisplayModePropertiesKHR
 
 
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_display
-  ( VkDisplayKHR
-  , VkDisplayModeCreateFlagsKHR
-  , VkDisplayModeKHR
-  , VkDisplayPlaneAlphaFlagBitsKHR
-  , VkDisplaySurfaceCreateFlagsKHR
-  )
+data DisplayPlaneCapabilitiesKHR
+
+instance ToCStruct DisplayPlaneCapabilitiesKHR
+instance Show DisplayPlaneCapabilitiesKHR
+
+instance FromCStruct DisplayPlaneCapabilitiesKHR
 
 
--- No documentation found for TopLevel "DisplayKHR"
-type DisplayKHR = VkDisplayKHR
+data DisplayPlanePropertiesKHR
 
--- No documentation found for TopLevel "DisplayModeCreateFlagsKHR"
-type DisplayModeCreateFlagsKHR = VkDisplayModeCreateFlagsKHR
+instance ToCStruct DisplayPlanePropertiesKHR
+instance Show DisplayPlanePropertiesKHR
 
--- No documentation found for TopLevel "DisplayModeKHR"
-type DisplayModeKHR = VkDisplayModeKHR
+instance FromCStruct DisplayPlanePropertiesKHR
 
--- No documentation found for TopLevel "DisplayPlaneAlphaFlagBitsKHR"
-type DisplayPlaneAlphaFlagBitsKHR = VkDisplayPlaneAlphaFlagBitsKHR
 
--- No documentation found for TopLevel "DisplayPlaneAlphaFlagsKHR"
-type DisplayPlaneAlphaFlagsKHR = DisplayPlaneAlphaFlagBitsKHR
+data DisplayPropertiesKHR
 
--- No documentation found for TopLevel "DisplaySurfaceCreateFlagsKHR"
-type DisplaySurfaceCreateFlagsKHR = VkDisplaySurfaceCreateFlagsKHR
+instance ToCStruct DisplayPropertiesKHR
+instance Show DisplayPropertiesKHR
+
+instance FromCStruct DisplayPropertiesKHR
+
+
+data DisplaySurfaceCreateInfoKHR
+
+instance ToCStruct DisplaySurfaceCreateInfoKHR
+instance Show DisplaySurfaceCreateInfoKHR
+
+instance FromCStruct DisplaySurfaceCreateInfoKHR
+

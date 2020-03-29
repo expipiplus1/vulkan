@@ -1,40 +1,81 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Core10.SparseResourceMemoryManagement  ( BindSparseInfo
+                                                              , SparseBufferMemoryBindInfo
+                                                              , SparseImageFormatProperties
+                                                              , SparseImageMemoryBind
+                                                              , SparseImageMemoryBindInfo
+                                                              , SparseImageMemoryRequirements
+                                                              , SparseImageOpaqueMemoryBindInfo
+                                                              , SparseMemoryBind
+                                                              ) where
+
+import Data.Kind (Type)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (Chain)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (PeekChain)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (PokeChain)
+import Graphics.Vulkan.CStruct (ToCStruct)
+type role BindSparseInfo nominal
+data BindSparseInfo (es :: [Type])
+
+instance PokeChain es => ToCStruct (BindSparseInfo es)
+instance Show (Chain es) => Show (BindSparseInfo es)
+
+instance PeekChain es => FromCStruct (BindSparseInfo es)
 
 
-module Graphics.Vulkan.Core10.SparseResourceMemoryManagement
-  ( ImageAspectFlagBits
-  , ImageAspectFlags
-  , SparseImageFormatFlagBits
-  , SparseImageFormatFlags
-  , SparseMemoryBindFlagBits
-  , SparseMemoryBindFlags
-  ) where
+data SparseBufferMemoryBindInfo
+
+instance ToCStruct SparseBufferMemoryBindInfo
+instance Show SparseBufferMemoryBindInfo
+
+instance FromCStruct SparseBufferMemoryBindInfo
 
 
+data SparseImageFormatProperties
+
+instance ToCStruct SparseImageFormatProperties
+instance Show SparseImageFormatProperties
+
+instance FromCStruct SparseImageFormatProperties
 
 
-import {-# source #-} Graphics.Vulkan.C.Core10.SparseResourceMemoryManagement
-  ( VkImageAspectFlagBits
-  , VkSparseImageFormatFlagBits
-  , VkSparseMemoryBindFlagBits
-  )
+data SparseImageMemoryBind
+
+instance ToCStruct SparseImageMemoryBind
+instance Show SparseImageMemoryBind
+
+instance FromCStruct SparseImageMemoryBind
 
 
--- No documentation found for TopLevel "ImageAspectFlagBits"
-type ImageAspectFlagBits = VkImageAspectFlagBits
+data SparseImageMemoryBindInfo
 
--- No documentation found for TopLevel "ImageAspectFlags"
-type ImageAspectFlags = ImageAspectFlagBits
+instance ToCStruct SparseImageMemoryBindInfo
+instance Show SparseImageMemoryBindInfo
 
--- No documentation found for TopLevel "SparseImageFormatFlagBits"
-type SparseImageFormatFlagBits = VkSparseImageFormatFlagBits
+instance FromCStruct SparseImageMemoryBindInfo
 
--- No documentation found for TopLevel "SparseImageFormatFlags"
-type SparseImageFormatFlags = SparseImageFormatFlagBits
 
--- No documentation found for TopLevel "SparseMemoryBindFlagBits"
-type SparseMemoryBindFlagBits = VkSparseMemoryBindFlagBits
+data SparseImageMemoryRequirements
 
--- No documentation found for TopLevel "SparseMemoryBindFlags"
-type SparseMemoryBindFlags = SparseMemoryBindFlagBits
+instance ToCStruct SparseImageMemoryRequirements
+instance Show SparseImageMemoryRequirements
+
+instance FromCStruct SparseImageMemoryRequirements
+
+
+data SparseImageOpaqueMemoryBindInfo
+
+instance ToCStruct SparseImageOpaqueMemoryBindInfo
+instance Show SparseImageOpaqueMemoryBindInfo
+
+instance FromCStruct SparseImageOpaqueMemoryBindInfo
+
+
+data SparseMemoryBind
+
+instance ToCStruct SparseMemoryBind
+instance Show SparseMemoryBind
+
+instance FromCStruct SparseMemoryBind
+

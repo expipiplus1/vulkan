@@ -1,60 +1,167 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
+module Graphics.Vulkan.Extensions.VK_EXT_acquire_xlib_display  ( acquireXlibDisplayEXT
+                                                               , getRandROutputDisplayEXT
+                                                               , EXT_ACQUIRE_XLIB_DISPLAY_SPEC_VERSION
+                                                               , pattern EXT_ACQUIRE_XLIB_DISPLAY_SPEC_VERSION
+                                                               , EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME
+                                                               , pattern EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME
+                                                               , DisplayKHR(..)
+                                                               , Display
+                                                               , RROutput
+                                                               ) where
 
-module Graphics.Vulkan.Extensions.VK_EXT_acquire_xlib_display
-  ( acquireXlibDisplayEXT
-  , getRandROutputDisplayEXT
-  , pattern EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME
-  , pattern EXT_ACQUIRE_XLIB_DISPLAY_SPEC_VERSION
-  ) where
+import Control.Exception.Base (bracket)
+import Foreign.Marshal.Alloc (callocBytes)
+import Foreign.Marshal.Alloc (free)
+import GHC.Base (when)
+import GHC.IO (throwIO)
+import Control.Monad.Trans.Class (lift)
+import Control.Monad.Trans.Cont (evalContT)
+import Data.String (IsString)
+import Foreign.Storable (Storable(peek))
+import Foreign.Ptr (FunPtr)
+import Foreign.Ptr (Ptr)
+import Control.Monad.Trans.Cont (ContT(..))
+import Graphics.Vulkan.NamedType ((:::))
+import Graphics.Vulkan.Extensions.WSITypes (Display)
+import Graphics.Vulkan.Extensions.Handles (DisplayKHR)
+import Graphics.Vulkan.Extensions.Handles (DisplayKHR(..))
+import Graphics.Vulkan.Dynamic (InstanceCmds(pVkAcquireXlibDisplayEXT))
+import Graphics.Vulkan.Dynamic (InstanceCmds(pVkGetRandROutputDisplayEXT))
+import Graphics.Vulkan.Core10.Handles (PhysicalDevice)
+import Graphics.Vulkan.Core10.Handles (PhysicalDevice(..))
+import Graphics.Vulkan.Core10.Handles (PhysicalDevice_T)
+import Graphics.Vulkan.Extensions.WSITypes (RROutput)
+import Graphics.Vulkan.Core10.Enums.Result (Result)
+import Graphics.Vulkan.Core10.Enums.Result (Result(..))
+import Graphics.Vulkan.Exception (VulkanException(..))
+import Graphics.Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Graphics.Vulkan.Extensions.WSITypes (Display)
+import Graphics.Vulkan.Extensions.Handles (DisplayKHR(..))
+import Graphics.Vulkan.Extensions.WSITypes (RROutput)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkAcquireXlibDisplayEXT
+  :: FunPtr (Ptr PhysicalDevice_T -> Ptr Display -> DisplayKHR -> IO Result) -> Ptr PhysicalDevice_T -> Ptr Display -> DisplayKHR -> IO Result
 
-import Data.String
-  ( IsString
-  )
-import Foreign.Marshal.Alloc
-  ( alloca
-  )
-import Foreign.Ptr
-  ( Ptr
-  )
-import Foreign.Storable
-  ( peek
-  )
+-- | vkAcquireXlibDisplayEXT - Acquire access to a VkDisplayKHR using Xlib
+--
+-- = Parameters
+--
+-- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' The physical device
+--     the display is on.
+--
+-- -   @dpy@ A connection to the X11 server that currently owns
+--     'Graphics.Vulkan.Extensions.WSITypes.Display'.
+--
+-- -   'Graphics.Vulkan.Extensions.WSITypes.Display' The display the caller
+--     wishes to control in Vulkan.
+--
+-- = Description
+--
+-- All permissions necessary to control the display are granted to the
+-- Vulkan instance associated with
+-- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' until the display is
+-- released or the X11 connection specified by @dpy@ is terminated.
+-- Permission to access the display /may/ be temporarily revoked during
+-- periods when the X11 server from which control was acquired itself loses
+-- access to 'Graphics.Vulkan.Extensions.WSITypes.Display'. During such
+-- periods, operations which require access to the display /must/ fail with
+-- an approriate error code. If the X11 server associated with @dpy@ does
+-- not own 'Graphics.Vulkan.Extensions.WSITypes.Display', or if permission
+-- to access it has already been acquired by another entity, the call
+-- /must/ return the error code
+-- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'.
+--
+-- Note
+--
+-- One example of when an X11 server loses access to a display is when it
+-- loses ownership of its virtual terminal.
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Extensions.Handles.DisplayKHR',
+-- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
+acquireXlibDisplayEXT :: PhysicalDevice -> ("dpy" ::: Ptr Display) -> DisplayKHR -> IO ()
+acquireXlibDisplayEXT physicalDevice dpy display = do
+  let vkAcquireXlibDisplayEXT' = mkVkAcquireXlibDisplayEXT (pVkAcquireXlibDisplayEXT (instanceCmds (physicalDevice :: PhysicalDevice)))
+  r <- vkAcquireXlibDisplayEXT' (physicalDeviceHandle (physicalDevice)) (dpy) (display)
+  when (r < SUCCESS) (throwIO (VulkanException r))
 
 
-import Graphics.Vulkan.C.Extensions.VK_EXT_acquire_xlib_display
-  ( RROutput
-  , vkAcquireXlibDisplayEXT
-  , vkGetRandROutputDisplayEXT
-  , pattern VK_EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME
-  , pattern VK_EXT_ACQUIRE_XLIB_DISPLAY_SPEC_VERSION
-  )
-import Graphics.Vulkan.C.Extensions.VK_KHR_xlib_surface
-  ( Display(..)
-  )
-import Graphics.Vulkan.Core10.DeviceInitialization
-  ( PhysicalDevice(..)
-  )
-import Graphics.Vulkan.Extensions.VK_KHR_display
-  ( DisplayKHR
-  )
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkGetRandROutputDisplayEXT
+  :: FunPtr (Ptr PhysicalDevice_T -> Ptr Display -> RROutput -> Ptr DisplayKHR -> IO Result) -> Ptr PhysicalDevice_T -> Ptr Display -> RROutput -> Ptr DisplayKHR -> IO Result
+
+-- | vkGetRandROutputDisplayEXT - Query the VkDisplayKHR corresponding to an
+-- X11 RandR Output
+--
+-- = Parameters
+--
+-- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' The physical device
+--     to query the display handle on.
+--
+-- -   @dpy@ A connection to the X11 server from which @rrOutput@ was
+--     queried.
+--
+-- -   @rrOutput@ An X11 RandR output ID.
+--
+-- -   @pDisplay@ The corresponding
+--     'Graphics.Vulkan.Extensions.Handles.DisplayKHR' handle will be
+--     returned here.
+--
+-- = Description
+--
+-- If there is no 'Graphics.Vulkan.Extensions.Handles.DisplayKHR'
+-- corresponding to @rrOutput@ on
+-- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
+-- 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ be returned in
+-- @pDisplay@.
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Extensions.Handles.DisplayKHR',
+-- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
+getRandROutputDisplayEXT :: PhysicalDevice -> ("dpy" ::: Ptr Display) -> RROutput -> IO (DisplayKHR)
+getRandROutputDisplayEXT physicalDevice dpy rrOutput = evalContT $ do
+  let vkGetRandROutputDisplayEXT' = mkVkGetRandROutputDisplayEXT (pVkGetRandROutputDisplayEXT (instanceCmds (physicalDevice :: PhysicalDevice)))
+  pPDisplay <- ContT $ bracket (callocBytes @DisplayKHR 8) free
+  _ <- lift $ vkGetRandROutputDisplayEXT' (physicalDeviceHandle (physicalDevice)) (dpy) (rrOutput) (pPDisplay)
+  pDisplay <- lift $ peek @DisplayKHR pPDisplay
+  pure $ (pDisplay)
 
 
-
--- No documentation found for TopLevel "vkAcquireXlibDisplayEXT"
-acquireXlibDisplayEXT :: PhysicalDevice ->  Ptr Display ->  DisplayKHR ->  IO ()
-acquireXlibDisplayEXT = undefined {- {wrapped (pretty cName) :: Doc ()} -}
-
-
--- No documentation found for TopLevel "vkGetRandROutputDisplayEXT"
-getRandROutputDisplayEXT :: PhysicalDevice ->  Ptr Display ->  RROutput ->  IO (DisplayKHR)
-getRandROutputDisplayEXT = undefined {- {wrapped (pretty cName) :: Doc ()} -}
-
--- No documentation found for TopLevel "VK_EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME"
-pattern EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME :: (Eq a, IsString a) => a
-pattern EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME = VK_EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME
+type EXT_ACQUIRE_XLIB_DISPLAY_SPEC_VERSION = 1
 
 -- No documentation found for TopLevel "VK_EXT_ACQUIRE_XLIB_DISPLAY_SPEC_VERSION"
-pattern EXT_ACQUIRE_XLIB_DISPLAY_SPEC_VERSION :: Integral a => a
-pattern EXT_ACQUIRE_XLIB_DISPLAY_SPEC_VERSION = VK_EXT_ACQUIRE_XLIB_DISPLAY_SPEC_VERSION
+pattern EXT_ACQUIRE_XLIB_DISPLAY_SPEC_VERSION :: forall a . Integral a => a
+pattern EXT_ACQUIRE_XLIB_DISPLAY_SPEC_VERSION = 1
+
+
+type EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME = "VK_EXT_acquire_xlib_display"
+
+-- No documentation found for TopLevel "VK_EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME"
+pattern EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern EXT_ACQUIRE_XLIB_DISPLAY_EXTENSION_NAME = "VK_EXT_acquire_xlib_display"
+

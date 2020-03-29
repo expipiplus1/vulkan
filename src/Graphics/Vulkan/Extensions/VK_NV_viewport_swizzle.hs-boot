@@ -1,23 +1,23 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_NV_viewport_swizzle  ( PipelineViewportSwizzleStateCreateInfoNV
+                                                          , ViewportSwizzleNV
+                                                          ) where
+
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data PipelineViewportSwizzleStateCreateInfoNV
+
+instance ToCStruct PipelineViewportSwizzleStateCreateInfoNV
+instance Show PipelineViewportSwizzleStateCreateInfoNV
+
+instance FromCStruct PipelineViewportSwizzleStateCreateInfoNV
 
 
-module Graphics.Vulkan.Extensions.VK_NV_viewport_swizzle
-  ( PipelineViewportSwizzleStateCreateFlagsNV
-  , ViewportCoordinateSwizzleNV
-  ) where
+data ViewportSwizzleNV
 
+instance ToCStruct ViewportSwizzleNV
+instance Show ViewportSwizzleNV
 
+instance FromCStruct ViewportSwizzleNV
 
-
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_viewport_swizzle
-  ( VkPipelineViewportSwizzleStateCreateFlagsNV
-  , VkViewportCoordinateSwizzleNV
-  )
-
-
--- No documentation found for TopLevel "PipelineViewportSwizzleStateCreateFlagsNV"
-type PipelineViewportSwizzleStateCreateFlagsNV = VkPipelineViewportSwizzleStateCreateFlagsNV
-
--- No documentation found for TopLevel "ViewportCoordinateSwizzleNV"
-type ViewportCoordinateSwizzleNV = VkViewportCoordinateSwizzleNV

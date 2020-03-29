@@ -1,18 +1,13 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_AMD_rasterization_order  (PipelineRasterizationStateRasterizationOrderAMD) where
 
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data PipelineRasterizationStateRasterizationOrderAMD
 
-module Graphics.Vulkan.Extensions.VK_AMD_rasterization_order
-  ( RasterizationOrderAMD
-  ) where
+instance ToCStruct PipelineRasterizationStateRasterizationOrderAMD
+instance Show PipelineRasterizationStateRasterizationOrderAMD
 
+instance FromCStruct PipelineRasterizationStateRasterizationOrderAMD
 
-
-
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_AMD_rasterization_order
-  ( VkRasterizationOrderAMD
-  )
-
-
--- No documentation found for TopLevel "RasterizationOrderAMD"
-type RasterizationOrderAMD = VkRasterizationOrderAMD

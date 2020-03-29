@@ -1,70 +1,121 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_NV_ray_tracing  ( AccelerationStructureCreateInfoNV
+                                                     , AccelerationStructureInfoNV
+                                                     , AccelerationStructureMemoryRequirementsInfoNV
+                                                     , BindAccelerationStructureMemoryInfoNV
+                                                     , GeometryAABBNV
+                                                     , GeometryDataNV
+                                                     , GeometryNV
+                                                     , GeometryTrianglesNV
+                                                     , PhysicalDeviceRayTracingPropertiesNV
+                                                     , RayTracingPipelineCreateInfoNV
+                                                     , RayTracingShaderGroupCreateInfoNV
+                                                     , WriteDescriptorSetAccelerationStructureNV
+                                                     , CopyAccelerationStructureModeNV
+                                                     ) where
+
+import Data.Kind (Type)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (Chain)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (PeekChain)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (PokeChain)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data AccelerationStructureCreateInfoNV
+
+instance ToCStruct AccelerationStructureCreateInfoNV
+instance Show AccelerationStructureCreateInfoNV
+
+instance FromCStruct AccelerationStructureCreateInfoNV
 
 
-module Graphics.Vulkan.Extensions.VK_NV_ray_tracing
-  ( AccelerationStructureMemoryRequirementsTypeNV
-  , AccelerationStructureNV
-  , AccelerationStructureTypeNV
-  , BuildAccelerationStructureFlagBitsNV
-  , BuildAccelerationStructureFlagsNV
-  , CopyAccelerationStructureModeNV
-  , GeometryFlagBitsNV
-  , GeometryFlagsNV
-  , GeometryInstanceFlagBitsNV
-  , GeometryInstanceFlagsNV
-  , GeometryTypeNV
-  , RayTracingShaderGroupTypeNV
-  ) where
+data AccelerationStructureInfoNV
+
+instance ToCStruct AccelerationStructureInfoNV
+instance Show AccelerationStructureInfoNV
+
+instance FromCStruct AccelerationStructureInfoNV
 
 
+data AccelerationStructureMemoryRequirementsInfoNV
+
+instance ToCStruct AccelerationStructureMemoryRequirementsInfoNV
+instance Show AccelerationStructureMemoryRequirementsInfoNV
+
+instance FromCStruct AccelerationStructureMemoryRequirementsInfoNV
 
 
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_ray_tracing
-  ( VkAccelerationStructureMemoryRequirementsTypeNV
-  , VkAccelerationStructureNV
-  , VkAccelerationStructureTypeNV
-  , VkBuildAccelerationStructureFlagBitsNV
-  , VkCopyAccelerationStructureModeNV
-  , VkGeometryFlagBitsNV
-  , VkGeometryInstanceFlagBitsNV
-  , VkGeometryTypeNV
-  , VkRayTracingShaderGroupTypeNV
-  )
+data BindAccelerationStructureMemoryInfoNV
+
+instance ToCStruct BindAccelerationStructureMemoryInfoNV
+instance Show BindAccelerationStructureMemoryInfoNV
+
+instance FromCStruct BindAccelerationStructureMemoryInfoNV
 
 
--- No documentation found for TopLevel "AccelerationStructureMemoryRequirementsTypeNV"
-type AccelerationStructureMemoryRequirementsTypeNV = VkAccelerationStructureMemoryRequirementsTypeNV
+data GeometryAABBNV
 
--- No documentation found for TopLevel "AccelerationStructureNV"
-type AccelerationStructureNV = VkAccelerationStructureNV
+instance ToCStruct GeometryAABBNV
+instance Show GeometryAABBNV
 
--- No documentation found for TopLevel "AccelerationStructureTypeNV"
-type AccelerationStructureTypeNV = VkAccelerationStructureTypeNV
+instance FromCStruct GeometryAABBNV
 
--- No documentation found for TopLevel "BuildAccelerationStructureFlagBitsNV"
-type BuildAccelerationStructureFlagBitsNV = VkBuildAccelerationStructureFlagBitsNV
 
--- No documentation found for TopLevel "BuildAccelerationStructureFlagsNV"
-type BuildAccelerationStructureFlagsNV = BuildAccelerationStructureFlagBitsNV
+data GeometryDataNV
 
--- No documentation found for TopLevel "CopyAccelerationStructureModeNV"
-type CopyAccelerationStructureModeNV = VkCopyAccelerationStructureModeNV
+instance ToCStruct GeometryDataNV
+instance Show GeometryDataNV
 
--- No documentation found for TopLevel "GeometryFlagBitsNV"
-type GeometryFlagBitsNV = VkGeometryFlagBitsNV
+instance FromCStruct GeometryDataNV
 
--- No documentation found for TopLevel "GeometryFlagsNV"
-type GeometryFlagsNV = GeometryFlagBitsNV
 
--- No documentation found for TopLevel "GeometryInstanceFlagBitsNV"
-type GeometryInstanceFlagBitsNV = VkGeometryInstanceFlagBitsNV
+data GeometryNV
 
--- No documentation found for TopLevel "GeometryInstanceFlagsNV"
-type GeometryInstanceFlagsNV = GeometryInstanceFlagBitsNV
+instance ToCStruct GeometryNV
+instance Show GeometryNV
 
--- No documentation found for TopLevel "GeometryTypeNV"
-type GeometryTypeNV = VkGeometryTypeNV
+instance FromCStruct GeometryNV
 
--- No documentation found for TopLevel "RayTracingShaderGroupTypeNV"
-type RayTracingShaderGroupTypeNV = VkRayTracingShaderGroupTypeNV
+
+data GeometryTrianglesNV
+
+instance ToCStruct GeometryTrianglesNV
+instance Show GeometryTrianglesNV
+
+instance FromCStruct GeometryTrianglesNV
+
+
+data PhysicalDeviceRayTracingPropertiesNV
+
+instance ToCStruct PhysicalDeviceRayTracingPropertiesNV
+instance Show PhysicalDeviceRayTracingPropertiesNV
+
+instance FromCStruct PhysicalDeviceRayTracingPropertiesNV
+
+
+type role RayTracingPipelineCreateInfoNV nominal
+data RayTracingPipelineCreateInfoNV (es :: [Type])
+
+instance PokeChain es => ToCStruct (RayTracingPipelineCreateInfoNV es)
+instance Show (Chain es) => Show (RayTracingPipelineCreateInfoNV es)
+
+instance PeekChain es => FromCStruct (RayTracingPipelineCreateInfoNV es)
+
+
+data RayTracingShaderGroupCreateInfoNV
+
+instance ToCStruct RayTracingShaderGroupCreateInfoNV
+instance Show RayTracingShaderGroupCreateInfoNV
+
+instance FromCStruct RayTracingShaderGroupCreateInfoNV
+
+
+data WriteDescriptorSetAccelerationStructureNV
+
+instance ToCStruct WriteDescriptorSetAccelerationStructureNV
+instance Show WriteDescriptorSetAccelerationStructureNV
+
+instance FromCStruct WriteDescriptorSetAccelerationStructureNV
+
+
+data CopyAccelerationStructureModeNV
+

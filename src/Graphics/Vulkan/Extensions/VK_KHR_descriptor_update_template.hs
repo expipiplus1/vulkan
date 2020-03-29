@@ -1,123 +1,97 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
+module Graphics.Vulkan.Extensions.VK_KHR_descriptor_update_template  ( pattern STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO_KHR
+                                                                     , pattern OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR
+                                                                     , pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET_KHR
+                                                                     , pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR_EXT
+                                                                     , createDescriptorUpdateTemplateKHR
+                                                                     , destroyDescriptorUpdateTemplateKHR
+                                                                     , updateDescriptorSetWithTemplateKHR
+                                                                     , DescriptorUpdateTemplateCreateFlagsKHR
+                                                                     , DescriptorUpdateTemplateKHR
+                                                                     , DescriptorUpdateTemplateTypeKHR
+                                                                     , DescriptorUpdateTemplateEntryKHR
+                                                                     , DescriptorUpdateTemplateCreateInfoKHR
+                                                                     , KHR_DESCRIPTOR_UPDATE_TEMPLATE_SPEC_VERSION
+                                                                     , pattern KHR_DESCRIPTOR_UPDATE_TEMPLATE_SPEC_VERSION
+                                                                     , KHR_DESCRIPTOR_UPDATE_TEMPLATE_EXTENSION_NAME
+                                                                     , pattern KHR_DESCRIPTOR_UPDATE_TEMPLATE_EXTENSION_NAME
+                                                                     , cmdPushDescriptorSetWithTemplateKHR
+                                                                     , DebugReportObjectTypeEXT(..)
+                                                                     ) where
 
-module Graphics.Vulkan.Extensions.VK_KHR_descriptor_update_template
-  ( DescriptorUpdateTemplateCreateInfoKHR
-  , DescriptorUpdateTemplateEntryKHR
-  , DescriptorUpdateTemplateKHR
-  , createDescriptorUpdateTemplateKHR
-  , destroyDescriptorUpdateTemplateKHR
-  , updateDescriptorSetWithTemplateKHR
-  , pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR_EXT
-  , pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET_KHR
-  , pattern KHR_DESCRIPTOR_UPDATE_TEMPLATE_EXTENSION_NAME
-  , pattern KHR_DESCRIPTOR_UPDATE_TEMPLATE_SPEC_VERSION
-  , pattern OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR
-  , pattern STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO_KHR
-  , DescriptorUpdateTemplateCreateFlagsKHR
-  , DescriptorUpdateTemplateTypeKHR
-  , cmdPushDescriptorSetWithTemplateKHR
-  , pattern STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO
-  , pattern OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE
-  , pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
-  , pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR
-  , pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT
-  ) where
-
-import Data.String
-  ( IsString
-  )
-import Foreign.Ptr
-  ( Ptr
-  )
-
-
-import Graphics.Vulkan.C.Core10.Core
-  ( VkObjectType(..)
-  , VkStructureType(..)
-  )
-import Graphics.Vulkan.C.Core11.Promoted_from_VK_KHR_descriptor_update_template
-  ( VkDescriptorUpdateTemplateType(..)
-  )
-import Graphics.Vulkan.C.Extensions.VK_EXT_debug_report
-  ( VkDebugReportObjectTypeEXT(..)
-  )
-import Graphics.Vulkan.C.Extensions.VK_KHR_descriptor_update_template
-  ( pattern VK_KHR_DESCRIPTOR_UPDATE_TEMPLATE_EXTENSION_NAME
-  , pattern VK_KHR_DESCRIPTOR_UPDATE_TEMPLATE_SPEC_VERSION
-  )
-import Graphics.Vulkan.Core10.Core
-  ( pattern OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE
-  , pattern STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO
-  )
-import Graphics.Vulkan.Core10.DescriptorSet
-  ( DescriptorSet
-  )
-import Graphics.Vulkan.Core10.DeviceInitialization
-  ( AllocationCallbacks(..)
-  , Device(..)
-  )
-import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_descriptor_update_template
-  ( DescriptorUpdateTemplateCreateInfo(..)
-  , DescriptorUpdateTemplateEntry(..)
-  , DescriptorUpdateTemplate
-  , createDescriptorUpdateTemplate
-  , destroyDescriptorUpdateTemplate
-  , updateDescriptorSetWithTemplate
-  , pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
-  )
-import Graphics.Vulkan.Extensions.VK_EXT_debug_report
-  ( pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT
-  )
-import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_descriptor_update_template
-  ( DescriptorUpdateTemplateCreateFlagsKHR
-  , DescriptorUpdateTemplateTypeKHR
-  , pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR
-  )
-import Graphics.Vulkan.Extensions.VK_KHR_push_descriptor
-  ( cmdPushDescriptorSetWithTemplateKHR
-  )
+import Data.String (IsString)
+import Graphics.Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template (createDescriptorUpdateTemplate)
+import Graphics.Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template (destroyDescriptorUpdateTemplate)
+import Graphics.Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template (updateDescriptorSetWithTemplate)
+import Graphics.Vulkan.Core11.Handles (DescriptorUpdateTemplate)
+import Graphics.Vulkan.Core11.Enums.DescriptorUpdateTemplateCreateFlags (DescriptorUpdateTemplateCreateFlags)
+import Graphics.Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template (DescriptorUpdateTemplateCreateInfo)
+import Graphics.Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template (DescriptorUpdateTemplateEntry)
+import Graphics.Vulkan.Core11.Enums.DescriptorUpdateTemplateType (DescriptorUpdateTemplateType)
+import Graphics.Vulkan.Extensions.VK_EXT_debug_report (DebugReportObjectTypeEXT(DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT))
+import Graphics.Vulkan.Core11.Enums.DescriptorUpdateTemplateType (DescriptorUpdateTemplateType(DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET))
+import Graphics.Vulkan.Core10.Enums.ObjectType (ObjectType(OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO))
+import Graphics.Vulkan.Extensions.VK_KHR_push_descriptor (cmdPushDescriptorSetWithTemplateKHR)
+import Graphics.Vulkan.Extensions.VK_EXT_debug_report (DebugReportObjectTypeEXT(..))
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO_KHR"
+pattern STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO_KHR = STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO
 
 
-type DescriptorUpdateTemplateCreateInfoKHR = DescriptorUpdateTemplateCreateInfo
--- TODO: Pattern constructor alias)
-
-type DescriptorUpdateTemplateEntryKHR = DescriptorUpdateTemplateEntry
--- TODO: Pattern constructor alias)
-
--- No documentation found for TopLevel "DescriptorUpdateTemplateKHR"
-type DescriptorUpdateTemplateKHR = DescriptorUpdateTemplate
-
-createDescriptorUpdateTemplateKHR :: Device ->  DescriptorUpdateTemplateCreateInfo ->  Maybe AllocationCallbacks ->  IO (DescriptorUpdateTemplate)
-createDescriptorUpdateTemplateKHR = createDescriptorUpdateTemplate
-
-destroyDescriptorUpdateTemplateKHR :: Device ->  DescriptorUpdateTemplate ->  Maybe AllocationCallbacks ->  IO ()
-destroyDescriptorUpdateTemplateKHR = destroyDescriptorUpdateTemplate
-
-updateDescriptorSetWithTemplateKHR :: Device ->  DescriptorSet ->  DescriptorUpdateTemplate ->  Ptr () ->  IO ()
-updateDescriptorSetWithTemplateKHR = updateDescriptorSetWithTemplate
-
--- No documentation found for TopLevel "DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR_EXT"
-pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR_EXT :: VkDebugReportObjectTypeEXT
-pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR_EXT = DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT
-
--- No documentation found for TopLevel "DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET_KHR"
-pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET_KHR :: VkDescriptorUpdateTemplateType
-pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET_KHR = DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
-
--- No documentation found for TopLevel "VK_KHR_DESCRIPTOR_UPDATE_TEMPLATE_EXTENSION_NAME"
-pattern KHR_DESCRIPTOR_UPDATE_TEMPLATE_EXTENSION_NAME :: (Eq a, IsString a) => a
-pattern KHR_DESCRIPTOR_UPDATE_TEMPLATE_EXTENSION_NAME = VK_KHR_DESCRIPTOR_UPDATE_TEMPLATE_EXTENSION_NAME
-
--- No documentation found for TopLevel "VK_KHR_DESCRIPTOR_UPDATE_TEMPLATE_SPEC_VERSION"
-pattern KHR_DESCRIPTOR_UPDATE_TEMPLATE_SPEC_VERSION :: Integral a => a
-pattern KHR_DESCRIPTOR_UPDATE_TEMPLATE_SPEC_VERSION = VK_KHR_DESCRIPTOR_UPDATE_TEMPLATE_SPEC_VERSION
-
--- No documentation found for TopLevel "OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR"
-pattern OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR :: VkObjectType
+-- No documentation found for TopLevel "VK_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR"
 pattern OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR = OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE
 
--- No documentation found for TopLevel "STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO_KHR"
-pattern STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO_KHR :: VkStructureType
-pattern STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO_KHR = STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO
+
+-- No documentation found for TopLevel "VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET_KHR"
+pattern DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET_KHR = DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
+
+
+-- No documentation found for TopLevel "VK_DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR_EXT"
+pattern DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR_EXT = DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT
+
+
+-- No documentation found for TopLevel "vkCreateDescriptorUpdateTemplateKHR"
+createDescriptorUpdateTemplateKHR = createDescriptorUpdateTemplate
+
+
+-- No documentation found for TopLevel "vkDestroyDescriptorUpdateTemplateKHR"
+destroyDescriptorUpdateTemplateKHR = destroyDescriptorUpdateTemplate
+
+
+-- No documentation found for TopLevel "vkUpdateDescriptorSetWithTemplateKHR"
+updateDescriptorSetWithTemplateKHR = updateDescriptorSetWithTemplate
+
+
+-- No documentation found for TopLevel "VkDescriptorUpdateTemplateCreateFlagsKHR"
+type DescriptorUpdateTemplateCreateFlagsKHR = DescriptorUpdateTemplateCreateFlags
+
+
+-- No documentation found for TopLevel "VkDescriptorUpdateTemplateKHR"
+type DescriptorUpdateTemplateKHR = DescriptorUpdateTemplate
+
+
+-- No documentation found for TopLevel "VkDescriptorUpdateTemplateTypeKHR"
+type DescriptorUpdateTemplateTypeKHR = DescriptorUpdateTemplateType
+
+
+-- No documentation found for TopLevel "VkDescriptorUpdateTemplateEntryKHR"
+type DescriptorUpdateTemplateEntryKHR = DescriptorUpdateTemplateEntry
+
+
+-- No documentation found for TopLevel "VkDescriptorUpdateTemplateCreateInfoKHR"
+type DescriptorUpdateTemplateCreateInfoKHR = DescriptorUpdateTemplateCreateInfo
+
+
+type KHR_DESCRIPTOR_UPDATE_TEMPLATE_SPEC_VERSION = 1
+
+-- No documentation found for TopLevel "VK_KHR_DESCRIPTOR_UPDATE_TEMPLATE_SPEC_VERSION"
+pattern KHR_DESCRIPTOR_UPDATE_TEMPLATE_SPEC_VERSION :: forall a . Integral a => a
+pattern KHR_DESCRIPTOR_UPDATE_TEMPLATE_SPEC_VERSION = 1
+
+
+type KHR_DESCRIPTOR_UPDATE_TEMPLATE_EXTENSION_NAME = "VK_KHR_descriptor_update_template"
+
+-- No documentation found for TopLevel "VK_KHR_DESCRIPTOR_UPDATE_TEMPLATE_EXTENSION_NAME"
+pattern KHR_DESCRIPTOR_UPDATE_TEMPLATE_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern KHR_DESCRIPTOR_UPDATE_TEMPLATE_EXTENSION_NAME = "VK_KHR_descriptor_update_template"
+

@@ -1,94 +1,142 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language DuplicateRecordFields #-}
-{-# language PatternSynonyms #-}
+module Graphics.Vulkan.Extensions.VK_NV_external_memory  ( ExternalMemoryImageCreateInfoNV(..)
+                                                         , ExportMemoryAllocateInfoNV(..)
+                                                         , NV_EXTERNAL_MEMORY_SPEC_VERSION
+                                                         , pattern NV_EXTERNAL_MEMORY_SPEC_VERSION
+                                                         , NV_EXTERNAL_MEMORY_EXTENSION_NAME
+                                                         , pattern NV_EXTERNAL_MEMORY_EXTENSION_NAME
+                                                         , ExternalMemoryHandleTypeFlagBitsNV(..)
+                                                         , ExternalMemoryHandleTypeFlagsNV
+                                                         ) where
 
-module Graphics.Vulkan.Extensions.VK_NV_external_memory
-  ( 
-#if defined(VK_USE_PLATFORM_GGP)
-  ExportMemoryAllocateInfoNV(..)
-  , 
-  ExternalMemoryImageCreateInfoNV(..)
-#endif
-  , pattern NV_EXTERNAL_MEMORY_EXTENSION_NAME
-  , pattern NV_EXTERNAL_MEMORY_SPEC_VERSION
-  , pattern STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV
-  , pattern STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV
-  ) where
-
-import Data.String
-  ( IsString
-  )
-
-
-
-#if defined(VK_USE_PLATFORM_GGP)
-import Graphics.Vulkan.C.Core10.Core
-  ( Zero(..)
-  )
-#endif
-import Graphics.Vulkan.C.Extensions.VK_NV_external_memory
-  ( pattern VK_NV_EXTERNAL_MEMORY_EXTENSION_NAME
-  , pattern VK_NV_EXTERNAL_MEMORY_SPEC_VERSION
-  )
-
-#if defined(VK_USE_PLATFORM_GGP)
-import Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities
-  ( ExternalMemoryHandleTypeFlagsNV
-  )
-#endif
-
-#if defined(VK_USE_PLATFORM_GGP)
-import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
-  ( SomeVkStruct
-  )
-#endif
-import Graphics.Vulkan.Core10.Core
-  ( pattern STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV
-  , pattern STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV
-  )
-
-
-
-#if defined(VK_USE_PLATFORM_GGP)
-
--- No documentation found for TopLevel "VkExportMemoryAllocateInfoNV"
-data ExportMemoryAllocateInfoNV = ExportMemoryAllocateInfoNV
-  { -- No documentation found for Nested "ExportMemoryAllocateInfoNV" "pNext"
-  next :: Maybe SomeVkStruct
-  , -- No documentation found for Nested "ExportMemoryAllocateInfoNV" "handleTypes"
-  handleTypes :: ExternalMemoryHandleTypeFlagsNV
-  }
-  deriving (Show, Eq)
-
-instance Zero ExportMemoryAllocateInfoNV where
-  zero = ExportMemoryAllocateInfoNV Nothing
-                                    zero
-
-#endif
-
-
-#if defined(VK_USE_PLATFORM_GGP)
-
--- No documentation found for TopLevel "VkExternalMemoryImageCreateInfoNV"
+import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Ptr (nullPtr)
+import Foreign.Ptr (plusPtr)
+import Data.String (IsString)
+import Data.Typeable (Typeable)
+import Foreign.Storable (Storable)
+import Foreign.Storable (Storable(peek))
+import Foreign.Storable (Storable(poke))
+import qualified Foreign.Storable (Storable(..))
+import Foreign.Ptr (Ptr)
+import Data.Kind (Type)
+import Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities (ExternalMemoryHandleTypeFlagsNV)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (FromCStruct(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
+import Graphics.Vulkan.CStruct (ToCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct(..))
+import Graphics.Vulkan.Zero (Zero(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV))
+import Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities (ExternalMemoryHandleTypeFlagBitsNV(..))
+import Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities (ExternalMemoryHandleTypeFlagsNV)
+-- | VkExternalMemoryImageCreateInfoNV - Specify that an image may be backed
+-- by external memory
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagsNV',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data ExternalMemoryImageCreateInfoNV = ExternalMemoryImageCreateInfoNV
-  { -- No documentation found for Nested "ExternalMemoryImageCreateInfoNV" "pNext"
-  next :: Maybe SomeVkStruct
-  , -- No documentation found for Nested "ExternalMemoryImageCreateInfoNV" "handleTypes"
-  handleTypes :: ExternalMemoryHandleTypeFlagsNV
-  }
-  deriving (Show, Eq)
+  { -- | @handleTypes@ /must/ be a valid combination of
+    -- 'Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'
+    -- values
+    handleTypes :: ExternalMemoryHandleTypeFlagsNV }
+  deriving (Typeable)
+deriving instance Show ExternalMemoryImageCreateInfoNV
+
+instance ToCStruct ExternalMemoryImageCreateInfoNV where
+  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p ExternalMemoryImageCreateInfoNV{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr ExternalMemoryHandleTypeFlagsNV)) (handleTypes)
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    f
+
+instance FromCStruct ExternalMemoryImageCreateInfoNV where
+  peekCStruct p = do
+    handleTypes <- peek @ExternalMemoryHandleTypeFlagsNV ((p `plusPtr` 16 :: Ptr ExternalMemoryHandleTypeFlagsNV))
+    pure $ ExternalMemoryImageCreateInfoNV
+             handleTypes
+
+instance Storable ExternalMemoryImageCreateInfoNV where
+  sizeOf ~_ = 24
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero ExternalMemoryImageCreateInfoNV where
-  zero = ExternalMemoryImageCreateInfoNV Nothing
-                                         zero
+  zero = ExternalMemoryImageCreateInfoNV
+           zero
 
-#endif
 
--- No documentation found for TopLevel "VK_NV_EXTERNAL_MEMORY_EXTENSION_NAME"
-pattern NV_EXTERNAL_MEMORY_EXTENSION_NAME :: (Eq a, IsString a) => a
-pattern NV_EXTERNAL_MEMORY_EXTENSION_NAME = VK_NV_EXTERNAL_MEMORY_EXTENSION_NAME
+-- | VkExportMemoryAllocateInfoNV - Specify memory handle types that may be
+-- exported
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagsNV',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
+data ExportMemoryAllocateInfoNV = ExportMemoryAllocateInfoNV
+  { -- | @handleTypes@ /must/ be a valid combination of
+    -- 'Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'
+    -- values
+    handleTypes :: ExternalMemoryHandleTypeFlagsNV }
+  deriving (Typeable)
+deriving instance Show ExportMemoryAllocateInfoNV
+
+instance ToCStruct ExportMemoryAllocateInfoNV where
+  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p ExportMemoryAllocateInfoNV{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr ExternalMemoryHandleTypeFlagsNV)) (handleTypes)
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    f
+
+instance FromCStruct ExportMemoryAllocateInfoNV where
+  peekCStruct p = do
+    handleTypes <- peek @ExternalMemoryHandleTypeFlagsNV ((p `plusPtr` 16 :: Ptr ExternalMemoryHandleTypeFlagsNV))
+    pure $ ExportMemoryAllocateInfoNV
+             handleTypes
+
+instance Storable ExportMemoryAllocateInfoNV where
+  sizeOf ~_ = 24
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero ExportMemoryAllocateInfoNV where
+  zero = ExportMemoryAllocateInfoNV
+           zero
+
+
+type NV_EXTERNAL_MEMORY_SPEC_VERSION = 1
 
 -- No documentation found for TopLevel "VK_NV_EXTERNAL_MEMORY_SPEC_VERSION"
-pattern NV_EXTERNAL_MEMORY_SPEC_VERSION :: Integral a => a
-pattern NV_EXTERNAL_MEMORY_SPEC_VERSION = VK_NV_EXTERNAL_MEMORY_SPEC_VERSION
+pattern NV_EXTERNAL_MEMORY_SPEC_VERSION :: forall a . Integral a => a
+pattern NV_EXTERNAL_MEMORY_SPEC_VERSION = 1
+
+
+type NV_EXTERNAL_MEMORY_EXTENSION_NAME = "VK_NV_external_memory"
+
+-- No documentation found for TopLevel "VK_NV_EXTERNAL_MEMORY_EXTENSION_NAME"
+pattern NV_EXTERNAL_MEMORY_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern NV_EXTERNAL_MEMORY_EXTENSION_NAME = "VK_NV_external_memory"
+

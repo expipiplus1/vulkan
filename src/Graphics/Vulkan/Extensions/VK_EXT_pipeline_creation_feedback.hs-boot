@@ -1,22 +1,23 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_feedback  ( PipelineCreationFeedbackCreateInfoEXT
+                                                                     , PipelineCreationFeedbackEXT
+                                                                     ) where
+
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data PipelineCreationFeedbackCreateInfoEXT
+
+instance ToCStruct PipelineCreationFeedbackCreateInfoEXT
+instance Show PipelineCreationFeedbackCreateInfoEXT
+
+instance FromCStruct PipelineCreationFeedbackCreateInfoEXT
 
 
-module Graphics.Vulkan.Extensions.VK_EXT_pipeline_creation_feedback
-  ( PipelineCreationFeedbackFlagBitsEXT
-  , PipelineCreationFeedbackFlagsEXT
-  ) where
+data PipelineCreationFeedbackEXT
 
+instance ToCStruct PipelineCreationFeedbackEXT
+instance Show PipelineCreationFeedbackEXT
 
+instance FromCStruct PipelineCreationFeedbackEXT
 
-
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_pipeline_creation_feedback
-  ( VkPipelineCreationFeedbackFlagBitsEXT
-  )
-
-
--- No documentation found for TopLevel "PipelineCreationFeedbackFlagBitsEXT"
-type PipelineCreationFeedbackFlagBitsEXT = VkPipelineCreationFeedbackFlagBitsEXT
-
--- No documentation found for TopLevel "PipelineCreationFeedbackFlagsEXT"
-type PipelineCreationFeedbackFlagsEXT = PipelineCreationFeedbackFlagBitsEXT

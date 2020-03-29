@@ -1,18 +1,13 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_KHR_win32_surface  (Win32SurfaceCreateInfoKHR) where
 
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data Win32SurfaceCreateInfoKHR
 
-module Graphics.Vulkan.Extensions.VK_KHR_win32_surface
-  ( Win32SurfaceCreateFlagsKHR
-  ) where
+instance ToCStruct Win32SurfaceCreateInfoKHR
+instance Show Win32SurfaceCreateInfoKHR
 
+instance FromCStruct Win32SurfaceCreateInfoKHR
 
-
-
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_win32_surface
-  ( VkWin32SurfaceCreateFlagsKHR
-  )
-
-
--- No documentation found for TopLevel "Win32SurfaceCreateFlagsKHR"
-type Win32SurfaceCreateFlagsKHR = VkWin32SurfaceCreateFlagsKHR

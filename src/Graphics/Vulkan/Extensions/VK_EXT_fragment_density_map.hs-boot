@@ -1,25 +1,32 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_EXT_fragment_density_map  ( PhysicalDeviceFragmentDensityMapFeaturesEXT
+                                                               , PhysicalDeviceFragmentDensityMapPropertiesEXT
+                                                               , RenderPassFragmentDensityMapCreateInfoEXT
+                                                               ) where
+
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data PhysicalDeviceFragmentDensityMapFeaturesEXT
+
+instance ToCStruct PhysicalDeviceFragmentDensityMapFeaturesEXT
+instance Show PhysicalDeviceFragmentDensityMapFeaturesEXT
+
+instance FromCStruct PhysicalDeviceFragmentDensityMapFeaturesEXT
 
 
-module Graphics.Vulkan.Extensions.VK_EXT_fragment_density_map
-  ( ImageViewCreateFlagBits
-  , SamplerCreateFlagBits
-  ) where
+data PhysicalDeviceFragmentDensityMapPropertiesEXT
+
+instance ToCStruct PhysicalDeviceFragmentDensityMapPropertiesEXT
+instance Show PhysicalDeviceFragmentDensityMapPropertiesEXT
+
+instance FromCStruct PhysicalDeviceFragmentDensityMapPropertiesEXT
 
 
+data RenderPassFragmentDensityMapCreateInfoEXT
 
+instance ToCStruct RenderPassFragmentDensityMapCreateInfoEXT
+instance Show RenderPassFragmentDensityMapCreateInfoEXT
 
-import {-# source #-} Graphics.Vulkan.C.Core10.ImageView
-  ( VkImageViewCreateFlagBits
-  )
-import {-# source #-} Graphics.Vulkan.C.Core10.Sampler
-  ( VkSamplerCreateFlagBits
-  )
+instance FromCStruct RenderPassFragmentDensityMapCreateInfoEXT
 
-
--- No documentation found for TopLevel "ImageViewCreateFlagBits"
-type ImageViewCreateFlagBits = VkImageViewCreateFlagBits
-
--- No documentation found for TopLevel "SamplerCreateFlagBits"
-type SamplerCreateFlagBits = VkSamplerCreateFlagBits

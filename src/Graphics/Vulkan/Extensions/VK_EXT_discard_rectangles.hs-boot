@@ -1,23 +1,23 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_EXT_discard_rectangles  ( PhysicalDeviceDiscardRectanglePropertiesEXT
+                                                             , PipelineDiscardRectangleStateCreateInfoEXT
+                                                             ) where
+
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data PhysicalDeviceDiscardRectanglePropertiesEXT
+
+instance ToCStruct PhysicalDeviceDiscardRectanglePropertiesEXT
+instance Show PhysicalDeviceDiscardRectanglePropertiesEXT
+
+instance FromCStruct PhysicalDeviceDiscardRectanglePropertiesEXT
 
 
-module Graphics.Vulkan.Extensions.VK_EXT_discard_rectangles
-  ( DiscardRectangleModeEXT
-  , PipelineDiscardRectangleStateCreateFlagsEXT
-  ) where
+data PipelineDiscardRectangleStateCreateInfoEXT
 
+instance ToCStruct PipelineDiscardRectangleStateCreateInfoEXT
+instance Show PipelineDiscardRectangleStateCreateInfoEXT
 
+instance FromCStruct PipelineDiscardRectangleStateCreateInfoEXT
 
-
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_discard_rectangles
-  ( VkDiscardRectangleModeEXT
-  , VkPipelineDiscardRectangleStateCreateFlagsEXT
-  )
-
-
--- No documentation found for TopLevel "DiscardRectangleModeEXT"
-type DiscardRectangleModeEXT = VkDiscardRectangleModeEXT
-
--- No documentation found for TopLevel "PipelineDiscardRectangleStateCreateFlagsEXT"
-type PipelineDiscardRectangleStateCreateFlagsEXT = VkPipelineDiscardRectangleStateCreateFlagsEXT

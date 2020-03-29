@@ -1,23 +1,13 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Core10.Event  (EventCreateInfo) where
 
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data EventCreateInfo
 
-module Graphics.Vulkan.Core10.Event
-  ( Event
-  , EventCreateFlags
-  ) where
+instance ToCStruct EventCreateInfo
+instance Show EventCreateInfo
 
+instance FromCStruct EventCreateInfo
 
-
-
-import {-# source #-} Graphics.Vulkan.C.Core10.Event
-  ( VkEvent
-  , VkEventCreateFlags
-  )
-
-
--- No documentation found for TopLevel "Event"
-type Event = VkEvent
-
--- No documentation found for TopLevel "EventCreateFlags"
-type EventCreateFlags = VkEventCreateFlags

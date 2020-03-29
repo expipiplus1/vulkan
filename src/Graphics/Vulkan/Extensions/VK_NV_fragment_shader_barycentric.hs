@@ -1,67 +1,112 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language DuplicateRecordFields #-}
-{-# language PatternSynonyms #-}
+module Graphics.Vulkan.Extensions.VK_NV_fragment_shader_barycentric  ( PhysicalDeviceFragmentShaderBarycentricFeaturesNV(..)
+                                                                     , NV_FRAGMENT_SHADER_BARYCENTRIC_SPEC_VERSION
+                                                                     , pattern NV_FRAGMENT_SHADER_BARYCENTRIC_SPEC_VERSION
+                                                                     , NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME
+                                                                     , pattern NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME
+                                                                     ) where
 
-module Graphics.Vulkan.Extensions.VK_NV_fragment_shader_barycentric
-  ( 
-#if defined(VK_USE_PLATFORM_GGP)
-  PhysicalDeviceFragmentShaderBarycentricFeaturesNV(..)
-  , 
-#endif
-  pattern NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME
-  , pattern NV_FRAGMENT_SHADER_BARYCENTRIC_SPEC_VERSION
-  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_NV
-  ) where
-
-import Data.String
-  ( IsString
-  )
-
-
-
-#if defined(VK_USE_PLATFORM_GGP)
-import Graphics.Vulkan.C.Core10.Core
-  ( Zero(..)
-  )
-#endif
-import Graphics.Vulkan.C.Extensions.VK_NV_fragment_shader_barycentric
-  ( pattern VK_NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME
-  , pattern VK_NV_FRAGMENT_SHADER_BARYCENTRIC_SPEC_VERSION
-  )
-
-#if defined(VK_USE_PLATFORM_GGP)
-import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
-  ( SomeVkStruct
-  )
-#endif
-import Graphics.Vulkan.Core10.Core
-  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_NV
-  )
-
-
-
-#if defined(VK_USE_PLATFORM_GGP)
-
--- No documentation found for TopLevel "VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV"
+import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Ptr (nullPtr)
+import Foreign.Ptr (plusPtr)
+import Data.String (IsString)
+import Data.Typeable (Typeable)
+import Foreign.Storable (Storable)
+import Foreign.Storable (Storable(peek))
+import Foreign.Storable (Storable(poke))
+import qualified Foreign.Storable (Storable(..))
+import Foreign.Ptr (Ptr)
+import Data.Kind (Type)
+import Graphics.Vulkan.Core10.BaseType (bool32ToBool)
+import Graphics.Vulkan.Core10.BaseType (boolToBool32)
+import Graphics.Vulkan.Core10.BaseType (Bool32)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (FromCStruct(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
+import Graphics.Vulkan.CStruct (ToCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct(..))
+import Graphics.Vulkan.Zero (Zero(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_NV))
+-- | VkPhysicalDeviceFragmentShaderBarycentricFeaturesNV - Structure
+-- describing barycentric support in fragment shaders that can be supported
+-- by an implementation
+--
+-- = Members
+--
+-- The members of the 'PhysicalDeviceFragmentShaderBarycentricFeaturesNV'
+-- structure describe the following features:
+--
+-- = Description
+--
+-- See
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#primsrast-barycentric Barycentric Interpolation>
+-- for more information.
+--
+-- If the 'PhysicalDeviceFragmentShaderBarycentricFeaturesNV' structure is
+-- included in the @pNext@ chain of
+-- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceFeatures2',
+-- it is filled with values indicating whether the feature is supported.
+-- 'PhysicalDeviceFragmentShaderBarycentricFeaturesNV' /can/ also be
+-- included in the @pNext@ chain of
+-- 'Graphics.Vulkan.Core10.Device.DeviceCreateInfo' to enable features.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Core10.BaseType.Bool32',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceFragmentShaderBarycentricFeaturesNV = PhysicalDeviceFragmentShaderBarycentricFeaturesNV
-  { -- No documentation found for Nested "PhysicalDeviceFragmentShaderBarycentricFeaturesNV" "pNext"
-  next :: Maybe SomeVkStruct
-  , -- No documentation found for Nested "PhysicalDeviceFragmentShaderBarycentricFeaturesNV" "fragmentShaderBarycentric"
-  fragmentShaderBarycentric :: Bool
-  }
-  deriving (Show, Eq)
+  { -- | @fragmentShaderBarycentric@ indicates that the implementation supports
+    -- the @BaryCoordNV@ and @BaryCoordNoPerspNV@ SPIR-V fragment shader
+    -- built-ins and supports the @PerVertexNV@ SPIR-V decoration on fragment
+    -- shader input variables.
+    fragmentShaderBarycentric :: Bool }
+  deriving (Typeable)
+deriving instance Show PhysicalDeviceFragmentShaderBarycentricFeaturesNV
+
+instance ToCStruct PhysicalDeviceFragmentShaderBarycentricFeaturesNV where
+  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p PhysicalDeviceFragmentShaderBarycentricFeaturesNV{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_NV)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (fragmentShaderBarycentric))
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADER_BARYCENTRIC_FEATURES_NV)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
+    f
+
+instance FromCStruct PhysicalDeviceFragmentShaderBarycentricFeaturesNV where
+  peekCStruct p = do
+    fragmentShaderBarycentric <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
+    pure $ PhysicalDeviceFragmentShaderBarycentricFeaturesNV
+             (bool32ToBool fragmentShaderBarycentric)
+
+instance Storable PhysicalDeviceFragmentShaderBarycentricFeaturesNV where
+  sizeOf ~_ = 24
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero PhysicalDeviceFragmentShaderBarycentricFeaturesNV where
-  zero = PhysicalDeviceFragmentShaderBarycentricFeaturesNV Nothing
-                                                           False
+  zero = PhysicalDeviceFragmentShaderBarycentricFeaturesNV
+           zero
 
-#endif
 
--- No documentation found for TopLevel "VK_NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME"
-pattern NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME :: (Eq a, IsString a) => a
-pattern NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME = VK_NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME
+type NV_FRAGMENT_SHADER_BARYCENTRIC_SPEC_VERSION = 1
 
 -- No documentation found for TopLevel "VK_NV_FRAGMENT_SHADER_BARYCENTRIC_SPEC_VERSION"
-pattern NV_FRAGMENT_SHADER_BARYCENTRIC_SPEC_VERSION :: Integral a => a
-pattern NV_FRAGMENT_SHADER_BARYCENTRIC_SPEC_VERSION = VK_NV_FRAGMENT_SHADER_BARYCENTRIC_SPEC_VERSION
+pattern NV_FRAGMENT_SHADER_BARYCENTRIC_SPEC_VERSION :: forall a . Integral a => a
+pattern NV_FRAGMENT_SHADER_BARYCENTRIC_SPEC_VERSION = 1
+
+
+type NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME = "VK_NV_fragment_shader_barycentric"
+
+-- No documentation found for TopLevel "VK_NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME"
+pattern NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern NV_FRAGMENT_SHADER_BARYCENTRIC_EXTENSION_NAME = "VK_NV_fragment_shader_barycentric"
+

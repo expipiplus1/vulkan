@@ -1,18 +1,32 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_EXT_transform_feedback  ( PhysicalDeviceTransformFeedbackFeaturesEXT
+                                                             , PhysicalDeviceTransformFeedbackPropertiesEXT
+                                                             , PipelineRasterizationStateStreamCreateInfoEXT
+                                                             ) where
+
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data PhysicalDeviceTransformFeedbackFeaturesEXT
+
+instance ToCStruct PhysicalDeviceTransformFeedbackFeaturesEXT
+instance Show PhysicalDeviceTransformFeedbackFeaturesEXT
+
+instance FromCStruct PhysicalDeviceTransformFeedbackFeaturesEXT
 
 
-module Graphics.Vulkan.Extensions.VK_EXT_transform_feedback
-  ( PipelineRasterizationStateStreamCreateFlagsEXT
-  ) where
+data PhysicalDeviceTransformFeedbackPropertiesEXT
+
+instance ToCStruct PhysicalDeviceTransformFeedbackPropertiesEXT
+instance Show PhysicalDeviceTransformFeedbackPropertiesEXT
+
+instance FromCStruct PhysicalDeviceTransformFeedbackPropertiesEXT
 
 
+data PipelineRasterizationStateStreamCreateInfoEXT
 
+instance ToCStruct PipelineRasterizationStateStreamCreateInfoEXT
+instance Show PipelineRasterizationStateStreamCreateInfoEXT
 
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_transform_feedback
-  ( VkPipelineRasterizationStateStreamCreateFlagsEXT
-  )
+instance FromCStruct PipelineRasterizationStateStreamCreateInfoEXT
 
-
--- No documentation found for TopLevel "PipelineRasterizationStateStreamCreateFlagsEXT"
-type PipelineRasterizationStateStreamCreateFlagsEXT = VkPipelineRasterizationStateStreamCreateFlagsEXT

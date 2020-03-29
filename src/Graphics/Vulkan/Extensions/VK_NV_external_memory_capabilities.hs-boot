@@ -1,31 +1,21 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities  ( ExternalImageFormatPropertiesNV
+                                                                      , ExternalMemoryHandleTypeFlagBitsNV
+                                                                      , ExternalMemoryHandleTypeFlagsNV
+                                                                      ) where
+
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data ExternalImageFormatPropertiesNV
+
+instance ToCStruct ExternalImageFormatPropertiesNV
+instance Show ExternalImageFormatPropertiesNV
+
+instance FromCStruct ExternalImageFormatPropertiesNV
 
 
-module Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities
-  ( ExternalMemoryFeatureFlagBitsNV
-  , ExternalMemoryFeatureFlagsNV
-  , ExternalMemoryHandleTypeFlagBitsNV
-  , ExternalMemoryHandleTypeFlagsNV
-  ) where
+data ExternalMemoryHandleTypeFlagBitsNV
 
-
-
-
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_external_memory_capabilities
-  ( VkExternalMemoryFeatureFlagBitsNV
-  , VkExternalMemoryHandleTypeFlagBitsNV
-  )
-
-
--- No documentation found for TopLevel "ExternalMemoryFeatureFlagBitsNV"
-type ExternalMemoryFeatureFlagBitsNV = VkExternalMemoryFeatureFlagBitsNV
-
--- No documentation found for TopLevel "ExternalMemoryFeatureFlagsNV"
-type ExternalMemoryFeatureFlagsNV = ExternalMemoryFeatureFlagBitsNV
-
--- No documentation found for TopLevel "ExternalMemoryHandleTypeFlagBitsNV"
-type ExternalMemoryHandleTypeFlagBitsNV = VkExternalMemoryHandleTypeFlagBitsNV
-
--- No documentation found for TopLevel "ExternalMemoryHandleTypeFlagsNV"
 type ExternalMemoryHandleTypeFlagsNV = ExternalMemoryHandleTypeFlagBitsNV
+

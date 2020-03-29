@@ -1,28 +1,23 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_EXT_validation_cache  ( ShaderModuleValidationCacheCreateInfoEXT
+                                                           , ValidationCacheCreateInfoEXT
+                                                           ) where
+
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data ShaderModuleValidationCacheCreateInfoEXT
+
+instance ToCStruct ShaderModuleValidationCacheCreateInfoEXT
+instance Show ShaderModuleValidationCacheCreateInfoEXT
+
+instance FromCStruct ShaderModuleValidationCacheCreateInfoEXT
 
 
-module Graphics.Vulkan.Extensions.VK_EXT_validation_cache
-  ( ValidationCacheCreateFlagsEXT
-  , ValidationCacheEXT
-  , ValidationCacheHeaderVersionEXT
-  ) where
+data ValidationCacheCreateInfoEXT
 
+instance ToCStruct ValidationCacheCreateInfoEXT
+instance Show ValidationCacheCreateInfoEXT
 
+instance FromCStruct ValidationCacheCreateInfoEXT
 
-
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_validation_cache
-  ( VkValidationCacheCreateFlagsEXT
-  , VkValidationCacheEXT
-  , VkValidationCacheHeaderVersionEXT
-  )
-
-
--- No documentation found for TopLevel "ValidationCacheCreateFlagsEXT"
-type ValidationCacheCreateFlagsEXT = VkValidationCacheCreateFlagsEXT
-
--- No documentation found for TopLevel "ValidationCacheEXT"
-type ValidationCacheEXT = VkValidationCacheEXT
-
--- No documentation found for TopLevel "ValidationCacheHeaderVersionEXT"
-type ValidationCacheHeaderVersionEXT = VkValidationCacheHeaderVersionEXT

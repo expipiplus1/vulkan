@@ -1,46 +1,23 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_KHR_surface  ( SurfaceCapabilitiesKHR
+                                                  , SurfaceFormatKHR
+                                                  ) where
+
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data SurfaceCapabilitiesKHR
+
+instance ToCStruct SurfaceCapabilitiesKHR
+instance Show SurfaceCapabilitiesKHR
+
+instance FromCStruct SurfaceCapabilitiesKHR
 
 
-module Graphics.Vulkan.Extensions.VK_KHR_surface
-  ( ColorSpaceKHR
-  , CompositeAlphaFlagBitsKHR
-  , CompositeAlphaFlagsKHR
-  , PresentModeKHR
-  , SurfaceKHR
-  , SurfaceTransformFlagBitsKHR
-  , SurfaceTransformFlagsKHR
-  ) where
+data SurfaceFormatKHR
 
+instance ToCStruct SurfaceFormatKHR
+instance Show SurfaceFormatKHR
 
+instance FromCStruct SurfaceFormatKHR
 
-
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_surface
-  ( VkColorSpaceKHR
-  , VkCompositeAlphaFlagBitsKHR
-  , VkPresentModeKHR
-  , VkSurfaceKHR
-  , VkSurfaceTransformFlagBitsKHR
-  )
-
-
--- No documentation found for TopLevel "ColorSpaceKHR"
-type ColorSpaceKHR = VkColorSpaceKHR
-
--- No documentation found for TopLevel "CompositeAlphaFlagBitsKHR"
-type CompositeAlphaFlagBitsKHR = VkCompositeAlphaFlagBitsKHR
-
--- No documentation found for TopLevel "CompositeAlphaFlagsKHR"
-type CompositeAlphaFlagsKHR = CompositeAlphaFlagBitsKHR
-
--- No documentation found for TopLevel "PresentModeKHR"
-type PresentModeKHR = VkPresentModeKHR
-
--- No documentation found for TopLevel "SurfaceKHR"
-type SurfaceKHR = VkSurfaceKHR
-
--- No documentation found for TopLevel "SurfaceTransformFlagBitsKHR"
-type SurfaceTransformFlagBitsKHR = VkSurfaceTransformFlagBitsKHR
-
--- No documentation found for TopLevel "SurfaceTransformFlagsKHR"
-type SurfaceTransformFlagsKHR = SurfaceTransformFlagBitsKHR

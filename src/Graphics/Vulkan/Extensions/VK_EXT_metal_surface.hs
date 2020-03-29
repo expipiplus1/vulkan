@@ -1,112 +1,232 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language DuplicateRecordFields #-}
-{-# language PatternSynonyms #-}
+module Graphics.Vulkan.Extensions.VK_EXT_metal_surface  ( createMetalSurfaceEXT
+                                                        , MetalSurfaceCreateInfoEXT(..)
+                                                        , MetalSurfaceCreateFlagsEXT(..)
+                                                        , EXT_METAL_SURFACE_SPEC_VERSION
+                                                        , pattern EXT_METAL_SURFACE_SPEC_VERSION
+                                                        , EXT_METAL_SURFACE_EXTENSION_NAME
+                                                        , pattern EXT_METAL_SURFACE_EXTENSION_NAME
+                                                        , SurfaceKHR(..)
+                                                        , CAMetalLayer
+                                                        ) where
 
-module Graphics.Vulkan.Extensions.VK_EXT_metal_surface
-  ( MetalSurfaceCreateFlagsEXT
-#if defined(VK_USE_PLATFORM_GGP)
-  , MetalSurfaceCreateInfoEXT(..)
+import Control.Exception.Base (bracket)
+import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (callocBytes)
+import Foreign.Marshal.Alloc (free)
+import GHC.Base (when)
+import GHC.IO (throwIO)
+import Foreign.Ptr (nullPtr)
+import Foreign.Ptr (plusPtr)
+import GHC.Read (choose)
+import GHC.Read (expectP)
+import GHC.Read (parens)
+import GHC.Show (showParen)
+import GHC.Show (showString)
+import Numeric (showHex)
+import Text.ParserCombinators.ReadPrec ((+++))
+import Text.ParserCombinators.ReadPrec (prec)
+import Text.ParserCombinators.ReadPrec (step)
+import Control.Monad.Trans.Class (lift)
+import Control.Monad.Trans.Cont (evalContT)
+import Data.Bits (Bits)
+import Data.String (IsString)
+import Data.Typeable (Typeable)
+import Foreign.Storable (Storable)
+import Foreign.Storable (Storable(peek))
+import Foreign.Storable (Storable(poke))
+import qualified Foreign.Storable (Storable(..))
+import Foreign.Ptr (FunPtr)
+import Foreign.Ptr (Ptr)
+import GHC.Read (Read(readPrec))
+import Text.Read.Lex (Lexeme(Ident))
+import Data.Kind (Type)
+import Control.Monad.Trans.Cont (ContT(..))
+import Graphics.Vulkan.NamedType ((:::))
+import Graphics.Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
+import Graphics.Vulkan.Extensions.WSITypes (CAMetalLayer)
+import Graphics.Vulkan.Core10.BaseType (Flags)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (FromCStruct(..))
+import Graphics.Vulkan.Core10.Handles (Instance)
+import Graphics.Vulkan.Core10.Handles (Instance(..))
+import Graphics.Vulkan.Dynamic (InstanceCmds(pVkCreateMetalSurfaceEXT))
+import Graphics.Vulkan.Core10.Handles (Instance_T)
+import Graphics.Vulkan.Core10.Enums.Result (Result)
+import Graphics.Vulkan.Core10.Enums.Result (Result(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
+import Graphics.Vulkan.Extensions.Handles (SurfaceKHR)
+import Graphics.Vulkan.Extensions.Handles (SurfaceKHR(..))
+import Graphics.Vulkan.CStruct (ToCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct(..))
+import Graphics.Vulkan.Exception (VulkanException(..))
+import Graphics.Vulkan.Zero (Zero)
+import Graphics.Vulkan.Zero (Zero(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT))
+import Graphics.Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Graphics.Vulkan.Extensions.WSITypes (CAMetalLayer)
+import Graphics.Vulkan.Extensions.Handles (SurfaceKHR(..))
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
-  , createMetalSurfaceEXT
-  , pattern EXT_METAL_SURFACE_EXTENSION_NAME
-  , pattern EXT_METAL_SURFACE_SPEC_VERSION
-  , pattern STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT
-  ) where
+  "dynamic" mkVkCreateMetalSurfaceEXT
+  :: FunPtr (Ptr Instance_T -> Ptr MetalSurfaceCreateInfoEXT -> Ptr AllocationCallbacks -> Ptr SurfaceKHR -> IO Result) -> Ptr Instance_T -> Ptr MetalSurfaceCreateInfoEXT -> Ptr AllocationCallbacks -> Ptr SurfaceKHR -> IO Result
 
-import Data.String
-  ( IsString
-  )
-import Foreign.Marshal.Alloc
-  ( alloca
-  )
-import Foreign.Marshal.Utils
-  ( maybeWith
-  , with
-  )
+-- | vkCreateMetalSurfaceEXT - Create a VkSurfaceKHR object for CAMetalLayer
+--
+-- = Parameters
+--
+-- -   'Graphics.Vulkan.Core10.Handles.Instance' is the instance with which
+--     to associate the surface.
+--
+-- -   @pCreateInfo@ is a pointer to a 'MetalSurfaceCreateInfoEXT'
+--     structure specifying parameters affecting the creation of the
+--     surface object.
+--
+-- -   @pAllocator@ is the allocator used for host memory allocated for the
+--     surface object when there is no more specific allocator available
+--     (see
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
+--
+-- -   @pSurface@ is a pointer to a
+--     'Graphics.Vulkan.Extensions.Handles.SurfaceKHR' handle in which the
+--     created surface object is returned.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Instance' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'MetalSurfaceCreateInfoEXT' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
+--
+-- -   @pSurface@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.Extensions.Handles.SurfaceKHR' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_NATIVE_WINDOW_IN_USE_KHR'
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
+-- 'Graphics.Vulkan.Core10.Handles.Instance', 'MetalSurfaceCreateInfoEXT',
+-- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'
+createMetalSurfaceEXT :: Instance -> MetalSurfaceCreateInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (SurfaceKHR)
+createMetalSurfaceEXT instance' createInfo allocator = evalContT $ do
+  let vkCreateMetalSurfaceEXT' = mkVkCreateMetalSurfaceEXT (pVkCreateMetalSurfaceEXT (instanceCmds (instance' :: Instance)))
+  pCreateInfo <- ContT $ withCStruct (createInfo)
+  pAllocator <- case (allocator) of
+    Nothing -> pure nullPtr
+    Just j -> ContT $ withCStruct (j)
+  pPSurface <- ContT $ bracket (callocBytes @SurfaceKHR 8) free
+  r <- lift $ vkCreateMetalSurfaceEXT' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pSurface <- lift $ peek @SurfaceKHR pPSurface
+  pure $ (pSurface)
 
-#if defined(VK_USE_PLATFORM_GGP)
-import Foreign.Ptr
-  ( Ptr
-  )
-#endif
-import Foreign.Storable
-  ( peek
-  )
 
-
-
-#if defined(VK_USE_PLATFORM_GGP)
-import Graphics.Vulkan.C.Core10.Core
-  ( Zero(..)
-  )
-#endif
-import Graphics.Vulkan.C.Extensions.VK_EXT_metal_surface
-  ( VkMetalSurfaceCreateFlagsEXT(..)
-  , vkCreateMetalSurfaceEXT
-  , pattern VK_EXT_METAL_SURFACE_EXTENSION_NAME
-  , pattern VK_EXT_METAL_SURFACE_SPEC_VERSION
-  )
-
-#if defined(VK_USE_PLATFORM_GGP)
-import Graphics.Vulkan.C.Extensions.VK_EXT_metal_surface
-  ( CAMetalLayer
-  )
-#endif
-import Graphics.Vulkan.Core10.DeviceInitialization
-  ( AllocationCallbacks(..)
-  , Instance(..)
-  )
-import Graphics.Vulkan.Extensions.VK_KHR_surface
-  ( SurfaceKHR
-  )
-
-#if defined(VK_USE_PLATFORM_GGP)
-import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
-  ( SomeVkStruct
-  )
-#endif
-import Graphics.Vulkan.Core10.Core
-  ( pattern STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT
-  )
-
-
--- No documentation found for TopLevel "MetalSurfaceCreateFlagsEXT"
-type MetalSurfaceCreateFlagsEXT = VkMetalSurfaceCreateFlagsEXT
-
-
--- No complete pragma for MetalSurfaceCreateFlagsEXT as it has no patterns
-
-
-#if defined(VK_USE_PLATFORM_GGP)
-
--- No documentation found for TopLevel "VkMetalSurfaceCreateInfoEXT"
+-- | VkMetalSurfaceCreateInfoEXT - Structure specifying parameters of a newly
+-- created Metal surface object
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'MetalSurfaceCreateFlagsEXT',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'createMetalSurfaceEXT'
 data MetalSurfaceCreateInfoEXT = MetalSurfaceCreateInfoEXT
-  { -- No documentation found for Nested "MetalSurfaceCreateInfoEXT" "pNext"
-  next :: Maybe SomeVkStruct
-  , -- No documentation found for Nested "MetalSurfaceCreateInfoEXT" "flags"
-  flags :: MetalSurfaceCreateFlagsEXT
-  , -- No documentation found for Nested "MetalSurfaceCreateInfoEXT" "pLayer"
-  layer :: Ptr CAMetalLayer
+  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+    flags :: MetalSurfaceCreateFlagsEXT
+  , -- | @pLayer@ is a reference to a
+    -- 'Graphics.Vulkan.Extensions.WSITypes.CAMetalLayer' object representing a
+    -- renderable surface.
+    layer :: Ptr CAMetalLayer
   }
-  deriving (Show, Eq)
+  deriving (Typeable)
+deriving instance Show MetalSurfaceCreateInfoEXT
+
+instance ToCStruct MetalSurfaceCreateInfoEXT where
+  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p MetalSurfaceCreateInfoEXT{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr MetalSurfaceCreateFlagsEXT)) (flags)
+    poke ((p `plusPtr` 24 :: Ptr (Ptr CAMetalLayer))) (layer)
+    f
+  cStructSize = 32
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 24 :: Ptr (Ptr CAMetalLayer))) (zero)
+    f
+
+instance FromCStruct MetalSurfaceCreateInfoEXT where
+  peekCStruct p = do
+    flags <- peek @MetalSurfaceCreateFlagsEXT ((p `plusPtr` 16 :: Ptr MetalSurfaceCreateFlagsEXT))
+    pLayer <- peek @(Ptr CAMetalLayer) ((p `plusPtr` 24 :: Ptr (Ptr CAMetalLayer)))
+    pure $ MetalSurfaceCreateInfoEXT
+             flags pLayer
+
+instance Storable MetalSurfaceCreateInfoEXT where
+  sizeOf ~_ = 32
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero MetalSurfaceCreateInfoEXT where
-  zero = MetalSurfaceCreateInfoEXT Nothing
-                                   zero
-                                   zero
-
-#endif
+  zero = MetalSurfaceCreateInfoEXT
+           zero
+           zero
 
 
--- No documentation found for TopLevel "vkCreateMetalSurfaceEXT"
-createMetalSurfaceEXT :: Instance ->  MetalSurfaceCreateInfoEXT ->  Maybe AllocationCallbacks ->  IO (SurfaceKHR)
-createMetalSurfaceEXT = undefined {- {wrapped (pretty cName) :: Doc ()} -}
+-- No documentation found for TopLevel "VkMetalSurfaceCreateFlagsEXT"
+newtype MetalSurfaceCreateFlagsEXT = MetalSurfaceCreateFlagsEXT Flags
+  deriving newtype (Eq, Ord, Storable, Zero, Bits)
 
--- No documentation found for TopLevel "VK_EXT_METAL_SURFACE_EXTENSION_NAME"
-pattern EXT_METAL_SURFACE_EXTENSION_NAME :: (Eq a, IsString a) => a
-pattern EXT_METAL_SURFACE_EXTENSION_NAME = VK_EXT_METAL_SURFACE_EXTENSION_NAME
+
+
+instance Show MetalSurfaceCreateFlagsEXT where
+  showsPrec p = \case
+    MetalSurfaceCreateFlagsEXT x -> showParen (p >= 11) (showString "MetalSurfaceCreateFlagsEXT 0x" . showHex x)
+
+instance Read MetalSurfaceCreateFlagsEXT where
+  readPrec = parens (choose []
+                     +++
+                     prec 10 (do
+                       expectP (Ident "MetalSurfaceCreateFlagsEXT")
+                       v <- step readPrec
+                       pure (MetalSurfaceCreateFlagsEXT v)))
+
+
+type EXT_METAL_SURFACE_SPEC_VERSION = 1
 
 -- No documentation found for TopLevel "VK_EXT_METAL_SURFACE_SPEC_VERSION"
-pattern EXT_METAL_SURFACE_SPEC_VERSION :: Integral a => a
-pattern EXT_METAL_SURFACE_SPEC_VERSION = VK_EXT_METAL_SURFACE_SPEC_VERSION
+pattern EXT_METAL_SURFACE_SPEC_VERSION :: forall a . Integral a => a
+pattern EXT_METAL_SURFACE_SPEC_VERSION = 1
+
+
+type EXT_METAL_SURFACE_EXTENSION_NAME = "VK_EXT_metal_surface"
+
+-- No documentation found for TopLevel "VK_EXT_METAL_SURFACE_EXTENSION_NAME"
+pattern EXT_METAL_SURFACE_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern EXT_METAL_SURFACE_EXTENSION_NAME = "VK_EXT_metal_surface"
+

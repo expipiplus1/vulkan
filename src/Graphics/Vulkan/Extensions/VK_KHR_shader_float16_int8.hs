@@ -1,70 +1,43 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language DuplicateRecordFields #-}
-{-# language PatternSynonyms #-}
+module Graphics.Vulkan.Extensions.VK_KHR_shader_float16_int8  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES_KHR
+                                                              , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT16_INT8_FEATURES_KHR
+                                                              , PhysicalDeviceShaderFloat16Int8FeaturesKHR
+                                                              , PhysicalDeviceFloat16Int8FeaturesKHR
+                                                              , KHR_SHADER_FLOAT16_INT8_SPEC_VERSION
+                                                              , pattern KHR_SHADER_FLOAT16_INT8_SPEC_VERSION
+                                                              , KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME
+                                                              , pattern KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME
+                                                              ) where
 
-module Graphics.Vulkan.Extensions.VK_KHR_shader_float16_int8
-  ( 
-#if defined(VK_USE_PLATFORM_GGP)
-  PhysicalDeviceFloat16Int8FeaturesKHR(..)
-  , 
-#endif
-  pattern KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME
-  , pattern KHR_SHADER_FLOAT16_INT8_SPEC_VERSION
-  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT16_INT8_FEATURES_KHR
-  ) where
-
-import Data.String
-  ( IsString
-  )
+import Data.String (IsString)
+import Graphics.Vulkan.Core12.Promoted_From_VK_KHR_shader_float16_int8 (PhysicalDeviceShaderFloat16Int8Features)
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES))
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES_KHR = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES
 
 
-
-#if defined(VK_USE_PLATFORM_GGP)
-import Graphics.Vulkan.C.Core10.Core
-  ( Zero(..)
-  )
-#endif
-import Graphics.Vulkan.C.Extensions.VK_KHR_shader_float16_int8
-  ( pattern VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME
-  , pattern VK_KHR_SHADER_FLOAT16_INT8_SPEC_VERSION
-  )
-
-#if defined(VK_USE_PLATFORM_GGP)
-import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
-  ( SomeVkStruct
-  )
-#endif
-import Graphics.Vulkan.Core10.Core
-  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT16_INT8_FEATURES_KHR
-  )
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT16_INT8_FEATURES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_FLOAT16_INT8_FEATURES_KHR = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_FLOAT16_INT8_FEATURES
 
 
+-- No documentation found for TopLevel "VkPhysicalDeviceShaderFloat16Int8FeaturesKHR"
+type PhysicalDeviceShaderFloat16Int8FeaturesKHR = PhysicalDeviceShaderFloat16Int8Features
 
-#if defined(VK_USE_PLATFORM_GGP)
 
 -- No documentation found for TopLevel "VkPhysicalDeviceFloat16Int8FeaturesKHR"
-data PhysicalDeviceFloat16Int8FeaturesKHR = PhysicalDeviceFloat16Int8FeaturesKHR
-  { -- No documentation found for Nested "PhysicalDeviceFloat16Int8FeaturesKHR" "pNext"
-  next :: Maybe SomeVkStruct
-  , -- No documentation found for Nested "PhysicalDeviceFloat16Int8FeaturesKHR" "shaderFloat16"
-  shaderFloat16 :: Bool
-  , -- No documentation found for Nested "PhysicalDeviceFloat16Int8FeaturesKHR" "shaderInt8"
-  shaderInt8 :: Bool
-  }
-  deriving (Show, Eq)
+type PhysicalDeviceFloat16Int8FeaturesKHR = PhysicalDeviceShaderFloat16Int8Features
 
-instance Zero PhysicalDeviceFloat16Int8FeaturesKHR where
-  zero = PhysicalDeviceFloat16Int8FeaturesKHR Nothing
-                                              False
-                                              False
 
-#endif
-
--- No documentation found for TopLevel "VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME"
-pattern KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME :: (Eq a, IsString a) => a
-pattern KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME = VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME
+type KHR_SHADER_FLOAT16_INT8_SPEC_VERSION = 1
 
 -- No documentation found for TopLevel "VK_KHR_SHADER_FLOAT16_INT8_SPEC_VERSION"
-pattern KHR_SHADER_FLOAT16_INT8_SPEC_VERSION :: Integral a => a
-pattern KHR_SHADER_FLOAT16_INT8_SPEC_VERSION = VK_KHR_SHADER_FLOAT16_INT8_SPEC_VERSION
+pattern KHR_SHADER_FLOAT16_INT8_SPEC_VERSION :: forall a . Integral a => a
+pattern KHR_SHADER_FLOAT16_INT8_SPEC_VERSION = 1
+
+
+type KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME = "VK_KHR_shader_float16_int8"
+
+-- No documentation found for TopLevel "VK_KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME"
+pattern KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern KHR_SHADER_FLOAT16_INT8_EXTENSION_NAME = "VK_KHR_shader_float16_int8"
+

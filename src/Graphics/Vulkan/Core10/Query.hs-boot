@@ -1,46 +1,17 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Core10.Query  (QueryPoolCreateInfo) where
 
+import Data.Kind (Type)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (Chain)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (PeekChain)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (PokeChain)
+import Graphics.Vulkan.CStruct (ToCStruct)
+type role QueryPoolCreateInfo nominal
+data QueryPoolCreateInfo (es :: [Type])
 
-module Graphics.Vulkan.Core10.Query
-  ( QueryPipelineStatisticFlagBits
-  , QueryPipelineStatisticFlags
-  , QueryPool
-  , QueryPoolCreateFlags
-  , QueryResultFlagBits
-  , QueryResultFlags
-  , QueryType
-  ) where
+instance PokeChain es => ToCStruct (QueryPoolCreateInfo es)
+instance Show (Chain es) => Show (QueryPoolCreateInfo es)
 
+instance PeekChain es => FromCStruct (QueryPoolCreateInfo es)
 
-
-
-import {-# source #-} Graphics.Vulkan.C.Core10.Query
-  ( VkQueryPipelineStatisticFlagBits
-  , VkQueryPool
-  , VkQueryPoolCreateFlags
-  , VkQueryResultFlagBits
-  , VkQueryType
-  )
-
-
--- No documentation found for TopLevel "QueryPipelineStatisticFlagBits"
-type QueryPipelineStatisticFlagBits = VkQueryPipelineStatisticFlagBits
-
--- No documentation found for TopLevel "QueryPipelineStatisticFlags"
-type QueryPipelineStatisticFlags = QueryPipelineStatisticFlagBits
-
--- No documentation found for TopLevel "QueryPool"
-type QueryPool = VkQueryPool
-
--- No documentation found for TopLevel "QueryPoolCreateFlags"
-type QueryPoolCreateFlags = VkQueryPoolCreateFlags
-
--- No documentation found for TopLevel "QueryResultFlagBits"
-type QueryResultFlagBits = VkQueryResultFlagBits
-
--- No documentation found for TopLevel "QueryResultFlags"
-type QueryResultFlags = QueryResultFlagBits
-
--- No documentation found for TopLevel "QueryType"
-type QueryType = VkQueryType

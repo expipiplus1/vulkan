@@ -1,0 +1,56 @@
+{-# language CPP #-}
+module Graphics.Vulkan.Core11.Enums.ExternalFenceFeatureFlagBits  ( ExternalFenceFeatureFlagBits( EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT
+                                                                                                , EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT
+                                                                                                , ..
+                                                                                                )
+                                                                  , ExternalFenceFeatureFlags
+                                                                  ) where
+
+import GHC.Read (choose)
+import GHC.Read (expectP)
+import GHC.Read (parens)
+import GHC.Show (showParen)
+import GHC.Show (showString)
+import Numeric (showHex)
+import Text.ParserCombinators.ReadPrec ((+++))
+import Text.ParserCombinators.ReadPrec (prec)
+import Text.ParserCombinators.ReadPrec (step)
+import Data.Bits (Bits)
+import Foreign.Storable (Storable)
+import GHC.Read (Read(readPrec))
+import Text.Read.Lex (Lexeme(Ident))
+import Graphics.Vulkan.Core10.BaseType (Flags)
+import Graphics.Vulkan.Zero (Zero)
+-- | VkExternalFenceFeatureFlagBits - Bitfield describing features of an
+-- external fence handle type
+--
+-- = See Also
+--
+-- 'ExternalFenceFeatureFlags'
+newtype ExternalFenceFeatureFlagBits = ExternalFenceFeatureFlagBits Flags
+  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+
+-- | 'EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT' specifies handles of this type
+-- /can/ be exported from Vulkan fence objects.
+pattern EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT = ExternalFenceFeatureFlagBits 0x00000001
+-- | 'EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT' specifies handles of this type
+-- /can/ be imported to Vulkan fence objects.
+pattern EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT = ExternalFenceFeatureFlagBits 0x00000002
+
+type ExternalFenceFeatureFlags = ExternalFenceFeatureFlagBits
+
+instance Show ExternalFenceFeatureFlagBits where
+  showsPrec p = \case
+    EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT -> showString "EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT"
+    EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT -> showString "EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT"
+    ExternalFenceFeatureFlagBits x -> showParen (p >= 11) (showString "ExternalFenceFeatureFlagBits 0x" . showHex x)
+
+instance Read ExternalFenceFeatureFlagBits where
+  readPrec = parens (choose [("EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT", pure EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT)
+                            , ("EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT", pure EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT)]
+                     +++
+                     prec 10 (do
+                       expectP (Ident "ExternalFenceFeatureFlagBits")
+                       v <- step readPrec
+                       pure (ExternalFenceFeatureFlagBits v)))
+

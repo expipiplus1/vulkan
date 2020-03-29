@@ -1,79 +1,64 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Core10.Pass  ( AttachmentDescription
+                                    , AttachmentReference
+                                    , FramebufferCreateInfo
+                                    , RenderPassCreateInfo
+                                    , SubpassDependency
+                                    , SubpassDescription
+                                    ) where
+
+import Data.Kind (Type)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (Chain)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (PeekChain)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (PokeChain)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data AttachmentDescription
+
+instance ToCStruct AttachmentDescription
+instance Show AttachmentDescription
+
+instance FromCStruct AttachmentDescription
 
 
-module Graphics.Vulkan.Core10.Pass
-  ( AccessFlagBits
-  , AccessFlags
-  , AttachmentDescriptionFlagBits
-  , AttachmentDescriptionFlags
-  , AttachmentLoadOp
-  , AttachmentStoreOp
-  , DependencyFlagBits
-  , DependencyFlags
-  , Framebuffer
-  , FramebufferCreateFlags
-  , PipelineBindPoint
-  , RenderPassCreateFlags
-  , SubpassDescriptionFlagBits
-  , SubpassDescriptionFlags
-  ) where
+data AttachmentReference
+
+instance ToCStruct AttachmentReference
+instance Show AttachmentReference
+
+instance FromCStruct AttachmentReference
 
 
+type role FramebufferCreateInfo nominal
+data FramebufferCreateInfo (es :: [Type])
+
+instance PokeChain es => ToCStruct (FramebufferCreateInfo es)
+instance Show (Chain es) => Show (FramebufferCreateInfo es)
+
+instance PeekChain es => FromCStruct (FramebufferCreateInfo es)
 
 
-import {-# source #-} Graphics.Vulkan.C.Core10.Pass
-  ( VkAccessFlagBits
-  , VkAttachmentDescriptionFlagBits
-  , VkAttachmentLoadOp
-  , VkAttachmentStoreOp
-  , VkDependencyFlagBits
-  , VkFramebuffer
-  , VkFramebufferCreateFlags
-  , VkPipelineBindPoint
-  , VkRenderPassCreateFlags
-  , VkSubpassDescriptionFlagBits
-  )
+type role RenderPassCreateInfo nominal
+data RenderPassCreateInfo (es :: [Type])
+
+instance PokeChain es => ToCStruct (RenderPassCreateInfo es)
+instance Show (Chain es) => Show (RenderPassCreateInfo es)
+
+instance PeekChain es => FromCStruct (RenderPassCreateInfo es)
 
 
--- No documentation found for TopLevel "AccessFlagBits"
-type AccessFlagBits = VkAccessFlagBits
+data SubpassDependency
 
--- No documentation found for TopLevel "AccessFlags"
-type AccessFlags = AccessFlagBits
+instance ToCStruct SubpassDependency
+instance Show SubpassDependency
 
--- No documentation found for TopLevel "AttachmentDescriptionFlagBits"
-type AttachmentDescriptionFlagBits = VkAttachmentDescriptionFlagBits
+instance FromCStruct SubpassDependency
 
--- No documentation found for TopLevel "AttachmentDescriptionFlags"
-type AttachmentDescriptionFlags = AttachmentDescriptionFlagBits
 
--- No documentation found for TopLevel "AttachmentLoadOp"
-type AttachmentLoadOp = VkAttachmentLoadOp
+data SubpassDescription
 
--- No documentation found for TopLevel "AttachmentStoreOp"
-type AttachmentStoreOp = VkAttachmentStoreOp
+instance ToCStruct SubpassDescription
+instance Show SubpassDescription
 
--- No documentation found for TopLevel "DependencyFlagBits"
-type DependencyFlagBits = VkDependencyFlagBits
+instance FromCStruct SubpassDescription
 
--- No documentation found for TopLevel "DependencyFlags"
-type DependencyFlags = DependencyFlagBits
-
--- No documentation found for TopLevel "Framebuffer"
-type Framebuffer = VkFramebuffer
-
--- No documentation found for TopLevel "FramebufferCreateFlags"
-type FramebufferCreateFlags = VkFramebufferCreateFlags
-
--- No documentation found for TopLevel "PipelineBindPoint"
-type PipelineBindPoint = VkPipelineBindPoint
-
--- No documentation found for TopLevel "RenderPassCreateFlags"
-type RenderPassCreateFlags = VkRenderPassCreateFlags
-
--- No documentation found for TopLevel "SubpassDescriptionFlagBits"
-type SubpassDescriptionFlagBits = VkSubpassDescriptionFlagBits
-
--- No documentation found for TopLevel "SubpassDescriptionFlags"
-type SubpassDescriptionFlags = SubpassDescriptionFlagBits

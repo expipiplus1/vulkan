@@ -1,67 +1,95 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language DuplicateRecordFields #-}
-{-# language PatternSynonyms #-}
+module Graphics.Vulkan.Extensions.VK_KHR_surface_protected_capabilities  ( SurfaceProtectedCapabilitiesKHR(..)
+                                                                         , KHR_SURFACE_PROTECTED_CAPABILITIES_SPEC_VERSION
+                                                                         , pattern KHR_SURFACE_PROTECTED_CAPABILITIES_SPEC_VERSION
+                                                                         , KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME
+                                                                         , pattern KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME
+                                                                         ) where
 
-module Graphics.Vulkan.Extensions.VK_KHR_surface_protected_capabilities
-  ( 
-#if defined(VK_USE_PLATFORM_GGP)
-  SurfaceProtectedCapabilitiesKHR(..)
-  , 
-#endif
-  pattern KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME
-  , pattern KHR_SURFACE_PROTECTED_CAPABILITIES_SPEC_VERSION
-  , pattern STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR
-  ) where
-
-import Data.String
-  ( IsString
-  )
-
-
-
-#if defined(VK_USE_PLATFORM_GGP)
-import Graphics.Vulkan.C.Core10.Core
-  ( Zero(..)
-  )
-#endif
-import Graphics.Vulkan.C.Extensions.VK_KHR_surface_protected_capabilities
-  ( pattern VK_KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME
-  , pattern VK_KHR_SURFACE_PROTECTED_CAPABILITIES_SPEC_VERSION
-  )
-
-#if defined(VK_USE_PLATFORM_GGP)
-import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
-  ( SomeVkStruct
-  )
-#endif
-import Graphics.Vulkan.Core10.Core
-  ( pattern STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR
-  )
-
-
-
-#if defined(VK_USE_PLATFORM_GGP)
-
--- No documentation found for TopLevel "VkSurfaceProtectedCapabilitiesKHR"
+import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Ptr (nullPtr)
+import Foreign.Ptr (plusPtr)
+import Data.String (IsString)
+import Data.Typeable (Typeable)
+import Foreign.Storable (Storable)
+import Foreign.Storable (Storable(peek))
+import Foreign.Storable (Storable(poke))
+import qualified Foreign.Storable (Storable(..))
+import Foreign.Ptr (Ptr)
+import Data.Kind (Type)
+import Graphics.Vulkan.Core10.BaseType (bool32ToBool)
+import Graphics.Vulkan.Core10.BaseType (boolToBool32)
+import Graphics.Vulkan.Core10.BaseType (Bool32)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (FromCStruct(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
+import Graphics.Vulkan.CStruct (ToCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct(..))
+import Graphics.Vulkan.Zero (Zero(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR))
+-- | VkSurfaceProtectedCapabilitiesKHR - Structure describing capability of a
+-- surface to be protected
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Core10.BaseType.Bool32',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data SurfaceProtectedCapabilitiesKHR = SurfaceProtectedCapabilitiesKHR
-  { -- No documentation found for Nested "SurfaceProtectedCapabilitiesKHR" "pNext"
-  next :: Maybe SomeVkStruct
-  , -- No documentation found for Nested "SurfaceProtectedCapabilitiesKHR" "supportsProtected"
-  supportsProtected :: Bool
-  }
-  deriving (Show, Eq)
+  { -- | @supportsProtected@ specifies whether a protected swapchain created from
+    -- 'Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'::@surface@
+    -- for a particular windowing system /can/ be displayed on screen or not.
+    -- If @supportsProtected@ is 'Graphics.Vulkan.Core10.BaseType.TRUE', then
+    -- creation of swapchains with the
+    -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.SWAPCHAIN_CREATE_PROTECTED_BIT_KHR'
+    -- flag set /must/ be supported for @surface@.
+    supportsProtected :: Bool }
+  deriving (Typeable)
+deriving instance Show SurfaceProtectedCapabilitiesKHR
+
+instance ToCStruct SurfaceProtectedCapabilitiesKHR where
+  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p SurfaceProtectedCapabilitiesKHR{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (supportsProtected))
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
+    f
+
+instance FromCStruct SurfaceProtectedCapabilitiesKHR where
+  peekCStruct p = do
+    supportsProtected <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
+    pure $ SurfaceProtectedCapabilitiesKHR
+             (bool32ToBool supportsProtected)
+
+instance Storable SurfaceProtectedCapabilitiesKHR where
+  sizeOf ~_ = 24
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero SurfaceProtectedCapabilitiesKHR where
-  zero = SurfaceProtectedCapabilitiesKHR Nothing
-                                         False
+  zero = SurfaceProtectedCapabilitiesKHR
+           zero
 
-#endif
 
--- No documentation found for TopLevel "VK_KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME"
-pattern KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME :: (Eq a, IsString a) => a
-pattern KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME = VK_KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME
+type KHR_SURFACE_PROTECTED_CAPABILITIES_SPEC_VERSION = 1
 
 -- No documentation found for TopLevel "VK_KHR_SURFACE_PROTECTED_CAPABILITIES_SPEC_VERSION"
-pattern KHR_SURFACE_PROTECTED_CAPABILITIES_SPEC_VERSION :: Integral a => a
-pattern KHR_SURFACE_PROTECTED_CAPABILITIES_SPEC_VERSION = VK_KHR_SURFACE_PROTECTED_CAPABILITIES_SPEC_VERSION
+pattern KHR_SURFACE_PROTECTED_CAPABILITIES_SPEC_VERSION :: forall a . Integral a => a
+pattern KHR_SURFACE_PROTECTED_CAPABILITIES_SPEC_VERSION = 1
+
+
+type KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME = "VK_KHR_surface_protected_capabilities"
+
+-- No documentation found for TopLevel "VK_KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME"
+pattern KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern KHR_SURFACE_PROTECTED_CAPABILITIES_EXTENSION_NAME = "VK_KHR_surface_protected_capabilities"
+

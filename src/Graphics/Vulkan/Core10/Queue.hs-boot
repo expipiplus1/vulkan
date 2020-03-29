@@ -1,32 +1,17 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Core10.Queue  (SubmitInfo) where
 
+import Data.Kind (Type)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (Chain)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (PeekChain)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (PokeChain)
+import Graphics.Vulkan.CStruct (ToCStruct)
+type role SubmitInfo nominal
+data SubmitInfo (es :: [Type])
 
-module Graphics.Vulkan.Core10.Queue
-  ( Fence
-  , PipelineStageFlagBits
-  , PipelineStageFlags
-  , Semaphore
-  ) where
+instance PokeChain es => ToCStruct (SubmitInfo es)
+instance Show (Chain es) => Show (SubmitInfo es)
 
+instance PeekChain es => FromCStruct (SubmitInfo es)
 
-
-
-import {-# source #-} Graphics.Vulkan.C.Core10.Queue
-  ( VkFence
-  , VkPipelineStageFlagBits
-  , VkSemaphore
-  )
-
-
--- No documentation found for TopLevel "Fence"
-type Fence = VkFence
-
--- No documentation found for TopLevel "PipelineStageFlagBits"
-type PipelineStageFlagBits = VkPipelineStageFlagBits
-
--- No documentation found for TopLevel "PipelineStageFlags"
-type PipelineStageFlags = PipelineStageFlagBits
-
--- No documentation found for TopLevel "Semaphore"
-type Semaphore = VkSemaphore

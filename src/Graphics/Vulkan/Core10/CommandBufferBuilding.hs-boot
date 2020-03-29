@@ -1,32 +1,94 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Core10.CommandBufferBuilding  ( BufferCopy
+                                                     , BufferImageCopy
+                                                     , ClearAttachment
+                                                     , ClearRect
+                                                     , ImageBlit
+                                                     , ImageCopy
+                                                     , ImageResolve
+                                                     , Rect2D
+                                                     , RenderPassBeginInfo
+                                                     , Viewport
+                                                     ) where
+
+import Data.Kind (Type)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (Chain)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (PokeChain)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data BufferCopy
+
+instance ToCStruct BufferCopy
+instance Show BufferCopy
+
+instance FromCStruct BufferCopy
 
 
-module Graphics.Vulkan.Core10.CommandBufferBuilding
-  ( IndexType
-  , StencilFaceFlagBits
-  , StencilFaceFlags
-  , SubpassContents
-  ) where
+data BufferImageCopy
+
+instance ToCStruct BufferImageCopy
+instance Show BufferImageCopy
+
+instance FromCStruct BufferImageCopy
 
 
+data ClearAttachment
+
+instance ToCStruct ClearAttachment
+instance Show ClearAttachment
 
 
-import {-# source #-} Graphics.Vulkan.C.Core10.CommandBufferBuilding
-  ( VkIndexType
-  , VkStencilFaceFlagBits
-  , VkSubpassContents
-  )
+data ClearRect
+
+instance ToCStruct ClearRect
+instance Show ClearRect
+
+instance FromCStruct ClearRect
 
 
--- No documentation found for TopLevel "IndexType"
-type IndexType = VkIndexType
+data ImageBlit
 
--- No documentation found for TopLevel "StencilFaceFlagBits"
-type StencilFaceFlagBits = VkStencilFaceFlagBits
+instance ToCStruct ImageBlit
+instance Show ImageBlit
 
--- No documentation found for TopLevel "StencilFaceFlags"
-type StencilFaceFlags = StencilFaceFlagBits
+instance FromCStruct ImageBlit
 
--- No documentation found for TopLevel "SubpassContents"
-type SubpassContents = VkSubpassContents
+
+data ImageCopy
+
+instance ToCStruct ImageCopy
+instance Show ImageCopy
+
+instance FromCStruct ImageCopy
+
+
+data ImageResolve
+
+instance ToCStruct ImageResolve
+instance Show ImageResolve
+
+instance FromCStruct ImageResolve
+
+
+data Rect2D
+
+instance ToCStruct Rect2D
+instance Show Rect2D
+
+instance FromCStruct Rect2D
+
+
+type role RenderPassBeginInfo nominal
+data RenderPassBeginInfo (es :: [Type])
+
+instance PokeChain es => ToCStruct (RenderPassBeginInfo es)
+instance Show (Chain es) => Show (RenderPassBeginInfo es)
+
+
+data Viewport
+
+instance ToCStruct Viewport
+instance Show Viewport
+
+instance FromCStruct Viewport
+

@@ -1,70 +1,33 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language DuplicateRecordFields #-}
-{-# language PatternSynonyms #-}
+module Graphics.Vulkan.Extensions.VK_KHR_shader_atomic_int64  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES_KHR
+                                                              , PhysicalDeviceShaderAtomicInt64FeaturesKHR
+                                                              , KHR_SHADER_ATOMIC_INT64_SPEC_VERSION
+                                                              , pattern KHR_SHADER_ATOMIC_INT64_SPEC_VERSION
+                                                              , KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME
+                                                              , pattern KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME
+                                                              ) where
 
-module Graphics.Vulkan.Extensions.VK_KHR_shader_atomic_int64
-  ( 
-#if defined(VK_USE_PLATFORM_GGP)
-  PhysicalDeviceShaderAtomicInt64FeaturesKHR(..)
-  , 
-#endif
-  pattern KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME
-  , pattern KHR_SHADER_ATOMIC_INT64_SPEC_VERSION
-  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES_KHR
-  ) where
+import Data.String (IsString)
+import Graphics.Vulkan.Core12.Promoted_From_VK_KHR_shader_atomic_int64 (PhysicalDeviceShaderAtomicInt64Features)
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES))
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES_KHR = STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES
 
-import Data.String
-  ( IsString
-  )
-
-
-
-#if defined(VK_USE_PLATFORM_GGP)
-import Graphics.Vulkan.C.Core10.Core
-  ( Zero(..)
-  )
-#endif
-import Graphics.Vulkan.C.Extensions.VK_KHR_shader_atomic_int64
-  ( pattern VK_KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME
-  , pattern VK_KHR_SHADER_ATOMIC_INT64_SPEC_VERSION
-  )
-
-#if defined(VK_USE_PLATFORM_GGP)
-import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
-  ( SomeVkStruct
-  )
-#endif
-import Graphics.Vulkan.Core10.Core
-  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_INT64_FEATURES_KHR
-  )
-
-
-
-#if defined(VK_USE_PLATFORM_GGP)
 
 -- No documentation found for TopLevel "VkPhysicalDeviceShaderAtomicInt64FeaturesKHR"
-data PhysicalDeviceShaderAtomicInt64FeaturesKHR = PhysicalDeviceShaderAtomicInt64FeaturesKHR
-  { -- No documentation found for Nested "PhysicalDeviceShaderAtomicInt64FeaturesKHR" "pNext"
-  next :: Maybe SomeVkStruct
-  , -- No documentation found for Nested "PhysicalDeviceShaderAtomicInt64FeaturesKHR" "shaderBufferInt64Atomics"
-  shaderBufferInt64Atomics :: Bool
-  , -- No documentation found for Nested "PhysicalDeviceShaderAtomicInt64FeaturesKHR" "shaderSharedInt64Atomics"
-  shaderSharedInt64Atomics :: Bool
-  }
-  deriving (Show, Eq)
+type PhysicalDeviceShaderAtomicInt64FeaturesKHR = PhysicalDeviceShaderAtomicInt64Features
 
-instance Zero PhysicalDeviceShaderAtomicInt64FeaturesKHR where
-  zero = PhysicalDeviceShaderAtomicInt64FeaturesKHR Nothing
-                                                    False
-                                                    False
 
-#endif
-
--- No documentation found for TopLevel "VK_KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME"
-pattern KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME :: (Eq a, IsString a) => a
-pattern KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME = VK_KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME
+type KHR_SHADER_ATOMIC_INT64_SPEC_VERSION = 1
 
 -- No documentation found for TopLevel "VK_KHR_SHADER_ATOMIC_INT64_SPEC_VERSION"
-pattern KHR_SHADER_ATOMIC_INT64_SPEC_VERSION :: Integral a => a
-pattern KHR_SHADER_ATOMIC_INT64_SPEC_VERSION = VK_KHR_SHADER_ATOMIC_INT64_SPEC_VERSION
+pattern KHR_SHADER_ATOMIC_INT64_SPEC_VERSION :: forall a . Integral a => a
+pattern KHR_SHADER_ATOMIC_INT64_SPEC_VERSION = 1
+
+
+type KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME = "VK_KHR_shader_atomic_int64"
+
+-- No documentation found for TopLevel "VK_KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME"
+pattern KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern KHR_SHADER_ATOMIC_INT64_EXTENSION_NAME = "VK_KHR_shader_atomic_int64"
+

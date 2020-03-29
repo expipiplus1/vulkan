@@ -1,104 +1,117 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Core10.DeviceInitialization  ( ApplicationInfo
+                                                    , FormatProperties
+                                                    , ImageFormatProperties
+                                                    , InstanceCreateInfo
+                                                    , MemoryHeap
+                                                    , MemoryType
+                                                    , PhysicalDeviceFeatures
+                                                    , PhysicalDeviceLimits
+                                                    , PhysicalDeviceMemoryProperties
+                                                    , PhysicalDeviceProperties
+                                                    , PhysicalDeviceSparseProperties
+                                                    , QueueFamilyProperties
+                                                    ) where
+
+import Data.Kind (Type)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (Chain)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (PeekChain)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (PokeChain)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data ApplicationInfo
+
+instance ToCStruct ApplicationInfo
+instance Show ApplicationInfo
+
+instance FromCStruct ApplicationInfo
 
 
-module Graphics.Vulkan.Core10.DeviceInitialization
-  ( DeviceSize
-  , FormatFeatureFlagBits
-  , FormatFeatureFlags
-  , ImageCreateFlagBits
-  , ImageCreateFlags
-  , ImageTiling
-  , ImageType
-  , ImageUsageFlagBits
-  , ImageUsageFlags
-  , InstanceCreateFlags
-  , MemoryHeapFlagBits
-  , MemoryHeapFlags
-  , MemoryPropertyFlagBits
-  , MemoryPropertyFlags
-  , PhysicalDeviceType
-  , QueueFlagBits
-  , QueueFlags
-  , SampleCountFlagBits
-  , SampleCountFlags
-  ) where
+data FormatProperties
+
+instance ToCStruct FormatProperties
+instance Show FormatProperties
+
+instance FromCStruct FormatProperties
 
 
+data ImageFormatProperties
+
+instance ToCStruct ImageFormatProperties
+instance Show ImageFormatProperties
+
+instance FromCStruct ImageFormatProperties
 
 
-import Graphics.Vulkan.C.Core10.DeviceInitialization
-  ( VkDeviceSize
-  )
-import {-# source #-} Graphics.Vulkan.C.Core10.DeviceInitialization
-  ( VkFormatFeatureFlagBits
-  , VkImageCreateFlagBits
-  , VkImageTiling
-  , VkImageType
-  , VkImageUsageFlagBits
-  , VkInstanceCreateFlags
-  , VkMemoryHeapFlagBits
-  , VkMemoryPropertyFlagBits
-  , VkPhysicalDeviceType
-  , VkQueueFlagBits
-  , VkSampleCountFlagBits
-  )
+type role InstanceCreateInfo nominal
+data InstanceCreateInfo (es :: [Type])
+
+instance PokeChain es => ToCStruct (InstanceCreateInfo es)
+instance Show (Chain es) => Show (InstanceCreateInfo es)
+
+instance PeekChain es => FromCStruct (InstanceCreateInfo es)
 
 
--- No documentation found for TopLevel "DeviceSize"
-type DeviceSize = VkDeviceSize
-  
+data MemoryHeap
 
--- No documentation found for TopLevel "FormatFeatureFlagBits"
-type FormatFeatureFlagBits = VkFormatFeatureFlagBits
+instance ToCStruct MemoryHeap
+instance Show MemoryHeap
 
--- No documentation found for TopLevel "FormatFeatureFlags"
-type FormatFeatureFlags = FormatFeatureFlagBits
+instance FromCStruct MemoryHeap
 
--- No documentation found for TopLevel "ImageCreateFlagBits"
-type ImageCreateFlagBits = VkImageCreateFlagBits
 
--- No documentation found for TopLevel "ImageCreateFlags"
-type ImageCreateFlags = ImageCreateFlagBits
+data MemoryType
 
--- No documentation found for TopLevel "ImageTiling"
-type ImageTiling = VkImageTiling
+instance ToCStruct MemoryType
+instance Show MemoryType
 
--- No documentation found for TopLevel "ImageType"
-type ImageType = VkImageType
+instance FromCStruct MemoryType
 
--- No documentation found for TopLevel "ImageUsageFlagBits"
-type ImageUsageFlagBits = VkImageUsageFlagBits
 
--- No documentation found for TopLevel "ImageUsageFlags"
-type ImageUsageFlags = ImageUsageFlagBits
+data PhysicalDeviceFeatures
 
--- No documentation found for TopLevel "InstanceCreateFlags"
-type InstanceCreateFlags = VkInstanceCreateFlags
+instance ToCStruct PhysicalDeviceFeatures
+instance Show PhysicalDeviceFeatures
 
--- No documentation found for TopLevel "MemoryHeapFlagBits"
-type MemoryHeapFlagBits = VkMemoryHeapFlagBits
+instance FromCStruct PhysicalDeviceFeatures
 
--- No documentation found for TopLevel "MemoryHeapFlags"
-type MemoryHeapFlags = MemoryHeapFlagBits
 
--- No documentation found for TopLevel "MemoryPropertyFlagBits"
-type MemoryPropertyFlagBits = VkMemoryPropertyFlagBits
+data PhysicalDeviceLimits
 
--- No documentation found for TopLevel "MemoryPropertyFlags"
-type MemoryPropertyFlags = MemoryPropertyFlagBits
+instance ToCStruct PhysicalDeviceLimits
+instance Show PhysicalDeviceLimits
 
--- No documentation found for TopLevel "PhysicalDeviceType"
-type PhysicalDeviceType = VkPhysicalDeviceType
+instance FromCStruct PhysicalDeviceLimits
 
--- No documentation found for TopLevel "QueueFlagBits"
-type QueueFlagBits = VkQueueFlagBits
 
--- No documentation found for TopLevel "QueueFlags"
-type QueueFlags = QueueFlagBits
+data PhysicalDeviceMemoryProperties
 
--- No documentation found for TopLevel "SampleCountFlagBits"
-type SampleCountFlagBits = VkSampleCountFlagBits
+instance ToCStruct PhysicalDeviceMemoryProperties
+instance Show PhysicalDeviceMemoryProperties
 
--- No documentation found for TopLevel "SampleCountFlags"
-type SampleCountFlags = SampleCountFlagBits
+instance FromCStruct PhysicalDeviceMemoryProperties
+
+
+data PhysicalDeviceProperties
+
+instance ToCStruct PhysicalDeviceProperties
+instance Show PhysicalDeviceProperties
+
+instance FromCStruct PhysicalDeviceProperties
+
+
+data PhysicalDeviceSparseProperties
+
+instance ToCStruct PhysicalDeviceSparseProperties
+instance Show PhysicalDeviceSparseProperties
+
+instance FromCStruct PhysicalDeviceSparseProperties
+
+
+data QueueFamilyProperties
+
+instance ToCStruct QueueFamilyProperties
+instance Show QueueFamilyProperties
+
+instance FromCStruct QueueFamilyProperties
+

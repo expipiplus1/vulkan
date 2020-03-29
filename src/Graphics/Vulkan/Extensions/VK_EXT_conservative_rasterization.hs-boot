@@ -1,23 +1,23 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_EXT_conservative_rasterization  ( PhysicalDeviceConservativeRasterizationPropertiesEXT
+                                                                     , PipelineRasterizationConservativeStateCreateInfoEXT
+                                                                     ) where
+
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data PhysicalDeviceConservativeRasterizationPropertiesEXT
+
+instance ToCStruct PhysicalDeviceConservativeRasterizationPropertiesEXT
+instance Show PhysicalDeviceConservativeRasterizationPropertiesEXT
+
+instance FromCStruct PhysicalDeviceConservativeRasterizationPropertiesEXT
 
 
-module Graphics.Vulkan.Extensions.VK_EXT_conservative_rasterization
-  ( ConservativeRasterizationModeEXT
-  , PipelineRasterizationConservativeStateCreateFlagsEXT
-  ) where
+data PipelineRasterizationConservativeStateCreateInfoEXT
 
+instance ToCStruct PipelineRasterizationConservativeStateCreateInfoEXT
+instance Show PipelineRasterizationConservativeStateCreateInfoEXT
 
+instance FromCStruct PipelineRasterizationConservativeStateCreateInfoEXT
 
-
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_conservative_rasterization
-  ( VkConservativeRasterizationModeEXT
-  , VkPipelineRasterizationConservativeStateCreateFlagsEXT
-  )
-
-
--- No documentation found for TopLevel "ConservativeRasterizationModeEXT"
-type ConservativeRasterizationModeEXT = VkConservativeRasterizationModeEXT
-
--- No documentation found for TopLevel "PipelineRasterizationConservativeStateCreateFlagsEXT"
-type PipelineRasterizationConservativeStateCreateFlagsEXT = VkPipelineRasterizationConservativeStateCreateFlagsEXT

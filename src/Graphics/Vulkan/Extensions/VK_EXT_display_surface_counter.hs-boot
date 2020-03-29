@@ -1,22 +1,21 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_EXT_display_surface_counter  ( SurfaceCapabilities2EXT
+                                                                  , SurfaceCounterFlagBitsEXT
+                                                                  , SurfaceCounterFlagsEXT
+                                                                  ) where
+
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data SurfaceCapabilities2EXT
+
+instance ToCStruct SurfaceCapabilities2EXT
+instance Show SurfaceCapabilities2EXT
+
+instance FromCStruct SurfaceCapabilities2EXT
 
 
-module Graphics.Vulkan.Extensions.VK_EXT_display_surface_counter
-  ( SurfaceCounterFlagBitsEXT
-  , SurfaceCounterFlagsEXT
-  ) where
+data SurfaceCounterFlagBitsEXT
 
-
-
-
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_display_surface_counter
-  ( VkSurfaceCounterFlagBitsEXT
-  )
-
-
--- No documentation found for TopLevel "SurfaceCounterFlagBitsEXT"
-type SurfaceCounterFlagBitsEXT = VkSurfaceCounterFlagBitsEXT
-
--- No documentation found for TopLevel "SurfaceCounterFlagsEXT"
 type SurfaceCounterFlagsEXT = SurfaceCounterFlagBitsEXT
+

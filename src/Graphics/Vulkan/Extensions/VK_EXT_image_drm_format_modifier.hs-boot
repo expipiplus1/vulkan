@@ -1,18 +1,59 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_EXT_image_drm_format_modifier  ( DrmFormatModifierPropertiesEXT
+                                                                    , DrmFormatModifierPropertiesListEXT
+                                                                    , ImageDrmFormatModifierExplicitCreateInfoEXT
+                                                                    , ImageDrmFormatModifierListCreateInfoEXT
+                                                                    , ImageDrmFormatModifierPropertiesEXT
+                                                                    , PhysicalDeviceImageDrmFormatModifierInfoEXT
+                                                                    ) where
+
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data DrmFormatModifierPropertiesEXT
+
+instance ToCStruct DrmFormatModifierPropertiesEXT
+instance Show DrmFormatModifierPropertiesEXT
+
+instance FromCStruct DrmFormatModifierPropertiesEXT
 
 
-module Graphics.Vulkan.Extensions.VK_EXT_image_drm_format_modifier
-  ( ImageTiling
-  ) where
+data DrmFormatModifierPropertiesListEXT
+
+instance ToCStruct DrmFormatModifierPropertiesListEXT
+instance Show DrmFormatModifierPropertiesListEXT
+
+instance FromCStruct DrmFormatModifierPropertiesListEXT
 
 
+data ImageDrmFormatModifierExplicitCreateInfoEXT
+
+instance ToCStruct ImageDrmFormatModifierExplicitCreateInfoEXT
+instance Show ImageDrmFormatModifierExplicitCreateInfoEXT
+
+instance FromCStruct ImageDrmFormatModifierExplicitCreateInfoEXT
 
 
-import {-# source #-} Graphics.Vulkan.C.Core10.DeviceInitialization
-  ( VkImageTiling
-  )
+data ImageDrmFormatModifierListCreateInfoEXT
+
+instance ToCStruct ImageDrmFormatModifierListCreateInfoEXT
+instance Show ImageDrmFormatModifierListCreateInfoEXT
+
+instance FromCStruct ImageDrmFormatModifierListCreateInfoEXT
 
 
--- No documentation found for TopLevel "ImageTiling"
-type ImageTiling = VkImageTiling
+data ImageDrmFormatModifierPropertiesEXT
+
+instance ToCStruct ImageDrmFormatModifierPropertiesEXT
+instance Show ImageDrmFormatModifierPropertiesEXT
+
+instance FromCStruct ImageDrmFormatModifierPropertiesEXT
+
+
+data PhysicalDeviceImageDrmFormatModifierInfoEXT
+
+instance ToCStruct PhysicalDeviceImageDrmFormatModifierInfoEXT
+instance Show PhysicalDeviceImageDrmFormatModifierInfoEXT
+
+instance FromCStruct PhysicalDeviceImageDrmFormatModifierInfoEXT
+

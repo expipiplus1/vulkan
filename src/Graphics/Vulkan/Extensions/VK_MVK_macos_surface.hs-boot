@@ -1,18 +1,13 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_MVK_macos_surface  (MacOSSurfaceCreateInfoMVK) where
 
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data MacOSSurfaceCreateInfoMVK
 
-module Graphics.Vulkan.Extensions.VK_MVK_macos_surface
-  ( MacOSSurfaceCreateFlagsMVK
-  ) where
+instance ToCStruct MacOSSurfaceCreateInfoMVK
+instance Show MacOSSurfaceCreateInfoMVK
 
+instance FromCStruct MacOSSurfaceCreateInfoMVK
 
-
-
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_MVK_macos_surface
-  ( VkMacOSSurfaceCreateFlagsMVK
-  )
-
-
--- No documentation found for TopLevel "MacOSSurfaceCreateFlagsMVK"
-type MacOSSurfaceCreateFlagsMVK = VkMacOSSurfaceCreateFlagsMVK

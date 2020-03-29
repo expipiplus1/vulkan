@@ -1,23 +1,13 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Core10.BufferView  (BufferViewCreateInfo) where
 
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data BufferViewCreateInfo
 
-module Graphics.Vulkan.Core10.BufferView
-  ( BufferView
-  , BufferViewCreateFlags
-  ) where
+instance ToCStruct BufferViewCreateInfo
+instance Show BufferViewCreateInfo
 
+instance FromCStruct BufferViewCreateInfo
 
-
-
-import {-# source #-} Graphics.Vulkan.C.Core10.BufferView
-  ( VkBufferView
-  , VkBufferViewCreateFlags
-  )
-
-
--- No documentation found for TopLevel "BufferView"
-type BufferView = VkBufferView
-
--- No documentation found for TopLevel "BufferViewCreateFlags"
-type BufferViewCreateFlags = VkBufferViewCreateFlags

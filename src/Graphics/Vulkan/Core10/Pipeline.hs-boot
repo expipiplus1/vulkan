@@ -1,168 +1,179 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Core10.Pipeline  ( ComputePipelineCreateInfo
+                                        , GraphicsPipelineCreateInfo
+                                        , PipelineColorBlendAttachmentState
+                                        , PipelineColorBlendStateCreateInfo
+                                        , PipelineDepthStencilStateCreateInfo
+                                        , PipelineDynamicStateCreateInfo
+                                        , PipelineInputAssemblyStateCreateInfo
+                                        , PipelineMultisampleStateCreateInfo
+                                        , PipelineRasterizationStateCreateInfo
+                                        , PipelineShaderStageCreateInfo
+                                        , PipelineTessellationStateCreateInfo
+                                        , PipelineVertexInputStateCreateInfo
+                                        , PipelineViewportStateCreateInfo
+                                        , SpecializationInfo
+                                        , SpecializationMapEntry
+                                        , StencilOpState
+                                        , VertexInputAttributeDescription
+                                        , VertexInputBindingDescription
+                                        ) where
+
+import Data.Kind (Type)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (Chain)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (PeekChain)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (PokeChain)
+import Graphics.Vulkan.CStruct (ToCStruct)
+type role ComputePipelineCreateInfo nominal
+data ComputePipelineCreateInfo (es :: [Type])
+
+instance PokeChain es => ToCStruct (ComputePipelineCreateInfo es)
+instance Show (Chain es) => Show (ComputePipelineCreateInfo es)
+
+instance PeekChain es => FromCStruct (ComputePipelineCreateInfo es)
 
 
-module Graphics.Vulkan.Core10.Pipeline
-  ( BlendFactor
-  , BlendOp
-  , ColorComponentFlagBits
-  , ColorComponentFlags
-  , CompareOp
-  , CullModeFlagBits
-  , CullModeFlags
-  , DynamicState
-  , FrontFace
-  , LogicOp
-  , Pipeline
-  , PipelineColorBlendStateCreateFlags
-  , PipelineCreateFlagBits
-  , PipelineCreateFlags
-  , PipelineDepthStencilStateCreateFlags
-  , PipelineDynamicStateCreateFlags
-  , PipelineInputAssemblyStateCreateFlags
-  , PipelineLayout
-  , PipelineMultisampleStateCreateFlags
-  , PipelineRasterizationStateCreateFlags
-  , PipelineShaderStageCreateFlags
-  , PipelineTessellationStateCreateFlags
-  , PipelineVertexInputStateCreateFlags
-  , PipelineViewportStateCreateFlags
-  , PolygonMode
-  , PrimitiveTopology
-  , RenderPass
-  , SampleMask
-  , ShaderStageFlagBits
-  , StencilOp
-  , VertexInputRate
-  ) where
+type role GraphicsPipelineCreateInfo nominal
+data GraphicsPipelineCreateInfo (es :: [Type])
+
+instance PokeChain es => ToCStruct (GraphicsPipelineCreateInfo es)
+instance Show (Chain es) => Show (GraphicsPipelineCreateInfo es)
+
+instance PeekChain es => FromCStruct (GraphicsPipelineCreateInfo es)
 
 
+data PipelineColorBlendAttachmentState
+
+instance ToCStruct PipelineColorBlendAttachmentState
+instance Show PipelineColorBlendAttachmentState
+
+instance FromCStruct PipelineColorBlendAttachmentState
 
 
-import Graphics.Vulkan.C.Core10.Pipeline
-  ( VkSampleMask
-  )
-import {-# source #-} Graphics.Vulkan.C.Core10.Pipeline
-  ( VkBlendFactor
-  , VkBlendOp
-  , VkColorComponentFlagBits
-  , VkCompareOp
-  , VkCullModeFlagBits
-  , VkDynamicState
-  , VkFrontFace
-  , VkLogicOp
-  , VkPipeline
-  , VkPipelineColorBlendStateCreateFlags
-  , VkPipelineCreateFlagBits
-  , VkPipelineDepthStencilStateCreateFlags
-  , VkPipelineDynamicStateCreateFlags
-  , VkPipelineInputAssemblyStateCreateFlags
-  , VkPipelineLayout
-  , VkPipelineMultisampleStateCreateFlags
-  , VkPipelineRasterizationStateCreateFlags
-  , VkPipelineShaderStageCreateFlags
-  , VkPipelineTessellationStateCreateFlags
-  , VkPipelineVertexInputStateCreateFlags
-  , VkPipelineViewportStateCreateFlags
-  , VkPolygonMode
-  , VkPrimitiveTopology
-  , VkRenderPass
-  , VkShaderStageFlagBits
-  , VkStencilOp
-  , VkVertexInputRate
-  )
+type role PipelineColorBlendStateCreateInfo nominal
+data PipelineColorBlendStateCreateInfo (es :: [Type])
+
+instance PokeChain es => ToCStruct (PipelineColorBlendStateCreateInfo es)
+instance Show (Chain es) => Show (PipelineColorBlendStateCreateInfo es)
+
+instance PeekChain es => FromCStruct (PipelineColorBlendStateCreateInfo es)
 
 
--- No documentation found for TopLevel "BlendFactor"
-type BlendFactor = VkBlendFactor
+data PipelineDepthStencilStateCreateInfo
 
--- No documentation found for TopLevel "BlendOp"
-type BlendOp = VkBlendOp
+instance ToCStruct PipelineDepthStencilStateCreateInfo
+instance Show PipelineDepthStencilStateCreateInfo
 
--- No documentation found for TopLevel "ColorComponentFlagBits"
-type ColorComponentFlagBits = VkColorComponentFlagBits
+instance FromCStruct PipelineDepthStencilStateCreateInfo
 
--- No documentation found for TopLevel "ColorComponentFlags"
-type ColorComponentFlags = ColorComponentFlagBits
 
--- No documentation found for TopLevel "CompareOp"
-type CompareOp = VkCompareOp
+data PipelineDynamicStateCreateInfo
 
--- No documentation found for TopLevel "CullModeFlagBits"
-type CullModeFlagBits = VkCullModeFlagBits
+instance ToCStruct PipelineDynamicStateCreateInfo
+instance Show PipelineDynamicStateCreateInfo
 
--- No documentation found for TopLevel "CullModeFlags"
-type CullModeFlags = CullModeFlagBits
+instance FromCStruct PipelineDynamicStateCreateInfo
 
--- No documentation found for TopLevel "DynamicState"
-type DynamicState = VkDynamicState
 
--- No documentation found for TopLevel "FrontFace"
-type FrontFace = VkFrontFace
+data PipelineInputAssemblyStateCreateInfo
 
--- No documentation found for TopLevel "LogicOp"
-type LogicOp = VkLogicOp
+instance ToCStruct PipelineInputAssemblyStateCreateInfo
+instance Show PipelineInputAssemblyStateCreateInfo
 
--- No documentation found for TopLevel "Pipeline"
-type Pipeline = VkPipeline
+instance FromCStruct PipelineInputAssemblyStateCreateInfo
 
--- No documentation found for TopLevel "PipelineColorBlendStateCreateFlags"
-type PipelineColorBlendStateCreateFlags = VkPipelineColorBlendStateCreateFlags
 
--- No documentation found for TopLevel "PipelineCreateFlagBits"
-type PipelineCreateFlagBits = VkPipelineCreateFlagBits
+type role PipelineMultisampleStateCreateInfo nominal
+data PipelineMultisampleStateCreateInfo (es :: [Type])
 
--- No documentation found for TopLevel "PipelineCreateFlags"
-type PipelineCreateFlags = PipelineCreateFlagBits
+instance PokeChain es => ToCStruct (PipelineMultisampleStateCreateInfo es)
+instance Show (Chain es) => Show (PipelineMultisampleStateCreateInfo es)
 
--- No documentation found for TopLevel "PipelineDepthStencilStateCreateFlags"
-type PipelineDepthStencilStateCreateFlags = VkPipelineDepthStencilStateCreateFlags
+instance PeekChain es => FromCStruct (PipelineMultisampleStateCreateInfo es)
 
--- No documentation found for TopLevel "PipelineDynamicStateCreateFlags"
-type PipelineDynamicStateCreateFlags = VkPipelineDynamicStateCreateFlags
 
--- No documentation found for TopLevel "PipelineInputAssemblyStateCreateFlags"
-type PipelineInputAssemblyStateCreateFlags = VkPipelineInputAssemblyStateCreateFlags
+type role PipelineRasterizationStateCreateInfo nominal
+data PipelineRasterizationStateCreateInfo (es :: [Type])
 
--- No documentation found for TopLevel "PipelineLayout"
-type PipelineLayout = VkPipelineLayout
+instance PokeChain es => ToCStruct (PipelineRasterizationStateCreateInfo es)
+instance Show (Chain es) => Show (PipelineRasterizationStateCreateInfo es)
 
--- No documentation found for TopLevel "PipelineMultisampleStateCreateFlags"
-type PipelineMultisampleStateCreateFlags = VkPipelineMultisampleStateCreateFlags
+instance PeekChain es => FromCStruct (PipelineRasterizationStateCreateInfo es)
 
--- No documentation found for TopLevel "PipelineRasterizationStateCreateFlags"
-type PipelineRasterizationStateCreateFlags = VkPipelineRasterizationStateCreateFlags
 
--- No documentation found for TopLevel "PipelineShaderStageCreateFlags"
-type PipelineShaderStageCreateFlags = VkPipelineShaderStageCreateFlags
+type role PipelineShaderStageCreateInfo nominal
+data PipelineShaderStageCreateInfo (es :: [Type])
 
--- No documentation found for TopLevel "PipelineTessellationStateCreateFlags"
-type PipelineTessellationStateCreateFlags = VkPipelineTessellationStateCreateFlags
+instance PokeChain es => ToCStruct (PipelineShaderStageCreateInfo es)
+instance Show (Chain es) => Show (PipelineShaderStageCreateInfo es)
 
--- No documentation found for TopLevel "PipelineVertexInputStateCreateFlags"
-type PipelineVertexInputStateCreateFlags = VkPipelineVertexInputStateCreateFlags
+instance PeekChain es => FromCStruct (PipelineShaderStageCreateInfo es)
 
--- No documentation found for TopLevel "PipelineViewportStateCreateFlags"
-type PipelineViewportStateCreateFlags = VkPipelineViewportStateCreateFlags
 
--- No documentation found for TopLevel "PolygonMode"
-type PolygonMode = VkPolygonMode
+type role PipelineTessellationStateCreateInfo nominal
+data PipelineTessellationStateCreateInfo (es :: [Type])
 
--- No documentation found for TopLevel "PrimitiveTopology"
-type PrimitiveTopology = VkPrimitiveTopology
+instance PokeChain es => ToCStruct (PipelineTessellationStateCreateInfo es)
+instance Show (Chain es) => Show (PipelineTessellationStateCreateInfo es)
 
--- No documentation found for TopLevel "RenderPass"
-type RenderPass = VkRenderPass
+instance PeekChain es => FromCStruct (PipelineTessellationStateCreateInfo es)
 
--- No documentation found for TopLevel "SampleMask"
-type SampleMask = VkSampleMask
-  
 
--- No documentation found for TopLevel "ShaderStageFlagBits"
-type ShaderStageFlagBits = VkShaderStageFlagBits
+type role PipelineVertexInputStateCreateInfo nominal
+data PipelineVertexInputStateCreateInfo (es :: [Type])
 
--- No documentation found for TopLevel "StencilOp"
-type StencilOp = VkStencilOp
+instance PokeChain es => ToCStruct (PipelineVertexInputStateCreateInfo es)
+instance Show (Chain es) => Show (PipelineVertexInputStateCreateInfo es)
 
--- No documentation found for TopLevel "VertexInputRate"
-type VertexInputRate = VkVertexInputRate
+instance PeekChain es => FromCStruct (PipelineVertexInputStateCreateInfo es)
+
+
+type role PipelineViewportStateCreateInfo nominal
+data PipelineViewportStateCreateInfo (es :: [Type])
+
+instance PokeChain es => ToCStruct (PipelineViewportStateCreateInfo es)
+instance Show (Chain es) => Show (PipelineViewportStateCreateInfo es)
+
+instance PeekChain es => FromCStruct (PipelineViewportStateCreateInfo es)
+
+
+data SpecializationInfo
+
+instance ToCStruct SpecializationInfo
+instance Show SpecializationInfo
+
+instance FromCStruct SpecializationInfo
+
+
+data SpecializationMapEntry
+
+instance ToCStruct SpecializationMapEntry
+instance Show SpecializationMapEntry
+
+instance FromCStruct SpecializationMapEntry
+
+
+data StencilOpState
+
+instance ToCStruct StencilOpState
+instance Show StencilOpState
+
+instance FromCStruct StencilOpState
+
+
+data VertexInputAttributeDescription
+
+instance ToCStruct VertexInputAttributeDescription
+instance Show VertexInputAttributeDescription
+
+instance FromCStruct VertexInputAttributeDescription
+
+
+data VertexInputBindingDescription
+
+instance ToCStruct VertexInputBindingDescription
+instance Show VertexInputBindingDescription
+
+instance FromCStruct VertexInputBindingDescription
+

@@ -1,188 +1,129 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language DuplicateRecordFields #-}
-{-# language PatternSynonyms #-}
-{-# language TypeFamilies #-}
+module Graphics.Vulkan.Extensions.VK_KHR_driver_properties  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR
+                                                            , pattern DRIVER_ID_AMD_PROPRIETARY_KHR
+                                                            , pattern DRIVER_ID_AMD_OPEN_SOURCE_KHR
+                                                            , pattern DRIVER_ID_MESA_RADV_KHR
+                                                            , pattern DRIVER_ID_NVIDIA_PROPRIETARY_KHR
+                                                            , pattern DRIVER_ID_INTEL_PROPRIETARY_WINDOWS_KHR
+                                                            , pattern DRIVER_ID_INTEL_OPEN_SOURCE_MESA_KHR
+                                                            , pattern DRIVER_ID_IMAGINATION_PROPRIETARY_KHR
+                                                            , pattern DRIVER_ID_QUALCOMM_PROPRIETARY_KHR
+                                                            , pattern DRIVER_ID_ARM_PROPRIETARY_KHR
+                                                            , pattern DRIVER_ID_GOOGLE_SWIFTSHADER_KHR
+                                                            , pattern DRIVER_ID_GGP_PROPRIETARY_KHR
+                                                            , pattern DRIVER_ID_BROADCOM_PROPRIETARY_KHR
+                                                            , pattern MAX_DRIVER_NAME_SIZE_KHR
+                                                            , pattern MAX_DRIVER_INFO_SIZE_KHR
+                                                            , DriverIdKHR
+                                                            , ConformanceVersionKHR
+                                                            , PhysicalDeviceDriverPropertiesKHR
+                                                            , KHR_DRIVER_PROPERTIES_SPEC_VERSION
+                                                            , pattern KHR_DRIVER_PROPERTIES_SPEC_VERSION
+                                                            , KHR_DRIVER_PROPERTIES_EXTENSION_NAME
+                                                            , pattern KHR_DRIVER_PROPERTIES_EXTENSION_NAME
+                                                            ) where
 
-module Graphics.Vulkan.Extensions.VK_KHR_driver_properties
-  ( ConformanceVersionKHR(..)
-  , DriverIdKHR
-  , pattern DRIVER_ID_AMD_PROPRIETARY_KHR
-  , pattern DRIVER_ID_AMD_OPEN_SOURCE_KHR
-  , pattern DRIVER_ID_MESA_RADV_KHR
-  , pattern DRIVER_ID_NVIDIA_PROPRIETARY_KHR
-  , pattern DRIVER_ID_INTEL_PROPRIETARY_WINDOWS_KHR
-  , pattern DRIVER_ID_INTEL_OPEN_SOURCE_MESA_KHR
-  , pattern DRIVER_ID_IMAGINATION_PROPRIETARY_KHR
-  , pattern DRIVER_ID_QUALCOMM_PROPRIETARY_KHR
-  , pattern DRIVER_ID_ARM_PROPRIETARY_KHR
-  , pattern DRIVER_ID_GOOGLE_PASTEL_KHR
-  , pattern DRIVER_ID_GGP_PROPRIETARY_KHR
-#if defined(VK_USE_PLATFORM_GGP)
-  , PhysicalDeviceDriverPropertiesKHR(..)
-#endif
-  , pattern KHR_DRIVER_PROPERTIES_EXTENSION_NAME
-  , pattern KHR_DRIVER_PROPERTIES_SPEC_VERSION
-  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR
-  ) where
+import Data.String (IsString)
+import Graphics.Vulkan.Core12.Promoted_From_VK_KHR_driver_properties (ConformanceVersion)
+import Graphics.Vulkan.Core12.Enums.DriverId (DriverId)
+import Graphics.Vulkan.Core12.Promoted_From_VK_KHR_driver_properties (PhysicalDeviceDriverProperties)
+import Graphics.Vulkan.Core12.Enums.DriverId (DriverId(DRIVER_ID_AMD_OPEN_SOURCE))
+import Graphics.Vulkan.Core12.Enums.DriverId (DriverId(DRIVER_ID_AMD_PROPRIETARY))
+import Graphics.Vulkan.Core12.Enums.DriverId (DriverId(DRIVER_ID_ARM_PROPRIETARY))
+import Graphics.Vulkan.Core12.Enums.DriverId (DriverId(DRIVER_ID_BROADCOM_PROPRIETARY))
+import Graphics.Vulkan.Core12.Enums.DriverId (DriverId(DRIVER_ID_GGP_PROPRIETARY))
+import Graphics.Vulkan.Core12.Enums.DriverId (DriverId(DRIVER_ID_GOOGLE_SWIFTSHADER))
+import Graphics.Vulkan.Core12.Enums.DriverId (DriverId(DRIVER_ID_IMAGINATION_PROPRIETARY))
+import Graphics.Vulkan.Core12.Enums.DriverId (DriverId(DRIVER_ID_INTEL_OPEN_SOURCE_MESA))
+import Graphics.Vulkan.Core12.Enums.DriverId (DriverId(DRIVER_ID_INTEL_PROPRIETARY_WINDOWS))
+import Graphics.Vulkan.Core12.Enums.DriverId (DriverId(DRIVER_ID_MESA_RADV))
+import Graphics.Vulkan.Core12.Enums.DriverId (DriverId(DRIVER_ID_NVIDIA_PROPRIETARY))
+import Graphics.Vulkan.Core12.Enums.DriverId (DriverId(DRIVER_ID_QUALCOMM_PROPRIETARY))
+import Graphics.Vulkan.Core10.APIConstants (pattern MAX_DRIVER_INFO_SIZE)
+import Graphics.Vulkan.Core10.APIConstants (pattern MAX_DRIVER_NAME_SIZE)
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES))
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR = STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES
 
 
-#if defined(VK_USE_PLATFORM_GGP)
-import Data.ByteString
-  ( ByteString
-  )
-#endif
-import Data.String
-  ( IsString
-  )
-import Data.Word
-  ( Word8
-  )
+-- No documentation found for TopLevel "VK_DRIVER_ID_AMD_PROPRIETARY_KHR"
+pattern DRIVER_ID_AMD_PROPRIETARY_KHR = DRIVER_ID_AMD_PROPRIETARY
 
 
-import Graphics.Vulkan.C.Core10.Core
-  ( Zero(..)
-  )
-import Graphics.Vulkan.C.Extensions.VK_KHR_driver_properties
-  ( VkDriverIdKHR(..)
-  , pattern VK_DRIVER_ID_AMD_OPEN_SOURCE_KHR
-  , pattern VK_DRIVER_ID_AMD_PROPRIETARY_KHR
-  , pattern VK_DRIVER_ID_ARM_PROPRIETARY_KHR
-  , pattern VK_DRIVER_ID_GGP_PROPRIETARY_KHR
-  , pattern VK_DRIVER_ID_GOOGLE_PASTEL_KHR
-  , pattern VK_DRIVER_ID_IMAGINATION_PROPRIETARY_KHR
-  , pattern VK_DRIVER_ID_INTEL_OPEN_SOURCE_MESA_KHR
-  , pattern VK_DRIVER_ID_INTEL_PROPRIETARY_WINDOWS_KHR
-  , pattern VK_DRIVER_ID_MESA_RADV_KHR
-  , pattern VK_DRIVER_ID_NVIDIA_PROPRIETARY_KHR
-  , pattern VK_DRIVER_ID_QUALCOMM_PROPRIETARY_KHR
-  , pattern VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME
-  , pattern VK_KHR_DRIVER_PROPERTIES_SPEC_VERSION
-  )
+-- No documentation found for TopLevel "VK_DRIVER_ID_AMD_OPEN_SOURCE_KHR"
+pattern DRIVER_ID_AMD_OPEN_SOURCE_KHR = DRIVER_ID_AMD_OPEN_SOURCE
 
-#if defined(VK_USE_PLATFORM_GGP)
-import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
-  ( SomeVkStruct
-  )
-#endif
-import Graphics.Vulkan.Core10.Core
-  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES_KHR
-  )
 
+-- No documentation found for TopLevel "VK_DRIVER_ID_MESA_RADV_KHR"
+pattern DRIVER_ID_MESA_RADV_KHR = DRIVER_ID_MESA_RADV
+
+
+-- No documentation found for TopLevel "VK_DRIVER_ID_NVIDIA_PROPRIETARY_KHR"
+pattern DRIVER_ID_NVIDIA_PROPRIETARY_KHR = DRIVER_ID_NVIDIA_PROPRIETARY
+
+
+-- No documentation found for TopLevel "VK_DRIVER_ID_INTEL_PROPRIETARY_WINDOWS_KHR"
+pattern DRIVER_ID_INTEL_PROPRIETARY_WINDOWS_KHR = DRIVER_ID_INTEL_PROPRIETARY_WINDOWS
+
+
+-- No documentation found for TopLevel "VK_DRIVER_ID_INTEL_OPEN_SOURCE_MESA_KHR"
+pattern DRIVER_ID_INTEL_OPEN_SOURCE_MESA_KHR = DRIVER_ID_INTEL_OPEN_SOURCE_MESA
+
+
+-- No documentation found for TopLevel "VK_DRIVER_ID_IMAGINATION_PROPRIETARY_KHR"
+pattern DRIVER_ID_IMAGINATION_PROPRIETARY_KHR = DRIVER_ID_IMAGINATION_PROPRIETARY
+
+
+-- No documentation found for TopLevel "VK_DRIVER_ID_QUALCOMM_PROPRIETARY_KHR"
+pattern DRIVER_ID_QUALCOMM_PROPRIETARY_KHR = DRIVER_ID_QUALCOMM_PROPRIETARY
+
+
+-- No documentation found for TopLevel "VK_DRIVER_ID_ARM_PROPRIETARY_KHR"
+pattern DRIVER_ID_ARM_PROPRIETARY_KHR = DRIVER_ID_ARM_PROPRIETARY
+
+
+-- No documentation found for TopLevel "VK_DRIVER_ID_GOOGLE_SWIFTSHADER_KHR"
+pattern DRIVER_ID_GOOGLE_SWIFTSHADER_KHR = DRIVER_ID_GOOGLE_SWIFTSHADER
+
+
+-- No documentation found for TopLevel "VK_DRIVER_ID_GGP_PROPRIETARY_KHR"
+pattern DRIVER_ID_GGP_PROPRIETARY_KHR = DRIVER_ID_GGP_PROPRIETARY
+
+
+-- No documentation found for TopLevel "VK_DRIVER_ID_BROADCOM_PROPRIETARY_KHR"
+pattern DRIVER_ID_BROADCOM_PROPRIETARY_KHR = DRIVER_ID_BROADCOM_PROPRIETARY
+
+
+-- No documentation found for TopLevel "VK_MAX_DRIVER_NAME_SIZE_KHR"
+pattern MAX_DRIVER_NAME_SIZE_KHR = MAX_DRIVER_NAME_SIZE
+
+
+-- No documentation found for TopLevel "VK_MAX_DRIVER_INFO_SIZE_KHR"
+pattern MAX_DRIVER_INFO_SIZE_KHR = MAX_DRIVER_INFO_SIZE
+
+
+-- No documentation found for TopLevel "VkDriverIdKHR"
+type DriverIdKHR = DriverId
 
 
 -- No documentation found for TopLevel "VkConformanceVersionKHR"
-data ConformanceVersionKHR = ConformanceVersionKHR
-  { -- No documentation found for Nested "ConformanceVersionKHR" "major"
-  major :: Word8
-  , -- No documentation found for Nested "ConformanceVersionKHR" "minor"
-  minor :: Word8
-  , -- No documentation found for Nested "ConformanceVersionKHR" "subminor"
-  subminor :: Word8
-  , -- No documentation found for Nested "ConformanceVersionKHR" "patch"
-  patch :: Word8
-  }
-  deriving (Show, Eq)
+type ConformanceVersionKHR = ConformanceVersion
 
-instance Zero ConformanceVersionKHR where
-  zero = ConformanceVersionKHR zero
-                               zero
-                               zero
-                               zero
-
-
--- No documentation found for TopLevel "DriverIdKHR"
-type DriverIdKHR = VkDriverIdKHR
-
-
-{-# complete DRIVER_ID_AMD_PROPRIETARY_KHR, DRIVER_ID_AMD_OPEN_SOURCE_KHR, DRIVER_ID_MESA_RADV_KHR, DRIVER_ID_NVIDIA_PROPRIETARY_KHR, DRIVER_ID_INTEL_PROPRIETARY_WINDOWS_KHR, DRIVER_ID_INTEL_OPEN_SOURCE_MESA_KHR, DRIVER_ID_IMAGINATION_PROPRIETARY_KHR, DRIVER_ID_QUALCOMM_PROPRIETARY_KHR, DRIVER_ID_ARM_PROPRIETARY_KHR, DRIVER_ID_GOOGLE_PASTEL_KHR, DRIVER_ID_GGP_PROPRIETARY_KHR :: DriverIdKHR #-}
-
-
--- No documentation found for Nested "DriverIdKHR" "DRIVER_ID_AMD_PROPRIETARY_KHR"
-pattern DRIVER_ID_AMD_PROPRIETARY_KHR :: (a ~ DriverIdKHR) => a
-pattern DRIVER_ID_AMD_PROPRIETARY_KHR = VK_DRIVER_ID_AMD_PROPRIETARY_KHR
-
-
--- No documentation found for Nested "DriverIdKHR" "DRIVER_ID_AMD_OPEN_SOURCE_KHR"
-pattern DRIVER_ID_AMD_OPEN_SOURCE_KHR :: (a ~ DriverIdKHR) => a
-pattern DRIVER_ID_AMD_OPEN_SOURCE_KHR = VK_DRIVER_ID_AMD_OPEN_SOURCE_KHR
-
-
--- No documentation found for Nested "DriverIdKHR" "DRIVER_ID_MESA_RADV_KHR"
-pattern DRIVER_ID_MESA_RADV_KHR :: (a ~ DriverIdKHR) => a
-pattern DRIVER_ID_MESA_RADV_KHR = VK_DRIVER_ID_MESA_RADV_KHR
-
-
--- No documentation found for Nested "DriverIdKHR" "DRIVER_ID_NVIDIA_PROPRIETARY_KHR"
-pattern DRIVER_ID_NVIDIA_PROPRIETARY_KHR :: (a ~ DriverIdKHR) => a
-pattern DRIVER_ID_NVIDIA_PROPRIETARY_KHR = VK_DRIVER_ID_NVIDIA_PROPRIETARY_KHR
-
-
--- No documentation found for Nested "DriverIdKHR" "DRIVER_ID_INTEL_PROPRIETARY_WINDOWS_KHR"
-pattern DRIVER_ID_INTEL_PROPRIETARY_WINDOWS_KHR :: (a ~ DriverIdKHR) => a
-pattern DRIVER_ID_INTEL_PROPRIETARY_WINDOWS_KHR = VK_DRIVER_ID_INTEL_PROPRIETARY_WINDOWS_KHR
-
-
--- No documentation found for Nested "DriverIdKHR" "DRIVER_ID_INTEL_OPEN_SOURCE_MESA_KHR"
-pattern DRIVER_ID_INTEL_OPEN_SOURCE_MESA_KHR :: (a ~ DriverIdKHR) => a
-pattern DRIVER_ID_INTEL_OPEN_SOURCE_MESA_KHR = VK_DRIVER_ID_INTEL_OPEN_SOURCE_MESA_KHR
-
-
--- No documentation found for Nested "DriverIdKHR" "DRIVER_ID_IMAGINATION_PROPRIETARY_KHR"
-pattern DRIVER_ID_IMAGINATION_PROPRIETARY_KHR :: (a ~ DriverIdKHR) => a
-pattern DRIVER_ID_IMAGINATION_PROPRIETARY_KHR = VK_DRIVER_ID_IMAGINATION_PROPRIETARY_KHR
-
-
--- No documentation found for Nested "DriverIdKHR" "DRIVER_ID_QUALCOMM_PROPRIETARY_KHR"
-pattern DRIVER_ID_QUALCOMM_PROPRIETARY_KHR :: (a ~ DriverIdKHR) => a
-pattern DRIVER_ID_QUALCOMM_PROPRIETARY_KHR = VK_DRIVER_ID_QUALCOMM_PROPRIETARY_KHR
-
-
--- No documentation found for Nested "DriverIdKHR" "DRIVER_ID_ARM_PROPRIETARY_KHR"
-pattern DRIVER_ID_ARM_PROPRIETARY_KHR :: (a ~ DriverIdKHR) => a
-pattern DRIVER_ID_ARM_PROPRIETARY_KHR = VK_DRIVER_ID_ARM_PROPRIETARY_KHR
-
-
--- No documentation found for Nested "DriverIdKHR" "DRIVER_ID_GOOGLE_PASTEL_KHR"
-pattern DRIVER_ID_GOOGLE_PASTEL_KHR :: (a ~ DriverIdKHR) => a
-pattern DRIVER_ID_GOOGLE_PASTEL_KHR = VK_DRIVER_ID_GOOGLE_PASTEL_KHR
-
-
--- No documentation found for Nested "DriverIdKHR" "DRIVER_ID_GGP_PROPRIETARY_KHR"
-pattern DRIVER_ID_GGP_PROPRIETARY_KHR :: (a ~ DriverIdKHR) => a
-pattern DRIVER_ID_GGP_PROPRIETARY_KHR = VK_DRIVER_ID_GGP_PROPRIETARY_KHR
-
-
-#if defined(VK_USE_PLATFORM_GGP)
 
 -- No documentation found for TopLevel "VkPhysicalDeviceDriverPropertiesKHR"
-data PhysicalDeviceDriverPropertiesKHR = PhysicalDeviceDriverPropertiesKHR
-  { -- No documentation found for Nested "PhysicalDeviceDriverPropertiesKHR" "pNext"
-  next :: Maybe SomeVkStruct
-  , -- No documentation found for Nested "PhysicalDeviceDriverPropertiesKHR" "driverID"
-  driverID :: DriverIdKHR
-  , -- No documentation found for Nested "PhysicalDeviceDriverPropertiesKHR" "driverName"
-  driverName :: ByteString
-  , -- No documentation found for Nested "PhysicalDeviceDriverPropertiesKHR" "driverInfo"
-  driverInfo :: ByteString
-  , -- No documentation found for Nested "PhysicalDeviceDriverPropertiesKHR" "conformanceVersion"
-  conformanceVersion :: ConformanceVersionKHR
-  }
-  deriving (Show, Eq)
+type PhysicalDeviceDriverPropertiesKHR = PhysicalDeviceDriverProperties
 
-instance Zero PhysicalDeviceDriverPropertiesKHR where
-  zero = PhysicalDeviceDriverPropertiesKHR Nothing
-                                           zero
-                                           mempty
-                                           mempty
-                                           zero
 
-#endif
-
--- No documentation found for TopLevel "VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME"
-pattern KHR_DRIVER_PROPERTIES_EXTENSION_NAME :: (Eq a, IsString a) => a
-pattern KHR_DRIVER_PROPERTIES_EXTENSION_NAME = VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME
+type KHR_DRIVER_PROPERTIES_SPEC_VERSION = 1
 
 -- No documentation found for TopLevel "VK_KHR_DRIVER_PROPERTIES_SPEC_VERSION"
-pattern KHR_DRIVER_PROPERTIES_SPEC_VERSION :: Integral a => a
-pattern KHR_DRIVER_PROPERTIES_SPEC_VERSION = VK_KHR_DRIVER_PROPERTIES_SPEC_VERSION
+pattern KHR_DRIVER_PROPERTIES_SPEC_VERSION :: forall a . Integral a => a
+pattern KHR_DRIVER_PROPERTIES_SPEC_VERSION = 1
+
+
+type KHR_DRIVER_PROPERTIES_EXTENSION_NAME = "VK_KHR_driver_properties"
+
+-- No documentation found for TopLevel "VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME"
+pattern KHR_DRIVER_PROPERTIES_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern KHR_DRIVER_PROPERTIES_EXTENSION_NAME = "VK_KHR_driver_properties"
+

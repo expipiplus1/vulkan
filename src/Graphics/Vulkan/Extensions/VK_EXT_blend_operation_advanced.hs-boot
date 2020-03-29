@@ -1,18 +1,32 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_EXT_blend_operation_advanced  ( PhysicalDeviceBlendOperationAdvancedFeaturesEXT
+                                                                   , PhysicalDeviceBlendOperationAdvancedPropertiesEXT
+                                                                   , PipelineColorBlendAdvancedStateCreateInfoEXT
+                                                                   ) where
+
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data PhysicalDeviceBlendOperationAdvancedFeaturesEXT
+
+instance ToCStruct PhysicalDeviceBlendOperationAdvancedFeaturesEXT
+instance Show PhysicalDeviceBlendOperationAdvancedFeaturesEXT
+
+instance FromCStruct PhysicalDeviceBlendOperationAdvancedFeaturesEXT
 
 
-module Graphics.Vulkan.Extensions.VK_EXT_blend_operation_advanced
-  ( BlendOverlapEXT
-  ) where
+data PhysicalDeviceBlendOperationAdvancedPropertiesEXT
+
+instance ToCStruct PhysicalDeviceBlendOperationAdvancedPropertiesEXT
+instance Show PhysicalDeviceBlendOperationAdvancedPropertiesEXT
+
+instance FromCStruct PhysicalDeviceBlendOperationAdvancedPropertiesEXT
 
 
+data PipelineColorBlendAdvancedStateCreateInfoEXT
 
+instance ToCStruct PipelineColorBlendAdvancedStateCreateInfoEXT
+instance Show PipelineColorBlendAdvancedStateCreateInfoEXT
 
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_blend_operation_advanced
-  ( VkBlendOverlapEXT
-  )
+instance FromCStruct PipelineColorBlendAdvancedStateCreateInfoEXT
 
-
--- No documentation found for TopLevel "BlendOverlapEXT"
-type BlendOverlapEXT = VkBlendOverlapEXT

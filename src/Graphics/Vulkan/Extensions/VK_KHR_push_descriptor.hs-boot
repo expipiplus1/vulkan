@@ -1,18 +1,13 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_KHR_push_descriptor  (PhysicalDevicePushDescriptorPropertiesKHR) where
 
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data PhysicalDevicePushDescriptorPropertiesKHR
 
-module Graphics.Vulkan.Extensions.VK_KHR_push_descriptor
-  ( DescriptorSetLayoutCreateFlagBits
-  ) where
+instance ToCStruct PhysicalDevicePushDescriptorPropertiesKHR
+instance Show PhysicalDevicePushDescriptorPropertiesKHR
 
+instance FromCStruct PhysicalDevicePushDescriptorPropertiesKHR
 
-
-
-import {-# source #-} Graphics.Vulkan.C.Core10.DescriptorSet
-  ( VkDescriptorSetLayoutCreateFlagBits
-  )
-
-
--- No documentation found for TopLevel "DescriptorSetLayoutCreateFlagBits"
-type DescriptorSetLayoutCreateFlagBits = VkDescriptorSetLayoutCreateFlagBits

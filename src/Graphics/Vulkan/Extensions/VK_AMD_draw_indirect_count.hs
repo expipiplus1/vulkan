@@ -1,51 +1,33 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
+module Graphics.Vulkan.Extensions.VK_AMD_draw_indirect_count  ( cmdDrawIndirectCountAMD
+                                                              , cmdDrawIndexedIndirectCountAMD
+                                                              , AMD_DRAW_INDIRECT_COUNT_SPEC_VERSION
+                                                              , pattern AMD_DRAW_INDIRECT_COUNT_SPEC_VERSION
+                                                              , AMD_DRAW_INDIRECT_COUNT_EXTENSION_NAME
+                                                              , pattern AMD_DRAW_INDIRECT_COUNT_EXTENSION_NAME
+                                                              ) where
 
-module Graphics.Vulkan.Extensions.VK_AMD_draw_indirect_count
-  ( cmdDrawIndexedIndirectCountAMD
-  , cmdDrawIndirectCountAMD
-  , pattern AMD_DRAW_INDIRECT_COUNT_EXTENSION_NAME
-  , pattern AMD_DRAW_INDIRECT_COUNT_SPEC_VERSION
-  ) where
-
-import Data.String
-  ( IsString
-  )
-import Data.Word
-  ( Word32
-  )
+import Data.String (IsString)
+import Graphics.Vulkan.Core12.Promoted_From_VK_KHR_draw_indirect_count (cmdDrawIndexedIndirectCount)
+import Graphics.Vulkan.Core12.Promoted_From_VK_KHR_draw_indirect_count (cmdDrawIndirectCount)
+-- No documentation found for TopLevel "vkCmdDrawIndirectCountAMD"
+cmdDrawIndirectCountAMD = cmdDrawIndirectCount
 
 
-import Graphics.Vulkan.C.Extensions.VK_AMD_draw_indirect_count
-  ( pattern VK_AMD_DRAW_INDIRECT_COUNT_EXTENSION_NAME
-  , pattern VK_AMD_DRAW_INDIRECT_COUNT_SPEC_VERSION
-  )
-import Graphics.Vulkan.Core10.DeviceInitialization
-  ( DeviceSize
-  )
-import Graphics.Vulkan.Core10.MemoryManagement
-  ( Buffer
-  )
-import Graphics.Vulkan.Core10.Queue
-  ( CommandBuffer(..)
-  )
-import Graphics.Vulkan.Extensions.VK_KHR_draw_indirect_count
-  ( cmdDrawIndexedIndirectCountKHR
-  , cmdDrawIndirectCountKHR
-  )
+-- No documentation found for TopLevel "vkCmdDrawIndexedIndirectCountAMD"
+cmdDrawIndexedIndirectCountAMD = cmdDrawIndexedIndirectCount
 
 
-cmdDrawIndexedIndirectCountAMD :: CommandBuffer ->  Buffer ->  DeviceSize ->  Buffer ->  DeviceSize ->  Word32 ->  Word32 ->  IO ()
-cmdDrawIndexedIndirectCountAMD = cmdDrawIndexedIndirectCountKHR
-
-cmdDrawIndirectCountAMD :: CommandBuffer ->  Buffer ->  DeviceSize ->  Buffer ->  DeviceSize ->  Word32 ->  Word32 ->  IO ()
-cmdDrawIndirectCountAMD = cmdDrawIndirectCountKHR
-
--- No documentation found for TopLevel "VK_AMD_DRAW_INDIRECT_COUNT_EXTENSION_NAME"
-pattern AMD_DRAW_INDIRECT_COUNT_EXTENSION_NAME :: (Eq a, IsString a) => a
-pattern AMD_DRAW_INDIRECT_COUNT_EXTENSION_NAME = VK_AMD_DRAW_INDIRECT_COUNT_EXTENSION_NAME
+type AMD_DRAW_INDIRECT_COUNT_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_AMD_DRAW_INDIRECT_COUNT_SPEC_VERSION"
-pattern AMD_DRAW_INDIRECT_COUNT_SPEC_VERSION :: Integral a => a
-pattern AMD_DRAW_INDIRECT_COUNT_SPEC_VERSION = VK_AMD_DRAW_INDIRECT_COUNT_SPEC_VERSION
+pattern AMD_DRAW_INDIRECT_COUNT_SPEC_VERSION :: forall a . Integral a => a
+pattern AMD_DRAW_INDIRECT_COUNT_SPEC_VERSION = 2
+
+
+type AMD_DRAW_INDIRECT_COUNT_EXTENSION_NAME = "VK_AMD_draw_indirect_count"
+
+-- No documentation found for TopLevel "VK_AMD_DRAW_INDIRECT_COUNT_EXTENSION_NAME"
+pattern AMD_DRAW_INDIRECT_COUNT_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern AMD_DRAW_INDIRECT_COUNT_EXTENSION_NAME = "VK_AMD_draw_indirect_count"
+

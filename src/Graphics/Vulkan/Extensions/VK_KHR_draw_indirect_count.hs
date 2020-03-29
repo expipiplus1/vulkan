@@ -1,53 +1,33 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
+module Graphics.Vulkan.Extensions.VK_KHR_draw_indirect_count  ( cmdDrawIndirectCountKHR
+                                                              , cmdDrawIndexedIndirectCountKHR
+                                                              , KHR_DRAW_INDIRECT_COUNT_SPEC_VERSION
+                                                              , pattern KHR_DRAW_INDIRECT_COUNT_SPEC_VERSION
+                                                              , KHR_DRAW_INDIRECT_COUNT_EXTENSION_NAME
+                                                              , pattern KHR_DRAW_INDIRECT_COUNT_EXTENSION_NAME
+                                                              ) where
 
-module Graphics.Vulkan.Extensions.VK_KHR_draw_indirect_count
-  ( cmdDrawIndexedIndirectCountKHR
-  , cmdDrawIndirectCountKHR
-  , pattern KHR_DRAW_INDIRECT_COUNT_EXTENSION_NAME
-  , pattern KHR_DRAW_INDIRECT_COUNT_SPEC_VERSION
-  ) where
-
-import Data.String
-  ( IsString
-  )
-import Data.Word
-  ( Word32
-  )
-
-
-import Graphics.Vulkan.C.Extensions.VK_KHR_draw_indirect_count
-  ( vkCmdDrawIndexedIndirectCountKHR
-  , vkCmdDrawIndirectCountKHR
-  , pattern VK_KHR_DRAW_INDIRECT_COUNT_EXTENSION_NAME
-  , pattern VK_KHR_DRAW_INDIRECT_COUNT_SPEC_VERSION
-  )
-import Graphics.Vulkan.Core10.DeviceInitialization
-  ( DeviceSize
-  )
-import Graphics.Vulkan.Core10.MemoryManagement
-  ( Buffer
-  )
-import Graphics.Vulkan.Core10.Queue
-  ( CommandBuffer(..)
-  )
-
+import Data.String (IsString)
+import Graphics.Vulkan.Core12.Promoted_From_VK_KHR_draw_indirect_count (cmdDrawIndexedIndirectCount)
+import Graphics.Vulkan.Core12.Promoted_From_VK_KHR_draw_indirect_count (cmdDrawIndirectCount)
+-- No documentation found for TopLevel "vkCmdDrawIndirectCountKHR"
+cmdDrawIndirectCountKHR = cmdDrawIndirectCount
 
 
 -- No documentation found for TopLevel "vkCmdDrawIndexedIndirectCountKHR"
-cmdDrawIndexedIndirectCountKHR :: CommandBuffer ->  Buffer ->  DeviceSize ->  Buffer ->  DeviceSize ->  Word32 ->  Word32 ->  IO ()
-cmdDrawIndexedIndirectCountKHR = undefined {- {wrapped (pretty cName) :: Doc ()} -}
+cmdDrawIndexedIndirectCountKHR = cmdDrawIndexedIndirectCount
 
 
--- No documentation found for TopLevel "vkCmdDrawIndirectCountKHR"
-cmdDrawIndirectCountKHR :: CommandBuffer ->  Buffer ->  DeviceSize ->  Buffer ->  DeviceSize ->  Word32 ->  Word32 ->  IO ()
-cmdDrawIndirectCountKHR = undefined {- {wrapped (pretty cName) :: Doc ()} -}
-
--- No documentation found for TopLevel "VK_KHR_DRAW_INDIRECT_COUNT_EXTENSION_NAME"
-pattern KHR_DRAW_INDIRECT_COUNT_EXTENSION_NAME :: (Eq a, IsString a) => a
-pattern KHR_DRAW_INDIRECT_COUNT_EXTENSION_NAME = VK_KHR_DRAW_INDIRECT_COUNT_EXTENSION_NAME
+type KHR_DRAW_INDIRECT_COUNT_SPEC_VERSION = 1
 
 -- No documentation found for TopLevel "VK_KHR_DRAW_INDIRECT_COUNT_SPEC_VERSION"
-pattern KHR_DRAW_INDIRECT_COUNT_SPEC_VERSION :: Integral a => a
-pattern KHR_DRAW_INDIRECT_COUNT_SPEC_VERSION = VK_KHR_DRAW_INDIRECT_COUNT_SPEC_VERSION
+pattern KHR_DRAW_INDIRECT_COUNT_SPEC_VERSION :: forall a . Integral a => a
+pattern KHR_DRAW_INDIRECT_COUNT_SPEC_VERSION = 1
+
+
+type KHR_DRAW_INDIRECT_COUNT_EXTENSION_NAME = "VK_KHR_draw_indirect_count"
+
+-- No documentation found for TopLevel "VK_KHR_DRAW_INDIRECT_COUNT_EXTENSION_NAME"
+pattern KHR_DRAW_INDIRECT_COUNT_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern KHR_DRAW_INDIRECT_COUNT_EXTENSION_NAME = "VK_KHR_draw_indirect_count"
+

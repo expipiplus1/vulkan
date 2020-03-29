@@ -1,159 +1,92 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language DuplicateRecordFields #-}
-{-# language PatternSynonyms #-}
-{-# language TypeFamilies #-}
+module Graphics.Vulkan.Extensions.VK_KHR_depth_stencil_resolve  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES_KHR
+                                                                , pattern STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE_KHR
+                                                                , pattern RESOLVE_MODE_NONE_KHR
+                                                                , pattern RESOLVE_MODE_SAMPLE_ZERO_BIT_KHR
+                                                                , pattern RESOLVE_MODE_AVERAGE_BIT_KHR
+                                                                , pattern RESOLVE_MODE_MIN_BIT_KHR
+                                                                , pattern RESOLVE_MODE_MAX_BIT_KHR
+                                                                , ResolveModeFlagsKHR
+                                                                , ResolveModeFlagBitsKHR
+                                                                , PhysicalDeviceDepthStencilResolvePropertiesKHR
+                                                                , SubpassDescriptionDepthStencilResolveKHR
+                                                                , KHR_DEPTH_STENCIL_RESOLVE_SPEC_VERSION
+                                                                , pattern KHR_DEPTH_STENCIL_RESOLVE_SPEC_VERSION
+                                                                , KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME
+                                                                , pattern KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME
+                                                                ) where
 
-module Graphics.Vulkan.Extensions.VK_KHR_depth_stencil_resolve
-  ( 
-#if defined(VK_USE_PLATFORM_GGP)
-  PhysicalDeviceDepthStencilResolvePropertiesKHR(..)
-  , 
-#endif
-  ResolveModeFlagBitsKHR
-  , pattern RESOLVE_MODE_SAMPLE_ZERO_BIT_KHR
-  , pattern RESOLVE_MODE_AVERAGE_BIT_KHR
-  , pattern RESOLVE_MODE_MIN_BIT_KHR
-  , pattern RESOLVE_MODE_MAX_BIT_KHR
-  , pattern RESOLVE_MODE_NONE_KHR
-  , ResolveModeFlagsKHR
-#if defined(VK_USE_PLATFORM_GGP)
-  , SubpassDescriptionDepthStencilResolveKHR(..)
-#endif
-  , pattern KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME
-  , pattern KHR_DEPTH_STENCIL_RESOLVE_SPEC_VERSION
-  , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES_KHR
-  , pattern STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE_KHR
-  ) where
-
-import Data.String
-  ( IsString
-  )
-
-
-
-#if defined(VK_USE_PLATFORM_GGP)
-import Graphics.Vulkan.C.Core10.Core
-  ( Zero(..)
-  )
-#endif
-import Graphics.Vulkan.C.Extensions.VK_KHR_depth_stencil_resolve
-  ( VkResolveModeFlagBitsKHR(..)
-  , pattern VK_KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME
-  , pattern VK_KHR_DEPTH_STENCIL_RESOLVE_SPEC_VERSION
-  , pattern VK_RESOLVE_MODE_AVERAGE_BIT_KHR
-  , pattern VK_RESOLVE_MODE_MAX_BIT_KHR
-  , pattern VK_RESOLVE_MODE_MIN_BIT_KHR
-  , pattern VK_RESOLVE_MODE_NONE_KHR
-  , pattern VK_RESOLVE_MODE_SAMPLE_ZERO_BIT_KHR
-  )
-
-#if defined(VK_USE_PLATFORM_GGP)
-import Graphics.Vulkan.Extensions.VK_KHR_create_renderpass2
-  ( AttachmentReference2KHR(..)
-  )
-#endif
-
-#if defined(VK_USE_PLATFORM_GGP)
-import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
-  ( SomeVkStruct
-  )
-#endif
-import Graphics.Vulkan.Core10.Core
-  ( pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES_KHR
-  , pattern STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE_KHR
-  )
+import Data.String (IsString)
+import Graphics.Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve (PhysicalDeviceDepthStencilResolveProperties)
+import Graphics.Vulkan.Core12.Enums.ResolveModeFlagBits (ResolveModeFlagBits)
+import Graphics.Vulkan.Core12.Enums.ResolveModeFlagBits (ResolveModeFlags)
+import Graphics.Vulkan.Core12.Promoted_From_VK_KHR_depth_stencil_resolve (SubpassDescriptionDepthStencilResolve)
+import Graphics.Vulkan.Core12.Enums.ResolveModeFlagBits (ResolveModeFlags)
+import Graphics.Vulkan.Core12.Enums.ResolveModeFlagBits (ResolveModeFlagBits(RESOLVE_MODE_AVERAGE_BIT))
+import Graphics.Vulkan.Core12.Enums.ResolveModeFlagBits (ResolveModeFlags)
+import Graphics.Vulkan.Core12.Enums.ResolveModeFlagBits (ResolveModeFlagBits(RESOLVE_MODE_MAX_BIT))
+import Graphics.Vulkan.Core12.Enums.ResolveModeFlagBits (ResolveModeFlags)
+import Graphics.Vulkan.Core12.Enums.ResolveModeFlagBits (ResolveModeFlagBits(RESOLVE_MODE_MIN_BIT))
+import Graphics.Vulkan.Core12.Enums.ResolveModeFlagBits (ResolveModeFlags)
+import Graphics.Vulkan.Core12.Enums.ResolveModeFlagBits (ResolveModeFlagBits(RESOLVE_MODE_NONE))
+import Graphics.Vulkan.Core12.Enums.ResolveModeFlagBits (ResolveModeFlags)
+import Graphics.Vulkan.Core12.Enums.ResolveModeFlagBits (ResolveModeFlagBits(RESOLVE_MODE_SAMPLE_ZERO_BIT))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE))
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES_KHR = STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES
 
 
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE_KHR"
+pattern STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE_KHR = STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE
 
-#if defined(VK_USE_PLATFORM_GGP)
+
+-- No documentation found for TopLevel "VK_RESOLVE_MODE_NONE_KHR"
+pattern RESOLVE_MODE_NONE_KHR = RESOLVE_MODE_NONE
+
+
+-- No documentation found for TopLevel "VK_RESOLVE_MODE_SAMPLE_ZERO_BIT_KHR"
+pattern RESOLVE_MODE_SAMPLE_ZERO_BIT_KHR = RESOLVE_MODE_SAMPLE_ZERO_BIT
+
+
+-- No documentation found for TopLevel "VK_RESOLVE_MODE_AVERAGE_BIT_KHR"
+pattern RESOLVE_MODE_AVERAGE_BIT_KHR = RESOLVE_MODE_AVERAGE_BIT
+
+
+-- No documentation found for TopLevel "VK_RESOLVE_MODE_MIN_BIT_KHR"
+pattern RESOLVE_MODE_MIN_BIT_KHR = RESOLVE_MODE_MIN_BIT
+
+
+-- No documentation found for TopLevel "VK_RESOLVE_MODE_MAX_BIT_KHR"
+pattern RESOLVE_MODE_MAX_BIT_KHR = RESOLVE_MODE_MAX_BIT
+
+
+-- No documentation found for TopLevel "VkResolveModeFlagsKHR"
+type ResolveModeFlagsKHR = ResolveModeFlags
+
+
+-- No documentation found for TopLevel "VkResolveModeFlagBitsKHR"
+type ResolveModeFlagBitsKHR = ResolveModeFlagBits
+
 
 -- No documentation found for TopLevel "VkPhysicalDeviceDepthStencilResolvePropertiesKHR"
-data PhysicalDeviceDepthStencilResolvePropertiesKHR = PhysicalDeviceDepthStencilResolvePropertiesKHR
-  { -- No documentation found for Nested "PhysicalDeviceDepthStencilResolvePropertiesKHR" "pNext"
-  next :: Maybe SomeVkStruct
-  , -- No documentation found for Nested "PhysicalDeviceDepthStencilResolvePropertiesKHR" "supportedDepthResolveModes"
-  supportedDepthResolveModes :: ResolveModeFlagsKHR
-  , -- No documentation found for Nested "PhysicalDeviceDepthStencilResolvePropertiesKHR" "supportedStencilResolveModes"
-  supportedStencilResolveModes :: ResolveModeFlagsKHR
-  , -- No documentation found for Nested "PhysicalDeviceDepthStencilResolvePropertiesKHR" "independentResolveNone"
-  independentResolveNone :: Bool
-  , -- No documentation found for Nested "PhysicalDeviceDepthStencilResolvePropertiesKHR" "independentResolve"
-  independentResolve :: Bool
-  }
-  deriving (Show, Eq)
+type PhysicalDeviceDepthStencilResolvePropertiesKHR = PhysicalDeviceDepthStencilResolveProperties
 
-instance Zero PhysicalDeviceDepthStencilResolvePropertiesKHR where
-  zero = PhysicalDeviceDepthStencilResolvePropertiesKHR Nothing
-                                                        zero
-                                                        zero
-                                                        False
-                                                        False
-
-#endif
-
--- No documentation found for TopLevel "ResolveModeFlagBitsKHR"
-type ResolveModeFlagBitsKHR = VkResolveModeFlagBitsKHR
-
-
-{-# complete RESOLVE_MODE_SAMPLE_ZERO_BIT_KHR, RESOLVE_MODE_AVERAGE_BIT_KHR, RESOLVE_MODE_MIN_BIT_KHR, RESOLVE_MODE_MAX_BIT_KHR, RESOLVE_MODE_NONE_KHR :: ResolveModeFlagBitsKHR #-}
-
-
--- No documentation found for Nested "ResolveModeFlagBitsKHR" "RESOLVE_MODE_SAMPLE_ZERO_BIT_KHR"
-pattern RESOLVE_MODE_SAMPLE_ZERO_BIT_KHR :: (a ~ ResolveModeFlagBitsKHR) => a
-pattern RESOLVE_MODE_SAMPLE_ZERO_BIT_KHR = VK_RESOLVE_MODE_SAMPLE_ZERO_BIT_KHR
-
-
--- No documentation found for Nested "ResolveModeFlagBitsKHR" "RESOLVE_MODE_AVERAGE_BIT_KHR"
-pattern RESOLVE_MODE_AVERAGE_BIT_KHR :: (a ~ ResolveModeFlagBitsKHR) => a
-pattern RESOLVE_MODE_AVERAGE_BIT_KHR = VK_RESOLVE_MODE_AVERAGE_BIT_KHR
-
-
--- No documentation found for Nested "ResolveModeFlagBitsKHR" "RESOLVE_MODE_MIN_BIT_KHR"
-pattern RESOLVE_MODE_MIN_BIT_KHR :: (a ~ ResolveModeFlagBitsKHR) => a
-pattern RESOLVE_MODE_MIN_BIT_KHR = VK_RESOLVE_MODE_MIN_BIT_KHR
-
-
--- No documentation found for Nested "ResolveModeFlagBitsKHR" "RESOLVE_MODE_MAX_BIT_KHR"
-pattern RESOLVE_MODE_MAX_BIT_KHR :: (a ~ ResolveModeFlagBitsKHR) => a
-pattern RESOLVE_MODE_MAX_BIT_KHR = VK_RESOLVE_MODE_MAX_BIT_KHR
-
-
--- No documentation found for Nested "ResolveModeFlagBitsKHR" "RESOLVE_MODE_NONE_KHR"
-pattern RESOLVE_MODE_NONE_KHR :: (a ~ ResolveModeFlagBitsKHR) => a
-pattern RESOLVE_MODE_NONE_KHR = VK_RESOLVE_MODE_NONE_KHR
-
--- No documentation found for TopLevel "ResolveModeFlagsKHR"
-type ResolveModeFlagsKHR = ResolveModeFlagBitsKHR
-
-
-#if defined(VK_USE_PLATFORM_GGP)
 
 -- No documentation found for TopLevel "VkSubpassDescriptionDepthStencilResolveKHR"
-data SubpassDescriptionDepthStencilResolveKHR = SubpassDescriptionDepthStencilResolveKHR
-  { -- No documentation found for Nested "SubpassDescriptionDepthStencilResolveKHR" "pNext"
-  next :: Maybe SomeVkStruct
-  , -- No documentation found for Nested "SubpassDescriptionDepthStencilResolveKHR" "depthResolveMode"
-  depthResolveMode :: ResolveModeFlagBitsKHR
-  , -- No documentation found for Nested "SubpassDescriptionDepthStencilResolveKHR" "stencilResolveMode"
-  stencilResolveMode :: ResolveModeFlagBitsKHR
-  , -- No documentation found for Nested "SubpassDescriptionDepthStencilResolveKHR" "pDepthStencilResolveAttachment"
-  depthStencilResolveAttachment :: Maybe AttachmentReference2KHR
-  }
-  deriving (Show, Eq)
+type SubpassDescriptionDepthStencilResolveKHR = SubpassDescriptionDepthStencilResolve
 
-instance Zero SubpassDescriptionDepthStencilResolveKHR where
-  zero = SubpassDescriptionDepthStencilResolveKHR Nothing
-                                                  zero
-                                                  zero
-                                                  Nothing
 
-#endif
-
--- No documentation found for TopLevel "VK_KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME"
-pattern KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME :: (Eq a, IsString a) => a
-pattern KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME = VK_KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME
+type KHR_DEPTH_STENCIL_RESOLVE_SPEC_VERSION = 1
 
 -- No documentation found for TopLevel "VK_KHR_DEPTH_STENCIL_RESOLVE_SPEC_VERSION"
-pattern KHR_DEPTH_STENCIL_RESOLVE_SPEC_VERSION :: Integral a => a
-pattern KHR_DEPTH_STENCIL_RESOLVE_SPEC_VERSION = VK_KHR_DEPTH_STENCIL_RESOLVE_SPEC_VERSION
+pattern KHR_DEPTH_STENCIL_RESOLVE_SPEC_VERSION :: forall a . Integral a => a
+pattern KHR_DEPTH_STENCIL_RESOLVE_SPEC_VERSION = 1
+
+
+type KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME = "VK_KHR_depth_stencil_resolve"
+
+-- No documentation found for TopLevel "VK_KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME"
+pattern KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME = "VK_KHR_depth_stencil_resolve"
+

@@ -1,18 +1,13 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_KHR_wayland_surface  (WaylandSurfaceCreateInfoKHR) where
 
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data WaylandSurfaceCreateInfoKHR
 
-module Graphics.Vulkan.Extensions.VK_KHR_wayland_surface
-  ( WaylandSurfaceCreateFlagsKHR
-  ) where
+instance ToCStruct WaylandSurfaceCreateInfoKHR
+instance Show WaylandSurfaceCreateInfoKHR
 
+instance FromCStruct WaylandSurfaceCreateInfoKHR
 
-
-
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_wayland_surface
-  ( VkWaylandSurfaceCreateFlagsKHR
-  )
-
-
--- No documentation found for TopLevel "WaylandSurfaceCreateFlagsKHR"
-type WaylandSurfaceCreateFlagsKHR = VkWaylandSurfaceCreateFlagsKHR

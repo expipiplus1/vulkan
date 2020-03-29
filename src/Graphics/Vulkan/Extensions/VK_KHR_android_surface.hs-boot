@@ -1,18 +1,13 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_KHR_android_surface  (AndroidSurfaceCreateInfoKHR) where
 
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data AndroidSurfaceCreateInfoKHR
 
-module Graphics.Vulkan.Extensions.VK_KHR_android_surface
-  ( AndroidSurfaceCreateFlagsKHR
-  ) where
+instance ToCStruct AndroidSurfaceCreateInfoKHR
+instance Show AndroidSurfaceCreateInfoKHR
 
+instance FromCStruct AndroidSurfaceCreateInfoKHR
 
-
-
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_android_surface
-  ( VkAndroidSurfaceCreateFlagsKHR
-  )
-
-
--- No documentation found for TopLevel "AndroidSurfaceCreateFlagsKHR"
-type AndroidSurfaceCreateFlagsKHR = VkAndroidSurfaceCreateFlagsKHR

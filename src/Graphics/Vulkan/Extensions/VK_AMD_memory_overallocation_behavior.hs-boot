@@ -1,18 +1,13 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_AMD_memory_overallocation_behavior  (DeviceMemoryOverallocationCreateInfoAMD) where
 
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data DeviceMemoryOverallocationCreateInfoAMD
 
-module Graphics.Vulkan.Extensions.VK_AMD_memory_overallocation_behavior
-  ( MemoryOverallocationBehaviorAMD
-  ) where
+instance ToCStruct DeviceMemoryOverallocationCreateInfoAMD
+instance Show DeviceMemoryOverallocationCreateInfoAMD
 
+instance FromCStruct DeviceMemoryOverallocationCreateInfoAMD
 
-
-
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_AMD_memory_overallocation_behavior
-  ( VkMemoryOverallocationBehaviorAMD
-  )
-
-
--- No documentation found for TopLevel "MemoryOverallocationBehaviorAMD"
-type MemoryOverallocationBehaviorAMD = VkMemoryOverallocationBehaviorAMD

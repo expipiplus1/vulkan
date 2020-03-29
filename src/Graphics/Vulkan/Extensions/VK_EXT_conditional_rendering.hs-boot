@@ -1,22 +1,32 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_EXT_conditional_rendering  ( CommandBufferInheritanceConditionalRenderingInfoEXT
+                                                                , ConditionalRenderingBeginInfoEXT
+                                                                , PhysicalDeviceConditionalRenderingFeaturesEXT
+                                                                ) where
+
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data CommandBufferInheritanceConditionalRenderingInfoEXT
+
+instance ToCStruct CommandBufferInheritanceConditionalRenderingInfoEXT
+instance Show CommandBufferInheritanceConditionalRenderingInfoEXT
+
+instance FromCStruct CommandBufferInheritanceConditionalRenderingInfoEXT
 
 
-module Graphics.Vulkan.Extensions.VK_EXT_conditional_rendering
-  ( ConditionalRenderingFlagBitsEXT
-  , ConditionalRenderingFlagsEXT
-  ) where
+data ConditionalRenderingBeginInfoEXT
+
+instance ToCStruct ConditionalRenderingBeginInfoEXT
+instance Show ConditionalRenderingBeginInfoEXT
+
+instance FromCStruct ConditionalRenderingBeginInfoEXT
 
 
+data PhysicalDeviceConditionalRenderingFeaturesEXT
 
+instance ToCStruct PhysicalDeviceConditionalRenderingFeaturesEXT
+instance Show PhysicalDeviceConditionalRenderingFeaturesEXT
 
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_conditional_rendering
-  ( VkConditionalRenderingFlagBitsEXT
-  )
+instance FromCStruct PhysicalDeviceConditionalRenderingFeaturesEXT
 
-
--- No documentation found for TopLevel "ConditionalRenderingFlagBitsEXT"
-type ConditionalRenderingFlagBitsEXT = VkConditionalRenderingFlagBitsEXT
-
--- No documentation found for TopLevel "ConditionalRenderingFlagsEXT"
-type ConditionalRenderingFlagsEXT = ConditionalRenderingFlagBitsEXT

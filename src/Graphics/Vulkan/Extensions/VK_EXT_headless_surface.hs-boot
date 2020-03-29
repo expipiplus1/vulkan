@@ -1,18 +1,13 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_EXT_headless_surface  (HeadlessSurfaceCreateInfoEXT) where
 
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data HeadlessSurfaceCreateInfoEXT
 
-module Graphics.Vulkan.Extensions.VK_EXT_headless_surface
-  ( HeadlessSurfaceCreateFlagsEXT
-  ) where
+instance ToCStruct HeadlessSurfaceCreateInfoEXT
+instance Show HeadlessSurfaceCreateInfoEXT
 
+instance FromCStruct HeadlessSurfaceCreateInfoEXT
 
-
-
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_headless_surface
-  ( VkHeadlessSurfaceCreateFlagsEXT
-  )
-
-
--- No documentation found for TopLevel "HeadlessSurfaceCreateFlagsEXT"
-type HeadlessSurfaceCreateFlagsEXT = VkHeadlessSurfaceCreateFlagsEXT

@@ -1,18 +1,13 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_MVK_ios_surface  (IOSSurfaceCreateInfoMVK) where
 
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data IOSSurfaceCreateInfoMVK
 
-module Graphics.Vulkan.Extensions.VK_MVK_ios_surface
-  ( IOSSurfaceCreateFlagsMVK
-  ) where
+instance ToCStruct IOSSurfaceCreateInfoMVK
+instance Show IOSSurfaceCreateInfoMVK
 
+instance FromCStruct IOSSurfaceCreateInfoMVK
 
-
-
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_MVK_ios_surface
-  ( VkIOSSurfaceCreateFlagsMVK
-  )
-
-
--- No documentation found for TopLevel "IOSSurfaceCreateFlagsMVK"
-type IOSSurfaceCreateFlagsMVK = VkIOSSurfaceCreateFlagsMVK

@@ -1,18 +1,18 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_EXT_calibrated_timestamps  ( CalibratedTimestampInfoEXT
+                                                                , TimeDomainEXT
+                                                                ) where
+
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data CalibratedTimestampInfoEXT
+
+instance ToCStruct CalibratedTimestampInfoEXT
+instance Show CalibratedTimestampInfoEXT
+
+instance FromCStruct CalibratedTimestampInfoEXT
 
 
-module Graphics.Vulkan.Extensions.VK_EXT_calibrated_timestamps
-  ( TimeDomainEXT
-  ) where
+data TimeDomainEXT
 
-
-
-
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_calibrated_timestamps
-  ( VkTimeDomainEXT
-  )
-
-
--- No documentation found for TopLevel "TimeDomainEXT"
-type TimeDomainEXT = VkTimeDomainEXT

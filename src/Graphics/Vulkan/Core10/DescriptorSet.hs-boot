@@ -1,51 +1,93 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Core10.DescriptorSet  ( CopyDescriptorSet
+                                             , DescriptorBufferInfo
+                                             , DescriptorImageInfo
+                                             , DescriptorPoolCreateInfo
+                                             , DescriptorPoolSize
+                                             , DescriptorSetAllocateInfo
+                                             , DescriptorSetLayoutBinding
+                                             , DescriptorSetLayoutCreateInfo
+                                             , WriteDescriptorSet
+                                             ) where
+
+import Data.Kind (Type)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (Chain)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (PeekChain)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (PokeChain)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data CopyDescriptorSet
+
+instance ToCStruct CopyDescriptorSet
+instance Show CopyDescriptorSet
+
+instance FromCStruct CopyDescriptorSet
 
 
-module Graphics.Vulkan.Core10.DescriptorSet
-  ( DescriptorPool
-  , DescriptorPoolCreateFlagBits
-  , DescriptorPoolCreateFlags
-  , DescriptorPoolResetFlags
-  , DescriptorSet
-  , DescriptorSetLayoutCreateFlagBits
-  , DescriptorSetLayoutCreateFlags
-  , DescriptorType
-  ) where
+data DescriptorBufferInfo
+
+instance ToCStruct DescriptorBufferInfo
+instance Show DescriptorBufferInfo
+
+instance FromCStruct DescriptorBufferInfo
 
 
+data DescriptorImageInfo
+
+instance ToCStruct DescriptorImageInfo
+instance Show DescriptorImageInfo
+
+instance FromCStruct DescriptorImageInfo
 
 
-import {-# source #-} Graphics.Vulkan.C.Core10.DescriptorSet
-  ( VkDescriptorPool
-  , VkDescriptorPoolCreateFlagBits
-  , VkDescriptorPoolResetFlags
-  , VkDescriptorSet
-  , VkDescriptorSetLayoutCreateFlagBits
-  , VkDescriptorType
-  )
+type role DescriptorPoolCreateInfo nominal
+data DescriptorPoolCreateInfo (es :: [Type])
+
+instance PokeChain es => ToCStruct (DescriptorPoolCreateInfo es)
+instance Show (Chain es) => Show (DescriptorPoolCreateInfo es)
+
+instance PeekChain es => FromCStruct (DescriptorPoolCreateInfo es)
 
 
--- No documentation found for TopLevel "DescriptorPool"
-type DescriptorPool = VkDescriptorPool
+data DescriptorPoolSize
 
--- No documentation found for TopLevel "DescriptorPoolCreateFlagBits"
-type DescriptorPoolCreateFlagBits = VkDescriptorPoolCreateFlagBits
+instance ToCStruct DescriptorPoolSize
+instance Show DescriptorPoolSize
 
--- No documentation found for TopLevel "DescriptorPoolCreateFlags"
-type DescriptorPoolCreateFlags = DescriptorPoolCreateFlagBits
+instance FromCStruct DescriptorPoolSize
 
--- No documentation found for TopLevel "DescriptorPoolResetFlags"
-type DescriptorPoolResetFlags = VkDescriptorPoolResetFlags
 
--- No documentation found for TopLevel "DescriptorSet"
-type DescriptorSet = VkDescriptorSet
+type role DescriptorSetAllocateInfo nominal
+data DescriptorSetAllocateInfo (es :: [Type])
 
--- No documentation found for TopLevel "DescriptorSetLayoutCreateFlagBits"
-type DescriptorSetLayoutCreateFlagBits = VkDescriptorSetLayoutCreateFlagBits
+instance PokeChain es => ToCStruct (DescriptorSetAllocateInfo es)
+instance Show (Chain es) => Show (DescriptorSetAllocateInfo es)
 
--- No documentation found for TopLevel "DescriptorSetLayoutCreateFlags"
-type DescriptorSetLayoutCreateFlags = DescriptorSetLayoutCreateFlagBits
+instance PeekChain es => FromCStruct (DescriptorSetAllocateInfo es)
 
--- No documentation found for TopLevel "DescriptorType"
-type DescriptorType = VkDescriptorType
+
+data DescriptorSetLayoutBinding
+
+instance ToCStruct DescriptorSetLayoutBinding
+instance Show DescriptorSetLayoutBinding
+
+instance FromCStruct DescriptorSetLayoutBinding
+
+
+type role DescriptorSetLayoutCreateInfo nominal
+data DescriptorSetLayoutCreateInfo (es :: [Type])
+
+instance PokeChain es => ToCStruct (DescriptorSetLayoutCreateInfo es)
+instance Show (Chain es) => Show (DescriptorSetLayoutCreateInfo es)
+
+instance PeekChain es => FromCStruct (DescriptorSetLayoutCreateInfo es)
+
+
+type role WriteDescriptorSet nominal
+data WriteDescriptorSet (es :: [Type])
+
+instance PokeChain es => ToCStruct (WriteDescriptorSet es)
+instance Show (Chain es) => Show (WriteDescriptorSet es)
+
+instance PeekChain es => FromCStruct (WriteDescriptorSet es)
+

@@ -1,23 +1,13 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_NV_framebuffer_mixed_samples  (PipelineCoverageModulationStateCreateInfoNV) where
 
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data PipelineCoverageModulationStateCreateInfoNV
 
-module Graphics.Vulkan.Extensions.VK_NV_framebuffer_mixed_samples
-  ( CoverageModulationModeNV
-  , PipelineCoverageModulationStateCreateFlagsNV
-  ) where
+instance ToCStruct PipelineCoverageModulationStateCreateInfoNV
+instance Show PipelineCoverageModulationStateCreateInfoNV
 
+instance FromCStruct PipelineCoverageModulationStateCreateInfoNV
 
-
-
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_framebuffer_mixed_samples
-  ( VkCoverageModulationModeNV
-  , VkPipelineCoverageModulationStateCreateFlagsNV
-  )
-
-
--- No documentation found for TopLevel "CoverageModulationModeNV"
-type CoverageModulationModeNV = VkCoverageModulationModeNV
-
--- No documentation found for TopLevel "PipelineCoverageModulationStateCreateFlagsNV"
-type PipelineCoverageModulationStateCreateFlagsNV = VkPipelineCoverageModulationStateCreateFlagsNV

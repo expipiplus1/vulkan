@@ -1,18 +1,13 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface  (ImagePipeSurfaceCreateInfoFUCHSIA) where
 
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data ImagePipeSurfaceCreateInfoFUCHSIA
 
-module Graphics.Vulkan.Extensions.VK_FUCHSIA_imagepipe_surface
-  ( ImagePipeSurfaceCreateFlagsFUCHSIA
-  ) where
+instance ToCStruct ImagePipeSurfaceCreateInfoFUCHSIA
+instance Show ImagePipeSurfaceCreateInfoFUCHSIA
 
+instance FromCStruct ImagePipeSurfaceCreateInfoFUCHSIA
 
-
-
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_FUCHSIA_imagepipe_surface
-  ( VkImagePipeSurfaceCreateFlagsFUCHSIA
-  )
-
-
--- No documentation found for TopLevel "ImagePipeSurfaceCreateFlagsFUCHSIA"
-type ImagePipeSurfaceCreateFlagsFUCHSIA = VkImagePipeSurfaceCreateFlagsFUCHSIA

@@ -1,23 +1,13 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Core10.MemoryManagement  (MemoryRequirements) where
 
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data MemoryRequirements
 
-module Graphics.Vulkan.Core10.MemoryManagement
-  ( Buffer
-  , Image
-  ) where
+instance ToCStruct MemoryRequirements
+instance Show MemoryRequirements
 
+instance FromCStruct MemoryRequirements
 
-
-
-import {-# source #-} Graphics.Vulkan.C.Core10.MemoryManagement
-  ( VkBuffer
-  , VkImage
-  )
-
-
--- No documentation found for TopLevel "Buffer"
-type Buffer = VkBuffer
-
--- No documentation found for TopLevel "Image"
-type Image = VkImage

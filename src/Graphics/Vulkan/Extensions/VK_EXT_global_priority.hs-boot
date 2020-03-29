@@ -1,18 +1,13 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_EXT_global_priority  (DeviceQueueGlobalPriorityCreateInfoEXT) where
 
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data DeviceQueueGlobalPriorityCreateInfoEXT
 
-module Graphics.Vulkan.Extensions.VK_EXT_global_priority
-  ( QueueGlobalPriorityEXT
-  ) where
+instance ToCStruct DeviceQueueGlobalPriorityCreateInfoEXT
+instance Show DeviceQueueGlobalPriorityCreateInfoEXT
 
+instance FromCStruct DeviceQueueGlobalPriorityCreateInfoEXT
 
-
-
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_global_priority
-  ( VkQueueGlobalPriorityEXT
-  )
-
-
--- No documentation found for TopLevel "QueueGlobalPriorityEXT"
-type QueueGlobalPriorityEXT = VkQueueGlobalPriorityEXT

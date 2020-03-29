@@ -1,18 +1,13 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_EXT_validation_flags  (ValidationFlagsEXT) where
 
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data ValidationFlagsEXT
 
-module Graphics.Vulkan.Extensions.VK_EXT_validation_flags
-  ( ValidationCheckEXT
-  ) where
+instance ToCStruct ValidationFlagsEXT
+instance Show ValidationFlagsEXT
 
+instance FromCStruct ValidationFlagsEXT
 
-
-
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_validation_flags
-  ( VkValidationCheckEXT
-  )
-
-
--- No documentation found for TopLevel "ValidationCheckEXT"
-type ValidationCheckEXT = VkValidationCheckEXT

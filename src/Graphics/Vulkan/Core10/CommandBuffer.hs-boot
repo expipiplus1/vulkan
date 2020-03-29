@@ -1,45 +1,37 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Core10.CommandBuffer  ( CommandBufferAllocateInfo
+                                             , CommandBufferBeginInfo
+                                             , CommandBufferInheritanceInfo
+                                             ) where
+
+import Data.Kind (Type)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (Chain)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (PeekChain)
+import {-# SOURCE #-} Graphics.Vulkan.CStruct.Extends (PokeChain)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data CommandBufferAllocateInfo
+
+instance ToCStruct CommandBufferAllocateInfo
+instance Show CommandBufferAllocateInfo
+
+instance FromCStruct CommandBufferAllocateInfo
 
 
-module Graphics.Vulkan.Core10.CommandBuffer
-  ( CommandBufferLevel
-  , CommandBufferResetFlagBits
-  , CommandBufferResetFlags
-  , CommandBufferUsageFlagBits
-  , CommandBufferUsageFlags
-  , QueryControlFlagBits
-  , QueryControlFlags
-  ) where
+type role CommandBufferBeginInfo nominal
+data CommandBufferBeginInfo (es :: [Type])
+
+instance PokeChain es => ToCStruct (CommandBufferBeginInfo es)
+instance Show (Chain es) => Show (CommandBufferBeginInfo es)
+
+instance PeekChain es => FromCStruct (CommandBufferBeginInfo es)
 
 
+type role CommandBufferInheritanceInfo nominal
+data CommandBufferInheritanceInfo (es :: [Type])
 
+instance PokeChain es => ToCStruct (CommandBufferInheritanceInfo es)
+instance Show (Chain es) => Show (CommandBufferInheritanceInfo es)
 
-import {-# source #-} Graphics.Vulkan.C.Core10.CommandBuffer
-  ( VkCommandBufferLevel
-  , VkCommandBufferResetFlagBits
-  , VkCommandBufferUsageFlagBits
-  , VkQueryControlFlagBits
-  )
+instance PeekChain es => FromCStruct (CommandBufferInheritanceInfo es)
 
-
--- No documentation found for TopLevel "CommandBufferLevel"
-type CommandBufferLevel = VkCommandBufferLevel
-
--- No documentation found for TopLevel "CommandBufferResetFlagBits"
-type CommandBufferResetFlagBits = VkCommandBufferResetFlagBits
-
--- No documentation found for TopLevel "CommandBufferResetFlags"
-type CommandBufferResetFlags = CommandBufferResetFlagBits
-
--- No documentation found for TopLevel "CommandBufferUsageFlagBits"
-type CommandBufferUsageFlagBits = VkCommandBufferUsageFlagBits
-
--- No documentation found for TopLevel "CommandBufferUsageFlags"
-type CommandBufferUsageFlags = CommandBufferUsageFlagBits
-
--- No documentation found for TopLevel "QueryControlFlagBits"
-type QueryControlFlagBits = VkQueryControlFlagBits
-
--- No documentation found for TopLevel "QueryControlFlags"
-type QueryControlFlags = QueryControlFlagBits

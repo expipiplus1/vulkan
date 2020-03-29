@@ -1,130 +1,266 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language DuplicateRecordFields #-}
-{-# language PatternSynonyms #-}
+module Graphics.Vulkan.Extensions.VK_NV_external_memory_win32  ( getMemoryWin32HandleNV
+                                                               , ImportMemoryWin32HandleInfoNV(..)
+                                                               , ExportMemoryWin32HandleInfoNV(..)
+                                                               , NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION
+                                                               , pattern NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION
+                                                               , NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME
+                                                               , pattern NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME
+                                                               , ExternalMemoryHandleTypeFlagBitsNV(..)
+                                                               , ExternalMemoryHandleTypeFlagsNV
+                                                               , HANDLE
+                                                               , DWORD
+                                                               , SECURITY_ATTRIBUTES
+                                                               ) where
 
-module Graphics.Vulkan.Extensions.VK_NV_external_memory_win32
-  ( 
-#if defined(VK_USE_PLATFORM_GGP)
-  ExportMemoryWin32HandleInfoNV(..)
-  , 
-  ImportMemoryWin32HandleInfoNV(..)
+import Control.Exception.Base (bracket)
+import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (callocBytes)
+import Foreign.Marshal.Alloc (free)
+import GHC.Base (when)
+import GHC.IO (throwIO)
+import Foreign.Ptr (nullPtr)
+import Foreign.Ptr (plusPtr)
+import Control.Monad.Trans.Class (lift)
+import Control.Monad.Trans.Cont (evalContT)
+import Data.String (IsString)
+import Data.Typeable (Typeable)
+import Foreign.Storable (Storable)
+import Foreign.Storable (Storable(peek))
+import Foreign.Storable (Storable(poke))
+import qualified Foreign.Storable (Storable(..))
+import Foreign.Ptr (FunPtr)
+import Foreign.Ptr (Ptr)
+import Data.Kind (Type)
+import Control.Monad.Trans.Cont (ContT(..))
+import Graphics.Vulkan.Extensions.WSITypes (DWORD)
+import Graphics.Vulkan.Core10.Handles (Device)
+import Graphics.Vulkan.Core10.Handles (Device(..))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkGetMemoryWin32HandleNV))
+import Graphics.Vulkan.Core10.Handles (DeviceMemory)
+import Graphics.Vulkan.Core10.Handles (DeviceMemory(..))
+import Graphics.Vulkan.Core10.Handles (Device_T)
+import Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities (ExternalMemoryHandleTypeFlagsNV)
+import Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities (ExternalMemoryHandleTypeFlagsNV)
+import Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities (ExternalMemoryHandleTypeFlagBitsNV(..))
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (FromCStruct(..))
+import Graphics.Vulkan.Extensions.WSITypes (HANDLE)
+import Graphics.Vulkan.Core10.Enums.Result (Result)
+import Graphics.Vulkan.Core10.Enums.Result (Result(..))
+import Graphics.Vulkan.Extensions.WSITypes (SECURITY_ATTRIBUTES)
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
+import Graphics.Vulkan.CStruct (ToCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct(..))
+import Graphics.Vulkan.Exception (VulkanException(..))
+import Graphics.Vulkan.Zero (Zero(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV))
+import Graphics.Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Graphics.Vulkan.Extensions.WSITypes (DWORD)
+import Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities (ExternalMemoryHandleTypeFlagBitsNV(..))
+import Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities (ExternalMemoryHandleTypeFlagsNV)
+import Graphics.Vulkan.Extensions.WSITypes (HANDLE)
+import Graphics.Vulkan.Extensions.WSITypes (SECURITY_ATTRIBUTES)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
-  , getMemoryWin32HandleNV
-  , pattern NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME
-  , pattern NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION
-  , pattern STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV
-  , pattern STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV
-  ) where
+  "dynamic" mkVkGetMemoryWin32HandleNV
+  :: FunPtr (Ptr Device_T -> DeviceMemory -> ExternalMemoryHandleTypeFlagsNV -> Ptr HANDLE -> IO Result) -> Ptr Device_T -> DeviceMemory -> ExternalMemoryHandleTypeFlagsNV -> Ptr HANDLE -> IO Result
 
-import Data.String
-  ( IsString
-  )
-import Foreign.Marshal.Alloc
-  ( alloca
-  )
-
-#if defined(VK_USE_PLATFORM_GGP)
-import Foreign.Ptr
-  ( Ptr
-  )
-#endif
-import Foreign.Storable
-  ( peek
-  )
-
-
-
-#if defined(VK_USE_PLATFORM_GGP)
-import Graphics.Vulkan.C.Core10.Core
-  ( Zero(..)
-  )
-#endif
-import Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32
-  ( HANDLE
-  , vkGetMemoryWin32HandleNV
-  , pattern VK_NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME
-  , pattern VK_NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION
-  )
-
-#if defined(VK_USE_PLATFORM_GGP)
-import Graphics.Vulkan.C.Extensions.VK_NV_external_memory_win32
-  ( DWORD
-  , SECURITY_ATTRIBUTES
-  )
-#endif
-import Graphics.Vulkan.Core10.DeviceInitialization
-  ( Device(..)
-  )
-import Graphics.Vulkan.Core10.Memory
-  ( DeviceMemory
-  )
-import Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities
-  ( ExternalMemoryHandleTypeFlagsNV
-  )
-
-#if defined(VK_USE_PLATFORM_GGP)
-import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
-  ( SomeVkStruct
-  )
-#endif
-import Graphics.Vulkan.Core10.Core
-  ( pattern STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV
-  , pattern STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV
-  )
+-- | vkGetMemoryWin32HandleNV - retrieve Win32 handle to a device memory
+-- object
+--
+-- = Parameters
+--
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     owns the memory.
+--
+-- -   @memory@ is the 'Graphics.Vulkan.Core10.Handles.DeviceMemory'
+--     object.
+--
+-- -   @handleType@ is a bitmask of
+--     'Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'
+--     containing a single bit specifying the type of handle requested.
+--
+-- -   @handle@ is a pointer to a Windows
+--     'Graphics.Vulkan.Extensions.WSITypes.HANDLE' in which the handle is
+--     returned.
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Core10.Handles.Device',
+-- 'Graphics.Vulkan.Core10.Handles.DeviceMemory',
+-- 'Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagsNV'
+getMemoryWin32HandleNV :: Device -> DeviceMemory -> ExternalMemoryHandleTypeFlagsNV -> IO (HANDLE)
+getMemoryWin32HandleNV device memory handleType = evalContT $ do
+  let vkGetMemoryWin32HandleNV' = mkVkGetMemoryWin32HandleNV (pVkGetMemoryWin32HandleNV (deviceCmds (device :: Device)))
+  pPHandle <- ContT $ bracket (callocBytes @HANDLE 8) free
+  r <- lift $ vkGetMemoryWin32HandleNV' (deviceHandle (device)) (memory) (handleType) (pPHandle)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pHandle <- lift $ peek @HANDLE pPHandle
+  pure $ (pHandle)
 
 
-
-#if defined(VK_USE_PLATFORM_GGP)
-
--- No documentation found for TopLevel "VkExportMemoryWin32HandleInfoNV"
-data ExportMemoryWin32HandleInfoNV = ExportMemoryWin32HandleInfoNV
-  { -- No documentation found for Nested "ExportMemoryWin32HandleInfoNV" "pNext"
-  next :: Maybe SomeVkStruct
-  , -- No documentation found for Nested "ExportMemoryWin32HandleInfoNV" "pAttributes"
-  attributes :: Ptr SECURITY_ATTRIBUTES
-  , -- No documentation found for Nested "ExportMemoryWin32HandleInfoNV" "dwAccess"
-  dwAccess :: DWORD
-  }
-  deriving (Show, Eq)
-
-instance Zero ExportMemoryWin32HandleInfoNV where
-  zero = ExportMemoryWin32HandleInfoNV Nothing
-                                       zero
-                                       zero
-
-#endif
-
-
-#if defined(VK_USE_PLATFORM_GGP)
-
--- No documentation found for TopLevel "VkImportMemoryWin32HandleInfoNV"
+-- | VkImportMemoryWin32HandleInfoNV - import Win32 memory created on the
+-- same physical device
+--
+-- = Description
+--
+-- If @handleType@ is @0@, this structure is ignored by consumers of the
+-- 'Graphics.Vulkan.Core10.Memory.MemoryAllocateInfo' structure it is
+-- chained from.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagsNV',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data ImportMemoryWin32HandleInfoNV = ImportMemoryWin32HandleInfoNV
-  { -- No documentation found for Nested "ImportMemoryWin32HandleInfoNV" "pNext"
-  next :: Maybe SomeVkStruct
-  , -- No documentation found for Nested "ImportMemoryWin32HandleInfoNV" "handleType"
-  handleType :: ExternalMemoryHandleTypeFlagsNV
-  , -- No documentation found for Nested "ImportMemoryWin32HandleInfoNV" "handle"
-  handle :: HANDLE
+  { -- | @handleType@ /must/ be a valid combination of
+    -- 'Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagBitsNV'
+    -- values
+    handleType :: ExternalMemoryHandleTypeFlagsNV
+  , -- | @handle@ /must/ be a valid handle to memory, obtained as specified by
+    -- @handleType@.
+    handle :: HANDLE
   }
-  deriving (Show, Eq)
+  deriving (Typeable)
+deriving instance Show ImportMemoryWin32HandleInfoNV
+
+instance ToCStruct ImportMemoryWin32HandleInfoNV where
+  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p ImportMemoryWin32HandleInfoNV{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr ExternalMemoryHandleTypeFlagsNV)) (handleType)
+    poke ((p `plusPtr` 24 :: Ptr HANDLE)) (handle)
+    f
+  cStructSize = 32
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    f
+
+instance FromCStruct ImportMemoryWin32HandleInfoNV where
+  peekCStruct p = do
+    handleType <- peek @ExternalMemoryHandleTypeFlagsNV ((p `plusPtr` 16 :: Ptr ExternalMemoryHandleTypeFlagsNV))
+    handle <- peek @HANDLE ((p `plusPtr` 24 :: Ptr HANDLE))
+    pure $ ImportMemoryWin32HandleInfoNV
+             handleType handle
+
+instance Storable ImportMemoryWin32HandleInfoNV where
+  sizeOf ~_ = 32
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero ImportMemoryWin32HandleInfoNV where
-  zero = ImportMemoryWin32HandleInfoNV Nothing
-                                       zero
-                                       zero
-
-#endif
+  zero = ImportMemoryWin32HandleInfoNV
+           zero
+           zero
 
 
--- No documentation found for TopLevel "vkGetMemoryWin32HandleNV"
-getMemoryWin32HandleNV :: Device ->  DeviceMemory ->  ExternalMemoryHandleTypeFlagsNV ->  IO (HANDLE)
-getMemoryWin32HandleNV = undefined {- {wrapped (pretty cName) :: Doc ()} -}
+-- | VkExportMemoryWin32HandleInfoNV - specify security attributes and access
+-- rights for Win32 memory handles
+--
+-- = Description
+--
+-- If this structure is not present, or if @pAttributes@ is set to @NULL@,
+-- default security descriptor values will be used, and child processes
+-- created by the application will not inherit the handle, as described in
+-- the MSDN documentation for “Synchronization Object Security and Access
+-- Rights”1. Further, if the structure is not present, the access rights
+-- will be
+--
+-- @DXGI_SHARED_RESOURCE_READ@ | @DXGI_SHARED_RESOURCE_WRITE@
+--
+-- [1]
+--     <https://docs.microsoft.com/en-us/windows/win32/sync/synchronization-object-security-and-access-rights>
+--
+-- == Valid Usage (Implicit)
+--
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV'
+--
+-- -   If @pAttributes@ is not @NULL@, @pAttributes@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.Extensions.WSITypes.SECURITY_ATTRIBUTES' value
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
+data ExportMemoryWin32HandleInfoNV = ExportMemoryWin32HandleInfoNV
+  { -- | @pAttributes@ is a pointer to a Windows
+    -- 'Graphics.Vulkan.Extensions.WSITypes.SECURITY_ATTRIBUTES' structure
+    -- specifying security attributes of the handle.
+    attributes :: Ptr SECURITY_ATTRIBUTES
+  , -- | @dwAccess@ is a 'Graphics.Vulkan.Extensions.WSITypes.DWORD' specifying
+    -- access rights of the handle.
+    dwAccess :: DWORD
+  }
+  deriving (Typeable)
+deriving instance Show ExportMemoryWin32HandleInfoNV
 
--- No documentation found for TopLevel "VK_NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME"
-pattern NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME :: (Eq a, IsString a) => a
-pattern NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME = VK_NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME
+instance ToCStruct ExportMemoryWin32HandleInfoNV where
+  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p ExportMemoryWin32HandleInfoNV{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr (Ptr SECURITY_ATTRIBUTES))) (attributes)
+    poke ((p `plusPtr` 24 :: Ptr DWORD)) (dwAccess)
+    f
+  cStructSize = 32
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    f
+
+instance FromCStruct ExportMemoryWin32HandleInfoNV where
+  peekCStruct p = do
+    pAttributes <- peek @(Ptr SECURITY_ATTRIBUTES) ((p `plusPtr` 16 :: Ptr (Ptr SECURITY_ATTRIBUTES)))
+    dwAccess <- peek @DWORD ((p `plusPtr` 24 :: Ptr DWORD))
+    pure $ ExportMemoryWin32HandleInfoNV
+             pAttributes dwAccess
+
+instance Storable ExportMemoryWin32HandleInfoNV where
+  sizeOf ~_ = 32
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero ExportMemoryWin32HandleInfoNV where
+  zero = ExportMemoryWin32HandleInfoNV
+           zero
+           zero
+
+
+type NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION = 1
 
 -- No documentation found for TopLevel "VK_NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION"
-pattern NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION :: Integral a => a
-pattern NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION = VK_NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION
+pattern NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION :: forall a . Integral a => a
+pattern NV_EXTERNAL_MEMORY_WIN32_SPEC_VERSION = 1
+
+
+type NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME = "VK_NV_external_memory_win32"
+
+-- No documentation found for TopLevel "VK_NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME"
+pattern NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern NV_EXTERNAL_MEMORY_WIN32_EXTENSION_NAME = "VK_NV_external_memory_win32"
+

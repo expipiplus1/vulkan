@@ -1,8 +1,7 @@
 # Change Log
 
-## [3.0.0.0] - 2019-04-21
-  - Move existing bindings to `Graphics.Vulkan.C`
-  - Add new set of higher level bindings to `Graphics.Vulkan`
+## [3.0.0.0] - 2020-02-29
+  - Rewrite, bindings are not much more idiomatic Haskell
 
 ## [2.1.0.0] - 2018-04-22
   - Expose dynamic loader from Graphics.Vulkan.Dymamic

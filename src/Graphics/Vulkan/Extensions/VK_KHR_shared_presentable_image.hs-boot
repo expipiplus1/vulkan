@@ -1,18 +1,18 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image  ( SharedPresentSurfaceCapabilitiesKHR
+                                                                   , PresentModeKHR
+                                                                   ) where
+
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data SharedPresentSurfaceCapabilitiesKHR
+
+instance ToCStruct SharedPresentSurfaceCapabilitiesKHR
+instance Show SharedPresentSurfaceCapabilitiesKHR
+
+instance FromCStruct SharedPresentSurfaceCapabilitiesKHR
 
 
-module Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image
-  ( PresentModeKHR
-  ) where
+data PresentModeKHR
 
-
-
-
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_KHR_surface
-  ( VkPresentModeKHR
-  )
-
-
--- No documentation found for TopLevel "PresentModeKHR"
-type PresentModeKHR = VkPresentModeKHR

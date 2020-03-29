@@ -1,18 +1,13 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_NV_fragment_coverage_to_color  (PipelineCoverageToColorStateCreateInfoNV) where
 
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data PipelineCoverageToColorStateCreateInfoNV
 
-module Graphics.Vulkan.Extensions.VK_NV_fragment_coverage_to_color
-  ( PipelineCoverageToColorStateCreateFlagsNV
-  ) where
+instance ToCStruct PipelineCoverageToColorStateCreateInfoNV
+instance Show PipelineCoverageToColorStateCreateInfoNV
 
+instance FromCStruct PipelineCoverageToColorStateCreateInfoNV
 
-
-
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_NV_fragment_coverage_to_color
-  ( VkPipelineCoverageToColorStateCreateFlagsNV
-  )
-
-
--- No documentation found for TopLevel "PipelineCoverageToColorStateCreateFlagsNV"
-type PipelineCoverageToColorStateCreateFlagsNV = VkPipelineCoverageToColorStateCreateFlagsNV

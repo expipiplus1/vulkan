@@ -1,28 +1,41 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_EXT_display_control  ( DeviceEventInfoEXT
+                                                          , DisplayEventInfoEXT
+                                                          , DisplayPowerInfoEXT
+                                                          , SwapchainCounterCreateInfoEXT
+                                                          ) where
+
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data DeviceEventInfoEXT
+
+instance ToCStruct DeviceEventInfoEXT
+instance Show DeviceEventInfoEXT
+
+instance FromCStruct DeviceEventInfoEXT
 
 
-module Graphics.Vulkan.Extensions.VK_EXT_display_control
-  ( DeviceEventTypeEXT
-  , DisplayEventTypeEXT
-  , DisplayPowerStateEXT
-  ) where
+data DisplayEventInfoEXT
+
+instance ToCStruct DisplayEventInfoEXT
+instance Show DisplayEventInfoEXT
+
+instance FromCStruct DisplayEventInfoEXT
 
 
+data DisplayPowerInfoEXT
+
+instance ToCStruct DisplayPowerInfoEXT
+instance Show DisplayPowerInfoEXT
+
+instance FromCStruct DisplayPowerInfoEXT
 
 
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_display_control
-  ( VkDeviceEventTypeEXT
-  , VkDisplayEventTypeEXT
-  , VkDisplayPowerStateEXT
-  )
+data SwapchainCounterCreateInfoEXT
 
+instance ToCStruct SwapchainCounterCreateInfoEXT
+instance Show SwapchainCounterCreateInfoEXT
 
--- No documentation found for TopLevel "DeviceEventTypeEXT"
-type DeviceEventTypeEXT = VkDeviceEventTypeEXT
+instance FromCStruct SwapchainCounterCreateInfoEXT
 
--- No documentation found for TopLevel "DisplayEventTypeEXT"
-type DisplayEventTypeEXT = VkDisplayEventTypeEXT
-
--- No documentation found for TopLevel "DisplayPowerStateEXT"
-type DisplayPowerStateEXT = VkDisplayPowerStateEXT

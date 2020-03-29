@@ -1,235 +1,631 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
-{-# language TypeFamilies #-}
-{-# language DuplicateRecordFields #-}
+module Graphics.Vulkan.Extensions.VK_EXT_full_screen_exclusive  ( getPhysicalDeviceSurfacePresentModes2EXT
+                                                                , getDeviceGroupSurfacePresentModes2EXT
+                                                                , acquireFullScreenExclusiveModeEXT
+                                                                , releaseFullScreenExclusiveModeEXT
+                                                                , SurfaceFullScreenExclusiveInfoEXT(..)
+                                                                , SurfaceFullScreenExclusiveWin32InfoEXT(..)
+                                                                , SurfaceCapabilitiesFullScreenExclusiveEXT(..)
+                                                                , FullScreenExclusiveEXT( FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT
+                                                                                        , FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT
+                                                                                        , FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT
+                                                                                        , FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT
+                                                                                        , ..
+                                                                                        )
+                                                                , EXT_FULL_SCREEN_EXCLUSIVE_SPEC_VERSION
+                                                                , pattern EXT_FULL_SCREEN_EXCLUSIVE_SPEC_VERSION
+                                                                , EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME
+                                                                , pattern EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME
+                                                                , SurfaceKHR(..)
+                                                                , SwapchainKHR(..)
+                                                                , PhysicalDeviceSurfaceInfo2KHR(..)
+                                                                , PresentModeKHR(..)
+                                                                , DeviceGroupPresentModeFlagBitsKHR(..)
+                                                                , DeviceGroupPresentModeFlagsKHR
+                                                                , HMONITOR
+                                                                ) where
 
-module Graphics.Vulkan.Extensions.VK_EXT_full_screen_exclusive
-  ( FullScreenExclusiveEXT
-  , pattern FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT
-  , pattern FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT
-  , pattern FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT
-  , pattern FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT
-#if defined(VK_USE_PLATFORM_GGP)
-  , SurfaceCapabilitiesFullScreenExclusiveEXT(..)
-  , SurfaceFullScreenExclusiveInfoEXT(..)
-  , SurfaceFullScreenExclusiveWin32InfoEXT(..)
+import Control.Exception.Base (bracket)
+import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (callocBytes)
+import Foreign.Marshal.Alloc (free)
+import GHC.Base (when)
+import GHC.IO (throwIO)
+import Foreign.Ptr (nullPtr)
+import Foreign.Ptr (plusPtr)
+import GHC.Read (choose)
+import GHC.Read (expectP)
+import GHC.Read (parens)
+import GHC.Show (showParen)
+import GHC.Show (showString)
+import GHC.Show (showsPrec)
+import Text.ParserCombinators.ReadPrec ((+++))
+import Text.ParserCombinators.ReadPrec (prec)
+import Text.ParserCombinators.ReadPrec (step)
+import Control.Monad.Trans.Class (lift)
+import Control.Monad.Trans.Cont (evalContT)
+import Data.Vector (generateM)
+import Data.String (IsString)
+import Data.Typeable (Typeable)
+import Foreign.Storable (Storable)
+import Foreign.Storable (Storable(peek))
+import Foreign.Storable (Storable(poke))
+import qualified Foreign.Storable (Storable(..))
+import Data.Int (Int32)
+import Foreign.Ptr (FunPtr)
+import Foreign.Ptr (Ptr)
+import GHC.Read (Read(readPrec))
+import Data.Word (Word32)
+import Text.Read.Lex (Lexeme(Ident))
+import Data.Kind (Type)
+import Control.Monad.Trans.Cont (ContT(..))
+import Data.Vector (Vector)
+import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
+import Graphics.Vulkan.Core10.BaseType (bool32ToBool)
+import Graphics.Vulkan.Core10.BaseType (boolToBool32)
+import Graphics.Vulkan.NamedType ((:::))
+import Graphics.Vulkan.Core10.BaseType (Bool32)
+import Graphics.Vulkan.Core10.Handles (Device)
+import Graphics.Vulkan.Core10.Handles (Device(..))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkAcquireFullScreenExclusiveModeEXT))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkGetDeviceGroupSurfacePresentModes2EXT))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkReleaseFullScreenExclusiveModeEXT))
+import Graphics.Vulkan.Extensions.VK_KHR_swapchain (DeviceGroupPresentModeFlagsKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_swapchain (DeviceGroupPresentModeFlagsKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_swapchain (DeviceGroupPresentModeFlagBitsKHR(..))
+import Graphics.Vulkan.Core10.Handles (Device_T)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (FromCStruct(..))
+import Graphics.Vulkan.Extensions.WSITypes (HMONITOR)
+import Graphics.Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceSurfacePresentModes2EXT))
+import Graphics.Vulkan.Core10.Handles (PhysicalDevice)
+import Graphics.Vulkan.Core10.Handles (PhysicalDevice(..))
+import Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2 (PhysicalDeviceSurfaceInfo2KHR)
+import Graphics.Vulkan.Core10.Handles (PhysicalDevice_T)
+import Graphics.Vulkan.CStruct.Extends (PokeChain)
+import Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image (PresentModeKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image (PresentModeKHR(..))
+import Graphics.Vulkan.Core10.Enums.Result (Result)
+import Graphics.Vulkan.Core10.Enums.Result (Result(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
+import Graphics.Vulkan.Extensions.Handles (SwapchainKHR)
+import Graphics.Vulkan.Extensions.Handles (SwapchainKHR(..))
+import Graphics.Vulkan.CStruct (ToCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct(..))
+import Graphics.Vulkan.Exception (VulkanException(..))
+import Graphics.Vulkan.Zero (Zero)
+import Graphics.Vulkan.Zero (Zero(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SURFACE_CAPABILITIES_FULL_SCREEN_EXCLUSIVE_EXT))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_INFO_EXT))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_WIN32_INFO_EXT))
+import Graphics.Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Graphics.Vulkan.Extensions.VK_KHR_swapchain (DeviceGroupPresentModeFlagBitsKHR(..))
+import Graphics.Vulkan.Extensions.VK_KHR_swapchain (DeviceGroupPresentModeFlagsKHR)
+import Graphics.Vulkan.Extensions.WSITypes (HMONITOR)
+import Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2 (PhysicalDeviceSurfaceInfo2KHR(..))
+import Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image (PresentModeKHR(..))
+import Graphics.Vulkan.Extensions.Handles (SurfaceKHR(..))
+import Graphics.Vulkan.Extensions.Handles (SwapchainKHR(..))
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
-  , acquireFullScreenExclusiveModeEXT
-  , getNumPhysicalDeviceSurfacePresentModes2EXT
-  , getPhysicalDeviceSurfacePresentModes2EXT
-  , getAllPhysicalDeviceSurfacePresentModes2EXT
-  , releaseFullScreenExclusiveModeEXT
-  , pattern EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME
-  , pattern EXT_FULL_SCREEN_EXCLUSIVE_SPEC_VERSION
-#if defined(VK_USE_PLATFORM_WIN32)
-  , getDeviceGroupSurfacePresentModes2EXT
+  "dynamic" mkVkGetPhysicalDeviceSurfacePresentModes2EXT
+  :: FunPtr (Ptr PhysicalDevice_T -> Ptr (PhysicalDeviceSurfaceInfo2KHR a) -> Ptr Word32 -> Ptr PresentModeKHR -> IO Result) -> Ptr PhysicalDevice_T -> Ptr (PhysicalDeviceSurfaceInfo2KHR a) -> Ptr Word32 -> Ptr PresentModeKHR -> IO Result
+
+-- | vkGetPhysicalDeviceSurfacePresentModes2EXT - Query supported
+-- presentation modes
+--
+-- = Parameters
+--
+-- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
+--     device that will be associated with the swapchain to be created, as
+--     described for
+--     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
+--
+-- -   @pSurfaceInfo@ is a pointer to a
+--     'Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
+--     structure describing the surface and other fixed parameters that
+--     would be consumed by
+--     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
+--
+-- -   @pPresentModeCount@ is a pointer to an integer related to the number
+--     of presentation modes available or queried, as described below.
+--
+-- -   @pPresentModes@ is either @NULL@ or a pointer to an array of
+--     'Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image.PresentModeKHR'
+--     values, indicating the supported presentation modes.
+--
+-- = Description
+--
+-- 'getPhysicalDeviceSurfacePresentModes2EXT' behaves similarly to
+-- 'Graphics.Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfacePresentModesKHR',
+-- with the ability to specify extended inputs via chained input
+-- structures.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
+--
+-- -   @pSurfaceInfo@ /must/ be a valid pointer to a valid
+--     'Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
+--     structure
+--
+-- -   @pPresentModeCount@ /must/ be a valid pointer to a @uint32_t@ value
+--
+-- -   If the value referenced by @pPresentModeCount@ is not @0@, and
+--     @pPresentModes@ is not @NULL@, @pPresentModes@ /must/ be a valid
+--     pointer to an array of @pPresentModeCount@
+--     'Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image.PresentModeKHR'
+--     values
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.INCOMPLETE'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image.PresentModeKHR'
+getPhysicalDeviceSurfacePresentModes2EXT :: PokeChain a => PhysicalDevice -> PhysicalDeviceSurfaceInfo2KHR a -> IO (Result, ("presentModes" ::: Vector PresentModeKHR))
+getPhysicalDeviceSurfacePresentModes2EXT physicalDevice surfaceInfo = evalContT $ do
+  let vkGetPhysicalDeviceSurfacePresentModes2EXT' = mkVkGetPhysicalDeviceSurfacePresentModes2EXT (pVkGetPhysicalDeviceSurfacePresentModes2EXT (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let physicalDevice' = physicalDeviceHandle (physicalDevice)
+  pSurfaceInfo <- ContT $ withCStruct (surfaceInfo)
+  pPPresentModeCount <- ContT $ bracket (callocBytes @Word32 4) free
+  r <- lift $ vkGetPhysicalDeviceSurfacePresentModes2EXT' physicalDevice' pSurfaceInfo (pPPresentModeCount) (nullPtr)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pPresentModeCount <- lift $ peek @Word32 pPPresentModeCount
+  pPPresentModes <- ContT $ bracket (callocBytes @PresentModeKHR ((fromIntegral (pPresentModeCount)) * 4)) free
+  r' <- lift $ vkGetPhysicalDeviceSurfacePresentModes2EXT' physicalDevice' pSurfaceInfo (pPPresentModeCount) (pPPresentModes)
+  lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
+  pPresentModeCount' <- lift $ peek @Word32 pPPresentModeCount
+  pPresentModes' <- lift $ generateM (fromIntegral (pPresentModeCount')) (\i -> peek @PresentModeKHR ((pPPresentModes `advancePtrBytes` (4 * (i)) :: Ptr PresentModeKHR)))
+  pure $ ((r'), pPresentModes')
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
-  , pattern STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_INFO_EXT
-  , pattern STRUCTURE_TYPE_SURFACE_CAPABILITIES_FULL_SCREEN_EXCLUSIVE_EXT
-  , pattern ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT
-  , pattern STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_WIN32_INFO_EXT
-  ) where
+  "dynamic" mkVkGetDeviceGroupSurfacePresentModes2EXT
+  :: FunPtr (Ptr Device_T -> Ptr (PhysicalDeviceSurfaceInfo2KHR a) -> Ptr DeviceGroupPresentModeFlagsKHR -> IO Result) -> Ptr Device_T -> Ptr (PhysicalDeviceSurfaceInfo2KHR a) -> Ptr DeviceGroupPresentModeFlagsKHR -> IO Result
 
-import Data.String
-  ( IsString
-  )
-import Data.Vector
-  ( Vector
-  )
-import qualified Data.Vector
-  ( generateM
-  )
-import Data.Word
-  ( Word32
-  )
-import Foreign.Marshal.Alloc
-  ( alloca
-  )
-import Foreign.Marshal.Array
-  ( allocaArray
-  )
-import Foreign.Marshal.Utils
-  ( with
-  )
-import Foreign.Ptr
-  ( nullPtr
-  )
-import Foreign.Storable
-  ( peek
-  , peekElemOff
-  )
+-- | vkGetDeviceGroupSurfacePresentModes2EXT - Query device group present
+-- capabilities for a surface
+--
+-- = Parameters
+--
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device.
+--
+-- -   @pSurfaceInfo@ is a pointer to a
+--     'Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
+--     structure describing the surface and other fixed parameters that
+--     would be consumed by
+--     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
+--
+-- -   @pModes@ is a pointer to a
+--     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.DeviceGroupPresentModeFlagsKHR'
+--     in which the supported device group present modes for the surface
+--     are returned.
+--
+-- = Description
+--
+-- 'getDeviceGroupSurfacePresentModes2EXT' behaves similarly to
+-- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.getDeviceGroupSurfacePresentModesKHR',
+-- with the ability to specify extended inputs via chained input
+-- structures.
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Core10.Handles.Device',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.DeviceGroupPresentModeFlagsKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
+getDeviceGroupSurfacePresentModes2EXT :: PokeChain a => Device -> PhysicalDeviceSurfaceInfo2KHR a -> IO (("modes" ::: DeviceGroupPresentModeFlagsKHR))
+getDeviceGroupSurfacePresentModes2EXT device surfaceInfo = evalContT $ do
+  let vkGetDeviceGroupSurfacePresentModes2EXT' = mkVkGetDeviceGroupSurfacePresentModes2EXT (pVkGetDeviceGroupSurfacePresentModes2EXT (deviceCmds (device :: Device)))
+  pSurfaceInfo <- ContT $ withCStruct (surfaceInfo)
+  pPModes <- ContT $ bracket (callocBytes @DeviceGroupPresentModeFlagsKHR 4) free
+  r <- lift $ vkGetDeviceGroupSurfacePresentModes2EXT' (deviceHandle (device)) pSurfaceInfo (pPModes)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pModes <- lift $ peek @DeviceGroupPresentModeFlagsKHR pPModes
+  pure $ (pModes)
 
 
-import Graphics.Vulkan.C.Core10.Core
-  ( VkResult(..)
-  )
-
-#if defined(VK_USE_PLATFORM_GGP)
-import Graphics.Vulkan.C.Core10.Core
-  ( Zero(..)
-  )
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
-import Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive
-  ( VkFullScreenExclusiveEXT(..)
-  , vkAcquireFullScreenExclusiveModeEXT
-  , vkGetPhysicalDeviceSurfacePresentModes2EXT
-  , vkReleaseFullScreenExclusiveModeEXT
-  , pattern VK_EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME
-  , pattern VK_EXT_FULL_SCREEN_EXCLUSIVE_SPEC_VERSION
-  , pattern VK_FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT
-  , pattern VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT
-  , pattern VK_FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT
-  , pattern VK_FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT
-  )
+  "dynamic" mkVkAcquireFullScreenExclusiveModeEXT
+  :: FunPtr (Ptr Device_T -> SwapchainKHR -> IO Result) -> Ptr Device_T -> SwapchainKHR -> IO Result
 
-#if defined(VK_USE_PLATFORM_GGP)
-import Graphics.Vulkan.C.Extensions.VK_EXT_full_screen_exclusive
-  ( HMONITOR
-  )
+-- | vkAcquireFullScreenExclusiveModeEXT - Acquire full-screen exclusive mode
+-- for a swapchain
+--
+-- = Parameters
+--
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the device associated
+--     with @swapchain@.
+--
+-- -   @swapchain@ is the swapchain to acquire exclusive full-screen access
+--     for.
+--
+-- == Valid Usage
+--
+-- -   @swapchain@ /must/ not be in the retired state
+--
+-- -   @swapchain@ /must/ be a swapchain created with a
+--     'SurfaceFullScreenExclusiveInfoEXT' structure, with
+--     @fullScreenExclusive@ set to
+--     'FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT'
+--
+-- -   @swapchain@ /must/ not currently have exclusive full-screen access
+--
+-- A return value of 'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
+-- indicates that the @swapchain@ successfully acquired exclusive
+-- full-screen access. The swapchain will retain this exclusivity until
+-- either the application releases exclusive full-screen access with
+-- 'releaseFullScreenExclusiveModeEXT', destroys the swapchain, or if any
+-- of the swapchain commands return
+-- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT'
+-- indicating that the mode was lost because of platform-specific changes.
+--
+-- If the swapchain was unable to acquire exclusive full-screen access to
+-- the display then
+-- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED' is
+-- returned. An application /can/ attempt to acquire exclusive full-screen
+-- access again for the same swapchain even if this command fails, or if
+-- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT'
+-- has been returned by a swapchain command.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
+--
+-- -   @swapchain@ /must/ be a valid
+--     'Graphics.Vulkan.Extensions.Handles.SwapchainKHR' handle
+--
+-- -   Both of 'Graphics.Vulkan.Core10.Handles.Device', and @swapchain@
+--     /must/ have been created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Instance'
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Core10.Handles.Device',
+-- 'Graphics.Vulkan.Extensions.Handles.SwapchainKHR'
+acquireFullScreenExclusiveModeEXT :: Device -> SwapchainKHR -> IO ()
+acquireFullScreenExclusiveModeEXT device swapchain = do
+  let vkAcquireFullScreenExclusiveModeEXT' = mkVkAcquireFullScreenExclusiveModeEXT (pVkAcquireFullScreenExclusiveModeEXT (deviceCmds (device :: Device)))
+  r <- vkAcquireFullScreenExclusiveModeEXT' (deviceHandle (device)) (swapchain)
+  when (r < SUCCESS) (throwIO (VulkanException r))
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
 #endif
-import Graphics.Vulkan.Core10.DeviceInitialization
-  ( Device(..)
-  , PhysicalDevice(..)
-  )
-import Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2
-  ( PhysicalDeviceSurfaceInfo2KHR(..)
-  )
-import Graphics.Vulkan.Extensions.VK_KHR_surface
-  ( PresentModeKHR
-  )
-import Graphics.Vulkan.Extensions.VK_KHR_swapchain
-  ( SwapchainKHR
-  )
+  "dynamic" mkVkReleaseFullScreenExclusiveModeEXT
+  :: FunPtr (Ptr Device_T -> SwapchainKHR -> IO Result) -> Ptr Device_T -> SwapchainKHR -> IO Result
 
-#if defined(VK_USE_PLATFORM_GGP)
-import {-# source #-} Graphics.Vulkan.Marshal.SomeVkStruct
-  ( SomeVkStruct
-  )
-#endif
-import Graphics.Vulkan.Core10.Core
-  ( pattern ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT
-  , pattern STRUCTURE_TYPE_SURFACE_CAPABILITIES_FULL_SCREEN_EXCLUSIVE_EXT
-  , pattern STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_INFO_EXT
-  , pattern STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_WIN32_INFO_EXT
-  )
-
-#if defined(VK_USE_PLATFORM_WIN32)
-import Graphics.Vulkan.Extensions.VK_KHR_device_group
-  ( getDeviceGroupSurfacePresentModes2EXT
-  )
-#endif
-
-
--- No documentation found for TopLevel "FullScreenExclusiveEXT"
-type FullScreenExclusiveEXT = VkFullScreenExclusiveEXT
-
-
-{-# complete FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT, FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT, FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT, FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT :: FullScreenExclusiveEXT #-}
+-- | vkReleaseFullScreenExclusiveModeEXT - Release full-screen exclusive mode
+-- from a swapchain
+--
+-- = Parameters
+--
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the device associated
+--     with @swapchain@.
+--
+-- -   @swapchain@ is the swapchain to release exclusive full-screen access
+--     from.
+--
+-- = Description
+--
+-- Note
+--
+-- Applications will not be able to present to @swapchain@ after this call
+-- until exclusive full-screen access is reacquired. This is usually useful
+-- to handle when an application is minimised or otherwise intends to stop
+-- presenting for a time.
+--
+-- == Valid Usage
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Core10.Handles.Device',
+-- 'Graphics.Vulkan.Extensions.Handles.SwapchainKHR'
+releaseFullScreenExclusiveModeEXT :: Device -> SwapchainKHR -> IO ()
+releaseFullScreenExclusiveModeEXT device swapchain = do
+  let vkReleaseFullScreenExclusiveModeEXT' = mkVkReleaseFullScreenExclusiveModeEXT (pVkReleaseFullScreenExclusiveModeEXT (deviceCmds (device :: Device)))
+  r <- vkReleaseFullScreenExclusiveModeEXT' (deviceHandle (device)) (swapchain)
+  when (r < SUCCESS) (throwIO (VulkanException r))
 
 
--- No documentation found for Nested "FullScreenExclusiveEXT" "FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT"
-pattern FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT :: (a ~ FullScreenExclusiveEXT) => a
-pattern FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT = VK_FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT
-
-
--- No documentation found for Nested "FullScreenExclusiveEXT" "FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT"
-pattern FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT :: (a ~ FullScreenExclusiveEXT) => a
-pattern FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT = VK_FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT
-
-
--- No documentation found for Nested "FullScreenExclusiveEXT" "FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT"
-pattern FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT :: (a ~ FullScreenExclusiveEXT) => a
-pattern FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT = VK_FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT
-
-
--- No documentation found for Nested "FullScreenExclusiveEXT" "FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT"
-pattern FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT :: (a ~ FullScreenExclusiveEXT) => a
-pattern FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT = VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT
-
-
-#if defined(VK_USE_PLATFORM_GGP)
-
--- No documentation found for TopLevel "VkSurfaceCapabilitiesFullScreenExclusiveEXT"
-data SurfaceCapabilitiesFullScreenExclusiveEXT = SurfaceCapabilitiesFullScreenExclusiveEXT
-  { -- No documentation found for Nested "SurfaceCapabilitiesFullScreenExclusiveEXT" "pNext"
-  next :: Maybe SomeVkStruct
-  , -- No documentation found for Nested "SurfaceCapabilitiesFullScreenExclusiveEXT" "fullScreenExclusiveSupported"
-  fullScreenExclusiveSupported :: Bool
-  }
-  deriving (Show, Eq)
-
-instance Zero SurfaceCapabilitiesFullScreenExclusiveEXT where
-  zero = SurfaceCapabilitiesFullScreenExclusiveEXT Nothing
-                                                   False
-
-#endif
-
-
-#if defined(VK_USE_PLATFORM_GGP)
-
--- No documentation found for TopLevel "VkSurfaceFullScreenExclusiveInfoEXT"
+-- | VkSurfaceFullScreenExclusiveInfoEXT - Structure specifying the preferred
+-- full-screen transition behavior
+--
+-- = Description
+--
+-- If this structure is not present, @fullScreenExclusive@ is considered to
+-- be 'FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT'.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'FullScreenExclusiveEXT',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data SurfaceFullScreenExclusiveInfoEXT = SurfaceFullScreenExclusiveInfoEXT
-  { -- No documentation found for Nested "SurfaceFullScreenExclusiveInfoEXT" "pNext"
-  next :: Maybe SomeVkStruct
-  , -- No documentation found for Nested "SurfaceFullScreenExclusiveInfoEXT" "fullScreenExclusive"
-  fullScreenExclusive :: FullScreenExclusiveEXT
-  }
-  deriving (Show, Eq)
+  { -- | @fullScreenExclusive@ /must/ be a valid 'FullScreenExclusiveEXT' value
+    fullScreenExclusive :: FullScreenExclusiveEXT }
+  deriving (Typeable)
+deriving instance Show SurfaceFullScreenExclusiveInfoEXT
+
+instance ToCStruct SurfaceFullScreenExclusiveInfoEXT where
+  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p SurfaceFullScreenExclusiveInfoEXT{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_INFO_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr FullScreenExclusiveEXT)) (fullScreenExclusive)
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_INFO_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr FullScreenExclusiveEXT)) (zero)
+    f
+
+instance FromCStruct SurfaceFullScreenExclusiveInfoEXT where
+  peekCStruct p = do
+    fullScreenExclusive <- peek @FullScreenExclusiveEXT ((p `plusPtr` 16 :: Ptr FullScreenExclusiveEXT))
+    pure $ SurfaceFullScreenExclusiveInfoEXT
+             fullScreenExclusive
+
+instance Storable SurfaceFullScreenExclusiveInfoEXT where
+  sizeOf ~_ = 24
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero SurfaceFullScreenExclusiveInfoEXT where
-  zero = SurfaceFullScreenExclusiveInfoEXT Nothing
-                                           zero
-
-#endif
+  zero = SurfaceFullScreenExclusiveInfoEXT
+           zero
 
 
-#if defined(VK_USE_PLATFORM_GGP)
-
--- No documentation found for TopLevel "VkSurfaceFullScreenExclusiveWin32InfoEXT"
+-- | VkSurfaceFullScreenExclusiveWin32InfoEXT - Structure specifying
+-- additional creation parameters specific to Win32 fullscreen exclusive
+-- mode
+--
+-- = Description
+--
+-- Note
+--
+-- If @hmonitor@ is invalidated (e.g. the monitor is unplugged) during the
+-- lifetime of a swapchain created with this structure, operations on that
+-- swapchain will return
+-- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DATE_KHR'.
+--
+-- Note
+--
+-- It’s the responsibility of the application to change the display
+-- settings of the targeted Win32 display using the appropriate platform
+-- APIs. Such changes /may/ alter the surface capabilities reported for the
+-- created surface.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data SurfaceFullScreenExclusiveWin32InfoEXT = SurfaceFullScreenExclusiveWin32InfoEXT
-  { -- No documentation found for Nested "SurfaceFullScreenExclusiveWin32InfoEXT" "pNext"
-  next :: Maybe SomeVkStruct
-  , -- No documentation found for Nested "SurfaceFullScreenExclusiveWin32InfoEXT" "hmonitor"
-  hmonitor :: HMONITOR
-  }
-  deriving (Show, Eq)
+  { -- | @hmonitor@ /must/ be a valid
+    -- 'Graphics.Vulkan.Extensions.WSITypes.HMONITOR'
+    hmonitor :: HMONITOR }
+  deriving (Typeable)
+deriving instance Show SurfaceFullScreenExclusiveWin32InfoEXT
+
+instance ToCStruct SurfaceFullScreenExclusiveWin32InfoEXT where
+  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p SurfaceFullScreenExclusiveWin32InfoEXT{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_WIN32_INFO_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr HMONITOR)) (hmonitor)
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_FULL_SCREEN_EXCLUSIVE_WIN32_INFO_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr HMONITOR)) (zero)
+    f
+
+instance FromCStruct SurfaceFullScreenExclusiveWin32InfoEXT where
+  peekCStruct p = do
+    hmonitor <- peek @HMONITOR ((p `plusPtr` 16 :: Ptr HMONITOR))
+    pure $ SurfaceFullScreenExclusiveWin32InfoEXT
+             hmonitor
+
+instance Storable SurfaceFullScreenExclusiveWin32InfoEXT where
+  sizeOf ~_ = 24
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
 instance Zero SurfaceFullScreenExclusiveWin32InfoEXT where
-  zero = SurfaceFullScreenExclusiveWin32InfoEXT Nothing
-                                                zero
-
-#endif
+  zero = SurfaceFullScreenExclusiveWin32InfoEXT
+           zero
 
 
--- No documentation found for TopLevel "vkAcquireFullScreenExclusiveModeEXT"
-acquireFullScreenExclusiveModeEXT :: Device ->  SwapchainKHR ->  IO ()
-acquireFullScreenExclusiveModeEXT = undefined {- {wrapped (pretty cName) :: Doc ()} -}
+-- | VkSurfaceCapabilitiesFullScreenExclusiveEXT - Structure describing full
+-- screen exclusive capabilities of a surface
+--
+-- = Description
+--
+-- This structure /can/ be included in the @pNext@ chain of
+-- 'Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceCapabilities2KHR'
+-- to determine support for exclusive full-screen access. If
+-- @fullScreenExclusiveSupported@ is
+-- 'Graphics.Vulkan.Core10.BaseType.FALSE', it indicates that exclusive
+-- full-screen access is not obtainable for this surface.
+--
+-- Applications /must/ not attempt to create swapchains with
+-- 'FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT' set if
+-- @fullScreenExclusiveSupported@ is
+-- 'Graphics.Vulkan.Core10.BaseType.FALSE'.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Core10.BaseType.Bool32',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
+data SurfaceCapabilitiesFullScreenExclusiveEXT = SurfaceCapabilitiesFullScreenExclusiveEXT
+  { -- No documentation found for Nested "VkSurfaceCapabilitiesFullScreenExclusiveEXT" "fullScreenExclusiveSupported"
+    fullScreenExclusiveSupported :: Bool }
+  deriving (Typeable)
+deriving instance Show SurfaceCapabilitiesFullScreenExclusiveEXT
+
+instance ToCStruct SurfaceCapabilitiesFullScreenExclusiveEXT where
+  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p SurfaceCapabilitiesFullScreenExclusiveEXT{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_CAPABILITIES_FULL_SCREEN_EXCLUSIVE_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (fullScreenExclusiveSupported))
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_SURFACE_CAPABILITIES_FULL_SCREEN_EXCLUSIVE_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
+    f
+
+instance FromCStruct SurfaceCapabilitiesFullScreenExclusiveEXT where
+  peekCStruct p = do
+    fullScreenExclusiveSupported <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
+    pure $ SurfaceCapabilitiesFullScreenExclusiveEXT
+             (bool32ToBool fullScreenExclusiveSupported)
+
+instance Storable SurfaceCapabilitiesFullScreenExclusiveEXT where
+  sizeOf ~_ = 24
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero SurfaceCapabilitiesFullScreenExclusiveEXT where
+  zero = SurfaceCapabilitiesFullScreenExclusiveEXT
+           zero
 
 
--- No documentation found for TopLevel "vkGetPhysicalDeviceSurfacePresentModes2EXT"
-getNumPhysicalDeviceSurfacePresentModes2EXT :: PhysicalDevice ->  PhysicalDeviceSurfaceInfo2KHR ->  IO (VkResult, Word32)
-getNumPhysicalDeviceSurfacePresentModes2EXT = undefined {- {wrapped (pretty cName) :: Doc ()} -}
+-- | VkFullScreenExclusiveEXT - Hint values an application can specify
+-- affecting full-screen transition behavior
+--
+-- = See Also
+--
+-- 'SurfaceFullScreenExclusiveInfoEXT'
+newtype FullScreenExclusiveEXT = FullScreenExclusiveEXT Int32
+  deriving newtype (Eq, Ord, Storable, Zero)
 
--- No documentation found for TopLevel "vkGetPhysicalDeviceSurfacePresentModes2EXT"
-getPhysicalDeviceSurfacePresentModes2EXT :: PhysicalDevice ->  PhysicalDeviceSurfaceInfo2KHR ->  Word32 ->  IO (VkResult, Vector PresentModeKHR)
-getPhysicalDeviceSurfacePresentModes2EXT = undefined {- {wrapped (pretty cName) :: Doc ()} -}
--- | Returns all the values available from 'getPhysicalDeviceSurfacePresentModes2EXT'.
-getAllPhysicalDeviceSurfacePresentModes2EXT :: PhysicalDevice ->  PhysicalDeviceSurfaceInfo2KHR ->  IO (Vector PresentModeKHR)
-getAllPhysicalDeviceSurfacePresentModes2EXT physicalDevice' pSurfaceInfo' =
-  snd <$> getNumPhysicalDeviceSurfacePresentModes2EXT physicalDevice' pSurfaceInfo'
-    >>= \num -> snd <$> getPhysicalDeviceSurfacePresentModes2EXT physicalDevice' pSurfaceInfo' num
+-- | 'FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT' indicates the implementation
+-- /should/ determine the appropriate full-screen method by whatever means
+-- it deems appropriate.
+pattern FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT = FullScreenExclusiveEXT 0
+-- | 'FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT' indicates the implementation /may/
+-- use full-screen exclusive mechanisms when available. Such mechanisms
+-- /may/ result in better performance and\/or the availability of different
+-- presentation capabilities, but /may/ require a more disruptive
+-- transition during swapchain initialization, first presentation and\/or
+-- destruction.
+pattern FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT = FullScreenExclusiveEXT 1
+-- | 'FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT' indicates the implementation
+-- /should/ avoid using full-screen mechanisms which rely on disruptive
+-- transitions.
+pattern FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT = FullScreenExclusiveEXT 2
+-- | 'FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT' indicates the
+-- application will manage full-screen exclusive mode by using the
+-- 'acquireFullScreenExclusiveModeEXT' and
+-- 'releaseFullScreenExclusiveModeEXT' commands.
+pattern FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT = FullScreenExclusiveEXT 3
+{-# complete FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT,
+             FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT,
+             FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT,
+             FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT :: FullScreenExclusiveEXT #-}
+
+instance Show FullScreenExclusiveEXT where
+  showsPrec p = \case
+    FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT -> showString "FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT"
+    FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT -> showString "FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT"
+    FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT -> showString "FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT"
+    FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT -> showString "FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT"
+    FullScreenExclusiveEXT x -> showParen (p >= 11) (showString "FullScreenExclusiveEXT " . showsPrec 11 x)
+
+instance Read FullScreenExclusiveEXT where
+  readPrec = parens (choose [("FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT", pure FULL_SCREEN_EXCLUSIVE_DEFAULT_EXT)
+                            , ("FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT", pure FULL_SCREEN_EXCLUSIVE_ALLOWED_EXT)
+                            , ("FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT", pure FULL_SCREEN_EXCLUSIVE_DISALLOWED_EXT)
+                            , ("FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT", pure FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT)]
+                     +++
+                     prec 10 (do
+                       expectP (Ident "FullScreenExclusiveEXT")
+                       v <- step readPrec
+                       pure (FullScreenExclusiveEXT v)))
 
 
-
--- No documentation found for TopLevel "vkReleaseFullScreenExclusiveModeEXT"
-releaseFullScreenExclusiveModeEXT :: Device ->  SwapchainKHR ->  IO ()
-releaseFullScreenExclusiveModeEXT = undefined {- {wrapped (pretty cName) :: Doc ()} -}
-
--- No documentation found for TopLevel "VK_EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME"
-pattern EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME :: (Eq a, IsString a) => a
-pattern EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME = VK_EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME
+type EXT_FULL_SCREEN_EXCLUSIVE_SPEC_VERSION = 4
 
 -- No documentation found for TopLevel "VK_EXT_FULL_SCREEN_EXCLUSIVE_SPEC_VERSION"
-pattern EXT_FULL_SCREEN_EXCLUSIVE_SPEC_VERSION :: Integral a => a
-pattern EXT_FULL_SCREEN_EXCLUSIVE_SPEC_VERSION = VK_EXT_FULL_SCREEN_EXCLUSIVE_SPEC_VERSION
+pattern EXT_FULL_SCREEN_EXCLUSIVE_SPEC_VERSION :: forall a . Integral a => a
+pattern EXT_FULL_SCREEN_EXCLUSIVE_SPEC_VERSION = 4
+
+
+type EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME = "VK_EXT_full_screen_exclusive"
+
+-- No documentation found for TopLevel "VK_EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME"
+pattern EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern EXT_FULL_SCREEN_EXCLUSIVE_EXTENSION_NAME = "VK_EXT_full_screen_exclusive"
+

@@ -1,46 +1,64 @@
-{-# language Strict #-}
 {-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_EXT_debug_utils  ( DebugUtilsLabelEXT
+                                                      , DebugUtilsMessengerCallbackDataEXT
+                                                      , DebugUtilsMessengerCreateInfoEXT
+                                                      , DebugUtilsObjectNameInfoEXT
+                                                      , DebugUtilsObjectTagInfoEXT
+                                                      , DebugUtilsMessageSeverityFlagBitsEXT
+                                                      , DebugUtilsMessageSeverityFlagsEXT
+                                                      , DebugUtilsMessageTypeFlagBitsEXT
+                                                      , DebugUtilsMessageTypeFlagsEXT
+                                                      ) where
+
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data DebugUtilsLabelEXT
+
+instance ToCStruct DebugUtilsLabelEXT
+instance Show DebugUtilsLabelEXT
+
+instance FromCStruct DebugUtilsLabelEXT
 
 
-module Graphics.Vulkan.Extensions.VK_EXT_debug_utils
-  ( DebugUtilsMessageSeverityFlagBitsEXT
-  , DebugUtilsMessageSeverityFlagsEXT
-  , DebugUtilsMessageTypeFlagBitsEXT
-  , DebugUtilsMessageTypeFlagsEXT
-  , DebugUtilsMessengerCallbackDataFlagsEXT
-  , DebugUtilsMessengerCreateFlagsEXT
-  , DebugUtilsMessengerEXT
-  ) where
+data DebugUtilsMessengerCallbackDataEXT
+
+instance ToCStruct DebugUtilsMessengerCallbackDataEXT
+instance Show DebugUtilsMessengerCallbackDataEXT
+
+instance FromCStruct DebugUtilsMessengerCallbackDataEXT
 
 
+data DebugUtilsMessengerCreateInfoEXT
+
+instance ToCStruct DebugUtilsMessengerCreateInfoEXT
+instance Show DebugUtilsMessengerCreateInfoEXT
+
+instance FromCStruct DebugUtilsMessengerCreateInfoEXT
 
 
-import {-# source #-} Graphics.Vulkan.C.Extensions.VK_EXT_debug_utils
-  ( VkDebugUtilsMessageSeverityFlagBitsEXT
-  , VkDebugUtilsMessageTypeFlagBitsEXT
-  , VkDebugUtilsMessengerCallbackDataFlagsEXT
-  , VkDebugUtilsMessengerCreateFlagsEXT
-  , VkDebugUtilsMessengerEXT
-  )
+data DebugUtilsObjectNameInfoEXT
+
+instance ToCStruct DebugUtilsObjectNameInfoEXT
+instance Show DebugUtilsObjectNameInfoEXT
+
+instance FromCStruct DebugUtilsObjectNameInfoEXT
 
 
--- No documentation found for TopLevel "DebugUtilsMessageSeverityFlagBitsEXT"
-type DebugUtilsMessageSeverityFlagBitsEXT = VkDebugUtilsMessageSeverityFlagBitsEXT
+data DebugUtilsObjectTagInfoEXT
 
--- No documentation found for TopLevel "DebugUtilsMessageSeverityFlagsEXT"
+instance ToCStruct DebugUtilsObjectTagInfoEXT
+instance Show DebugUtilsObjectTagInfoEXT
+
+instance FromCStruct DebugUtilsObjectTagInfoEXT
+
+
+data DebugUtilsMessageSeverityFlagBitsEXT
+
 type DebugUtilsMessageSeverityFlagsEXT = DebugUtilsMessageSeverityFlagBitsEXT
 
--- No documentation found for TopLevel "DebugUtilsMessageTypeFlagBitsEXT"
-type DebugUtilsMessageTypeFlagBitsEXT = VkDebugUtilsMessageTypeFlagBitsEXT
 
--- No documentation found for TopLevel "DebugUtilsMessageTypeFlagsEXT"
+data DebugUtilsMessageTypeFlagBitsEXT
+
 type DebugUtilsMessageTypeFlagsEXT = DebugUtilsMessageTypeFlagBitsEXT
 
--- No documentation found for TopLevel "DebugUtilsMessengerCallbackDataFlagsEXT"
-type DebugUtilsMessengerCallbackDataFlagsEXT = VkDebugUtilsMessengerCallbackDataFlagsEXT
-
--- No documentation found for TopLevel "DebugUtilsMessengerCreateFlagsEXT"
-type DebugUtilsMessengerCreateFlagsEXT = VkDebugUtilsMessengerCreateFlagsEXT
-
--- No documentation found for TopLevel "DebugUtilsMessengerEXT"
-type DebugUtilsMessengerEXT = VkDebugUtilsMessengerEXT
