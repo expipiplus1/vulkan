@@ -1,99 +1,78 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
-{-# language OverloadedStrings #-}
-{-# language DataKinds #-}
-{-# language TypeOperators #-}
-{-# language DuplicateRecordFields #-}
+module Graphics.Vulkan.Extensions.VK_KHR_push_descriptor  ( cmdPushDescriptorSetKHR
+                                                          , cmdPushDescriptorSetWithTemplateKHR
+                                                          , PhysicalDevicePushDescriptorPropertiesKHR(..)
+                                                          , KHR_PUSH_DESCRIPTOR_SPEC_VERSION
+                                                          , pattern KHR_PUSH_DESCRIPTOR_SPEC_VERSION
+                                                          , KHR_PUSH_DESCRIPTOR_EXTENSION_NAME
+                                                          , pattern KHR_PUSH_DESCRIPTOR_EXTENSION_NAME
+                                                          ) where
 
-module Graphics.Vulkan.Extensions.VK_KHR_push_descriptor
-  ( pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR
-  , pattern VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR
-  , pattern VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR
-  , pattern VK_KHR_PUSH_DESCRIPTOR_SPEC_VERSION
-  , pattern VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME
-  , vkCmdPushDescriptorSetKHR
-  , vkCmdPushDescriptorSetWithTemplateKHR
-  , VkPhysicalDevicePushDescriptorPropertiesKHR(..)
-  ) where
+import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Ptr (nullPtr)
+import Foreign.Ptr (plusPtr)
+import Control.Monad.Trans.Class (lift)
+import Control.Monad.Trans.Cont (evalContT)
+import qualified Data.Vector (imapM_)
+import qualified Data.Vector (length)
+import Data.String (IsString)
+import Data.Typeable (Typeable)
+import Foreign.Storable (Storable)
+import Foreign.Storable (Storable(peek))
+import Foreign.Storable (Storable(poke))
+import qualified Foreign.Storable (Storable(..))
+import Foreign.Ptr (FunPtr)
+import Foreign.Ptr (Ptr)
+import Data.Word (Word32)
+import Data.Kind (Type)
+import Control.Monad.Trans.Cont (ContT(..))
+import Data.Vector (Vector)
+import Graphics.Vulkan.NamedType ((:::))
+import Graphics.Vulkan.Core10.Handles (CommandBuffer)
+import Graphics.Vulkan.Core10.Handles (CommandBuffer(..))
+import Graphics.Vulkan.Core10.Handles (CommandBuffer_T)
+import Graphics.Vulkan.Core11.Handles (DescriptorUpdateTemplate)
+import Graphics.Vulkan.Core11.Handles (DescriptorUpdateTemplate(..))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkCmdPushDescriptorSetKHR))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkCmdPushDescriptorSetWithTemplateKHR))
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (FromCStruct(..))
+import Graphics.Vulkan.Core10.Enums.PipelineBindPoint (PipelineBindPoint)
+import Graphics.Vulkan.Core10.Enums.PipelineBindPoint (PipelineBindPoint(..))
+import Graphics.Vulkan.Core10.Handles (PipelineLayout)
+import Graphics.Vulkan.Core10.Handles (PipelineLayout(..))
+import Graphics.Vulkan.CStruct.Extends (PokeChain)
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
+import Graphics.Vulkan.CStruct (ToCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct(..))
+import Graphics.Vulkan.Core10.DescriptorSet (WriteDescriptorSet)
+import Graphics.Vulkan.Zero (Zero(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR))
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdPushDescriptorSetKHR
+  :: FunPtr (Ptr CommandBuffer_T -> PipelineBindPoint -> PipelineLayout -> Word32 -> Word32 -> Ptr (WriteDescriptorSet a) -> IO ()) -> Ptr CommandBuffer_T -> PipelineBindPoint -> PipelineLayout -> Word32 -> Word32 -> Ptr (WriteDescriptorSet a) -> IO ()
 
-import Data.String
-  ( IsString
-  )
-import Data.Word
-  ( Word32
-  )
-import Foreign.Ptr
-  ( Ptr
-  , plusPtr
-  )
-import Foreign.Storable
-  ( Storable
-  , Storable(..)
-  )
-import Graphics.Vulkan.NamedType
-  ( (:::)
-  )
-
-
-import Graphics.Vulkan.Core10.Core
-  ( VkStructureType(..)
-  )
-import Graphics.Vulkan.Core10.DescriptorSet
-  ( VkDescriptorSetLayoutCreateFlagBits(..)
-  , VkWriteDescriptorSet(..)
-  )
-import Graphics.Vulkan.Core10.Pass
-  ( VkPipelineBindPoint(..)
-  )
-import Graphics.Vulkan.Core10.Pipeline
-  ( VkPipelineLayout
-  )
-import Graphics.Vulkan.Core10.Queue
-  ( VkCommandBuffer
-  )
-import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_descriptor_update_template
-  ( VkDescriptorUpdateTemplateType(..)
-  , VkDescriptorUpdateTemplate
-  )
-
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR"
-pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR :: VkStructureType
-pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR = VkStructureType 1000080000
--- | @VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR@ specifies that
--- the descriptor update template will be used for push descriptor updates
--- only.
-pattern VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR :: VkDescriptorUpdateTemplateType
-pattern VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR = VkDescriptorUpdateTemplateType 1
--- | @VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR@ specifies that
--- descriptor sets /must/ not be allocated using this layout, and
--- descriptors are instead pushed by 'vkCmdPushDescriptorSetKHR'.
-pattern VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR :: VkDescriptorSetLayoutCreateFlagBits
-pattern VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR = VkDescriptorSetLayoutCreateFlagBits 0x00000001
--- No documentation found for TopLevel "VK_KHR_PUSH_DESCRIPTOR_SPEC_VERSION"
-pattern VK_KHR_PUSH_DESCRIPTOR_SPEC_VERSION :: Integral a => a
-pattern VK_KHR_PUSH_DESCRIPTOR_SPEC_VERSION = 2
--- No documentation found for TopLevel "VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME"
-pattern VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME :: (Eq a ,IsString a) => a
-pattern VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME = "VK_KHR_push_descriptor"
 -- | vkCmdPushDescriptorSetKHR - Pushes descriptor updates into a command
 -- buffer
 --
 -- = Parameters
 --
--- -   @commandBuffer@ is the command buffer that the descriptors will be
---     recorded in.
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
+--     that the descriptors will be recorded in.
 --
--- -   @pipelineBindPoint@ is a
---     'Graphics.Vulkan.Core10.Pass.VkPipelineBindPoint' indicating whether
---     the descriptors will be used by graphics pipelines or compute
---     pipelines. There is a separate set of push descriptor bindings for
---     each of graphics and compute, so binding one does not disturb the
---     other.
+-- -   'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
+--     is a
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
+--     indicating whether the descriptors will be used by graphics
+--     pipelines or compute pipelines. There is a separate set of push
+--     descriptor bindings for each of graphics and compute, so binding one
+--     does not disturb the other.
 --
--- -   @layout@ is a @VkPipelineLayout@ object used to program the
---     bindings.
+-- -   @layout@ is a 'Graphics.Vulkan.Core10.Handles.PipelineLayout' object
+--     used to program the bindings.
 --
 -- -   @set@ is the set number of the descriptor set in the pipeline layout
 --     that will be updated.
@@ -102,8 +81,8 @@ pattern VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME = "VK_KHR_push_descriptor"
 --     @pDescriptorWrites@ array.
 --
 -- -   @pDescriptorWrites@ is a pointer to an array of
---     'Graphics.Vulkan.Core10.DescriptorSet.VkWriteDescriptorSet'
---     structures describing the descriptors to be updated.
+--     'Graphics.Vulkan.Core10.DescriptorSet.WriteDescriptorSet' structures
+--     describing the descriptors to be updated.
 --
 -- = Description
 --
@@ -113,191 +92,224 @@ pattern VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME = "VK_KHR_push_descriptor"
 -- allow for incremental updates of descriptors without managing the
 -- lifetime of descriptor sets.
 --
--- When a command buffer begins recording, all push descriptors have
--- undefined contents. Push descriptors /can/ be updated incrementally and
--- cause shaders to use the updated descriptors for subsequent rendering
--- commands (either compute or graphics, according to the
--- @pipelineBindPoint@) until the descriptor is overwritten, or else until
--- the set is disturbed as described in [Pipeline Layout
--- Compatibility](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#descriptorsets-compatibility).
+-- When a command buffer begins recording, all push descriptors are
+-- undefined. Push descriptors /can/ be updated incrementally and cause
+-- shaders to use the updated descriptors for subsequent rendering commands
+-- (either compute or graphics, according to the
+-- 'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint')
+-- until the descriptor is overwritten, or else until the set is disturbed
+-- as described in
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>.
 -- When the set is disturbed or push descriptors with a different
--- descriptor set layout are set, all push descriptors become invalid.
+-- descriptor set layout are set, all push descriptors are undefined.
 --
--- Valid descriptors /must/ be pushed for all bindings that any shaders in
--- a pipeline access, at the time that a draw or dispatch command is
--- recorded to execute using that pipeline. This includes immutable sampler
--- descriptors, which /must/ be pushed before they are accessed by a
--- pipeline. However, if none of the shaders in a pipeline statically use
--- certain bindings in the push descriptor set, then those descriptors need
--- not be valid.
+-- Push descriptors that are
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#shaders-staticuse statically used>
+-- by a pipeline /must/ not be undefined at the time that a draw or
+-- dispatch command is recorded to execute using that pipeline. This
+-- includes immutable sampler descriptors, which /must/ be pushed before
+-- they are accessed by a pipeline (the immutable samplers are pushed,
+-- rather than the samplers in @pDescriptorWrites@). Push descriptors that
+-- are not statically used /can/ remain undefined.
 --
 -- Push descriptors do not use dynamic offsets. Instead, the corresponding
 -- non-dynamic descriptor types /can/ be used and the @offset@ member of
--- 'Graphics.Vulkan.Core10.DescriptorSet.VkDescriptorBufferInfo' /can/ be
+-- 'Graphics.Vulkan.Core10.DescriptorSet.DescriptorBufferInfo' /can/ be
 -- changed each time the descriptor is written.
 --
 -- Each element of @pDescriptorWrites@ is interpreted as in
--- 'Graphics.Vulkan.Core10.DescriptorSet.VkWriteDescriptorSet', except the
+-- 'Graphics.Vulkan.Core10.DescriptorSet.WriteDescriptorSet', except the
 -- @dstSet@ member is ignored.
 --
 -- To push an immutable sampler, use a
--- 'Graphics.Vulkan.Core10.DescriptorSet.VkWriteDescriptorSet' with
+-- 'Graphics.Vulkan.Core10.DescriptorSet.WriteDescriptorSet' with
 -- @dstBinding@ and @dstArrayElement@ selecting the immutable sampler’s
--- binding. If the descriptor type is @VK_DESCRIPTOR_TYPE_SAMPLER@, the
--- @pImageInfo@ parameter is ignored and the immutable sampler is taken
+-- binding. If the descriptor type is
+-- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER',
+-- the @pImageInfo@ parameter is ignored and the immutable sampler is taken
 -- from the push descriptor set layout in the pipeline layout. If the
--- descriptor type is @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@, the
--- @sampler@ member of the @pImageInfo@ parameter is ignored and the
--- immutable sampler is taken from the push descriptor set layout in the
--- pipeline layout.
+-- descriptor type is
+-- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
+-- the 'Graphics.Vulkan.Core10.Handles.Sampler' member of the @pImageInfo@
+-- parameter is ignored and the immutable sampler is taken from the push
+-- descriptor set layout in the pipeline layout.
 --
 -- == Valid Usage
 --
--- -   @pipelineBindPoint@ /must/ be supported by the @commandBuffer@’s
---     parent @VkCommandPool@’s queue family
+-- -   'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
+--     /must/ be supported by the
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer'’s parent
+--     'Graphics.Vulkan.Core10.Handles.CommandPool'’s queue family
 --
 -- -   @set@ /must/ be less than
---     @VkPipelineLayoutCreateInfo@::@setLayoutCount@ provided when
---     @layout@ was created
+--     'Graphics.Vulkan.Core10.PipelineLayout.PipelineLayoutCreateInfo'::@setLayoutCount@
+--     provided when @layout@ was created
 --
 -- -   @set@ /must/ be the unique set number in the pipeline layout that
 --     uses a descriptor set layout that was created with
---     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR@
+--     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @pipelineBindPoint@ /must/ be a valid
---     'Graphics.Vulkan.Core10.Pass.VkPipelineBindPoint' value
+-- -   'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
+--     /must/ be a valid
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
+--     value
 --
--- -   @layout@ /must/ be a valid @VkPipelineLayout@ handle
+-- -   @layout@ /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.PipelineLayout' handle
 --
 -- -   @pDescriptorWrites@ /must/ be a valid pointer to an array of
---     @descriptorWriteCount@ valid @VkWriteDescriptorSet@ structures
+--     @descriptorWriteCount@ valid
+--     'Graphics.Vulkan.Core10.DescriptorSet.WriteDescriptorSet' structures
 --
--- -   @commandBuffer@ /must/ be in the [recording
---     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics, or compute operations
+-- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
+--     /must/ support graphics, or compute operations
 --
 -- -   @descriptorWriteCount@ /must/ be greater than @0@
 --
--- -   Both of @commandBuffer@, and @layout@ /must/ have been created,
---     allocated, or retrieved from the same @VkDevice@
+-- -   Both of 'Graphics.Vulkan.Core10.Handles.CommandBuffer', and @layout@
+--     /must/ have been created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
+-- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
+--     be externally synchronized
 --
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
+-- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
+--     /must/ be externally synchronized
 --
 -- == Command Properties
 --
 -- \'
 --
--- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
--- | [Command Buffer                                                                                             | [Render Pass                                                                                               | [Supported Queue                                                                                      | [Pipeline                                                                                                                  |
--- | Levels](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel) | Scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass) | Types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits) | Type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types) |
--- +=============================================================================================================+============================================================================================================+=======================================================================================================+============================================================================================================================+
--- | Primary                                                                                                     | Both                                                                                                       | Graphics                                                                                              |                                                                                                                            |
--- | Secondary                                                                                                   |                                                                                                            | Compute                                                                                               |                                                                                                                            |
--- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
--- 'Graphics.Vulkan.Core10.Pass.VkPipelineBindPoint',
--- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineLayout',
--- 'Graphics.Vulkan.Core10.DescriptorSet.VkWriteDescriptorSet'
+-- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
+-- 'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint',
+-- 'Graphics.Vulkan.Core10.Handles.PipelineLayout',
+-- 'Graphics.Vulkan.Core10.DescriptorSet.WriteDescriptorSet'
+cmdPushDescriptorSetKHR :: PokeChain a => CommandBuffer -> PipelineBindPoint -> PipelineLayout -> ("set" ::: Word32) -> ("descriptorWrites" ::: Vector (WriteDescriptorSet a)) -> IO ()
+cmdPushDescriptorSetKHR commandBuffer pipelineBindPoint layout set descriptorWrites = evalContT $ do
+  let vkCmdPushDescriptorSetKHR' = mkVkCmdPushDescriptorSetKHR (pVkCmdPushDescriptorSetKHR (deviceCmds (commandBuffer :: CommandBuffer)))
+  pPDescriptorWrites <- ContT $ allocaBytesAligned @(WriteDescriptorSet _) ((Data.Vector.length (descriptorWrites)) * 64) 8
+  Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDescriptorWrites `plusPtr` (64 * (i)) :: Ptr (WriteDescriptorSet _)) (e) . ($ ())) (descriptorWrites)
+  lift $ vkCmdPushDescriptorSetKHR' (commandBufferHandle (commandBuffer)) (pipelineBindPoint) (layout) (set) ((fromIntegral (Data.Vector.length $ (descriptorWrites)) :: Word32)) (pPDescriptorWrites)
+  pure $ ()
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkCmdPushDescriptorSetKHR" vkCmdPushDescriptorSetKHR :: ("commandBuffer" ::: VkCommandBuffer) -> ("pipelineBindPoint" ::: VkPipelineBindPoint) -> ("layout" ::: VkPipelineLayout) -> ("set" ::: Word32) -> ("descriptorWriteCount" ::: Word32) -> ("pDescriptorWrites" ::: Ptr VkWriteDescriptorSet) -> IO ()
+  "dynamic" mkVkCmdPushDescriptorSetWithTemplateKHR
+  :: FunPtr (Ptr CommandBuffer_T -> DescriptorUpdateTemplate -> PipelineLayout -> Word32 -> Ptr () -> IO ()) -> Ptr CommandBuffer_T -> DescriptorUpdateTemplate -> PipelineLayout -> Word32 -> Ptr () -> IO ()
+
 -- | vkCmdPushDescriptorSetWithTemplateKHR - Pushes descriptor updates into a
 -- command buffer using a descriptor update template
 --
 -- = Parameters
 --
--- -   @commandBuffer@ is the command buffer that the descriptors will be
---     recorded in.
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
+--     that the descriptors will be recorded in.
 --
--- -   @descriptorUpdateTemplate@ A descriptor update template which
---     defines how to interpret the descriptor information in pData.
+-- -   'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate' is a
+--     descriptor update template defining how to interpret the descriptor
+--     information in @pData@.
 --
--- -   @layout@ is a @VkPipelineLayout@ object used to program the
---     bindings. It /must/ be compatible with the layout used to create the
---     @descriptorUpdateTemplate@ handle.
+-- -   @layout@ is a 'Graphics.Vulkan.Core10.Handles.PipelineLayout' object
+--     used to program the bindings. It /must/ be compatible with the
+--     layout used to create the
+--     'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate' handle.
 --
 -- -   @set@ is the set number of the descriptor set in the pipeline layout
 --     that will be updated. This /must/ be the same number used to create
---     the @descriptorUpdateTemplate@ handle.
+--     the 'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate'
+--     handle.
 --
--- -   @pData@ Points to memory which contains the descriptors for the
+-- -   @pData@ is a pointer to memory containing descriptors for the
 --     templated update.
 --
 -- == Valid Usage
 --
--- -   The pipelineBindPoint specified during the creation of the
---     descriptor update template /must/ be supported by the
---     @commandBuffer@’s parent @VkCommandPool@’s queue family
+-- -   The
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
+--     specified during the creation of the descriptor update template
+--     /must/ be supported by the
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer'’s parent
+--     'Graphics.Vulkan.Core10.Handles.CommandPool'’s queue family
 --
--- -   @pData@ /must/ be a valid pointer to a memory that contains one or
---     more valid instances of
---     'Graphics.Vulkan.Core10.DescriptorSet.VkDescriptorImageInfo',
---     'Graphics.Vulkan.Core10.DescriptorSet.VkDescriptorBufferInfo', or
---     'Graphics.Vulkan.Core10.BufferView.VkBufferView' in a layout defined
---     by @descriptorUpdateTemplate@ when it was created with
---     'Graphics.Vulkan.Extensions.VK_KHR_descriptor_update_template.vkCreateDescriptorUpdateTemplateKHR'
+-- -   @pData@ /must/ be a valid pointer to a memory containing one or more
+--     valid instances of
+--     'Graphics.Vulkan.Core10.DescriptorSet.DescriptorImageInfo',
+--     'Graphics.Vulkan.Core10.DescriptorSet.DescriptorBufferInfo', or
+--     'Graphics.Vulkan.Core10.Handles.BufferView' in a layout defined by
+--     'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate' when it
+--     was created with
+--     'Graphics.Vulkan.Extensions.VK_KHR_descriptor_update_template.createDescriptorUpdateTemplateKHR'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @descriptorUpdateTemplate@ /must/ be a valid
---     @VkDescriptorUpdateTemplate@ handle
+-- -   'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate' /must/ be
+--     a valid 'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate'
+--     handle
 --
--- -   @layout@ /must/ be a valid @VkPipelineLayout@ handle
+-- -   @layout@ /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.PipelineLayout' handle
 --
--- -   @commandBuffer@ /must/ be in the [recording
---     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics, or compute operations
+-- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
+--     /must/ support graphics, or compute operations
 --
--- -   Each of @commandBuffer@, @descriptorUpdateTemplate@, and @layout@
---     /must/ have been created, allocated, or retrieved from the same
---     @VkDevice@
+-- -   Each of 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
+--     'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate', and
+--     @layout@ /must/ have been created, allocated, or retrieved from the
+--     same 'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
+-- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
+--     be externally synchronized
 --
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
+-- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
+--     /must/ be externally synchronized
 --
 -- == Command Properties
 --
 -- \'
 --
--- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
--- | [Command Buffer                                                                                             | [Render Pass                                                                                               | [Supported Queue                                                                                      | [Pipeline                                                                                                                  |
--- | Levels](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel) | Scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass) | Types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits) | Type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types) |
--- +=============================================================================================================+============================================================================================================+=======================================================================================================+============================================================================================================================+
--- | Primary                                                                                                     | Both                                                                                                       | Graphics                                                                                              |                                                                                                                            |
--- | Secondary                                                                                                   |                                                                                                            | Compute                                                                                               |                                                                                                                            |
--- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Graphics                                                                                                              |                                                                                                                                     |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
 --
 -- __API example.__
 --
--- > struct AppBufferView {
--- >     VkBufferView bufferView;
--- >     uint32_t     applicationRelatedInformation;
--- > };
--- >
 -- > struct AppDataStructure
 -- > {
 -- >     VkDescriptorImageInfo  imageInfo;          // a single image info
@@ -313,24 +325,23 @@ foreign import ccall
 -- >         1,                                           // descriptorCount
 -- >         VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,   // descriptorType
 -- >         offsetof(AppDataStructure, imageInfo),       // offset
--- >         0                                            // stride is not required if descriptorCount is 1.
+-- >         0                                            // stride is not required if descriptorCount is 1
 -- >     }
--- >
 -- > };
 -- >
--- > // create an descriptor update template for descriptor set updates
+-- > // create a descriptor update template for descriptor set updates
 -- > const VkDescriptorUpdateTemplateCreateInfo createInfo =
 -- > {
 -- >     VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO,  // sType
--- >     NULL,                                                          // pNext
--- >     0,                                                             // flags
--- >     1,                                                             // descriptorUpdateEntryCount
--- >     descriptorUpdateTemplateEntries,                               // pDescriptorUpdateEntries
--- >     VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR,       // templateType
--- >     0,                                                             // descriptorSetLayout, ignored by given templateType
--- >     VK_PIPELINE_BIND_POINT_GRAPHICS,                               // pipelineBindPoint
--- >     myPipelineLayout,                                              // pipelineLayout
--- >     0,                                                             // set
+-- >     NULL,                                                      // pNext
+-- >     0,                                                         // flags
+-- >     1,                                                         // descriptorUpdateEntryCount
+-- >     descriptorUpdateTemplateEntries,                           // pDescriptorUpdateEntries
+-- >     VK_DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR,   // templateType
+-- >     0,                                                         // descriptorSetLayout, ignored by given templateType
+-- >     VK_PIPELINE_BIND_POINT_GRAPHICS,                           // pipelineBindPoint
+-- >     myPipelineLayout,                                          // pipelineLayout
+-- >     0,                                                         // set
 -- > };
 -- >
 -- > VkDescriptorUpdateTemplate myDescriptorUpdateTemplate;
@@ -347,52 +358,87 @@ foreign import ccall
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
--- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_descriptor_update_template.VkDescriptorUpdateTemplate',
--- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineLayout'
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "vkCmdPushDescriptorSetWithTemplateKHR" vkCmdPushDescriptorSetWithTemplateKHR :: ("commandBuffer" ::: VkCommandBuffer) -> ("descriptorUpdateTemplate" ::: VkDescriptorUpdateTemplate) -> ("layout" ::: VkPipelineLayout) -> ("set" ::: Word32) -> ("pData" ::: Ptr ()) -> IO ()
+-- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
+-- 'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate',
+-- 'Graphics.Vulkan.Core10.Handles.PipelineLayout'
+cmdPushDescriptorSetWithTemplateKHR :: CommandBuffer -> DescriptorUpdateTemplate -> PipelineLayout -> ("set" ::: Word32) -> ("data" ::: Ptr ()) -> IO ()
+cmdPushDescriptorSetWithTemplateKHR commandBuffer descriptorUpdateTemplate layout set data' = do
+  let vkCmdPushDescriptorSetWithTemplateKHR' = mkVkCmdPushDescriptorSetWithTemplateKHR (pVkCmdPushDescriptorSetWithTemplateKHR (deviceCmds (commandBuffer :: CommandBuffer)))
+  vkCmdPushDescriptorSetWithTemplateKHR' (commandBufferHandle (commandBuffer)) (descriptorUpdateTemplate) (layout) (set) (data')
+  pure $ ()
+
+
 -- | VkPhysicalDevicePushDescriptorPropertiesKHR - Structure describing push
 -- descriptor limits that can be supported by an implementation
 --
 -- = Members
 --
--- The members of the @VkPhysicalDevicePushDescriptorPropertiesKHR@
--- structure describe the following implementation-dependent limits:
+-- The members of the 'PhysicalDevicePushDescriptorPropertiesKHR' structure
+-- describe the following implementation-dependent limits:
 --
 -- = Description
 --
--- -   @maxPushDescriptors@ is the maximum number of descriptors that /can/
---     be used in a descriptor set created with
---     @VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR@ set.
+-- If the 'PhysicalDevicePushDescriptorPropertiesKHR' structure is included
+-- in the @pNext@ chain of
+-- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
+-- it is filled with the implementation-dependent limits.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR@
---
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.Core.VkStructureType'
-data VkPhysicalDevicePushDescriptorPropertiesKHR = VkPhysicalDevicePushDescriptorPropertiesKHR
-  { -- No documentation found for Nested "VkPhysicalDevicePushDescriptorPropertiesKHR" "sType"
-  vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDevicePushDescriptorPropertiesKHR" "pNext"
-  vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDevicePushDescriptorPropertiesKHR" "maxPushDescriptors"
-  vkMaxPushDescriptors :: Word32
-  }
-  deriving (Eq, Show)
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
+data PhysicalDevicePushDescriptorPropertiesKHR = PhysicalDevicePushDescriptorPropertiesKHR
+  { -- | @maxPushDescriptors@ is the maximum number of descriptors that /can/ be
+    -- used in a descriptor set created with
+    -- 'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
+    -- set.
+    maxPushDescriptors :: Word32 }
+  deriving (Typeable)
+deriving instance Show PhysicalDevicePushDescriptorPropertiesKHR
 
-instance Storable VkPhysicalDevicePushDescriptorPropertiesKHR where
+instance ToCStruct PhysicalDevicePushDescriptorPropertiesKHR where
+  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p PhysicalDevicePushDescriptorPropertiesKHR{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Word32)) (maxPushDescriptors)
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
+    f
+
+instance FromCStruct PhysicalDevicePushDescriptorPropertiesKHR where
+  peekCStruct p = do
+    maxPushDescriptors <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
+    pure $ PhysicalDevicePushDescriptorPropertiesKHR
+             maxPushDescriptors
+
+instance Storable PhysicalDevicePushDescriptorPropertiesKHR where
   sizeOf ~_ = 24
   alignment ~_ = 8
-  peek ptr = VkPhysicalDevicePushDescriptorPropertiesKHR <$> peek (ptr `plusPtr` 0)
-                                                         <*> peek (ptr `plusPtr` 8)
-                                                         <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDevicePushDescriptorPropertiesKHR))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDevicePushDescriptorPropertiesKHR))
-                *> poke (ptr `plusPtr` 16) (vkMaxPushDescriptors (poked :: VkPhysicalDevicePushDescriptorPropertiesKHR))
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero PhysicalDevicePushDescriptorPropertiesKHR where
+  zero = PhysicalDevicePushDescriptorPropertiesKHR
+           zero
+
+
+type KHR_PUSH_DESCRIPTOR_SPEC_VERSION = 2
+
+-- No documentation found for TopLevel "VK_KHR_PUSH_DESCRIPTOR_SPEC_VERSION"
+pattern KHR_PUSH_DESCRIPTOR_SPEC_VERSION :: forall a . Integral a => a
+pattern KHR_PUSH_DESCRIPTOR_SPEC_VERSION = 2
+
+
+type KHR_PUSH_DESCRIPTOR_EXTENSION_NAME = "VK_KHR_push_descriptor"
+
+-- No documentation found for TopLevel "VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME"
+pattern KHR_PUSH_DESCRIPTOR_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern KHR_PUSH_DESCRIPTOR_EXTENSION_NAME = "VK_KHR_push_descriptor"
+

@@ -1,5 +1,8 @@
 # Change Log
 
+## [3.0.0.0] - 2020-02-29
+  - Rewrite, bindings are not much more idiomatic Haskell
+
 ## [2.1.0.0] - 2018-04-22
   - Expose dynamic loader from Graphics.Vulkan.Dymamic
   - Turn on platform specific features by default

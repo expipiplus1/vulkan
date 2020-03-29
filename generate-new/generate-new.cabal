@@ -1,0 +1,124 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: a484aaf046ec03532c0fe3501d54e3b6ed9435e8af715759a91feb4dabb5b9af
+
+name:           generate-new
+version:        0.0.0
+synopsis:       A program to generate the vulkan package from the vulkan docs.
+author:         Joe Hermaszewski
+maintainer:     generator.i.ardly.know.er@monoid.al
+license:        BSD3
+license-file:   ../LICENSE
+build-type:     Simple
+
+executable generate
+  main-is: Main.hs
+  other-modules:
+      AssignModules
+      Bespoke
+      Bespoke.Seeds
+      Bespoke.Utils
+      Bracket
+      CType
+      CType.Size
+      Data.Text.Extra
+      Data.Vector.Extra
+      Documentation
+      Documentation.All
+      Documentation.Haddock
+      Documentation.RunAsciiDoctor
+      Error
+      Haskell
+      Haskell.Name
+      Marshal
+      Marshal.Command
+      Marshal.Marshalable
+      Marshal.Scheme
+      Marshal.Scheme.Zero
+      Marshal.Struct
+      Render.Aggregate
+      Render.Alias
+      Render.Command
+      Render.Constant
+      Render.CStruct
+      Render.Dynamic
+      Render.Element
+      Render.Element.Write
+      Render.Enum
+      Render.FuncPointer
+      Render.Handle
+      Render.Names
+      Render.Peek
+      Render.Scheme
+      Render.Spec
+      Render.Spec.Extends
+      Render.Spec.Versions
+      Render.SpecInfo
+      Render.Stmts
+      Render.Stmts.Alloc
+      Render.Stmts.Poke
+      Render.Stmts.Poke.SiblingInfo
+      Render.Stmts.Utils
+      Render.Struct
+      Render.Type
+      Render.Type.Preserve
+      Render.Union
+      Render.Utils
+      Render.VkException
+      Spec.APIConstant
+      Spec.Name
+      Spec.Parse
+      Spec.Types
+      Text.InterpolatedString.Perl6.Unindented
+      TrackDepends
+      Write.Segment
+      Paths_generate_new
+  hs-source-dirs:
+      src
+  default-extensions: BangPatterns BinaryLiterals BlockArguments ConstraintKinds DataKinds DeriveGeneric DerivingVia DisambiguateRecordFields DuplicateRecordFields EmptyCase FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings ParallelListComp PartialTypeSignatures PatternSynonyms PolyKinds RankNTypes RecordWildCards RecursiveDo ScopedTypeVariables StandaloneDeriving TemplateHaskellQuotes TupleSections TypeApplications TypeFamilies TypeOperators ViewPatterns
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -fno-warn-unticked-promoted-constructors -fno-warn-name-shadowing -O2 -flate-specialise -fspecialise-aggressively
+  build-depends:
+      algebraic-graphs
+    , ascii-progress
+    , async-pool
+    , base
+    , bytestring
+    , containers
+    , data-default
+    , deepseq
+    , dependent-map
+    , dependent-sum
+    , directory
+    , extra
+    , filepath
+    , inline-c
+    , interpolatedstring-perl6
+    , mtl
+    , pandoc
+    , parsec
+    , polysemy
+    , polysemy-plugin
+    , polysemy-zoo
+    , pretty-show
+    , prettyprinter
+    , regex-applicative
+    , relude
+    , say
+    , tagsoup
+    , template-haskell
+    , text
+    , th-orphans
+    , timeit
+    , transformers
+    , typed-process
+    , uniplate
+    , unordered-containers
+    , vector
+    , vector-sized
+    , word-wrap
+    , xeno
+  default-language: Haskell2010

@@ -1,212 +1,243 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language GeneralizedNewtypeDeriving #-}
-{-# language PatternSynonyms #-}
-{-# language DataKinds #-}
-{-# language TypeOperators #-}
-{-# language DuplicateRecordFields #-}
+module Graphics.Vulkan.Core10.Fence  ( createFence
+                                     , withFence
+                                     , destroyFence
+                                     , resetFences
+                                     , getFenceStatus
+                                     , waitForFences
+                                     , FenceCreateInfo(..)
+                                     ) where
 
-module Graphics.Vulkan.Core10.Fence
-  ( VkFenceCreateFlagBits(..)
-  , pattern VK_FENCE_CREATE_SIGNALED_BIT
-  , vkCreateFence
-  , vkDestroyFence
-  , vkResetFences
-  , vkGetFenceStatus
-  , vkWaitForFences
-  , VkFenceCreateInfo(..)
-  , VkFenceCreateFlags
-  ) where
+import Control.Exception.Base (bracket)
+import Data.Typeable (eqT)
+import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (callocBytes)
+import Foreign.Marshal.Alloc (free)
+import GHC.Base (when)
+import GHC.IO (throwIO)
+import GHC.Ptr (castPtr)
+import Foreign.Ptr (nullPtr)
+import Foreign.Ptr (plusPtr)
+import Control.Monad.Trans.Class (lift)
+import Control.Monad.Trans.Cont (evalContT)
+import qualified Data.Vector (imapM_)
+import qualified Data.Vector (length)
+import Data.Type.Equality ((:~:)(Refl))
+import Data.Typeable (Typeable)
+import Foreign.Storable (Storable(peek))
+import Foreign.Storable (Storable(poke))
+import Foreign.Ptr (FunPtr)
+import Foreign.Ptr (Ptr)
+import Data.Word (Word32)
+import Data.Word (Word64)
+import Data.Kind (Type)
+import Control.Monad.Trans.Cont (ContT(..))
+import Data.Vector (Vector)
+import Graphics.Vulkan.Core10.BaseType (boolToBool32)
+import Graphics.Vulkan.NamedType ((:::))
+import Graphics.Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
+import Graphics.Vulkan.Core10.BaseType (Bool32)
+import Graphics.Vulkan.Core10.BaseType (Bool32(..))
+import Graphics.Vulkan.CStruct.Extends (Chain)
+import Graphics.Vulkan.Core10.Handles (Device)
+import Graphics.Vulkan.Core10.Handles (Device(..))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkCreateFence))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkDestroyFence))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkGetFenceStatus))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkResetFences))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkWaitForFences))
+import Graphics.Vulkan.Core10.Handles (Device_T)
+import {-# SOURCE #-} Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_fence (ExportFenceCreateInfo)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_KHR_external_fence_win32 (ExportFenceWin32HandleInfoKHR)
+import Graphics.Vulkan.CStruct.Extends (Extends)
+import Graphics.Vulkan.CStruct.Extends (Extensible(..))
+import Graphics.Vulkan.Core10.Handles (Fence)
+import Graphics.Vulkan.Core10.Handles (Fence(..))
+import Graphics.Vulkan.Core10.Enums.FenceCreateFlagBits (FenceCreateFlags)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (FromCStruct(..))
+import Graphics.Vulkan.CStruct.Extends (PeekChain)
+import Graphics.Vulkan.CStruct.Extends (PeekChain(..))
+import Graphics.Vulkan.CStruct.Extends (PokeChain)
+import Graphics.Vulkan.CStruct.Extends (PokeChain(..))
+import Graphics.Vulkan.Core10.Enums.Result (Result)
+import Graphics.Vulkan.Core10.Enums.Result (Result(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
+import Graphics.Vulkan.CStruct (ToCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct(..))
+import Graphics.Vulkan.Exception (VulkanException(..))
+import Graphics.Vulkan.Zero (Zero(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_FENCE_CREATE_INFO))
+import Graphics.Vulkan.Core10.Enums.Result (Result(SUCCESS))
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCreateFence
+  :: FunPtr (Ptr Device_T -> Ptr (FenceCreateInfo a) -> Ptr AllocationCallbacks -> Ptr Fence -> IO Result) -> Ptr Device_T -> Ptr (FenceCreateInfo a) -> Ptr AllocationCallbacks -> Ptr Fence -> IO Result
 
-import Data.Bits
-  ( Bits
-  , FiniteBits
-  )
-import Data.Word
-  ( Word32
-  , Word64
-  )
-import Foreign.Ptr
-  ( Ptr
-  , plusPtr
-  )
-import Foreign.Storable
-  ( Storable
-  , Storable(..)
-  )
-import GHC.Read
-  ( choose
-  , expectP
-  )
-import Graphics.Vulkan.NamedType
-  ( (:::)
-  )
-import Text.ParserCombinators.ReadPrec
-  ( (+++)
-  , prec
-  , step
-  )
-import Text.Read
-  ( Read(..)
-  , parens
-  )
-import Text.Read.Lex
-  ( Lexeme(Ident)
-  )
-
-
-import Graphics.Vulkan.Core10.Core
-  ( VkBool32(..)
-  , VkResult(..)
-  , VkStructureType(..)
-  , VkFlags
-  )
-import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkAllocationCallbacks(..)
-  , VkDevice
-  )
-import Graphics.Vulkan.Core10.Queue
-  ( VkFence
-  )
-
-
--- ** VkFenceCreateFlagBits
-
--- | VkFenceCreateFlagBits - Bitmask specifying initial state and behavior of
--- a fence
---
--- = See Also
---
--- 'VkFenceCreateFlags'
-newtype VkFenceCreateFlagBits = VkFenceCreateFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
-
-instance Show VkFenceCreateFlagBits where
-  showsPrec _ VK_FENCE_CREATE_SIGNALED_BIT = showString "VK_FENCE_CREATE_SIGNALED_BIT"
-  showsPrec p (VkFenceCreateFlagBits x) = showParen (p >= 11) (showString "VkFenceCreateFlagBits " . showsPrec 11 x)
-
-instance Read VkFenceCreateFlagBits where
-  readPrec = parens ( choose [ ("VK_FENCE_CREATE_SIGNALED_BIT", pure VK_FENCE_CREATE_SIGNALED_BIT)
-                             ] +++
-                      prec 10 (do
-                        expectP (Ident "VkFenceCreateFlagBits")
-                        v <- step readPrec
-                        pure (VkFenceCreateFlagBits v)
-                        )
-                    )
-
--- | @VK_FENCE_CREATE_SIGNALED_BIT@ specifies that the fence object is
--- created in the signaled state. Otherwise, it is created in the
--- unsignaled state.
-pattern VK_FENCE_CREATE_SIGNALED_BIT :: VkFenceCreateFlagBits
-pattern VK_FENCE_CREATE_SIGNALED_BIT = VkFenceCreateFlagBits 0x00000001
 -- | vkCreateFence - Create a new fence object
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that creates the fence.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     creates the fence.
 --
--- -   @pCreateInfo@ is a pointer to an instance of the @VkFenceCreateInfo@
---     structure which contains information about how the fence is to be
---     created.
+-- -   @pCreateInfo@ is a pointer to a 'FenceCreateInfo' structure
+--     containing information about how the fence is to be created.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     [Memory
---     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
--- -   @pFence@ points to a handle in which the resulting fence object is
---     returned.
+-- -   @pFence@ is a pointer to a handle in which the resulting fence
+--     object is returned.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     @VkFenceCreateInfo@ structure
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid 'FenceCreateInfo'
+--     structure
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
+--     pointer to a valid
+--     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pFence@ /must/ be a valid pointer to a @VkFence@ handle
+-- -   @pFence@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.Core10.Handles.Fence' handle
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
--- 'Graphics.Vulkan.Core10.Queue.VkFence', 'VkFenceCreateInfo'
+-- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
+-- 'Graphics.Vulkan.Core10.Handles.Device',
+-- 'Graphics.Vulkan.Core10.Handles.Fence', 'FenceCreateInfo'
+createFence :: PokeChain a => Device -> FenceCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (Fence)
+createFence device createInfo allocator = evalContT $ do
+  let vkCreateFence' = mkVkCreateFence (pVkCreateFence (deviceCmds (device :: Device)))
+  pCreateInfo <- ContT $ withCStruct (createInfo)
+  pAllocator <- case (allocator) of
+    Nothing -> pure nullPtr
+    Just j -> ContT $ withCStruct (j)
+  pPFence <- ContT $ bracket (callocBytes @Fence 8) free
+  r <- lift $ vkCreateFence' (deviceHandle (device)) pCreateInfo pAllocator (pPFence)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pFence <- lift $ peek @Fence pPFence
+  pure $ (pFence)
+
+-- | A safe wrapper for 'createFence' and 'destroyFence' using 'bracket'
+--
+-- The allocated value must not be returned from the provided computation
+withFence :: PokeChain a => Device -> FenceCreateInfo a -> Maybe AllocationCallbacks -> (Fence -> IO r) -> IO r
+withFence device fenceCreateInfo allocationCallbacks =
+  bracket
+    (createFence device fenceCreateInfo allocationCallbacks)
+    (\o -> destroyFence device o allocationCallbacks)
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkCreateFence" vkCreateFence :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkFenceCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pFence" ::: Ptr VkFence) -> IO VkResult
+  "dynamic" mkVkDestroyFence
+  :: FunPtr (Ptr Device_T -> Fence -> Ptr AllocationCallbacks -> IO ()) -> Ptr Device_T -> Fence -> Ptr AllocationCallbacks -> IO ()
+
 -- | vkDestroyFence - Destroy a fence object
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that destroys the fence.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     destroys the fence.
 --
--- -   @fence@ is the handle of the fence to destroy.
+-- -   'Graphics.Vulkan.Core10.Handles.Fence' is the handle of the fence to
+--     destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     [Memory
---     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
 -- == Valid Usage
 --
--- -   All [queue
---     submission](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-submission)
---     commands that refer to @fence@ /must/ have completed execution
+-- -   All
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-submission queue submission>
+--     commands that refer to 'Graphics.Vulkan.Core10.Handles.Fence' /must/
+--     have completed execution
 --
--- -   If @VkAllocationCallbacks@ were provided when @fence@ was created, a
---     compatible set of callbacks /must/ be provided here
+-- -   If 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     were provided when 'Graphics.Vulkan.Core10.Handles.Fence' was
+--     created, a compatible set of callbacks /must/ be provided here
 --
--- -   If no @VkAllocationCallbacks@ were provided when @fence@ was
+-- -   If no
+--     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     were provided when 'Graphics.Vulkan.Core10.Handles.Fence' was
 --     created, @pAllocator@ /must/ be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
--- -   If @fence@ is not 'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE',
---     @fence@ /must/ be a valid @VkFence@ handle
+-- -   If 'Graphics.Vulkan.Core10.Handles.Fence' is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     'Graphics.Vulkan.Core10.Handles.Fence' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Fence' handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
+--     pointer to a valid
+--     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   If @fence@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
+-- -   If 'Graphics.Vulkan.Core10.Handles.Fence' is a valid handle, it
+--     /must/ have been created, allocated, or retrieved from
+--     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
--- -   Host access to @fence@ /must/ be externally synchronized
+-- -   Host access to 'Graphics.Vulkan.Core10.Handles.Fence' /must/ be
+--     externally synchronized
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
--- 'Graphics.Vulkan.Core10.Queue.VkFence'
+-- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
+-- 'Graphics.Vulkan.Core10.Handles.Device',
+-- 'Graphics.Vulkan.Core10.Handles.Fence'
+destroyFence :: Device -> Fence -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
+destroyFence device fence allocator = evalContT $ do
+  let vkDestroyFence' = mkVkDestroyFence (pVkDestroyFence (deviceCmds (device :: Device)))
+  pAllocator <- case (allocator) of
+    Nothing -> pure nullPtr
+    Just j -> ContT $ withCStruct (j)
+  lift $ vkDestroyFence' (deviceHandle (device)) (fence) pAllocator
+  pure $ ()
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkDestroyFence" vkDestroyFence :: ("device" ::: VkDevice) -> ("fence" ::: VkFence) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+  "dynamic" mkVkResetFences
+  :: FunPtr (Ptr Device_T -> Word32 -> Ptr Fence -> IO Result) -> Ptr Device_T -> Word32 -> Ptr Fence -> IO Result
+
 -- | vkResetFences - Resets one or more fence objects
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that owns the fences.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     owns the fences.
 --
 -- -   @fenceCount@ is the number of fences to reset.
 --
@@ -214,18 +245,18 @@ foreign import ccall
 --
 -- = Description
 --
--- If any member of @pFences@ currently has its [payload
--- imported](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-fences-importing)
+-- If any member of @pFences@ currently has its
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fences-importing payload imported>
 -- with temporary permanence, that fence’s prior permanent payload is first
 -- restored. The remaining operations described therefore operate on the
 -- restored payload.
 --
--- When 'vkResetFences' is executed on the host, it defines a /fence
--- unsignal operation/ for each fence, which resets the fence to the
--- unsignaled state.
+-- When 'resetFences' is executed on the host, it defines a /fence unsignal
+-- operation/ for each fence, which resets the fence to the unsignaled
+-- state.
 --
 -- If any member of @pFences@ is already in the unsignaled state when
--- 'vkResetFences' is executed, then 'vkResetFences' has no effect on that
+-- 'resetFences' is executed, then 'resetFences' has no effect on that
 -- fence.
 --
 -- == Valid Usage
@@ -235,15 +266,16 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
 -- -   @pFences@ /must/ be a valid pointer to an array of @fenceCount@
---     valid @VkFence@ handles
+--     valid 'Graphics.Vulkan.Core10.Handles.Fence' handles
 --
 -- -   @fenceCount@ /must/ be greater than @0@
 --
 -- -   Each element of @pFences@ /must/ have been created, allocated, or
---     retrieved from @device@
+--     retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
@@ -252,106 +284,127 @@ foreign import ccall
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
--- 'Graphics.Vulkan.Core10.Queue.VkFence'
+-- 'Graphics.Vulkan.Core10.Handles.Device',
+-- 'Graphics.Vulkan.Core10.Handles.Fence'
+resetFences :: Device -> ("fences" ::: Vector Fence) -> IO ()
+resetFences device fences = evalContT $ do
+  let vkResetFences' = mkVkResetFences (pVkResetFences (deviceCmds (device :: Device)))
+  pPFences <- ContT $ allocaBytesAligned @Fence ((Data.Vector.length (fences)) * 8) 8
+  lift $ Data.Vector.imapM_ (\i e -> poke (pPFences `plusPtr` (8 * (i)) :: Ptr Fence) (e)) (fences)
+  r <- lift $ vkResetFences' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (fences)) :: Word32)) (pPFences)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkResetFences" vkResetFences :: ("device" ::: VkDevice) -> ("fenceCount" ::: Word32) -> ("pFences" ::: Ptr VkFence) -> IO VkResult
+  "dynamic" mkVkGetFenceStatus
+  :: FunPtr (Ptr Device_T -> Fence -> IO Result) -> Ptr Device_T -> Fence -> IO Result
+
 -- | vkGetFenceStatus - Return the status of a fence
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that owns the fence.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     owns the fence.
 --
--- -   @fence@ is the handle of the fence to query.
+-- -   'Graphics.Vulkan.Core10.Handles.Fence' is the handle of the fence to
+--     query.
 --
 -- = Description
 --
--- Upon success, @vkGetFenceStatus@ returns the status of the fence object,
+-- Upon success, 'getFenceStatus' returns the status of the fence object,
 -- with the following return codes:
 --
--- +-----------------------------------+-------------------------------------------------------------------------------------------------------------------+
--- | Status                            | Meaning                                                                                                           |
--- +===================================+===================================================================================================================+
--- | @VK_SUCCESS@                      | The fence specified by @fence@ is signaled.                                                                       |
--- +-----------------------------------+-------------------------------------------------------------------------------------------------------------------+
--- | @VK_NOT_READY@                    | The fence specified by @fence@ is unsignaled.                                                                     |
--- +-----------------------------------+-------------------------------------------------------------------------------------------------------------------+
--- | @VK_ERROR_DEVICE_LOST@            | The device has been lost. See [Lost                                                                               |
--- |                                   | Device](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-lost-device). |
--- +-----------------------------------+-------------------------------------------------------------------------------------------------------------------+
+-- +---------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+
+-- | Status                                                  | Meaning                                                                                                                |
+-- +=========================================================+========================================================================================================================+
+-- | 'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'           | The fence specified by 'Graphics.Vulkan.Core10.Handles.Fence' is signaled.                                             |
+-- +---------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+
+-- | 'Graphics.Vulkan.Core10.Enums.Result.NOT_READY'         | The fence specified by 'Graphics.Vulkan.Core10.Handles.Fence' is unsignaled.                                           |
+-- +---------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+
+-- | 'Graphics.Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST' | The device has been lost. See                                                                                          |
+-- |                                                         | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>. |
+-- +---------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+
 --
 -- Fence Object Status Codes
 --
--- If a [queue
--- submission](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-submission)
+-- If a
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-submission queue submission>
 -- command is pending execution, then the value returned by this command
 -- /may/ immediately be out of date.
 --
--- If the device has been lost (see [Lost
--- Device](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-lost-device)),
--- @vkGetFenceStatus@ /may/ return any of the above status codes. If the
--- device has been lost and @vkGetFenceStatus@ is called repeatedly, it
--- will eventually return either @VK_SUCCESS@ or @VK_ERROR_DEVICE_LOST@.
---
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   @fence@ /must/ be a valid @VkFence@ handle
---
--- -   @fence@ /must/ have been created, allocated, or retrieved from
---     @device@
+-- If the device has been lost (see
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>),
+-- 'getFenceStatus' /may/ return any of the above status codes. If the
+-- device has been lost and 'getFenceStatus' is called repeatedly, it will
+-- eventually return either 'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
+-- or 'Graphics.Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'.
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   @VK_NOT_READY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.NOT_READY'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   @VK_ERROR_DEVICE_LOST@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
--- 'Graphics.Vulkan.Core10.Queue.VkFence'
+-- 'Graphics.Vulkan.Core10.Handles.Device',
+-- 'Graphics.Vulkan.Core10.Handles.Fence'
+getFenceStatus :: Device -> Fence -> IO (Result)
+getFenceStatus device fence = do
+  let vkGetFenceStatus' = mkVkGetFenceStatus (pVkGetFenceStatus (deviceCmds (device :: Device)))
+  r <- vkGetFenceStatus' (deviceHandle (device)) (fence)
+  when (r < SUCCESS) (throwIO (VulkanException r))
+  pure $ (r)
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkGetFenceStatus" vkGetFenceStatus :: ("device" ::: VkDevice) -> ("fence" ::: VkFence) -> IO VkResult
+  "dynamic" mkVkWaitForFences
+  :: FunPtr (Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result) -> Ptr Device_T -> Word32 -> Ptr Fence -> Bool32 -> Word64 -> IO Result
+
 -- | vkWaitForFences - Wait for one or more fences to become signaled
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that owns the fences.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     owns the fences.
 --
 -- -   @fenceCount@ is the number of fences to wait on.
 --
 -- -   @pFences@ is a pointer to an array of @fenceCount@ fence handles.
 --
 -- -   @waitAll@ is the condition that /must/ be satisfied to successfully
---     unblock the wait. If @waitAll@ is @VK_TRUE@, then the condition is
---     that all fences in @pFences@ are signaled. Otherwise, the condition
---     is that at least one fence in @pFences@ is signaled.
+--     unblock the wait. If @waitAll@ is
+--     'Graphics.Vulkan.Core10.BaseType.TRUE', then the condition is that
+--     all fences in @pFences@ are signaled. Otherwise, the condition is
+--     that at least one fence in @pFences@ is signaled.
 --
 -- -   @timeout@ is the timeout period in units of nanoseconds. @timeout@
 --     is adjusted to the closest value allowed by the
@@ -361,121 +414,157 @@ foreign import ccall
 --
 -- = Description
 --
--- If the condition is satisfied when @vkWaitForFences@ is called, then
--- @vkWaitForFences@ returns immediately. If the condition is not satisfied
--- at the time @vkWaitForFences@ is called, then @vkWaitForFences@ will
--- block and wait up to @timeout@ nanoseconds for the condition to become
+-- If the condition is satisfied when 'waitForFences' is called, then
+-- 'waitForFences' returns immediately. If the condition is not satisfied
+-- at the time 'waitForFences' is called, then 'waitForFences' will block
+-- and wait up to @timeout@ nanoseconds for the condition to become
 -- satisfied.
 --
--- If @timeout@ is zero, then @vkWaitForFences@ does not wait, but simply
--- returns the current state of the fences. @VK_TIMEOUT@ will be returned
--- in this case if the condition is not satisfied, even though no actual
--- wait was performed.
+-- If @timeout@ is zero, then 'waitForFences' does not wait, but simply
+-- returns the current state of the fences.
+-- 'Graphics.Vulkan.Core10.Enums.Result.TIMEOUT' will be returned in this
+-- case if the condition is not satisfied, even though no actual wait was
+-- performed.
 --
 -- If the specified timeout period expires before the condition is
--- satisfied, @vkWaitForFences@ returns @VK_TIMEOUT@. If the condition is
--- satisfied before @timeout@ nanoseconds has expired, @vkWaitForFences@
--- returns @VK_SUCCESS@.
+-- satisfied, 'waitForFences' returns
+-- 'Graphics.Vulkan.Core10.Enums.Result.TIMEOUT'. If the condition is
+-- satisfied before @timeout@ nanoseconds has expired, 'waitForFences'
+-- returns 'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'.
 --
--- If device loss occurs (see [Lost
--- Device](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-lost-device))
--- before the timeout has expired, @vkWaitForFences@ /must/ return in
--- finite time with either @VK_SUCCESS@ or @VK_ERROR_DEVICE_LOST@.
+-- If device loss occurs (see
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>)
+-- before the timeout has expired, 'waitForFences' /must/ return in finite
+-- time with either 'Graphics.Vulkan.Core10.Enums.Result.SUCCESS' or
+-- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'.
 --
--- __Note__
+-- Note
 --
--- While we guarantee that @vkWaitForFences@ /must/ return in finite time,
--- no guarantees are made that it returns immediately upon device loss.
+-- While we guarantee that 'waitForFences' /must/ return in finite time, no
+-- guarantees are made that it returns immediately upon device loss.
 -- However, the client can reasonably expect that the delay will be on the
--- order of seconds and that calling @vkWaitForFences@ will not result in a
+-- order of seconds and that calling 'waitForFences' will not result in a
 -- permanently (or seemingly permanently) dead process.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
 -- -   @pFences@ /must/ be a valid pointer to an array of @fenceCount@
---     valid @VkFence@ handles
+--     valid 'Graphics.Vulkan.Core10.Handles.Fence' handles
 --
 -- -   @fenceCount@ /must/ be greater than @0@
 --
 -- -   Each element of @pFences@ /must/ have been created, allocated, or
---     retrieved from @device@
+--     retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   @VK_TIMEOUT@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.TIMEOUT'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   @VK_ERROR_DEVICE_LOST@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
 --
 -- = See Also
 --
--- @VkBool32@, 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
--- 'Graphics.Vulkan.Core10.Queue.VkFence'
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "vkWaitForFences" vkWaitForFences :: ("device" ::: VkDevice) -> ("fenceCount" ::: Word32) -> ("pFences" ::: Ptr VkFence) -> ("waitAll" ::: VkBool32) -> ("timeout" ::: Word64) -> IO VkResult
+-- 'Graphics.Vulkan.Core10.BaseType.Bool32',
+-- 'Graphics.Vulkan.Core10.Handles.Device',
+-- 'Graphics.Vulkan.Core10.Handles.Fence'
+waitForFences :: Device -> ("fences" ::: Vector Fence) -> ("waitAll" ::: Bool) -> ("timeout" ::: Word64) -> IO (Result)
+waitForFences device fences waitAll timeout = evalContT $ do
+  let vkWaitForFences' = mkVkWaitForFences (pVkWaitForFences (deviceCmds (device :: Device)))
+  pPFences <- ContT $ allocaBytesAligned @Fence ((Data.Vector.length (fences)) * 8) 8
+  lift $ Data.Vector.imapM_ (\i e -> poke (pPFences `plusPtr` (8 * (i)) :: Ptr Fence) (e)) (fences)
+  r <- lift $ vkWaitForFences' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (fences)) :: Word32)) (pPFences) (boolToBool32 (waitAll)) (timeout)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pure $ (r)
+
+
 -- | VkFenceCreateInfo - Structure specifying parameters of a newly created
 -- fence
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_FENCE_CREATE_INFO@
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_FENCE_CREATE_INFO'
 --
 -- -   Each @pNext@ member of any structure (including this one) in the
 --     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
 --     instance of
---     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_fence.VkExportFenceCreateInfo'
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_fence.ExportFenceCreateInfo'
 --     or
---     'Graphics.Vulkan.Extensions.VK_KHR_external_fence_win32.VkExportFenceWin32HandleInfoKHR'
+--     'Graphics.Vulkan.Extensions.VK_KHR_external_fence_win32.ExportFenceWin32HandleInfoKHR'
 --
--- -   Each @sType@ member in the @pNext@ chain /must/ be unique
+-- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
+--     unique
 --
--- -   @flags@ /must/ be a valid combination of 'VkFenceCreateFlagBits'
+-- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
+--     combination of
+--     'Graphics.Vulkan.Core10.Enums.FenceCreateFlagBits.FenceCreateFlagBits'
 --     values
 --
 -- = See Also
 --
--- 'VkFenceCreateFlags', 'Graphics.Vulkan.Core10.Core.VkStructureType',
--- 'vkCreateFence'
-data VkFenceCreateInfo = VkFenceCreateInfo
-  { -- | @sType@ is the type of this structure.
-  vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
-  vkPNext :: Ptr ()
-  , -- | @flags@ is a bitmask of 'VkFenceCreateFlagBits' specifying the initial
-  -- state and behavior of the fence.
-  vkFlags :: VkFenceCreateFlags
+-- 'Graphics.Vulkan.Core10.Enums.FenceCreateFlagBits.FenceCreateFlags',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'createFence'
+data FenceCreateInfo (es :: [Type]) = FenceCreateInfo
+  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+    next :: Chain es
+  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+    -- 'Graphics.Vulkan.Core10.Enums.FenceCreateFlagBits.FenceCreateFlagBits'
+    -- specifying the initial state and behavior of the fence.
+    flags :: FenceCreateFlags
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show (Chain es) => Show (FenceCreateInfo es)
 
-instance Storable VkFenceCreateInfo where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek ptr = VkFenceCreateInfo <$> peek (ptr `plusPtr` 0)
-                               <*> peek (ptr `plusPtr` 8)
-                               <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkFenceCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkFenceCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkFenceCreateInfo))
--- | VkFenceCreateFlags - Bitmask of VkFenceCreateFlagBits
---
--- = Description
---
--- @VkFenceCreateFlags@ is a bitmask type for setting a mask of zero or
--- more 'VkFenceCreateFlagBits'.
---
--- = See Also
---
--- 'VkFenceCreateFlagBits', 'VkFenceCreateInfo'
-type VkFenceCreateFlags = VkFenceCreateFlagBits
+instance Extensible FenceCreateInfo where
+  extensibleType = STRUCTURE_TYPE_FENCE_CREATE_INFO
+  setNext x next = x{next = next}
+  getNext FenceCreateInfo{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends FenceCreateInfo e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @ExportFenceWin32HandleInfoKHR = Just f
+    | Just Refl <- eqT @e @ExportFenceCreateInfo = Just f
+    | otherwise = Nothing
+
+instance PokeChain es => ToCStruct (FenceCreateInfo es) where
+  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p FenceCreateInfo{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FENCE_CREATE_INFO)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ poke ((p `plusPtr` 16 :: Ptr FenceCreateFlags)) (flags)
+    lift $ f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_FENCE_CREATE_INFO)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ f
+
+instance PeekChain es => FromCStruct (FenceCreateInfo es) where
+  peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
+    flags <- peek @FenceCreateFlags ((p `plusPtr` 16 :: Ptr FenceCreateFlags))
+    pure $ FenceCreateInfo
+             next flags
+
+instance es ~ '[] => Zero (FenceCreateInfo es) where
+  zero = FenceCreateInfo
+           ()
+           zero
+

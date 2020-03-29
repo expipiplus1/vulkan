@@ -1,0 +1,13 @@
+{-# language CPP #-}
+module Graphics.Vulkan.Extensions.VK_EXT_shader_demote_to_helper_invocation  (PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT) where
+
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct)
+data PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT
+
+instance ToCStruct PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT
+instance Show PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT
+
+instance FromCStruct PhysicalDeviceShaderDemoteToHelperInvocationFeaturesEXT
+

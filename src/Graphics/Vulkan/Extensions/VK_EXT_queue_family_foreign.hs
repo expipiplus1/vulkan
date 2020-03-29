@@ -1,31 +1,25 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
-{-# language OverloadedStrings #-}
+module Graphics.Vulkan.Extensions.VK_EXT_queue_family_foreign  ( EXT_QUEUE_FAMILY_FOREIGN_SPEC_VERSION
+                                                               , pattern EXT_QUEUE_FAMILY_FOREIGN_SPEC_VERSION
+                                                               , EXT_QUEUE_FAMILY_FOREIGN_EXTENSION_NAME
+                                                               , pattern EXT_QUEUE_FAMILY_FOREIGN_EXTENSION_NAME
+                                                               , QUEUE_FAMILY_FOREIGN_EXT
+                                                               , pattern QUEUE_FAMILY_FOREIGN_EXT
+                                                               ) where
 
-module Graphics.Vulkan.Extensions.VK_EXT_queue_family_foreign
-  ( pattern VK_QUEUE_FAMILY_FOREIGN_EXT
-  , pattern VK_EXT_QUEUE_FAMILY_FOREIGN_SPEC_VERSION
-  , pattern VK_EXT_QUEUE_FAMILY_FOREIGN_EXTENSION_NAME
-  ) where
+import Data.String (IsString)
+import Graphics.Vulkan.Core10.APIConstants (QUEUE_FAMILY_FOREIGN_EXT)
+import Graphics.Vulkan.Core10.APIConstants (pattern QUEUE_FAMILY_FOREIGN_EXT)
+type EXT_QUEUE_FAMILY_FOREIGN_SPEC_VERSION = 1
 
-import Data.String
-  ( IsString
-  )
-import Data.Word
-  ( Word32
-  )
-
-
-
-
-
--- No documentation found for Nested "Word32" "VK_QUEUE_FAMILY_FOREIGN_EXT"
-pattern VK_QUEUE_FAMILY_FOREIGN_EXT :: Word32
-pattern VK_QUEUE_FAMILY_FOREIGN_EXT = 0xfffffffd
 -- No documentation found for TopLevel "VK_EXT_QUEUE_FAMILY_FOREIGN_SPEC_VERSION"
-pattern VK_EXT_QUEUE_FAMILY_FOREIGN_SPEC_VERSION :: Integral a => a
-pattern VK_EXT_QUEUE_FAMILY_FOREIGN_SPEC_VERSION = 1
+pattern EXT_QUEUE_FAMILY_FOREIGN_SPEC_VERSION :: forall a . Integral a => a
+pattern EXT_QUEUE_FAMILY_FOREIGN_SPEC_VERSION = 1
+
+
+type EXT_QUEUE_FAMILY_FOREIGN_EXTENSION_NAME = "VK_EXT_queue_family_foreign"
+
 -- No documentation found for TopLevel "VK_EXT_QUEUE_FAMILY_FOREIGN_EXTENSION_NAME"
-pattern VK_EXT_QUEUE_FAMILY_FOREIGN_EXTENSION_NAME :: (Eq a ,IsString a) => a
-pattern VK_EXT_QUEUE_FAMILY_FOREIGN_EXTENSION_NAME = "VK_EXT_queue_family_foreign"
+pattern EXT_QUEUE_FAMILY_FOREIGN_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern EXT_QUEUE_FAMILY_FOREIGN_EXTENSION_NAME = "VK_EXT_queue_family_foreign"
+

@@ -1,279 +1,150 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language GeneralizedNewtypeDeriving #-}
-{-# language PatternSynonyms #-}
-{-# language DataKinds #-}
-{-# language TypeOperators #-}
-{-# language DuplicateRecordFields #-}
+module Graphics.Vulkan.Core10.CommandBuffer  ( allocateCommandBuffers
+                                             , withCommandBuffers
+                                             , freeCommandBuffers
+                                             , beginCommandBuffer
+                                             , useCommandBuffer
+                                             , endCommandBuffer
+                                             , resetCommandBuffer
+                                             , CommandBufferAllocateInfo(..)
+                                             , CommandBufferInheritanceInfo(..)
+                                             , CommandBufferBeginInfo(..)
+                                             ) where
 
-module Graphics.Vulkan.Core10.CommandBuffer
-  ( VkCommandBufferLevel(..)
-  , pattern VK_COMMAND_BUFFER_LEVEL_PRIMARY
-  , pattern VK_COMMAND_BUFFER_LEVEL_SECONDARY
-  , VkQueryControlFlagBits(..)
-  , pattern VK_QUERY_CONTROL_PRECISE_BIT
-  , VkCommandBufferResetFlagBits(..)
-  , pattern VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT
-  , VkCommandBufferUsageFlagBits(..)
-  , pattern VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT
-  , pattern VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT
-  , pattern VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT
-  , vkAllocateCommandBuffers
-  , vkFreeCommandBuffers
-  , vkBeginCommandBuffer
-  , vkEndCommandBuffer
-  , vkResetCommandBuffer
-  , VkCommandBufferAllocateInfo(..)
-  , VkCommandBufferInheritanceInfo(..)
-  , VkCommandBufferBeginInfo(..)
-  , VkQueryControlFlags
-  , VkCommandBufferResetFlags
-  , VkCommandBufferUsageFlags
-  ) where
+import Control.Exception.Base (bracket)
+import Control.Exception.Base (bracket_)
+import Data.Typeable (eqT)
+import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (callocBytes)
+import Foreign.Marshal.Alloc (free)
+import Foreign.Marshal.Utils (maybePeek)
+import GHC.Base (when)
+import GHC.IO (throwIO)
+import GHC.Ptr (castPtr)
+import Foreign.Ptr (nullPtr)
+import Foreign.Ptr (plusPtr)
+import Control.Monad.Trans.Class (lift)
+import Control.Monad.Trans.Cont (evalContT)
+import Data.Vector (generateM)
+import qualified Data.Vector (imapM_)
+import qualified Data.Vector (length)
+import Data.Type.Equality ((:~:)(Refl))
+import Data.Typeable (Typeable)
+import Foreign.Storable (Storable)
+import Foreign.Storable (Storable(peek))
+import Foreign.Storable (Storable(poke))
+import qualified Foreign.Storable (Storable(..))
+import Foreign.Ptr (FunPtr)
+import Foreign.Ptr (Ptr)
+import Data.Word (Word32)
+import Data.Kind (Type)
+import Control.Monad.Trans.Cont (ContT(..))
+import Data.Vector (Vector)
+import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
+import Graphics.Vulkan.Core10.BaseType (bool32ToBool)
+import Graphics.Vulkan.Core10.BaseType (boolToBool32)
+import Graphics.Vulkan.CStruct.Extends (forgetExtensions)
+import Graphics.Vulkan.CStruct.Extends (peekSomeCStruct)
+import Graphics.Vulkan.CStruct.Extends (withSomeCStruct)
+import Graphics.Vulkan.NamedType ((:::))
+import Graphics.Vulkan.Core10.BaseType (Bool32)
+import Graphics.Vulkan.CStruct.Extends (Chain)
+import Graphics.Vulkan.Core10.Handles (CommandBuffer)
+import Graphics.Vulkan.Core10.Handles (CommandBuffer(..))
+import Graphics.Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_EXT_conditional_rendering (CommandBufferInheritanceConditionalRenderingInfoEXT)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_QCOM_render_pass_transform (CommandBufferInheritanceRenderPassTransformInfoQCOM)
+import Graphics.Vulkan.Core10.Enums.CommandBufferLevel (CommandBufferLevel)
+import Graphics.Vulkan.Core10.Enums.CommandBufferResetFlagBits (CommandBufferResetFlags)
+import Graphics.Vulkan.Core10.Enums.CommandBufferResetFlagBits (CommandBufferResetFlags)
+import Graphics.Vulkan.Core10.Enums.CommandBufferResetFlagBits (CommandBufferResetFlagBits(..))
+import Graphics.Vulkan.Core10.Enums.CommandBufferUsageFlagBits (CommandBufferUsageFlags)
+import Graphics.Vulkan.Core10.Handles (CommandBuffer_T)
+import Graphics.Vulkan.Core10.Handles (CommandPool)
+import Graphics.Vulkan.Core10.Handles (CommandPool(..))
+import Graphics.Vulkan.Core10.Handles (Device)
+import Graphics.Vulkan.Core10.Handles (Device(..))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkAllocateCommandBuffers))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkBeginCommandBuffer))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkEndCommandBuffer))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkFreeCommandBuffers))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkResetCommandBuffer))
+import {-# SOURCE #-} Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group (DeviceGroupCommandBufferBeginInfo)
+import Graphics.Vulkan.Core10.Handles (Device_T)
+import Graphics.Vulkan.CStruct.Extends (Extends)
+import Graphics.Vulkan.CStruct.Extends (Extensible(..))
+import Graphics.Vulkan.Core10.Handles (Framebuffer)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (FromCStruct(..))
+import Graphics.Vulkan.CStruct.Extends (PeekChain)
+import Graphics.Vulkan.CStruct.Extends (PeekChain(..))
+import Graphics.Vulkan.CStruct.Extends (PokeChain)
+import Graphics.Vulkan.CStruct.Extends (PokeChain(..))
+import Graphics.Vulkan.Core10.Enums.QueryControlFlagBits (QueryControlFlags)
+import Graphics.Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits (QueryPipelineStatisticFlags)
+import Graphics.Vulkan.Core10.Handles (RenderPass)
+import Graphics.Vulkan.Core10.Enums.Result (Result)
+import Graphics.Vulkan.Core10.Enums.Result (Result(..))
+import Graphics.Vulkan.CStruct.Extends (SomeStruct)
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
+import Graphics.Vulkan.CStruct (ToCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct(..))
+import Graphics.Vulkan.Exception (VulkanException(..))
+import Graphics.Vulkan.Zero (Zero(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO))
+import Graphics.Vulkan.Core10.Enums.Result (Result(SUCCESS))
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkAllocateCommandBuffers
+  :: FunPtr (Ptr Device_T -> Ptr CommandBufferAllocateInfo -> Ptr (Ptr CommandBuffer_T) -> IO Result) -> Ptr Device_T -> Ptr CommandBufferAllocateInfo -> Ptr (Ptr CommandBuffer_T) -> IO Result
 
-import Data.Bits
-  ( Bits
-  , FiniteBits
-  )
-import Data.Int
-  ( Int32
-  )
-import Data.Word
-  ( Word32
-  )
-import Foreign.Ptr
-  ( Ptr
-  , plusPtr
-  )
-import Foreign.Storable
-  ( Storable
-  , Storable(..)
-  )
-import GHC.Read
-  ( choose
-  , expectP
-  )
-import Graphics.Vulkan.NamedType
-  ( (:::)
-  )
-import Text.ParserCombinators.ReadPrec
-  ( (+++)
-  , prec
-  , step
-  )
-import Text.Read
-  ( Read(..)
-  , parens
-  )
-import Text.Read.Lex
-  ( Lexeme(Ident)
-  )
-
-
-import Graphics.Vulkan.Core10.CommandPool
-  ( VkCommandPool
-  )
-import Graphics.Vulkan.Core10.Core
-  ( VkBool32(..)
-  , VkResult(..)
-  , VkStructureType(..)
-  , VkFlags
-  )
-import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkDevice
-  )
-import Graphics.Vulkan.Core10.Pass
-  ( VkFramebuffer
-  )
-import Graphics.Vulkan.Core10.Pipeline
-  ( VkRenderPass
-  )
-import Graphics.Vulkan.Core10.Query
-  ( VkQueryPipelineStatisticFlags
-  )
-import Graphics.Vulkan.Core10.Queue
-  ( VkCommandBuffer
-  )
-
-
--- ** VkCommandBufferLevel
-
--- | VkCommandBufferLevel - Enumerant specifying a command buffer level
---
--- = See Also
---
--- 'VkCommandBufferAllocateInfo'
-newtype VkCommandBufferLevel = VkCommandBufferLevel Int32
-  deriving (Eq, Ord, Storable)
-
-instance Show VkCommandBufferLevel where
-  showsPrec _ VK_COMMAND_BUFFER_LEVEL_PRIMARY = showString "VK_COMMAND_BUFFER_LEVEL_PRIMARY"
-  showsPrec _ VK_COMMAND_BUFFER_LEVEL_SECONDARY = showString "VK_COMMAND_BUFFER_LEVEL_SECONDARY"
-  showsPrec p (VkCommandBufferLevel x) = showParen (p >= 11) (showString "VkCommandBufferLevel " . showsPrec 11 x)
-
-instance Read VkCommandBufferLevel where
-  readPrec = parens ( choose [ ("VK_COMMAND_BUFFER_LEVEL_PRIMARY",   pure VK_COMMAND_BUFFER_LEVEL_PRIMARY)
-                             , ("VK_COMMAND_BUFFER_LEVEL_SECONDARY", pure VK_COMMAND_BUFFER_LEVEL_SECONDARY)
-                             ] +++
-                      prec 10 (do
-                        expectP (Ident "VkCommandBufferLevel")
-                        v <- step readPrec
-                        pure (VkCommandBufferLevel v)
-                        )
-                    )
-
--- | @VK_COMMAND_BUFFER_LEVEL_PRIMARY@ specifies a primary command buffer.
-pattern VK_COMMAND_BUFFER_LEVEL_PRIMARY :: VkCommandBufferLevel
-pattern VK_COMMAND_BUFFER_LEVEL_PRIMARY = VkCommandBufferLevel 0
-
--- | @VK_COMMAND_BUFFER_LEVEL_SECONDARY@ specifies a secondary command
--- buffer.
-pattern VK_COMMAND_BUFFER_LEVEL_SECONDARY :: VkCommandBufferLevel
-pattern VK_COMMAND_BUFFER_LEVEL_SECONDARY = VkCommandBufferLevel 1
--- ** VkQueryControlFlagBits
-
--- | VkQueryControlFlagBits - Bitmask specifying constraints on a query
---
--- = See Also
---
--- 'VkQueryControlFlags'
-newtype VkQueryControlFlagBits = VkQueryControlFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
-
-instance Show VkQueryControlFlagBits where
-  showsPrec _ VK_QUERY_CONTROL_PRECISE_BIT = showString "VK_QUERY_CONTROL_PRECISE_BIT"
-  showsPrec p (VkQueryControlFlagBits x) = showParen (p >= 11) (showString "VkQueryControlFlagBits " . showsPrec 11 x)
-
-instance Read VkQueryControlFlagBits where
-  readPrec = parens ( choose [ ("VK_QUERY_CONTROL_PRECISE_BIT", pure VK_QUERY_CONTROL_PRECISE_BIT)
-                             ] +++
-                      prec 10 (do
-                        expectP (Ident "VkQueryControlFlagBits")
-                        v <- step readPrec
-                        pure (VkQueryControlFlagBits v)
-                        )
-                    )
-
--- | @VK_QUERY_CONTROL_PRECISE_BIT@ specifies the precision of [occlusion
--- queries](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-occlusion).
-pattern VK_QUERY_CONTROL_PRECISE_BIT :: VkQueryControlFlagBits
-pattern VK_QUERY_CONTROL_PRECISE_BIT = VkQueryControlFlagBits 0x00000001
--- ** VkCommandBufferResetFlagBits
-
--- | VkCommandBufferResetFlagBits - Bitmask controlling behavior of a command
--- buffer reset
---
--- = See Also
---
--- 'VkCommandBufferResetFlags'
-newtype VkCommandBufferResetFlagBits = VkCommandBufferResetFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
-
-instance Show VkCommandBufferResetFlagBits where
-  showsPrec _ VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = showString "VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT"
-  showsPrec p (VkCommandBufferResetFlagBits x) = showParen (p >= 11) (showString "VkCommandBufferResetFlagBits " . showsPrec 11 x)
-
-instance Read VkCommandBufferResetFlagBits where
-  readPrec = parens ( choose [ ("VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT", pure VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT)
-                             ] +++
-                      prec 10 (do
-                        expectP (Ident "VkCommandBufferResetFlagBits")
-                        v <- step readPrec
-                        pure (VkCommandBufferResetFlagBits v)
-                        )
-                    )
-
--- | @VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT@ specifies that most or
--- all memory resources currently owned by the command buffer /should/ be
--- returned to the parent command pool. If this flag is not set, then the
--- command buffer /may/ hold onto memory resources and reuse them when
--- recording commands. @commandBuffer@ is moved to the [initial
--- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
-pattern VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT :: VkCommandBufferResetFlagBits
-pattern VK_COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = VkCommandBufferResetFlagBits 0x00000001
--- ** VkCommandBufferUsageFlagBits
-
--- | VkCommandBufferUsageFlagBits - Bitmask specifying usage behavior for
--- command buffer
---
--- = See Also
---
--- 'VkCommandBufferUsageFlags'
-newtype VkCommandBufferUsageFlagBits = VkCommandBufferUsageFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
-
-instance Show VkCommandBufferUsageFlagBits where
-  showsPrec _ VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT = showString "VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT"
-  showsPrec _ VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT = showString "VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT"
-  showsPrec _ VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = showString "VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT"
-  showsPrec p (VkCommandBufferUsageFlagBits x) = showParen (p >= 11) (showString "VkCommandBufferUsageFlagBits " . showsPrec 11 x)
-
-instance Read VkCommandBufferUsageFlagBits where
-  readPrec = parens ( choose [ ("VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT",      pure VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT)
-                             , ("VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT", pure VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT)
-                             , ("VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT",     pure VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT)
-                             ] +++
-                      prec 10 (do
-                        expectP (Ident "VkCommandBufferUsageFlagBits")
-                        v <- step readPrec
-                        pure (VkCommandBufferUsageFlagBits v)
-                        )
-                    )
-
--- | @VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT@ specifies that each
--- recording of the command buffer will only be submitted once, and the
--- command buffer will be reset and recorded again between each submission.
-pattern VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT :: VkCommandBufferUsageFlagBits
-pattern VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT = VkCommandBufferUsageFlagBits 0x00000001
-
--- | @VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT@ specifies that a
--- secondary command buffer is considered to be entirely inside a render
--- pass. If this is a primary command buffer, then this bit is ignored.
-pattern VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT :: VkCommandBufferUsageFlagBits
-pattern VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT = VkCommandBufferUsageFlagBits 0x00000002
-
--- | @VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT@ specifies that a command
--- buffer /can/ be resubmitted to a queue while it is in the /pending
--- state/, and recorded into multiple primary command buffers.
-pattern VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT :: VkCommandBufferUsageFlagBits
-pattern VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = VkCommandBufferUsageFlagBits 0x00000004
 -- | vkAllocateCommandBuffers - Allocate command buffers from an existing
 -- command pool
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that owns the command pool.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     owns the command pool.
 --
--- -   @pAllocateInfo@ is a pointer to an instance of the
---     @VkCommandBufferAllocateInfo@ structure describing parameters of the
---     allocation.
+-- -   @pAllocateInfo@ is a pointer to a 'CommandBufferAllocateInfo'
+--     structure describing parameters of the allocation.
 --
--- -   @pCommandBuffers@ is a pointer to an array of @VkCommandBuffer@
---     handles in which the resulting command buffer objects are returned.
---     The array /must/ be at least the length specified by the
---     @commandBufferCount@ member of @pAllocateInfo@. Each allocated
---     command buffer begins in the initial state.
+-- -   @pCommandBuffers@ is a pointer to an array of
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handles in which the
+--     resulting command buffer objects are returned. The array /must/ be
+--     at least the length specified by the @commandBufferCount@ member of
+--     @pAllocateInfo@. Each allocated command buffer begins in the initial
+--     state.
 --
 -- = Description
 --
--- @vkAllocateCommandBuffers@ /can/ be used to create multiple command
+-- 'allocateCommandBuffers' /can/ be used to create multiple command
 -- buffers. If the creation of any of those command buffers fails, the
 -- implementation /must/ destroy all successfully created command buffer
 -- objects from this command, set all entries of the @pCommandBuffers@
 -- array to @NULL@ and return the error.
 --
--- When command buffers are first allocated, they are in the [initial
--- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
+-- When command buffers are first allocated, they are in the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
 -- -   @pAllocateInfo@ /must/ be a valid pointer to a valid
---     @VkCommandBufferAllocateInfo@ structure
+--     'CommandBufferAllocateInfo' structure
 --
 -- -   @pCommandBuffers@ /must/ be a valid pointer to an array of
---     @pAllocateInfo@::commandBufferCount @VkCommandBuffer@ handles
+--     @pAllocateInfo@::commandBufferCount
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handles
+--
+-- -   The value referenced by @pAllocateInfo@::@commandBufferCount@ /must/
+--     be greater than @0@
 --
 -- == Host Synchronization
 --
@@ -282,556 +153,739 @@ pattern VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT = VkCommandBufferUsageFlagB
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
--- 'VkCommandBufferAllocateInfo',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
+-- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
+-- 'CommandBufferAllocateInfo', 'Graphics.Vulkan.Core10.Handles.Device'
+allocateCommandBuffers :: Device -> CommandBufferAllocateInfo -> IO (("commandBuffers" ::: Vector CommandBuffer))
+allocateCommandBuffers device allocateInfo = evalContT $ do
+  let cmds = deviceCmds (device :: Device)
+  let vkAllocateCommandBuffers' = mkVkAllocateCommandBuffers (pVkAllocateCommandBuffers cmds)
+  pAllocateInfo <- ContT $ withCStruct (allocateInfo)
+  pPCommandBuffers <- ContT $ bracket (callocBytes @(Ptr CommandBuffer_T) ((fromIntegral $ commandBufferCount ((allocateInfo) :: CommandBufferAllocateInfo)) * 8)) free
+  r <- lift $ vkAllocateCommandBuffers' (deviceHandle (device)) pAllocateInfo (pPCommandBuffers)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pCommandBuffers <- lift $ generateM (fromIntegral $ commandBufferCount ((allocateInfo) :: CommandBufferAllocateInfo)) (\i -> do
+    pCommandBuffersElem <- peek @(Ptr CommandBuffer_T) ((pPCommandBuffers `advancePtrBytes` (8 * (i)) :: Ptr (Ptr CommandBuffer_T)))
+    pure $ (\h -> CommandBuffer h cmds ) pCommandBuffersElem)
+  pure $ (pCommandBuffers)
+
+-- | A safe wrapper for 'allocateCommandBuffers' and 'freeCommandBuffers'
+-- using 'bracket'
+--
+-- The allocated value must not be returned from the provided computation
+withCommandBuffers :: Device -> CommandBufferAllocateInfo -> (Vector CommandBuffer -> IO r) -> IO r
+withCommandBuffers device commandBufferAllocateInfo =
+  bracket
+    (allocateCommandBuffers device commandBufferAllocateInfo)
+    (\o -> freeCommandBuffers device (commandPool (commandBufferAllocateInfo :: CommandBufferAllocateInfo)) o)
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkAllocateCommandBuffers" vkAllocateCommandBuffers :: ("device" ::: VkDevice) -> ("pAllocateInfo" ::: Ptr VkCommandBufferAllocateInfo) -> ("pCommandBuffers" ::: Ptr VkCommandBuffer) -> IO VkResult
+  "dynamic" mkVkFreeCommandBuffers
+  :: FunPtr (Ptr Device_T -> CommandPool -> Word32 -> Ptr (Ptr CommandBuffer_T) -> IO ()) -> Ptr Device_T -> CommandPool -> Word32 -> Ptr (Ptr CommandBuffer_T) -> IO ()
+
 -- | vkFreeCommandBuffers - Free command buffers
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that owns the command pool.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     owns the command pool.
 --
--- -   @commandPool@ is the command pool from which the command buffers
---     were allocated.
+-- -   'Graphics.Vulkan.Core10.Handles.CommandPool' is the command pool
+--     from which the command buffers were allocated.
 --
 -- -   @commandBufferCount@ is the length of the @pCommandBuffers@ array.
 --
--- -   @pCommandBuffers@ is an array of handles of command buffers to free.
+-- -   @pCommandBuffers@ is a pointer to an array of handles of command
+--     buffers to free.
 --
 -- = Description
 --
--- Any primary command buffer that is in the [recording or executable
--- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
+-- Any primary command buffer that is in the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording or executable state>
 -- and has any element of @pCommandBuffers@ recorded into it, becomes
--- [invalid](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle invalid>.
 --
 -- == Valid Usage
 --
--- -   All elements of @pCommandBuffers@ /must/ not be in the [pending
---     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
+-- -   All elements of @pCommandBuffers@ /must/ not be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
 -- -   @pCommandBuffers@ /must/ be a valid pointer to an array of
---     @commandBufferCount@ @VkCommandBuffer@ handles, each element of
---     which /must/ either be a valid handle or @NULL@
+--     @commandBufferCount@ 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
+--     handles, each element of which /must/ either be a valid handle or
+--     @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
--- -   @commandPool@ /must/ be a valid @VkCommandPool@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.CommandPool' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.CommandPool' handle
 --
 -- -   @commandBufferCount@ /must/ be greater than @0@
 --
--- -   @commandPool@ /must/ have been created, allocated, or retrieved from
---     @device@
+-- -   'Graphics.Vulkan.Core10.Handles.CommandPool' /must/ have been
+--     created, allocated, or retrieved from
+--     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- -   Each element of @pCommandBuffers@ that is a valid handle /must/ have
---     been created, allocated, or retrieved from @commandPool@
+--     been created, allocated, or retrieved from
+--     'Graphics.Vulkan.Core10.Handles.CommandPool'
 --
 -- == Host Synchronization
 --
--- -   Host access to @commandPool@ /must/ be externally synchronized
+-- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandPool' /must/
+--     be externally synchronized
 --
 -- -   Host access to each member of @pCommandBuffers@ /must/ be externally
 --     synchronized
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
--- 'Graphics.Vulkan.Core10.CommandPool.VkCommandPool',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
+-- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
+-- 'Graphics.Vulkan.Core10.Handles.CommandPool',
+-- 'Graphics.Vulkan.Core10.Handles.Device'
+freeCommandBuffers :: Device -> CommandPool -> ("commandBuffers" ::: Vector CommandBuffer) -> IO ()
+freeCommandBuffers device commandPool commandBuffers = evalContT $ do
+  let vkFreeCommandBuffers' = mkVkFreeCommandBuffers (pVkFreeCommandBuffers (deviceCmds (device :: Device)))
+  pPCommandBuffers <- ContT $ allocaBytesAligned @(Ptr CommandBuffer_T) ((Data.Vector.length (commandBuffers)) * 8) 8
+  lift $ Data.Vector.imapM_ (\i e -> poke (pPCommandBuffers `plusPtr` (8 * (i)) :: Ptr (Ptr CommandBuffer_T)) (commandBufferHandle (e))) (commandBuffers)
+  lift $ vkFreeCommandBuffers' (deviceHandle (device)) (commandPool) ((fromIntegral (Data.Vector.length $ (commandBuffers)) :: Word32)) (pPCommandBuffers)
+  pure $ ()
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkFreeCommandBuffers" vkFreeCommandBuffers :: ("device" ::: VkDevice) -> ("commandPool" ::: VkCommandPool) -> ("commandBufferCount" ::: Word32) -> ("pCommandBuffers" ::: Ptr VkCommandBuffer) -> IO ()
+  "dynamic" mkVkBeginCommandBuffer
+  :: FunPtr (Ptr CommandBuffer_T -> Ptr (CommandBufferBeginInfo a) -> IO Result) -> Ptr CommandBuffer_T -> Ptr (CommandBufferBeginInfo a) -> IO Result
+
 -- | vkBeginCommandBuffer - Start recording a command buffer
 --
 -- = Parameters
 --
--- -   @commandBuffer@ is the handle of the command buffer which is to be
---     put in the recording state.
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the handle of the
+--     command buffer which is to be put in the recording state.
 --
--- -   @pBeginInfo@ is an instance of the @VkCommandBufferBeginInfo@
---     structure, which defines additional information about how the
---     command buffer begins recording.
+-- -   @pBeginInfo@ points to a 'CommandBufferBeginInfo' structure defining
+--     additional information about how the command buffer begins
+--     recording.
 --
 -- == Valid Usage
 --
--- -   @commandBuffer@ /must/ not be in the [recording or pending
---     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ not be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording or pending state>
 --
--- -   If @commandBuffer@ was allocated from a
---     'Graphics.Vulkan.Core10.CommandPool.VkCommandPool' which did not
---     have the @VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT@ flag set,
---     @commandBuffer@ /must/ be in the [initial
---     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
+-- -   If 'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
+--     a 'Graphics.Vulkan.Core10.Handles.CommandPool' which did not have
+--     the
+--     'Graphics.Vulkan.Core10.Enums.CommandPoolCreateFlagBits.COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT'
+--     flag set, 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be
+--     in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>
 --
--- -   If @commandBuffer@ is a secondary command buffer, the
---     @pInheritanceInfo@ member of @pBeginInfo@ /must/ be a valid
---     @VkCommandBufferInheritanceInfo@ structure
+-- -   If 'Graphics.Vulkan.Core10.Handles.CommandBuffer' is a secondary
+--     command buffer, the @pInheritanceInfo@ member of @pBeginInfo@ /must/
+--     be a valid 'CommandBufferInheritanceInfo' structure
 --
--- -   If @commandBuffer@ is a secondary command buffer and either the
---     @occlusionQueryEnable@ member of the @pInheritanceInfo@ member of
---     @pBeginInfo@ is @VK_FALSE@, or the precise occlusion queries feature
---     is not enabled, the @queryFlags@ member of the @pInheritanceInfo@
---     member @pBeginInfo@ /must/ not contain
---     @VK_QUERY_CONTROL_PRECISE_BIT@
+-- -   If 'Graphics.Vulkan.Core10.Handles.CommandBuffer' is a secondary
+--     command buffer and either the @occlusionQueryEnable@ member of the
+--     @pInheritanceInfo@ member of @pBeginInfo@ is
+--     'Graphics.Vulkan.Core10.BaseType.FALSE', or the precise occlusion
+--     queries feature is not enabled, the @queryFlags@ member of the
+--     @pInheritanceInfo@ member @pBeginInfo@ /must/ not contain
+--     'Graphics.Vulkan.Core10.Enums.QueryControlFlagBits.QUERY_CONTROL_PRECISE_BIT'
+--
+-- -   If 'Graphics.Vulkan.Core10.Handles.CommandBuffer' is a primary
+--     command buffer, then @pBeginInfo->flags@ /must/ not set both the
+--     'Graphics.Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT'
+--     and the
+--     'Graphics.Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT'
+--     flags
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pBeginInfo@ /must/ be a valid pointer to a valid
---     @VkCommandBufferBeginInfo@ structure
+--     'CommandBufferBeginInfo' structure
 --
 -- == Host Synchronization
 --
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
+-- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
+--     be externally synchronized
 --
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
+-- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
+--     /must/ be externally synchronized
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
--- 'VkCommandBufferBeginInfo'
+-- 'Graphics.Vulkan.Core10.Handles.CommandBuffer', 'CommandBufferBeginInfo'
+beginCommandBuffer :: PokeChain a => CommandBuffer -> CommandBufferBeginInfo a -> IO ()
+beginCommandBuffer commandBuffer beginInfo = evalContT $ do
+  let vkBeginCommandBuffer' = mkVkBeginCommandBuffer (pVkBeginCommandBuffer (deviceCmds (commandBuffer :: CommandBuffer)))
+  pBeginInfo <- ContT $ withCStruct (beginInfo)
+  r <- lift $ vkBeginCommandBuffer' (commandBufferHandle (commandBuffer)) pBeginInfo
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+
+-- | A safe wrapper for 'beginCommandBuffer' and 'endCommandBuffer' using
+-- 'bracket_'
+--
+-- The allocated value must not be returned from the provided computation
+useCommandBuffer :: PokeChain a => CommandBuffer -> CommandBufferBeginInfo a -> IO r -> IO r
+useCommandBuffer commandBuffer commandBufferBeginInfo =
+  bracket_
+    (beginCommandBuffer commandBuffer commandBufferBeginInfo)
+    ( endCommandBuffer commandBuffer)
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkBeginCommandBuffer" vkBeginCommandBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> ("pBeginInfo" ::: Ptr VkCommandBufferBeginInfo) -> IO VkResult
+  "dynamic" mkVkEndCommandBuffer
+  :: FunPtr (Ptr CommandBuffer_T -> IO Result) -> Ptr CommandBuffer_T -> IO Result
+
 -- | vkEndCommandBuffer - Finish recording a command buffer
 --
 -- = Parameters
 --
--- -   @commandBuffer@ is the command buffer to complete recording.
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
+--     to complete recording.
 --
 -- = Description
 --
 -- If there was an error during recording, the application will be notified
--- by an unsuccessful return code returned by @vkEndCommandBuffer@. If the
+-- by an unsuccessful return code returned by 'endCommandBuffer'. If the
 -- application wishes to further use the command buffer, the command buffer
--- /must/ be reset. The command buffer /must/ have been in the [recording
--- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle),
--- and is moved to the [executable
--- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
+-- /must/ be reset. The command buffer /must/ have been in the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>,
+-- and is moved to the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle executable state>.
 --
 -- == Valid Usage
 --
--- -   @commandBuffer@ /must/ be in the [recording
---     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>.
 --
--- -   If @commandBuffer@ is a primary command buffer, there /must/ not be
---     an active render pass instance
+-- -   If 'Graphics.Vulkan.Core10.Handles.CommandBuffer' is a primary
+--     command buffer, there /must/ not be an active render pass instance
 --
 -- -   All queries made
---     [active](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#queries-operation-active)
---     during the recording of @commandBuffer@ /must/ have been made
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-operation-active active>
+--     during the recording of
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ have been made
 --     inactive
 --
--- -   If @commandBuffer@ is a secondary command buffer, there /must/ not
---     be an outstanding
---     'Graphics.Vulkan.Extensions.VK_EXT_debug_utils.vkCmdBeginDebugUtilsLabelEXT'
---     command recorded to @commandBuffer@ that has not previously been
---     ended by a call to
---     'Graphics.Vulkan.Extensions.VK_EXT_debug_utils.vkCmdEndDebugUtilsLabelEXT'.
+-- -   Conditional rendering must not be
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#active-conditional-rendering active>
 --
--- -   If @commandBuffer@ is a secondary command buffer, there /must/ not
---     be an outstanding
---     'Graphics.Vulkan.Extensions.VK_EXT_debug_marker.vkCmdDebugMarkerBeginEXT'
---     command recorded to @commandBuffer@ that has not previously been
---     ended by a call to
---     'Graphics.Vulkan.Extensions.VK_EXT_debug_marker.vkCmdDebugMarkerEndEXT'.
+-- -   If 'Graphics.Vulkan.Core10.Handles.CommandBuffer' is a secondary
+--     command buffer, there /must/ not be an outstanding
+--     'Graphics.Vulkan.Extensions.VK_EXT_debug_utils.cmdBeginDebugUtilsLabelEXT'
+--     command recorded to 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
+--     that has not previously been ended by a call to
+--     'Graphics.Vulkan.Extensions.VK_EXT_debug_utils.cmdEndDebugUtilsLabelEXT'.
+--
+-- -   If 'Graphics.Vulkan.Core10.Handles.CommandBuffer' is a secondary
+--     command buffer, there /must/ not be an outstanding
+--     'Graphics.Vulkan.Extensions.VK_EXT_debug_marker.cmdDebugMarkerBeginEXT'
+--     command recorded to 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
+--     that has not previously been ended by a call to
+--     'Graphics.Vulkan.Extensions.VK_EXT_debug_marker.cmdDebugMarkerEndEXT'.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- == Host Synchronization
 --
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
+-- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
+--     be externally synchronized
 --
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
+-- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
+--     /must/ be externally synchronized
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer'
+-- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
+endCommandBuffer :: CommandBuffer -> IO ()
+endCommandBuffer commandBuffer = do
+  let vkEndCommandBuffer' = mkVkEndCommandBuffer (pVkEndCommandBuffer (deviceCmds (commandBuffer :: CommandBuffer)))
+  r <- vkEndCommandBuffer' (commandBufferHandle (commandBuffer))
+  when (r < SUCCESS) (throwIO (VulkanException r))
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkEndCommandBuffer" vkEndCommandBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> IO VkResult
+  "dynamic" mkVkResetCommandBuffer
+  :: FunPtr (Ptr CommandBuffer_T -> CommandBufferResetFlags -> IO Result) -> Ptr CommandBuffer_T -> CommandBufferResetFlags -> IO Result
+
 -- | vkResetCommandBuffer - Reset a command buffer to the initial state
 --
 -- = Parameters
 --
--- -   @commandBuffer@ is the command buffer to reset. The command buffer
---     /can/ be in any state other than
---     [pending](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle),
---     and is moved into the [initial
---     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
+--     to reset. The command buffer /can/ be in any state other than
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending>,
+--     and is moved into the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>.
 --
--- -   @flags@ is a bitmask of 'VkCommandBufferResetFlagBits' controlling
---     the reset operation.
+-- -   'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+--     'Graphics.Vulkan.Core10.Enums.CommandBufferResetFlagBits.CommandBufferResetFlagBits'
+--     controlling the reset operation.
 --
 -- = Description
 --
--- Any primary command buffer that is in the [recording or executable
--- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
--- and has @commandBuffer@ recorded into it, becomes
--- [invalid](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
+-- Any primary command buffer that is in the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording or executable state>
+-- and has 'Graphics.Vulkan.Core10.Handles.CommandBuffer' recorded into it,
+-- becomes
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle invalid>.
 --
 -- == Valid Usage
 --
--- -   @commandBuffer@ /must/ not be in the [pending
---     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ not be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
--- -   @commandBuffer@ /must/ have been allocated from a pool that was
---     created with the @VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT@
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ have been
+--     allocated from a pool that was created with the
+--     'Graphics.Vulkan.Core10.Enums.CommandPoolCreateFlagBits.COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   @flags@ /must/ be a valid combination of
---     'VkCommandBufferResetFlagBits' values
+-- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
+--     combination of
+--     'Graphics.Vulkan.Core10.Enums.CommandBufferResetFlagBits.CommandBufferResetFlagBits'
+--     values
 --
 -- == Host Synchronization
 --
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
+-- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
+--     be externally synchronized
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer',
--- 'VkCommandBufferResetFlags'
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "vkResetCommandBuffer" vkResetCommandBuffer :: ("commandBuffer" ::: VkCommandBuffer) -> ("flags" ::: VkCommandBufferResetFlags) -> IO VkResult
+-- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
+-- 'Graphics.Vulkan.Core10.Enums.CommandBufferResetFlagBits.CommandBufferResetFlags'
+resetCommandBuffer :: CommandBuffer -> CommandBufferResetFlags -> IO ()
+resetCommandBuffer commandBuffer flags = do
+  let vkResetCommandBuffer' = mkVkResetCommandBuffer (pVkResetCommandBuffer (deviceCmds (commandBuffer :: CommandBuffer)))
+  r <- vkResetCommandBuffer' (commandBufferHandle (commandBuffer)) (flags)
+  when (r < SUCCESS) (throwIO (VulkanException r))
+
+
 -- | VkCommandBufferAllocateInfo - Structure specifying the allocation
 -- parameters for command buffer object
 --
--- == Valid Usage
---
--- -   @commandBufferCount@ /must/ be greater than @0@
---
 -- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO@
---
--- -   @pNext@ /must/ be @NULL@
---
--- -   @commandPool@ /must/ be a valid @VkCommandPool@ handle
---
--- -   @level@ /must/ be a valid 'VkCommandBufferLevel' value
 --
 -- = See Also
 --
--- 'VkCommandBufferLevel',
--- 'Graphics.Vulkan.Core10.CommandPool.VkCommandPool',
--- 'Graphics.Vulkan.Core10.Core.VkStructureType',
--- 'vkAllocateCommandBuffers'
-data VkCommandBufferAllocateInfo = VkCommandBufferAllocateInfo
-  { -- | @sType@ is the type of this structure.
-  vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
-  vkPNext :: Ptr ()
-  , -- | @commandPool@ is the command pool from which the command buffers are
-  -- allocated.
-  vkCommandPool :: VkCommandPool
-  , -- | @level@ is an 'VkCommandBufferLevel' value specifying the command buffer
-  -- level.
-  vkLevel :: VkCommandBufferLevel
-  , -- | @commandBufferCount@ is the number of command buffers to allocate from
-  -- the pool.
-  vkCommandBufferCount :: Word32
+-- 'Graphics.Vulkan.Core10.Enums.CommandBufferLevel.CommandBufferLevel',
+-- 'Graphics.Vulkan.Core10.Handles.CommandPool',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'allocateCommandBuffers'
+data CommandBufferAllocateInfo = CommandBufferAllocateInfo
+  { -- | 'Graphics.Vulkan.Core10.Handles.CommandPool' /must/ be a valid
+    -- 'Graphics.Vulkan.Core10.Handles.CommandPool' handle
+    commandPool :: CommandPool
+  , -- | @level@ /must/ be a valid
+    -- 'Graphics.Vulkan.Core10.Enums.CommandBufferLevel.CommandBufferLevel'
+    -- value
+    level :: CommandBufferLevel
+  , -- | @commandBufferCount@ /must/ be greater than @0@
+    commandBufferCount :: Word32
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show CommandBufferAllocateInfo
 
-instance Storable VkCommandBufferAllocateInfo where
+instance ToCStruct CommandBufferAllocateInfo where
+  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p CommandBufferAllocateInfo{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr CommandPool)) (commandPool)
+    poke ((p `plusPtr` 24 :: Ptr CommandBufferLevel)) (level)
+    poke ((p `plusPtr` 28 :: Ptr Word32)) (commandBufferCount)
+    f
+  cStructSize = 32
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr CommandPool)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr CommandBufferLevel)) (zero)
+    poke ((p `plusPtr` 28 :: Ptr Word32)) (zero)
+    f
+
+instance FromCStruct CommandBufferAllocateInfo where
+  peekCStruct p = do
+    commandPool <- peek @CommandPool ((p `plusPtr` 16 :: Ptr CommandPool))
+    level <- peek @CommandBufferLevel ((p `plusPtr` 24 :: Ptr CommandBufferLevel))
+    commandBufferCount <- peek @Word32 ((p `plusPtr` 28 :: Ptr Word32))
+    pure $ CommandBufferAllocateInfo
+             commandPool level commandBufferCount
+
+instance Storable CommandBufferAllocateInfo where
   sizeOf ~_ = 32
   alignment ~_ = 8
-  peek ptr = VkCommandBufferAllocateInfo <$> peek (ptr `plusPtr` 0)
-                                         <*> peek (ptr `plusPtr` 8)
-                                         <*> peek (ptr `plusPtr` 16)
-                                         <*> peek (ptr `plusPtr` 24)
-                                         <*> peek (ptr `plusPtr` 28)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkCommandBufferAllocateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkCommandBufferAllocateInfo))
-                *> poke (ptr `plusPtr` 16) (vkCommandPool (poked :: VkCommandBufferAllocateInfo))
-                *> poke (ptr `plusPtr` 24) (vkLevel (poked :: VkCommandBufferAllocateInfo))
-                *> poke (ptr `plusPtr` 28) (vkCommandBufferCount (poked :: VkCommandBufferAllocateInfo))
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero CommandBufferAllocateInfo where
+  zero = CommandBufferAllocateInfo
+           zero
+           zero
+           zero
+
+
 -- | VkCommandBufferInheritanceInfo - Structure specifying command buffer
 -- inheritance info
 --
--- = Members
---
--- -   @sType@ is the type of this structure.
---
--- -   @pNext@ is @NULL@ or a pointer to an extension-specific structure.
---
--- -   @renderPass@ is a @VkRenderPass@ object defining which render passes
---     the @VkCommandBuffer@ will be
---     [compatible](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#renderpass-compatibility)
---     with and /can/ be executed within. If the @VkCommandBuffer@ will not
---     be executed within a render pass instance, @renderPass@ is ignored.
---
--- -   @subpass@ is the index of the subpass within the render pass
---     instance that the @VkCommandBuffer@ will be executed within. If the
---     @VkCommandBuffer@ will not be executed within a render pass
---     instance, @subpass@ is ignored.
---
--- -   @framebuffer@ optionally refers to the @VkFramebuffer@ object that
---     the @VkCommandBuffer@ will be rendering to if it is executed within
---     a render pass instance. It /can/ be
---     'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE' if the framebuffer
---     is not known, or if the @VkCommandBuffer@ will not be executed
---     within a render pass instance.
---
---     __Note__
---
---     Specifying the exact framebuffer that the secondary command buffer
---     will be executed with /may/ result in better performance at command
---     buffer execution time.
---
--- -   @occlusionQueryEnable@ specifies whether the command buffer /can/ be
---     executed while an occlusion query is active in the primary command
---     buffer. If this is @VK_TRUE@, then this command buffer /can/ be
---     executed whether the primary command buffer has an occlusion query
---     active or not. If this is @VK_FALSE@, then the primary command
---     buffer /must/ not have an occlusion query active.
---
--- -   @queryFlags@ specifies the query flags that /can/ be used by an
---     active occlusion query in the primary command buffer when this
---     secondary command buffer is executed. If this value includes the
---     @VK_QUERY_CONTROL_PRECISE_BIT@ bit, then the active query /can/
---     return boolean results or actual sample counts. If this bit is not
---     set, then the active query /must/ not use the
---     @VK_QUERY_CONTROL_PRECISE_BIT@ bit.
---
--- -   @pipelineStatistics@ is a bitmask of
---     'Graphics.Vulkan.Core10.Query.VkQueryPipelineStatisticFlagBits'
---     specifying the set of pipeline statistics that /can/ be counted by
---     an active query in the primary command buffer when this secondary
---     command buffer is executed. If this value includes a given bit, then
---     this command buffer /can/ be executed whether the primary command
---     buffer has a pipeline statistics query active that includes this bit
---     or not. If this value excludes a given bit, then the active pipeline
---     statistics query /must/ not be from a query pool that counts that
---     statistic.
---
 -- == Valid Usage
 --
--- -   If the [inherited
---     queries](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-inheritedQueries)
---     feature is not enabled, @occlusionQueryEnable@ /must/ be @VK_FALSE@
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-inheritedQueries inherited queries>
+--     feature is not enabled, @occlusionQueryEnable@ /must/ be
+--     'Graphics.Vulkan.Core10.BaseType.FALSE'
 --
--- -   If the [inherited
---     queries](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-inheritedQueries)
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-inheritedQueries inherited queries>
 --     feature is enabled, @queryFlags@ /must/ be a valid combination of
---     'VkQueryControlFlagBits' values
+--     'Graphics.Vulkan.Core10.Enums.QueryControlFlagBits.QueryControlFlagBits'
+--     values
 --
--- -   If the [pipeline statistics
---     queries](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-pipelineStatisticsQuery)
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-inheritedQueries inherited queries>
+--     feature is not enabled, @queryFlags@ /must/ be @0@
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineStatisticsQuery pipeline statistics queries>
+--     feature is enabled, @pipelineStatistics@ /must/ be a valid
+--     combination of
+--     'Graphics.Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QueryPipelineStatisticFlagBits'
+--     values
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineStatisticsQuery pipeline statistics queries>
 --     feature is not enabled, @pipelineStatistics@ /must/ be @0@
 --
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO@
+--     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO'
 --
--- -   @pNext@ /must/ be @NULL@
+-- -   Each @pNext@ member of any structure (including this one) in the
+--     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
+--     instance of
+--     'Graphics.Vulkan.Extensions.VK_EXT_conditional_rendering.CommandBufferInheritanceConditionalRenderingInfoEXT'
+--     or
+--     'Graphics.Vulkan.Extensions.VK_QCOM_render_pass_transform.CommandBufferInheritanceRenderPassTransformInfoQCOM'
 --
--- -   Both of @framebuffer@, and @renderPass@ that are valid handles
---     /must/ have been created, allocated, or retrieved from the same
---     @VkDevice@
+-- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
+--     unique
+--
+-- -   Both of 'Graphics.Vulkan.Core10.Handles.Framebuffer', and
+--     'Graphics.Vulkan.Core10.Handles.RenderPass' that are valid handles
+--     of non-ignored parameters /must/ have been created, allocated, or
+--     retrieved from the same 'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- = See Also
 --
--- @VkBool32@, 'VkCommandBufferBeginInfo',
--- 'Graphics.Vulkan.Core10.Pass.VkFramebuffer', 'VkQueryControlFlags',
--- 'Graphics.Vulkan.Core10.Query.VkQueryPipelineStatisticFlags',
--- 'Graphics.Vulkan.Core10.Pipeline.VkRenderPass',
--- 'Graphics.Vulkan.Core10.Core.VkStructureType'
-data VkCommandBufferInheritanceInfo = VkCommandBufferInheritanceInfo
-  { -- No documentation found for Nested "VkCommandBufferInheritanceInfo" "sType"
-  vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkCommandBufferInheritanceInfo" "pNext"
-  vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkCommandBufferInheritanceInfo" "renderPass"
-  vkRenderPass :: VkRenderPass
-  , -- No documentation found for Nested "VkCommandBufferInheritanceInfo" "subpass"
-  vkSubpass :: Word32
-  , -- No documentation found for Nested "VkCommandBufferInheritanceInfo" "framebuffer"
-  vkFramebuffer :: VkFramebuffer
-  , -- No documentation found for Nested "VkCommandBufferInheritanceInfo" "occlusionQueryEnable"
-  vkOcclusionQueryEnable :: VkBool32
-  , -- No documentation found for Nested "VkCommandBufferInheritanceInfo" "queryFlags"
-  vkQueryFlags :: VkQueryControlFlags
-  , -- No documentation found for Nested "VkCommandBufferInheritanceInfo" "pipelineStatistics"
-  vkPipelineStatistics :: VkQueryPipelineStatisticFlags
+-- 'Graphics.Vulkan.Core10.BaseType.Bool32', 'CommandBufferBeginInfo',
+-- 'Graphics.Vulkan.Core10.Handles.Framebuffer',
+-- 'Graphics.Vulkan.Core10.Enums.QueryControlFlagBits.QueryControlFlags',
+-- 'Graphics.Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QueryPipelineStatisticFlags',
+-- 'Graphics.Vulkan.Core10.Handles.RenderPass',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
+data CommandBufferInheritanceInfo (es :: [Type]) = CommandBufferInheritanceInfo
+  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+    next :: Chain es
+  , -- | 'Graphics.Vulkan.Core10.Handles.RenderPass' is a
+    -- 'Graphics.Vulkan.Core10.Handles.RenderPass' object defining which render
+    -- passes the 'Graphics.Vulkan.Core10.Handles.CommandBuffer' will be
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
+    -- with and /can/ be executed within. If the
+    -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer' will not be executed
+    -- within a render pass instance,
+    -- 'Graphics.Vulkan.Core10.Handles.RenderPass' is ignored.
+    renderPass :: RenderPass
+  , -- | @subpass@ is the index of the subpass within the render pass instance
+    -- that the 'Graphics.Vulkan.Core10.Handles.CommandBuffer' will be executed
+    -- within. If the 'Graphics.Vulkan.Core10.Handles.CommandBuffer' will not
+    -- be executed within a render pass instance, @subpass@ is ignored.
+    subpass :: Word32
+  , -- | 'Graphics.Vulkan.Core10.Handles.Framebuffer' optionally refers to the
+    -- 'Graphics.Vulkan.Core10.Handles.Framebuffer' object that the
+    -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer' will be rendering to if
+    -- it is executed within a render pass instance. It /can/ be
+    -- 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' if the framebuffer is
+    -- not known, or if the 'Graphics.Vulkan.Core10.Handles.CommandBuffer' will
+    -- not be executed within a render pass instance.
+    --
+    -- Note
+    --
+    -- Specifying the exact framebuffer that the secondary command buffer will
+    -- be executed with /may/ result in better performance at command buffer
+    -- execution time.
+    framebuffer :: Framebuffer
+  , -- | @occlusionQueryEnable@ specifies whether the command buffer /can/ be
+    -- executed while an occlusion query is active in the primary command
+    -- buffer. If this is 'Graphics.Vulkan.Core10.BaseType.TRUE', then this
+    -- command buffer /can/ be executed whether the primary command buffer has
+    -- an occlusion query active or not. If this is
+    -- 'Graphics.Vulkan.Core10.BaseType.FALSE', then the primary command buffer
+    -- /must/ not have an occlusion query active.
+    occlusionQueryEnable :: Bool
+  , -- | @queryFlags@ specifies the query flags that /can/ be used by an active
+    -- occlusion query in the primary command buffer when this secondary
+    -- command buffer is executed. If this value includes the
+    -- 'Graphics.Vulkan.Core10.Enums.QueryControlFlagBits.QUERY_CONTROL_PRECISE_BIT'
+    -- bit, then the active query /can/ return boolean results or actual sample
+    -- counts. If this bit is not set, then the active query /must/ not use the
+    -- 'Graphics.Vulkan.Core10.Enums.QueryControlFlagBits.QUERY_CONTROL_PRECISE_BIT'
+    -- bit.
+    queryFlags :: QueryControlFlags
+  , -- | @pipelineStatistics@ is a bitmask of
+    -- 'Graphics.Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QueryPipelineStatisticFlagBits'
+    -- specifying the set of pipeline statistics that /can/ be counted by an
+    -- active query in the primary command buffer when this secondary command
+    -- buffer is executed. If this value includes a given bit, then this
+    -- command buffer /can/ be executed whether the primary command buffer has
+    -- a pipeline statistics query active that includes this bit or not. If
+    -- this value excludes a given bit, then the active pipeline statistics
+    -- query /must/ not be from a query pool that counts that statistic.
+    pipelineStatistics :: QueryPipelineStatisticFlags
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show (Chain es) => Show (CommandBufferInheritanceInfo es)
 
-instance Storable VkCommandBufferInheritanceInfo where
-  sizeOf ~_ = 56
-  alignment ~_ = 8
-  peek ptr = VkCommandBufferInheritanceInfo <$> peek (ptr `plusPtr` 0)
-                                            <*> peek (ptr `plusPtr` 8)
-                                            <*> peek (ptr `plusPtr` 16)
-                                            <*> peek (ptr `plusPtr` 24)
-                                            <*> peek (ptr `plusPtr` 32)
-                                            <*> peek (ptr `plusPtr` 40)
-                                            <*> peek (ptr `plusPtr` 44)
-                                            <*> peek (ptr `plusPtr` 48)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkCommandBufferInheritanceInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkCommandBufferInheritanceInfo))
-                *> poke (ptr `plusPtr` 16) (vkRenderPass (poked :: VkCommandBufferInheritanceInfo))
-                *> poke (ptr `plusPtr` 24) (vkSubpass (poked :: VkCommandBufferInheritanceInfo))
-                *> poke (ptr `plusPtr` 32) (vkFramebuffer (poked :: VkCommandBufferInheritanceInfo))
-                *> poke (ptr `plusPtr` 40) (vkOcclusionQueryEnable (poked :: VkCommandBufferInheritanceInfo))
-                *> poke (ptr `plusPtr` 44) (vkQueryFlags (poked :: VkCommandBufferInheritanceInfo))
-                *> poke (ptr `plusPtr` 48) (vkPipelineStatistics (poked :: VkCommandBufferInheritanceInfo))
+instance Extensible CommandBufferInheritanceInfo where
+  extensibleType = STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO
+  setNext x next = x{next = next}
+  getNext CommandBufferInheritanceInfo{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends CommandBufferInheritanceInfo e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @CommandBufferInheritanceRenderPassTransformInfoQCOM = Just f
+    | Just Refl <- eqT @e @CommandBufferInheritanceConditionalRenderingInfoEXT = Just f
+    | otherwise = Nothing
+
+instance PokeChain es => ToCStruct (CommandBufferInheritanceInfo es) where
+  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p CommandBufferInheritanceInfo{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ poke ((p `plusPtr` 16 :: Ptr RenderPass)) (renderPass)
+    lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (subpass)
+    lift $ poke ((p `plusPtr` 32 :: Ptr Framebuffer)) (framebuffer)
+    lift $ poke ((p `plusPtr` 40 :: Ptr Bool32)) (boolToBool32 (occlusionQueryEnable))
+    lift $ poke ((p `plusPtr` 44 :: Ptr QueryControlFlags)) (queryFlags)
+    lift $ poke ((p `plusPtr` 48 :: Ptr QueryPipelineStatisticFlags)) (pipelineStatistics)
+    lift $ f
+  cStructSize = 56
+  cStructAlignment = 8
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
+    lift $ poke ((p `plusPtr` 40 :: Ptr Bool32)) (boolToBool32 (zero))
+    lift $ f
+
+instance PeekChain es => FromCStruct (CommandBufferInheritanceInfo es) where
+  peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
+    renderPass <- peek @RenderPass ((p `plusPtr` 16 :: Ptr RenderPass))
+    subpass <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
+    framebuffer <- peek @Framebuffer ((p `plusPtr` 32 :: Ptr Framebuffer))
+    occlusionQueryEnable <- peek @Bool32 ((p `plusPtr` 40 :: Ptr Bool32))
+    queryFlags <- peek @QueryControlFlags ((p `plusPtr` 44 :: Ptr QueryControlFlags))
+    pipelineStatistics <- peek @QueryPipelineStatisticFlags ((p `plusPtr` 48 :: Ptr QueryPipelineStatisticFlags))
+    pure $ CommandBufferInheritanceInfo
+             next renderPass subpass framebuffer (bool32ToBool occlusionQueryEnable) queryFlags pipelineStatistics
+
+instance es ~ '[] => Zero (CommandBufferInheritanceInfo es) where
+  zero = CommandBufferInheritanceInfo
+           ()
+           zero
+           zero
+           zero
+           zero
+           zero
+           zero
+
+
 -- | VkCommandBufferBeginInfo - Structure specifying a command buffer begin
 -- operation
 --
 -- == Valid Usage
 --
--- -   If @flags@ contains
---     @VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT@, the @renderPass@
---     member of @pInheritanceInfo@ /must/ be a valid @VkRenderPass@
+-- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+--     'Graphics.Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT',
+--     the 'Graphics.Vulkan.Core10.Handles.RenderPass' member of
+--     @pInheritanceInfo@ /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.RenderPass'
 --
--- -   If @flags@ contains
---     @VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT@, the @subpass@
---     member of @pInheritanceInfo@ /must/ be a valid subpass index within
---     the @renderPass@ member of @pInheritanceInfo@
+-- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+--     'Graphics.Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT',
+--     the @subpass@ member of @pInheritanceInfo@ /must/ be a valid subpass
+--     index within the 'Graphics.Vulkan.Core10.Handles.RenderPass' member
+--     of @pInheritanceInfo@
 --
--- -   If @flags@ contains
---     @VK_COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT@, the
---     @framebuffer@ member of @pInheritanceInfo@ /must/ be either
---     'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE', or a valid
---     @VkFramebuffer@ that is compatible with the @renderPass@ member of
+-- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+--     'Graphics.Vulkan.Core10.Enums.CommandBufferUsageFlagBits.COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT',
+--     the 'Graphics.Vulkan.Core10.Handles.Framebuffer' member of
+--     @pInheritanceInfo@ /must/ be either
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', or a valid
+--     'Graphics.Vulkan.Core10.Handles.Framebuffer' that is compatible with
+--     the 'Graphics.Vulkan.Core10.Handles.RenderPass' member of
 --     @pInheritanceInfo@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO@
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO'
 --
 -- -   @pNext@ /must/ be @NULL@ or a pointer to a valid instance of
---     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group.VkDeviceGroupCommandBufferBeginInfo'
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group.DeviceGroupCommandBufferBeginInfo'
 --
--- -   @flags@ /must/ be a valid combination of
---     'VkCommandBufferUsageFlagBits' values
+-- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
+--     unique
+--
+-- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
+--     combination of
+--     'Graphics.Vulkan.Core10.Enums.CommandBufferUsageFlagBits.CommandBufferUsageFlagBits'
+--     values
 --
 -- = See Also
 --
--- 'VkCommandBufferInheritanceInfo', 'VkCommandBufferUsageFlags',
--- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'vkBeginCommandBuffer'
-data VkCommandBufferBeginInfo = VkCommandBufferBeginInfo
-  { -- | @sType@ is the type of this structure.
-  vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
-  vkPNext :: Ptr ()
-  , -- | @flags@ is a bitmask of 'VkCommandBufferUsageFlagBits' specifying usage
-  -- behavior for the command buffer.
-  vkFlags :: VkCommandBufferUsageFlags
-  , -- | @pInheritanceInfo@ is a pointer to a @VkCommandBufferInheritanceInfo@
-  -- structure, which is used if @commandBuffer@ is a secondary command
-  -- buffer. If this is a primary command buffer, then this value is ignored.
-  vkPInheritanceInfo :: Ptr VkCommandBufferInheritanceInfo
+-- 'CommandBufferInheritanceInfo',
+-- 'Graphics.Vulkan.Core10.Enums.CommandBufferUsageFlagBits.CommandBufferUsageFlags',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'beginCommandBuffer'
+data CommandBufferBeginInfo (es :: [Type]) = CommandBufferBeginInfo
+  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+    next :: Chain es
+  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+    -- 'Graphics.Vulkan.Core10.Enums.CommandBufferUsageFlagBits.CommandBufferUsageFlagBits'
+    -- specifying usage behavior for the command buffer.
+    flags :: CommandBufferUsageFlags
+  , -- | @pInheritanceInfo@ is a pointer to a 'CommandBufferInheritanceInfo'
+    -- structure, used if 'Graphics.Vulkan.Core10.Handles.CommandBuffer' is a
+    -- secondary command buffer. If this is a primary command buffer, then this
+    -- value is ignored.
+    inheritanceInfo :: Maybe (SomeStruct CommandBufferInheritanceInfo)
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show (Chain es) => Show (CommandBufferBeginInfo es)
 
-instance Storable VkCommandBufferBeginInfo where
-  sizeOf ~_ = 32
-  alignment ~_ = 8
-  peek ptr = VkCommandBufferBeginInfo <$> peek (ptr `plusPtr` 0)
-                                      <*> peek (ptr `plusPtr` 8)
-                                      <*> peek (ptr `plusPtr` 16)
-                                      <*> peek (ptr `plusPtr` 24)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkCommandBufferBeginInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkCommandBufferBeginInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkCommandBufferBeginInfo))
-                *> poke (ptr `plusPtr` 24) (vkPInheritanceInfo (poked :: VkCommandBufferBeginInfo))
--- | VkQueryControlFlags - Bitmask of VkQueryControlFlagBits
---
--- = Description
---
--- @VkQueryControlFlags@ is a bitmask type for setting a mask of zero or
--- more 'VkQueryControlFlagBits'.
---
--- = See Also
---
--- 'VkCommandBufferInheritanceInfo', 'VkQueryControlFlagBits',
--- 'Graphics.Vulkan.Core10.CommandBufferBuilding.vkCmdBeginQuery'
-type VkQueryControlFlags = VkQueryControlFlagBits
--- | VkCommandBufferResetFlags - Bitmask of VkCommandBufferResetFlagBits
---
--- = Description
---
--- @VkCommandBufferResetFlags@ is a bitmask type for setting a mask of zero
--- or more 'VkCommandBufferResetFlagBits'.
---
--- = See Also
---
--- 'VkCommandBufferResetFlagBits', 'vkResetCommandBuffer'
-type VkCommandBufferResetFlags = VkCommandBufferResetFlagBits
--- | VkCommandBufferUsageFlags - Bitmask of VkCommandBufferUsageFlagBits
---
--- = Description
---
--- @VkCommandBufferUsageFlags@ is a bitmask type for setting a mask of zero
--- or more 'VkCommandBufferUsageFlagBits'.
---
--- = See Also
---
--- 'VkCommandBufferBeginInfo', 'VkCommandBufferUsageFlagBits'
-type VkCommandBufferUsageFlags = VkCommandBufferUsageFlagBits
+instance Extensible CommandBufferBeginInfo where
+  extensibleType = STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO
+  setNext x next = x{next = next}
+  getNext CommandBufferBeginInfo{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends CommandBufferBeginInfo e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @DeviceGroupCommandBufferBeginInfo = Just f
+    | otherwise = Nothing
+
+instance PokeChain es => ToCStruct (CommandBufferBeginInfo es) where
+  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p CommandBufferBeginInfo{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ poke ((p `plusPtr` 16 :: Ptr CommandBufferUsageFlags)) (flags)
+    pInheritanceInfo'' <- case (inheritanceInfo) of
+      Nothing -> pure nullPtr
+      Just j -> ContT @_ @_ @(Ptr (CommandBufferInheritanceInfo '[])) $ \cont -> withSomeCStruct @CommandBufferInheritanceInfo (j) (cont . castPtr)
+    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr (CommandBufferInheritanceInfo _)))) pInheritanceInfo''
+    lift $ f
+  cStructSize = 32
+  cStructAlignment = 8
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ f
+
+instance PeekChain es => FromCStruct (CommandBufferBeginInfo es) where
+  peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
+    flags <- peek @CommandBufferUsageFlags ((p `plusPtr` 16 :: Ptr CommandBufferUsageFlags))
+    pInheritanceInfo <- peek @(Ptr (CommandBufferInheritanceInfo _)) ((p `plusPtr` 24 :: Ptr (Ptr (CommandBufferInheritanceInfo a))))
+    pInheritanceInfo' <- maybePeek (\j -> peekSomeCStruct (forgetExtensions (j))) pInheritanceInfo
+    pure $ CommandBufferBeginInfo
+             next flags pInheritanceInfo'
+
+instance es ~ '[] => Zero (CommandBufferBeginInfo es) where
+  zero = CommandBufferBeginInfo
+           ()
+           zero
+           Nothing
+

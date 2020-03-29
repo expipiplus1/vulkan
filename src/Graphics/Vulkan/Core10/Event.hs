@@ -1,125 +1,79 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language GeneralizedNewtypeDeriving #-}
-{-# language PatternSynonyms #-}
-{-# language DataKinds #-}
-{-# language TypeOperators #-}
-{-# language DuplicateRecordFields #-}
+module Graphics.Vulkan.Core10.Event  ( createEvent
+                                     , withEvent
+                                     , destroyEvent
+                                     , getEventStatus
+                                     , setEvent
+                                     , resetEvent
+                                     , EventCreateInfo(..)
+                                     ) where
 
-module Graphics.Vulkan.Core10.Event
-  ( VkEventCreateFlags(..)
-  , VkEvent
-  , vkCreateEvent
-  , vkDestroyEvent
-  , vkGetEventStatus
-  , vkSetEvent
-  , vkResetEvent
-  , VkEventCreateInfo(..)
-  ) where
+import Control.Exception.Base (bracket)
+import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (callocBytes)
+import Foreign.Marshal.Alloc (free)
+import GHC.Base (when)
+import GHC.IO (throwIO)
+import Foreign.Ptr (nullPtr)
+import Foreign.Ptr (plusPtr)
+import Control.Monad.Trans.Class (lift)
+import Control.Monad.Trans.Cont (evalContT)
+import Data.Typeable (Typeable)
+import Foreign.Storable (Storable)
+import Foreign.Storable (Storable(peek))
+import Foreign.Storable (Storable(poke))
+import qualified Foreign.Storable (Storable(..))
+import Foreign.Ptr (FunPtr)
+import Foreign.Ptr (Ptr)
+import Data.Kind (Type)
+import Control.Monad.Trans.Cont (ContT(..))
+import Graphics.Vulkan.NamedType ((:::))
+import Graphics.Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
+import Graphics.Vulkan.Core10.Handles (Device)
+import Graphics.Vulkan.Core10.Handles (Device(..))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkCreateEvent))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkDestroyEvent))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkGetEventStatus))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkResetEvent))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkSetEvent))
+import Graphics.Vulkan.Core10.Handles (Device_T)
+import Graphics.Vulkan.Core10.Handles (Event)
+import Graphics.Vulkan.Core10.Handles (Event(..))
+import Graphics.Vulkan.Core10.Enums.EventCreateFlags (EventCreateFlags)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (FromCStruct(..))
+import Graphics.Vulkan.Core10.Enums.Result (Result)
+import Graphics.Vulkan.Core10.Enums.Result (Result(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
+import Graphics.Vulkan.CStruct (ToCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct(..))
+import Graphics.Vulkan.Exception (VulkanException(..))
+import Graphics.Vulkan.Zero (Zero(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_EVENT_CREATE_INFO))
+import Graphics.Vulkan.Core10.Enums.Result (Result(SUCCESS))
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCreateEvent
+  :: FunPtr (Ptr Device_T -> Ptr EventCreateInfo -> Ptr AllocationCallbacks -> Ptr Event -> IO Result) -> Ptr Device_T -> Ptr EventCreateInfo -> Ptr AllocationCallbacks -> Ptr Event -> IO Result
 
-import Data.Bits
-  ( Bits
-  , FiniteBits
-  )
-import Foreign.Ptr
-  ( Ptr
-  , plusPtr
-  )
-import Foreign.Storable
-  ( Storable
-  , Storable(..)
-  )
-import GHC.Read
-  ( choose
-  , expectP
-  )
-import Graphics.Vulkan.NamedType
-  ( (:::)
-  )
-import Text.ParserCombinators.ReadPrec
-  ( (+++)
-  , prec
-  , step
-  )
-import Text.Read
-  ( Read(..)
-  , parens
-  )
-import Text.Read.Lex
-  ( Lexeme(Ident)
-  )
-
-
-import Graphics.Vulkan.Core10.Core
-  ( VkResult(..)
-  , VkStructureType(..)
-  , VkFlags
-  )
-import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkAllocationCallbacks(..)
-  , VkDevice
-  )
-
-
--- ** VkEventCreateFlags
-
--- | VkEventCreateFlags - Reserved for future use
---
--- = Description
---
--- @VkEventCreateFlags@ is a bitmask type for setting a mask, but is
--- currently reserved for future use.
---
--- = See Also
---
--- 'VkEventCreateInfo'
-newtype VkEventCreateFlags = VkEventCreateFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
-
-instance Show VkEventCreateFlags where
-  
-  showsPrec p (VkEventCreateFlags x) = showParen (p >= 11) (showString "VkEventCreateFlags " . showsPrec 11 x)
-
-instance Read VkEventCreateFlags where
-  readPrec = parens ( choose [ 
-                             ] +++
-                      prec 10 (do
-                        expectP (Ident "VkEventCreateFlags")
-                        v <- step readPrec
-                        pure (VkEventCreateFlags v)
-                        )
-                    )
-
-
--- | Dummy data to tag the 'Ptr' with
-data VkEvent_T
--- | VkEvent - Opaque handle to a event object
---
--- = See Also
---
--- 'Graphics.Vulkan.Core10.CommandBufferBuilding.vkCmdResetEvent',
--- 'Graphics.Vulkan.Core10.CommandBufferBuilding.vkCmdSetEvent',
--- 'Graphics.Vulkan.Core10.CommandBufferBuilding.vkCmdWaitEvents',
--- 'vkCreateEvent', 'vkDestroyEvent', 'vkGetEventStatus', 'vkResetEvent',
--- 'vkSetEvent'
-type VkEvent = Ptr VkEvent_T
 -- | vkCreateEvent - Create a new event object
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that creates the event.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     creates the event.
 --
--- -   @pCreateInfo@ is a pointer to an instance of the @VkEventCreateInfo@
---     structure which contains information about how the event is to be
---     created.
+-- -   @pCreateInfo@ is a pointer to a 'EventCreateInfo' structure
+--     containing information about how the event is to be created.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     [Memory
---     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
--- -   @pEvent@ points to a handle in which the resulting event object is
---     returned.
+-- -   @pEvent@ is a pointer to a handle in which the resulting event
+--     object is returned.
 --
 -- = Description
 --
@@ -127,285 +81,388 @@ type VkEvent = Ptr VkEvent_T
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     @VkEventCreateInfo@ structure
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid 'EventCreateInfo'
+--     structure
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
+--     pointer to a valid
+--     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pEvent@ /must/ be a valid pointer to a @VkEvent@ handle
+-- -   @pEvent@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.Core10.Handles.Event' handle
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkEvent',
--- 'VkEventCreateInfo'
+-- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
+-- 'Graphics.Vulkan.Core10.Handles.Device',
+-- 'Graphics.Vulkan.Core10.Handles.Event', 'EventCreateInfo'
+createEvent :: Device -> EventCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (Event)
+createEvent device createInfo allocator = evalContT $ do
+  let vkCreateEvent' = mkVkCreateEvent (pVkCreateEvent (deviceCmds (device :: Device)))
+  pCreateInfo <- ContT $ withCStruct (createInfo)
+  pAllocator <- case (allocator) of
+    Nothing -> pure nullPtr
+    Just j -> ContT $ withCStruct (j)
+  pPEvent <- ContT $ bracket (callocBytes @Event 8) free
+  r <- lift $ vkCreateEvent' (deviceHandle (device)) pCreateInfo pAllocator (pPEvent)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pEvent <- lift $ peek @Event pPEvent
+  pure $ (pEvent)
+
+-- | A safe wrapper for 'createEvent' and 'destroyEvent' using 'bracket'
+--
+-- The allocated value must not be returned from the provided computation
+withEvent :: Device -> EventCreateInfo -> Maybe AllocationCallbacks -> (Event -> IO r) -> IO r
+withEvent device eventCreateInfo allocationCallbacks =
+  bracket
+    (createEvent device eventCreateInfo allocationCallbacks)
+    (\o -> destroyEvent device o allocationCallbacks)
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkCreateEvent" vkCreateEvent :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkEventCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pEvent" ::: Ptr VkEvent) -> IO VkResult
+  "dynamic" mkVkDestroyEvent
+  :: FunPtr (Ptr Device_T -> Event -> Ptr AllocationCallbacks -> IO ()) -> Ptr Device_T -> Event -> Ptr AllocationCallbacks -> IO ()
+
 -- | vkDestroyEvent - Destroy an event object
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that destroys the event.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     destroys the event.
 --
--- -   @event@ is the handle of the event to destroy.
+-- -   'Graphics.Vulkan.Core10.Handles.Event' is the handle of the event to
+--     destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     [Memory
---     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
 -- == Valid Usage
 --
--- -   All submitted commands that refer to @event@ /must/ have completed
+-- -   All submitted commands that refer to
+--     'Graphics.Vulkan.Core10.Handles.Event' /must/ have completed
 --     execution
 --
--- -   If @VkAllocationCallbacks@ were provided when @event@ was created, a
---     compatible set of callbacks /must/ be provided here
+-- -   If 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     were provided when 'Graphics.Vulkan.Core10.Handles.Event' was
+--     created, a compatible set of callbacks /must/ be provided here
 --
--- -   If no @VkAllocationCallbacks@ were provided when @event@ was
+-- -   If no
+--     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     were provided when 'Graphics.Vulkan.Core10.Handles.Event' was
 --     created, @pAllocator@ /must/ be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
--- -   If @event@ is not 'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE',
---     @event@ /must/ be a valid @VkEvent@ handle
+-- -   If 'Graphics.Vulkan.Core10.Handles.Event' is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     'Graphics.Vulkan.Core10.Handles.Event' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Event' handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
+--     pointer to a valid
+--     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   If @event@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
+-- -   If 'Graphics.Vulkan.Core10.Handles.Event' is a valid handle, it
+--     /must/ have been created, allocated, or retrieved from
+--     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
--- -   Host access to @event@ /must/ be externally synchronized
+-- -   Host access to 'Graphics.Vulkan.Core10.Handles.Event' /must/ be
+--     externally synchronized
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkEvent'
+-- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
+-- 'Graphics.Vulkan.Core10.Handles.Device',
+-- 'Graphics.Vulkan.Core10.Handles.Event'
+destroyEvent :: Device -> Event -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
+destroyEvent device event allocator = evalContT $ do
+  let vkDestroyEvent' = mkVkDestroyEvent (pVkDestroyEvent (deviceCmds (device :: Device)))
+  pAllocator <- case (allocator) of
+    Nothing -> pure nullPtr
+    Just j -> ContT $ withCStruct (j)
+  lift $ vkDestroyEvent' (deviceHandle (device)) (event) pAllocator
+  pure $ ()
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkDestroyEvent" vkDestroyEvent :: ("device" ::: VkDevice) -> ("event" ::: VkEvent) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+  "dynamic" mkVkGetEventStatus
+  :: FunPtr (Ptr Device_T -> Event -> IO Result) -> Ptr Device_T -> Event -> IO Result
+
 -- | vkGetEventStatus - Retrieve the status of an event object
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that owns the event.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     owns the event.
 --
--- -   @event@ is the handle of the event to query.
+-- -   'Graphics.Vulkan.Core10.Handles.Event' is the handle of the event to
+--     query.
 --
 -- = Description
 --
--- Upon success, @vkGetEventStatus@ returns the state of the event object
+-- Upon success, 'getEventStatus' returns the state of the event object
 -- with the following return codes:
 --
--- +-----------------------------------+-----------------------------------+
--- | Status                            | Meaning                           |
--- +===================================+===================================+
--- | @VK_EVENT_SET@                    | The event specified by @event@ is |
--- |                                   | signaled.                         |
--- +-----------------------------------+-----------------------------------+
--- | @VK_EVENT_RESET@                  | The event specified by @event@ is |
--- |                                   | unsignaled.                       |
--- +-----------------------------------+-----------------------------------+
+-- +---------------------------------------------------+----------------------------------------+
+-- | Status                                            | Meaning                                |
+-- +===================================================+========================================+
+-- | 'Graphics.Vulkan.Core10.Enums.Result.EVENT_SET'   | The event specified by                 |
+-- |                                                   | 'Graphics.Vulkan.Core10.Handles.Event' |
+-- |                                                   | is signaled.                           |
+-- +---------------------------------------------------+----------------------------------------+
+-- | 'Graphics.Vulkan.Core10.Enums.Result.EVENT_RESET' | The event specified by                 |
+-- |                                                   | 'Graphics.Vulkan.Core10.Handles.Event' |
+-- |                                                   | is unsignaled.                         |
+-- +---------------------------------------------------+----------------------------------------+
 --
 -- Event Object Status Codes
 --
--- If a @vkCmdSetEvent@ or @vkCmdResetEvent@ command is in a command buffer
--- that is in the [pending
--- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle),
+-- If a 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdSetEvent' or
+-- 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdResetEvent' command is
+-- in a command buffer that is in the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>,
 -- then the value returned by this command /may/ immediately be out of
 -- date.
 --
 -- The state of an event /can/ be updated by the host. The state of the
--- event is immediately changed, and subsequent calls to @vkGetEventStatus@
+-- event is immediately changed, and subsequent calls to 'getEventStatus'
 -- will return the new state. If an event is already in the requested
 -- state, then updating it to the same state has no effect.
 --
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   @event@ /must/ be a valid @VkEvent@ handle
---
--- -   @event@ /must/ have been created, allocated, or retrieved from
---     @device@
---
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_EVENT_SET@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   @VK_EVENT_RESET@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.EVENT_SET'
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.EVENT_RESET'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   @VK_ERROR_DEVICE_LOST@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkEvent'
+-- 'Graphics.Vulkan.Core10.Handles.Device',
+-- 'Graphics.Vulkan.Core10.Handles.Event'
+getEventStatus :: Device -> Event -> IO (Result)
+getEventStatus device event = do
+  let vkGetEventStatus' = mkVkGetEventStatus (pVkGetEventStatus (deviceCmds (device :: Device)))
+  r <- vkGetEventStatus' (deviceHandle (device)) (event)
+  when (r < SUCCESS) (throwIO (VulkanException r))
+  pure $ (r)
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkGetEventStatus" vkGetEventStatus :: ("device" ::: VkDevice) -> ("event" ::: VkEvent) -> IO VkResult
+  "dynamic" mkVkSetEvent
+  :: FunPtr (Ptr Device_T -> Event -> IO Result) -> Ptr Device_T -> Event -> IO Result
+
 -- | vkSetEvent - Set an event to signaled state
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that owns the event.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     owns the event.
 --
--- -   @event@ is the event to set.
+-- -   'Graphics.Vulkan.Core10.Handles.Event' is the event to set.
 --
 -- = Description
 --
--- When 'vkSetEvent' is executed on the host, it defines an /event signal
+-- When 'setEvent' is executed on the host, it defines an /event signal
 -- operation/ which sets the event to the signaled state.
 --
--- If @event@ is already in the signaled state when 'vkSetEvent' is
--- executed, then 'vkSetEvent' has no effect, and no event signal operation
--- occurs.
+-- If 'Graphics.Vulkan.Core10.Handles.Event' is already in the signaled
+-- state when 'setEvent' is executed, then 'setEvent' has no effect, and no
+-- event signal operation occurs.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
--- -   @event@ /must/ be a valid @VkEvent@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Event' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Event' handle
 --
--- -   @event@ /must/ have been created, allocated, or retrieved from
---     @device@
+-- -   'Graphics.Vulkan.Core10.Handles.Event' /must/ have been created,
+--     allocated, or retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
--- -   Host access to @event@ /must/ be externally synchronized
+-- -   Host access to 'Graphics.Vulkan.Core10.Handles.Event' /must/ be
+--     externally synchronized
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkEvent'
+-- 'Graphics.Vulkan.Core10.Handles.Device',
+-- 'Graphics.Vulkan.Core10.Handles.Event'
+setEvent :: Device -> Event -> IO ()
+setEvent device event = do
+  let vkSetEvent' = mkVkSetEvent (pVkSetEvent (deviceCmds (device :: Device)))
+  r <- vkSetEvent' (deviceHandle (device)) (event)
+  when (r < SUCCESS) (throwIO (VulkanException r))
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkSetEvent" vkSetEvent :: ("device" ::: VkDevice) -> ("event" ::: VkEvent) -> IO VkResult
+  "dynamic" mkVkResetEvent
+  :: FunPtr (Ptr Device_T -> Event -> IO Result) -> Ptr Device_T -> Event -> IO Result
+
 -- | vkResetEvent - Reset an event to non-signaled state
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that owns the event.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     owns the event.
 --
--- -   @event@ is the event to reset.
+-- -   'Graphics.Vulkan.Core10.Handles.Event' is the event to reset.
 --
 -- = Description
 --
--- When 'vkResetEvent' is executed on the host, it defines an /event
--- unsignal operation/ which resets the event to the unsignaled state.
+-- When 'resetEvent' is executed on the host, it defines an /event unsignal
+-- operation/ which resets the event to the unsignaled state.
 --
--- If @event@ is already in the unsignaled state when 'vkResetEvent' is
--- executed, then 'vkResetEvent' has no effect, and no event unsignal
--- operation occurs.
+-- If 'Graphics.Vulkan.Core10.Handles.Event' is already in the unsignaled
+-- state when 'resetEvent' is executed, then 'resetEvent' has no effect,
+-- and no event unsignal operation occurs.
 --
 -- == Valid Usage
 --
--- -   @event@ /must/ not be waited on by a @vkCmdWaitEvents@ command that
---     is currently executing
+-- -   'Graphics.Vulkan.Core10.Handles.Event' /must/ not be waited on by a
+--     'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdWaitEvents' command
+--     that is currently executing
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
--- -   @event@ /must/ be a valid @VkEvent@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Event' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Event' handle
 --
--- -   @event@ /must/ have been created, allocated, or retrieved from
---     @device@
+-- -   'Graphics.Vulkan.Core10.Handles.Event' /must/ have been created,
+--     allocated, or retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
--- -   Host access to @event@ /must/ be externally synchronized
+-- -   Host access to 'Graphics.Vulkan.Core10.Handles.Event' /must/ be
+--     externally synchronized
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkEvent'
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "vkResetEvent" vkResetEvent :: ("device" ::: VkDevice) -> ("event" ::: VkEvent) -> IO VkResult
+-- 'Graphics.Vulkan.Core10.Handles.Device',
+-- 'Graphics.Vulkan.Core10.Handles.Event'
+resetEvent :: Device -> Event -> IO ()
+resetEvent device event = do
+  let vkResetEvent' = mkVkResetEvent (pVkResetEvent (deviceCmds (device :: Device)))
+  r <- vkResetEvent' (deviceHandle (device)) (event)
+  when (r < SUCCESS) (throwIO (VulkanException r))
+
+
 -- | VkEventCreateInfo - Structure specifying parameters of a newly created
 -- event
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_EVENT_CREATE_INFO@
---
--- -   @pNext@ /must/ be @NULL@
---
--- -   @flags@ /must/ be @0@
---
 -- = See Also
 --
--- 'VkEventCreateFlags', 'Graphics.Vulkan.Core10.Core.VkStructureType',
--- 'vkCreateEvent'
-data VkEventCreateInfo = VkEventCreateInfo
-  { -- | @sType@ is the type of this structure.
-  vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
-  vkPNext :: Ptr ()
-  , -- | @flags@ is reserved for future use.
-  vkFlags :: VkEventCreateFlags
-  }
-  deriving (Eq, Show)
+-- 'Graphics.Vulkan.Core10.Enums.EventCreateFlags.EventCreateFlags',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'createEvent'
+data EventCreateInfo = EventCreateInfo
+  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+    flags :: EventCreateFlags }
+  deriving (Typeable)
+deriving instance Show EventCreateInfo
 
-instance Storable VkEventCreateInfo where
+instance ToCStruct EventCreateInfo where
+  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p EventCreateInfo{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EVENT_CREATE_INFO)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr EventCreateFlags)) (flags)
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_EVENT_CREATE_INFO)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    f
+
+instance FromCStruct EventCreateInfo where
+  peekCStruct p = do
+    flags <- peek @EventCreateFlags ((p `plusPtr` 16 :: Ptr EventCreateFlags))
+    pure $ EventCreateInfo
+             flags
+
+instance Storable EventCreateInfo where
   sizeOf ~_ = 24
   alignment ~_ = 8
-  peek ptr = VkEventCreateInfo <$> peek (ptr `plusPtr` 0)
-                               <*> peek (ptr `plusPtr` 8)
-                               <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkEventCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkEventCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkEventCreateInfo))
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero EventCreateInfo where
+  zero = EventCreateInfo
+           zero
+

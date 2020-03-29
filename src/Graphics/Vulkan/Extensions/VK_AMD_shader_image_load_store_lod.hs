@@ -1,24 +1,22 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
-{-# language OverloadedStrings #-}
+module Graphics.Vulkan.Extensions.VK_AMD_shader_image_load_store_lod  ( AMD_SHADER_IMAGE_LOAD_STORE_LOD_SPEC_VERSION
+                                                                      , pattern AMD_SHADER_IMAGE_LOAD_STORE_LOD_SPEC_VERSION
+                                                                      , AMD_SHADER_IMAGE_LOAD_STORE_LOD_EXTENSION_NAME
+                                                                      , pattern AMD_SHADER_IMAGE_LOAD_STORE_LOD_EXTENSION_NAME
+                                                                      ) where
 
-module Graphics.Vulkan.Extensions.VK_AMD_shader_image_load_store_lod
-  ( pattern VK_AMD_SHADER_IMAGE_LOAD_STORE_LOD_SPEC_VERSION
-  , pattern VK_AMD_SHADER_IMAGE_LOAD_STORE_LOD_EXTENSION_NAME
-  ) where
+import Data.String (IsString)
 
-import Data.String
-  ( IsString
-  )
-
-
-
-
+type AMD_SHADER_IMAGE_LOAD_STORE_LOD_SPEC_VERSION = 1
 
 -- No documentation found for TopLevel "VK_AMD_SHADER_IMAGE_LOAD_STORE_LOD_SPEC_VERSION"
-pattern VK_AMD_SHADER_IMAGE_LOAD_STORE_LOD_SPEC_VERSION :: Integral a => a
-pattern VK_AMD_SHADER_IMAGE_LOAD_STORE_LOD_SPEC_VERSION = 1
+pattern AMD_SHADER_IMAGE_LOAD_STORE_LOD_SPEC_VERSION :: forall a . Integral a => a
+pattern AMD_SHADER_IMAGE_LOAD_STORE_LOD_SPEC_VERSION = 1
+
+
+type AMD_SHADER_IMAGE_LOAD_STORE_LOD_EXTENSION_NAME = "VK_AMD_shader_image_load_store_lod"
+
 -- No documentation found for TopLevel "VK_AMD_SHADER_IMAGE_LOAD_STORE_LOD_EXTENSION_NAME"
-pattern VK_AMD_SHADER_IMAGE_LOAD_STORE_LOD_EXTENSION_NAME :: (Eq a ,IsString a) => a
-pattern VK_AMD_SHADER_IMAGE_LOAD_STORE_LOD_EXTENSION_NAME = "VK_AMD_shader_image_load_store_lod"
+pattern AMD_SHADER_IMAGE_LOAD_STORE_LOD_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern AMD_SHADER_IMAGE_LOAD_STORE_LOD_EXTENSION_NAME = "VK_AMD_shader_image_load_store_lod"
+

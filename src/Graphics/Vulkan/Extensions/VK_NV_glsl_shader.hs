@@ -1,30 +1,22 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
-{-# language OverloadedStrings #-}
+module Graphics.Vulkan.Extensions.VK_NV_glsl_shader  ( NV_GLSL_SHADER_SPEC_VERSION
+                                                     , pattern NV_GLSL_SHADER_SPEC_VERSION
+                                                     , NV_GLSL_SHADER_EXTENSION_NAME
+                                                     , pattern NV_GLSL_SHADER_EXTENSION_NAME
+                                                     ) where
 
-module Graphics.Vulkan.Extensions.VK_NV_glsl_shader
-  ( pattern VK_ERROR_INVALID_SHADER_NV
-  , pattern VK_NV_GLSL_SHADER_SPEC_VERSION
-  , pattern VK_NV_GLSL_SHADER_EXTENSION_NAME
-  ) where
+import Data.String (IsString)
 
-import Data.String
-  ( IsString
-  )
+type NV_GLSL_SHADER_SPEC_VERSION = 1
 
-
-import Graphics.Vulkan.Core10.Core
-  ( VkResult(..)
-  )
-
-
--- No documentation found for Nested "VkResult" "VK_ERROR_INVALID_SHADER_NV"
-pattern VK_ERROR_INVALID_SHADER_NV :: VkResult
-pattern VK_ERROR_INVALID_SHADER_NV = VkResult (-1000012000)
 -- No documentation found for TopLevel "VK_NV_GLSL_SHADER_SPEC_VERSION"
-pattern VK_NV_GLSL_SHADER_SPEC_VERSION :: Integral a => a
-pattern VK_NV_GLSL_SHADER_SPEC_VERSION = 1
+pattern NV_GLSL_SHADER_SPEC_VERSION :: forall a . Integral a => a
+pattern NV_GLSL_SHADER_SPEC_VERSION = 1
+
+
+type NV_GLSL_SHADER_EXTENSION_NAME = "VK_NV_glsl_shader"
+
 -- No documentation found for TopLevel "VK_NV_GLSL_SHADER_EXTENSION_NAME"
-pattern VK_NV_GLSL_SHADER_EXTENSION_NAME :: (Eq a ,IsString a) => a
-pattern VK_NV_GLSL_SHADER_EXTENSION_NAME = "VK_NV_glsl_shader"
+pattern NV_GLSL_SHADER_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern NV_GLSL_SHADER_EXTENSION_NAME = "VK_NV_glsl_shader"
+

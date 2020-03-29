@@ -1,414 +1,394 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language GeneralizedNewtypeDeriving #-}
-{-# language PatternSynonyms #-}
-{-# language DataKinds #-}
-{-# language TypeOperators #-}
-{-# language DuplicateRecordFields #-}
+module Graphics.Vulkan.Core10.CommandPool  ( createCommandPool
+                                           , withCommandPool
+                                           , destroyCommandPool
+                                           , resetCommandPool
+                                           , CommandPoolCreateInfo(..)
+                                           ) where
 
-module Graphics.Vulkan.Core10.CommandPool
-  ( VkCommandPoolCreateFlagBits(..)
-  , pattern VK_COMMAND_POOL_CREATE_TRANSIENT_BIT
-  , pattern VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT
-  , VkCommandPoolResetFlagBits(..)
-  , pattern VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT
-  , VkCommandPool
-  , vkCreateCommandPool
-  , vkDestroyCommandPool
-  , vkResetCommandPool
-  , VkCommandPoolCreateInfo(..)
-  , VkCommandPoolCreateFlags
-  , VkCommandPoolResetFlags
-  ) where
-
-import Data.Bits
-  ( Bits
-  , FiniteBits
-  )
-import Data.Word
-  ( Word32
-  )
-import Foreign.Ptr
-  ( Ptr
-  , plusPtr
-  )
-import Foreign.Storable
-  ( Storable
-  , Storable(..)
-  )
-import GHC.Read
-  ( choose
-  , expectP
-  )
-import Graphics.Vulkan.NamedType
-  ( (:::)
-  )
-import Text.ParserCombinators.ReadPrec
-  ( (+++)
-  , prec
-  , step
-  )
-import Text.Read
-  ( Read(..)
-  , parens
-  )
-import Text.Read.Lex
-  ( Lexeme(Ident)
-  )
-
-
-import Graphics.Vulkan.Core10.Core
-  ( VkResult(..)
-  , VkStructureType(..)
-  , VkFlags
-  )
-import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkAllocationCallbacks(..)
-  , VkDevice
-  )
-
-
--- ** VkCommandPoolCreateFlagBits
-
--- | VkCommandPoolCreateFlagBits - Bitmask specifying usage behavior for a
--- command pool
---
--- = See Also
---
--- 'VkCommandPoolCreateFlags'
-newtype VkCommandPoolCreateFlagBits = VkCommandPoolCreateFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
-
-instance Show VkCommandPoolCreateFlagBits where
-  showsPrec _ VK_COMMAND_POOL_CREATE_TRANSIENT_BIT = showString "VK_COMMAND_POOL_CREATE_TRANSIENT_BIT"
-  showsPrec _ VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = showString "VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT"
-  -- The following values are from extensions, the patterns themselves are exported from the extension modules
-  showsPrec _ (VkCommandPoolCreateFlagBits 0x00000004) = showString "VK_COMMAND_POOL_CREATE_PROTECTED_BIT"
-  showsPrec p (VkCommandPoolCreateFlagBits x) = showParen (p >= 11) (showString "VkCommandPoolCreateFlagBits " . showsPrec 11 x)
-
-instance Read VkCommandPoolCreateFlagBits where
-  readPrec = parens ( choose [ ("VK_COMMAND_POOL_CREATE_TRANSIENT_BIT",            pure VK_COMMAND_POOL_CREATE_TRANSIENT_BIT)
-                             , ("VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT", pure VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT)
-                             , -- The following values are from extensions, the patterns themselves are exported from the extension modules
-                               ("VK_COMMAND_POOL_CREATE_PROTECTED_BIT", pure (VkCommandPoolCreateFlagBits 0x00000004))
-                             ] +++
-                      prec 10 (do
-                        expectP (Ident "VkCommandPoolCreateFlagBits")
-                        v <- step readPrec
-                        pure (VkCommandPoolCreateFlagBits v)
-                        )
-                    )
-
--- | @VK_COMMAND_POOL_CREATE_TRANSIENT_BIT@ specifies that command buffers
--- allocated from the pool will be short-lived, meaning that they will be
--- reset or freed in a relatively short timeframe. This flag /may/ be used
--- by the implementation to control memory allocation behavior within the
--- pool.
-pattern VK_COMMAND_POOL_CREATE_TRANSIENT_BIT :: VkCommandPoolCreateFlagBits
-pattern VK_COMMAND_POOL_CREATE_TRANSIENT_BIT = VkCommandPoolCreateFlagBits 0x00000001
-
--- | @VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT@ allows any command
--- buffer allocated from a pool to be individually reset to the [initial
--- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle);
--- either by calling
--- 'Graphics.Vulkan.Core10.CommandBuffer.vkResetCommandBuffer', or via the
--- implicit reset when calling
--- 'Graphics.Vulkan.Core10.CommandBuffer.vkBeginCommandBuffer'. If this
--- flag is not set on a pool, then @vkResetCommandBuffer@ /must/ not be
--- called for any command buffer allocated from that pool.
-pattern VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT :: VkCommandPoolCreateFlagBits
-pattern VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT = VkCommandPoolCreateFlagBits 0x00000002
--- ** VkCommandPoolResetFlagBits
-
--- | VkCommandPoolResetFlagBits - Bitmask controlling behavior of a command
--- pool reset
---
--- = See Also
---
--- 'VkCommandPoolResetFlags'
-newtype VkCommandPoolResetFlagBits = VkCommandPoolResetFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
-
-instance Show VkCommandPoolResetFlagBits where
-  showsPrec _ VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = showString "VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT"
-  showsPrec p (VkCommandPoolResetFlagBits x) = showParen (p >= 11) (showString "VkCommandPoolResetFlagBits " . showsPrec 11 x)
-
-instance Read VkCommandPoolResetFlagBits where
-  readPrec = parens ( choose [ ("VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT", pure VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT)
-                             ] +++
-                      prec 10 (do
-                        expectP (Ident "VkCommandPoolResetFlagBits")
-                        v <- step readPrec
-                        pure (VkCommandPoolResetFlagBits v)
-                        )
-                    )
-
--- | @VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT@ specifies that resetting a
--- command pool recycles all of the resources from the command pool back to
--- the system.
-pattern VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT :: VkCommandPoolResetFlagBits
-pattern VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT = VkCommandPoolResetFlagBits 0x00000001
--- | Dummy data to tag the 'Ptr' with
-data VkCommandPool_T
--- | VkCommandPool - Opaque handle to a command pool object
---
--- = See Also
---
--- 'Graphics.Vulkan.Core10.CommandBuffer.VkCommandBufferAllocateInfo',
--- 'vkCreateCommandPool', 'vkDestroyCommandPool',
--- 'Graphics.Vulkan.Core10.CommandBuffer.vkFreeCommandBuffers',
--- 'vkResetCommandPool',
--- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance1.vkTrimCommandPool',
--- 'Graphics.Vulkan.Extensions.VK_KHR_maintenance1.vkTrimCommandPoolKHR'
-type VkCommandPool = Ptr VkCommandPool_T
--- | vkCreateCommandPool - Create a new command pool object
---
--- = Parameters
---
--- -   @device@ is the logical device that creates the command pool.
---
--- -   @pCreateInfo@ contains information used to create the command pool.
---
--- -   @pAllocator@ controls host memory allocation as described in the
---     [Memory
---     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
---     chapter.
---
--- -   @pCommandPool@ points to a @VkCommandPool@ handle in which the
---     created pool is returned.
---
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     @VkCommandPoolCreateInfo@ structure
---
--- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
---
--- -   @pCommandPool@ /must/ be a valid pointer to a @VkCommandPool@ handle
---
--- == Return Codes
---
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
---
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
---
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
---
--- = See Also
---
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'VkCommandPool', 'VkCommandPoolCreateInfo',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
+import Control.Exception.Base (bracket)
+import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (callocBytes)
+import Foreign.Marshal.Alloc (free)
+import GHC.Base (when)
+import GHC.IO (throwIO)
+import Foreign.Ptr (nullPtr)
+import Foreign.Ptr (plusPtr)
+import Control.Monad.Trans.Class (lift)
+import Control.Monad.Trans.Cont (evalContT)
+import Data.Typeable (Typeable)
+import Foreign.Storable (Storable)
+import Foreign.Storable (Storable(peek))
+import Foreign.Storable (Storable(poke))
+import qualified Foreign.Storable (Storable(..))
+import Foreign.Ptr (FunPtr)
+import Foreign.Ptr (Ptr)
+import Data.Word (Word32)
+import Data.Kind (Type)
+import Control.Monad.Trans.Cont (ContT(..))
+import Graphics.Vulkan.NamedType ((:::))
+import Graphics.Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
+import Graphics.Vulkan.Core10.Handles (CommandPool)
+import Graphics.Vulkan.Core10.Handles (CommandPool(..))
+import Graphics.Vulkan.Core10.Enums.CommandPoolCreateFlagBits (CommandPoolCreateFlags)
+import Graphics.Vulkan.Core10.Enums.CommandPoolResetFlagBits (CommandPoolResetFlags)
+import Graphics.Vulkan.Core10.Enums.CommandPoolResetFlagBits (CommandPoolResetFlags)
+import Graphics.Vulkan.Core10.Enums.CommandPoolResetFlagBits (CommandPoolResetFlagBits(..))
+import Graphics.Vulkan.Core10.Handles (Device)
+import Graphics.Vulkan.Core10.Handles (Device(..))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkCreateCommandPool))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkDestroyCommandPool))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkResetCommandPool))
+import Graphics.Vulkan.Core10.Handles (Device_T)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (FromCStruct(..))
+import Graphics.Vulkan.Core10.Enums.Result (Result)
+import Graphics.Vulkan.Core10.Enums.Result (Result(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
+import Graphics.Vulkan.CStruct (ToCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct(..))
+import Graphics.Vulkan.Exception (VulkanException(..))
+import Graphics.Vulkan.Zero (Zero(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO))
+import Graphics.Vulkan.Core10.Enums.Result (Result(SUCCESS))
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkCreateCommandPool" vkCreateCommandPool :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkCommandPoolCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pCommandPool" ::: Ptr VkCommandPool) -> IO VkResult
+  "dynamic" mkVkCreateCommandPool
+  :: FunPtr (Ptr Device_T -> Ptr CommandPoolCreateInfo -> Ptr AllocationCallbacks -> Ptr CommandPool -> IO Result) -> Ptr Device_T -> Ptr CommandPoolCreateInfo -> Ptr AllocationCallbacks -> Ptr CommandPool -> IO Result
+
+-- | vkCreateCommandPool - Create a new command pool object
+--
+-- = Parameters
+--
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     creates the command pool.
+--
+-- -   @pCreateInfo@ is a pointer to a 'CommandPoolCreateInfo' structure
+--     specifying the state of the command pool object.
+--
+-- -   @pAllocator@ controls host memory allocation as described in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
+--     chapter.
+--
+-- -   @pCommandPool@ is a pointer to a
+--     'Graphics.Vulkan.Core10.Handles.CommandPool' handle in which the
+--     created pool is returned.
+--
+-- == Valid Usage
+--
+-- -   @pCreateInfo->queueFamilyIndex@ /must/ be the index of a queue
+--     family available in the logical device
+--     'Graphics.Vulkan.Core10.Handles.Device'.
+--
+-- == Valid Usage (Implicit)
+--
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
+--
+-- -   @pCreateInfo@ /must/ be a valid pointer to a valid
+--     'CommandPoolCreateInfo' structure
+--
+-- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
+--     pointer to a valid
+--     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
+--
+-- -   @pCommandPool@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.Core10.Handles.CommandPool' handle
+--
+-- == Return Codes
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
+-- 'Graphics.Vulkan.Core10.Handles.CommandPool', 'CommandPoolCreateInfo',
+-- 'Graphics.Vulkan.Core10.Handles.Device'
+createCommandPool :: Device -> CommandPoolCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (CommandPool)
+createCommandPool device createInfo allocator = evalContT $ do
+  let vkCreateCommandPool' = mkVkCreateCommandPool (pVkCreateCommandPool (deviceCmds (device :: Device)))
+  pCreateInfo <- ContT $ withCStruct (createInfo)
+  pAllocator <- case (allocator) of
+    Nothing -> pure nullPtr
+    Just j -> ContT $ withCStruct (j)
+  pPCommandPool <- ContT $ bracket (callocBytes @CommandPool 8) free
+  r <- lift $ vkCreateCommandPool' (deviceHandle (device)) pCreateInfo pAllocator (pPCommandPool)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pCommandPool <- lift $ peek @CommandPool pPCommandPool
+  pure $ (pCommandPool)
+
+-- | A safe wrapper for 'createCommandPool' and 'destroyCommandPool' using
+-- 'bracket'
+--
+-- The allocated value must not be returned from the provided computation
+withCommandPool :: Device -> CommandPoolCreateInfo -> Maybe AllocationCallbacks -> (CommandPool -> IO r) -> IO r
+withCommandPool device commandPoolCreateInfo allocationCallbacks =
+  bracket
+    (createCommandPool device commandPoolCreateInfo allocationCallbacks)
+    (\o -> destroyCommandPool device o allocationCallbacks)
+
+
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkDestroyCommandPool
+  :: FunPtr (Ptr Device_T -> CommandPool -> Ptr AllocationCallbacks -> IO ()) -> Ptr Device_T -> CommandPool -> Ptr AllocationCallbacks -> IO ()
+
 -- | vkDestroyCommandPool - Destroy a command pool object
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that destroys the command pool.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     destroys the command pool.
 --
--- -   @commandPool@ is the handle of the command pool to destroy.
+-- -   'Graphics.Vulkan.Core10.Handles.CommandPool' is the handle of the
+--     command pool to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     [Memory
---     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
 -- = Description
 --
 -- When a pool is destroyed, all command buffers allocated from the pool
 -- are
--- [freed](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkFreeCommandBuffers).
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkFreeCommandBuffers freed>.
 --
--- Any primary command buffer allocated from another 'VkCommandPool' that
--- is in the [recording or executable
--- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
--- and has a secondary command buffer allocated from @commandPool@ recorded
--- into it, becomes
--- [invalid](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
+-- Any primary command buffer allocated from another
+-- 'Graphics.Vulkan.Core10.Handles.CommandPool' that is in the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording or executable state>
+-- and has a secondary command buffer allocated from
+-- 'Graphics.Vulkan.Core10.Handles.CommandPool' recorded into it, becomes
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle invalid>.
 --
 -- == Valid Usage
 --
--- -   All @VkCommandBuffer@ objects allocated from @commandPool@ /must/
---     not be in the [pending
---     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
+-- -   All 'Graphics.Vulkan.Core10.Handles.CommandBuffer' objects allocated
+--     from 'Graphics.Vulkan.Core10.Handles.CommandPool' /must/ not be in
+--     the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>.
 --
--- -   If @VkAllocationCallbacks@ were provided when @commandPool@ was
+-- -   If 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     were provided when 'Graphics.Vulkan.Core10.Handles.CommandPool' was
 --     created, a compatible set of callbacks /must/ be provided here
 --
--- -   If no @VkAllocationCallbacks@ were provided when @commandPool@ was
+-- -   If no
+--     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     were provided when 'Graphics.Vulkan.Core10.Handles.CommandPool' was
 --     created, @pAllocator@ /must/ be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
--- -   If @commandPool@ is not
---     'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE', @commandPool@
---     /must/ be a valid @VkCommandPool@ handle
+-- -   If 'Graphics.Vulkan.Core10.Handles.CommandPool' is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     'Graphics.Vulkan.Core10.Handles.CommandPool' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.CommandPool' handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
+--     pointer to a valid
+--     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   If @commandPool@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
+-- -   If 'Graphics.Vulkan.Core10.Handles.CommandPool' is a valid handle,
+--     it /must/ have been created, allocated, or retrieved from
+--     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
--- -   Host access to @commandPool@ /must/ be externally synchronized
+-- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandPool' /must/
+--     be externally synchronized
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'VkCommandPool', 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
+-- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
+-- 'Graphics.Vulkan.Core10.Handles.CommandPool',
+-- 'Graphics.Vulkan.Core10.Handles.Device'
+destroyCommandPool :: Device -> CommandPool -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
+destroyCommandPool device commandPool allocator = evalContT $ do
+  let vkDestroyCommandPool' = mkVkDestroyCommandPool (pVkDestroyCommandPool (deviceCmds (device :: Device)))
+  pAllocator <- case (allocator) of
+    Nothing -> pure nullPtr
+    Just j -> ContT $ withCStruct (j)
+  lift $ vkDestroyCommandPool' (deviceHandle (device)) (commandPool) pAllocator
+  pure $ ()
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkDestroyCommandPool" vkDestroyCommandPool :: ("device" ::: VkDevice) -> ("commandPool" ::: VkCommandPool) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+  "dynamic" mkVkResetCommandPool
+  :: FunPtr (Ptr Device_T -> CommandPool -> CommandPoolResetFlags -> IO Result) -> Ptr Device_T -> CommandPool -> CommandPoolResetFlags -> IO Result
+
 -- | vkResetCommandPool - Reset a command pool
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that owns the command pool.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     owns the command pool.
 --
--- -   @commandPool@ is the command pool to reset.
+-- -   'Graphics.Vulkan.Core10.Handles.CommandPool' is the command pool to
+--     reset.
 --
--- -   @flags@ is a bitmask of 'VkCommandPoolResetFlagBits' controlling the
---     reset operation.
+-- -   'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+--     'Graphics.Vulkan.Core10.Enums.CommandPoolResetFlagBits.CommandPoolResetFlagBits'
+--     controlling the reset operation.
 --
 -- = Description
 --
 -- Resetting a command pool recycles all of the resources from all of the
 -- command buffers allocated from the command pool back to the command
 -- pool. All command buffers that have been allocated from the command pool
--- are put in the [initial
--- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
+-- are put in the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>.
 --
--- Any primary command buffer allocated from another 'VkCommandPool' that
--- is in the [recording or executable
--- state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
--- and has a secondary command buffer allocated from @commandPool@ recorded
--- into it, becomes
--- [invalid](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle).
+-- Any primary command buffer allocated from another
+-- 'Graphics.Vulkan.Core10.Handles.CommandPool' that is in the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording or executable state>
+-- and has a secondary command buffer allocated from
+-- 'Graphics.Vulkan.Core10.Handles.CommandPool' recorded into it, becomes
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle invalid>.
 --
 -- == Valid Usage
 --
--- -   All @VkCommandBuffer@ objects allocated from @commandPool@ /must/
---     not be in the [pending
---     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
+-- -   All 'Graphics.Vulkan.Core10.Handles.CommandBuffer' objects allocated
+--     from 'Graphics.Vulkan.Core10.Handles.CommandPool' /must/ not be in
+--     the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
--- -   @commandPool@ /must/ be a valid @VkCommandPool@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.CommandPool' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.CommandPool' handle
 --
--- -   @flags@ /must/ be a valid combination of
---     'VkCommandPoolResetFlagBits' values
+-- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
+--     combination of
+--     'Graphics.Vulkan.Core10.Enums.CommandPoolResetFlagBits.CommandPoolResetFlagBits'
+--     values
 --
--- -   @commandPool@ /must/ have been created, allocated, or retrieved from
---     @device@
+-- -   'Graphics.Vulkan.Core10.Handles.CommandPool' /must/ have been
+--     created, allocated, or retrieved from
+--     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
--- -   Host access to @commandPool@ /must/ be externally synchronized
+-- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandPool' /must/
+--     be externally synchronized
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- 'VkCommandPool', 'VkCommandPoolResetFlags',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "vkResetCommandPool" vkResetCommandPool :: ("device" ::: VkDevice) -> ("commandPool" ::: VkCommandPool) -> ("flags" ::: VkCommandPoolResetFlags) -> IO VkResult
+-- 'Graphics.Vulkan.Core10.Handles.CommandPool',
+-- 'Graphics.Vulkan.Core10.Enums.CommandPoolResetFlagBits.CommandPoolResetFlags',
+-- 'Graphics.Vulkan.Core10.Handles.Device'
+resetCommandPool :: Device -> CommandPool -> CommandPoolResetFlags -> IO ()
+resetCommandPool device commandPool flags = do
+  let vkResetCommandPool' = mkVkResetCommandPool (pVkResetCommandPool (deviceCmds (device :: Device)))
+  r <- vkResetCommandPool' (deviceHandle (device)) (commandPool) (flags)
+  when (r < SUCCESS) (throwIO (VulkanException r))
+
+
 -- | VkCommandPoolCreateInfo - Structure specifying parameters of a newly
 -- created command pool
 --
 -- == Valid Usage
 --
--- -   @queueFamilyIndex@ /must/ be the index of a queue family available
---     in the calling command’s @device@ parameter
+-- -   If the protected memory feature is not enabled, the
+--     'Graphics.Vulkan.Core10.Enums.CommandPoolCreateFlagBits.COMMAND_POOL_CREATE_PROTECTED_BIT'
+--     bit of 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not be set.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO@
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO'
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   @flags@ /must/ be a valid combination of
---     'VkCommandPoolCreateFlagBits' values
+-- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
+--     combination of
+--     'Graphics.Vulkan.Core10.Enums.CommandPoolCreateFlagBits.CommandPoolCreateFlagBits'
+--     values
 --
 -- = See Also
 --
--- 'VkCommandPoolCreateFlags',
--- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'vkCreateCommandPool'
-data VkCommandPoolCreateInfo = VkCommandPoolCreateInfo
-  { -- | @sType@ is the type of this structure.
-  vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
-  vkPNext :: Ptr ()
-  , -- | @flags@ is a bitmask of 'VkCommandPoolCreateFlagBits' indicating usage
-  -- behavior for the pool and command buffers allocated from it.
-  vkFlags :: VkCommandPoolCreateFlags
+-- 'Graphics.Vulkan.Core10.Enums.CommandPoolCreateFlagBits.CommandPoolCreateFlags',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'createCommandPool'
+data CommandPoolCreateInfo = CommandPoolCreateInfo
+  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+    -- 'Graphics.Vulkan.Core10.Enums.CommandPoolCreateFlagBits.CommandPoolCreateFlagBits'
+    -- indicating usage behavior for the pool and command buffers allocated
+    -- from it.
+    flags :: CommandPoolCreateFlags
   , -- | @queueFamilyIndex@ designates a queue family as described in section
-  -- [Queue Family
-  -- Properties](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#devsandqueues-queueprops).
-  -- All command buffers allocated from this command pool /must/ be submitted
-  -- on queues from the same queue family.
-  vkQueueFamilyIndex :: Word32
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-queueprops Queue Family Properties>.
+    -- All command buffers allocated from this command pool /must/ be submitted
+    -- on queues from the same queue family.
+    queueFamilyIndex :: Word32
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show CommandPoolCreateInfo
 
-instance Storable VkCommandPoolCreateInfo where
+instance ToCStruct CommandPoolCreateInfo where
+  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p CommandPoolCreateInfo{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr CommandPoolCreateFlags)) (flags)
+    poke ((p `plusPtr` 20 :: Ptr Word32)) (queueFamilyIndex)
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
+    f
+
+instance FromCStruct CommandPoolCreateInfo where
+  peekCStruct p = do
+    flags <- peek @CommandPoolCreateFlags ((p `plusPtr` 16 :: Ptr CommandPoolCreateFlags))
+    queueFamilyIndex <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
+    pure $ CommandPoolCreateInfo
+             flags queueFamilyIndex
+
+instance Storable CommandPoolCreateInfo where
   sizeOf ~_ = 24
   alignment ~_ = 8
-  peek ptr = VkCommandPoolCreateInfo <$> peek (ptr `plusPtr` 0)
-                                     <*> peek (ptr `plusPtr` 8)
-                                     <*> peek (ptr `plusPtr` 16)
-                                     <*> peek (ptr `plusPtr` 20)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkCommandPoolCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkCommandPoolCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkCommandPoolCreateInfo))
-                *> poke (ptr `plusPtr` 20) (vkQueueFamilyIndex (poked :: VkCommandPoolCreateInfo))
--- | VkCommandPoolCreateFlags - Bitmask of VkCommandPoolCreateFlagBits
---
--- = Description
---
--- @VkCommandPoolCreateFlags@ is a bitmask type for setting a mask of zero
--- or more 'VkCommandPoolCreateFlagBits'.
---
--- = See Also
---
--- 'VkCommandPoolCreateFlagBits', 'VkCommandPoolCreateInfo'
-type VkCommandPoolCreateFlags = VkCommandPoolCreateFlagBits
--- | VkCommandPoolResetFlags - Bitmask of VkCommandPoolResetFlagBits
---
--- = Description
---
--- @VkCommandPoolResetFlags@ is a bitmask type for setting a mask of zero
--- or more 'VkCommandPoolResetFlagBits'.
---
--- = See Also
---
--- 'VkCommandPoolResetFlagBits', 'vkResetCommandPool'
-type VkCommandPoolResetFlags = VkCommandPoolResetFlagBits
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero CommandPoolCreateInfo where
+  zero = CommandPoolCreateInfo
+           zero
+           zero
+

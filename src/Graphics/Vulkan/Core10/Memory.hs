@@ -1,149 +1,123 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language GeneralizedNewtypeDeriving #-}
-{-# language PatternSynonyms #-}
-{-# language DataKinds #-}
-{-# language TypeOperators #-}
-{-# language DuplicateRecordFields #-}
+module Graphics.Vulkan.Core10.Memory  ( allocateMemory
+                                      , withMemory
+                                      , freeMemory
+                                      , mapMemory
+                                      , withMappedMemory
+                                      , unmapMemory
+                                      , flushMappedMemoryRanges
+                                      , invalidateMappedMemoryRanges
+                                      , getDeviceMemoryCommitment
+                                      , MemoryAllocateInfo(..)
+                                      , MappedMemoryRange(..)
+                                      ) where
 
-module Graphics.Vulkan.Core10.Memory
-  ( VkMemoryMapFlags(..)
-  , VkDeviceMemory
-  , vkAllocateMemory
-  , vkFreeMemory
-  , vkMapMemory
-  , vkUnmapMemory
-  , vkFlushMappedMemoryRanges
-  , vkInvalidateMappedMemoryRanges
-  , vkGetDeviceMemoryCommitment
-  , VkMemoryAllocateInfo(..)
-  , VkMappedMemoryRange(..)
-  ) where
+import Control.Exception.Base (bracket)
+import Data.Typeable (eqT)
+import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (callocBytes)
+import Foreign.Marshal.Alloc (free)
+import GHC.Base (when)
+import GHC.IO (throwIO)
+import GHC.Ptr (castPtr)
+import Foreign.Ptr (nullPtr)
+import Foreign.Ptr (plusPtr)
+import Control.Monad.Trans.Class (lift)
+import Control.Monad.Trans.Cont (evalContT)
+import qualified Data.Vector (imapM_)
+import qualified Data.Vector (length)
+import Data.Type.Equality ((:~:)(Refl))
+import Data.Typeable (Typeable)
+import Foreign.Storable (Storable)
+import Foreign.Storable (Storable(peek))
+import Foreign.Storable (Storable(poke))
+import qualified Foreign.Storable (Storable(..))
+import Foreign.Ptr (FunPtr)
+import Foreign.Ptr (Ptr)
+import Data.Word (Word32)
+import Data.Kind (Type)
+import Control.Monad.Trans.Cont (ContT(..))
+import Data.Vector (Vector)
+import Graphics.Vulkan.NamedType ((:::))
+import Graphics.Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
+import Graphics.Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation (DedicatedAllocationMemoryAllocateInfoNV)
+import Graphics.Vulkan.Core10.Handles (Device)
+import Graphics.Vulkan.Core10.Handles (Device(..))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkAllocateMemory))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkFlushMappedMemoryRanges))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkFreeMemory))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkGetDeviceMemoryCommitment))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkInvalidateMappedMemoryRanges))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkMapMemory))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkUnmapMemory))
+import Graphics.Vulkan.Core10.Handles (DeviceMemory)
+import Graphics.Vulkan.Core10.Handles (DeviceMemory(..))
+import Graphics.Vulkan.Core10.BaseType (DeviceSize)
+import Graphics.Vulkan.Core10.Handles (Device_T)
+import {-# SOURCE #-} Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory (ExportMemoryAllocateInfo)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NV_external_memory (ExportMemoryAllocateInfoNV)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32 (ExportMemoryWin32HandleInfoKHR)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NV_external_memory_win32 (ExportMemoryWin32HandleInfoNV)
+import Graphics.Vulkan.CStruct.Extends (Extends)
+import Graphics.Vulkan.CStruct.Extends (Extensible(..))
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (FromCStruct(..))
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer (ImportAndroidHardwareBufferInfoANDROID)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_KHR_external_memory_fd (ImportMemoryFdInfoKHR)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_EXT_external_memory_host (ImportMemoryHostPointerInfoEXT)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32 (ImportMemoryWin32HandleInfoKHR)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NV_external_memory_win32 (ImportMemoryWin32HandleInfoNV)
+import {-# SOURCE #-} Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group (MemoryAllocateFlagsInfo)
+import {-# SOURCE #-} Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation (MemoryDedicatedAllocateInfo)
+import Graphics.Vulkan.Core10.Enums.MemoryMapFlags (MemoryMapFlags)
+import Graphics.Vulkan.Core10.Enums.MemoryMapFlags (MemoryMapFlags(..))
+import {-# SOURCE #-} Graphics.Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (MemoryOpaqueCaptureAddressAllocateInfo)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_EXT_memory_priority (MemoryPriorityAllocateInfoEXT)
+import Graphics.Vulkan.CStruct.Extends (PeekChain)
+import Graphics.Vulkan.CStruct.Extends (PeekChain(..))
+import Graphics.Vulkan.CStruct.Extends (PokeChain)
+import Graphics.Vulkan.CStruct.Extends (PokeChain(..))
+import Graphics.Vulkan.Core10.Enums.Result (Result)
+import Graphics.Vulkan.Core10.Enums.Result (Result(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
+import Graphics.Vulkan.CStruct (ToCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct(..))
+import Graphics.Vulkan.Exception (VulkanException(..))
+import Graphics.Vulkan.Zero (Zero(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_MAPPED_MEMORY_RANGE))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO))
+import Graphics.Vulkan.Core10.Enums.Result (Result(SUCCESS))
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkAllocateMemory
+  :: FunPtr (Ptr Device_T -> Ptr (MemoryAllocateInfo a) -> Ptr AllocationCallbacks -> Ptr DeviceMemory -> IO Result) -> Ptr Device_T -> Ptr (MemoryAllocateInfo a) -> Ptr AllocationCallbacks -> Ptr DeviceMemory -> IO Result
 
-import Data.Bits
-  ( Bits
-  , FiniteBits
-  )
-import Data.Word
-  ( Word32
-  )
-import Foreign.Ptr
-  ( Ptr
-  , plusPtr
-  )
-import Foreign.Storable
-  ( Storable
-  , Storable(..)
-  )
-import GHC.Read
-  ( choose
-  , expectP
-  )
-import Graphics.Vulkan.NamedType
-  ( (:::)
-  )
-import Text.ParserCombinators.ReadPrec
-  ( (+++)
-  , prec
-  , step
-  )
-import Text.Read
-  ( Read(..)
-  , parens
-  )
-import Text.Read.Lex
-  ( Lexeme(Ident)
-  )
-
-
-import Graphics.Vulkan.Core10.Core
-  ( VkResult(..)
-  , VkStructureType(..)
-  , VkFlags
-  )
-import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkAllocationCallbacks(..)
-  , VkDevice
-  , VkDeviceSize
-  )
-
-
--- ** VkMemoryMapFlags
-
--- | VkMemoryMapFlags - Reserved for future use
---
--- = Description
---
--- @VkMemoryMapFlags@ is a bitmask type for setting a mask, but is
--- currently reserved for future use.
---
--- = See Also
---
--- 'vkMapMemory'
-newtype VkMemoryMapFlags = VkMemoryMapFlags VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
-
-instance Show VkMemoryMapFlags where
-  
-  showsPrec p (VkMemoryMapFlags x) = showParen (p >= 11) (showString "VkMemoryMapFlags " . showsPrec 11 x)
-
-instance Read VkMemoryMapFlags where
-  readPrec = parens ( choose [ 
-                             ] +++
-                      prec 10 (do
-                        expectP (Ident "VkMemoryMapFlags")
-                        v <- step readPrec
-                        pure (VkMemoryMapFlags v)
-                        )
-                    )
-
-
--- | Dummy data to tag the 'Ptr' with
-data VkDeviceMemory_T
--- | VkDeviceMemory - Opaque handle to a device memory object
---
--- = See Also
---
--- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_bind_memory2.VkBindBufferMemoryInfo',
--- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_bind_memory2.VkBindImageMemoryInfo',
--- 'VkMappedMemoryRange',
--- 'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkMemoryGetAndroidHardwareBufferInfoANDROID',
--- 'Graphics.Vulkan.Extensions.VK_KHR_external_memory_fd.VkMemoryGetFdInfoKHR',
--- 'Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32.VkMemoryGetWin32HandleInfoKHR',
--- 'Graphics.Vulkan.Core10.SparseResourceMemoryManagement.VkSparseImageMemoryBind',
--- 'Graphics.Vulkan.Core10.SparseResourceMemoryManagement.VkSparseMemoryBind',
--- 'Graphics.Vulkan.Extensions.VK_KHR_win32_keyed_mutex.VkWin32KeyedMutexAcquireReleaseInfoKHR',
--- 'Graphics.Vulkan.Extensions.VK_NV_win32_keyed_mutex.VkWin32KeyedMutexAcquireReleaseInfoNV',
--- 'vkAllocateMemory',
--- 'Graphics.Vulkan.Core10.MemoryManagement.vkBindBufferMemory',
--- 'Graphics.Vulkan.Core10.MemoryManagement.vkBindImageMemory',
--- 'vkFreeMemory', 'vkGetDeviceMemoryCommitment',
--- 'Graphics.Vulkan.Extensions.VK_NV_external_memory_win32.vkGetMemoryWin32HandleNV',
--- 'vkMapMemory', 'vkUnmapMemory'
-type VkDeviceMemory = Ptr VkDeviceMemory_T
 -- | vkAllocateMemory - Allocate device memory
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that owns the memory.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     owns the memory.
 --
--- -   @pAllocateInfo@ is a pointer to an instance of the
---     'VkMemoryAllocateInfo' structure describing parameters of the
---     allocation. A successful returned allocation /must/ use the
---     requested parameters — no substitution is permitted by the
---     implementation.
+-- -   @pAllocateInfo@ is a pointer to a 'MemoryAllocateInfo' structure
+--     describing parameters of the allocation. A successful returned
+--     allocation /must/ use the requested parameters — no substitution is
+--     permitted by the implementation.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     [Memory
---     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
--- -   @pMemory@ is a pointer to a @VkDeviceMemory@ handle in which
+-- -   @pMemory@ is a pointer to a
+--     'Graphics.Vulkan.Core10.Handles.DeviceMemory' handle in which
 --     information about the allocated memory is returned.
 --
 -- = Description
 --
--- Allocations returned by @vkAllocateMemory@ are guaranteed to meet any
+-- Allocations returned by 'allocateMemory' are guaranteed to meet any
 -- alignment requirement of the implementation. For example, if an
 -- implementation requires 128 byte alignment for images and 64 byte
 -- alignment for buffers, the device memory returned through this mechanism
@@ -151,16 +125,26 @@ type VkDeviceMemory = Ptr VkDeviceMemory_T
 -- correctly suballocate objects of different types (with potentially
 -- different alignment requirements) in the same memory object.
 --
--- When memory is allocated, its contents are undefined.
+-- When memory is allocated, its contents are undefined with the following
+-- constraint:
+--
+-- -   The contents of unprotected memory /must/ not be a function of data
+--     protected memory objects, even if those memory objects were
+--     previously freed.
+--
+-- Note
+--
+-- The contents of memory allocated by one application /should/ not be a
+-- function of data from protected memory objects of another application,
+-- even if those memory objects were previously freed.
 --
 -- The maximum number of valid memory allocations that /can/ exist
--- simultaneously within a
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice' /may/ be
+-- simultaneously within a 'Graphics.Vulkan.Core10.Handles.Device' /may/ be
 -- restricted by implementation- or platform-dependent limits. If a call to
--- 'vkAllocateMemory' would cause the total number of allocations to exceed
+-- 'allocateMemory' would cause the total number of allocations to exceed
 -- these limits, such a call will fail and /must/ return
--- @VK_ERROR_TOO_MANY_OBJECTS@. The
--- [@maxMemoryAllocationCount@](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-limits-maxMemoryAllocationCount)
+-- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'. The
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxMemoryAllocationCount maxMemoryAllocationCount>
 -- feature describes the number of allocations that /can/ exist
 -- simultaneously before encountering these internal limits.
 --
@@ -168,102 +152,148 @@ type VkDeviceMemory = Ptr VkDeviceMemory_T
 -- allocation. For example, certain systems /may/ fail to create
 -- allocations with a size greater than or equal to 4GB. Such a limit is
 -- implementation-dependent, and if such a failure occurs then the error
--- @VK_ERROR_OUT_OF_DEVICE_MEMORY@ /must/ be returned. This limit is
--- advertised in
--- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance3.VkPhysicalDeviceMaintenance3Properties'::@maxMemoryAllocationSize@.
+-- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY' /must/
+-- be returned. This limit is advertised in
+-- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_maintenance3.PhysicalDeviceMaintenance3Properties'::@maxMemoryAllocationSize@.
+--
+-- The cumulative memory size allocated to a heap /can/ be limited by the
+-- size of the specified heap. In such cases, allocated memory is tracked
+-- on a per-device and per-heap basis. Some platforms allow overallocation
+-- into other heaps. The overallocation behavior /can/ be specified through
+-- the
+-- @https:\/\/www.khronos.org\/registry\/vulkan\/specs\/1.2-extensions\/html\/vkspec.html#VK_AMD_memory_overallocation_behavior@
+-- extension.
 --
 -- == Valid Usage
 --
--- -   @pAllocateInfo@->@allocationSize@ /must/ be less than or equal to
---     'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDeviceMemoryProperties'::@memoryHeaps@[@pAllocateInfo@->@memoryTypeIndex@].@size@
+-- -   @pAllocateInfo->allocationSize@ /must/ be less than or equal to
+--     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'::@memoryHeaps@[memindex].size
+--     where @memindex@ =
+--     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'::@memoryTypes@[pAllocateInfo->memoryTypeIndex].heapIndex
 --     as returned by
---     'Graphics.Vulkan.Core10.DeviceInitialization.vkGetPhysicalDeviceMemoryProperties'
---     for the
---     'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice' that
---     @device@ was created from.
+--     'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceMemoryProperties'
+--     for the 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' that
+--     'Graphics.Vulkan.Core10.Handles.Device' was created from.
 --
--- -   @pAllocateInfo@->@memoryTypeIndex@ /must/ be less than
---     'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDeviceMemoryProperties'::@memoryTypeCount@
+-- -   @pAllocateInfo->memoryTypeIndex@ /must/ be less than
+--     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'::@memoryTypeCount@
 --     as returned by
---     'Graphics.Vulkan.Core10.DeviceInitialization.vkGetPhysicalDeviceMemoryProperties'
---     for the
---     'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice' that
---     @device@ was created from.
+--     'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceMemoryProperties'
+--     for the 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' that
+--     'Graphics.Vulkan.Core10.Handles.Device' was created from.
+--
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceCoherentMemory deviceCoherentMemory>
+--     feature is not enabled, @pAllocateInfo->memoryTypeIndex@ /must/ not
+--     identify a memory type supporting
+--     'Graphics.Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
 -- -   @pAllocateInfo@ /must/ be a valid pointer to a valid
---     @VkMemoryAllocateInfo@ structure
+--     'MemoryAllocateInfo' structure
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
+--     pointer to a valid
+--     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pMemory@ /must/ be a valid pointer to a @VkDeviceMemory@ handle
+-- -   @pMemory@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.Core10.Handles.DeviceMemory' handle
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   @VK_ERROR_TOO_MANY_OBJECTS@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
 --
---     -   @VK_ERROR_INVALID_EXTERNAL_HANDLE@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_TOO_MANY_OBJECTS'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_INVALID_EXTERNAL_HANDLE'
+--
+--     -   'Graphics.Vulkan.Extensions.VK_KHR_buffer_device_address.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
--- 'VkDeviceMemory', 'VkMemoryAllocateInfo'
+-- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
+-- 'Graphics.Vulkan.Core10.Handles.Device',
+-- 'Graphics.Vulkan.Core10.Handles.DeviceMemory', 'MemoryAllocateInfo'
+allocateMemory :: PokeChain a => Device -> MemoryAllocateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (DeviceMemory)
+allocateMemory device allocateInfo allocator = evalContT $ do
+  let vkAllocateMemory' = mkVkAllocateMemory (pVkAllocateMemory (deviceCmds (device :: Device)))
+  pAllocateInfo <- ContT $ withCStruct (allocateInfo)
+  pAllocator <- case (allocator) of
+    Nothing -> pure nullPtr
+    Just j -> ContT $ withCStruct (j)
+  pPMemory <- ContT $ bracket (callocBytes @DeviceMemory 8) free
+  r <- lift $ vkAllocateMemory' (deviceHandle (device)) pAllocateInfo pAllocator (pPMemory)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pMemory <- lift $ peek @DeviceMemory pPMemory
+  pure $ (pMemory)
+
+-- | A safe wrapper for 'allocateMemory' and 'freeMemory' using 'bracket'
+--
+-- The allocated value must not be returned from the provided computation
+withMemory :: PokeChain a => Device -> MemoryAllocateInfo a -> Maybe AllocationCallbacks -> (DeviceMemory -> IO r) -> IO r
+withMemory device memoryAllocateInfo allocationCallbacks =
+  bracket
+    (allocateMemory device memoryAllocateInfo allocationCallbacks)
+    (\o -> freeMemory device o allocationCallbacks)
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkAllocateMemory" vkAllocateMemory :: ("device" ::: VkDevice) -> ("pAllocateInfo" ::: Ptr VkMemoryAllocateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pMemory" ::: Ptr VkDeviceMemory) -> IO VkResult
+  "dynamic" mkVkFreeMemory
+  :: FunPtr (Ptr Device_T -> DeviceMemory -> Ptr AllocationCallbacks -> IO ()) -> Ptr Device_T -> DeviceMemory -> Ptr AllocationCallbacks -> IO ()
+
 -- | vkFreeMemory - Free device memory
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that owns the memory.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     owns the memory.
 --
--- -   @memory@ is the @VkDeviceMemory@ object to be freed.
+-- -   @memory@ is the 'Graphics.Vulkan.Core10.Handles.DeviceMemory' object
+--     to be freed.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     [Memory
---     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
 -- = Description
 --
 -- Before freeing a memory object, an application /must/ ensure the memory
 -- object is no longer in use by the device—​for example by command buffers
--- in the /pending state/. The memory /can/ remain bound to images or
--- buffers at the time the memory object is freed, but any further use of
--- them (on host or device) for anything other than destroying those
--- objects will result in undefined behavior. If there are still any bound
--- images or buffers, the memory /may/ not be immediately released by the
--- implementation, but /must/ be released by the time all bound images and
--- buffers have been destroyed. Once memory is released, it is returned to
--- the heap from which it was allocated.
+-- in the /pending state/. Memory /can/ be freed whilst still bound to
+-- resources, but those resources /must/ not be used afterwards. If there
+-- are still any bound images or buffers, the memory /may/ not be
+-- immediately released by the implementation, but /must/ be released by
+-- the time all bound images and buffers have been destroyed. Once memory
+-- is released, it is returned to the heap from which it was allocated.
 --
 -- How memory objects are bound to Images and Buffers is described in
--- detail in the [Resource Memory
--- Association](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-association)
+-- detail in the
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-association Resource Memory Association>
 -- section.
 --
 -- If a memory object is mapped at the time it is freed, it is implicitly
 -- unmapped.
 --
--- __Note__
+-- Note
 --
 -- As described
--- [below](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-device-unmap-does-not-flush),
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-device-unmap-does-not-flush below>,
 -- host writes are not implicitly flushed when the memory object is
 -- unmapped, but the implementation /must/ guarantee that writes that have
 -- not been flushed do not affect any other memory.
@@ -275,17 +305,20 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
 -- -   If @memory@ is not
---     'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE', @memory@ /must/
---     be a valid @VkDeviceMemory@ handle
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @memory@ /must/
+--     be a valid 'Graphics.Vulkan.Core10.Handles.DeviceMemory' handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
+--     pointer to a valid
+--     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
 -- -   If @memory@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
+--     allocated, or retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
@@ -293,105 +326,132 @@ foreign import ccall
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkDeviceMemory'
+-- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
+-- 'Graphics.Vulkan.Core10.Handles.Device',
+-- 'Graphics.Vulkan.Core10.Handles.DeviceMemory'
+freeMemory :: Device -> DeviceMemory -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
+freeMemory device memory allocator = evalContT $ do
+  let vkFreeMemory' = mkVkFreeMemory (pVkFreeMemory (deviceCmds (device :: Device)))
+  pAllocator <- case (allocator) of
+    Nothing -> pure nullPtr
+    Just j -> ContT $ withCStruct (j)
+  lift $ vkFreeMemory' (deviceHandle (device)) (memory) pAllocator
+  pure $ ()
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkFreeMemory" vkFreeMemory :: ("device" ::: VkDevice) -> ("memory" ::: VkDeviceMemory) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+  "dynamic" mkVkMapMemory
+  :: FunPtr (Ptr Device_T -> DeviceMemory -> DeviceSize -> DeviceSize -> MemoryMapFlags -> Ptr (Ptr ()) -> IO Result) -> Ptr Device_T -> DeviceMemory -> DeviceSize -> DeviceSize -> MemoryMapFlags -> Ptr (Ptr ()) -> IO Result
+
 -- | vkMapMemory - Map a memory object into application address space
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that owns the memory.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     owns the memory.
 --
--- -   @memory@ is the @VkDeviceMemory@ object to be mapped.
+-- -   @memory@ is the 'Graphics.Vulkan.Core10.Handles.DeviceMemory' object
+--     to be mapped.
 --
 -- -   @offset@ is a zero-based byte offset from the beginning of the
 --     memory object.
 --
--- -   @size@ is the size of the memory range to map, or @VK_WHOLE_SIZE@ to
---     map from @offset@ to the end of the allocation.
+-- -   @size@ is the size of the memory range to map, or
+--     'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE' to map from
+--     @offset@ to the end of the allocation.
 --
--- -   @flags@ is reserved for future use.
+-- -   'Graphics.Vulkan.Core10.BaseType.Flags' is reserved for future use.
 --
--- -   @ppData@ points to a pointer in which is returned a host-accessible
---     pointer to the beginning of the mapped range. This pointer minus
---     @offset@ /must/ be aligned to at least
---     'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@minMemoryMapAlignment@.
+-- -   @ppData@ is a pointer to a @void *@ variable in which is returned a
+--     host-accessible pointer to the beginning of the mapped range. This
+--     pointer minus @offset@ /must/ be aligned to at least
+--     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@minMemoryMapAlignment@.
 --
 -- = Description
 --
--- It is an application error to call @vkMapMemory@ on a memory object that
--- is already mapped.
+-- After a successful call to 'mapMemory' the memory object @memory@ is
+-- considered to be currently /host mapped/.
 --
--- __Note__
+-- Note
 --
--- @vkMapMemory@ will fail if the implementation is unable to allocate an
+-- It is an application error to call 'mapMemory' on a memory object that
+-- is already /host mapped/.
+--
+-- Note
+--
+-- 'mapMemory' will fail if the implementation is unable to allocate an
 -- appropriately sized contiguous virtual address range, e.g. due to
 -- virtual address space fragmentation or platform limits. In such cases,
--- @vkMapMemory@ /must/ return @VK_ERROR_MEMORY_MAP_FAILED@. The
+-- 'mapMemory' /must/ return
+-- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_MEMORY_MAP_FAILED'. The
 -- application /can/ improve the likelihood of success by reducing the size
 -- of the mapped range and\/or removing unneeded mappings using
--- @VkUnmapMemory@.
+-- 'unmapMemory'.
 --
--- @vkMapMemory@ does not check whether the device memory is currently in
--- use before returning the host-accessible pointer. The application /must/
+-- 'mapMemory' does not check whether the device memory is currently in use
+-- before returning the host-accessible pointer. The application /must/
 -- guarantee that any previously submitted command that writes to this
 -- range has completed before the host reads from or writes to that range,
 -- and that any previously submitted command that reads from that range has
 -- completed before the host writes to that region (see
--- [here](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-submission-host-writes)
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-submission-host-writes here>
 -- for details on fulfilling such a guarantee). If the device memory was
--- allocated without the @VK_MEMORY_PROPERTY_HOST_COHERENT_BIT@ set, these
--- guarantees /must/ be made for an extended range: the application /must/
--- round down the start of the range to the nearest multiple of
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@nonCoherentAtomSize@,
+-- allocated without the
+-- 'Graphics.Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_HOST_COHERENT_BIT'
+-- set, these guarantees /must/ be made for an extended range: the
+-- application /must/ round down the start of the range to the nearest
+-- multiple of
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@nonCoherentAtomSize@,
 -- and round the end of the range up to the nearest multiple of
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@nonCoherentAtomSize@.
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@nonCoherentAtomSize@.
 --
--- While a range of device memory is mapped for host access, the
--- application is responsible for synchronizing both device and host access
--- to that memory range.
+-- While a range of device memory is host mapped, the application is
+-- responsible for synchronizing both device and host access to that memory
+-- range.
 --
--- __Note__
+-- Note
 --
 -- It is important for the application developer to become meticulously
 -- familiar with all of the mechanisms described in the chapter on
--- [Synchronization and Cache
--- Control](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization)
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization Synchronization and Cache Control>
 -- as they are crucial to maintaining memory access ordering.
 --
 -- == Valid Usage
 --
--- -   @memory@ /must/ not be currently mapped
+-- -   @memory@ /must/ not be currently host mapped
 --
 -- -   @offset@ /must/ be less than the size of @memory@
 --
--- -   If @size@ is not equal to @VK_WHOLE_SIZE@, @size@ /must/ be greater
---     than @0@
+-- -   If @size@ is not equal to
+--     'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE', @size@ /must/ be
+--     greater than @0@
 --
--- -   If @size@ is not equal to @VK_WHOLE_SIZE@, @size@ /must/ be less
---     than or equal to the size of the @memory@ minus @offset@
+-- -   If @size@ is not equal to
+--     'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE', @size@ /must/ be
+--     less than or equal to the size of the @memory@ minus @offset@
 --
 -- -   @memory@ /must/ have been created with a memory type that reports
---     @VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT@
+--     'Graphics.Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_HOST_VISIBLE_BIT'
 --
 -- -   @memory@ /must/ not have been allocated with multiple instances.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
--- -   @memory@ /must/ be a valid @VkDeviceMemory@ handle
+-- -   @memory@ /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.DeviceMemory' handle
 --
--- -   @flags@ /must/ be @0@
+-- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
 --
 -- -   @ppData@ /must/ be a valid pointer to a pointer value
 --
 -- -   @memory@ /must/ have been created, allocated, or retrieved from
---     @device@
+--     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
@@ -399,45 +459,73 @@ foreign import ccall
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   @VK_ERROR_MEMORY_MAP_FAILED@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_MEMORY_MAP_FAILED'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
--- 'VkDeviceMemory', @VkDeviceSize@, 'VkMemoryMapFlags'
+-- 'Graphics.Vulkan.Core10.Handles.Device',
+-- 'Graphics.Vulkan.Core10.Handles.DeviceMemory',
+-- 'Graphics.Vulkan.Core10.BaseType.DeviceSize',
+-- 'Graphics.Vulkan.Core10.Enums.MemoryMapFlags.MemoryMapFlags'
+mapMemory :: Device -> DeviceMemory -> ("offset" ::: DeviceSize) -> DeviceSize -> MemoryMapFlags -> IO (("data" ::: Ptr ()))
+mapMemory device memory offset size flags = evalContT $ do
+  let vkMapMemory' = mkVkMapMemory (pVkMapMemory (deviceCmds (device :: Device)))
+  pPpData <- ContT $ bracket (callocBytes @(Ptr ()) 8) free
+  r <- lift $ vkMapMemory' (deviceHandle (device)) (memory) (offset) (size) (flags) (pPpData)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  ppData <- lift $ peek @(Ptr ()) pPpData
+  pure $ (ppData)
+
+-- | A safe wrapper for 'mapMemory' and 'unmapMemory' using 'bracket'
+--
+-- The allocated value must not be returned from the provided computation
+withMappedMemory :: Device -> DeviceMemory -> DeviceSize -> DeviceSize -> MemoryMapFlags -> (Ptr () -> IO r) -> IO r
+withMappedMemory device deviceMemory offset' size' flags' =
+  bracket
+    (mapMemory device deviceMemory offset' size' flags')
+    (\_ -> unmapMemory device deviceMemory)
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkMapMemory" vkMapMemory :: ("device" ::: VkDevice) -> ("memory" ::: VkDeviceMemory) -> ("offset" ::: VkDeviceSize) -> ("size" ::: VkDeviceSize) -> ("flags" ::: VkMemoryMapFlags) -> ("ppData" ::: Ptr (Ptr ())) -> IO VkResult
+  "dynamic" mkVkUnmapMemory
+  :: FunPtr (Ptr Device_T -> DeviceMemory -> IO ()) -> Ptr Device_T -> DeviceMemory -> IO ()
+
 -- | vkUnmapMemory - Unmap a previously mapped memory object
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that owns the memory.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     owns the memory.
 --
 -- -   @memory@ is the memory object to be unmapped.
 --
 -- == Valid Usage
 --
--- -   @memory@ /must/ be currently mapped
+-- -   @memory@ /must/ be currently host mapped
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
--- -   @memory@ /must/ be a valid @VkDeviceMemory@ handle
+-- -   @memory@ /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.DeviceMemory' handle
 --
 -- -   @memory@ /must/ have been created, allocated, or retrieved from
---     @device@
+--     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
@@ -445,153 +533,174 @@ foreign import ccall
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice', 'VkDeviceMemory'
+-- 'Graphics.Vulkan.Core10.Handles.Device',
+-- 'Graphics.Vulkan.Core10.Handles.DeviceMemory'
+unmapMemory :: Device -> DeviceMemory -> IO ()
+unmapMemory device memory = do
+  let vkUnmapMemory' = mkVkUnmapMemory (pVkUnmapMemory (deviceCmds (device :: Device)))
+  vkUnmapMemory' (deviceHandle (device)) (memory)
+  pure $ ()
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkUnmapMemory" vkUnmapMemory :: ("device" ::: VkDevice) -> ("memory" ::: VkDeviceMemory) -> IO ()
+  "dynamic" mkVkFlushMappedMemoryRanges
+  :: FunPtr (Ptr Device_T -> Word32 -> Ptr MappedMemoryRange -> IO Result) -> Ptr Device_T -> Word32 -> Ptr MappedMemoryRange -> IO Result
+
 -- | vkFlushMappedMemoryRanges - Flush mapped memory ranges
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that owns the memory ranges.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     owns the memory ranges.
 --
 -- -   @memoryRangeCount@ is the length of the @pMemoryRanges@ array.
 --
--- -   @pMemoryRanges@ is a pointer to an array of 'VkMappedMemoryRange'
+-- -   @pMemoryRanges@ is a pointer to an array of 'MappedMemoryRange'
 --     structures describing the memory ranges to flush.
 --
 -- = Description
 --
--- @vkFlushMappedMemoryRanges@ guarantees that host writes to the memory
--- ranges described by @pMemoryRanges@ /can/ be made available to device
--- access, via [availability
--- operations](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-dependencies-available-and-visible)
--- from the @VK_ACCESS_HOST_WRITE_BIT@ [access
--- type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-types).
+-- 'flushMappedMemoryRanges' guarantees that host writes to the memory
+-- ranges described by @pMemoryRanges@ are made available to the host
+-- memory domain, such that they /can/ be made available to the device
+-- memory domain via
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-dependencies-available-and-visible memory domain operations>
+-- using the
+-- 'Graphics.Vulkan.Core10.Enums.AccessFlagBits.ACCESS_HOST_WRITE_BIT'
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types access type>.
 --
 -- Within each range described by @pMemoryRanges@, each set of
 -- @nonCoherentAtomSize@ bytes in that range is flushed if any byte in that
--- set has been written by the host since it was first mapped, or the last
--- time it was flushed. If @pMemoryRanges@ includes sets of
+-- set has been written by the host since it was first host mapped, or the
+-- last time it was flushed. If @pMemoryRanges@ includes sets of
 -- @nonCoherentAtomSize@ bytes where no bytes have been written by the
 -- host, those bytes /must/ not be flushed.
 --
--- Unmapping non-coherent memory does not implicitly flush the mapped
+-- Unmapping non-coherent memory does not implicitly flush the host mapped
 -- memory, and host writes that have not been flushed /may/ not ever be
 -- visible to the device. However, implementations /must/ ensure that
 -- writes that have not been flushed do not become visible to any other
 -- memory.
 --
--- __Note__
+-- Note
 --
 -- The above guarantee avoids a potential memory corruption in scenarios
 -- where host writes to a mapped memory object have not been flushed before
 -- the memory is unmapped (or freed), and the virtual address range is
 -- subsequently reused for a different mapping (or memory allocation).
 --
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   @pMemoryRanges@ /must/ be a valid pointer to an array of
---     @memoryRangeCount@ valid @VkMappedMemoryRange@ structures
---
--- -   @memoryRangeCount@ /must/ be greater than @0@
---
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
--- 'VkMappedMemoryRange'
+-- 'Graphics.Vulkan.Core10.Handles.Device', 'MappedMemoryRange'
+flushMappedMemoryRanges :: Device -> ("memoryRanges" ::: Vector MappedMemoryRange) -> IO ()
+flushMappedMemoryRanges device memoryRanges = evalContT $ do
+  let vkFlushMappedMemoryRanges' = mkVkFlushMappedMemoryRanges (pVkFlushMappedMemoryRanges (deviceCmds (device :: Device)))
+  pPMemoryRanges <- ContT $ allocaBytesAligned @MappedMemoryRange ((Data.Vector.length (memoryRanges)) * 40) 8
+  Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPMemoryRanges `plusPtr` (40 * (i)) :: Ptr MappedMemoryRange) (e) . ($ ())) (memoryRanges)
+  r <- lift $ vkFlushMappedMemoryRanges' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (memoryRanges)) :: Word32)) (pPMemoryRanges)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkFlushMappedMemoryRanges" vkFlushMappedMemoryRanges :: ("device" ::: VkDevice) -> ("memoryRangeCount" ::: Word32) -> ("pMemoryRanges" ::: Ptr VkMappedMemoryRange) -> IO VkResult
+  "dynamic" mkVkInvalidateMappedMemoryRanges
+  :: FunPtr (Ptr Device_T -> Word32 -> Ptr MappedMemoryRange -> IO Result) -> Ptr Device_T -> Word32 -> Ptr MappedMemoryRange -> IO Result
+
 -- | vkInvalidateMappedMemoryRanges - Invalidate ranges of mapped memory
 -- objects
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that owns the memory ranges.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     owns the memory ranges.
 --
 -- -   @memoryRangeCount@ is the length of the @pMemoryRanges@ array.
 --
--- -   @pMemoryRanges@ is a pointer to an array of 'VkMappedMemoryRange'
+-- -   @pMemoryRanges@ is a pointer to an array of 'MappedMemoryRange'
 --     structures describing the memory ranges to invalidate.
 --
 -- = Description
 --
--- @vkInvalidateMappedMemoryRanges@ guarantees that device writes to the
--- memory ranges described by @pMemoryRanges@, which have been made visible
--- to the @VK_ACCESS_HOST_WRITE_BIT@ and @VK_ACCESS_HOST_READ_BIT@ [access
--- types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-access-types),
+-- 'invalidateMappedMemoryRanges' guarantees that device writes to the
+-- memory ranges described by @pMemoryRanges@, which have been made
+-- available to the host memory domain using the
+-- 'Graphics.Vulkan.Core10.Enums.AccessFlagBits.ACCESS_HOST_WRITE_BIT' and
+-- 'Graphics.Vulkan.Core10.Enums.AccessFlagBits.ACCESS_HOST_READ_BIT'
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types access types>,
 -- are made visible to the host. If a range of non-coherent memory is
 -- written by the host and then invalidated without first being flushed,
 -- its contents are undefined.
 --
 -- Within each range described by @pMemoryRanges@, each set of
 -- @nonCoherentAtomSize@ bytes in that range is invalidated if any byte in
--- that set has been written by the device since it was first mapped, or
--- the last time it was invalidated.
+-- that set has been written by the device since it was first host mapped,
+-- or the last time it was invalidated.
 --
--- __Note__
+-- Note
 --
--- Mapping non-coherent memory does not implicitly invalidate the mapped
--- memory, and device writes that have not been invalidated /must/ be made
--- visible before the host reads or overwrites them.
---
--- == Valid Usage (Implicit)
---
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   @pMemoryRanges@ /must/ be a valid pointer to an array of
---     @memoryRangeCount@ valid @VkMappedMemoryRange@ structures
---
--- -   @memoryRangeCount@ /must/ be greater than @0@
+-- Mapping non-coherent memory does not implicitly invalidate that memory.
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
--- 'VkMappedMemoryRange'
+-- 'Graphics.Vulkan.Core10.Handles.Device', 'MappedMemoryRange'
+invalidateMappedMemoryRanges :: Device -> ("memoryRanges" ::: Vector MappedMemoryRange) -> IO ()
+invalidateMappedMemoryRanges device memoryRanges = evalContT $ do
+  let vkInvalidateMappedMemoryRanges' = mkVkInvalidateMappedMemoryRanges (pVkInvalidateMappedMemoryRanges (deviceCmds (device :: Device)))
+  pPMemoryRanges <- ContT $ allocaBytesAligned @MappedMemoryRange ((Data.Vector.length (memoryRanges)) * 40) 8
+  Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPMemoryRanges `plusPtr` (40 * (i)) :: Ptr MappedMemoryRange) (e) . ($ ())) (memoryRanges)
+  r <- lift $ vkInvalidateMappedMemoryRanges' (deviceHandle (device)) ((fromIntegral (Data.Vector.length $ (memoryRanges)) :: Word32)) (pPMemoryRanges)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkInvalidateMappedMemoryRanges" vkInvalidateMappedMemoryRanges :: ("device" ::: VkDevice) -> ("memoryRangeCount" ::: Word32) -> ("pMemoryRanges" ::: Ptr VkMappedMemoryRange) -> IO VkResult
+  "dynamic" mkVkGetDeviceMemoryCommitment
+  :: FunPtr (Ptr Device_T -> DeviceMemory -> Ptr DeviceSize -> IO ()) -> Ptr Device_T -> DeviceMemory -> Ptr DeviceSize -> IO ()
+
 -- | vkGetDeviceMemoryCommitment - Query the current commitment for a
 -- VkDeviceMemory
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that owns the memory.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     owns the memory.
 --
 -- -   @memory@ is the memory object being queried.
 --
--- -   @pCommittedMemoryInBytes@ is a pointer to a @VkDeviceSize@ value in
---     which the number of bytes currently committed is returned, on
---     success.
+-- -   @pCommittedMemoryInBytes@ is a pointer to a
+--     'Graphics.Vulkan.Core10.BaseType.DeviceSize' value in which the
+--     number of bytes currently committed is returned, on success.
 --
 -- = Description
 --
@@ -599,51 +708,44 @@ foreign import ccall
 -- value returned by this query /may/ be out of date.
 --
 -- The implementation guarantees to allocate any committed memory from the
--- heapIndex indicated by the memory type that the memory object was
+-- @heapIndex@ indicated by the memory type that the memory object was
 -- created with.
---
--- == Valid Usage
---
--- -   @memory@ /must/ have been created with a memory type that reports
---     @VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
---
--- -   @memory@ /must/ be a valid @VkDeviceMemory@ handle
---
--- -   @pCommittedMemoryInBytes@ /must/ be a valid pointer to a
---     @VkDeviceSize@ value
---
--- -   @memory@ /must/ have been created, allocated, or retrieved from
---     @device@
---
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
--- 'VkDeviceMemory', @VkDeviceSize@
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "vkGetDeviceMemoryCommitment" vkGetDeviceMemoryCommitment :: ("device" ::: VkDevice) -> ("memory" ::: VkDeviceMemory) -> ("pCommittedMemoryInBytes" ::: Ptr VkDeviceSize) -> IO ()
+-- 'Graphics.Vulkan.Core10.Handles.Device',
+-- 'Graphics.Vulkan.Core10.Handles.DeviceMemory',
+-- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
+getDeviceMemoryCommitment :: Device -> DeviceMemory -> IO (("committedMemoryInBytes" ::: DeviceSize))
+getDeviceMemoryCommitment device memory = evalContT $ do
+  let vkGetDeviceMemoryCommitment' = mkVkGetDeviceMemoryCommitment (pVkGetDeviceMemoryCommitment (deviceCmds (device :: Device)))
+  pPCommittedMemoryInBytes <- ContT $ bracket (callocBytes @DeviceSize 8) free
+  lift $ vkGetDeviceMemoryCommitment' (deviceHandle (device)) (memory) (pPCommittedMemoryInBytes)
+  pCommittedMemoryInBytes <- lift $ peek @DeviceSize pPCommittedMemoryInBytes
+  pure $ (pCommittedMemoryInBytes)
+
+
 -- | VkMemoryAllocateInfo - Structure containing parameters of a memory
 -- allocation
 --
 -- = Description
 --
--- An instance of the 'VkMemoryAllocateInfo' structure defines a memory
--- import operation if the @pNext@ chain contains an instance of one of the
--- following structures: *
--- 'Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32.VkImportMemoryWin32HandleInfoKHR'
--- with non-zero @handleType@ value *
--- 'Graphics.Vulkan.Extensions.VK_KHR_external_memory_fd.VkImportMemoryFdInfoKHR'
--- with a non-zero @handleType@ value *
--- 'Graphics.Vulkan.Extensions.VK_EXT_external_memory_host.VkImportMemoryHostPointerInfoEXT'
--- with a non-zero @handleType@ value *
--- 'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkImportAndroidHardwareBufferInfoANDROID'
--- with a non-@NULL@ @buffer@ value
+-- A 'MemoryAllocateInfo' structure defines a memory import operation if
+-- its @pNext@ chain includes one of the following structures:
+--
+-- -   'Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32.ImportMemoryWin32HandleInfoKHR'
+--     with non-zero @handleType@ value
+--
+-- -   'Graphics.Vulkan.Extensions.VK_KHR_external_memory_fd.ImportMemoryFdInfoKHR'
+--     with a non-zero @handleType@ value
+--
+-- -   'Graphics.Vulkan.Extensions.VK_EXT_external_memory_host.ImportMemoryHostPointerInfoEXT'
+--     with a non-zero @handleType@ value
+--
+-- -   'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
+--     with a non-@NULL@ 'Graphics.Vulkan.Core10.Handles.Buffer' value
 --
 -- Importing memory /must/ not modify the content of the memory.
 -- Implementations /must/ ensure that importing memory does not enable the
@@ -654,7 +756,7 @@ foreign import ccall
 -- instance to obtain data from the exporting Vulkan instance or
 -- vice-versa.
 --
--- __Note__
+-- Note
 --
 -- How exported and imported memory is isolated is left to the
 -- implementation, but applications should be aware that such isolation
@@ -672,281 +774,469 @@ foreign import ccall
 -- allowed according to its allocation parameters. If the external handle
 -- provided does not meet these requirements, the implementation /must/
 -- fail the memory import operation with the error code
--- @VK_ERROR_INVALID_EXTERNAL_HANDLE@.
+-- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_INVALID_EXTERNAL_HANDLE'.
 --
 -- == Valid Usage
 --
--- -   If the @pNext@ chain contains an instance of
---     @VkExportMemoryAllocateInfo@, and any of the handle types specified
---     in @VkExportMemoryAllocateInfo@::@handleTypes@ require a dedicated
---     allocation, as reported by
---     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceImageFormatProperties2'
+-- -   If the @pNext@ chain includes a
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'
+--     structure, and any of the handle types specified in
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@
+--     require a dedicated allocation, as reported by
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --     in
---     @VkExternalImageFormatProperties@::@externalMemoryProperties@::@externalMemoryFeatures@
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties'::@externalMemoryProperties.externalMemoryFeatures@
 --     or
---     @VkExternalBufferProperties@::@externalMemoryProperties@::@externalMemoryFeatures@,
---     the @pNext@ chain must contain an instance of
---     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'::@externalMemoryProperties.externalMemoryFeatures@,
+--     the @pNext@ chain must include a
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     or
---     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationMemoryAllocateInfoNV'
---     with either its @image@ or @buffer@ field set to a value other than
---     @VK_NULL_HANDLE@.
+--     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'
+--     structure with either its 'Graphics.Vulkan.Core10.Handles.Image' or
+--     'Graphics.Vulkan.Core10.Handles.Buffer' member set to a value other
+--     than 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'.
 --
--- -   If the @pNext@ chain contains an instance of
---     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory.VkExportMemoryAllocateInfo',
---     it /must/ not contain an instance of
---     'Graphics.Vulkan.Extensions.VK_NV_external_memory.VkExportMemoryAllocateInfoNV'
+-- -   If the @pNext@ chain includes a
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'
+--     structure, it /must/ not include a
+--     'Graphics.Vulkan.Extensions.VK_NV_external_memory.ExportMemoryAllocateInfoNV'
 --     or
---     'Graphics.Vulkan.Extensions.VK_NV_external_memory_win32.VkExportMemoryWin32HandleInfoNV'.
+--     'Graphics.Vulkan.Extensions.VK_NV_external_memory_win32.ExportMemoryWin32HandleInfoNV'
+--     structure.
 --
--- -   If the @pNext@ chain contains an instance of
---     'Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32.VkImportMemoryWin32HandleInfoKHR',
---     it /must/ not contain an instance of
---     'Graphics.Vulkan.Extensions.VK_NV_external_memory_win32.VkImportMemoryWin32HandleInfoNV'.
+-- -   If the @pNext@ chain includes a
+--     'Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32.ImportMemoryWin32HandleInfoKHR'
+--     structure, it /must/ not include a
+--     'Graphics.Vulkan.Extensions.VK_NV_external_memory_win32.ImportMemoryWin32HandleInfoNV'
+--     structure.
 --
 -- -   If the parameters define an import operation, the external handle
 --     specified was created by the Vulkan API, and the external handle
---     type is @VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT_KHR@, then the
---     values of @allocationSize@ and @memoryTypeIndex@ /must/ match those
---     specified when the memory object being imported was created.
+--     type is
+--     'Graphics.Vulkan.Extensions.VK_KHR_external_memory_capabilities.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT_KHR',
+--     then the values of @allocationSize@ and @memoryTypeIndex@ /must/
+--     match those specified when the memory object being imported was
+--     created.
 --
 -- -   If the parameters define an import operation and the external handle
 --     specified was created by the Vulkan API, the device mask specified
 --     by
---     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group.VkMemoryAllocateFlagsInfo'
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo'
 --     /must/ match that specified when the memory object being imported
 --     was allocated.
 --
 -- -   If the parameters define an import operation and the external handle
 --     specified was created by the Vulkan API, the list of physical
---     devices that comprise the logical device passed to
---     'vkAllocateMemory' /must/ match the list of physical devices that
---     comprise the logical device on which the memory was originally
---     allocated.
+--     devices that comprise the logical device passed to 'allocateMemory'
+--     /must/ match the list of physical devices that comprise the logical
+--     device on which the memory was originally allocated.
 --
 -- -   If the parameters define an import operation and the external handle
 --     is an NT handle or a global share handle created outside of the
 --     Vulkan API, the value of @memoryTypeIndex@ /must/ be one of those
 --     returned by
---     'Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32.vkGetMemoryWin32HandlePropertiesKHR'.
+--     'Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32.getMemoryWin32HandlePropertiesKHR'.
 --
 -- -   If the parameters define an import operation, the external handle
 --     was created by the Vulkan API, and the external handle type is
---     @VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_KHR@ or
---     @VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_KHR@, then the
---     values of @allocationSize@ and @memoryTypeIndex@ /must/ match those
---     specified when the memory object being imported was created.
+--     'Graphics.Vulkan.Extensions.VK_KHR_external_memory_capabilities.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_KHR'
+--     or
+--     'Graphics.Vulkan.Extensions.VK_KHR_external_memory_capabilities.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_KHR',
+--     then the values of @allocationSize@ and @memoryTypeIndex@ /must/
+--     match those specified when the memory object being imported was
+--     created.
 --
 -- -   If the parameters define an import operation and the external handle
---     type is @VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT@,
---     @VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT@, or
---     @VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT@,
+--     type is
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT',
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT',
+--     or
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT',
 --     @allocationSize@ /must/ match the size reported in the memory
---     requirements of the @image@ or @buffer@ member of the instance of
---     @VkDedicatedAllocationMemoryAllocateInfoNV@ included in the @pNext@
---     chain.
+--     requirements of the 'Graphics.Vulkan.Core10.Handles.Image' or
+--     'Graphics.Vulkan.Core10.Handles.Buffer' member of the
+--     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'
+--     structure included in the @pNext@ chain.
 --
 -- -   If the parameters define an import operation and the external handle
---     type is @VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT@,
+--     type is
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT',
 --     @allocationSize@ /must/ match the size specified when creating the
 --     Direct3D 12 heap from which the external handle was extracted.
 --
 -- -   If the parameters define an import operation and the external handle
 --     is a POSIX file descriptor created outside of the Vulkan API, the
 --     value of @memoryTypeIndex@ /must/ be one of those returned by
---     'Graphics.Vulkan.Extensions.VK_KHR_external_memory_fd.vkGetMemoryFdPropertiesKHR'.
+--     'Graphics.Vulkan.Extensions.VK_KHR_external_memory_fd.getMemoryFdPropertiesKHR'.
+--
+-- -   If the protected memory feature is not enabled, the
+--     'MemoryAllocateInfo'::@memoryTypeIndex@ /must/ not indicate a memory
+--     type that reports
+--     'Graphics.Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'.
 --
 -- -   If the parameters define an import operation and the external handle
 --     is a host pointer, the value of @memoryTypeIndex@ /must/ be one of
 --     those returned by
---     'Graphics.Vulkan.Extensions.VK_EXT_external_memory_host.vkGetMemoryHostPointerPropertiesEXT'
+--     'Graphics.Vulkan.Extensions.VK_EXT_external_memory_host.getMemoryHostPointerPropertiesEXT'
 --
 -- -   If the parameters define an import operation and the external handle
 --     is a host pointer, @allocationSize@ /must/ be an integer multiple of
---     @VkPhysicalDeviceExternalMemoryHostPropertiesEXT@::@minImportedHostPointerAlignment@
+--     'Graphics.Vulkan.Extensions.VK_EXT_external_memory_host.PhysicalDeviceExternalMemoryHostPropertiesEXT'::@minImportedHostPointerAlignment@
+--
+-- -   If the parameters define an import operation and the external handle
+--     is a host pointer, the @pNext@ chain /must/ not include a
+--     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'
+--     structure with either its 'Graphics.Vulkan.Core10.Handles.Image' or
+--     'Graphics.Vulkan.Core10.Handles.Buffer' field set to a value other
+--     than 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'.
+--
+-- -   If the parameters define an import operation and the external handle
+--     is a host pointer, the @pNext@ chain /must/ not include a
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
+--     structure with either its 'Graphics.Vulkan.Core10.Handles.Image' or
+--     'Graphics.Vulkan.Core10.Handles.Buffer' field set to a value other
+--     than 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'.
 --
 -- -   If the parameters define an import operation and the external handle
 --     type is
---     @VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BIT_ANDROID@:
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID',
+--     @allocationSize@ /must/ be the size returned by
+--     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.getAndroidHardwareBufferPropertiesANDROID'
+--     for the Android hardware buffer.
 --
---     -   @allocationSize@ /must/ be the size returned by
---         'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.vkGetAndroidHardwareBufferPropertiesANDROID'
---         for the Android hardware buffer
+-- -   If the parameters define an import operation and the external handle
+--     type is
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID',
+--     and the @pNext@ chain does not include a
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
+--     structure or
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::'Graphics.Vulkan.Core10.Handles.Image'
+--     is 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', the Android
+--     hardware buffer /must/ have a
+--     @AHardwareBuffer_Desc@::'Graphics.Vulkan.Core10.Enums.Format.Format'
+--     of @AHARDWAREBUFFER_FORMAT_BLOB@ and a
+--     @AHardwareBuffer_Desc@::@usage@ that includes
+--     @AHARDWAREBUFFER_USAGE_GPU_DATA_BUFFER@.
 --
---     -   If the @pNext@ chain doesn’t contain an instance of
---         'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'
---         or @VkMemoryDedicatedAllocateInfo@::@image@ is
---         'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE', the Android
---         hardware buffer /must/ have a format of
---         @AHARDWAREBUFFER_FORMAT_BLOB@ and a usage that includes
---         @AHARDWAREBUFFER_USAGE_GPU_DATA_BUFFER@
---
---     -   @memoryTypeIndex@ /must/ be one of those returned by
---         'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.vkGetAndroidHardwareBufferPropertiesANDROID'
---         for the Android hardware buffer
+-- -   If the parameters define an import operation and the external handle
+--     type is
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID',
+--     @memoryTypeIndex@ /must/ be one of those returned by
+--     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.getAndroidHardwareBufferPropertiesANDROID'
+--     for the Android hardware buffer.
 --
 -- -   If the parameters do not define an import operation, and the @pNext@
---     chain contains an instance of @VkExportMemoryAllocateInfo@ with
---     @VK_EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID@
---     included in its @handleTypes@ member, and the @pNext@ contains an
---     instance of
---     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'
---     with @image@ not equal to
---     'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE', then
+--     chain includes a
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'
+--     structure with
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
+--     included in its @handleTypes@ member, and the @pNext@ chain includes
+--     a
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
+--     structure with 'Graphics.Vulkan.Core10.Handles.Image' not equal to
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', then
 --     @allocationSize@ /must/ be @0@, otherwise @allocationSize@ /must/ be
 --     greater than @0@.
 --
 -- -   If the parameters define an import operation, the external handle is
---     an Android hardware buffer, and the @pNext@ chain includes an
---     instance of
---     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'
---     with @image@ that is not
---     'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE':
+--     an Android hardware buffer, and the @pNext@ chain includes a
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
+--     with 'Graphics.Vulkan.Core10.Handles.Image' that is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', the Android
+--     hardware buffer’s
+--     'Graphics.Vulkan.Extensions.WSITypes.AHardwareBuffer'::@usage@
+--     /must/ include at least one of
+--     @AHARDWAREBUFFER_USAGE_GPU_COLOR_OUTPUT@ or
+--     @AHARDWAREBUFFER_USAGE_GPU_SAMPLED_IMAGE@.
 --
---     -   The Android hardware buffer’s usage /must/ include at least one
---         of @AHARDWAREBUFFER_USAGE_GPU_COLOR_OUTPUT@ or
---         @AHARDWAREBUFFER_USAGE_GPU_SAMPLED_IMAGE@
+-- -   If the parameters define an import operation, the external handle is
+--     an Android hardware buffer, and the @pNext@ chain includes a
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
+--     with 'Graphics.Vulkan.Core10.Handles.Image' that is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', the format of
+--     'Graphics.Vulkan.Core10.Handles.Image' /must/ be
+--     'Graphics.Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED' or the format
+--     returned by
+--     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.getAndroidHardwareBufferPropertiesANDROID'
+--     in
+--     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferFormatPropertiesANDROID'::'Graphics.Vulkan.Core10.Enums.Format.Format'
+--     for the Android hardware buffer.
 --
---     -   The @image@’s format /must/ be @VK_FORMAT_UNDEFINED@ or the
---         format returned by
---         'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.vkGetAndroidHardwareBufferPropertiesANDROID'
---         in
---         'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkAndroidHardwareBufferFormatPropertiesANDROID'::@format@
---         for the Android hardware buffer.
+-- -   If the parameters define an import operation, the external handle is
+--     an Android hardware buffer, and the @pNext@ chain includes a
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
+--     structure with 'Graphics.Vulkan.Core10.Handles.Image' that is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', the width,
+--     height, and array layer dimensions of
+--     'Graphics.Vulkan.Core10.Handles.Image' and the Android hardware
+--     buffer’s @AHardwareBuffer_Desc@ /must/ be identical.
 --
---     -   The image’s and Android hardware buffer’s width, height, and
---         array layer dimensions /must/ be the same
+-- -   If the parameters define an import operation, the external handle is
+--     an Android hardware buffer, and the @pNext@ chain includes a
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
+--     structure with 'Graphics.Vulkan.Core10.Handles.Image' that is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', and the Android
+--     hardware buffer’s
+--     'Graphics.Vulkan.Extensions.WSITypes.AHardwareBuffer'::@usage@
+--     includes @AHARDWAREBUFFER_USAGE_GPU_MIPMAP_COMPLETE@, the
+--     'Graphics.Vulkan.Core10.Handles.Image' /must/ have a complete mipmap
+--     chain.
 --
---     -   If the Android hardware buffer’s usage includes
---         @AHARDWAREBUFFER_USAGE_GPU_MIPMAP_COMPLETE@, the image must have
---         ⌊log2(max(@width@, @height@))⌋ + 1 mip levels, otherwise it must
---         have exactly @1@ mip level.
+-- -   If the parameters define an import operation, the external handle is
+--     an Android hardware buffer, and the @pNext@ chain includes a
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
+--     structure with 'Graphics.Vulkan.Core10.Handles.Image' that is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', and the Android
+--     hardware buffer’s
+--     'Graphics.Vulkan.Extensions.WSITypes.AHardwareBuffer'::@usage@ does
+--     not include @AHARDWAREBUFFER_USAGE_GPU_MIPMAP_COMPLETE@, the
+--     'Graphics.Vulkan.Core10.Handles.Image' /must/ have exactly one
+--     mipmap level.
 --
---     -   Each bit set in the image’s usage /must/ be listed in
---         [AHardwareBuffer Usage
---         Equivalence](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-external-android-hardware-buffer-usage),
---         and if there is a corresponding @AHARDWAREBUFFER_USAGE@ bit
---         listed that bit /must/ be included in the Android hardware
---         buffer’s usage
+-- -   If the parameters define an import operation, the external handle is
+--     an Android hardware buffer, and the @pNext@ chain includes a
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
+--     structure with 'Graphics.Vulkan.Core10.Handles.Image' that is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', each bit set in
+--     the usage of 'Graphics.Vulkan.Core10.Handles.Image' /must/ be listed
+--     in
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer-usage AHardwareBuffer Usage Equivalence>,
+--     and if there is a corresponding @AHARDWAREBUFFER_USAGE@ bit listed
+--     that bit /must/ be included in the Android hardware buffer’s
+--     @AHardwareBuffer_Desc@::@usage@.
+--
+-- -   If
+--     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.MemoryOpaqueCaptureAddressAllocateInfo'::@opaqueCaptureAddress@
+--     is not zero,
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'
+--     /must/ include
+--     'Graphics.Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
+--
+-- -   If
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'
+--     includes
+--     'Graphics.Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT',
+--     the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddressCaptureReplay bufferDeviceAddressCaptureReplay>
+--     feature /must/ be enabled
+--
+-- -   If
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'
+--     includes
+--     'Graphics.Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT',
+--     the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddress bufferDeviceAddress>
+--     feature /must/ be enabled
+--
+-- -   If the @pNext@ chain includes a
+--     'Graphics.Vulkan.Extensions.VK_EXT_external_memory_host.ImportMemoryHostPointerInfoEXT'
+--     structure,
+--     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.MemoryOpaqueCaptureAddressAllocateInfo'::@opaqueCaptureAddress@
+--     /must/ be zero
+--
+-- -   If the parameters define an import operation,
+--     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.MemoryOpaqueCaptureAddressAllocateInfo'::@opaqueCaptureAddress@
+--     /must/ be zero
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO@
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO'
 --
 -- -   Each @pNext@ member of any structure (including this one) in the
 --     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
 --     instance of
---     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationMemoryAllocateInfoNV',
---     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory.VkExportMemoryAllocateInfo',
---     'Graphics.Vulkan.Extensions.VK_NV_external_memory.VkExportMemoryAllocateInfoNV',
---     'Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32.VkExportMemoryWin32HandleInfoKHR',
---     'Graphics.Vulkan.Extensions.VK_NV_external_memory_win32.VkExportMemoryWin32HandleInfoNV',
---     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.VkImportAndroidHardwareBufferInfoANDROID',
---     'Graphics.Vulkan.Extensions.VK_KHR_external_memory_fd.VkImportMemoryFdInfoKHR',
---     'Graphics.Vulkan.Extensions.VK_EXT_external_memory_host.VkImportMemoryHostPointerInfoEXT',
---     'Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32.VkImportMemoryWin32HandleInfoKHR',
---     'Graphics.Vulkan.Extensions.VK_NV_external_memory_win32.VkImportMemoryWin32HandleInfoNV',
---     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_device_group.VkMemoryAllocateFlagsInfo',
+--     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV',
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo',
+--     'Graphics.Vulkan.Extensions.VK_NV_external_memory.ExportMemoryAllocateInfoNV',
+--     'Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32.ExportMemoryWin32HandleInfoKHR',
+--     'Graphics.Vulkan.Extensions.VK_NV_external_memory_win32.ExportMemoryWin32HandleInfoNV',
+--     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID',
+--     'Graphics.Vulkan.Extensions.VK_KHR_external_memory_fd.ImportMemoryFdInfoKHR',
+--     'Graphics.Vulkan.Extensions.VK_EXT_external_memory_host.ImportMemoryHostPointerInfoEXT',
+--     'Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32.ImportMemoryWin32HandleInfoKHR',
+--     'Graphics.Vulkan.Extensions.VK_NV_external_memory_win32.ImportMemoryWin32HandleInfoNV',
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo',
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo',
+--     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.MemoryOpaqueCaptureAddressAllocateInfo',
 --     or
---     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_dedicated_allocation.VkMemoryDedicatedAllocateInfo'
+--     'Graphics.Vulkan.Extensions.VK_EXT_memory_priority.MemoryPriorityAllocateInfoEXT'
 --
--- -   Each @sType@ member in the @pNext@ chain /must/ be unique
+-- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
+--     unique
 --
 -- = See Also
 --
--- @VkDeviceSize@, 'Graphics.Vulkan.Core10.Core.VkStructureType',
--- 'vkAllocateMemory'
-data VkMemoryAllocateInfo = VkMemoryAllocateInfo
-  { -- | @sType@ is the type of this structure.
-  vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
-  vkPNext :: Ptr ()
+-- 'Graphics.Vulkan.Core10.BaseType.DeviceSize',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'allocateMemory'
+data MemoryAllocateInfo (es :: [Type]) = MemoryAllocateInfo
+  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+    next :: Chain es
   , -- | @allocationSize@ is the size of the allocation in bytes
-  vkAllocationSize :: VkDeviceSize
+    allocationSize :: DeviceSize
   , -- | @memoryTypeIndex@ is an index identifying a memory type from the
-  -- @memoryTypes@ array of the
-  -- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDeviceMemoryProperties'
-  -- structure
-  vkMemoryTypeIndex :: Word32
+    -- @memoryTypes@ array of the
+    -- 'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'
+    -- structure
+    memoryTypeIndex :: Word32
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show (Chain es) => Show (MemoryAllocateInfo es)
 
-instance Storable VkMemoryAllocateInfo where
-  sizeOf ~_ = 32
-  alignment ~_ = 8
-  peek ptr = VkMemoryAllocateInfo <$> peek (ptr `plusPtr` 0)
-                                  <*> peek (ptr `plusPtr` 8)
-                                  <*> peek (ptr `plusPtr` 16)
-                                  <*> peek (ptr `plusPtr` 24)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMemoryAllocateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryAllocateInfo))
-                *> poke (ptr `plusPtr` 16) (vkAllocationSize (poked :: VkMemoryAllocateInfo))
-                *> poke (ptr `plusPtr` 24) (vkMemoryTypeIndex (poked :: VkMemoryAllocateInfo))
+instance Extensible MemoryAllocateInfo where
+  extensibleType = STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO
+  setNext x next = x{next = next}
+  getNext MemoryAllocateInfo{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends MemoryAllocateInfo e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @MemoryOpaqueCaptureAddressAllocateInfo = Just f
+    | Just Refl <- eqT @e @MemoryPriorityAllocateInfoEXT = Just f
+    | Just Refl <- eqT @e @ImportAndroidHardwareBufferInfoANDROID = Just f
+    | Just Refl <- eqT @e @ImportMemoryHostPointerInfoEXT = Just f
+    | Just Refl <- eqT @e @MemoryDedicatedAllocateInfo = Just f
+    | Just Refl <- eqT @e @MemoryAllocateFlagsInfo = Just f
+    | Just Refl <- eqT @e @ImportMemoryFdInfoKHR = Just f
+    | Just Refl <- eqT @e @ExportMemoryWin32HandleInfoKHR = Just f
+    | Just Refl <- eqT @e @ImportMemoryWin32HandleInfoKHR = Just f
+    | Just Refl <- eqT @e @ExportMemoryAllocateInfo = Just f
+    | Just Refl <- eqT @e @ExportMemoryWin32HandleInfoNV = Just f
+    | Just Refl <- eqT @e @ImportMemoryWin32HandleInfoNV = Just f
+    | Just Refl <- eqT @e @ExportMemoryAllocateInfoNV = Just f
+    | Just Refl <- eqT @e @DedicatedAllocationMemoryAllocateInfoNV = Just f
+    | otherwise = Nothing
+
+instance PokeChain es => ToCStruct (MemoryAllocateInfo es) where
+  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p MemoryAllocateInfo{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (allocationSize)
+    lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (memoryTypeIndex)
+    lift $ f
+  cStructSize = 32
+  cStructAlignment = 8
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (zero)
+    lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
+    lift $ f
+
+instance PeekChain es => FromCStruct (MemoryAllocateInfo es) where
+  peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
+    allocationSize <- peek @DeviceSize ((p `plusPtr` 16 :: Ptr DeviceSize))
+    memoryTypeIndex <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
+    pure $ MemoryAllocateInfo
+             next allocationSize memoryTypeIndex
+
+instance es ~ '[] => Zero (MemoryAllocateInfo es) where
+  zero = MemoryAllocateInfo
+           ()
+           zero
+           zero
+
+
 -- | VkMappedMemoryRange - Structure specifying a mapped memory range
 --
 -- == Valid Usage
 --
--- -   @memory@ /must/ be currently mapped
+-- -   @memory@ /must/ be currently host mapped
 --
--- -   If @size@ is not equal to @VK_WHOLE_SIZE@, @offset@ and @size@
---     /must/ specify a range contained within the currently mapped range
---     of @memory@
+-- -   If @size@ is not equal to
+--     'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE', @offset@ and
+--     @size@ /must/ specify a range contained within the currently mapped
+--     range of @memory@
 --
--- -   If @size@ is equal to @VK_WHOLE_SIZE@, @offset@ /must/ be within the
---     currently mapped range of @memory@
+-- -   If @size@ is equal to
+--     'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE', @offset@ /must/ be
+--     within the currently mapped range of @memory@
 --
--- -   If @size@ is equal to @VK_WHOLE_SIZE@, the end of the current
---     mapping of @memory@ /must/ be a multiple of
---     'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@nonCoherentAtomSize@
+-- -   If @size@ is equal to
+--     'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE', the end of the
+--     current mapping of @memory@ /must/ be a multiple of
+--     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@nonCoherentAtomSize@
 --     bytes from the beginning of the memory object.
 --
 -- -   @offset@ /must/ be a multiple of
---     'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@nonCoherentAtomSize@
+--     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@nonCoherentAtomSize@
 --
--- -   If @size@ is not equal to @VK_WHOLE_SIZE@, @size@ /must/ either be a
---     multiple of
---     'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDeviceLimits'::@nonCoherentAtomSize@,
+-- -   If @size@ is not equal to
+--     'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE', @size@ /must/
+--     either be a multiple of
+--     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@nonCoherentAtomSize@,
 --     or @offset@ plus @size@ /must/ equal the size of @memory@.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE@
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MAPPED_MEMORY_RANGE'
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   @memory@ /must/ be a valid @VkDeviceMemory@ handle
+-- -   @memory@ /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.DeviceMemory' handle
 --
 -- = See Also
 --
--- 'VkDeviceMemory', @VkDeviceSize@,
--- 'Graphics.Vulkan.Core10.Core.VkStructureType',
--- 'vkFlushMappedMemoryRanges', 'vkInvalidateMappedMemoryRanges'
-data VkMappedMemoryRange = VkMappedMemoryRange
-  { -- | @sType@ is the type of this structure.
-  vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
-  vkPNext :: Ptr ()
-  , -- | @memory@ is the memory object to which this range belongs.
-  vkMemory :: VkDeviceMemory
+-- 'Graphics.Vulkan.Core10.Handles.DeviceMemory',
+-- 'Graphics.Vulkan.Core10.BaseType.DeviceSize',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'flushMappedMemoryRanges', 'invalidateMappedMemoryRanges'
+data MappedMemoryRange = MappedMemoryRange
+  { -- | @memory@ is the memory object to which this range belongs.
+    memory :: DeviceMemory
   , -- | @offset@ is the zero-based byte offset from the beginning of the memory
-  -- object.
-  vkOffset :: VkDeviceSize
-  , -- | @size@ is either the size of range, or @VK_WHOLE_SIZE@ to affect the
-  -- range from @offset@ to the end of the current mapping of the allocation.
-  vkSize :: VkDeviceSize
+    -- object.
+    offset :: DeviceSize
+  , -- | @size@ is either the size of range, or
+    -- 'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE' to affect the range
+    -- from @offset@ to the end of the current mapping of the allocation.
+    size :: DeviceSize
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show MappedMemoryRange
 
-instance Storable VkMappedMemoryRange where
+instance ToCStruct MappedMemoryRange where
+  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p MappedMemoryRange{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MAPPED_MEMORY_RANGE)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr DeviceMemory)) (memory)
+    poke ((p `plusPtr` 24 :: Ptr DeviceSize)) (offset)
+    poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (size)
+    f
+  cStructSize = 40
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MAPPED_MEMORY_RANGE)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr DeviceMemory)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr DeviceSize)) (zero)
+    poke ((p `plusPtr` 32 :: Ptr DeviceSize)) (zero)
+    f
+
+instance FromCStruct MappedMemoryRange where
+  peekCStruct p = do
+    memory <- peek @DeviceMemory ((p `plusPtr` 16 :: Ptr DeviceMemory))
+    offset <- peek @DeviceSize ((p `plusPtr` 24 :: Ptr DeviceSize))
+    size <- peek @DeviceSize ((p `plusPtr` 32 :: Ptr DeviceSize))
+    pure $ MappedMemoryRange
+             memory offset size
+
+instance Storable MappedMemoryRange where
   sizeOf ~_ = 40
   alignment ~_ = 8
-  peek ptr = VkMappedMemoryRange <$> peek (ptr `plusPtr` 0)
-                                 <*> peek (ptr `plusPtr` 8)
-                                 <*> peek (ptr `plusPtr` 16)
-                                 <*> peek (ptr `plusPtr` 24)
-                                 <*> peek (ptr `plusPtr` 32)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMappedMemoryRange))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMappedMemoryRange))
-                *> poke (ptr `plusPtr` 16) (vkMemory (poked :: VkMappedMemoryRange))
-                *> poke (ptr `plusPtr` 24) (vkOffset (poked :: VkMappedMemoryRange))
-                *> poke (ptr `plusPtr` 32) (vkSize (poked :: VkMappedMemoryRange))
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero MappedMemoryRange where
+  zero = MappedMemoryRange
+           zero
+           zero
+           zero
+

@@ -1,87 +1,100 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
-{-# language OverloadedStrings #-}
-{-# language DataKinds #-}
-{-# language TypeOperators #-}
-{-# language DuplicateRecordFields #-}
+module Graphics.Vulkan.Extensions.VK_GOOGLE_display_timing  ( getRefreshCycleDurationGOOGLE
+                                                            , getPastPresentationTimingGOOGLE
+                                                            , RefreshCycleDurationGOOGLE(..)
+                                                            , PastPresentationTimingGOOGLE(..)
+                                                            , PresentTimesInfoGOOGLE(..)
+                                                            , PresentTimeGOOGLE(..)
+                                                            , GOOGLE_DISPLAY_TIMING_SPEC_VERSION
+                                                            , pattern GOOGLE_DISPLAY_TIMING_SPEC_VERSION
+                                                            , GOOGLE_DISPLAY_TIMING_EXTENSION_NAME
+                                                            , pattern GOOGLE_DISPLAY_TIMING_EXTENSION_NAME
+                                                            , SwapchainKHR(..)
+                                                            ) where
 
-module Graphics.Vulkan.Extensions.VK_GOOGLE_display_timing
-  ( pattern VK_STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE
-  , pattern VK_GOOGLE_DISPLAY_TIMING_SPEC_VERSION
-  , pattern VK_GOOGLE_DISPLAY_TIMING_EXTENSION_NAME
-  , vkGetRefreshCycleDurationGOOGLE
-  , vkGetPastPresentationTimingGOOGLE
-  , VkRefreshCycleDurationGOOGLE(..)
-  , VkPastPresentationTimingGOOGLE(..)
-  , VkPresentTimesInfoGOOGLE(..)
-  , VkPresentTimeGOOGLE(..)
-  ) where
+import Control.Exception.Base (bracket)
+import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (callocBytes)
+import Foreign.Marshal.Alloc (free)
+import Foreign.Marshal.Utils (maybePeek)
+import GHC.Base (when)
+import GHC.IO (throwIO)
+import Foreign.Ptr (nullPtr)
+import Foreign.Ptr (plusPtr)
+import Control.Monad.Trans.Class (lift)
+import Control.Monad.Trans.Cont (evalContT)
+import Data.Vector (generateM)
+import qualified Data.Vector (imapM_)
+import qualified Data.Vector (length)
+import Data.Either (Either)
+import Data.String (IsString)
+import Data.Typeable (Typeable)
+import Foreign.Storable (Storable)
+import Foreign.Storable (Storable(peek))
+import Foreign.Storable (Storable(poke))
+import qualified Foreign.Storable (Storable(..))
+import Foreign.Ptr (FunPtr)
+import Foreign.Ptr (Ptr)
+import Data.Word (Word32)
+import Data.Word (Word64)
+import Data.Kind (Type)
+import Control.Monad.Trans.Cont (ContT(..))
+import Data.Vector (Vector)
+import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
+import Graphics.Vulkan.NamedType ((:::))
+import Graphics.Vulkan.Core10.Handles (Device)
+import Graphics.Vulkan.Core10.Handles (Device(..))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkGetPastPresentationTimingGOOGLE))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkGetRefreshCycleDurationGOOGLE))
+import Graphics.Vulkan.Core10.Handles (Device_T)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (FromCStruct(..))
+import Graphics.Vulkan.Core10.Enums.Result (Result)
+import Graphics.Vulkan.Core10.Enums.Result (Result(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
+import Graphics.Vulkan.Extensions.Handles (SwapchainKHR)
+import Graphics.Vulkan.Extensions.Handles (SwapchainKHR(..))
+import Graphics.Vulkan.CStruct (ToCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct(..))
+import Graphics.Vulkan.Exception (VulkanException(..))
+import Graphics.Vulkan.Zero (Zero(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE))
+import Graphics.Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Graphics.Vulkan.Extensions.Handles (SwapchainKHR(..))
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkGetRefreshCycleDurationGOOGLE
+  :: FunPtr (Ptr Device_T -> SwapchainKHR -> Ptr RefreshCycleDurationGOOGLE -> IO Result) -> Ptr Device_T -> SwapchainKHR -> Ptr RefreshCycleDurationGOOGLE -> IO Result
 
-import Data.String
-  ( IsString
-  )
-import Data.Word
-  ( Word32
-  , Word64
-  )
-import Foreign.Ptr
-  ( Ptr
-  , plusPtr
-  )
-import Foreign.Storable
-  ( Storable
-  , Storable(..)
-  )
-import Graphics.Vulkan.NamedType
-  ( (:::)
-  )
-
-
-import Graphics.Vulkan.Core10.Core
-  ( VkResult(..)
-  , VkStructureType(..)
-  )
-import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkDevice
-  )
-import Graphics.Vulkan.Extensions.VK_KHR_swapchain
-  ( VkSwapchainKHR
-  )
-
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE"
-pattern VK_STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE :: VkStructureType
-pattern VK_STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE = VkStructureType 1000092000
--- No documentation found for TopLevel "VK_GOOGLE_DISPLAY_TIMING_SPEC_VERSION"
-pattern VK_GOOGLE_DISPLAY_TIMING_SPEC_VERSION :: Integral a => a
-pattern VK_GOOGLE_DISPLAY_TIMING_SPEC_VERSION = 1
--- No documentation found for TopLevel "VK_GOOGLE_DISPLAY_TIMING_EXTENSION_NAME"
-pattern VK_GOOGLE_DISPLAY_TIMING_EXTENSION_NAME :: (Eq a ,IsString a) => a
-pattern VK_GOOGLE_DISPLAY_TIMING_EXTENSION_NAME = "VK_GOOGLE_display_timing"
 -- | vkGetRefreshCycleDurationGOOGLE - Obtain the RC duration of the PE’s
 -- display
 --
 -- = Parameters
 --
--- -   @device@ is the device associated with @swapchain@.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the device associated
+--     with @swapchain@.
 --
 -- -   @swapchain@ is the swapchain to obtain the refresh duration for.
 --
--- -   @pDisplayTimingProperties@ is a pointer to an instance of the
---     @VkRefreshCycleDurationGOOGLE@ structure.
+-- -   @pDisplayTimingProperties@ is a pointer to a
+--     'RefreshCycleDurationGOOGLE' structure.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
--- -   @swapchain@ /must/ be a valid @VkSwapchainKHR@ handle
+-- -   @swapchain@ /must/ be a valid
+--     'Graphics.Vulkan.Extensions.Handles.SwapchainKHR' handle
 --
 -- -   @pDisplayTimingProperties@ /must/ be a valid pointer to a
---     @VkRefreshCycleDurationGOOGLE@ structure
+--     'RefreshCycleDurationGOOGLE' structure
 --
--- -   Both of @device@, and @swapchain@ /must/ have been created,
---     allocated, or retrieved from the same @VkInstance@
+-- -   Both of 'Graphics.Vulkan.Core10.Handles.Device', and @swapchain@
+--     /must/ have been created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Host Synchronization
 --
@@ -89,40 +102,54 @@ pattern VK_GOOGLE_DISPLAY_TIMING_EXTENSION_NAME = "VK_GOOGLE_display_timing"
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_DEVICE_LOST@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
---     -   @VK_ERROR_SURFACE_LOST_KHR@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
--- 'VkRefreshCycleDurationGOOGLE',
--- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
+-- 'Graphics.Vulkan.Core10.Handles.Device', 'RefreshCycleDurationGOOGLE',
+-- 'Graphics.Vulkan.Extensions.Handles.SwapchainKHR'
+getRefreshCycleDurationGOOGLE :: Device -> SwapchainKHR -> IO (("displayTimingProperties" ::: RefreshCycleDurationGOOGLE))
+getRefreshCycleDurationGOOGLE device swapchain = evalContT $ do
+  let vkGetRefreshCycleDurationGOOGLE' = mkVkGetRefreshCycleDurationGOOGLE (pVkGetRefreshCycleDurationGOOGLE (deviceCmds (device :: Device)))
+  pPDisplayTimingProperties <- ContT (withZeroCStruct @RefreshCycleDurationGOOGLE)
+  r <- lift $ vkGetRefreshCycleDurationGOOGLE' (deviceHandle (device)) (swapchain) (pPDisplayTimingProperties)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pDisplayTimingProperties <- lift $ peekCStruct @RefreshCycleDurationGOOGLE pPDisplayTimingProperties
+  pure $ (pDisplayTimingProperties)
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkGetRefreshCycleDurationGOOGLE" vkGetRefreshCycleDurationGOOGLE :: ("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> ("pDisplayTimingProperties" ::: Ptr VkRefreshCycleDurationGOOGLE) -> IO VkResult
+  "dynamic" mkVkGetPastPresentationTimingGOOGLE
+  :: FunPtr (Ptr Device_T -> SwapchainKHR -> Ptr Word32 -> Ptr PastPresentationTimingGOOGLE -> IO Result) -> Ptr Device_T -> SwapchainKHR -> Ptr Word32 -> Ptr PastPresentationTimingGOOGLE -> IO Result
+
 -- | vkGetPastPresentationTimingGOOGLE - Obtain timing of a
 -- previously-presented image
 --
 -- = Parameters
 --
--- -   @device@ is the device associated with @swapchain@.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the device associated
+--     with @swapchain@.
 --
 -- -   @swapchain@ is the swapchain to obtain presentation timing
 --     information duration for.
 --
 -- -   @pPresentationTimingCount@ is a pointer to an integer related to the
---     number of @VkPastPresentationTimingGOOGLE@ structures to query, as
+--     number of 'PastPresentationTimingGOOGLE' structures to query, as
 --     described below.
 --
--- -   @pPresentationTimings@ is either @NULL@ or a pointer to an an array
---     of @VkPastPresentationTimingGOOGLE@ structures.
+-- -   @pPresentationTimings@ is either @NULL@ or a pointer to an array of
+--     'PastPresentationTimingGOOGLE' structures.
 --
 -- = Description
 --
@@ -136,15 +163,18 @@ foreign import ccall
 -- less than the number of newly-available timing records, at most
 -- @pPresentationTimingCount@ structures will be written. If
 -- @pPresentationTimingCount@ is smaller than the number of newly-available
--- timing records for the given @swapchain@, @VK_INCOMPLETE@ will be
--- returned instead of @VK_SUCCESS@ to indicate that not all the available
--- values were returned.
+-- timing records for the given @swapchain@,
+-- 'Graphics.Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned
+-- instead of 'Graphics.Vulkan.Core10.Enums.Result.SUCCESS' to indicate
+-- that not all the available values were returned.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
--- -   @swapchain@ /must/ be a valid @VkSwapchainKHR@ handle
+-- -   @swapchain@ /must/ be a valid
+--     'Graphics.Vulkan.Extensions.Handles.SwapchainKHR' handle
 --
 -- -   @pPresentationTimingCount@ /must/ be a valid pointer to a @uint32_t@
 --     value
@@ -152,10 +182,11 @@ foreign import ccall
 -- -   If the value referenced by @pPresentationTimingCount@ is not @0@,
 --     and @pPresentationTimings@ is not @NULL@, @pPresentationTimings@
 --     /must/ be a valid pointer to an array of @pPresentationTimingCount@
---     @VkPastPresentationTimingGOOGLE@ structures
+--     'PastPresentationTimingGOOGLE' structures
 --
--- -   Both of @device@, and @swapchain@ /must/ have been created,
---     allocated, or retrieved from the same @VkInstance@
+-- -   Both of 'Graphics.Vulkan.Core10.Handles.Device', and @swapchain@
+--     /must/ have been created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Host Synchronization
 --
@@ -163,55 +194,91 @@ foreign import ccall
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   @VK_INCOMPLETE@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_DEVICE_LOST@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.INCOMPLETE'
 --
---     -   @VK_ERROR_OUT_OF_DATE_KHR@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   @VK_ERROR_SURFACE_LOST_KHR@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DATE_KHR'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_SURFACE_LOST_KHR'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
--- 'VkPastPresentationTimingGOOGLE',
--- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkSwapchainKHR'
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "vkGetPastPresentationTimingGOOGLE" vkGetPastPresentationTimingGOOGLE :: ("device" ::: VkDevice) -> ("swapchain" ::: VkSwapchainKHR) -> ("pPresentationTimingCount" ::: Ptr Word32) -> ("pPresentationTimings" ::: Ptr VkPastPresentationTimingGOOGLE) -> IO VkResult
+-- 'Graphics.Vulkan.Core10.Handles.Device', 'PastPresentationTimingGOOGLE',
+-- 'Graphics.Vulkan.Extensions.Handles.SwapchainKHR'
+getPastPresentationTimingGOOGLE :: Device -> SwapchainKHR -> IO (Result, ("presentationTimings" ::: Vector PastPresentationTimingGOOGLE))
+getPastPresentationTimingGOOGLE device swapchain = evalContT $ do
+  let vkGetPastPresentationTimingGOOGLE' = mkVkGetPastPresentationTimingGOOGLE (pVkGetPastPresentationTimingGOOGLE (deviceCmds (device :: Device)))
+  let device' = deviceHandle (device)
+  pPPresentationTimingCount <- ContT $ bracket (callocBytes @Word32 4) free
+  r <- lift $ vkGetPastPresentationTimingGOOGLE' device' (swapchain) (pPPresentationTimingCount) (nullPtr)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pPresentationTimingCount <- lift $ peek @Word32 pPPresentationTimingCount
+  pPPresentationTimings <- ContT $ bracket (callocBytes @PastPresentationTimingGOOGLE ((fromIntegral (pPresentationTimingCount)) * 40)) free
+  _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPPresentationTimings `advancePtrBytes` (i * 40) :: Ptr PastPresentationTimingGOOGLE) . ($ ())) [0..(fromIntegral (pPresentationTimingCount)) - 1]
+  r' <- lift $ vkGetPastPresentationTimingGOOGLE' device' (swapchain) (pPPresentationTimingCount) ((pPPresentationTimings))
+  lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
+  pPresentationTimingCount' <- lift $ peek @Word32 pPPresentationTimingCount
+  pPresentationTimings' <- lift $ generateM (fromIntegral (pPresentationTimingCount')) (\i -> peekCStruct @PastPresentationTimingGOOGLE (((pPPresentationTimings) `advancePtrBytes` (40 * (i)) :: Ptr PastPresentationTimingGOOGLE)))
+  pure $ ((r'), pPresentationTimings')
+
+
 -- | VkRefreshCycleDurationGOOGLE - Structure containing the RC duration of a
 -- display
 --
 -- = See Also
 --
--- 'vkGetRefreshCycleDurationGOOGLE'
-data VkRefreshCycleDurationGOOGLE = VkRefreshCycleDurationGOOGLE
+-- 'getRefreshCycleDurationGOOGLE'
+data RefreshCycleDurationGOOGLE = RefreshCycleDurationGOOGLE
   { -- | @refreshDuration@ is the number of nanoseconds from the start of one
-  -- refresh cycle to the next.
-  vkRefreshDuration :: Word64
-  }
-  deriving (Eq, Show)
+    -- refresh cycle to the next.
+    refreshDuration :: Word64 }
+  deriving (Typeable)
+deriving instance Show RefreshCycleDurationGOOGLE
 
-instance Storable VkRefreshCycleDurationGOOGLE where
+instance ToCStruct RefreshCycleDurationGOOGLE where
+  withCStruct x f = allocaBytesAligned 8 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p RefreshCycleDurationGOOGLE{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr Word64)) (refreshDuration)
+    f
+  cStructSize = 8
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr Word64)) (zero)
+    f
+
+instance FromCStruct RefreshCycleDurationGOOGLE where
+  peekCStruct p = do
+    refreshDuration <- peek @Word64 ((p `plusPtr` 0 :: Ptr Word64))
+    pure $ RefreshCycleDurationGOOGLE
+             refreshDuration
+
+instance Storable RefreshCycleDurationGOOGLE where
   sizeOf ~_ = 8
   alignment ~_ = 8
-  peek ptr = VkRefreshCycleDurationGOOGLE <$> peek (ptr `plusPtr` 0)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkRefreshDuration (poked :: VkRefreshCycleDurationGOOGLE))
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero RefreshCycleDurationGOOGLE where
+  zero = RefreshCycleDurationGOOGLE
+           zero
+
+
 -- | VkPastPresentationTimingGOOGLE - Structure containing timing information
 -- about a previously-presented image
 --
 -- = Description
 --
 -- The results for a given @swapchain@ and @presentID@ are only returned
--- once from @vkGetPastPresentationTimingGOOGLE@.
+-- once from 'getPastPresentationTimingGOOGLE'.
 --
--- The application /can/ use the @VkPastPresentationTimingGOOGLE@ values to
+-- The application /can/ use the 'PastPresentationTimingGOOGLE' values to
 -- occasionally adjust its timing. For example, if @actualPresentTime@ is
 -- later than expected (e.g. one @refreshDuration@ late), the application
 -- may increase its target IPD to a higher multiple of @refreshDuration@
@@ -231,124 +298,218 @@ instance Storable VkRefreshCycleDurationGOOGLE where
 --
 -- = See Also
 --
--- 'vkGetPastPresentationTimingGOOGLE'
-data VkPastPresentationTimingGOOGLE = VkPastPresentationTimingGOOGLE
+-- 'getPastPresentationTimingGOOGLE'
+data PastPresentationTimingGOOGLE = PastPresentationTimingGOOGLE
   { -- | @presentID@ is an application-provided value that was given to a
-  -- previous @vkQueuePresentKHR@ command via
-  -- 'VkPresentTimeGOOGLE'::@presentID@ (see below). It /can/ be used to
-  -- uniquely identify a previous present with the
-  -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.vkQueuePresentKHR' command.
-  vkPresentID :: Word32
+    -- previous 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR'
+    -- command via 'PresentTimeGOOGLE'::@presentID@ (see below). It /can/ be
+    -- used to uniquely identify a previous present with the
+    -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR' command.
+    presentID :: Word32
   , -- | @desiredPresentTime@ is an application-provided value that was given to
-  -- a previous
-  -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.vkQueuePresentKHR' command
-  -- via 'VkPresentTimeGOOGLE'::@desiredPresentTime@. If non-zero, it was
-  -- used by the application to indicate that an image not be presented any
-  -- sooner than @desiredPresentTime@.
-  vkDesiredPresentTime :: Word64
+    -- a previous 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR'
+    -- command via 'PresentTimeGOOGLE'::@desiredPresentTime@. If non-zero, it
+    -- was used by the application to indicate that an image not be presented
+    -- any sooner than @desiredPresentTime@.
+    desiredPresentTime :: Word64
   , -- | @actualPresentTime@ is the time when the image of the @swapchain@ was
-  -- actually displayed.
-  vkActualPresentTime :: Word64
+    -- actually displayed.
+    actualPresentTime :: Word64
   , -- | @earliestPresentTime@ is the time when the image of the @swapchain@
-  -- could have been displayed. This /may/ differ from @actualPresentTime@ if
-  -- the application requested that the image be presented no sooner than
-  -- 'VkPresentTimeGOOGLE'::@desiredPresentTime@.
-  vkEarliestPresentTime :: Word64
-  , -- | @presentMargin@ is an indication of how early the @vkQueuePresentKHR@
-  -- command was processed compared to how soon it needed to be processed,
-  -- and still be presented at @earliestPresentTime@.
-  vkPresentMargin :: Word64
+    -- could have been displayed. This /may/ differ from @actualPresentTime@ if
+    -- the application requested that the image be presented no sooner than
+    -- 'PresentTimeGOOGLE'::@desiredPresentTime@.
+    earliestPresentTime :: Word64
+  , -- | @presentMargin@ is an indication of how early the
+    -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.queuePresentKHR' command
+    -- was processed compared to how soon it needed to be processed, and still
+    -- be presented at @earliestPresentTime@.
+    presentMargin :: Word64
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show PastPresentationTimingGOOGLE
 
-instance Storable VkPastPresentationTimingGOOGLE where
+instance ToCStruct PastPresentationTimingGOOGLE where
+  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p PastPresentationTimingGOOGLE{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr Word32)) (presentID)
+    poke ((p `plusPtr` 8 :: Ptr Word64)) (desiredPresentTime)
+    poke ((p `plusPtr` 16 :: Ptr Word64)) (actualPresentTime)
+    poke ((p `plusPtr` 24 :: Ptr Word64)) (earliestPresentTime)
+    poke ((p `plusPtr` 32 :: Ptr Word64)) (presentMargin)
+    f
+  cStructSize = 40
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr Word64)) (zero)
+    poke ((p `plusPtr` 16 :: Ptr Word64)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr Word64)) (zero)
+    poke ((p `plusPtr` 32 :: Ptr Word64)) (zero)
+    f
+
+instance FromCStruct PastPresentationTimingGOOGLE where
+  peekCStruct p = do
+    presentID <- peek @Word32 ((p `plusPtr` 0 :: Ptr Word32))
+    desiredPresentTime <- peek @Word64 ((p `plusPtr` 8 :: Ptr Word64))
+    actualPresentTime <- peek @Word64 ((p `plusPtr` 16 :: Ptr Word64))
+    earliestPresentTime <- peek @Word64 ((p `plusPtr` 24 :: Ptr Word64))
+    presentMargin <- peek @Word64 ((p `plusPtr` 32 :: Ptr Word64))
+    pure $ PastPresentationTimingGOOGLE
+             presentID desiredPresentTime actualPresentTime earliestPresentTime presentMargin
+
+instance Storable PastPresentationTimingGOOGLE where
   sizeOf ~_ = 40
   alignment ~_ = 8
-  peek ptr = VkPastPresentationTimingGOOGLE <$> peek (ptr `plusPtr` 0)
-                                            <*> peek (ptr `plusPtr` 8)
-                                            <*> peek (ptr `plusPtr` 16)
-                                            <*> peek (ptr `plusPtr` 24)
-                                            <*> peek (ptr `plusPtr` 32)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkPresentID (poked :: VkPastPresentationTimingGOOGLE))
-                *> poke (ptr `plusPtr` 8) (vkDesiredPresentTime (poked :: VkPastPresentationTimingGOOGLE))
-                *> poke (ptr `plusPtr` 16) (vkActualPresentTime (poked :: VkPastPresentationTimingGOOGLE))
-                *> poke (ptr `plusPtr` 24) (vkEarliestPresentTime (poked :: VkPastPresentationTimingGOOGLE))
-                *> poke (ptr `plusPtr` 32) (vkPresentMargin (poked :: VkPastPresentationTimingGOOGLE))
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero PastPresentationTimingGOOGLE where
+  zero = PastPresentationTimingGOOGLE
+           zero
+           zero
+           zero
+           zero
+           zero
+
+
 -- | VkPresentTimesInfoGOOGLE - The earliest time each image should be
 -- presented
 --
 -- == Valid Usage
 --
 -- -   @swapchainCount@ /must/ be the same value as
---     @VkPresentInfoKHR@::@swapchainCount@, where @VkPresentInfoKHR@ is in
---     the @pNext@ chain of this @VkPresentTimesInfoGOOGLE@ structure.
+--     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR'::@swapchainCount@,
+--     where 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR'
+--     is included in the @pNext@ chain of this 'PresentTimesInfoGOOGLE'
+--     structure.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE@
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE'
 --
 -- -   If @pTimes@ is not @NULL@, @pTimes@ /must/ be a valid pointer to an
---     array of @swapchainCount@ @VkPresentTimeGOOGLE@ structures
+--     array of @swapchainCount@ 'PresentTimeGOOGLE' structures
 --
 -- -   @swapchainCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
--- 'VkPresentTimeGOOGLE', 'Graphics.Vulkan.Core10.Core.VkStructureType'
-data VkPresentTimesInfoGOOGLE = VkPresentTimesInfoGOOGLE
-  { -- | @sType@ is the type of this structure.
-  vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
-  vkPNext :: Ptr ()
-  , -- | @swapchainCount@ is the number of swapchains being presented to by this
-  -- command.
-  vkSwapchainCount :: Word32
-  , -- | @pTimes@ is @NULL@ or a pointer to an array of @VkPresentTimeGOOGLE@
-  -- elements with @swapchainCount@ entries. If not @NULL@, each element of
-  -- @pTimes@ contains the earliest time to present the image corresponding
-  -- to the entry in the @VkPresentInfoKHR@::@pImageIndices@ array.
-  vkPTimes :: Ptr VkPresentTimeGOOGLE
-  }
-  deriving (Eq, Show)
+-- 'PresentTimeGOOGLE',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
+data PresentTimesInfoGOOGLE = PresentTimesInfoGOOGLE
+  { -- | @pTimes@ is @NULL@ or a pointer to an array of 'PresentTimeGOOGLE'
+    -- elements with @swapchainCount@ entries. If not @NULL@, each element of
+    -- @pTimes@ contains the earliest time to present the image corresponding
+    -- to the entry in the
+    -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.PresentInfoKHR'::@pImageIndices@
+    -- array.
+    times :: Either Word32 (Vector PresentTimeGOOGLE) }
+  deriving (Typeable)
+deriving instance Show PresentTimesInfoGOOGLE
 
-instance Storable VkPresentTimesInfoGOOGLE where
-  sizeOf ~_ = 32
-  alignment ~_ = 8
-  peek ptr = VkPresentTimesInfoGOOGLE <$> peek (ptr `plusPtr` 0)
-                                      <*> peek (ptr `plusPtr` 8)
-                                      <*> peek (ptr `plusPtr` 16)
-                                      <*> peek (ptr `plusPtr` 24)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPresentTimesInfoGOOGLE))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPresentTimesInfoGOOGLE))
-                *> poke (ptr `plusPtr` 16) (vkSwapchainCount (poked :: VkPresentTimesInfoGOOGLE))
-                *> poke (ptr `plusPtr` 24) (vkPTimes (poked :: VkPresentTimesInfoGOOGLE))
+instance ToCStruct PresentTimesInfoGOOGLE where
+  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p PresentTimesInfoGOOGLE{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral (either id (fromIntegral . Data.Vector.length) (times)) :: Word32))
+    pTimes'' <- case (times) of
+      Left _ -> pure nullPtr
+      Right v -> do
+        pPTimes' <- ContT $ allocaBytesAligned @PresentTimeGOOGLE ((Data.Vector.length (v)) * 16) 8
+        Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPTimes' `plusPtr` (16 * (i)) :: Ptr PresentTimeGOOGLE) (e) . ($ ())) (v)
+        pure $ pPTimes'
+    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr PresentTimeGOOGLE))) pTimes''
+    lift $ f
+  cStructSize = 32
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    f
+
+instance FromCStruct PresentTimesInfoGOOGLE where
+  peekCStruct p = do
+    swapchainCount <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
+    pTimes <- peek @(Ptr PresentTimeGOOGLE) ((p `plusPtr` 24 :: Ptr (Ptr PresentTimeGOOGLE)))
+    pTimes' <- maybePeek (\j -> generateM (fromIntegral swapchainCount) (\i -> peekCStruct @PresentTimeGOOGLE (((j) `advancePtrBytes` (16 * (i)) :: Ptr PresentTimeGOOGLE)))) pTimes
+    let pTimes'' = maybe (Left swapchainCount) Right pTimes'
+    pure $ PresentTimesInfoGOOGLE
+             pTimes''
+
+instance Zero PresentTimesInfoGOOGLE where
+  zero = PresentTimesInfoGOOGLE
+           (Left 0)
+
+
 -- | VkPresentTimeGOOGLE - The earliest time image should be presented
 --
 -- = See Also
 --
--- 'VkPresentTimesInfoGOOGLE'
-data VkPresentTimeGOOGLE = VkPresentTimeGOOGLE
+-- 'PresentTimesInfoGOOGLE'
+data PresentTimeGOOGLE = PresentTimeGOOGLE
   { -- | @presentID@ is an application-provided identification value, that /can/
-  -- be used with the results of 'vkGetPastPresentationTimingGOOGLE', in
-  -- order to uniquely identify this present. In order to be useful to the
-  -- application, it /should/ be unique within some period of time that is
-  -- meaningful to the application.
-  vkPresentID :: Word32
+    -- be used with the results of 'getPastPresentationTimingGOOGLE', in order
+    -- to uniquely identify this present. In order to be useful to the
+    -- application, it /should/ be unique within some period of time that is
+    -- meaningful to the application.
+    presentID :: Word32
   , -- | @desiredPresentTime@ specifies that the image given /should/ not be
-  -- displayed to the user any earlier than this time. @desiredPresentTime@
-  -- is a time in nanoseconds, relative to a monotonically-increasing clock
-  -- (e.g. @CLOCK_MONOTONIC@ (see clock_gettime(2)) on Android and Linux). A
-  -- value of zero specifies that the presentation engine /may/ display the
-  -- image at any time. This is useful when the application desires to
-  -- provide @presentID@, but doesn’t need a specific @desiredPresentTime@.
-  vkDesiredPresentTime :: Word64
+    -- displayed to the user any earlier than this time. @desiredPresentTime@
+    -- is a time in nanoseconds, relative to a monotonically-increasing clock
+    -- (e.g. @CLOCK_MONOTONIC@ (see clock_gettime(2)) on Android and Linux). A
+    -- value of zero specifies that the presentation engine /may/ display the
+    -- image at any time. This is useful when the application desires to
+    -- provide @presentID@, but does not need a specific @desiredPresentTime@.
+    desiredPresentTime :: Word64
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show PresentTimeGOOGLE
 
-instance Storable VkPresentTimeGOOGLE where
+instance ToCStruct PresentTimeGOOGLE where
+  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p PresentTimeGOOGLE{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr Word32)) (presentID)
+    poke ((p `plusPtr` 8 :: Ptr Word64)) (desiredPresentTime)
+    f
+  cStructSize = 16
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr Word64)) (zero)
+    f
+
+instance FromCStruct PresentTimeGOOGLE where
+  peekCStruct p = do
+    presentID <- peek @Word32 ((p `plusPtr` 0 :: Ptr Word32))
+    desiredPresentTime <- peek @Word64 ((p `plusPtr` 8 :: Ptr Word64))
+    pure $ PresentTimeGOOGLE
+             presentID desiredPresentTime
+
+instance Storable PresentTimeGOOGLE where
   sizeOf ~_ = 16
   alignment ~_ = 8
-  peek ptr = VkPresentTimeGOOGLE <$> peek (ptr `plusPtr` 0)
-                                 <*> peek (ptr `plusPtr` 8)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkPresentID (poked :: VkPresentTimeGOOGLE))
-                *> poke (ptr `plusPtr` 8) (vkDesiredPresentTime (poked :: VkPresentTimeGOOGLE))
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero PresentTimeGOOGLE where
+  zero = PresentTimeGOOGLE
+           zero
+           zero
+
+
+type GOOGLE_DISPLAY_TIMING_SPEC_VERSION = 1
+
+-- No documentation found for TopLevel "VK_GOOGLE_DISPLAY_TIMING_SPEC_VERSION"
+pattern GOOGLE_DISPLAY_TIMING_SPEC_VERSION :: forall a . Integral a => a
+pattern GOOGLE_DISPLAY_TIMING_SPEC_VERSION = 1
+
+
+type GOOGLE_DISPLAY_TIMING_EXTENSION_NAME = "VK_GOOGLE_display_timing"
+
+-- No documentation found for TopLevel "VK_GOOGLE_DISPLAY_TIMING_EXTENSION_NAME"
+pattern GOOGLE_DISPLAY_TIMING_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern GOOGLE_DISPLAY_TIMING_EXTENSION_NAME = "VK_GOOGLE_display_timing"
+

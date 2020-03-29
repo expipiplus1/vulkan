@@ -1,62 +1,100 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language GeneralizedNewtypeDeriving #-}
-{-# language PatternSynonyms #-}
-{-# language OverloadedStrings #-}
-{-# language DuplicateRecordFields #-}
+module Graphics.Vulkan.Extensions.VK_EXT_global_priority  ( DeviceQueueGlobalPriorityCreateInfoEXT(..)
+                                                          , QueueGlobalPriorityEXT( QUEUE_GLOBAL_PRIORITY_LOW_EXT
+                                                                                  , QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT
+                                                                                  , QUEUE_GLOBAL_PRIORITY_HIGH_EXT
+                                                                                  , QUEUE_GLOBAL_PRIORITY_REALTIME_EXT
+                                                                                  , ..
+                                                                                  )
+                                                          , EXT_GLOBAL_PRIORITY_SPEC_VERSION
+                                                          , pattern EXT_GLOBAL_PRIORITY_SPEC_VERSION
+                                                          , EXT_GLOBAL_PRIORITY_EXTENSION_NAME
+                                                          , pattern EXT_GLOBAL_PRIORITY_EXTENSION_NAME
+                                                          ) where
 
-module Graphics.Vulkan.Extensions.VK_EXT_global_priority
-  ( VkQueueGlobalPriorityEXT(..)
-  , pattern VK_QUEUE_GLOBAL_PRIORITY_LOW_EXT
-  , pattern VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT
-  , pattern VK_QUEUE_GLOBAL_PRIORITY_HIGH_EXT
-  , pattern VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT
-  , pattern VK_ERROR_NOT_PERMITTED_EXT
-  , pattern VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT
-  , pattern VK_EXT_GLOBAL_PRIORITY_SPEC_VERSION
-  , pattern VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME
-  , VkDeviceQueueGlobalPriorityCreateInfoEXT(..)
-  ) where
+import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Ptr (nullPtr)
+import Foreign.Ptr (plusPtr)
+import GHC.Read (choose)
+import GHC.Read (expectP)
+import GHC.Read (parens)
+import GHC.Show (showParen)
+import GHC.Show (showString)
+import GHC.Show (showsPrec)
+import Text.ParserCombinators.ReadPrec ((+++))
+import Text.ParserCombinators.ReadPrec (prec)
+import Text.ParserCombinators.ReadPrec (step)
+import Data.String (IsString)
+import Data.Typeable (Typeable)
+import Foreign.Storable (Storable)
+import Foreign.Storable (Storable(peek))
+import Foreign.Storable (Storable(poke))
+import qualified Foreign.Storable (Storable(..))
+import Data.Int (Int32)
+import Foreign.Ptr (Ptr)
+import GHC.Read (Read(readPrec))
+import Text.Read.Lex (Lexeme(Ident))
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (FromCStruct(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
+import Graphics.Vulkan.CStruct (ToCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct(..))
+import Graphics.Vulkan.Zero (Zero)
+import Graphics.Vulkan.Zero (Zero(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT))
+-- | VkDeviceQueueGlobalPriorityCreateInfoEXT - Specify a system wide
+-- priority
+--
+-- = Description
+--
+-- A queue created without specifying
+-- 'DeviceQueueGlobalPriorityCreateInfoEXT' will default to
+-- 'QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT'.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'QueueGlobalPriorityEXT',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
+data DeviceQueueGlobalPriorityCreateInfoEXT = DeviceQueueGlobalPriorityCreateInfoEXT
+  { -- | @globalPriority@ /must/ be a valid 'QueueGlobalPriorityEXT' value
+    globalPriority :: QueueGlobalPriorityEXT }
+  deriving (Typeable)
+deriving instance Show DeviceQueueGlobalPriorityCreateInfoEXT
 
-import Data.Int
-  ( Int32
-  )
-import Data.String
-  ( IsString
-  )
-import Foreign.Ptr
-  ( Ptr
-  , plusPtr
-  )
-import Foreign.Storable
-  ( Storable
-  , Storable(..)
-  )
-import GHC.Read
-  ( choose
-  , expectP
-  )
-import Text.ParserCombinators.ReadPrec
-  ( (+++)
-  , prec
-  , step
-  )
-import Text.Read
-  ( Read(..)
-  , parens
-  )
-import Text.Read.Lex
-  ( Lexeme(Ident)
-  )
+instance ToCStruct DeviceQueueGlobalPriorityCreateInfoEXT where
+  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p DeviceQueueGlobalPriorityCreateInfoEXT{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr QueueGlobalPriorityEXT)) (globalPriority)
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr QueueGlobalPriorityEXT)) (zero)
+    f
 
+instance FromCStruct DeviceQueueGlobalPriorityCreateInfoEXT where
+  peekCStruct p = do
+    globalPriority <- peek @QueueGlobalPriorityEXT ((p `plusPtr` 16 :: Ptr QueueGlobalPriorityEXT))
+    pure $ DeviceQueueGlobalPriorityCreateInfoEXT
+             globalPriority
 
-import Graphics.Vulkan.Core10.Core
-  ( VkResult(..)
-  , VkStructureType(..)
-  )
+instance Storable DeviceQueueGlobalPriorityCreateInfoEXT where
+  sizeOf ~_ = 24
+  alignment ~_ = 8
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
+instance Zero DeviceQueueGlobalPriorityCreateInfoEXT where
+  zero = DeviceQueueGlobalPriorityCreateInfoEXT
+           zero
 
--- ** VkQueueGlobalPriorityEXT
 
 -- | VkQueueGlobalPriorityEXT - Values specifying a system-wide queue
 -- priority
@@ -66,107 +104,58 @@ import Graphics.Vulkan.Core10.Core
 -- Priority values are sorted in ascending order. A comparison operation on
 -- the enum values can be used to determine the priority order.
 --
--- -   @VK_QUEUE_GLOBAL_PRIORITY_LOW_EXT@ is below the system default.
---     Useful for non-interactive tasks.
---
--- -   @VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT@ is the system default
---     priority.
---
--- -   @VK_QUEUE_GLOBAL_PRIORITY_HIGH_EXT@ is above the system default.
---
--- -   @VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT@ is the highest priority.
---     Useful for critical tasks.
---
 -- = See Also
 --
--- 'VkDeviceQueueGlobalPriorityCreateInfoEXT'
-newtype VkQueueGlobalPriorityEXT = VkQueueGlobalPriorityEXT Int32
-  deriving (Eq, Ord, Storable)
+-- 'DeviceQueueGlobalPriorityCreateInfoEXT'
+newtype QueueGlobalPriorityEXT = QueueGlobalPriorityEXT Int32
+  deriving newtype (Eq, Ord, Storable, Zero)
+-- Note that the zero instance does not produce a valid value, passing 'zero' to Vulkan will result in an error
 
-instance Show VkQueueGlobalPriorityEXT where
-  showsPrec _ VK_QUEUE_GLOBAL_PRIORITY_LOW_EXT = showString "VK_QUEUE_GLOBAL_PRIORITY_LOW_EXT"
-  showsPrec _ VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT = showString "VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT"
-  showsPrec _ VK_QUEUE_GLOBAL_PRIORITY_HIGH_EXT = showString "VK_QUEUE_GLOBAL_PRIORITY_HIGH_EXT"
-  showsPrec _ VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT = showString "VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT"
-  showsPrec p (VkQueueGlobalPriorityEXT x) = showParen (p >= 11) (showString "VkQueueGlobalPriorityEXT " . showsPrec 11 x)
+-- | 'QUEUE_GLOBAL_PRIORITY_LOW_EXT' is below the system default. Useful for
+-- non-interactive tasks.
+pattern QUEUE_GLOBAL_PRIORITY_LOW_EXT = QueueGlobalPriorityEXT 128
+-- | 'QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT' is the system default priority.
+pattern QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT = QueueGlobalPriorityEXT 256
+-- | 'QUEUE_GLOBAL_PRIORITY_HIGH_EXT' is above the system default.
+pattern QUEUE_GLOBAL_PRIORITY_HIGH_EXT = QueueGlobalPriorityEXT 512
+-- | 'QUEUE_GLOBAL_PRIORITY_REALTIME_EXT' is the highest priority. Useful for
+-- critical tasks.
+pattern QUEUE_GLOBAL_PRIORITY_REALTIME_EXT = QueueGlobalPriorityEXT 1024
+{-# complete QUEUE_GLOBAL_PRIORITY_LOW_EXT,
+             QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT,
+             QUEUE_GLOBAL_PRIORITY_HIGH_EXT,
+             QUEUE_GLOBAL_PRIORITY_REALTIME_EXT :: QueueGlobalPriorityEXT #-}
 
-instance Read VkQueueGlobalPriorityEXT where
-  readPrec = parens ( choose [ ("VK_QUEUE_GLOBAL_PRIORITY_LOW_EXT",      pure VK_QUEUE_GLOBAL_PRIORITY_LOW_EXT)
-                             , ("VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT",   pure VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT)
-                             , ("VK_QUEUE_GLOBAL_PRIORITY_HIGH_EXT",     pure VK_QUEUE_GLOBAL_PRIORITY_HIGH_EXT)
-                             , ("VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT", pure VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT)
-                             ] +++
-                      prec 10 (do
-                        expectP (Ident "VkQueueGlobalPriorityEXT")
-                        v <- step readPrec
-                        pure (VkQueueGlobalPriorityEXT v)
-                        )
-                    )
+instance Show QueueGlobalPriorityEXT where
+  showsPrec p = \case
+    QUEUE_GLOBAL_PRIORITY_LOW_EXT -> showString "QUEUE_GLOBAL_PRIORITY_LOW_EXT"
+    QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT -> showString "QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT"
+    QUEUE_GLOBAL_PRIORITY_HIGH_EXT -> showString "QUEUE_GLOBAL_PRIORITY_HIGH_EXT"
+    QUEUE_GLOBAL_PRIORITY_REALTIME_EXT -> showString "QUEUE_GLOBAL_PRIORITY_REALTIME_EXT"
+    QueueGlobalPriorityEXT x -> showParen (p >= 11) (showString "QueueGlobalPriorityEXT " . showsPrec 11 x)
 
--- No documentation found for Nested "VkQueueGlobalPriorityEXT" "VK_QUEUE_GLOBAL_PRIORITY_LOW_EXT"
-pattern VK_QUEUE_GLOBAL_PRIORITY_LOW_EXT :: VkQueueGlobalPriorityEXT
-pattern VK_QUEUE_GLOBAL_PRIORITY_LOW_EXT = VkQueueGlobalPriorityEXT 128
+instance Read QueueGlobalPriorityEXT where
+  readPrec = parens (choose [("QUEUE_GLOBAL_PRIORITY_LOW_EXT", pure QUEUE_GLOBAL_PRIORITY_LOW_EXT)
+                            , ("QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT", pure QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT)
+                            , ("QUEUE_GLOBAL_PRIORITY_HIGH_EXT", pure QUEUE_GLOBAL_PRIORITY_HIGH_EXT)
+                            , ("QUEUE_GLOBAL_PRIORITY_REALTIME_EXT", pure QUEUE_GLOBAL_PRIORITY_REALTIME_EXT)]
+                     +++
+                     prec 10 (do
+                       expectP (Ident "QueueGlobalPriorityEXT")
+                       v <- step readPrec
+                       pure (QueueGlobalPriorityEXT v)))
 
--- No documentation found for Nested "VkQueueGlobalPriorityEXT" "VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT"
-pattern VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT :: VkQueueGlobalPriorityEXT
-pattern VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT = VkQueueGlobalPriorityEXT 256
 
--- No documentation found for Nested "VkQueueGlobalPriorityEXT" "VK_QUEUE_GLOBAL_PRIORITY_HIGH_EXT"
-pattern VK_QUEUE_GLOBAL_PRIORITY_HIGH_EXT :: VkQueueGlobalPriorityEXT
-pattern VK_QUEUE_GLOBAL_PRIORITY_HIGH_EXT = VkQueueGlobalPriorityEXT 512
+type EXT_GLOBAL_PRIORITY_SPEC_VERSION = 2
 
--- No documentation found for Nested "VkQueueGlobalPriorityEXT" "VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT"
-pattern VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT :: VkQueueGlobalPriorityEXT
-pattern VK_QUEUE_GLOBAL_PRIORITY_REALTIME_EXT = VkQueueGlobalPriorityEXT 1024
--- No documentation found for Nested "VkResult" "VK_ERROR_NOT_PERMITTED_EXT"
-pattern VK_ERROR_NOT_PERMITTED_EXT :: VkResult
-pattern VK_ERROR_NOT_PERMITTED_EXT = VkResult (-1000174001)
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT"
-pattern VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT :: VkStructureType
-pattern VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT = VkStructureType 1000174000
 -- No documentation found for TopLevel "VK_EXT_GLOBAL_PRIORITY_SPEC_VERSION"
-pattern VK_EXT_GLOBAL_PRIORITY_SPEC_VERSION :: Integral a => a
-pattern VK_EXT_GLOBAL_PRIORITY_SPEC_VERSION = 2
--- No documentation found for TopLevel "VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME"
-pattern VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME :: (Eq a ,IsString a) => a
-pattern VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME = "VK_EXT_global_priority"
--- | VkDeviceQueueGlobalPriorityCreateInfoEXT - Specify a system wide
--- priority
---
--- = Description
---
--- A queue created without specifying
--- @VkDeviceQueueGlobalPriorityCreateInfoEXT@ will default to
--- @VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT@.
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT@
---
--- -   @globalPriority@ /must/ be a valid 'VkQueueGlobalPriorityEXT' value
---
--- = See Also
---
--- 'VkQueueGlobalPriorityEXT',
--- 'Graphics.Vulkan.Core10.Core.VkStructureType'
-data VkDeviceQueueGlobalPriorityCreateInfoEXT = VkDeviceQueueGlobalPriorityCreateInfoEXT
-  { -- | @sType@ is the type of this structure.
-  vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
-  vkPNext :: Ptr ()
-  , -- | @globalPriority@ is the system-wide priority associated to this queue as
-  -- specified by 'VkQueueGlobalPriorityEXT'
-  vkGlobalPriority :: VkQueueGlobalPriorityEXT
-  }
-  deriving (Eq, Show)
+pattern EXT_GLOBAL_PRIORITY_SPEC_VERSION :: forall a . Integral a => a
+pattern EXT_GLOBAL_PRIORITY_SPEC_VERSION = 2
 
-instance Storable VkDeviceQueueGlobalPriorityCreateInfoEXT where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek ptr = VkDeviceQueueGlobalPriorityCreateInfoEXT <$> peek (ptr `plusPtr` 0)
-                                                      <*> peek (ptr `plusPtr` 8)
-                                                      <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDeviceQueueGlobalPriorityCreateInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceQueueGlobalPriorityCreateInfoEXT))
-                *> poke (ptr `plusPtr` 16) (vkGlobalPriority (poked :: VkDeviceQueueGlobalPriorityCreateInfoEXT))
+
+type EXT_GLOBAL_PRIORITY_EXTENSION_NAME = "VK_EXT_global_priority"
+
+-- No documentation found for TopLevel "VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME"
+pattern EXT_GLOBAL_PRIORITY_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern EXT_GLOBAL_PRIORITY_EXTENSION_NAME = "VK_EXT_global_priority"
+

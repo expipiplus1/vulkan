@@ -1,185 +1,198 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
-{-# language OverloadedStrings #-}
-{-# language DuplicateRecordFields #-}
+module Graphics.Vulkan.Extensions.VK_AMD_shader_core_properties  ( PhysicalDeviceShaderCorePropertiesAMD(..)
+                                                                 , AMD_SHADER_CORE_PROPERTIES_SPEC_VERSION
+                                                                 , pattern AMD_SHADER_CORE_PROPERTIES_SPEC_VERSION
+                                                                 , AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME
+                                                                 , pattern AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME
+                                                                 ) where
 
-module Graphics.Vulkan.Extensions.VK_AMD_shader_core_properties
-  ( pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD
-  , pattern VK_AMD_SHADER_CORE_PROPERTIES_SPEC_VERSION
-  , pattern VK_AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME
-  , VkPhysicalDeviceShaderCorePropertiesAMD(..)
-  ) where
-
-import Data.String
-  ( IsString
-  )
-import Data.Word
-  ( Word32
-  )
-import Foreign.Ptr
-  ( Ptr
-  , plusPtr
-  )
-import Foreign.Storable
-  ( Storable
-  , Storable(..)
-  )
-
-
-import Graphics.Vulkan.Core10.Core
-  ( VkStructureType(..)
-  )
-
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD"
-pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD :: VkStructureType
-pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD = VkStructureType 1000185000
--- No documentation found for TopLevel "VK_AMD_SHADER_CORE_PROPERTIES_SPEC_VERSION"
-pattern VK_AMD_SHADER_CORE_PROPERTIES_SPEC_VERSION :: Integral a => a
-pattern VK_AMD_SHADER_CORE_PROPERTIES_SPEC_VERSION = 1
--- No documentation found for TopLevel "VK_AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME"
-pattern VK_AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME :: (Eq a ,IsString a) => a
-pattern VK_AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME = "VK_AMD_shader_core_properties"
+import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Ptr (nullPtr)
+import Foreign.Ptr (plusPtr)
+import Data.String (IsString)
+import Data.Typeable (Typeable)
+import Foreign.Storable (Storable)
+import Foreign.Storable (Storable(peek))
+import Foreign.Storable (Storable(poke))
+import qualified Foreign.Storable (Storable(..))
+import Foreign.Ptr (Ptr)
+import Data.Word (Word32)
+import Data.Kind (Type)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (FromCStruct(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
+import Graphics.Vulkan.CStruct (ToCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct(..))
+import Graphics.Vulkan.Zero (Zero(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD))
 -- | VkPhysicalDeviceShaderCorePropertiesAMD - Structure describing shader
 -- core properties that can be supported by an implementation
 --
 -- = Members
 --
--- The members of the @VkPhysicalDeviceShaderCorePropertiesAMD@ structure
+-- The members of the 'PhysicalDeviceShaderCorePropertiesAMD' structure
 -- describe the following implementation-dependent limits:
 --
 -- = Description
 --
--- -   @shaderEngineCount@ is an unsigned integer value indicating the
---     number of shader engines found inside the shader core of the
---     physical device.
---
--- -   @shaderArraysPerEngineCount@ is an unsigned integer value indicating
---     the number of shader arrays inside a shader engine. Each shader
---     array has its own scan converter, set of compute units, and a render
---     back end (color and depth buffers). Shader arrays within a shader
---     engine share shader processor input (wave launcher) and shader
---     export (export buffer) units. Currently, a shader engine can have
---     one or two shader arrays.
---
--- -   @computeUnitsPerShaderArray@ is an unsigned integer value indicating
---     the number of compute units within a shader array. A compute unit
---     houses a set of SIMDs along with a sequencer module and a local data
---     store.
---
--- -   @simdPerComputeUnit@ is an unsigned integer value indicating the
---     number of SIMDs inside a compute unit. Each SIMD processes a single
---     instruction at a time.
---
--- -   @wavefrontSize@ is an unsigned integer value indicating the number
---     of channels (or threads) in a wavefront.
---
--- -   @sgprsPerSimd@ is an unsigned integer value indicating the number of
---     physical Scalar General Purpose Registers (SGPRs) per SIMD.
---
--- -   @minSgprAllocation@ is an unsigned integer value indicating the
---     minimum number of SGPRs allocated for a wave.
---
--- -   @maxSgprAllocation@ is an unsigned integer value indicating the
---     maximum number of SGPRs allocated for a wave.
---
--- -   @sgprAllocationGranularity@ is an unsigned integer value indicating
---     the granularity of SGPR allocation for a wave.
---
--- -   @vgprsPerSimd@ is an unsigned integer value indicating the number of
---     physical Vector General Purpose Registers (VGPRs) per SIMD.
---
--- -   @minVgprAllocation@ is an unsigned integer value indicating the
---     minimum number of VGPRs allocated for a wave.
---
--- -   @maxVgprAllocation@ is an unsigned integer value indicating the
---     maximum number of VGPRs allocated for a wave.
---
--- -   @vgprAllocationGranularity@ is an unsigned integer value indicating
---     the granularity of VGPR allocation for a wave.
+-- If the 'PhysicalDeviceShaderCorePropertiesAMD' structure is included in
+-- the @pNext@ chain of
+-- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
+-- it is filled with the implementation-dependent limits.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD@
---
--- If the @VkPhysicalDeviceShaderCorePropertiesAMD@ structure is included
--- in the @pNext@ chain of
--- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2',
--- it is filled with the implementation-dependent limits.
---
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.Core.VkStructureType'
-data VkPhysicalDeviceShaderCorePropertiesAMD = VkPhysicalDeviceShaderCorePropertiesAMD
-  { -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "sType"
-  vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "pNext"
-  vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "shaderEngineCount"
-  vkShaderEngineCount :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "shaderArraysPerEngineCount"
-  vkShaderArraysPerEngineCount :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "computeUnitsPerShaderArray"
-  vkComputeUnitsPerShaderArray :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "simdPerComputeUnit"
-  vkSimdPerComputeUnit :: Word32
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
+data PhysicalDeviceShaderCorePropertiesAMD = PhysicalDeviceShaderCorePropertiesAMD
+  { -- | @shaderEngineCount@ is an unsigned integer value indicating the number
+    -- of shader engines found inside the shader core of the physical device.
+    shaderEngineCount :: Word32
+  , -- | @shaderArraysPerEngineCount@ is an unsigned integer value indicating the
+    -- number of shader arrays inside a shader engine. Each shader array has
+    -- its own scan converter, set of compute units, and a render back end
+    -- (color and depth buffers). Shader arrays within a shader engine share
+    -- shader processor input (wave launcher) and shader export (export buffer)
+    -- units. Currently, a shader engine can have one or two shader arrays.
+    shaderArraysPerEngineCount :: Word32
+  , -- | @computeUnitsPerShaderArray@ is an unsigned integer value indicating the
+    -- physical number of compute units within a shader array. The active
+    -- number of compute units in a shader array /may/ be lower. A compute unit
+    -- houses a set of SIMDs along with a sequencer module and a local data
+    -- store.
+    computeUnitsPerShaderArray :: Word32
+  , -- | @simdPerComputeUnit@ is an unsigned integer value indicating the number
+    -- of SIMDs inside a compute unit. Each SIMD processes a single instruction
+    -- at a time.
+    simdPerComputeUnit :: Word32
   , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "wavefrontsPerSimd"
-  vkWavefrontsPerSimd :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "wavefrontSize"
-  vkWavefrontSize :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "sgprsPerSimd"
-  vkSgprsPerSimd :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "minSgprAllocation"
-  vkMinSgprAllocation :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "maxSgprAllocation"
-  vkMaxSgprAllocation :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "sgprAllocationGranularity"
-  vkSgprAllocationGranularity :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "vgprsPerSimd"
-  vkVgprsPerSimd :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "minVgprAllocation"
-  vkMinVgprAllocation :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "maxVgprAllocation"
-  vkMaxVgprAllocation :: Word32
-  , -- No documentation found for Nested "VkPhysicalDeviceShaderCorePropertiesAMD" "vgprAllocationGranularity"
-  vkVgprAllocationGranularity :: Word32
+    wavefrontsPerSimd :: Word32
+  , -- | @wavefrontSize@ is an unsigned integer value indicating the maximum size
+    -- of a subgroup.
+    wavefrontSize :: Word32
+  , -- | @sgprsPerSimd@ is an unsigned integer value indicating the number of
+    -- physical Scalar General Purpose Registers (SGPRs) per SIMD.
+    sgprsPerSimd :: Word32
+  , -- | @minSgprAllocation@ is an unsigned integer value indicating the minimum
+    -- number of SGPRs allocated for a wave.
+    minSgprAllocation :: Word32
+  , -- | @maxSgprAllocation@ is an unsigned integer value indicating the maximum
+    -- number of SGPRs allocated for a wave.
+    maxSgprAllocation :: Word32
+  , -- | @sgprAllocationGranularity@ is an unsigned integer value indicating the
+    -- granularity of SGPR allocation for a wave.
+    sgprAllocationGranularity :: Word32
+  , -- | @vgprsPerSimd@ is an unsigned integer value indicating the number of
+    -- physical Vector General Purpose Registers (VGPRs) per SIMD.
+    vgprsPerSimd :: Word32
+  , -- | @minVgprAllocation@ is an unsigned integer value indicating the minimum
+    -- number of VGPRs allocated for a wave.
+    minVgprAllocation :: Word32
+  , -- | @maxVgprAllocation@ is an unsigned integer value indicating the maximum
+    -- number of VGPRs allocated for a wave.
+    maxVgprAllocation :: Word32
+  , -- | @vgprAllocationGranularity@ is an unsigned integer value indicating the
+    -- granularity of VGPR allocation for a wave.
+    vgprAllocationGranularity :: Word32
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show PhysicalDeviceShaderCorePropertiesAMD
 
-instance Storable VkPhysicalDeviceShaderCorePropertiesAMD where
+instance ToCStruct PhysicalDeviceShaderCorePropertiesAMD where
+  withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p PhysicalDeviceShaderCorePropertiesAMD{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Word32)) (shaderEngineCount)
+    poke ((p `plusPtr` 20 :: Ptr Word32)) (shaderArraysPerEngineCount)
+    poke ((p `plusPtr` 24 :: Ptr Word32)) (computeUnitsPerShaderArray)
+    poke ((p `plusPtr` 28 :: Ptr Word32)) (simdPerComputeUnit)
+    poke ((p `plusPtr` 32 :: Ptr Word32)) (wavefrontsPerSimd)
+    poke ((p `plusPtr` 36 :: Ptr Word32)) (wavefrontSize)
+    poke ((p `plusPtr` 40 :: Ptr Word32)) (sgprsPerSimd)
+    poke ((p `plusPtr` 44 :: Ptr Word32)) (minSgprAllocation)
+    poke ((p `plusPtr` 48 :: Ptr Word32)) (maxSgprAllocation)
+    poke ((p `plusPtr` 52 :: Ptr Word32)) (sgprAllocationGranularity)
+    poke ((p `plusPtr` 56 :: Ptr Word32)) (vgprsPerSimd)
+    poke ((p `plusPtr` 60 :: Ptr Word32)) (minVgprAllocation)
+    poke ((p `plusPtr` 64 :: Ptr Word32)) (maxVgprAllocation)
+    poke ((p `plusPtr` 68 :: Ptr Word32)) (vgprAllocationGranularity)
+    f
+  cStructSize = 72
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 28 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 32 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 36 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 40 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 44 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 48 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 52 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 56 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 60 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 64 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 68 :: Ptr Word32)) (zero)
+    f
+
+instance FromCStruct PhysicalDeviceShaderCorePropertiesAMD where
+  peekCStruct p = do
+    shaderEngineCount <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
+    shaderArraysPerEngineCount <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
+    computeUnitsPerShaderArray <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
+    simdPerComputeUnit <- peek @Word32 ((p `plusPtr` 28 :: Ptr Word32))
+    wavefrontsPerSimd <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
+    wavefrontSize <- peek @Word32 ((p `plusPtr` 36 :: Ptr Word32))
+    sgprsPerSimd <- peek @Word32 ((p `plusPtr` 40 :: Ptr Word32))
+    minSgprAllocation <- peek @Word32 ((p `plusPtr` 44 :: Ptr Word32))
+    maxSgprAllocation <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))
+    sgprAllocationGranularity <- peek @Word32 ((p `plusPtr` 52 :: Ptr Word32))
+    vgprsPerSimd <- peek @Word32 ((p `plusPtr` 56 :: Ptr Word32))
+    minVgprAllocation <- peek @Word32 ((p `plusPtr` 60 :: Ptr Word32))
+    maxVgprAllocation <- peek @Word32 ((p `plusPtr` 64 :: Ptr Word32))
+    vgprAllocationGranularity <- peek @Word32 ((p `plusPtr` 68 :: Ptr Word32))
+    pure $ PhysicalDeviceShaderCorePropertiesAMD
+             shaderEngineCount shaderArraysPerEngineCount computeUnitsPerShaderArray simdPerComputeUnit wavefrontsPerSimd wavefrontSize sgprsPerSimd minSgprAllocation maxSgprAllocation sgprAllocationGranularity vgprsPerSimd minVgprAllocation maxVgprAllocation vgprAllocationGranularity
+
+instance Storable PhysicalDeviceShaderCorePropertiesAMD where
   sizeOf ~_ = 72
   alignment ~_ = 8
-  peek ptr = VkPhysicalDeviceShaderCorePropertiesAMD <$> peek (ptr `plusPtr` 0)
-                                                     <*> peek (ptr `plusPtr` 8)
-                                                     <*> peek (ptr `plusPtr` 16)
-                                                     <*> peek (ptr `plusPtr` 20)
-                                                     <*> peek (ptr `plusPtr` 24)
-                                                     <*> peek (ptr `plusPtr` 28)
-                                                     <*> peek (ptr `plusPtr` 32)
-                                                     <*> peek (ptr `plusPtr` 36)
-                                                     <*> peek (ptr `plusPtr` 40)
-                                                     <*> peek (ptr `plusPtr` 44)
-                                                     <*> peek (ptr `plusPtr` 48)
-                                                     <*> peek (ptr `plusPtr` 52)
-                                                     <*> peek (ptr `plusPtr` 56)
-                                                     <*> peek (ptr `plusPtr` 60)
-                                                     <*> peek (ptr `plusPtr` 64)
-                                                     <*> peek (ptr `plusPtr` 68)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))
-                *> poke (ptr `plusPtr` 16) (vkShaderEngineCount (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))
-                *> poke (ptr `plusPtr` 20) (vkShaderArraysPerEngineCount (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))
-                *> poke (ptr `plusPtr` 24) (vkComputeUnitsPerShaderArray (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))
-                *> poke (ptr `plusPtr` 28) (vkSimdPerComputeUnit (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))
-                *> poke (ptr `plusPtr` 32) (vkWavefrontsPerSimd (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))
-                *> poke (ptr `plusPtr` 36) (vkWavefrontSize (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))
-                *> poke (ptr `plusPtr` 40) (vkSgprsPerSimd (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))
-                *> poke (ptr `plusPtr` 44) (vkMinSgprAllocation (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))
-                *> poke (ptr `plusPtr` 48) (vkMaxSgprAllocation (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))
-                *> poke (ptr `plusPtr` 52) (vkSgprAllocationGranularity (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))
-                *> poke (ptr `plusPtr` 56) (vkVgprsPerSimd (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))
-                *> poke (ptr `plusPtr` 60) (vkMinVgprAllocation (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))
-                *> poke (ptr `plusPtr` 64) (vkMaxVgprAllocation (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))
-                *> poke (ptr `plusPtr` 68) (vkVgprAllocationGranularity (poked :: VkPhysicalDeviceShaderCorePropertiesAMD))
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero PhysicalDeviceShaderCorePropertiesAMD where
+  zero = PhysicalDeviceShaderCorePropertiesAMD
+           zero
+           zero
+           zero
+           zero
+           zero
+           zero
+           zero
+           zero
+           zero
+           zero
+           zero
+           zero
+           zero
+           zero
+
+
+type AMD_SHADER_CORE_PROPERTIES_SPEC_VERSION = 2
+
+-- No documentation found for TopLevel "VK_AMD_SHADER_CORE_PROPERTIES_SPEC_VERSION"
+pattern AMD_SHADER_CORE_PROPERTIES_SPEC_VERSION :: forall a . Integral a => a
+pattern AMD_SHADER_CORE_PROPERTIES_SPEC_VERSION = 2
+
+
+type AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME = "VK_AMD_shader_core_properties"
+
+-- No documentation found for TopLevel "VK_AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME"
+pattern AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME = "VK_AMD_shader_core_properties"
+

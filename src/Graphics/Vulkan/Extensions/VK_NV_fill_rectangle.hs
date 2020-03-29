@@ -1,30 +1,22 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
-{-# language OverloadedStrings #-}
+module Graphics.Vulkan.Extensions.VK_NV_fill_rectangle  ( NV_FILL_RECTANGLE_SPEC_VERSION
+                                                        , pattern NV_FILL_RECTANGLE_SPEC_VERSION
+                                                        , NV_FILL_RECTANGLE_EXTENSION_NAME
+                                                        , pattern NV_FILL_RECTANGLE_EXTENSION_NAME
+                                                        ) where
 
-module Graphics.Vulkan.Extensions.VK_NV_fill_rectangle
-  ( pattern VK_POLYGON_MODE_FILL_RECTANGLE_NV
-  , pattern VK_NV_FILL_RECTANGLE_SPEC_VERSION
-  , pattern VK_NV_FILL_RECTANGLE_EXTENSION_NAME
-  ) where
+import Data.String (IsString)
 
-import Data.String
-  ( IsString
-  )
+type NV_FILL_RECTANGLE_SPEC_VERSION = 1
 
-
-import Graphics.Vulkan.Core10.Pipeline
-  ( VkPolygonMode(..)
-  )
-
-
--- No documentation found for Nested "VkPolygonMode" "VK_POLYGON_MODE_FILL_RECTANGLE_NV"
-pattern VK_POLYGON_MODE_FILL_RECTANGLE_NV :: VkPolygonMode
-pattern VK_POLYGON_MODE_FILL_RECTANGLE_NV = VkPolygonMode 1000153000
 -- No documentation found for TopLevel "VK_NV_FILL_RECTANGLE_SPEC_VERSION"
-pattern VK_NV_FILL_RECTANGLE_SPEC_VERSION :: Integral a => a
-pattern VK_NV_FILL_RECTANGLE_SPEC_VERSION = 1
+pattern NV_FILL_RECTANGLE_SPEC_VERSION :: forall a . Integral a => a
+pattern NV_FILL_RECTANGLE_SPEC_VERSION = 1
+
+
+type NV_FILL_RECTANGLE_EXTENSION_NAME = "VK_NV_fill_rectangle"
+
 -- No documentation found for TopLevel "VK_NV_FILL_RECTANGLE_EXTENSION_NAME"
-pattern VK_NV_FILL_RECTANGLE_EXTENSION_NAME :: (Eq a ,IsString a) => a
-pattern VK_NV_FILL_RECTANGLE_EXTENSION_NAME = "VK_NV_fill_rectangle"
+pattern NV_FILL_RECTANGLE_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern NV_FILL_RECTANGLE_EXTENSION_NAME = "VK_NV_fill_rectangle"
+

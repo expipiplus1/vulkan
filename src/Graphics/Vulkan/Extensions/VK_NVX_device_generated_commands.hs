@@ -1,651 +1,420 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language GeneralizedNewtypeDeriving #-}
-{-# language PatternSynonyms #-}
-{-# language OverloadedStrings #-}
-{-# language DataKinds #-}
-{-# language TypeOperators #-}
-{-# language DuplicateRecordFields #-}
+module Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands  ( cmdProcessCommandsNVX
+                                                                    , cmdReserveSpaceForCommandsNVX
+                                                                    , createIndirectCommandsLayoutNVX
+                                                                    , withIndirectCommandsLayoutNVX
+                                                                    , destroyIndirectCommandsLayoutNVX
+                                                                    , createObjectTableNVX
+                                                                    , withObjectTableNVX
+                                                                    , destroyObjectTableNVX
+                                                                    , registerObjectsNVX
+                                                                    , withRegisteredObjectsNVX
+                                                                    , unregisterObjectsNVX
+                                                                    , getPhysicalDeviceGeneratedCommandsPropertiesNVX
+                                                                    , DeviceGeneratedCommandsFeaturesNVX(..)
+                                                                    , DeviceGeneratedCommandsLimitsNVX(..)
+                                                                    , IndirectCommandsTokenNVX(..)
+                                                                    , IndirectCommandsLayoutTokenNVX(..)
+                                                                    , IndirectCommandsLayoutCreateInfoNVX(..)
+                                                                    , CmdProcessCommandsInfoNVX(..)
+                                                                    , CmdReserveSpaceForCommandsInfoNVX(..)
+                                                                    , ObjectTableCreateInfoNVX(..)
+                                                                    , ObjectTableEntryNVX(..)
+                                                                    , ObjectTablePipelineEntryNVX(..)
+                                                                    , ObjectTableDescriptorSetEntryNVX(..)
+                                                                    , ObjectTableVertexBufferEntryNVX(..)
+                                                                    , ObjectTableIndexBufferEntryNVX(..)
+                                                                    , ObjectTablePushConstantEntryNVX(..)
+                                                                    , IndirectCommandsLayoutUsageFlagBitsNVX( INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NVX
+                                                                                                            , INDIRECT_COMMANDS_LAYOUT_USAGE_SPARSE_SEQUENCES_BIT_NVX
+                                                                                                            , INDIRECT_COMMANDS_LAYOUT_USAGE_EMPTY_EXECUTIONS_BIT_NVX
+                                                                                                            , INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NVX
+                                                                                                            , ..
+                                                                                                            )
+                                                                    , IndirectCommandsLayoutUsageFlagsNVX
+                                                                    , ObjectEntryUsageFlagBitsNVX( OBJECT_ENTRY_USAGE_GRAPHICS_BIT_NVX
+                                                                                                 , OBJECT_ENTRY_USAGE_COMPUTE_BIT_NVX
+                                                                                                 , ..
+                                                                                                 )
+                                                                    , ObjectEntryUsageFlagsNVX
+                                                                    , IndirectCommandsTokenTypeNVX( INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX
+                                                                                                  , INDIRECT_COMMANDS_TOKEN_TYPE_DESCRIPTOR_SET_NVX
+                                                                                                  , INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NVX
+                                                                                                  , INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NVX
+                                                                                                  , INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NVX
+                                                                                                  , INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NVX
+                                                                                                  , INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NVX
+                                                                                                  , INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX
+                                                                                                  , ..
+                                                                                                  )
+                                                                    , ObjectEntryTypeNVX( OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX
+                                                                                        , OBJECT_ENTRY_TYPE_PIPELINE_NVX
+                                                                                        , OBJECT_ENTRY_TYPE_INDEX_BUFFER_NVX
+                                                                                        , OBJECT_ENTRY_TYPE_VERTEX_BUFFER_NVX
+                                                                                        , OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX
+                                                                                        , ..
+                                                                                        )
+                                                                    , NVX_DEVICE_GENERATED_COMMANDS_SPEC_VERSION
+                                                                    , pattern NVX_DEVICE_GENERATED_COMMANDS_SPEC_VERSION
+                                                                    , NVX_DEVICE_GENERATED_COMMANDS_EXTENSION_NAME
+                                                                    , pattern NVX_DEVICE_GENERATED_COMMANDS_EXTENSION_NAME
+                                                                    , ObjectTableNVX(..)
+                                                                    , IndirectCommandsLayoutNVX(..)
+                                                                    ) where
 
-module Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands
-  ( VkIndirectCommandsTokenTypeNVX(..)
-  , pattern VK_INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX
-  , pattern VK_INDIRECT_COMMANDS_TOKEN_TYPE_DESCRIPTOR_SET_NVX
-  , pattern VK_INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NVX
-  , pattern VK_INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NVX
-  , pattern VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NVX
-  , pattern VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NVX
-  , pattern VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NVX
-  , pattern VK_INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX
-  , VkObjectEntryTypeNVX(..)
-  , pattern VK_OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX
-  , pattern VK_OBJECT_ENTRY_TYPE_PIPELINE_NVX
-  , pattern VK_OBJECT_ENTRY_TYPE_INDEX_BUFFER_NVX
-  , pattern VK_OBJECT_ENTRY_TYPE_VERTEX_BUFFER_NVX
-  , pattern VK_OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX
-  , VkIndirectCommandsLayoutUsageFlagBitsNVX(..)
-  , pattern VK_INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NVX
-  , pattern VK_INDIRECT_COMMANDS_LAYOUT_USAGE_SPARSE_SEQUENCES_BIT_NVX
-  , pattern VK_INDIRECT_COMMANDS_LAYOUT_USAGE_EMPTY_EXECUTIONS_BIT_NVX
-  , pattern VK_INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NVX
-  , VkObjectEntryUsageFlagBitsNVX(..)
-  , pattern VK_OBJECT_ENTRY_USAGE_GRAPHICS_BIT_NVX
-  , pattern VK_OBJECT_ENTRY_USAGE_COMPUTE_BIT_NVX
-  , pattern VK_STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX
-  , pattern VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NVX
-  , pattern VK_STRUCTURE_TYPE_CMD_PROCESS_COMMANDS_INFO_NVX
-  , pattern VK_STRUCTURE_TYPE_CMD_RESERVE_SPACE_FOR_COMMANDS_INFO_NVX
-  , pattern VK_STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_LIMITS_NVX
-  , pattern VK_STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_FEATURES_NVX
-  , pattern VK_OBJECT_TYPE_OBJECT_TABLE_NVX
-  , pattern VK_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX
-  , pattern VK_ACCESS_COMMAND_PROCESS_READ_BIT_NVX
-  , pattern VK_ACCESS_COMMAND_PROCESS_WRITE_BIT_NVX
-  , pattern VK_PIPELINE_STAGE_COMMAND_PROCESS_BIT_NVX
-  , pattern VK_NVX_DEVICE_GENERATED_COMMANDS_SPEC_VERSION
-  , pattern VK_NVX_DEVICE_GENERATED_COMMANDS_EXTENSION_NAME
-  , VkObjectTableNVX
-  , VkIndirectCommandsLayoutNVX
-  , vkCmdProcessCommandsNVX
-  , vkCmdReserveSpaceForCommandsNVX
-  , vkCreateIndirectCommandsLayoutNVX
-  , vkDestroyIndirectCommandsLayoutNVX
-  , vkCreateObjectTableNVX
-  , vkDestroyObjectTableNVX
-  , vkRegisterObjectsNVX
-  , vkUnregisterObjectsNVX
-  , vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX
-  , VkDeviceGeneratedCommandsFeaturesNVX(..)
-  , VkDeviceGeneratedCommandsLimitsNVX(..)
-  , VkIndirectCommandsTokenNVX(..)
-  , VkIndirectCommandsLayoutTokenNVX(..)
-  , VkIndirectCommandsLayoutCreateInfoNVX(..)
-  , VkCmdProcessCommandsInfoNVX(..)
-  , VkCmdReserveSpaceForCommandsInfoNVX(..)
-  , VkObjectTableCreateInfoNVX(..)
-  , VkObjectTableEntryNVX(..)
-  , VkObjectTablePipelineEntryNVX(..)
-  , VkObjectTableDescriptorSetEntryNVX(..)
-  , VkObjectTableVertexBufferEntryNVX(..)
-  , VkObjectTableIndexBufferEntryNVX(..)
-  , VkObjectTablePushConstantEntryNVX(..)
-  , VkIndirectCommandsLayoutUsageFlagsNVX
-  , VkObjectEntryUsageFlagsNVX
-  ) where
+import Control.Exception.Base (bracket)
+import Control.Exception.Base (bracket_)
+import Control.Monad (unless)
+import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (callocBytes)
+import Foreign.Marshal.Alloc (free)
+import GHC.Base (when)
+import GHC.IO (throwIO)
+import Foreign.Ptr (nullPtr)
+import Foreign.Ptr (plusPtr)
+import GHC.Read (choose)
+import GHC.Read (expectP)
+import GHC.Read (parens)
+import GHC.Show (showParen)
+import GHC.Show (showString)
+import GHC.Show (showsPrec)
+import Numeric (showHex)
+import Text.ParserCombinators.ReadPrec ((+++))
+import Text.ParserCombinators.ReadPrec (prec)
+import Text.ParserCombinators.ReadPrec (step)
+import Control.Monad.Trans.Class (lift)
+import Control.Monad.Trans.Cont (evalContT)
+import Data.Vector (generateM)
+import qualified Data.Vector (imapM_)
+import qualified Data.Vector (length)
+import Data.Bits (Bits)
+import Data.String (IsString)
+import Data.Typeable (Typeable)
+import Foreign.Storable (Storable)
+import Foreign.Storable (Storable(peek))
+import Foreign.Storable (Storable(poke))
+import qualified Foreign.Storable (Storable(..))
+import GHC.IO.Exception (IOErrorType(..))
+import GHC.IO.Exception (IOException(..))
+import Data.Int (Int32)
+import Foreign.Ptr (FunPtr)
+import Foreign.Ptr (Ptr)
+import GHC.Read (Read(readPrec))
+import Data.Word (Word32)
+import Text.Read.Lex (Lexeme(Ident))
+import Data.Kind (Type)
+import Control.Monad.Trans.Cont (ContT(..))
+import Data.Vector (Vector)
+import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
+import Graphics.Vulkan.Core10.BaseType (bool32ToBool)
+import Graphics.Vulkan.Core10.BaseType (boolToBool32)
+import Graphics.Vulkan.NamedType ((:::))
+import Graphics.Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
+import Graphics.Vulkan.Core10.BaseType (Bool32)
+import Graphics.Vulkan.Core10.Handles (Buffer)
+import Graphics.Vulkan.Core10.Handles (CommandBuffer)
+import Graphics.Vulkan.Core10.Handles (CommandBuffer(..))
+import Graphics.Vulkan.Core10.Handles (CommandBuffer_T)
+import Graphics.Vulkan.Core10.Handles (DescriptorSet)
+import Graphics.Vulkan.Core10.Handles (Device)
+import Graphics.Vulkan.Core10.Handles (Device(..))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkCmdProcessCommandsNVX))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkCmdReserveSpaceForCommandsNVX))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkCreateIndirectCommandsLayoutNVX))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkCreateObjectTableNVX))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkDestroyIndirectCommandsLayoutNVX))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkDestroyObjectTableNVX))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkRegisterObjectsNVX))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkUnregisterObjectsNVX))
+import Graphics.Vulkan.Core10.BaseType (DeviceSize)
+import Graphics.Vulkan.Core10.Handles (Device_T)
+import Graphics.Vulkan.Core10.BaseType (Flags)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (FromCStruct(..))
+import Graphics.Vulkan.Core10.Enums.IndexType (IndexType)
+import Graphics.Vulkan.Extensions.Handles (IndirectCommandsLayoutNVX)
+import Graphics.Vulkan.Extensions.Handles (IndirectCommandsLayoutNVX(..))
+import Graphics.Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceGeneratedCommandsPropertiesNVX))
+import Graphics.Vulkan.Extensions.Handles (ObjectTableNVX)
+import Graphics.Vulkan.Extensions.Handles (ObjectTableNVX(..))
+import Graphics.Vulkan.Core10.Handles (PhysicalDevice)
+import Graphics.Vulkan.Core10.Handles (PhysicalDevice(..))
+import Graphics.Vulkan.Core10.Handles (PhysicalDevice_T)
+import Graphics.Vulkan.Core10.Handles (Pipeline)
+import Graphics.Vulkan.Core10.Enums.PipelineBindPoint (PipelineBindPoint)
+import Graphics.Vulkan.Core10.Handles (PipelineLayout)
+import Graphics.Vulkan.Core10.Enums.Result (Result)
+import Graphics.Vulkan.Core10.Enums.Result (Result(..))
+import Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlags)
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
+import Graphics.Vulkan.CStruct (ToCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct(..))
+import Graphics.Vulkan.Exception (VulkanException(..))
+import Graphics.Vulkan.Zero (Zero)
+import Graphics.Vulkan.Zero (Zero(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_CMD_PROCESS_COMMANDS_INFO_NVX))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_CMD_RESERVE_SPACE_FOR_COMMANDS_INFO_NVX))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_FEATURES_NVX))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_LIMITS_NVX))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NVX))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX))
+import Graphics.Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Graphics.Vulkan.Extensions.Handles (IndirectCommandsLayoutNVX(..))
+import Graphics.Vulkan.Extensions.Handles (ObjectTableNVX(..))
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdProcessCommandsNVX
+  :: FunPtr (Ptr CommandBuffer_T -> Ptr CmdProcessCommandsInfoNVX -> IO ()) -> Ptr CommandBuffer_T -> Ptr CmdProcessCommandsInfoNVX -> IO ()
 
-import Data.Bits
-  ( Bits
-  , FiniteBits
-  )
-import Data.Int
-  ( Int32
-  )
-import Data.String
-  ( IsString
-  )
-import Data.Word
-  ( Word32
-  )
-import Foreign.Ptr
-  ( Ptr
-  , plusPtr
-  )
-import Foreign.Storable
-  ( Storable
-  , Storable(..)
-  )
-import GHC.Read
-  ( choose
-  , expectP
-  )
-import Graphics.Vulkan.NamedType
-  ( (:::)
-  )
-import Text.ParserCombinators.ReadPrec
-  ( (+++)
-  , prec
-  , step
-  )
-import Text.Read
-  ( Read(..)
-  , parens
-  )
-import Text.Read.Lex
-  ( Lexeme(Ident)
-  )
-
-
-import Graphics.Vulkan.Core10.CommandBufferBuilding
-  ( VkIndexType(..)
-  )
-import Graphics.Vulkan.Core10.Core
-  ( VkBool32(..)
-  , VkObjectType(..)
-  , VkResult(..)
-  , VkStructureType(..)
-  , VkFlags
-  )
-import Graphics.Vulkan.Core10.DescriptorSet
-  ( VkDescriptorSet
-  )
-import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkAllocationCallbacks(..)
-  , VkDevice
-  , VkDeviceSize
-  , VkPhysicalDevice
-  )
-import Graphics.Vulkan.Core10.MemoryManagement
-  ( VkBuffer
-  )
-import Graphics.Vulkan.Core10.Pass
-  ( VkAccessFlagBits(..)
-  , VkPipelineBindPoint(..)
-  )
-import Graphics.Vulkan.Core10.Pipeline
-  ( VkPipeline
-  , VkPipelineLayout
-  )
-import Graphics.Vulkan.Core10.PipelineLayout
-  ( VkShaderStageFlags
-  )
-import Graphics.Vulkan.Core10.Queue
-  ( VkPipelineStageFlagBits(..)
-  , VkCommandBuffer
-  )
-
-
--- ** VkIndirectCommandsTokenTypeNVX
-
--- | VkIndirectCommandsTokenTypeNVX - Enum specifying
---
--- = Description
---
--- \'
---
--- +------------------------------------------------------+----------------------------+
--- | Token type                                           | Equivalent command         |
--- +======================================================+============================+
--- | @VK_INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX@       | @vkCmdBindPipeline@        |
--- +------------------------------------------------------+----------------------------+
--- | @VK_INDIRECT_COMMANDS_TOKEN_TYPE_DESCRIPTOR_SET_NVX@ | @vkCmdBindDescriptorSets@  |
--- +------------------------------------------------------+----------------------------+
--- | @VK_INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NVX@   | @vkCmdBindIndexBuffer@     |
--- +------------------------------------------------------+----------------------------+
--- | @VK_INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NVX@  | @vkCmdBindVertexBuffers@   |
--- +------------------------------------------------------+----------------------------+
--- | @VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NVX@  | @vkCmdPushConstants@       |
--- +------------------------------------------------------+----------------------------+
--- | @VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NVX@   | @vkCmdDrawIndexedIndirect@ |
--- +------------------------------------------------------+----------------------------+
--- | @VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NVX@           | @vkCmdDrawIndirect@        |
--- +------------------------------------------------------+----------------------------+
--- | @VK_INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX@       | @vkCmdDispatchIndirect@    |
--- +------------------------------------------------------+----------------------------+
---
--- Supported indirect command tokens
---
--- = See Also
---
--- 'VkIndirectCommandsLayoutTokenNVX', 'VkIndirectCommandsTokenNVX'
-newtype VkIndirectCommandsTokenTypeNVX = VkIndirectCommandsTokenTypeNVX Int32
-  deriving (Eq, Ord, Storable)
-
-instance Show VkIndirectCommandsTokenTypeNVX where
-  showsPrec _ VK_INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX = showString "VK_INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX"
-  showsPrec _ VK_INDIRECT_COMMANDS_TOKEN_TYPE_DESCRIPTOR_SET_NVX = showString "VK_INDIRECT_COMMANDS_TOKEN_TYPE_DESCRIPTOR_SET_NVX"
-  showsPrec _ VK_INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NVX = showString "VK_INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NVX"
-  showsPrec _ VK_INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NVX = showString "VK_INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NVX"
-  showsPrec _ VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NVX = showString "VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NVX"
-  showsPrec _ VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NVX = showString "VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NVX"
-  showsPrec _ VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NVX = showString "VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NVX"
-  showsPrec _ VK_INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX = showString "VK_INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX"
-  showsPrec p (VkIndirectCommandsTokenTypeNVX x) = showParen (p >= 11) (showString "VkIndirectCommandsTokenTypeNVX " . showsPrec 11 x)
-
-instance Read VkIndirectCommandsTokenTypeNVX where
-  readPrec = parens ( choose [ ("VK_INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX",       pure VK_INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX)
-                             , ("VK_INDIRECT_COMMANDS_TOKEN_TYPE_DESCRIPTOR_SET_NVX", pure VK_INDIRECT_COMMANDS_TOKEN_TYPE_DESCRIPTOR_SET_NVX)
-                             , ("VK_INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NVX",   pure VK_INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NVX)
-                             , ("VK_INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NVX",  pure VK_INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NVX)
-                             , ("VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NVX",  pure VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NVX)
-                             , ("VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NVX",   pure VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NVX)
-                             , ("VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NVX",           pure VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NVX)
-                             , ("VK_INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX",       pure VK_INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX)
-                             ] +++
-                      prec 10 (do
-                        expectP (Ident "VkIndirectCommandsTokenTypeNVX")
-                        v <- step readPrec
-                        pure (VkIndirectCommandsTokenTypeNVX v)
-                        )
-                    )
-
--- No documentation found for Nested "VkIndirectCommandsTokenTypeNVX" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX"
-pattern VK_INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX :: VkIndirectCommandsTokenTypeNVX
-pattern VK_INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX = VkIndirectCommandsTokenTypeNVX 0
-
--- No documentation found for Nested "VkIndirectCommandsTokenTypeNVX" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_DESCRIPTOR_SET_NVX"
-pattern VK_INDIRECT_COMMANDS_TOKEN_TYPE_DESCRIPTOR_SET_NVX :: VkIndirectCommandsTokenTypeNVX
-pattern VK_INDIRECT_COMMANDS_TOKEN_TYPE_DESCRIPTOR_SET_NVX = VkIndirectCommandsTokenTypeNVX 1
-
--- No documentation found for Nested "VkIndirectCommandsTokenTypeNVX" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NVX"
-pattern VK_INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NVX :: VkIndirectCommandsTokenTypeNVX
-pattern VK_INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NVX = VkIndirectCommandsTokenTypeNVX 2
-
--- No documentation found for Nested "VkIndirectCommandsTokenTypeNVX" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NVX"
-pattern VK_INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NVX :: VkIndirectCommandsTokenTypeNVX
-pattern VK_INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NVX = VkIndirectCommandsTokenTypeNVX 3
-
--- No documentation found for Nested "VkIndirectCommandsTokenTypeNVX" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NVX"
-pattern VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NVX :: VkIndirectCommandsTokenTypeNVX
-pattern VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NVX = VkIndirectCommandsTokenTypeNVX 4
-
--- No documentation found for Nested "VkIndirectCommandsTokenTypeNVX" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NVX"
-pattern VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NVX :: VkIndirectCommandsTokenTypeNVX
-pattern VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NVX = VkIndirectCommandsTokenTypeNVX 5
-
--- No documentation found for Nested "VkIndirectCommandsTokenTypeNVX" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NVX"
-pattern VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NVX :: VkIndirectCommandsTokenTypeNVX
-pattern VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NVX = VkIndirectCommandsTokenTypeNVX 6
-
--- No documentation found for Nested "VkIndirectCommandsTokenTypeNVX" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX"
-pattern VK_INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX :: VkIndirectCommandsTokenTypeNVX
-pattern VK_INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX = VkIndirectCommandsTokenTypeNVX 7
--- ** VkObjectEntryTypeNVX
-
--- | VkObjectEntryTypeNVX - Enum specifying object table entry type
---
--- = See Also
---
--- 'VkObjectTableCreateInfoNVX', 'VkObjectTableDescriptorSetEntryNVX',
--- 'VkObjectTableEntryNVX', 'VkObjectTableIndexBufferEntryNVX',
--- 'VkObjectTablePipelineEntryNVX', 'VkObjectTablePushConstantEntryNVX',
--- 'VkObjectTableVertexBufferEntryNVX', 'vkUnregisterObjectsNVX'
-newtype VkObjectEntryTypeNVX = VkObjectEntryTypeNVX Int32
-  deriving (Eq, Ord, Storable)
-
-instance Show VkObjectEntryTypeNVX where
-  showsPrec _ VK_OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX = showString "VK_OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX"
-  showsPrec _ VK_OBJECT_ENTRY_TYPE_PIPELINE_NVX = showString "VK_OBJECT_ENTRY_TYPE_PIPELINE_NVX"
-  showsPrec _ VK_OBJECT_ENTRY_TYPE_INDEX_BUFFER_NVX = showString "VK_OBJECT_ENTRY_TYPE_INDEX_BUFFER_NVX"
-  showsPrec _ VK_OBJECT_ENTRY_TYPE_VERTEX_BUFFER_NVX = showString "VK_OBJECT_ENTRY_TYPE_VERTEX_BUFFER_NVX"
-  showsPrec _ VK_OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX = showString "VK_OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX"
-  showsPrec p (VkObjectEntryTypeNVX x) = showParen (p >= 11) (showString "VkObjectEntryTypeNVX " . showsPrec 11 x)
-
-instance Read VkObjectEntryTypeNVX where
-  readPrec = parens ( choose [ ("VK_OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX", pure VK_OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX)
-                             , ("VK_OBJECT_ENTRY_TYPE_PIPELINE_NVX",       pure VK_OBJECT_ENTRY_TYPE_PIPELINE_NVX)
-                             , ("VK_OBJECT_ENTRY_TYPE_INDEX_BUFFER_NVX",   pure VK_OBJECT_ENTRY_TYPE_INDEX_BUFFER_NVX)
-                             , ("VK_OBJECT_ENTRY_TYPE_VERTEX_BUFFER_NVX",  pure VK_OBJECT_ENTRY_TYPE_VERTEX_BUFFER_NVX)
-                             , ("VK_OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX",  pure VK_OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX)
-                             ] +++
-                      prec 10 (do
-                        expectP (Ident "VkObjectEntryTypeNVX")
-                        v <- step readPrec
-                        pure (VkObjectEntryTypeNVX v)
-                        )
-                    )
-
--- | @VK_OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX@ specifies a @VkDescriptorSet@
--- resource entry that is registered via
--- @VkObjectTableDescriptorSetEntryNVX@.
-pattern VK_OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX :: VkObjectEntryTypeNVX
-pattern VK_OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX = VkObjectEntryTypeNVX 0
-
--- | @VK_OBJECT_ENTRY_TYPE_PIPELINE_NVX@ specifies a @VkPipeline@ resource
--- entry that is registered via @VkObjectTablePipelineEntryNVX@.
-pattern VK_OBJECT_ENTRY_TYPE_PIPELINE_NVX :: VkObjectEntryTypeNVX
-pattern VK_OBJECT_ENTRY_TYPE_PIPELINE_NVX = VkObjectEntryTypeNVX 1
-
--- | @VK_OBJECT_ENTRY_TYPE_INDEX_BUFFER_NVX@ specifies a @VkBuffer@ resource
--- entry that is registered via @VkObjectTableIndexBufferEntryNVX@.
-pattern VK_OBJECT_ENTRY_TYPE_INDEX_BUFFER_NVX :: VkObjectEntryTypeNVX
-pattern VK_OBJECT_ENTRY_TYPE_INDEX_BUFFER_NVX = VkObjectEntryTypeNVX 2
-
--- | @VK_OBJECT_ENTRY_TYPE_VERTEX_BUFFER_NVX@ specifies a @VkBuffer@ resource
--- entry that is registered via @VkObjectTableVertexBufferEntryNVX@.
-pattern VK_OBJECT_ENTRY_TYPE_VERTEX_BUFFER_NVX :: VkObjectEntryTypeNVX
-pattern VK_OBJECT_ENTRY_TYPE_VERTEX_BUFFER_NVX = VkObjectEntryTypeNVX 3
-
--- | @VK_OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX@ specifies the resource entry is
--- registered via @VkObjectTablePushConstantEntryNVX@.
-pattern VK_OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX :: VkObjectEntryTypeNVX
-pattern VK_OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX = VkObjectEntryTypeNVX 4
--- ** VkIndirectCommandsLayoutUsageFlagBitsNVX
-
--- | VkIndirectCommandsLayoutUsageFlagBitsNVX - Bitmask specifying allowed
--- usage of a indirect commands layout
---
--- = See Also
---
--- 'VkIndirectCommandsLayoutUsageFlagsNVX'
-newtype VkIndirectCommandsLayoutUsageFlagBitsNVX = VkIndirectCommandsLayoutUsageFlagBitsNVX VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
-
-instance Show VkIndirectCommandsLayoutUsageFlagBitsNVX where
-  showsPrec _ VK_INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NVX = showString "VK_INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NVX"
-  showsPrec _ VK_INDIRECT_COMMANDS_LAYOUT_USAGE_SPARSE_SEQUENCES_BIT_NVX = showString "VK_INDIRECT_COMMANDS_LAYOUT_USAGE_SPARSE_SEQUENCES_BIT_NVX"
-  showsPrec _ VK_INDIRECT_COMMANDS_LAYOUT_USAGE_EMPTY_EXECUTIONS_BIT_NVX = showString "VK_INDIRECT_COMMANDS_LAYOUT_USAGE_EMPTY_EXECUTIONS_BIT_NVX"
-  showsPrec _ VK_INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NVX = showString "VK_INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NVX"
-  showsPrec p (VkIndirectCommandsLayoutUsageFlagBitsNVX x) = showParen (p >= 11) (showString "VkIndirectCommandsLayoutUsageFlagBitsNVX " . showsPrec 11 x)
-
-instance Read VkIndirectCommandsLayoutUsageFlagBitsNVX where
-  readPrec = parens ( choose [ ("VK_INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NVX", pure VK_INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NVX)
-                             , ("VK_INDIRECT_COMMANDS_LAYOUT_USAGE_SPARSE_SEQUENCES_BIT_NVX",    pure VK_INDIRECT_COMMANDS_LAYOUT_USAGE_SPARSE_SEQUENCES_BIT_NVX)
-                             , ("VK_INDIRECT_COMMANDS_LAYOUT_USAGE_EMPTY_EXECUTIONS_BIT_NVX",    pure VK_INDIRECT_COMMANDS_LAYOUT_USAGE_EMPTY_EXECUTIONS_BIT_NVX)
-                             , ("VK_INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NVX",   pure VK_INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NVX)
-                             ] +++
-                      prec 10 (do
-                        expectP (Ident "VkIndirectCommandsLayoutUsageFlagBitsNVX")
-                        v <- step readPrec
-                        pure (VkIndirectCommandsLayoutUsageFlagBitsNVX v)
-                        )
-                    )
-
--- | @VK_INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NVX@
--- specifies that the processing of sequences /can/ happen at an
--- implementation-dependent order, which is not guaranteed to be coherent
--- across multiple invocations.
-pattern VK_INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NVX :: VkIndirectCommandsLayoutUsageFlagBitsNVX
-pattern VK_INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NVX = VkIndirectCommandsLayoutUsageFlagBitsNVX 0x00000001
-
--- | @VK_INDIRECT_COMMANDS_LAYOUT_USAGE_SPARSE_SEQUENCES_BIT_NVX@ specifies
--- that there is likely a high difference between allocated number of
--- sequences and actually used.
-pattern VK_INDIRECT_COMMANDS_LAYOUT_USAGE_SPARSE_SEQUENCES_BIT_NVX :: VkIndirectCommandsLayoutUsageFlagBitsNVX
-pattern VK_INDIRECT_COMMANDS_LAYOUT_USAGE_SPARSE_SEQUENCES_BIT_NVX = VkIndirectCommandsLayoutUsageFlagBitsNVX 0x00000002
-
--- | @VK_INDIRECT_COMMANDS_LAYOUT_USAGE_EMPTY_EXECUTIONS_BIT_NVX@ specifies
--- that there are likely many draw or dispatch calls that are zero-sized
--- (zero grid dimension, no primitives to render).
-pattern VK_INDIRECT_COMMANDS_LAYOUT_USAGE_EMPTY_EXECUTIONS_BIT_NVX :: VkIndirectCommandsLayoutUsageFlagBitsNVX
-pattern VK_INDIRECT_COMMANDS_LAYOUT_USAGE_EMPTY_EXECUTIONS_BIT_NVX = VkIndirectCommandsLayoutUsageFlagBitsNVX 0x00000004
-
--- | @VK_INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NVX@ specifies
--- that the input data for the sequences is not implicitly indexed from
--- 0..sequencesUsed but a user provided @VkBuffer@ encoding the index is
--- provided.
-pattern VK_INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NVX :: VkIndirectCommandsLayoutUsageFlagBitsNVX
-pattern VK_INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NVX = VkIndirectCommandsLayoutUsageFlagBitsNVX 0x00000008
--- ** VkObjectEntryUsageFlagBitsNVX
-
--- | VkObjectEntryUsageFlagBitsNVX - Bitmask specifying allowed usage of an
--- object entry
---
--- = See Also
---
--- 'VkObjectEntryUsageFlagsNVX'
-newtype VkObjectEntryUsageFlagBitsNVX = VkObjectEntryUsageFlagBitsNVX VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
-
-instance Show VkObjectEntryUsageFlagBitsNVX where
-  showsPrec _ VK_OBJECT_ENTRY_USAGE_GRAPHICS_BIT_NVX = showString "VK_OBJECT_ENTRY_USAGE_GRAPHICS_BIT_NVX"
-  showsPrec _ VK_OBJECT_ENTRY_USAGE_COMPUTE_BIT_NVX = showString "VK_OBJECT_ENTRY_USAGE_COMPUTE_BIT_NVX"
-  showsPrec p (VkObjectEntryUsageFlagBitsNVX x) = showParen (p >= 11) (showString "VkObjectEntryUsageFlagBitsNVX " . showsPrec 11 x)
-
-instance Read VkObjectEntryUsageFlagBitsNVX where
-  readPrec = parens ( choose [ ("VK_OBJECT_ENTRY_USAGE_GRAPHICS_BIT_NVX", pure VK_OBJECT_ENTRY_USAGE_GRAPHICS_BIT_NVX)
-                             , ("VK_OBJECT_ENTRY_USAGE_COMPUTE_BIT_NVX",  pure VK_OBJECT_ENTRY_USAGE_COMPUTE_BIT_NVX)
-                             ] +++
-                      prec 10 (do
-                        expectP (Ident "VkObjectEntryUsageFlagBitsNVX")
-                        v <- step readPrec
-                        pure (VkObjectEntryUsageFlagBitsNVX v)
-                        )
-                    )
-
--- | @VK_OBJECT_ENTRY_USAGE_GRAPHICS_BIT_NVX@ specifies that the resource is
--- bound to @VK_PIPELINE_BIND_POINT_GRAPHICS@
-pattern VK_OBJECT_ENTRY_USAGE_GRAPHICS_BIT_NVX :: VkObjectEntryUsageFlagBitsNVX
-pattern VK_OBJECT_ENTRY_USAGE_GRAPHICS_BIT_NVX = VkObjectEntryUsageFlagBitsNVX 0x00000001
-
--- | @VK_OBJECT_ENTRY_USAGE_COMPUTE_BIT_NVX@ specifies that the resource is
--- bound to @VK_PIPELINE_BIND_POINT_COMPUTE@
-pattern VK_OBJECT_ENTRY_USAGE_COMPUTE_BIT_NVX :: VkObjectEntryUsageFlagBitsNVX
-pattern VK_OBJECT_ENTRY_USAGE_COMPUTE_BIT_NVX = VkObjectEntryUsageFlagBitsNVX 0x00000002
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX"
-pattern VK_STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX :: VkStructureType
-pattern VK_STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX = VkStructureType 1000086000
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NVX"
-pattern VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NVX :: VkStructureType
-pattern VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NVX = VkStructureType 1000086001
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_CMD_PROCESS_COMMANDS_INFO_NVX"
-pattern VK_STRUCTURE_TYPE_CMD_PROCESS_COMMANDS_INFO_NVX :: VkStructureType
-pattern VK_STRUCTURE_TYPE_CMD_PROCESS_COMMANDS_INFO_NVX = VkStructureType 1000086002
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_CMD_RESERVE_SPACE_FOR_COMMANDS_INFO_NVX"
-pattern VK_STRUCTURE_TYPE_CMD_RESERVE_SPACE_FOR_COMMANDS_INFO_NVX :: VkStructureType
-pattern VK_STRUCTURE_TYPE_CMD_RESERVE_SPACE_FOR_COMMANDS_INFO_NVX = VkStructureType 1000086003
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_LIMITS_NVX"
-pattern VK_STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_LIMITS_NVX :: VkStructureType
-pattern VK_STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_LIMITS_NVX = VkStructureType 1000086004
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_FEATURES_NVX"
-pattern VK_STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_FEATURES_NVX :: VkStructureType
-pattern VK_STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_FEATURES_NVX = VkStructureType 1000086005
--- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_OBJECT_TABLE_NVX"
-pattern VK_OBJECT_TYPE_OBJECT_TABLE_NVX :: VkObjectType
-pattern VK_OBJECT_TYPE_OBJECT_TABLE_NVX = VkObjectType 1000086000
--- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX"
-pattern VK_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX :: VkObjectType
-pattern VK_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX = VkObjectType 1000086001
--- No documentation found for Nested "VkAccessFlagBits" "VK_ACCESS_COMMAND_PROCESS_READ_BIT_NVX"
-pattern VK_ACCESS_COMMAND_PROCESS_READ_BIT_NVX :: VkAccessFlagBits
-pattern VK_ACCESS_COMMAND_PROCESS_READ_BIT_NVX = VkAccessFlagBits 0x00020000
--- No documentation found for Nested "VkAccessFlagBits" "VK_ACCESS_COMMAND_PROCESS_WRITE_BIT_NVX"
-pattern VK_ACCESS_COMMAND_PROCESS_WRITE_BIT_NVX :: VkAccessFlagBits
-pattern VK_ACCESS_COMMAND_PROCESS_WRITE_BIT_NVX = VkAccessFlagBits 0x00040000
--- No documentation found for Nested "VkPipelineStageFlagBits" "VK_PIPELINE_STAGE_COMMAND_PROCESS_BIT_NVX"
-pattern VK_PIPELINE_STAGE_COMMAND_PROCESS_BIT_NVX :: VkPipelineStageFlagBits
-pattern VK_PIPELINE_STAGE_COMMAND_PROCESS_BIT_NVX = VkPipelineStageFlagBits 0x00020000
--- No documentation found for TopLevel "VK_NVX_DEVICE_GENERATED_COMMANDS_SPEC_VERSION"
-pattern VK_NVX_DEVICE_GENERATED_COMMANDS_SPEC_VERSION :: Integral a => a
-pattern VK_NVX_DEVICE_GENERATED_COMMANDS_SPEC_VERSION = 3
--- No documentation found for TopLevel "VK_NVX_DEVICE_GENERATED_COMMANDS_EXTENSION_NAME"
-pattern VK_NVX_DEVICE_GENERATED_COMMANDS_EXTENSION_NAME :: (Eq a ,IsString a) => a
-pattern VK_NVX_DEVICE_GENERATED_COMMANDS_EXTENSION_NAME = "VK_NVX_device_generated_commands"
--- | Dummy data to tag the 'Ptr' with
-data VkObjectTableNVX_T
--- | VkObjectTableNVX - Opaque handle to an object table
---
--- = See Also
---
--- 'VkCmdProcessCommandsInfoNVX', 'VkCmdReserveSpaceForCommandsInfoNVX',
--- 'vkCreateObjectTableNVX', 'vkDestroyObjectTableNVX',
--- 'vkRegisterObjectsNVX', 'vkUnregisterObjectsNVX'
-type VkObjectTableNVX = Ptr VkObjectTableNVX_T
--- | Dummy data to tag the 'Ptr' with
-data VkIndirectCommandsLayoutNVX_T
--- | VkIndirectCommandsLayoutNVX - Opaque handle to an indirect commands
--- layout object
---
--- = See Also
---
--- 'VkCmdProcessCommandsInfoNVX', 'VkCmdReserveSpaceForCommandsInfoNVX',
--- 'vkCreateIndirectCommandsLayoutNVX',
--- 'vkDestroyIndirectCommandsLayoutNVX'
-type VkIndirectCommandsLayoutNVX = Ptr VkIndirectCommandsLayoutNVX_T
 -- | vkCmdProcessCommandsNVX - Performs the generation of commands on the
 -- device
 --
 -- = Parameters
 --
--- -   @commandBuffer@ is the primary command buffer in which the
---     generation process takes space.
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the primary
+--     command buffer in which the generation process takes space.
 --
--- -   @pProcessCommandsInfo@ is a pointer to an instance of the
---     'VkCmdProcessCommandsInfoNVX' structure containing parameters
---     affecting the processing of commands.
+-- -   @pProcessCommandsInfo@ is a pointer to a 'CmdProcessCommandsInfoNVX'
+--     structure containing parameters affecting the processing of
+--     commands.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pProcessCommandsInfo@ /must/ be a valid pointer to a valid
---     @VkCmdProcessCommandsInfoNVX@ structure
+--     'CmdProcessCommandsInfoNVX' structure
 --
--- -   @commandBuffer@ /must/ be in the [recording
---     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics, or compute operations
+-- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
+--     /must/ support graphics, or compute operations
 --
 -- -   This command /must/ only be called inside of a render pass instance
 --
 -- == Host Synchronization
 --
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
+-- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
+--     be externally synchronized
 --
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
+-- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
+--     /must/ be externally synchronized
 --
 -- == Command Properties
 --
 -- \'
 --
--- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
--- | [Command Buffer                                                                                             | [Render Pass                                                                                               | [Supported Queue                                                                                      | [Pipeline                                                                                                                  |
--- | Levels](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel) | Scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass) | Types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits) | Type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types) |
--- +=============================================================================================================+============================================================================================================+=======================================================================================================+============================================================================================================================+
--- | Primary                                                                                                     | Inside                                                                                                     | Graphics                                                                                              |                                                                                                                            |
--- | Secondary                                                                                                   |                                                                                                            | Compute                                                                                               |                                                                                                                            |
--- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
+-- | Primary                                                                                                                    | Inside                                                                                                                 | Graphics                                                                                                              |                                                                                                                                     |
+-- | Secondary                                                                                                                  |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
--- 'VkCmdProcessCommandsInfoNVX',
--- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer'
+-- 'CmdProcessCommandsInfoNVX',
+-- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
+cmdProcessCommandsNVX :: CommandBuffer -> CmdProcessCommandsInfoNVX -> IO ()
+cmdProcessCommandsNVX commandBuffer processCommandsInfo = evalContT $ do
+  let vkCmdProcessCommandsNVX' = mkVkCmdProcessCommandsNVX (pVkCmdProcessCommandsNVX (deviceCmds (commandBuffer :: CommandBuffer)))
+  pProcessCommandsInfo <- ContT $ withCStruct (processCommandsInfo)
+  lift $ vkCmdProcessCommandsNVX' (commandBufferHandle (commandBuffer)) pProcessCommandsInfo
+  pure $ ()
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkCmdProcessCommandsNVX" vkCmdProcessCommandsNVX :: ("commandBuffer" ::: VkCommandBuffer) -> ("pProcessCommandsInfo" ::: Ptr VkCmdProcessCommandsInfoNVX) -> IO ()
+  "dynamic" mkVkCmdReserveSpaceForCommandsNVX
+  :: FunPtr (Ptr CommandBuffer_T -> Ptr CmdReserveSpaceForCommandsInfoNVX -> IO ()) -> Ptr CommandBuffer_T -> Ptr CmdReserveSpaceForCommandsInfoNVX -> IO ()
+
 -- | vkCmdReserveSpaceForCommandsNVX - Perform a reservation of command
 -- buffer space
 --
 -- = Parameters
 --
--- -   @commandBuffer@ is the secondary command buffer in which the space
---     for device-generated commands is reserved.
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the secondary
+--     command buffer in which the space for device-generated commands is
+--     reserved.
 --
--- -   @pProcessCommandsInfo@ is a pointer to an instance of the
---     'vkCmdReserveSpaceForCommandsNVX' structure containing parameters
+-- -   @pProcessCommandsInfo@ is a pointer to a
+--     'CmdReserveSpaceForCommandsInfoNVX' structure containing parameters
 --     affecting the reservation of command buffer space.
 --
 -- == Valid Usage
 --
--- -   The provided @commandBuffer@ /must/ not have had a prior space
---     reservation since its creation or the last reset.
+-- -   The provided 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
+--     not have had a prior space reservation since its creation or the
+--     last reset.
 --
--- -   The state of the @commandBuffer@ /must/ be legal to execute all
---     commands within the sequence provided by the
---     @indirectCommandsLayout@ member of @pProcessCommandsInfo@.
+-- -   The state of the 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
+--     /must/ be legal to execute all commands within the sequence provided
+--     by the @indirectCommandsLayout@ member of @pProcessCommandsInfo@.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pReserveSpaceInfo@ /must/ be a valid pointer to a valid
---     @VkCmdReserveSpaceForCommandsInfoNVX@ structure
+--     'CmdReserveSpaceForCommandsInfoNVX' structure
 --
--- -   @commandBuffer@ /must/ be in the [recording
---     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support graphics, or compute operations
+-- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
+--     /must/ support graphics, or compute operations
 --
 -- -   This command /must/ only be called inside of a render pass instance
 --
--- -   @commandBuffer@ /must/ be a secondary @VkCommandBuffer@
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a secondary
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer'
 --
 -- == Host Synchronization
 --
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
+-- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
+--     be externally synchronized
 --
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
+-- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
+--     /must/ be externally synchronized
 --
 -- == Command Properties
 --
 -- \'
 --
--- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
--- | [Command Buffer                                                                                             | [Render Pass                                                                                               | [Supported Queue                                                                                      | [Pipeline                                                                                                                  |
--- | Levels](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel) | Scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass) | Types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits) | Type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types) |
--- +=============================================================================================================+============================================================================================================+=======================================================================================================+============================================================================================================================+
--- | Secondary                                                                                                   | Inside                                                                                                     | Graphics                                                                                              |                                                                                                                            |
--- |                                                                                                             |                                                                                                            | Compute                                                                                               |                                                                                                                            |
--- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
+-- | Secondary                                                                                                                  | Inside                                                                                                                 | Graphics                                                                                                              |                                                                                                                                     |
+-- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
--- 'VkCmdReserveSpaceForCommandsInfoNVX',
--- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer'
+-- 'CmdReserveSpaceForCommandsInfoNVX',
+-- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
+cmdReserveSpaceForCommandsNVX :: CommandBuffer -> ("reserveSpaceInfo" ::: CmdReserveSpaceForCommandsInfoNVX) -> IO ()
+cmdReserveSpaceForCommandsNVX commandBuffer reserveSpaceInfo = evalContT $ do
+  let vkCmdReserveSpaceForCommandsNVX' = mkVkCmdReserveSpaceForCommandsNVX (pVkCmdReserveSpaceForCommandsNVX (deviceCmds (commandBuffer :: CommandBuffer)))
+  pReserveSpaceInfo <- ContT $ withCStruct (reserveSpaceInfo)
+  lift $ vkCmdReserveSpaceForCommandsNVX' (commandBufferHandle (commandBuffer)) pReserveSpaceInfo
+  pure $ ()
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkCmdReserveSpaceForCommandsNVX" vkCmdReserveSpaceForCommandsNVX :: ("commandBuffer" ::: VkCommandBuffer) -> ("pReserveSpaceInfo" ::: Ptr VkCmdReserveSpaceForCommandsInfoNVX) -> IO ()
+  "dynamic" mkVkCreateIndirectCommandsLayoutNVX
+  :: FunPtr (Ptr Device_T -> Ptr IndirectCommandsLayoutCreateInfoNVX -> Ptr AllocationCallbacks -> Ptr IndirectCommandsLayoutNVX -> IO Result) -> Ptr Device_T -> Ptr IndirectCommandsLayoutCreateInfoNVX -> Ptr AllocationCallbacks -> Ptr IndirectCommandsLayoutNVX -> IO Result
+
 -- | vkCreateIndirectCommandsLayoutNVX - Create an indirect command layout
 -- object
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that creates the indirect command
---     layout.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     creates the indirect command layout.
 --
--- -   @pCreateInfo@ is a pointer to an instance of the
---     @VkIndirectCommandsLayoutCreateInfoNVX@ structure containing
+-- -   @pCreateInfo@ is a pointer to a
+--     'IndirectCommandsLayoutCreateInfoNVX' structure containing
 --     parameters affecting creation of the indirect command layout.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     [Memory
---     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
--- -   @pIndirectCommandsLayout@ points to a @VkIndirectCommandsLayoutNVX@
+-- -   @pIndirectCommandsLayout@ is a pointer to a
+--     'Graphics.Vulkan.Extensions.Handles.IndirectCommandsLayoutNVX'
 --     handle in which the resulting indirect command layout is returned.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     @VkIndirectCommandsLayoutCreateInfoNVX@ structure
+--     'IndirectCommandsLayoutCreateInfoNVX' structure
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
+--     pointer to a valid
+--     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
 -- -   @pIndirectCommandsLayout@ /must/ be a valid pointer to a
---     @VkIndirectCommandsLayoutNVX@ handle
+--     'Graphics.Vulkan.Extensions.Handles.IndirectCommandsLayoutNVX'
+--     handle
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
--- 'VkIndirectCommandsLayoutCreateInfoNVX', 'VkIndirectCommandsLayoutNVX'
+-- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
+-- 'Graphics.Vulkan.Core10.Handles.Device',
+-- 'IndirectCommandsLayoutCreateInfoNVX',
+-- 'Graphics.Vulkan.Extensions.Handles.IndirectCommandsLayoutNVX'
+createIndirectCommandsLayoutNVX :: Device -> IndirectCommandsLayoutCreateInfoNVX -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (IndirectCommandsLayoutNVX)
+createIndirectCommandsLayoutNVX device createInfo allocator = evalContT $ do
+  let vkCreateIndirectCommandsLayoutNVX' = mkVkCreateIndirectCommandsLayoutNVX (pVkCreateIndirectCommandsLayoutNVX (deviceCmds (device :: Device)))
+  pCreateInfo <- ContT $ withCStruct (createInfo)
+  pAllocator <- case (allocator) of
+    Nothing -> pure nullPtr
+    Just j -> ContT $ withCStruct (j)
+  pPIndirectCommandsLayout <- ContT $ bracket (callocBytes @IndirectCommandsLayoutNVX 8) free
+  r <- lift $ vkCreateIndirectCommandsLayoutNVX' (deviceHandle (device)) pCreateInfo pAllocator (pPIndirectCommandsLayout)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pIndirectCommandsLayout <- lift $ peek @IndirectCommandsLayoutNVX pPIndirectCommandsLayout
+  pure $ (pIndirectCommandsLayout)
+
+-- | A safe wrapper for 'createIndirectCommandsLayoutNVX' and
+-- 'destroyIndirectCommandsLayoutNVX' using 'bracket'
+--
+-- The allocated value must not be returned from the provided computation
+withIndirectCommandsLayoutNVX :: Device -> IndirectCommandsLayoutCreateInfoNVX -> Maybe AllocationCallbacks -> (IndirectCommandsLayoutNVX -> IO r) -> IO r
+withIndirectCommandsLayoutNVX device indirectCommandsLayoutCreateInfoNVX allocationCallbacks =
+  bracket
+    (createIndirectCommandsLayoutNVX device indirectCommandsLayoutCreateInfoNVX allocationCallbacks)
+    (\o -> destroyIndirectCommandsLayoutNVX device o allocationCallbacks)
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkCreateIndirectCommandsLayoutNVX" vkCreateIndirectCommandsLayoutNVX :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkIndirectCommandsLayoutCreateInfoNVX) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pIndirectCommandsLayout" ::: Ptr VkIndirectCommandsLayoutNVX) -> IO VkResult
--- | vkDestroyIndirectCommandsLayoutNVX - Destroy a object table
+  "dynamic" mkVkDestroyIndirectCommandsLayoutNVX
+  :: FunPtr (Ptr Device_T -> IndirectCommandsLayoutNVX -> Ptr AllocationCallbacks -> IO ()) -> Ptr Device_T -> IndirectCommandsLayoutNVX -> Ptr AllocationCallbacks -> IO ()
+
+-- | vkDestroyIndirectCommandsLayoutNVX - Destroy an object table
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that destroys the layout.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     destroys the layout.
 --
 -- -   @indirectCommandsLayout@ is the table to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     [Memory
---     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
 -- == Valid Usage
@@ -653,97 +422,147 @@ foreign import ccall
 -- -   All submitted commands that refer to @indirectCommandsLayout@ /must/
 --     have completed execution
 --
--- -   If @VkAllocationCallbacks@ were provided when @objectTable@ was
---     created, a compatible set of callbacks /must/ be provided here
+-- -   If 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     were provided when @objectTable@ was created, a compatible set of
+--     callbacks /must/ be provided here
 --
--- -   If no @VkAllocationCallbacks@ were provided when @objectTable@ was
---     created, @pAllocator@ /must/ be @NULL@
+-- -   If no
+--     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     were provided when @objectTable@ was created, @pAllocator@ /must/ be
+--     @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
 -- -   @indirectCommandsLayout@ /must/ be a valid
---     @VkIndirectCommandsLayoutNVX@ handle
+--     'Graphics.Vulkan.Extensions.Handles.IndirectCommandsLayoutNVX'
+--     handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
+--     pointer to a valid
+--     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
 -- -   @indirectCommandsLayout@ /must/ have been created, allocated, or
---     retrieved from @device@
+--     retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
--- 'VkIndirectCommandsLayoutNVX'
+-- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
+-- 'Graphics.Vulkan.Core10.Handles.Device',
+-- 'Graphics.Vulkan.Extensions.Handles.IndirectCommandsLayoutNVX'
+destroyIndirectCommandsLayoutNVX :: Device -> IndirectCommandsLayoutNVX -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
+destroyIndirectCommandsLayoutNVX device indirectCommandsLayout allocator = evalContT $ do
+  let vkDestroyIndirectCommandsLayoutNVX' = mkVkDestroyIndirectCommandsLayoutNVX (pVkDestroyIndirectCommandsLayoutNVX (deviceCmds (device :: Device)))
+  pAllocator <- case (allocator) of
+    Nothing -> pure nullPtr
+    Just j -> ContT $ withCStruct (j)
+  lift $ vkDestroyIndirectCommandsLayoutNVX' (deviceHandle (device)) (indirectCommandsLayout) pAllocator
+  pure $ ()
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkDestroyIndirectCommandsLayoutNVX" vkDestroyIndirectCommandsLayoutNVX :: ("device" ::: VkDevice) -> ("indirectCommandsLayout" ::: VkIndirectCommandsLayoutNVX) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+  "dynamic" mkVkCreateObjectTableNVX
+  :: FunPtr (Ptr Device_T -> Ptr ObjectTableCreateInfoNVX -> Ptr AllocationCallbacks -> Ptr ObjectTableNVX -> IO Result) -> Ptr Device_T -> Ptr ObjectTableCreateInfoNVX -> Ptr AllocationCallbacks -> Ptr ObjectTableNVX -> IO Result
+
 -- | vkCreateObjectTableNVX - Create an object table
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that creates the object table.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     creates the object table.
 --
--- -   @pCreateInfo@ is a pointer to an instance of the
---     @VkObjectTableCreateInfoNVX@ structure containing parameters
---     affecting creation of the table.
+-- -   @pCreateInfo@ is a pointer to a 'ObjectTableCreateInfoNVX' structure
+--     containing parameters affecting creation of the table.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     [Memory
---     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
--- -   @pObjectTable@ points to a @VkObjectTableNVX@ handle in which the
---     resulting object table is returned.
+-- -   @pObjectTable@ is a pointer to a
+--     'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX' handle in which
+--     the resulting object table is returned.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     @VkObjectTableCreateInfoNVX@ structure
+--     'ObjectTableCreateInfoNVX' structure
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
+--     pointer to a valid
+--     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pObjectTable@ /must/ be a valid pointer to a @VkObjectTableNVX@
---     handle
+-- -   @pObjectTable@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX' handle
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
--- 'VkObjectTableCreateInfoNVX', 'VkObjectTableNVX'
+-- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
+-- 'Graphics.Vulkan.Core10.Handles.Device', 'ObjectTableCreateInfoNVX',
+-- 'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX'
+createObjectTableNVX :: Device -> ObjectTableCreateInfoNVX -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (ObjectTableNVX)
+createObjectTableNVX device createInfo allocator = evalContT $ do
+  let vkCreateObjectTableNVX' = mkVkCreateObjectTableNVX (pVkCreateObjectTableNVX (deviceCmds (device :: Device)))
+  pCreateInfo <- ContT $ withCStruct (createInfo)
+  pAllocator <- case (allocator) of
+    Nothing -> pure nullPtr
+    Just j -> ContT $ withCStruct (j)
+  pPObjectTable <- ContT $ bracket (callocBytes @ObjectTableNVX 8) free
+  r <- lift $ vkCreateObjectTableNVX' (deviceHandle (device)) pCreateInfo pAllocator (pPObjectTable)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pObjectTable <- lift $ peek @ObjectTableNVX pPObjectTable
+  pure $ (pObjectTable)
+
+-- | A safe wrapper for 'createObjectTableNVX' and 'destroyObjectTableNVX'
+-- using 'bracket'
+--
+-- The allocated value must not be returned from the provided computation
+withObjectTableNVX :: Device -> ObjectTableCreateInfoNVX -> Maybe AllocationCallbacks -> (ObjectTableNVX -> IO r) -> IO r
+withObjectTableNVX device objectTableCreateInfoNVX allocationCallbacks =
+  bracket
+    (createObjectTableNVX device objectTableCreateInfoNVX allocationCallbacks)
+    (\o -> destroyObjectTableNVX device o allocationCallbacks)
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkCreateObjectTableNVX" vkCreateObjectTableNVX :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkObjectTableCreateInfoNVX) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pObjectTable" ::: Ptr VkObjectTableNVX) -> IO VkResult
--- | vkDestroyObjectTableNVX - Destroy a object table
+  "dynamic" mkVkDestroyObjectTableNVX
+  :: FunPtr (Ptr Device_T -> ObjectTableNVX -> Ptr AllocationCallbacks -> IO ()) -> Ptr Device_T -> ObjectTableNVX -> Ptr AllocationCallbacks -> IO ()
+
+-- | vkDestroyObjectTableNVX - Destroy an object table
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that destroys the table.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     destroys the table.
 --
 -- -   @objectTable@ is the table to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     [Memory
---     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
 -- == Valid Usage
@@ -751,23 +570,30 @@ foreign import ccall
 -- -   All submitted commands that refer to @objectTable@ /must/ have
 --     completed execution.
 --
--- -   If @VkAllocationCallbacks@ were provided when @objectTable@ was
---     created, a compatible set of callbacks /must/ be provided here.
+-- -   If 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     were provided when @objectTable@ was created, a compatible set of
+--     callbacks /must/ be provided here.
 --
--- -   If no @VkAllocationCallbacks@ were provided when @objectTable@ was
---     created, @pAllocator@ /must/ be @NULL@.
+-- -   If no
+--     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     were provided when @objectTable@ was created, @pAllocator@ /must/ be
+--     @NULL@.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
--- -   @objectTable@ /must/ be a valid @VkObjectTableNVX@ handle
+-- -   @objectTable@ /must/ be a valid
+--     'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX' handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
+--     pointer to a valid
+--     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
 -- -   @objectTable@ /must/ have been created, allocated, or retrieved from
---     @device@
+--     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
@@ -775,31 +601,42 @@ foreign import ccall
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
--- 'VkObjectTableNVX'
+-- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
+-- 'Graphics.Vulkan.Core10.Handles.Device',
+-- 'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX'
+destroyObjectTableNVX :: Device -> ObjectTableNVX -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
+destroyObjectTableNVX device objectTable allocator = evalContT $ do
+  let vkDestroyObjectTableNVX' = mkVkDestroyObjectTableNVX (pVkDestroyObjectTableNVX (deviceCmds (device :: Device)))
+  pAllocator <- case (allocator) of
+    Nothing -> pure nullPtr
+    Just j -> ContT $ withCStruct (j)
+  lift $ vkDestroyObjectTableNVX' (deviceHandle (device)) (objectTable) pAllocator
+  pure $ ()
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkDestroyObjectTableNVX" vkDestroyObjectTableNVX :: ("device" ::: VkDevice) -> ("objectTable" ::: VkObjectTableNVX) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+  "dynamic" mkVkRegisterObjectsNVX
+  :: FunPtr (Ptr Device_T -> ObjectTableNVX -> Word32 -> Ptr (Ptr ObjectTableEntryNVX) -> Ptr Word32 -> IO Result) -> Ptr Device_T -> ObjectTableNVX -> Word32 -> Ptr (Ptr ObjectTableEntryNVX) -> Ptr Word32 -> IO Result
+
 -- | vkRegisterObjectsNVX - Register resource bindings in an object table
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that creates the object table.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     creates the object table.
 --
 -- -   @objectTable@ is the table for which the resources are registered.
 --
 -- -   @objectCount@ is the number of resources to register.
 --
 -- -   @ppObjectTableEntries@ provides an array for detailed binding
---     informations, each array element is a pointer to a struct of type
---     @VkObjectTablePipelineEntryNVX@,
---     @VkObjectTableDescriptorSetEntryNVX@,
---     @VkObjectTableVertexBufferEntryNVX@,
---     @VkObjectTableIndexBufferEntryNVX@ or
---     @VkObjectTablePushConstantEntryNVX@ (see below for details).
+--     informations. Each array element is a pointer to a structure of type
+--     'ObjectTablePipelineEntryNVX', 'ObjectTableDescriptorSetEntryNVX',
+--     'ObjectTableVertexBufferEntryNVX', 'ObjectTableIndexBufferEntryNVX'
+--     or 'ObjectTablePushConstantEntryNVX' (see below for details).
 --
 -- -   @pObjectIndices@ are the indices at which each resource is
 --     registered.
@@ -813,17 +650,19 @@ foreign import ccall
 --     already.
 --
 -- -   Any value inside @pObjectIndices@ /must/ be below the appropriate
---     @VkObjectTableCreateInfoNVX@::@pObjectEntryCounts@ limits provided
---     at @objectTable@ creation time.
+--     'ObjectTableCreateInfoNVX'::@pObjectEntryCounts@ limits provided at
+--     @objectTable@ creation time.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
--- -   @objectTable@ /must/ be a valid @VkObjectTableNVX@ handle
+-- -   @objectTable@ /must/ be a valid
+--     'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX' handle
 --
 -- -   @ppObjectTableEntries@ /must/ be a valid pointer to an array of
---     @objectCount@ valid @VkObjectTableEntryNVX@ structures
+--     @objectCount@ valid 'ObjectTableEntryNVX' structures
 --
 -- -   @pObjectIndices@ /must/ be a valid pointer to an array of
 --     @objectCount@ @uint32_t@ values
@@ -831,7 +670,7 @@ foreign import ccall
 -- -   @objectCount@ /must/ be greater than @0@
 --
 -- -   @objectTable@ /must/ have been created, allocated, or retrieved from
---     @device@
+--     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
@@ -839,28 +678,60 @@ foreign import ccall
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
--- 'VkObjectTableEntryNVX', 'VkObjectTableNVX'
+-- 'Graphics.Vulkan.Core10.Handles.Device', 'ObjectTableEntryNVX',
+-- 'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX'
+registerObjectsNVX :: Device -> ObjectTableNVX -> ("objectTableEntries" ::: Vector ObjectTableEntryNVX) -> ("objectIndices" ::: Vector Word32) -> IO ()
+registerObjectsNVX device objectTable objectTableEntries objectIndices = evalContT $ do
+  let vkRegisterObjectsNVX' = mkVkRegisterObjectsNVX (pVkRegisterObjectsNVX (deviceCmds (device :: Device)))
+  let ppObjectTableEntriesLength = Data.Vector.length $ (objectTableEntries)
+  let pObjectIndicesLength = Data.Vector.length $ (objectIndices)
+  lift $ unless (pObjectIndicesLength == ppObjectTableEntriesLength) $
+    throwIO $ IOError Nothing InvalidArgument "" "pObjectIndices and ppObjectTableEntries must have the same length" Nothing Nothing
+  pPpObjectTableEntries <- ContT $ allocaBytesAligned @(Ptr ObjectTableEntryNVX) ((Data.Vector.length (objectTableEntries)) * 8) 8
+  Data.Vector.imapM_ (\i e -> do
+    ppObjectTableEntries <- ContT $ withCStruct (e)
+    lift $ poke (pPpObjectTableEntries `plusPtr` (8 * (i)) :: Ptr (Ptr ObjectTableEntryNVX)) ppObjectTableEntries) (objectTableEntries)
+  pPObjectIndices <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (objectIndices)) * 4) 4
+  lift $ Data.Vector.imapM_ (\i e -> poke (pPObjectIndices `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (objectIndices)
+  r <- lift $ vkRegisterObjectsNVX' (deviceHandle (device)) (objectTable) ((fromIntegral ppObjectTableEntriesLength :: Word32)) (pPpObjectTableEntries) (pPObjectIndices)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+
+-- | A safe wrapper for 'registerObjectsNVX' and 'unregisterObjectsNVX' using
+-- 'bracket_'
+--
+-- The allocated value must not be returned from the provided computation
+withRegisteredObjectsNVX :: Device -> ObjectTableNVX -> Vector ObjectTableEntryNVX -> Vector Word32 -> Vector ObjectEntryTypeNVX -> IO r -> IO r
+withRegisteredObjectsNVX device objectTableNVX objectTableEntryNVX objectIndices objectEntryTypeNVX =
+  bracket_
+    (registerObjectsNVX device objectTableNVX objectTableEntryNVX objectIndices)
+    ( unregisterObjectsNVX device objectTableNVX objectEntryTypeNVX objectIndices)
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkRegisterObjectsNVX" vkRegisterObjectsNVX :: ("device" ::: VkDevice) -> ("objectTable" ::: VkObjectTableNVX) -> ("objectCount" ::: Word32) -> ("ppObjectTableEntries" ::: Ptr (Ptr VkObjectTableEntryNVX)) -> ("pObjectIndices" ::: Ptr Word32) -> IO VkResult
+  "dynamic" mkVkUnregisterObjectsNVX
+  :: FunPtr (Ptr Device_T -> ObjectTableNVX -> Word32 -> Ptr ObjectEntryTypeNVX -> Ptr Word32 -> IO Result) -> Ptr Device_T -> ObjectTableNVX -> Word32 -> Ptr ObjectEntryTypeNVX -> Ptr Word32 -> IO Result
+
 -- | vkUnregisterObjectsNVX - Unregister resource bindings in an object table
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that creates the object table.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     creates the object table.
 --
 -- -   @objectTable@ is the table from which the resources are
 --     unregistered.
@@ -868,8 +739,8 @@ foreign import ccall
 -- -   @objectCount@ is the number of resources being removed from the
 --     object table.
 --
--- -   @pObjectEntryType@ provides an array of @VkObjectEntryTypeNVX@ for
---     the resources being removed.
+-- -   @pObjectEntryType@ provides an array of 'ObjectEntryTypeNVX' for the
+--     resources being removed.
 --
 -- -   @pObjectIndices@ provides the array of object indices to be removed.
 --
@@ -886,12 +757,14 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
--- -   @objectTable@ /must/ be a valid @VkObjectTableNVX@ handle
+-- -   @objectTable@ /must/ be a valid
+--     'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX' handle
 --
 -- -   @pObjectEntryTypes@ /must/ be a valid pointer to an array of
---     @objectCount@ valid 'VkObjectEntryTypeNVX' values
+--     @objectCount@ valid 'ObjectEntryTypeNVX' values
 --
 -- -   @pObjectIndices@ /must/ be a valid pointer to an array of
 --     @objectCount@ @uint32_t@ values
@@ -899,7 +772,7 @@ foreign import ccall
 -- -   @objectCount@ /must/ be greater than @0@
 --
 -- -   @objectTable@ /must/ have been created, allocated, or retrieved from
---     @device@
+--     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
@@ -907,237 +780,341 @@ foreign import ccall
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
--- 'VkObjectEntryTypeNVX', 'VkObjectTableNVX'
+-- 'Graphics.Vulkan.Core10.Handles.Device', 'ObjectEntryTypeNVX',
+-- 'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX'
+unregisterObjectsNVX :: Device -> ObjectTableNVX -> ("objectEntryTypes" ::: Vector ObjectEntryTypeNVX) -> ("objectIndices" ::: Vector Word32) -> IO ()
+unregisterObjectsNVX device objectTable objectEntryTypes objectIndices = evalContT $ do
+  let vkUnregisterObjectsNVX' = mkVkUnregisterObjectsNVX (pVkUnregisterObjectsNVX (deviceCmds (device :: Device)))
+  let pObjectEntryTypesLength = Data.Vector.length $ (objectEntryTypes)
+  let pObjectIndicesLength = Data.Vector.length $ (objectIndices)
+  lift $ unless (pObjectIndicesLength == pObjectEntryTypesLength) $
+    throwIO $ IOError Nothing InvalidArgument "" "pObjectIndices and pObjectEntryTypes must have the same length" Nothing Nothing
+  pPObjectEntryTypes <- ContT $ allocaBytesAligned @ObjectEntryTypeNVX ((Data.Vector.length (objectEntryTypes)) * 4) 4
+  lift $ Data.Vector.imapM_ (\i e -> poke (pPObjectEntryTypes `plusPtr` (4 * (i)) :: Ptr ObjectEntryTypeNVX) (e)) (objectEntryTypes)
+  pPObjectIndices <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (objectIndices)) * 4) 4
+  lift $ Data.Vector.imapM_ (\i e -> poke (pPObjectIndices `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (objectIndices)
+  r <- lift $ vkUnregisterObjectsNVX' (deviceHandle (device)) (objectTable) ((fromIntegral pObjectEntryTypesLength :: Word32)) (pPObjectEntryTypes) (pPObjectIndices)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkUnregisterObjectsNVX" vkUnregisterObjectsNVX :: ("device" ::: VkDevice) -> ("objectTable" ::: VkObjectTableNVX) -> ("objectCount" ::: Word32) -> ("pObjectEntryTypes" ::: Ptr VkObjectEntryTypeNVX) -> ("pObjectIndices" ::: Ptr Word32) -> IO VkResult
+  "dynamic" mkVkGetPhysicalDeviceGeneratedCommandsPropertiesNVX
+  :: FunPtr (Ptr PhysicalDevice_T -> Ptr DeviceGeneratedCommandsFeaturesNVX -> Ptr DeviceGeneratedCommandsLimitsNVX -> IO ()) -> Ptr PhysicalDevice_T -> Ptr DeviceGeneratedCommandsFeaturesNVX -> Ptr DeviceGeneratedCommandsLimitsNVX -> IO ()
+
 -- | vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX - Returns
 -- device-generated commands related properties of a physical device
 --
 -- = Parameters
 --
--- -   @physicalDevice@ is the handle to the physical device whose
---     properties will be queried.
+-- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the handle to the
+--     physical device whose properties will be queried.
 --
--- -   @pFeatures@ points to an instance of the
---     'VkDeviceGeneratedCommandsFeaturesNVX' structure, that will be
---     filled with returned information.
+-- -   @pFeatures@ is a pointer to a 'DeviceGeneratedCommandsFeaturesNVX'
+--     structure in which features are returned.
 --
--- -   @pLimits@ points to an instance of the
---     'VkDeviceGeneratedCommandsLimitsNVX' structure, that will be filled
---     with returned information.
+-- -   @pLimits@ is a pointer to a 'DeviceGeneratedCommandsLimitsNVX'
+--     structure in which limitations are returned.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid @VkPhysicalDevice@ handle
---
--- -   @pFeatures@ /must/ be a valid pointer to a
---     @VkDeviceGeneratedCommandsFeaturesNVX@ structure
---
--- -   @pLimits@ /must/ be a valid pointer to a
---     @VkDeviceGeneratedCommandsLimitsNVX@ structure
---
 -- = See Also
 --
--- 'VkDeviceGeneratedCommandsFeaturesNVX',
--- 'VkDeviceGeneratedCommandsLimitsNVX',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX" vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pFeatures" ::: Ptr VkDeviceGeneratedCommandsFeaturesNVX) -> ("pLimits" ::: Ptr VkDeviceGeneratedCommandsLimitsNVX) -> IO ()
+-- 'DeviceGeneratedCommandsFeaturesNVX',
+-- 'DeviceGeneratedCommandsLimitsNVX',
+-- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
+getPhysicalDeviceGeneratedCommandsPropertiesNVX :: PhysicalDevice -> IO (DeviceGeneratedCommandsFeaturesNVX, DeviceGeneratedCommandsLimitsNVX)
+getPhysicalDeviceGeneratedCommandsPropertiesNVX physicalDevice = evalContT $ do
+  let vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX' = mkVkGetPhysicalDeviceGeneratedCommandsPropertiesNVX (pVkGetPhysicalDeviceGeneratedCommandsPropertiesNVX (instanceCmds (physicalDevice :: PhysicalDevice)))
+  pPFeatures <- ContT (withZeroCStruct @DeviceGeneratedCommandsFeaturesNVX)
+  pPLimits <- ContT (withZeroCStruct @DeviceGeneratedCommandsLimitsNVX)
+  lift $ vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX' (physicalDeviceHandle (physicalDevice)) (pPFeatures) (pPLimits)
+  pFeatures <- lift $ peekCStruct @DeviceGeneratedCommandsFeaturesNVX pPFeatures
+  pLimits <- lift $ peekCStruct @DeviceGeneratedCommandsLimitsNVX pPLimits
+  pure $ (pFeatures, pLimits)
+
+
 -- | VkDeviceGeneratedCommandsFeaturesNVX - Structure specifying physical
 -- device support
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_FEATURES_NVX@
---
--- -   @pNext@ /must/ be @NULL@
---
 -- = See Also
 --
--- @VkBool32@, 'Graphics.Vulkan.Core10.Core.VkStructureType',
--- 'vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX'
-data VkDeviceGeneratedCommandsFeaturesNVX = VkDeviceGeneratedCommandsFeaturesNVX
-  { -- | @sType@ is the type of this structure.
-  vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
-  vkPNext :: Ptr ()
-  , -- | @computeBindingPointSupport@ specifies whether the @VkObjectTableNVX@
-  -- supports entries with @VK_OBJECT_ENTRY_USAGE_GRAPHICS_BIT_NVX@ bit set
-  -- and @VkIndirectCommandsLayoutNVX@ supports
-  -- @VK_PIPELINE_BIND_POINT_COMPUTE@.
-  vkComputeBindingPointSupport :: VkBool32
-  }
-  deriving (Eq, Show)
+-- 'Graphics.Vulkan.Core10.BaseType.Bool32',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'getPhysicalDeviceGeneratedCommandsPropertiesNVX'
+data DeviceGeneratedCommandsFeaturesNVX = DeviceGeneratedCommandsFeaturesNVX
+  { -- | @computeBindingPointSupport@ specifies whether the
+    -- 'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX' supports entries
+    -- with 'OBJECT_ENTRY_USAGE_GRAPHICS_BIT_NVX' bit set and
+    -- 'Graphics.Vulkan.Extensions.Handles.IndirectCommandsLayoutNVX' supports
+    -- 'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_COMPUTE'.
+    computeBindingPointSupport :: Bool }
+  deriving (Typeable)
+deriving instance Show DeviceGeneratedCommandsFeaturesNVX
 
-instance Storable VkDeviceGeneratedCommandsFeaturesNVX where
+instance ToCStruct DeviceGeneratedCommandsFeaturesNVX where
+  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p DeviceGeneratedCommandsFeaturesNVX{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_FEATURES_NVX)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (computeBindingPointSupport))
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_FEATURES_NVX)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Bool32)) (boolToBool32 (zero))
+    f
+
+instance FromCStruct DeviceGeneratedCommandsFeaturesNVX where
+  peekCStruct p = do
+    computeBindingPointSupport <- peek @Bool32 ((p `plusPtr` 16 :: Ptr Bool32))
+    pure $ DeviceGeneratedCommandsFeaturesNVX
+             (bool32ToBool computeBindingPointSupport)
+
+instance Storable DeviceGeneratedCommandsFeaturesNVX where
   sizeOf ~_ = 24
   alignment ~_ = 8
-  peek ptr = VkDeviceGeneratedCommandsFeaturesNVX <$> peek (ptr `plusPtr` 0)
-                                                  <*> peek (ptr `plusPtr` 8)
-                                                  <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDeviceGeneratedCommandsFeaturesNVX))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceGeneratedCommandsFeaturesNVX))
-                *> poke (ptr `plusPtr` 16) (vkComputeBindingPointSupport (poked :: VkDeviceGeneratedCommandsFeaturesNVX))
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero DeviceGeneratedCommandsFeaturesNVX where
+  zero = DeviceGeneratedCommandsFeaturesNVX
+           zero
+
+
 -- | VkDeviceGeneratedCommandsLimitsNVX - Structure specifying physical
 -- device limits
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_LIMITS_NVX@
---
--- -   @pNext@ /must/ be @NULL@
---
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.Core.VkStructureType',
--- 'vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX'
-data VkDeviceGeneratedCommandsLimitsNVX = VkDeviceGeneratedCommandsLimitsNVX
-  { -- | @sType@ is the type of this structure.
-  vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
-  vkPNext :: Ptr ()
-  , -- | @maxIndirectCommandsLayoutTokenCount@ the maximum number of tokens in
-  -- @VkIndirectCommandsLayoutNVX@.
-  vkMaxIndirectCommandsLayoutTokenCount :: Word32
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'getPhysicalDeviceGeneratedCommandsPropertiesNVX'
+data DeviceGeneratedCommandsLimitsNVX = DeviceGeneratedCommandsLimitsNVX
+  { -- | @maxIndirectCommandsLayoutTokenCount@ the maximum number of tokens in
+    -- 'Graphics.Vulkan.Extensions.Handles.IndirectCommandsLayoutNVX'.
+    maxIndirectCommandsLayoutTokenCount :: Word32
   , -- | @maxObjectEntryCounts@ the maximum number of entries per resource type
-  -- in @VkObjectTableNVX@.
-  vkMaxObjectEntryCounts :: Word32
+    -- in 'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX'.
+    maxObjectEntryCounts :: Word32
   , -- | @minSequenceCountBufferOffsetAlignment@ the minimum alignment for memory
-  -- addresses optionally used in @vkCmdProcessCommandsNVX@.
-  vkMinSequenceCountBufferOffsetAlignment :: Word32
+    -- addresses optionally used in 'cmdProcessCommandsNVX'.
+    minSequenceCountBufferOffsetAlignment :: Word32
   , -- | @minSequenceIndexBufferOffsetAlignment@ the minimum alignment for memory
-  -- addresses optionally used in @vkCmdProcessCommandsNVX@.
-  vkMinSequenceIndexBufferOffsetAlignment :: Word32
+    -- addresses optionally used in 'cmdProcessCommandsNVX'.
+    minSequenceIndexBufferOffsetAlignment :: Word32
   , -- | @minCommandsTokenBufferOffsetAlignment@ the minimum alignment for memory
-  -- addresses optionally used in @vkCmdProcessCommandsNVX@.
-  vkMinCommandsTokenBufferOffsetAlignment :: Word32
+    -- addresses optionally used in 'cmdProcessCommandsNVX'.
+    minCommandsTokenBufferOffsetAlignment :: Word32
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show DeviceGeneratedCommandsLimitsNVX
 
-instance Storable VkDeviceGeneratedCommandsLimitsNVX where
+instance ToCStruct DeviceGeneratedCommandsLimitsNVX where
+  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p DeviceGeneratedCommandsLimitsNVX{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_LIMITS_NVX)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Word32)) (maxIndirectCommandsLayoutTokenCount)
+    poke ((p `plusPtr` 20 :: Ptr Word32)) (maxObjectEntryCounts)
+    poke ((p `plusPtr` 24 :: Ptr Word32)) (minSequenceCountBufferOffsetAlignment)
+    poke ((p `plusPtr` 28 :: Ptr Word32)) (minSequenceIndexBufferOffsetAlignment)
+    poke ((p `plusPtr` 32 :: Ptr Word32)) (minCommandsTokenBufferOffsetAlignment)
+    f
+  cStructSize = 40
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_LIMITS_NVX)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 20 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 28 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 32 :: Ptr Word32)) (zero)
+    f
+
+instance FromCStruct DeviceGeneratedCommandsLimitsNVX where
+  peekCStruct p = do
+    maxIndirectCommandsLayoutTokenCount <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
+    maxObjectEntryCounts <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
+    minSequenceCountBufferOffsetAlignment <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
+    minSequenceIndexBufferOffsetAlignment <- peek @Word32 ((p `plusPtr` 28 :: Ptr Word32))
+    minCommandsTokenBufferOffsetAlignment <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
+    pure $ DeviceGeneratedCommandsLimitsNVX
+             maxIndirectCommandsLayoutTokenCount maxObjectEntryCounts minSequenceCountBufferOffsetAlignment minSequenceIndexBufferOffsetAlignment minCommandsTokenBufferOffsetAlignment
+
+instance Storable DeviceGeneratedCommandsLimitsNVX where
   sizeOf ~_ = 40
   alignment ~_ = 8
-  peek ptr = VkDeviceGeneratedCommandsLimitsNVX <$> peek (ptr `plusPtr` 0)
-                                                <*> peek (ptr `plusPtr` 8)
-                                                <*> peek (ptr `plusPtr` 16)
-                                                <*> peek (ptr `plusPtr` 20)
-                                                <*> peek (ptr `plusPtr` 24)
-                                                <*> peek (ptr `plusPtr` 28)
-                                                <*> peek (ptr `plusPtr` 32)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDeviceGeneratedCommandsLimitsNVX))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDeviceGeneratedCommandsLimitsNVX))
-                *> poke (ptr `plusPtr` 16) (vkMaxIndirectCommandsLayoutTokenCount (poked :: VkDeviceGeneratedCommandsLimitsNVX))
-                *> poke (ptr `plusPtr` 20) (vkMaxObjectEntryCounts (poked :: VkDeviceGeneratedCommandsLimitsNVX))
-                *> poke (ptr `plusPtr` 24) (vkMinSequenceCountBufferOffsetAlignment (poked :: VkDeviceGeneratedCommandsLimitsNVX))
-                *> poke (ptr `plusPtr` 28) (vkMinSequenceIndexBufferOffsetAlignment (poked :: VkDeviceGeneratedCommandsLimitsNVX))
-                *> poke (ptr `plusPtr` 32) (vkMinCommandsTokenBufferOffsetAlignment (poked :: VkDeviceGeneratedCommandsLimitsNVX))
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero DeviceGeneratedCommandsLimitsNVX where
+  zero = DeviceGeneratedCommandsLimitsNVX
+           zero
+           zero
+           zero
+           zero
+           zero
+
+
 -- | VkIndirectCommandsTokenNVX - Structure specifying parameters for the
 -- reservation of command buffer space
 --
 -- == Valid Usage
 --
--- -   The @buffer@’s usage flag /must/ have the
---     @VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT@ bit set.
+-- -   The 'Graphics.Vulkan.Core10.Handles.Buffer'’s usage flag /must/ have
+--     the
+--     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_INDIRECT_BUFFER_BIT'
+--     bit set.
 --
 -- -   The @offset@ /must/ be aligned to
---     @VkDeviceGeneratedCommandsLimitsNVX@::@minCommandsTokenBufferOffsetAlignment@.
+--     'DeviceGeneratedCommandsLimitsNVX'::@minCommandsTokenBufferOffsetAlignment@.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @tokenType@ /must/ be a valid 'VkIndirectCommandsTokenTypeNVX' value
+-- -   @tokenType@ /must/ be a valid 'IndirectCommandsTokenTypeNVX' value
 --
--- -   @buffer@ /must/ be a valid @VkBuffer@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Buffer' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Buffer' handle
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.MemoryManagement.VkBuffer',
--- 'VkCmdProcessCommandsInfoNVX', @VkDeviceSize@,
--- 'VkIndirectCommandsTokenTypeNVX'
-data VkIndirectCommandsTokenNVX = VkIndirectCommandsTokenNVX
+-- 'Graphics.Vulkan.Core10.Handles.Buffer', 'CmdProcessCommandsInfoNVX',
+-- 'Graphics.Vulkan.Core10.BaseType.DeviceSize',
+-- 'IndirectCommandsTokenTypeNVX'
+data IndirectCommandsTokenNVX = IndirectCommandsTokenNVX
   { -- | @tokenType@ specifies the token command type.
-  vkTokenType :: VkIndirectCommandsTokenTypeNVX
-  , -- | @buffer@ specifies the @VkBuffer@ storing the functional arguments for
-  -- each squence. These argumetns can be written by the device.
-  vkBuffer :: VkBuffer
-  , -- | @offset@ specified an offset into @buffer@ where the arguments start.
-  vkOffset :: VkDeviceSize
+    tokenType :: IndirectCommandsTokenTypeNVX
+  , -- | 'Graphics.Vulkan.Core10.Handles.Buffer' specifies the
+    -- 'Graphics.Vulkan.Core10.Handles.Buffer' storing the functional arguments
+    -- for each squence. These argumetns can be written by the device.
+    buffer :: Buffer
+  , -- | @offset@ specified an offset into
+    -- 'Graphics.Vulkan.Core10.Handles.Buffer' where the arguments start.
+    offset :: DeviceSize
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show IndirectCommandsTokenNVX
 
-instance Storable VkIndirectCommandsTokenNVX where
+instance ToCStruct IndirectCommandsTokenNVX where
+  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p IndirectCommandsTokenNVX{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr IndirectCommandsTokenTypeNVX)) (tokenType)
+    poke ((p `plusPtr` 8 :: Ptr Buffer)) (buffer)
+    poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (offset)
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr IndirectCommandsTokenTypeNVX)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr Buffer)) (zero)
+    poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (zero)
+    f
+
+instance FromCStruct IndirectCommandsTokenNVX where
+  peekCStruct p = do
+    tokenType <- peek @IndirectCommandsTokenTypeNVX ((p `plusPtr` 0 :: Ptr IndirectCommandsTokenTypeNVX))
+    buffer <- peek @Buffer ((p `plusPtr` 8 :: Ptr Buffer))
+    offset <- peek @DeviceSize ((p `plusPtr` 16 :: Ptr DeviceSize))
+    pure $ IndirectCommandsTokenNVX
+             tokenType buffer offset
+
+instance Storable IndirectCommandsTokenNVX where
   sizeOf ~_ = 24
   alignment ~_ = 8
-  peek ptr = VkIndirectCommandsTokenNVX <$> peek (ptr `plusPtr` 0)
-                                        <*> peek (ptr `plusPtr` 8)
-                                        <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkTokenType (poked :: VkIndirectCommandsTokenNVX))
-                *> poke (ptr `plusPtr` 8) (vkBuffer (poked :: VkIndirectCommandsTokenNVX))
-                *> poke (ptr `plusPtr` 16) (vkOffset (poked :: VkIndirectCommandsTokenNVX))
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero IndirectCommandsTokenNVX where
+  zero = IndirectCommandsTokenNVX
+           zero
+           zero
+           zero
+
+
 -- | VkIndirectCommandsLayoutTokenNVX - Struct specifying the details of an
 -- indirect command layout token
 --
--- == Valid Usage
---
--- -   @bindingUnit@ /must/ stay within device supported limits for the
---     appropriate commands.
---
--- -   @dynamicCount@ /must/ stay within device supported limits for the
---     appropriate commands.
---
--- -   @divisor@ /must/ be greater than @0@ and a power of two.
---
 -- == Valid Usage (Implicit)
---
--- -   @tokenType@ /must/ be a valid 'VkIndirectCommandsTokenTypeNVX' value
 --
 -- = See Also
 --
--- 'VkIndirectCommandsLayoutCreateInfoNVX',
--- 'VkIndirectCommandsTokenTypeNVX'
-data VkIndirectCommandsLayoutTokenNVX = VkIndirectCommandsLayoutTokenNVX
-  { -- No documentation found for Nested "VkIndirectCommandsLayoutTokenNVX" "tokenType"
-  vkTokenType :: VkIndirectCommandsTokenTypeNVX
-  , -- | @bindingUnit@ has a different meaning depending on the type, please
-  -- refer pseudo code further down for details.
-  vkBindingUnit :: Word32
-  , -- | @dynamicCount@ has a different meaning depending on the type, please
-  -- refer pseudo code further down for details.
-  vkDynamicCount :: Word32
-  , -- | @divisor@ defines the rate at which the input data buffers are accessed.
-  vkDivisor :: Word32
+-- 'IndirectCommandsLayoutCreateInfoNVX', 'IndirectCommandsTokenTypeNVX'
+data IndirectCommandsLayoutTokenNVX = IndirectCommandsLayoutTokenNVX
+  { -- | @tokenType@ /must/ be a valid 'IndirectCommandsTokenTypeNVX' value
+    tokenType :: IndirectCommandsTokenTypeNVX
+  , -- | @bindingUnit@ /must/ stay within device supported limits for the
+    -- appropriate commands.
+    bindingUnit :: Word32
+  , -- | @dynamicCount@ /must/ stay within device supported limits for the
+    -- appropriate commands.
+    dynamicCount :: Word32
+  , -- | @divisor@ /must/ be greater than @0@ and a power of two.
+    divisor :: Word32
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show IndirectCommandsLayoutTokenNVX
 
-instance Storable VkIndirectCommandsLayoutTokenNVX where
+instance ToCStruct IndirectCommandsLayoutTokenNVX where
+  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p IndirectCommandsLayoutTokenNVX{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr IndirectCommandsTokenTypeNVX)) (tokenType)
+    poke ((p `plusPtr` 4 :: Ptr Word32)) (bindingUnit)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (dynamicCount)
+    poke ((p `plusPtr` 12 :: Ptr Word32)) (divisor)
+    f
+  cStructSize = 16
+  cStructAlignment = 4
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr IndirectCommandsTokenTypeNVX)) (zero)
+    poke ((p `plusPtr` 4 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (zero)
+    poke ((p `plusPtr` 12 :: Ptr Word32)) (zero)
+    f
+
+instance FromCStruct IndirectCommandsLayoutTokenNVX where
+  peekCStruct p = do
+    tokenType <- peek @IndirectCommandsTokenTypeNVX ((p `plusPtr` 0 :: Ptr IndirectCommandsTokenTypeNVX))
+    bindingUnit <- peek @Word32 ((p `plusPtr` 4 :: Ptr Word32))
+    dynamicCount <- peek @Word32 ((p `plusPtr` 8 :: Ptr Word32))
+    divisor <- peek @Word32 ((p `plusPtr` 12 :: Ptr Word32))
+    pure $ IndirectCommandsLayoutTokenNVX
+             tokenType bindingUnit dynamicCount divisor
+
+instance Storable IndirectCommandsLayoutTokenNVX where
   sizeOf ~_ = 16
   alignment ~_ = 4
-  peek ptr = VkIndirectCommandsLayoutTokenNVX <$> peek (ptr `plusPtr` 0)
-                                              <*> peek (ptr `plusPtr` 4)
-                                              <*> peek (ptr `plusPtr` 8)
-                                              <*> peek (ptr `plusPtr` 12)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkTokenType (poked :: VkIndirectCommandsLayoutTokenNVX))
-                *> poke (ptr `plusPtr` 4) (vkBindingUnit (poked :: VkIndirectCommandsLayoutTokenNVX))
-                *> poke (ptr `plusPtr` 8) (vkDynamicCount (poked :: VkIndirectCommandsLayoutTokenNVX))
-                *> poke (ptr `plusPtr` 12) (vkDivisor (poked :: VkIndirectCommandsLayoutTokenNVX))
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero IndirectCommandsLayoutTokenNVX where
+  zero = IndirectCommandsLayoutTokenNVX
+           zero
+           zero
+           zero
+           zero
+
+
 -- | VkIndirectCommandsLayoutCreateInfoNVX - Structure specifying the
 -- parameters of a newly created indirect commands layout object
 --
@@ -1165,162 +1142,197 @@ instance Storable VkIndirectCommandsLayoutTokenNVX where
 -- == Valid Usage
 --
 -- -   @tokenCount@ /must/ be greater than @0@ and below
---     @VkDeviceGeneratedCommandsLimitsNVX@::@maxIndirectCommandsLayoutTokenCount@
+--     'DeviceGeneratedCommandsLimitsNVX'::@maxIndirectCommandsLayoutTokenCount@
 --
 -- -   If the
---     @VkDeviceGeneratedCommandsFeaturesNVX@::@computeBindingPointSupport@
---     feature is not enabled, then @pipelineBindPoint@ /must/ not be
---     @VK_PIPELINE_BIND_POINT_COMPUTE@
+--     'DeviceGeneratedCommandsFeaturesNVX'::@computeBindingPointSupport@
+--     feature is not enabled, then
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
+--     /must/ not be
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_COMPUTE'
 --
 -- -   If @pTokens@ contains an entry of
---     @VK_INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX@ it /must/ be the
---     first element of the array and there /must/ be only a single element
---     of such token type.
+--     'INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX' it /must/ be the first
+--     element of the array and there /must/ be only a single element of
+--     such token type.
 --
 -- -   All state binding tokens in @pTokens@ /must/ occur prior work
---     provoking tokens (@VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NVX@,
---     @VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NVX@,
---     @VK_INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX@).
+--     provoking tokens ('INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NVX',
+--     'INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NVX',
+--     'INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX').
 --
 -- -   The content of @pTokens@ /must/ include one single work provoking
---     token that is compatible with the @pipelineBindPoint@.
+--     token that is compatible with the
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'.
 --
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NVX@
+--     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NVX'
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   @pipelineBindPoint@ /must/ be a valid
---     'Graphics.Vulkan.Core10.Pass.VkPipelineBindPoint' value
+-- -   'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
+--     /must/ be a valid
+--     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
+--     value
 --
--- -   @flags@ /must/ be a valid combination of
---     'VkIndirectCommandsLayoutUsageFlagBitsNVX' values
+-- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
+--     combination of 'IndirectCommandsLayoutUsageFlagBitsNVX' values
 --
--- -   @flags@ /must/ not be @0@
+-- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not be @0@
 --
 -- -   @pTokens@ /must/ be a valid pointer to an array of @tokenCount@
---     valid @VkIndirectCommandsLayoutTokenNVX@ structures
+--     valid 'IndirectCommandsLayoutTokenNVX' structures
 --
 -- -   @tokenCount@ /must/ be greater than @0@
 --
 -- = See Also
 --
--- 'VkIndirectCommandsLayoutTokenNVX',
--- 'VkIndirectCommandsLayoutUsageFlagsNVX',
--- 'Graphics.Vulkan.Core10.Pass.VkPipelineBindPoint',
--- 'Graphics.Vulkan.Core10.Core.VkStructureType',
--- 'vkCreateIndirectCommandsLayoutNVX'
-data VkIndirectCommandsLayoutCreateInfoNVX = VkIndirectCommandsLayoutCreateInfoNVX
-  { -- | @sType@ is the type of this structure.
-  vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
-  vkPNext :: Ptr ()
-  , -- | @pipelineBindPoint@ is the @VkPipelineBindPoint@ that this layout
-  -- targets.
-  vkPipelineBindPoint :: VkPipelineBindPoint
-  , -- | @flags@ is a bitmask of 'VkIndirectCommandsLayoutUsageFlagBitsNVX'
-  -- specifying usage hints of this layout.
-  vkFlags :: VkIndirectCommandsLayoutUsageFlagsNVX
-  , -- | @tokenCount@ is the length of the individual command sequnce.
-  vkTokenCount :: Word32
+-- 'IndirectCommandsLayoutTokenNVX', 'IndirectCommandsLayoutUsageFlagsNVX',
+-- 'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'createIndirectCommandsLayoutNVX'
+data IndirectCommandsLayoutCreateInfoNVX = IndirectCommandsLayoutCreateInfoNVX
+  { -- | 'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' is
+    -- the 'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
+    -- that this layout targets.
+    pipelineBindPoint :: PipelineBindPoint
+  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+    -- 'IndirectCommandsLayoutUsageFlagBitsNVX' specifying usage hints of this
+    -- layout.
+    flags :: IndirectCommandsLayoutUsageFlagsNVX
   , -- | @pTokens@ is an array describing each command token in detail. See
-  -- 'VkIndirectCommandsTokenTypeNVX' and 'VkIndirectCommandsLayoutTokenNVX'
-  -- below for details.
-  vkPTokens :: Ptr VkIndirectCommandsLayoutTokenNVX
+    -- 'IndirectCommandsTokenTypeNVX' and 'IndirectCommandsLayoutTokenNVX'
+    -- below for details.
+    tokens :: Vector IndirectCommandsLayoutTokenNVX
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show IndirectCommandsLayoutCreateInfoNVX
 
-instance Storable VkIndirectCommandsLayoutCreateInfoNVX where
-  sizeOf ~_ = 40
-  alignment ~_ = 8
-  peek ptr = VkIndirectCommandsLayoutCreateInfoNVX <$> peek (ptr `plusPtr` 0)
-                                                   <*> peek (ptr `plusPtr` 8)
-                                                   <*> peek (ptr `plusPtr` 16)
-                                                   <*> peek (ptr `plusPtr` 20)
-                                                   <*> peek (ptr `plusPtr` 24)
-                                                   <*> peek (ptr `plusPtr` 32)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkIndirectCommandsLayoutCreateInfoNVX))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkIndirectCommandsLayoutCreateInfoNVX))
-                *> poke (ptr `plusPtr` 16) (vkPipelineBindPoint (poked :: VkIndirectCommandsLayoutCreateInfoNVX))
-                *> poke (ptr `plusPtr` 20) (vkFlags (poked :: VkIndirectCommandsLayoutCreateInfoNVX))
-                *> poke (ptr `plusPtr` 24) (vkTokenCount (poked :: VkIndirectCommandsLayoutCreateInfoNVX))
-                *> poke (ptr `plusPtr` 32) (vkPTokens (poked :: VkIndirectCommandsLayoutCreateInfoNVX))
+instance ToCStruct IndirectCommandsLayoutCreateInfoNVX where
+  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p IndirectCommandsLayoutCreateInfoNVX{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NVX)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    lift $ poke ((p `plusPtr` 16 :: Ptr PipelineBindPoint)) (pipelineBindPoint)
+    lift $ poke ((p `plusPtr` 20 :: Ptr IndirectCommandsLayoutUsageFlagsNVX)) (flags)
+    lift $ poke ((p `plusPtr` 24 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (tokens)) :: Word32))
+    pPTokens' <- ContT $ allocaBytesAligned @IndirectCommandsLayoutTokenNVX ((Data.Vector.length (tokens)) * 16) 4
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPTokens' `plusPtr` (16 * (i)) :: Ptr IndirectCommandsLayoutTokenNVX) (e) . ($ ())) (tokens)
+    lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr IndirectCommandsLayoutTokenNVX))) (pPTokens')
+    lift $ f
+  cStructSize = 40
+  cStructAlignment = 8
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NVX)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    lift $ poke ((p `plusPtr` 16 :: Ptr PipelineBindPoint)) (zero)
+    lift $ poke ((p `plusPtr` 20 :: Ptr IndirectCommandsLayoutUsageFlagsNVX)) (zero)
+    pPTokens' <- ContT $ allocaBytesAligned @IndirectCommandsLayoutTokenNVX ((Data.Vector.length (mempty)) * 16) 4
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPTokens' `plusPtr` (16 * (i)) :: Ptr IndirectCommandsLayoutTokenNVX) (e) . ($ ())) (mempty)
+    lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr IndirectCommandsLayoutTokenNVX))) (pPTokens')
+    lift $ f
+
+instance FromCStruct IndirectCommandsLayoutCreateInfoNVX where
+  peekCStruct p = do
+    pipelineBindPoint <- peek @PipelineBindPoint ((p `plusPtr` 16 :: Ptr PipelineBindPoint))
+    flags <- peek @IndirectCommandsLayoutUsageFlagsNVX ((p `plusPtr` 20 :: Ptr IndirectCommandsLayoutUsageFlagsNVX))
+    tokenCount <- peek @Word32 ((p `plusPtr` 24 :: Ptr Word32))
+    pTokens <- peek @(Ptr IndirectCommandsLayoutTokenNVX) ((p `plusPtr` 32 :: Ptr (Ptr IndirectCommandsLayoutTokenNVX)))
+    pTokens' <- generateM (fromIntegral tokenCount) (\i -> peekCStruct @IndirectCommandsLayoutTokenNVX ((pTokens `advancePtrBytes` (16 * (i)) :: Ptr IndirectCommandsLayoutTokenNVX)))
+    pure $ IndirectCommandsLayoutCreateInfoNVX
+             pipelineBindPoint flags pTokens'
+
+instance Zero IndirectCommandsLayoutCreateInfoNVX where
+  zero = IndirectCommandsLayoutCreateInfoNVX
+           zero
+           zero
+           mempty
+
+
 -- | VkCmdProcessCommandsInfoNVX - Structure specifying parameters for the
 -- generation of commands
 --
 -- == Valid Usage
 --
 -- -   The provided @objectTable@ /must/ include all objects referenced by
---     the generation process.
+--     the generation process
 --
 -- -   @indirectCommandsTokenCount@ /must/ match the
---     @indirectCommandsLayout@’s @tokenCount@.
+--     @indirectCommandsLayout@’s @tokenCount@
 --
 -- -   The @tokenType@ member of each entry in the
 --     @pIndirectCommandsTokens@ array /must/ match the values used at
 --     creation time of @indirectCommandsLayout@
 --
 -- -   If @targetCommandBuffer@ is provided, it /must/ have reserved
---     command space.
+--     command space
 --
 -- -   If @targetCommandBuffer@ is provided, the @objectTable@ /must/ match
---     the reservation’s objectTable and /must/ have had all referenced
---     objects registered at reservation time.
+--     the reservation’s @objectTable@ and /must/ have had all referenced
+--     objects registered at reservation time
 --
 -- -   If @targetCommandBuffer@ is provided, the @indirectCommandsLayout@
---     /must/ match the reservation’s indirectCommandsLayout.
+--     /must/ match the reservation’s @indirectCommandsLayout@
 --
 -- -   If @targetCommandBuffer@ is provided, the @maxSequencesCount@ /must/
---     not exceed the reservation’s maxSequencesCount.
+--     not exceed the reservation’s @maxSequencesCount@
 --
--- -   If @sequencesCountBuffer@ is used, its usage flag /must/ have
---     @VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT@ bit set.
+-- -   If @sequencesCountBuffer@ is used, its usage flag /must/ have the
+--     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_INDIRECT_BUFFER_BIT'
+--     bit set
 --
 -- -   If @sequencesCountBuffer@ is used, @sequencesCountOffset@ /must/ be
 --     aligned to
---     @VkDeviceGeneratedCommandsLimitsNVX@::@minSequenceCountBufferOffsetAlignment@.
+--     'DeviceGeneratedCommandsLimitsNVX'::@minSequenceCountBufferOffsetAlignment@
 --
--- -   If @sequencesIndexBuffer@ is used, its usage flag /must/ have
---     @VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT@ bit set.
+-- -   If @sequencesIndexBuffer@ is used, its usage flag /must/ have the
+--     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_INDIRECT_BUFFER_BIT'
+--     bit set
 --
 -- -   If @sequencesIndexBuffer@ is used, @sequencesIndexOffset@ /must/ be
 --     aligned to
---     @VkDeviceGeneratedCommandsLimitsNVX@::@minSequenceIndexBufferOffsetAlignment@.
+--     'DeviceGeneratedCommandsLimitsNVX'::@minSequenceIndexBufferOffsetAlignment@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_CMD_PROCESS_COMMANDS_INFO_NVX@
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CMD_PROCESS_COMMANDS_INFO_NVX'
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   @objectTable@ /must/ be a valid @VkObjectTableNVX@ handle
+-- -   @objectTable@ /must/ be a valid
+--     'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX' handle
 --
 -- -   @indirectCommandsLayout@ /must/ be a valid
---     @VkIndirectCommandsLayoutNVX@ handle
+--     'Graphics.Vulkan.Extensions.Handles.IndirectCommandsLayoutNVX'
+--     handle
 --
 -- -   @pIndirectCommandsTokens@ /must/ be a valid pointer to an array of
---     @indirectCommandsTokenCount@ valid @VkIndirectCommandsTokenNVX@
+--     @indirectCommandsTokenCount@ valid 'IndirectCommandsTokenNVX'
 --     structures
 --
 -- -   If @targetCommandBuffer@ is not @NULL@, @targetCommandBuffer@ /must/
---     be a valid @VkCommandBuffer@ handle
+--     be a valid 'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   If @sequencesCountBuffer@ is not
---     'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE',
---     @sequencesCountBuffer@ /must/ be a valid @VkBuffer@ handle
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @sequencesCountBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Buffer' handle
 --
 -- -   If @sequencesIndexBuffer@ is not
---     'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE',
---     @sequencesIndexBuffer@ /must/ be a valid @VkBuffer@ handle
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @sequencesIndexBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Buffer' handle
 --
 -- -   @indirectCommandsTokenCount@ /must/ be greater than @0@
 --
 -- -   Each of @indirectCommandsLayout@, @objectTable@,
 --     @sequencesCountBuffer@, @sequencesIndexBuffer@, and
---     @targetCommandBuffer@ that are valid handles /must/ have been
---     created, allocated, or retrieved from the same @VkDevice@
+--     @targetCommandBuffer@ that are valid handles of non-ignored
+--     parameters /must/ have been created, allocated, or retrieved from
+--     the same 'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
@@ -1331,101 +1343,138 @@ instance Storable VkIndirectCommandsLayoutCreateInfoNVX where
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.MemoryManagement.VkBuffer',
--- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer', @VkDeviceSize@,
--- 'VkIndirectCommandsLayoutNVX', 'VkIndirectCommandsTokenNVX',
--- 'VkObjectTableNVX', 'Graphics.Vulkan.Core10.Core.VkStructureType',
--- 'vkCmdProcessCommandsNVX'
-data VkCmdProcessCommandsInfoNVX = VkCmdProcessCommandsInfoNVX
-  { -- | @sType@ is the type of this structure.
-  vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
-  vkPNext :: Ptr ()
-  , -- | @objectTable@ is the @VkObjectTableNVX@ to be used for the generation
-  -- process. Only registered objects at the time
-  -- 'vkCmdReserveSpaceForCommandsNVX' is called, will be taken into account
-  -- for the reservation.
-  vkObjectTable :: VkObjectTableNVX
-  , -- | @indirectCommandsLayout@ is the @VkIndirectCommandsLayoutNVX@ that
-  -- provides the command sequence to generate.
-  vkIndirectCommandsLayout :: VkIndirectCommandsLayoutNVX
-  , -- | @indirectCommandsTokenCount@ defines the number of input tokens used.
-  vkIndirectCommandsTokenCount :: Word32
+-- 'Graphics.Vulkan.Core10.Handles.Buffer',
+-- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
+-- 'Graphics.Vulkan.Core10.BaseType.DeviceSize',
+-- 'Graphics.Vulkan.Extensions.Handles.IndirectCommandsLayoutNVX',
+-- 'IndirectCommandsTokenNVX',
+-- 'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'cmdProcessCommandsNVX'
+data CmdProcessCommandsInfoNVX = CmdProcessCommandsInfoNVX
+  { -- | @objectTable@ is the 'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX'
+    -- to be used for the generation process. Only registered objects at the
+    -- time 'cmdReserveSpaceForCommandsNVX' is called, will be taken into
+    -- account for the reservation.
+    objectTable :: ObjectTableNVX
+  , -- | @indirectCommandsLayout@ is the
+    -- 'Graphics.Vulkan.Extensions.Handles.IndirectCommandsLayoutNVX' that
+    -- provides the command sequence to generate.
+    indirectCommandsLayout :: IndirectCommandsLayoutNVX
   , -- | @pIndirectCommandsTokens@ provides an array of
-  -- 'VkIndirectCommandsTokenNVX' that reference the input data for each
-  -- token command.
-  vkPIndirectCommandsTokens :: Ptr VkIndirectCommandsTokenNVX
+    -- 'IndirectCommandsTokenNVX' that reference the input data for each token
+    -- command.
+    indirectCommandsTokens :: Vector IndirectCommandsTokenNVX
   , -- | @maxSequencesCount@ is the maximum number of sequences for which command
-  -- buffer space will be reserved. If @sequencesCountBuffer@ is
-  -- 'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE', this is also the
-  -- actual number of sequences generated.
-  vkMaxSequencesCount :: Word32
-  , -- | @targetCommandBuffer@ /can/ be the secondary @VkCommandBuffer@ in which
-  -- the commands should be recorded. If @targetCommandBuffer@ is @NULL@ an
-  -- implicit reservation as well as execution takes place on the processing
-  -- @VkCommandBuffer@.
-  vkTargetCommandBuffer :: VkCommandBuffer
-  , -- | @sequencesCountBuffer@ /can/ be @VkBuffer@ from which the actual amount
-  -- of sequences is sourced from as @uint32_t@ value.
-  vkSequencesCountBuffer :: VkBuffer
+    -- buffer space will be reserved. If @sequencesCountBuffer@ is
+    -- 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', this is also the
+    -- actual number of sequences generated.
+    maxSequencesCount :: Word32
+  , -- | @targetCommandBuffer@ /can/ be the secondary
+    -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer' in which the commands
+    -- should be recorded. If @targetCommandBuffer@ is @NULL@ an implicit
+    -- reservation as well as execution takes place on the processing
+    -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'.
+    targetCommandBuffer :: Ptr CommandBuffer_T
+  , -- | @sequencesCountBuffer@ /can/ be 'Graphics.Vulkan.Core10.Handles.Buffer'
+    -- from which the actual amount of sequences is sourced from as @uint32_t@
+    -- value.
+    sequencesCountBuffer :: Buffer
   , -- | @sequencesCountOffset@ is the byte offset into @sequencesCountBuffer@
-  -- where the count value is stored.
-  vkSequencesCountOffset :: VkDeviceSize
+    -- where the count value is stored.
+    sequencesCountOffset :: DeviceSize
   , -- | @sequencesIndexBuffer@ /must/ be set if @indirectCommandsLayout@’s
-  -- @VK_INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT@ is set and
-  -- provides the used sequence indices as @uint32_t@ array. Otherwise it
-  -- /must/ be 'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE'.
-  vkSequencesIndexBuffer :: VkBuffer
+    -- 'INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NVX' is set and
+    -- provides the used sequence indices as @uint32_t@ array. Otherwise it
+    -- /must/ be 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'.
+    sequencesIndexBuffer :: Buffer
   , -- | @sequencesIndexOffset@ is the byte offset into @sequencesIndexBuffer@
-  -- where the index values start.
-  vkSequencesIndexOffset :: VkDeviceSize
+    -- where the index values start.
+    sequencesIndexOffset :: DeviceSize
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show CmdProcessCommandsInfoNVX
 
-instance Storable VkCmdProcessCommandsInfoNVX where
-  sizeOf ~_ = 96
-  alignment ~_ = 8
-  peek ptr = VkCmdProcessCommandsInfoNVX <$> peek (ptr `plusPtr` 0)
-                                         <*> peek (ptr `plusPtr` 8)
-                                         <*> peek (ptr `plusPtr` 16)
-                                         <*> peek (ptr `plusPtr` 24)
-                                         <*> peek (ptr `plusPtr` 32)
-                                         <*> peek (ptr `plusPtr` 40)
-                                         <*> peek (ptr `plusPtr` 48)
-                                         <*> peek (ptr `plusPtr` 56)
-                                         <*> peek (ptr `plusPtr` 64)
-                                         <*> peek (ptr `plusPtr` 72)
-                                         <*> peek (ptr `plusPtr` 80)
-                                         <*> peek (ptr `plusPtr` 88)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkCmdProcessCommandsInfoNVX))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkCmdProcessCommandsInfoNVX))
-                *> poke (ptr `plusPtr` 16) (vkObjectTable (poked :: VkCmdProcessCommandsInfoNVX))
-                *> poke (ptr `plusPtr` 24) (vkIndirectCommandsLayout (poked :: VkCmdProcessCommandsInfoNVX))
-                *> poke (ptr `plusPtr` 32) (vkIndirectCommandsTokenCount (poked :: VkCmdProcessCommandsInfoNVX))
-                *> poke (ptr `plusPtr` 40) (vkPIndirectCommandsTokens (poked :: VkCmdProcessCommandsInfoNVX))
-                *> poke (ptr `plusPtr` 48) (vkMaxSequencesCount (poked :: VkCmdProcessCommandsInfoNVX))
-                *> poke (ptr `plusPtr` 56) (vkTargetCommandBuffer (poked :: VkCmdProcessCommandsInfoNVX))
-                *> poke (ptr `plusPtr` 64) (vkSequencesCountBuffer (poked :: VkCmdProcessCommandsInfoNVX))
-                *> poke (ptr `plusPtr` 72) (vkSequencesCountOffset (poked :: VkCmdProcessCommandsInfoNVX))
-                *> poke (ptr `plusPtr` 80) (vkSequencesIndexBuffer (poked :: VkCmdProcessCommandsInfoNVX))
-                *> poke (ptr `plusPtr` 88) (vkSequencesIndexOffset (poked :: VkCmdProcessCommandsInfoNVX))
+instance ToCStruct CmdProcessCommandsInfoNVX where
+  withCStruct x f = allocaBytesAligned 96 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p CmdProcessCommandsInfoNVX{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CMD_PROCESS_COMMANDS_INFO_NVX)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    lift $ poke ((p `plusPtr` 16 :: Ptr ObjectTableNVX)) (objectTable)
+    lift $ poke ((p `plusPtr` 24 :: Ptr IndirectCommandsLayoutNVX)) (indirectCommandsLayout)
+    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (indirectCommandsTokens)) :: Word32))
+    pPIndirectCommandsTokens' <- ContT $ allocaBytesAligned @IndirectCommandsTokenNVX ((Data.Vector.length (indirectCommandsTokens)) * 24) 8
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPIndirectCommandsTokens' `plusPtr` (24 * (i)) :: Ptr IndirectCommandsTokenNVX) (e) . ($ ())) (indirectCommandsTokens)
+    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr IndirectCommandsTokenNVX))) (pPIndirectCommandsTokens')
+    lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (maxSequencesCount)
+    lift $ poke ((p `plusPtr` 56 :: Ptr (Ptr CommandBuffer_T))) (targetCommandBuffer)
+    lift $ poke ((p `plusPtr` 64 :: Ptr Buffer)) (sequencesCountBuffer)
+    lift $ poke ((p `plusPtr` 72 :: Ptr DeviceSize)) (sequencesCountOffset)
+    lift $ poke ((p `plusPtr` 80 :: Ptr Buffer)) (sequencesIndexBuffer)
+    lift $ poke ((p `plusPtr` 88 :: Ptr DeviceSize)) (sequencesIndexOffset)
+    lift $ f
+  cStructSize = 96
+  cStructAlignment = 8
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CMD_PROCESS_COMMANDS_INFO_NVX)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    lift $ poke ((p `plusPtr` 16 :: Ptr ObjectTableNVX)) (zero)
+    lift $ poke ((p `plusPtr` 24 :: Ptr IndirectCommandsLayoutNVX)) (zero)
+    pPIndirectCommandsTokens' <- ContT $ allocaBytesAligned @IndirectCommandsTokenNVX ((Data.Vector.length (mempty)) * 24) 8
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPIndirectCommandsTokens' `plusPtr` (24 * (i)) :: Ptr IndirectCommandsTokenNVX) (e) . ($ ())) (mempty)
+    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr IndirectCommandsTokenNVX))) (pPIndirectCommandsTokens')
+    lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (zero)
+    lift $ f
+
+instance FromCStruct CmdProcessCommandsInfoNVX where
+  peekCStruct p = do
+    objectTable <- peek @ObjectTableNVX ((p `plusPtr` 16 :: Ptr ObjectTableNVX))
+    indirectCommandsLayout <- peek @IndirectCommandsLayoutNVX ((p `plusPtr` 24 :: Ptr IndirectCommandsLayoutNVX))
+    indirectCommandsTokenCount <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
+    pIndirectCommandsTokens <- peek @(Ptr IndirectCommandsTokenNVX) ((p `plusPtr` 40 :: Ptr (Ptr IndirectCommandsTokenNVX)))
+    pIndirectCommandsTokens' <- generateM (fromIntegral indirectCommandsTokenCount) (\i -> peekCStruct @IndirectCommandsTokenNVX ((pIndirectCommandsTokens `advancePtrBytes` (24 * (i)) :: Ptr IndirectCommandsTokenNVX)))
+    maxSequencesCount <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))
+    targetCommandBuffer <- peek @(Ptr CommandBuffer_T) ((p `plusPtr` 56 :: Ptr (Ptr CommandBuffer_T)))
+    sequencesCountBuffer <- peek @Buffer ((p `plusPtr` 64 :: Ptr Buffer))
+    sequencesCountOffset <- peek @DeviceSize ((p `plusPtr` 72 :: Ptr DeviceSize))
+    sequencesIndexBuffer <- peek @Buffer ((p `plusPtr` 80 :: Ptr Buffer))
+    sequencesIndexOffset <- peek @DeviceSize ((p `plusPtr` 88 :: Ptr DeviceSize))
+    pure $ CmdProcessCommandsInfoNVX
+             objectTable indirectCommandsLayout pIndirectCommandsTokens' maxSequencesCount targetCommandBuffer sequencesCountBuffer sequencesCountOffset sequencesIndexBuffer sequencesIndexOffset
+
+instance Zero CmdProcessCommandsInfoNVX where
+  zero = CmdProcessCommandsInfoNVX
+           zero
+           zero
+           mempty
+           zero
+           zero
+           zero
+           zero
+           zero
+           zero
+
+
 -- | VkCmdReserveSpaceForCommandsInfoNVX - Structure specifying parameters
 -- for the reservation of command buffer space
 --
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_CMD_RESERVE_SPACE_FOR_COMMANDS_INFO_NVX@
+--     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_CMD_RESERVE_SPACE_FOR_COMMANDS_INFO_NVX'
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   @objectTable@ /must/ be a valid @VkObjectTableNVX@ handle
+-- -   @objectTable@ /must/ be a valid
+--     'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX' handle
 --
 -- -   @indirectCommandsLayout@ /must/ be a valid
---     @VkIndirectCommandsLayoutNVX@ handle
+--     'Graphics.Vulkan.Extensions.Handles.IndirectCommandsLayoutNVX'
+--     handle
 --
 -- -   Both of @indirectCommandsLayout@, and @objectTable@ /must/ have been
---     created, allocated, or retrieved from the same @VkDevice@
+--     created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
@@ -1433,53 +1482,79 @@ instance Storable VkCmdProcessCommandsInfoNVX where
 --
 -- = See Also
 --
--- 'VkIndirectCommandsLayoutNVX', 'VkObjectTableNVX',
--- 'Graphics.Vulkan.Core10.Core.VkStructureType',
--- 'vkCmdReserveSpaceForCommandsNVX'
-data VkCmdReserveSpaceForCommandsInfoNVX = VkCmdReserveSpaceForCommandsInfoNVX
-  { -- | @sType@ is the type of this structure.
-  vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
-  vkPNext :: Ptr ()
-  , -- | @objectTable@ is the @VkObjectTableNVX@ to be used for the generation
-  -- process. Only registered objects at the time
-  -- 'vkCmdReserveSpaceForCommandsNVX' is called, will be taken into account
-  -- for the reservation.
-  vkObjectTable :: VkObjectTableNVX
-  , -- | @indirectCommandsLayout@ is the @VkIndirectCommandsLayoutNVX@ that
-  -- /must/ also be used at generation time.
-  vkIndirectCommandsLayout :: VkIndirectCommandsLayoutNVX
+-- 'Graphics.Vulkan.Extensions.Handles.IndirectCommandsLayoutNVX',
+-- 'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'cmdReserveSpaceForCommandsNVX'
+data CmdReserveSpaceForCommandsInfoNVX = CmdReserveSpaceForCommandsInfoNVX
+  { -- | @objectTable@ is the 'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX'
+    -- to be used for the generation process. Only registered objects at the
+    -- time 'cmdReserveSpaceForCommandsNVX' is called, will be taken into
+    -- account for the reservation.
+    objectTable :: ObjectTableNVX
+  , -- | @indirectCommandsLayout@ is the
+    -- 'Graphics.Vulkan.Extensions.Handles.IndirectCommandsLayoutNVX' that
+    -- /must/ also be used at generation time.
+    indirectCommandsLayout :: IndirectCommandsLayoutNVX
   , -- | @maxSequencesCount@ is the maximum number of sequences for which command
-  -- buffer space will be reserved.
-  vkMaxSequencesCount :: Word32
+    -- buffer space will be reserved.
+    maxSequencesCount :: Word32
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show CmdReserveSpaceForCommandsInfoNVX
 
-instance Storable VkCmdReserveSpaceForCommandsInfoNVX where
+instance ToCStruct CmdReserveSpaceForCommandsInfoNVX where
+  withCStruct x f = allocaBytesAligned 40 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p CmdReserveSpaceForCommandsInfoNVX{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CMD_RESERVE_SPACE_FOR_COMMANDS_INFO_NVX)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr ObjectTableNVX)) (objectTable)
+    poke ((p `plusPtr` 24 :: Ptr IndirectCommandsLayoutNVX)) (indirectCommandsLayout)
+    poke ((p `plusPtr` 32 :: Ptr Word32)) (maxSequencesCount)
+    f
+  cStructSize = 40
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_CMD_RESERVE_SPACE_FOR_COMMANDS_INFO_NVX)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr ObjectTableNVX)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr IndirectCommandsLayoutNVX)) (zero)
+    poke ((p `plusPtr` 32 :: Ptr Word32)) (zero)
+    f
+
+instance FromCStruct CmdReserveSpaceForCommandsInfoNVX where
+  peekCStruct p = do
+    objectTable <- peek @ObjectTableNVX ((p `plusPtr` 16 :: Ptr ObjectTableNVX))
+    indirectCommandsLayout <- peek @IndirectCommandsLayoutNVX ((p `plusPtr` 24 :: Ptr IndirectCommandsLayoutNVX))
+    maxSequencesCount <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
+    pure $ CmdReserveSpaceForCommandsInfoNVX
+             objectTable indirectCommandsLayout maxSequencesCount
+
+instance Storable CmdReserveSpaceForCommandsInfoNVX where
   sizeOf ~_ = 40
   alignment ~_ = 8
-  peek ptr = VkCmdReserveSpaceForCommandsInfoNVX <$> peek (ptr `plusPtr` 0)
-                                                 <*> peek (ptr `plusPtr` 8)
-                                                 <*> peek (ptr `plusPtr` 16)
-                                                 <*> peek (ptr `plusPtr` 24)
-                                                 <*> peek (ptr `plusPtr` 32)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkCmdReserveSpaceForCommandsInfoNVX))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkCmdReserveSpaceForCommandsInfoNVX))
-                *> poke (ptr `plusPtr` 16) (vkObjectTable (poked :: VkCmdReserveSpaceForCommandsInfoNVX))
-                *> poke (ptr `plusPtr` 24) (vkIndirectCommandsLayout (poked :: VkCmdReserveSpaceForCommandsInfoNVX))
-                *> poke (ptr `plusPtr` 32) (vkMaxSequencesCount (poked :: VkCmdReserveSpaceForCommandsInfoNVX))
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero CmdReserveSpaceForCommandsInfoNVX where
+  zero = CmdReserveSpaceForCommandsInfoNVX
+           zero
+           zero
+           zero
+
+
 -- | VkObjectTableCreateInfoNVX - Structure specifying the parameters of a
 -- newly created object table
 --
 -- == Valid Usage
 --
 -- -   If the
---     @VkDeviceGeneratedCommandsFeaturesNVX@::@computeBindingPointSupport@
+--     'DeviceGeneratedCommandsFeaturesNVX'::@computeBindingPointSupport@
 --     feature is not enabled, @pObjectEntryUsageFlags@ /must/ not contain
---     @VK_OBJECT_ENTRY_USAGE_COMPUTE_BIT_NVX@
+--     'OBJECT_ENTRY_USAGE_COMPUTE_BIT_NVX'
 --
 -- -   Any value within @pObjectEntryCounts@ /must/ not exceed
---     @VkDeviceGeneratedCommandsLimitsNVX@::@maxObjectEntryCounts@
+--     'DeviceGeneratedCommandsLimitsNVX'::@maxObjectEntryCounts@
 --
 -- -   @maxUniformBuffersPerDescriptor@ /must/ be within the limits
 --     supported by the device.
@@ -1495,18 +1570,19 @@ instance Storable VkCmdReserveSpaceForCommandsInfoNVX where
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX@
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX'
 --
 -- -   @pNext@ /must/ be @NULL@
 --
 -- -   @pObjectEntryTypes@ /must/ be a valid pointer to an array of
---     @objectCount@ valid 'VkObjectEntryTypeNVX' values
+--     @objectCount@ valid 'ObjectEntryTypeNVX' values
 --
 -- -   @pObjectEntryCounts@ /must/ be a valid pointer to an array of
 --     @objectCount@ @uint32_t@ values
 --
 -- -   @pObjectEntryUsageFlags@ /must/ be a valid pointer to an array of
---     @objectCount@ valid combinations of 'VkObjectEntryUsageFlagBitsNVX'
+--     @objectCount@ valid combinations of 'ObjectEntryUsageFlagBitsNVX'
 --     values
 --
 -- -   Each element of @pObjectEntryUsageFlags@ /must/ not be @0@
@@ -1515,380 +1591,775 @@ instance Storable VkCmdReserveSpaceForCommandsInfoNVX where
 --
 -- = See Also
 --
--- 'VkObjectEntryTypeNVX', 'VkObjectEntryUsageFlagsNVX',
--- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'vkCreateObjectTableNVX'
-data VkObjectTableCreateInfoNVX = VkObjectTableCreateInfoNVX
-  { -- | @sType@ is the type of this structure.
-  vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
-  vkPNext :: Ptr ()
-  , -- | @objectCount@ is the number of entry configurations that the object
-  -- table supports.
-  vkObjectCount :: Word32
-  , -- | @pObjectEntryTypes@ is an array of 'VkObjectEntryTypeNVX' values
-  -- providing the entry type of a given configuration.
-  vkPObjectEntryTypes :: Ptr VkObjectEntryTypeNVX
-  , -- | @pObjectEntryCounts@ is an array of counts of how many objects can be
-  -- registered in the table.
-  vkPObjectEntryCounts :: Ptr Word32
-  , -- | @pObjectEntryUsageFlags@ is an array of bitmasks of
-  -- 'VkObjectEntryUsageFlagBitsNVX' specifying the binding usage of the
-  -- entry.
-  vkPObjectEntryUsageFlags :: Ptr VkObjectEntryUsageFlagsNVX
+-- 'ObjectEntryTypeNVX', 'ObjectEntryUsageFlagsNVX',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'createObjectTableNVX'
+data ObjectTableCreateInfoNVX = ObjectTableCreateInfoNVX
+  { -- | @pObjectEntryTypes@ is a pointer to an array of 'ObjectEntryTypeNVX'
+    -- values providing the entry type of a given configuration.
+    objectEntryTypes :: Vector ObjectEntryTypeNVX
+  , -- | @pObjectEntryCounts@ is a pointer to an array of counts of how many
+    -- objects can be registered in the table.
+    objectEntryCounts :: Vector Word32
+  , -- | @pObjectEntryUsageFlags@ is a pointer to an array of bitmasks of
+    -- 'ObjectEntryUsageFlagBitsNVX' specifying the binding usage of the entry.
+    objectEntryUsageFlags :: Vector ObjectEntryUsageFlagsNVX
   , -- | @maxUniformBuffersPerDescriptor@ is the maximum number of
-  -- @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER@ or
-  -- @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC@ used by any single
-  -- registered @VkDescriptorSet@ in this table.
-  vkMaxUniformBuffersPerDescriptor :: Word32
+    -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
+    -- or
+    -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
+    -- used by any single registered
+    -- 'Graphics.Vulkan.Core10.Handles.DescriptorSet' in this table.
+    maxUniformBuffersPerDescriptor :: Word32
   , -- | @maxStorageBuffersPerDescriptor@ is the maximum number of
-  -- @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER@ or
-  -- @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC@ used by any single
-  -- registered @VkDescriptorSet@ in this table.
-  vkMaxStorageBuffersPerDescriptor :: Word32
+    -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
+    -- or
+    -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
+    -- used by any single registered
+    -- 'Graphics.Vulkan.Core10.Handles.DescriptorSet' in this table.
+    maxStorageBuffersPerDescriptor :: Word32
   , -- | @maxStorageImagesPerDescriptor@ is the maximum number of
-  -- @VK_DESCRIPTOR_TYPE_STORAGE_IMAGE@ or
-  -- @VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER@ used by any single registered
-  -- @VkDescriptorSet@ in this table.
-  vkMaxStorageImagesPerDescriptor :: Word32
+    -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE'
+    -- or
+    -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
+    -- used by any single registered
+    -- 'Graphics.Vulkan.Core10.Handles.DescriptorSet' in this table.
+    maxStorageImagesPerDescriptor :: Word32
   , -- | @maxSampledImagesPerDescriptor@ is the maximum number of
-  -- @VK_DESCRIPTOR_TYPE_SAMPLER@,
-  -- @VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER@,
-  -- @VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER@ or
-  -- @VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT@ used by any single registered
-  -- @VkDescriptorSet@ in this table.
-  vkMaxSampledImagesPerDescriptor :: Word32
-  , -- | @maxPipelineLayouts@ is the maximum number of unique @VkPipelineLayout@
-  -- used by any registered @VkDescriptorSet@ or @VkPipeline@ in this table.
-  vkMaxPipelineLayouts :: Word32
+    -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER',
+    -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
+    -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
+    -- or
+    -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
+    -- used by any single registered
+    -- 'Graphics.Vulkan.Core10.Handles.DescriptorSet' in this table.
+    maxSampledImagesPerDescriptor :: Word32
+  , -- | @maxPipelineLayouts@ is the maximum number of unique
+    -- 'Graphics.Vulkan.Core10.Handles.PipelineLayout' used by any registered
+    -- 'Graphics.Vulkan.Core10.Handles.DescriptorSet' or
+    -- 'Graphics.Vulkan.Core10.Handles.Pipeline' in this table.
+    maxPipelineLayouts :: Word32
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show ObjectTableCreateInfoNVX
 
-instance Storable VkObjectTableCreateInfoNVX where
-  sizeOf ~_ = 72
-  alignment ~_ = 8
-  peek ptr = VkObjectTableCreateInfoNVX <$> peek (ptr `plusPtr` 0)
-                                        <*> peek (ptr `plusPtr` 8)
-                                        <*> peek (ptr `plusPtr` 16)
-                                        <*> peek (ptr `plusPtr` 24)
-                                        <*> peek (ptr `plusPtr` 32)
-                                        <*> peek (ptr `plusPtr` 40)
-                                        <*> peek (ptr `plusPtr` 48)
-                                        <*> peek (ptr `plusPtr` 52)
-                                        <*> peek (ptr `plusPtr` 56)
-                                        <*> peek (ptr `plusPtr` 60)
-                                        <*> peek (ptr `plusPtr` 64)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkObjectTableCreateInfoNVX))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkObjectTableCreateInfoNVX))
-                *> poke (ptr `plusPtr` 16) (vkObjectCount (poked :: VkObjectTableCreateInfoNVX))
-                *> poke (ptr `plusPtr` 24) (vkPObjectEntryTypes (poked :: VkObjectTableCreateInfoNVX))
-                *> poke (ptr `plusPtr` 32) (vkPObjectEntryCounts (poked :: VkObjectTableCreateInfoNVX))
-                *> poke (ptr `plusPtr` 40) (vkPObjectEntryUsageFlags (poked :: VkObjectTableCreateInfoNVX))
-                *> poke (ptr `plusPtr` 48) (vkMaxUniformBuffersPerDescriptor (poked :: VkObjectTableCreateInfoNVX))
-                *> poke (ptr `plusPtr` 52) (vkMaxStorageBuffersPerDescriptor (poked :: VkObjectTableCreateInfoNVX))
-                *> poke (ptr `plusPtr` 56) (vkMaxStorageImagesPerDescriptor (poked :: VkObjectTableCreateInfoNVX))
-                *> poke (ptr `plusPtr` 60) (vkMaxSampledImagesPerDescriptor (poked :: VkObjectTableCreateInfoNVX))
-                *> poke (ptr `plusPtr` 64) (vkMaxPipelineLayouts (poked :: VkObjectTableCreateInfoNVX))
+instance ToCStruct ObjectTableCreateInfoNVX where
+  withCStruct x f = allocaBytesAligned 72 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p ObjectTableCreateInfoNVX{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    let pObjectEntryTypesLength = Data.Vector.length $ (objectEntryTypes)
+    let pObjectEntryCountsLength = Data.Vector.length $ (objectEntryCounts)
+    lift $ unless (pObjectEntryCountsLength == pObjectEntryTypesLength) $
+      throwIO $ IOError Nothing InvalidArgument "" "pObjectEntryCounts and pObjectEntryTypes must have the same length" Nothing Nothing
+    let pObjectEntryUsageFlagsLength = Data.Vector.length $ (objectEntryUsageFlags)
+    lift $ unless (pObjectEntryUsageFlagsLength == pObjectEntryTypesLength) $
+      throwIO $ IOError Nothing InvalidArgument "" "pObjectEntryUsageFlags and pObjectEntryTypes must have the same length" Nothing Nothing
+    lift $ poke ((p `plusPtr` 16 :: Ptr Word32)) ((fromIntegral pObjectEntryTypesLength :: Word32))
+    pPObjectEntryTypes' <- ContT $ allocaBytesAligned @ObjectEntryTypeNVX ((Data.Vector.length (objectEntryTypes)) * 4) 4
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPObjectEntryTypes' `plusPtr` (4 * (i)) :: Ptr ObjectEntryTypeNVX) (e)) (objectEntryTypes)
+    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ObjectEntryTypeNVX))) (pPObjectEntryTypes')
+    pPObjectEntryCounts' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (objectEntryCounts)) * 4) 4
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPObjectEntryCounts' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (objectEntryCounts)
+    lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr Word32))) (pPObjectEntryCounts')
+    pPObjectEntryUsageFlags' <- ContT $ allocaBytesAligned @ObjectEntryUsageFlagsNVX ((Data.Vector.length (objectEntryUsageFlags)) * 4) 4
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPObjectEntryUsageFlags' `plusPtr` (4 * (i)) :: Ptr ObjectEntryUsageFlagsNVX) (e)) (objectEntryUsageFlags)
+    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr ObjectEntryUsageFlagsNVX))) (pPObjectEntryUsageFlags')
+    lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (maxUniformBuffersPerDescriptor)
+    lift $ poke ((p `plusPtr` 52 :: Ptr Word32)) (maxStorageBuffersPerDescriptor)
+    lift $ poke ((p `plusPtr` 56 :: Ptr Word32)) (maxStorageImagesPerDescriptor)
+    lift $ poke ((p `plusPtr` 60 :: Ptr Word32)) (maxSampledImagesPerDescriptor)
+    lift $ poke ((p `plusPtr` 64 :: Ptr Word32)) (maxPipelineLayouts)
+    lift $ f
+  cStructSize = 72
+  cStructAlignment = 8
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    pPObjectEntryTypes' <- ContT $ allocaBytesAligned @ObjectEntryTypeNVX ((Data.Vector.length (mempty)) * 4) 4
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPObjectEntryTypes' `plusPtr` (4 * (i)) :: Ptr ObjectEntryTypeNVX) (e)) (mempty)
+    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ObjectEntryTypeNVX))) (pPObjectEntryTypes')
+    pPObjectEntryCounts' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (mempty)) * 4) 4
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPObjectEntryCounts' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (mempty)
+    lift $ poke ((p `plusPtr` 32 :: Ptr (Ptr Word32))) (pPObjectEntryCounts')
+    pPObjectEntryUsageFlags' <- ContT $ allocaBytesAligned @ObjectEntryUsageFlagsNVX ((Data.Vector.length (mempty)) * 4) 4
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPObjectEntryUsageFlags' `plusPtr` (4 * (i)) :: Ptr ObjectEntryUsageFlagsNVX) (e)) (mempty)
+    lift $ poke ((p `plusPtr` 40 :: Ptr (Ptr ObjectEntryUsageFlagsNVX))) (pPObjectEntryUsageFlags')
+    lift $ poke ((p `plusPtr` 48 :: Ptr Word32)) (zero)
+    lift $ poke ((p `plusPtr` 52 :: Ptr Word32)) (zero)
+    lift $ poke ((p `plusPtr` 56 :: Ptr Word32)) (zero)
+    lift $ poke ((p `plusPtr` 60 :: Ptr Word32)) (zero)
+    lift $ poke ((p `plusPtr` 64 :: Ptr Word32)) (zero)
+    lift $ f
+
+instance FromCStruct ObjectTableCreateInfoNVX where
+  peekCStruct p = do
+    objectCount <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
+    pObjectEntryTypes <- peek @(Ptr ObjectEntryTypeNVX) ((p `plusPtr` 24 :: Ptr (Ptr ObjectEntryTypeNVX)))
+    pObjectEntryTypes' <- generateM (fromIntegral objectCount) (\i -> peek @ObjectEntryTypeNVX ((pObjectEntryTypes `advancePtrBytes` (4 * (i)) :: Ptr ObjectEntryTypeNVX)))
+    pObjectEntryCounts <- peek @(Ptr Word32) ((p `plusPtr` 32 :: Ptr (Ptr Word32)))
+    pObjectEntryCounts' <- generateM (fromIntegral objectCount) (\i -> peek @Word32 ((pObjectEntryCounts `advancePtrBytes` (4 * (i)) :: Ptr Word32)))
+    pObjectEntryUsageFlags <- peek @(Ptr ObjectEntryUsageFlagsNVX) ((p `plusPtr` 40 :: Ptr (Ptr ObjectEntryUsageFlagsNVX)))
+    pObjectEntryUsageFlags' <- generateM (fromIntegral objectCount) (\i -> peek @ObjectEntryUsageFlagsNVX ((pObjectEntryUsageFlags `advancePtrBytes` (4 * (i)) :: Ptr ObjectEntryUsageFlagsNVX)))
+    maxUniformBuffersPerDescriptor <- peek @Word32 ((p `plusPtr` 48 :: Ptr Word32))
+    maxStorageBuffersPerDescriptor <- peek @Word32 ((p `plusPtr` 52 :: Ptr Word32))
+    maxStorageImagesPerDescriptor <- peek @Word32 ((p `plusPtr` 56 :: Ptr Word32))
+    maxSampledImagesPerDescriptor <- peek @Word32 ((p `plusPtr` 60 :: Ptr Word32))
+    maxPipelineLayouts <- peek @Word32 ((p `plusPtr` 64 :: Ptr Word32))
+    pure $ ObjectTableCreateInfoNVX
+             pObjectEntryTypes' pObjectEntryCounts' pObjectEntryUsageFlags' maxUniformBuffersPerDescriptor maxStorageBuffersPerDescriptor maxStorageImagesPerDescriptor maxSampledImagesPerDescriptor maxPipelineLayouts
+
+instance Zero ObjectTableCreateInfoNVX where
+  zero = ObjectTableCreateInfoNVX
+           mempty
+           mempty
+           mempty
+           zero
+           zero
+           zero
+           zero
+           zero
+
+
 -- | VkObjectTableEntryNVX - Common parameters of an object table resource
 -- entry
 --
 -- == Valid Usage
 --
 -- -   If the
---     @VkDeviceGeneratedCommandsFeaturesNVX@::@computeBindingPointSupport@
---     feature is not enabled, @flags@ /must/ not contain
---     @VK_OBJECT_ENTRY_USAGE_COMPUTE_BIT_NVX@
+--     'DeviceGeneratedCommandsFeaturesNVX'::@computeBindingPointSupport@
+--     feature is not enabled, 'Graphics.Vulkan.Core10.BaseType.Flags'
+--     /must/ not contain 'OBJECT_ENTRY_USAGE_COMPUTE_BIT_NVX'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @type@ /must/ be a valid 'VkObjectEntryTypeNVX' value
+-- -   @type@ /must/ be a valid 'ObjectEntryTypeNVX' value
 --
--- -   @flags@ /must/ be a valid combination of
---     'VkObjectEntryUsageFlagBitsNVX' values
+-- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
+--     combination of 'ObjectEntryUsageFlagBitsNVX' values
 --
--- -   @flags@ /must/ not be @0@
+-- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not be @0@
 --
 -- = See Also
 --
--- 'VkObjectEntryTypeNVX', 'VkObjectEntryUsageFlagsNVX',
--- 'vkRegisterObjectsNVX'
-data VkObjectTableEntryNVX = VkObjectTableEntryNVX
+-- 'ObjectEntryTypeNVX', 'ObjectEntryUsageFlagsNVX', 'registerObjectsNVX'
+data ObjectTableEntryNVX = ObjectTableEntryNVX
   { -- | @type@ defines the entry type
-  vkType :: VkObjectEntryTypeNVX
-  , -- | @flags@ defines which @VkPipelineBindPoint@ the resource can be used
-  -- with. Some entry types allow only a single flag to be set.
-  vkFlags :: VkObjectEntryUsageFlagsNVX
+    type' :: ObjectEntryTypeNVX
+  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' defines which
+    -- 'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' the
+    -- resource can be used with. Some entry types allow only a single flag to
+    -- be set.
+    flags :: ObjectEntryUsageFlagsNVX
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show ObjectTableEntryNVX
 
-instance Storable VkObjectTableEntryNVX where
+instance ToCStruct ObjectTableEntryNVX where
+  withCStruct x f = allocaBytesAligned 8 4 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p ObjectTableEntryNVX{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr ObjectEntryTypeNVX)) (type')
+    poke ((p `plusPtr` 4 :: Ptr ObjectEntryUsageFlagsNVX)) (flags)
+    f
+  cStructSize = 8
+  cStructAlignment = 4
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr ObjectEntryTypeNVX)) (zero)
+    poke ((p `plusPtr` 4 :: Ptr ObjectEntryUsageFlagsNVX)) (zero)
+    f
+
+instance FromCStruct ObjectTableEntryNVX where
+  peekCStruct p = do
+    type' <- peek @ObjectEntryTypeNVX ((p `plusPtr` 0 :: Ptr ObjectEntryTypeNVX))
+    flags <- peek @ObjectEntryUsageFlagsNVX ((p `plusPtr` 4 :: Ptr ObjectEntryUsageFlagsNVX))
+    pure $ ObjectTableEntryNVX
+             type' flags
+
+instance Storable ObjectTableEntryNVX where
   sizeOf ~_ = 8
   alignment ~_ = 4
-  peek ptr = VkObjectTableEntryNVX <$> peek (ptr `plusPtr` 0)
-                                   <*> peek (ptr `plusPtr` 4)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkType (poked :: VkObjectTableEntryNVX))
-                *> poke (ptr `plusPtr` 4) (vkFlags (poked :: VkObjectTableEntryNVX))
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero ObjectTableEntryNVX where
+  zero = ObjectTableEntryNVX
+           zero
+           zero
+
+
 -- | VkObjectTablePipelineEntryNVX - Parameters of an object table pipeline
 -- entry
 --
--- == Valid Usage
---
--- -   @type@ /must/ be @VK_OBJECT_ENTRY_TYPE_PIPELINE_NVX@
---
 -- == Valid Usage (Implicit)
---
--- -   @type@ /must/ be a valid 'VkObjectEntryTypeNVX' value
---
--- -   @flags@ /must/ be a valid combination of
---     'VkObjectEntryUsageFlagBitsNVX' values
---
--- -   @flags@ /must/ not be @0@
---
--- -   @pipeline@ /must/ be a valid @VkPipeline@ handle
 --
 -- = See Also
 --
--- 'VkObjectEntryTypeNVX', 'VkObjectEntryUsageFlagsNVX',
--- 'Graphics.Vulkan.Core10.Pipeline.VkPipeline'
-data VkObjectTablePipelineEntryNVX = VkObjectTablePipelineEntryNVX
-  { -- No documentation found for Nested "VkObjectTablePipelineEntryNVX" "type"
-  vkType :: VkObjectEntryTypeNVX
-  , -- No documentation found for Nested "VkObjectTablePipelineEntryNVX" "flags"
-  vkFlags :: VkObjectEntryUsageFlagsNVX
-  , -- | @pipeline@ specifies the @VkPipeline@ that this resource entry
-  -- references.
-  vkPipeline :: VkPipeline
+-- 'ObjectEntryTypeNVX', 'ObjectEntryUsageFlagsNVX',
+-- 'Graphics.Vulkan.Core10.Handles.Pipeline'
+data ObjectTablePipelineEntryNVX = ObjectTablePipelineEntryNVX
+  { -- | @type@ /must/ be a valid 'ObjectEntryTypeNVX' value
+    type' :: ObjectEntryTypeNVX
+  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not be @0@
+    flags :: ObjectEntryUsageFlagsNVX
+  , -- | 'Graphics.Vulkan.Core10.Handles.Pipeline' /must/ be a valid
+    -- 'Graphics.Vulkan.Core10.Handles.Pipeline' handle
+    pipeline :: Pipeline
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show ObjectTablePipelineEntryNVX
 
-instance Storable VkObjectTablePipelineEntryNVX where
+instance ToCStruct ObjectTablePipelineEntryNVX where
+  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p ObjectTablePipelineEntryNVX{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr ObjectEntryTypeNVX)) (type')
+    poke ((p `plusPtr` 4 :: Ptr ObjectEntryUsageFlagsNVX)) (flags)
+    poke ((p `plusPtr` 8 :: Ptr Pipeline)) (pipeline)
+    f
+  cStructSize = 16
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr ObjectEntryTypeNVX)) (zero)
+    poke ((p `plusPtr` 4 :: Ptr ObjectEntryUsageFlagsNVX)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr Pipeline)) (zero)
+    f
+
+instance FromCStruct ObjectTablePipelineEntryNVX where
+  peekCStruct p = do
+    type' <- peek @ObjectEntryTypeNVX ((p `plusPtr` 0 :: Ptr ObjectEntryTypeNVX))
+    flags <- peek @ObjectEntryUsageFlagsNVX ((p `plusPtr` 4 :: Ptr ObjectEntryUsageFlagsNVX))
+    pipeline <- peek @Pipeline ((p `plusPtr` 8 :: Ptr Pipeline))
+    pure $ ObjectTablePipelineEntryNVX
+             type' flags pipeline
+
+instance Storable ObjectTablePipelineEntryNVX where
   sizeOf ~_ = 16
   alignment ~_ = 8
-  peek ptr = VkObjectTablePipelineEntryNVX <$> peek (ptr `plusPtr` 0)
-                                           <*> peek (ptr `plusPtr` 4)
-                                           <*> peek (ptr `plusPtr` 8)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkType (poked :: VkObjectTablePipelineEntryNVX))
-                *> poke (ptr `plusPtr` 4) (vkFlags (poked :: VkObjectTablePipelineEntryNVX))
-                *> poke (ptr `plusPtr` 8) (vkPipeline (poked :: VkObjectTablePipelineEntryNVX))
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero ObjectTablePipelineEntryNVX where
+  zero = ObjectTablePipelineEntryNVX
+           zero
+           zero
+           zero
+
+
 -- | VkObjectTableDescriptorSetEntryNVX - Parameters of an object table
 -- descriptor set entry
 --
 -- == Valid Usage
 --
--- -   @type@ /must/ be @VK_OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX@
+-- -   @type@ /must/ be 'OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @type@ /must/ be a valid 'VkObjectEntryTypeNVX' value
+-- -   @type@ /must/ be a valid 'ObjectEntryTypeNVX' value
 --
--- -   @flags@ /must/ be a valid combination of
---     'VkObjectEntryUsageFlagBitsNVX' values
+-- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
+--     combination of 'ObjectEntryUsageFlagBitsNVX' values
 --
--- -   @flags@ /must/ not be @0@
+-- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not be @0@
 --
--- -   @pipelineLayout@ /must/ be a valid @VkPipelineLayout@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.PipelineLayout' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.PipelineLayout' handle
 --
--- -   @descriptorSet@ /must/ be a valid @VkDescriptorSet@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.DescriptorSet' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.DescriptorSet' handle
 --
--- -   Both of @descriptorSet@, and @pipelineLayout@ /must/ have been
---     created, allocated, or retrieved from the same @VkDevice@
+-- -   Both of 'Graphics.Vulkan.Core10.Handles.DescriptorSet', and
+--     'Graphics.Vulkan.Core10.Handles.PipelineLayout' /must/ have been
+--     created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DescriptorSet.VkDescriptorSet',
--- 'VkObjectEntryTypeNVX', 'VkObjectEntryUsageFlagsNVX',
--- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineLayout'
-data VkObjectTableDescriptorSetEntryNVX = VkObjectTableDescriptorSetEntryNVX
+-- 'Graphics.Vulkan.Core10.Handles.DescriptorSet', 'ObjectEntryTypeNVX',
+-- 'ObjectEntryUsageFlagsNVX',
+-- 'Graphics.Vulkan.Core10.Handles.PipelineLayout'
+data ObjectTableDescriptorSetEntryNVX = ObjectTableDescriptorSetEntryNVX
   { -- No documentation found for Nested "VkObjectTableDescriptorSetEntryNVX" "type"
-  vkType :: VkObjectEntryTypeNVX
+    type' :: ObjectEntryTypeNVX
   , -- No documentation found for Nested "VkObjectTableDescriptorSetEntryNVX" "flags"
-  vkFlags :: VkObjectEntryUsageFlagsNVX
-  , -- | @pipelineLayout@ specifies the @VkPipelineLayout@ that the
-  -- @descriptorSet@ is used with.
-  vkPipelineLayout :: VkPipelineLayout
-  , -- | @descriptorSet@ specifies the @VkDescriptorSet@ that can be bound with
-  -- this entry.
-  vkDescriptorSet :: VkDescriptorSet
+    flags :: ObjectEntryUsageFlagsNVX
+  , -- | 'Graphics.Vulkan.Core10.Handles.PipelineLayout' specifies the
+    -- 'Graphics.Vulkan.Core10.Handles.PipelineLayout' that the
+    -- 'Graphics.Vulkan.Core10.Handles.DescriptorSet' is used with.
+    pipelineLayout :: PipelineLayout
+  , -- | 'Graphics.Vulkan.Core10.Handles.DescriptorSet' specifies the
+    -- 'Graphics.Vulkan.Core10.Handles.DescriptorSet' that can be bound with
+    -- this entry.
+    descriptorSet :: DescriptorSet
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show ObjectTableDescriptorSetEntryNVX
 
-instance Storable VkObjectTableDescriptorSetEntryNVX where
+instance ToCStruct ObjectTableDescriptorSetEntryNVX where
+  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p ObjectTableDescriptorSetEntryNVX{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr ObjectEntryTypeNVX)) (type')
+    poke ((p `plusPtr` 4 :: Ptr ObjectEntryUsageFlagsNVX)) (flags)
+    poke ((p `plusPtr` 8 :: Ptr PipelineLayout)) (pipelineLayout)
+    poke ((p `plusPtr` 16 :: Ptr DescriptorSet)) (descriptorSet)
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr ObjectEntryTypeNVX)) (zero)
+    poke ((p `plusPtr` 4 :: Ptr ObjectEntryUsageFlagsNVX)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr PipelineLayout)) (zero)
+    poke ((p `plusPtr` 16 :: Ptr DescriptorSet)) (zero)
+    f
+
+instance FromCStruct ObjectTableDescriptorSetEntryNVX where
+  peekCStruct p = do
+    type' <- peek @ObjectEntryTypeNVX ((p `plusPtr` 0 :: Ptr ObjectEntryTypeNVX))
+    flags <- peek @ObjectEntryUsageFlagsNVX ((p `plusPtr` 4 :: Ptr ObjectEntryUsageFlagsNVX))
+    pipelineLayout <- peek @PipelineLayout ((p `plusPtr` 8 :: Ptr PipelineLayout))
+    descriptorSet <- peek @DescriptorSet ((p `plusPtr` 16 :: Ptr DescriptorSet))
+    pure $ ObjectTableDescriptorSetEntryNVX
+             type' flags pipelineLayout descriptorSet
+
+instance Storable ObjectTableDescriptorSetEntryNVX where
   sizeOf ~_ = 24
   alignment ~_ = 8
-  peek ptr = VkObjectTableDescriptorSetEntryNVX <$> peek (ptr `plusPtr` 0)
-                                                <*> peek (ptr `plusPtr` 4)
-                                                <*> peek (ptr `plusPtr` 8)
-                                                <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkType (poked :: VkObjectTableDescriptorSetEntryNVX))
-                *> poke (ptr `plusPtr` 4) (vkFlags (poked :: VkObjectTableDescriptorSetEntryNVX))
-                *> poke (ptr `plusPtr` 8) (vkPipelineLayout (poked :: VkObjectTableDescriptorSetEntryNVX))
-                *> poke (ptr `plusPtr` 16) (vkDescriptorSet (poked :: VkObjectTableDescriptorSetEntryNVX))
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero ObjectTableDescriptorSetEntryNVX where
+  zero = ObjectTableDescriptorSetEntryNVX
+           zero
+           zero
+           zero
+           zero
+
+
 -- | VkObjectTableVertexBufferEntryNVX - Parameters of an object table vertex
 -- buffer entry
 --
--- == Valid Usage
---
--- -   @type@ /must/ be @VK_OBJECT_ENTRY_TYPE_VERTEX_BUFFER_NVX@
---
 -- == Valid Usage (Implicit)
---
--- -   @type@ /must/ be a valid 'VkObjectEntryTypeNVX' value
---
--- -   @flags@ /must/ be a valid combination of
---     'VkObjectEntryUsageFlagBitsNVX' values
---
--- -   @flags@ /must/ not be @0@
---
--- -   @buffer@ /must/ be a valid @VkBuffer@ handle
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.MemoryManagement.VkBuffer',
--- 'VkObjectEntryTypeNVX', 'VkObjectEntryUsageFlagsNVX'
-data VkObjectTableVertexBufferEntryNVX = VkObjectTableVertexBufferEntryNVX
-  { -- No documentation found for Nested "VkObjectTableVertexBufferEntryNVX" "type"
-  vkType :: VkObjectEntryTypeNVX
-  , -- No documentation found for Nested "VkObjectTableVertexBufferEntryNVX" "flags"
-  vkFlags :: VkObjectEntryUsageFlagsNVX
-  , -- | @buffer@ specifies the @VkBuffer@ that can be bound as vertex bufer
-  vkBuffer :: VkBuffer
+-- 'Graphics.Vulkan.Core10.Handles.Buffer', 'ObjectEntryTypeNVX',
+-- 'ObjectEntryUsageFlagsNVX'
+data ObjectTableVertexBufferEntryNVX = ObjectTableVertexBufferEntryNVX
+  { -- | @type@ /must/ be a valid 'ObjectEntryTypeNVX' value
+    type' :: ObjectEntryTypeNVX
+  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not be @0@
+    flags :: ObjectEntryUsageFlagsNVX
+  , -- | 'Graphics.Vulkan.Core10.Handles.Buffer' /must/ be a valid
+    -- 'Graphics.Vulkan.Core10.Handles.Buffer' handle
+    buffer :: Buffer
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show ObjectTableVertexBufferEntryNVX
 
-instance Storable VkObjectTableVertexBufferEntryNVX where
+instance ToCStruct ObjectTableVertexBufferEntryNVX where
+  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p ObjectTableVertexBufferEntryNVX{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr ObjectEntryTypeNVX)) (type')
+    poke ((p `plusPtr` 4 :: Ptr ObjectEntryUsageFlagsNVX)) (flags)
+    poke ((p `plusPtr` 8 :: Ptr Buffer)) (buffer)
+    f
+  cStructSize = 16
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr ObjectEntryTypeNVX)) (zero)
+    poke ((p `plusPtr` 4 :: Ptr ObjectEntryUsageFlagsNVX)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr Buffer)) (zero)
+    f
+
+instance FromCStruct ObjectTableVertexBufferEntryNVX where
+  peekCStruct p = do
+    type' <- peek @ObjectEntryTypeNVX ((p `plusPtr` 0 :: Ptr ObjectEntryTypeNVX))
+    flags <- peek @ObjectEntryUsageFlagsNVX ((p `plusPtr` 4 :: Ptr ObjectEntryUsageFlagsNVX))
+    buffer <- peek @Buffer ((p `plusPtr` 8 :: Ptr Buffer))
+    pure $ ObjectTableVertexBufferEntryNVX
+             type' flags buffer
+
+instance Storable ObjectTableVertexBufferEntryNVX where
   sizeOf ~_ = 16
   alignment ~_ = 8
-  peek ptr = VkObjectTableVertexBufferEntryNVX <$> peek (ptr `plusPtr` 0)
-                                               <*> peek (ptr `plusPtr` 4)
-                                               <*> peek (ptr `plusPtr` 8)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkType (poked :: VkObjectTableVertexBufferEntryNVX))
-                *> poke (ptr `plusPtr` 4) (vkFlags (poked :: VkObjectTableVertexBufferEntryNVX))
-                *> poke (ptr `plusPtr` 8) (vkBuffer (poked :: VkObjectTableVertexBufferEntryNVX))
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero ObjectTableVertexBufferEntryNVX where
+  zero = ObjectTableVertexBufferEntryNVX
+           zero
+           zero
+           zero
+
+
 -- | VkObjectTableIndexBufferEntryNVX - Parameters of an object table index
 -- buffer entry
 --
--- == Valid Usage
---
--- -   @type@ /must/ be @VK_OBJECT_ENTRY_TYPE_INDEX_BUFFER_NVX@
---
 -- == Valid Usage (Implicit)
---
--- -   @type@ /must/ be a valid 'VkObjectEntryTypeNVX' value
---
--- -   @flags@ /must/ be a valid combination of
---     'VkObjectEntryUsageFlagBitsNVX' values
---
--- -   @flags@ /must/ not be @0@
---
--- -   @buffer@ /must/ be a valid @VkBuffer@ handle
---
--- -   @indexType@ /must/ be a valid
---     'Graphics.Vulkan.Core10.CommandBufferBuilding.VkIndexType' value
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.MemoryManagement.VkBuffer',
--- 'Graphics.Vulkan.Core10.CommandBufferBuilding.VkIndexType',
--- 'VkObjectEntryTypeNVX', 'VkObjectEntryUsageFlagsNVX'
-data VkObjectTableIndexBufferEntryNVX = VkObjectTableIndexBufferEntryNVX
-  { -- No documentation found for Nested "VkObjectTableIndexBufferEntryNVX" "type"
-  vkType :: VkObjectEntryTypeNVX
-  , -- No documentation found for Nested "VkObjectTableIndexBufferEntryNVX" "flags"
-  vkFlags :: VkObjectEntryUsageFlagsNVX
-  , -- | @buffer@ specifies the @VkBuffer@ that can be bound as index buffer
-  vkBuffer :: VkBuffer
-  , -- | @indexType@ specifies the @VkIndexType@ used with this index buffer
-  vkIndexType :: VkIndexType
+-- 'Graphics.Vulkan.Core10.Handles.Buffer',
+-- 'Graphics.Vulkan.Core10.Enums.IndexType.IndexType',
+-- 'ObjectEntryTypeNVX', 'ObjectEntryUsageFlagsNVX'
+data ObjectTableIndexBufferEntryNVX = ObjectTableIndexBufferEntryNVX
+  { -- | @type@ /must/ be a valid 'ObjectEntryTypeNVX' value
+    type' :: ObjectEntryTypeNVX
+  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not be @0@
+    flags :: ObjectEntryUsageFlagsNVX
+  , -- | 'Graphics.Vulkan.Core10.Handles.Buffer' /must/ be a valid
+    -- 'Graphics.Vulkan.Core10.Handles.Buffer' handle
+    buffer :: Buffer
+  , -- | 'Graphics.Vulkan.Core10.Enums.IndexType.IndexType' /must/ be a valid
+    -- 'Graphics.Vulkan.Core10.Enums.IndexType.IndexType' value
+    indexType :: IndexType
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show ObjectTableIndexBufferEntryNVX
 
-instance Storable VkObjectTableIndexBufferEntryNVX where
+instance ToCStruct ObjectTableIndexBufferEntryNVX where
+  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p ObjectTableIndexBufferEntryNVX{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr ObjectEntryTypeNVX)) (type')
+    poke ((p `plusPtr` 4 :: Ptr ObjectEntryUsageFlagsNVX)) (flags)
+    poke ((p `plusPtr` 8 :: Ptr Buffer)) (buffer)
+    poke ((p `plusPtr` 16 :: Ptr IndexType)) (indexType)
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr ObjectEntryTypeNVX)) (zero)
+    poke ((p `plusPtr` 4 :: Ptr ObjectEntryUsageFlagsNVX)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr Buffer)) (zero)
+    poke ((p `plusPtr` 16 :: Ptr IndexType)) (zero)
+    f
+
+instance FromCStruct ObjectTableIndexBufferEntryNVX where
+  peekCStruct p = do
+    type' <- peek @ObjectEntryTypeNVX ((p `plusPtr` 0 :: Ptr ObjectEntryTypeNVX))
+    flags <- peek @ObjectEntryUsageFlagsNVX ((p `plusPtr` 4 :: Ptr ObjectEntryUsageFlagsNVX))
+    buffer <- peek @Buffer ((p `plusPtr` 8 :: Ptr Buffer))
+    indexType <- peek @IndexType ((p `plusPtr` 16 :: Ptr IndexType))
+    pure $ ObjectTableIndexBufferEntryNVX
+             type' flags buffer indexType
+
+instance Storable ObjectTableIndexBufferEntryNVX where
   sizeOf ~_ = 24
   alignment ~_ = 8
-  peek ptr = VkObjectTableIndexBufferEntryNVX <$> peek (ptr `plusPtr` 0)
-                                              <*> peek (ptr `plusPtr` 4)
-                                              <*> peek (ptr `plusPtr` 8)
-                                              <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkType (poked :: VkObjectTableIndexBufferEntryNVX))
-                *> poke (ptr `plusPtr` 4) (vkFlags (poked :: VkObjectTableIndexBufferEntryNVX))
-                *> poke (ptr `plusPtr` 8) (vkBuffer (poked :: VkObjectTableIndexBufferEntryNVX))
-                *> poke (ptr `plusPtr` 16) (vkIndexType (poked :: VkObjectTableIndexBufferEntryNVX))
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero ObjectTableIndexBufferEntryNVX where
+  zero = ObjectTableIndexBufferEntryNVX
+           zero
+           zero
+           zero
+           zero
+
+
 -- | VkObjectTablePushConstantEntryNVX - Parameters of an object table push
 -- constant entry
 --
--- == Valid Usage
---
--- -   @type@ /must/ be @VK_OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX@
---
 -- == Valid Usage (Implicit)
 --
--- -   @type@ /must/ be a valid 'VkObjectEntryTypeNVX' value
---
--- -   @flags@ /must/ be a valid combination of
---     'VkObjectEntryUsageFlagBitsNVX' values
---
--- -   @flags@ /must/ not be @0@
---
--- -   @pipelineLayout@ /must/ be a valid @VkPipelineLayout@ handle
---
--- -   @stageFlags@ /must/ be a valid combination of
---     'Graphics.Vulkan.Core10.Pipeline.VkShaderStageFlagBits' values
---
--- -   @stageFlags@ /must/ not be @0@
---
 -- = See Also
 --
--- 'VkObjectEntryTypeNVX', 'VkObjectEntryUsageFlagsNVX',
--- 'Graphics.Vulkan.Core10.Pipeline.VkPipelineLayout',
--- 'Graphics.Vulkan.Core10.PipelineLayout.VkShaderStageFlags'
-data VkObjectTablePushConstantEntryNVX = VkObjectTablePushConstantEntryNVX
-  { -- No documentation found for Nested "VkObjectTablePushConstantEntryNVX" "type"
-  vkType :: VkObjectEntryTypeNVX
-  , -- No documentation found for Nested "VkObjectTablePushConstantEntryNVX" "flags"
-  vkFlags :: VkObjectEntryUsageFlagsNVX
-  , -- | @pipelineLayout@ specifies the @VkPipelineLayout@ that the pushconstants
-  -- are used with
-  vkPipelineLayout :: VkPipelineLayout
-  , -- | @stageFlags@ specifies the @VkShaderStageFlags@ that the pushconstants
-  -- are used with
-  vkStageFlags :: VkShaderStageFlags
+-- 'ObjectEntryTypeNVX', 'ObjectEntryUsageFlagsNVX',
+-- 'Graphics.Vulkan.Core10.Handles.PipelineLayout',
+-- 'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlags'
+data ObjectTablePushConstantEntryNVX = ObjectTablePushConstantEntryNVX
+  { -- | @type@ /must/ be a valid 'ObjectEntryTypeNVX' value
+    type' :: ObjectEntryTypeNVX
+  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not be @0@
+    flags :: ObjectEntryUsageFlagsNVX
+  , -- | 'Graphics.Vulkan.Core10.Handles.PipelineLayout' /must/ be a valid
+    -- 'Graphics.Vulkan.Core10.Handles.PipelineLayout' handle
+    pipelineLayout :: PipelineLayout
+  , -- | @stageFlags@ /must/ not be @0@
+    stageFlags :: ShaderStageFlags
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show ObjectTablePushConstantEntryNVX
 
-instance Storable VkObjectTablePushConstantEntryNVX where
+instance ToCStruct ObjectTablePushConstantEntryNVX where
+  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p ObjectTablePushConstantEntryNVX{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr ObjectEntryTypeNVX)) (type')
+    poke ((p `plusPtr` 4 :: Ptr ObjectEntryUsageFlagsNVX)) (flags)
+    poke ((p `plusPtr` 8 :: Ptr PipelineLayout)) (pipelineLayout)
+    poke ((p `plusPtr` 16 :: Ptr ShaderStageFlags)) (stageFlags)
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr ObjectEntryTypeNVX)) (zero)
+    poke ((p `plusPtr` 4 :: Ptr ObjectEntryUsageFlagsNVX)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr PipelineLayout)) (zero)
+    poke ((p `plusPtr` 16 :: Ptr ShaderStageFlags)) (zero)
+    f
+
+instance FromCStruct ObjectTablePushConstantEntryNVX where
+  peekCStruct p = do
+    type' <- peek @ObjectEntryTypeNVX ((p `plusPtr` 0 :: Ptr ObjectEntryTypeNVX))
+    flags <- peek @ObjectEntryUsageFlagsNVX ((p `plusPtr` 4 :: Ptr ObjectEntryUsageFlagsNVX))
+    pipelineLayout <- peek @PipelineLayout ((p `plusPtr` 8 :: Ptr PipelineLayout))
+    stageFlags <- peek @ShaderStageFlags ((p `plusPtr` 16 :: Ptr ShaderStageFlags))
+    pure $ ObjectTablePushConstantEntryNVX
+             type' flags pipelineLayout stageFlags
+
+instance Storable ObjectTablePushConstantEntryNVX where
   sizeOf ~_ = 24
   alignment ~_ = 8
-  peek ptr = VkObjectTablePushConstantEntryNVX <$> peek (ptr `plusPtr` 0)
-                                               <*> peek (ptr `plusPtr` 4)
-                                               <*> peek (ptr `plusPtr` 8)
-                                               <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkType (poked :: VkObjectTablePushConstantEntryNVX))
-                *> poke (ptr `plusPtr` 4) (vkFlags (poked :: VkObjectTablePushConstantEntryNVX))
-                *> poke (ptr `plusPtr` 8) (vkPipelineLayout (poked :: VkObjectTablePushConstantEntryNVX))
-                *> poke (ptr `plusPtr` 16) (vkStageFlags (poked :: VkObjectTablePushConstantEntryNVX))
--- | VkIndirectCommandsLayoutUsageFlagsNVX - Bitmask of
--- VkIndirectCommandsLayoutUsageFlagBitsNVX
---
--- = Description
---
--- @VkIndirectCommandsLayoutUsageFlagsNVX@ is a bitmask type for setting a
--- mask of zero or more 'VkIndirectCommandsLayoutUsageFlagBitsNVX'.
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero ObjectTablePushConstantEntryNVX where
+  zero = ObjectTablePushConstantEntryNVX
+           zero
+           zero
+           zero
+           zero
+
+
+-- | VkIndirectCommandsLayoutUsageFlagBitsNVX - Bitmask specifying allowed
+-- usage of an indirect commands layout
 --
 -- = See Also
 --
--- 'VkIndirectCommandsLayoutCreateInfoNVX',
--- 'VkIndirectCommandsLayoutUsageFlagBitsNVX'
-type VkIndirectCommandsLayoutUsageFlagsNVX = VkIndirectCommandsLayoutUsageFlagBitsNVX
--- | VkObjectEntryUsageFlagsNVX - Bitmask of VkObjectEntryUsageFlagBitsNVX
---
--- = Description
---
--- @VkObjectEntryUsageFlagsNVX@ is a bitmask type for setting a mask of
--- zero or more 'VkObjectEntryUsageFlagBitsNVX'.
+-- 'IndirectCommandsLayoutUsageFlagsNVX'
+newtype IndirectCommandsLayoutUsageFlagBitsNVX = IndirectCommandsLayoutUsageFlagBitsNVX Flags
+  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+
+-- | 'INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NVX' specifies
+-- that the processing of sequences /can/ happen at an
+-- implementation-dependent order, which is not guaranteed to be coherent
+-- across multiple invocations.
+pattern INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NVX = IndirectCommandsLayoutUsageFlagBitsNVX 0x00000001
+-- | 'INDIRECT_COMMANDS_LAYOUT_USAGE_SPARSE_SEQUENCES_BIT_NVX' specifies that
+-- there is likely a high difference between allocated number of sequences
+-- and actually used.
+pattern INDIRECT_COMMANDS_LAYOUT_USAGE_SPARSE_SEQUENCES_BIT_NVX = IndirectCommandsLayoutUsageFlagBitsNVX 0x00000002
+-- | 'INDIRECT_COMMANDS_LAYOUT_USAGE_EMPTY_EXECUTIONS_BIT_NVX' specifies that
+-- there are likely many draw or dispatch calls that are zero-sized (zero
+-- grid dimension, no primitives to render).
+pattern INDIRECT_COMMANDS_LAYOUT_USAGE_EMPTY_EXECUTIONS_BIT_NVX = IndirectCommandsLayoutUsageFlagBitsNVX 0x00000004
+-- | 'INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NVX' specifies
+-- that the input data for the sequences is not implicitly indexed from
+-- 0..sequencesUsed but a user provided
+-- 'Graphics.Vulkan.Core10.Handles.Buffer' encoding the index is provided.
+pattern INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NVX = IndirectCommandsLayoutUsageFlagBitsNVX 0x00000008
+
+type IndirectCommandsLayoutUsageFlagsNVX = IndirectCommandsLayoutUsageFlagBitsNVX
+
+instance Show IndirectCommandsLayoutUsageFlagBitsNVX where
+  showsPrec p = \case
+    INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NVX -> showString "INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NVX"
+    INDIRECT_COMMANDS_LAYOUT_USAGE_SPARSE_SEQUENCES_BIT_NVX -> showString "INDIRECT_COMMANDS_LAYOUT_USAGE_SPARSE_SEQUENCES_BIT_NVX"
+    INDIRECT_COMMANDS_LAYOUT_USAGE_EMPTY_EXECUTIONS_BIT_NVX -> showString "INDIRECT_COMMANDS_LAYOUT_USAGE_EMPTY_EXECUTIONS_BIT_NVX"
+    INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NVX -> showString "INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NVX"
+    IndirectCommandsLayoutUsageFlagBitsNVX x -> showParen (p >= 11) (showString "IndirectCommandsLayoutUsageFlagBitsNVX 0x" . showHex x)
+
+instance Read IndirectCommandsLayoutUsageFlagBitsNVX where
+  readPrec = parens (choose [("INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NVX", pure INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NVX)
+                            , ("INDIRECT_COMMANDS_LAYOUT_USAGE_SPARSE_SEQUENCES_BIT_NVX", pure INDIRECT_COMMANDS_LAYOUT_USAGE_SPARSE_SEQUENCES_BIT_NVX)
+                            , ("INDIRECT_COMMANDS_LAYOUT_USAGE_EMPTY_EXECUTIONS_BIT_NVX", pure INDIRECT_COMMANDS_LAYOUT_USAGE_EMPTY_EXECUTIONS_BIT_NVX)
+                            , ("INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NVX", pure INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NVX)]
+                     +++
+                     prec 10 (do
+                       expectP (Ident "IndirectCommandsLayoutUsageFlagBitsNVX")
+                       v <- step readPrec
+                       pure (IndirectCommandsLayoutUsageFlagBitsNVX v)))
+
+
+-- | VkObjectEntryUsageFlagBitsNVX - Bitmask specifying allowed usage of an
+-- object entry
 --
 -- = See Also
 --
--- 'VkObjectEntryUsageFlagBitsNVX', 'VkObjectTableCreateInfoNVX',
--- 'VkObjectTableDescriptorSetEntryNVX', 'VkObjectTableEntryNVX',
--- 'VkObjectTableIndexBufferEntryNVX', 'VkObjectTablePipelineEntryNVX',
--- 'VkObjectTablePushConstantEntryNVX', 'VkObjectTableVertexBufferEntryNVX'
-type VkObjectEntryUsageFlagsNVX = VkObjectEntryUsageFlagBitsNVX
+-- 'ObjectEntryUsageFlagsNVX'
+newtype ObjectEntryUsageFlagBitsNVX = ObjectEntryUsageFlagBitsNVX Flags
+  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+
+-- | 'OBJECT_ENTRY_USAGE_GRAPHICS_BIT_NVX' specifies that the resource is
+-- bound to
+-- 'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
+pattern OBJECT_ENTRY_USAGE_GRAPHICS_BIT_NVX = ObjectEntryUsageFlagBitsNVX 0x00000001
+-- | 'OBJECT_ENTRY_USAGE_COMPUTE_BIT_NVX' specifies that the resource is
+-- bound to
+-- 'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_COMPUTE'
+pattern OBJECT_ENTRY_USAGE_COMPUTE_BIT_NVX = ObjectEntryUsageFlagBitsNVX 0x00000002
+
+type ObjectEntryUsageFlagsNVX = ObjectEntryUsageFlagBitsNVX
+
+instance Show ObjectEntryUsageFlagBitsNVX where
+  showsPrec p = \case
+    OBJECT_ENTRY_USAGE_GRAPHICS_BIT_NVX -> showString "OBJECT_ENTRY_USAGE_GRAPHICS_BIT_NVX"
+    OBJECT_ENTRY_USAGE_COMPUTE_BIT_NVX -> showString "OBJECT_ENTRY_USAGE_COMPUTE_BIT_NVX"
+    ObjectEntryUsageFlagBitsNVX x -> showParen (p >= 11) (showString "ObjectEntryUsageFlagBitsNVX 0x" . showHex x)
+
+instance Read ObjectEntryUsageFlagBitsNVX where
+  readPrec = parens (choose [("OBJECT_ENTRY_USAGE_GRAPHICS_BIT_NVX", pure OBJECT_ENTRY_USAGE_GRAPHICS_BIT_NVX)
+                            , ("OBJECT_ENTRY_USAGE_COMPUTE_BIT_NVX", pure OBJECT_ENTRY_USAGE_COMPUTE_BIT_NVX)]
+                     +++
+                     prec 10 (do
+                       expectP (Ident "ObjectEntryUsageFlagBitsNVX")
+                       v <- step readPrec
+                       pure (ObjectEntryUsageFlagBitsNVX v)))
+
+
+-- | VkIndirectCommandsTokenTypeNVX - Enum specifying
+--
+-- = Description
+--
+-- \'
+--
+-- +---------------------------------------------------+-----------------------------------------------------------------------+
+-- | Token type                                        | Equivalent command                                                    |
+-- +===================================================+=======================================================================+
+-- | 'INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX'       | 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdBindPipeline'        |
+-- +---------------------------------------------------+-----------------------------------------------------------------------+
+-- | 'INDIRECT_COMMANDS_TOKEN_TYPE_DESCRIPTOR_SET_NVX' | 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdBindDescriptorSets'  |
+-- +---------------------------------------------------+-----------------------------------------------------------------------+
+-- | 'INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NVX'   | 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer'     |
+-- +---------------------------------------------------+-----------------------------------------------------------------------+
+-- | 'INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NVX'  | 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdBindVertexBuffers'   |
+-- +---------------------------------------------------+-----------------------------------------------------------------------+
+-- | 'INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NVX'  | 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdPushConstants'       |
+-- +---------------------------------------------------+-----------------------------------------------------------------------+
+-- | 'INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NVX'   | 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdDrawIndexedIndirect' |
+-- +---------------------------------------------------+-----------------------------------------------------------------------+
+-- | 'INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NVX'           | 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdDrawIndirect'        |
+-- +---------------------------------------------------+-----------------------------------------------------------------------+
+-- | 'INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX'       | 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdDispatchIndirect'    |
+-- +---------------------------------------------------+-----------------------------------------------------------------------+
+--
+-- Supported indirect command tokens
+--
+-- = See Also
+--
+-- 'IndirectCommandsLayoutTokenNVX', 'IndirectCommandsTokenNVX'
+newtype IndirectCommandsTokenTypeNVX = IndirectCommandsTokenTypeNVX Int32
+  deriving newtype (Eq, Ord, Storable, Zero)
+
+-- No documentation found for Nested "VkIndirectCommandsTokenTypeNVX" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX"
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX = IndirectCommandsTokenTypeNVX 0
+-- No documentation found for Nested "VkIndirectCommandsTokenTypeNVX" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_DESCRIPTOR_SET_NVX"
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_DESCRIPTOR_SET_NVX = IndirectCommandsTokenTypeNVX 1
+-- No documentation found for Nested "VkIndirectCommandsTokenTypeNVX" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NVX"
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NVX = IndirectCommandsTokenTypeNVX 2
+-- No documentation found for Nested "VkIndirectCommandsTokenTypeNVX" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NVX"
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NVX = IndirectCommandsTokenTypeNVX 3
+-- No documentation found for Nested "VkIndirectCommandsTokenTypeNVX" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NVX"
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NVX = IndirectCommandsTokenTypeNVX 4
+-- No documentation found for Nested "VkIndirectCommandsTokenTypeNVX" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NVX"
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NVX = IndirectCommandsTokenTypeNVX 5
+-- No documentation found for Nested "VkIndirectCommandsTokenTypeNVX" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NVX"
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NVX = IndirectCommandsTokenTypeNVX 6
+-- No documentation found for Nested "VkIndirectCommandsTokenTypeNVX" "VK_INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX"
+pattern INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX = IndirectCommandsTokenTypeNVX 7
+{-# complete INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX,
+             INDIRECT_COMMANDS_TOKEN_TYPE_DESCRIPTOR_SET_NVX,
+             INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NVX,
+             INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NVX,
+             INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NVX,
+             INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NVX,
+             INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NVX,
+             INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX :: IndirectCommandsTokenTypeNVX #-}
+
+instance Show IndirectCommandsTokenTypeNVX where
+  showsPrec p = \case
+    INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX -> showString "INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX"
+    INDIRECT_COMMANDS_TOKEN_TYPE_DESCRIPTOR_SET_NVX -> showString "INDIRECT_COMMANDS_TOKEN_TYPE_DESCRIPTOR_SET_NVX"
+    INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NVX -> showString "INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NVX"
+    INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NVX -> showString "INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NVX"
+    INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NVX -> showString "INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NVX"
+    INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NVX -> showString "INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NVX"
+    INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NVX -> showString "INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NVX"
+    INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX -> showString "INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX"
+    IndirectCommandsTokenTypeNVX x -> showParen (p >= 11) (showString "IndirectCommandsTokenTypeNVX " . showsPrec 11 x)
+
+instance Read IndirectCommandsTokenTypeNVX where
+  readPrec = parens (choose [("INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX", pure INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX)
+                            , ("INDIRECT_COMMANDS_TOKEN_TYPE_DESCRIPTOR_SET_NVX", pure INDIRECT_COMMANDS_TOKEN_TYPE_DESCRIPTOR_SET_NVX)
+                            , ("INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NVX", pure INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NVX)
+                            , ("INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NVX", pure INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NVX)
+                            , ("INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NVX", pure INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NVX)
+                            , ("INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NVX", pure INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NVX)
+                            , ("INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NVX", pure INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NVX)
+                            , ("INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX", pure INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX)]
+                     +++
+                     prec 10 (do
+                       expectP (Ident "IndirectCommandsTokenTypeNVX")
+                       v <- step readPrec
+                       pure (IndirectCommandsTokenTypeNVX v)))
+
+
+-- | VkObjectEntryTypeNVX - Enum specifying object table entry type
+--
+-- = See Also
+--
+-- 'ObjectTableCreateInfoNVX', 'ObjectTableDescriptorSetEntryNVX',
+-- 'ObjectTableEntryNVX', 'ObjectTableIndexBufferEntryNVX',
+-- 'ObjectTablePipelineEntryNVX', 'ObjectTablePushConstantEntryNVX',
+-- 'ObjectTableVertexBufferEntryNVX', 'unregisterObjectsNVX'
+newtype ObjectEntryTypeNVX = ObjectEntryTypeNVX Int32
+  deriving newtype (Eq, Ord, Storable, Zero)
+
+-- | 'OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX' specifies a
+-- 'Graphics.Vulkan.Core10.Handles.DescriptorSet' resource entry that is
+-- registered via 'ObjectTableDescriptorSetEntryNVX'.
+pattern OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX = ObjectEntryTypeNVX 0
+-- | 'OBJECT_ENTRY_TYPE_PIPELINE_NVX' specifies a
+-- 'Graphics.Vulkan.Core10.Handles.Pipeline' resource entry that is
+-- registered via 'ObjectTablePipelineEntryNVX'.
+pattern OBJECT_ENTRY_TYPE_PIPELINE_NVX = ObjectEntryTypeNVX 1
+-- | 'OBJECT_ENTRY_TYPE_INDEX_BUFFER_NVX' specifies a
+-- 'Graphics.Vulkan.Core10.Handles.Buffer' resource entry that is
+-- registered via 'ObjectTableIndexBufferEntryNVX'.
+pattern OBJECT_ENTRY_TYPE_INDEX_BUFFER_NVX = ObjectEntryTypeNVX 2
+-- | 'OBJECT_ENTRY_TYPE_VERTEX_BUFFER_NVX' specifies a
+-- 'Graphics.Vulkan.Core10.Handles.Buffer' resource entry that is
+-- registered via 'ObjectTableVertexBufferEntryNVX'.
+pattern OBJECT_ENTRY_TYPE_VERTEX_BUFFER_NVX = ObjectEntryTypeNVX 3
+-- | 'OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX' specifies the resource entry is
+-- registered via 'ObjectTablePushConstantEntryNVX'.
+pattern OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX = ObjectEntryTypeNVX 4
+{-# complete OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX,
+             OBJECT_ENTRY_TYPE_PIPELINE_NVX,
+             OBJECT_ENTRY_TYPE_INDEX_BUFFER_NVX,
+             OBJECT_ENTRY_TYPE_VERTEX_BUFFER_NVX,
+             OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX :: ObjectEntryTypeNVX #-}
+
+instance Show ObjectEntryTypeNVX where
+  showsPrec p = \case
+    OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX -> showString "OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX"
+    OBJECT_ENTRY_TYPE_PIPELINE_NVX -> showString "OBJECT_ENTRY_TYPE_PIPELINE_NVX"
+    OBJECT_ENTRY_TYPE_INDEX_BUFFER_NVX -> showString "OBJECT_ENTRY_TYPE_INDEX_BUFFER_NVX"
+    OBJECT_ENTRY_TYPE_VERTEX_BUFFER_NVX -> showString "OBJECT_ENTRY_TYPE_VERTEX_BUFFER_NVX"
+    OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX -> showString "OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX"
+    ObjectEntryTypeNVX x -> showParen (p >= 11) (showString "ObjectEntryTypeNVX " . showsPrec 11 x)
+
+instance Read ObjectEntryTypeNVX where
+  readPrec = parens (choose [("OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX", pure OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX)
+                            , ("OBJECT_ENTRY_TYPE_PIPELINE_NVX", pure OBJECT_ENTRY_TYPE_PIPELINE_NVX)
+                            , ("OBJECT_ENTRY_TYPE_INDEX_BUFFER_NVX", pure OBJECT_ENTRY_TYPE_INDEX_BUFFER_NVX)
+                            , ("OBJECT_ENTRY_TYPE_VERTEX_BUFFER_NVX", pure OBJECT_ENTRY_TYPE_VERTEX_BUFFER_NVX)
+                            , ("OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX", pure OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX)]
+                     +++
+                     prec 10 (do
+                       expectP (Ident "ObjectEntryTypeNVX")
+                       v <- step readPrec
+                       pure (ObjectEntryTypeNVX v)))
+
+
+type NVX_DEVICE_GENERATED_COMMANDS_SPEC_VERSION = 3
+
+-- No documentation found for TopLevel "VK_NVX_DEVICE_GENERATED_COMMANDS_SPEC_VERSION"
+pattern NVX_DEVICE_GENERATED_COMMANDS_SPEC_VERSION :: forall a . Integral a => a
+pattern NVX_DEVICE_GENERATED_COMMANDS_SPEC_VERSION = 3
+
+
+type NVX_DEVICE_GENERATED_COMMANDS_EXTENSION_NAME = "VK_NVX_device_generated_commands"
+
+-- No documentation found for TopLevel "VK_NVX_DEVICE_GENERATED_COMMANDS_EXTENSION_NAME"
+pattern NVX_DEVICE_GENERATED_COMMANDS_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern NVX_DEVICE_GENERATED_COMMANDS_EXTENSION_NAME = "VK_NVX_device_generated_commands"
+

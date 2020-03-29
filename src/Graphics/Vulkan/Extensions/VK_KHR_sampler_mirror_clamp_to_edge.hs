@@ -1,33 +1,27 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
-{-# language OverloadedStrings #-}
+module Graphics.Vulkan.Extensions.VK_KHR_sampler_mirror_clamp_to_edge  ( pattern SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE_KHR
+                                                                       , KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_SPEC_VERSION
+                                                                       , pattern KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_SPEC_VERSION
+                                                                       , KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_EXTENSION_NAME
+                                                                       , pattern KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_EXTENSION_NAME
+                                                                       ) where
 
-module Graphics.Vulkan.Extensions.VK_KHR_sampler_mirror_clamp_to_edge
-  ( pattern VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE
-  , pattern VK_KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_SPEC_VERSION
-  , pattern VK_KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_EXTENSION_NAME
-  ) where
-
-import Data.String
-  ( IsString
-  )
-
-
-import Graphics.Vulkan.Core10.Sampler
-  ( VkSamplerAddressMode(..)
-  )
+import Data.String (IsString)
+import Graphics.Vulkan.Core10.Enums.SamplerAddressMode (SamplerAddressMode(SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE))
+-- No documentation found for TopLevel "VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE_KHR"
+pattern SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE_KHR = SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE
 
 
--- | @VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE@ specifies that the mirror
--- clamp to edge wrap mode will be used. This is only valid if the
--- @{html_spec_relative}#VK_KHR_sampler_mirror_clamp_to_edge@ extension is
--- enabled.
-pattern VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE :: VkSamplerAddressMode
-pattern VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE = VkSamplerAddressMode 4
+type KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_SPEC_VERSION = 3
+
 -- No documentation found for TopLevel "VK_KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_SPEC_VERSION"
-pattern VK_KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_SPEC_VERSION :: Integral a => a
-pattern VK_KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_SPEC_VERSION = 1
+pattern KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_SPEC_VERSION :: forall a . Integral a => a
+pattern KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_SPEC_VERSION = 3
+
+
+type KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_EXTENSION_NAME = "VK_KHR_sampler_mirror_clamp_to_edge"
+
 -- No documentation found for TopLevel "VK_KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_EXTENSION_NAME"
-pattern VK_KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_EXTENSION_NAME :: (Eq a ,IsString a) => a
-pattern VK_KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_EXTENSION_NAME = "VK_KHR_sampler_mirror_clamp_to_edge"
+pattern KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_EXTENSION_NAME = "VK_KHR_sampler_mirror_clamp_to_edge"
+

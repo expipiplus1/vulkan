@@ -1,0 +1,78 @@
+name: vulkan
+version: 3.0.0.0
+synopsis: Bindings to the Vulkan graphics API.
+category: Graphics
+maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
+github: expipiplus1/vulkan
+extra-source-files:
+ - readme.md
+ - changelog.md
+
+library:
+  source-dirs: src
+  dependencies:
+    - base
+    - bytestring
+    - transformers
+    - vector
+    - vector-sized
+  when:
+    - condition: os(windows)
+      then:
+        extra-libraries: vulkan-1
+      else:
+        extra-libraries: vulkan
+    - condition: flag(safe-foreign-calls)
+      then:
+        cpp-options: -DSAFE_FOREIGN_CALLS
+      else: {}
+  ghc-options:
+    - -Wall
+    - -Wno-unticked-promoted-constructors
+    - -Wno-missing-pattern-synonym-signatures
+    - -Wno-unused-imports
+    - -Wno-missing-signatures
+    - -Wno-partial-type-signatures
+
+flags:
+  safe-foreign-calls:
+    description:
+      Do not mark foreign imports as 'unsafe'. This means that
+      callbacks from Vulkan to Haskell will work. If you are using
+      these then make sure this flag is enabled.
+    default: yes
+    manual: no
+
+default-extensions:
+  - AllowAmbiguousTypes
+  - CPP
+  - DataKinds
+  - DefaultSignatures
+  - DeriveAnyClass
+  - DerivingStrategies
+  - DuplicateRecordFields
+  - FlexibleContexts
+  - FlexibleInstances
+  - GADTs
+  - GeneralizedNewtypeDeriving
+  - InstanceSigs
+  - LambdaCase
+  - MagicHash
+  - NoMonomorphismRestriction
+  - OverloadedStrings
+  - PartialTypeSignatures
+  - PatternSynonyms
+  - PolyKinds
+  - QuantifiedConstraints
+  - RankNTypes
+  - RecordWildCards
+  - RoleAnnotations
+  - ScopedTypeVariables
+  - StandaloneDeriving
+  - Strict
+  - TypeApplications
+  - TypeFamilyDependencies
+  - TypeOperators
+  - TypeSynonymInstances
+  - UndecidableInstances
+  - ViewPatterns

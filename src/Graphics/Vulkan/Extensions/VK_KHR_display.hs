@@ -1,371 +1,310 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language GeneralizedNewtypeDeriving #-}
-{-# language PatternSynonyms #-}
-{-# language OverloadedStrings #-}
-{-# language DataKinds #-}
-{-# language TypeOperators #-}
-{-# language DuplicateRecordFields #-}
+module Graphics.Vulkan.Extensions.VK_KHR_display  ( getPhysicalDeviceDisplayPropertiesKHR
+                                                  , getPhysicalDeviceDisplayPlanePropertiesKHR
+                                                  , getDisplayPlaneSupportedDisplaysKHR
+                                                  , getDisplayModePropertiesKHR
+                                                  , createDisplayModeKHR
+                                                  , getDisplayPlaneCapabilitiesKHR
+                                                  , createDisplayPlaneSurfaceKHR
+                                                  , DisplayPropertiesKHR(..)
+                                                  , DisplayPlanePropertiesKHR(..)
+                                                  , DisplayModeParametersKHR(..)
+                                                  , DisplayModePropertiesKHR(..)
+                                                  , DisplayModeCreateInfoKHR(..)
+                                                  , DisplayPlaneCapabilitiesKHR(..)
+                                                  , DisplaySurfaceCreateInfoKHR(..)
+                                                  , DisplayModeCreateFlagsKHR(..)
+                                                  , DisplaySurfaceCreateFlagsKHR(..)
+                                                  , DisplayPlaneAlphaFlagBitsKHR( DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR
+                                                                                , DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR
+                                                                                , DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR
+                                                                                , DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR
+                                                                                , ..
+                                                                                )
+                                                  , DisplayPlaneAlphaFlagsKHR
+                                                  , SurfaceTransformFlagBitsKHR( SURFACE_TRANSFORM_IDENTITY_BIT_KHR
+                                                                               , SURFACE_TRANSFORM_ROTATE_90_BIT_KHR
+                                                                               , SURFACE_TRANSFORM_ROTATE_180_BIT_KHR
+                                                                               , SURFACE_TRANSFORM_ROTATE_270_BIT_KHR
+                                                                               , SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR
+                                                                               , SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR
+                                                                               , SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR
+                                                                               , SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR
+                                                                               , SURFACE_TRANSFORM_INHERIT_BIT_KHR
+                                                                               , ..
+                                                                               )
+                                                  , SurfaceTransformFlagsKHR
+                                                  , KHR_DISPLAY_SPEC_VERSION
+                                                  , pattern KHR_DISPLAY_SPEC_VERSION
+                                                  , KHR_DISPLAY_EXTENSION_NAME
+                                                  , pattern KHR_DISPLAY_EXTENSION_NAME
+                                                  , DisplayKHR(..)
+                                                  , DisplayModeKHR(..)
+                                                  , SurfaceKHR(..)
+                                                  ) where
 
-module Graphics.Vulkan.Extensions.VK_KHR_display
-  ( VkDisplayPlaneAlphaFlagBitsKHR(..)
-  , pattern VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR
-  , pattern VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR
-  , pattern VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR
-  , pattern VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR
-  , VkDisplayModeCreateFlagsKHR(..)
-  , VkDisplaySurfaceCreateFlagsKHR(..)
-  , pattern VK_STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR
-  , pattern VK_STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR
-  , pattern VK_OBJECT_TYPE_DISPLAY_KHR
-  , pattern VK_OBJECT_TYPE_DISPLAY_MODE_KHR
-  , pattern VK_KHR_DISPLAY_SPEC_VERSION
-  , pattern VK_KHR_DISPLAY_EXTENSION_NAME
-  , VkDisplayKHR
-  , VkDisplayModeKHR
-  , vkGetPhysicalDeviceDisplayPropertiesKHR
-  , vkGetPhysicalDeviceDisplayPlanePropertiesKHR
-  , vkGetDisplayPlaneSupportedDisplaysKHR
-  , vkGetDisplayModePropertiesKHR
-  , vkCreateDisplayModeKHR
-  , vkGetDisplayPlaneCapabilitiesKHR
-  , vkCreateDisplayPlaneSurfaceKHR
-  , VkDisplayPropertiesKHR(..)
-  , VkDisplayPlanePropertiesKHR(..)
-  , VkDisplayModeParametersKHR(..)
-  , VkDisplayModePropertiesKHR(..)
-  , VkDisplayModeCreateInfoKHR(..)
-  , VkDisplayPlaneCapabilitiesKHR(..)
-  , VkDisplaySurfaceCreateInfoKHR(..)
-  , VkDisplayPlaneAlphaFlagsKHR
-  ) where
+import Control.Exception.Base (bracket)
+import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (callocBytes)
+import Foreign.Marshal.Alloc (free)
+import GHC.Base (when)
+import GHC.IO (throwIO)
+import Foreign.Ptr (nullPtr)
+import Foreign.Ptr (plusPtr)
+import GHC.Read (choose)
+import GHC.Read (expectP)
+import GHC.Read (parens)
+import GHC.Show (showParen)
+import GHC.Show (showString)
+import Numeric (showHex)
+import Text.ParserCombinators.ReadPrec ((+++))
+import Text.ParserCombinators.ReadPrec (prec)
+import Text.ParserCombinators.ReadPrec (step)
+import Data.ByteString (packCString)
+import Data.ByteString (useAsCString)
+import Control.Monad.Trans.Class (lift)
+import Control.Monad.Trans.Cont (evalContT)
+import Data.Vector (generateM)
+import Data.Bits (Bits)
+import Data.String (IsString)
+import Data.Typeable (Typeable)
+import Foreign.C.Types (CChar)
+import Foreign.C.Types (CFloat)
+import Foreign.C.Types (CFloat(CFloat))
+import Foreign.Storable (Storable)
+import Foreign.Storable (Storable(peek))
+import Foreign.Storable (Storable(poke))
+import qualified Foreign.Storable (Storable(..))
+import Foreign.Ptr (FunPtr)
+import Foreign.Ptr (Ptr)
+import GHC.Read (Read(readPrec))
+import Data.Word (Word32)
+import Text.Read.Lex (Lexeme(Ident))
+import Data.ByteString (ByteString)
+import Data.Kind (Type)
+import Control.Monad.Trans.Cont (ContT(..))
+import Data.Vector (Vector)
+import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
+import Graphics.Vulkan.Core10.BaseType (bool32ToBool)
+import Graphics.Vulkan.Core10.BaseType (boolToBool32)
+import Graphics.Vulkan.NamedType ((:::))
+import Graphics.Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
+import Graphics.Vulkan.Core10.BaseType (Bool32)
+import Graphics.Vulkan.Extensions.Handles (DisplayKHR)
+import Graphics.Vulkan.Extensions.Handles (DisplayKHR(..))
+import Graphics.Vulkan.Extensions.Handles (DisplayModeKHR)
+import Graphics.Vulkan.Extensions.Handles (DisplayModeKHR(..))
+import Graphics.Vulkan.Core10.SharedTypes (Extent2D)
+import Graphics.Vulkan.Core10.BaseType (Flags)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (FromCStruct(..))
+import Graphics.Vulkan.Core10.Handles (Instance)
+import Graphics.Vulkan.Core10.Handles (Instance(..))
+import Graphics.Vulkan.Dynamic (InstanceCmds(pVkCreateDisplayModeKHR))
+import Graphics.Vulkan.Dynamic (InstanceCmds(pVkCreateDisplayPlaneSurfaceKHR))
+import Graphics.Vulkan.Dynamic (InstanceCmds(pVkGetDisplayModePropertiesKHR))
+import Graphics.Vulkan.Dynamic (InstanceCmds(pVkGetDisplayPlaneCapabilitiesKHR))
+import Graphics.Vulkan.Dynamic (InstanceCmds(pVkGetDisplayPlaneSupportedDisplaysKHR))
+import Graphics.Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceDisplayPlanePropertiesKHR))
+import Graphics.Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceDisplayPropertiesKHR))
+import Graphics.Vulkan.Core10.Handles (Instance_T)
+import Graphics.Vulkan.Core10.SharedTypes (Offset2D)
+import Graphics.Vulkan.Core10.Handles (PhysicalDevice)
+import Graphics.Vulkan.Core10.Handles (PhysicalDevice(..))
+import Graphics.Vulkan.Core10.Handles (PhysicalDevice_T)
+import Graphics.Vulkan.Core10.Enums.Result (Result)
+import Graphics.Vulkan.Core10.Enums.Result (Result(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
+import Graphics.Vulkan.Extensions.Handles (SurfaceKHR)
+import Graphics.Vulkan.Extensions.Handles (SurfaceKHR(..))
+import Graphics.Vulkan.CStruct (ToCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct(..))
+import Graphics.Vulkan.Exception (VulkanException(..))
+import Graphics.Vulkan.Zero (Zero)
+import Graphics.Vulkan.Zero (Zero(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR))
+import Graphics.Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Graphics.Vulkan.Extensions.Handles (DisplayKHR(..))
+import Graphics.Vulkan.Extensions.Handles (DisplayModeKHR(..))
+import Graphics.Vulkan.Extensions.Handles (SurfaceKHR(..))
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkGetPhysicalDeviceDisplayPropertiesKHR
+  :: FunPtr (Ptr PhysicalDevice_T -> Ptr Word32 -> Ptr DisplayPropertiesKHR -> IO Result) -> Ptr PhysicalDevice_T -> Ptr Word32 -> Ptr DisplayPropertiesKHR -> IO Result
 
-import Data.Bits
-  ( Bits
-  , FiniteBits
-  )
-import Data.String
-  ( IsString
-  )
-import Data.Word
-  ( Word32
-  )
-import Foreign.C.Types
-  ( CChar(..)
-  , CFloat(..)
-  )
-import Foreign.Ptr
-  ( Ptr
-  , plusPtr
-  )
-import Foreign.Storable
-  ( Storable
-  , Storable(..)
-  )
-import GHC.Read
-  ( choose
-  , expectP
-  )
-import Graphics.Vulkan.NamedType
-  ( (:::)
-  )
-import Text.ParserCombinators.ReadPrec
-  ( (+++)
-  , prec
-  , step
-  )
-import Text.Read
-  ( Read(..)
-  , parens
-  )
-import Text.Read.Lex
-  ( Lexeme(Ident)
-  )
-
-
-import Graphics.Vulkan.Core10.Core
-  ( VkBool32(..)
-  , VkObjectType(..)
-  , VkResult(..)
-  , VkStructureType(..)
-  , VkFlags
-  )
-import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkAllocationCallbacks(..)
-  , VkInstance
-  , VkPhysicalDevice
-  )
-import Graphics.Vulkan.Core10.Pipeline
-  ( VkExtent2D(..)
-  , VkOffset2D(..)
-  )
-import Graphics.Vulkan.Extensions.VK_KHR_surface
-  ( VkSurfaceTransformFlagBitsKHR(..)
-  , VkSurfaceKHR
-  , VkSurfaceTransformFlagsKHR
-  )
-
-
--- ** VkDisplayPlaneAlphaFlagBitsKHR
-
--- | VkDisplayPlaneAlphaFlagBitsKHR - Alpha blending type
---
--- = See Also
---
--- 'VkDisplayPlaneAlphaFlagsKHR', 'VkDisplaySurfaceCreateInfoKHR'
-newtype VkDisplayPlaneAlphaFlagBitsKHR = VkDisplayPlaneAlphaFlagBitsKHR VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
-
-instance Show VkDisplayPlaneAlphaFlagBitsKHR where
-  showsPrec _ VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR = showString "VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR"
-  showsPrec _ VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR = showString "VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR"
-  showsPrec _ VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR = showString "VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR"
-  showsPrec _ VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = showString "VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR"
-  showsPrec p (VkDisplayPlaneAlphaFlagBitsKHR x) = showParen (p >= 11) (showString "VkDisplayPlaneAlphaFlagBitsKHR " . showsPrec 11 x)
-
-instance Read VkDisplayPlaneAlphaFlagBitsKHR where
-  readPrec = parens ( choose [ ("VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR",                  pure VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR)
-                             , ("VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR",                  pure VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR)
-                             , ("VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR",               pure VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR)
-                             , ("VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR", pure VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR)
-                             ] +++
-                      prec 10 (do
-                        expectP (Ident "VkDisplayPlaneAlphaFlagBitsKHR")
-                        v <- step readPrec
-                        pure (VkDisplayPlaneAlphaFlagBitsKHR v)
-                        )
-                    )
-
--- | @VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR@ specifies that the source image
--- will be treated as opaque.
-pattern VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR :: VkDisplayPlaneAlphaFlagBitsKHR
-pattern VK_DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR = VkDisplayPlaneAlphaFlagBitsKHR 0x00000001
-
--- | @VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR@ specifies that a global alpha
--- value /must/ be specified that will be applied to all pixels in the
--- source image.
-pattern VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR :: VkDisplayPlaneAlphaFlagBitsKHR
-pattern VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR = VkDisplayPlaneAlphaFlagBitsKHR 0x00000002
-
--- | @VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR@ specifies that the alpha
--- value will be determined by the alpha channel of the source image’s
--- pixels. If the source format contains no alpha values, no blending will
--- be applied. The source alpha values are not premultiplied into the
--- source image’s other color channels.
-pattern VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR :: VkDisplayPlaneAlphaFlagBitsKHR
-pattern VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR = VkDisplayPlaneAlphaFlagBitsKHR 0x00000004
-
--- | @VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR@ is equivalent
--- to @VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR@, except the source alpha
--- values are assumed to be premultiplied into the source image’s other
--- color channels.
-pattern VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR :: VkDisplayPlaneAlphaFlagBitsKHR
-pattern VK_DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = VkDisplayPlaneAlphaFlagBitsKHR 0x00000008
--- ** VkDisplayModeCreateFlagsKHR
-
--- No documentation found for TopLevel "VkDisplayModeCreateFlagsKHR"
-newtype VkDisplayModeCreateFlagsKHR = VkDisplayModeCreateFlagsKHR VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
-
-instance Show VkDisplayModeCreateFlagsKHR where
-  
-  showsPrec p (VkDisplayModeCreateFlagsKHR x) = showParen (p >= 11) (showString "VkDisplayModeCreateFlagsKHR " . showsPrec 11 x)
-
-instance Read VkDisplayModeCreateFlagsKHR where
-  readPrec = parens ( choose [ 
-                             ] +++
-                      prec 10 (do
-                        expectP (Ident "VkDisplayModeCreateFlagsKHR")
-                        v <- step readPrec
-                        pure (VkDisplayModeCreateFlagsKHR v)
-                        )
-                    )
-
-
--- ** VkDisplaySurfaceCreateFlagsKHR
-
--- No documentation found for TopLevel "VkDisplaySurfaceCreateFlagsKHR"
-newtype VkDisplaySurfaceCreateFlagsKHR = VkDisplaySurfaceCreateFlagsKHR VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
-
-instance Show VkDisplaySurfaceCreateFlagsKHR where
-  
-  showsPrec p (VkDisplaySurfaceCreateFlagsKHR x) = showParen (p >= 11) (showString "VkDisplaySurfaceCreateFlagsKHR " . showsPrec 11 x)
-
-instance Read VkDisplaySurfaceCreateFlagsKHR where
-  readPrec = parens ( choose [ 
-                             ] +++
-                      prec 10 (do
-                        expectP (Ident "VkDisplaySurfaceCreateFlagsKHR")
-                        v <- step readPrec
-                        pure (VkDisplaySurfaceCreateFlagsKHR v)
-                        )
-                    )
-
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR"
-pattern VK_STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR :: VkStructureType
-pattern VK_STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR = VkStructureType 1000002000
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR"
-pattern VK_STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR :: VkStructureType
-pattern VK_STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR = VkStructureType 1000002001
--- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_DISPLAY_KHR"
-pattern VK_OBJECT_TYPE_DISPLAY_KHR :: VkObjectType
-pattern VK_OBJECT_TYPE_DISPLAY_KHR = VkObjectType 1000002000
--- No documentation found for Nested "VkObjectType" "VK_OBJECT_TYPE_DISPLAY_MODE_KHR"
-pattern VK_OBJECT_TYPE_DISPLAY_MODE_KHR :: VkObjectType
-pattern VK_OBJECT_TYPE_DISPLAY_MODE_KHR = VkObjectType 1000002001
--- No documentation found for TopLevel "VK_KHR_DISPLAY_SPEC_VERSION"
-pattern VK_KHR_DISPLAY_SPEC_VERSION :: Integral a => a
-pattern VK_KHR_DISPLAY_SPEC_VERSION = 21
--- No documentation found for TopLevel "VK_KHR_DISPLAY_EXTENSION_NAME"
-pattern VK_KHR_DISPLAY_EXTENSION_NAME :: (Eq a ,IsString a) => a
-pattern VK_KHR_DISPLAY_EXTENSION_NAME = "VK_KHR_display"
--- | Dummy data to tag the 'Ptr' with
-data VkDisplayKHR_T
--- | VkDisplayKHR - Opaque handle to a display object
---
--- = See Also
---
--- 'VkDisplayPlanePropertiesKHR', 'VkDisplayPropertiesKHR',
--- 'Graphics.Vulkan.Extensions.VK_EXT_acquire_xlib_display.vkAcquireXlibDisplayEXT',
--- 'vkCreateDisplayModeKHR',
--- 'Graphics.Vulkan.Extensions.VK_EXT_display_control.vkDisplayPowerControlEXT',
--- 'vkGetDisplayModePropertiesKHR',
--- 'vkGetDisplayPlaneSupportedDisplaysKHR',
--- 'Graphics.Vulkan.Extensions.VK_EXT_acquire_xlib_display.vkGetRandROutputDisplayEXT',
--- 'Graphics.Vulkan.Extensions.VK_EXT_display_control.vkRegisterDisplayEventEXT',
--- 'Graphics.Vulkan.Extensions.VK_EXT_direct_mode_display.vkReleaseDisplayEXT'
-type VkDisplayKHR = Ptr VkDisplayKHR_T
--- | Dummy data to tag the 'Ptr' with
-data VkDisplayModeKHR_T
--- | VkDisplayModeKHR - Opaque handle to a display mode object
---
--- = See Also
---
--- 'VkDisplayModePropertiesKHR', 'VkDisplaySurfaceCreateInfoKHR',
--- 'vkCreateDisplayModeKHR', 'vkGetDisplayPlaneCapabilitiesKHR'
-type VkDisplayModeKHR = Ptr VkDisplayModeKHR_T
 -- | vkGetPhysicalDeviceDisplayPropertiesKHR - Query information about the
 -- available displays
 --
 -- = Parameters
 --
--- -   @physicalDevice@ is a physical device.
+-- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is a physical
+--     device.
 --
 -- -   @pPropertyCount@ is a pointer to an integer related to the number of
 --     display devices available or queried, as described below.
 --
 -- -   @pProperties@ is either @NULL@ or a pointer to an array of
---     @VkDisplayPropertiesKHR@ structures.
+--     'DisplayPropertiesKHR' structures.
 --
 -- = Description
 --
 -- If @pProperties@ is @NULL@, then the number of display devices available
--- for @physicalDevice@ is returned in @pPropertyCount@. Otherwise,
--- @pPropertyCount@ /must/ point to a variable set by the user to the
--- number of elements in the @pProperties@ array, and on return the
--- variable is overwritten with the number of structures actually written
--- to @pProperties@. If the value of @pPropertyCount@ is less than the
--- number of display devices for @physicalDevice@, at most @pPropertyCount@
--- structures will be written. If @pPropertyCount@ is smaller than the
--- number of display devices available for @physicalDevice@,
--- @VK_INCOMPLETE@ will be returned instead of @VK_SUCCESS@ to indicate
+-- for 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is returned in
+-- @pPropertyCount@. Otherwise, @pPropertyCount@ /must/ point to a variable
+-- set by the user to the number of elements in the @pProperties@ array,
+-- and on return the variable is overwritten with the number of structures
+-- actually written to @pProperties@. If the value of @pPropertyCount@ is
+-- less than the number of display devices for
+-- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', at most
+-- @pPropertyCount@ structures will be written. If @pPropertyCount@ is
+-- smaller than the number of display devices available for
+-- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
+-- 'Graphics.Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned
+-- instead of 'Graphics.Vulkan.Core10.Enums.Result.SUCCESS' to indicate
 -- that not all the available values were returned.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid @VkPhysicalDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
 --
 -- -   If the value referenced by @pPropertyCount@ is not @0@, and
 --     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
---     to an array of @pPropertyCount@ @VkDisplayPropertiesKHR@ structures
+--     to an array of @pPropertyCount@ 'DisplayPropertiesKHR' structures
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   @VK_INCOMPLETE@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.INCOMPLETE'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- 'VkDisplayPropertiesKHR',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'
+-- 'DisplayPropertiesKHR', 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
+getPhysicalDeviceDisplayPropertiesKHR :: PhysicalDevice -> IO (Result, ("properties" ::: Vector DisplayPropertiesKHR))
+getPhysicalDeviceDisplayPropertiesKHR physicalDevice = evalContT $ do
+  let vkGetPhysicalDeviceDisplayPropertiesKHR' = mkVkGetPhysicalDeviceDisplayPropertiesKHR (pVkGetPhysicalDeviceDisplayPropertiesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let physicalDevice' = physicalDeviceHandle (physicalDevice)
+  pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
+  r <- lift $ vkGetPhysicalDeviceDisplayPropertiesKHR' physicalDevice' (pPPropertyCount) (nullPtr)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pPropertyCount <- lift $ peek @Word32 pPPropertyCount
+  pPProperties <- ContT $ bracket (callocBytes @DisplayPropertiesKHR ((fromIntegral (pPropertyCount)) * 48)) free
+  _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 48) :: Ptr DisplayPropertiesKHR) . ($ ())) [0..(fromIntegral (pPropertyCount)) - 1]
+  r' <- lift $ vkGetPhysicalDeviceDisplayPropertiesKHR' physicalDevice' (pPPropertyCount) ((pPProperties))
+  lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
+  pPropertyCount' <- lift $ peek @Word32 pPPropertyCount
+  pProperties' <- lift $ generateM (fromIntegral (pPropertyCount')) (\i -> peekCStruct @DisplayPropertiesKHR (((pPProperties) `advancePtrBytes` (48 * (i)) :: Ptr DisplayPropertiesKHR)))
+  pure $ ((r'), pProperties')
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkGetPhysicalDeviceDisplayPropertiesKHR" vkGetPhysicalDeviceDisplayPropertiesKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayPropertiesKHR) -> IO VkResult
+  "dynamic" mkVkGetPhysicalDeviceDisplayPlanePropertiesKHR
+  :: FunPtr (Ptr PhysicalDevice_T -> Ptr Word32 -> Ptr DisplayPlanePropertiesKHR -> IO Result) -> Ptr PhysicalDevice_T -> Ptr Word32 -> Ptr DisplayPlanePropertiesKHR -> IO Result
+
 -- | vkGetPhysicalDeviceDisplayPlanePropertiesKHR - Query the plane
 -- properties
 --
 -- = Parameters
 --
--- -   @physicalDevice@ is a physical device.
+-- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is a physical
+--     device.
 --
 -- -   @pPropertyCount@ is a pointer to an integer related to the number of
 --     display planes available or queried, as described below.
 --
 -- -   @pProperties@ is either @NULL@ or a pointer to an array of
---     @VkDisplayPlanePropertiesKHR@ structures.
+--     'DisplayPlanePropertiesKHR' structures.
 --
 -- = Description
 --
 -- If @pProperties@ is @NULL@, then the number of display planes available
--- for @physicalDevice@ is returned in @pPropertyCount@. Otherwise,
--- @pPropertyCount@ /must/ point to a variable set by the user to the
--- number of elements in the @pProperties@ array, and on return the
--- variable is overwritten with the number of structures actually written
--- to @pProperties@. If the value of @pPropertyCount@ is less than the
--- number of display planes for @physicalDevice@, at most @pPropertyCount@
--- structures will be written.
+-- for 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is returned in
+-- @pPropertyCount@. Otherwise, @pPropertyCount@ /must/ point to a variable
+-- set by the user to the number of elements in the @pProperties@ array,
+-- and on return the variable is overwritten with the number of structures
+-- actually written to @pProperties@. If the value of @pPropertyCount@ is
+-- less than the number of display planes for
+-- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', at most
+-- @pPropertyCount@ structures will be written.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid @VkPhysicalDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
 --
 -- -   If the value referenced by @pPropertyCount@ is not @0@, and
 --     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
---     to an array of @pPropertyCount@ @VkDisplayPlanePropertiesKHR@
+--     to an array of @pPropertyCount@ 'DisplayPlanePropertiesKHR'
 --     structures
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   @VK_INCOMPLETE@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.INCOMPLETE'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- 'VkDisplayPlanePropertiesKHR',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'
+-- 'DisplayPlanePropertiesKHR',
+-- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
+getPhysicalDeviceDisplayPlanePropertiesKHR :: PhysicalDevice -> IO (Result, ("properties" ::: Vector DisplayPlanePropertiesKHR))
+getPhysicalDeviceDisplayPlanePropertiesKHR physicalDevice = evalContT $ do
+  let vkGetPhysicalDeviceDisplayPlanePropertiesKHR' = mkVkGetPhysicalDeviceDisplayPlanePropertiesKHR (pVkGetPhysicalDeviceDisplayPlanePropertiesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let physicalDevice' = physicalDeviceHandle (physicalDevice)
+  pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
+  r <- lift $ vkGetPhysicalDeviceDisplayPlanePropertiesKHR' physicalDevice' (pPPropertyCount) (nullPtr)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pPropertyCount <- lift $ peek @Word32 pPPropertyCount
+  pPProperties <- ContT $ bracket (callocBytes @DisplayPlanePropertiesKHR ((fromIntegral (pPropertyCount)) * 16)) free
+  _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 16) :: Ptr DisplayPlanePropertiesKHR) . ($ ())) [0..(fromIntegral (pPropertyCount)) - 1]
+  r' <- lift $ vkGetPhysicalDeviceDisplayPlanePropertiesKHR' physicalDevice' (pPPropertyCount) ((pPProperties))
+  lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
+  pPropertyCount' <- lift $ peek @Word32 pPPropertyCount
+  pProperties' <- lift $ generateM (fromIntegral (pPropertyCount')) (\i -> peekCStruct @DisplayPlanePropertiesKHR (((pPProperties) `advancePtrBytes` (16 * (i)) :: Ptr DisplayPlanePropertiesKHR)))
+  pure $ ((r'), pProperties')
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkGetPhysicalDeviceDisplayPlanePropertiesKHR" vkGetPhysicalDeviceDisplayPlanePropertiesKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayPlanePropertiesKHR) -> IO VkResult
+  "dynamic" mkVkGetDisplayPlaneSupportedDisplaysKHR
+  :: FunPtr (Ptr PhysicalDevice_T -> Word32 -> Ptr Word32 -> Ptr DisplayKHR -> IO Result) -> Ptr PhysicalDevice_T -> Word32 -> Ptr Word32 -> Ptr DisplayKHR -> IO Result
+
 -- | vkGetDisplayPlaneSupportedDisplaysKHR - Query the list of displays a
 -- plane supports
 --
 -- = Parameters
 --
--- -   @physicalDevice@ is a physical device.
+-- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is a physical
+--     device.
 --
 -- -   @planeIndex@ is the plane which the application wishes to use, and
 --     /must/ be in the range [0, physical device plane count - 1].
@@ -374,188 +313,282 @@ foreign import ccall
 --     displays available or queried, as described below.
 --
 -- -   @pDisplays@ is either @NULL@ or a pointer to an array of
---     @VkDisplayKHR@ handles.
+--     'Graphics.Vulkan.Extensions.Handles.DisplayKHR' handles.
 --
 -- = Description
 --
 -- If @pDisplays@ is @NULL@, then the number of displays usable with the
--- specified @planeIndex@ for @physicalDevice@ is returned in
+-- specified @planeIndex@ for
+-- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is returned in
 -- @pDisplayCount@. Otherwise, @pDisplayCount@ /must/ point to a variable
 -- set by the user to the number of elements in the @pDisplays@ array, and
 -- on return the variable is overwritten with the number of handles
 -- actually written to @pDisplays@. If the value of @pDisplayCount@ is less
--- than the number of display planes for @physicalDevice@, at most
--- @pDisplayCount@ handles will be written. If @pDisplayCount@ is smaller
--- than the number of displays usable with the specified @planeIndex@ for
--- @physicalDevice@, @VK_INCOMPLETE@ will be returned instead of
--- @VK_SUCCESS@ to indicate that not all the available values were
--- returned.
+-- than the number of display planes for
+-- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', at most @pDisplayCount@
+-- handles will be written. If @pDisplayCount@ is smaller than the number
+-- of displays usable with the specified @planeIndex@ for
+-- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
+-- 'Graphics.Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned
+-- instead of 'Graphics.Vulkan.Core10.Enums.Result.SUCCESS' to indicate
+-- that not all the available values were returned.
 --
 -- == Valid Usage
 --
 -- -   @planeIndex@ /must/ be less than the number of display planes
 --     supported by the device as determined by calling
---     @vkGetPhysicalDeviceDisplayPlanePropertiesKHR@
+--     'getPhysicalDeviceDisplayPlanePropertiesKHR'
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid @VkPhysicalDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pDisplayCount@ /must/ be a valid pointer to a @uint32_t@ value
 --
 -- -   If the value referenced by @pDisplayCount@ is not @0@, and
 --     @pDisplays@ is not @NULL@, @pDisplays@ /must/ be a valid pointer to
---     an array of @pDisplayCount@ @VkDisplayKHR@ handles
+--     an array of @pDisplayCount@
+--     'Graphics.Vulkan.Extensions.Handles.DisplayKHR' handles
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   @VK_INCOMPLETE@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.INCOMPLETE'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- 'VkDisplayKHR',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'
+-- 'Graphics.Vulkan.Extensions.Handles.DisplayKHR',
+-- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
+getDisplayPlaneSupportedDisplaysKHR :: PhysicalDevice -> ("planeIndex" ::: Word32) -> IO (Result, ("displays" ::: Vector DisplayKHR))
+getDisplayPlaneSupportedDisplaysKHR physicalDevice planeIndex = evalContT $ do
+  let vkGetDisplayPlaneSupportedDisplaysKHR' = mkVkGetDisplayPlaneSupportedDisplaysKHR (pVkGetDisplayPlaneSupportedDisplaysKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let physicalDevice' = physicalDeviceHandle (physicalDevice)
+  pPDisplayCount <- ContT $ bracket (callocBytes @Word32 4) free
+  r <- lift $ vkGetDisplayPlaneSupportedDisplaysKHR' physicalDevice' (planeIndex) (pPDisplayCount) (nullPtr)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pDisplayCount <- lift $ peek @Word32 pPDisplayCount
+  pPDisplays <- ContT $ bracket (callocBytes @DisplayKHR ((fromIntegral (pDisplayCount)) * 8)) free
+  r' <- lift $ vkGetDisplayPlaneSupportedDisplaysKHR' physicalDevice' (planeIndex) (pPDisplayCount) (pPDisplays)
+  lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
+  pDisplayCount' <- lift $ peek @Word32 pPDisplayCount
+  pDisplays' <- lift $ generateM (fromIntegral (pDisplayCount')) (\i -> peek @DisplayKHR ((pPDisplays `advancePtrBytes` (8 * (i)) :: Ptr DisplayKHR)))
+  pure $ ((r'), pDisplays')
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkGetDisplayPlaneSupportedDisplaysKHR" vkGetDisplayPlaneSupportedDisplaysKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("planeIndex" ::: Word32) -> ("pDisplayCount" ::: Ptr Word32) -> ("pDisplays" ::: Ptr VkDisplayKHR) -> IO VkResult
+  "dynamic" mkVkGetDisplayModePropertiesKHR
+  :: FunPtr (Ptr PhysicalDevice_T -> DisplayKHR -> Ptr Word32 -> Ptr DisplayModePropertiesKHR -> IO Result) -> Ptr PhysicalDevice_T -> DisplayKHR -> Ptr Word32 -> Ptr DisplayModePropertiesKHR -> IO Result
+
 -- | vkGetDisplayModePropertiesKHR - Query the set of mode properties
 -- supported by the display
 --
 -- = Parameters
 --
--- -   @physicalDevice@ is the physical device associated with @display@.
+-- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
+--     device associated with
+--     'Graphics.Vulkan.Extensions.WSITypes.Display'.
 --
--- -   @display@ is the display to query.
+-- -   'Graphics.Vulkan.Extensions.WSITypes.Display' is the display to
+--     query.
 --
 -- -   @pPropertyCount@ is a pointer to an integer related to the number of
 --     display modes available or queried, as described below.
 --
 -- -   @pProperties@ is either @NULL@ or a pointer to an array of
---     @VkDisplayModePropertiesKHR@ structures.
+--     'DisplayModePropertiesKHR' structures.
 --
 -- = Description
 --
 -- If @pProperties@ is @NULL@, then the number of display modes available
--- on the specified @display@ for @physicalDevice@ is returned in
+-- on the specified 'Graphics.Vulkan.Extensions.WSITypes.Display' for
+-- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is returned in
 -- @pPropertyCount@. Otherwise, @pPropertyCount@ /must/ point to a variable
 -- set by the user to the number of elements in the @pProperties@ array,
 -- and on return the variable is overwritten with the number of structures
 -- actually written to @pProperties@. If the value of @pPropertyCount@ is
--- less than the number of display modes for @physicalDevice@, at most
+-- less than the number of display modes for
+-- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', at most
 -- @pPropertyCount@ structures will be written. If @pPropertyCount@ is
 -- smaller than the number of display modes available on the specified
--- @display@ for @physicalDevice@, @VK_INCOMPLETE@ will be returned instead
--- of @VK_SUCCESS@ to indicate that not all the available values were
--- returned.
+-- 'Graphics.Vulkan.Extensions.WSITypes.Display' for
+-- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
+-- 'Graphics.Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned
+-- instead of 'Graphics.Vulkan.Core10.Enums.Result.SUCCESS' to indicate
+-- that not all the available values were returned.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid @VkPhysicalDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @display@ /must/ be a valid @VkDisplayKHR@ handle
+-- -   'Graphics.Vulkan.Extensions.WSITypes.Display' /must/ be a valid
+--     'Graphics.Vulkan.Extensions.Handles.DisplayKHR' handle
 --
 -- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
 --
 -- -   If the value referenced by @pPropertyCount@ is not @0@, and
 --     @pProperties@ is not @NULL@, @pProperties@ /must/ be a valid pointer
---     to an array of @pPropertyCount@ @VkDisplayModePropertiesKHR@
+--     to an array of @pPropertyCount@ 'DisplayModePropertiesKHR'
 --     structures
+--
+-- -   'Graphics.Vulkan.Extensions.WSITypes.Display' /must/ have been
+--     created, allocated, or retrieved from
+--     'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
---     -   @VK_INCOMPLETE@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.INCOMPLETE'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- 'VkDisplayKHR', 'VkDisplayModePropertiesKHR',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'
+-- 'Graphics.Vulkan.Extensions.Handles.DisplayKHR',
+-- 'DisplayModePropertiesKHR',
+-- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
+getDisplayModePropertiesKHR :: PhysicalDevice -> DisplayKHR -> IO (Result, ("properties" ::: Vector DisplayModePropertiesKHR))
+getDisplayModePropertiesKHR physicalDevice display = evalContT $ do
+  let vkGetDisplayModePropertiesKHR' = mkVkGetDisplayModePropertiesKHR (pVkGetDisplayModePropertiesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
+  let physicalDevice' = physicalDeviceHandle (physicalDevice)
+  pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
+  r <- lift $ vkGetDisplayModePropertiesKHR' physicalDevice' (display) (pPPropertyCount) (nullPtr)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pPropertyCount <- lift $ peek @Word32 pPPropertyCount
+  pPProperties <- ContT $ bracket (callocBytes @DisplayModePropertiesKHR ((fromIntegral (pPropertyCount)) * 24)) free
+  _ <- traverse (\i -> ContT $ pokeZeroCStruct (pPProperties `advancePtrBytes` (i * 24) :: Ptr DisplayModePropertiesKHR) . ($ ())) [0..(fromIntegral (pPropertyCount)) - 1]
+  r' <- lift $ vkGetDisplayModePropertiesKHR' physicalDevice' (display) (pPPropertyCount) ((pPProperties))
+  lift $ when (r' < SUCCESS) (throwIO (VulkanException r'))
+  pPropertyCount' <- lift $ peek @Word32 pPPropertyCount
+  pProperties' <- lift $ generateM (fromIntegral (pPropertyCount')) (\i -> peekCStruct @DisplayModePropertiesKHR (((pPProperties) `advancePtrBytes` (24 * (i)) :: Ptr DisplayModePropertiesKHR)))
+  pure $ ((r'), pProperties')
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkGetDisplayModePropertiesKHR" vkGetDisplayModePropertiesKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("display" ::: VkDisplayKHR) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr VkDisplayModePropertiesKHR) -> IO VkResult
+  "dynamic" mkVkCreateDisplayModeKHR
+  :: FunPtr (Ptr PhysicalDevice_T -> DisplayKHR -> Ptr DisplayModeCreateInfoKHR -> Ptr AllocationCallbacks -> Ptr DisplayModeKHR -> IO Result) -> Ptr PhysicalDevice_T -> DisplayKHR -> Ptr DisplayModeCreateInfoKHR -> Ptr AllocationCallbacks -> Ptr DisplayModeKHR -> IO Result
+
 -- | vkCreateDisplayModeKHR - Create a display mode
 --
 -- = Parameters
 --
--- -   @physicalDevice@ is the physical device associated with @display@.
+-- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
+--     device associated with
+--     'Graphics.Vulkan.Extensions.WSITypes.Display'.
 --
--- -   @display@ is the display to create an additional mode for.
+-- -   'Graphics.Vulkan.Extensions.WSITypes.Display' is the display to
+--     create an additional mode for.
 --
--- -   @pCreateInfo@ is a 'VkDisplayModeCreateInfoKHR' structure describing
+-- -   @pCreateInfo@ is a 'DisplayModeCreateInfoKHR' structure describing
 --     the new mode to create.
 --
 -- -   @pAllocator@ is the allocator used for host memory allocated for the
 --     display mode object when there is no more specific allocator
---     available (see [Memory
---     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)).
+--     available (see
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
 --
 -- -   @pMode@ returns the handle of the mode created.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid @VkPhysicalDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @display@ /must/ be a valid @VkDisplayKHR@ handle
+-- -   'Graphics.Vulkan.Extensions.WSITypes.Display' /must/ be a valid
+--     'Graphics.Vulkan.Extensions.Handles.DisplayKHR' handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     @VkDisplayModeCreateInfoKHR@ structure
+--     'DisplayModeCreateInfoKHR' structure
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
+--     pointer to a valid
+--     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pMode@ /must/ be a valid pointer to a @VkDisplayModeKHR@ handle
+-- -   @pMode@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.Extensions.Handles.DisplayModeKHR' handle
+--
+-- -   'Graphics.Vulkan.Extensions.WSITypes.Display' /must/ have been
+--     created, allocated, or retrieved from
+--     'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
 --
 -- == Host Synchronization
 --
--- -   Host access to @display@ /must/ be externally synchronized
+-- -   Host access to 'Graphics.Vulkan.Extensions.WSITypes.Display' /must/
+--     be externally synchronized
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
 --
---     -   @VK_ERROR_INITIALIZATION_FAILED@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'VkDisplayKHR', 'VkDisplayModeCreateInfoKHR', 'VkDisplayModeKHR',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'
+-- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
+-- 'Graphics.Vulkan.Extensions.Handles.DisplayKHR',
+-- 'DisplayModeCreateInfoKHR',
+-- 'Graphics.Vulkan.Extensions.Handles.DisplayModeKHR',
+-- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
+createDisplayModeKHR :: PhysicalDevice -> DisplayKHR -> DisplayModeCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (DisplayModeKHR)
+createDisplayModeKHR physicalDevice display createInfo allocator = evalContT $ do
+  let vkCreateDisplayModeKHR' = mkVkCreateDisplayModeKHR (pVkCreateDisplayModeKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
+  pCreateInfo <- ContT $ withCStruct (createInfo)
+  pAllocator <- case (allocator) of
+    Nothing -> pure nullPtr
+    Just j -> ContT $ withCStruct (j)
+  pPMode <- ContT $ bracket (callocBytes @DisplayModeKHR 8) free
+  r <- lift $ vkCreateDisplayModeKHR' (physicalDeviceHandle (physicalDevice)) (display) pCreateInfo pAllocator (pPMode)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pMode <- lift $ peek @DisplayModeKHR pPMode
+  pure $ (pMode)
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkCreateDisplayModeKHR" vkCreateDisplayModeKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("display" ::: VkDisplayKHR) -> ("pCreateInfo" ::: Ptr VkDisplayModeCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pMode" ::: Ptr VkDisplayModeKHR) -> IO VkResult
+  "dynamic" mkVkGetDisplayPlaneCapabilitiesKHR
+  :: FunPtr (Ptr PhysicalDevice_T -> DisplayModeKHR -> Word32 -> Ptr DisplayPlaneCapabilitiesKHR -> IO Result) -> Ptr PhysicalDevice_T -> DisplayModeKHR -> Word32 -> Ptr DisplayPlaneCapabilitiesKHR -> IO Result
+
 -- | vkGetDisplayPlaneCapabilitiesKHR - Query capabilities of a mode and
 -- plane combination
 --
 -- = Parameters
 --
--- -   @physicalDevice@ is the physical device associated with @display@
+-- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
+--     device associated with 'Graphics.Vulkan.Extensions.WSITypes.Display'
 --
 -- -   @mode@ is the display mode the application intends to program when
 --     using the specified plane. Note this parameter also implicitly
@@ -565,17 +598,19 @@ foreign import ccall
 --     the display, and is less than the number of display planes supported
 --     by the device.
 --
--- -   @pCapabilities@ is a pointer to a 'VkDisplayPlaneCapabilitiesKHR'
+-- -   @pCapabilities@ is a pointer to a 'DisplayPlaneCapabilitiesKHR'
 --     structure in which the capabilities are returned.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @physicalDevice@ /must/ be a valid @VkPhysicalDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   @mode@ /must/ be a valid @VkDisplayModeKHR@ handle
+-- -   @mode@ /must/ be a valid
+--     'Graphics.Vulkan.Extensions.Handles.DisplayModeKHR' handle
 --
 -- -   @pCapabilities@ /must/ be a valid pointer to a
---     @VkDisplayPlaneCapabilitiesKHR@ structure
+--     'DisplayPlaneCapabilitiesKHR' structure
 --
 -- == Host Synchronization
 --
@@ -583,102 +618,119 @@ foreign import ccall
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- 'VkDisplayModeKHR', 'VkDisplayPlaneCapabilitiesKHR',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkPhysicalDevice'
+-- 'Graphics.Vulkan.Extensions.Handles.DisplayModeKHR',
+-- 'DisplayPlaneCapabilitiesKHR',
+-- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
+getDisplayPlaneCapabilitiesKHR :: PhysicalDevice -> DisplayModeKHR -> ("planeIndex" ::: Word32) -> IO (DisplayPlaneCapabilitiesKHR)
+getDisplayPlaneCapabilitiesKHR physicalDevice mode planeIndex = evalContT $ do
+  let vkGetDisplayPlaneCapabilitiesKHR' = mkVkGetDisplayPlaneCapabilitiesKHR (pVkGetDisplayPlaneCapabilitiesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
+  pPCapabilities <- ContT (withZeroCStruct @DisplayPlaneCapabilitiesKHR)
+  r <- lift $ vkGetDisplayPlaneCapabilitiesKHR' (physicalDeviceHandle (physicalDevice)) (mode) (planeIndex) (pPCapabilities)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pCapabilities <- lift $ peekCStruct @DisplayPlaneCapabilitiesKHR pPCapabilities
+  pure $ (pCapabilities)
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkGetDisplayPlaneCapabilitiesKHR" vkGetDisplayPlaneCapabilitiesKHR :: ("physicalDevice" ::: VkPhysicalDevice) -> ("mode" ::: VkDisplayModeKHR) -> ("planeIndex" ::: Word32) -> ("pCapabilities" ::: Ptr VkDisplayPlaneCapabilitiesKHR) -> IO VkResult
+  "dynamic" mkVkCreateDisplayPlaneSurfaceKHR
+  :: FunPtr (Ptr Instance_T -> Ptr DisplaySurfaceCreateInfoKHR -> Ptr AllocationCallbacks -> Ptr SurfaceKHR -> IO Result) -> Ptr Instance_T -> Ptr DisplaySurfaceCreateInfoKHR -> Ptr AllocationCallbacks -> Ptr SurfaceKHR -> IO Result
+
 -- | vkCreateDisplayPlaneSurfaceKHR - Create a
--- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceKHR' structure
--- representing a display plane and mode
+-- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR' structure representing a
+-- display plane and mode
 --
 -- = Parameters
 --
--- -   @instance@ is the instance corresponding to the physical device the
---     targeted display is on.
+-- -   'Graphics.Vulkan.Core10.Handles.Instance' is the instance
+--     corresponding to the physical device the targeted display is on.
 --
--- -   @pCreateInfo@ is a pointer to an instance of the
---     'VkDisplaySurfaceCreateInfoKHR' structure specifying which mode,
---     plane, and other parameters to use, as described below.
+-- -   @pCreateInfo@ is a pointer to a 'DisplaySurfaceCreateInfoKHR'
+--     structure specifying which mode, plane, and other parameters to use,
+--     as described below.
 --
 -- -   @pAllocator@ is the allocator used for host memory allocated for the
 --     surface object when there is no more specific allocator available
---     (see [Memory
---     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)).
+--     (see
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>).
 --
--- -   @pSurface@ points to a @VkSurfaceKHR@ handle in which the created
---     surface is returned.
+-- -   @pSurface@ is a pointer to a
+--     'Graphics.Vulkan.Extensions.Handles.SurfaceKHR' handle in which the
+--     created surface is returned.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @instance@ /must/ be a valid @VkInstance@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     @VkDisplaySurfaceCreateInfoKHR@ structure
+--     'DisplaySurfaceCreateInfoKHR' structure
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
+--     pointer to a valid
+--     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pSurface@ /must/ be a valid pointer to a @VkSurfaceKHR@ handle
+-- -   @pSurface@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.Extensions.Handles.SurfaceKHR' handle
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'VkDisplaySurfaceCreateInfoKHR',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkInstance',
--- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceKHR'
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "vkCreateDisplayPlaneSurfaceKHR" vkCreateDisplayPlaneSurfaceKHR :: ("instance" ::: VkInstance) -> ("pCreateInfo" ::: Ptr VkDisplaySurfaceCreateInfoKHR) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pSurface" ::: Ptr VkSurfaceKHR) -> IO VkResult
+-- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
+-- 'DisplaySurfaceCreateInfoKHR',
+-- 'Graphics.Vulkan.Core10.Handles.Instance',
+-- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'
+createDisplayPlaneSurfaceKHR :: Instance -> DisplaySurfaceCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (SurfaceKHR)
+createDisplayPlaneSurfaceKHR instance' createInfo allocator = evalContT $ do
+  let vkCreateDisplayPlaneSurfaceKHR' = mkVkCreateDisplayPlaneSurfaceKHR (pVkCreateDisplayPlaneSurfaceKHR (instanceCmds (instance' :: Instance)))
+  pCreateInfo <- ContT $ withCStruct (createInfo)
+  pAllocator <- case (allocator) of
+    Nothing -> pure nullPtr
+    Just j -> ContT $ withCStruct (j)
+  pPSurface <- ContT $ bracket (callocBytes @SurfaceKHR 8) free
+  r <- lift $ vkCreateDisplayPlaneSurfaceKHR' (instanceHandle (instance')) pCreateInfo pAllocator (pPSurface)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pSurface <- lift $ peek @SurfaceKHR pPSurface
+  pure $ (pSurface)
+
+
 -- | VkDisplayPropertiesKHR - Structure describing an available display
 -- device
 --
 -- = Description
 --
--- __Note__
+-- Note
 --
 -- For devices which have no natural value to return here, implementations
 -- /should/ return the maximum resolution supported.
 --
--- -   @supportedTransforms@ tells which transforms are supported by this
---     display. This will contain one or more of the bits from
---     @VkSurfaceTransformFlagsKHR@.
---
--- -   @planeReorderPossible@ tells whether the planes on this display
---     /can/ have their z order changed. If this is @VK_TRUE@, the
---     application /can/ re-arrange the planes on this display in any order
---     relative to each other.
---
--- -   @persistentContent@ tells whether the display supports
---     self-refresh\/internal buffering. If this is true, the application
---     /can/ submit persistent present operations on swapchains created
---     against this display.
---
--- __Note__
+-- Note
 --
 -- Persistent presents /may/ have higher latency, and /may/ use less power
 -- when the screen content is updated infrequently, or when only a portion
@@ -686,179 +738,297 @@ foreign import ccall
 --
 -- = See Also
 --
--- @VkBool32@, 'VkDisplayKHR',
--- 'Graphics.Vulkan.Core10.Pipeline.VkExtent2D',
--- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceTransformFlagsKHR',
--- 'vkGetPhysicalDeviceDisplayPropertiesKHR'
-data VkDisplayPropertiesKHR = VkDisplayPropertiesKHR
-  { -- | @display@ is a handle that is used to refer to the display described
-  -- here. This handle will be valid for the lifetime of the Vulkan instance.
-  vkDisplay :: VkDisplayKHR
-  , -- | @displayName@ is a pointer to a NULL-terminated string containing the
-  -- name of the display. Generally, this will be the name provided by the
-  -- display’s EDID. It /can/ be @NULL@ if no suitable name is available. If
-  -- not @NULL@, the memory it points to /must/ remain accessible as long as
-  -- @display@ is valid.
-  vkDisplayName :: Ptr CChar
+-- 'Graphics.Vulkan.Core10.BaseType.Bool32',
+-- 'Graphics.Vulkan.Extensions.Handles.DisplayKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_get_display_properties2.DisplayProperties2KHR',
+-- 'Graphics.Vulkan.Core10.SharedTypes.Extent2D',
+-- 'SurfaceTransformFlagsKHR', 'getPhysicalDeviceDisplayPropertiesKHR'
+data DisplayPropertiesKHR = DisplayPropertiesKHR
+  { -- | 'Graphics.Vulkan.Extensions.WSITypes.Display' is a handle that is used
+    -- to refer to the display described here. This handle will be valid for
+    -- the lifetime of the Vulkan instance.
+    display :: DisplayKHR
+  , -- | @displayName@ is a pointer to a null-terminated UTF-8 string containing
+    -- the name of the display. Generally, this will be the name provided by
+    -- the display’s EDID. It /can/ be @NULL@ if no suitable name is available.
+    -- If not @NULL@, the memory it points to /must/ remain accessible as long
+    -- as 'Graphics.Vulkan.Extensions.WSITypes.Display' is valid.
+    displayName :: ByteString
   , -- | @physicalDimensions@ describes the physical width and height of the
-  -- visible portion of the display, in millimeters.
-  vkPhysicalDimensions :: VkExtent2D
+    -- visible portion of the display, in millimeters.
+    physicalDimensions :: Extent2D
   , -- | @physicalResolution@ describes the physical, native, or preferred
-  -- resolution of the display.
-  vkPhysicalResolution :: VkExtent2D
-  , -- No documentation found for Nested "VkDisplayPropertiesKHR" "supportedTransforms"
-  vkSupportedTransforms :: VkSurfaceTransformFlagsKHR
-  , -- No documentation found for Nested "VkDisplayPropertiesKHR" "planeReorderPossible"
-  vkPlaneReorderPossible :: VkBool32
-  , -- No documentation found for Nested "VkDisplayPropertiesKHR" "persistentContent"
-  vkPersistentContent :: VkBool32
+    -- resolution of the display.
+    physicalResolution :: Extent2D
+  , -- | @supportedTransforms@ is a bitmask of 'SurfaceTransformFlagBitsKHR'
+    -- describing which transforms are supported by this display.
+    supportedTransforms :: SurfaceTransformFlagsKHR
+  , -- | @planeReorderPossible@ tells whether the planes on this display /can/
+    -- have their z order changed. If this is
+    -- 'Graphics.Vulkan.Core10.BaseType.TRUE', the application /can/ re-arrange
+    -- the planes on this display in any order relative to each other.
+    planeReorderPossible :: Bool
+  , -- | @persistentContent@ tells whether the display supports
+    -- self-refresh\/internal buffering. If this is true, the application /can/
+    -- submit persistent present operations on swapchains created against this
+    -- display.
+    persistentContent :: Bool
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show DisplayPropertiesKHR
 
-instance Storable VkDisplayPropertiesKHR where
-  sizeOf ~_ = 48
-  alignment ~_ = 8
-  peek ptr = VkDisplayPropertiesKHR <$> peek (ptr `plusPtr` 0)
-                                    <*> peek (ptr `plusPtr` 8)
-                                    <*> peek (ptr `plusPtr` 16)
-                                    <*> peek (ptr `plusPtr` 24)
-                                    <*> peek (ptr `plusPtr` 32)
-                                    <*> peek (ptr `plusPtr` 36)
-                                    <*> peek (ptr `plusPtr` 40)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkDisplay (poked :: VkDisplayPropertiesKHR))
-                *> poke (ptr `plusPtr` 8) (vkDisplayName (poked :: VkDisplayPropertiesKHR))
-                *> poke (ptr `plusPtr` 16) (vkPhysicalDimensions (poked :: VkDisplayPropertiesKHR))
-                *> poke (ptr `plusPtr` 24) (vkPhysicalResolution (poked :: VkDisplayPropertiesKHR))
-                *> poke (ptr `plusPtr` 32) (vkSupportedTransforms (poked :: VkDisplayPropertiesKHR))
-                *> poke (ptr `plusPtr` 36) (vkPlaneReorderPossible (poked :: VkDisplayPropertiesKHR))
-                *> poke (ptr `plusPtr` 40) (vkPersistentContent (poked :: VkDisplayPropertiesKHR))
+instance ToCStruct DisplayPropertiesKHR where
+  withCStruct x f = allocaBytesAligned 48 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p DisplayPropertiesKHR{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr DisplayKHR)) (display)
+    displayName'' <- ContT $ useAsCString (displayName)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr CChar))) displayName''
+    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr Extent2D)) (physicalDimensions) . ($ ())
+    ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr Extent2D)) (physicalResolution) . ($ ())
+    lift $ poke ((p `plusPtr` 32 :: Ptr SurfaceTransformFlagsKHR)) (supportedTransforms)
+    lift $ poke ((p `plusPtr` 36 :: Ptr Bool32)) (boolToBool32 (planeReorderPossible))
+    lift $ poke ((p `plusPtr` 40 :: Ptr Bool32)) (boolToBool32 (persistentContent))
+    lift $ f
+  cStructSize = 48
+  cStructAlignment = 8
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr DisplayKHR)) (zero)
+    displayName'' <- ContT $ useAsCString (mempty)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr CChar))) displayName''
+    ContT $ pokeCStruct ((p `plusPtr` 16 :: Ptr Extent2D)) (zero) . ($ ())
+    ContT $ pokeCStruct ((p `plusPtr` 24 :: Ptr Extent2D)) (zero) . ($ ())
+    lift $ poke ((p `plusPtr` 36 :: Ptr Bool32)) (boolToBool32 (zero))
+    lift $ poke ((p `plusPtr` 40 :: Ptr Bool32)) (boolToBool32 (zero))
+    lift $ f
+
+instance FromCStruct DisplayPropertiesKHR where
+  peekCStruct p = do
+    display <- peek @DisplayKHR ((p `plusPtr` 0 :: Ptr DisplayKHR))
+    displayName <- packCString =<< peek ((p `plusPtr` 8 :: Ptr (Ptr CChar)))
+    physicalDimensions <- peekCStruct @Extent2D ((p `plusPtr` 16 :: Ptr Extent2D))
+    physicalResolution <- peekCStruct @Extent2D ((p `plusPtr` 24 :: Ptr Extent2D))
+    supportedTransforms <- peek @SurfaceTransformFlagsKHR ((p `plusPtr` 32 :: Ptr SurfaceTransformFlagsKHR))
+    planeReorderPossible <- peek @Bool32 ((p `plusPtr` 36 :: Ptr Bool32))
+    persistentContent <- peek @Bool32 ((p `plusPtr` 40 :: Ptr Bool32))
+    pure $ DisplayPropertiesKHR
+             display displayName physicalDimensions physicalResolution supportedTransforms (bool32ToBool planeReorderPossible) (bool32ToBool persistentContent)
+
+instance Zero DisplayPropertiesKHR where
+  zero = DisplayPropertiesKHR
+           zero
+           mempty
+           zero
+           zero
+           zero
+           zero
+           zero
+
+
 -- | VkDisplayPlanePropertiesKHR - Structure describing display plane
 -- properties
 --
 -- = See Also
 --
--- 'VkDisplayKHR', 'vkGetPhysicalDeviceDisplayPlanePropertiesKHR'
-data VkDisplayPlanePropertiesKHR = VkDisplayPlanePropertiesKHR
+-- 'Graphics.Vulkan.Extensions.Handles.DisplayKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_get_display_properties2.DisplayPlaneProperties2KHR',
+-- 'getPhysicalDeviceDisplayPlanePropertiesKHR'
+data DisplayPlanePropertiesKHR = DisplayPlanePropertiesKHR
   { -- | @currentDisplay@ is the handle of the display the plane is currently
-  -- associated with. If the plane is not currently attached to any displays,
-  -- this will be @VK_NULL_HANDLE@.
-  vkCurrentDisplay :: VkDisplayKHR
+    -- associated with. If the plane is not currently attached to any displays,
+    -- this will be 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'.
+    currentDisplay :: DisplayKHR
   , -- | @currentStackIndex@ is the current z-order of the plane. This will be
-  -- between 0 and the value returned by
-  -- @vkGetPhysicalDeviceDisplayPlanePropertiesKHR@ in @pPropertyCount@.
-  vkCurrentStackIndex :: Word32
+    -- between 0 and the value returned by
+    -- 'getPhysicalDeviceDisplayPlanePropertiesKHR' in @pPropertyCount@.
+    currentStackIndex :: Word32
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show DisplayPlanePropertiesKHR
 
-instance Storable VkDisplayPlanePropertiesKHR where
+instance ToCStruct DisplayPlanePropertiesKHR where
+  withCStruct x f = allocaBytesAligned 16 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p DisplayPlanePropertiesKHR{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr DisplayKHR)) (currentDisplay)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (currentStackIndex)
+    f
+  cStructSize = 16
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr DisplayKHR)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr Word32)) (zero)
+    f
+
+instance FromCStruct DisplayPlanePropertiesKHR where
+  peekCStruct p = do
+    currentDisplay <- peek @DisplayKHR ((p `plusPtr` 0 :: Ptr DisplayKHR))
+    currentStackIndex <- peek @Word32 ((p `plusPtr` 8 :: Ptr Word32))
+    pure $ DisplayPlanePropertiesKHR
+             currentDisplay currentStackIndex
+
+instance Storable DisplayPlanePropertiesKHR where
   sizeOf ~_ = 16
   alignment ~_ = 8
-  peek ptr = VkDisplayPlanePropertiesKHR <$> peek (ptr `plusPtr` 0)
-                                         <*> peek (ptr `plusPtr` 8)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkCurrentDisplay (poked :: VkDisplayPlanePropertiesKHR))
-                *> poke (ptr `plusPtr` 8) (vkCurrentStackIndex (poked :: VkDisplayPlanePropertiesKHR))
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero DisplayPlanePropertiesKHR where
+  zero = DisplayPlanePropertiesKHR
+           zero
+           zero
+
+
 -- | VkDisplayModeParametersKHR - Structure describing display parameters
 -- associated with a display mode
 --
 -- = Description
 --
--- __Note__
+-- Note
 --
 -- For example, a 60Hz display mode would report a @refreshRate@ of 60,000.
 --
+-- == Valid Usage
+--
+-- -   The @width@ member of @visibleRegion@ /must/ be greater than @0@
+--
+-- -   The @height@ member of @visibleRegion@ /must/ be greater than @0@
+--
+-- -   @refreshRate@ /must/ be greater than @0@
+--
 -- = See Also
 --
--- 'VkDisplayModeCreateInfoKHR', 'VkDisplayModePropertiesKHR',
--- 'Graphics.Vulkan.Core10.Pipeline.VkExtent2D'
-data VkDisplayModeParametersKHR = VkDisplayModeParametersKHR
+-- 'DisplayModeCreateInfoKHR', 'DisplayModePropertiesKHR',
+-- 'Graphics.Vulkan.Core10.SharedTypes.Extent2D'
+data DisplayModeParametersKHR = DisplayModeParametersKHR
   { -- | @visibleRegion@ is the 2D extents of the visible region.
-  vkVisibleRegion :: VkExtent2D
+    visibleRegion :: Extent2D
   , -- | @refreshRate@ is a @uint32_t@ that is the number of times the display is
-  -- refreshed each second multiplied by 1000.
-  vkRefreshRate :: Word32
+    -- refreshed each second multiplied by 1000.
+    refreshRate :: Word32
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show DisplayModeParametersKHR
 
-instance Storable VkDisplayModeParametersKHR where
-  sizeOf ~_ = 12
-  alignment ~_ = 4
-  peek ptr = VkDisplayModeParametersKHR <$> peek (ptr `plusPtr` 0)
-                                        <*> peek (ptr `plusPtr` 8)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkVisibleRegion (poked :: VkDisplayModeParametersKHR))
-                *> poke (ptr `plusPtr` 8) (vkRefreshRate (poked :: VkDisplayModeParametersKHR))
+instance ToCStruct DisplayModeParametersKHR where
+  withCStruct x f = allocaBytesAligned 12 4 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p DisplayModeParametersKHR{..} f = evalContT $ do
+    ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr Extent2D)) (visibleRegion) . ($ ())
+    lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) (refreshRate)
+    lift $ f
+  cStructSize = 12
+  cStructAlignment = 4
+  pokeZeroCStruct p f = evalContT $ do
+    ContT $ pokeCStruct ((p `plusPtr` 0 :: Ptr Extent2D)) (zero) . ($ ())
+    lift $ poke ((p `plusPtr` 8 :: Ptr Word32)) (zero)
+    lift $ f
+
+instance FromCStruct DisplayModeParametersKHR where
+  peekCStruct p = do
+    visibleRegion <- peekCStruct @Extent2D ((p `plusPtr` 0 :: Ptr Extent2D))
+    refreshRate <- peek @Word32 ((p `plusPtr` 8 :: Ptr Word32))
+    pure $ DisplayModeParametersKHR
+             visibleRegion refreshRate
+
+instance Zero DisplayModeParametersKHR where
+  zero = DisplayModeParametersKHR
+           zero
+           zero
+
+
 -- | VkDisplayModePropertiesKHR - Structure describing display mode
 -- properties
 --
 -- = See Also
 --
--- 'VkDisplayModeKHR', 'VkDisplayModeParametersKHR',
--- 'vkGetDisplayModePropertiesKHR'
-data VkDisplayModePropertiesKHR = VkDisplayModePropertiesKHR
+-- 'Graphics.Vulkan.Extensions.Handles.DisplayModeKHR',
+-- 'DisplayModeParametersKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_get_display_properties2.DisplayModeProperties2KHR',
+-- 'getDisplayModePropertiesKHR'
+data DisplayModePropertiesKHR = DisplayModePropertiesKHR
   { -- | @displayMode@ is a handle to the display mode described in this
-  -- structure. This handle will be valid for the lifetime of the Vulkan
-  -- instance.
-  vkDisplayMode :: VkDisplayModeKHR
-  , -- | @parameters@ is a @VkDisplayModeParametersKHR@ structure describing the
-  -- display parameters associated with @displayMode@.
-  vkParameters :: VkDisplayModeParametersKHR
+    -- structure. This handle will be valid for the lifetime of the Vulkan
+    -- instance.
+    displayMode :: DisplayModeKHR
+  , -- | @parameters@ is a 'DisplayModeParametersKHR' structure describing the
+    -- display parameters associated with @displayMode@.
+    parameters :: DisplayModeParametersKHR
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show DisplayModePropertiesKHR
 
-instance Storable VkDisplayModePropertiesKHR where
-  sizeOf ~_ = 24
-  alignment ~_ = 8
-  peek ptr = VkDisplayModePropertiesKHR <$> peek (ptr `plusPtr` 0)
-                                        <*> peek (ptr `plusPtr` 8)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkDisplayMode (poked :: VkDisplayModePropertiesKHR))
-                *> poke (ptr `plusPtr` 8) (vkParameters (poked :: VkDisplayModePropertiesKHR))
+instance ToCStruct DisplayModePropertiesKHR where
+  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p DisplayModePropertiesKHR{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr DisplayModeKHR)) (displayMode)
+    ContT $ pokeCStruct ((p `plusPtr` 8 :: Ptr DisplayModeParametersKHR)) (parameters) . ($ ())
+    lift $ f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr DisplayModeKHR)) (zero)
+    ContT $ pokeCStruct ((p `plusPtr` 8 :: Ptr DisplayModeParametersKHR)) (zero) . ($ ())
+    lift $ f
+
+instance FromCStruct DisplayModePropertiesKHR where
+  peekCStruct p = do
+    displayMode <- peek @DisplayModeKHR ((p `plusPtr` 0 :: Ptr DisplayModeKHR))
+    parameters <- peekCStruct @DisplayModeParametersKHR ((p `plusPtr` 8 :: Ptr DisplayModeParametersKHR))
+    pure $ DisplayModePropertiesKHR
+             displayMode parameters
+
+instance Zero DisplayModePropertiesKHR where
+  zero = DisplayModePropertiesKHR
+           zero
+           zero
+
+
 -- | VkDisplayModeCreateInfoKHR - Structure specifying parameters of a newly
 -- created display mode object
 --
--- == Valid Usage
---
--- -   The @width@ and @height@ members of the @visibleRegion@ member of
---     @parameters@ /must/ be greater than @0@
---
--- -   The @refreshRate@ member of @parameters@ /must/ be greater than @0@
---
 -- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR@
---
--- -   @pNext@ /must/ be @NULL@
---
--- -   @flags@ /must/ be @0@
 --
 -- = See Also
 --
--- 'VkDisplayModeCreateFlagsKHR', 'VkDisplayModeParametersKHR',
--- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'vkCreateDisplayModeKHR'
-data VkDisplayModeCreateInfoKHR = VkDisplayModeCreateInfoKHR
-  { -- | @sType@ is the type of this structure.
-  vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
-  vkPNext :: Ptr ()
-  , -- | @flags@ is reserved for future use, and /must/ be zero.
-  vkFlags :: VkDisplayModeCreateFlagsKHR
-  , -- | @parameters@ is a @VkDisplayModeParametersKHR@ structure describing the
-  -- display parameters to use in creating the new mode. If the parameters
-  -- are not compatible with the specified display, the implementation /must/
-  -- return @VK_ERROR_INITIALIZATION_FAILED@.
-  vkParameters :: VkDisplayModeParametersKHR
+-- 'DisplayModeCreateFlagsKHR', 'DisplayModeParametersKHR',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'createDisplayModeKHR'
+data DisplayModeCreateInfoKHR = DisplayModeCreateInfoKHR
+  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+    flags :: DisplayModeCreateFlagsKHR
+  , -- | @parameters@ /must/ be a valid 'DisplayModeParametersKHR' structure
+    parameters :: DisplayModeParametersKHR
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show DisplayModeCreateInfoKHR
 
-instance Storable VkDisplayModeCreateInfoKHR where
-  sizeOf ~_ = 32
-  alignment ~_ = 8
-  peek ptr = VkDisplayModeCreateInfoKHR <$> peek (ptr `plusPtr` 0)
-                                        <*> peek (ptr `plusPtr` 8)
-                                        <*> peek (ptr `plusPtr` 16)
-                                        <*> peek (ptr `plusPtr` 20)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDisplayModeCreateInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDisplayModeCreateInfoKHR))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkDisplayModeCreateInfoKHR))
-                *> poke (ptr `plusPtr` 20) (vkParameters (poked :: VkDisplayModeCreateInfoKHR))
+instance ToCStruct DisplayModeCreateInfoKHR where
+  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p DisplayModeCreateInfoKHR{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    lift $ poke ((p `plusPtr` 16 :: Ptr DisplayModeCreateFlagsKHR)) (flags)
+    ContT $ pokeCStruct ((p `plusPtr` 20 :: Ptr DisplayModeParametersKHR)) (parameters) . ($ ())
+    lift $ f
+  cStructSize = 32
+  cStructAlignment = 8
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    ContT $ pokeCStruct ((p `plusPtr` 20 :: Ptr DisplayModeParametersKHR)) (zero) . ($ ())
+    lift $ f
+
+instance FromCStruct DisplayModeCreateInfoKHR where
+  peekCStruct p = do
+    flags <- peek @DisplayModeCreateFlagsKHR ((p `plusPtr` 16 :: Ptr DisplayModeCreateFlagsKHR))
+    parameters <- peekCStruct @DisplayModeParametersKHR ((p `plusPtr` 20 :: Ptr DisplayModeParametersKHR))
+    pure $ DisplayModeCreateInfoKHR
+             flags parameters
+
+instance Zero DisplayModeCreateInfoKHR where
+  zero = DisplayModeCreateInfoKHR
+           zero
+           zero
+
+
 -- | VkDisplayPlaneCapabilitiesKHR - Structure describing capabilities of a
 -- mode and plane combination
 --
@@ -890,76 +1060,110 @@ instance Storable VkDisplayModeCreateInfoKHR where
 --
 -- These values indicate the limits of the implementation’s individual
 -- fields. Not all combinations of values within the offset and extent
--- ranges returned in @VkDisplayPlaneCapabilitiesKHR@ are guaranteed to be
--- supported. Vendors /may/ still fail presentation requests that specify
--- unsupported combinations.
+-- ranges returned in 'DisplayPlaneCapabilitiesKHR' are guaranteed to be
+-- supported. Presentation requests specifying unsupported combinations
+-- /may/ fail.
 --
 -- = See Also
 --
--- 'VkDisplayPlaneAlphaFlagsKHR',
--- 'Graphics.Vulkan.Core10.Pipeline.VkExtent2D',
--- 'Graphics.Vulkan.Core10.Pipeline.VkOffset2D',
--- 'vkGetDisplayPlaneCapabilitiesKHR'
-data VkDisplayPlaneCapabilitiesKHR = VkDisplayPlaneCapabilitiesKHR
-  { -- | @supportedAlpha@ is a bitmask of 'VkDisplayPlaneAlphaFlagBitsKHR'
-  -- describing the supported alpha blending modes.
-  vkSupportedAlpha :: VkDisplayPlaneAlphaFlagsKHR
+-- 'DisplayPlaneAlphaFlagsKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_get_display_properties2.DisplayPlaneCapabilities2KHR',
+-- 'Graphics.Vulkan.Core10.SharedTypes.Extent2D',
+-- 'Graphics.Vulkan.Core10.SharedTypes.Offset2D',
+-- 'getDisplayPlaneCapabilitiesKHR'
+data DisplayPlaneCapabilitiesKHR = DisplayPlaneCapabilitiesKHR
+  { -- | @supportedAlpha@ is a bitmask of 'DisplayPlaneAlphaFlagBitsKHR'
+    -- describing the supported alpha blending modes.
+    supportedAlpha :: DisplayPlaneAlphaFlagsKHR
   , -- | @minSrcPosition@ is the minimum source rectangle offset supported by
-  -- this plane using the specified mode.
-  vkMinSrcPosition :: VkOffset2D
+    -- this plane using the specified mode.
+    minSrcPosition :: Offset2D
   , -- | @maxSrcPosition@ is the maximum source rectangle offset supported by
-  -- this plane using the specified mode. The @x@ and @y@ components of
-  -- @maxSrcPosition@ /must/ each be greater than or equal to the @x@ and @y@
-  -- components of @minSrcPosition@, respectively.
-  vkMaxSrcPosition :: VkOffset2D
+    -- this plane using the specified mode. The @x@ and @y@ components of
+    -- @maxSrcPosition@ /must/ each be greater than or equal to the @x@ and @y@
+    -- components of @minSrcPosition@, respectively.
+    maxSrcPosition :: Offset2D
   , -- | @minSrcExtent@ is the minimum source rectangle size supported by this
-  -- plane using the specified mode.
-  vkMinSrcExtent :: VkExtent2D
+    -- plane using the specified mode.
+    minSrcExtent :: Extent2D
   , -- | @maxSrcExtent@ is the maximum source rectangle size supported by this
-  -- plane using the specified mode.
-  vkMaxSrcExtent :: VkExtent2D
+    -- plane using the specified mode.
+    maxSrcExtent :: Extent2D
   , -- | @minDstPosition@, @maxDstPosition@, @minDstExtent@, @maxDstExtent@ all
-  -- have similar semantics to their corresponding @*Src*@ equivalents, but
-  -- apply to the output region within the mode rather than the input region
-  -- within the source image. Unlike the @*Src*@ offsets, @minDstPosition@
-  -- and @maxDstPosition@ /may/ contain negative values.
-  vkMinDstPosition :: VkOffset2D
+    -- have similar semantics to their corresponding @*Src*@ equivalents, but
+    -- apply to the output region within the mode rather than the input region
+    -- within the source image. Unlike the @*Src*@ offsets, @minDstPosition@
+    -- and @maxDstPosition@ /may/ contain negative values.
+    minDstPosition :: Offset2D
   , -- No documentation found for Nested "VkDisplayPlaneCapabilitiesKHR" "maxDstPosition"
-  vkMaxDstPosition :: VkOffset2D
+    maxDstPosition :: Offset2D
   , -- No documentation found for Nested "VkDisplayPlaneCapabilitiesKHR" "minDstExtent"
-  vkMinDstExtent :: VkExtent2D
+    minDstExtent :: Extent2D
   , -- No documentation found for Nested "VkDisplayPlaneCapabilitiesKHR" "maxDstExtent"
-  vkMaxDstExtent :: VkExtent2D
+    maxDstExtent :: Extent2D
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show DisplayPlaneCapabilitiesKHR
 
-instance Storable VkDisplayPlaneCapabilitiesKHR where
-  sizeOf ~_ = 68
-  alignment ~_ = 4
-  peek ptr = VkDisplayPlaneCapabilitiesKHR <$> peek (ptr `plusPtr` 0)
-                                           <*> peek (ptr `plusPtr` 4)
-                                           <*> peek (ptr `plusPtr` 12)
-                                           <*> peek (ptr `plusPtr` 20)
-                                           <*> peek (ptr `plusPtr` 28)
-                                           <*> peek (ptr `plusPtr` 36)
-                                           <*> peek (ptr `plusPtr` 44)
-                                           <*> peek (ptr `plusPtr` 52)
-                                           <*> peek (ptr `plusPtr` 60)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSupportedAlpha (poked :: VkDisplayPlaneCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 4) (vkMinSrcPosition (poked :: VkDisplayPlaneCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 12) (vkMaxSrcPosition (poked :: VkDisplayPlaneCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 20) (vkMinSrcExtent (poked :: VkDisplayPlaneCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 28) (vkMaxSrcExtent (poked :: VkDisplayPlaneCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 36) (vkMinDstPosition (poked :: VkDisplayPlaneCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 44) (vkMaxDstPosition (poked :: VkDisplayPlaneCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 52) (vkMinDstExtent (poked :: VkDisplayPlaneCapabilitiesKHR))
-                *> poke (ptr `plusPtr` 60) (vkMaxDstExtent (poked :: VkDisplayPlaneCapabilitiesKHR))
+instance ToCStruct DisplayPlaneCapabilitiesKHR where
+  withCStruct x f = allocaBytesAligned 68 4 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p DisplayPlaneCapabilitiesKHR{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr DisplayPlaneAlphaFlagsKHR)) (supportedAlpha)
+    ContT $ pokeCStruct ((p `plusPtr` 4 :: Ptr Offset2D)) (minSrcPosition) . ($ ())
+    ContT $ pokeCStruct ((p `plusPtr` 12 :: Ptr Offset2D)) (maxSrcPosition) . ($ ())
+    ContT $ pokeCStruct ((p `plusPtr` 20 :: Ptr Extent2D)) (minSrcExtent) . ($ ())
+    ContT $ pokeCStruct ((p `plusPtr` 28 :: Ptr Extent2D)) (maxSrcExtent) . ($ ())
+    ContT $ pokeCStruct ((p `plusPtr` 36 :: Ptr Offset2D)) (minDstPosition) . ($ ())
+    ContT $ pokeCStruct ((p `plusPtr` 44 :: Ptr Offset2D)) (maxDstPosition) . ($ ())
+    ContT $ pokeCStruct ((p `plusPtr` 52 :: Ptr Extent2D)) (minDstExtent) . ($ ())
+    ContT $ pokeCStruct ((p `plusPtr` 60 :: Ptr Extent2D)) (maxDstExtent) . ($ ())
+    lift $ f
+  cStructSize = 68
+  cStructAlignment = 4
+  pokeZeroCStruct p f = evalContT $ do
+    ContT $ pokeCStruct ((p `plusPtr` 4 :: Ptr Offset2D)) (zero) . ($ ())
+    ContT $ pokeCStruct ((p `plusPtr` 12 :: Ptr Offset2D)) (zero) . ($ ())
+    ContT $ pokeCStruct ((p `plusPtr` 20 :: Ptr Extent2D)) (zero) . ($ ())
+    ContT $ pokeCStruct ((p `plusPtr` 28 :: Ptr Extent2D)) (zero) . ($ ())
+    ContT $ pokeCStruct ((p `plusPtr` 36 :: Ptr Offset2D)) (zero) . ($ ())
+    ContT $ pokeCStruct ((p `plusPtr` 44 :: Ptr Offset2D)) (zero) . ($ ())
+    ContT $ pokeCStruct ((p `plusPtr` 52 :: Ptr Extent2D)) (zero) . ($ ())
+    ContT $ pokeCStruct ((p `plusPtr` 60 :: Ptr Extent2D)) (zero) . ($ ())
+    lift $ f
+
+instance FromCStruct DisplayPlaneCapabilitiesKHR where
+  peekCStruct p = do
+    supportedAlpha <- peek @DisplayPlaneAlphaFlagsKHR ((p `plusPtr` 0 :: Ptr DisplayPlaneAlphaFlagsKHR))
+    minSrcPosition <- peekCStruct @Offset2D ((p `plusPtr` 4 :: Ptr Offset2D))
+    maxSrcPosition <- peekCStruct @Offset2D ((p `plusPtr` 12 :: Ptr Offset2D))
+    minSrcExtent <- peekCStruct @Extent2D ((p `plusPtr` 20 :: Ptr Extent2D))
+    maxSrcExtent <- peekCStruct @Extent2D ((p `plusPtr` 28 :: Ptr Extent2D))
+    minDstPosition <- peekCStruct @Offset2D ((p `plusPtr` 36 :: Ptr Offset2D))
+    maxDstPosition <- peekCStruct @Offset2D ((p `plusPtr` 44 :: Ptr Offset2D))
+    minDstExtent <- peekCStruct @Extent2D ((p `plusPtr` 52 :: Ptr Extent2D))
+    maxDstExtent <- peekCStruct @Extent2D ((p `plusPtr` 60 :: Ptr Extent2D))
+    pure $ DisplayPlaneCapabilitiesKHR
+             supportedAlpha minSrcPosition maxSrcPosition minSrcExtent maxSrcExtent minDstPosition maxDstPosition minDstExtent maxDstExtent
+
+instance Zero DisplayPlaneCapabilitiesKHR where
+  zero = DisplayPlaneCapabilitiesKHR
+           zero
+           zero
+           zero
+           zero
+           zero
+           zero
+           zero
+           zero
+           zero
+
+
 -- | VkDisplaySurfaceCreateInfoKHR - Structure specifying parameters of a
 -- newly created display plane surface object
 --
 -- = Description
 --
--- __Note__
+-- Note
 --
 -- Creating a display surface /must/ not modify the state of the displays,
 -- planes, or other resources it names. For example, it /must/ not apply
@@ -971,117 +1175,328 @@ instance Storable VkDisplayPlaneCapabilitiesKHR where
 --
 -- -   @planeIndex@ /must/ be less than the number of display planes
 --     supported by the device as determined by calling
---     @vkGetPhysicalDeviceDisplayPlanePropertiesKHR@
+--     'getPhysicalDeviceDisplayPlanePropertiesKHR'
 --
--- -   If the @planeReorderPossible@ member of the @VkDisplayPropertiesKHR@
---     structure returned by @vkGetPhysicalDeviceDisplayPropertiesKHR@ for
---     the display corresponding to @displayMode@ is @VK_TRUE@ then
---     @planeStackIndex@ /must/ be less than the number of display planes
---     supported by the device as determined by calling
---     @vkGetPhysicalDeviceDisplayPlanePropertiesKHR@; otherwise
---     @planeStackIndex@ /must/ equal the @currentStackIndex@ member of
---     @VkDisplayPlanePropertiesKHR@ returned by
---     @vkGetPhysicalDeviceDisplayPlanePropertiesKHR@ for the display plane
+-- -   If the @planeReorderPossible@ member of the 'DisplayPropertiesKHR'
+--     structure returned by 'getPhysicalDeviceDisplayPropertiesKHR' for
+--     the display corresponding to @displayMode@ is
+--     'Graphics.Vulkan.Core10.BaseType.TRUE' then @planeStackIndex@ /must/
+--     be less than the number of display planes supported by the device as
+--     determined by calling 'getPhysicalDeviceDisplayPlanePropertiesKHR';
+--     otherwise @planeStackIndex@ /must/ equal the @currentStackIndex@
+--     member of 'DisplayPlanePropertiesKHR' returned by
+--     'getPhysicalDeviceDisplayPlanePropertiesKHR' for the display plane
 --     corresponding to @displayMode@
 --
--- -   If @alphaMode@ is @VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR@ then
+-- -   If @alphaMode@ is 'DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR' then
 --     @globalAlpha@ /must/ be between @0@ and @1@, inclusive
 --
 -- -   @alphaMode@ /must/ be @0@ or one of the bits present in the
---     @supportedAlpha@ member of @VkDisplayPlaneCapabilitiesKHR@ returned
---     by @vkGetDisplayPlaneCapabilitiesKHR@ for the display plane
---     corresponding to @displayMode@
+--     @supportedAlpha@ member of 'DisplayPlaneCapabilitiesKHR' returned by
+--     'getDisplayPlaneCapabilitiesKHR' for the display plane corresponding
+--     to @displayMode@
 --
 -- -   The @width@ and @height@ members of @imageExtent@ /must/ be less
---     than the @maxImageDimensions2D@ member of @VkPhysicalDeviceLimits@
+--     than the @maxImageDimensions2D@ member of
+--     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'
 --
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR@
+--     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR'
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   @flags@ /must/ be @0@
+-- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
 --
--- -   @displayMode@ /must/ be a valid @VkDisplayModeKHR@ handle
+-- -   @displayMode@ /must/ be a valid
+--     'Graphics.Vulkan.Extensions.Handles.DisplayModeKHR' handle
 --
--- -   @transform@ /must/ be a valid
---     'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceTransformFlagBitsKHR'
---     value
+-- -   @transform@ /must/ be a valid 'SurfaceTransformFlagBitsKHR' value
 --
--- -   @alphaMode@ /must/ be a valid 'VkDisplayPlaneAlphaFlagBitsKHR' value
+-- -   @alphaMode@ /must/ be a valid 'DisplayPlaneAlphaFlagBitsKHR' value
 --
 -- = See Also
 --
--- 'VkDisplayModeKHR', 'VkDisplayPlaneAlphaFlagBitsKHR',
--- 'VkDisplaySurfaceCreateFlagsKHR',
--- 'Graphics.Vulkan.Core10.Pipeline.VkExtent2D',
--- 'Graphics.Vulkan.Core10.Core.VkStructureType',
--- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceTransformFlagBitsKHR',
--- 'vkCreateDisplayPlaneSurfaceKHR'
-data VkDisplaySurfaceCreateInfoKHR = VkDisplaySurfaceCreateInfoKHR
-  { -- | @sType@ is the type of this structure.
-  vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
-  vkPNext :: Ptr ()
-  , -- | @flags@ is reserved for future use, and /must/ be zero.
-  vkFlags :: VkDisplaySurfaceCreateFlagsKHR
-  , -- | @displayMode@ is a 'VkDisplayModeKHR' handle specifying the mode to use
-  -- when displaying this surface.
-  vkDisplayMode :: VkDisplayModeKHR
+-- 'Graphics.Vulkan.Extensions.Handles.DisplayModeKHR',
+-- 'DisplayPlaneAlphaFlagBitsKHR', 'DisplaySurfaceCreateFlagsKHR',
+-- 'Graphics.Vulkan.Core10.SharedTypes.Extent2D',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'SurfaceTransformFlagBitsKHR', 'createDisplayPlaneSurfaceKHR'
+data DisplaySurfaceCreateInfoKHR = DisplaySurfaceCreateInfoKHR
+  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is reserved for future use, and
+    -- /must/ be zero.
+    flags :: DisplaySurfaceCreateFlagsKHR
+  , -- | @displayMode@ is a 'Graphics.Vulkan.Extensions.Handles.DisplayModeKHR'
+    -- handle specifying the mode to use when displaying this surface.
+    displayMode :: DisplayModeKHR
   , -- | @planeIndex@ is the plane on which this surface appears.
-  vkPlaneIndex :: Word32
+    planeIndex :: Word32
   , -- | @planeStackIndex@ is the z-order of the plane.
-  vkPlaneStackIndex :: Word32
-  , -- | @transform@ is a
-  -- 'Graphics.Vulkan.Extensions.VK_KHR_surface.VkSurfaceTransformFlagBitsKHR'
-  -- value specifying the transformation to apply to images as part of the
-  -- scanout operation.
-  vkTransform :: VkSurfaceTransformFlagBitsKHR
+    planeStackIndex :: Word32
+  , -- | @transform@ is a 'SurfaceTransformFlagBitsKHR' value specifying the
+    -- transformation to apply to images as part of the scanout operation.
+    transform :: SurfaceTransformFlagBitsKHR
   , -- | @globalAlpha@ is the global alpha value. This value is ignored if
-  -- @alphaMode@ is not @VK_DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR@.
-  vkGlobalAlpha :: CFloat
-  , -- | @alphaMode@ is a 'VkDisplayPlaneAlphaFlagBitsKHR' value specifying the
-  -- type of alpha blending to use.
-  vkAlphaMode :: VkDisplayPlaneAlphaFlagBitsKHR
+    -- @alphaMode@ is not 'DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR'.
+    globalAlpha :: Float
+  , -- | @alphaMode@ is a 'DisplayPlaneAlphaFlagBitsKHR' value specifying the
+    -- type of alpha blending to use.
+    alphaMode :: DisplayPlaneAlphaFlagBitsKHR
   , -- | @imageExtent@ The size of the presentable images to use with the
-  -- surface.
-  vkImageExtent :: VkExtent2D
+    -- surface.
+    imageExtent :: Extent2D
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show DisplaySurfaceCreateInfoKHR
 
-instance Storable VkDisplaySurfaceCreateInfoKHR where
-  sizeOf ~_ = 64
-  alignment ~_ = 8
-  peek ptr = VkDisplaySurfaceCreateInfoKHR <$> peek (ptr `plusPtr` 0)
-                                           <*> peek (ptr `plusPtr` 8)
-                                           <*> peek (ptr `plusPtr` 16)
-                                           <*> peek (ptr `plusPtr` 24)
-                                           <*> peek (ptr `plusPtr` 32)
-                                           <*> peek (ptr `plusPtr` 36)
-                                           <*> peek (ptr `plusPtr` 40)
-                                           <*> peek (ptr `plusPtr` 44)
-                                           <*> peek (ptr `plusPtr` 48)
-                                           <*> peek (ptr `plusPtr` 52)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkDisplaySurfaceCreateInfoKHR))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkDisplaySurfaceCreateInfoKHR))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkDisplaySurfaceCreateInfoKHR))
-                *> poke (ptr `plusPtr` 24) (vkDisplayMode (poked :: VkDisplaySurfaceCreateInfoKHR))
-                *> poke (ptr `plusPtr` 32) (vkPlaneIndex (poked :: VkDisplaySurfaceCreateInfoKHR))
-                *> poke (ptr `plusPtr` 36) (vkPlaneStackIndex (poked :: VkDisplaySurfaceCreateInfoKHR))
-                *> poke (ptr `plusPtr` 40) (vkTransform (poked :: VkDisplaySurfaceCreateInfoKHR))
-                *> poke (ptr `plusPtr` 44) (vkGlobalAlpha (poked :: VkDisplaySurfaceCreateInfoKHR))
-                *> poke (ptr `plusPtr` 48) (vkAlphaMode (poked :: VkDisplaySurfaceCreateInfoKHR))
-                *> poke (ptr `plusPtr` 52) (vkImageExtent (poked :: VkDisplaySurfaceCreateInfoKHR))
--- | VkDisplayPlaneAlphaFlagsKHR - Bitmask of VkDisplayPlaneAlphaFlagBitsKHR
+instance ToCStruct DisplaySurfaceCreateInfoKHR where
+  withCStruct x f = allocaBytesAligned 64 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p DisplaySurfaceCreateInfoKHR{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    lift $ poke ((p `plusPtr` 16 :: Ptr DisplaySurfaceCreateFlagsKHR)) (flags)
+    lift $ poke ((p `plusPtr` 24 :: Ptr DisplayModeKHR)) (displayMode)
+    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (planeIndex)
+    lift $ poke ((p `plusPtr` 36 :: Ptr Word32)) (planeStackIndex)
+    lift $ poke ((p `plusPtr` 40 :: Ptr SurfaceTransformFlagBitsKHR)) (transform)
+    lift $ poke ((p `plusPtr` 44 :: Ptr CFloat)) (CFloat (globalAlpha))
+    lift $ poke ((p `plusPtr` 48 :: Ptr DisplayPlaneAlphaFlagBitsKHR)) (alphaMode)
+    ContT $ pokeCStruct ((p `plusPtr` 52 :: Ptr Extent2D)) (imageExtent) . ($ ())
+    lift $ f
+  cStructSize = 64
+  cStructAlignment = 8
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    lift $ poke ((p `plusPtr` 24 :: Ptr DisplayModeKHR)) (zero)
+    lift $ poke ((p `plusPtr` 32 :: Ptr Word32)) (zero)
+    lift $ poke ((p `plusPtr` 36 :: Ptr Word32)) (zero)
+    lift $ poke ((p `plusPtr` 40 :: Ptr SurfaceTransformFlagBitsKHR)) (zero)
+    lift $ poke ((p `plusPtr` 44 :: Ptr CFloat)) (CFloat (zero))
+    lift $ poke ((p `plusPtr` 48 :: Ptr DisplayPlaneAlphaFlagBitsKHR)) (zero)
+    ContT $ pokeCStruct ((p `plusPtr` 52 :: Ptr Extent2D)) (zero) . ($ ())
+    lift $ f
+
+instance FromCStruct DisplaySurfaceCreateInfoKHR where
+  peekCStruct p = do
+    flags <- peek @DisplaySurfaceCreateFlagsKHR ((p `plusPtr` 16 :: Ptr DisplaySurfaceCreateFlagsKHR))
+    displayMode <- peek @DisplayModeKHR ((p `plusPtr` 24 :: Ptr DisplayModeKHR))
+    planeIndex <- peek @Word32 ((p `plusPtr` 32 :: Ptr Word32))
+    planeStackIndex <- peek @Word32 ((p `plusPtr` 36 :: Ptr Word32))
+    transform <- peek @SurfaceTransformFlagBitsKHR ((p `plusPtr` 40 :: Ptr SurfaceTransformFlagBitsKHR))
+    globalAlpha <- peek @CFloat ((p `plusPtr` 44 :: Ptr CFloat))
+    alphaMode <- peek @DisplayPlaneAlphaFlagBitsKHR ((p `plusPtr` 48 :: Ptr DisplayPlaneAlphaFlagBitsKHR))
+    imageExtent <- peekCStruct @Extent2D ((p `plusPtr` 52 :: Ptr Extent2D))
+    pure $ DisplaySurfaceCreateInfoKHR
+             flags displayMode planeIndex planeStackIndex transform ((\(CFloat a) -> a) globalAlpha) alphaMode imageExtent
+
+instance Zero DisplaySurfaceCreateInfoKHR where
+  zero = DisplaySurfaceCreateInfoKHR
+           zero
+           zero
+           zero
+           zero
+           zero
+           zero
+           zero
+           zero
+
+
+-- | VkDisplayModeCreateFlagsKHR - Reserved for future use
 --
 -- = Description
 --
--- @VkDisplayPlaneAlphaFlagsKHR@ is a bitmask type for setting a mask of
--- zero or more 'VkDisplayPlaneAlphaFlagBitsKHR'.
+-- 'DisplayModeCreateFlagsKHR' is a bitmask type for setting a mask, but is
+-- currently reserved for future use.
 --
 -- = See Also
 --
--- 'VkDisplayPlaneAlphaFlagBitsKHR', 'VkDisplayPlaneCapabilitiesKHR'
-type VkDisplayPlaneAlphaFlagsKHR = VkDisplayPlaneAlphaFlagBitsKHR
+-- 'DisplayModeCreateInfoKHR'
+newtype DisplayModeCreateFlagsKHR = DisplayModeCreateFlagsKHR Flags
+  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+
+
+
+instance Show DisplayModeCreateFlagsKHR where
+  showsPrec p = \case
+    DisplayModeCreateFlagsKHR x -> showParen (p >= 11) (showString "DisplayModeCreateFlagsKHR 0x" . showHex x)
+
+instance Read DisplayModeCreateFlagsKHR where
+  readPrec = parens (choose []
+                     +++
+                     prec 10 (do
+                       expectP (Ident "DisplayModeCreateFlagsKHR")
+                       v <- step readPrec
+                       pure (DisplayModeCreateFlagsKHR v)))
+
+
+-- | VkDisplaySurfaceCreateFlagsKHR - Reserved for future use
+--
+-- = Description
+--
+-- 'DisplaySurfaceCreateFlagsKHR' is a bitmask type for setting a mask, but
+-- is currently reserved for future use.
+--
+-- = See Also
+--
+-- 'DisplaySurfaceCreateInfoKHR'
+newtype DisplaySurfaceCreateFlagsKHR = DisplaySurfaceCreateFlagsKHR Flags
+  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+
+
+
+instance Show DisplaySurfaceCreateFlagsKHR where
+  showsPrec p = \case
+    DisplaySurfaceCreateFlagsKHR x -> showParen (p >= 11) (showString "DisplaySurfaceCreateFlagsKHR 0x" . showHex x)
+
+instance Read DisplaySurfaceCreateFlagsKHR where
+  readPrec = parens (choose []
+                     +++
+                     prec 10 (do
+                       expectP (Ident "DisplaySurfaceCreateFlagsKHR")
+                       v <- step readPrec
+                       pure (DisplaySurfaceCreateFlagsKHR v)))
+
+
+-- | VkDisplayPlaneAlphaFlagBitsKHR - Alpha blending type
+--
+-- = See Also
+--
+-- 'DisplayPlaneAlphaFlagsKHR', 'DisplaySurfaceCreateInfoKHR'
+newtype DisplayPlaneAlphaFlagBitsKHR = DisplayPlaneAlphaFlagBitsKHR Flags
+  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+
+-- | 'DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR' specifies that the source image
+-- will be treated as opaque.
+pattern DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR = DisplayPlaneAlphaFlagBitsKHR 0x00000001
+-- | 'DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR' specifies that a global alpha value
+-- /must/ be specified that will be applied to all pixels in the source
+-- image.
+pattern DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR = DisplayPlaneAlphaFlagBitsKHR 0x00000002
+-- | 'DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR' specifies that the alpha value
+-- will be determined by the alpha channel of the source image’s pixels. If
+-- the source format contains no alpha values, no blending will be applied.
+-- The source alpha values are not premultiplied into the source image’s
+-- other color channels.
+pattern DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR = DisplayPlaneAlphaFlagBitsKHR 0x00000004
+-- | 'DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR' is equivalent to
+-- 'DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR', except the source alpha values
+-- are assumed to be premultiplied into the source image’s other color
+-- channels.
+pattern DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR = DisplayPlaneAlphaFlagBitsKHR 0x00000008
+
+type DisplayPlaneAlphaFlagsKHR = DisplayPlaneAlphaFlagBitsKHR
+
+instance Show DisplayPlaneAlphaFlagBitsKHR where
+  showsPrec p = \case
+    DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR -> showString "DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR"
+    DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR -> showString "DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR"
+    DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR -> showString "DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR"
+    DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR -> showString "DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR"
+    DisplayPlaneAlphaFlagBitsKHR x -> showParen (p >= 11) (showString "DisplayPlaneAlphaFlagBitsKHR 0x" . showHex x)
+
+instance Read DisplayPlaneAlphaFlagBitsKHR where
+  readPrec = parens (choose [("DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR", pure DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR)
+                            , ("DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR", pure DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR)
+                            , ("DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR", pure DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR)
+                            , ("DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR", pure DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR)]
+                     +++
+                     prec 10 (do
+                       expectP (Ident "DisplayPlaneAlphaFlagBitsKHR")
+                       v <- step readPrec
+                       pure (DisplayPlaneAlphaFlagBitsKHR v)))
+
+
+-- | VkSurfaceTransformFlagBitsKHR - presentation transforms supported on a
+-- device
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Extensions.VK_QCOM_render_pass_transform.CommandBufferInheritanceRenderPassTransformInfoQCOM',
+-- 'DisplaySurfaceCreateInfoKHR',
+-- 'Graphics.Vulkan.Extensions.VK_QCOM_render_pass_transform.RenderPassTransformBeginInfoQCOM',
+-- 'Graphics.Vulkan.Extensions.VK_EXT_display_surface_counter.SurfaceCapabilities2EXT',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_surface.SurfaceCapabilitiesKHR',
+-- 'SurfaceTransformFlagsKHR',
+-- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR'
+newtype SurfaceTransformFlagBitsKHR = SurfaceTransformFlagBitsKHR Flags
+  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+
+-- | 'SURFACE_TRANSFORM_IDENTITY_BIT_KHR' specifies that image content is
+-- presented without being transformed.
+pattern SURFACE_TRANSFORM_IDENTITY_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000001
+-- | 'SURFACE_TRANSFORM_ROTATE_90_BIT_KHR' specifies that image content is
+-- rotated 90 degrees clockwise.
+pattern SURFACE_TRANSFORM_ROTATE_90_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000002
+-- | 'SURFACE_TRANSFORM_ROTATE_180_BIT_KHR' specifies that image content is
+-- rotated 180 degrees clockwise.
+pattern SURFACE_TRANSFORM_ROTATE_180_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000004
+-- | 'SURFACE_TRANSFORM_ROTATE_270_BIT_KHR' specifies that image content is
+-- rotated 270 degrees clockwise.
+pattern SURFACE_TRANSFORM_ROTATE_270_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000008
+-- | 'SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR' specifies that image
+-- content is mirrored horizontally.
+pattern SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000010
+-- | 'SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR' specifies that
+-- image content is mirrored horizontally, then rotated 90 degrees
+-- clockwise.
+pattern SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000020
+-- | 'SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR' specifies that
+-- image content is mirrored horizontally, then rotated 180 degrees
+-- clockwise.
+pattern SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000040
+-- | 'SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR' specifies that
+-- image content is mirrored horizontally, then rotated 270 degrees
+-- clockwise.
+pattern SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000080
+-- | 'SURFACE_TRANSFORM_INHERIT_BIT_KHR' specifies that the presentation
+-- transform is not specified, and is instead determined by
+-- platform-specific considerations and mechanisms outside Vulkan.
+pattern SURFACE_TRANSFORM_INHERIT_BIT_KHR = SurfaceTransformFlagBitsKHR 0x00000100
+
+type SurfaceTransformFlagsKHR = SurfaceTransformFlagBitsKHR
+
+instance Show SurfaceTransformFlagBitsKHR where
+  showsPrec p = \case
+    SURFACE_TRANSFORM_IDENTITY_BIT_KHR -> showString "SURFACE_TRANSFORM_IDENTITY_BIT_KHR"
+    SURFACE_TRANSFORM_ROTATE_90_BIT_KHR -> showString "SURFACE_TRANSFORM_ROTATE_90_BIT_KHR"
+    SURFACE_TRANSFORM_ROTATE_180_BIT_KHR -> showString "SURFACE_TRANSFORM_ROTATE_180_BIT_KHR"
+    SURFACE_TRANSFORM_ROTATE_270_BIT_KHR -> showString "SURFACE_TRANSFORM_ROTATE_270_BIT_KHR"
+    SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR -> showString "SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR"
+    SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR -> showString "SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR"
+    SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR -> showString "SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR"
+    SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR -> showString "SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR"
+    SURFACE_TRANSFORM_INHERIT_BIT_KHR -> showString "SURFACE_TRANSFORM_INHERIT_BIT_KHR"
+    SurfaceTransformFlagBitsKHR x -> showParen (p >= 11) (showString "SurfaceTransformFlagBitsKHR 0x" . showHex x)
+
+instance Read SurfaceTransformFlagBitsKHR where
+  readPrec = parens (choose [("SURFACE_TRANSFORM_IDENTITY_BIT_KHR", pure SURFACE_TRANSFORM_IDENTITY_BIT_KHR)
+                            , ("SURFACE_TRANSFORM_ROTATE_90_BIT_KHR", pure SURFACE_TRANSFORM_ROTATE_90_BIT_KHR)
+                            , ("SURFACE_TRANSFORM_ROTATE_180_BIT_KHR", pure SURFACE_TRANSFORM_ROTATE_180_BIT_KHR)
+                            , ("SURFACE_TRANSFORM_ROTATE_270_BIT_KHR", pure SURFACE_TRANSFORM_ROTATE_270_BIT_KHR)
+                            , ("SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR", pure SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR)
+                            , ("SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR", pure SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR)
+                            , ("SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR", pure SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR)
+                            , ("SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR", pure SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR)
+                            , ("SURFACE_TRANSFORM_INHERIT_BIT_KHR", pure SURFACE_TRANSFORM_INHERIT_BIT_KHR)]
+                     +++
+                     prec 10 (do
+                       expectP (Ident "SurfaceTransformFlagBitsKHR")
+                       v <- step readPrec
+                       pure (SurfaceTransformFlagBitsKHR v)))
+
+
+type KHR_DISPLAY_SPEC_VERSION = 23
+
+-- No documentation found for TopLevel "VK_KHR_DISPLAY_SPEC_VERSION"
+pattern KHR_DISPLAY_SPEC_VERSION :: forall a . Integral a => a
+pattern KHR_DISPLAY_SPEC_VERSION = 23
+
+
+type KHR_DISPLAY_EXTENSION_NAME = "VK_KHR_display"
+
+-- No documentation found for TopLevel "VK_KHR_DISPLAY_EXTENSION_NAME"
+pattern KHR_DISPLAY_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern KHR_DISPLAY_EXTENSION_NAME = "VK_KHR_display"
+

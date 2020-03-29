@@ -1,32 +1,22 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
-{-# language OverloadedStrings #-}
+module Graphics.Vulkan.Extensions.VK_NV_shader_subgroup_partitioned  ( NV_SHADER_SUBGROUP_PARTITIONED_SPEC_VERSION
+                                                                     , pattern NV_SHADER_SUBGROUP_PARTITIONED_SPEC_VERSION
+                                                                     , NV_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME
+                                                                     , pattern NV_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME
+                                                                     ) where
 
-module Graphics.Vulkan.Extensions.VK_NV_shader_subgroup_partitioned
-  ( pattern VK_SUBGROUP_FEATURE_PARTITIONED_BIT_NV
-  , pattern VK_NV_SHADER_SUBGROUP_PARTITIONED_SPEC_VERSION
-  , pattern VK_NV_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME
-  ) where
+import Data.String (IsString)
 
-import Data.String
-  ( IsString
-  )
+type NV_SHADER_SUBGROUP_PARTITIONED_SPEC_VERSION = 1
 
-
-import Graphics.Vulkan.Core11.Promoted_From_VK_KHR_subgroup
-  ( VkSubgroupFeatureFlagBits(..)
-  )
-
-
--- | @VK_SUBGROUP_FEATURE_PARTITIONED_BIT_NV@ specifies the device will
--- accept SPIR-V shader modules that contain the
--- @GroupNonUniformPartitionedNV@ capability.
-pattern VK_SUBGROUP_FEATURE_PARTITIONED_BIT_NV :: VkSubgroupFeatureFlagBits
-pattern VK_SUBGROUP_FEATURE_PARTITIONED_BIT_NV = VkSubgroupFeatureFlagBits 0x00000100
 -- No documentation found for TopLevel "VK_NV_SHADER_SUBGROUP_PARTITIONED_SPEC_VERSION"
-pattern VK_NV_SHADER_SUBGROUP_PARTITIONED_SPEC_VERSION :: Integral a => a
-pattern VK_NV_SHADER_SUBGROUP_PARTITIONED_SPEC_VERSION = 1
+pattern NV_SHADER_SUBGROUP_PARTITIONED_SPEC_VERSION :: forall a . Integral a => a
+pattern NV_SHADER_SUBGROUP_PARTITIONED_SPEC_VERSION = 1
+
+
+type NV_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME = "VK_NV_shader_subgroup_partitioned"
+
 -- No documentation found for TopLevel "VK_NV_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME"
-pattern VK_NV_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME :: (Eq a ,IsString a) => a
-pattern VK_NV_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME = "VK_NV_shader_subgroup_partitioned"
+pattern NV_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern NV_SHADER_SUBGROUP_PARTITIONED_EXTENSION_NAME = "VK_NV_shader_subgroup_partitioned"
+

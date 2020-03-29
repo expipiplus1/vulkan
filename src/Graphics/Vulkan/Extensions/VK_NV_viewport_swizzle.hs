@@ -1,276 +1,288 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language GeneralizedNewtypeDeriving #-}
-{-# language PatternSynonyms #-}
-{-# language OverloadedStrings #-}
-{-# language DuplicateRecordFields #-}
+module Graphics.Vulkan.Extensions.VK_NV_viewport_swizzle  ( ViewportSwizzleNV(..)
+                                                          , PipelineViewportSwizzleStateCreateInfoNV(..)
+                                                          , PipelineViewportSwizzleStateCreateFlagsNV(..)
+                                                          , ViewportCoordinateSwizzleNV( VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV
+                                                                                       , VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV
+                                                                                       , VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV
+                                                                                       , VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV
+                                                                                       , VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV
+                                                                                       , VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV
+                                                                                       , VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV
+                                                                                       , VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV
+                                                                                       , ..
+                                                                                       )
+                                                          , NV_VIEWPORT_SWIZZLE_SPEC_VERSION
+                                                          , pattern NV_VIEWPORT_SWIZZLE_SPEC_VERSION
+                                                          , NV_VIEWPORT_SWIZZLE_EXTENSION_NAME
+                                                          , pattern NV_VIEWPORT_SWIZZLE_EXTENSION_NAME
+                                                          ) where
 
-module Graphics.Vulkan.Extensions.VK_NV_viewport_swizzle
-  ( VkViewportCoordinateSwizzleNV(..)
-  , pattern VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV
-  , pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV
-  , pattern VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV
-  , pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV
-  , pattern VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV
-  , pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV
-  , pattern VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV
-  , pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV
-  , VkPipelineViewportSwizzleStateCreateFlagsNV(..)
-  , pattern VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV
-  , pattern VK_NV_VIEWPORT_SWIZZLE_SPEC_VERSION
-  , pattern VK_NV_VIEWPORT_SWIZZLE_EXTENSION_NAME
-  , VkViewportSwizzleNV(..)
-  , VkPipelineViewportSwizzleStateCreateInfoNV(..)
-  ) where
+import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Ptr (nullPtr)
+import Foreign.Ptr (plusPtr)
+import GHC.Read (choose)
+import GHC.Read (expectP)
+import GHC.Read (parens)
+import GHC.Show (showParen)
+import GHC.Show (showString)
+import GHC.Show (showsPrec)
+import Numeric (showHex)
+import Text.ParserCombinators.ReadPrec ((+++))
+import Text.ParserCombinators.ReadPrec (prec)
+import Text.ParserCombinators.ReadPrec (step)
+import Control.Monad.Trans.Class (lift)
+import Control.Monad.Trans.Cont (evalContT)
+import Data.Vector (generateM)
+import qualified Data.Vector (imapM_)
+import qualified Data.Vector (length)
+import Data.Bits (Bits)
+import Data.String (IsString)
+import Data.Typeable (Typeable)
+import Foreign.Storable (Storable)
+import Foreign.Storable (Storable(peek))
+import Foreign.Storable (Storable(poke))
+import qualified Foreign.Storable (Storable(..))
+import Data.Int (Int32)
+import Foreign.Ptr (Ptr)
+import GHC.Read (Read(readPrec))
+import Data.Word (Word32)
+import Text.Read.Lex (Lexeme(Ident))
+import Data.Kind (Type)
+import Control.Monad.Trans.Cont (ContT(..))
+import Data.Vector (Vector)
+import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
+import Graphics.Vulkan.Core10.BaseType (Flags)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (FromCStruct(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
+import Graphics.Vulkan.CStruct (ToCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct(..))
+import Graphics.Vulkan.Zero (Zero)
+import Graphics.Vulkan.Zero (Zero(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV))
+-- | VkViewportSwizzleNV - Structure specifying a viewport swizzle
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'PipelineViewportSwizzleStateCreateInfoNV',
+-- 'ViewportCoordinateSwizzleNV'
+data ViewportSwizzleNV = ViewportSwizzleNV
+  { -- | @x@ /must/ be a valid 'ViewportCoordinateSwizzleNV' value
+    x :: ViewportCoordinateSwizzleNV
+  , -- | @y@ /must/ be a valid 'ViewportCoordinateSwizzleNV' value
+    y :: ViewportCoordinateSwizzleNV
+  , -- | @z@ /must/ be a valid 'ViewportCoordinateSwizzleNV' value
+    z :: ViewportCoordinateSwizzleNV
+  , -- | @w@ /must/ be a valid 'ViewportCoordinateSwizzleNV' value
+    w :: ViewportCoordinateSwizzleNV
+  }
+  deriving (Typeable)
+deriving instance Show ViewportSwizzleNV
 
-import Data.Bits
-  ( Bits
-  , FiniteBits
-  )
-import Data.Int
-  ( Int32
-  )
-import Data.String
-  ( IsString
-  )
-import Data.Word
-  ( Word32
-  )
-import Foreign.Ptr
-  ( Ptr
-  , plusPtr
-  )
-import Foreign.Storable
-  ( Storable
-  , Storable(..)
-  )
-import GHC.Read
-  ( choose
-  , expectP
-  )
-import Text.ParserCombinators.ReadPrec
-  ( (+++)
-  , prec
-  , step
-  )
-import Text.Read
-  ( Read(..)
-  , parens
-  )
-import Text.Read.Lex
-  ( Lexeme(Ident)
-  )
+instance ToCStruct ViewportSwizzleNV where
+  withCStruct x f = allocaBytesAligned 16 4 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p ViewportSwizzleNV{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr ViewportCoordinateSwizzleNV)) (x)
+    poke ((p `plusPtr` 4 :: Ptr ViewportCoordinateSwizzleNV)) (y)
+    poke ((p `plusPtr` 8 :: Ptr ViewportCoordinateSwizzleNV)) (z)
+    poke ((p `plusPtr` 12 :: Ptr ViewportCoordinateSwizzleNV)) (w)
+    f
+  cStructSize = 16
+  cStructAlignment = 4
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr ViewportCoordinateSwizzleNV)) (zero)
+    poke ((p `plusPtr` 4 :: Ptr ViewportCoordinateSwizzleNV)) (zero)
+    poke ((p `plusPtr` 8 :: Ptr ViewportCoordinateSwizzleNV)) (zero)
+    poke ((p `plusPtr` 12 :: Ptr ViewportCoordinateSwizzleNV)) (zero)
+    f
+
+instance FromCStruct ViewportSwizzleNV where
+  peekCStruct p = do
+    x <- peek @ViewportCoordinateSwizzleNV ((p `plusPtr` 0 :: Ptr ViewportCoordinateSwizzleNV))
+    y <- peek @ViewportCoordinateSwizzleNV ((p `plusPtr` 4 :: Ptr ViewportCoordinateSwizzleNV))
+    z <- peek @ViewportCoordinateSwizzleNV ((p `plusPtr` 8 :: Ptr ViewportCoordinateSwizzleNV))
+    w <- peek @ViewportCoordinateSwizzleNV ((p `plusPtr` 12 :: Ptr ViewportCoordinateSwizzleNV))
+    pure $ ViewportSwizzleNV
+             x y z w
+
+instance Storable ViewportSwizzleNV where
+  sizeOf ~_ = 16
+  alignment ~_ = 4
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero ViewportSwizzleNV where
+  zero = ViewportSwizzleNV
+           zero
+           zero
+           zero
+           zero
 
 
-import Graphics.Vulkan.Core10.Core
-  ( VkStructureType(..)
-  , VkFlags
-  )
+-- | VkPipelineViewportSwizzleStateCreateInfoNV - Structure specifying
+-- swizzle applied to primitive clip coordinates
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'PipelineViewportSwizzleStateCreateFlagsNV',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'ViewportSwizzleNV'
+data PipelineViewportSwizzleStateCreateInfoNV = PipelineViewportSwizzleStateCreateInfoNV
+  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+    flags :: PipelineViewportSwizzleStateCreateFlagsNV
+  , -- | @pViewportSwizzles@ /must/ be a valid pointer to an array of
+    -- @viewportCount@ valid 'ViewportSwizzleNV' structures
+    viewportSwizzles :: Vector ViewportSwizzleNV
+  }
+  deriving (Typeable)
+deriving instance Show PipelineViewportSwizzleStateCreateInfoNV
+
+instance ToCStruct PipelineViewportSwizzleStateCreateInfoNV where
+  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p PipelineViewportSwizzleStateCreateInfoNV{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    lift $ poke ((p `plusPtr` 16 :: Ptr PipelineViewportSwizzleStateCreateFlagsNV)) (flags)
+    lift $ poke ((p `plusPtr` 20 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (viewportSwizzles)) :: Word32))
+    pPViewportSwizzles' <- ContT $ allocaBytesAligned @ViewportSwizzleNV ((Data.Vector.length (viewportSwizzles)) * 16) 4
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPViewportSwizzles' `plusPtr` (16 * (i)) :: Ptr ViewportSwizzleNV) (e) . ($ ())) (viewportSwizzles)
+    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ViewportSwizzleNV))) (pPViewportSwizzles')
+    lift $ f
+  cStructSize = 32
+  cStructAlignment = 8
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    pPViewportSwizzles' <- ContT $ allocaBytesAligned @ViewportSwizzleNV ((Data.Vector.length (mempty)) * 16) 4
+    Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPViewportSwizzles' `plusPtr` (16 * (i)) :: Ptr ViewportSwizzleNV) (e) . ($ ())) (mempty)
+    lift $ poke ((p `plusPtr` 24 :: Ptr (Ptr ViewportSwizzleNV))) (pPViewportSwizzles')
+    lift $ f
+
+instance FromCStruct PipelineViewportSwizzleStateCreateInfoNV where
+  peekCStruct p = do
+    flags <- peek @PipelineViewportSwizzleStateCreateFlagsNV ((p `plusPtr` 16 :: Ptr PipelineViewportSwizzleStateCreateFlagsNV))
+    viewportCount <- peek @Word32 ((p `plusPtr` 20 :: Ptr Word32))
+    pViewportSwizzles <- peek @(Ptr ViewportSwizzleNV) ((p `plusPtr` 24 :: Ptr (Ptr ViewportSwizzleNV)))
+    pViewportSwizzles' <- generateM (fromIntegral viewportCount) (\i -> peekCStruct @ViewportSwizzleNV ((pViewportSwizzles `advancePtrBytes` (16 * (i)) :: Ptr ViewportSwizzleNV)))
+    pure $ PipelineViewportSwizzleStateCreateInfoNV
+             flags pViewportSwizzles'
+
+instance Zero PipelineViewportSwizzleStateCreateInfoNV where
+  zero = PipelineViewportSwizzleStateCreateInfoNV
+           zero
+           mempty
 
 
--- ** VkViewportCoordinateSwizzleNV
+-- | VkPipelineViewportSwizzleStateCreateFlagsNV - Reserved for future use
+--
+-- = Description
+--
+-- 'PipelineViewportSwizzleStateCreateFlagsNV' is a bitmask type for
+-- setting a mask, but is currently reserved for future use.
+--
+-- = See Also
+--
+-- 'PipelineViewportSwizzleStateCreateInfoNV'
+newtype PipelineViewportSwizzleStateCreateFlagsNV = PipelineViewportSwizzleStateCreateFlagsNV Flags
+  deriving newtype (Eq, Ord, Storable, Zero, Bits)
+
+
+
+instance Show PipelineViewportSwizzleStateCreateFlagsNV where
+  showsPrec p = \case
+    PipelineViewportSwizzleStateCreateFlagsNV x -> showParen (p >= 11) (showString "PipelineViewportSwizzleStateCreateFlagsNV 0x" . showHex x)
+
+instance Read PipelineViewportSwizzleStateCreateFlagsNV where
+  readPrec = parens (choose []
+                     +++
+                     prec 10 (do
+                       expectP (Ident "PipelineViewportSwizzleStateCreateFlagsNV")
+                       v <- step readPrec
+                       pure (PipelineViewportSwizzleStateCreateFlagsNV v)))
+
 
 -- | VkViewportCoordinateSwizzleNV - Specify how a viewport coordinate is
 -- swizzled
 --
 -- = Description
 --
--- These values are described in detail in [Viewport
--- Swizzle](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vertexpostproc-viewport-swizzle).
+-- These values are described in detail in
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vertexpostproc-viewport-swizzle Viewport Swizzle>.
 --
 -- = See Also
 --
--- 'VkViewportSwizzleNV'
-newtype VkViewportCoordinateSwizzleNV = VkViewportCoordinateSwizzleNV Int32
-  deriving (Eq, Ord, Storable)
-
-instance Show VkViewportCoordinateSwizzleNV where
-  showsPrec _ VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV = showString "VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV"
-  showsPrec _ VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV = showString "VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV"
-  showsPrec _ VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV = showString "VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV"
-  showsPrec _ VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV = showString "VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV"
-  showsPrec _ VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV = showString "VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV"
-  showsPrec _ VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV = showString "VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV"
-  showsPrec _ VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV = showString "VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV"
-  showsPrec _ VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV = showString "VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV"
-  showsPrec p (VkViewportCoordinateSwizzleNV x) = showParen (p >= 11) (showString "VkViewportCoordinateSwizzleNV " . showsPrec 11 x)
-
-instance Read VkViewportCoordinateSwizzleNV where
-  readPrec = parens ( choose [ ("VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV", pure VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV)
-                             , ("VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV", pure VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV)
-                             , ("VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV", pure VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV)
-                             , ("VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV", pure VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV)
-                             , ("VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV", pure VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV)
-                             , ("VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV", pure VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV)
-                             , ("VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV", pure VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV)
-                             , ("VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV", pure VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV)
-                             ] +++
-                      prec 10 (do
-                        expectP (Ident "VkViewportCoordinateSwizzleNV")
-                        v <- step readPrec
-                        pure (VkViewportCoordinateSwizzleNV v)
-                        )
-                    )
+-- 'ViewportSwizzleNV'
+newtype ViewportCoordinateSwizzleNV = ViewportCoordinateSwizzleNV Int32
+  deriving newtype (Eq, Ord, Storable, Zero)
 
 -- No documentation found for Nested "VkViewportCoordinateSwizzleNV" "VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV"
-pattern VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV :: VkViewportCoordinateSwizzleNV
-pattern VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV = VkViewportCoordinateSwizzleNV 0
-
+pattern VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV = ViewportCoordinateSwizzleNV 0
 -- No documentation found for Nested "VkViewportCoordinateSwizzleNV" "VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV"
-pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV :: VkViewportCoordinateSwizzleNV
-pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV = VkViewportCoordinateSwizzleNV 1
-
+pattern VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV = ViewportCoordinateSwizzleNV 1
 -- No documentation found for Nested "VkViewportCoordinateSwizzleNV" "VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV"
-pattern VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV :: VkViewportCoordinateSwizzleNV
-pattern VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV = VkViewportCoordinateSwizzleNV 2
-
+pattern VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV = ViewportCoordinateSwizzleNV 2
 -- No documentation found for Nested "VkViewportCoordinateSwizzleNV" "VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV"
-pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV :: VkViewportCoordinateSwizzleNV
-pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV = VkViewportCoordinateSwizzleNV 3
-
+pattern VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV = ViewportCoordinateSwizzleNV 3
 -- No documentation found for Nested "VkViewportCoordinateSwizzleNV" "VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV"
-pattern VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV :: VkViewportCoordinateSwizzleNV
-pattern VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV = VkViewportCoordinateSwizzleNV 4
-
+pattern VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV = ViewportCoordinateSwizzleNV 4
 -- No documentation found for Nested "VkViewportCoordinateSwizzleNV" "VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV"
-pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV :: VkViewportCoordinateSwizzleNV
-pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV = VkViewportCoordinateSwizzleNV 5
-
+pattern VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV = ViewportCoordinateSwizzleNV 5
 -- No documentation found for Nested "VkViewportCoordinateSwizzleNV" "VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV"
-pattern VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV :: VkViewportCoordinateSwizzleNV
-pattern VK_VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV = VkViewportCoordinateSwizzleNV 6
-
+pattern VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV = ViewportCoordinateSwizzleNV 6
 -- No documentation found for Nested "VkViewportCoordinateSwizzleNV" "VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV"
-pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV :: VkViewportCoordinateSwizzleNV
-pattern VK_VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV = VkViewportCoordinateSwizzleNV 7
--- ** VkPipelineViewportSwizzleStateCreateFlagsNV
+pattern VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV = ViewportCoordinateSwizzleNV 7
+{-# complete VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV,
+             VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV,
+             VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV,
+             VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV,
+             VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV,
+             VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV,
+             VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV,
+             VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV :: ViewportCoordinateSwizzleNV #-}
 
--- | VkPipelineViewportSwizzleStateCreateFlagsNV - Reserved for future use
---
--- = Description
---
--- @VkPipelineViewportSwizzleStateCreateFlagsNV@ is a bitmask type for
--- setting a mask, but is currently reserved for future use.
---
--- = See Also
---
--- 'VkPipelineViewportSwizzleStateCreateInfoNV'
-newtype VkPipelineViewportSwizzleStateCreateFlagsNV = VkPipelineViewportSwizzleStateCreateFlagsNV VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
+instance Show ViewportCoordinateSwizzleNV where
+  showsPrec p = \case
+    VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV -> showString "VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV"
+    VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV -> showString "VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV"
+    VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV -> showString "VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV"
+    VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV -> showString "VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV"
+    VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV -> showString "VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV"
+    VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV -> showString "VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV"
+    VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV -> showString "VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV"
+    VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV -> showString "VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV"
+    ViewportCoordinateSwizzleNV x -> showParen (p >= 11) (showString "ViewportCoordinateSwizzleNV " . showsPrec 11 x)
 
-instance Show VkPipelineViewportSwizzleStateCreateFlagsNV where
-  
-  showsPrec p (VkPipelineViewportSwizzleStateCreateFlagsNV x) = showParen (p >= 11) (showString "VkPipelineViewportSwizzleStateCreateFlagsNV " . showsPrec 11 x)
+instance Read ViewportCoordinateSwizzleNV where
+  readPrec = parens (choose [("VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV", pure VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV)
+                            , ("VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV", pure VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV)
+                            , ("VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV", pure VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV)
+                            , ("VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV", pure VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV)
+                            , ("VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV", pure VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV)
+                            , ("VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV", pure VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV)
+                            , ("VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV", pure VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV)
+                            , ("VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV", pure VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV)]
+                     +++
+                     prec 10 (do
+                       expectP (Ident "ViewportCoordinateSwizzleNV")
+                       v <- step readPrec
+                       pure (ViewportCoordinateSwizzleNV v)))
 
-instance Read VkPipelineViewportSwizzleStateCreateFlagsNV where
-  readPrec = parens ( choose [ 
-                             ] +++
-                      prec 10 (do
-                        expectP (Ident "VkPipelineViewportSwizzleStateCreateFlagsNV")
-                        v <- step readPrec
-                        pure (VkPipelineViewportSwizzleStateCreateFlagsNV v)
-                        )
-                    )
 
+type NV_VIEWPORT_SWIZZLE_SPEC_VERSION = 1
 
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV"
-pattern VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV :: VkStructureType
-pattern VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV = VkStructureType 1000098000
 -- No documentation found for TopLevel "VK_NV_VIEWPORT_SWIZZLE_SPEC_VERSION"
-pattern VK_NV_VIEWPORT_SWIZZLE_SPEC_VERSION :: Integral a => a
-pattern VK_NV_VIEWPORT_SWIZZLE_SPEC_VERSION = 1
+pattern NV_VIEWPORT_SWIZZLE_SPEC_VERSION :: forall a . Integral a => a
+pattern NV_VIEWPORT_SWIZZLE_SPEC_VERSION = 1
+
+
+type NV_VIEWPORT_SWIZZLE_EXTENSION_NAME = "VK_NV_viewport_swizzle"
+
 -- No documentation found for TopLevel "VK_NV_VIEWPORT_SWIZZLE_EXTENSION_NAME"
-pattern VK_NV_VIEWPORT_SWIZZLE_EXTENSION_NAME :: (Eq a ,IsString a) => a
-pattern VK_NV_VIEWPORT_SWIZZLE_EXTENSION_NAME = "VK_NV_viewport_swizzle"
--- | VkViewportSwizzleNV - Structure specifying a viewport swizzle
---
--- == Valid Usage (Implicit)
---
--- -   @x@ /must/ be a valid 'VkViewportCoordinateSwizzleNV' value
---
--- -   @y@ /must/ be a valid 'VkViewportCoordinateSwizzleNV' value
---
--- -   @z@ /must/ be a valid 'VkViewportCoordinateSwizzleNV' value
---
--- -   @w@ /must/ be a valid 'VkViewportCoordinateSwizzleNV' value
---
--- = See Also
---
--- 'VkPipelineViewportSwizzleStateCreateInfoNV',
--- 'VkViewportCoordinateSwizzleNV'
-data VkViewportSwizzleNV = VkViewportSwizzleNV
-  { -- | @x@ is a 'VkViewportCoordinateSwizzleNV' value specifying the swizzle
-  -- operation to apply to the x component of the primitive
-  vkX :: VkViewportCoordinateSwizzleNV
-  , -- | @y@ is a 'VkViewportCoordinateSwizzleNV' value specifying the swizzle
-  -- operation to apply to the y component of the primitive
-  vkY :: VkViewportCoordinateSwizzleNV
-  , -- | @z@ is a 'VkViewportCoordinateSwizzleNV' value specifying the swizzle
-  -- operation to apply to the z component of the primitive
-  vkZ :: VkViewportCoordinateSwizzleNV
-  , -- | @w@ is a 'VkViewportCoordinateSwizzleNV' value specifying the swizzle
-  -- operation to apply to the w component of the primitive
-  vkW :: VkViewportCoordinateSwizzleNV
-  }
-  deriving (Eq, Show)
+pattern NV_VIEWPORT_SWIZZLE_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern NV_VIEWPORT_SWIZZLE_EXTENSION_NAME = "VK_NV_viewport_swizzle"
 
-instance Storable VkViewportSwizzleNV where
-  sizeOf ~_ = 16
-  alignment ~_ = 4
-  peek ptr = VkViewportSwizzleNV <$> peek (ptr `plusPtr` 0)
-                                 <*> peek (ptr `plusPtr` 4)
-                                 <*> peek (ptr `plusPtr` 8)
-                                 <*> peek (ptr `plusPtr` 12)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkX (poked :: VkViewportSwizzleNV))
-                *> poke (ptr `plusPtr` 4) (vkY (poked :: VkViewportSwizzleNV))
-                *> poke (ptr `plusPtr` 8) (vkZ (poked :: VkViewportSwizzleNV))
-                *> poke (ptr `plusPtr` 12) (vkW (poked :: VkViewportSwizzleNV))
--- | VkPipelineViewportSwizzleStateCreateInfoNV - Structure specifying
--- swizzle applied to primitive clip coordinates
---
--- == Valid Usage
---
--- -   @viewportCount@ /must/ match the @viewportCount@ set in
---     @VkPipelineViewportStateCreateInfo@
---
--- == Valid Usage (Implicit)
---
--- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV@
---
--- -   @flags@ /must/ be @0@
---
--- -   @viewportCount@ /must/ be greater than @0@
---
--- = See Also
---
--- 'VkPipelineViewportSwizzleStateCreateFlagsNV',
--- 'Graphics.Vulkan.Core10.Core.VkStructureType', 'VkViewportSwizzleNV'
-data VkPipelineViewportSwizzleStateCreateInfoNV = VkPipelineViewportSwizzleStateCreateInfoNV
-  { -- | @sType@ is the type of this structure.
-  vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
-  vkPNext :: Ptr ()
-  , -- | @flags@ is reserved for future use.
-  vkFlags :: VkPipelineViewportSwizzleStateCreateFlagsNV
-  , -- | @viewportCount@ is the number of viewport swizzles used by the pipeline.
-  vkViewportCount :: Word32
-  , -- | @pViewportSwizzles@ is a pointer to an array of 'VkViewportSwizzleNV'
-  -- structures, defining the viewport swizzles.
-  vkPViewportSwizzles :: Ptr VkViewportSwizzleNV
-  }
-  deriving (Eq, Show)
-
-instance Storable VkPipelineViewportSwizzleStateCreateInfoNV where
-  sizeOf ~_ = 32
-  alignment ~_ = 8
-  peek ptr = VkPipelineViewportSwizzleStateCreateInfoNV <$> peek (ptr `plusPtr` 0)
-                                                        <*> peek (ptr `plusPtr` 8)
-                                                        <*> peek (ptr `plusPtr` 16)
-                                                        <*> peek (ptr `plusPtr` 20)
-                                                        <*> peek (ptr `plusPtr` 24)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPipelineViewportSwizzleStateCreateInfoNV))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPipelineViewportSwizzleStateCreateInfoNV))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkPipelineViewportSwizzleStateCreateInfoNV))
-                *> poke (ptr `plusPtr` 20) (vkViewportCount (poked :: VkPipelineViewportSwizzleStateCreateInfoNV))
-                *> poke (ptr `plusPtr` 24) (vkPViewportSwizzles (poked :: VkPipelineViewportSwizzleStateCreateInfoNV))

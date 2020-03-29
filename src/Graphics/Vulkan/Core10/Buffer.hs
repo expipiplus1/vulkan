@@ -1,446 +1,238 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language GeneralizedNewtypeDeriving #-}
-{-# language PatternSynonyms #-}
-{-# language DataKinds #-}
-{-# language TypeOperators #-}
-{-# language DuplicateRecordFields #-}
+module Graphics.Vulkan.Core10.Buffer  ( createBuffer
+                                      , withBuffer
+                                      , destroyBuffer
+                                      , BufferCreateInfo(..)
+                                      ) where
 
-module Graphics.Vulkan.Core10.Buffer
-  ( VkSharingMode(..)
-  , pattern VK_SHARING_MODE_EXCLUSIVE
-  , pattern VK_SHARING_MODE_CONCURRENT
-  , VkBufferUsageFlagBits(..)
-  , pattern VK_BUFFER_USAGE_TRANSFER_SRC_BIT
-  , pattern VK_BUFFER_USAGE_TRANSFER_DST_BIT
-  , pattern VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT
-  , pattern VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT
-  , pattern VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT
-  , pattern VK_BUFFER_USAGE_STORAGE_BUFFER_BIT
-  , pattern VK_BUFFER_USAGE_INDEX_BUFFER_BIT
-  , pattern VK_BUFFER_USAGE_VERTEX_BUFFER_BIT
-  , pattern VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT
-  , VkBufferCreateFlagBits(..)
-  , pattern VK_BUFFER_CREATE_SPARSE_BINDING_BIT
-  , pattern VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT
-  , pattern VK_BUFFER_CREATE_SPARSE_ALIASED_BIT
-  , vkCreateBuffer
-  , vkDestroyBuffer
-  , VkBufferCreateInfo(..)
-  , VkBufferUsageFlags
-  , VkBufferCreateFlags
-  ) where
+import Control.Exception.Base (bracket)
+import Data.Typeable (eqT)
+import Foreign.Marshal.Alloc (allocaBytesAligned)
+import Foreign.Marshal.Alloc (callocBytes)
+import Foreign.Marshal.Alloc (free)
+import GHC.Base (when)
+import GHC.IO (throwIO)
+import GHC.Ptr (castPtr)
+import Foreign.Ptr (nullPtr)
+import Foreign.Ptr (plusPtr)
+import Control.Monad.Trans.Class (lift)
+import Control.Monad.Trans.Cont (evalContT)
+import Data.Vector (generateM)
+import qualified Data.Vector (imapM_)
+import qualified Data.Vector (length)
+import Data.Type.Equality ((:~:)(Refl))
+import Data.Typeable (Typeable)
+import Foreign.Storable (Storable(peek))
+import Foreign.Storable (Storable(poke))
+import Foreign.Ptr (FunPtr)
+import Foreign.Ptr (Ptr)
+import Data.Word (Word32)
+import Data.Kind (Type)
+import Control.Monad.Trans.Cont (ContT(..))
+import Data.Vector (Vector)
+import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
+import Graphics.Vulkan.NamedType ((:::))
+import Graphics.Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
+import Graphics.Vulkan.Core10.Handles (Buffer)
+import Graphics.Vulkan.Core10.Handles (Buffer(..))
+import Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits (BufferCreateFlags)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_EXT_buffer_device_address (BufferDeviceAddressCreateInfoEXT)
+import {-# SOURCE #-} Graphics.Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address (BufferOpaqueCaptureAddressCreateInfo)
+import Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits (BufferUsageFlags)
+import Graphics.Vulkan.CStruct.Extends (Chain)
+import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation (DedicatedAllocationBufferCreateInfoNV)
+import Graphics.Vulkan.Core10.Handles (Device)
+import Graphics.Vulkan.Core10.Handles (Device(..))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkCreateBuffer))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkDestroyBuffer))
+import Graphics.Vulkan.Core10.BaseType (DeviceSize)
+import Graphics.Vulkan.Core10.Handles (Device_T)
+import Graphics.Vulkan.CStruct.Extends (Extends)
+import Graphics.Vulkan.CStruct.Extends (Extensible(..))
+import {-# SOURCE #-} Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory (ExternalMemoryBufferCreateInfo)
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (FromCStruct(..))
+import Graphics.Vulkan.CStruct.Extends (PeekChain)
+import Graphics.Vulkan.CStruct.Extends (PeekChain(..))
+import Graphics.Vulkan.CStruct.Extends (PokeChain)
+import Graphics.Vulkan.CStruct.Extends (PokeChain(..))
+import Graphics.Vulkan.Core10.Enums.Result (Result)
+import Graphics.Vulkan.Core10.Enums.Result (Result(..))
+import Graphics.Vulkan.Core10.Enums.SharingMode (SharingMode)
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
+import Graphics.Vulkan.CStruct (ToCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct(..))
+import Graphics.Vulkan.Exception (VulkanException(..))
+import Graphics.Vulkan.Zero (Zero(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_BUFFER_CREATE_INFO))
+import Graphics.Vulkan.Core10.Enums.Result (Result(SUCCESS))
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCreateBuffer
+  :: FunPtr (Ptr Device_T -> Ptr (BufferCreateInfo a) -> Ptr AllocationCallbacks -> Ptr Buffer -> IO Result) -> Ptr Device_T -> Ptr (BufferCreateInfo a) -> Ptr AllocationCallbacks -> Ptr Buffer -> IO Result
 
-import Data.Bits
-  ( Bits
-  , FiniteBits
-  )
-import Data.Int
-  ( Int32
-  )
-import Data.Word
-  ( Word32
-  )
-import Foreign.Ptr
-  ( Ptr
-  , plusPtr
-  )
-import Foreign.Storable
-  ( Storable
-  , Storable(..)
-  )
-import GHC.Read
-  ( choose
-  , expectP
-  )
-import Graphics.Vulkan.NamedType
-  ( (:::)
-  )
-import Text.ParserCombinators.ReadPrec
-  ( (+++)
-  , prec
-  , step
-  )
-import Text.Read
-  ( Read(..)
-  , parens
-  )
-import Text.Read.Lex
-  ( Lexeme(Ident)
-  )
-
-
-import Graphics.Vulkan.Core10.Core
-  ( VkResult(..)
-  , VkStructureType(..)
-  , VkFlags
-  )
-import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkAllocationCallbacks(..)
-  , VkDevice
-  , VkDeviceSize
-  )
-import Graphics.Vulkan.Core10.MemoryManagement
-  ( VkBuffer
-  )
-
-
--- ** VkSharingMode
-
--- | VkSharingMode - Buffer and image sharing modes
---
--- = Description
---
--- -   @VK_SHARING_MODE_EXCLUSIVE@ specifies that access to any range or
---     image subresource of the object will be exclusive to a single queue
---     family at a time.
---
--- -   @VK_SHARING_MODE_CONCURRENT@ specifies that concurrent access to any
---     range or image subresource of the object from multiple queue
---     families is supported.
---
--- __Note__
---
--- @VK_SHARING_MODE_CONCURRENT@ /may/ result in lower performance access to
--- the buffer or image than @VK_SHARING_MODE_EXCLUSIVE@.
---
--- Ranges of buffers and image subresources of image objects created using
--- @VK_SHARING_MODE_EXCLUSIVE@ /must/ only be accessed by queues in the
--- queue family that has /ownership/ of the resource. Upon creation, such
--- resources are not owned by any queue family; ownership is implicitly
--- acquired upon first use within a queue. Once a resource using
--- @VK_SHARING_MODE_EXCLUSIVE@ is owned by some queue family, the
--- application /must/ perform a [queue family ownership
--- transfer](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-queue-transfers)
--- to make the memory contents of a range or image subresource accessible
--- to a different queue family.
---
--- __Note__
---
--- Images still require a [layout
--- transition](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#resources-image-layouts)
--- from @VK_IMAGE_LAYOUT_UNDEFINED@ or @VK_IMAGE_LAYOUT_PREINITIALIZED@
--- before being used on the first queue.
---
--- A queue family /can/ take ownership of an image subresource or buffer
--- range of a resource created with @VK_SHARING_MODE_EXCLUSIVE@, without an
--- ownership transfer, in the same way as for a resource that was just
--- created; however, taking ownership in this way has the effect that the
--- contents of the image subresource or buffer range are undefined.
---
--- Ranges of buffers and image subresources of image objects created using
--- @VK_SHARING_MODE_CONCURRENT@ /must/ only be accessed by queues from the
--- queue families specified through the @queueFamilyIndexCount@ and
--- @pQueueFamilyIndices@ members of the corresponding create info
--- structures.
---
--- = See Also
---
--- 'VkBufferCreateInfo', 'Graphics.Vulkan.Core10.Image.VkImageCreateInfo',
--- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.VkSwapchainCreateInfoKHR'
-newtype VkSharingMode = VkSharingMode Int32
-  deriving (Eq, Ord, Storable)
-
-instance Show VkSharingMode where
-  showsPrec _ VK_SHARING_MODE_EXCLUSIVE = showString "VK_SHARING_MODE_EXCLUSIVE"
-  showsPrec _ VK_SHARING_MODE_CONCURRENT = showString "VK_SHARING_MODE_CONCURRENT"
-  showsPrec p (VkSharingMode x) = showParen (p >= 11) (showString "VkSharingMode " . showsPrec 11 x)
-
-instance Read VkSharingMode where
-  readPrec = parens ( choose [ ("VK_SHARING_MODE_EXCLUSIVE",  pure VK_SHARING_MODE_EXCLUSIVE)
-                             , ("VK_SHARING_MODE_CONCURRENT", pure VK_SHARING_MODE_CONCURRENT)
-                             ] +++
-                      prec 10 (do
-                        expectP (Ident "VkSharingMode")
-                        v <- step readPrec
-                        pure (VkSharingMode v)
-                        )
-                    )
-
--- No documentation found for Nested "VkSharingMode" "VK_SHARING_MODE_EXCLUSIVE"
-pattern VK_SHARING_MODE_EXCLUSIVE :: VkSharingMode
-pattern VK_SHARING_MODE_EXCLUSIVE = VkSharingMode 0
-
--- No documentation found for Nested "VkSharingMode" "VK_SHARING_MODE_CONCURRENT"
-pattern VK_SHARING_MODE_CONCURRENT :: VkSharingMode
-pattern VK_SHARING_MODE_CONCURRENT = VkSharingMode 1
--- ** VkBufferUsageFlagBits
-
--- | VkBufferUsageFlagBits - Bitmask specifying allowed usage of a buffer
---
--- = See Also
---
--- 'VkBufferUsageFlags'
-newtype VkBufferUsageFlagBits = VkBufferUsageFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
-
-instance Show VkBufferUsageFlagBits where
-  showsPrec _ VK_BUFFER_USAGE_TRANSFER_SRC_BIT = showString "VK_BUFFER_USAGE_TRANSFER_SRC_BIT"
-  showsPrec _ VK_BUFFER_USAGE_TRANSFER_DST_BIT = showString "VK_BUFFER_USAGE_TRANSFER_DST_BIT"
-  showsPrec _ VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT = showString "VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT"
-  showsPrec _ VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT = showString "VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT"
-  showsPrec _ VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT = showString "VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT"
-  showsPrec _ VK_BUFFER_USAGE_STORAGE_BUFFER_BIT = showString "VK_BUFFER_USAGE_STORAGE_BUFFER_BIT"
-  showsPrec _ VK_BUFFER_USAGE_INDEX_BUFFER_BIT = showString "VK_BUFFER_USAGE_INDEX_BUFFER_BIT"
-  showsPrec _ VK_BUFFER_USAGE_VERTEX_BUFFER_BIT = showString "VK_BUFFER_USAGE_VERTEX_BUFFER_BIT"
-  showsPrec _ VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT = showString "VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT"
-  showsPrec p (VkBufferUsageFlagBits x) = showParen (p >= 11) (showString "VkBufferUsageFlagBits " . showsPrec 11 x)
-
-instance Read VkBufferUsageFlagBits where
-  readPrec = parens ( choose [ ("VK_BUFFER_USAGE_TRANSFER_SRC_BIT",         pure VK_BUFFER_USAGE_TRANSFER_SRC_BIT)
-                             , ("VK_BUFFER_USAGE_TRANSFER_DST_BIT",         pure VK_BUFFER_USAGE_TRANSFER_DST_BIT)
-                             , ("VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT", pure VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT)
-                             , ("VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT", pure VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT)
-                             , ("VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT",       pure VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT)
-                             , ("VK_BUFFER_USAGE_STORAGE_BUFFER_BIT",       pure VK_BUFFER_USAGE_STORAGE_BUFFER_BIT)
-                             , ("VK_BUFFER_USAGE_INDEX_BUFFER_BIT",         pure VK_BUFFER_USAGE_INDEX_BUFFER_BIT)
-                             , ("VK_BUFFER_USAGE_VERTEX_BUFFER_BIT",        pure VK_BUFFER_USAGE_VERTEX_BUFFER_BIT)
-                             , ("VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT",      pure VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT)
-                             ] +++
-                      prec 10 (do
-                        expectP (Ident "VkBufferUsageFlagBits")
-                        v <- step readPrec
-                        pure (VkBufferUsageFlagBits v)
-                        )
-                    )
-
--- | @VK_BUFFER_USAGE_TRANSFER_SRC_BIT@ specifies that the buffer /can/ be
--- used as the source of a /transfer command/ (see the definition of
--- [@VK_PIPELINE_STAGE_TRANSFER_BIT@](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-transfer)).
-pattern VK_BUFFER_USAGE_TRANSFER_SRC_BIT :: VkBufferUsageFlagBits
-pattern VK_BUFFER_USAGE_TRANSFER_SRC_BIT = VkBufferUsageFlagBits 0x00000001
-
--- | @VK_BUFFER_USAGE_TRANSFER_DST_BIT@ specifies that the buffer /can/ be
--- used as the destination of a transfer command.
-pattern VK_BUFFER_USAGE_TRANSFER_DST_BIT :: VkBufferUsageFlagBits
-pattern VK_BUFFER_USAGE_TRANSFER_DST_BIT = VkBufferUsageFlagBits 0x00000002
-
--- | @VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT@ specifies that the buffer
--- /can/ be used to create a @VkBufferView@ suitable for occupying a
--- @VkDescriptorSet@ slot of type
--- @VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER@.
-pattern VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT :: VkBufferUsageFlagBits
-pattern VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT = VkBufferUsageFlagBits 0x00000004
-
--- | @VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT@ specifies that the buffer
--- /can/ be used to create a @VkBufferView@ suitable for occupying a
--- @VkDescriptorSet@ slot of type
--- @VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER@.
-pattern VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT :: VkBufferUsageFlagBits
-pattern VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT = VkBufferUsageFlagBits 0x00000008
-
--- | @VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT@ specifies that the buffer /can/ be
--- used in a @VkDescriptorBufferInfo@ suitable for occupying a
--- @VkDescriptorSet@ slot either of type
--- @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER@ or
--- @VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC@.
-pattern VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT :: VkBufferUsageFlagBits
-pattern VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT = VkBufferUsageFlagBits 0x00000010
-
--- | @VK_BUFFER_USAGE_STORAGE_BUFFER_BIT@ specifies that the buffer /can/ be
--- used in a @VkDescriptorBufferInfo@ suitable for occupying a
--- @VkDescriptorSet@ slot either of type
--- @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER@ or
--- @VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC@.
-pattern VK_BUFFER_USAGE_STORAGE_BUFFER_BIT :: VkBufferUsageFlagBits
-pattern VK_BUFFER_USAGE_STORAGE_BUFFER_BIT = VkBufferUsageFlagBits 0x00000020
-
--- | @VK_BUFFER_USAGE_INDEX_BUFFER_BIT@ specifies that the buffer is suitable
--- for passing as the @buffer@ parameter to @vkCmdBindIndexBuffer@.
-pattern VK_BUFFER_USAGE_INDEX_BUFFER_BIT :: VkBufferUsageFlagBits
-pattern VK_BUFFER_USAGE_INDEX_BUFFER_BIT = VkBufferUsageFlagBits 0x00000040
-
--- | @VK_BUFFER_USAGE_VERTEX_BUFFER_BIT@ specifies that the buffer is
--- suitable for passing as an element of the @pBuffers@ array to
--- @vkCmdBindVertexBuffers@.
-pattern VK_BUFFER_USAGE_VERTEX_BUFFER_BIT :: VkBufferUsageFlagBits
-pattern VK_BUFFER_USAGE_VERTEX_BUFFER_BIT = VkBufferUsageFlagBits 0x00000080
-
--- | @VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT@ specifies that the buffer is
--- suitable for passing as the @buffer@ parameter to @vkCmdDrawIndirect@,
--- @vkCmdDrawIndexedIndirect@, or @vkCmdDispatchIndirect@. It is also
--- suitable for passing as the @buffer@ member of
--- @VkIndirectCommandsTokenNVX@, or @sequencesCountBuffer@ or
--- @sequencesIndexBuffer@ member of @VkCmdProcessCommandsInfoNVX@
-pattern VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT :: VkBufferUsageFlagBits
-pattern VK_BUFFER_USAGE_INDIRECT_BUFFER_BIT = VkBufferUsageFlagBits 0x00000100
--- ** VkBufferCreateFlagBits
-
--- | VkBufferCreateFlagBits - Bitmask specifying additional parameters of a
--- buffer
---
--- = Description
---
--- -   @VK_BUFFER_CREATE_SPARSE_BINDING_BIT@ specifies that the buffer will
---     be backed using sparse memory binding.
---
--- -   @VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT@ specifies that the buffer
---     /can/ be partially backed using sparse memory binding. Buffers
---     created with this flag /must/ also be created with the
---     @VK_BUFFER_CREATE_SPARSE_BINDING_BIT@ flag.
---
--- -   @VK_BUFFER_CREATE_SPARSE_ALIASED_BIT@ specifies that the buffer will
---     be backed using sparse memory binding with memory ranges that might
---     also simultaneously be backing another buffer (or another portion of
---     the same buffer). Buffers created with this flag /must/ also be
---     created with the @VK_BUFFER_CREATE_SPARSE_BINDING_BIT@ flag.
---
--- See [Sparse Resource
--- Features](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#sparsememory-sparseresourcefeatures)
--- and [Physical Device
--- Features](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features)
--- for details of the sparse memory features supported on a device.
---
--- = See Also
---
--- 'VkBufferCreateFlags'
-newtype VkBufferCreateFlagBits = VkBufferCreateFlagBits VkFlags
-  deriving (Eq, Ord, Storable, Bits, FiniteBits)
-
-instance Show VkBufferCreateFlagBits where
-  showsPrec _ VK_BUFFER_CREATE_SPARSE_BINDING_BIT = showString "VK_BUFFER_CREATE_SPARSE_BINDING_BIT"
-  showsPrec _ VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT = showString "VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT"
-  showsPrec _ VK_BUFFER_CREATE_SPARSE_ALIASED_BIT = showString "VK_BUFFER_CREATE_SPARSE_ALIASED_BIT"
-  -- The following values are from extensions, the patterns themselves are exported from the extension modules
-  showsPrec _ (VkBufferCreateFlagBits 0x00000008) = showString "VK_BUFFER_CREATE_PROTECTED_BIT"
-  showsPrec p (VkBufferCreateFlagBits x) = showParen (p >= 11) (showString "VkBufferCreateFlagBits " . showsPrec 11 x)
-
-instance Read VkBufferCreateFlagBits where
-  readPrec = parens ( choose [ ("VK_BUFFER_CREATE_SPARSE_BINDING_BIT",   pure VK_BUFFER_CREATE_SPARSE_BINDING_BIT)
-                             , ("VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT", pure VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT)
-                             , ("VK_BUFFER_CREATE_SPARSE_ALIASED_BIT",   pure VK_BUFFER_CREATE_SPARSE_ALIASED_BIT)
-                             , -- The following values are from extensions, the patterns themselves are exported from the extension modules
-                               ("VK_BUFFER_CREATE_PROTECTED_BIT", pure (VkBufferCreateFlagBits 0x00000008))
-                             ] +++
-                      prec 10 (do
-                        expectP (Ident "VkBufferCreateFlagBits")
-                        v <- step readPrec
-                        pure (VkBufferCreateFlagBits v)
-                        )
-                    )
-
--- No documentation found for Nested "VkBufferCreateFlagBits" "VK_BUFFER_CREATE_SPARSE_BINDING_BIT"
-pattern VK_BUFFER_CREATE_SPARSE_BINDING_BIT :: VkBufferCreateFlagBits
-pattern VK_BUFFER_CREATE_SPARSE_BINDING_BIT = VkBufferCreateFlagBits 0x00000001
-
--- No documentation found for Nested "VkBufferCreateFlagBits" "VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT"
-pattern VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT :: VkBufferCreateFlagBits
-pattern VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT = VkBufferCreateFlagBits 0x00000002
-
--- No documentation found for Nested "VkBufferCreateFlagBits" "VK_BUFFER_CREATE_SPARSE_ALIASED_BIT"
-pattern VK_BUFFER_CREATE_SPARSE_ALIASED_BIT :: VkBufferCreateFlagBits
-pattern VK_BUFFER_CREATE_SPARSE_ALIASED_BIT = VkBufferCreateFlagBits 0x00000004
 -- | vkCreateBuffer - Create a new buffer object
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that creates the buffer object.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     creates the buffer object.
 --
--- -   @pCreateInfo@ is a pointer to an instance of the
---     @VkBufferCreateInfo@ structure containing parameters affecting
---     creation of the buffer.
+-- -   @pCreateInfo@ is a pointer to a 'BufferCreateInfo' structure
+--     containing parameters affecting creation of the buffer.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     [Memory
---     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
--- -   @pBuffer@ points to a @VkBuffer@ handle in which the resulting
---     buffer object is returned.
+-- -   @pBuffer@ is a pointer to a 'Graphics.Vulkan.Core10.Handles.Buffer'
+--     handle in which the resulting buffer object is returned.
 --
 -- == Valid Usage
 --
--- -   If the @flags@ member of @pCreateInfo@ includes
---     @VK_BUFFER_CREATE_SPARSE_BINDING_BIT@, creating this @VkBuffer@
---     /must/ not cause the total required sparse memory for all currently
---     valid sparse resources on the device to exceed
---     @VkPhysicalDeviceLimits@::@sparseAddressSpaceSize@
+-- -   If the 'Graphics.Vulkan.Core10.BaseType.Flags' member of
+--     @pCreateInfo@ includes
+--     'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT',
+--     creating this 'Graphics.Vulkan.Core10.Handles.Buffer' /must/ not
+--     cause the total required sparse memory for all currently valid
+--     sparse resources on the device to exceed
+--     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@sparseAddressSpaceSize@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
---     @VkBufferCreateInfo@ structure
+--     'BufferCreateInfo' structure
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
+--     pointer to a valid
+--     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   @pBuffer@ /must/ be a valid pointer to a @VkBuffer@ handle
+-- -   @pBuffer@ /must/ be a valid pointer to a
+--     'Graphics.Vulkan.Core10.Handles.Buffer' handle
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_OUT_OF_HOST_MEMORY@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
 --
---     -   @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_HOST_MEMORY'
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_OUT_OF_DEVICE_MEMORY'
+--
+--     -   'Graphics.Vulkan.Extensions.VK_KHR_buffer_device_address.ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS_KHR'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'Graphics.Vulkan.Core10.MemoryManagement.VkBuffer',
--- 'VkBufferCreateInfo',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
+-- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
+-- 'Graphics.Vulkan.Core10.Handles.Buffer', 'BufferCreateInfo',
+-- 'Graphics.Vulkan.Core10.Handles.Device'
+createBuffer :: PokeChain a => Device -> BufferCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (Buffer)
+createBuffer device createInfo allocator = evalContT $ do
+  let vkCreateBuffer' = mkVkCreateBuffer (pVkCreateBuffer (deviceCmds (device :: Device)))
+  pCreateInfo <- ContT $ withCStruct (createInfo)
+  pAllocator <- case (allocator) of
+    Nothing -> pure nullPtr
+    Just j -> ContT $ withCStruct (j)
+  pPBuffer <- ContT $ bracket (callocBytes @Buffer 8) free
+  r <- lift $ vkCreateBuffer' (deviceHandle (device)) pCreateInfo pAllocator (pPBuffer)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pBuffer <- lift $ peek @Buffer pPBuffer
+  pure $ (pBuffer)
+
+-- | A safe wrapper for 'createBuffer' and 'destroyBuffer' using 'bracket'
+--
+-- The allocated value must not be returned from the provided computation
+withBuffer :: PokeChain a => Device -> BufferCreateInfo a -> Maybe AllocationCallbacks -> (Buffer -> IO r) -> IO r
+withBuffer device bufferCreateInfo allocationCallbacks =
+  bracket
+    (createBuffer device bufferCreateInfo allocationCallbacks)
+    (\o -> destroyBuffer device o allocationCallbacks)
+
+
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
   unsafe
 #endif
-  "vkCreateBuffer" vkCreateBuffer :: ("device" ::: VkDevice) -> ("pCreateInfo" ::: Ptr VkBufferCreateInfo) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> ("pBuffer" ::: Ptr VkBuffer) -> IO VkResult
+  "dynamic" mkVkDestroyBuffer
+  :: FunPtr (Ptr Device_T -> Buffer -> Ptr AllocationCallbacks -> IO ()) -> Ptr Device_T -> Buffer -> Ptr AllocationCallbacks -> IO ()
+
 -- | vkDestroyBuffer - Destroy a buffer object
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that destroys the buffer.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     destroys the buffer.
 --
--- -   @buffer@ is the buffer to destroy.
+-- -   'Graphics.Vulkan.Core10.Handles.Buffer' is the buffer to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
---     [Memory
---     Allocation](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-allocation)
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
 --     chapter.
 --
 -- == Valid Usage
 --
--- -   All submitted commands that refer to @buffer@, either directly or
---     via a @VkBufferView@, /must/ have completed execution
+-- -   All submitted commands that refer to
+--     'Graphics.Vulkan.Core10.Handles.Buffer', either directly or via a
+--     'Graphics.Vulkan.Core10.Handles.BufferView', /must/ have completed
+--     execution
 --
--- -   If @VkAllocationCallbacks@ were provided when @buffer@ was created,
---     a compatible set of callbacks /must/ be provided here
+-- -   If 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     were provided when 'Graphics.Vulkan.Core10.Handles.Buffer' was
+--     created, a compatible set of callbacks /must/ be provided here
 --
--- -   If no @VkAllocationCallbacks@ were provided when @buffer@ was
+-- -   If no
+--     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     were provided when 'Graphics.Vulkan.Core10.Handles.Buffer' was
 --     created, @pAllocator@ /must/ be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
--- -   If @buffer@ is not
---     'Graphics.Vulkan.Core10.Constants.VK_NULL_HANDLE', @buffer@ /must/
---     be a valid @VkBuffer@ handle
+-- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     'Graphics.Vulkan.Core10.Handles.Buffer' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Buffer' handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
---     pointer to a valid @VkAllocationCallbacks@ structure
+--     pointer to a valid
+--     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
+--     structure
 --
--- -   If @buffer@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from @device@
+-- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' is a valid handle, it
+--     /must/ have been created, allocated, or retrieved from
+--     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
--- -   Host access to @buffer@ /must/ be externally synchronized
+-- -   Host access to 'Graphics.Vulkan.Core10.Handles.Buffer' /must/ be
+--     externally synchronized
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkAllocationCallbacks',
--- 'Graphics.Vulkan.Core10.MemoryManagement.VkBuffer',
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice'
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "vkDestroyBuffer" vkDestroyBuffer :: ("device" ::: VkDevice) -> ("buffer" ::: VkBuffer) -> ("pAllocator" ::: Ptr VkAllocationCallbacks) -> IO ()
+-- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
+-- 'Graphics.Vulkan.Core10.Handles.Buffer',
+-- 'Graphics.Vulkan.Core10.Handles.Device'
+destroyBuffer :: Device -> Buffer -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
+destroyBuffer device buffer allocator = evalContT $ do
+  let vkDestroyBuffer' = mkVkDestroyBuffer (pVkDestroyBuffer (deviceCmds (device :: Device)))
+  pAllocator <- case (allocator) of
+    Nothing -> pure nullPtr
+    Just j -> ContT $ withCStruct (j)
+  lift $ vkDestroyBuffer' (deviceHandle (device)) (buffer) pAllocator
+  pure $ ()
+
+
 -- | VkBufferCreateInfo - Structure specifying the parameters of a newly
 -- created buffer object
 --
@@ -448,151 +240,229 @@ foreign import ccall
 --
 -- -   @size@ /must/ be greater than @0@
 --
--- -   If @sharingMode@ is @VK_SHARING_MODE_CONCURRENT@,
+-- -   If 'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode' is
+--     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     @pQueueFamilyIndices@ /must/ be a valid pointer to an array of
 --     @queueFamilyIndexCount@ @uint32_t@ values
 --
--- -   If @sharingMode@ is @VK_SHARING_MODE_CONCURRENT@,
+-- -   If 'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode' is
+--     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     @queueFamilyIndexCount@ /must/ be greater than @1@
 --
--- -   If @sharingMode@ is @VK_SHARING_MODE_CONCURRENT@, each element of
---     @pQueueFamilyIndices@ /must/ be unique and /must/ be less than
---     @pQueueFamilyPropertyCount@ returned by either
---     'Graphics.Vulkan.Core10.DeviceInitialization.vkGetPhysicalDeviceQueueFamilyProperties'
+-- -   If 'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode' is
+--     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
+--     each element of @pQueueFamilyIndices@ /must/ be unique and /must/ be
+--     less than @pQueueFamilyPropertyCount@ returned by either
+--     'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
 --     or
---     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_get_physical_device_properties2.vkGetPhysicalDeviceQueueFamilyProperties2'
---     for the @physicalDevice@ that was used to create @device@
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceQueueFamilyProperties2'
+--     for the 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' that was
+--     used to create 'Graphics.Vulkan.Core10.Handles.Device'
 --
--- -   If the [sparse
---     bindings](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-sparseBinding)
---     feature is not enabled, @flags@ /must/ not contain
---     @VK_BUFFER_CREATE_SPARSE_BINDING_BIT@
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseBinding sparse bindings>
+--     feature is not enabled, 'Graphics.Vulkan.Core10.BaseType.Flags'
+--     /must/ not contain
+--     'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT'
 --
--- -   If the [sparse buffer
---     residency](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-sparseResidencyBuffer)
---     feature is not enabled, @flags@ /must/ not contain
---     @VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT@
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidencyBuffer sparse buffer residency>
+--     feature is not enabled, 'Graphics.Vulkan.Core10.BaseType.Flags'
+--     /must/ not contain
+--     'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
 --
--- -   If the [sparse aliased
---     residency](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#features-features-sparseResidencyAliased)
---     feature is not enabled, @flags@ /must/ not contain
---     @VK_BUFFER_CREATE_SPARSE_ALIASED_BIT@
+-- -   If the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidencyAliased sparse aliased residency>
+--     feature is not enabled, 'Graphics.Vulkan.Core10.BaseType.Flags'
+--     /must/ not contain
+--     'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_ALIASED_BIT'
 --
--- -   If @flags@ contains @VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT@ or
---     @VK_BUFFER_CREATE_SPARSE_ALIASED_BIT@, it /must/ also contain
---     @VK_BUFFER_CREATE_SPARSE_BINDING_BIT@
+-- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+--     'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
+--     or
+--     'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_ALIASED_BIT',
+--     it /must/ also contain
+--     'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT'
 --
--- -   If the @pNext@ chain contains an instance of
---     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryBufferCreateInfo',
---     its @handleTypes@ member /must/ only contain bits that are also in
---     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalBufferProperties'::@externalMemoryProperties.pname@:compatibleHandleTypes,
+-- -   If the @pNext@ chain includes a
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'
+--     structure, its @handleTypes@ member /must/ only contain bits that
+--     are also in
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'::@externalMemoryProperties.compatibleHandleTypes@,
 --     as returned by
---     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.vkGetPhysicalDeviceExternalBufferProperties'
---     with @pExternalBufferInfo@->@handleType@ equal to any one of the
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.getPhysicalDeviceExternalBufferProperties'
+--     with @pExternalBufferInfo->handleType@ equal to any one of the
 --     handle types specified in
---     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryBufferCreateInfo'::@handleTypes@
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
 --
--- -   If the @pNext@ chain contains an instance of
---     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationBufferCreateInfoNV',
---     and the @dedicatedAllocation@ member of the chained structure is
---     @VK_TRUE@, then @flags@ /must/ not include
---     @VK_BUFFER_CREATE_SPARSE_BINDING_BIT@,
---     @VK_BUFFER_CREATE_SPARSE_RESIDENCY_BIT@, or
---     @VK_BUFFER_CREATE_SPARSE_ALIASED_BIT@
+-- -   If the protected memory feature is not enabled,
+--     'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not contain
+--     'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'
+--
+-- -   If any of the bits
+--     'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT',
+--     'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT',
+--     or
+--     'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_ALIASED_BIT'
+--     are set,
+--     'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_PROTECTED_BIT'
+--     /must/ not also be set
+--
+-- -   If the @pNext@ chain includes a
+--     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV'
+--     structure, and the @dedicatedAllocation@ member of the chained
+--     structure is 'Graphics.Vulkan.Core10.BaseType.TRUE', then
+--     'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not include
+--     'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT',
+--     'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT',
+--     or
+--     'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_ALIASED_BIT'
+--
+-- -   If
+--     'Graphics.Vulkan.Extensions.VK_EXT_buffer_device_address.BufferDeviceAddressCreateInfoEXT'::'Graphics.Vulkan.Core10.BaseType.DeviceAddress'
+--     is not zero, 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ include
+--     'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
+--
+-- -   If
+--     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.BufferOpaqueCaptureAddressCreateInfo'::@opaqueCaptureAddress@
+--     is not zero, 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ include
+--     'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
+--
+-- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' includes
+--     'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT',
+--     the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddressCaptureReplay bufferDeviceAddressCaptureReplay>
+--     or
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddressCaptureReplayEXT ::bufferDeviceAddressCaptureReplay>
+--     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be @VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO@
+-- -   @sType@ /must/ be
+--     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_BUFFER_CREATE_INFO'
 --
 -- -   Each @pNext@ member of any structure (including this one) in the
 --     @pNext@ chain /must/ be either @NULL@ or a pointer to a valid
 --     instance of
---     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.VkDedicatedAllocationBufferCreateInfoNV'
+--     'Graphics.Vulkan.Extensions.VK_EXT_buffer_device_address.BufferDeviceAddressCreateInfoEXT',
+--     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.BufferOpaqueCaptureAddressCreateInfo',
+--     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV',
 --     or
---     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory.VkExternalMemoryBufferCreateInfo'
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'
 --
--- -   Each @sType@ member in the @pNext@ chain /must/ be unique
+-- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
+--     unique
 --
--- -   @flags@ /must/ be a valid combination of 'VkBufferCreateFlagBits'
+-- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
+--     combination of
+--     'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlagBits'
 --     values
 --
--- -   @usage@ /must/ be a valid combination of 'VkBufferUsageFlagBits'
+-- -   @usage@ /must/ be a valid combination of
+--     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits'
 --     values
 --
 -- -   @usage@ /must/ not be @0@
 --
--- -   @sharingMode@ /must/ be a valid 'VkSharingMode' value
+-- -   'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode' /must/ be a
+--     valid 'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode' value
 --
 -- = See Also
 --
--- 'VkBufferCreateFlags', 'VkBufferUsageFlags', @VkDeviceSize@,
--- 'VkSharingMode', 'Graphics.Vulkan.Core10.Core.VkStructureType',
--- 'vkCreateBuffer'
-data VkBufferCreateInfo = VkBufferCreateInfo
-  { -- | @sType@ is the type of this structure.
-  vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
-  vkPNext :: Ptr ()
-  , -- | @flags@ is a bitmask of 'VkBufferCreateFlagBits' specifying additional
-  -- parameters of the buffer.
-  vkFlags :: VkBufferCreateFlags
+-- 'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlags',
+-- 'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlags',
+-- 'Graphics.Vulkan.Core10.BaseType.DeviceSize',
+-- 'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'createBuffer'
+data BufferCreateInfo (es :: [Type]) = BufferCreateInfo
+  { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
+    next :: Chain es
+  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+    -- 'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlagBits'
+    -- specifying additional parameters of the buffer.
+    flags :: BufferCreateFlags
   , -- | @size@ is the size in bytes of the buffer to be created.
-  vkSize :: VkDeviceSize
-  , -- | @usage@ is a bitmask of 'VkBufferUsageFlagBits' specifying allowed
-  -- usages of the buffer.
-  vkUsage :: VkBufferUsageFlags
-  , -- | @sharingMode@ is a 'VkSharingMode' value specifying the sharing mode of
-  -- the buffer when it will be accessed by multiple queue families.
-  vkSharingMode :: VkSharingMode
-  , -- | @queueFamilyIndexCount@ is the number of entries in the
-  -- @pQueueFamilyIndices@ array.
-  vkQueueFamilyIndexCount :: Word32
+    size :: DeviceSize
+  , -- | @usage@ is a bitmask of
+    -- 'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BufferUsageFlagBits'
+    -- specifying allowed usages of the buffer.
+    usage :: BufferUsageFlags
+  , -- | 'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode' is a
+    -- 'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode' value specifying
+    -- the sharing mode of the buffer when it will be accessed by multiple
+    -- queue families.
+    sharingMode :: SharingMode
   , -- | @pQueueFamilyIndices@ is a list of queue families that will access this
-  -- buffer (ignored if @sharingMode@ is not @VK_SHARING_MODE_CONCURRENT@).
-  vkPQueueFamilyIndices :: Ptr Word32
+    -- buffer (ignored if
+    -- 'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode' is not
+    -- 'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT').
+    queueFamilyIndices :: Vector Word32
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show (Chain es) => Show (BufferCreateInfo es)
 
-instance Storable VkBufferCreateInfo where
-  sizeOf ~_ = 56
-  alignment ~_ = 8
-  peek ptr = VkBufferCreateInfo <$> peek (ptr `plusPtr` 0)
-                                <*> peek (ptr `plusPtr` 8)
-                                <*> peek (ptr `plusPtr` 16)
-                                <*> peek (ptr `plusPtr` 24)
-                                <*> peek (ptr `plusPtr` 32)
-                                <*> peek (ptr `plusPtr` 36)
-                                <*> peek (ptr `plusPtr` 40)
-                                <*> peek (ptr `plusPtr` 48)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkBufferCreateInfo))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkBufferCreateInfo))
-                *> poke (ptr `plusPtr` 16) (vkFlags (poked :: VkBufferCreateInfo))
-                *> poke (ptr `plusPtr` 24) (vkSize (poked :: VkBufferCreateInfo))
-                *> poke (ptr `plusPtr` 32) (vkUsage (poked :: VkBufferCreateInfo))
-                *> poke (ptr `plusPtr` 36) (vkSharingMode (poked :: VkBufferCreateInfo))
-                *> poke (ptr `plusPtr` 40) (vkQueueFamilyIndexCount (poked :: VkBufferCreateInfo))
-                *> poke (ptr `plusPtr` 48) (vkPQueueFamilyIndices (poked :: VkBufferCreateInfo))
--- | VkBufferUsageFlags - Bitmask of VkBufferUsageFlagBits
---
--- = Description
---
--- @VkBufferUsageFlags@ is a bitmask type for setting a mask of zero or
--- more 'VkBufferUsageFlagBits'.
---
--- = See Also
---
--- 'VkBufferCreateInfo', 'VkBufferUsageFlagBits',
--- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkPhysicalDeviceExternalBufferInfo'
-type VkBufferUsageFlags = VkBufferUsageFlagBits
--- | VkBufferCreateFlags - Bitmask of VkBufferCreateFlagBits
---
--- = Description
---
--- @VkBufferCreateFlags@ is a bitmask type for setting a mask of zero or
--- more 'VkBufferCreateFlagBits'.
---
--- = See Also
---
--- 'VkBufferCreateFlagBits', 'VkBufferCreateInfo',
--- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkPhysicalDeviceExternalBufferInfo'
-type VkBufferCreateFlags = VkBufferCreateFlagBits
+instance Extensible BufferCreateInfo where
+  extensibleType = STRUCTURE_TYPE_BUFFER_CREATE_INFO
+  setNext x next = x{next = next}
+  getNext BufferCreateInfo{..} = next
+  extends :: forall e b proxy. Typeable e => proxy e -> (Extends BufferCreateInfo e => b) -> Maybe b
+  extends _ f
+    | Just Refl <- eqT @e @BufferDeviceAddressCreateInfoEXT = Just f
+    | Just Refl <- eqT @e @BufferOpaqueCaptureAddressCreateInfo = Just f
+    | Just Refl <- eqT @e @ExternalMemoryBufferCreateInfo = Just f
+    | Just Refl <- eqT @e @DedicatedAllocationBufferCreateInfoNV = Just f
+    | otherwise = Nothing
+
+instance PokeChain es => ToCStruct (BufferCreateInfo es) where
+  withCStruct x f = allocaBytesAligned 56 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p BufferCreateInfo{..} f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_CREATE_INFO)
+    pNext'' <- fmap castPtr . ContT $ withChain (next)
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext''
+    lift $ poke ((p `plusPtr` 16 :: Ptr BufferCreateFlags)) (flags)
+    lift $ poke ((p `plusPtr` 24 :: Ptr DeviceSize)) (size)
+    lift $ poke ((p `plusPtr` 32 :: Ptr BufferUsageFlags)) (usage)
+    lift $ poke ((p `plusPtr` 36 :: Ptr SharingMode)) (sharingMode)
+    lift $ poke ((p `plusPtr` 40 :: Ptr Word32)) ((fromIntegral (Data.Vector.length $ (queueFamilyIndices)) :: Word32))
+    pPQueueFamilyIndices' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (queueFamilyIndices)) * 4) 4
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPQueueFamilyIndices' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (queueFamilyIndices)
+    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr Word32))) (pPQueueFamilyIndices')
+    lift $ f
+  cStructSize = 56
+  cStructAlignment = 8
+  pokeZeroCStruct p f = evalContT $ do
+    lift $ poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_BUFFER_CREATE_INFO)
+    pNext' <- fmap castPtr . ContT $ withZeroChain @es
+    lift $ poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) pNext'
+    lift $ poke ((p `plusPtr` 24 :: Ptr DeviceSize)) (zero)
+    lift $ poke ((p `plusPtr` 32 :: Ptr BufferUsageFlags)) (zero)
+    lift $ poke ((p `plusPtr` 36 :: Ptr SharingMode)) (zero)
+    pPQueueFamilyIndices' <- ContT $ allocaBytesAligned @Word32 ((Data.Vector.length (mempty)) * 4) 4
+    lift $ Data.Vector.imapM_ (\i e -> poke (pPQueueFamilyIndices' `plusPtr` (4 * (i)) :: Ptr Word32) (e)) (mempty)
+    lift $ poke ((p `plusPtr` 48 :: Ptr (Ptr Word32))) (pPQueueFamilyIndices')
+    lift $ f
+
+instance PeekChain es => FromCStruct (BufferCreateInfo es) where
+  peekCStruct p = do
+    pNext <- peek @(Ptr ()) ((p `plusPtr` 8 :: Ptr (Ptr ())))
+    next <- peekChain (castPtr pNext)
+    flags <- peek @BufferCreateFlags ((p `plusPtr` 16 :: Ptr BufferCreateFlags))
+    size <- peek @DeviceSize ((p `plusPtr` 24 :: Ptr DeviceSize))
+    usage <- peek @BufferUsageFlags ((p `plusPtr` 32 :: Ptr BufferUsageFlags))
+    sharingMode <- peek @SharingMode ((p `plusPtr` 36 :: Ptr SharingMode))
+    queueFamilyIndexCount <- peek @Word32 ((p `plusPtr` 40 :: Ptr Word32))
+    pQueueFamilyIndices <- peek @(Ptr Word32) ((p `plusPtr` 48 :: Ptr (Ptr Word32)))
+    pQueueFamilyIndices' <- generateM (fromIntegral queueFamilyIndexCount) (\i -> peek @Word32 ((pQueueFamilyIndices `advancePtrBytes` (4 * (i)) :: Ptr Word32)))
+    pure $ BufferCreateInfo
+             next flags size usage sharingMode pQueueFamilyIndices'
+
+instance es ~ '[] => Zero (BufferCreateInfo es) where
+  zero = BufferCreateInfo
+           ()
+           zero
+           zero
+           zero
+           zero
+           mempty
+

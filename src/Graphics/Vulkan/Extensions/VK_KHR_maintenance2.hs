@@ -1,167 +1,137 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
-{-# language OverloadedStrings #-}
-{-# language DataKinds #-}
-{-# language TypeOperators #-}
+module Graphics.Vulkan.Extensions.VK_KHR_maintenance2  ( pattern IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_KHR
+                                                       , pattern IMAGE_CREATE_EXTENDED_USAGE_BIT_KHR
+                                                       , pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES_KHR
+                                                       , pattern STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO_KHR
+                                                       , pattern STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO_KHR
+                                                       , pattern STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO_KHR
+                                                       , pattern IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL_KHR
+                                                       , pattern IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL_KHR
+                                                       , pattern POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES_KHR
+                                                       , pattern POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY_KHR
+                                                       , pattern TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT_KHR
+                                                       , pattern TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT_KHR
+                                                       , PointClippingBehaviorKHR
+                                                       , TessellationDomainOriginKHR
+                                                       , InputAttachmentAspectReferenceKHR
+                                                       , RenderPassInputAttachmentAspectCreateInfoKHR
+                                                       , PhysicalDevicePointClippingPropertiesKHR
+                                                       , ImageViewUsageCreateInfoKHR
+                                                       , PipelineTessellationDomainOriginStateCreateInfoKHR
+                                                       , KHR_MAINTENANCE2_SPEC_VERSION
+                                                       , pattern KHR_MAINTENANCE2_SPEC_VERSION
+                                                       , KHR_MAINTENANCE2_EXTENSION_NAME
+                                                       , pattern KHR_MAINTENANCE2_EXTENSION_NAME
+                                                       ) where
 
-module Graphics.Vulkan.Extensions.VK_KHR_maintenance2
-  ( pattern VK_KHR_MAINTENANCE2_SPEC_VERSION
-  , pattern VK_KHR_MAINTENANCE2_EXTENSION_NAME
-  , VkPointClippingBehaviorKHR
-  , VkTessellationDomainOriginKHR
-  , VkInputAttachmentAspectReferenceKHR
-  , pattern VkInputAttachmentAspectReferenceKHR
-  , VkRenderPassInputAttachmentAspectCreateInfoKHR
-  , pattern VkRenderPassInputAttachmentAspectCreateInfoKHR
-  , VkPhysicalDevicePointClippingPropertiesKHR
-  , pattern VkPhysicalDevicePointClippingPropertiesKHR
-  , VkImageViewUsageCreateInfoKHR
-  , pattern VkImageViewUsageCreateInfoKHR
-  , VkPipelineTessellationDomainOriginStateCreateInfoKHR
-  , pattern VkPipelineTessellationDomainOriginStateCreateInfoKHR
-  , pattern VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_KHR
-  , pattern VK_IMAGE_CREATE_EXTENDED_USAGE_BIT_KHR
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES_KHR
-  , pattern VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO_KHR
-  , pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO_KHR
-  , pattern VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO_KHR
-  , pattern VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL_KHR
-  , pattern VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL_KHR
-  , pattern VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES_KHR
-  , pattern VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY_KHR
-  , pattern VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT_KHR
-  , pattern VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT_KHR
-  ) where
-
-import Data.String
-  ( IsString
-  )
-import Data.Word
-  ( Word32
-  )
-import Foreign.Ptr
-  ( Ptr
-  )
-import Graphics.Vulkan.NamedType
-  ( (:::)
-  )
+import Data.String (IsString)
+import Graphics.Vulkan.Core11.Promoted_From_VK_KHR_maintenance2 (ImageViewUsageCreateInfo)
+import Graphics.Vulkan.Core11.Promoted_From_VK_KHR_maintenance2 (InputAttachmentAspectReference)
+import Graphics.Vulkan.Core11.Promoted_From_VK_KHR_maintenance2 (PhysicalDevicePointClippingProperties)
+import Graphics.Vulkan.Core11.Promoted_From_VK_KHR_maintenance2 (PipelineTessellationDomainOriginStateCreateInfo)
+import Graphics.Vulkan.Core11.Enums.PointClippingBehavior (PointClippingBehavior)
+import Graphics.Vulkan.Core11.Promoted_From_VK_KHR_maintenance2 (RenderPassInputAttachmentAspectCreateInfo)
+import Graphics.Vulkan.Core11.Enums.TessellationDomainOrigin (TessellationDomainOrigin)
+import Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlags)
+import Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlagBits(IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT))
+import Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlags)
+import Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlagBits(IMAGE_CREATE_EXTENDED_USAGE_BIT))
+import Graphics.Vulkan.Core10.Enums.ImageLayout (ImageLayout(IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL))
+import Graphics.Vulkan.Core10.Enums.ImageLayout (ImageLayout(IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL))
+import Graphics.Vulkan.Core11.Enums.PointClippingBehavior (PointClippingBehavior(POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES))
+import Graphics.Vulkan.Core11.Enums.PointClippingBehavior (PointClippingBehavior(POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO))
+import Graphics.Vulkan.Core11.Enums.TessellationDomainOrigin (TessellationDomainOrigin(TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT))
+import Graphics.Vulkan.Core11.Enums.TessellationDomainOrigin (TessellationDomainOrigin(TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT))
+-- No documentation found for TopLevel "VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_KHR"
+pattern IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_KHR = IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT
 
 
-import Graphics.Vulkan.Core10.Core
-  ( VkStructureType(..)
-  )
-import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkImageCreateFlagBits(..)
-  , VkImageUsageFlags
-  )
-import Graphics.Vulkan.Core10.Image
-  ( VkImageLayout(..)
-  )
-import Graphics.Vulkan.Core10.SparseResourceMemoryManagement
-  ( VkImageAspectFlags
-  )
-import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance2
-  ( VkImageViewUsageCreateInfo(..)
-  , VkInputAttachmentAspectReference(..)
-  , VkPhysicalDevicePointClippingProperties(..)
-  , VkPipelineTessellationDomainOriginStateCreateInfo(..)
-  , VkPointClippingBehavior(..)
-  , VkRenderPassInputAttachmentAspectCreateInfo(..)
-  , VkTessellationDomainOrigin(..)
-  , pattern VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT
-  , pattern VK_IMAGE_CREATE_EXTENDED_USAGE_BIT
-  , pattern VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL
-  , pattern VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL
-  , pattern VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES
-  , pattern VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY
-  , pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES
-  , pattern VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO
-  , pattern VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO
-  , pattern VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT
-  , pattern VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT
-  )
+-- No documentation found for TopLevel "VK_IMAGE_CREATE_EXTENDED_USAGE_BIT_KHR"
+pattern IMAGE_CREATE_EXTENDED_USAGE_BIT_KHR = IMAGE_CREATE_EXTENDED_USAGE_BIT
 
+
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES_KHR"
+pattern STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES_KHR = STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES
+
+
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO_KHR"
+pattern STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO_KHR = STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO
+
+
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO_KHR"
+pattern STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO_KHR = STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO
+
+
+-- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO_KHR"
+pattern STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO_KHR = STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO
+
+
+-- No documentation found for TopLevel "VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL_KHR"
+pattern IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL_KHR = IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL
+
+
+-- No documentation found for TopLevel "VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL_KHR"
+pattern IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL_KHR = IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL
+
+
+-- No documentation found for TopLevel "VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES_KHR"
+pattern POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES_KHR = POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES
+
+
+-- No documentation found for TopLevel "VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY_KHR"
+pattern POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY_KHR = POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY
+
+
+-- No documentation found for TopLevel "VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT_KHR"
+pattern TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT_KHR = TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT
+
+
+-- No documentation found for TopLevel "VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT_KHR"
+pattern TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT_KHR = TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT
+
+
+-- No documentation found for TopLevel "VkPointClippingBehaviorKHR"
+type PointClippingBehaviorKHR = PointClippingBehavior
+
+
+-- No documentation found for TopLevel "VkTessellationDomainOriginKHR"
+type TessellationDomainOriginKHR = TessellationDomainOrigin
+
+
+-- No documentation found for TopLevel "VkInputAttachmentAspectReferenceKHR"
+type InputAttachmentAspectReferenceKHR = InputAttachmentAspectReference
+
+
+-- No documentation found for TopLevel "VkRenderPassInputAttachmentAspectCreateInfoKHR"
+type RenderPassInputAttachmentAspectCreateInfoKHR = RenderPassInputAttachmentAspectCreateInfo
+
+
+-- No documentation found for TopLevel "VkPhysicalDevicePointClippingPropertiesKHR"
+type PhysicalDevicePointClippingPropertiesKHR = PhysicalDevicePointClippingProperties
+
+
+-- No documentation found for TopLevel "VkImageViewUsageCreateInfoKHR"
+type ImageViewUsageCreateInfoKHR = ImageViewUsageCreateInfo
+
+
+-- No documentation found for TopLevel "VkPipelineTessellationDomainOriginStateCreateInfoKHR"
+type PipelineTessellationDomainOriginStateCreateInfoKHR = PipelineTessellationDomainOriginStateCreateInfo
+
+
+type KHR_MAINTENANCE2_SPEC_VERSION = 1
 
 -- No documentation found for TopLevel "VK_KHR_MAINTENANCE2_SPEC_VERSION"
-pattern VK_KHR_MAINTENANCE2_SPEC_VERSION :: Integral a => a
-pattern VK_KHR_MAINTENANCE2_SPEC_VERSION = 1
+pattern KHR_MAINTENANCE2_SPEC_VERSION :: forall a . Integral a => a
+pattern KHR_MAINTENANCE2_SPEC_VERSION = 1
+
+
+type KHR_MAINTENANCE2_EXTENSION_NAME = "VK_KHR_maintenance2"
+
 -- No documentation found for TopLevel "VK_KHR_MAINTENANCE2_EXTENSION_NAME"
-pattern VK_KHR_MAINTENANCE2_EXTENSION_NAME :: (Eq a ,IsString a) => a
-pattern VK_KHR_MAINTENANCE2_EXTENSION_NAME = "VK_KHR_maintenance2"
--- No documentation found for TopLevel "VkPointClippingBehaviorKHR"
-type VkPointClippingBehaviorKHR = VkPointClippingBehavior
--- No documentation found for TopLevel "VkTessellationDomainOriginKHR"
-type VkTessellationDomainOriginKHR = VkTessellationDomainOrigin
--- No documentation found for TopLevel "VkInputAttachmentAspectReferenceKHR"
-type VkInputAttachmentAspectReferenceKHR = VkInputAttachmentAspectReference
+pattern KHR_MAINTENANCE2_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern KHR_MAINTENANCE2_EXTENSION_NAME = "VK_KHR_maintenance2"
 
-
--- No documentation found for TopLevel "VkInputAttachmentAspectReferenceKHR"
-pattern VkInputAttachmentAspectReferenceKHR :: ("subpass" ::: Word32) -> ("inputAttachmentIndex" ::: Word32) -> ("aspectMask" ::: VkImageAspectFlags) -> VkInputAttachmentAspectReferenceKHR
-pattern VkInputAttachmentAspectReferenceKHR vkSubpass vkInputAttachmentIndex vkAspectMask = VkInputAttachmentAspectReference vkSubpass vkInputAttachmentIndex vkAspectMask
--- No documentation found for TopLevel "VkRenderPassInputAttachmentAspectCreateInfoKHR"
-type VkRenderPassInputAttachmentAspectCreateInfoKHR = VkRenderPassInputAttachmentAspectCreateInfo
-
-
--- No documentation found for TopLevel "VkRenderPassInputAttachmentAspectCreateInfoKHR"
-pattern VkRenderPassInputAttachmentAspectCreateInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("aspectReferenceCount" ::: Word32) -> ("pAspectReferences" ::: Ptr VkInputAttachmentAspectReference) -> VkRenderPassInputAttachmentAspectCreateInfoKHR
-pattern VkRenderPassInputAttachmentAspectCreateInfoKHR vkSType vkPNext vkAspectReferenceCount vkPAspectReferences = VkRenderPassInputAttachmentAspectCreateInfo vkSType vkPNext vkAspectReferenceCount vkPAspectReferences
--- No documentation found for TopLevel "VkPhysicalDevicePointClippingPropertiesKHR"
-type VkPhysicalDevicePointClippingPropertiesKHR = VkPhysicalDevicePointClippingProperties
-
-
--- No documentation found for TopLevel "VkPhysicalDevicePointClippingPropertiesKHR"
-pattern VkPhysicalDevicePointClippingPropertiesKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("pointClippingBehavior" ::: VkPointClippingBehavior) -> VkPhysicalDevicePointClippingPropertiesKHR
-pattern VkPhysicalDevicePointClippingPropertiesKHR vkSType vkPNext vkPointClippingBehavior = VkPhysicalDevicePointClippingProperties vkSType vkPNext vkPointClippingBehavior
--- No documentation found for TopLevel "VkImageViewUsageCreateInfoKHR"
-type VkImageViewUsageCreateInfoKHR = VkImageViewUsageCreateInfo
-
-
--- No documentation found for TopLevel "VkImageViewUsageCreateInfoKHR"
-pattern VkImageViewUsageCreateInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("usage" ::: VkImageUsageFlags) -> VkImageViewUsageCreateInfoKHR
-pattern VkImageViewUsageCreateInfoKHR vkSType vkPNext vkUsage = VkImageViewUsageCreateInfo vkSType vkPNext vkUsage
--- No documentation found for TopLevel "VkPipelineTessellationDomainOriginStateCreateInfoKHR"
-type VkPipelineTessellationDomainOriginStateCreateInfoKHR = VkPipelineTessellationDomainOriginStateCreateInfo
-
-
--- No documentation found for TopLevel "VkPipelineTessellationDomainOriginStateCreateInfoKHR"
-pattern VkPipelineTessellationDomainOriginStateCreateInfoKHR :: ("sType" ::: VkStructureType) -> ("pNext" ::: Ptr ()) -> ("domainOrigin" ::: VkTessellationDomainOrigin) -> VkPipelineTessellationDomainOriginStateCreateInfoKHR
-pattern VkPipelineTessellationDomainOriginStateCreateInfoKHR vkSType vkPNext vkDomainOrigin = VkPipelineTessellationDomainOriginStateCreateInfo vkSType vkPNext vkDomainOrigin
--- No documentation found for TopLevel "VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_KHR"
-pattern VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_KHR :: VkImageCreateFlagBits
-pattern VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_KHR = VK_IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT
--- No documentation found for TopLevel "VK_IMAGE_CREATE_EXTENDED_USAGE_BIT_KHR"
-pattern VK_IMAGE_CREATE_EXTENDED_USAGE_BIT_KHR :: VkImageCreateFlagBits
-pattern VK_IMAGE_CREATE_EXTENDED_USAGE_BIT_KHR = VK_IMAGE_CREATE_EXTENDED_USAGE_BIT
--- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES_KHR"
-pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES_KHR :: VkStructureType
-pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES_KHR = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES
--- No documentation found for TopLevel "VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO_KHR"
-pattern VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO_KHR :: VkStructureType
-pattern VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO_KHR = VK_STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO
--- No documentation found for TopLevel "VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO_KHR"
-pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO_KHR :: VkStructureType
-pattern VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO_KHR = VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO
--- No documentation found for TopLevel "VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO_KHR"
-pattern VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO_KHR :: VkStructureType
-pattern VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO_KHR = VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO
--- No documentation found for TopLevel "VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL_KHR"
-pattern VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL_KHR :: VkImageLayout
-pattern VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL_KHR = VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL
--- No documentation found for TopLevel "VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL_KHR"
-pattern VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL_KHR :: VkImageLayout
-pattern VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL_KHR = VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL
--- No documentation found for TopLevel "VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES_KHR"
-pattern VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES_KHR :: VkPointClippingBehavior
-pattern VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES_KHR = VK_POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES
--- No documentation found for TopLevel "VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY_KHR"
-pattern VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY_KHR :: VkPointClippingBehavior
-pattern VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY_KHR = VK_POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY
--- No documentation found for TopLevel "VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT_KHR"
-pattern VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT_KHR :: VkTessellationDomainOrigin
-pattern VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT_KHR = VK_TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT
--- No documentation found for TopLevel "VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT_KHR"
-pattern VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT_KHR :: VkTessellationDomainOrigin
-pattern VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT_KHR = VK_TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT

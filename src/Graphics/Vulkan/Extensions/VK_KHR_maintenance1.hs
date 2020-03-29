@@ -1,70 +1,60 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
-{-# language OverloadedStrings #-}
-{-# language DataKinds #-}
-{-# language TypeOperators #-}
+module Graphics.Vulkan.Extensions.VK_KHR_maintenance1  ( pattern ERROR_OUT_OF_POOL_MEMORY_KHR
+                                                       , pattern FORMAT_FEATURE_TRANSFER_SRC_BIT_KHR
+                                                       , pattern FORMAT_FEATURE_TRANSFER_DST_BIT_KHR
+                                                       , pattern IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT_KHR
+                                                       , trimCommandPoolKHR
+                                                       , CommandPoolTrimFlagsKHR
+                                                       , KHR_MAINTENANCE1_SPEC_VERSION
+                                                       , pattern KHR_MAINTENANCE1_SPEC_VERSION
+                                                       , KHR_MAINTENANCE1_EXTENSION_NAME
+                                                       , pattern KHR_MAINTENANCE1_EXTENSION_NAME
+                                                       ) where
 
-module Graphics.Vulkan.Extensions.VK_KHR_maintenance1
-  ( pattern VK_KHR_MAINTENANCE1_SPEC_VERSION
-  , pattern VK_KHR_MAINTENANCE1_EXTENSION_NAME
-  , vkTrimCommandPoolKHR
-  , VkCommandPoolTrimFlagsKHR
-  , pattern VK_ERROR_OUT_OF_POOL_MEMORY_KHR
-  , pattern VK_FORMAT_FEATURE_TRANSFER_SRC_BIT_KHR
-  , pattern VK_FORMAT_FEATURE_TRANSFER_DST_BIT_KHR
-  , pattern VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT_KHR
-  ) where
-
-import Data.String
-  ( IsString
-  )
-import Graphics.Vulkan.NamedType
-  ( (:::)
-  )
+import Data.String (IsString)
+import Graphics.Vulkan.Core11.Promoted_From_VK_KHR_maintenance1 (trimCommandPool)
+import Graphics.Vulkan.Core11.Enums.CommandPoolTrimFlags (CommandPoolTrimFlags)
+import Graphics.Vulkan.Core10.Enums.Result (Result(ERROR_OUT_OF_POOL_MEMORY))
+import Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits (FormatFeatureFlags)
+import Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits (FormatFeatureFlagBits(FORMAT_FEATURE_TRANSFER_DST_BIT))
+import Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits (FormatFeatureFlags)
+import Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits (FormatFeatureFlagBits(FORMAT_FEATURE_TRANSFER_SRC_BIT))
+import Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlags)
+import Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlagBits(IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT))
+-- No documentation found for TopLevel "VK_ERROR_OUT_OF_POOL_MEMORY_KHR"
+pattern ERROR_OUT_OF_POOL_MEMORY_KHR = ERROR_OUT_OF_POOL_MEMORY
 
 
-import Graphics.Vulkan.Core10.CommandPool
-  ( VkCommandPool
-  )
-import Graphics.Vulkan.Core10.Core
-  ( VkResult(..)
-  )
-import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkFormatFeatureFlagBits(..)
-  , VkImageCreateFlagBits(..)
-  , VkDevice
-  )
-import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_maintenance1
-  ( VkCommandPoolTrimFlags(..)
-  , vkTrimCommandPool
-  , pattern VK_ERROR_OUT_OF_POOL_MEMORY
-  , pattern VK_FORMAT_FEATURE_TRANSFER_DST_BIT
-  , pattern VK_FORMAT_FEATURE_TRANSFER_SRC_BIT
-  , pattern VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT
-  )
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_TRANSFER_SRC_BIT_KHR"
+pattern FORMAT_FEATURE_TRANSFER_SRC_BIT_KHR = FORMAT_FEATURE_TRANSFER_SRC_BIT
 
+
+-- No documentation found for TopLevel "VK_FORMAT_FEATURE_TRANSFER_DST_BIT_KHR"
+pattern FORMAT_FEATURE_TRANSFER_DST_BIT_KHR = FORMAT_FEATURE_TRANSFER_DST_BIT
+
+
+-- No documentation found for TopLevel "VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT_KHR"
+pattern IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT_KHR = IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT
+
+
+-- No documentation found for TopLevel "vkTrimCommandPoolKHR"
+trimCommandPoolKHR = trimCommandPool
+
+
+-- No documentation found for TopLevel "VkCommandPoolTrimFlagsKHR"
+type CommandPoolTrimFlagsKHR = CommandPoolTrimFlags
+
+
+type KHR_MAINTENANCE1_SPEC_VERSION = 2
 
 -- No documentation found for TopLevel "VK_KHR_MAINTENANCE1_SPEC_VERSION"
-pattern VK_KHR_MAINTENANCE1_SPEC_VERSION :: Integral a => a
-pattern VK_KHR_MAINTENANCE1_SPEC_VERSION = 2
+pattern KHR_MAINTENANCE1_SPEC_VERSION :: forall a . Integral a => a
+pattern KHR_MAINTENANCE1_SPEC_VERSION = 2
+
+
+type KHR_MAINTENANCE1_EXTENSION_NAME = "VK_KHR_maintenance1"
+
 -- No documentation found for TopLevel "VK_KHR_MAINTENANCE1_EXTENSION_NAME"
-pattern VK_KHR_MAINTENANCE1_EXTENSION_NAME :: (Eq a ,IsString a) => a
-pattern VK_KHR_MAINTENANCE1_EXTENSION_NAME = "VK_KHR_maintenance1"
--- No documentation found for TopLevel "vkTrimCommandPoolKHR"
-vkTrimCommandPoolKHR :: ("device" ::: VkDevice) -> ("commandPool" ::: VkCommandPool) -> ("flags" ::: VkCommandPoolTrimFlags) -> IO ()
-vkTrimCommandPoolKHR = vkTrimCommandPool
--- No documentation found for TopLevel "VkCommandPoolTrimFlagsKHR"
-type VkCommandPoolTrimFlagsKHR = VkCommandPoolTrimFlags
--- No documentation found for TopLevel "VK_ERROR_OUT_OF_POOL_MEMORY_KHR"
-pattern VK_ERROR_OUT_OF_POOL_MEMORY_KHR :: VkResult
-pattern VK_ERROR_OUT_OF_POOL_MEMORY_KHR = VK_ERROR_OUT_OF_POOL_MEMORY
--- No documentation found for TopLevel "VK_FORMAT_FEATURE_TRANSFER_SRC_BIT_KHR"
-pattern VK_FORMAT_FEATURE_TRANSFER_SRC_BIT_KHR :: VkFormatFeatureFlagBits
-pattern VK_FORMAT_FEATURE_TRANSFER_SRC_BIT_KHR = VK_FORMAT_FEATURE_TRANSFER_SRC_BIT
--- No documentation found for TopLevel "VK_FORMAT_FEATURE_TRANSFER_DST_BIT_KHR"
-pattern VK_FORMAT_FEATURE_TRANSFER_DST_BIT_KHR :: VkFormatFeatureFlagBits
-pattern VK_FORMAT_FEATURE_TRANSFER_DST_BIT_KHR = VK_FORMAT_FEATURE_TRANSFER_DST_BIT
--- No documentation found for TopLevel "VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT_KHR"
-pattern VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT_KHR :: VkImageCreateFlagBits
-pattern VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT_KHR = VK_IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT
+pattern KHR_MAINTENANCE1_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern KHR_MAINTENANCE1_EXTENSION_NAME = "VK_KHR_maintenance1"
+

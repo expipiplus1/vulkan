@@ -1,57 +1,44 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
-{-# language OverloadedStrings #-}
-{-# language DataKinds #-}
-{-# language TypeOperators #-}
+module Graphics.Vulkan.Extensions.VK_AMD_buffer_marker  ( cmdWriteBufferMarkerAMD
+                                                        , AMD_BUFFER_MARKER_SPEC_VERSION
+                                                        , pattern AMD_BUFFER_MARKER_SPEC_VERSION
+                                                        , AMD_BUFFER_MARKER_EXTENSION_NAME
+                                                        , pattern AMD_BUFFER_MARKER_EXTENSION_NAME
+                                                        ) where
 
-module Graphics.Vulkan.Extensions.VK_AMD_buffer_marker
-  ( pattern VK_AMD_BUFFER_MARKER_SPEC_VERSION
-  , pattern VK_AMD_BUFFER_MARKER_EXTENSION_NAME
-  , vkCmdWriteBufferMarkerAMD
-  ) where
+import Data.String (IsString)
+import Foreign.Ptr (FunPtr)
+import Foreign.Ptr (Ptr)
+import Data.Word (Word32)
+import Graphics.Vulkan.NamedType ((:::))
+import Graphics.Vulkan.Core10.Handles (Buffer)
+import Graphics.Vulkan.Core10.Handles (Buffer(..))
+import Graphics.Vulkan.Core10.Handles (CommandBuffer)
+import Graphics.Vulkan.Core10.Handles (CommandBuffer(..))
+import Graphics.Vulkan.Core10.Handles (CommandBuffer_T)
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkCmdWriteBufferMarkerAMD))
+import Graphics.Vulkan.Core10.BaseType (DeviceSize)
+import Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlagBits)
+import Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlagBits(..))
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkCmdWriteBufferMarkerAMD
+  :: FunPtr (Ptr CommandBuffer_T -> PipelineStageFlagBits -> Buffer -> DeviceSize -> Word32 -> IO ()) -> Ptr CommandBuffer_T -> PipelineStageFlagBits -> Buffer -> DeviceSize -> Word32 -> IO ()
 
-import Data.String
-  ( IsString
-  )
-import Data.Word
-  ( Word32
-  )
-import Graphics.Vulkan.NamedType
-  ( (:::)
-  )
-
-
-import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkDeviceSize
-  )
-import Graphics.Vulkan.Core10.MemoryManagement
-  ( VkBuffer
-  )
-import Graphics.Vulkan.Core10.Queue
-  ( VkPipelineStageFlagBits(..)
-  , VkCommandBuffer
-  )
-
-
--- No documentation found for TopLevel "VK_AMD_BUFFER_MARKER_SPEC_VERSION"
-pattern VK_AMD_BUFFER_MARKER_SPEC_VERSION :: Integral a => a
-pattern VK_AMD_BUFFER_MARKER_SPEC_VERSION = 1
--- No documentation found for TopLevel "VK_AMD_BUFFER_MARKER_EXTENSION_NAME"
-pattern VK_AMD_BUFFER_MARKER_EXTENSION_NAME :: (Eq a ,IsString a) => a
-pattern VK_AMD_BUFFER_MARKER_EXTENSION_NAME = "VK_AMD_buffer_marker"
 -- | vkCmdWriteBufferMarkerAMD - Execute a pipelined write of a marker value
 -- into a buffer
 --
 -- = Parameters
 --
--- -   @commandBuffer@ is the command buffer into which the command will be
---     recorded.
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
+--     into which the command will be recorded.
 --
 -- -   @pipelineStage@ is one of the
---     'Graphics.Vulkan.Core10.Queue.VkPipelineStageFlagBits' values,
---     specifying the pipeline stage whose completion triggers the marker
---     write.
+--     'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
+--     values, specifying the pipeline stage whose completion triggers the
+--     marker write.
 --
 -- -   @dstBuffer@ is the buffer where the marker will be written to.
 --
@@ -65,26 +52,28 @@ pattern VK_AMD_BUFFER_MARKER_EXTENSION_NAME = "VK_AMD_buffer_marker"
 -- The command will write the 32-bit marker value into the buffer only
 -- after all preceding commands have finished executing up to at least the
 -- specified pipeline stage. This includes the completion of other
--- preceding @vkCmdWriteBufferMarkerAMD@ commands so long as their
--- specified pipeline stages occur either at the same time or earlier than
--- this command’s specified @pipelineStage@.
+-- preceding 'cmdWriteBufferMarkerAMD' commands so long as their specified
+-- pipeline stages occur either at the same time or earlier than this
+-- command’s specified @pipelineStage@.
 --
 -- While consecutive buffer marker writes with the same @pipelineStage@
 -- parameter are implicitly complete in submission order, memory and
 -- execution dependencies between buffer marker writes and other operations
 -- must still be explicitly ordered using synchronization commands. The
 -- access scope for buffer marker writes falls under the
--- @VK_ACCESS_TRANSFER_WRITE_BIT@, and the pipeline stages for identifying
--- the synchronization scope /must/ include both @pipelineStage@ and
--- @VK_PIPELINE_STAGE_TRANSFER_BIT@.
+-- 'Graphics.Vulkan.Core10.Enums.AccessFlagBits.ACCESS_TRANSFER_WRITE_BIT',
+-- and the pipeline stages for identifying the synchronization scope /must/
+-- include both @pipelineStage@ and
+-- 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_TRANSFER_BIT'.
 --
--- __Note__
+-- Note
 --
--- Similar to @vkCmdWriteTimestamp@, if an implementation is unable to
--- write a marker at any specific pipeline stage, it /may/ instead do so at
--- any logically later stage.
+-- Similar to
+-- 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdWriteTimestamp', if an
+-- implementation is unable to write a marker at any specific pipeline
+-- stage, it /may/ instead do so at any logically later stage.
 --
--- __Note__
+-- Note
 --
 -- Implementations /may/ only support a limited number of pipelined marker
 -- write operations in flight at a given time, thus excessive number of
@@ -96,58 +85,82 @@ pattern VK_AMD_BUFFER_MARKER_EXTENSION_NAME = "VK_AMD_buffer_marker"
 --     minus @4@.
 --
 -- -   @dstBuffer@ /must/ have been created with
---     @VK_BUFFER_USAGE_TRANSFER_DST_BIT@ usage flag
+--     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_TRANSFER_DST_BIT'
+--     usage flag
 --
 -- -   If @dstBuffer@ is non-sparse then it /must/ be bound completely and
---     contiguously to a single @VkDeviceMemory@ object
+--     contiguously to a single
+--     'Graphics.Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- -   @dstOffset@ /must/ be a multiple of @4@
 --
 -- == Valid Usage (Implicit)
 --
--- -   @commandBuffer@ /must/ be a valid @VkCommandBuffer@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pipelineStage@ /must/ be a valid
---     'Graphics.Vulkan.Core10.Queue.VkPipelineStageFlagBits' value
+--     'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
+--     value
 --
--- -   @dstBuffer@ /must/ be a valid @VkBuffer@ handle
+-- -   @dstBuffer@ /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Buffer' handle
 --
--- -   @commandBuffer@ /must/ be in the [recording
---     state](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#commandbuffers-lifecycle)
+-- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
--- -   The @VkCommandPool@ that @commandBuffer@ was allocated from /must/
---     support transfer, graphics, or compute operations
+-- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
+--     /must/ support transfer, graphics, or compute operations
 --
--- -   Both of @commandBuffer@, and @dstBuffer@ /must/ have been created,
---     allocated, or retrieved from the same @VkDevice@
+-- -   Both of 'Graphics.Vulkan.Core10.Handles.CommandBuffer', and
+--     @dstBuffer@ /must/ have been created, allocated, or retrieved from
+--     the same 'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
--- -   Host access to @commandBuffer@ /must/ be externally synchronized
+-- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
+--     be externally synchronized
 --
--- -   Host access to the @VkCommandPool@ that @commandBuffer@ was
---     allocated from /must/ be externally synchronized
+-- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
+--     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
+--     /must/ be externally synchronized
 --
 -- == Command Properties
 --
 -- \'
 --
--- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
--- | [Command Buffer                                                                                             | [Render Pass                                                                                               | [Supported Queue                                                                                      | [Pipeline                                                                                                                  |
--- | Levels](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkCommandBufferLevel) | Scope](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#vkCmdBeginRenderPass) | Types](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#VkQueueFlagBits) | Type](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#synchronization-pipeline-stages-types) |
--- +=============================================================================================================+============================================================================================================+=======================================================================================================+============================================================================================================================+
--- | Primary                                                                                                     | Both                                                                                                       | Transfer                                                                                              | Transfer                                                                                                                   |
--- | Secondary                                                                                                   |                                                                                                            | Graphics                                                                                              |                                                                                                                            |
--- |                                                                                                             |                                                                                                            | Compute                                                                                               |                                                                                                                            |
--- +-------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+-- | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkCommandBufferLevel Command Buffer Levels> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#vkCmdBeginRenderPass Render Pass Scope> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkQueueFlagBits Supported Queue Types> | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types Pipeline Type> |
+-- +============================================================================================================================+========================================================================================================================+=======================================================================================================================+=====================================================================================================================================+
+-- | Primary                                                                                                                    | Both                                                                                                                   | Transfer                                                                                                              | Transfer                                                                                                                            |
+-- | Secondary                                                                                                                  |                                                                                                                        | Graphics                                                                                                              |                                                                                                                                     |
+-- |                                                                                                                            |                                                                                                                        | Compute                                                                                                               |                                                                                                                                     |
+-- +----------------------------------------------------------------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.MemoryManagement.VkBuffer',
--- 'Graphics.Vulkan.Core10.Queue.VkCommandBuffer', @VkDeviceSize@,
--- 'Graphics.Vulkan.Core10.Queue.VkPipelineStageFlagBits'
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "vkCmdWriteBufferMarkerAMD" vkCmdWriteBufferMarkerAMD :: ("commandBuffer" ::: VkCommandBuffer) -> ("pipelineStage" ::: VkPipelineStageFlagBits) -> ("dstBuffer" ::: VkBuffer) -> ("dstOffset" ::: VkDeviceSize) -> ("marker" ::: Word32) -> IO ()
+-- 'Graphics.Vulkan.Core10.Handles.Buffer',
+-- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
+-- 'Graphics.Vulkan.Core10.BaseType.DeviceSize',
+-- 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PipelineStageFlagBits'
+cmdWriteBufferMarkerAMD :: CommandBuffer -> PipelineStageFlagBits -> ("dstBuffer" ::: Buffer) -> ("dstOffset" ::: DeviceSize) -> ("marker" ::: Word32) -> IO ()
+cmdWriteBufferMarkerAMD commandBuffer pipelineStage dstBuffer dstOffset marker = do
+  let vkCmdWriteBufferMarkerAMD' = mkVkCmdWriteBufferMarkerAMD (pVkCmdWriteBufferMarkerAMD (deviceCmds (commandBuffer :: CommandBuffer)))
+  vkCmdWriteBufferMarkerAMD' (commandBufferHandle (commandBuffer)) (pipelineStage) (dstBuffer) (dstOffset) (marker)
+  pure $ ()
+
+
+type AMD_BUFFER_MARKER_SPEC_VERSION = 1
+
+-- No documentation found for TopLevel "VK_AMD_BUFFER_MARKER_SPEC_VERSION"
+pattern AMD_BUFFER_MARKER_SPEC_VERSION :: forall a . Integral a => a
+pattern AMD_BUFFER_MARKER_SPEC_VERSION = 1
+
+
+type AMD_BUFFER_MARKER_EXTENSION_NAME = "VK_AMD_buffer_marker"
+
+-- No documentation found for TopLevel "VK_AMD_BUFFER_MARKER_EXTENSION_NAME"
+pattern AMD_BUFFER_MARKER_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern AMD_BUFFER_MARKER_EXTENSION_NAME = "VK_AMD_buffer_marker"
+

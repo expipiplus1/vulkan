@@ -1,136 +1,135 @@
-{-# language Strict #-}
 {-# language CPP #-}
-{-# language PatternSynonyms #-}
-{-# language OverloadedStrings #-}
-{-# language DataKinds #-}
-{-# language TypeOperators #-}
-{-# language DuplicateRecordFields #-}
+module Graphics.Vulkan.Extensions.VK_EXT_external_memory_host  ( getMemoryHostPointerPropertiesEXT
+                                                               , ImportMemoryHostPointerInfoEXT(..)
+                                                               , MemoryHostPointerPropertiesEXT(..)
+                                                               , PhysicalDeviceExternalMemoryHostPropertiesEXT(..)
+                                                               , EXT_EXTERNAL_MEMORY_HOST_SPEC_VERSION
+                                                               , pattern EXT_EXTERNAL_MEMORY_HOST_SPEC_VERSION
+                                                               , EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME
+                                                               , pattern EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME
+                                                               , ExternalMemoryHandleTypeFlagsKHR
+                                                               , ExternalMemoryHandleTypeFlagBitsKHR
+                                                               ) where
 
-module Graphics.Vulkan.Extensions.VK_EXT_external_memory_host
-  ( pattern VK_STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT
-  , pattern VK_STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT
-  , pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT
-  , pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT
-  , pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT
-  , pattern VK_EXT_EXTERNAL_MEMORY_HOST_SPEC_VERSION
-  , pattern VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME
-  , vkGetMemoryHostPointerPropertiesEXT
-  , VkImportMemoryHostPointerInfoEXT(..)
-  , VkMemoryHostPointerPropertiesEXT(..)
-  , VkPhysicalDeviceExternalMemoryHostPropertiesEXT(..)
-  ) where
+import Foreign.Marshal.Alloc (allocaBytesAligned)
+import GHC.Base (when)
+import GHC.IO (throwIO)
+import Foreign.Ptr (nullPtr)
+import Foreign.Ptr (plusPtr)
+import Control.Monad.Trans.Class (lift)
+import Control.Monad.Trans.Cont (evalContT)
+import Data.String (IsString)
+import Data.Typeable (Typeable)
+import Foreign.Storable (Storable)
+import Foreign.Storable (Storable(peek))
+import Foreign.Storable (Storable(poke))
+import qualified Foreign.Storable (Storable(..))
+import Foreign.Ptr (FunPtr)
+import Foreign.Ptr (Ptr)
+import Data.Word (Word32)
+import Data.Kind (Type)
+import Control.Monad.Trans.Cont (ContT(..))
+import Graphics.Vulkan.NamedType ((:::))
+import Graphics.Vulkan.Core10.Handles (Device)
+import Graphics.Vulkan.Core10.Handles (Device(..))
+import Graphics.Vulkan.Dynamic (DeviceCmds(pVkGetMemoryHostPointerPropertiesEXT))
+import Graphics.Vulkan.Core10.BaseType (DeviceSize)
+import Graphics.Vulkan.Core10.Handles (Device_T)
+import Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits (ExternalMemoryHandleTypeFlagBits)
+import Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits (ExternalMemoryHandleTypeFlagBits(..))
+import Graphics.Vulkan.CStruct (FromCStruct)
+import Graphics.Vulkan.CStruct (FromCStruct(..))
+import Graphics.Vulkan.Core10.Enums.Result (Result)
+import Graphics.Vulkan.Core10.Enums.Result (Result(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
+import Graphics.Vulkan.CStruct (ToCStruct)
+import Graphics.Vulkan.CStruct (ToCStruct(..))
+import Graphics.Vulkan.Exception (VulkanException(..))
+import Graphics.Vulkan.Zero (Zero(..))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT))
+import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT))
+import Graphics.Vulkan.Core10.Enums.Result (Result(SUCCESS))
+import Graphics.Vulkan.Extensions.VK_KHR_external_memory_capabilities (ExternalMemoryHandleTypeFlagBitsKHR)
+import Graphics.Vulkan.Extensions.VK_KHR_external_memory_capabilities (ExternalMemoryHandleTypeFlagsKHR)
+foreign import ccall
+#if !defined(SAFE_FOREIGN_CALLS)
+  unsafe
+#endif
+  "dynamic" mkVkGetMemoryHostPointerPropertiesEXT
+  :: FunPtr (Ptr Device_T -> ExternalMemoryHandleTypeFlagBits -> Ptr () -> Ptr MemoryHostPointerPropertiesEXT -> IO Result) -> Ptr Device_T -> ExternalMemoryHandleTypeFlagBits -> Ptr () -> Ptr MemoryHostPointerPropertiesEXT -> IO Result
 
-import Data.String
-  ( IsString
-  )
-import Data.Word
-  ( Word32
-  )
-import Foreign.Ptr
-  ( Ptr
-  , plusPtr
-  )
-import Foreign.Storable
-  ( Storable
-  , Storable(..)
-  )
-import Graphics.Vulkan.NamedType
-  ( (:::)
-  )
-
-
-import Graphics.Vulkan.Core10.Core
-  ( VkResult(..)
-  , VkStructureType(..)
-  )
-import Graphics.Vulkan.Core10.DeviceInitialization
-  ( VkDevice
-  , VkDeviceSize
-  )
-import Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities
-  ( VkExternalMemoryHandleTypeFlagBits(..)
-  )
-
-
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT"
-pattern VK_STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT :: VkStructureType
-pattern VK_STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT = VkStructureType 1000178000
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT"
-pattern VK_STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT :: VkStructureType
-pattern VK_STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT = VkStructureType 1000178001
--- No documentation found for Nested "VkStructureType" "VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT"
-pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT :: VkStructureType
-pattern VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT = VkStructureType 1000178002
--- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBits" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT"
-pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT :: VkExternalMemoryHandleTypeFlagBits
-pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT = VkExternalMemoryHandleTypeFlagBits 0x00000080
--- No documentation found for Nested "VkExternalMemoryHandleTypeFlagBits" "VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT"
-pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT :: VkExternalMemoryHandleTypeFlagBits
-pattern VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT = VkExternalMemoryHandleTypeFlagBits 0x00000100
--- No documentation found for TopLevel "VK_EXT_EXTERNAL_MEMORY_HOST_SPEC_VERSION"
-pattern VK_EXT_EXTERNAL_MEMORY_HOST_SPEC_VERSION :: Integral a => a
-pattern VK_EXT_EXTERNAL_MEMORY_HOST_SPEC_VERSION = 1
--- No documentation found for TopLevel "VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME"
-pattern VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME :: (Eq a ,IsString a) => a
-pattern VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME = "VK_EXT_external_memory_host"
 -- | vkGetMemoryHostPointerPropertiesEXT - Get properties of external memory
 -- host pointer
 --
 -- = Parameters
 --
--- -   @device@ is the logical device that will be importing
---     @pHostPointer@.
+-- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
+--     will be importing @pHostPointer@.
 --
 -- -   @handleType@ is the type of the handle @pHostPointer@.
 --
 -- -   @pHostPointer@ is the host pointer to import from.
 --
+-- -   @pMemoryHostPointerProperties@ is a pointer to a
+--     'MemoryHostPointerPropertiesEXT' structure in which the host pointer
+--     properties are returned.
+--
 -- == Valid Usage
 --
 -- -   @handleType@ /must/ be
---     @VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT@ or
---     @VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT@
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT'
+--     or
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT'
 --
 -- -   @pHostPointer@ /must/ be a pointer aligned to an integer multiple of
---     @VkPhysicalDeviceExternalMemoryHostPropertiesEXT@::@minImportedHostPointerAlignment@
+--     'PhysicalDeviceExternalMemoryHostPropertiesEXT'::@minImportedHostPointerAlignment@
 --
 -- -   If @handleType@ is
---     @VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT@,
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT',
 --     @pHostPointer@ /must/ be a pointer to host memory
 --
 -- -   If @handleType@ is
---     @VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT@,
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT',
 --     @pHostPointer@ /must/ be a pointer to host mapped foreign memory
 --
 -- == Valid Usage (Implicit)
 --
--- -   @device@ /must/ be a valid @VkDevice@ handle
+-- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
 -- -   @handleType@ /must/ be a valid
---     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits'
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
 --     value
 --
 -- -   @pMemoryHostPointerProperties@ /must/ be a valid pointer to a
---     @VkMemoryHostPointerPropertiesEXT@ structure
+--     'MemoryHostPointerPropertiesEXT' structure
 --
 -- == Return Codes
 --
--- [[Success](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-successcodes)]
---     -   @VK_SUCCESS@
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-successcodes Success>]
 --
--- [[Failure](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#fundamentals-errorcodes)]
---     -   @VK_ERROR_INVALID_EXTERNAL_HANDLE@
+--     -   'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'
+--
+-- [<https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#fundamentals-errorcodes Failure>]
+--
+--     -   'Graphics.Vulkan.Core10.Enums.Result.ERROR_INVALID_EXTERNAL_HANDLE'
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core10.DeviceInitialization.VkDevice',
--- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits',
--- 'VkMemoryHostPointerPropertiesEXT'
-foreign import ccall
-#if !defined(SAFE_FOREIGN_CALLS)
-  unsafe
-#endif
-  "vkGetMemoryHostPointerPropertiesEXT" vkGetMemoryHostPointerPropertiesEXT :: ("device" ::: VkDevice) -> ("handleType" ::: VkExternalMemoryHandleTypeFlagBits) -> ("pHostPointer" ::: Ptr ()) -> ("pMemoryHostPointerProperties" ::: Ptr VkMemoryHostPointerPropertiesEXT) -> IO VkResult
+-- 'Graphics.Vulkan.Core10.Handles.Device',
+-- 'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
+-- 'MemoryHostPointerPropertiesEXT'
+getMemoryHostPointerPropertiesEXT :: Device -> ExternalMemoryHandleTypeFlagBits -> ("hostPointer" ::: Ptr ()) -> IO (MemoryHostPointerPropertiesEXT)
+getMemoryHostPointerPropertiesEXT device handleType hostPointer = evalContT $ do
+  let vkGetMemoryHostPointerPropertiesEXT' = mkVkGetMemoryHostPointerPropertiesEXT (pVkGetMemoryHostPointerPropertiesEXT (deviceCmds (device :: Device)))
+  pPMemoryHostPointerProperties <- ContT (withZeroCStruct @MemoryHostPointerPropertiesEXT)
+  r <- lift $ vkGetMemoryHostPointerPropertiesEXT' (deviceHandle (device)) (handleType) (hostPointer) (pPMemoryHostPointerProperties)
+  lift $ when (r < SUCCESS) (throwIO (VulkanException r))
+  pMemoryHostPointerProperties <- lift $ peekCStruct @MemoryHostPointerPropertiesEXT pPMemoryHostPointerProperties
+  pure $ (pMemoryHostPointerProperties)
+
+
 -- | VkImportMemoryHostPointerInfoEXT - import memory from a host pointer
 --
 -- = Description
@@ -139,8 +138,8 @@ foreign import ccall
 -- between the host and the Vulkan implementation. The application /can/
 -- continue to access the memory through the host pointer but it is the
 -- application’s responsibility to synchronize device and non-device access
--- to the underlying memory as defined in [Host Access to Device Memory
--- Objects](https://www.khronos.org/registry/vulkan/specs/1.0-extensions/html/vkspec.html#memory-device-hostaccess).
+-- to the underlying memory as defined in
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-device-hostaccess Host Access to Device Memory Objects>.
 --
 -- Applications /can/ import the same underlying memory into multiple
 -- instances of Vulkan and multiple times into a given Vulkan instance.
@@ -151,7 +150,7 @@ foreign import ccall
 -- due to additional platform-specific restrictions beyond the scope of
 -- this specification in which case the implementation /must/ fail the
 -- memory import operation with the error code
--- @VK_ERROR_INVALID_EXTERNAL_HANDLE_KHR@.
+-- 'Graphics.Vulkan.Extensions.VK_KHR_external_memory.ERROR_INVALID_EXTERNAL_HANDLE_KHR'.
 --
 -- The application /must/ ensure that the imported memory range remains
 -- valid and accessible for the lifetime of the imported memory object.
@@ -160,128 +159,213 @@ foreign import ccall
 --
 -- -   If @handleType@ is not @0@, it /must/ be supported for import, as
 --     reported in
---     'Graphics.Vulkan.Extensions.VK_KHR_external_memory_capabilities.VkExternalMemoryPropertiesKHR'
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalMemoryProperties'
 --
 -- -   If @handleType@ is not @0@, it /must/ be
---     @VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT@ or
---     @VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT@
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT'
+--     or
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT'
 --
 -- -   @pHostPointer@ /must/ be a pointer aligned to an integer multiple of
---     @VkPhysicalDeviceExternalMemoryHostPropertiesEXT@::@minImportedHostPointerAlignment@
+--     'PhysicalDeviceExternalMemoryHostPropertiesEXT'::@minImportedHostPointerAlignment@
 --
 -- -   If @handleType@ is
---     @VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT@,
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT',
 --     @pHostPointer@ /must/ be a pointer to @allocationSize@ number of
 --     bytes of host memory, where @allocationSize@ is the member of the
---     @VkMemoryAllocateInfo@ structure this structure is chained to
+--     'Graphics.Vulkan.Core10.Memory.MemoryAllocateInfo' structure this
+--     structure is chained to
 --
 -- -   If @handleType@ is
---     @VK_EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT@,
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT',
 --     @pHostPointer@ /must/ be a pointer to @allocationSize@ number of
 --     bytes of host mapped foreign memory, where @allocationSize@ is the
---     member of the @VkMemoryAllocateInfo@ structure this structure is
---     chained to
+--     member of the 'Graphics.Vulkan.Core10.Memory.MemoryAllocateInfo'
+--     structure this structure is chained to
 --
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT@
+--     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT'
 --
 -- -   @handleType@ /must/ be a valid
---     'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits'
+--     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
 --     value
 --
 -- = See Also
 --
--- 'Graphics.Vulkan.Core11.Promoted_from_VK_KHR_external_memory_capabilities.VkExternalMemoryHandleTypeFlagBits',
--- 'Graphics.Vulkan.Core10.Core.VkStructureType'
-data VkImportMemoryHostPointerInfoEXT = VkImportMemoryHostPointerInfoEXT
-  { -- | @sType@ is the type of this structure.
-  vkSType :: VkStructureType
-  , -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
-  vkPNext :: Ptr ()
-  , -- | @handleType@ specifies the handle type.
-  vkHandleType :: VkExternalMemoryHandleTypeFlagBits
+-- 'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
+data ImportMemoryHostPointerInfoEXT = ImportMemoryHostPointerInfoEXT
+  { -- | @handleType@ specifies the handle type.
+    handleType :: ExternalMemoryHandleTypeFlagBits
   , -- | @pHostPointer@ is the host pointer to import from.
-  vkPHostPointer :: Ptr ()
+    hostPointer :: Ptr ()
   }
-  deriving (Eq, Show)
+  deriving (Typeable)
+deriving instance Show ImportMemoryHostPointerInfoEXT
 
-instance Storable VkImportMemoryHostPointerInfoEXT where
+instance ToCStruct ImportMemoryHostPointerInfoEXT where
+  withCStruct x f = allocaBytesAligned 32 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p ImportMemoryHostPointerInfoEXT{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr ExternalMemoryHandleTypeFlagBits)) (handleType)
+    poke ((p `plusPtr` 24 :: Ptr (Ptr ()))) (hostPointer)
+    f
+  cStructSize = 32
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr ExternalMemoryHandleTypeFlagBits)) (zero)
+    poke ((p `plusPtr` 24 :: Ptr (Ptr ()))) (zero)
+    f
+
+instance FromCStruct ImportMemoryHostPointerInfoEXT where
+  peekCStruct p = do
+    handleType <- peek @ExternalMemoryHandleTypeFlagBits ((p `plusPtr` 16 :: Ptr ExternalMemoryHandleTypeFlagBits))
+    pHostPointer <- peek @(Ptr ()) ((p `plusPtr` 24 :: Ptr (Ptr ())))
+    pure $ ImportMemoryHostPointerInfoEXT
+             handleType pHostPointer
+
+instance Storable ImportMemoryHostPointerInfoEXT where
   sizeOf ~_ = 32
   alignment ~_ = 8
-  peek ptr = VkImportMemoryHostPointerInfoEXT <$> peek (ptr `plusPtr` 0)
-                                              <*> peek (ptr `plusPtr` 8)
-                                              <*> peek (ptr `plusPtr` 16)
-                                              <*> peek (ptr `plusPtr` 24)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkImportMemoryHostPointerInfoEXT))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkImportMemoryHostPointerInfoEXT))
-                *> poke (ptr `plusPtr` 16) (vkHandleType (poked :: VkImportMemoryHostPointerInfoEXT))
-                *> poke (ptr `plusPtr` 24) (vkPHostPointer (poked :: VkImportMemoryHostPointerInfoEXT))
--- No documentation found for TopLevel "VkMemoryHostPointerPropertiesEXT"
-data VkMemoryHostPointerPropertiesEXT = VkMemoryHostPointerPropertiesEXT
-  { -- No documentation found for Nested "VkMemoryHostPointerPropertiesEXT" "sType"
-  vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkMemoryHostPointerPropertiesEXT" "pNext"
-  vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkMemoryHostPointerPropertiesEXT" "memoryTypeBits"
-  vkMemoryTypeBits :: Word32
-  }
-  deriving (Eq, Show)
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
 
-instance Storable VkMemoryHostPointerPropertiesEXT where
+instance Zero ImportMemoryHostPointerInfoEXT where
+  zero = ImportMemoryHostPointerInfoEXT
+           zero
+           zero
+
+
+-- | VkMemoryHostPointerPropertiesEXT - Properties of external memory host
+-- pointer
+--
+-- = Description
+--
+-- The value returned by @memoryTypeBits@ /must/ only include bits that
+-- identify memory types which are host visible.
+--
+-- == Valid Usage (Implicit)
+--
+-- = See Also
+--
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
+-- 'getMemoryHostPointerPropertiesEXT'
+data MemoryHostPointerPropertiesEXT = MemoryHostPointerPropertiesEXT
+  { -- | @memoryTypeBits@ is a bitmask containing one bit set for every memory
+    -- type which the specified host pointer /can/ be imported as.
+    memoryTypeBits :: Word32 }
+  deriving (Typeable)
+deriving instance Show MemoryHostPointerPropertiesEXT
+
+instance ToCStruct MemoryHostPointerPropertiesEXT where
+  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p MemoryHostPointerPropertiesEXT{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Word32)) (memoryTypeBits)
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr Word32)) (zero)
+    f
+
+instance FromCStruct MemoryHostPointerPropertiesEXT where
+  peekCStruct p = do
+    memoryTypeBits <- peek @Word32 ((p `plusPtr` 16 :: Ptr Word32))
+    pure $ MemoryHostPointerPropertiesEXT
+             memoryTypeBits
+
+instance Storable MemoryHostPointerPropertiesEXT where
   sizeOf ~_ = 24
   alignment ~_ = 8
-  peek ptr = VkMemoryHostPointerPropertiesEXT <$> peek (ptr `plusPtr` 0)
-                                              <*> peek (ptr `plusPtr` 8)
-                                              <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkMemoryHostPointerPropertiesEXT))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkMemoryHostPointerPropertiesEXT))
-                *> poke (ptr `plusPtr` 16) (vkMemoryTypeBits (poked :: VkMemoryHostPointerPropertiesEXT))
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero MemoryHostPointerPropertiesEXT where
+  zero = MemoryHostPointerPropertiesEXT
+           zero
+
+
 -- | VkPhysicalDeviceExternalMemoryHostPropertiesEXT - Structure describing
 -- external memory host pointer limits that can be supported by an
 -- implementation
 --
 -- = Members
 --
--- The members of the @VkPhysicalDeviceExternalMemoryHostPropertiesEXT@
+-- The members of the 'PhysicalDeviceExternalMemoryHostPropertiesEXT'
 -- structure describe the following implementation-dependent limits:
 --
 -- = Description
 --
--- -   @minImportedHostPointerAlignment@ is the minimum /required/
---     alignment, in bytes, for the base address and size of host pointers
---     that /can/ be imported to a Vulkan memory object.
+-- If the 'PhysicalDeviceExternalMemoryHostPropertiesEXT' structure is
+-- included in the @pNext@ chain of
+-- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceProperties2',
+-- it is filled with the implementation-dependent limits.
 --
 -- == Valid Usage (Implicit)
 --
--- -   @sType@ /must/ be
---     @VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT@
---
--- If the @VkPhysicalDeviceExternalMemoryHostPropertiesEXT@ structure is
--- included in the @pNext@ chain of
--- 'Graphics.Vulkan.Extensions.VK_KHR_get_physical_device_properties2.VkPhysicalDeviceProperties2KHR',
--- it is filled with the implementation-dependent limits.
---
 -- = See Also
 --
--- @VkDeviceSize@, 'Graphics.Vulkan.Core10.Core.VkStructureType'
-data VkPhysicalDeviceExternalMemoryHostPropertiesEXT = VkPhysicalDeviceExternalMemoryHostPropertiesEXT
-  { -- No documentation found for Nested "VkPhysicalDeviceExternalMemoryHostPropertiesEXT" "sType"
-  vkSType :: VkStructureType
-  , -- No documentation found for Nested "VkPhysicalDeviceExternalMemoryHostPropertiesEXT" "pNext"
-  vkPNext :: Ptr ()
-  , -- No documentation found for Nested "VkPhysicalDeviceExternalMemoryHostPropertiesEXT" "minImportedHostPointerAlignment"
-  vkMinImportedHostPointerAlignment :: VkDeviceSize
-  }
-  deriving (Eq, Show)
+-- 'Graphics.Vulkan.Core10.BaseType.DeviceSize',
+-- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
+data PhysicalDeviceExternalMemoryHostPropertiesEXT = PhysicalDeviceExternalMemoryHostPropertiesEXT
+  { -- | @minImportedHostPointerAlignment@ is the minimum /required/ alignment,
+    -- in bytes, for the base address and size of host pointers that /can/ be
+    -- imported to a Vulkan memory object.
+    minImportedHostPointerAlignment :: DeviceSize }
+  deriving (Typeable)
+deriving instance Show PhysicalDeviceExternalMemoryHostPropertiesEXT
 
-instance Storable VkPhysicalDeviceExternalMemoryHostPropertiesEXT where
+instance ToCStruct PhysicalDeviceExternalMemoryHostPropertiesEXT where
+  withCStruct x f = allocaBytesAligned 24 8 $ \p -> pokeCStruct p x (f p)
+  pokeCStruct p PhysicalDeviceExternalMemoryHostPropertiesEXT{..} f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (minImportedHostPointerAlignment)
+    f
+  cStructSize = 24
+  cStructAlignment = 8
+  pokeZeroCStruct p f = do
+    poke ((p `plusPtr` 0 :: Ptr StructureType)) (STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT)
+    poke ((p `plusPtr` 8 :: Ptr (Ptr ()))) (nullPtr)
+    poke ((p `plusPtr` 16 :: Ptr DeviceSize)) (zero)
+    f
+
+instance FromCStruct PhysicalDeviceExternalMemoryHostPropertiesEXT where
+  peekCStruct p = do
+    minImportedHostPointerAlignment <- peek @DeviceSize ((p `plusPtr` 16 :: Ptr DeviceSize))
+    pure $ PhysicalDeviceExternalMemoryHostPropertiesEXT
+             minImportedHostPointerAlignment
+
+instance Storable PhysicalDeviceExternalMemoryHostPropertiesEXT where
   sizeOf ~_ = 24
   alignment ~_ = 8
-  peek ptr = VkPhysicalDeviceExternalMemoryHostPropertiesEXT <$> peek (ptr `plusPtr` 0)
-                                                             <*> peek (ptr `plusPtr` 8)
-                                                             <*> peek (ptr `plusPtr` 16)
-  poke ptr poked = poke (ptr `plusPtr` 0) (vkSType (poked :: VkPhysicalDeviceExternalMemoryHostPropertiesEXT))
-                *> poke (ptr `plusPtr` 8) (vkPNext (poked :: VkPhysicalDeviceExternalMemoryHostPropertiesEXT))
-                *> poke (ptr `plusPtr` 16) (vkMinImportedHostPointerAlignment (poked :: VkPhysicalDeviceExternalMemoryHostPropertiesEXT))
+  peek = peekCStruct
+  poke ptr poked = pokeCStruct ptr poked (pure ())
+
+instance Zero PhysicalDeviceExternalMemoryHostPropertiesEXT where
+  zero = PhysicalDeviceExternalMemoryHostPropertiesEXT
+           zero
+
+
+type EXT_EXTERNAL_MEMORY_HOST_SPEC_VERSION = 1
+
+-- No documentation found for TopLevel "VK_EXT_EXTERNAL_MEMORY_HOST_SPEC_VERSION"
+pattern EXT_EXTERNAL_MEMORY_HOST_SPEC_VERSION :: forall a . Integral a => a
+pattern EXT_EXTERNAL_MEMORY_HOST_SPEC_VERSION = 1
+
+
+type EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME = "VK_EXT_external_memory_host"
+
+-- No documentation found for TopLevel "VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME"
+pattern EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME :: forall a . (Eq a, IsString a) => a
+pattern EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME = "VK_EXT_external_memory_host"
+
