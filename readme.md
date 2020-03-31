@@ -74,7 +74,7 @@ import `Graphics.Vulkan.Zero` too.
     "COMPARE_OP_LESS"
     ```
 
-# Minor things
+### Minor things
 
 - To prevent a name clash between the constructors of
   `VkClearColorValue` and `VkPerformanceCounterResultKHR` the latter have had
