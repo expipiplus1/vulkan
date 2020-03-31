@@ -23,3 +23,5 @@ cabal.project.local~
 
 result
 .hdevtools.sock
+
+generate-new/out
