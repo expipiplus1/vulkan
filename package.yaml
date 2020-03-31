@@ -5,8 +5,11 @@ category: Graphics
 maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
 github: expipiplus1/vulkan
 extra-source-files:
- - readme.md
- - changelog.md
+  - readme.md
+  - changelog.md
+  - default.nix
+  - examples/sdl-triangle/shader.frag
+  - examples/sdl-triangle/shader.vert
 
 library:
   source-dirs: src
