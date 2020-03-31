@@ -1,4 +1,3 @@
-license-file: ../LICENSE
 maintainer: generator.i.ardly.know.er@monoid.al
 ghc-options:
 - -threaded

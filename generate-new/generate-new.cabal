@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a484aaf046ec03532c0fe3501d54e3b6ed9435e8af715759a91feb4dabb5b9af
+-- hash: 5f31d4e27220b6d735fd6e874f06f615e4a0e3f8c195425a4cda369f07c1a668
 
 name:           generate-new
 version:        0.0.0
@@ -12,7 +12,7 @@ synopsis:       A program to generate the vulkan package from the vulkan docs.
 author:         Joe Hermaszewski
 maintainer:     generator.i.ardly.know.er@monoid.al
 license:        BSD3
-license-file:   ../LICENSE
+license-file:   LICENSE
 build-type:     Simple
 
 executable generate
