@@ -74,7 +74,7 @@ let
 
   # Generate a haskell derivation using the cabal2nix tool on `package.yaml`
   makeDrv = name: src:
-    haskellPackages.callCabal2nixWithOptions "" src "--flag=build-examples" ({ }
+    haskellPackages.callCabal2nixWithOptions "" src "" ({ }
       // pkgs.lib.optionalAttrs (name == "vulkan") {
         vulkan = pkgs.vulkan-loader;
       });
