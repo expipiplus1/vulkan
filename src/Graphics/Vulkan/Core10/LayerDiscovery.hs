@@ -120,7 +120,7 @@ foreign import ccall
 -- 'LayerProperties'
 enumerateInstanceLayerProperties :: IO (Result, ("properties" ::: Vector LayerProperties))
 enumerateInstanceLayerProperties  = evalContT $ do
-  vkEnumerateInstanceLayerProperties' <- lift $ mkVkEnumerateInstanceLayerProperties . castFunPtr @_ @(("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr LayerProperties) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkEnumerateInstanceLayerProperties\NUL"#)
+  vkEnumerateInstanceLayerProperties' <- lift $ mkVkEnumerateInstanceLayerProperties . castFunPtr @_ @(("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr LayerProperties) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkEnumerateInstanceLayerProperties"#)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
   r <- lift $ vkEnumerateInstanceLayerProperties' (pPPropertyCount) (nullPtr)
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))

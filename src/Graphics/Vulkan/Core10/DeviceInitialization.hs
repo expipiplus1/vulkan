@@ -238,7 +238,7 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Instance', 'InstanceCreateInfo'
 createInstance :: PokeChain a => InstanceCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (Instance)
 createInstance createInfo allocator = evalContT $ do
-  vkCreateInstance' <- lift $ mkVkCreateInstance . castFunPtr @_ @(("pCreateInfo" ::: Ptr (InstanceCreateInfo _)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pInstance" ::: Ptr (Ptr Instance_T)) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkCreateInstance\NUL"#)
+  vkCreateInstance' <- lift $ mkVkCreateInstance . castFunPtr @_ @(("pCreateInfo" ::: Ptr (InstanceCreateInfo _)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pInstance" ::: Ptr (Ptr Instance_T)) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkCreateInstance"#)
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr

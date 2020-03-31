@@ -136,7 +136,7 @@ foreign import ccall
 -- 'ExtensionProperties'
 enumerateInstanceExtensionProperties :: ("layerName" ::: Maybe ByteString) -> IO (Result, ("properties" ::: Vector ExtensionProperties))
 enumerateInstanceExtensionProperties layerName = evalContT $ do
-  vkEnumerateInstanceExtensionProperties' <- lift $ mkVkEnumerateInstanceExtensionProperties . castFunPtr @_ @(("pLayerName" ::: Ptr CChar) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr ExtensionProperties) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkEnumerateInstanceExtensionProperties\NUL"#)
+  vkEnumerateInstanceExtensionProperties' <- lift $ mkVkEnumerateInstanceExtensionProperties . castFunPtr @_ @(("pLayerName" ::: Ptr CChar) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr ExtensionProperties) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkEnumerateInstanceExtensionProperties"#)
   pLayerName <- case (layerName) of
     Nothing -> pure nullPtr
     Just j -> ContT $ useAsCString (j)

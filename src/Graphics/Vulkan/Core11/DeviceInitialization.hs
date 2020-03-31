@@ -46,7 +46,7 @@ foreign import ccall
 -- No cross-references are available
 enumerateInstanceVersion :: IO (("apiVersion" ::: Word32))
 enumerateInstanceVersion  = evalContT $ do
-  vkEnumerateInstanceVersion' <- lift $ mkVkEnumerateInstanceVersion . castFunPtr @_ @(("pApiVersion" ::: Ptr Word32) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkEnumerateInstanceVersion\NUL"#)
+  vkEnumerateInstanceVersion' <- lift $ mkVkEnumerateInstanceVersion . castFunPtr @_ @(("pApiVersion" ::: Ptr Word32) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkEnumerateInstanceVersion"#)
   pPApiVersion <- ContT $ bracket (callocBytes @Word32 4) free
   _ <- lift $ vkEnumerateInstanceVersion' (pPApiVersion)
   pApiVersion <- lift $ peek @Word32 pPApiVersion
