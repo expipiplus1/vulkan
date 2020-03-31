@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f571002fa0efabe8c089d61c818436e83a6fbf5ff687db722579f1c97102e22d
+-- hash: b2503b3771d69445c4799beb8e8af137f0cea39637e68c22ca9f31b58b3b2a24
 
 name:                vulkan
 version:             3.0.0.0
@@ -56,7 +56,6 @@ library
         vulkan
   if flag(safe-foreign-calls)
     cpp-options: -DSAFE_FOREIGN_CALLS
-  else
   exposed-modules:
       Graphics.Vulkan
       Graphics.Vulkan.Core10

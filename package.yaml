@@ -26,9 +26,7 @@ library:
       else:
         extra-libraries: vulkan
     - condition: flag(safe-foreign-calls)
-      then:
-        cpp-options: -DSAFE_FOREIGN_CALLS
-      else: {}
+      cpp-options: -DSAFE_FOREIGN_CALLS
   ghc-options:
     - -Wall
     - -Wno-unticked-promoted-constructors
