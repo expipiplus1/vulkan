@@ -178,6 +178,23 @@ This package requires GHC 8.6 or higher due to the use of the
 For instructions on how to regenerate the bindings see [the readme in
 ./generate-new](./generate-new/readme.md).
 
+## Examples
+
+There are a couple of examples in the `examples` directory.
+
+### `sdl-triangle`
+
+This opens a window using SDL and renders a triangle.
+
+You'll need to build the shaders first with `(cd examples/sdl-triangle &&
+glslangValidator -V shader.*)`
+
+Make sure that SDL can find `libvulkan.so` either by setting `LD_LIBRARY_PATH`
+or `SDL_VULKAN_LIBRARY`, this must be the same `libvulkan.so` that the
+`sdl-triangle` binary was compiled against.
+
+Exit with `q`, `escape` or the window exit button.
+
 ## Current Status
 
 All the core Vulkan 1.0, 1.1, and 1.2 functionality is here as well as all the

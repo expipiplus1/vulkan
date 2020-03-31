@@ -52,6 +52,24 @@ executables:
       - pretty-simple
     <<: *is-example
 
+  sdl-triangle:
+    main: Main.hs
+    source-dirs: examples/sdl-triangle
+    dependencies:
+      - base
+      - bytestring
+      - extra
+      - managed
+      - pretty-show
+      - say
+      - sdl2
+      - text
+      - transformers
+      - vector
+      - vulkan
+    c-sources: examples/sdl-triangle/DebugCallback.c
+    <<: *is-example
+
 flags:
   safe-foreign-calls:
     description:

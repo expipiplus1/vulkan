@@ -19,6 +19,22 @@ let
     pkgs.haskell.packages.${compiler'}.override {
       overrides = self: super:
         (pkgs.lib.mapAttrs (n: v: makeDrv n v) targets) // {
+          #
+          # Examples
+          #
+          sdl2 = overrideSrc super.sdl2 {
+            src = pkgs.fetchFromGitHub {
+              owner = "haskell-game";
+              repo = "sdl2";
+              rev = "45679ab73fe4113eeae3b17ecaa2bec3b00bfd81";
+              sha256 = "0qnzjs23b9b1j6ixlvhjdmp0anlgv0jxg2mxccb3piwkp9hdj6l2";
+            };
+          };
+          bytes = self.bytes_0_17;
+
+          #
+          # Generate
+          #
           algebraic-graphs = dontCheck super.algebraic-graphs;
           first-class-families = doJailbreak super.first-class-families;
           inline-c = self.inline-c_0_9_0_0;
@@ -54,13 +70,13 @@ let
 
   buildSet = pkgs.lib.foldl (ps: p: ps // { ${p.pname} = p; }) { } packages;
   packages = map (t: haskellPackages.${t}) (builtins.attrNames targets);
-  tools = with pkgs; [ pkgconfig asciidoctor python3 ];
+  tools = with pkgs; [ pkgconfig asciidoctor python3 vulkan-headers glslang ];
 
   # Generate a haskell derivation using the cabal2nix tool on `package.yaml`
   makeDrv = name: src:
     haskellPackages.callCabal2nixWithOptions "" src "--flag=build-examples" ({ }
       // pkgs.lib.optionalAttrs (name == "vulkan") {
-        vulkan = pkgs.swiftshader;
+        vulkan = pkgs.vulkan-loader;
       });
 
   addHoogleDatabase = drv:

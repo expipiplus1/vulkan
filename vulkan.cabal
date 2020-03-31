@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 01da611692cbecc0d07c353916b30e81a7876079062cdfbd7fd82472dd5664f5
+-- hash: 0e224fe2d6cab012213dcb74f3830ac6110df29c5c38bba27d4de3e9a90c1214
 
 name:                vulkan
 version:             3.0.0.0
@@ -483,6 +483,33 @@ executable info
   build-depends:
       base
     , pretty-simple
+    , vulkan
+  if flag(build-examples)
+    buildable: True
+  else
+    buildable: False
+  default-language: Haskell2010
+
+executable sdl-triangle
+  main-is: Main.hs
+  other-modules:
+      Paths_vulkan
+  hs-source-dirs:
+      examples/sdl-triangle
+  default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
+  c-sources:
+      examples/sdl-triangle/DebugCallback.c
+  build-depends:
+      base
+    , bytestring
+    , extra
+    , managed
+    , pretty-show
+    , say
+    , sdl2
+    , text
+    , transformers
+    , vector
     , vulkan
   if flag(build-examples)
     buildable: True

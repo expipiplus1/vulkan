@@ -21,6 +21,8 @@ cabal.project.local~
 .HTF/
 .ghc.environment.*
 
+*.spv
+
 result
 .hdevtools.sock
 
