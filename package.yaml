@@ -14,7 +14,7 @@ extra-source-files:
 library:
   source-dirs: src
   dependencies:
-    - base
+    - base < 4.14
     - bytestring
     - transformers
     - vector
@@ -48,7 +48,7 @@ executables:
     main: Main.hs
     source-dirs: examples/info
     dependencies:
-      - base
+      - base < 4.14
       - vulkan
       - pretty-simple
     <<: *is-example
@@ -57,7 +57,7 @@ executables:
     main: Main.hs
     source-dirs: examples/sdl-triangle
     dependencies:
-      - base
+      - base < 4.14
       - bytestring
       - extra
       - managed

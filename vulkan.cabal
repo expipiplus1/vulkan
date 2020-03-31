@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b2503b3771d69445c4799beb8e8af137f0cea39637e68c22ca9f31b58b3b2a24
+-- hash: f7e72b88e88eab9cd679e001a8d67909870b2518cf620ea811ea4a85ef28355c
 
 name:                vulkan
 version:             3.0.0.0
@@ -43,7 +43,7 @@ library
   default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
   ghc-options: -Wall -Wno-unticked-promoted-constructors -Wno-missing-pattern-synonym-signatures -Wno-unused-imports -Wno-missing-signatures -Wno-partial-type-signatures
   build-depends:
-      base
+      base <4.14
     , bytestring
     , transformers
     , vector
@@ -483,7 +483,7 @@ executable info
       examples/info
   default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
   build-depends:
-      base
+      base <4.14
     , pretty-simple
     , vulkan
   if flag(build-examples)
@@ -502,7 +502,7 @@ executable sdl-triangle
   c-sources:
       examples/sdl-triangle/DebugCallback.c
   build-depends:
-      base
+      base <4.14
     , bytestring
     , extra
     , managed
