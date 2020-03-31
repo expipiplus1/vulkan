@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 6092205c10d7a1c63320fdd2428a8ddb8a7e05007ae8ac8770e45098cd2ecdf9
+-- hash: 01da611692cbecc0d07c353916b30e81a7876079062cdfbd7fd82472dd5664f5
 
 name:                vulkan
 version:             3.0.0.0
@@ -23,6 +23,11 @@ extra-source-files:
 source-repository head
   type: git
   location: https://github.com/expipiplus1/vulkan
+
+flag build-examples
+  description: Build example executables
+  manual: False
+  default: False
 
 flag safe-foreign-calls
   description: Do not mark foreign imports as 'unsafe'. This means that callbacks from Vulkan to Haskell will work. If you are using these then make sure this flag is enabled.
@@ -466,4 +471,21 @@ library
       Graphics.Vulkan.Zero
   other-modules:
       Paths_vulkan
+  default-language: Haskell2010
+
+executable info
+  main-is: Main.hs
+  other-modules:
+      Paths_vulkan
+  hs-source-dirs:
+      examples/info
+  default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
+  build-depends:
+      base
+    , pretty-simple
+    , vulkan
+  if flag(build-examples)
+    buildable: True
+  else
+    buildable: False
   default-language: Haskell2010

@@ -34,6 +34,24 @@ library:
     - -Wno-missing-signatures
     - -Wno-partial-type-signatures
 
+_: &is-example
+  when:
+  - condition: flag(build-examples)
+    then:
+      buildable: true
+    else:
+      buildable: false
+
+executables:
+  info:
+    main: Main.hs
+    source-dirs: examples/info
+    dependencies:
+      - base
+      - vulkan
+      - pretty-simple
+    <<: *is-example
+
 flags:
   safe-foreign-calls:
     description:
@@ -41,6 +59,12 @@ flags:
       callbacks from Vulkan to Haskell will work. If you are using
       these then make sure this flag is enabled.
     default: yes
+    manual: no
+
+  build-examples:
+    description:
+      Build example executables
+    default: no
     manual: no
 
 default-extensions:
