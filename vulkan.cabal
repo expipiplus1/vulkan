@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f7e72b88e88eab9cd679e001a8d67909870b2518cf620ea811ea4a85ef28355c
+-- hash: 114c0fde74e474e875021865600ff7eb6f54ffb28ef52a9fd385840b8e68d414
 
 name:                vulkan
 version:             3.0.0.0
@@ -29,12 +29,12 @@ source-repository head
 
 flag build-examples
   description: Build example executables
-  manual: False
+  manual: True
   default: False
 
 flag safe-foreign-calls
   description: Do not mark foreign imports as 'unsafe'. This means that callbacks from Vulkan to Haskell will work. If you are using these then make sure this flag is enabled.
-  manual: False
+  manual: True
   default: True
 
 library
@@ -482,11 +482,11 @@ executable info
   hs-source-dirs:
       examples/info
   default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
-  build-depends:
-      base <4.14
-    , pretty-simple
-    , vulkan
   if flag(build-examples)
+    build-depends:
+        base <4.14
+      , pretty-simple
+      , vulkan
     buildable: True
   else
     buildable: False
@@ -501,19 +501,19 @@ executable sdl-triangle
   default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
   c-sources:
       examples/sdl-triangle/DebugCallback.c
-  build-depends:
-      base <4.14
-    , bytestring
-    , extra
-    , managed
-    , pretty-show
-    , say
-    , sdl2
-    , text
-    , transformers
-    , vector
-    , vulkan
   if flag(build-examples)
+    build-depends:
+        base <4.14
+      , bytestring
+      , extra
+      , managed
+      , pretty-show
+      , say
+      , sdl2
+      , text
+      , transformers
+      , vector
+      , vulkan
     buildable: True
   else
     buildable: False

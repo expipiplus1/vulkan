@@ -35,41 +35,43 @@ library:
     - -Wno-missing-signatures
     - -Wno-partial-type-signatures
 
-_: &is-example
-  when:
-  - condition: flag(build-examples)
-    then:
-      buildable: true
-    else:
-      buildable: false
-
 executables:
   info:
     main: Main.hs
     source-dirs: examples/info
-    dependencies:
-      - base < 4.14
-      - vulkan
-      - pretty-simple
-    <<: *is-example
+    when:
+    - condition: flag(build-examples)
+      then:
+        buildable: true
+        dependencies:
+          - base < 4.14
+          - vulkan
+          - pretty-simple
+      else:
+        buildable: false
 
   sdl-triangle:
     main: Main.hs
     source-dirs: examples/sdl-triangle
-    dependencies:
-      - base < 4.14
-      - bytestring
-      - extra
-      - managed
-      - pretty-show
-      - say
-      - sdl2
-      - text
-      - transformers
-      - vector
-      - vulkan
+    when:
+    - condition: flag(build-examples)
+      then:
+        buildable: true
+        dependencies:
+          - base < 4.14
+          - bytestring
+          - extra
+          - managed
+          - pretty-show
+          - say
+          - sdl2
+          - text
+          - transformers
+          - vector
+          - vulkan
+      else:
+        buildable: false
     c-sources: examples/sdl-triangle/DebugCallback.c
-    <<: *is-example
 
 flags:
   safe-foreign-calls:
@@ -78,13 +80,13 @@ flags:
       callbacks from Vulkan to Haskell will work. If you are using
       these then make sure this flag is enabled.
     default: yes
-    manual: no
+    manual: yes
 
   build-examples:
     description:
       Build example executables
     default: no
-    manual: no
+    manual: yes
 
 default-extensions:
   - AllowAmbiguousTypes
