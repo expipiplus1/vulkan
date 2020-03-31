@@ -181,7 +181,7 @@ writeInitDeviceCmds deviceCommands = do
     {n} :: {tDoc}
     {n} instanceCmds handle = do
       pGetDeviceProcAddr <- castFunPtr @_ @{getDeviceProcAddrTDoc}
-          <$> {getInstanceProcAddr'} (instanceCmdsHandle instanceCmds) (GHC.Ptr.Ptr "vkGetDeviceProcAddr\\NUL"#)
+          <$> {getInstanceProcAddr'} (instanceCmdsHandle instanceCmds) (GHC.Ptr.Ptr "vkGetDeviceProcAddr"#)
       let getDeviceProcAddr' = mkVkGetDeviceProcAddr pGetDeviceProcAddr
     {indent 2 $ vsep binds}
       pure $ DeviceCmds handle
@@ -207,7 +207,7 @@ initCmdsStmts getProcAddr commands = do
           <+> getProcAddr
           <+> "handle (Ptr \""
           <>  pretty (unCName cName)
-          <>  "\\NUL\"#)"
+          <>  "\"#)"
   apps <- forV commands $ \MarshaledCommand { mcCommand = c@Command {..} } -> do
     fTyDoc <- renderTypeHighPrecSource
       =<< cToHsTypeWithHoles DoLower (commandType c)

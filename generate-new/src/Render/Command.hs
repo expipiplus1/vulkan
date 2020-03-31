@@ -635,50 +635,49 @@ getCCall
 getCCall c = do
   RenderParams {..} <- ask
   let -- What to do in the case that this command isn't dispatched from a handle
-    noHandle = stmt Nothing (Just (unCName (cName c) <> "'")) $ do
-      -- TODO: Change this function pointer to a "global variable" with ioref and
-      -- unsafePerformIO
-      let getInstanceProcAddr' = mkFunName "vkGetInstanceProcAddr'" -- TODO: Remove vulkan specific stuff here!
-      tellImport getInstanceProcAddr' -- TODO: Remove vulkan specific stuff here!
-      tellImport 'nullPtr
-      tellImport 'castFunPtr
-      tellImportWith ''GHC.Ptr.Ptr 'GHC.Ptr.Ptr
-      let dynName = getDynName c
-      fTyDoc <- renderTypeHighPrec =<< cToHsTypeWithHoles
-        DoLower
-        (C.Proto
-          (cReturnType c)
-          [ (Just (unCName pName), pType)
-          | Parameter {..} <- V.toList (cParameters c)
-          ]
-        )
-      pure
-        .   IOAction
-        .   FunDoc
-        $   pretty dynName
-        <+> ". castFunPtr @_ @"
-        <>  fTyDoc
-        <+> "<$>"
-        <+> pretty getInstanceProcAddr'
-        <+> "nullPtr"
-        <+> parens
-              ("Ptr" <+> dquotes (pretty (unCName (cName c)) <> "\\NUL") <> "#")
+      noHandle = stmt Nothing (Just (unCName (cName c) <> "'")) $ do
+        -- TODO: Change this function pointer to a "global variable" with ioref and
+        -- unsafePerformIO
+        let getInstanceProcAddr' = mkFunName "vkGetInstanceProcAddr'" -- TODO: Remove vulkan specific stuff here!
+        tellImport getInstanceProcAddr' -- TODO: Remove vulkan specific stuff here!
+        tellImport 'nullPtr
+        tellImport 'castFunPtr
+        tellImportWith ''GHC.Ptr.Ptr 'GHC.Ptr.Ptr
+        let dynName = getDynName c
+        fTyDoc <- renderTypeHighPrec =<< cToHsTypeWithHoles
+          DoLower
+          (C.Proto
+            (cReturnType c)
+            [ (Just (unCName pName), pType)
+            | Parameter {..} <- V.toList (cParameters c)
+            ]
+          )
+        pure
+          .   IOAction
+          .   FunDoc
+          $   pretty dynName
+          <+> ". castFunPtr @_ @"
+          <>  fTyDoc
+          <+> "<$>"
+          <+> pretty getInstanceProcAddr'
+          <+> "nullPtr"
+          <+> parens ("Ptr" <+> dquotes (pretty (unCName (cName c))) <> "#")
 
-    -- What do do if we need to extract the command pointer from a parameter
-    cmdsFun ptrRecTyName getCmdsFun paramName paramType = do
-      cmdsRef <- stmt Nothing (Just "cmds") $ do
-        paramTDoc <- renderType =<< cToHsType DoNotPreserve paramType
-        getCmds   <- getCmdsFun
-        pure . Pure InlineOnce . CmdsDoc $ getCmds <+> parens
-          (pretty paramName <+> "::" <+> paramTDoc)
-      nameRef "cmds" cmdsRef
-      stmt Nothing (Just (unCName (cName c) <> "'")) $ do
-        let dynName    = getDynName c
-            memberName = mkFuncPointerMemberName (cName c)
-        tellImportWith ptrRecTyName memberName
-        CmdsDoc cmds <- use cmdsRef
-        pure . Pure NeverInline . FunDoc $ pretty dynName <+> parens
-          (pretty memberName <+> cmds)
+      -- What do do if we need to extract the command pointer from a parameter
+      cmdsFun ptrRecTyName getCmdsFun paramName paramType = do
+        cmdsRef <- stmt Nothing (Just "cmds") $ do
+          paramTDoc <- renderType =<< cToHsType DoNotPreserve paramType
+          getCmds   <- getCmdsFun
+          pure . Pure InlineOnce . CmdsDoc $ getCmds <+> parens
+            (pretty paramName <+> "::" <+> paramTDoc)
+        nameRef "cmds" cmdsRef
+        stmt Nothing (Just (unCName (cName c) <> "'")) $ do
+          let dynName    = getDynName c
+              memberName = mkFuncPointerMemberName (cName c)
+          tellImportWith ptrRecTyName memberName
+          CmdsDoc cmds <- use cmdsRef
+          pure . Pure NeverInline . FunDoc $ pretty dynName <+> parens
+            (pretty memberName <+> cmds)
 
   commandHandle c >>= \case
     Nothing                            -> noHandle
