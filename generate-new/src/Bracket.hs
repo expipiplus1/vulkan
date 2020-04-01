@@ -392,8 +392,8 @@ writePair Bracket {..} =
             foldr (~>) (ConT ''IO :@ VarT (mkName "r")) (argHsTypes ++ [cont])
           resourcePattern = if noDestructorResource then "_" else "o"
           callDestructor =
-            (if noResource then emptyDoc else "\\" <> resourcePattern <+> "->")
-              <+> pretty destroy
+            (if noResource then emptyDoc else "\\" <> resourcePattern <+> "-> ")
+              <> pretty destroy
               <+> hsep destroyArgVars
         constrainedType <- constrainStructVariables wrapperType
         wrapperTDoc     <- renderType constrainedType
@@ -407,16 +407,21 @@ writePair Bracket {..} =
         tellDoc $ vsep
           [ comment
             (T.unlines
-              [ "A safe wrapper for '"
-              <> unName create
-              <> "' and '"
-              <> unName destroy
-              <> "' using '"
-              <> bracketDoc
-              <> "'"
-              , ""
-              , "The allocated value must not be returned from the provided computation"
-              ]
+              (  [ "A safe wrapper for '"
+                   <> unName create
+                   <> "' and '"
+                   <> unName destroy
+                   <> "' using '"
+                   <> bracketDoc
+                   <> "'"
+                 ]
+              <> bool
+                   [ ""
+                   , "The allocated value must not be returned from the provided computation"
+                   ]
+                   []
+                   noResource
+              )
             )
           , pretty wrapperName <+> "::" <+> wrapperTDoc
           , pretty wrapperName <+> sep argHsVars <+> "=" <> line <> indent
