@@ -38,45 +38,59 @@ brackets
   -> Sem r (Vector (CName, CName, RenderElement))
   -- ^ (Creating command, Bracket command, RenderElem)
 brackets handles = do
-  rs <- traverseV
-    writePair
-    [ simpleBracket True  "Instance"                  Nothing
-    , simpleBracket False "Device"                    (Just "VkPhysicalDevice")
-    , simpleBracket True  "CommandPool"               (Just "VkDevice")
-    , simpleBracket True  "Buffer"                    (Just "VkDevice")
-    , simpleBracket True  "BufferView"                (Just "VkDevice")
-    , simpleBracket True  "Image"                     (Just "VkDevice")
-    , simpleBracket True  "ImageView"                 (Just "VkDevice")
-    , simpleBracket True  "ShaderModule"              (Just "VkDevice")
-    , simpleBracket True  "PipelineLayout"            (Just "VkDevice")
-    , simpleBracket True  "Sampler"                   (Just "VkDevice")
-    , simpleBracket True  "DescriptorSetLayout"       (Just "VkDevice")
-    , simpleBracket True  "DescriptorPool"            (Just "VkDevice")
-    , simpleBracket True  "Fence"                     (Just "VkDevice")
-    , simpleBracket True  "Semaphore"                 (Just "VkDevice")
-    , simpleBracket True  "Event"                     (Just "VkDevice")
-    , simpleBracket True  "QueryPool"                 (Just "VkDevice")
-    , simpleBracket True  "Framebuffer"               (Just "VkDevice")
-    , simpleBracket True  "RenderPass"                (Just "VkDevice")
-    , simpleBracket True  "PipelineCache"             (Just "VkDevice")
-    , simpleBracket True  "ObjectTableNVX"            (Just "VkDevice")
-    , simpleBracket True  "IndirectCommandsLayoutNVX" (Just "VkDevice")
-    , simpleBracket True  "DescriptorUpdateTemplate"  (Just "VkDevice")
-    , simpleBracket True  "SamplerYcbcrConversion"    (Just "VkDevice")
-    , simpleBracket True  "ValidationCacheEXT"        (Just "VkDevice")
-    , simpleBracket True  "AccelerationStructureNV"   (Just "VkDevice")
-    , simpleBracket True  "SwapchainKHR"              (Just "VkDevice")
-    , simpleBracket True  "DebugReportCallbackEXT"    (Just "VkInstance")
-    , simpleBracket True  "DebugUtilsMessengerEXT"    (Just "VkInstance")
-    , allocateBracket True False (Just "commandPool") "CommandBuffer" Nothing
-    , allocateBracket False True Nothing "DeviceMemory" (Just "Memory")
-    , allocateBracket True False (Just "descriptorPool") "DescriptorSet" Nothing
-    , createPipeline "Compute"
-    , createPipeline "Graphics"
-    , mapMemory
-    , useCommandBuffer
-    , registerObjectsNVX
+  autoBrackets <- sequenceV
+    [ autoBracketBeginEndWith "vkCmdBeginQuery"
+    -- , autoBracketBeginEndWith "vkCmdBeginConditionalRenderingEXT"
+    -- , autoBracketBeginEndWith "vkCmdBeginRenderPass"
+    -- , autoBracketBeginEndWith "vkCmdBeginDebugUtilsLabelEXT"
+    -- , autoBracketBeginEndWith "vkCmdBeginRenderPass2"
+    -- , autoBracketBeginEndWith "vkCmdBeginTransformFeedbackEXT"
+    , autoBracketBeginEndWith "vkCmdBeginQueryIndexedEXT"
     ]
+  rs <-
+    traverseV writePair
+    $  [ simpleBracket True  "Instance"                  Nothing
+       , simpleBracket False "Device" (Just "VkPhysicalDevice")
+       , simpleBracket True  "CommandPool"               (Just "VkDevice")
+       , simpleBracket True  "Buffer"                    (Just "VkDevice")
+       , simpleBracket True  "BufferView"                (Just "VkDevice")
+       , simpleBracket True  "Image"                     (Just "VkDevice")
+       , simpleBracket True  "ImageView"                 (Just "VkDevice")
+       , simpleBracket True  "ShaderModule"              (Just "VkDevice")
+       , simpleBracket True  "PipelineLayout"            (Just "VkDevice")
+       , simpleBracket True  "Sampler"                   (Just "VkDevice")
+       , simpleBracket True  "DescriptorSetLayout"       (Just "VkDevice")
+       , simpleBracket True  "DescriptorPool"            (Just "VkDevice")
+       , simpleBracket True  "Fence"                     (Just "VkDevice")
+       , simpleBracket True  "Semaphore"                 (Just "VkDevice")
+       , simpleBracket True  "Event"                     (Just "VkDevice")
+       , simpleBracket True  "QueryPool"                 (Just "VkDevice")
+       , simpleBracket True  "Framebuffer"               (Just "VkDevice")
+       , simpleBracket True  "RenderPass"                (Just "VkDevice")
+       , simpleBracket True  "PipelineCache"             (Just "VkDevice")
+       , simpleBracket True  "ObjectTableNVX"            (Just "VkDevice")
+       , simpleBracket True  "IndirectCommandsLayoutNVX" (Just "VkDevice")
+       , simpleBracket True  "DescriptorUpdateTemplate"  (Just "VkDevice")
+       , simpleBracket True  "SamplerYcbcrConversion"    (Just "VkDevice")
+       , simpleBracket True  "ValidationCacheEXT"        (Just "VkDevice")
+       , simpleBracket True  "AccelerationStructureNV"   (Just "VkDevice")
+       , simpleBracket True  "SwapchainKHR"              (Just "VkDevice")
+       , simpleBracket True  "DebugReportCallbackEXT"    (Just "VkInstance")
+       , simpleBracket True  "DebugUtilsMessengerEXT"    (Just "VkInstance")
+       , allocateBracket True False (Just "commandPool") "CommandBuffer" Nothing
+       , allocateBracket False True Nothing "DeviceMemory" (Just "Memory")
+       , allocateBracket True
+                         False
+                         (Just "descriptorPool")
+                         "DescriptorSet"
+                         Nothing
+       , createPipeline "Compute"
+       , createPipeline "Graphics"
+       , mapMemory
+       , useCommandBuffer
+       , registerObjectsNVX
+       ]
+    <> autoBrackets
   let ignoredHandles =
         [ "VkPhysicalDevice"
         , "VkQueue"
@@ -130,6 +144,42 @@ data Argument
   | Resource
   | Member Text Text
   deriving (Eq, Ord)
+
+autoBracket
+  :: forall r
+   . (HasErr r, HasSpecInfo r)
+  => CName
+  -- ^ With
+  -> CName
+  -- ^ Create
+  -> CName
+  -- ^ Destroy
+  -> Sem r Bracket
+autoBracket withName beginName endName = do
+  let get :: CName -> Sem r Command
+      get n = note ("Unable to find command " <> show n) =<< getCommand n
+  begin <- get beginName
+  end   <- get endName
+  let toArg :: Parameter -> Argument
+      toArg Parameter {..} = Provided (Single pType) (paramName pName)
+      bInnerType           = Single (cReturnType begin)
+      bWrapperName         = withName
+      bCreate              = beginName
+      bDestroy             = endName
+      bCreateArguments     = toArg <$> toList (cParameters begin)
+      bDestroyArguments    = toArg <$> toList (cParameters end)
+      bDestroyIndividually = False
+  pure Bracket { .. }
+
+autoBracketBeginEndWith
+  :: (HasErr r, HasSpecInfo r)
+  => CName
+  -- ^ begin
+  -> Sem r Bracket
+autoBracketBeginEndWith begin =
+  let end  = CName (T.replace "Begin" "End" (unCName begin))
+      with = CName (T.replace "Begin" "With" (unCName begin))
+  in  autoBracket with begin end
 
 -- | A bracket consuming a "CreateInfo" and "AllocationCallbacks"
 simpleBracket
