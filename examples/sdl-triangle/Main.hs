@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedLists #-}
+{-# LANGUAGE QuasiQuotes #-}
 {-# OPTIONS_GHC -Wno-name-shadowing #-}
 
 module Main where
@@ -32,6 +33,7 @@ import           Graphics.Vulkan.Version
 import qualified SDL
 import qualified SDL.Video.Vulkan              as SDL
 import           Control.Arrow                  ( (&&&) )
+import           ShaderQQ
 
 -- pattern (::&) :: Extensible a => a es -> Chain es -> a es
 -- pattern a ::& es <- (id &&& getNext -> (a, es))
@@ -162,10 +164,43 @@ createCommandBuffers dev renderPass graphicsPipeline graphicsQueueFamilyIndex fr
 createShaders
   :: Device -> Managed (V.Vector (SomeStruct PipelineShaderStageCreateInfo))
 createShaders dev = do
-  frag       <- liftIO $ BS.readFile "examples/sdl-triangle/frag.spv"
-  vert       <- liftIO $ BS.readFile "examples/sdl-triangle/vert.spv"
-  fragModule <- managed $ withShaderModule dev zero { code = frag } Nothing
-  vertModule <- managed $ withShaderModule dev zero { code = vert } Nothing
+  let fragCode = [frag|
+        #version 450
+        #extension GL_ARB_separate_shader_objects : enable
+
+        layout(location = 0) in vec3 fragColor;
+
+        layout(location = 0) out vec4 outColor;
+
+        void main() {
+            outColor = vec4(fragColor, 1.0);
+        }
+      |]
+      vertCode = [vert|
+        #version 450
+        #extension GL_ARB_separate_shader_objects : enable
+
+        layout(location = 0) out vec3 fragColor;
+
+        vec2 positions[3] = vec2[](
+          vec2(0.0, -0.5),
+          vec2(0.5, 0.5),
+          vec2(-0.5, 0.5)
+        );
+
+        vec3 colors[3] = vec3[](
+          vec3(1.0, 1.0, 0.0),
+          vec3(0.0, 1.0, 1.0),
+          vec3(1.0, 0.0, 1.0)
+        );
+
+        void main() {
+          gl_Position = vec4(positions[gl_VertexIndex], 0.0, 1.0);
+          fragColor = colors[gl_VertexIndex];
+        }
+      |]
+  fragModule <- managed $ withShaderModule dev zero { code = fragCode } Nothing
+  vertModule <- managed $ withShaderModule dev zero { code = vertCode } Nothing
   let vertShaderStageCreateInfo = zero { stage   = SHADER_STAGE_VERTEX_BIT
                                        , module' = vertModule
                                        , name    = "main"

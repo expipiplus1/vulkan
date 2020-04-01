@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 114c0fde74e474e875021865600ff7eb6f54ffb28ef52a9fd385840b8e68d414
+-- hash: 8057c42f4bfb5412225f45150f036eee9a50461ce31155ee2866f23874d7d7a4
 
 name:                vulkan
 version:             3.0.0.0
@@ -20,8 +20,6 @@ extra-source-files:
     readme.md
     changelog.md
     default.nix
-    examples/sdl-triangle/shader.frag
-    examples/sdl-triangle/shader.vert
 
 source-repository head
   type: git
@@ -495,6 +493,7 @@ executable info
 executable sdl-triangle
   main-is: Main.hs
   other-modules:
+      ShaderQQ
       Paths_vulkan
   hs-source-dirs:
       examples/sdl-triangle
@@ -506,12 +505,16 @@ executable sdl-triangle
         base <4.14
       , bytestring
       , extra
+      , file-embed
       , managed
       , pretty-show
       , say
       , sdl2
+      , template-haskell
+      , temporary
       , text
       , transformers
+      , typed-process
       , vector
       , vulkan
     buildable: True
