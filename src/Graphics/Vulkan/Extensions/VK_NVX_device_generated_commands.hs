@@ -710,13 +710,11 @@ registerObjectsNVX device objectTable objectTableEntries objectIndices = evalCon
 
 -- | A safe wrapper for 'registerObjectsNVX' and 'unregisterObjectsNVX' using
 -- 'bracket_'
---
--- The allocated value must not be returned from the provided computation
 withRegisteredObjectsNVX :: Device -> ObjectTableNVX -> Vector ObjectTableEntryNVX -> Vector Word32 -> Vector ObjectEntryTypeNVX -> IO r -> IO r
 withRegisteredObjectsNVX device objectTableNVX objectTableEntryNVX objectIndices objectEntryTypeNVX =
   bracket_
     (registerObjectsNVX device objectTableNVX objectTableEntryNVX objectIndices)
-    ( unregisterObjectsNVX device objectTableNVX objectEntryTypeNVX objectIndices)
+    (unregisterObjectsNVX device objectTableNVX objectEntryTypeNVX objectIndices)
 
 
 foreign import ccall

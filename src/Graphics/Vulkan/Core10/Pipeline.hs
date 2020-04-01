@@ -2055,7 +2055,7 @@ instance PokeChain es => ToCStruct (PipelineMultisampleStateCreateInfo es) where
     lift $ poke ((p `plusPtr` 28 :: Ptr CFloat)) (CFloat (minSampleShading))
     pSampleMask'' <- case Data.Vector.length (sampleMask) of
       0      -> pure nullPtr
-      vecLen ->  do
+      vecLen -> do
         let requiredLen = case (rasterizationSamples) of
               SampleCountFlagBits n -> (n + 31) `quot` 32
         lift $ unless (requiredLen == fromIntegral vecLen) $

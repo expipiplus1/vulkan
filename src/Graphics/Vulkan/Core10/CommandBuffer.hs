@@ -361,13 +361,11 @@ beginCommandBuffer commandBuffer beginInfo = evalContT $ do
 
 -- | A safe wrapper for 'beginCommandBuffer' and 'endCommandBuffer' using
 -- 'bracket_'
---
--- The allocated value must not be returned from the provided computation
 useCommandBuffer :: PokeChain a => CommandBuffer -> CommandBufferBeginInfo a -> IO r -> IO r
 useCommandBuffer commandBuffer commandBufferBeginInfo =
   bracket_
     (beginCommandBuffer commandBuffer commandBufferBeginInfo)
-    ( endCommandBuffer commandBuffer)
+    (endCommandBuffer commandBuffer)
 
 
 foreign import ccall

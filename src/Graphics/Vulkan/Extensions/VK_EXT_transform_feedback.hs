@@ -3,6 +3,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_transform_feedback  ( cmdBindTransformF
                                                              , cmdBeginTransformFeedbackEXT
                                                              , cmdEndTransformFeedbackEXT
                                                              , cmdBeginQueryIndexedEXT
+                                                             , cmdWithQueryIndexedEXT
                                                              , cmdEndQueryIndexedEXT
                                                              , cmdDrawIndirectByteCountEXT
                                                              , PhysicalDeviceTransformFeedbackFeaturesEXT(..)
@@ -15,6 +16,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_transform_feedback  ( cmdBindTransformF
                                                              , pattern EXT_TRANSFORM_FEEDBACK_EXTENSION_NAME
                                                              ) where
 
+import Control.Exception.Base (bracket_)
 import Control.Monad (unless)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.IO (throwIO)
@@ -758,6 +760,14 @@ cmdBeginQueryIndexedEXT commandBuffer queryPool query flags index = do
   let vkCmdBeginQueryIndexedEXT' = mkVkCmdBeginQueryIndexedEXT (pVkCmdBeginQueryIndexedEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdBeginQueryIndexedEXT' (commandBufferHandle (commandBuffer)) (queryPool) (query) (flags) (index)
   pure $ ()
+
+-- | A safe wrapper for 'cmdBeginQueryIndexedEXT' and 'cmdEndQueryIndexedEXT'
+-- using 'bracket_'
+cmdWithQueryIndexedEXT :: CommandBuffer -> QueryPool -> Word32 -> QueryControlFlags -> Word32 -> IO r -> IO r
+cmdWithQueryIndexedEXT commandBuffer queryPool query flags index =
+  bracket_
+    (cmdBeginQueryIndexedEXT commandBuffer queryPool query flags index)
+    (cmdEndQueryIndexedEXT commandBuffer queryPool query index)
 
 
 foreign import ccall

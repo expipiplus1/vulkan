@@ -4,18 +4,18 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 114c0fde74e474e875021865600ff7eb6f54ffb28ef52a9fd385840b8e68d414
+-- hash: b70783f0d2aac4c84723a5a09b9ceb3a91ccfa334c423e227b0d97f9735a12ba
 
-name:                vulkan
-version:             3.0.0.0
-synopsis:            Bindings to the Vulkan graphics API.
-homepage:            https://github.com/expipiplus1/vulkan#readme
-bug-reports:         https://github.com/expipiplus1/vulkan/issues
-license:             BSD3
-license-file:        LICENSE
-maintainer:          Joe Hermaszewski <live.long.and.prosper@monoid.al>
-category:            Graphics
-build-type:          Simple
+name:           vulkan
+version:        3.0.0.0
+synopsis:       Bindings to the Vulkan graphics API.
+category:       Graphics
+homepage:       https://github.com/expipiplus1/vulkan#readme
+bug-reports:    https://github.com/expipiplus1/vulkan/issues
+maintainer:     Joe Hermaszewski <live.long.and.prosper@monoid.al>
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
 extra-source-files:
     readme.md
     changelog.md
@@ -38,24 +38,6 @@ flag safe-foreign-calls
   default: True
 
 library
-  hs-source-dirs:
-      src
-  default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
-  ghc-options: -Wall -Wno-unticked-promoted-constructors -Wno-missing-pattern-synonym-signatures -Wno-unused-imports -Wno-missing-signatures -Wno-partial-type-signatures
-  build-depends:
-      base <4.14
-    , bytestring
-    , transformers
-    , vector
-    , vector-sized
-  if os(windows)
-    extra-libraries:
-        vulkan-1
-  else
-    extra-libraries:
-        vulkan
-  if flag(safe-foreign-calls)
-    cpp-options: -DSAFE_FOREIGN_CALLS
   exposed-modules:
       Graphics.Vulkan
       Graphics.Vulkan.Core10
@@ -473,6 +455,24 @@ library
       Graphics.Vulkan.Zero
   other-modules:
       Paths_vulkan
+  hs-source-dirs:
+      src
+  default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
+  ghc-options: -Wall -Wno-unticked-promoted-constructors -Wno-missing-pattern-synonym-signatures -Wno-unused-imports -Wno-missing-signatures -Wno-partial-type-signatures
+  build-depends:
+      base <4.14
+    , bytestring
+    , transformers
+    , vector
+    , vector-sized
+  if os(windows)
+    extra-libraries:
+        vulkan-1
+  else
+    extra-libraries:
+        vulkan
+  if flag(safe-foreign-calls)
+    cpp-options: -DSAFE_FOREIGN_CALLS
   default-language: Haskell2010
 
 executable info
