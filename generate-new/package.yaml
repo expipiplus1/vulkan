@@ -76,7 +76,6 @@ executables:
     - parsec
     - polysemy
     - polysemy-plugin
-    - polysemy-zoo
     - pretty-show
     - prettyprinter
     - regex-applicative
