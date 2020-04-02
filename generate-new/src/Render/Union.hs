@@ -1,16 +1,13 @@
 module Render.Union
   where
 
-import           Relude                  hiding ( Reader
-                                                , ask
-                                                , runReader
-                                                , State
+import           Relude                  hiding ( State
                                                 , Type
                                                 )
 import           Data.Text.Prettyprint.Doc
 import           Polysemy
 import           Polysemy.NonDet
-import           Polysemy.Reader
+import           Polysemy.Input
 
 import           Foreign.Ptr
 import           Control.Monad.Trans.Cont       ( runContT )
@@ -44,7 +41,7 @@ renderUnion
   => MarshaledStruct AUnion
   -> Sem r RenderElement
 renderUnion marshaled@MarshaledStruct {..} = context (unCName msName) $ do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let Struct {..} = msStruct
   genRe ("union " <> unCName sName) $ do
     let n = mkTyName sName
@@ -60,7 +57,7 @@ renderUnion marshaled@MarshaledStruct {..} = context (unCName msName) $ do
     let -- No useful information in the siblings in a union..
         lookupMember :: CName -> Maybe (SiblingInfo StructMember)
         lookupMember = const Nothing
-    runReader lookupMember $ do
+    runInputConst lookupMember $ do
 
       toCStructInstance marshaled
       zeroInstance marshaled
@@ -83,7 +80,7 @@ renderUnionMember
   -> MarshaledStructMember
   -> Sem r (Doc ())
 renderUnionMember tyName MarshaledStructMember {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let StructMember {..} = msmStructMember
   let con               = mkConName tyName smName
   t    <- note "Union member is elided" =<< schemeType msmScheme
@@ -104,7 +101,7 @@ toCStructInstance
   -> Sem r ()
 toCStructInstance MarshaledStruct {..} = do
   let addrVar = "p"
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   tellImportWithAll (TyConName "ToCStruct")
   let
     Struct {..} = msStruct
@@ -192,7 +189,7 @@ zeroInstance
   => MarshaledStruct AUnion
   -> Sem r ()
 zeroInstance MarshaledStruct {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let n = mkTyName msName
   -- Use the first member with size equal to the struct
   zeroableMembers <-
@@ -240,7 +237,7 @@ peekUnionFunction
   -> MarshaledStruct AUnion
   -> Sem r ()
 peekUnionFunction UnionDiscriminator {..} MarshaledStruct {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let n        = mkTyName msName
       uTy      = ConT (typeName n)
       fName    = TermName ("peek" <> unName n)

@@ -2,15 +2,12 @@
 module Render.Constant
   where
 
-import           Relude                  hiding ( Reader
-                                                , ask
-                                                , lift
-                                                )
+import           Relude
 import           Data.Text.Prettyprint.Doc
 import           Language.Haskell.TH.Syntax
 import           Text.Printf
 import           Polysemy
-import           Polysemy.Reader
+import           Polysemy.Input
 
 import           Spec.Parse
 import           Spec.APIConstant
@@ -19,11 +16,11 @@ import           Error
 import           Render.Element
 
 renderConstant
-  :: (HasErr r, Member (Reader RenderParams) r)
+  :: (HasErr r, HasRenderParams r)
   => Constant
   -> Sem r RenderElement
 renderConstant Constant {..} = contextShow constName $ do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   genRe ("constant " <> unCName constName) $ do
     let
       n               = mkPatternName constName

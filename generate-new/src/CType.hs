@@ -1,11 +1,7 @@
 module CType
   where
 
-import           Relude                  hiding ( Const
-                                                , Reader
-                                                , ask
-                                                , asks
-                                                )
+import           Relude                  hiding ( Const )
 import           Language.C.Types.Parse  hiding ( Proto
                                                 , Array
                                                 , TypeName
@@ -13,7 +9,7 @@ import           Language.C.Types.Parse  hiding ( Proto
 import qualified Language.C.Types              as C
 import           Data.ByteString.Char8         as BS
 import           Polysemy
-import           Polysemy.Reader
+import           Polysemy.Input
 import qualified Text.ParserCombinators.Parsec.Combinator
                                                as Parsec
 import qualified Text.Parsec.Char              as Parsec
@@ -50,11 +46,11 @@ data Qualifier
 type C = C.Type C.CIdentifier
 
 parseCType
-  :: (MemberWithError (Reader TypeNames) r, HasErr r)
+  :: (MemberWithError (Input TypeNames) r, HasErr r)
   => ByteString
   -> Sem r CType
 parseCType bs = do
-  parseContext <- asks (cCParserContext False)
+  parseContext <- cCParserContext False <$> input
   let -- Drop the 'struct' keyword, it confuses our C type parser.
       typeStringWorkarounds :: ByteString -> ByteString
       typeStringWorkarounds =

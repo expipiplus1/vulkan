@@ -3,13 +3,11 @@ module Render.Spec.Extends
   ( structExtends
   ) where
 
-import           Relude                  hiding ( Reader
-                                                , Enum
-                                                , ask
+import           Relude                  hiding ( Enum
                                                 , Text
                                                 )
 import           Polysemy
-import           Polysemy.Reader
+import           Polysemy.Input
 import           Data.Text.Prettyprint.Doc
 import           Text.InterpolatedString.Perl6.Unindented
 import qualified Data.Vector.Extra             as V
@@ -48,7 +46,7 @@ typeFamily
   => Spec
   -> Sem r ()
 typeFamily Spec {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   tellExport (EType (TyConName "Extends"))
   tellImport ''Relude.Type
   tellImport ''TypeError
@@ -85,7 +83,7 @@ classes
   => Spec
   -> Sem r ()
 classes Spec {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   tellExport (EClass (TyConName "PeekChain"))
   tellExport (EClass (TyConName "PokeChain"))
   tellExport (EType (TyConName "Chain"))

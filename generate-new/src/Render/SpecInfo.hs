@@ -1,15 +1,10 @@
 module Render.SpecInfo
   where
 
-import           Relude                  hiding ( Reader
-                                                , ask
-                                                , asks
-                                                , runReader
-                                                , Handle
-                                                )
+import           Relude                  hiding ( Handle )
 import qualified Data.HashMap.Strict           as Map
 import qualified Data.HashSet                  as Set
-import           Polysemy.Reader
+import           Polysemy.Input
 import           Polysemy
 import           Algebra.Graph.Relation
 import           Algebra.Graph.ToGraph
@@ -19,7 +14,7 @@ import           Error
 import           Spec.Types
 import           Render.Element
 
-type HasSpecInfo r = MemberWithError (Reader SpecInfo) r
+type HasSpecInfo r = MemberWithError (Input SpecInfo) r
 
 type SizeMap = CType -> Maybe (Int, Int)
 
@@ -40,10 +35,10 @@ withSpecInfo
   :: HasRenderParams r
   => Spec
   -> (CType -> Maybe (Int, Int))
-  -> Sem (Reader SpecInfo ': r) a
+  -> Sem (Input SpecInfo ': r) a
   -> Sem r a
 withSpecInfo Spec {..} siTypeSize r = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let
     mkLookup n f =
       let m = Map.fromList [ (n s, s) | s <- toList f ]
@@ -96,38 +91,38 @@ withSpecInfo Spec {..} siTypeSize r = do
       ]
     siAppearsInNegativePosition = (`Set.member` negativeTypes)
     siAppearsInPositivePosition = (`Set.member` positiveTypes)
-  runReader SpecInfo { .. } r
+  runInputConst SpecInfo { .. } r
 
 getStruct :: HasSpecInfo r => CName -> Sem r (Maybe Struct)
-getStruct t = ($ t) <$> asks siIsStruct
+getStruct t = ($ t) <$> inputs siIsStruct
 
 getUnion :: HasSpecInfo r => CName -> Sem r (Maybe Union)
-getUnion t = ($ t) <$> asks siIsUnion
+getUnion t = ($ t) <$> inputs siIsUnion
 
 containsUnion :: HasSpecInfo r => CName -> Sem r [Union]
-containsUnion t = ($ t) <$> asks siContainsUnion
+containsUnion t = ($ t) <$> inputs siContainsUnion
 
 getHandle :: HasSpecInfo r => CName -> Sem r (Maybe Handle)
-getHandle t = ($ t) <$> asks siIsHandle
+getHandle t = ($ t) <$> inputs siIsHandle
 
 getCommand :: HasSpecInfo r => CName -> Sem r (Maybe Command)
-getCommand t = ($ t) <$> asks siIsCommand
+getCommand t = ($ t) <$> inputs siIsCommand
 
 getDisabledCommand :: HasSpecInfo r => CName -> Sem r (Maybe Command)
-getDisabledCommand t = ($ t) <$> asks siIsDisabledCommand
+getDisabledCommand t = ($ t) <$> inputs siIsDisabledCommand
 
 getEnum :: HasSpecInfo r => CName -> Sem r (Maybe Enum')
-getEnum t = ($ t) <$> asks siIsEnum
+getEnum t = ($ t) <$> inputs siIsEnum
 
 getTypeSize :: (HasErr r, HasSpecInfo r) => CType -> Sem r (Int, Int)
 getTypeSize t =
-  note ("Unable to get size for " <> show t) =<< ($ t) <$> asks siTypeSize
+  note ("Unable to get size for " <> show t) =<< ($ t) <$> inputs siTypeSize
 
 appearsInPositivePosition :: HasSpecInfo r => CName -> Sem r Bool
-appearsInPositivePosition s = ($ s) <$> asks siAppearsInPositivePosition
+appearsInPositivePosition s = ($ s) <$> inputs siAppearsInPositivePosition
 
 appearsInNegativePosition :: HasSpecInfo r => CName -> Sem r Bool
-appearsInNegativePosition s = ($ s) <$> asks siAppearsInNegativePosition
+appearsInNegativePosition s = ($ s) <$> inputs siAppearsInNegativePosition
 
 containsDispatchableHandle :: HasSpecInfo r => Struct -> Sem r Bool
 containsDispatchableHandle = fmap (not . null) . dispatchableHandles
@@ -138,4 +133,5 @@ dispatchableHandles Struct {..} =
     . traverse getHandle
     $ [ t | StructMember {..} <- toList sMembers, t <- getAllTypeNames smType ]
 
-
+inputs :: Member (Input a) r => (a -> b) -> Sem r b
+inputs f = f <$> input

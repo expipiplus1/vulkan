@@ -4,11 +4,7 @@ module Render.Command
   , constrainStructVariables
   ) where
 
-import           Relude                  hiding ( Reader
-                                                , ask
-                                                , lift
-                                                , runReader
-                                                , Type
+import           Relude                  hiding ( Type
                                                 , Handle
                                                 )
 import           Data.Text.Prettyprint.Doc
@@ -16,7 +12,7 @@ import           Data.Text.Extra                ( upperCaseFirst )
 import           Language.Haskell.TH.Syntax     ( nameBase )
 import           Data.List.Extra                ( nubOrd )
 import           Polysemy
-import           Polysemy.Reader
+import           Polysemy.Input
 import qualified Data.Text                     as T
 import qualified Data.Vector                   as V
 import           Data.Vector                    ( Vector )
@@ -58,7 +54,7 @@ renderCommand
   => MarshaledCommand
   -> Sem r RenderElement
 renderCommand m@MarshaledCommand {..} = contextShow (unCName mcName) $ do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let Command {..} = mcCommand
   genRe ("command " <> unCName mcName) $ do
     ffiTy <- cToHsType
@@ -89,17 +85,17 @@ renderCommand m@MarshaledCommand {..} = contextShow (unCName mcName) $ do
 
 
     let commandName = mkFunName mcName
-    runReader lookupSibling $ if any (isInOutCount . mpScheme) mcParams
+    runInputConst lookupSibling $ if any (isInOutCount . mpScheme) mcParams
       then marshaledDualPurposeCommandCall commandName m
       else marshaledCommandCall commandName m
 
 paramType
-  :: (HasErr r, Member (Reader RenderParams) r)
+  :: (HasErr r, HasRenderParams r)
   => (MarshalScheme Parameter -> Sem r (Maybe H.Type))
   -> MarshaledParam
   -> Sem r (Maybe H.Type)
 paramType st MarshaledParam {..} = contextShow (pName mpParam) $ do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let Parameter {..} = mpParam
   n <- st mpScheme
   pure $ namedTy (unName . mkParamName $ pName) <$> n
@@ -174,7 +170,7 @@ marshaledCommandCall
   -> MarshaledCommand
   -> Sem r ()
 marshaledCommandCall commandName m@MarshaledCommand {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
 
   includeReturnType <- shouldIncludeReturnType m
 
@@ -270,7 +266,7 @@ checkResultMaybe
   -> Ref s ValueDoc
   -> Stmt s r (Ref s ValueDoc)
 checkResultMaybe Command {..} retRef = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   if null cErrorCodes || cReturnType /= successCodeType
     then pure retRef
     else checkResult retRef
@@ -281,7 +277,7 @@ checkResult
   -> Stmt s r (Ref s ValueDoc)
 checkResult retRef = do
   check <- unitStmt $ do
-    RenderParams {..} <- ask
+    RenderParams {..} <- input
     ValueDoc ret      <- use retRef
     tellImport 'when
     tellImport 'throwIO
@@ -333,7 +329,7 @@ marshaledDualPurposeCommandCall
   -> MarshaledCommand
   -> Sem r ()
 marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   tellExport (ETerm commandName)
 
   --
@@ -589,7 +585,7 @@ paramRefUnnamed
   => MarshaledParam
   -> Stmt s r (Ref s ValueDoc)
 paramRefUnnamed MarshaledParam {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   ty                <- schemeType mpScheme
   stmt ty (Just . unName . mkParamName . pName $ mpParam)
     . pure
@@ -601,7 +597,7 @@ paramRefUnnamed MarshaledParam {..} = do
 
 shouldIncludeReturnType :: HasRenderParams r => MarshaledCommand -> Sem r Bool
 shouldIncludeReturnType MarshaledCommand {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   pure
     $  mcReturn
     /= C.Void
@@ -633,7 +629,7 @@ getCCall
   => Command
   -> Stmt s r (Ref s FunDoc)
 getCCall c = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let -- What to do in the case that this command isn't dispatched from a handle
       noHandle = stmt Nothing (Just (unCName (cName c) <> "'")) $ do
         -- TODO: Change this function pointer to a "global variable" with ioref and
@@ -726,7 +722,7 @@ getPoke
   -> Stmt s r (Ref s ValueDoc, Maybe (Ref s ValueDoc))
   -- ^ (poke, peek if it's a returned value)
 getPoke valueRef MarshaledParam {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   case mpScheme of
     Returned s -> do
       (addrRef, peek) <- allocateAndPeek (lowerParamType mpParam) s
@@ -760,7 +756,7 @@ importConstructors
   => Type
   -> Sem r ()
 importConstructors t = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let names = nubOrd $ allTypeNames t
       isNewtype' :: Name -> Sem r Bool
       isNewtype' n = pure (n `elem` builtinNewtypes)

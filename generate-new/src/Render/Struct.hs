@@ -3,18 +3,12 @@
 module Render.Struct
   where
 
-import           Relude                  hiding ( Reader
-                                                , ask
-                                                , runReader
-                                                , lift
-                                                , State
-                                                , Handle
-                                                )
+import           Relude                  hiding ( Handle )
 import           Text.InterpolatedString.Perl6.Unindented
 import           Data.Text.Prettyprint.Doc
 import           Data.Text.Extra                ( upperCaseFirst )
 import           Polysemy
-import           Polysemy.Reader
+import           Polysemy.Input
 import qualified Data.Vector.Extra             as V
 import qualified Data.Map                      as Map
 import           Data.List.Extra                ( nubOrd )
@@ -55,7 +49,7 @@ renderStruct
   => MarshaledStruct AStruct
   -> Sem r RenderElement
 renderStruct s@MarshaledStruct {..} = context (unCName msName) $ do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   genRe ("struct " <> unCName msName) $ do
     let n = mkTyName msName
     ms <- V.mapMaybe id <$> traverseV (renderStructMember msName) msMembers
@@ -90,7 +84,7 @@ renderStruct s@MarshaledStruct {..} = context (unCName msName) $ do
     renderExtensibleInstance s
     let lookupMember :: CName -> Maybe (SiblingInfo StructMember)
         lookupMember = (`Map.lookup` memberMap)
-    runReader lookupMember $ renderStoreInstances s
+    runInputConst lookupMember $ renderStoreInstances s
     pure ()
 
 renderStructMember
@@ -100,7 +94,7 @@ renderStructMember
   -> Sem r (Maybe ((Documentee -> Doc ()) -> Doc ()))
 renderStructMember sName MarshaledStructMember {..} = do
   let StructMember {..} = msmStructMember
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   m                 <- schemeType msmScheme
   traverse
     (\t -> do
@@ -123,7 +117,7 @@ renderExtensibleInstance
   => MarshaledStruct AStruct
   -> Sem r ()
 renderExtensibleInstance MarshaledStruct {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let n   = mkTyName (sName msStruct)
       con = mkConName (sName msStruct) (sName msStruct)
   unless (V.null (sExtendedBy msStruct)) $ do
@@ -185,7 +179,7 @@ renderStoreInstances
   => MarshaledStruct AStruct
   -> Sem r ()
 renderStoreInstances ms@MarshaledStruct {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
 
   tellBoot $ tellDoc . vsep =<< sequenceV
     [ toCStructInstanceStub tellSourceImport msStruct
@@ -213,14 +207,11 @@ renderStoreInstances ms@MarshaledStruct {..} = do
   zeroInstanceDecl ms
 
 storableInstance
-  :: ( HasErr r
-     , HasRenderParams r
-     , HasRenderElem r
-     )
+  :: (HasErr r, HasRenderParams r, HasRenderElem r)
   => MarshaledStruct AStruct
   -> Sem r ()
-storableInstance MarshaledStruct{..} = do
-  RenderParams{..} <- ask
+storableInstance MarshaledStruct {..} = do
+  RenderParams {..} <- input
   let n = mkTyName msName
   -- Some member names clash with storable members "alignment" for instance
   tellImport ''Storable
@@ -246,7 +237,7 @@ toCStructInstance
   -> RenderedStmts (Doc ())
   -> Sem r ()
 toCStructInstance m@MarshaledStruct {..} pokeValue = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   tellImportWithAll (TyConName "ToCStruct")
   let con         = mkConName msName msName
       Struct {..} = msStruct
@@ -291,7 +282,7 @@ fromCStructInstance
   => MarshaledStruct AStruct
   -> Sem r ()
 fromCStructInstance m@MarshaledStruct {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   tellImportWithAll (TyConName "FromCStruct")
   tellImport 'plusPtr
   peekStmts <- peekCStructBody m
@@ -315,7 +306,7 @@ fromCStructFunction
   -> [Handle]
   -> Sem r ()
 fromCStructFunction m@MarshaledStruct {..} handles = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   tellImportWithAll (TyConName "FromCStruct")
   let n           = mkTyName msName
       Struct {..} = msStruct
@@ -370,7 +361,7 @@ peekCStructBody
   => MarshaledStruct AStruct
   -> Sem r (Doc ())
 peekCStructBody MarshaledStruct {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let con         = mkConName msName msName
       Struct {..} = msStruct
       offset o tDoc =
@@ -417,7 +408,7 @@ pokeZeroCStructDecl
   => MarshaledStruct AStruct
   -> Sem r (Doc ())
 pokeZeroCStructDecl ms@MarshaledStruct {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
 
   let replaceWithZeroChainPoke m = case msmScheme m of
         Custom s@(CustomScheme "Chain" _ _ _ _) ->
@@ -450,7 +441,7 @@ zeroInstanceDecl
   => MarshaledStruct AStruct
   -> Sem r ()
 zeroInstanceDecl MarshaledStruct {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let n    = mkTyName msName
       con  = mkConName msName msName
       head = if hasChildren msStruct
@@ -542,7 +533,7 @@ memberVal MarshaledStructMember {..} doc = do
 recordWildCardsMemberVal
   :: HasRenderParams r => MarshaledStructMember -> Sem r (Doc ())
 recordWildCardsMemberVal MarshaledStructMember {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let m = mkMemberName (smName msmStructMember)
   pure $ pretty m
 
@@ -567,7 +558,7 @@ fromCStructInstanceStub
   -> Struct
   -> Sem r (Doc ())
 fromCStructInstanceStub tellSourceImport s = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let n    = mkTyName (sName s)
       tDoc = if hasChildren s
         then parens (pretty n <+> pretty structChainVar)
@@ -586,7 +577,7 @@ toCStructInstanceStub
   -> Struct
   -> Sem r (Doc ())
 toCStructInstanceStub tellSourceImport s = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let n    = mkTyName (sName s)
       tDoc = if hasChildren s
         then parens (pretty n <+> pretty structChainVar)
@@ -605,7 +596,7 @@ showInstanceStub
   -> Struct
   -> Sem r (Doc ())
 showInstanceStub tellSourceImport s = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let n = mkTyName (sName s)
   if hasChildren s
     then do

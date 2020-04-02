@@ -2,14 +2,11 @@
 module Render.Scheme
   where
 
-import           Relude                  hiding ( Reader
-                                                , ask
-                                                , lift
-                                                )
+import           Relude                  hiding ( lift )
 import           Language.Haskell.TH
 import           Language.Haskell.TH.Instances  ( )
 import           Polysemy
-import           Polysemy.Reader
+import           Polysemy.Input
 import qualified Data.Vector                   as V
 import           Foreign.Ptr
 
@@ -25,7 +22,7 @@ schemeType
   => MarshalScheme a
   -> Sem r (Maybe H.Type)
 schemeType s = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   case s of
     Unit              -> pure $ Just (ConT ''())
     Preserve cType    -> Just <$> cToHsType DoPreserve cType

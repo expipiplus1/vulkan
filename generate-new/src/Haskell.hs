@@ -18,8 +18,6 @@ where
 import           Relude                  hiding ( Type
                                                 , group
                                                 , State
-                                                , Reader
-                                                , ask
                                                 , words
                                                 , unwords
                                                 )
@@ -27,7 +25,7 @@ import           Language.Haskell.TH
 import           Data.Text.Prettyprint.Doc
 import           Data.Generics.Uniplate.Data
 import           Polysemy
-import           Polysemy.Reader
+import           Polysemy.Input
 import           Data.Char                      ( isLower )
 import qualified Data.List.Extra               as List
 import qualified Data.Text                     as T
@@ -60,7 +58,7 @@ renderType'
   -> Type
   -> Sem r (Doc ())
 renderType' importer t = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let removeModules = transformBi
         (\n ->
           if V.elem n alwaysQualifiedNames then n else mkName . nameBase $ n

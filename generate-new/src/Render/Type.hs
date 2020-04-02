@@ -8,9 +8,7 @@ module Render.Type
   )
 where
 
-import           Relude                  hiding ( Reader
-                                                , ask
-                                                , lift
+import           Relude                  hiding ( lift
                                                 , State
                                                 , modify'
                                                 , get
@@ -25,7 +23,6 @@ import qualified Data.Text                     as T
 import           Polysemy
 import           Polysemy.State
 import           Polysemy.Input
-import           Polysemy.Reader
 import           Foreign.C.Types
 import           Foreign.Ptr
 import qualified Data.Vector.Storable.Sized    as VSS
@@ -82,7 +79,7 @@ cToHsType'
   -> CType
   -> Sem r H.Type
 cToHsType' preserve t = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   case mkHsTypeOverride preserve t of
     Just h  -> pure h
     Nothing -> do
@@ -119,7 +116,7 @@ cToHsType' preserve t = do
         DoLower -> ConT ''Ptr :@ arrayTy
         _       -> arrayTy
     Array _ (SymbolicArraySize n) e -> do
-      RenderParams {..} <- ask
+      RenderParams {..} <- input
       e'                <- cToHsType' preserve e
       let arrayTy = ConT ''VSS.Vector :@ ConT (typeName (mkTyName n)) :@ e'
       pure $ case preserve of
@@ -135,7 +132,7 @@ cToHsType' preserve t = do
     TypeName "int64_t"  -> pure $ ConT ''Int64
     TypeName "size_t"   -> pure $ ConT ''CSize
     TypeName n          -> do
-      RenderParams {..} <- ask
+      RenderParams {..} <- input
       let con = ConT . typeName . mkTyName $ n
       getStruct n >>= \case
         Just s | not (V.null (sExtendedBy s)) -> do

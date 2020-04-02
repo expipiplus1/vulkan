@@ -5,14 +5,12 @@ module Render.CStruct
   )
 where
 
-import           Relude                  hiding ( Reader
-                                                , ask
-                                                , lift
+import           Relude                  hiding ( lift
                                                 , State
                                                 )
 import           Text.InterpolatedString.Perl6.Unindented
 import           Polysemy
-import           Polysemy.Reader
+import           Polysemy.Input
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
 
@@ -29,7 +27,7 @@ cStructDocs = V.fromList [toCStruct, fromCStruct]
 
 toCStruct :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 toCStruct = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   genRe "ToCStruct" $ do
     tellExplicitModule (ModName "Graphics.Vulkan.CStruct")
     tellNotReexportable
@@ -76,10 +74,10 @@ toCStruct = do
     |]
 
 fromCStruct
-  :: (HasErr r, Member (Reader RenderParams) r)
+  :: (HasErr r, HasRenderParams r)
   => Sem r RenderElement
 fromCStruct = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   genRe "ToCStruct" $ do
     tellExplicitModule (ModName "Graphics.Vulkan.CStruct")
     tellNotReexportable

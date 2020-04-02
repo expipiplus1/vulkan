@@ -5,17 +5,14 @@ module Render.Stmts.Alloc
   ) where
 
 import           Relude                  hiding ( Type
-                                                , ask
-                                                , asks
                                                 , last
                                                 , init
                                                 , head
                                                 , Const
-                                                , Reader
                                                 )
 import           Data.Text.Prettyprint.Doc
 import           Polysemy
-import           Polysemy.Reader
+import           Polysemy.Input
 import qualified Data.Text.Extra               as T
 
 import           Foreign.Marshal.Alloc
@@ -130,7 +127,7 @@ allocateVector
   => a
   -> Stmt s r (Ref s AddrDoc)
 allocateVector vec = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let name' = name vec
       toTy  = type' vec
   toElem <- unPtr toTy

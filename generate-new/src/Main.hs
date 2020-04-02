@@ -1,8 +1,7 @@
 module Main
   where
 
-import           Relude                  hiding ( runReader
-                                                , uncons
+import           Relude                  hiding ( uncons
                                                 , Type
                                                 , Handle
                                                 )
@@ -14,7 +13,7 @@ import           Polysemy
 import           Polysemy.Fixpoint
 import qualified Data.HashMap.Strict           as Map
 import qualified Data.HashSet                  as Set
-import           Polysemy.Reader
+import           Polysemy.Input
 import qualified Data.Vector.Storable.Sized    as VSS
 import qualified Data.Vector                   as V
 import qualified Data.Text                     as T
@@ -82,7 +81,7 @@ main =
       else pure (const Nothing)
 
 
-    runReader (renderParams specHandles)
+    runInputConst (renderParams specHandles)
       . withRenderedNames spec
       . withSpecInfo spec getSize
       . withTypeInfo spec
@@ -140,7 +139,7 @@ main =
                 asum . fmap (\(BespokeScheme f) -> f p a) $ bespokeSchemes
               )
 
-          (ss, us, cs) <- runReader mps $ do
+          (ss, us, cs) <- runInputConst mps $ do
             ss <- timeItNamed "Marshaling structs"
               $ traverseV marshalStruct specStructs
             us <- timeItNamed "Marshaling unions"

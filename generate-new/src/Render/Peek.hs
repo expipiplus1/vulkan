@@ -9,14 +9,10 @@ module Render.Peek
   ) where
 
 import           Relude                  hiding ( Type
-                                                , ask
-                                                , asks
                                                 , last
                                                 , init
                                                 , Const
-                                                , Reader
                                                 , State
-                                                , runReader
                                                 )
 import qualified Data.Text                     as T
 import           Data.Text.Prettyprint.Doc
@@ -27,7 +23,7 @@ import           Data.Vector.Extra              ( pattern (:<|)
                                                 , pattern Empty
                                                 )
 import           Data.Vector                    ( Vector )
-import           Polysemy.Reader
+import           Polysemy.Input
 import qualified Data.Vector.Extra             as V
 
 import           Foreign.Ptr
@@ -101,7 +97,7 @@ peekIdiomatic
   -> MarshalScheme a
   -> Sem (NonDet ': StmtE s r ': r) (Ref s ValueDoc)
 peekIdiomatic name lengths fromType addr scheme = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   r                 <- peekWrapped name lengths fromType addr scheme
   t                 <- raise $ refType r
   toTy              <- schemeType scheme
@@ -117,7 +113,7 @@ unwrapIdiomaticType
   -> Ref s ValueDoc
   -> Stmt s r (Ref s ValueDoc)
 unwrapIdiomaticType name value = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   t                 <- refType value
   case mkIdiomaticType t of
     Nothing                     -> pure value
@@ -306,7 +302,7 @@ unionPeek
   -> Stmt s r (Ref s ValueDoc)
 unionPeek name addrRef Struct {..} _to fromPtr =
   failToError (V.singleton . T.pack) $ do
-    RenderParams {..} <- ask
+    RenderParams {..} <- input
     Ptr _ from        <- pure fromPtr
     TypeName n        <- pure from
     ty                <- cToHsTypeWithHoles DoPreserve from
@@ -456,7 +452,7 @@ vectorPeek name lengths addrRef fromPtr toElem = case fromPtr of
     vectorPeekWithLenRef name toElem elemPtrRef fromElem lenTail lenRef
 
   Ptr _ (Array _ (SymbolicArraySize len) fromElem) -> do
-    RenderParams {..} <- ask
+    RenderParams {..} <- input
     tDoc              <- renderTypeHighPrec =<< cToHsTypeWithHoles DoPreserve fromElem
 
     let lenName = mkPatternName len
@@ -657,7 +653,7 @@ getLenRef
   => Lengths
   -> Stmt s r (Ref s ValueDoc)
 getLenRef lengths = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   stmt Nothing Nothing $ case lengths of
     Empty                 -> throw "Trying to allocate something with no length"
     NamedLength len :<| _ -> do

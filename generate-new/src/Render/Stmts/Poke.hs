@@ -18,18 +18,15 @@ module Render.Stmts.Poke
   ) where
 
 import           Relude                  hiding ( Type
-                                                , ask
-                                                , asks
                                                 , last
                                                 , init
                                                 , head
                                                 , Const
-                                                , Reader
                                                 )
 import           Data.Text.Prettyprint.Doc
 import           Polysemy
 import           Polysemy.NonDet         hiding ( Empty )
-import           Polysemy.Reader
+import           Polysemy.Input
 import           Polysemy.Fail
 import           Data.Char                      ( isUpper )
 import           Data.Vector.Extra              ( Vector
@@ -182,7 +179,7 @@ normal name to from valueRef =
     =<< runNonDetMaybe (asum [idiomatic, same, indirectStruct])
  where
   idiomatic = failToNonDet $ do
-    RenderParams {..}                     <- ask
+    RenderParams {..}                     <- input
     toTy                                  <- cToHsTypeWithHoles DoPreserve to
     Just (IdiomaticType fromTy fromFun _) <- pure $ mkIdiomaticType toTy
     fromTy'                               <- cToHsTypeWithHoles DoNotPreserve from
@@ -193,7 +190,7 @@ normal name to from valueRef =
       pure . Pure InlineOnce . ValueDoc $ fromDoc <+> value
 
   same = failToNonDet $ do
-    RenderParams {..} <- ask
+    RenderParams {..} <- input
     guard (from == to)
     pure valueRef
 
@@ -249,7 +246,7 @@ wrappedStruct
   -> Stmt s r (Ref s ValueDoc)
 wrappedStruct name toType fromName valueRef = case toType of
   Ptr Const (TypeName n) | n == fromName -> do
-    RenderParams {..} <- ask
+    RenderParams {..} <- input
     ty                <- cToHsTypeWithHoles DoNotPreserve toType
     stmtC (Just ty) name $ do
       ValueDoc val <- use valueRef
@@ -342,7 +339,7 @@ elidedUnivalued
   -> Text
   -> Stmt s r (Ref s ValueDoc)
 elidedUnivalued name to value = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   ty                <- cToHsTypeWithHoles DoPreserve to
   stmtC (Just ty) name $ do
     vName <- case value of
@@ -585,7 +582,7 @@ byteStringFixedArrayIndirect
   -> Stmt s r (Ref s ValueDoc)
 byteStringFixedArrayIndirect _name size toElem valueRef addrRef = case size of
   SymbolicArraySize _ -> unitStmt $ do
-    RenderParams {..} <- ask
+    RenderParams {..} <- input
     fn                <- case toElem of
       Char -> do
         let fn = "pokeFixedLengthNullTerminatedByteString"
@@ -667,7 +664,7 @@ fixedArrayIndirect
   -> Ref s AddrDoc
   -> Stmt s r (Ref s ValueDoc)
 fixedArrayIndirect name size toElem fromElem valueRef addrRef = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   checkLength       <- stmtC Nothing name $ do
     len     <- use =<< lenRefFromSibling @a name
     maxSize <- case size of

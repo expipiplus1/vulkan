@@ -3,7 +3,6 @@ module Bracket
 
 import           Relude                  hiding ( Handle
                                                 , Type
-                                                , ask
                                                 )
 import           Data.List.Extra                ( nubOrd
                                                 , (\\)
@@ -16,7 +15,7 @@ import           Data.Text.Prettyprint.Doc
                                                 , plural
                                                 )
 import           Polysemy
-import           Polysemy.Reader                ( ask )
+import           Polysemy.Input
 import           Data.Vector                    ( Vector )
 
 import qualified Control.Exception
@@ -355,7 +354,7 @@ writePair b@Bracket {..} =
     fmap (unConstructedType bInnerType, bCreate, bWrapperName, )
     . genRe ("bracket " <> unCName bWrapperName)
     $ do
-        RenderParams {..} <- ask
+        RenderParams {..} <- input
         let create      = mkFunName bCreate
             destroy     = mkFunName bDestroy
             wrapperName = mkFunName bWrapperName
@@ -425,7 +424,7 @@ renderCreate
   => Bracket
   -> Sem r (Doc ())
 renderCreate Bracket {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let create = mkFunName bCreate
   createArgVars <- forV bCreateArguments $ \case
     Provided _ v -> pure (pretty v)
@@ -444,7 +443,7 @@ renderDestroy
   => Bracket
   -> Sem r (Doc ())
 renderDestroy Bracket {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let arguments            = nubOrd (bCreateArguments ++ bDestroyArguments)
       destroy              = mkFunName bDestroy
       noDestructorResource = Resource `notElem` bDestroyArguments

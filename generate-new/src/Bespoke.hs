@@ -11,13 +11,10 @@ module Bespoke
   , zeroNextPointer
   ) where
 
-import           Relude                  hiding ( Reader
-                                                , ask
-                                                , Const
-                                                )
+import           Relude                  hiding ( Const )
 import           Data.Text.Prettyprint.Doc
 import           Polysemy
-import           Polysemy.Reader
+import           Polysemy.Input
 import qualified Data.Text                     as T
 import qualified Data.List.Extra               as List
 import           Data.Vector                    ( Vector )
@@ -84,7 +81,7 @@ assignBespokeModules es = do
 
 bespokeModules :: HasRenderParams r => Sem r [(HName, ModName)]
 bespokeModules = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let core10Base n = (mkTyName n, ModName "Graphics.Vulkan.Core10.SharedTypes")
   pure
     $  [ ( mkTyName "VkAllocationCallbacks"
@@ -233,11 +230,11 @@ difficultLengths =
         { csName       = "Sample mask array"
         , csZero       = Just "mempty"
         , csType       = do
-                           RenderParams {..} <- ask
+                           RenderParams {..} <- input
                            let TyConName sm = mkTyName "VkSampleMask"
                            pure $ ConT ''Vector :@ ConT (mkName (T.unpack sm))
         , csDirectPoke = \vecRef -> do
-          RenderParams {..} <- ask
+          RenderParams {..} <- input
           stmt (Just (ConT ''Ptr :@ ConT ''Word32)) (Just "pSampleMask") $ do
             tellQualImport 'V.length
             tellQualImport 'nullPtr
@@ -292,7 +289,7 @@ difficultLengths =
                       ]
                     )
         , csPeek       = \addrRef -> do
-          RenderParams {..} <- ask
+          RenderParams {..} <- input
           stmt (Just (ConT ''Vector :@ ConT ''Word32)) (Just "pSampleMask") $ do
             ptr <- use =<< storablePeek
               "pSampleMask"
@@ -439,7 +436,7 @@ structChainVar = "es"
 
 bespokeSizes :: [(CName, (Int, Int))]
 bespokeSizes =
-  (fst <$> concat [win32 @'[Reader RenderParams], x11, xcb2, zircon, ggp])
+  (fst <$> concat [win32 @'[Input RenderParams], x11, xcb2, zircon, ggp])
     <> [ ("VkSampleMask"   , (4, 4))
        , ("VkFlags"        , (4, 4))
        , ("VkDeviceSize"   , (8, 8))
@@ -462,7 +459,7 @@ bespokeElements =
 
 boolConversion :: HasRenderParams r => Sem r RenderElement
 boolConversion = genRe "Bool conversion" $ do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   tellNotReexportable
   let true   = mkPatternName "VK_TRUE"
       false  = mkPatternName "VK_FALSE"
@@ -481,7 +478,7 @@ boolConversion = genRe "Bool conversion" $ do
   |]
 
 
-wsiTypes :: (HasErr r, Member (Reader RenderParams) r) => [Sem r RenderElement]
+wsiTypes :: (HasErr r, HasRenderParams r) => [Sem r RenderElement]
 wsiTypes =
   putInWSI <$> (snd <$> concat [win32, x11, xcb2, zircon, ggp]) <> concat
     [win32', xcb1, wayland, metal, android]
@@ -502,7 +499,7 @@ namedType = genRe "namedType" $ do
 baseType
   :: (HasRenderParams r, HasErr r) => CName -> Name -> Sem r RenderElement
 baseType n t = fmap identicalBoot . genRe ("base type " <> unCName n) $ do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let n' = mkTyName n
   tellExplicitModule (ModName "Graphics.Vulkan.Core10.BaseType")
   tellExport (EType n')
@@ -516,7 +513,7 @@ baseType n t = fmap identicalBoot . genRe ("base type " <> unCName n) $ do
 
 nullHandle :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 nullHandle = genRe "null handle" $ do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let patName = mkPatternName "VK_NULL_HANDLE"
   tellExplicitModule (ModName "Graphics.Vulkan.Core10.APIConstants")
   tellNotReexportable
@@ -540,7 +537,7 @@ nullHandle = genRe "null handle" $ do
 type BespokeAlias r = ((CName, (Int, Int)), Sem r RenderElement)
 -- C name, size, alignment, render element
 
-win32 :: Member (Reader RenderParams) r => [BespokeAlias r]
+win32 :: HasRenderParams r => [BespokeAlias r]
 win32 =
   [ alias (APtr ''())     "HINSTANCE"
   , alias (APtr ''())     "HWND"
@@ -550,10 +547,10 @@ win32 =
   , alias (APtr ''CWchar) "LPCWSTR"
   ]
 
-win32' :: Member (Reader RenderParams) r => [Sem r RenderElement]
+win32' :: HasRenderParams r => [Sem r RenderElement]
 win32' = [voidData "SECURITY_ATTRIBUTES"]
 
-x11 :: Member (Reader RenderParams) r => [BespokeAlias r]
+x11 :: HasRenderParams r => [BespokeAlias r]
 x11 =
   [ alias (APtr ''()) "Display"
   , alias AWord64 "VisualID"
@@ -561,34 +558,34 @@ x11 =
   , alias AWord64 "RROutput"
   ]
 
-xcb1 :: Member (Reader RenderParams) r => [Sem r RenderElement]
+xcb1 :: HasRenderParams r => [Sem r RenderElement]
 xcb1 = [voidData "xcb_connection_t"]
 
-xcb2 :: Member (Reader RenderParams) r => [BespokeAlias r]
+xcb2 :: HasRenderParams r => [BespokeAlias r]
 xcb2 = [alias AWord32 "xcb_visualid_t", alias AWord32 "xcb_window_t"]
 
-ggp :: Member (Reader RenderParams) r => [BespokeAlias r]
+ggp :: HasRenderParams r => [BespokeAlias r]
 ggp =
   [ alias AWord32 "GgpStreamDescriptor"
   , alias AWord32 "GgpFrameToken"
   ]
 
-metal :: Member (Reader RenderParams) r => [Sem r RenderElement]
+metal :: HasRenderParams r => [Sem r RenderElement]
 metal =
   [ voidData "CAMetalLayer"
   ]
 
-wayland :: Member (Reader RenderParams) r => [Sem r RenderElement]
+wayland :: HasRenderParams r => [Sem r RenderElement]
 wayland =
   [ voidData "wl_display"
   , voidData "wl_surface"
   ]
 
-zircon :: Member (Reader RenderParams) r => [BespokeAlias r]
+zircon :: HasRenderParams r => [BespokeAlias r]
 zircon =
   [alias AWord32 "zx_handle_t"]
 
-android :: Member (Reader RenderParams) r => [Sem r RenderElement]
+android :: HasRenderParams r => [Sem r RenderElement]
 android =
   [voidData "AHardwareBuffer", voidData "ANativeWindow"]
 
@@ -610,18 +607,18 @@ aTypeType = \case
   AWord64 -> ConT ''Word64
   APtr n  -> ConT ''Ptr :@ ConT n
 
-voidData :: Member (Reader RenderParams) r => CName -> Sem r RenderElement
+voidData :: HasRenderParams r => CName -> Sem r RenderElement
 voidData n = fmap identicalBoot . genRe ("data " <> unCName n) $ do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let n' = mkTyName n
   tellExport (EType n')
   tellDoc $ "data" <+> pretty n'
 
-alias :: Member (Reader RenderParams) r => AType -> CName -> BespokeAlias r
+alias :: HasRenderParams r => AType -> CName -> BespokeAlias r
 alias t n =
   ( (n, aTypeSize t)
   , fmap identicalBoot . genRe ("alias " <> unCName n) $ do
-    RenderParams {..} <- ask
+    RenderParams {..} <- input
     let n' = mkTyName n
     tDoc <- renderType (aTypeType t)
     tellExport (EType n')

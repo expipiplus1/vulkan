@@ -3,17 +3,14 @@
 module Render.Dynamic
   where
 
-import           Relude                  hiding ( Reader
-                                                , ask
-                                                , lift
+import           Relude                  hiding ( Type
                                                 , State
-                                                , Type
                                                 )
 import           Data.Text.Prettyprint.Doc
 import           Text.InterpolatedString.Perl6.Unindented
 import qualified Data.List.Extra               as List
 import           Polysemy
-import           Polysemy.Reader
+import           Polysemy.Input
 import           Polysemy.State
 import           Data.Vector.Extra              ( Vector
                                                 , pattern (:<|)
@@ -40,7 +37,7 @@ renderDynamicLoader
   => Vector MarshaledCommand
   -> Sem r RenderElement
 renderDynamicLoader cs = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   genRe "dynamic loader" $ do
     tellExplicitModule (ModName "Graphics.Vulkan.Dynamic")
     tellNotReexportable
@@ -79,7 +76,7 @@ loader
   -> Vector MarshaledCommand
   -> Sem r ()
 loader level handleType commands = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   memberDocs        <-
     forV commands $ \MarshaledCommand { mcCommand = c@Command {..} } -> do
       ty <- cToHsTypeQuantified DoLower $ commandType c
@@ -132,7 +129,7 @@ writeInitInstanceCmds
   => Vector MarshaledCommand
   -> Sem r ()
 writeInitInstanceCmds instanceCommands = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let n = mkFunName "initInstanceCmds"
   tDoc <- renderTypeSource
     (  (ConT ''Ptr :@ ConT (typeName (mkEmptyDataName "VkInstance")))
@@ -160,7 +157,7 @@ writeInitDeviceCmds
   => Vector MarshaledCommand
   -> Sem r ()
 writeInitDeviceCmds deviceCommands = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let n = mkFunName "initDeviceCmds"
   tDoc <- renderTypeSource
     (  ConT (typeName (mkTyName "InstanceCmds"))
@@ -227,7 +224,7 @@ writeGetInstanceProcAddr
      )
   => Sem r ()
 writeGetInstanceProcAddr = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   c@Command {..}    <-
     maybe (throw "Unable to find vkGetInstanceProcAddr command") pure
       =<< getCommand "vkGetInstanceProcAddr"
@@ -254,7 +251,7 @@ writeMkGetDeviceProcAddr
      )
   => Sem r ()
 writeMkGetDeviceProcAddr = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   c@Command {..}    <-
     maybe (throw "Unable to find vkGetDeviceProcAddr command") pure
       =<< getCommand "vkGetDeviceProcAddr"

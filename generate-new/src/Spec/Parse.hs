@@ -4,9 +4,7 @@ module Spec.Parse
   )
 where
 
-import           Relude                  hiding ( Reader
-                                                , runReader
-                                                , Handle
+import           Relude                  hiding ( Handle
                                                 , State
                                                 , get
                                                 , put
@@ -34,7 +32,7 @@ import qualified Data.Text                     as T
 import qualified Data.Vector                   as V
 import           Data.Char
 import           Polysemy
-import           Polysemy.Reader
+import           Polysemy.Input
 import           Data.Text.Extra                ( (<+>) )
 import           Data.Bits
 
@@ -51,7 +49,7 @@ import           Spec.Types
 ----------------------------------------------------------------
 
 type P a
-  = forall r . (MemberWithError (Reader TypeNames) r, HasErr r) => Sem r a
+  = forall r . (MemberWithError (Input TypeNames) r, HasErr r) => Sem r a
 
 parseSpec
   :: HasErr r
@@ -65,7 +63,7 @@ parseSpec bs = do
     "registry" -> do
       types     <- contents <$> oneChild "types" n
       typeNames <- allTypeNames types
-      runReader typeNames $ do
+      runInputConst typeNames $ do
         specHeaderVersion <- parseHeaderVersion types
         specHandles       <- parseHandles types
         specFuncPointers  <- parseFuncPointers types

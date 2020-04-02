@@ -2,9 +2,9 @@
 module Render.Spec
   where
 
-import           Relude                  hiding ( Reader, Enum, ask )
+import           Relude                  hiding ( Enum )
 import           Polysemy
-import           Polysemy.Reader
+import           Polysemy.Input
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
 import qualified Data.HashMap.Strict           as Map
@@ -64,11 +64,13 @@ renderSpec
   -> Vector MarshaledCommand
   -> Sem r (RenderedSpec RenderElement)
 renderSpec spec@Spec {..} getDoc ss us cs = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
 
   -- TODO: neaten
   -- If a struct containing an extendable struct appears in a positive position
   -- then the SomeVkStruct thing will have to be rethought.
+  -- Probably solvable by passing in a list of extensions to the calling
+  -- command, and still returning `SomeStruct`.
   _                 <- sequenceV
     [ getStruct t >>= traverse
         (\s2 -> forV

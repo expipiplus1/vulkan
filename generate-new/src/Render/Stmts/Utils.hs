@@ -2,13 +2,10 @@ module Render.Stmts.Utils
   where
 
 import           Relude                  hiding ( Type
-                                                , ask
-                                                , asks
                                                 , last
                                                 , init
                                                 , head
                                                 , Const
-                                                , Reader
                                                 )
 import           Data.Text.Prettyprint.Doc
 import           Polysemy

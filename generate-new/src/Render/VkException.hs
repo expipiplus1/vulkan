@@ -5,7 +5,7 @@ module Render.VkException
   where
 
 import           Relude                  hiding ( ask )
-import           Polysemy.Reader
+import           Polysemy.Input
 import           Data.Text.Prettyprint.Doc
 import           Text.InterpolatedString.Perl6.Unindented
 import           Text.Pandoc
@@ -32,7 +32,7 @@ vkExceptionRenderElement getDocumentation vkResultEnum =
   genRe "VulkanException declaration" $ do
     tellExplicitModule (ModName "Graphics.Vulkan.Exception")
     tellNotReexportable
-    RenderParams {..} <- ask
+    RenderParams {..} <- input
     tellImportWithAll ''Control.Exception.Exception
     vkResultTyDoc <- renderType =<< cToHsType DoNotPreserve successCodeType
     tellImportWithAll (mkTyName (eName vkResultEnum))
@@ -62,7 +62,7 @@ displayExceptionCase
   -> CName
   -> Sem r (Maybe (Doc ()))
 displayExceptionCase getDocumentation pat = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let pat' = mkPatternName pat
   pure $ fmap
     ((pretty pat' <+> "->") <+>)

@@ -35,10 +35,6 @@ import           Relude                  hiding ( Type
                                                 , evalState
                                                 , get
                                                 , gets
-                                                , Reader
-                                                , ask
-                                                , asks
-                                                , runReader
                                                 , execState
                                                 , runState
                                                 )

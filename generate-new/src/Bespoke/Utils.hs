@@ -5,9 +5,7 @@ module Bespoke.Utils
   )
 where
 
-import           Relude                  hiding ( Reader
-                                                , ask
-                                                )
+import           Relude
 import           Polysemy
 import           Foreign.Ptr
 import           Foreign.C.Types

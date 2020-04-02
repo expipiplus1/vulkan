@@ -3,15 +3,12 @@ module Render.Enum
   where
 
 import           Text.Printf
-import           Relude                  hiding ( Reader
-                                                , ask
-                                                , lift
-                                                )
+import           Relude                  hiding ( lift )
 import           Text.Show
 import qualified Text.Read                     as R
 import           Data.Text.Prettyprint.Doc
 import           Polysemy
-import           Polysemy.Reader
+import           Polysemy.Input
 import qualified Data.Vector                   as V
 
 import           Foreign.Storable
@@ -34,7 +31,7 @@ renderEnum
   => Enum'
   -> Sem r RenderElement
 renderEnum e@Enum {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   genRe ("enum " <> unCName eName) $ do
     innerTy <- case eType of
       AnEnum     -> pure $ ConT ''Int32
@@ -108,7 +105,7 @@ completePragma ty pats = if V.null pats
     <+> "#-}"
 
 renderEnumValue
-  :: (HasErr r, Member (Reader RenderParams) r)
+  :: (HasErr r, HasRenderParams r)
   => CName
   -- ^ Enum name for fetching documentation
   -> HName
@@ -117,7 +114,7 @@ renderEnumValue
   -> EnumValue
   -> Sem r ((Documentee -> Doc ()) -> Doc (), Export)
 renderEnumValue eName conName enumType EnumValue {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let n = mkPatternName evName
       v = case enumType of
         AnEnum     -> showsPrec 9 evValue ""
@@ -137,7 +134,7 @@ renderEnumValue eName conName enumType EnumValue {..} = do
 renderShowInstance
   :: (HasErr r, HasRenderParams r, HasRenderElem r) => Enum' -> Sem r ()
 renderShowInstance Enum {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let n       = mkTyName eName
       conName = mkConName eName eName
   valueCases <- forV eValues $ \EnumValue {..} -> do
@@ -171,7 +168,7 @@ renderShowInstance Enum {..} = do
 renderReadInstance
   :: (HasErr r, HasRenderParams r, HasRenderElem r) => Enum' -> Sem r ()
 renderReadInstance Enum {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let n       = mkTyName eName
       conName = mkConName eName eName
   matchTuples <- forV eValues $ \EnumValue {..} -> do

@@ -1,14 +1,12 @@
 module Render.Handle
   where
 
-import           Relude                  hiding ( Reader
-                                                , ask
-                                                , lift
+import           Relude                  hiding ( lift
                                                 , Handle
                                                 )
 import           Data.Text.Prettyprint.Doc
 import           Polysemy
-import           Polysemy.Reader
+import           Polysemy.Input
 import           Language.Haskell.TH            ( mkName )
 
 import           Foreign.Ptr
@@ -22,9 +20,9 @@ import           Error
 import           Render.Element
 
 renderHandle
-  :: (HasErr r, Member (Reader RenderParams) r) => Handle -> Sem r RenderElement
+  :: (HasErr r, HasRenderParams r) => Handle -> Sem r RenderElement
 renderHandle Handle {..} = context (unCName hName) $ do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   genRe ("handle " <> unCName hName) $ do
     let n = mkTyName hName
     case hDispatchable of

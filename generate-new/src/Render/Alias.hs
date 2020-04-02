@@ -1,13 +1,10 @@
 module Render.Alias
   where
 
-import           Relude                  hiding ( Reader
-                                                , ask
-                                                , lift
-                                                )
+import           Relude
 import           Data.Text.Prettyprint.Doc
 import           Polysemy
-import           Polysemy.Reader
+import           Polysemy.Input
 
 import           Spec.Parse
 import           Error
@@ -19,7 +16,7 @@ renderAlias
   => Alias
   -> Sem r RenderElement
 renderAlias Alias {..} = context (unCName aName) $ do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   genRe ("alias " <> unCName aName) $ case aType of
     TypeAlias -> do
       let t = mkTyName aTarget

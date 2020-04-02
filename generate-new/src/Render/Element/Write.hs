@@ -4,10 +4,6 @@ module Render.Element.Write
 import           Relude                  hiding ( runState
                                                 , State
                                                 , modify'
-                                                , Reader
-                                                , asks
-                                                , ask
-                                                , runReader
                                                 , Handle
                                                 )
 import qualified Data.Map                      as Map
@@ -26,7 +22,7 @@ import           Data.Text.Prettyprint.Doc.Render.Text
 import           System.Directory
 import           System.FilePath
 import           Polysemy
-import           Polysemy.Reader
+import           Polysemy.Input
 import           Data.List                      ( lookup )
 import           Foreign.Ptr
 import           Data.Version
@@ -85,7 +81,7 @@ makeModName
 makeModName (Segment placement es) = case placement of
   BespokeMod mod        -> [Segment (ModName ("Graphics.Vulkan." <> mod)) es]
   CoreMod ver component ->
-    let prefix = "Graphics.Vulkan.Core" <> (foldMap show (versionBranch ver)) <> "."
+    let prefix = "Graphics.Vulkan.Core" <> foldMap show (versionBranch ver) <> "."
     in splitTypes prefix component es
   ExtensionMod component ->
     let prefix = "Graphics.Vulkan.Extensions."
@@ -204,7 +200,7 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
   = do
     let exportsType = V.any (isTyConName . exportName) . reExports
         es          = fromList . sortOn exportsType . toList $ unsortedElements
-    RenderParams {..} <- ask
+    RenderParams {..} <- input
     let
       ext = bool ".hs" ".hs-boot" boot
       f =
@@ -434,12 +430,12 @@ data TypeInfo = TypeInfo
   , tiIsCommand :: HName -> Maybe Command
   }
 
-type HasTypeInfo r = MemberWithError (Reader TypeInfo) r
+type HasTypeInfo r = MemberWithError (Input TypeInfo) r
 
 withTypeInfo
-  :: HasRenderParams r => Spec -> Sem (Reader TypeInfo ': r) a -> Sem r a
+  :: HasRenderParams r => Spec -> Sem (Input TypeInfo ': r) a -> Sem r a
 withTypeInfo Spec {..} a = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let
     tyMap :: Map HName HName
     tyMap = Map.fromList
@@ -456,7 +452,7 @@ withTypeInfo Spec {..} a = do
     commandMap :: Map HName Command
     commandMap = Map.fromList
       [ (mkFunName cName, c) | c@Command {..} <- V.toList specCommands ]
-  runReader
+  runInputConst
     (TypeInfo (`Map.lookup` tyMap)
               (`Map.lookup` handleMap)
               (`Map.lookup` commandMap)
@@ -465,10 +461,10 @@ withTypeInfo Spec {..} a = do
 
 adoptConstructors :: HasTypeInfo r => Import HName -> Sem r (Import HName)
 adoptConstructors = \case
-  i@(Import n q cs _ source) -> getConParent n >>= pure . \case
+  i@(Import n q cs _ source) -> getConParent n <&> \case
     Just p  -> Import p q (V.singleton n <> cs) False source
     Nothing -> i
-  where getConParent n = asks (`tiConMap` n)
+  where getConParent n = inputs (`tiConMap` n)
 
 ----------------------------------------------------------------
 --

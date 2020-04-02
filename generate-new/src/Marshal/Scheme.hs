@@ -3,12 +3,10 @@ module Marshal.Scheme
 
 import           Relude                  hiding ( Const
                                                 , uncons
-                                                , Reader
-                                                , ask
                                                 )
 import qualified Prelude                       as P
 import           Polysemy
-import           Polysemy.Reader
+import           Polysemy.Input
 import           Polysemy.NonDet         hiding ( Empty )
 import           Polysemy.Fail
 import           Data.Vector.Extra              ( Vector
@@ -162,8 +160,10 @@ instance P.Show (CustomSchemeElided a) where
 
 
 type ND r a
-  =  (MemberWithError (Reader MarshalParams) r, HasSpecInfo r)
+  =  (MemberWithError (Input MarshalParams) r, HasSpecInfo r)
   => Sem (Fail ': NonDet ': r) a
+
+type HasMarshalParams r = MemberWithError (Input MarshalParams) r
 
 -- | Some functions to control the marshaling
 data MarshalParams = MarshalParams
@@ -332,7 +332,7 @@ optionalDefaultScheme
   -> a
   -> ND r (MarshalScheme a)
 optionalDefaultScheme wes wds p = do
-  MarshalParams {..} <- ask
+  MarshalParams {..} <- input
   Singleton True     <- pure $ isOptional p
   guard . V.null . lengths $ p
   guard $ isDefaultable (type' p)
@@ -353,7 +353,7 @@ optionalScheme wes wdh p = do
 -- | A struct to be wrapped in "SomeStruct"
 extensibleStruct :: Marshalable a => a -> ND r (MarshalScheme a)
 extensibleStruct p = do
-  MarshalParams {..} <- ask
+  MarshalParams {..} <- input
   TypeName n         <- dropPtrToStruct (type' p)
   Just     s         <- getStruct n
   guard (not (V.null (sExtendedBy s)))
@@ -361,7 +361,7 @@ extensibleStruct p = do
 
 rawDispatchableHandles :: Marshalable a => a -> ND r (MarshalScheme a)
 rawDispatchableHandles p = do
-  MarshalParams {..} <- ask
+  MarshalParams {..} <- input
   t@(TypeName n)     <- dropPtrToStruct (type' p)
   Just h             <- getHandle n
   guard (Dispatchable == hDispatchable h)
@@ -377,7 +377,7 @@ scalarScheme p = do
 
 normalCheck :: Marshalable a => CType -> a -> ND r ()
 normalCheck t p = do
-  MarshalParams {..} <- ask
+  MarshalParams {..} <- input
   -- Some sanity checking
   guard . V.null . values $ p
   guard . V.null . lengths $ p

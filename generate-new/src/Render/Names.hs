@@ -11,7 +11,7 @@ import           Relude                  hiding ( ask )
 import           Data.List                      ( partition )
 import           Polysemy
 import           Polysemy.Input
-import           Polysemy.Reader
+import           Polysemy.Input
 import qualified Data.HashSet                  as Set
 import qualified Data.HashMap.Strict           as Map
 
@@ -33,7 +33,7 @@ data RenderedNames = RenderedNames
 withRenderedNames
   :: HasRenderParams r => Spec -> Sem (Input RenderedNames ': r) a -> Sem r a
 withRenderedNames Spec {..} a = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let
     rnStructs =
       Map.fromList [ (mkTyName . sName $ s, s) | s <- toList specStructs ]

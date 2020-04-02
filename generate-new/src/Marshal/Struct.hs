@@ -4,12 +4,10 @@ module Marshal.Struct
   , MarshaledStructMember(..)
   ) where
 
-import           Relude                  hiding ( Reader
-                                                , ask
-                                                )
+import           Relude
 import           Polysemy
 import           Polysemy.NonDet
-import           Polysemy.Reader
+import           Polysemy.Input
 import           Polysemy.Fail
 import qualified Data.Vector                   as V
 
@@ -31,7 +29,7 @@ data MarshaledStructMember =
     }
 
 marshalStruct
-  :: (MemberWithError (Reader MarshalParams) r, HasErr r, HasSpecInfo r)
+  :: (HasMarshalParams r, HasErr r, HasSpecInfo r)
   => StructOrUnion t 'WithSize 'WithChildren
   -> Sem r (MarshaledStruct t)
 marshalStruct s@Struct {..} = contextShow sName $ do
@@ -43,12 +41,12 @@ marshalStruct s@Struct {..} = contextShow sName $ do
   pure MarshaledStruct { .. }
 
 structMemberScheme
-  :: (MemberWithError (Reader MarshalParams) r, HasErr r, HasSpecInfo r)
+  :: (HasMarshalParams r, HasErr r, HasSpecInfo r)
   => StructOrUnion t 'WithSize 'WithChildren
   -> StructMember
   -> Sem r (MarshalScheme StructMember)
 structMemberScheme Struct {..} member = do
-  MarshalParams {..} <- ask
+  MarshalParams {..} <- input
   let
     schemes =
       [ maybe empty pure . getBespokeScheme sName

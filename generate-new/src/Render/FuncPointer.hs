@@ -2,14 +2,11 @@
 module Render.FuncPointer
   where
 
-import           Relude                  hiding ( Reader
-                                                , ask
-                                                , lift
-                                                )
+import           Relude
 import           Data.Text.Prettyprint.Doc
 import           Language.Haskell.TH.Syntax
 import           Polysemy
-import           Polysemy.Reader
+import           Polysemy.Input
 import           Foreign.Ptr
 
 import           Spec.Parse
@@ -21,11 +18,11 @@ import           Render.SpecInfo
 import           CType
 
 renderFuncPointer
-  :: (HasErr r, Member (Reader RenderParams) r, HasSpecInfo r)
+  :: (HasErr r, HasRenderParams r, HasSpecInfo r)
   => FuncPointer
   -> Sem r RenderElement
 renderFuncPointer FuncPointer {..} = contextShow (unCName fpName) $ do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   fmap identicalBoot . genRe ("func pointer " <> unCName fpName) $ do
     let p = mkTyName fpName
         n = mkFuncPointerName fpName

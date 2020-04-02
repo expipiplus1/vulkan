@@ -22,7 +22,7 @@ import qualified Data.IntSet                   as Set
 import qualified Data.Set
 import qualified Data.Text.Extra               as T
 import           Polysemy
-import           Polysemy.Reader
+import           Polysemy.Input
 import           Polysemy.State
 import           Algebra.Graph.AdjacencyIntMap
                                          hiding ( empty )
@@ -42,7 +42,7 @@ assignModules
   -> RenderedSpec RenderElement
   -> Sem r [(ModName, Vector RenderElement)]
 assignModules spec@Spec {..} rs@RenderedSpec {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let indexed = run . evalState (0 :: Int) $ traverse
         (\r -> do
           i <- get @Int
@@ -143,7 +143,7 @@ assign
   -> RenderedSpec (Int, RenderElement)
   -> Sem r ()
 assign getExporter rel closedRel Spec {..} rs@RenderedSpec {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
 
   let
     allEnums        = IntMap.fromList (toList rsEnums)
@@ -440,7 +440,7 @@ postIntSets is rel = Set.unions $ (`postIntSet` rel) <$> Set.toList is
 
 unexportedNames :: HasRenderParams r => Spec -> Sem r [HName]
 unexportedNames Spec {..} = do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let apiVersions = toList specFeatures <&> \Feature {..} ->
         let major : minor : _ = versionBranch fVersion
         in  mkTyName

@@ -1,12 +1,10 @@
 module Render.Stmts.Poke.SiblingInfo
   where
 
-import           Relude                  hiding ( Reader
-                                                , asks
-                                                )
+import           Relude
 import           Data.Text.Prettyprint.Doc
 import           Polysemy
-import           Polysemy.Reader
+import           Polysemy.Input
 
 import           Error
 import           Spec.Name
@@ -19,11 +17,12 @@ data SiblingInfo a = SiblingInfo
     -- ^ What type is this sibling
   }
 
-type HasSiblingInfo a r = Member (Reader (CName -> Maybe (SiblingInfo a))) r
+type HasSiblingInfo a r = Member (Input (CName -> Maybe (SiblingInfo a))) r
 
 getSiblingInfo
   :: forall a r
    . (HasErr r, HasSiblingInfo a r)
   => CName
   -> Sem r (SiblingInfo a)
-getSiblingInfo n = note ("Unable to find info for: " <> unCName n) =<< asks ($ n)
+getSiblingInfo n =
+  note ("Unable to find info for: " <> unCName n) . ($ n) =<< input

@@ -4,12 +4,10 @@ module Marshal.Command
   , MarshaledParam(..)
   ) where
 
-import           Relude                  hiding ( Reader
-                                                , ask
-                                                )
+import           Relude
 import           Polysemy
 import           Polysemy.NonDet
-import           Polysemy.Reader
+import           Polysemy.Input
 import           Polysemy.Fail
 import qualified Data.Vector                   as V
 
@@ -36,7 +34,7 @@ data MarshaledParam =
   deriving (Show)
 
 marshalCommand
-  :: (MemberWithError (Reader MarshalParams) r, HasErr r, HasSpecInfo r)
+  :: (HasMarshalParams r, HasErr r, HasSpecInfo r)
   => Command
   -> Sem r MarshaledCommand
 marshalCommand c@Command {..} = contextShow cName $ do
@@ -49,12 +47,12 @@ marshalCommand c@Command {..} = contextShow cName $ do
   pure MarshaledCommand { .. }
 
 parameterScheme
-  :: (MemberWithError (Reader MarshalParams) r, HasErr r, HasSpecInfo r)
+  :: (HasMarshalParams r, HasErr r, HasSpecInfo r)
   => Command
   -> Parameter
   -> Sem r (MarshalScheme Parameter)
 parameterScheme Command {..} param = do
-  MarshalParams {..} <- ask
+  MarshalParams {..} <- input
   let
     schemes =
       [ maybe empty pure . getBespokeScheme cName

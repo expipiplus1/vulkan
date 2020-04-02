@@ -47,11 +47,7 @@ module Render.Element
 import           Relude                  hiding ( runState
                                                 , State
                                                 , modify'
-                                                , Reader
-                                                , asks
-                                                , ask
                                                 , gets
-                                                , runReader
                                                 , Handle
                                                 , Type
                                                 )
@@ -65,7 +61,7 @@ import           Data.Text.Prettyprint.Doc
 import           Data.Char                      ( isAlpha )
 import           Polysemy
 import           Polysemy.State
-import           Polysemy.Reader
+import           Polysemy.Input
 import           Language.Haskell.TH.Syntax
                                          hiding ( NameSpace
                                                 , ModName
@@ -205,7 +201,7 @@ thNameNamespace n = case nameSpace n of
 -- Configuration
 ----------------------------------------------------------------
 
-type HasRenderParams r = MemberWithError (Reader RenderParams) r
+type HasRenderParams r = MemberWithError (Input RenderParams) r
 
 data RenderParams = RenderParams
   { mkTyName :: CName -> HName
@@ -360,8 +356,8 @@ tellDocWithHaddock d =
 
 class Importable a where
   addImport
-    :: ( MemberWithError (State RenderElement) r
-       , MemberWithError (Reader RenderParams) r
+    :: ( HasRenderElem r
+       , HasRenderParams r
        )
     => Import a
     -> Sem r ()
@@ -370,7 +366,7 @@ instance Importable Name where
   addImport (Import i qual children withAll source) = case nameModule i of
     Just _ -> do
       -- This is an name in an external library, don't import with source
-      RenderParams {..} <- ask
+      RenderParams {..} <- input
       let q = qual || V.elem i alwaysQualifiedNames
       modify' $ \r -> r
         { reImports = insert (Import i q children withAll False) (reImports r)
@@ -385,12 +381,7 @@ instance Importable HName where
     modify' $ \r -> r { reLocalImports = insert i (reLocalImports r) }
 
 tellSourceImport, tellImportWithAll, tellQualImport, tellQualImportWithAll, tellImport
-  :: ( MemberWithError (State RenderElement) r
-     , MemberWithError (Reader RenderParams) r
-     , Importable a
-     )
-  => a
-  -> Sem r ()
+  :: (HasRenderElem r, HasRenderParams r, Importable a) => a -> Sem r ()
 tellImport a = addImport (Import a False Empty False False)
 tellSourceImport a = addImport (Import a False Empty False True)
 tellImportWithAll a = addImport (Import a False Empty True False)
@@ -398,13 +389,7 @@ tellQualImport a = addImport (Import a True Empty False False)
 tellQualImportWithAll a = addImport (Import a True Empty True False)
 
 tellImportWith
-  :: ( MemberWithError (State RenderElement) r
-     , MemberWithError (Reader RenderParams) r
-     , Importable a
-     )
-  => a
-  -> a
-  -> Sem r ()
+  :: (HasRenderElem r, HasRenderParams r, Importable a) => a -> a -> Sem r ()
 tellImportWith parent dat =
   addImport (Import parent False (V.singleton dat) False False)
 

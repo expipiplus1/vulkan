@@ -2,12 +2,9 @@
 module Render.Spec.Versions
   where
 
-import           Relude                  hiding ( Reader
-                                                , Enum
-                                                , ask
-                                                )
+import           Relude
 import           Polysemy
-import           Polysemy.Reader
+import           Polysemy.Input
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
 import           Text.InterpolatedString.Perl6.Unindented
@@ -35,7 +32,7 @@ specVersions Spec {..} = fromList
 
 headerVersion :: (HasErr r, HasRenderParams r) => Word -> Sem r RenderElement
 headerVersion version = genRe "header version" $ do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   tellExplicitModule (ModName "Graphics.Vulkan.Version")
   let pat = mkPatternName "VK_HEADER_VERSION"
   tellExport (EPat pat)
@@ -49,7 +46,7 @@ headerVersionComplete
   :: (HasErr r, HasRenderParams r) => Version -> Word -> Sem r RenderElement
 headerVersionComplete lastFeatureVersion headerVersion =
   genRe "header version complete" $ do
-    RenderParams {..} <- ask
+    RenderParams {..} <- input
     tellExplicitModule (ModName "Graphics.Vulkan.Version")
     let pat               = mkPatternName "VK_HEADER_VERSION_COMPLETE"
         major : minor : _ = versionBranch lastFeatureVersion
@@ -64,7 +61,7 @@ headerVersionComplete lastFeatureVersion headerVersion =
 featureVersion
   :: (HasErr r, HasRenderParams r) => Feature -> Sem r RenderElement
 featureVersion Feature {..} = genRe "feature version" $ do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   let major : minor : _ = versionBranch fVersion
       pat               = mkPatternName
         (CName $ "VK_API_VERSION_" <> show major <> "_" <> show minor)
@@ -81,7 +78,7 @@ featureVersion Feature {..} = genRe "feature version" $ do
 
 versionConstruction :: (HasErr r, HasRenderParams r) => Sem r RenderElement
 versionConstruction = genRe "version construction" $ do
-  RenderParams {..} <- ask
+  RenderParams {..} <- input
   tellExplicitModule (ModName "Graphics.Vulkan.Version")
   tellImport ''Word32
   tellImport '(.&.)
