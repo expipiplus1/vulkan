@@ -274,7 +274,7 @@ difficultLengths =
                     2
                     (vsep
                       [ "0      -> pure nullPtr"
-                      , "vecLen -> " <+> doBlock
+                      , "vecLen ->" <+> doBlock
                         [ "let" <+> indent
                           0
                           (   "requiredLen ="

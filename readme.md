@@ -74,6 +74,11 @@ import `Graphics.Vulkan.Zero` too.
     "COMPARE_OP_LESS"
     ```
 
+- Make sure that all the functions you're going to use are not `nullPtr` in
+  `InstanceCmds` or `DeviceCmds` before calling them, this package doesn't
+  perform any checks. The `*Cmds` records can be found inside any dispatchable
+  handle.
+
 ### Minor things
 
 - To prevent a name clash between the constructors of
@@ -177,6 +182,14 @@ This package requires GHC 8.6 or higher due to the use of the
 
 For instructions on how to regenerate the bindings see [the readme in
 ./generate-new](./generate-new/readme.md).
+
+### Stack
+
+To build with examples:
+
+```bash
+ns -p stack ghc vulkan-loader vulkan-headers pkg-config SDL2 --run 'stack --system-ghc build --flag vulkan:build-examples'
+```
 
 ## Examples
 

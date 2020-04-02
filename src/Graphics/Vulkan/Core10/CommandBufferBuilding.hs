@@ -34,6 +34,7 @@ module Graphics.Vulkan.Core10.CommandBufferBuilding  ( cmdBindPipeline
                                                      , cmdWaitEvents
                                                      , cmdPipelineBarrier
                                                      , cmdBeginQuery
+                                                     , cmdWithQuery
                                                      , cmdEndQuery
                                                      , cmdResetQueryPool
                                                      , cmdWriteTimestamp
@@ -55,6 +56,7 @@ module Graphics.Vulkan.Core10.CommandBufferBuilding  ( cmdBindPipeline
                                                      , ClearAttachment(..)
                                                      ) where
 
+import Control.Exception.Base (bracket_)
 import Control.Monad (unless)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -6848,6 +6850,13 @@ cmdBeginQuery commandBuffer queryPool query flags = do
   let vkCmdBeginQuery' = mkVkCmdBeginQuery (pVkCmdBeginQuery (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdBeginQuery' (commandBufferHandle (commandBuffer)) (queryPool) (query) (flags)
   pure $ ()
+
+-- | A safe wrapper for 'cmdBeginQuery' and 'cmdEndQuery' using 'bracket_'
+cmdWithQuery :: CommandBuffer -> QueryPool -> Word32 -> QueryControlFlags -> IO r -> IO r
+cmdWithQuery commandBuffer queryPool query flags =
+  bracket_
+    (cmdBeginQuery commandBuffer queryPool query flags)
+    (cmdEndQuery commandBuffer queryPool query)
 
 
 foreign import ccall

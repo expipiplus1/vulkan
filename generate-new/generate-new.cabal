@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 5f31d4e27220b6d735fd6e874f06f615e4a0e3f8c195425a4cda369f07c1a668
+-- hash: 688a88becdc3391cf6a83e15b7442e4237d00b9e8e2a47717e1145b765cab275
 
 name:           generate-new
 version:        0.0.0
@@ -102,7 +102,6 @@ executable generate
     , parsec
     , polysemy
     , polysemy-plugin
-    , polysemy-zoo
     , pretty-show
     , prettyprinter
     , regex-applicative
