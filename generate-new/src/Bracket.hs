@@ -93,12 +93,12 @@ brackets handles = do
   pure $ fromList [ (c, b, w) | (_, c, b, w) <- rs ]
 
 data Bracket = Bracket
-  { bInnerType :: ConstructedType
-  , bWrapperName :: CName
-  , bCreate :: CName
-  , bDestroy :: CName
-  , bCreateArguments :: [Argument]
-  , bDestroyArguments :: [Argument]
+  { bInnerType           :: ConstructedType
+  , bWrapperName         :: CName
+  , bCreate              :: CName
+  , bDestroy             :: CName
+  , bCreateArguments     :: [Argument]
+  , bDestroyArguments    :: [Argument]
   , bDestroyIndividually :: Bool
   }
 
@@ -299,7 +299,7 @@ writePair
   :: (HasErr r, HasRenderParams r, HasSpecInfo r, HasRenderedNames r)
   => Bracket
   -> Sem r (CType, CName, CName, RenderElement)
-writePair Bracket {..} =
+writePair b@Bracket {..} =
   let arguments = nubOrd (bCreateArguments ++ bDestroyArguments)
   in
     fmap (unConstructedType bInnerType, bCreate, bWrapperName, )
@@ -310,27 +310,9 @@ writePair Bracket {..} =
             destroy     = mkFunName bDestroy
             wrapperName = mkFunName bWrapperName
         tellExport (ETerm wrapperName)
-        tellImport create
-        tellImport destroy
         argHsTypes <- traverseV getConstructedType
                                 [ t | Provided t _ <- arguments ]
         let argHsVars = [ pretty v | Provided _ v <- arguments ]
-        createArgVars <- forV bCreateArguments $ \case
-          Provided _ v -> pure (pretty v)
-          Resource     -> throw "Resource used in its own construction"
-          Member _ _   -> throw "Member used during construction"
-        destroyArgVars <- forV bDestroyArguments $ \case
-          Provided _ v -> pure $ pretty v
-          Resource     -> pure "o"
-          Member member argument
-            | [t] <- [ t | Provided (Single t) v <- arguments, v == argument ] -> do
-              argTyDoc <- renderType =<< cToHsTypeWithHoles DoNotPreserve t
-              pure
-                $ parens
-                    (   pretty member
-                    <+> parens (pretty argument <+> "::" <+> argTyDoc)
-                    )
-            | otherwise -> throw "Can't find single argument for member"
         innerHsType <- getConstructedType bInnerType
         let
           noDestructorResource = Resource `notElem` bDestroyArguments
@@ -340,11 +322,6 @@ writePair Bracket {..} =
             else innerHsType ~> ConT ''IO :@ VarT (mkName "r")
           wrapperType =
             foldr (~>) (ConT ''IO :@ VarT (mkName "r")) (argHsTypes ++ [cont])
-          resourcePattern = if noDestructorResource then "_" else "o"
-          callDestructor =
-            (if noResource then emptyDoc else "\\" <> resourcePattern <+> "->")
-              <+> pretty destroy
-              <+> hsep destroyArgVars
         constrainedType <- constrainStructVariables wrapperType
         wrapperTDoc     <- renderType constrainedType
         bracketDoc      <- if noResource
@@ -354,6 +331,8 @@ writePair Bracket {..} =
           else do
             tellImport 'Control.Exception.bracket
             pure "bracket"
+        createCall <- renderCreate b
+        destroyCall <- renderDestroy b
         tellDoc $ vsep
           [ comment
             (T.unlines
@@ -374,14 +353,64 @@ writePair Bracket {..} =
             (pretty bracketDoc <> line <> indent
               2
               (vsep
-                [ parens (pretty create <+> sep createArgVars)
-                , bool mempty "(traverse " bDestroyIndividually
-                <> parens callDestructor
-                <> bool mempty ")" bDestroyIndividually
+                [ parens createCall
+                , parens destroyCall
                 ]
               )
             )
           ]
+
+renderCreate
+  :: ( HasErr r
+     , HasRenderParams r
+     , HasSpecInfo r
+     , HasRenderedNames r
+     , HasRenderElem r
+     )
+  => Bracket
+  -> Sem r (Doc ())
+renderCreate Bracket {..} = do
+  RenderParams {..} <- ask
+  let create = mkFunName bCreate
+  createArgVars <- forV bCreateArguments $ \case
+    Provided _ v -> pure (pretty v)
+    Resource     -> throw "Resource used in its own construction"
+    Member _ _   -> throw "Member used during construction"
+  tellImport create
+  pure $ pretty create <+> sep createArgVars
+
+renderDestroy
+  :: ( HasErr r
+     , HasRenderParams r
+     , HasSpecInfo r
+     , HasRenderedNames r
+     , HasRenderElem r
+     )
+  => Bracket
+  -> Sem r (Doc ())
+renderDestroy Bracket {..} = do
+  RenderParams {..} <- ask
+  let arguments            = nubOrd (bCreateArguments ++ bDestroyArguments)
+      destroy              = mkFunName bDestroy
+      noDestructorResource = Resource `notElem` bDestroyArguments
+      noResource           = bInnerType == Single Void && noDestructorResource
+      resourcePattern      = if noDestructorResource then "_" else "o"
+  destroyArgVars <- forV bDestroyArguments $ \case
+    Provided _ v -> pure $ pretty v
+    Resource     -> pure "o"
+    Member member argument
+      | [t] <- [ t | Provided (Single t) v <- arguments, v == argument ] -> do
+        argTyDoc <- renderType =<< cToHsTypeWithHoles DoNotPreserve t
+        pure $ parens
+          (pretty member <+> parens (pretty argument <+> "::" <+> argTyDoc))
+      | otherwise -> throw "Can't find single argument for member"
+  tellImport destroy
+  let callDestructor =
+        (if noResource then emptyDoc else "\\" <> resourcePattern <+> "->")
+          <+> pretty destroy
+          <+> sep destroyArgVars
+      traverseDestroy = "traverse" <+> parens callDestructor
+  pure $ bool callDestructor traverseDestroy bDestroyIndividually
 
 appendWithVendor :: Text -> Text -> Text
 appendWithVendor a b =

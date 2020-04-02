@@ -9,8 +9,7 @@ module Bespoke
   , BespokeScheme(..)
   , structChainVar
   , zeroNextPointer
-  )
-where
+  ) where
 
 import           Relude                  hiding ( Reader
                                                 , ask
