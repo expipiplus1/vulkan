@@ -50,8 +50,12 @@ compileShader stage code = withSystemTempDirectory "th-shader" $ \dir -> do
   let shader = dir <> "/shader." <> stage
       spirv  = dir <> "/shader.spv"
   writeFile shader code
-  let p = setStderr inherit
-        $ proc "glslangValidator" ["-S", stage, "-V", shader, "-o", spirv]
+  let -- TODO: writing to stdout here breaks HIE
+      p =
+        setStderr inherit
+          . setStdout (useHandleOpen stderr)
+          . setStdin closed
+          $ proc "glslangValidator" ["-S", stage, "-V", shader, "-o", spirv]
   runProcess_ p
   -- 'runIO' suggests flushing as GHC may not
   hFlush stderr
