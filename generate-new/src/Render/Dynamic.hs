@@ -279,6 +279,3 @@ applyInsideForall :: Type -> Type -> Type
 applyInsideForall f x = case x of
   ForallT vs ctx t -> ForallT vs ctx (f :@ t)
   _                -> f :@ x
-
-(<||>) :: Applicative f => f Bool -> f Bool -> f Bool
-(<||>) = liftA2 (||)

@@ -11,8 +11,6 @@ import           Polysemy
 import           Polysemy.Input
 import qualified Data.Vector.Extra             as V
 import qualified Data.Map                      as Map
-import           Data.List.Extra                ( nubOrd )
-import           Language.Haskell.TH            ( mkName )
 
 import           Foreign.Marshal.Alloc
 import           Foreign.Ptr
@@ -293,62 +291,6 @@ fromCStructInstance m@MarshaledStruct {..} = do
   tellDoc $ (stub <+> "where") <> line <> indent
     2
     (vsep ["peekCStruct" <+> pretty addrVar' <+> "=" <+> peekStmts])
-
-fromCStructFunction
-  :: ( HasErr r
-     , HasRenderElem r
-     , HasSpecInfo r
-     , HasRenderParams r
-     , HasSiblingInfo StructMember r
-     , HasStmts r
-     )
-  => MarshaledStruct AStruct
-  -> [Handle]
-  -> Sem r ()
-fromCStructFunction m@MarshaledStruct {..} handles = do
-  RenderParams {..} <- input
-  tellImportWithAll (TyConName "FromCStruct")
-  let n           = mkTyName msName
-      Struct {..} = msStruct
-      structT     = if hasChildren msStruct
-        then ConT (typeName n) :@ VarT (mkName structChainVar)
-        else ConT (typeName n)
-      funName      = TermName $ "peekCStruct" <> unName n
-      handleLevels = nubOrd (hLevel <$> handles)
-  addContext <- if hasChildren msStruct
-    then do
-      tellImport (TyConName "PeekChain")
-      pure $ ForallT
-        []
-        [ConT (mkName "PeekChain") :@ VarT (mkName structChainVar)]
-    else pure id
-  handleCommandTypes <- forV handleLevels $ \case
-    NoHandleLevel -> throw "Dispatchable handle with no level" -- TODO: use types for this
-    Device        -> pure $ ConT (typeName (TyConName "DeviceCmds"))
-    Instance      -> pure $ ConT (typeName (TyConName "InstanceCmds"))
-  handleCommandNames <- case handleLevels of
-    [_] -> pure ["cmds"]
-    _   -> throw "TODO: fromCStruct with multiple cmd levels"
-  peekCStructTDoc <- renderType . addContext $ foldr
-    (~>)
-    (ConT ''IO :@ structT)
-    (handleCommandTypes <> [ConT ''Ptr :@ structT])
-
-  peekStmts <- peekCStructBody m
-  tellExport (ETerm funName)
-  tellDoc $ vsep
-    [ "-- |"
-    <+> pretty n
-    <+> "contains dispatchable handles, for which the function"
-    , "-- pointer record would be inaccessible if this was an instance of @fromCStruct@"
-    , pretty funName <+> "::" <+> peekCStructTDoc
-    , pretty funName
-    <+> sep handleCommandNames
-    <+> pretty addrVar
-    <+> "="
-    <+> peekStmts
-    ]
-
 
 peekCStructBody
   :: ( HasErr r

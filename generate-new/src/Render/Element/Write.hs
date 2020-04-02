@@ -25,7 +25,6 @@ import           Polysemy
 import           Polysemy.Input
 import           Data.List                      ( lookup )
 import           Foreign.Ptr
-import           Data.Version
 import           Language.Haskell.TH            ( nameBase
                                                 , nameModule
                                                 , mkName
@@ -42,62 +41,8 @@ import           Error
 import           Write.Segment
 import           Spec.Types
 import           Haskell.Name
-import           Bespoke.Seeds
 import           Documentation
 import           Documentation.Haddock
-
-----------------------------------------------------------------
--- Segmenting
-----------------------------------------------------------------
-
-segmentRenderElements
-  :: HasErr r
-  => (i -> Text)
-  -> Vector RenderElement
-  -> Vector (SegmentGroup i HName)
-  -> Sem r (V.Vector (SegmentedGroup i RenderElement))
-segmentRenderElements debugI =
-  let elementExports RenderElement {..} =
-          reInternal <> reExports <> V.concatMap exportWith reExports
-  in  segmentGraph
-        reName
-        show
-        debugI
-        (fmap exportName . V.toList . elementExports)
-        (fmap importName . toList . reLocalImports)
-
-separateTypes
-  :: Vector (SegmentedGroup ModulePlacement RenderElement)
-  -> [Segment ModName RenderElement]
-separateTypes segmented =
-  [ ss'
-  | SegmentedGroup segments extras <- toList segmented
-  , ss                             <- extras : toList segments
-  , ss'                            <- makeModName ss
-  ]
-
-makeModName
-  :: Segment ModulePlacement RenderElement -> [Segment ModName RenderElement]
-makeModName (Segment placement es) = case placement of
-  BespokeMod mod        -> [Segment (ModName ("Graphics.Vulkan." <> mod)) es]
-  CoreMod ver component ->
-    let prefix = "Graphics.Vulkan.Core" <> foldMap show (versionBranch ver) <> "."
-    in splitTypes prefix component es
-  ExtensionMod component ->
-    let prefix = "Graphics.Vulkan.Extensions."
-    in splitTypes prefix component es
-
-splitTypes
-  :: Text -> Text -> Vector RenderElement -> [Segment ModName RenderElement]
-splitTypes prefix component es = toList es <&> \re ->
-  case mapMaybe getTyConName (exportName <$> toList (reExports re)) of
-    []    -> Segment (ModName (prefix <> component)) (V.singleton re)
-    x : _ -> Segment (ModName (prefix <> "Types." <> x)) (V.singleton re)
-
-getTyConName :: HName -> Maybe Text
-getTyConName = \case
-  TyConName n -> Just n
-  _ -> Nothing
 
 ----------------------------------------------------------------
 -- Rendering

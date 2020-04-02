@@ -11,7 +11,6 @@ import           Relude                  hiding ( ask )
 import           Data.List                      ( partition )
 import           Polysemy
 import           Polysemy.Input
-import           Polysemy.Input
 import qualified Data.HashSet                  as Set
 import qualified Data.HashMap.Strict           as Map
 

@@ -27,9 +27,6 @@ genericList s l r ds = case toList ds of
   [d] -> l `s` d `s` r
   _   -> align $ vsep $ zipWith (<+>) (l : repeat ",") (toList ds) <> [r]
 
-appList :: Foldable f => f (Doc ()) -> Doc ()
-appList xs = align (vsep (zipWith (<+>) ("<$>" : repeat "<*>") (toList xs)))
-
 -- | Wrap text sensibly
 comment :: Text -> Doc ()
 comment c =

@@ -58,11 +58,6 @@ schemeTypePositive s = case s of
   InOutCount t -> schemeType t
   _            -> pure Nothing
 
-isUnivalued :: MarshalScheme a -> Bool
-isUnivalued = \case
-  ElidedUnivalued _ -> True
-  _                 -> False
-
 isInOutCount :: MarshalScheme a -> Bool
 isInOutCount = \case
   InOutCount _ -> True

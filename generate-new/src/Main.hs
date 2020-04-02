@@ -394,10 +394,6 @@ isPassAsPointerType' = \case
     -> True
   _ -> False
 
--- TODO: Remove, extra union names and handle
-extraStructNames :: [CName]
-extraStructNames = ["VkClearColorValue", "VkSemaphore"]
-
 ----------------------------------------------------------------
 -- Utils
 ----------------------------------------------------------------

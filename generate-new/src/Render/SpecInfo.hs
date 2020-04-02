@@ -111,9 +111,6 @@ getCommand t = ($ t) <$> inputs siIsCommand
 getDisabledCommand :: HasSpecInfo r => CName -> Sem r (Maybe Command)
 getDisabledCommand t = ($ t) <$> inputs siIsDisabledCommand
 
-getEnum :: HasSpecInfo r => CName -> Sem r (Maybe Enum')
-getEnum t = ($ t) <$> inputs siIsEnum
-
 getTypeSize :: (HasErr r, HasSpecInfo r) => CType -> Sem r (Int, Int)
 getTypeSize t =
   note ("Unable to get size for " <> show t) =<< ($ t) <$> inputs siTypeSize
@@ -123,15 +120,6 @@ appearsInPositivePosition s = ($ s) <$> inputs siAppearsInPositivePosition
 
 appearsInNegativePosition :: HasSpecInfo r => CName -> Sem r Bool
 appearsInNegativePosition s = ($ s) <$> inputs siAppearsInNegativePosition
-
-containsDispatchableHandle :: HasSpecInfo r => Struct -> Sem r Bool
-containsDispatchableHandle = fmap (not . null) . dispatchableHandles
-
-dispatchableHandles :: HasSpecInfo r => Struct -> Sem r [Handle]
-dispatchableHandles Struct {..} =
-  fmap (filter ((== Dispatchable) . hDispatchable) . catMaybes)
-    . traverse getHandle
-    $ [ t | StructMember {..} <- toList sMembers, t <- getAllTypeNames smType ]
 
 inputs :: Member (Input a) r => (a -> b) -> Sem r b
 inputs f = f <$> input
