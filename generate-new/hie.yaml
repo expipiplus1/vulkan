@@ -1,2 +1,10 @@
 cradle:
-  cabal:
+  multi:
+    - path: "./src"
+      config:
+        cradle:
+          cabal:
+    - path: "./src/Main.hs"
+      config:
+        cradle:
+          none:
