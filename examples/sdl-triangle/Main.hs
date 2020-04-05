@@ -20,6 +20,7 @@ import           Say
 import           System.Exit
 import           Data.String                    ( IsString )
 import           Data.Text               hiding ( maximum )
+import           Data.Text.Encoding
 import           Control.Monad.Managed
 import qualified Data.Vector                   as V
 import           Graphics.Vulkan.Core10
@@ -34,13 +35,6 @@ import qualified SDL
 import qualified SDL.Video.Vulkan              as SDL
 import           Control.Arrow                  ( (&&&) )
 import           ShaderQQ
-
--- pattern (::&) :: Extensible a => a es -> Chain es -> a es
--- pattern a ::& es <- (id &&& getNext -> (a, es))
---   where a ::& es = setNext a es
-
--- pattern (:&) :: e -> Chain es -> Chain (e:es)
--- pattern e :& es = (e, es)
 
 main :: IO ()
 main = runManaged $ do
@@ -353,12 +347,6 @@ data VulkanWindow = VulkanWindow
 
 withVulkanWindow :: Text -> Int -> Int -> Managed VulkanWindow
 withVulkanWindow appName width height = do
-  -- sayShow =<< SDL.vkLoadLibrary
-  --   (Just
-  --     "/nix/store/5q53qn1wbg3bpipjwniz565wc7asx9p-swiftshader-2020-03-31/lib/libvulkan.so.1"
-  --   )
-  -- sayShow "hello"
-  -- sayShow =<< Raw.vkLoadLibrary (Ptr "/dev/nul"#)
   window             <- managed $ withWindow appName width height
   instanceCreateInfo <- liftIO $ windowInstanceCreateInfo window
   inst               <- managed $ withInstance instanceCreateInfo Nothing
@@ -403,7 +391,7 @@ withVulkanWindow appName width height = do
                       presentQueue
 
 appName :: IsString a => a
-appName = "vulkan triangle example"
+appName = "Haskell Vulkan triangle example"
 
 windowWidth, windowHeight :: Int
 windowWidth = 1920
@@ -440,6 +428,8 @@ createGraphicalDevice inst surface = do
       surface
       requiredDeviceExtensions
       (SurfaceFormatKHR FORMAT_B8G8R8_UNORM COLOR_SPACE_SRGB_NONLINEAR_KHR)
+  props <- liftIO $ getPhysicalDeviceProperties physicalDevice
+  sayErr $ "Using device: " <> decodeUtf8 (deviceName props)
   let
     deviceCreateInfo :: DeviceCreateInfo '[]
     deviceCreateInfo = zero
@@ -551,10 +541,6 @@ pickGraphicalPhysicalDevice inst surface requiredExtensions desiredFormat = do
 
   deviceScore :: PhysicalDevice -> IO Word64
   deviceScore dev = do
-    -- may be useful later...
-    -- print =<< getPhysicalDeviceProperties2 @'[PhysicalDevicePushDescriptorPropertiesKHR] dev
-    print =<< getPhysicalDeviceProperties2 @'[] dev
-    print =<< getPhysicalDeviceFeatures dev
     heaps <- memoryHeaps <$> getPhysicalDeviceMemoryProperties dev
     let totalSize = sum $ (size :: MemoryHeap -> DeviceSize) <$> heaps
     pure totalSize
