@@ -62,6 +62,17 @@ executables:
       - -threaded
       - -rtsopts
       - -with-rtsopts=-N
+  vma:
+    main: Main.hs
+    source-dirs: vma
+    dependencies:
+      - generate-new
+      - spoon
+      - language-c
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
 
 dependencies:
   - algebraic-graphs

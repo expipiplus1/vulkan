@@ -41,3 +41,9 @@ getPhysicalDeviceXlibPresentationSupportKHR -- wrong
 cd Vulkan-Docs
 nix-shell -p python3 asciidoctor gnumake --run './makeAllExts allman'
 ```
+
+# VMA
+
+## To check
+
+- `pHeapSizeLimit` length
