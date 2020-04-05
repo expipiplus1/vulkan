@@ -1,0 +1,37 @@
+diff --git a/src/Language/C/Analysis/TravMonad.hs b/src/Language/C/Analysis/TravMonad.hs
+index 6151bfe..fc38a9c 100644
+--- a/src/Language/C/Analysis/TravMonad.hs
++++ b/src/Language/C/Analysis/TravMonad.hs
+@@ -41,7 +41,7 @@ module Language.C.Analysis.TravMonad (
+     astError, warn,
+     -- * Trav - default MonadTrav implementation
+     Trav,
+-    runTrav,runTrav_,
++    runTrav,runTravWithTravState,runTrav_,
+     TravState,initTravState,withExtDeclHandler,modifyUserState,userState,
+     getUserState,
+     TravOptions(..),modifyOptions,
+@@ -390,15 +390,17 @@ put :: TravState s -> Trav s ()
+ put s    = Trav (\_ -> Right ((),s))
+ 
+ 
+-runTrav :: forall s a. s -> Trav s a -> Either [CError] (a, TravState s)
+-runTrav state traversal =
+-    case unTrav action (initTravState state) of
++runTrav :: forall s a . s -> Trav s a -> Either [CError] (a, TravState s)
++runTrav state a = runTravWithTravState (initTravState state) $ do
++  withDefTable (const ((), builtins))
++  a
++
++runTravWithTravState :: forall s a. TravState s -> Trav s a -> Either [CError] (a, TravState s)
++runTravWithTravState state traversal =
++    case unTrav traversal state of
+         Left trav_err                                 -> Left [trav_err]
+         Right (v, ts) | hadHardErrors (travErrors ts) -> Left (travErrors ts)
+                       | otherwise                     -> Right (v,ts)
+-    where
+-    action = do withDefTable (const ((), builtins))
+-                traversal
+ 
+ runTrav_ :: Trav () a -> Either [CError] (a,[CError])
+ runTrav_ t = fmap fst . runTrav () $
