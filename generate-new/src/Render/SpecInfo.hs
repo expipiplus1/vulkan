@@ -18,6 +18,7 @@ type HasSpecInfo r = MemberWithError (Input SpecInfo) r
 
 type SizeMap = CType -> Maybe (Int, Int)
 
+-- TODO: Rename to HeaderInfo
 data SpecInfo = SpecInfo
   { siIsUnion                   :: CName -> Maybe Union
   , siIsStruct                  :: CName -> Maybe Struct
@@ -31,13 +32,42 @@ data SpecInfo = SpecInfo
   , siAppearsInNegativePosition :: CName -> Bool
   }
 
-withSpecInfo
-  :: HasRenderParams r
-  => Spec
-  -> (CType -> Maybe (Int, Int))
-  -> Sem (Input SpecInfo ': r) a
-  -> Sem r a
-withSpecInfo Spec {..} siTypeSize r = do
+instance Semigroup SpecInfo where
+  s1 <> s2 = SpecInfo
+    { siIsUnion                   = first siIsUnion
+    , siIsStruct                  = first siIsStruct
+    , siIsHandle                  = first siIsHandle
+    , siIsCommand                 = first siIsCommand
+    , siIsDisabledCommand         = first siIsDisabledCommand
+    , siIsEnum                    = first siIsEnum
+    , siContainsUnion             = applyBoth siContainsUnion (liftA2 (<>))
+    , siTypeSize                  = first siTypeSize
+    , siAppearsInPositivePosition = applyBoth siAppearsInPositivePosition
+                                              (liftA2 (||))
+    , siAppearsInNegativePosition = applyBoth siAppearsInNegativePosition
+                                              (liftA2 (||))
+    }
+   where
+    first :: (SpecInfo -> (a -> Maybe b)) -> a -> Maybe b
+    first f = applyBoth f (liftA2 (<|>))
+    applyBoth :: (SpecInfo -> a) -> (a -> a -> b) -> b
+    applyBoth f x = x (f s1) (f s2)
+
+instance Monoid SpecInfo where
+  mempty = SpecInfo (const Nothing)
+                    (const Nothing)
+                    (const Nothing)
+                    (const Nothing)
+                    (const Nothing)
+                    (const Nothing)
+                    (const [])
+                    (const Nothing)
+                    (const False)
+                    (const False)
+
+specSpecInfo
+  :: HasRenderParams r => Spec -> (CType -> Maybe (Int, Int)) -> Sem r SpecInfo
+specSpecInfo Spec {..} siTypeSize = do
   RenderParams {..} <- input
   let
     mkLookup n f =
@@ -91,7 +121,17 @@ withSpecInfo Spec {..} siTypeSize r = do
       ]
     siAppearsInNegativePosition = (`Set.member` negativeTypes)
     siAppearsInPositivePosition = (`Set.member` positiveTypes)
-  runInputConst SpecInfo { .. } r
+  pure SpecInfo { .. }
+
+withSpecInfo
+  :: HasRenderParams r
+  => Spec
+  -> (CType -> Maybe (Int, Int))
+  -> Sem (Input SpecInfo ': r) a
+  -> Sem r a
+withSpecInfo spec typeSize r = do
+  si <- specSpecInfo spec typeSize
+  runInputConst si r
 
 getStruct :: HasSpecInfo r => CName -> Sem r (Maybe Struct)
 getStruct t = ($ t) <$> inputs siIsStruct

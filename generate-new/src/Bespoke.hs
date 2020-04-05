@@ -141,9 +141,8 @@ nextPointers :: Spec -> BespokeScheme
 nextPointers Spec {..} =
   let schemeMap :: Map (CName, CName) NextType
       schemeMap = Map.fromList
-        [ ((sName s, m), scheme)
+        [ ((sName s, "pNext"), scheme)
         | s <- toList specStructs
-        , let m = "pNext"
         , let scheme = case sExtendedBy s of
                 V.Empty -> NextElided
                 _       -> NextChain

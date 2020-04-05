@@ -369,10 +369,8 @@ fixOddImport n = fromMaybe (Just n) (lookup n fixes)
 ----------------------------------------------------------------
 
 -- Sometimes we need to lookup the type of a constructor or the level of a handle
-data TypeInfo = TypeInfo
+newtype TypeInfo = TypeInfo
   { tiConMap :: HName -> Maybe HName
-  , tiIsHandle :: HName -> Maybe Handle
-  , tiIsCommand :: HName -> Maybe Command
   }
 
 type HasTypeInfo r = MemberWithError (Input TypeInfo) r
@@ -381,28 +379,16 @@ withTypeInfo
   :: HasRenderParams r => Spec -> Sem (Input TypeInfo ': r) a -> Sem r a
 withTypeInfo Spec {..} a = do
   RenderParams {..} <- input
-  let
-    tyMap :: Map HName HName
-    tyMap = Map.fromList
-      [ (mkConName eExportedName evName, mkTyName eExportedName)
-      | Enum {..} <- V.toList specEnums
-      , let eExportedName = case eType of
-              AnEnum         -> eName
-              ABitmask flags -> flags
-      , EnumValue {..} <- V.toList eValues
-      ]
-    handleMap :: Map HName Handle
-    handleMap = Map.fromList
-      [ (mkTyName hName, h) | h@Handle {..} <- V.toList specHandles ]
-    commandMap :: Map HName Command
-    commandMap = Map.fromList
-      [ (mkFunName cName, c) | c@Command {..} <- V.toList specCommands ]
-  runInputConst
-    (TypeInfo (`Map.lookup` tyMap)
-              (`Map.lookup` handleMap)
-              (`Map.lookup` commandMap)
-    )
-    a
+  let tyMap :: Map HName HName
+      tyMap = Map.fromList
+        [ (mkConName eExportedName evName, mkTyName eExportedName)
+        | Enum {..} <- V.toList specEnums
+        , let eExportedName = case eType of
+                AnEnum         -> eName
+                ABitmask flags -> flags
+        , EnumValue {..} <- V.toList eValues
+        ]
+  runInputConst (TypeInfo (`Map.lookup` tyMap)) a
 
 adoptConstructors :: HasTypeInfo r => Import HName -> Sem r (Import HName)
 adoptConstructors = \case

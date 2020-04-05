@@ -17,15 +17,17 @@ scanOffsets
   -> (a -> m (Int, Int))
   -- ^ Size and alignment
   -> f a
-  -> m ((Int, Int), f Int)
+  -> m (Int, Int, f Int)
   -- Total size, alignment and offsets for the elements
-scanOffsets getOffset getSize getTypeSize ts =
-  runM . runState (0, 1) . for ts $ \t -> do
-    (memberSize, memberAlign) <- embed $ getTypeSize t
-    (totalSize , maxAlign   ) <- get
-    let newOffset = getOffset memberAlign totalSize
-    put (getSize totalSize memberSize newOffset, max maxAlign memberAlign)
-    pure newOffset
+scanOffsets getOffset getSize getTypeSize ts = do
+  ((unalignedSize, align), offsets) <- runM . runState (0, 1) . for ts $ \t ->
+    do
+      (memberSize, memberAlign) <- embed $ getTypeSize t
+      (totalSize , maxAlign   ) <- get
+      let newOffset = getOffset memberAlign totalSize
+      put (getSize totalSize memberSize newOffset, max maxAlign memberAlign)
+      pure newOffset
+  pure (roundToAlignment align unalignedSize, align, offsets)
 
 -- | Find the next multiple of an alignment
 roundToAlignment

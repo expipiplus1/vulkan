@@ -1,4 +1,5 @@
 {-# language UndecidableInstances #-}
+{-# language TypeFamilyDependencies #-}
 module Spec.Types
   ( CName(..)
   , module Spec.Types
@@ -128,7 +129,7 @@ data StructOrUnionType = AStruct | AUnion
 
 data WithSize = WithSize | WithoutSize
 
-type family SizeType (a :: WithSize) where
+type family SizeType (a :: WithSize) = r | r -> a where
   SizeType 'WithSize = Int
   SizeType 'WithoutSize = ()
 

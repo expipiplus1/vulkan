@@ -173,6 +173,18 @@ data MarshalParams = MarshalParams
       :: forall a . Marshalable a => CName -> a -> Maybe (MarshalScheme a)
   }
 
+instance Semigroup MarshalParams where
+  mp1 <> mp2 = MarshalParams
+    { isDefaultable       = getAny . concatBoth (Any .: isDefaultable)
+    , isPassAsPointerType = getAny . concatBoth (Any .: isPassAsPointerType)
+    , getBespokeScheme    = \p x ->
+                              getBespokeScheme mp1 p x <|> getBespokeScheme mp2 p x
+    }
+   where
+    concatBoth :: Monoid a => (MarshalParams -> a) -> a
+    concatBoth f = f mp2 <> f mp2
+    (.:) = (.) . (.)
+
 ----------------------------------------------------------------
 -- Schemes
 --

@@ -4,9 +4,11 @@ module Error
   ( Err
   , runErr
   , throw
+  , throwMany
   , context
   , contextShow
   , fromEither
+  , fromEitherShow
   , note
   , sequenceV
   , traverseV
@@ -34,6 +36,10 @@ runErr = E.runError
 throw :: forall r a. MemberWithError Err r => Text -> Sem r a
 throw = E.throw . singleton
 
+throwMany
+  :: forall r f a . (MemberWithError Err r, Foldable f) => f Text -> Sem r a
+throwMany = E.throw . V.fromList . toList
+
 context :: forall r a . MemberWithError Err r => Text -> Sem r a -> Sem r a
 context c m = E.catch @(Vector Text) m $ \e -> E.throw ((c <> ":" <+>) <$> e)
 
@@ -43,6 +49,9 @@ contextShow = context . show
 
 fromEither :: MemberWithError Err r => Either Text a -> Sem r a
 fromEither = E.fromEither . first singleton
+
+fromEitherShow :: (Show e, MemberWithError Err r) => Either e a -> Sem r a
+fromEitherShow = fromEither . first show
 
 note :: MemberWithError Err r => Text -> Maybe a -> Sem r a
 note e = \case

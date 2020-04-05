@@ -219,8 +219,8 @@ wrappedStructIndirect
   -> Ref s AddrDoc
   -> Stmt s r (Ref s ValueDoc)
 wrappedStructIndirect name toType fromName valueRef addrRef = case toType of
-  Ptr Const (TypeName n) | n == fromName -> do
-    storablePoke addrRef =<< wrappedStruct name (toType) fromName valueRef
+  Ptr Const (TypeName n) | n == fromName ->
+    storablePoke addrRef =<< wrappedStruct name toType fromName valueRef
   TypeName n | n == fromName -> do
     ty <- cToHsTypeWithHoles DoNotPreserve toType
     stmtC (Just ty) name $ do

@@ -1,19 +1,12 @@
-module Main
-  where
+module Bespoke.RenderParams
+  ( renderParams
+  ) where
 
 import           Relude                  hiding ( uncons
                                                 , Type
                                                 , Handle
                                                 )
-import           Relude.Extra.Map
-import           Say
-import           Data.Char                      ( isLower )
-import           System.TimeIt
-import           Polysemy
-import           Polysemy.Fixpoint
-import qualified Data.HashMap.Strict           as Map
 import qualified Data.HashSet                  as Set
-import           Polysemy.Input
 import qualified Data.Vector.Storable.Sized    as VSS
 import qualified Data.Vector                   as V
 import qualified Data.Text                     as T
@@ -25,147 +18,18 @@ import           Data.Text.Extra                ( lowerCaseFirst
                                                 )
 import           Data.Text.Prettyprint.Doc      ( pretty )
 import           Language.Haskell.TH            ( nameBase )
-import           Data.Version
+import           Data.Char                      ( isLower )
 
 import           Foreign.C.Types
 import           Foreign.Ptr
 
 import           CType
-import           Error
-import           Marshal
-import           Marshal.Scheme
 import           Render.Element
-import           Render.SpecInfo
-import           Render.Names
-import           Render.Element.Write
-import           Render.Aggregate
 import           Render.Stmts                   ( useViaName )
 import           Render.Stmts.Poke              ( CmdsDoc(..) )
-import           Bespoke                        ( BespokeScheme(..)
-                                                , bespokeSchemes
-                                                , assignBespokeModules
-                                                )
-import           Render.Spec
 import           Spec.Parse
 import           Render.Type.Preserve
 import           Haskell
-import           AssignModules
-import           Documentation.All
-
-main :: IO ()
-main =
-  (runFinal . embedToFinal @IO . fixpointToFinal @IO . runErr $ go) >>= \case
-    Left es -> do
-      traverse_ sayErr es
-      sayErr (show (length es) <+> "errors")
-    Right () -> pure ()
- where
-  go :: Sem '[Err , Fixpoint , Embed IO , Final IO] ()
-  go = do
-    specText <- timeItNamed "Reading spec"
-      $ readFileBS "./Vulkan-Docs/xml/vk.xml"
-
-    (spec@Spec {..}, getSize) <- timeItNamed "Parsing spec" $ parseSpec specText
-
-    let allExtensionNames =
-          toList (exName <$> specExtensions)
-            <> [ "VK_VERSION_" <> show major <> "_" <> show minor
-               | Feature {..}      <- toList specFeatures
-               , major : minor : _ <- pure $ versionBranch fVersion
-               ]
-        doLoadDocs = True
-    getDocumentation <- if doLoadDocs
-      then liftIO $ loadAllDocumentation allExtensionNames
-                                         "./Vulkan-Docs"
-                                         "./Vulkan-Docs/man"
-      else pure (const Nothing)
-
-
-    runInputConst (renderParams specHandles)
-      . withRenderedNames spec
-      . withSpecInfo spec getSize
-      . withTypeInfo spec
-      $ do
-          bespokeSchemes <- bespokeSchemes spec
-          let
-            aliasMap :: Map.HashMap CName CName
-            aliasMap =
-              fromList [ (aName, aTarget) | Alias {..} <- toList specAliases ]
-            resolveAlias :: CName -> CName
-            resolveAlias t = maybe t resolveAlias (Map.lookup t aliasMap) -- TODO: handle cycles!
-            bitmaskNames :: HashSet CName
-            bitmaskNames = fromList
-              [ n
-              | Enum {..}      <- toList specEnums
-              , ABitmask flags <- pure eType
-              , n              <- [eName, flags]
-              ]
-            isBitmask     = (`member` bitmaskNames)
-            isBitmaskType = \case
-              TypeName n -> isBitmask n || isBitmask (resolveAlias n)
-              _          -> False
-            nonDispatchableHandleNames :: HashSet CName
-            nonDispatchableHandleNames = fromList
-              [ hName
-              | Handle {..} <- toList specHandles
-              , hDispatchable == NonDispatchable
-              ]
-            isNonDispatchableHandle     = (`member` nonDispatchableHandleNames)
-            isNonDispatchableHandleType = \case
-              TypeName n -> isNonDispatchableHandle n
-                || isNonDispatchableHandle (resolveAlias n)
-              _ -> False
-            dispatchableHandleNames :: HashSet CName
-            dispatchableHandleNames = fromList
-              [ hName
-              | Handle {..} <- toList specHandles
-              , hDispatchable == Dispatchable
-              ]
-            -- TODO Remove, these will not be defaultable once we bundle the
-            -- command pointers
-            isDispatchableHandle     = (`member` dispatchableHandleNames)
-            isDispatchableHandleType = \case
-              TypeName n ->
-                isDispatchableHandle n || isDispatchableHandle (resolveAlias n)
-              _ -> False
-            mps = MarshalParams
-              (    isDefaultable'
-              <||> isBitmaskType
-              <||> isNonDispatchableHandleType
-              <||> isDispatchableHandleType
-              )
-              isPassAsPointerType'
-              (\p a ->
-                asum . fmap (\(BespokeScheme f) -> f p a) $ bespokeSchemes
-              )
-
-          (ss, us, cs) <- runInputConst mps $ do
-            ss <- timeItNamed "Marshaling structs"
-              $ traverseV marshalStruct specStructs
-            us <- timeItNamed "Marshaling unions"
-              $ traverseV marshalStruct specUnions
-            cs <- timeItNamed "Marshaling commands"
-              $ traverseV marshalCommand specCommands
-              -- TODO: Don't use all commands here, just those commands referenced by
-              -- features and extensions. Similarly for specs
-            pure (ss, us, cs)
-
-          renderElements <-
-            timeItNamed "Rendering"
-            $   traverse evaluateWHNF
-            =<< renderSpec spec getDocumentation ss us cs
-
-          groups <-
-            timeItNamed "Segmenting"
-            $   assignModules spec
-            =<< assignBespokeModules renderElements
-
-          timeItNamed "writing"
-            $ renderSegments getDocumentation "out" (mergeElements groups)
-
-----------------------------------------------------------------
--- Render Params
-----------------------------------------------------------------
 
 renderParams :: V.Vector Handle -> RenderParams
 renderParams handles = r
@@ -185,7 +49,7 @@ renderParams handles = r
     , mkMemberName = TermName . lowerCaseFirst . dropPointer . unCName
     , mkFunName                   = TermName . lowerCaseFirst . dropVk
     , mkParamName                 = TermName . dropPointer . unCName
-    , mkPatternName               = ConName . dropVk
+    , mkPatternName               = ConName . upperCaseFirst . dropVk
     , mkFuncPointerName           = TyConName . T.tail . unCName
     , mkFuncPointerMemberName = TermName . ("p" <>) . upperCaseFirst . unCName
     , mkEmptyDataName             = TyConName . (<> "_T") . dropVk
@@ -299,6 +163,7 @@ renderParams handles = r
           <+> "$"
           <+> sibling
       _ -> Nothing
+    , isExternalName              = const Nothing
     }
 
 wrappedIdiomaticType
@@ -324,11 +189,6 @@ wrappedIdiomaticType t w c =
     )
   )
 
-
-----------------------------------------------------------------
--- Bespoke Vulkan stuff
-----------------------------------------------------------------
-
 dropVk :: CName -> Text
 dropVk (CName t) = if "vk" `T.isPrefixOf` T.toLower t
   then T.dropWhile (== '_') . T.drop 2 $ t
@@ -341,62 +201,3 @@ dropPointer =
     . first (\p -> if T.all (== 'p') p then "" else p)
     . T.span isLower
 
-isDefaultable' :: CType -> Bool
-isDefaultable' t = isDefaultableForeignType t || isIntegral t
-
-isIntegral :: CType -> Bool
-isIntegral =
-  (`elem` [ Int
-          , Char
-          , TypeName "uint8_t"
-          , TypeName "uint16_t"
-          , TypeName "uint32_t"
-          , TypeName "uint64_t"
-          , TypeName "int8_t"
-          , TypeName "int16_t"
-          , TypeName "int32_t"
-          , TypeName "int64_t"
-          , TypeName "size_t"
-          , TypeName "VkDeviceSize"
-          , TypeName "VkDeviceAddress"
-          ]
-  )
-
-isDefaultableForeignType :: CType -> Bool
-isDefaultableForeignType =
-  (`elem` [ TypeName "HANDLE"
-          , TypeName "DWORD"
-          , TypeName "LPCWSTR"
-          , TypeName "PFN_vkInternalAllocationNotification"
-          , TypeName "PFN_vkInternalFreeNotification"
-          , TypeName "PFN_vkAllocationFunction"
-          , TypeName "PFN_vkReallocationFunction"
-          , TypeName "PFN_vkFreeFunction"
-          , Ptr CType.Const (TypeName "SECURITY_ATTRIBUTES")
-          ]
-  )
-
--- | Is this a type we don't want to marshal
-isPassAsPointerType' :: CType -> Bool
-isPassAsPointerType' = \case
-  TypeName n
-    | n
-      `elem` [ "MirConnection"
-             , "wl_display"
-             , "wl_surface"
-             , "Display"
-             , "xcb_connection_t"
-             , "AHardwareBuffer"
-             , "ANativeWindow"
-             , "CAMetalLayer"
-             , "SECURITY_ATTRIBUTES"
-             ]
-    -> True
-  _ -> False
-
-----------------------------------------------------------------
--- Utils
-----------------------------------------------------------------
-
-(<||>) :: Applicative f => f Bool -> f Bool -> f Bool
-(<||>) = liftA2 (||)
