@@ -45,6 +45,7 @@ executables:
           - base < 4.14
           - vulkan
           - pretty-simple
+          - bytestring
       else:
         buildable: false
 

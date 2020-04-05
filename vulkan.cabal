@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 97aeb006bf1191f6c233aad3fbec9197f40f3f47669293e753165eeb3827a474
+-- hash: 300d263cc403953d9f051e0324439f8bd86ee66770cb7845de18ba0b9c9cea3f
 
 name:           vulkan
 version:        3.0.0.0
@@ -483,6 +483,7 @@ executable info
   if flag(build-examples)
     build-depends:
         base <4.14
+      , bytestring
       , pretty-simple
       , vulkan
     buildable: True
