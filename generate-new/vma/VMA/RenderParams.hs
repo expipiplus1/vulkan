@@ -15,9 +15,7 @@ import           Data.Text.Extra                ( lowerCaseFirst
                                                 , upperCaseFirst
                                                 )
 import           Data.Char                      ( isLower )
-import           Language.Haskell.TH            ( mkName
-                                                , nameBase
-                                                )
+import           Language.Haskell.TH            ( mkName )
 
 import           Foreign.Ptr
 
@@ -108,7 +106,7 @@ dropPointer =
 
 -- TODO: Generate this automatically
 vulkanManifest :: RenderParams -> CType -> Maybe Type
-vulkanManifest r@RenderParams {..} =
+vulkanManifest RenderParams {..} =
   let vk =
         Just
           . ConT

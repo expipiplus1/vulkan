@@ -16,7 +16,7 @@ import           Marshal.Scheme
 import           Bespoke
 
 marshalParams :: Spec -> Sem r MarshalParams
-marshalParams spec@Spec{..} = do
+marshalParams spec@Spec {..} = do
   bespokeSchemes <- bespokeSchemes spec
   let
     aliasMap :: Map.HashMap CName CName
@@ -59,14 +59,13 @@ marshalParams spec@Spec{..} = do
         isDispatchableHandle n || isDispatchableHandle (resolveAlias n)
       _ -> False
   pure MarshalParams
-    { isDefaultable       = (    isDefaultable'
+    { isDefaultable       = isDefaultable'
                             <||> isBitmaskType
                             <||> isNonDispatchableHandleType
                             <||> isDispatchableHandleType
-                            )
     , isPassAsPointerType = isPassAsPointerType'
-    , getBespokeScheme    =
-      (\p a -> asum . fmap (\(BespokeScheme f) -> f p a) $ bespokeSchemes)
+    , getBespokeScheme    = \p a ->
+      asum . fmap (\(BespokeScheme f) -> f p a) $ bespokeSchemes
     }
 
 ----------------------------------------------------------------
