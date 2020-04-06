@@ -103,7 +103,6 @@ specSpecInfo Spec {..} siTypeSize = do
     aliasMap        = Map.fromList
       [ (aName, aTarget)
       | Alias {..} <- toList specAliases
-      , TypeAlias == aType
       ]
     -- TODO: Handle alias cycles!
     resolveAlias :: CName -> CName

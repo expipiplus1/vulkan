@@ -8,6 +8,7 @@ import           Relude                  hiding ( uncons
                                                 )
 import           Relude.Extra.Map
 import qualified Data.HashMap.Strict           as Map
+import qualified Data.Text                     as T
 import           Polysemy
 
 import           CType
@@ -94,18 +95,17 @@ isIntegral =
   )
 
 isDefaultableForeignType :: CType -> Bool
-isDefaultableForeignType =
-  (`elem` [ TypeName "HANDLE"
-          , TypeName "DWORD"
-          , TypeName "LPCWSTR"
-          , TypeName "PFN_vkInternalAllocationNotification"
-          , TypeName "PFN_vkInternalFreeNotification"
-          , TypeName "PFN_vkAllocationFunction"
-          , TypeName "PFN_vkReallocationFunction"
-          , TypeName "PFN_vkFreeFunction"
-          , Ptr CType.Const (TypeName "SECURITY_ATTRIBUTES")
-          ]
-  )
+isDefaultableForeignType t =
+  (      t
+    `elem` [ TypeName "HANDLE"
+           , TypeName "DWORD"
+           , TypeName "LPCWSTR"
+           , Ptr CType.Const (TypeName "SECURITY_ATTRIBUTES")
+           ]
+    )
+    || case t of
+         TypeName (CName n) -> "PFN_" `T.isPrefixOf` n
+         _                  -> False
 
 -- | Is this a type we don't want to marshal
 isPassAsPointerType' :: CType -> Bool

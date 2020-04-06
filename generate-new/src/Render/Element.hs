@@ -62,7 +62,6 @@ import           Data.Text.Prettyprint.Doc
 import           Data.Char                      ( isAlpha
                                                 , isLower
                                                 )
-import qualified Prelude                       as P
 import           Polysemy
 import           Polysemy.State
 import           Polysemy.Input
@@ -199,6 +198,7 @@ nameNameSpace = \case
 thNameNamespace :: Name -> NameSpace
 thNameNamespace n = case nameSpace n of
   Just TcClsName -> Type
+  Just DataName  -> Pattern
   _              -> Plain
 
 ----------------------------------------------------------------
@@ -377,10 +377,16 @@ class Importable a where
 instance Importable Name where
   addImport import'@(Import i qual children withAll source) = do
     RenderParams {..} <- input
-    let mkLocalName n = case nameBase n of
-          b | isLower (P.head b) -> TermName . T.pack $ b
-          b                      -> TyConName . T.pack $ b
-        localName  = mkLocalName i
+    let mkLocalName n =
+          let b = T.pack . nameBase $ n
+          in  case nameSpace n of
+                Just TcClsName         -> TyConName b
+                Just DataName          -> ConName b
+                Just VarName           -> TermName b
+                _ | isLower (T.head b) -> TermName b
+                -- TODO: Defaults to TyCon over patterns
+                _                      -> TyConName b
+        localName = mkLocalName i
     withModule <- fromMaybe i <$> addModName localName
     case nameModule withModule of
       Just _ -> do
@@ -409,9 +415,12 @@ instance Importable HName where
 
 addModName :: HasRenderParams r => HName -> Sem r (Maybe Name)
 addModName n = do
+  let mkName' m n = case n of
+        TyConName s -> mkNameG_tc "" (T.unpack m) (T.unpack s)
+        ConName   s -> mkNameG_d "" (T.unpack m) (T.unpack s)
+        TermName  s -> mkNameG_v "" (T.unpack m) (T.unpack s)
   RenderParams {..} <- input
-  pure $ isExternalName n <&> \(ModName modName) ->
-    mkName (T.unpack (modName <> "." <> unName n))
+  pure $ isExternalName n <&> \(ModName modName) -> mkName' modName n
 
 tellSourceImport, tellImportWithAll, tellQualImport, tellQualImportWithAll, tellImport
   :: (HasRenderElem r, HasRenderParams r, Importable a) => a -> Sem r ()

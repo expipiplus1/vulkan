@@ -182,7 +182,7 @@ instance Semigroup MarshalParams where
     }
    where
     concatBoth :: Monoid a => (MarshalParams -> a) -> a
-    concatBoth f = f mp2 <> f mp2
+    concatBoth f = f mp1 <> f mp2
     (.:) = (.) . (.)
 
 ----------------------------------------------------------------

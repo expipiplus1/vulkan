@@ -22,6 +22,7 @@ import           Polysemy.Input
 import           Polysemy.Fixpoint
 import           Say
 import qualified Data.Map                      as Map
+import qualified Data.Set                      as Set
 import           System.TimeIt
 
 import           Error
@@ -31,11 +32,15 @@ import           Spec.Parse
 import           Render.SpecInfo
 import           VMA.RenderParams
 import           VMA.Render
-import           Render.Element                 ( ModName(..) )
+import           Render.Element                 ( ModName(..)
+                                                , makeRenderElementInternal
+                                                )
 import           Render.Element.Write
 import           Render.Names
+import           Render.FuncPointer
+import           Marshal.Scheme
 import           Marshal.Struct
-import           Marshal.Marshalable            ( ParameterLength(..) )
+import           Marshal.Marshalable
 import           Write.Segment
 import qualified Bespoke.MarshalParams         as Vk
 
@@ -63,25 +68,51 @@ main =
     runInputConst (renderParams (specHandles spec)) $ do
       headerInfo <- liftA2 (<>)
                            (specSpecInfo spec specTypeSize)
-                           (vmaSpecInfo enums structs)
+                           (vmaSpecInfo enums structs handles)
 
       renderedNames <- specRenderedNames spec
       runInputConst headerInfo
         . runInputConst (TypeInfo (const Nothing))
         . runInputConst renderedNames
         $ do
-            specMarshalParams <- Vk.marshalParams spec
-            marshaledStructs  <- runInputConst specMarshalParams
-              $ traverseV marshalStruct structs
+            vulkanFuncPointers <- vulkanFuncPointers
+            specMarshalParams  <- Vk.marshalParams spec
+            ourMarshalParams   <- marshalParams handles
+            marshaledStructs   <-
+              runInputConst (specMarshalParams <> ourMarshalParams)
+                $ traverseV marshalStruct structs
 
             renderElems <- renderHeader enums
                                         marshaledStructs
                                         handles
                                         funcPointers
-            let
-              segments =
-                [Segment (ModName "Graphics.VulkanMemoryAllocator") renderElems]
+            renderedVulkanFuncPointers <- traverseV
+              (fmap makeRenderElementInternal . renderFuncPointer)
+              vulkanFuncPointers
+            let segments =
+                  [ Segment (ModName "Graphics.VulkanMemoryAllocator")
+                            (renderElems <> renderedVulkanFuncPointers)
+                  ]
             renderSegments (const Nothing) "out-vma" segments
+
+marshalParams :: Vector Handle -> Sem r MarshalParams
+marshalParams handles =
+  let handleNames = Set.fromList [ hName | Handle {..} <- toList handles ]
+      isHandle    = \case
+        TypeName n -> Set.member n handleNames
+        _          -> False
+      isDefaultable = isHandle
+      isPassAsPointerType _ = False
+      getBespokeScheme :: Marshalable a => CName -> a -> Maybe (MarshalScheme a)
+      getBespokeScheme = \case
+        "VmaAllocatorCreateInfo" -> \case
+          a | name a == "pHeapSizeLimit" -> Just $ Preserve (type' a)
+          _                              -> Nothing
+        -- "VmaDefragmentationPassInfo" -> \case
+        --   a | name a == "pMoves", Ptr _ p <- type' a -> Just $ Vector (Normal p)
+        --   _ -> Nothing
+        _ -> const Nothing
+  in  pure MarshalParams { .. }
 
 vmaHeader :: FilePath
 vmaHeader = "VulkanMemoryAllocator/src/vk_mem_alloc.h"
@@ -90,8 +121,8 @@ vmaHeader = "VulkanMemoryAllocator/src/vk_mem_alloc.h"
 -- Spec info
 ----------------------------------------------------------------
 
-vmaSpecInfo :: Vector Enum' -> Vector Struct -> Sem r SpecInfo
-vmaSpecInfo enums structs = do
+vmaSpecInfo :: Vector Enum' -> Vector Struct -> Vector Handle -> Sem r SpecInfo
+vmaSpecInfo enums structs handles = do
   let aliasMap = mempty
       resolveAlias :: CName -> CName
       resolveAlias n = maybe n resolveAlias (Map.lookup n aliasMap)
@@ -100,7 +131,7 @@ vmaSpecInfo enums structs = do
         in  (`Map.lookup` m) . resolveAlias
       siIsStruct          = mkLookup sName structs
       siIsUnion           = const Nothing
-      siIsHandle          = const Nothing
+      siIsHandle          = mkLookup hName handles
       siIsCommand         = const Nothing
       siIsDisabledCommand = const Nothing
       siIsEnum            = mkLookup eName enums
@@ -112,6 +143,7 @@ vmaSpecInfo enums structs = do
                    | Struct {..} <- toList structs
                    ]
                 <> [ (eName, (4, 4)) | Enum {..} <- toList enums ]
+                <> [ (hName, (8, 8)) | Handle {..} <- toList handles ]
         in  \case
               TypeName n -> Map.lookup n sizeMap
               _          -> Nothing
@@ -158,10 +190,49 @@ unitHandles ds = fromList
 
 unitFuncPointers :: HasErr r => GlobalDecls -> Sem r (Vector FuncPointer)
 unitFuncPointers ds = fromList <$> sequenceV
-  [ FuncPointer (CName (T.pack n)) <$> typeToCType t
+  [ FuncPointer (CName (T.pack n)) . (\(_, _, t) -> t) <$> typeToCType t
   | (Ident n _ _, TypeDef _ t _ _) <- Map.toList $ gTypeDefs ds
   , "PFN_" `List.isPrefixOf` n
   ]
+
+vulkanFuncPointers :: (HasSpecInfo r, HasErr r) => Sem r (Vector FuncPointer)
+vulkanFuncPointers =
+  fmap fromList
+    . forV
+        [ "vkAllocateMemory"
+        , "vkBindBufferMemory"
+        , "vkBindBufferMemory2KHR"
+        , "vkBindImageMemory"
+        , "vkBindImageMemory2KHR"
+        , "vkCmdCopyBuffer"
+        , "vkCreateBuffer"
+        , "vkCreateImage"
+        , "vkDestroyBuffer"
+        , "vkDestroyImage"
+        , "vkFlushMappedMemoryRanges"
+        , "vkFreeMemory"
+        , "vkGetBufferMemoryRequirements"
+        , "vkGetBufferMemoryRequirements2KHR"
+        , "vkGetImageMemoryRequirements"
+        , "vkGetImageMemoryRequirements2KHR"
+        , "vkGetPhysicalDeviceMemoryProperties"
+        , "vkGetPhysicalDeviceMemoryProperties2KHR"
+        , "vkGetPhysicalDeviceProperties"
+        , "vkInvalidateMappedMemoryRanges"
+        , "vkMapMemory"
+        , "vkUnmapMemory"
+        ]
+    $ \n -> do
+        Command {..} <- note ("Unable to find command " <> show n)
+          =<< getCommand n
+        pure $ FuncPointer
+          (CName ("PFN_" <> unCName n))
+          (Ptr NonConst $ Proto
+            cReturnType
+            (   (\Parameter {..} -> (Just (unCName pName), pType))
+            <$> toList cParameters
+            )
+          )
 
 unitStructs :: HasErr r => TravState s -> GlobalDecls -> Sem r (Vector Struct)
 unitStructs state ds = do
@@ -175,17 +246,32 @@ unitStructs state ds = do
           sExtendedBy = mempty
       sizedMembers <- forV ms $ \case
         m@(MemberDecl (VarDecl (VarName (Ident n _ _) _) _ ty) Nothing _) -> do
-          smType <- typeToCType ty
-          let
-            smName   = CName (T.pack n)
-            -- TODO: Extract these from comments or attributes
-            -- https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator/issues/114
-            smValues = mempty
-            smLengths =
-              if n == "pFilePath" then fromList [NullTerminated] else mempty
-            smIsOptional =
-              if n == "pHeapSizeLimit" then fromList [True] else mempty
-            smOffset = ()
+          let smName = CName (T.pack n)
+          (lengths, optionality, smType) <- case (sName, smName) of
+            ("VmaStats", "memoryType") -> pure
+              ( []
+              , []
+              , Array NonConst
+                      (SymbolicArraySize "VK_MAX_MEMORY_TYPES")
+                      (TypeName "VmaStatInfo")
+              )
+            ("VmaStats", "memoryHeap") -> pure
+              ( []
+              , []
+              , Array NonConst
+                      (SymbolicArraySize "VK_MAX_MEMORY_HEAPS")
+                      (TypeName "VmaStatInfo")
+              )
+            _ -> typeToCType ty
+          let smValues  = mempty
+              smLengths = if n == "pFilePath"
+                then fromList [NullTerminated]
+                else fromList lengths
+              smIsOptional = fromList $ case (sName, smName) of
+                ("VmaDefragmentationInfo2", "poolCount") -> [True]
+                ("VmaDefragmentationInfo2", "pPools") -> [False]
+                _ -> optionality
+              smOffset = ()
           (size, alignment) <- runTrav_' DoNotIgnoreWarnings state $ do
             s <- fromIntegral <$> sizeofType x86_64 m ty
             a <- fromIntegral <$> alignofType x86_64 m ty
@@ -218,12 +304,19 @@ unitStructs state ds = do
         ("Align mismatch " <> show sAlignment <> " vs " <> show align')
       pure Struct { .. }
 
-typeToCType :: HasErr r => Type -> Sem r CType
-typeToCType = fmap snd . typeToCType'
+-- TODO: Make optionality part of the Ptr constructor
+typeToCType
+  :: HasErr r
+  => Type
+  -- ^ to parse
+  -> Sem r ([ParameterLength], [Bool], CType)
+  -- ^ (type, optionality)
+typeToCType = fmap (\(_, l, o, t) -> (l, o, t)) . typeToCType'
 
-typeToCType' :: HasErr r => Type -> Sem r (Qualifier, CType)
+typeToCType'
+  :: HasErr r => Type -> Sem r (Qualifier, [ParameterLength], [Bool], CType)
 typeToCType' = \case
-  DirectType t q _ -> (qual q, ) <$> case t of
+  DirectType t q _ -> (qual q, [], [], ) <$> case t of
     TyVoid                -> pure Void
     (TyIntegral TyChar  ) -> pure Char
     (TyIntegral TyInt   ) -> pure Int
@@ -232,31 +325,46 @@ typeToCType' = \case
     (TyComp (CompTypeRef (NamedRef (Ident n _ _)) _ _)) ->
       pure . TypeName . CName . T.pack $ n
     _ -> throw $ "Unhandled DirectType: " <> show t
-  ArrayType t (ArraySize False sizeExpr) q _ -> do
-    (elemQual, elemTy) <- typeToCType' t
-    size               <- case sizeExpr of
+  ArrayType t (ArraySize False sizeExpr) q as -> do
+    (elemQual, l, o, elemTy) <- typeToCType' t
+    size                     <- case sizeExpr of
       CConst (CIntConst (CInteger n _ _) _) ->
         pure $ NumericArraySize (fromIntegral n)
       _ -> throw $ "Unhandled array size expression: " <> show sizeExpr
-    pure (qual q, Array elemQual size elemTy)
-  TypeDefType (TypeDefRef (Ident n _ _) _ _) q _ ->
-    pure (qual q, TypeName . CName . T.pack $ n)
-  PtrType t q _ -> do
-    (elemQual, elemTy) <- typeToCType' t
-    pure (qual q, Ptr elemQual elemTy)
+    pure (qual q, len as l, o, Array elemQual size elemTy)
+  TypeDefType (TypeDefRef (Ident n _ _) _ _) q as ->
+    pure (qual q, len as [], opt q [], TypeName . CName . T.pack $ n)
+  PtrType t q as -> do
+    (elemQual, ls, os, elemTy) <- typeToCType' t
+    pure (qual q, len as ls, opt q os, Ptr elemQual elemTy)
   FunctionType (FunType ret params False) _ -> do
-    ret'    <- typeToCType ret
-    params' <- forV params $ \case
+    (_, _, ret') <- typeToCType ret
+    params'      <- forV params $ \case
       ParamDecl (VarDecl n _ t) _ -> do
-        t' <- typeToCType t
+        (_, _, t') <- typeToCType t
         let paramName = case n of
               NoName                  -> Nothing
               VarName (Ident n _ _) _ -> Just (T.pack n)
         pure (paramName, t')
       AbstractParamDecl _ _ -> throw "Unhandled AbstractParamDecl"
-    pure (NonConst, Proto ret' params')
+    pure (NonConst, [], [], Proto ret' params')
   t -> throw $ "Unhandled type to convert: " <> show t
-  where qual = bool NonConst CType.Const . constant
+ where
+  qual = bool NonConst CType.Const . constant
+  opt q t = if nullable q then True : t else if nonnull q then False : t else t
+  len as t =
+    [ l
+      | Attr (Ident attrName _ _) [expr] _ <- as
+      , attrName == lenAttrName
+      , Just l <- pure $ case expr of
+        CConst (CStrConst (CString x _) _) -> case T.splitOn "::" (T.pack x) of
+          [x]    -> Just $ NamedLength (CName x)
+          [x, y] -> Just $ NamedMemberLength (CName x) (CName y)
+          _      -> error "bad len attribute"
+        CVar (Ident v _ _) _ -> Just $ NamedLength (CName (T.pack v))
+        _                    -> error "bad len attribute"
+      ]
+      ++ t
 
 x86_64 :: MachineDesc
 x86_64 =
@@ -355,7 +463,18 @@ data IgnoreWarnings = DoIgnoreWarnings | DoNotIgnoreWarnings
 
 -- | Read the preprocessed version of a file
 cpp :: MonadIO m => FilePath -> m LByteString
-cpp f = readProcessStdout_ (proc "cpp" [f])
+cpp f = readProcessStdout_
+  (proc
+    "cpp"
+    [ f
+    , "-DVMA_NOT_NULL=_Nonnull"
+    , "-DVMA_NULLABLE=_Nullable"
+    , "-DVMA_LEN_IF_NOT_NULL(len)=__attribute__((" <> lenAttrName <> "(len)))"
+    ]
+  )
+
+lenAttrName :: String
+lenAttrName = "len_if_not_null"
 
 ----------------------------------------------------------------
 -- Trav to Sem

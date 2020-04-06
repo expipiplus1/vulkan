@@ -47,3 +47,6 @@ nix-shell -p python3 asciidoctor gnumake --run './makeAllExts allman'
 ## To check
 
 - `pHeapSizeLimit` length
+- `VmaDefragmentationPassInfo::pMoves`
+- `VmaAllocatorCreateInfo::pVulkanFunctions` This should be created from the
+  function table in `Device`

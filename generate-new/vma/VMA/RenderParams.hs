@@ -33,12 +33,16 @@ renderParams handles = r
     [ hName | Handle {..} <- toList handles, hDispatchable == Dispatchable ]
   vulkanParams = Vk.renderParams handles
   r            = RenderParams
-    { mkTyName                    = TyConName . upperCaseFirst . dropVma
-    , mkConName                   = \_ -> ConName . upperCaseFirst . dropVma
+    { mkTyName = \n -> TyConName $ fromMaybe (upperCaseFirst . dropVma $ n)
+                                             (vulkanNameOverrides n)
+    , mkConName = \_ n -> ConName $ fromMaybe (upperCaseFirst . dropVma $ n)
+                                              (vulkanNameOverrides n)
     , mkMemberName = TermName . lowerCaseFirst . dropPointer . unCName
     , mkFunName                   = TermName . lowerCaseFirst . dropVma
     , mkParamName                 = TermName . dropPointer . unCName
-    , mkPatternName               = ConName . upperCaseFirst . dropVma
+    , mkPatternName               =
+      \n -> ConName
+        $ fromMaybe (upperCaseFirst . dropVma $ n) (vulkanNameOverrides n)
     , mkFuncPointerName           = TyConName . T.tail . unCName
     , mkFuncPointerMemberName = TermName . ("p" <>) . upperCaseFirst . unCName
     , mkEmptyDataName             = TermName . (<> "_T") . dropVma
@@ -71,20 +75,32 @@ renderParams handles = r
     , firstSuccessCode            = "VK_SUCCESS"
     , exceptionTypeName           = TyConName "VulkanException"
     , complexMemberLengthFunction = \_ _ _ -> Nothing
-    , isExternalName = let vk s = Just (ModName $ "Graphics.Vulkan." <> s)
-                       in  \case
-                             TermName  "advancePtrBytes" -> vk "CStruct.Utils"
-                             TermName  "lowerArrayPtr"   -> vk "CStruct.Utils"
-                             TyConName "Zero"            -> vk "Zero"
-                             TyConName "ToCStruct"       -> vk "CStruct"
-                             TyConName "FromCStruct"     -> vk "CStruct"
-                             TyConName "IsHandle" -> vk "Core10.APIConstants"
-                             TyConName ":::"             -> vk "NamedType"
-                             _                           -> Nothing
+    , isExternalName              =
+      let vk s = Just (ModName $ "Graphics.Vulkan." <> s)
+      in  \case
+            TermName  "advancePtrBytes"  -> vk "CStruct.Utils"
+            TermName  "lowerArrayPtr"    -> vk "CStruct.Utils"
+            TyConName "Zero"             -> vk "Zero"
+            TyConName "ToCStruct"        -> vk "CStruct"
+            TyConName "FromCStruct"      -> vk "CStruct"
+            TyConName "IsHandle"         -> vk "Core10.APIConstants"
+            TyConName ":::"              -> vk "NamedType"
+            TyConName "MAX_MEMORY_TYPES" -> vk "Core10.APIConstants"
+            TyConName "MAX_MEMORY_HEAPS" -> vk "Core10.APIConstants"
+            ConName   "MAX_MEMORY_TYPES" -> vk "Core10.APIConstants"
+            ConName   "MAX_MEMORY_HEAPS" -> vk "Core10.APIConstants"
+            TyConName "SomeStruct"       -> vk "CStruct.Extends"
+            _                            -> Nothing
     }
 
 dropVma :: CName -> Text
 dropVma (CName t) = fromMaybe t (dropPrefix "vma" t)
+
+vulkanNameOverrides :: CName -> Maybe Text
+vulkanNameOverrides = \case
+  "VK_MAX_MEMORY_TYPES" -> Just "MAX_MEMORY_TYPES"
+  "VK_MAX_MEMORY_HEAPS" -> Just "MAX_MEMORY_HEAPS"
+  _                     -> Nothing
 
 dropPrefix
   :: Text
@@ -115,6 +131,17 @@ vulkanManifest RenderParams {..} =
           . ("Graphics.Vulkan." <>)
           . unName
           . mkTyName
+      someVk t = Just
+        (  ConT (mkName "SomeStruct")
+        :@ ( ConT
+           . mkName
+           . T.unpack
+           . ("Graphics.Vulkan." <>)
+           . unName
+           . mkTyName
+           $ t
+           )
+        )
   in  \case
         TypeName n
           | n
@@ -128,29 +155,28 @@ vulkanManifest RenderParams {..} =
                    , "VkDevice_T"
                    , "VkInstance_T"
                    , "VkMemoryPropertyFlags"
-                   , "PFN_vkAllocateMemory"
-                   , "PFN_vkBindBufferMemory"
-                   , "PFN_vkBindBufferMemory2KHR"
-                   , "PFN_vkBindImageMemory"
-                   , "PFN_vkBindImageMemory2KHR"
-                   , "PFN_vkCmdCopyBuffer"
-                   , "PFN_vkCreateBuffer"
-                   , "PFN_vkCreateImage"
-                   , "PFN_vkDestroyBuffer"
-                   , "PFN_vkDestroyImage"
-                   , "PFN_vkFlushMappedMemoryRanges"
-                   , "PFN_vkFreeMemory"
-                   , "PFN_vkGetBufferMemoryRequirements"
-                   , "PFN_vkGetBufferMemoryRequirements2KHR"
-                   , "PFN_vkGetImageMemoryRequirements"
-                   , "PFN_vkGetImageMemoryRequirements2KHR"
-                   , "PFN_vkGetPhysicalDeviceMemoryProperties"
-                   , "PFN_vkGetPhysicalDeviceMemoryProperties2KHR"
-                   , "PFN_vkGetPhysicalDeviceProperties"
-                   , "PFN_vkInvalidateMappedMemoryRanges"
-                   , "PFN_vkMapMemory"
-                   , "PFN_vkUnmapMemory"
                    , "VkPhysicalDevice_T"
+                   , "VkBuffer"
+                   , "VkBufferCopy"
+                   , "VkBufferMemoryRequirementsInfo2"
+                   , "VkImage"
+                   , "VkMappedMemoryRange"
+                   , "VkMemoryMapFlags"
+                   , "VkMemoryRequirements"
+                   , "VkPhysicalDeviceMemoryProperties"
+                   , "VkPhysicalDeviceProperties"
+                   , "VkResult"
                    ]
           -> vk n
+          | n
+            `elem` [ "VkMemoryAllocateInfo"
+                   , "VkBindBufferMemoryInfo"
+                   , "VkBindImageMemoryInfo"
+                   , "VkBufferCreateInfo"
+                   , "VkImageCreateInfo"
+                   , "VkMemoryRequirements2"
+                   , "VkImageMemoryRequirementsInfo2"
+                   , "VkPhysicalDeviceMemoryProperties2"
+                   ]
+          -> someVk n
         _ -> Nothing
