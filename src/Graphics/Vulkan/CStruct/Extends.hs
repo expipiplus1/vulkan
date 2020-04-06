@@ -12,6 +12,8 @@ module Graphics.Vulkan.CStruct.Extends  ( BaseOutStructure(..)
                                         , pokeSomeCStruct
                                         , forgetExtensions
                                         , Extensible(..)
+                                        , pattern (::&)
+                                        , pattern (:&)
                                         ) where
 
 import Data.Maybe (fromMaybe)
@@ -1271,6 +1273,34 @@ class Extensible (a :: [Type] -> Type) where
 type family Chain (xs :: [a]) = (r :: a) | r -> xs where
   Chain '[]    = ()
   Chain (x:xs) = (x, Chain xs)
+
+-- | A pattern synonym to separate the head of a struct chain from the
+-- tail, use in conjunction with ':&' to extract several members.
+--
+-- @
+-- Head{..} ::& () <- returningNoTail a b c
+-- -- Equivalent to
+-- Head{..} <- returningNoTail @'[] a b c
+-- @
+--
+-- @
+-- Head{..} ::& Foo{..} :& Bar{..} :& () <- returningWithTail a b c
+-- @
+--
+-- @
+-- myFun (Head{..} :&& Foo{..} :& ())
+-- @
+pattern (::&) :: Extensible a => a es -> Chain es -> a es
+pattern a ::& es <- (\a -> (a, getNext a) -> (a, es))
+  where a ::& es = setNext a es
+infixr 6 ::&
+
+-- | View the head and tail of a 'Chain', see '::&'
+--
+-- Equivalent to @(,)@
+pattern (:&) :: e -> Chain es -> Chain (e:es)
+pattern e :& es = (e, es)
+infixr 7 :&
 
 type family Extendss (p :: [Type] -> Type) (xs :: [Type]) :: Constraint where
   Extendss p '[]      = ()
