@@ -678,6 +678,7 @@ parseCommands es =
     cReturnType   <- parseCType (allNonCommentText proto)
     cParameters   <- fromList
       <$> traverseV parseParameter (manyChildren "param" n)
+    let cIsDynamic = True
     pure Command { .. }
 
   parseParameter :: Node -> P Parameter

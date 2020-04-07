@@ -38,7 +38,7 @@ data MarshalScheme a
   | Normal CType
     -- ^ Stays the same but uses more idiomatic Haskell types, for example
     -- Float instead of CFloat
-  | ElidedLength (Vector a) (Vector a) -- optional and required lengths
+  | ElidedLength CType (Vector a) (Vector a) -- optional and required lengths
     -- ^ This parameter only appears on the C side, it's value can be inferred
     -- from the lengths of some optional and required vectors
   | ElidedUnivalued Text
@@ -242,11 +242,11 @@ lengthScheme ps p = do
   guard (any (\v -> type' v /= Ptr Const Void) vs)
   case V.partition isTopOptional vs of
     -- Make sure they exist
-    (Empty, Empty)                     -> empty
+    (Empty, Empty)                   -> empty
     (Empty, rs) | all isReturnPtr rs -> empty
     (os, Empty) | length os > 1 ->
       throw "TODO: Handle multiple optional vectors without any required ones"
-    (os, rs) -> pure $ ElidedLength os rs
+    (os, rs) -> pure $ ElidedLength (type' p) os rs
 
 -- | Matches const and non-const void pointers, exposes them as 'Ptr ()'
 voidPointerScheme :: Marshalable a => a -> ND r (MarshalScheme a)
@@ -494,7 +494,7 @@ isElided = \case
   Unit              -> False
   Preserve _        -> False
   Normal   _        -> False
-  ElidedLength _ _  -> True
+  ElidedLength{}    -> True
   ElidedUnivalued _ -> True
   ElidedVoid        -> True
   VoidPtr           -> False

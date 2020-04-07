@@ -231,17 +231,22 @@ data RenderParams = RenderParams
   , mkIdiomaticType             :: Type -> Maybe IdiomaticType
     -- ^ Overrides for using a different type than default on the Haskell side
     -- than the C side
-  , mkHsTypeOverride            :: Preserve -> CType -> Maybe Type
+  , mkHsTypeOverride
+      :: forall r
+       . ExtensibleStructStyle r
+      -> Preserve
+      -> CType
+      -> Maybe (Sem r Type)
     -- ^ Override for using a different type than default on the Haskell side
-  , unionDiscriminators         :: Vector UnionDiscriminator
-  , successCodeType             :: CType
-  , isSuccessCodeReturned       :: Text -> Bool
+  , unionDiscriminators   :: Vector UnionDiscriminator
+  , successCodeType       :: CType
+  , isSuccessCodeReturned :: Text -> Bool
     -- ^ Is this success code returned from a function (failure codes are thrown)
     --
     -- use @const True@ to always return success codes
-  , firstSuccessCode            :: CName
+  , firstSuccessCode      :: CName
     -- Any code less than this is an error code
-  , exceptionTypeName           :: HName
+  , exceptionTypeName     :: HName
     -- The name for the exception wrapper
   , complexMemberLengthFunction
       :: forall r

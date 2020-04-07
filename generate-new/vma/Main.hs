@@ -18,12 +18,15 @@ import           Language.C.Analysis.SemRep
 import           Language.C.Analysis.ConstEval
 import           System.Process.Typed
 import           Polysemy
+import           Polysemy.NonDet
+import           Polysemy.Fail
 import           Polysemy.Input
 import           Polysemy.Fixpoint
 import           Say
 import qualified Data.Map                      as Map
 import qualified Data.Set                      as Set
 import           System.TimeIt
+import           Control.Exception              ( mapException )
 
 import           Error
 import           CType
@@ -40,9 +43,11 @@ import           Render.Names
 import           Render.FuncPointer
 import           Marshal.Scheme
 import           Marshal.Struct
+import           Marshal.Command
 import           Marshal.Marshalable
 import           Write.Segment
 import qualified Bespoke.MarshalParams         as Vk
+import qualified Bespoke.RenderParams          as Vk
 
 main :: IO ()
 main =
@@ -62,30 +67,39 @@ main =
     (ds  , state       ) <- fileDecls DoNotIgnoreWarnings vmaHeader
     enums                <- unitEnums state ds
     structs              <- unitStructs state ds
+    commands             <- unitCommands ds
     let handles = unitHandles ds
     funcPointers <- unitFuncPointers ds
 
     runInputConst (renderParams (specHandles spec)) $ do
       headerInfo <- liftA2 (<>)
                            (specSpecInfo spec specTypeSize)
-                           (vmaSpecInfo enums structs handles)
+                           (vmaSpecInfo enums structs handles commands)
 
-      renderedNames <- specRenderedNames spec
+      (renderedNames, specTypeInfo) <-
+        runInputConst (Vk.renderParams (specHandles spec)) $ do
+          rn <- specRenderedNames spec
+          ti <- specTypeInfo spec
+          pure (rn, ti)
+
       runInputConst headerInfo
-        . runInputConst (TypeInfo (const Nothing))
+        . runInputConst specTypeInfo
         . runInputConst renderedNames
         $ do
-            vulkanFuncPointers <- vulkanFuncPointers
-            specMarshalParams  <- Vk.marshalParams spec
-            ourMarshalParams   <- marshalParams handles
-            marshaledStructs   <-
-              runInputConst (specMarshalParams <> ourMarshalParams)
-                $ traverseV marshalStruct structs
+            vulkanFuncPointers                    <- vulkanFuncPointers
+            specMarshalParams                     <- Vk.marshalParams spec
+            ourMarshalParams                      <- marshalParams handles
+            (marshaledStructs, marshaledCommands) <-
+              runInputConst (specMarshalParams <> ourMarshalParams) $ do
+                ss <- traverseV marshalStruct structs
+                cs <- traverseV marshalCommand commands
+                pure (ss, cs)
 
             renderElems <- renderHeader enums
                                         marshaledStructs
                                         handles
                                         funcPointers
+                                        marshaledCommands
             renderedVulkanFuncPointers <- traverseV
               (fmap makeRenderElementInternal . renderFuncPointer)
               vulkanFuncPointers
@@ -104,25 +118,31 @@ marshalParams handles =
       isDefaultable = isHandle
       isPassAsPointerType _ = False
       getBespokeScheme :: Marshalable a => CName -> a -> Maybe (MarshalScheme a)
-      getBespokeScheme = \case
-        "VmaAllocatorCreateInfo" -> \case
-          a | name a == "pHeapSizeLimit" -> Just $ Preserve (type' a)
-          _                              -> Nothing
-        -- "VmaDefragmentationPassInfo" -> \case
-        --   a | name a == "pMoves", Ptr _ p <- type' a -> Just $ Vector (Normal p)
-        --   _ -> Nothing
-        _ -> const Nothing
+      getBespokeScheme p a = case (p, name a) of
+        ("VmaAllocatorCreateInfo", "pHeapSizeLimit") ->
+          Just $ Preserve (type' a)
+        ("vmaBuildStatsString", "ppStatsString") | Ptr _ p <- type' a ->
+          Just $ Returned (Preserve p)
+        ("vmaGetPoolName", "ppName") | Ptr _ p <- type' a ->
+          Just $ Returned (Preserve p)
+        ("vmaFreeStatsString", "pStatsString") -> Just $ Preserve (type' a)
+        _ -> Nothing
   in  pure MarshalParams { .. }
 
 vmaHeader :: FilePath
-vmaHeader = "VulkanMemoryAllocator/src/vk_mem_alloc.h"
+vmaHeader = "../VulkanMemoryAllocator/VulkanMemoryAllocator/src/vk_mem_alloc.h"
 
 ----------------------------------------------------------------
 -- Spec info
 ----------------------------------------------------------------
 
-vmaSpecInfo :: Vector Enum' -> Vector Struct -> Vector Handle -> Sem r SpecInfo
-vmaSpecInfo enums structs handles = do
+vmaSpecInfo
+  :: Vector Enum'
+  -> Vector Struct
+  -> Vector Handle
+  -> Vector Command
+  -> Sem r SpecInfo
+vmaSpecInfo enums structs handles commands = do
   let aliasMap = mempty
       resolveAlias :: CName -> CName
       resolveAlias n = maybe n resolveAlias (Map.lookup n aliasMap)
@@ -132,7 +152,7 @@ vmaSpecInfo enums structs handles = do
       siIsStruct          = mkLookup sName structs
       siIsUnion           = const Nothing
       siIsHandle          = mkLookup hName handles
-      siIsCommand         = const Nothing
+      siIsCommand         = mkLookup cName commands
       siIsDisabledCommand = const Nothing
       siIsEnum            = mkLookup eName enums
       siContainsUnion     = const []
@@ -233,6 +253,38 @@ vulkanFuncPointers =
             <$> toList cParameters
             )
           )
+
+unitCommands :: HasErr r => GlobalDecls -> Sem r (Vector Command)
+unitCommands ds =
+  fmap (fromList . catMaybes)
+    . forV [ d | Declaration d <- toList (gObjs ds) ]
+    $ \d -> runNonDetMaybe . failToNonDet $ do
+        Decl (VarDecl (VarName (Ident name _ _) _) attrs ty) _ <- pure d
+        DeclAttrs _ (FunLinkage ExternalLinkage) _             <- pure attrs
+        FunctionType (FunType ret params _) _                  <- pure ty
+        let cName         = CName (T.pack name)
+            cSuccessCodes = fromList $ case cName of
+              "vmaDefragmentationBegin"   -> ["VK_NOT_READY"]
+              "vmaDefragmentationPassEnd" -> ["VK_NOT_READY"]
+              _                           -> []
+            cErrorCodes = fromList ["VK_ERROR_UNKNOWN"]
+            cIsDynamic  = False
+        (_, _, cReturnType) <- typeToCType ret
+        cParameters         <- fmap fromList . forV params $ \case
+          ParamDecl (VarDecl (VarName (Ident name _ _) _) _ ty) _ -> do
+            let pName = CName (T.pack name)
+            (lengths, opts, pType) <- typeToCType ty
+            let pLengths = fromList $ case (cName, pName) of
+                  ("vmaGetPoolName", "ppName") -> [NullTerminated]
+                  ("vmaSetPoolName", "pName" ) -> [NullTerminated]
+                  _                            -> lengths
+                pIsOptional = fromList opts
+            pure Parameter { .. }
+          -- TODO: Make pName in Parameter optional
+          ParamDecl (VarDecl NoName _ _) _ ->
+            throw "Unhandled param with no name"
+          AbstractParamDecl _ _ -> throw "Unhandled AbstractParamDecl"
+        pure Command { .. }
 
 unitStructs :: HasErr r => TravState s -> GlobalDecls -> Sem r (Vector Struct)
 unitStructs state ds = do
@@ -463,7 +515,7 @@ data IgnoreWarnings = DoIgnoreWarnings | DoNotIgnoreWarnings
 
 -- | Read the preprocessed version of a file
 cpp :: MonadIO m => FilePath -> m LByteString
-cpp f = readProcessStdout_
+cpp f = mapException (\e -> e { eceStdout = mempty }) $ readProcessStdout_
   (proc
     "cpp"
     [ f

@@ -153,16 +153,17 @@ peekWrapped
   -> MarshalScheme a
   -> Sem (NonDet ': StmtE s r ': r) (Ref s ValueDoc)
 peekWrapped name lengths fromType addr = \case
-  Normal   toType   -> raise $ normalPeek name addr toType fromType
-  Preserve _toType  -> raise $ storablePeek name addr fromType
-  ElidedVoid        -> empty
-  ElidedLength _ _  -> raise $ storablePeek name addr fromType
-  ElidedUnivalued _ -> empty
-  ByteString        -> raise $ byteStringPeek @a name lengths addr fromType
-  VoidPtr           -> raise $ storablePeek name addr fromType
-  Maybe  toType     -> raise $ maybePeek' name lengths addr fromType toType
-  Vector toElem     -> raise $ vectorPeek name lengths addr fromType toElem
-  Tupled _ toElem   -> raise $ tuplePeek name addr fromType toElem
+  Normal   toType      -> raise $ normalPeek name addr toType fromType
+  Preserve _toType     -> raise $ storablePeek name addr fromType
+  ElidedVoid           -> empty
+  -- TODO: Should this take into account the type?
+  ElidedLength{}       -> raise $ storablePeek name addr fromType
+  ElidedUnivalued _    -> empty
+  ByteString           -> raise $ byteStringPeek @a name lengths addr fromType
+  VoidPtr              -> raise $ storablePeek name addr fromType
+  Maybe  toType        -> raise $ maybePeek' name lengths addr fromType toType
+  Vector toElem        -> raise $ vectorPeek name lengths addr fromType toElem
+  Tupled _ toElem      -> raise $ tuplePeek name addr fromType toElem
   WrappedStruct toName -> raise $ wrappedStructPeek name addr toName fromType
   EitherWord32 toElem ->
     raise $ eitherWord32Peek name lengths addr fromType toElem
@@ -687,7 +688,7 @@ getLenRef lengths = do
             $   "fromIntegral $"
             <+> pretty (mkMemberName member)
             <+> parens (structValue <+> "::" <+> structTyDoc)
-    NullTerminated :<| _ -> throw "Trying to allocate a null terminated"
+    NullTerminated :<| _ -> throw "Trying to allocate a null terminated array"
     -- _ -> throw "Trying to allocate something with multiple lengths"
 
 ----------------------------------------------------------------

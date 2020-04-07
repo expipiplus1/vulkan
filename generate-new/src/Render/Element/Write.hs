@@ -368,7 +368,6 @@ fixOddImport n = fromMaybe (Just n) (lookup n fixes)
 --
 ----------------------------------------------------------------
 
--- Sometimes we need to lookup the type of a constructor or the level of a handle
 newtype TypeInfo = TypeInfo
   { tiConMap :: HName -> Maybe HName
   }
@@ -377,7 +376,12 @@ type HasTypeInfo r = MemberWithError (Input TypeInfo) r
 
 withTypeInfo
   :: HasRenderParams r => Spec -> Sem (Input TypeInfo ': r) a -> Sem r a
-withTypeInfo Spec {..} a = do
+withTypeInfo spec a = do
+  ti <- specTypeInfo spec
+  runInputConst ti a
+
+specTypeInfo :: HasRenderParams r => Spec -> Sem r TypeInfo
+specTypeInfo Spec {..} = do
   RenderParams {..} <- input
   let tyMap :: Map HName HName
       tyMap = Map.fromList
@@ -388,7 +392,7 @@ withTypeInfo Spec {..} a = do
                 ABitmask flags -> flags
         , EnumValue {..} <- V.toList eValues
         ]
-  runInputConst (TypeInfo (`Map.lookup` tyMap)) a
+  pure $ TypeInfo (`Map.lookup` tyMap)
 
 adoptConstructors :: HasTypeInfo r => Import HName -> Sem r (Import HName)
 adoptConstructors = \case

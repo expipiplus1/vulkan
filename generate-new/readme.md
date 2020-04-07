@@ -50,3 +50,6 @@ nix-shell -p python3 asciidoctor gnumake --run './makeAllExts allman'
 - `VmaDefragmentationPassInfo::pMoves`
 - `VmaAllocatorCreateInfo::pVulkanFunctions` This should be created from the
   function table in `Device`
+
+- throwing on error Result return values
+- Returning any success return values

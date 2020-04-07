@@ -122,7 +122,7 @@ renderParams handles = r
                         ]
                      )
       )
-    , mkHsTypeOverride            = \preserve t -> case preserve of
+    , mkHsTypeOverride            = \_ preserve t -> pure <$> case preserve of
       DoNotPreserve -> Nothing
       _             -> case t of
         TypeName n | Set.member n dispatchableHandleNames ->

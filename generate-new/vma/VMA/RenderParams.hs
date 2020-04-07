@@ -16,6 +16,7 @@ import           Data.Text.Extra                ( lowerCaseFirst
                                                 )
 import           Data.Char                      ( isLower )
 import           Language.Haskell.TH            ( mkName )
+import           Polysemy
 
 import           Foreign.Ptr
 
@@ -52,23 +53,25 @@ renderParams handles = r
                                     . dropVma
     , alwaysQualifiedNames        = V.fromList [''VSS.Vector]
     , mkIdiomaticType             = mkIdiomaticType vulkanParams
-    , mkHsTypeOverride = \preserve t -> case vulkanManifest vulkanParams t of
-                           Just r -> pure r
-                           _      -> case preserve of
-                             DoNotPreserve -> Nothing
-                             _             -> case t of
-                               TypeName n
-                                 | Set.member n dispatchableHandleNames -> Just
-                                 $ ConT ''Ptr
-                                 :@ ConT
-                                      ( mkName
-                                      . ("Graphics.Vulkan." <>)
-                                      . T.unpack
-                                      . unName
-                                      . mkEmptyDataName vulkanParams
-                                      $ n
-                                      )
-                               _ -> Nothing
+    , mkHsTypeOverride            = \structStyle preserve t ->
+                                      case vulkanManifest structStyle vulkanParams t of
+                                        Just r -> pure r
+                                        _      -> case preserve of
+                                          DoNotPreserve -> Nothing
+                                          _             -> case t of
+                                            TypeName n
+                                              | Set.member n dispatchableHandleNames -> Just
+                                              . pure
+                                              $ ConT ''Ptr
+                                              :@ ConT
+                                                   ( mkName
+                                                   . ("Graphics.Vulkan." <>)
+                                                   . T.unpack
+                                                   . unName
+                                                   . mkEmptyDataName vulkanParams
+                                                   $ n
+                                                   )
+                                            _ -> Nothing
     , unionDiscriminators         = mempty
     , successCodeType             = TypeName "VkResult"
     , isSuccessCodeReturned       = (/= "VK_SUCCESS")
@@ -90,6 +93,9 @@ renderParams handles = r
             ConName   "MAX_MEMORY_TYPES" -> vk "Core10.APIConstants"
             ConName   "MAX_MEMORY_HEAPS" -> vk "Core10.APIConstants"
             TyConName "SomeStruct"       -> vk "CStruct.Extends"
+            TyConName "PokeChain"        -> vk "CStruct.Extends"
+            TyConName "VulkanException"  -> vk "Exception"
+            ConName   "SUCCESS"          -> vk "Core10.Enums.Result"
             _                            -> Nothing
     }
 
@@ -100,6 +106,7 @@ vulkanNameOverrides :: CName -> Maybe Text
 vulkanNameOverrides = \case
   "VK_MAX_MEMORY_TYPES" -> Just "MAX_MEMORY_TYPES"
   "VK_MAX_MEMORY_HEAPS" -> Just "MAX_MEMORY_HEAPS"
+  "VK_SUCCESS"          -> Just "SUCCESS"
   _                     -> Nothing
 
 dropPrefix
@@ -121,27 +128,32 @@ dropPointer =
     . T.span isLower
 
 -- TODO: Generate this automatically
-vulkanManifest :: RenderParams -> CType -> Maybe Type
-vulkanManifest RenderParams {..} =
+vulkanManifest
+  :: ExtensibleStructStyle r -> RenderParams -> CType -> Maybe (Sem r Type)
+vulkanManifest structStyle RenderParams {..} =
   let vk =
         Just
+          . pure
           . ConT
           . mkName
           . T.unpack
           . ("Graphics.Vulkan." <>)
           . unName
           . mkTyName
-      someVk t = Just
-        (  ConT (mkName "SomeStruct")
-        :@ ( ConT
-           . mkName
-           . T.unpack
-           . ("Graphics.Vulkan." <>)
-           . unName
-           . mkTyName
-           $ t
-           )
-        )
+      someVk t = Just $ do
+        let structTyCon =
+              ConT
+                . mkName
+                . T.unpack
+                . ("Graphics.Vulkan." <>)
+                . unName
+                . mkTyName
+                $ t
+        case structStyle of
+          Applied getVar -> do
+            v <- getVar
+            pure $ structTyCon :@ v
+          Wrapped -> pure $ ConT (mkName "SomeStruct") :@ structTyCon
   in  \case
         TypeName n
           | n

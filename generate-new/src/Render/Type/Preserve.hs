@@ -1,7 +1,7 @@
-module Render.Type.Preserve
-  ( Preserve(..)
-  )
-where
+module Render.Type.Preserve where
+
+import           Polysemy
+import           Language.Haskell.TH            ( Type )
 
 data Preserve
   = DoNotPreserve
@@ -10,3 +10,9 @@ data Preserve
     -- ^ Use the types from Foreign.C.Types
   | DoLower
     -- ^ Use the types from Foreign.C.Types and lower arrays to pointers
+
+data ExtensibleStructStyle r
+  = Applied (Sem r Type)
+  -- ^ A variable or hole of kind @[Type]@ to apply to the extensible struct
+  | Wrapped
+  -- ^ Structs should be wrapped in @SomeStruct@

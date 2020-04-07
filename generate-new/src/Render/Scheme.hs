@@ -27,7 +27,7 @@ schemeType s = do
     Unit              -> pure $ Just (ConT ''())
     Preserve cType    -> Just <$> cToHsType DoPreserve cType
     Normal   cType    -> Just <$> cToHsType DoNotPreserve cType
-    ElidedLength _ _  -> pure Nothing
+    ElidedLength{}    -> pure Nothing
     ElidedUnivalued _ -> pure Nothing
     ElidedVoid        -> pure Nothing
     VoidPtr           -> pure . Just $ ConT ''Ptr :@ ConT ''()

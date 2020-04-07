@@ -9,7 +9,10 @@ import           Relude                  hiding ( Type
                                                 )
 import           Data.Text.Prettyprint.Doc
 import           Data.Text.Extra                ( upperCaseFirst )
-import           Language.Haskell.TH.Syntax     ( nameBase )
+import           Language.Haskell.TH.Syntax     ( nameBase
+                                                , nameModule
+                                                , mkNameG_tc
+                                                )
 import           Data.List.Extra                ( nubOrd )
 import           Polysemy
 import           Polysemy.Input
@@ -57,23 +60,7 @@ renderCommand m@MarshaledCommand {..} = contextShow (unCName mcName) $ do
   RenderParams {..} <- input
   let Command {..} = mcCommand
   genRe ("command " <> unCName mcName) $ do
-    ffiTy <- cToHsType
-      DoLower
-      (Proto cReturnType
-             [ (Nothing, pType) | Parameter {..} <- toList cParameters ]
-      )
-    let dynamicBindType = ConT ''FunPtr :@ ffiTy ~> ffiTy
-        dynName         = getDynName mcCommand
-    dynamicBindTypeDoc <- renderType dynamicBindType
-    importConstructors dynamicBindType
-    tellDoc $ vsep
-      [ "foreign import ccall"
-      , "#if !defined(SAFE_FOREIGN_CALLS)"
-      , indent 2 "unsafe"
-      , "#endif"
-      , indent 2 "\"dynamic\"" <+> pretty dynName
-      , indent 2 ("::" <+> dynamicBindTypeDoc)
-      ]
+    renderForeignDecl mcCommand
 
     let siblingMap = Map.fromList
           [ (n, SiblingInfo (pretty . unCName $ n) (mpScheme p))
@@ -240,7 +227,7 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
   let t         = foldr arrowUniqueVars r nts
       paramName = pretty . mkParamName . pName . mpParam
       isArg p = case mpScheme p of
-        ElidedLength _ _  -> Nothing
+        ElidedLength{}    -> Nothing
         ElidedUnivalued _ -> Nothing
         ElidedVoid        -> Nothing
         Returned _        -> Nothing
@@ -366,7 +353,7 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
   --
   let paramName = pretty . mkParamName . pName . mpParam
       isArg p = case mpScheme p of
-        ElidedLength _ _  -> Nothing
+        ElidedLength{}    -> Nothing
         ElidedUnivalued _ -> Nothing
         ElidedVoid        -> Nothing
         Returned   _      -> Nothing
@@ -388,7 +375,7 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
     --
     (getLengthPokes, getLengthPeeks, countAddr, countPeek) <-
       pokesForGettingCount mcParams countParamIndex vecParamIndices
-    ret1 <- runWithPokes False m funRef getLengthPokes
+    ret1        <- runWithPokes False m funRef getLengthPokes
 
     filledCount <- stmt Nothing Nothing $ do
       after ret1
@@ -628,7 +615,20 @@ getCCall
      )
   => Command
   -> Stmt s r (Ref s FunDoc)
-getCCall c = do
+getCCall c = if cIsDynamic c
+  then getCCallDynamic c
+  else pureStmt (FunDoc (pretty (getStaticName c)))
+
+getCCallDynamic
+  :: ( HasErr r
+     , HasRenderParams r
+     , HasSpecInfo r
+     , HasRenderParams r
+     , HasRenderElem r
+     )
+  => Command
+  -> Stmt s r (Ref s FunDoc)
+getCCallDynamic c = do
   RenderParams {..} <- input
   let -- What to do in the case that this command isn't dispatched from a handle
       noHandle = stmt Nothing (Just (unCName (cName c) <> "'")) $ do
@@ -702,6 +702,49 @@ commandHandle Command {..} = case cParameters V.!? 0 of
   Just p@Parameter {..} | TypeName t <- pType -> fmap (p, ) <$> getHandle t
   _ -> pure Nothing
 
+renderForeignDecl
+  :: ( HasErr r
+     , HasSpecInfo r
+     , HasRenderElem r
+     , HasRenderParams r
+     , HasRenderedNames r
+     )
+  => Command
+  -> Sem r ()
+renderForeignDecl c@Command {..} = do
+  ffiTy <- cToHsType
+    DoLower
+    (Proto cReturnType
+           [ (Nothing, pType) | Parameter {..} <- toList cParameters ]
+    )
+  if cIsDynamic
+    then do
+      let dynamicBindType = ConT ''FunPtr :@ ffiTy ~> ffiTy
+          dynName         = getDynName c
+      dynamicBindTypeDoc <- renderType dynamicBindType
+      importConstructors dynamicBindType
+      tellDoc $ vsep
+        [ "foreign import ccall"
+        , "#if !defined(SAFE_FOREIGN_CALLS)"
+        , indent 2 "unsafe"
+        , "#endif"
+        , indent 2 "\"dynamic\"" <+> pretty dynName
+        , indent 2 ("::" <+> dynamicBindTypeDoc)
+        ]
+    else do
+      let staticName = getStaticName c
+      staticBindTypeDoc <- renderType ffiTy
+      importConstructors ffiTy
+      tellDoc $ vsep
+        [ "foreign import ccall"
+        , "#if !defined(SAFE_FOREIGN_CALLS)"
+        , indent 2 "unsafe"
+        , "#endif"
+        , indent 2 (dquotes (pretty (unCName cName)) <+> pretty staticName)
+        , indent 2 ("::" <+> staticBindTypeDoc)
+        ]
+
+
 ----------------------------------------------------------------
 -- Poking values
 ----------------------------------------------------------------
@@ -750,6 +793,9 @@ lowerParamType p@Parameter {..} = case pType of
 ----------------------------------------------------------------
 
 -- | Foreign imports require constructors in scope for newtypes
+--
+-- TODO: This currently assumes that the newtypes are in the same module as any
+-- synonyms pointing to them.
 importConstructors
   :: forall r
    . (HasSpecInfo r, HasRenderElem r, HasRenderParams r, HasRenderedNames r)
@@ -757,11 +803,18 @@ importConstructors
   -> Sem r ()
 importConstructors t = do
   RenderParams {..} <- input
-  let names = nubOrd $ allTypeNames t
-      isNewtype' :: Name -> Sem r Bool
-      isNewtype' n = pure (n `elem` builtinNewtypes)
-        <||> isNewtype (TyConName . T.pack . nameBase $ n)
-  for_ names $ \n -> whenM (isNewtype' n) $ tellImportWithAll n
+  let
+    names = nubOrd $ allTypeNames t
+    isNewtype' :: Name -> Sem r Bool
+    isNewtype' n = pure (n `elem` builtinNewtypes)
+      <||> isNewtype (TyConName . T.pack . nameBase $ n)
+    setNameBase :: Name -> HName -> Name
+    setNameBase n =
+      mkNameG_tc "" (fromMaybe "" (nameModule n)) . T.unpack . unName
+  resolveAlias <- do
+    ra <- getResolveAlias
+    pure $ \n -> setNameBase n (ra . TyConName . T.pack . nameBase $ n)
+  for_ names $ \n -> whenM (isNewtype' n) $ tellImportWithAll (resolveAlias n)
 
 builtinNewtypes :: [Name]
 builtinNewtypes =
@@ -799,6 +852,9 @@ builtinNewtypes =
 
 getDynName :: Command -> Text
 getDynName = ("mk" <>) . upperCaseFirst . unCName . cName
+
+getStaticName :: Command -> Text
+getStaticName = ("ffi" <>) . upperCaseFirst . unCName . cName
 
 infixr 2 -->
 (-->) :: Bool -> Bool -> Bool

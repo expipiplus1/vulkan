@@ -177,11 +177,12 @@ instance M.Marshalable StructMember where
 --
 
 data Command = Command
-  { cName :: CName
-  , cReturnType :: CType
-  , cParameters :: Vector Parameter
+  { cName         :: CName
+  , cReturnType   :: CType
+  , cParameters   :: Vector Parameter
   , cSuccessCodes :: Vector Text
-  , cErrorCodes :: Vector Text
+  , cErrorCodes   :: Vector Text
+  , cIsDynamic    :: Bool
   }
   deriving (Show, Eq)
 

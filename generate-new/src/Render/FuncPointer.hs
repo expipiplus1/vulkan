@@ -26,7 +26,7 @@ renderFuncPointer FuncPointer {..} = contextShow (unCName fpName) $ do
   fmap identicalBoot . genRe ("func pointer " <> unCName fpName) $ do
     let p = mkTyName fpName
         n = mkFuncPointerName fpName
-    tDoc    <- renderType =<< cToHsType DoPreserve =<< stripPtr fpType
+    tDoc    <- renderType =<< cToHsTypeWrapped DoPreserve =<< stripPtr fpType
     tPtrDoc <- renderType (ConT ''FunPtr :@ ConT (typeName n))
     tellExport (EType p)
     tellExport (EType n)
