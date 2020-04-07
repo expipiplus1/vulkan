@@ -7,6 +7,9 @@
 
 Complete zero writing, we write some unnecessary zero bytes
 
+We sometimes use calloc where alloc would do, when passing in space for "out"
+parameters.
+
 non-optional arrays/structs can be allocated at the same time as their parent
 struct.
 
