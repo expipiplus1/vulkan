@@ -11,6 +11,7 @@ let
 
   targets = {
     vulkan = ./.;
+    VulkanMemoryAllocator = ./VulkanMemoryAllocator;
     generate-new = ./generate-new;
   };
 
@@ -79,9 +80,14 @@ let
 
   # Generate a haskell derivation using the cabal2nix tool on `package.yaml`
   makeDrv = name: src:
-    haskellPackages.callCabal2nixWithOptions "" src "" ({ }
+    haskellPackages.callCabal2nixWithOptions "" src "--flag=build-examples" ({ }
       // pkgs.lib.optionalAttrs (name == "vulkan") {
         vulkan = pkgs.vulkan-loader;
+      }
+      // pkgs.lib.optionalAttrs (name == "VulkanMemoryAllocator" && forShell) {
+        # For the shell we don't want to have the compile the local dependency
+        # for VMA
+        vulkan = null;
       });
 
   addHoogleDatabase = drv:
