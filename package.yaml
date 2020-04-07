@@ -82,7 +82,7 @@ flags:
       Do not mark foreign imports as 'unsafe'. This means that
       callbacks from Vulkan to Haskell will work. If you are using
       these then make sure this flag is enabled.
-    default: yes
+    default: no
     manual: yes
 
   build-examples:

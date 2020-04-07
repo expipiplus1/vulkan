@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 300d263cc403953d9f051e0324439f8bd86ee66770cb7845de18ba0b9c9cea3f
+-- hash: 679c81eaa58abcfcf349c8a2c4da52556f84759f349f6e33f786ae28b1db16cf
 
 name:           vulkan
 version:        3.0.0.0
@@ -33,7 +33,7 @@ flag build-examples
 flag safe-foreign-calls
   description: Do not mark foreign imports as 'unsafe'. This means that callbacks from Vulkan to Haskell will work. If you are using these then make sure this flag is enabled.
   manual: True
-  default: True
+  default: False
 
 library
   exposed-modules:
