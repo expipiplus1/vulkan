@@ -52,6 +52,8 @@ executables:
   sdl-triangle:
     main: Main.hs
     source-dirs: examples/sdl-triangle
+    system-build-tools:
+      - glslang
     when:
     - condition: flag(build-examples)
       then:
