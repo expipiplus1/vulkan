@@ -67,7 +67,6 @@ executables:
     source-dirs: vma
     dependencies:
       - generate-new
-      - spoon
       - language-c
     ghc-options:
       - -threaded

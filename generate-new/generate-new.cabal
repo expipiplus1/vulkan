@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 3399b947f5c5d02b5cec73d54a4d89e82c37bec34d42ccc71c2c9e2586f7ae86
+-- hash: 74f013f11982c9c4984d4dde1abeeeb10e5abb1aab2196872ecde6d44d80f8c8
 
 name:           generate-new
 version:        0.0.0
@@ -177,6 +177,7 @@ executable vk
 executable vma
   main-is: Main.hs
   other-modules:
+      VMA.Documentation
       VMA.Render
       VMA.RenderParams
       Paths_generate_new
