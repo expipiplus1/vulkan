@@ -47,6 +47,20 @@ nix-shell -p python3 asciidoctor gnumake --run './makeAllExts allman'
 
 # VMA
 
+## Docbook documentation
+
+To generate the docbook documentation required by `vma`:
+
+In an environment with `doxygen` (`nix-shell -p doxygen`), in the
+`VulkanMemoryAllocator/VulkanMemoryAllocator` directory.
+
+```bash
+sed -i 's|^GENERATE_DOCBOOK.*|GENERATE_DOCBOOK=YES|' src/Doxyfile
+(cd src && doxygen Doxyfile)
+```
+
+The docbook documentation will be in `docs/docbook`.
+
 ## To check
 
 - `pHeapSizeLimit` length
@@ -56,3 +70,7 @@ nix-shell -p python3 asciidoctor gnumake --run './makeAllExts allman'
 
 - throwing on error Result return values
 - Returning any success return values
+
+# More TODOs
+
+Bindings for chaoticbob/SPIRV-Reflect

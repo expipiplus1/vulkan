@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 833b031eec7740568ab197a618f272c843a2702976f09de02871aee096623604
+-- hash: 3399b947f5c5d02b5cec73d54a4d89e82c37bec34d42ccc71c2c9e2586f7ae86
 
 name:           generate-new
 version:        0.0.0
@@ -19,6 +19,8 @@ library
   exposed-modules:
       AssignModules
       Bespoke
+      Bespoke.MarshalParams
+      Bespoke.RenderParams
       Bespoke.Seeds
       Bespoke.Utils
       Bracket
@@ -147,7 +149,6 @@ executable vk
     , generate-new
     , inline-c
     , interpolatedstring-perl6
-    , language-c
     , mtl
     , pandoc
     , parsec
@@ -176,6 +177,8 @@ executable vk
 executable vma
   main-is: Main.hs
   other-modules:
+      VMA.Render
+      VMA.RenderParams
       Paths_generate_new
   hs-source-dirs:
       vma
@@ -198,6 +201,7 @@ executable vma
     , generate-new
     , inline-c
     , interpolatedstring-perl6
+    , language-c
     , mtl
     , pandoc
     , parsec

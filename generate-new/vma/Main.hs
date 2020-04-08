@@ -1,4 +1,4 @@
-module VMA
+module Main
   where
 
 import           Relude                  hiding ( Type
@@ -33,8 +33,6 @@ import           CType
 import           CType.Size
 import           Spec.Parse
 import           Render.SpecInfo
-import           VMA.RenderParams
-import           VMA.Render
 import           Render.Element                 ( ModName(..)
                                                 , makeRenderElementInternal
                                                 )
@@ -48,6 +46,15 @@ import           Marshal.Marshalable
 import           Write.Segment
 import qualified Bespoke.MarshalParams         as Vk
 import qualified Bespoke.RenderParams          as Vk
+
+import           VMA.RenderParams
+import           VMA.Render
+import           VMA.Documentation
+
+vmaDir, vmaDocbookDir, vmaHeader :: FilePath
+vmaDir = "../VulkanMemoryAllocator/VulkanMemoryAllocator"
+vmaHeader = vmaDir <> "/src/vk_mem_alloc.h"
+vmaDocbookDir = vmaDir <> "/docs/docbook"
 
 main :: IO ()
 main =
@@ -64,7 +71,9 @@ main =
       $ readFileBS "./Vulkan-Docs/xml/vk.xml"
     (spec, specTypeSize) <- timeItNamed "Parsing spec" $ parseSpec specText
 
-    (ds  , state       ) <- fileDecls DoNotIgnoreWarnings vmaHeader
+    getDocumentation     <- loadAllDocumentation vmaDocbookDir
+
+    (ds, state)          <- fileDecls DoNotIgnoreWarnings vmaHeader
     enums                <- unitEnums state ds
     structs              <- unitStructs state ds
     commands             <- unitCommands ds
@@ -86,6 +95,37 @@ main =
         . runInputConst specTypeInfo
         . runInputConst renderedNames
         $ do
+            forV_ (specCommands spec) $ \Command {..} -> do
+              ints <-
+                fmap (V.mapMaybe id) $ forV cParameters $ \Parameter {..} -> do
+                  let t n = getHandle n <&> \case
+                        Nothing -> Nothing
+                        Just _  -> Just pName
+                  case pType of
+                    Ptr CType.Const (TypeName n) -> t n
+                    Ptr _ (Ptr CType.Const (TypeName n)) -> t n
+                    _ -> pure Nothing
+              for_ ints $ \n -> traceShowM (cName, n)
+
+            traceShowM ()
+            traceShowM ()
+            traceShowM ()
+            traceShowM ()
+            traceShowM ()
+
+            forV_ (specStructs spec) $ \Struct {..} -> do
+              ints <-
+                fmap (V.mapMaybe id) $ forV sMembers $ \StructMember {..} -> do
+                  let t n = getHandle n <&> \case
+                        Nothing -> Nothing
+                        Just _  -> Just smName
+                  case smType of
+                    Array _ _ (Ptr CType.Const (TypeName n)) -> t n
+                    Ptr CType.Const (TypeName n) -> t n
+                    Ptr _ (Ptr CType.Const (TypeName n)) -> t n
+                    _ -> pure Nothing
+              for_ ints $ \n -> traceShowM (sName, n)
+
             vulkanFuncPointers                    <- vulkanFuncPointers
             specMarshalParams                     <- Vk.marshalParams spec
             ourMarshalParams                      <- marshalParams handles
@@ -107,7 +147,7 @@ main =
                   [ Segment (ModName "Graphics.VulkanMemoryAllocator")
                             (renderElems <> renderedVulkanFuncPointers)
                   ]
-            renderSegments (const Nothing) "out-vma" segments
+            renderSegments getDocumentation "out-vma" segments
 
 marshalParams :: Vector Handle -> Sem r MarshalParams
 marshalParams handles =
@@ -128,9 +168,6 @@ marshalParams handles =
         ("vmaFreeStatsString", "pStatsString") -> Just $ Preserve (type' a)
         _ -> Nothing
   in  pure MarshalParams { .. }
-
-vmaHeader :: FilePath
-vmaHeader = "../VulkanMemoryAllocator/VulkanMemoryAllocator/src/vk_mem_alloc.h"
 
 ----------------------------------------------------------------
 -- Spec info

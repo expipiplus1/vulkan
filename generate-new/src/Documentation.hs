@@ -5,6 +5,8 @@ module Documentation
   , Documentee(..)
   , docBookToDocumentation
   , splitDocumentation
+  , guessDocumentee
+  , iterateSuffixesM
   , main
   ) where
 
@@ -12,7 +14,6 @@ import           Control.Monad
 import           Data.Default
 import           Data.Foldable
 import           Data.Maybe
-import qualified Data.Text.Extra               as T
 import           Documentation.RunAsciiDoctor
                                          hiding ( main )
 import           Relude                  hiding ( rem
@@ -37,26 +38,26 @@ data Documentee
   deriving (Show, Eq, Ord)
 
 docBookToDocumentation
-  :: Text
+  :: (Documentee -> Bool)
+  -- ^ Is a valid documentee name
+  -> Text
   -- ^ The docbook string
   -> Either Text [Documentation]
-docBookToDocumentation db = mdo
+docBookToDocumentation isValid db = mdo
   let readerOptions = def
   pandoc             <- first show $ runPure (readDocBook readerOptions db)
   (removed, subDocs) <- splitDocumentation name pandoc
-  name               <- guessDocumentee removed
+  name               <- guessDocumentee isValid removed
   pure $ Documentation (TopLevel name) removed : subDocs
 
-guessDocumentee :: Pandoc -> Either Text CName
-guessDocumentee (Pandoc _ bs) = do
+guessDocumentee :: (Documentee -> Bool) -> Pandoc -> Either Text CName
+guessDocumentee isValid (Pandoc _ bs) = do
   firstWord <- case bs of
     Para (Str n : _) : _ -> pure n
-    _                    -> Left "Unable to find first word in documentation"
-  if "vk"
-       `T.isPrefixOf` T.toLower firstWord
-       ||             "pfn_"
-       `T.isPrefixOf` T.toLower firstWord
+    _ -> Left "Unable to find first word in documentation"
+  if isValid (TopLevel (CName firstWord))
     then pure (CName firstWord)
+    -- TODO: Fix error message here.
     else Left "First word of documentation doesn't begin with \"vk\" or \"pfn\""
 
 -- | If the description is a bullet list of "enames" then remove those from the
@@ -142,7 +143,7 @@ main = do
   [d, m] <- getArgs
   manTxtToDocbook [] d m >>= \case
     Left  e  -> sayErr e
-    Right d' -> case docBookToDocumentation d' of
+    Right d' -> case docBookToDocumentation (const True) d' of
       Left  e  -> sayErr e
       Right ds -> for_ ds sayShow
 
