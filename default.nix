@@ -76,7 +76,7 @@ let
 
   buildSet = pkgs.lib.foldl (ps: p: ps // { ${p.pname} = p; }) { } packages;
   packages = map (t: haskellPackages.${t}) (builtins.attrNames targets);
-  tools = with pkgs; [ pkgconfig asciidoctor python3 ];
+  tools = with pkgs; [ pkgconfig asciidoctor python3 doxygen ];
 
   # Generate a haskell derivation using the cabal2nix tool on `package.yaml`
   makeDrv = name: src:

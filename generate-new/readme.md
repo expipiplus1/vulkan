@@ -55,7 +55,7 @@ In an environment with `doxygen` (`nix-shell -p doxygen`), in the
 `VulkanMemoryAllocator/VulkanMemoryAllocator` directory.
 
 ```bash
-(cd src && doxygen <(sed -e 's|^GENERATE_DOCBOOK.*|GENERATE_DOCBOOK=YES|' -e 's|^BRIEF_MEMBER_DESC.*|BRIEF_MEMBER_DESC=NO|' Doxyfile))
+(cd src && sed -i -e 's|^GENERATE_DOCBOOK.*|GENERATE_DOCBOOK=YES|' -e 's|^BRIEF_MEMBER_DESC.*|BRIEF_MEMBER_DESC=NO|' Doxyfile && doxygen Doxyfile)
 ```
 
 The docbook documentation will be in `docs/docbook`.

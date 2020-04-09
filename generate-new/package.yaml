@@ -110,5 +110,6 @@ dependencies:
   - unordered-containers
   - vector
   - vector-sized
+  - vector-algorithms
   - word-wrap
   - xeno

@@ -26,17 +26,17 @@ renderHeader
      , HasRenderedNames r
      , Member Fixpoint r
      )
-  => Vector Enum'
-  -> Vector (MarshaledStruct AStruct)
-  -> Vector Handle
-  -> Vector FuncPointer
-  -> Vector MarshaledCommand
-  -> Sem r (Vector RenderElement)
+  => Vector (a, Enum')
+  -> Vector (a, MarshaledStruct AStruct)
+  -> Vector (a, Handle)
+  -> Vector (a, FuncPointer)
+  -> Vector (a, MarshaledCommand)
+  -> Sem r (Vector (a, RenderElement))
 renderHeader enums structs handles funcPointers commands = sequenceV
-  (  (renderEnum <$> enums)
-  <> (renderStruct <$> structs)
-  <> (renderHandle <$> handles)
-  <> (renderFuncPointer <$> funcPointers)
-  <> (renderCommand <$> commands)
+  (  (traverse renderEnum <$> enums)
+  <> (traverse renderStruct <$> structs)
+  <> (traverse renderHandle <$> handles)
+  <> (traverse renderFuncPointer <$> funcPointers)
+  <> (traverse renderCommand <$> commands)
   )
 

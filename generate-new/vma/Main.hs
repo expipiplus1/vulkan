@@ -8,6 +8,7 @@ import qualified Data.Text                     as T
 import qualified Data.List                     as List
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
+import qualified Data.Vector.Algorithms.Intro  as V
 import           Language.C.Parser
 import           Language.C.Data
 import           Language.C.Data.Ident
@@ -81,9 +82,14 @@ main =
     funcPointers <- unitFuncPointers ds
 
     runInputConst (renderParams (specHandles spec)) $ do
-      headerInfo <- liftA2 (<>)
-                           (specSpecInfo spec specTypeSize)
-                           (vmaSpecInfo enums structs handles commands)
+      headerInfo <- liftA2
+        (<>)
+        (specSpecInfo spec specTypeSize)
+        (vmaSpecInfo (snd <$> enums)
+                     (snd <$> structs)
+                     (snd <$> handles)
+                     (snd <$> commands)
+        )
 
       (renderedNames, specTypeInfo) <-
         runInputConst (Vk.renderParams (specHandles spec)) $ do
@@ -97,11 +103,11 @@ main =
         $ do
             vulkanFuncPointers                    <- vulkanFuncPointers
             specMarshalParams                     <- Vk.marshalParams spec
-            ourMarshalParams                      <- marshalParams handles
+            ourMarshalParams <- marshalParams (snd <$> handles)
             (marshaledStructs, marshaledCommands) <-
               runInputConst (specMarshalParams <> ourMarshalParams) $ do
-                ss <- traverseV marshalStruct structs
-                cs <- traverseV marshalCommand commands
+                ss <- traverseV (traverse marshalStruct) structs
+                cs <- traverseV (traverse marshalCommand) commands
                 pure (ss, cs)
 
             renderElems <- renderHeader enums
@@ -112,9 +118,11 @@ main =
             renderedVulkanFuncPointers <- traverseV
               (fmap makeRenderElementInternal . renderFuncPointer)
               vulkanFuncPointers
-            let segments =
+            let sortedRenderElems =
+                  snd <$> V.modify (V.sortBy (comparing fst)) renderElems
+                segments =
                   [ Segment (ModName "Graphics.VulkanMemoryAllocator")
-                            (renderElems <> renderedVulkanFuncPointers)
+                            (sortedRenderElems <> renderedVulkanFuncPointers)
                   ]
             renderSegments getDocumentation "out-vma" segments
 
@@ -181,12 +189,13 @@ vmaSpecInfo enums structs handles commands = do
 --
 ----------------------------------------------------------------
 
-unitEnums :: HasErr r => TravState s -> GlobalDecls -> Sem r (Vector Enum')
+unitEnums
+  :: HasErr r => TravState s -> GlobalDecls -> Sem r (Vector (NodeInfo, Enum'))
 unitEnums state ds = do
   let ets = [ e | EnumDef e <- Map.elems (gTags ds) ]
   fmap fromList . forV ets $ \case
-    EnumType (AnonymousRef _            ) _  _ _ -> throw "Enum without a name"
-    EnumType (NamedRef     (Ident n _ _)) es _ _ -> do
+    EnumType (AnonymousRef _) _ _ _ -> throw "Enum without a name"
+    EnumType (NamedRef (Ident n _ nodeInfo)) es _ _ -> do
       allValues <-
         fmap fromList . forV es $ \(Enumerator (Ident n _ _) expr _ _) -> do
           let evName        = CName (T.pack n)
@@ -203,21 +212,25 @@ unitEnums state ds = do
           eType   = if "FlagBits" `List.isSuffixOf` n
             then ABitmask (CName $ T.dropEnd 8 (T.pack n) <> "Flags")
             else AnEnum
-      pure Enum { .. }
+      pure (nodeInfo, Enum { .. })
 
 -- TODO: This may be a little fragile
-unitHandles :: GlobalDecls -> Vector Handle
+unitHandles :: GlobalDecls -> Vector (NodeInfo, Handle)
 unitHandles ds = fromList
-  [ Handle (CName (T.pack n)) NonDispatchable NoHandleLevel
-  | (Ident n _ _, TypeDef _ (PtrType (DirectType (TyComp (CompTypeRef (NamedRef (Ident nT _ _)) _ _)) _ _) _ _) _ _) <-
+  [ (nodeInfo, Handle (CName (T.pack n)) NonDispatchable NoHandleLevel)
+  | (Ident n _ nodeInfo, TypeDef _ (PtrType (DirectType (TyComp (CompTypeRef (NamedRef (Ident nT _ _)) _ _)) _ _) _ _) _ _) <-
     Map.toList $ gTypeDefs ds
   , n <> "_T" == nT
   ]
 
-unitFuncPointers :: HasErr r => GlobalDecls -> Sem r (Vector FuncPointer)
+unitFuncPointers
+  :: HasErr r => GlobalDecls -> Sem r (Vector (NodeInfo, FuncPointer))
 unitFuncPointers ds = fromList <$> sequenceV
-  [ FuncPointer (CName (T.pack n)) . (\(_, _, t) -> t) <$> typeToCType t
-  | (Ident n _ _, TypeDef _ t _ _) <- Map.toList $ gTypeDefs ds
+  [ (nodeInfo, )
+    .   FuncPointer (CName (T.pack n))
+    .   (\(_, _, t) -> t)
+    <$> typeToCType t
+  | (Ident n _ nodeInfo, TypeDef _ t _ _) <- Map.toList $ gTypeDefs ds
   , "PFN_" `List.isPrefixOf` n
   ]
 
@@ -260,14 +273,14 @@ vulkanFuncPointers =
             )
           )
 
-unitCommands :: HasErr r => GlobalDecls -> Sem r (Vector Command)
+unitCommands :: HasErr r => GlobalDecls -> Sem r (Vector (NodeInfo, Command))
 unitCommands ds =
   fmap (fromList . catMaybes)
     . forV [ d | Declaration d <- toList (gObjs ds) ]
     $ \d -> runNonDetMaybe . failToNonDet $ do
-        Decl (VarDecl (VarName (Ident name _ _) _) attrs ty) _ <- pure d
-        DeclAttrs _ (FunLinkage ExternalLinkage) _             <- pure attrs
-        FunctionType (FunType ret params _) _                  <- pure ty
+        Decl (VarDecl (VarName (Ident name _ nodeInfo) _) attrs ty) _ <- pure d
+        DeclAttrs _ (FunLinkage ExternalLinkage) _ <- pure attrs
+        FunctionType (FunType ret params _) _ <- pure ty
         let cName         = CName (T.pack name)
             cSuccessCodes = fromList $ case cName of
               "vmaDefragmentationBegin"   -> ["VK_NOT_READY"]
@@ -290,79 +303,82 @@ unitCommands ds =
           ParamDecl (VarDecl NoName _ _) _ ->
             throw "Unhandled param with no name"
           AbstractParamDecl _ _ -> throw "Unhandled AbstractParamDecl"
-        pure Command { .. }
+        pure (nodeInfo, Command { .. })
 
-unitStructs :: HasErr r => TravState s -> GlobalDecls -> Sem r (Vector Struct)
+unitStructs
+  :: HasErr r => TravState s -> GlobalDecls -> Sem r (Vector (NodeInfo, Struct))
 unitStructs state ds = do
   let sts =
         [ s | CompDef s@(CompType _ StructTag _ _ _) <- Map.elems (gTags ds) ]
   fmap fromList . forV sts $ \case
     CompType (AnonymousRef _) _ _ _ _ -> throw "Struct without a name"
-    t@(CompType (NamedRef (Ident n _ _)) _ ms _ _) -> context (T.pack n) $ do
-      let sName       = CName (T.pack n)
-          sExtends    = mempty
-          sExtendedBy = mempty
-      sizedMembers <- forV ms $ \case
-        m@(MemberDecl (VarDecl (VarName (Ident n _ _) _) _ ty) Nothing _) -> do
-          let smName = CName (T.pack n)
-          (lengths, optionality, smType) <- case (sName, smName) of
-            ("VmaStats", "memoryType") -> pure
-              ( []
-              , []
-              , Array NonConst
-                      (SymbolicArraySize "VK_MAX_MEMORY_TYPES")
-                      (TypeName "VmaStatInfo")
-              )
-            ("VmaStats", "memoryHeap") -> pure
-              ( []
-              , []
-              , Array NonConst
-                      (SymbolicArraySize "VK_MAX_MEMORY_HEAPS")
-                      (TypeName "VmaStatInfo")
-              )
-            _ -> typeToCType ty
-          let smValues  = mempty
-              smLengths = if n == "pFilePath"
-                then fromList [NullTerminated]
-                else fromList lengths
-              smIsOptional = fromList $ case (sName, smName) of
-                -- pPools can only be null when allocationCount is zero
-                ("VmaDefragmentationInfo2", "pPools") -> [False]
-                -- pAllocations can only be null when 'allocationCount' is zero
-                ("VmaDefragmentationInfo2", "pAllocations") -> [False]
-                _ -> optionality
-              smOffset = ()
-          (size, alignment) <- runTrav_' DoNotIgnoreWarnings state $ do
-            s <- fromIntegral <$> sizeofType x86_64 m ty
-            a <- fromIntegral <$> alignofType x86_64 m ty
-            pure (s, a)
-          pure (StructMember { .. }, (size, alignment))
-        MemberDecl (VarDecl NoName _ _) _ _ ->
-          throw "Unhandled unnamed struct member"
-        MemberDecl _ (Just _) _ -> throw "Unhandled bitfield member"
-        AnonBitField{}          -> throw "Unhandled anonymous bitfield member"
-      (size', align', Compose membersWithOffsets) <- scanOffsets
-        CType.Size.roundToAlignment
-        (\_ m o -> m + o)
-        pure
-        (Compose sizedMembers)
-      let sMembers = fromList $ membersWithOffsets <&> \(s, o) ->
-            s { smOffset = fromIntegral o }
-      sSize <-
-        fmap fromIntegral . runTrav_' DoNotIgnoreWarnings state $ sizeofType
-          x86_64
-          t
-          (DirectType (typeOfCompDef t) noTypeQuals [])
-      sAlignment <-
-        fmap fromIntegral . runTrav_' DoNotIgnoreWarnings state $ alignofType
-          x86_64
-          t
-          (DirectType (typeOfCompDef t) noTypeQuals [])
-      unless (sSize == size')
-        $ throw ("Size mismatch " <> show sSize <> " vs " <> show size')
-      unless (sAlignment == align') $ throw
-        ("Align mismatch " <> show sAlignment <> " vs " <> show align')
-      pure Struct { .. }
+    t@(CompType (NamedRef (Ident n _ nodeInfo)) _ ms _ _) ->
+      context (T.pack n) $ do
+        let sName       = CName (T.pack n)
+            sExtends    = mempty
+            sExtendedBy = mempty
+        sizedMembers <- forV ms $ \case
+          m@(MemberDecl (VarDecl (VarName (Ident n _ _) _) _ ty) Nothing _) ->
+            do
+              let smName = CName (T.pack n)
+              (lengths, optionality, smType) <- case (sName, smName) of
+                ("VmaStats", "memoryType") -> pure
+                  ( []
+                  , []
+                  , Array NonConst
+                          (SymbolicArraySize "VK_MAX_MEMORY_TYPES")
+                          (TypeName "VmaStatInfo")
+                  )
+                ("VmaStats", "memoryHeap") -> pure
+                  ( []
+                  , []
+                  , Array NonConst
+                          (SymbolicArraySize "VK_MAX_MEMORY_HEAPS")
+                          (TypeName "VmaStatInfo")
+                  )
+                _ -> typeToCType ty
+              let smValues  = mempty
+                  smLengths = if n == "pFilePath"
+                    then fromList [NullTerminated]
+                    else fromList lengths
+                  smIsOptional = fromList $ case (sName, smName) of
+                    -- pPools can only be null when allocationCount is zero
+                    ("VmaDefragmentationInfo2", "pPools") -> [False]
+                    -- pAllocations can only be null when 'allocationCount' is zero
+                    ("VmaDefragmentationInfo2", "pAllocations") -> [False]
+                    _ -> optionality
+                  smOffset = ()
+              (size, alignment) <- runTrav_' DoNotIgnoreWarnings state $ do
+                s <- fromIntegral <$> sizeofType x86_64 m ty
+                a <- fromIntegral <$> alignofType x86_64 m ty
+                pure (s, a)
+              pure (StructMember { .. }, (size, alignment))
+          MemberDecl (VarDecl NoName _ _) _ _ ->
+            throw "Unhandled unnamed struct member"
+          MemberDecl _ (Just _) _ -> throw "Unhandled bitfield member"
+          AnonBitField{}          -> throw "Unhandled anonymous bitfield member"
+        (size', align', Compose membersWithOffsets) <- scanOffsets
+          CType.Size.roundToAlignment
+          (\_ m o -> m + o)
+          pure
+          (Compose sizedMembers)
+        let sMembers = fromList $ membersWithOffsets <&> \(s, o) ->
+              s { smOffset = fromIntegral o }
+        sSize <-
+          fmap fromIntegral . runTrav_' DoNotIgnoreWarnings state $ sizeofType
+            x86_64
+            t
+            (DirectType (typeOfCompDef t) noTypeQuals [])
+        sAlignment <-
+          fmap fromIntegral . runTrav_' DoNotIgnoreWarnings state $ alignofType
+            x86_64
+            t
+            (DirectType (typeOfCompDef t) noTypeQuals [])
+        unless (sSize == size')
+          $ throw ("Size mismatch " <> show sSize <> " vs " <> show size')
+        unless (sAlignment == align') $ throw
+          ("Align mismatch " <> show sAlignment <> " vs " <> show align')
+        pure (nodeInfo, Struct { .. })
 
 -- TODO: Make optionality part of the Ptr constructor
 typeToCType

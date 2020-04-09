@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 74f013f11982c9c4984d4dde1abeeeb10e5abb1aab2196872ecde6d44d80f8c8
+-- hash: a35bd0b81cc5cec3d4e0378e0abbce32abf5b19a4a975f47b1b8a9b3e2bae73f
 
 name:           generate-new
 version:        0.0.0
@@ -119,6 +119,7 @@ library
     , uniplate
     , unordered-containers
     , vector
+    , vector-algorithms
     , vector-sized
     , word-wrap
     , xeno
@@ -169,6 +170,7 @@ executable vk
     , uniplate
     , unordered-containers
     , vector
+    , vector-algorithms
     , vector-sized
     , word-wrap
     , xeno
@@ -223,6 +225,7 @@ executable vma
     , uniplate
     , unordered-containers
     , vector
+    , vector-algorithms
     , vector-sized
     , word-wrap
     , xeno
