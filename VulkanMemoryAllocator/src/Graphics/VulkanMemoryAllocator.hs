@@ -239,7 +239,41 @@ foreign import ccall
   "vmaAllocateMemoryPages" ffiVmaAllocateMemoryPages
   :: Allocator -> Ptr MemoryRequirements -> Ptr AllocationCreateInfo -> CSize -> Ptr Allocation -> Ptr AllocationInfo -> IO Result
 
--- No documentation found for TopLevel "vmaAllocateMemoryPages"
+-- | General purpose memory allocation for multiple allocation objects at
+-- once.
+--
+-- __Parameters.__
+--
+-- +-----------+-----------------------+-----------------------------------------------+
+-- |           | allocator             | Allocator object.                             |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- |           | pVkMemoryRequirements | Memory requirements for each allocation.      |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- |           | pCreateInfo           | Creation parameters for each alloction.       |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- |           | allocationCount       | Number of allocations to make.                |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- | out       | pAllocations          | Pointer to array that will be filled with     |
+-- |           |                       | handles to created allocations.               |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- | out       | pAllocationInfo       | Optional. Pointer to array that will be       |
+-- |           |                       | filled with parameters of created             |
+-- |           |                       | allocations.                                  |
+-- +-----------+-----------------------+-----------------------------------------------+
+--
+-- You should free the memory using 'freeMemory' or 'freeMemoryPages'.
+--
+-- Word \"pages\" is just a suggestion to use this function to allocate
+-- pieces of memory needed for sparse binding. It is just a general purpose
+-- allocation function able to make multiple allocations at once. It may be
+-- internally optimized to be more efficient than calling 'allocateMemory'
+-- @allocationCount@ times.
+--
+-- All allocations are made using same parameters. All of them are created
+-- out of the same memory pool and type. If any allocation fails, all
+-- allocations already made within this function call are also freed, so
+-- that when returned result is not @VK_SUCCESS@, @pAllocation@ array is
+-- always entirely filled with @VK_NULL_HANDLE@.
 allocateMemoryPages :: Allocator -> ("vkMemoryRequirements" ::: MemoryRequirements) -> AllocationCreateInfo -> ("allocationCount" ::: Word64) -> IO (("allocations" ::: Vector Allocation), ("allocationInfo" ::: Vector AllocationInfo))
 allocateMemoryPages allocator vkMemoryRequirements createInfo allocationCount = evalContT $ do
   pVkMemoryRequirements <- ContT $ withCStruct (vkMemoryRequirements)
@@ -261,7 +295,7 @@ foreign import ccall
   "vmaBeginDefragmentationPass" ffiVmaBeginDefragmentationPass
   :: Allocator -> DefragmentationContext -> Ptr DefragmentationPassInfo -> IO Result
 
--- No documentation found for TopLevel "vmaBeginDefragmentationPass"
+
 beginDefragmentationPass :: Allocator -> DefragmentationContext -> IO (DefragmentationPassInfo)
 beginDefragmentationPass allocator context = evalContT $ do
   pPInfo <- ContT (withZeroCStruct @DefragmentationPassInfo)
@@ -278,7 +312,19 @@ foreign import ccall
   "vmaBindBufferMemory" ffiVmaBindBufferMemory
   :: Allocator -> Allocation -> Buffer -> IO Result
 
--- No documentation found for TopLevel "vmaBindBufferMemory"
+-- | Binds buffer to allocation.
+--
+-- Binds specified buffer to region of memory represented by specified
+-- allocation. Gets @VkDeviceMemory@ handle and offset from the allocation.
+-- If you want to create a buffer, allocate memory for it and bind them
+-- together separately, you should use this function for binding instead of
+-- standard @vkBindBufferMemory()@, because it ensures proper
+-- synchronization so that when a @VkDeviceMemory@ object is used by
+-- multiple allocations, calls to @vkBind*Memory()@ or @vkMapMemory()@
+-- won\'t happen from multiple threads simultaneously (which is illegal in
+-- Vulkan).
+--
+-- It is recommended to use function 'createBuffer' instead of this one.
 bindBufferMemory :: Allocator -> Allocation -> Buffer -> IO ()
 bindBufferMemory allocator allocation buffer = do
   r <- (ffiVmaBindBufferMemory) (allocator) (allocation) (buffer)
@@ -292,7 +338,28 @@ foreign import ccall
   "vmaFindMemoryTypeIndex" ffiVmaFindMemoryTypeIndex
   :: Allocator -> Word32 -> Ptr AllocationCreateInfo -> Ptr Word32 -> IO Result
 
--- No documentation found for TopLevel "vmaFindMemoryTypeIndex"
+-- | Helps to find memoryTypeIndex, given memoryTypeBits and
+-- 'AllocationCreateInfo'.
+--
+-- This algorithm tries to find a memory type that:
+--
+-- -   Is allowed by memoryTypeBits.
+--
+-- -   Contains all the flags from pAllocationCreateInfo->requiredFlags.
+--
+-- -   Matches intended usage.
+--
+-- -   Has as many flags from pAllocationCreateInfo->preferredFlags as
+--     possible.
+--
+-- __Returns.__
+--
+-- Returns VK_ERROR_FEATURE_NOT_PRESENT if not found. Receiving such result
+-- from this function or any other allocating function probably means that
+-- your device doesn\'t support any memory type with requested features for
+-- the specific type of resource you want to use it for. Please check
+-- parameters of your resource, like image layout (OPTIMAL versus LINEAR)
+-- or mip level count.
 findMemoryTypeIndex :: Allocator -> ("memoryTypeBits" ::: Word32) -> AllocationCreateInfo -> IO (("memoryTypeIndex" ::: Word32))
 findMemoryTypeIndex allocator memoryTypeBits allocationCreateInfo = evalContT $ do
   pAllocationCreateInfo <- ContT $ withCStruct (allocationCreateInfo)
@@ -310,7 +377,12 @@ foreign import ccall
   "vmaGetAllocatorInfo" ffiVmaGetAllocatorInfo
   :: Allocator -> Ptr AllocatorInfo -> IO ()
 
--- No documentation found for TopLevel "vmaGetAllocatorInfo"
+-- | Returns information about existing 'Allocator' object - handle to Vulkan
+-- device etc.
+--
+-- It might be useful if you want to keep just the 'Allocator' handle and
+-- fetch other required handles to @VkPhysicalDevice@, @VkDevice@ etc.
+-- every time using this function.
 getAllocatorInfo :: Allocator -> IO (AllocatorInfo)
 getAllocatorInfo allocator = evalContT $ do
   pPAllocatorInfo <- ContT (withZeroCStruct @AllocatorInfo)
@@ -326,7 +398,19 @@ foreign import ccall
   "vmaBindImageMemory" ffiVmaBindImageMemory
   :: Allocator -> Allocation -> Image -> IO Result
 
--- No documentation found for TopLevel "vmaBindImageMemory"
+-- | Binds image to allocation.
+--
+-- Binds specified image to region of memory represented by specified
+-- allocation. Gets @VkDeviceMemory@ handle and offset from the allocation.
+-- If you want to create an image, allocate memory for it and bind them
+-- together separately, you should use this function for binding instead of
+-- standard @vkBindImageMemory()@, because it ensures proper
+-- synchronization so that when a @VkDeviceMemory@ object is used by
+-- multiple allocations, calls to @vkBind*Memory()@ or @vkMapMemory()@
+-- won\'t happen from multiple threads simultaneously (which is illegal in
+-- Vulkan).
+--
+-- It is recommended to use function 'createImage' instead of this one.
 bindImageMemory :: Allocator -> Allocation -> Image -> IO ()
 bindImageMemory allocator allocation image = do
   r <- (ffiVmaBindImageMemory) (allocator) (allocation) (image)
@@ -340,7 +424,27 @@ foreign import ccall
   "vmaBindImageMemory2" ffiVmaBindImageMemory2
   :: Allocator -> Allocation -> DeviceSize -> Image -> Ptr () -> IO Result
 
--- No documentation found for TopLevel "vmaBindImageMemory2"
+-- | Binds image to allocation with additional parameters.
+--
+-- __Parameters.__
+--
+-- +-----------------------+--------------------------------------------------------+
+-- | allocationLocalOffset | Additional offset to be added while binding, relative  |
+-- |                       | to the beginnig of the 'Allocation'. Normally it       |
+-- |                       | should be 0.                                           |
+-- +-----------------------+--------------------------------------------------------+
+-- | pNext                 | A chain of structures to be attached to                |
+-- |                       | @VkBindImageMemoryInfoKHR@ structure used internally.  |
+-- |                       | Normally it should be null.                            |
+-- +-----------------------+--------------------------------------------------------+
+--
+-- This function is similar to 'bindImageMemory', but it provides
+-- additional parameters.
+--
+-- If @pNext@ is not null, 'Allocator' object must have been created with
+-- 'ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT' flag or with
+-- @VmaAllocatorCreateInfo::vulkanApiVersion@ @== VK_API_VERSION_1_1@.
+-- Otherwise the call fails.
 bindImageMemory2 :: Allocator -> Allocation -> ("allocationLocalOffset" ::: DeviceSize) -> Image -> ("next" ::: Ptr ()) -> IO ()
 bindImageMemory2 allocator allocation allocationLocalOffset image next = do
   r <- (ffiVmaBindImageMemory2) (allocator) (allocation) (allocationLocalOffset) (image) (next)
@@ -354,7 +458,20 @@ foreign import ccall
   "vmaSetAllocationUserData" ffiVmaSetAllocationUserData
   :: Allocator -> Allocation -> Ptr () -> IO ()
 
--- No documentation found for TopLevel "vmaSetAllocationUserData"
+-- | Sets pUserData in given allocation to new value.
+--
+-- If the allocation was created with
+-- VMA_ALLOCATION_CREATE_USER_DATA_COPY_STRING_BIT, pUserData must be
+-- either null, or pointer to a null-terminated string. The function makes
+-- local copy of the string and sets it as allocation\'s @pUserData@.
+-- String passed as pUserData doesn\'t need to be valid for whole lifetime
+-- of the allocation - you can free it after this call. String previously
+-- pointed by allocation\'s pUserData is freed from memory.
+--
+-- If the flag was not used, the value of pointer @pUserData@ is just
+-- copied to allocation\'s @pUserData@. It is opaque, so you can use it
+-- however you want - e.g. as a pointer, ordinal number or some handle to
+-- you own data.
 setAllocationUserData :: Allocator -> Allocation -> ("userData" ::: Ptr ()) -> IO ()
 setAllocationUserData allocator allocation userData = do
   (ffiVmaSetAllocationUserData) (allocator) (allocation) (userData)
@@ -368,7 +485,58 @@ foreign import ccall
   "vmaDefragmentationBegin" ffiVmaDefragmentationBegin
   :: Allocator -> Ptr DefragmentationInfo2 -> Ptr DefragmentationStats -> Ptr DefragmentationContext -> IO Result
 
--- No documentation found for TopLevel "vmaDefragmentationBegin"
+-- | Begins defragmentation process.
+--
+-- __Parameters.__
+--
+-- +-----------+-----------+-----------------------------------------------+
+-- |           | allocator | Allocator object.                             |
+-- +-----------+-----------+-----------------------------------------------+
+-- |           | pInfo     | Structure filled with parameters of           |
+-- |           |           | defragmentation.                              |
+-- +-----------+-----------+-----------------------------------------------+
+-- | out       | pStats    | Optional. Statistics of defragmentation. You  |
+-- |           |           | can pass null if you are not interested in    |
+-- |           |           | this information.                             |
+-- +-----------+-----------+-----------------------------------------------+
+-- | out       | pContext  | Context object that must be passed to         |
+-- |           |           | 'defragmentationEnd' to finish                |
+-- |           |           | defragmentation.                              |
+-- +-----------+-----------+-----------------------------------------------+
+--
+-- __Returns.__
+--
+-- @VK_SUCCESS@ and @*pContext == null@ if defragmentation finished within
+-- this function call. @VK_NOT_READY@ and @*pContext != null@ if
+-- defragmentation has been started and you need to call
+-- 'defragmentationEnd' to finish it. Negative value in case of error.
+--
+-- Use this function instead of old, deprecated 'defragment'.
+--
+-- Warning! Between the call to 'defragmentationBegin' and
+-- 'defragmentationEnd':
+--
+-- -   You should not use any of allocations passed as
+--     @pInfo->pAllocations@ or any allocations that belong to pools passed
+--     as @pInfo->pPools@, including calling 'getAllocationInfo',
+--     'touchAllocation', or access their data.
+--
+-- -   Some mutexes protecting internal data structures may be locked, so
+--     trying to make or free any allocations, bind buffers or images, map
+--     memory, or launch another simultaneous defragmentation in between
+--     may cause stall (when done on another thread) or deadlock (when done
+--     on the same thread), unless you are 100% sure that defragmented
+--     allocations are in different pools.
+--
+-- -   Information returned via @pStats@ and @pInfo->pAllocationsChanged@
+--     are undefined. They become valid after call to 'defragmentationEnd'.
+--
+-- -   If @pInfo->commandBuffer@ is not null, you must submit that command
+--     buffer and make sure it finished execution before calling
+--     'defragmentationEnd'.
+--
+-- For more information and important limitations regarding
+-- defragmentation, see documentation chapter: @Defragmentation@.
 defragmentationBegin :: Allocator -> DefragmentationInfo2 -> IO (Result, DefragmentationStats, DefragmentationContext)
 defragmentationBegin allocator info = evalContT $ do
   pInfo <- ContT $ withCStruct (info)
@@ -388,7 +556,23 @@ foreign import ccall
   "vmaAllocateMemory" ffiVmaAllocateMemory
   :: Allocator -> Ptr MemoryRequirements -> Ptr AllocationCreateInfo -> Ptr Allocation -> Ptr AllocationInfo -> IO Result
 
--- No documentation found for TopLevel "vmaAllocateMemory"
+-- | General purpose memory allocation.
+--
+-- __Parameters.__
+--
+-- +-----------+-----------------+-----------------------------------------------+
+-- | out       | pAllocation     | Handle to allocated memory.                   |
+-- +-----------+-----------------+-----------------------------------------------+
+-- | out       | pAllocationInfo | Optional. Information about allocated memory. |
+-- |           |                 | It can be later fetched using function        |
+-- |           |                 | 'getAllocationInfo'.                          |
+-- +-----------+-----------------+-----------------------------------------------+
+--
+-- You should free the memory using 'freeMemory' or 'freeMemoryPages'.
+--
+-- It is recommended to use 'allocateMemoryForBuffer',
+-- 'allocateMemoryForImage', 'createBuffer', 'createImage' instead whenever
+-- possible.
 allocateMemory :: Allocator -> ("vkMemoryRequirements" ::: MemoryRequirements) -> AllocationCreateInfo -> IO (Allocation, AllocationInfo)
 allocateMemory allocator vkMemoryRequirements createInfo = evalContT $ do
   pVkMemoryRequirements <- ContT $ withCStruct (vkMemoryRequirements)
@@ -409,7 +593,10 @@ foreign import ccall
   "vmaGetMemoryTypeProperties" ffiVmaGetMemoryTypeProperties
   :: Allocator -> Word32 -> Ptr MemoryPropertyFlags -> IO ()
 
--- No documentation found for TopLevel "vmaGetMemoryTypeProperties"
+-- | Given Memory Type Index, returns Property Flags of this memory type.
+--
+-- This is just a convenience function. Same information can be obtained
+-- using 'getMemoryProperties'.
 getMemoryTypeProperties :: Allocator -> ("memoryTypeIndex" ::: Word32) -> IO (MemoryPropertyFlags)
 getMemoryTypeProperties allocator memoryTypeIndex = evalContT $ do
   pPFlags <- ContT $ bracket (callocBytes @MemoryPropertyFlags 4) free
@@ -425,7 +612,7 @@ foreign import ccall
   "vmaEndDefragmentationPass" ffiVmaEndDefragmentationPass
   :: Allocator -> DefragmentationContext -> IO Result
 
--- No documentation found for TopLevel "vmaEndDefragmentationPass"
+
 endDefragmentationPass :: Allocator -> DefragmentationContext -> IO ()
 endDefragmentationPass allocator context = do
   r <- (ffiVmaEndDefragmentationPass) (allocator) (context)
@@ -439,7 +626,11 @@ foreign import ccall
   "vmaDefragmentationEnd" ffiVmaDefragmentationEnd
   :: Allocator -> DefragmentationContext -> IO Result
 
--- No documentation found for TopLevel "vmaDefragmentationEnd"
+-- | Ends defragmentation process.
+--
+-- Use this function to finish defragmentation started by
+-- 'defragmentationBegin'. It is safe to pass @context == null@. The
+-- function then does nothing.
 defragmentationEnd :: Allocator -> DefragmentationContext -> IO ()
 defragmentationEnd allocator context = do
   r <- (ffiVmaDefragmentationEnd) (allocator) (context)
@@ -453,7 +644,18 @@ foreign import ccall
   "vmaFreeMemoryPages" ffiVmaFreeMemoryPages
   :: Allocator -> CSize -> Ptr Allocation -> IO ()
 
--- No documentation found for TopLevel "vmaFreeMemoryPages"
+-- | Frees memory and destroys multiple allocations.
+--
+-- Word \"pages\" is just a suggestion to use this function to free pieces
+-- of memory used for sparse binding. It is just a general purpose function
+-- to free memory and destroy allocations made using e.g. 'allocateMemory',
+-- 'allocateMemoryPages' and other functions. It may be internally
+-- optimized to be more efficient than calling 'freeMemory'
+-- @allocationCount@ times.
+--
+-- Allocations in @pAllocations@ array can come from any memory pools and
+-- types. Passing @VK_NULL_HANDLE@ as elements of @pAllocations@ array is
+-- valid. Such entries are just skipped.
 freeMemoryPages :: Allocator -> ("allocations" ::: Vector Allocation) -> IO ()
 freeMemoryPages allocator allocations = evalContT $ do
   pPAllocations <- ContT $ allocaBytesAligned @Allocation ((Data.Vector.length (allocations)) * 8) 8
@@ -469,7 +671,25 @@ foreign import ccall
   "vmaGetAllocationInfo" ffiVmaGetAllocationInfo
   :: Allocator -> Allocation -> Ptr AllocationInfo -> IO ()
 
--- No documentation found for TopLevel "vmaGetAllocationInfo"
+-- | Returns current information about specified allocation and atomically
+-- marks it as used in current frame.
+--
+-- Current paramters of given allocation are returned in @pAllocationInfo@.
+--
+-- This function also atomically \"touches\" allocation - marks it as used
+-- in current frame, just like 'touchAllocation'. If the allocation is in
+-- lost state, @pAllocationInfo->deviceMemory == VK_NULL_HANDLE@.
+--
+-- Although this function uses atomics and doesn\'t lock any mutex, so it
+-- should be quite efficient, you can avoid calling it too often.
+--
+-- -   You can retrieve same 'AllocationInfo' structure while creating your
+--     resource, from function 'createBuffer', 'createImage'. You can
+--     remember it if you are sure parameters don\'t change (e.g. due to
+--     defragmentation or allocation becoming lost).
+--
+-- -   If you just want to check if allocation is not lost,
+--     'touchAllocation' will work faster.
 getAllocationInfo :: Allocator -> Allocation -> IO (AllocationInfo)
 getAllocationInfo allocator allocation = evalContT $ do
   pPAllocationInfo <- ContT (withZeroCStruct @AllocationInfo)
@@ -485,7 +705,7 @@ foreign import ccall
   "vmaFreeStatsString" ffiVmaFreeStatsString
   :: Allocator -> Ptr CChar -> IO ()
 
--- No documentation found for TopLevel "vmaFreeStatsString"
+
 freeStatsString :: Allocator -> ("statsString" ::: Ptr CChar) -> IO ()
 freeStatsString allocator statsString = do
   (ffiVmaFreeStatsString) (allocator) (statsString)
@@ -499,7 +719,27 @@ foreign import ccall
   "vmaCheckPoolCorruption" ffiVmaCheckPoolCorruption
   :: Allocator -> Pool -> IO Result
 
--- No documentation found for TopLevel "vmaCheckPoolCorruption"
+-- | Checks magic number in margins around all allocations in given memory
+-- pool in search for corruptions.
+--
+-- Corruption detection is enabled only when @VMA_DEBUG_DETECT_CORRUPTION@
+-- macro is defined to nonzero, @VMA_DEBUG_MARGIN@ is defined to nonzero
+-- and the pool is created in memory type that is @HOST_VISIBLE@ and
+-- @HOST_COHERENT@. For more information, see /Corruption detection/.
+--
+-- Possible return values:
+--
+-- -   @VK_ERROR_FEATURE_NOT_PRESENT@ - corruption detection is not enabled
+--     for specified pool.
+--
+-- -   @VK_SUCCESS@ - corruption detection has been performed and
+--     succeeded.
+--
+-- -   @VK_ERROR_VALIDATION_FAILED_EXT@ - corruption detection has been
+--     performed and found memory corruptions around one of the
+--     allocations. @VMA_ASSERT@ is also fired in that case.
+--
+-- -   Other value: Error returned by Vulkan, e.g. memory mapping failure.
 checkPoolCorruption :: Allocator -> Pool -> IO ()
 checkPoolCorruption allocator pool = do
   r <- (ffiVmaCheckPoolCorruption) (allocator) (pool)
@@ -513,7 +753,21 @@ foreign import ccall
   "vmaFindMemoryTypeIndexForBufferInfo" ffiVmaFindMemoryTypeIndexForBufferInfo
   :: Allocator -> Ptr (BufferCreateInfo a) -> Ptr AllocationCreateInfo -> Ptr Word32 -> IO Result
 
--- No documentation found for TopLevel "vmaFindMemoryTypeIndexForBufferInfo"
+-- | Helps to find memoryTypeIndex, given VkBufferCreateInfo and
+-- 'AllocationCreateInfo'.
+--
+-- It can be useful e.g. to determine value to be used as
+-- @VmaPoolCreateInfo::memoryTypeIndex@. It internally creates a temporary,
+-- dummy buffer that never has memory bound. It is just a convenience
+-- function, equivalent to calling:
+--
+-- -   @vkCreateBuffer@
+--
+-- -   @vkGetBufferMemoryRequirements@
+--
+-- -   'findMemoryTypeIndex'
+--
+-- -   @vkDestroyBuffer@
 findMemoryTypeIndexForBufferInfo :: PokeChain a => Allocator -> BufferCreateInfo a -> AllocationCreateInfo -> IO (("memoryTypeIndex" ::: Word32))
 findMemoryTypeIndexForBufferInfo allocator bufferCreateInfo allocationCreateInfo = evalContT $ do
   pBufferCreateInfo <- ContT $ withCStruct (bufferCreateInfo)
@@ -532,7 +786,9 @@ foreign import ccall
   "vmaGetMemoryProperties" ffiVmaGetMemoryProperties
   :: Allocator -> Ptr (Ptr PhysicalDeviceMemoryProperties) -> IO ()
 
--- No documentation found for TopLevel "vmaGetMemoryProperties"
+-- | PhysicalDeviceMemoryProperties are fetched from physicalDevice by the
+-- allocator. You can access it here, without fetching it again on your
+-- own.
 getMemoryProperties :: Allocator -> IO (Ptr PhysicalDeviceMemoryProperties)
 getMemoryProperties allocator = evalContT $ do
   pPpPhysicalDeviceMemoryProperties <- ContT $ bracket (callocBytes @(Ptr PhysicalDeviceMemoryProperties) 8) free
@@ -548,7 +804,7 @@ foreign import ccall
   "vmaDestroyAllocator" ffiVmaDestroyAllocator
   :: Allocator -> IO ()
 
--- No documentation found for TopLevel "vmaDestroyAllocator"
+-- | Destroys allocator object.
 destroyAllocator :: Allocator -> IO ()
 destroyAllocator allocator = do
   (ffiVmaDestroyAllocator) (allocator)
@@ -562,7 +818,11 @@ foreign import ccall
   "vmaFreeMemory" ffiVmaFreeMemory
   :: Allocator -> Allocation -> IO ()
 
--- No documentation found for TopLevel "vmaFreeMemory"
+-- | Frees memory previously allocated using 'allocateMemory',
+-- 'allocateMemoryForBuffer', or 'allocateMemoryForImage'.
+--
+-- Passing @VK_NULL_HANDLE@ as 'Allocation' is valid. Such function call is
+-- just skipped.
 freeMemory :: Allocator -> Allocation -> IO ()
 freeMemory allocator allocation = do
   (ffiVmaFreeMemory) (allocator) (allocation)
@@ -576,7 +836,30 @@ foreign import ccall
   "vmaFlushAllocation" ffiVmaFlushAllocation
   :: Allocator -> Allocation -> DeviceSize -> DeviceSize -> IO ()
 
--- No documentation found for TopLevel "vmaFlushAllocation"
+-- | Flushes memory of given allocation.
+--
+-- Calls @vkFlushMappedMemoryRanges()@ for memory associated with given
+-- range of given allocation. It needs to be called after writing to a
+-- mapped memory for memory types that are not @HOST_COHERENT@. Unmap
+-- operation doesn\'t do that automatically.
+--
+-- -   @offset@ must be relative to the beginning of allocation.
+--
+-- -   @size@ can be @VK_WHOLE_SIZE@. It means all memory from @offset@ the
+--     the end of given allocation.
+--
+-- -   @offset@ and @size@ don\'t have to be aligned. They are internally
+--     rounded down\/up to multiply of @nonCoherentAtomSize@.
+--
+-- -   If @size@ is 0, this call is ignored.
+--
+-- -   If memory type that the 'Allocation' belongs to is not
+--     @HOST_VISIBLE@ or it is @HOST_COHERENT@, this call is ignored.
+--
+-- Warning! @offset@ and @size@ are relative to the contents of given
+-- 'Allocation'. If you mean whole allocation, you can pass 0 and
+-- @VK_WHOLE_SIZE@, respectively. Do not pass allocation\'s offset as
+-- @offset@!!!
 flushAllocation :: Allocator -> Allocation -> ("offset" ::: DeviceSize) -> DeviceSize -> IO ()
 flushAllocation allocator allocation offset size = do
   (ffiVmaFlushAllocation) (allocator) (allocation) (offset) (size)
@@ -590,7 +873,13 @@ foreign import ccall
   "vmaSetCurrentFrameIndex" ffiVmaSetCurrentFrameIndex
   :: Allocator -> Word32 -> IO ()
 
--- No documentation found for TopLevel "vmaSetCurrentFrameIndex"
+-- | Sets index of the current frame.
+--
+-- This function must be used if you make allocations with
+-- 'ALLOCATION_CREATE_CAN_BECOME_LOST_BIT' and
+-- 'ALLOCATION_CREATE_CAN_MAKE_OTHER_LOST_BIT' flags to inform the
+-- allocator when a new frame begins. Allocations queried using
+-- 'getAllocationInfo' cannot become lost in the current frame.
 setCurrentFrameIndex :: Allocator -> ("frameIndex" ::: Word32) -> IO ()
 setCurrentFrameIndex allocator frameIndex = do
   (ffiVmaSetCurrentFrameIndex) (allocator) (frameIndex)
@@ -604,7 +893,27 @@ foreign import ccall
   "vmaBindBufferMemory2" ffiVmaBindBufferMemory2
   :: Allocator -> Allocation -> DeviceSize -> Buffer -> Ptr () -> IO Result
 
--- No documentation found for TopLevel "vmaBindBufferMemory2"
+-- | Binds buffer to allocation with additional parameters.
+--
+-- __Parameters.__
+--
+-- +-----------------------+--------------------------------------------------------+
+-- | allocationLocalOffset | Additional offset to be added while binding, relative  |
+-- |                       | to the beginnig of the 'Allocation'. Normally it       |
+-- |                       | should be 0.                                           |
+-- +-----------------------+--------------------------------------------------------+
+-- | pNext                 | A chain of structures to be attached to                |
+-- |                       | @VkBindBufferMemoryInfoKHR@ structure used internally. |
+-- |                       | Normally it should be null.                            |
+-- +-----------------------+--------------------------------------------------------+
+--
+-- This function is similar to 'bindBufferMemory', but it provides
+-- additional parameters.
+--
+-- If @pNext@ is not null, 'Allocator' object must have been created with
+-- 'ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT' flag or with
+-- @VmaAllocatorCreateInfo::vulkanApiVersion@ @== VK_API_VERSION_1_1@.
+-- Otherwise the call fails.
 bindBufferMemory2 :: Allocator -> Allocation -> ("allocationLocalOffset" ::: DeviceSize) -> Buffer -> ("next" ::: Ptr ()) -> IO ()
 bindBufferMemory2 allocator allocation allocationLocalOffset buffer next = do
   r <- (ffiVmaBindBufferMemory2) (allocator) (allocation) (allocationLocalOffset) (buffer) (next)
@@ -618,7 +927,34 @@ foreign import ccall
   "vmaCheckCorruption" ffiVmaCheckCorruption
   :: Allocator -> Word32 -> IO Result
 
--- No documentation found for TopLevel "vmaCheckCorruption"
+-- | Checks magic number in margins around all allocations in given memory
+-- types (in both default and custom pools) in search for corruptions.
+--
+-- __Parameters.__
+--
+-- +----------------+--------------------------------------------------------+
+-- | memoryTypeBits | Bit mask, where each bit set means that a memory type  |
+-- |                | with that index should be checked.                     |
+-- +----------------+--------------------------------------------------------+
+--
+-- Corruption detection is enabled only when @VMA_DEBUG_DETECT_CORRUPTION@
+-- macro is defined to nonzero, @VMA_DEBUG_MARGIN@ is defined to nonzero
+-- and only for memory types that are @HOST_VISIBLE@ and @HOST_COHERENT@.
+-- For more information, see /Corruption detection/.
+--
+-- Possible return values:
+--
+-- -   @VK_ERROR_FEATURE_NOT_PRESENT@ - corruption detection is not enabled
+--     for any of specified memory types.
+--
+-- -   @VK_SUCCESS@ - corruption detection has been performed and
+--     succeeded.
+--
+-- -   @VK_ERROR_VALIDATION_FAILED_EXT@ - corruption detection has been
+--     performed and found memory corruptions around one of the
+--     allocations. @VMA_ASSERT@ is also fired in that case.
+--
+-- -   Other value: Error returned by Vulkan, e.g. memory mapping failure.
 checkCorruption :: Allocator -> ("memoryTypeBits" ::: Word32) -> IO ()
 checkCorruption allocator memoryTypeBits = do
   r <- (ffiVmaCheckCorruption) (allocator) (memoryTypeBits)
@@ -632,7 +968,30 @@ foreign import ccall
   "vmaInvalidateAllocation" ffiVmaInvalidateAllocation
   :: Allocator -> Allocation -> DeviceSize -> DeviceSize -> IO ()
 
--- No documentation found for TopLevel "vmaInvalidateAllocation"
+-- | Invalidates memory of given allocation.
+--
+-- Calls @vkInvalidateMappedMemoryRanges()@ for memory associated with
+-- given range of given allocation. It needs to be called before reading
+-- from a mapped memory for memory types that are not @HOST_COHERENT@. Map
+-- operation doesn\'t do that automatically.
+--
+-- -   @offset@ must be relative to the beginning of allocation.
+--
+-- -   @size@ can be @VK_WHOLE_SIZE@. It means all memory from @offset@ the
+--     the end of given allocation.
+--
+-- -   @offset@ and @size@ don\'t have to be aligned. They are internally
+--     rounded down\/up to multiply of @nonCoherentAtomSize@.
+--
+-- -   If @size@ is 0, this call is ignored.
+--
+-- -   If memory type that the 'Allocation' belongs to is not
+--     @HOST_VISIBLE@ or it is @HOST_COHERENT@, this call is ignored.
+--
+-- Warning! @offset@ and @size@ are relative to the contents of given
+-- 'Allocation'. If you mean whole allocation, you can pass 0 and
+-- @VK_WHOLE_SIZE@, respectively. Do not pass allocation\'s offset as
+-- @offset@!!!
 invalidateAllocation :: Allocator -> Allocation -> ("offset" ::: DeviceSize) -> DeviceSize -> IO ()
 invalidateAllocation allocator allocation offset size = do
   (ffiVmaInvalidateAllocation) (allocator) (allocation) (offset) (size)
@@ -646,7 +1005,15 @@ foreign import ccall
   "vmaCreateLostAllocation" ffiVmaCreateLostAllocation
   :: Allocator -> Ptr Allocation -> IO ()
 
--- No documentation found for TopLevel "vmaCreateLostAllocation"
+-- | Creates new allocation that is in lost state from the beginning.
+--
+-- It can be useful if you need a dummy, non-null allocation.
+--
+-- You still need to destroy created object using 'freeMemory'.
+--
+-- Returned allocation is not tied to any specific memory pool or memory
+-- type and not bound to any image or buffer. It has size = 0. It cannot be
+-- turned into a real, non-empty allocation.
 createLostAllocation :: Allocator -> IO (Allocation)
 createLostAllocation allocator = evalContT $ do
   pPAllocation <- ContT $ bracket (callocBytes @Allocation 8) free
@@ -662,7 +1029,14 @@ foreign import ccall
   "vmaBuildStatsString" ffiVmaBuildStatsString
   :: Allocator -> Ptr (Ptr CChar) -> Bool32 -> IO ()
 
--- No documentation found for TopLevel "vmaBuildStatsString"
+-- | Builds and returns statistics as string in JSON format.
+--
+-- __Parameters.__
+--
+-- +-----------+---------------+-----------------------------------------------+
+-- | out       | ppStatsString | Must be freed using 'freeStatsString'         |
+-- |           |               | function.                                     |
+-- +-----------+---------------+-----------------------------------------------+
 buildStatsString :: Allocator -> ("detailedMap" ::: Bool32) -> IO (("statsString" ::: Ptr CChar))
 buildStatsString allocator detailedMap = evalContT $ do
   pPpStatsString <- ContT $ bracket (callocBytes @(Ptr CChar) 8) free
@@ -678,7 +1052,15 @@ foreign import ccall
   "vmaCalculateStats" ffiVmaCalculateStats
   :: Allocator -> Ptr Stats -> IO ()
 
--- No documentation found for TopLevel "vmaCalculateStats"
+-- | Retrieves statistics from current state of the Allocator.
+--
+-- This function is called \"calculate\" not \"get\" because it has to
+-- traverse all internal data structures, so it may be quite slow. For
+-- faster but more brief statistics suitable to be called every frame or
+-- every allocation, use 'getBudget'.
+--
+-- Note that when using allocator from multiple threads, returned
+-- information may immediately become outdated.
 calculateStats :: Allocator -> IO (Stats)
 calculateStats allocator = evalContT $ do
   pPStats <- ContT (withZeroCStruct @Stats)
@@ -694,7 +1076,77 @@ foreign import ccall
   "vmaDefragment" ffiVmaDefragment
   :: Allocator -> Ptr Allocation -> CSize -> Ptr Bool32 -> Ptr DefragmentationInfo -> Ptr DefragmentationStats -> IO Result
 
--- No documentation found for TopLevel "vmaDefragment"
+-- | Deprecated. Compacts memory by moving allocations.
+--
+-- __Parameters.__
+--
+-- +-----------+-----------------------+-----------------------------------------------+
+-- |           | pAllocations          | Array of allocations that can be moved during |
+-- |           |                       | this compation.                               |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- |           | allocationCount       | Number of elements in pAllocations and        |
+-- |           |                       | pAllocationsChanged arrays.                   |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- | out       | pAllocationsChanged   | Array of boolean values that will indicate    |
+-- |           |                       | whether matching allocation in pAllocations   |
+-- |           |                       | array has been moved. This parameter is       |
+-- |           |                       | optional. Pass null if you don\'t need this   |
+-- |           |                       | information.                                  |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- |           | pDefragmentationInfo  | Configuration parameters. Optional - pass     |
+-- |           |                       | null to use default values.                   |
+-- +-----------+-----------------------+-----------------------------------------------+
+-- | out       | pDefragmentationStats | Statistics returned by the function. Optional |
+-- |           |                       | - pass null if you don\'t need this           |
+-- |           |                       | information.                                  |
+-- +-----------+-----------------------+-----------------------------------------------+
+--
+-- __Returns.__
+--
+-- @VK_SUCCESS@ if completed, negative error code in case of error.
+--
+-- @Deprecated@
+--
+-- This is a part of the old interface. It is recommended to use structure
+-- 'DefragmentationInfo2' and function 'defragmentationBegin' instead.
+--
+-- This function works by moving allocations to different places (different
+-- @VkDeviceMemory@ objects and\/or different offsets) in order to optimize
+-- memory usage. Only allocations that are in @pAllocations@ array can be
+-- moved. All other allocations are considered nonmovable in this call.
+-- Basic rules:
+--
+-- -   Only allocations made in memory types that have
+--     @VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT@ and
+--     @VK_MEMORY_PROPERTY_HOST_COHERENT_BIT@ flags can be compacted. You
+--     may pass other allocations but it makes no sense - these will never
+--     be moved.
+--
+-- -   Custom pools created with 'POOL_CREATE_LINEAR_ALGORITHM_BIT' or
+--     'POOL_CREATE_BUDDY_ALGORITHM_BIT' flag are not defragmented.
+--     Allocations passed to this function that come from such pools are
+--     ignored.
+--
+-- -   Allocations created with 'ALLOCATION_CREATE_DEDICATED_MEMORY_BIT' or
+--     created as dedicated allocations for any other reason are also
+--     ignored.
+--
+-- -   Both allocations made with or without 'ALLOCATION_CREATE_MAPPED_BIT'
+--     flag can be compacted. If not persistently mapped, memory will be
+--     mapped temporarily inside this function if needed.
+--
+-- -   You must not pass same 'Allocation' object multiple times in
+--     @pAllocations@ array.
+--
+-- The function also frees empty @VkDeviceMemory@ blocks.
+--
+-- Warning: This function may be time-consuming, so you shouldn\'t call it
+-- too often (like after every resource creation\/destruction). You can
+-- call it on special occasions (like when reloading a game level or when
+-- you just destroyed a lot of objects). Calling it every frame may be OK,
+-- but you should measure that on your platform.
+--
+-- For more information, see @Defragmentation@ chapter.
 defragment :: Allocator -> ("allocations" ::: Vector Allocation) -> ("defragmentationInfo" ::: Maybe DefragmentationInfo) -> IO (("allocationsChanged" ::: Vector Bool32), DefragmentationStats)
 defragment allocator allocations defragmentationInfo = evalContT $ do
   pPAllocations <- ContT $ allocaBytesAligned @Allocation ((Data.Vector.length (allocations)) * 8) 8
@@ -718,7 +1170,24 @@ foreign import ccall
   "vmaTouchAllocation" ffiVmaTouchAllocation
   :: Allocator -> Allocation -> IO Bool32
 
--- No documentation found for TopLevel "vmaTouchAllocation"
+-- | Returns @VK_TRUE@ if allocation is not lost and atomically marks it as
+-- used in current frame.
+--
+-- If the allocation has been created with
+-- 'ALLOCATION_CREATE_CAN_BECOME_LOST_BIT' flag, this function returns
+-- @VK_TRUE@ if it\'s not in lost state, so it can still be used. It then
+-- also atomically \"touches\" the allocation - marks it as used in current
+-- frame, so that you can be sure it won\'t become lost in current frame or
+-- next @frameInUseCount@ frames.
+--
+-- If the allocation is in lost state, the function returns @VK_FALSE@.
+-- Memory of such allocation, as well as buffer or image bound to it,
+-- should not be used. Lost allocation and the buffer\/image still need to
+-- be destroyed.
+--
+-- If the allocation has been created without
+-- 'ALLOCATION_CREATE_CAN_BECOME_LOST_BIT' flag, this function always
+-- returns @VK_TRUE@.
 touchAllocation :: Allocator -> Allocation -> IO (Bool32)
 touchAllocation allocator allocation = do
   r <- (ffiVmaTouchAllocation) (allocator) (allocation)
@@ -732,7 +1201,12 @@ foreign import ccall
   "vmaGetPoolName" ffiVmaGetPoolName
   :: Allocator -> Pool -> Ptr (Ptr CChar) -> IO ()
 
--- No documentation found for TopLevel "vmaGetPoolName"
+-- | Retrieves name of a custom pool.
+--
+-- After the call @ppName@ is either null or points to an internally-owned
+-- null-terminated string containing name of the pool that was previously
+-- set. The pointer becomes invalid when the pool is destroyed or its name
+-- is changed using 'setPoolName'.
 getPoolName :: Allocator -> Pool -> IO (("name" ::: Ptr CChar))
 getPoolName allocator pool = evalContT $ do
   pPpName <- ContT $ bracket (callocBytes @(Ptr CChar) 8) free
@@ -748,7 +1222,7 @@ foreign import ccall
   "vmaCreateAllocator" ffiVmaCreateAllocator
   :: Ptr AllocatorCreateInfo -> Ptr Allocator -> IO Result
 
--- No documentation found for TopLevel "vmaCreateAllocator"
+-- | Creates Allocator object.
 createAllocator :: AllocatorCreateInfo -> IO (Allocator)
 createAllocator createInfo = evalContT $ do
   pCreateInfo <- ContT $ withCStruct (createInfo)
@@ -766,7 +1240,7 @@ foreign import ccall
   "vmaCreateImage" ffiVmaCreateImage
   :: Allocator -> Ptr (ImageCreateInfo a) -> Ptr AllocationCreateInfo -> Ptr Image -> Ptr Allocation -> Ptr AllocationInfo -> IO Result
 
--- No documentation found for TopLevel "vmaCreateImage"
+-- | Function similar to 'createBuffer'.
 createImage :: PokeChain a => Allocator -> ImageCreateInfo a -> AllocationCreateInfo -> IO (Image, Allocation, AllocationInfo)
 createImage allocator imageCreateInfo allocationCreateInfo = evalContT $ do
   pImageCreateInfo <- ContT $ withCStruct (imageCreateInfo)
@@ -789,7 +1263,21 @@ foreign import ccall
   "vmaFindMemoryTypeIndexForImageInfo" ffiVmaFindMemoryTypeIndexForImageInfo
   :: Allocator -> Ptr (ImageCreateInfo a) -> Ptr AllocationCreateInfo -> Ptr Word32 -> IO Result
 
--- No documentation found for TopLevel "vmaFindMemoryTypeIndexForImageInfo"
+-- | Helps to find memoryTypeIndex, given VkImageCreateInfo and
+-- 'AllocationCreateInfo'.
+--
+-- It can be useful e.g. to determine value to be used as
+-- @VmaPoolCreateInfo::memoryTypeIndex@. It internally creates a temporary,
+-- dummy image that never has memory bound. It is just a convenience
+-- function, equivalent to calling:
+--
+-- -   @vkCreateImage@
+--
+-- -   @vkGetImageMemoryRequirements@
+--
+-- -   'findMemoryTypeIndex'
+--
+-- -   @vkDestroyImage@
 findMemoryTypeIndexForImageInfo :: PokeChain a => Allocator -> ImageCreateInfo a -> AllocationCreateInfo -> IO (("memoryTypeIndex" ::: Word32))
 findMemoryTypeIndexForImageInfo allocator imageCreateInfo allocationCreateInfo = evalContT $ do
   pImageCreateInfo <- ContT $ withCStruct (imageCreateInfo)
@@ -808,7 +1296,15 @@ foreign import ccall
   "vmaDestroyBuffer" ffiVmaDestroyBuffer
   :: Allocator -> Buffer -> Allocation -> IO ()
 
--- No documentation found for TopLevel "vmaDestroyBuffer"
+-- | Destroys Vulkan buffer and frees allocated memory.
+--
+-- This is just a convenience function equivalent to:
+--
+-- @vkDestroyBuffer(device, buffer, allocationCallbacks);
+-- vmaFreeMemory(allocator, allocation);
+-- @
+--
+-- It it safe to pass null as buffer and\/or allocation.
 destroyBuffer :: Allocator -> Buffer -> Allocation -> IO ()
 destroyBuffer allocator buffer allocation = do
   (ffiVmaDestroyBuffer) (allocator) (buffer) (allocation)
@@ -822,7 +1318,43 @@ foreign import ccall
   "vmaCreateBuffer" ffiVmaCreateBuffer
   :: Allocator -> Ptr (BufferCreateInfo a) -> Ptr AllocationCreateInfo -> Ptr Buffer -> Ptr Allocation -> Ptr AllocationInfo -> IO Result
 
--- No documentation found for TopLevel "vmaCreateBuffer"
+-- | __Parameters.__
+--
+-- +-----------+-----------------+-----------------------------------------------+
+-- | out       | pBuffer         | Buffer that was created.                      |
+-- +-----------+-----------------+-----------------------------------------------+
+-- | out       | pAllocation     | Allocation that was created.                  |
+-- +-----------+-----------------+-----------------------------------------------+
+-- | out       | pAllocationInfo | Optional. Information about allocated memory. |
+-- |           |                 | It can be later fetched using function        |
+-- |           |                 | 'getAllocationInfo'.                          |
+-- +-----------+-----------------+-----------------------------------------------+
+--
+-- This function automatically:
+--
+-- 1.  Creates buffer.
+--
+-- 2.  Allocates appropriate memory for it.
+--
+-- 3.  Binds the buffer with the memory.
+--
+-- If any of these operations fail, buffer and allocation are not created,
+-- returned value is negative error code, *pBuffer and *pAllocation are
+-- null.
+--
+-- If the function succeeded, you must destroy both buffer and allocation
+-- when you no longer need them using either convenience function
+-- 'destroyBuffer' or separately, using @vkDestroyBuffer()@ and
+-- 'freeMemory'.
+--
+-- If VMA_ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT flag was used,
+-- VK_KHR_dedicated_allocation extension is used internally to query driver
+-- whether it requires or prefers the new buffer to have dedicated
+-- allocation. If yes, and if dedicated allocation is possible
+-- (@VmaAllocationCreateInfo::pool@ is null and
+-- VMA_ALLOCATION_CREATE_NEVER_ALLOCATE_BIT is not used), it creates
+-- dedicated allocation for this buffer, just like when using
+-- VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT.
 createBuffer :: PokeChain a => Allocator -> BufferCreateInfo a -> AllocationCreateInfo -> IO (Buffer, Allocation, AllocationInfo)
 createBuffer allocator bufferCreateInfo allocationCreateInfo = evalContT $ do
   pBufferCreateInfo <- ContT $ withCStruct (bufferCreateInfo)
@@ -845,7 +1377,20 @@ foreign import ccall
   "vmaMakePoolAllocationsLost" ffiVmaMakePoolAllocationsLost
   :: Allocator -> Pool -> Ptr CSize -> IO ()
 
--- No documentation found for TopLevel "vmaMakePoolAllocationsLost"
+-- | Marks all allocations in given pool as lost if they are not used in
+-- current frame or @VmaPoolCreateInfo::frameInUseCount@ back from now.
+--
+-- __Parameters.__
+--
+-- +-----------+----------------------+-----------------------------------------------+
+-- |           | allocator            | Allocator object.                             |
+-- +-----------+----------------------+-----------------------------------------------+
+-- |           | pool                 | Pool.                                         |
+-- +-----------+----------------------+-----------------------------------------------+
+-- | out       | pLostAllocationCount | Number of allocations marked as lost.         |
+-- |           |                      | Optional - pass null if you don\'t need this  |
+-- |           |                      | information.                                  |
+-- +-----------+----------------------+-----------------------------------------------+
 makePoolAllocationsLost :: Allocator -> Pool -> IO (("lostAllocationCount" ::: Word64))
 makePoolAllocationsLost allocator pool = evalContT $ do
   pPLostAllocationCount <- ContT $ bracket (callocBytes @CSize 8) free
@@ -861,7 +1406,11 @@ foreign import ccall
   "vmaSetPoolName" ffiVmaSetPoolName
   :: Allocator -> Pool -> Ptr CChar -> IO ()
 
--- No documentation found for TopLevel "vmaSetPoolName"
+-- | Sets name of a custom pool.
+--
+-- @pName@ can be either null or pointer to a null-terminated string with
+-- new name for the pool. Function makes internal copy of the string, so it
+-- can be changed or freed immediately after this call.
 setPoolName :: Allocator -> Pool -> ("name" ::: Maybe ByteString) -> IO ()
 setPoolName allocator pool name = evalContT $ do
   pName <- case (name) of
@@ -878,7 +1427,15 @@ foreign import ccall
   "vmaDestroyImage" ffiVmaDestroyImage
   :: Allocator -> Image -> Allocation -> IO ()
 
--- No documentation found for TopLevel "vmaDestroyImage"
+-- | Destroys Vulkan image and frees allocated memory.
+--
+-- This is just a convenience function equivalent to:
+--
+-- @vkDestroyImage(device, image, allocationCallbacks);
+-- vmaFreeMemory(allocator, allocation);
+-- @
+--
+-- It it safe to pass null as image and\/or allocation.
 destroyImage :: Allocator -> Image -> Allocation -> IO ()
 destroyImage allocator image allocation = do
   (ffiVmaDestroyImage) (allocator) (image) (allocation)
@@ -892,7 +1449,7 @@ foreign import ccall
   "vmaDestroyPool" ffiVmaDestroyPool
   :: Allocator -> Pool -> IO ()
 
--- No documentation found for TopLevel "vmaDestroyPool"
+-- | Destroys 'Pool' object and frees Vulkan device memory.
 destroyPool :: Allocator -> Pool -> IO ()
 destroyPool allocator pool = do
   (ffiVmaDestroyPool) (allocator) (pool)
@@ -906,7 +1463,17 @@ foreign import ccall
   "vmaCreatePool" ffiVmaCreatePool
   :: Allocator -> Ptr PoolCreateInfo -> Ptr Pool -> IO Result
 
--- No documentation found for TopLevel "vmaCreatePool"
+-- | Allocates Vulkan device memory and creates 'Pool' object.
+--
+-- __Parameters.__
+--
+-- +-----------+-------------+-----------------------------------------------+
+-- |           | allocator   | Allocator object.                             |
+-- +-----------+-------------+-----------------------------------------------+
+-- |           | pCreateInfo | Parameters of pool to create.                 |
+-- +-----------+-------------+-----------------------------------------------+
+-- | out       | pPool       | Handle to created pool.                       |
+-- +-----------+-------------+-----------------------------------------------+
 createPool :: Allocator -> PoolCreateInfo -> IO (Pool)
 createPool allocator createInfo = evalContT $ do
   pCreateInfo <- ContT $ withCStruct (createInfo)
@@ -924,7 +1491,17 @@ foreign import ccall
   "vmaGetPoolStats" ffiVmaGetPoolStats
   :: Allocator -> Pool -> Ptr PoolStats -> IO ()
 
--- No documentation found for TopLevel "vmaGetPoolStats"
+-- | Retrieves statistics of existing 'Pool' object.
+--
+-- __Parameters.__
+--
+-- +-----------+------------+-----------------------------------------------+
+-- |           | allocator  | Allocator object.                             |
+-- +-----------+------------+-----------------------------------------------+
+-- |           | pool       | Pool object.                                  |
+-- +-----------+------------+-----------------------------------------------+
+-- | out       | pPoolStats | Statistics of specified pool.                 |
+-- +-----------+------------+-----------------------------------------------+
 getPoolStats :: Allocator -> Pool -> IO (PoolStats)
 getPoolStats allocator pool = evalContT $ do
   pPPoolStats <- ContT (withZeroCStruct @PoolStats)
@@ -940,7 +1517,46 @@ foreign import ccall
   "vmaMapMemory" ffiVmaMapMemory
   :: Allocator -> Allocation -> Ptr (Ptr ()) -> IO Result
 
--- No documentation found for TopLevel "vmaMapMemory"
+-- | Maps memory represented by given allocation and returns pointer to it.
+--
+-- Maps memory represented by given allocation to make it accessible to CPU
+-- code. When succeeded, @*ppData@ contains pointer to first byte of this
+-- memory. If the allocation is part of bigger @VkDeviceMemory@ block, the
+-- pointer is correctly offseted to the beginning of region assigned to
+-- this particular allocation.
+--
+-- Mapping is internally reference-counted and synchronized, so despite raw
+-- Vulkan function @vkMapMemory()@ cannot be used to map same block of
+-- @VkDeviceMemory@ multiple times simultaneously, it is safe to call this
+-- function on allocations assigned to the same memory block. Actual Vulkan
+-- memory will be mapped on first mapping and unmapped on last unmapping.
+--
+-- If the function succeeded, you must call 'unmapMemory' to unmap the
+-- allocation when mapping is no longer needed or before freeing the
+-- allocation, at the latest.
+--
+-- It also safe to call this function multiple times on the same
+-- allocation. You must call 'unmapMemory' same number of times as you
+-- called 'mapMemory'.
+--
+-- It is also safe to call this function on allocation created with
+-- 'ALLOCATION_CREATE_MAPPED_BIT' flag. Its memory stays mapped all the
+-- time. You must still call 'unmapMemory' same number of times as you
+-- called 'mapMemory'. You must not call 'unmapMemory' additional time to
+-- free the \"0-th\" mapping made automatically due to
+-- 'ALLOCATION_CREATE_MAPPED_BIT' flag.
+--
+-- This function fails when used on allocation made in memory type that is
+-- not @HOST_VISIBLE@.
+--
+-- This function always fails when called for allocation that was created
+-- with 'ALLOCATION_CREATE_CAN_BECOME_LOST_BIT' flag. Such allocations
+-- cannot be mapped.
+--
+-- This function doesn\'t automatically flush or invalidate caches. If the
+-- allocation is made from a memory types that is not @HOST_COHERENT@, you
+-- also need to use 'invalidateAllocation' \/ 'flushAllocation', as
+-- required by Vulkan specification.
 mapMemory :: Allocator -> Allocation -> IO (("data" ::: Ptr ()))
 mapMemory allocator allocation = evalContT $ do
   pPpData <- ContT $ bracket (callocBytes @(Ptr ()) 8) free
@@ -957,7 +1573,15 @@ foreign import ccall
   "vmaResizeAllocation" ffiVmaResizeAllocation
   :: Allocator -> Allocation -> DeviceSize -> IO Result
 
--- No documentation found for TopLevel "vmaResizeAllocation"
+-- | Deprecated.
+--
+-- @Deprecated@
+--
+-- In version 2.2.0 it used to try to change allocation\'s size without
+-- moving or reallocating it. In current version it returns @VK_SUCCESS@
+-- only if @newSize@ equals current allocation\'s size. Otherwise returns
+-- @VK_ERROR_OUT_OF_POOL_MEMORY@, indicating that allocation\'s size could
+-- not be changed.
 resizeAllocation :: Allocator -> Allocation -> ("newSize" ::: DeviceSize) -> IO ()
 resizeAllocation allocator allocation newSize = do
   r <- (ffiVmaResizeAllocation) (allocator) (allocation) (newSize)
@@ -971,7 +1595,22 @@ foreign import ccall
   "vmaGetBudget" ffiVmaGetBudget
   :: Allocator -> Ptr Budget -> IO ()
 
--- No documentation found for TopLevel "vmaGetBudget"
+-- | Retrieves information about current memory budget for all memory heaps.
+--
+-- __Parameters.__
+--
+-- +-----------+-----------+-----------------------------------------------+
+-- | out       | pBudget   | Must point to array with number of elements   |
+-- |           |           | at least equal to number of memory heaps in   |
+-- |           |           | physical device used.                         |
+-- +-----------+-----------+-----------------------------------------------+
+--
+-- This function is called \"get\" not \"calculate\" because it is very
+-- fast, suitable to be called every frame or every allocation. For more
+-- detailed statistics use 'calculateStats'.
+--
+-- Note that when using allocator from multiple threads, returned
+-- information may immediately become outdated.
 getBudget :: Allocator -> IO (Budget)
 getBudget allocator = evalContT $ do
   pPBudget <- ContT (withZeroCStruct @Budget)
@@ -987,7 +1626,15 @@ foreign import ccall
   "vmaUnmapMemory" ffiVmaUnmapMemory
   :: Allocator -> Allocation -> IO ()
 
--- No documentation found for TopLevel "vmaUnmapMemory"
+-- | Unmaps memory represented by given allocation, mapped previously using
+-- 'mapMemory'.
+--
+-- For details, see description of 'mapMemory'.
+--
+-- This function doesn\'t automatically flush or invalidate caches. If the
+-- allocation is made from a memory types that is not @HOST_COHERENT@, you
+-- also need to use 'invalidateAllocation' \/ 'flushAllocation', as
+-- required by Vulkan specification.
 unmapMemory :: Allocator -> Allocation -> IO ()
 unmapMemory allocator allocation = do
   (ffiVmaUnmapMemory) (allocator) (allocation)
@@ -1001,7 +1648,9 @@ foreign import ccall
   "vmaGetPhysicalDeviceProperties" ffiVmaGetPhysicalDeviceProperties
   :: Allocator -> Ptr (Ptr PhysicalDeviceProperties) -> IO ()
 
--- No documentation found for TopLevel "vmaGetPhysicalDeviceProperties"
+-- | PhysicalDeviceProperties are fetched from physicalDevice by the
+-- allocator. You can access it here, without fetching it again on your
+-- own.
 getPhysicalDeviceProperties :: Allocator -> IO (Ptr PhysicalDeviceProperties)
 getPhysicalDeviceProperties allocator = evalContT $ do
   pPpPhysicalDeviceProperties <- ContT $ bracket (callocBytes @(Ptr PhysicalDeviceProperties) 8) free
@@ -1017,7 +1666,17 @@ foreign import ccall
   "vmaAllocateMemoryForBuffer" ffiVmaAllocateMemoryForBuffer
   :: Allocator -> Buffer -> Ptr AllocationCreateInfo -> Ptr Allocation -> Ptr AllocationInfo -> IO Result
 
--- No documentation found for TopLevel "vmaAllocateMemoryForBuffer"
+-- | __Parameters.__
+--
+-- +-----------+-----------------+-----------------------------------------------+
+-- | out       | pAllocation     | Handle to allocated memory.                   |
+-- +-----------+-----------------+-----------------------------------------------+
+-- | out       | pAllocationInfo | Optional. Information about allocated memory. |
+-- |           |                 | It can be later fetched using function        |
+-- |           |                 | 'getAllocationInfo'.                          |
+-- +-----------+-----------------+-----------------------------------------------+
+--
+-- You should free the memory using 'freeMemory'.
 allocateMemoryForBuffer :: Allocator -> Buffer -> AllocationCreateInfo -> IO (Allocation, AllocationInfo)
 allocateMemoryForBuffer allocator buffer createInfo = evalContT $ do
   pCreateInfo <- ContT $ withCStruct (createInfo)
@@ -1037,7 +1696,7 @@ foreign import ccall
   "vmaAllocateMemoryForImage" ffiVmaAllocateMemoryForImage
   :: Allocator -> Image -> Ptr AllocationCreateInfo -> Ptr Allocation -> Ptr AllocationInfo -> IO Result
 
--- No documentation found for TopLevel "vmaAllocateMemoryForImage"
+-- | Function similar to 'allocateMemoryForBuffer'.
 allocateMemoryForImage :: Allocator -> Image -> AllocationCreateInfo -> IO (Allocation, AllocationInfo)
 allocateMemoryForImage allocator image createInfo = evalContT $ do
   pCreateInfo <- ContT $ withCStruct (createInfo)
@@ -1160,21 +1819,119 @@ type FN_vkUnmapMemory = Ptr Device_T -> DeviceMemory -> IO ()
 type PFN_vkUnmapMemory = FunPtr FN_vkUnmapMemory
 
 
--- No documentation found for TopLevel "VmaAllocatorCreateFlagBits"
+-- | Flags for created 'Allocator'.
 newtype AllocatorCreateFlagBits = AllocatorCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits)
 
--- No documentation found for Nested "VmaAllocatorCreateFlagBits" "VMA_ALLOCATOR_CREATE_EXTERNALLY_SYNCHRONIZED_BIT"
+-- | Allocator and all objects created from it will not be synchronized
+-- internally, so you must guarantee they are used from only one thread at
+-- a time or synchronized externally by you.
+--
+-- Using this flag may increase performance because internal mutexes are
+-- not used.
 pattern ALLOCATOR_CREATE_EXTERNALLY_SYNCHRONIZED_BIT = AllocatorCreateFlagBits 0x00000001
--- No documentation found for Nested "VmaAllocatorCreateFlagBits" "VMA_ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT"
+-- | Enables usage of VK_KHR_dedicated_allocation extension.
+--
+-- The flag works only if @VmaAllocatorCreateInfo::vulkanApiVersion@
+-- @== VK_API_VERSION_1_0@. When it\'s @VK_API_VERSION_1_1@, the flag is
+-- ignored because the extension has been promoted to Vulkan 1.1.
+--
+-- Using this extenion will automatically allocate dedicated blocks of
+-- memory for some buffers and images instead of suballocating place for
+-- them out of bigger memory blocks (as if you explicitly used
+-- 'ALLOCATION_CREATE_DEDICATED_MEMORY_BIT' flag) when it is recommended by
+-- the driver. It may improve performance on some GPUs.
+--
+-- You may set this flag only if you found out that following device
+-- extensions are supported, you enabled them while creating Vulkan device
+-- passed as @VmaAllocatorCreateInfo::device@, and you want them to be used
+-- internally by this library:
+--
+-- -   VK_KHR_get_memory_requirements2 (device extension)
+--
+-- -   VK_KHR_dedicated_allocation (device extension)
+--
+-- When this flag is set, you can experience following warnings reported by
+-- Vulkan validation layer. You can ignore them.
+--
+-- vkBindBufferMemory(): Binding memory to buffer 0x2d but
+-- vkGetBufferMemoryRequirements() has not been called on that buffer.
 pattern ALLOCATOR_CREATE_KHR_DEDICATED_ALLOCATION_BIT = AllocatorCreateFlagBits 0x00000002
--- No documentation found for Nested "VmaAllocatorCreateFlagBits" "VMA_ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT"
+-- | Enables usage of VK_KHR_bind_memory2 extension.
+--
+-- The flag works only if @VmaAllocatorCreateInfo::vulkanApiVersion@
+-- @== VK_API_VERSION_1_0@. When it\'s @VK_API_VERSION_1_1@, the flag is
+-- ignored because the extension has been promoted to Vulkan 1.1.
+--
+-- You may set this flag only if you found out that this device extension
+-- is supported, you enabled it while creating Vulkan device passed as
+-- @VmaAllocatorCreateInfo::device@, and you want it to be used internally
+-- by this library.
+--
+-- The extension provides functions @vkBindBufferMemory2KHR@ and
+-- @vkBindImageMemory2KHR@, which allow to pass a chain of @pNext@
+-- structures while binding. This flag is required if you use @pNext@
+-- parameter in 'bindBufferMemory2' or 'bindImageMemory2'.
 pattern ALLOCATOR_CREATE_KHR_BIND_MEMORY2_BIT = AllocatorCreateFlagBits 0x00000004
--- No documentation found for Nested "VmaAllocatorCreateFlagBits" "VMA_ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT"
+-- | Enables usage of VK_EXT_memory_budget extension.
+--
+-- You may set this flag only if you found out that this device extension
+-- is supported, you enabled it while creating Vulkan device passed as
+-- @VmaAllocatorCreateInfo::device@, and you want it to be used internally
+-- by this library, along with another instance extension
+-- VK_KHR_get_physical_device_properties2, which is required by it (or
+-- Vulkan 1.1, where this extension is promoted).
+--
+-- The extension provides query for current memory usage and budget, which
+-- will probably be more accurate than an estimation used by the library
+-- otherwise.
 pattern ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT = AllocatorCreateFlagBits 0x00000008
--- No documentation found for Nested "VmaAllocatorCreateFlagBits" "VMA_ALLOCATOR_CREATE_AMD_DEVICE_COHERENT_MEMORY_BIT"
+-- | Enables usage of VK_AMD_device_coherent_memory extension.
+--
+-- You may set this flag only if you:
+--
+-- -   found out that this device extension is supported and enabled it
+--     while creating Vulkan device passed as
+--     @VmaAllocatorCreateInfo::device@,
+--
+-- -   checked that
+--     @VkPhysicalDeviceCoherentMemoryFeaturesAMD::deviceCoherentMemory@ is
+--     true and set it while creating the Vulkan device,
+--
+-- -   want it to be used internally by this library.
+--
+-- The extension and accompanying device feature provide access to memory
+-- types with @VK_MEMORY_PROPERTY_DEVICE_COHERENT_BIT_AMD@ and
+-- @VK_MEMORY_PROPERTY_DEVICE_UNCACHED_BIT_AMD@ flags. They are useful
+-- mostly for writing breadcrumb markers - a common method for debugging
+-- GPU crash\/hang\/TDR.
+--
+-- When the extension is not enabled, such memory types are still
+-- enumerated, but their usage is illegal. To protect from this error, if
+-- you don\'t create the allocator with this flag, it will refuse to
+-- allocate any memory or create a custom pool in such memory type,
+-- returning @VK_ERROR_FEATURE_NOT_PRESENT@.
 pattern ALLOCATOR_CREATE_AMD_DEVICE_COHERENT_MEMORY_BIT = AllocatorCreateFlagBits 0x00000010
--- No documentation found for Nested "VmaAllocatorCreateFlagBits" "VMA_ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT"
+-- | Enables usage of \"buffer device address\" feature, which allows you to
+-- use function @vkGetBufferDeviceAddress*@ to get raw GPU pointer to a
+-- buffer and pass it for usage inside a shader.
+--
+-- You may set this flag only if you:
+--
+-- 1.  (For Vulkan version \< 1.2) Found as available and enabled device
+--     extension VK_KHR_buffer_device_address. This extension is promoted
+--     to core Vulkan 1.2.
+--
+-- 2.  Found as available and enabled device feature
+--     @VkPhysicalDeviceBufferDeviceAddressFeatures*::bufferDeviceAddress@.
+--
+-- When this flag is set, you can create buffers with
+-- @VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT*@ using VMA. The library
+-- automatically adds @VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT*@ to allocated
+-- memory blocks wherever it might be needed.
+--
+-- For more information, see documentation chapter /Enabling buffer device
+-- address/.
 pattern ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT = AllocatorCreateFlagBits 0x00000020
 
 type AllocatorCreateFlags = AllocatorCreateFlagBits
@@ -1203,11 +1960,12 @@ instance Read AllocatorCreateFlagBits where
                        pure (AllocatorCreateFlagBits v)))
 
 
--- No documentation found for TopLevel "VmaDefragmentationFlagBits"
+-- | Flags to be used in 'defragmentationBegin'. None at the moment. Reserved
+-- for future use.
 newtype DefragmentationFlagBits = DefragmentationFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits)
 
--- No documentation found for Nested "VmaDefragmentationFlagBits" "VMA_DEFRAGMENTATION_FLAG_INCREMENTAL"
+
 pattern DEFRAGMENTATION_FLAG_INCREMENTAL = DefragmentationFlagBits 0x00000001
 
 type DefragmentationFlags = DefragmentationFlagBits
@@ -1226,17 +1984,58 @@ instance Read DefragmentationFlagBits where
                        pure (DefragmentationFlagBits v)))
 
 
--- No documentation found for TopLevel "VmaPoolCreateFlagBits"
+-- | Flags to be passed as @VmaPoolCreateInfo::flags@.
 newtype PoolCreateFlagBits = PoolCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits)
 
--- No documentation found for Nested "VmaPoolCreateFlagBits" "VMA_POOL_CREATE_IGNORE_BUFFER_IMAGE_GRANULARITY_BIT"
+-- | Use this flag if you always allocate only buffers and linear images or
+-- only optimal images out of this pool and so Buffer-Image Granularity can
+-- be ignored.
+--
+-- This is an optional optimization flag.
+--
+-- If you always allocate using 'createBuffer', 'createImage',
+-- 'allocateMemoryForBuffer', then you don\'t need to use it because
+-- allocator knows exact type of your allocations so it can handle
+-- Buffer-Image Granularity in the optimal way.
+--
+-- If you also allocate using 'allocateMemoryForImage' or 'allocateMemory',
+-- exact type of such allocations is not known, so allocator must be
+-- conservative in handling Buffer-Image Granularity, which can lead to
+-- suboptimal allocation (wasted memory). In that case, if you can make
+-- sure you always allocate only buffers and linear images or only optimal
+-- images out of this pool, use this flag to make allocator disregard
+-- Buffer-Image Granularity and so make allocations faster and more
+-- optimal.
 pattern POOL_CREATE_IGNORE_BUFFER_IMAGE_GRANULARITY_BIT = PoolCreateFlagBits 0x00000002
--- No documentation found for Nested "VmaPoolCreateFlagBits" "VMA_POOL_CREATE_LINEAR_ALGORITHM_BIT"
+-- | Enables alternative, linear allocation algorithm in this pool.
+--
+-- Specify this flag to enable linear allocation algorithm, which always
+-- creates new allocations after last one and doesn\'t reuse space from
+-- allocations freed in between. It trades memory consumption for
+-- simplified algorithm and data structure, which has better performance
+-- and uses less memory for metadata.
+--
+-- By using this flag, you can achieve behavior of free-at-once, stack,
+-- ring buffer, and double stack. For details, see documentation chapter
+-- /Linear allocation algorithm/.
+--
+-- When using this flag, you must specify
+-- @VmaPoolCreateInfo::maxBlockCount@ == 1 (or 0 for default).
+--
+-- For more details, see /Linear allocation algorithm/.
 pattern POOL_CREATE_LINEAR_ALGORITHM_BIT = PoolCreateFlagBits 0x00000004
--- No documentation found for Nested "VmaPoolCreateFlagBits" "VMA_POOL_CREATE_BUDDY_ALGORITHM_BIT"
+-- | Enables alternative, buddy allocation algorithm in this pool.
+--
+-- It operates on a tree of blocks, each having size that is a power of two
+-- and a half of its parent\'s size. Comparing to default algorithm, this
+-- one provides faster allocation and deallocation and decreased external
+-- fragmentation, at the expense of more memory wasted (internal
+-- fragmentation).
+--
+-- For more details, see /Buddy allocation algorithm/.
 pattern POOL_CREATE_BUDDY_ALGORITHM_BIT = PoolCreateFlagBits 0x00000008
--- No documentation found for Nested "VmaPoolCreateFlagBits" "VMA_POOL_CREATE_ALGORITHM_MASK"
+-- | Bit mask to extract only @ALGORITHM@ bits from entire set of flags.
 pattern POOL_CREATE_ALGORITHM_MASK = PoolCreateFlagBits 0x0000000c
 
 type PoolCreateFlags = PoolCreateFlagBits
@@ -1261,41 +2060,106 @@ instance Read PoolCreateFlagBits where
                        pure (PoolCreateFlagBits v)))
 
 
--- No documentation found for TopLevel "VmaAllocationCreateFlagBits"
+-- | Flags to be passed as @VmaAllocationCreateInfo::flags@.
 newtype AllocationCreateFlagBits = AllocationCreateFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits)
 
--- No documentation found for Nested "VmaAllocationCreateFlagBits" "VMA_ALLOCATION_CREATE_DEDICATED_MEMORY_BIT"
+-- | Set this flag if the allocation should have its own memory block.
+--
+-- Use it for special, big resources, like fullscreen images used as
+-- attachments.
+--
+-- You should not use this flag if @VmaAllocationCreateInfo::pool@ is not
+-- null.
 pattern ALLOCATION_CREATE_DEDICATED_MEMORY_BIT = AllocationCreateFlagBits 0x00000001
--- No documentation found for Nested "VmaAllocationCreateFlagBits" "VMA_ALLOCATION_CREATE_NEVER_ALLOCATE_BIT"
+-- | Set this flag to only try to allocate from existing @VkDeviceMemory@
+-- blocks and never create new such block.
+--
+-- If new allocation cannot be placed in any of the existing blocks,
+-- allocation fails with @VK_ERROR_OUT_OF_DEVICE_MEMORY@ error.
+--
+-- You should not use 'ALLOCATION_CREATE_DEDICATED_MEMORY_BIT' and
+-- 'ALLOCATION_CREATE_NEVER_ALLOCATE_BIT' at the same time. It makes no
+-- sense.
+--
+-- If @VmaAllocationCreateInfo::pool@ is not null, this flag is implied and
+-- ignored.
 pattern ALLOCATION_CREATE_NEVER_ALLOCATE_BIT = AllocationCreateFlagBits 0x00000002
--- No documentation found for Nested "VmaAllocationCreateFlagBits" "VMA_ALLOCATION_CREATE_MAPPED_BIT"
+-- | Set this flag to use a memory that will be persistently mapped and
+-- retrieve pointer to it.
+--
+-- Pointer to mapped memory will be returned through
+-- @VmaAllocationInfo::pMappedData@.
+--
+-- Is it valid to use this flag for allocation made from memory type that
+-- is not @HOST_VISIBLE@. This flag is then ignored and memory is not
+-- mapped. This is useful if you need an allocation that is efficient to
+-- use on GPU (@DEVICE_LOCAL@) and still want to map it directly if
+-- possible on platforms that support it (e.g. Intel GPU).
+--
+-- You should not use this flag together with
+-- 'ALLOCATION_CREATE_CAN_BECOME_LOST_BIT'.
 pattern ALLOCATION_CREATE_MAPPED_BIT = AllocationCreateFlagBits 0x00000004
--- No documentation found for Nested "VmaAllocationCreateFlagBits" "VMA_ALLOCATION_CREATE_CAN_BECOME_LOST_BIT"
+-- | Allocation created with this flag can become lost as a result of another
+-- allocation with 'ALLOCATION_CREATE_CAN_MAKE_OTHER_LOST_BIT' flag, so you
+-- must check it before use.
+--
+-- To check if allocation is not lost, call 'getAllocationInfo' and check
+-- if @VmaAllocationInfo::deviceMemory@ is not @VK_NULL_HANDLE@.
+--
+-- For details about supporting lost allocations, see Lost Allocations
+-- chapter of User Guide on Main Page.
+--
+-- You should not use this flag together with
+-- 'ALLOCATION_CREATE_MAPPED_BIT'.
 pattern ALLOCATION_CREATE_CAN_BECOME_LOST_BIT = AllocationCreateFlagBits 0x00000008
--- No documentation found for Nested "VmaAllocationCreateFlagBits" "VMA_ALLOCATION_CREATE_CAN_MAKE_OTHER_LOST_BIT"
+-- | While creating allocation using this flag, other allocations that were
+-- created with flag 'ALLOCATION_CREATE_CAN_BECOME_LOST_BIT' can become
+-- lost.
+--
+-- For details about supporting lost allocations, see Lost Allocations
+-- chapter of User Guide on Main Page.
 pattern ALLOCATION_CREATE_CAN_MAKE_OTHER_LOST_BIT = AllocationCreateFlagBits 0x00000010
--- No documentation found for Nested "VmaAllocationCreateFlagBits" "VMA_ALLOCATION_CREATE_USER_DATA_COPY_STRING_BIT"
+-- | Set this flag to treat @VmaAllocationCreateInfo::pUserData@ as pointer
+-- to a null-terminated string. Instead of copying pointer value, a local
+-- copy of the string is made and stored in allocation\'s @pUserData@. The
+-- string is automatically freed together with the allocation. It is also
+-- used in 'buildStatsString'.
 pattern ALLOCATION_CREATE_USER_DATA_COPY_STRING_BIT = AllocationCreateFlagBits 0x00000020
--- No documentation found for Nested "VmaAllocationCreateFlagBits" "VMA_ALLOCATION_CREATE_UPPER_ADDRESS_BIT"
+-- | Allocation will be created from upper stack in a double stack pool.
+--
+-- This flag is only allowed for custom pools created with
+-- 'POOL_CREATE_LINEAR_ALGORITHM_BIT' flag.
 pattern ALLOCATION_CREATE_UPPER_ADDRESS_BIT = AllocationCreateFlagBits 0x00000040
--- No documentation found for Nested "VmaAllocationCreateFlagBits" "VMA_ALLOCATION_CREATE_DONT_BIND_BIT"
+-- | Create both buffer\/image and allocation, but don\'t bind them together.
+-- It is useful when you want to bind yourself to do some more advanced
+-- binding, e.g. using some extensions. The flag is meaningful only with
+-- functions that bind by default: 'createBuffer', 'createImage'. Otherwise
+-- it is ignored.
 pattern ALLOCATION_CREATE_DONT_BIND_BIT = AllocationCreateFlagBits 0x00000080
--- No documentation found for Nested "VmaAllocationCreateFlagBits" "VMA_ALLOCATION_CREATE_WITHIN_BUDGET_BIT"
+-- | Create allocation only if additional device memory required for it, if
+-- any, won\'t exceed memory budget. Otherwise return
+-- @VK_ERROR_OUT_OF_DEVICE_MEMORY@.
 pattern ALLOCATION_CREATE_WITHIN_BUDGET_BIT = AllocationCreateFlagBits 0x00000100
--- No documentation found for Nested "VmaAllocationCreateFlagBits" "VMA_ALLOCATION_CREATE_STRATEGY_BEST_FIT_BIT"
+-- | Allocation strategy that chooses smallest possible free range for the
+-- allocation.
 pattern ALLOCATION_CREATE_STRATEGY_BEST_FIT_BIT = AllocationCreateFlagBits 0x00010000
--- No documentation found for Nested "VmaAllocationCreateFlagBits" "VMA_ALLOCATION_CREATE_STRATEGY_WORST_FIT_BIT"
+-- | Allocation strategy that chooses biggest possible free range for the
+-- allocation.
 pattern ALLOCATION_CREATE_STRATEGY_WORST_FIT_BIT = AllocationCreateFlagBits 0x00020000
--- No documentation found for Nested "VmaAllocationCreateFlagBits" "VMA_ALLOCATION_CREATE_STRATEGY_FIRST_FIT_BIT"
+-- | Allocation strategy that chooses first suitable free range for the
+-- allocation.
+--
+-- \"First\" doesn\'t necessarily means the one with smallest offset in
+-- memory, but rather the one that is easiest and fastest to find.
 pattern ALLOCATION_CREATE_STRATEGY_FIRST_FIT_BIT = AllocationCreateFlagBits 0x00040000
--- No documentation found for Nested "VmaAllocationCreateFlagBits" "VMA_ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT"
+-- | Allocation strategy that tries to minimize memory usage.
 pattern ALLOCATION_CREATE_STRATEGY_MIN_MEMORY_BIT = AllocationCreateFlagBits 0x00010000
--- No documentation found for Nested "VmaAllocationCreateFlagBits" "VMA_ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT"
+-- | Allocation strategy that tries to minimize allocation time.
 pattern ALLOCATION_CREATE_STRATEGY_MIN_TIME_BIT = AllocationCreateFlagBits 0x00040000
--- No documentation found for Nested "VmaAllocationCreateFlagBits" "VMA_ALLOCATION_CREATE_STRATEGY_MIN_FRAGMENTATION_BIT"
+-- | Allocation strategy that tries to minimize memory fragmentation.
 pattern ALLOCATION_CREATE_STRATEGY_MIN_FRAGMENTATION_BIT = AllocationCreateFlagBits 0x00020000
--- No documentation found for Nested "VmaAllocationCreateFlagBits" "VMA_ALLOCATION_CREATE_STRATEGY_MASK"
+-- | A bit mask to extract only @STRATEGY@ bits from entire set of flags.
 pattern ALLOCATION_CREATE_STRATEGY_MASK = AllocationCreateFlagBits 0x00070000
 
 type AllocationCreateFlags = AllocationCreateFlagBits
@@ -1344,11 +2208,14 @@ instance Read AllocationCreateFlagBits where
                        pure (AllocationCreateFlagBits v)))
 
 
--- No documentation found for TopLevel "VmaRecordFlagBits"
+-- | Flags to be used in @VmaRecordSettings::flags@.
 newtype RecordFlagBits = RecordFlagBits Flags
   deriving newtype (Eq, Ord, Storable, Zero, Bits)
 
--- No documentation found for Nested "VmaRecordFlagBits" "VMA_RECORD_FLUSH_AFTER_CALL_BIT"
+-- | Enables flush after recording every function call.
+--
+-- Enable it if you expect your application to crash, which may leave
+-- recording file truncated. It may degrade performance though.
 pattern RECORD_FLUSH_AFTER_CALL_BIT = RecordFlagBits 0x00000001
 
 type RecordFlags = RecordFlagBits
@@ -1367,23 +2234,79 @@ instance Read RecordFlagBits where
                        pure (RecordFlagBits v)))
 
 
--- No documentation found for TopLevel "VmaMemoryUsage"
+
 newtype MemoryUsage = MemoryUsage Int32
   deriving newtype (Eq, Ord, Storable, Zero)
 
--- No documentation found for Nested "VmaMemoryUsage" "VMA_MEMORY_USAGE_UNKNOWN"
+-- | No intended memory usage specified. Use other members of
+-- 'AllocationCreateInfo' to specify your requirements.
 pattern MEMORY_USAGE_UNKNOWN = MemoryUsage 0
--- No documentation found for Nested "VmaMemoryUsage" "VMA_MEMORY_USAGE_GPU_ONLY"
+-- | Memory will be used on device only, so fast access from the device is
+-- preferred. It usually means device-local GPU (video) memory. No need to
+-- be mappable on host. It is roughly equivalent of
+-- @D3D12_HEAP_TYPE_DEFAULT@.
+--
+-- Usage:
+--
+-- -   Resources written and read by device, e.g. images used as
+--     attachments.
+--
+-- -   Resources transferred from host once (immutable) or infrequently and
+--     read by device multiple times, e.g. textures to be sampled, vertex
+--     buffers, uniform (constant) buffers, and majority of other types of
+--     resources used on GPU.
+--
+-- Allocation may still end up in @HOST_VISIBLE@ memory on some
+-- implementations. In such case, you are free to map it. You can use
+-- 'ALLOCATION_CREATE_MAPPED_BIT' with this usage type.
 pattern MEMORY_USAGE_GPU_ONLY = MemoryUsage 1
--- No documentation found for Nested "VmaMemoryUsage" "VMA_MEMORY_USAGE_CPU_ONLY"
+-- | Memory will be mappable on host. It usually means CPU (system) memory.
+-- Guarantees to be @HOST_VISIBLE@ and @HOST_COHERENT@. CPU access is
+-- typically uncached. Writes may be write-combined. Resources created in
+-- this pool may still be accessible to the device, but access to them can
+-- be slow. It is roughly equivalent of @D3D12_HEAP_TYPE_UPLOAD@.
+--
+-- Usage: Staging copy of resources used as transfer source.
 pattern MEMORY_USAGE_CPU_ONLY = MemoryUsage 2
--- No documentation found for Nested "VmaMemoryUsage" "VMA_MEMORY_USAGE_CPU_TO_GPU"
+-- | Memory that is both mappable on host (guarantees to be @HOST_VISIBLE@)
+-- and preferably fast to access by GPU. CPU access is typically uncached.
+-- Writes may be write-combined.
+--
+-- Usage: Resources written frequently by host (dynamic), read by device.
+-- E.g. textures, vertex buffers, uniform buffers updated every frame or
+-- every draw call.
 pattern MEMORY_USAGE_CPU_TO_GPU = MemoryUsage 3
--- No documentation found for Nested "VmaMemoryUsage" "VMA_MEMORY_USAGE_GPU_TO_CPU"
+-- | Memory mappable on host (guarantees to be @HOST_VISIBLE@) and cached. It
+-- is roughly equivalent of @D3D12_HEAP_TYPE_READBACK@.
+--
+-- Usage:
+--
+-- -   Resources written by device, read by host - results of some
+--     computations, e.g. screen capture, average scene luminance for HDR
+--     tone mapping.
+--
+-- -   Any resources read or accessed randomly on host, e.g. CPU-side copy
+--     of vertex buffer used as source of transfer, but also used for
+--     collision detection.
 pattern MEMORY_USAGE_GPU_TO_CPU = MemoryUsage 4
--- No documentation found for Nested "VmaMemoryUsage" "VMA_MEMORY_USAGE_CPU_COPY"
+-- | CPU memory - memory that is preferably not @DEVICE_LOCAL@, but also not
+-- guaranteed to be @HOST_VISIBLE@.
+--
+-- Usage: Staging copy of resources moved from GPU memory to CPU memory as
+-- part of custom paging\/residency mechanism, to be moved back to GPU
+-- memory when needed.
 pattern MEMORY_USAGE_CPU_COPY = MemoryUsage 5
--- No documentation found for Nested "VmaMemoryUsage" "VMA_MEMORY_USAGE_GPU_LAZILY_ALLOCATED"
+-- | Lazily allocated GPU memory having
+-- @VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT@. Exists mostly on mobile
+-- platforms. Using it on desktop PC or other GPUs with no such memory type
+-- present will fail the allocation.
+--
+-- Usage: Memory for transient attachment images (color attachments, depth
+-- attachments etc.), created with
+-- @VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT@.
+--
+-- Allocations with this usage are always created as dedicated - it implies
+-- 'ALLOCATION_CREATE_DEDICATED_MEMORY_BIT'.
 pattern MEMORY_USAGE_GPU_LAZILY_ALLOCATED = MemoryUsage 6
 {-# complete MEMORY_USAGE_UNKNOWN,
              MEMORY_USAGE_GPU_ONLY,
@@ -1421,16 +2344,12 @@ instance Read MemoryUsage where
 
 -- | VmaAllocationCreateInfo
 data AllocationCreateInfo = AllocationCreateInfo
-  { -- | Use
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a4fceecc301f4064dc808d3cd6c038941 VmaAllocationCreateFlagBits>
-    -- enum.
+  { -- | Use 'AllocationCreateFlagBits' enum.
     flags :: AllocationCreateFlags
   , -- | Intended usage of memory.
     --
-    -- You can leave
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1aa5846affa1e9da3800e3e78fae2305ccaf50d27e34e0925cf3a63db8c839121dd VMA_MEMORY_USAGE_UNKNOWN>
-    -- if you specify memory requirements in other way.   If 'Pool' is not
-    -- null, this member is ignored.
+    -- You can leave 'MEMORY_USAGE_UNKNOWN' if you specify memory requirements
+    -- in other way.   If 'Pool' is not null, this member is ignored.
     usage :: MemoryUsage
   , -- | Flags that must be set in a Memory Type chosen for an allocation.
     --
@@ -1457,18 +2376,14 @@ data AllocationCreateInfo = AllocationCreateInfo
     -- members: @usage@, @requiredFlags@, @preferredFlags@, @memoryTypeBits@
     -- are ignored.
     pool :: Pool
-  , -- | Custom general-purpose pointer that will be stored in
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation VmaAllocation>,
-    -- can be read as
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation_info_1adc507656149c04de7ed95d0042ba2a13 VmaAllocationInfo::pUserData>
-    -- and changed using
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1af9147d31ffc11d62fc187bde283ed14f vmaSetAllocationUserData()>.
+  , -- | Custom general-purpose pointer that will be stored in 'Allocation', can
+    -- be read as @VmaAllocationInfo::pUserData@ and changed using
+    -- 'setAllocationUserData'.
     --
-    -- If
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1ad9889c10c798b040d59c92f257cae597aa6f24f821cd6a7c5e4a443f7bf59c520 VMA_ALLOCATION_CREATE_USER_DATA_COPY_STRING_BIT>
-    -- is used, it must be either null or pointer to a null-terminated string.
-    -- The string will be then copied to internal buffer, so it doesn\'t need
-    -- to be valid after allocation call.
+    -- If 'ALLOCATION_CREATE_USER_DATA_COPY_STRING_BIT' is used, it must be
+    -- either null or pointer to a null-terminated string. The string will be
+    -- then copied to internal buffer, so it doesn\'t need to be valid after
+    -- allocation call.
     userData :: Ptr ()
   }
   deriving (Typeable)
@@ -1528,8 +2443,7 @@ instance Zero AllocationCreateInfo where
 --
 -- Parameters for incremental defragmentation steps.
 --
--- To be used with function
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1ac0f01545b6262f7d4d128fc8f8e5c77b vmaBeginDefragmentationPass()>.
+-- To be used with function 'beginDefragmentationPass'.
 data DefragmentationPassInfo = DefragmentationPassInfo
   { 
     moveCount :: Word32
@@ -1575,9 +2489,7 @@ instance Zero DefragmentationPassInfo where
 --
 -- Description of a Allocator to be created.
 data AllocatorCreateInfo = AllocatorCreateInfo
-  { -- | Flags for created allocator. Use
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1afd73b95e737ee7e76f827cb5472f559f VmaAllocatorCreateFlagBits>
-    -- enum.
+  { -- | Flags for created allocator. Use 'AllocatorCreateFlagBits' enum.
     flags :: AllocatorCreateFlags
   , -- | Vulkan physical device.
     --
@@ -1637,8 +2549,7 @@ data AllocatorCreateInfo = AllocatorCreateInfo
     --
     -- -   If the limit is smaller than heap size reported in
     --     @VkMemoryHeap::size@, the value of this limit will be reported
-    --     instead when using
-    --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1ab88db292a17974f911182543fda52d19 vmaGetMemoryProperties()>.
+    --     instead when using 'getMemoryProperties'.
     --
     -- Warning! Using this feature may not be equivalent to installing a GPU
     -- with smaller amount of memory, because graphics driver doesn\'t
@@ -1650,8 +2561,7 @@ data AllocatorCreateInfo = AllocatorCreateInfo
     heapSizeLimit :: Ptr DeviceSize
   , -- | Pointers to Vulkan functions. Can be null.
     --
-    -- For details see
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_configuration_1config_Vulkan_functions Pointers to Vulkan functions>.
+    -- For details see /Pointers to Vulkan functions/.
     vulkanFunctions :: Maybe VulkanFunctions
   , -- | Parameters for recording of VMA calls. Can be null.
     --
@@ -1761,15 +2671,12 @@ instance Zero AllocatorCreateInfo where
 -- | VmaDefragmentationInfo
 --
 -- Deprecated. Optional configuration parameters to be passed to function
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a9f0f8f56db5f7f57fe4454f465142dac vmaDefragment()>.
+-- 'defragment'.
 --
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_deprecated_1_deprecated000002 Deprecated>
+-- @Deprecated@
 --
 -- This is a part of the old interface. It is recommended to use structure
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_info2 VmaDefragmentationInfo2>
--- and function
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a36ba776fd7fd5cb1e9359fdc0d8e6e8a vmaDefragmentationBegin()>
--- instead.
+-- 'DefragmentationInfo2' and function 'defragmentationBegin' instead.
 data DefragmentationInfo = DefragmentationInfo
   { -- | Maximum total numbers of bytes that can be copied while moving
     -- allocations to different places.
@@ -1820,8 +2727,7 @@ instance Zero DefragmentationInfo where
 --
 -- Parameters for defragmentation.
 --
--- To be used with function
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a36ba776fd7fd5cb1e9359fdc0d8e6e8a vmaDefragmentationBegin()>.
+-- To be used with function 'defragmentationBegin'.
 data DefragmentationInfo2 = DefragmentationInfo2
   { -- | Reserved for future use. Should be 0.
     flags :: DefragmentationFlags
@@ -1846,8 +2752,8 @@ data DefragmentationInfo2 = DefragmentationInfo2
     -- defragmentation and there is no way to check if they were really moved
     -- as in @pAllocationsChanged@, so you must query all the allocations in
     -- all these pools for new @VkDeviceMemory@ and offset using
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a86dd08aba8633bfa4ad0df2e76481d8b vmaGetAllocationInfo()>
-    -- if you might need to recreate buffers and images bound to them.
+    -- 'getAllocationInfo' if you might need to recreate buffers and images
+    -- bound to them.
     --
     -- The array should have @poolCount@ elements. The array should not contain
     -- nulls. Elements in the array should be unique - same pool cannot occur
@@ -1883,8 +2789,7 @@ data DefragmentationInfo2 = DefragmentationInfo2
     -- If not null, it must be a valid command buffer handle that supports
     -- Transfer queue type. It must be in the recording state and outside of a
     -- render pass instance. You need to submit it and make sure it finished
-    -- execution before calling
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a8774e20e91e245aae959ba63efa15dd2 vmaDefragmentationEnd()>.
+    -- execution before calling 'defragmentationEnd'.
     --
     -- Passing null means that only CPU defragmentation will be performed.
     commandBuffer :: Ptr CommandBuffer_T
@@ -1960,13 +2865,11 @@ instance Zero DefragmentationInfo2 where
 
 -- | VmaPoolCreateInfo
 --
--- Describes parameter of created
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_pool VmaPool>.
+-- Describes parameter of created 'Pool'.
 data PoolCreateInfo = PoolCreateInfo
   { -- | Vulkan memory type index to allocate this pool from.
     memoryTypeIndex :: Word32
-  , -- | Use combination of
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a4d4f2efc2509157a9e4ecd4fd7942303 VmaPoolCreateFlagBits>.
+  , -- | Use combination of 'PoolCreateFlagBits'.
     flags :: PoolCreateFlags
   , -- | Size of a single @VkDeviceMemory@ block to be allocated as part of this
     -- pool, in bytes. Optional.
@@ -1987,18 +2890,16 @@ data PoolCreateInfo = PoolCreateInfo
     --
     -- Set to 0 to use default, which is @SIZE_MAX@, which means no limit.
     --
-    -- Set to same value as
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_pool_create_info_1ad8006fb803185c0a699d30f3e9a865ae VmaPoolCreateInfo::minBlockCount>
-    -- to have fixed amount of memory allocated throughout whole lifetime of
-    -- this pool.
+    -- Set to same value as @VmaPoolCreateInfo::minBlockCount@ to have fixed
+    -- amount of memory allocated throughout whole lifetime of this pool.
     maxBlockCount :: Word64
   , -- | Maximum number of additional frames that are in use at the same time as
     -- current frame.
     --
     -- This value is used only when you make allocations with
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1ad9889c10c798b040d59c92f257cae597a5f436af6c8fe8540573a6d22627a6fd2 VMA_ALLOCATION_CREATE_CAN_BECOME_LOST_BIT>
-    -- flag. Such allocation cannot become lost if allocation.lastUseFrameIndex
-    -- >= allocator.currentFrameIndex - frameInUseCount.
+    -- 'ALLOCATION_CREATE_CAN_BECOME_LOST_BIT' flag. Such allocation cannot
+    -- become lost if allocation.lastUseFrameIndex >=
+    -- allocator.currentFrameIndex - frameInUseCount.
     --
     -- For example, if you double-buffer your command buffers, so resources
     -- used for rendering in previous frame may still be in use by the GPU at
@@ -2062,8 +2963,7 @@ instance Zero PoolCreateInfo where
 
 -- | VmaDefragmentationStats
 --
--- Statistics returned by function
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a9f0f8f56db5f7f57fe4454f465142dac vmaDefragment()>.
+-- Statistics returned by function 'defragment'.
 data DefragmentationStats = DefragmentationStats
   { -- | Total number of bytes that have been copied while moving allocations to
     -- different places.
@@ -2122,10 +3022,8 @@ instance Zero DefragmentationStats where
 
 -- | VmaAllocationInfo
 --
--- Parameters of
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation VmaAllocation>
--- objects, that can be retrieved using function
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a86dd08aba8633bfa4ad0df2e76481d8b vmaGetAllocationInfo()>.
+-- Parameters of 'Allocation' objects, that can be retrieved using function
+-- 'getAllocationInfo'.
 data AllocationInfo = AllocationInfo
   { -- | Memory type index that this allocation was allocated from.
     --
@@ -2135,18 +3033,16 @@ data AllocationInfo = AllocationInfo
     --
     -- Same memory object can be shared by multiple allocations.
     --
-    -- It can change after call to
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a9f0f8f56db5f7f57fe4454f465142dac vmaDefragment()>
-    -- if this allocation is passed to the function, or if allocation is lost.
+    -- It can change after call to 'defragment' if this allocation is passed to
+    -- the function, or if allocation is lost.
     --
     -- If the allocation is lost, it is equal to @VK_NULL_HANDLE@.
     deviceMemory :: DeviceMemory
   , -- | Offset into deviceMemory object to the beginning of this allocation, in
     -- bytes. (deviceMemory, offset) pair is unique to this allocation.
     --
-    -- It can change after call to
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a9f0f8f56db5f7f57fe4454f465142dac vmaDefragment()>
-    -- if this allocation is passed to the function, or if allocation is lost.
+    -- It can change after call to 'defragment' if this allocation is passed to
+    -- the function, or if allocation is lost.
     offset :: DeviceSize
   , -- | Size of this allocation, in bytes.
     --
@@ -2154,27 +3050,18 @@ data AllocationInfo = AllocationInfo
     size :: DeviceSize
   , -- | Pointer to the beginning of this allocation as mapped data.
     --
-    -- If the allocation hasn\'t been mapped using
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1ad5bd1243512d099706de88168992f069 vmaMapMemory()>
-    -- and hasn\'t been created with
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1ad9889c10c798b040d59c92f257cae597a11da372cc3a82931c5e5d6146cd9dd1f VMA_ALLOCATION_CREATE_MAPPED_BIT>
-    -- flag, this value is null.
+    -- If the allocation hasn\'t been mapped using 'mapMemory' and hasn\'t been
+    -- created with 'ALLOCATION_CREATE_MAPPED_BIT' flag, this value is null.
     --
-    -- It can change after call to
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1ad5bd1243512d099706de88168992f069 vmaMapMemory()>,
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a9bc268595cb33f6ec4d519cfce81ff45 vmaUnmapMemory()>.
-    -- It can also change after call to
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a9f0f8f56db5f7f57fe4454f465142dac vmaDefragment()>
-    -- if this allocation is passed to the function.
+    -- It can change after call to 'mapMemory', 'unmapMemory'. It can also
+    -- change after call to 'defragment' if this allocation is passed to the
+    -- function.
     mappedData :: Ptr ()
   , -- | Custom general-purpose pointer that was passed as
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation_create_info_1a8259e85c272683434f4abb4ddddffe19 VmaAllocationCreateInfo::pUserData>
-    -- or set using
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1af9147d31ffc11d62fc187bde283ed14f vmaSetAllocationUserData()>.
+    -- @VmaAllocationCreateInfo::pUserData@ or set using
+    -- 'setAllocationUserData'.
     --
-    -- It can change after call to
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1af9147d31ffc11d62fc187bde283ed14f vmaSetAllocationUserData()>
-    -- for this allocation.
+    -- It can change after call to 'setAllocationUserData' for this allocation.
     userData :: Ptr ()
   }
   deriving (Typeable)
@@ -2227,24 +3114,22 @@ instance Zero AllocationInfo where
 
 -- | VmaAllocatorInfo
 --
--- Information about existing
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator VmaAllocator>
--- object.
+-- Information about existing 'Allocator' object.
 data AllocatorInfo = AllocatorInfo
   { -- | Handle to Vulkan instance object.
     --
     -- This is the same value as has been passed through
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1a70dd42e29b1df1d1b9b61532ae0b370b VmaAllocatorCreateInfo::instance>.
+    -- @VmaAllocatorCreateInfo::instance@.
     instance' :: Ptr Instance_T
   , -- | Handle to Vulkan physical device object.
     --
     -- This is the same value as has been passed through
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1a08230f04ae6ccf8a78150a9e829a7156 VmaAllocatorCreateInfo::physicalDevice>.
+    -- @VmaAllocatorCreateInfo::physicalDevice@.
     physicalDevice :: Ptr PhysicalDevice_T
   , -- | Handle to Vulkan device object.
     --
     -- This is the same value as has been passed through
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1ad924ddd77b04039c88d0c09b0ffcd500 VmaAllocatorCreateInfo::device>.
+    -- @VmaAllocatorCreateInfo::device@.
     device :: Ptr Device_T
   }
   deriving (Typeable)
@@ -2290,8 +3175,7 @@ instance Zero AllocatorInfo where
 --
 -- Pointers to some Vulkan functions - a subset used by the library.
 --
--- Used in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1a3dc197be3227da7338b1643f70db36bd VmaAllocatorCreateInfo::pVulkanFunctions>.
+-- Used in @VmaAllocatorCreateInfo::pVulkanFunctions@.
 data VulkanFunctions = VulkanFunctions
   { 
     vkGetPhysicalDeviceProperties :: PFN_vkGetPhysicalDeviceProperties
@@ -2432,21 +3316,18 @@ instance Zero VulkanFunctions where
 
 -- | VmaPoolStats
 --
--- Describes parameter of existing
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_pool VmaPool>.
+-- Describes parameter of existing 'Pool'.
 data PoolStats = PoolStats
   { -- | Total amount of @VkDeviceMemory@ allocated from Vulkan for this pool, in
     -- bytes.
     size :: DeviceSize
-  , -- | Total number of bytes in the pool not used by any
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation VmaAllocation>.
+  , -- | Total number of bytes in the pool not used by any 'Allocation'.
     unusedSize :: DeviceSize
-  , -- | Number of
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation VmaAllocation>
-    -- objects created from this pool that were not destroyed or lost.
+  , -- | Number of 'Allocation' objects created from this pool that were not
+    -- destroyed or lost.
     allocationCount :: Word64
   , -- | Number of continuous memory ranges in the pool not used by any
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation VmaAllocation>.
+    -- 'Allocation'.
     unusedRangeCount :: Word64
   , -- | Size of the largest continuous free memory region available for new
     -- allocation.
@@ -2515,9 +3396,7 @@ instance Zero PoolStats where
 data StatInfo = StatInfo
   { -- | Number of @VkDeviceMemory@ Vulkan memory blocks allocated.
     blockCount :: Word32
-  , -- | Number of
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation VmaAllocation>
-    -- allocation objects allocated.
+  , -- | Number of 'Allocation' allocation objects allocated.
     allocationCount :: Word32
   , -- | Number of free ranges of memory between allocations.
     unusedRangeCount :: Word32
@@ -2612,19 +3491,16 @@ instance Zero StatInfo where
 -- | VmaRecordSettings
 --
 -- Parameters for recording calls to VMA functions. To be used in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1ace2aa4877b16a42b0b7673d4e26000ee VmaAllocatorCreateInfo::pRecordSettings>.
+-- @VmaAllocatorCreateInfo::pRecordSettings@.
 data RecordSettings = RecordSettings
-  { -- | Flags for recording. Use
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1acd24d5eb58abff7e1f43cb32a1ba1413 VmaRecordFlagBits>
-    -- enum.
+  { -- | Flags for recording. Use 'RecordFlagBits' enum.
     flags :: RecordFlags
   , -- | Path to the file that should be written by the recording.
     --
     -- Suggested extension: \"csv\". If the file already exists, it will be
-    -- overwritten. It will be opened for the whole time
-    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator VmaAllocator>
-    -- object is alive. If opening this file fails, creation of the whole
-    -- allocator object fails.
+    -- overwritten. It will be opened for the whole time 'Allocator' object is
+    -- alive. If opening this file fails, creation of the whole allocator
+    -- object fails.
     filePath :: ByteString
   }
   deriving (Typeable)
@@ -2747,8 +3623,7 @@ instance Zero Budget where
 -- Provided for informative purpose, e.g. to gather statistics about number
 -- of allocations or total amount of memory allocated in Vulkan.
 --
--- Used in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1af1380969b5e1ea4c3184a877892d260e VmaAllocatorCreateInfo::pDeviceMemoryCallbacks>.
+-- Used in @VmaAllocatorCreateInfo::pDeviceMemoryCallbacks@.
 data DeviceMemoryCallbacks = DeviceMemoryCallbacks
   { -- | Optional, can be null.
     pfnAllocate :: PFN_vmaAllocateDeviceMemoryFunction
@@ -2842,16 +3717,11 @@ instance Zero DefragmentationPassMoveInfo where
 
 -- | VmaStats
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_stat_info VmaStatInfo>
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_stats_1a13e3caf754be79352c42408756309331 memoryType>
---     [VK_MAX_MEMORY_TYPES]
+-- -   'StatInfo' @memoryType@ [VK_MAX_MEMORY_TYPES]
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_stat_info VmaStatInfo>
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_stats_1a0e6611508c29a187f0fd14ff1a0329c0 memoryHeap>
---     [VK_MAX_MEMORY_HEAPS]
+-- -   'StatInfo' @memoryHeap@ [VK_MAX_MEMORY_HEAPS]
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_stat_info VmaStatInfo>
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_stats_1a2e8f5b3353f2fefef3c27f29e245a1f9 total>
+-- -   'StatInfo' @total@
 --
 -- General statistics from current state of Allocator.
 --
@@ -2929,16 +3799,10 @@ instance Zero Stats where
 --
 -- Represents custom memory pool.
 --
--- Fill structure
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_pool_create_info VmaPoolCreateInfo>
--- and call function
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a5c8770ded7c59c8caac6de0c2cb00b50 vmaCreatePool()>
--- to create it. Call function
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a5485779c8f1948238fc4e92232fa65e1 vmaDestroyPool()>
--- to destroy it.
+-- Fill structure 'PoolCreateInfo' and call function 'createPool' to create
+-- it. Call function 'destroyPool' to destroy it.
 --
--- For more information see
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_choosing_memory_type_1choosing_memory_type_custom_memory_pools Custom memory pools>.
+-- For more information see /Custom memory pools/.
 newtype Pool = Pool Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
@@ -2951,12 +3815,8 @@ instance Show Pool where
 -- Represents Opaque object that represents started defragmentation
 -- process.
 --
--- Fill structure
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_info2 VmaDefragmentationInfo2>
--- and call function
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a36ba776fd7fd5cb1e9359fdc0d8e6e8a vmaDefragmentationBegin()>
--- to create it. Call function
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a8774e20e91e245aae959ba63efa15dd2 vmaDefragmentationEnd()>
+-- Fill structure 'DefragmentationInfo2' and call function
+-- 'defragmentationBegin' to create it. Call function 'defragmentationEnd'
 -- to destroy it.
 newtype DefragmentationContext = DefragmentationContext Word64
   deriving newtype (Eq, Ord, Storable, Zero)
@@ -2973,10 +3833,8 @@ instance Show DefragmentationContext where
 -- region of a bigger block of this type plus unique offset.
 --
 -- There are multiple ways to create such object. You need to fill
--- structure
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation_create_info VmaAllocationCreateInfo>.
--- For more information see
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_choosing_memory_type Choosing memory type>.
+-- structure 'AllocationCreateInfo'. For more information see /Choosing
+-- memory type/.
 --
 -- Although the library provides convenience functions that create Vulkan
 -- buffer or image, allocate memory for it and bind them together, binding
@@ -2986,13 +3844,11 @@ instance Show DefragmentationContext where
 -- can be done independently of destruction of the allocation.
 --
 -- The object also remembers its size and some other information. To
--- retrieve this information, use function
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a86dd08aba8633bfa4ad0df2e76481d8b vmaGetAllocationInfo()>
--- and inspect returned structure
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation_info VmaAllocationInfo>.
+-- retrieve this information, use function 'getAllocationInfo' and inspect
+-- returned structure 'AllocationInfo'.
 --
 -- Some kinds allocations can be in lost state. For more information, see
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_lost_allocations Lost allocations>.
+-- /Lost allocations/.
 newtype Allocation = Allocation Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
@@ -3004,13 +3860,8 @@ instance Show Allocation where
 --
 -- Represents main object of this library initialized.
 --
--- Fill structure
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info VmaAllocatorCreateInfo>
--- and call function
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a200692051ddb34240248234f5f4c17bb vmaCreateAllocator()>
--- to create it. Call function
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1aa8d164061c88f22fb1fd3c8f3534bc1d vmaDestroyAllocator()>
--- to destroy it.
+-- Fill structure 'AllocatorCreateInfo' and call function 'createAllocator'
+-- to create it. Call function 'destroyAllocator' to destroy it.
 --
 -- It is recommended to create just one object of this type per @VkDevice@
 -- object, right after Vulkan is initialized and keep it alive until before
