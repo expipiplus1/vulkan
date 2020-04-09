@@ -1,5 +1,5 @@
 {-# language DeriveFunctor, DeriveFoldable, DeriveTraversable #-}
-module Render.Spec
+module VK.Render
   where
 
 import           Relude                  hiding ( Enum )
@@ -11,7 +11,6 @@ import qualified Data.HashMap.Strict           as Map
 
 import           Bespoke
 import           Bespoke.Utils
-import           Bracket
 import           Error
 import           Marshal
 import           Render.Alias
@@ -35,6 +34,8 @@ import           Render.VkException
 import           Spec.Parse
 import           CType
 import           Documentation
+
+import           VK.Bracket
 
 data RenderedSpec a = RenderedSpec
   { rsHandles            :: Vector a
@@ -126,7 +127,7 @@ commandWithBrackets
   :: ( HasErr r
      , HasRenderParams r
      , HasSpecInfo r
-     , HasStmts r
+     , Member Fixpoint r
      , HasRenderedNames r
      )
   => (CName -> Maybe RenderElement)

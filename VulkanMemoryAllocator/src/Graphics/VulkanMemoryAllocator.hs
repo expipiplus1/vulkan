@@ -1,5 +1,6 @@
 {-# language CPP #-}
 module Graphics.VulkanMemoryAllocator  ( createAllocator
+                                       , withAllocator
                                        , destroyAllocator
                                        , getAllocatorInfo
                                        , getPhysicalDeviceProperties
@@ -14,6 +15,7 @@ module Graphics.VulkanMemoryAllocator  ( createAllocator
                                        , findMemoryTypeIndexForBufferInfo
                                        , findMemoryTypeIndexForImageInfo
                                        , createPool
+                                       , withPool
                                        , destroyPool
                                        , getPoolStats
                                        , makePoolAllocationsLost
@@ -248,6 +250,16 @@ createAllocator createInfo = evalContT $ do
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pAllocator <- lift $ peek @Allocator pPAllocator
   pure $ (pAllocator)
+
+-- | A safe wrapper for 'createAllocator' and 'destroyAllocator' using
+-- 'bracket'
+--
+-- The allocated value must not be returned from the provided computation
+withAllocator :: AllocatorCreateInfo -> (Allocator -> IO r) -> IO r
+withAllocator createInfo =
+  bracket
+    (createAllocator createInfo)
+    (\o -> destroyAllocator o)
 
 
 foreign import ccall
@@ -583,6 +595,15 @@ createPool allocator createInfo = evalContT $ do
   lift $ when (r < SUCCESS) (throwIO (VulkanException r))
   pPool <- lift $ peek @Pool pPPool
   pure $ (pPool)
+
+-- | A safe wrapper for 'createPool' and 'destroyPool' using 'bracket'
+--
+-- The allocated value must not be returned from the provided computation
+withPool :: Allocator -> PoolCreateInfo -> (Pool -> IO r) -> IO r
+withPool allocator createInfo =
+  bracket
+    (createPool allocator createInfo)
+    (\o -> destroyPool allocator o)
 
 
 foreign import ccall

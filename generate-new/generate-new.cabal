@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a35bd0b81cc5cec3d4e0378e0abbce32abf5b19a4a975f47b1b8a9b3e2bae73f
+-- hash: 6c12383d1a50ee3ff29c4b9943470d00a22d711604a1eca895cb37ea90175a5c
 
 name:           generate-new
 version:        0.0.0
@@ -55,7 +55,6 @@ library
       Render.Names
       Render.Peek
       Render.Scheme
-      Render.Spec
       Render.Spec.Extends
       Render.Spec.Versions
       Render.SpecInfo
@@ -128,6 +127,8 @@ library
 executable vk
   main-is: Main.hs
   other-modules:
+      VK.Bracket
+      VK.Render
       Paths_generate_new
   hs-source-dirs:
       vk
@@ -179,6 +180,7 @@ executable vk
 executable vma
   main-is: Main.hs
   other-modules:
+      VMA.Bracket
       VMA.Documentation
       VMA.Render
       VMA.RenderParams

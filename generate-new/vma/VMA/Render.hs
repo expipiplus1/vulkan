@@ -2,7 +2,9 @@ module VMA.Render
   where
 
 import           Relude                  hiding ( Handle )
+import qualified Data.Map                      as Map
 import           Data.Vector                    ( Vector )
+import qualified Data.Vector                   as V
 import           Polysemy
 import           Polysemy.Fixpoint
 
@@ -19,6 +21,8 @@ import           Spec.Types
 import           Error
 import           Render.Names
 
+import           VMA.Bracket
+
 renderHeader
   :: ( HasErr r
      , HasRenderParams r
@@ -32,11 +36,31 @@ renderHeader
   -> Vector (a, FuncPointer)
   -> Vector (a, MarshaledCommand)
   -> Sem r (Vector (a, RenderElement))
-renderHeader enums structs handles funcPointers commands = sequenceV
-  (  (traverse renderEnum <$> enums)
-  <> (traverse renderStruct <$> structs)
-  <> (traverse renderHandle <$> handles)
-  <> (traverse renderFuncPointer <$> funcPointers)
-  <> (traverse renderCommand <$> commands)
-  )
+renderHeader enums structs handles funcPointers commands = do
+  bs <- brackets
+  let bracketMap      = Map.fromList [ (n, b) | (n, _, b) <- toList bs ]
+      renderCommand'  = commandWithBrackets (`Map.lookup` bracketMap)
+  sequenceV
+    (  (traverse renderEnum <$> enums)
+    <> (traverse renderStruct <$> structs)
+    <> (traverse renderHandle <$> handles)
+    <> (traverse renderFuncPointer <$> funcPointers)
+    <> (traverse renderCommand' <$> commands)
+    )
 
+-- | Render a command along with any associated bracketing function
+commandWithBrackets
+  :: ( HasErr r
+     , HasRenderParams r
+     , HasSpecInfo r
+     , HasRenderedNames r
+     , Member Fixpoint r
+     )
+  => (CName -> Maybe RenderElement)
+  -> MarshaledCommand
+  -> Sem r RenderElement
+commandWithBrackets getBracket cmd = do
+  r <- renderCommand cmd
+  pure $ case getBracket (mcName cmd) of
+    Nothing -> r
+    Just b  -> r <> b

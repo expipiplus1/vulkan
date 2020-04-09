@@ -67,8 +67,11 @@ The docbook documentation will be in `docs/docbook`.
 - `VmaAllocatorCreateInfo::pVulkanFunctions` This should be created from the
   function table in `Device`
 
-- throwing on error Result return values
-- Returning any success return values
+## TODO
+
+Make `buildStatsString` return a ByteString
+
+`touchAllocation` Should not return `Bool32`
 
 # More TODOs
 

@@ -20,12 +20,13 @@ import           Render.Names
 import           Render.Element.Write
 import           Render.Aggregate
 import           Bespoke                        ( assignBespokeModules )
-import           Render.Spec
 import           Spec.Parse
 import           AssignModules
 import           Documentation.All
 import           Bespoke.RenderParams
 import           Bespoke.MarshalParams
+
+import           VK.Render
 
 main :: IO ()
 main =
