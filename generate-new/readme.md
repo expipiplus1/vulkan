@@ -71,8 +71,6 @@ The docbook documentation will be in `docs/docbook`.
 
 Make `buildStatsString` return a ByteString
 
-`touchAllocation` Should not return `Bool32`
-
 # More TODOs
 
 Bindings for chaoticbob/SPIRV-Reflect

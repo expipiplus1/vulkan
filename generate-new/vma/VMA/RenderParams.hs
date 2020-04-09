@@ -15,7 +15,8 @@ import           Data.Text.Extra                ( lowerCaseFirst
                                                 , upperCaseFirst
                                                 )
 import           Data.Char                      ( isLower )
-import           Language.Haskell.TH            ( mkName )
+import           Language.Haskell.TH
+import           Data.Generics.Uniplate.Data
 import           Polysemy
 
 import           Foreign.Ptr
@@ -52,7 +53,14 @@ renderParams handles = r
                                     . lowerCaseFirst
                                     . dropVma
     , alwaysQualifiedNames        = V.fromList [''VSS.Vector]
-    , mkIdiomaticType             = mkIdiomaticType vulkanParams
+    , mkIdiomaticType             =
+      let
+        dropVulkanModule = transformBi
+          (\n -> if nameModule n == Just "Graphics.Vulkan"
+            then mkName (nameBase n)
+            else n
+          )
+      in  mkIdiomaticType vulkanParams . dropVulkanModule
     , mkHsTypeOverride            = \structStyle preserve t ->
                                       case vulkanManifest structStyle vulkanParams t of
                                         Just r -> pure r
@@ -83,6 +91,8 @@ renderParams handles = r
       in  \case
             TermName  "advancePtrBytes"  -> vk "CStruct.Utils"
             TermName  "lowerArrayPtr"    -> vk "CStruct.Utils"
+            TermName  "boolToBool32"     -> vk "Core10.BaseType"
+            TermName  "bool32ToBool"     -> vk "Core10.BaseType"
             TyConName "Zero"             -> vk "Zero"
             TyConName "ToCStruct"        -> vk "CStruct"
             TyConName "FromCStruct"      -> vk "CStruct"

@@ -160,6 +160,7 @@ import Graphics.Vulkan (PhysicalDevice_T)
 import Graphics.Vulkan (Result)
 import Graphics.Vulkan.CStruct.Utils (advancePtrBytes)
 import Graphics.Vulkan.CStruct.Utils (lowerArrayPtr)
+import Graphics.Vulkan.Core10.BaseType (bool32ToBool)
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -1023,7 +1024,7 @@ foreign import ccall
 touchAllocation :: Allocator -> Allocation -> IO (Bool32)
 touchAllocation allocator allocation = do
   r <- (ffiVmaTouchAllocation) (allocator) (allocation)
-  pure $ (r)
+  pure $ ((bool32ToBool r))
 
 
 foreign import ccall
