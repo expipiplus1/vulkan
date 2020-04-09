@@ -95,37 +95,6 @@ main =
         . runInputConst specTypeInfo
         . runInputConst renderedNames
         $ do
-            forV_ (specCommands spec) $ \Command {..} -> do
-              ints <-
-                fmap (V.mapMaybe id) $ forV cParameters $ \Parameter {..} -> do
-                  let t n = getHandle n <&> \case
-                        Nothing -> Nothing
-                        Just _  -> Just pName
-                  case pType of
-                    Ptr CType.Const (TypeName n) -> t n
-                    Ptr _ (Ptr CType.Const (TypeName n)) -> t n
-                    _ -> pure Nothing
-              for_ ints $ \n -> traceShowM (cName, n)
-
-            traceShowM ()
-            traceShowM ()
-            traceShowM ()
-            traceShowM ()
-            traceShowM ()
-
-            forV_ (specStructs spec) $ \Struct {..} -> do
-              ints <-
-                fmap (V.mapMaybe id) $ forV sMembers $ \StructMember {..} -> do
-                  let t n = getHandle n <&> \case
-                        Nothing -> Nothing
-                        Just _  -> Just smName
-                  case smType of
-                    Array _ _ (Ptr CType.Const (TypeName n)) -> t n
-                    Ptr CType.Const (TypeName n) -> t n
-                    Ptr _ (Ptr CType.Const (TypeName n)) -> t n
-                    _ -> pure Nothing
-              for_ ints $ \n -> traceShowM (sName, n)
-
             vulkanFuncPointers                    <- vulkanFuncPointers
             specMarshalParams                     <- Vk.marshalParams spec
             ourMarshalParams                      <- marshalParams handles

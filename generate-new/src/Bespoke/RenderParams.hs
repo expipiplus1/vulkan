@@ -164,6 +164,9 @@ renderParams handles = r
           <+> sibling
       _ -> Nothing
     , isExternalName              = const Nothing
+    , externalDocHTML             =
+      Just
+        "https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html"
     }
 
 wrappedIdiomaticType

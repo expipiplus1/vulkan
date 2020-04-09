@@ -24,17 +24,22 @@ data DocumenteeLocation
   | OtherModule ModName HName
 
 documentationToHaddock
-  :: (CName -> DocumenteeLocation)
+  :: Maybe Text
+  -- ^ A URL for some HTML to point unresolved links to
+  -> (CName -> DocumenteeLocation)
   -- ^ Find which module a documentee lives in
   -> Documentation
   -- ^ The documentation to render
   -> Either Text Haddock
-documentationToHaddock getModule Documentation {..} =
+documentationToHaddock externalDocHTML getModule Documentation {..} =
   let writerOptions = def
   in  bimap show Haddock $ runPure
         (writeHaddock
           writerOptions
-          (prepareForHaddock . fixLinks getModule $ dDocumentation)
+          ( prepareForHaddock
+          . fixLinks externalDocHTML getModule
+          $ dDocumentation
+          )
         )
 
 prepareForHaddock :: Pandoc -> Pandoc
@@ -76,32 +81,32 @@ prepareForHaddock =
 
     b -> b
 
-fixLinks :: (CName -> DocumenteeLocation) -> Pandoc -> Pandoc
-fixLinks findDocs = topDown fixInlines
+fixLinks :: Maybe Text -> (CName -> DocumenteeLocation) -> Pandoc -> Pandoc
+fixLinks externalDocHTML findDocs = topDown fixInlines
  where
   fixInlines = \case
-    Link ("", [], []) [Str name] (tag, "") | tag == "#" <> name ->
-      case findDocs (CName name) of
-        Unknown      -> Code ("", [], []) name
-        ThisModule n -> RawInline "haddock" ("'" <> unName n <> "'")
-        OtherModule (ModName m) n ->
-          RawInline "haddock" ("'" <> m <> "." <> unName n <> "'")
+    Link ("", [], []) [Str name] (_, "") ->
+      let names = CName name : toList (CName <$> T.dropSuffix "()" name)
+      in  case asum (locationToHaddock . findDocs <$> names) of
+            Nothing -> Code ("", [], []) name
+            Just h  -> h
     -- Because of https://github.com/haskell/haddock/issues/802 the best we
     -- can do is link to the spec
-    Link attrs t (tag, title) | Just fragment <- T.dropPrefix "#" tag ->
-      Link attrs t (externalSpecHTML <> "#" <> fragment, title)
     Link attrs t (tag, title)
-      | Just fragment <- T.dropPrefix "{html_spec_relative}#" tag -> Link
-        attrs
-        t
-        (externalSpecHTML <> "#" <> fragment, title)
-    i@(Code _ name) -> case findDocs (CName name) of
-      Unknown      -> i
-      ThisModule n -> RawInline "haddock" ("'" <> unName n <> "'")
-      OtherModule (ModName m) n ->
-        RawInline "haddock" ("'" <> m <> "." <> unName n <> "'")
+      | Just fragment <- T.dropPrefix "#" tag, Just external <- externalDocHTML
+      -> Link attrs t (external <> "#" <> fragment, title)
+    Link attrs t (tag, title)
+      | Just fragment <- T.dropPrefix "{html_spec_relative}#" tag
+      , Just external <- externalDocHTML
+      -> Link attrs t (external <> "#" <> fragment, title)
+    -- We can't find anywhere for this link, just make it Emph... :(
+    Link _ t (url, _) | "#" `T.isPrefixOf` url -> Emph t
+    i@(Code _ name) -> fromMaybe i (locationToHaddock (findDocs (CName name)))
     i -> i
 
-externalSpecHTML :: Text
-externalSpecHTML =
-  "https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html"
+locationToHaddock :: DocumenteeLocation -> Maybe Inline
+locationToHaddock = \case
+  Unknown      -> Nothing
+  ThisModule n -> Just $ RawInline "haddock" ("'" <> unName n <> "'")
+  OtherModule (ModName m) n ->
+    Just $ RawInline "haddock" ("'" <> m <> "." <> unName n <> "'")

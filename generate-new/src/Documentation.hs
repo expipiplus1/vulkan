@@ -9,6 +9,7 @@ module Documentation
   , iterateSuffixesM
   , iterateSuffixes
   , pattern Section
+  , isHeaderLE
   , main
   ) where
 

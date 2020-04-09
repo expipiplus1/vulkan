@@ -97,6 +97,7 @@ renderParams handles = r
             TyConName "VulkanException"  -> vk "Exception"
             ConName   "SUCCESS"          -> vk "Core10.Enums.Result"
             _                            -> Nothing
+    , externalDocHTML             = Nothing
     }
 
 dropVma :: CName -> Text

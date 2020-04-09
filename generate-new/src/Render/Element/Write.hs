@@ -210,7 +210,7 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
       getDocumentation :: Documentee -> Doc ()
       getDocumentation target = case getDoc target of
         Nothing -> "-- No documentation found for" <+> viaShow target
-        Just d  -> case documentationToHaddock locate d of
+        Just d  -> case documentationToHaddock externalDocHTML locate d of
           Left e ->
             "-- Error getting documentation for"
               <+> viaShow target

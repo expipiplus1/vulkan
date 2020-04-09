@@ -265,6 +265,9 @@ data RenderParams = RenderParams
   , isExternalName :: HName -> Maybe ModName
     -- ^ If you want to refer to something in another package without using
     -- template haskell ''quotes, put the module in here
+  , externalDocHTML :: Maybe Text
+    -- ^ If we can't find a place in the generated source to link to, link to
+    -- this documentation instead.
   }
 
 data UnionDiscriminator = UnionDiscriminator
