@@ -3475,30 +3475,7 @@ instance ToCStruct VulkanFunctions where
     f
   cStructSize = 176
   cStructAlignment = 8
-  pokeZeroCStruct p f = do
-    poke ((p `plusPtr` 0 :: Ptr PFN_vkGetPhysicalDeviceProperties)) (zero)
-    poke ((p `plusPtr` 8 :: Ptr PFN_vkGetPhysicalDeviceMemoryProperties)) (zero)
-    poke ((p `plusPtr` 16 :: Ptr PFN_vkAllocateMemory)) (zero)
-    poke ((p `plusPtr` 24 :: Ptr PFN_vkFreeMemory)) (zero)
-    poke ((p `plusPtr` 32 :: Ptr PFN_vkMapMemory)) (zero)
-    poke ((p `plusPtr` 40 :: Ptr PFN_vkUnmapMemory)) (zero)
-    poke ((p `plusPtr` 48 :: Ptr PFN_vkFlushMappedMemoryRanges)) (zero)
-    poke ((p `plusPtr` 56 :: Ptr PFN_vkInvalidateMappedMemoryRanges)) (zero)
-    poke ((p `plusPtr` 64 :: Ptr PFN_vkBindBufferMemory)) (zero)
-    poke ((p `plusPtr` 72 :: Ptr PFN_vkBindImageMemory)) (zero)
-    poke ((p `plusPtr` 80 :: Ptr PFN_vkGetBufferMemoryRequirements)) (zero)
-    poke ((p `plusPtr` 88 :: Ptr PFN_vkGetImageMemoryRequirements)) (zero)
-    poke ((p `plusPtr` 96 :: Ptr PFN_vkCreateBuffer)) (zero)
-    poke ((p `plusPtr` 104 :: Ptr PFN_vkDestroyBuffer)) (zero)
-    poke ((p `plusPtr` 112 :: Ptr PFN_vkCreateImage)) (zero)
-    poke ((p `plusPtr` 120 :: Ptr PFN_vkDestroyImage)) (zero)
-    poke ((p `plusPtr` 128 :: Ptr PFN_vkCmdCopyBuffer)) (zero)
-    poke ((p `plusPtr` 136 :: Ptr PFN_vkGetBufferMemoryRequirements2KHR)) (zero)
-    poke ((p `plusPtr` 144 :: Ptr PFN_vkGetImageMemoryRequirements2KHR)) (zero)
-    poke ((p `plusPtr` 152 :: Ptr PFN_vkBindBufferMemory2KHR)) (zero)
-    poke ((p `plusPtr` 160 :: Ptr PFN_vkBindImageMemory2KHR)) (zero)
-    poke ((p `plusPtr` 168 :: Ptr PFN_vkGetPhysicalDeviceMemoryProperties2KHR)) (zero)
-    f
+  pokeZeroCStruct _ f = f
 
 instance FromCStruct VulkanFunctions where
   peekCStruct p = do

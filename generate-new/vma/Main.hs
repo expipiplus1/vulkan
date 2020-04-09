@@ -357,8 +357,10 @@ unitStructs state ds = do
                 then fromList [NullTerminated]
                 else fromList lengths
               smIsOptional = fromList $ case (sName, smName) of
-                ("VmaDefragmentationInfo2", "poolCount") -> [True]
+                -- pPools can only be null when allocationCount is zero
                 ("VmaDefragmentationInfo2", "pPools") -> [False]
+                -- pAllocations can only be null when 'allocationCount' is zero
+                ("VmaDefragmentationInfo2", "pAllocations") -> [False]
                 _ -> optionality
               smOffset = ()
           (size, alignment) <- runTrav_' DoNotIgnoreWarnings state $ do
