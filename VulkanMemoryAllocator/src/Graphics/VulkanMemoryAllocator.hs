@@ -1420,173 +1420,55 @@ instance Read MemoryUsage where
 
 
 -- | VmaAllocationCreateInfo
---
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a5225e5e11f8376f6a31a1791f3d6e817 VmaAllocationCreateFlags>
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation_create_info_1add09658ac14fe290ace25470ddd6d41b flags>
---
---     Use
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a4fceecc301f4064dc808d3cd6c038941 VmaAllocationCreateFlagBits>
---     enum.
---
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1aa5846affa1e9da3800e3e78fae2305cc VmaMemoryUsage>
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation_create_info_1accb8b06b1f677d858cb9af20705fa910 usage>
---
---     Intended usage of memory.
---
--- -   VkMemoryPropertyFlags
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation_create_info_1a9166390303ff42d783305bc31c2b6b90 requiredFlags>
---
---     Flags that must be set in a Memory Type chosen for an allocation.
---
--- -   VkMemoryPropertyFlags
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation_create_info_1a7fe8d81a1ad10b2a2faacacee5b15d6d preferredFlags>
---
---     Flags that preferably should be set in a memory type chosen for an
---     allocation.
---
--- -   uint32_t
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation_create_info_1a3bf940c0271d85d6ba32a4d820075055 memoryTypeBits>
---
---     Bitmask containing one bit set for every memory type acceptable for
---     this allocation.
---
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_pool VmaPool>
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation_create_info_1a6272c0555cfd1fe28bff1afeb6190150 pool>
---
---     Pool that this allocation should be created in.
---
--- -   void *
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation_create_info_1a8259e85c272683434f4abb4ddddffe19 pUserData>
---
---     Custom general-purpose pointer that will be stored in
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation VmaAllocation>,
---     can be read as
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation_info_1adc507656149c04de7ed95d0042ba2a13 VmaAllocationInfo::pUserData>
---     and changed using
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1af9147d31ffc11d62fc187bde283ed14f vmaSetAllocationUserData()>.
---
--- === flags
---
--- flags
--- VmaAllocationCreateInfo
--- VmaAllocationCreateInfo
--- flags
--- @VmaAllocationCreateFlags VmaAllocationCreateInfo::flags@
---
--- Use
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a4fceecc301f4064dc808d3cd6c038941 VmaAllocationCreateFlagBits>
--- enum.
---
--- === memoryTypeBits
---
--- memoryTypeBits
--- VmaAllocationCreateInfo
--- VmaAllocationCreateInfo
--- memoryTypeBits
--- @uint32_t VmaAllocationCreateInfo::memoryTypeBits@
---
--- Bitmask containing one bit set for every memory type acceptable for this
--- allocation.
---
--- Value 0 is equivalent to @UINT32_MAX@ - it means any memory type is
--- accepted if it meets other requirements specified by this structure,
--- with no further restrictions on memory type index.   If 'Pool' is not
--- null, this member is ignored.
---
--- === pool
---
--- pool
--- VmaAllocationCreateInfo
--- VmaAllocationCreateInfo
--- pool
--- @VmaPool VmaAllocationCreateInfo::pool@
---
--- Pool that this allocation should be created in.
---
--- Leave @VK_NULL_HANDLE@ to allocate from default pool. If not null,
--- members: @usage@, @requiredFlags@, @preferredFlags@, @memoryTypeBits@
--- are ignored.
---
--- === preferredFlags
---
--- preferredFlags
--- VmaAllocationCreateInfo
--- VmaAllocationCreateInfo
--- preferredFlags
--- @VkMemoryPropertyFlags VmaAllocationCreateInfo::preferredFlags@
---
--- Flags that preferably should be set in a memory type chosen for an
--- allocation.
---
--- Set to 0 if no additional flags are prefered.   If 'Pool' is not null,
--- this member is ignored.
---
--- === pUserData
---
--- pUserData
--- VmaAllocationCreateInfo
--- VmaAllocationCreateInfo
--- pUserData
--- @void* VmaAllocationCreateInfo::pUserData@
---
--- Custom general-purpose pointer that will be stored in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation VmaAllocation>,
--- can be read as
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation_info_1adc507656149c04de7ed95d0042ba2a13 VmaAllocationInfo::pUserData>
--- and changed using
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1af9147d31ffc11d62fc187bde283ed14f vmaSetAllocationUserData()>.
---
--- If
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1ad9889c10c798b040d59c92f257cae597aa6f24f821cd6a7c5e4a443f7bf59c520 VMA_ALLOCATION_CREATE_USER_DATA_COPY_STRING_BIT>
--- is used, it must be either null or pointer to a null-terminated string.
--- The string will be then copied to internal buffer, so it doesn\'t need
--- to be valid after allocation call.
---
--- === requiredFlags
---
--- requiredFlags
--- VmaAllocationCreateInfo
--- VmaAllocationCreateInfo
--- requiredFlags
--- @VkMemoryPropertyFlags VmaAllocationCreateInfo::requiredFlags@
---
--- Flags that must be set in a Memory Type chosen for an allocation.
---
--- Leave 0 if you specify memory requirements in other way.   If 'Pool' is
--- not null, this member is ignored.
---
--- === usage
---
--- usage
--- VmaAllocationCreateInfo
--- VmaAllocationCreateInfo
--- usage
--- @VmaMemoryUsage VmaAllocationCreateInfo::usage@
---
--- Intended usage of memory.
---
--- You can leave
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1aa5846affa1e9da3800e3e78fae2305ccaf50d27e34e0925cf3a63db8c839121dd VMA_MEMORY_USAGE_UNKNOWN>
--- if you specify memory requirements in other way.   If 'Pool' is not
--- null, this member is ignored.
---
--- The documentation for this struct was generated from the following file:
---
--- vk_mem_alloc.h
 data AllocationCreateInfo = AllocationCreateInfo
-  { -- No documentation found for Nested "VmaAllocationCreateInfo" "flags"
+  { -- | Use
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a4fceecc301f4064dc808d3cd6c038941 VmaAllocationCreateFlagBits>
+    -- enum.
     flags :: AllocationCreateFlags
-  , -- No documentation found for Nested "VmaAllocationCreateInfo" "usage"
+  , -- | Intended usage of memory.
+    --
+    -- You can leave
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1aa5846affa1e9da3800e3e78fae2305ccaf50d27e34e0925cf3a63db8c839121dd VMA_MEMORY_USAGE_UNKNOWN>
+    -- if you specify memory requirements in other way.   If 'Pool' is not
+    -- null, this member is ignored.
     usage :: MemoryUsage
-  , -- No documentation found for Nested "VmaAllocationCreateInfo" "requiredFlags"
+  , -- | Flags that must be set in a Memory Type chosen for an allocation.
+    --
+    -- Leave 0 if you specify memory requirements in other way.   If 'Pool' is
+    -- not null, this member is ignored.
     requiredFlags :: MemoryPropertyFlags
-  , -- No documentation found for Nested "VmaAllocationCreateInfo" "preferredFlags"
+  , -- | Flags that preferably should be set in a memory type chosen for an
+    -- allocation.
+    --
+    -- Set to 0 if no additional flags are prefered.   If 'Pool' is not null,
+    -- this member is ignored.
     preferredFlags :: MemoryPropertyFlags
-  , -- No documentation found for Nested "VmaAllocationCreateInfo" "memoryTypeBits"
+  , -- | Bitmask containing one bit set for every memory type acceptable for this
+    -- allocation.
+    --
+    -- Value 0 is equivalent to @UINT32_MAX@ - it means any memory type is
+    -- accepted if it meets other requirements specified by this structure,
+    -- with no further restrictions on memory type index.   If 'Pool' is not
+    -- null, this member is ignored.
     memoryTypeBits :: Word32
-  , -- No documentation found for Nested "VmaAllocationCreateInfo" "pool"
+  , -- | Pool that this allocation should be created in.
+    --
+    -- Leave @VK_NULL_HANDLE@ to allocate from default pool. If not null,
+    -- members: @usage@, @requiredFlags@, @preferredFlags@, @memoryTypeBits@
+    -- are ignored.
     pool :: Pool
-  , -- No documentation found for Nested "VmaAllocationCreateInfo" "pUserData"
+  , -- | Custom general-purpose pointer that will be stored in
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation VmaAllocation>,
+    -- can be read as
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation_info_1adc507656149c04de7ed95d0042ba2a13 VmaAllocationInfo::pUserData>
+    -- and changed using
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1af9147d31ffc11d62fc187bde283ed14f vmaSetAllocationUserData()>.
+    --
+    -- If
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1ad9889c10c798b040d59c92f257cae597aa6f24f821cd6a7c5e4a443f7bf59c520 VMA_ALLOCATION_CREATE_USER_DATA_COPY_STRING_BIT>
+    -- is used, it must be either null or pointer to a null-terminated string.
+    -- The string will be then copied to internal buffer, so it doesn\'t need
+    -- to be valid after allocation call.
     userData :: Ptr ()
   }
   deriving (Typeable)
@@ -1646,43 +1528,12 @@ instance Zero AllocationCreateInfo where
 --
 -- Parameters for incremental defragmentation steps.
 --
--- -   uint32_t
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_pass_info_1ac1086e657ba995f8d1f4e49b83dcfb6c moveCount>
---
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_pass_move_info VmaDefragmentationPassMoveInfo>
---     *
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_pass_info_1acbd42d4a3357999da130a95cd99a3792 pMoves>
---
--- == Detailed Description
---
--- Parameters for incremental defragmentation steps.
---
 -- To be used with function
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1ac0f01545b6262f7d4d128fc8f8e5c77b vmaBeginDefragmentationPass()>.
---
--- === moveCount
---
--- moveCount
--- VmaDefragmentationPassInfo
--- VmaDefragmentationPassInfo
--- moveCount
--- @uint32_t VmaDefragmentationPassInfo::moveCount@
---
--- === pMoves
---
--- pMoves
--- VmaDefragmentationPassInfo
--- VmaDefragmentationPassInfo
--- pMoves
--- @VmaDefragmentationPassMoveInfo* VmaDefragmentationPassInfo::pMoves@
---
--- The documentation for this struct was generated from the following file:
---
--- vk_mem_alloc.h
 data DefragmentationPassInfo = DefragmentationPassInfo
-  { -- No documentation found for Nested "VmaDefragmentationPassInfo" "moveCount"
+  { 
     moveCount :: Word32
-  , -- No documentation found for Nested "VmaDefragmentationPassInfo" "pMoves"
+  , 
     moves :: Ptr DefragmentationPassMoveInfo
   }
   deriving (Typeable)
@@ -1723,309 +1574,108 @@ instance Zero DefragmentationPassInfo where
 -- | VmaAllocatorCreateInfo
 --
 -- Description of a Allocator to be created.
---
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1acfe6863e160722c2c1bbcf7573fddc4d VmaAllocatorCreateFlags>
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1a392ea2ecbaff93f91a7c49f735ad4346 flags>
---
---     Flags for created allocator. Use
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1afd73b95e737ee7e76f827cb5472f559f VmaAllocatorCreateFlagBits>
---     enum.
---
--- -   VkPhysicalDevice
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1a08230f04ae6ccf8a78150a9e829a7156 physicalDevice>
---
---     Vulkan physical device.
---
--- -   VkDevice
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1ad924ddd77b04039c88d0c09b0ffcd500 device>
---
---     Vulkan device.
---
--- -   VkDeviceSize
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1a8e4714298e3121cdd8b214a1ae7a637a preferredLargeHeapBlockSize>
---
---     Preferred size of a single @VkDeviceMemory@ block to be allocated
---     from large heaps > 1 GiB. Optional.
---
--- -   const VkAllocationCallbacks *
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1a6e409087e3be55400d0e4ccbe43c608d pAllocationCallbacks>
---
---     Custom CPU memory allocation callbacks. Optional.
---
--- -   const
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_device_memory_callbacks VmaDeviceMemoryCallbacks>
---     *
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1af1380969b5e1ea4c3184a877892d260e pDeviceMemoryCallbacks>
---
---     Informative callbacks for @vkAllocateMemory@, @vkFreeMemory@.
---     Optional.
---
--- -   uint32_t
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1a21ea188dd212b8171cb9ecbed4a2a3a7 frameInUseCount>
---
---     Maximum number of additional frames that are in use at the same time
---     as current frame.
---
--- -   const VkDeviceSize *
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1a31c192aa6cbffa33279f6d9f0c47c44b pHeapSizeLimit>
---
---     Either null or a pointer to an array of limits on maximum number of
---     bytes that can be allocated out of particular Vulkan memory heap.
---
--- -   const
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_vulkan_functions VmaVulkanFunctions>
---     *
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1a3dc197be3227da7338b1643f70db36bd pVulkanFunctions>
---
---     Pointers to Vulkan functions. Can be null.
---
--- -   const
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_record_settings VmaRecordSettings>
---     *
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1ace2aa4877b16a42b0b7673d4e26000ee pRecordSettings>
---
---     Parameters for recording of VMA calls. Can be null.
---
--- -   VkInstance
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1a70dd42e29b1df1d1b9b61532ae0b370b instance>
---
---     Handle to Vulkan instance object.
---
--- -   uint32_t
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1ae0ffc55139b54520a6bb704b29ffc285 vulkanApiVersion>
---
---     Optional. The highest version of Vulkan that the application is
---     designed to use.
---
--- == Detailed Description
---
--- Description of a Allocator to be created.
---
--- === device
---
--- device
--- VmaAllocatorCreateInfo
--- VmaAllocatorCreateInfo
--- device
--- @VkDevice VmaAllocatorCreateInfo::device@
---
--- Vulkan device.
---
--- It must be valid throughout whole lifetime of created allocator.
---
--- === flags
---
--- flags
--- VmaAllocatorCreateInfo
--- VmaAllocatorCreateInfo
--- flags
--- @VmaAllocatorCreateFlags VmaAllocatorCreateInfo::flags@
---
--- Flags for created allocator. Use
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1afd73b95e737ee7e76f827cb5472f559f VmaAllocatorCreateFlagBits>
--- enum.
---
--- === frameInUseCount
---
--- frameInUseCount
--- VmaAllocatorCreateInfo
--- VmaAllocatorCreateInfo
--- frameInUseCount
--- @uint32_t VmaAllocatorCreateInfo::frameInUseCount@
---
--- Maximum number of additional frames that are in use at the same time as
--- current frame.
---
--- This value is used only when you make allocations with
--- VMA_ALLOCATION_CREATE_CAN_BECOME_LOST_BIT flag. Such allocation cannot
--- become lost if allocation.lastUseFrameIndex >=
--- allocator.currentFrameIndex - frameInUseCount.
---
--- For example, if you double-buffer your command buffers, so resources
--- used for rendering in previous frame may still be in use by the GPU at
--- the moment you allocate resources needed for the current frame, set this
--- value to 1.
---
--- If you want to allow any allocations other than used in the current
--- frame to become lost, set this value to 0.
---
--- === instance
---
--- instance
--- VmaAllocatorCreateInfo
--- VmaAllocatorCreateInfo
--- instance
--- @VkInstance VmaAllocatorCreateInfo::instance@
---
--- Handle to Vulkan instance object.
---
--- Starting from version 3.0.0 this member is no longer optional, it must
--- be set!
---
--- === pAllocationCallbacks
---
--- pAllocationCallbacks
--- VmaAllocatorCreateInfo
--- VmaAllocatorCreateInfo
--- pAllocationCallbacks
--- @const VkAllocationCallbacks* VmaAllocatorCreateInfo::pAllocationCallbacks@
---
--- Custom CPU memory allocation callbacks. Optional.
---
--- Optional, can be null. When specified, will also be used for all
--- CPU-side memory allocations.
---
--- === pDeviceMemoryCallbacks
---
--- pDeviceMemoryCallbacks
--- VmaAllocatorCreateInfo
--- VmaAllocatorCreateInfo
--- pDeviceMemoryCallbacks
--- @const VmaDeviceMemoryCallbacks* VmaAllocatorCreateInfo::pDeviceMemoryCallbacks@
---
--- Informative callbacks for @vkAllocateMemory@, @vkFreeMemory@. Optional.
---
--- Optional, can be null.
---
--- === pHeapSizeLimit
---
--- pHeapSizeLimit
--- VmaAllocatorCreateInfo
--- VmaAllocatorCreateInfo
--- pHeapSizeLimit
--- @const VkDeviceSize* VmaAllocatorCreateInfo::pHeapSizeLimit@
---
--- Either null or a pointer to an array of limits on maximum number of
--- bytes that can be allocated out of particular Vulkan memory heap.
---
--- If not NULL, it must be a pointer to an array of
--- @VkPhysicalDeviceMemoryProperties::memoryHeapCount@ elements, defining
--- limit on maximum number of bytes that can be allocated out of particular
--- Vulkan memory heap.
---
--- Any of the elements may be equal to @VK_WHOLE_SIZE@, which means no
--- limit on that heap. This is also the default in case of @pHeapSizeLimit@
--- = NULL.
---
--- If there is a limit defined for a heap:
---
--- -   If user tries to allocate more memory from that heap using this
---     allocator, the allocation fails with
---     @VK_ERROR_OUT_OF_DEVICE_MEMORY@.
---
--- -   If the limit is smaller than heap size reported in
---     @VkMemoryHeap::size@, the value of this limit will be reported
---     instead when using
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1ab88db292a17974f911182543fda52d19 vmaGetMemoryProperties()>.
---
--- Warning! Using this feature may not be equivalent to installing a GPU
--- with smaller amount of memory, because graphics driver doesn\'t
--- necessary fail new allocations with @VK_ERROR_OUT_OF_DEVICE_MEMORY@
--- result when memory capacity is exceeded. It may return success and just
--- silently migrate some device memory blocks to system RAM. This driver
--- behavior can also be controlled using
--- VK_AMD_memory_overallocation_behavior extension.
---
--- === physicalDevice
---
--- physicalDevice
--- VmaAllocatorCreateInfo
--- VmaAllocatorCreateInfo
--- physicalDevice
--- @VkPhysicalDevice VmaAllocatorCreateInfo::physicalDevice@
---
--- Vulkan physical device.
---
--- It must be valid throughout whole lifetime of created allocator.
---
--- === pRecordSettings
---
--- pRecordSettings
--- VmaAllocatorCreateInfo
--- VmaAllocatorCreateInfo
--- pRecordSettings
--- @const VmaRecordSettings* VmaAllocatorCreateInfo::pRecordSettings@
---
--- Parameters for recording of VMA calls. Can be null.
---
--- If not null, it enables recording of calls to VMA functions to a file.
--- If support for recording is not enabled using @VMA_RECORDING_ENABLED@
--- macro, creation of the allocator object fails with
--- @VK_ERROR_FEATURE_NOT_PRESENT@.
---
--- === preferredLargeHeapBlockSize
---
--- preferredLargeHeapBlockSize
--- VmaAllocatorCreateInfo
--- VmaAllocatorCreateInfo
--- preferredLargeHeapBlockSize
--- @VkDeviceSize VmaAllocatorCreateInfo::preferredLargeHeapBlockSize@
---
--- Preferred size of a single @VkDeviceMemory@ block to be allocated from
--- large heaps > 1 GiB. Optional.
---
--- Set to 0 to use default, which is currently 256 MiB.
---
--- === pVulkanFunctions
---
--- pVulkanFunctions
--- VmaAllocatorCreateInfo
--- VmaAllocatorCreateInfo
--- pVulkanFunctions
--- @const VmaVulkanFunctions* VmaAllocatorCreateInfo::pVulkanFunctions@
---
--- Pointers to Vulkan functions. Can be null.
---
--- For details see
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_configuration_1config_Vulkan_functions Pointers to Vulkan functions>.
---
--- === vulkanApiVersion
---
--- vulkanApiVersion
--- VmaAllocatorCreateInfo
--- VmaAllocatorCreateInfo
--- vulkanApiVersion
--- @uint32_t VmaAllocatorCreateInfo::vulkanApiVersion@
---
--- Optional. The highest version of Vulkan that the application is designed
--- to use.
---
--- It must be a value in the format as created by macro @VK_MAKE_VERSION@
--- or a constant like: @VK_API_VERSION_1_1@, @VK_API_VERSION_1_0@. The
--- patch version number specified is ignored. Only the major and minor
--- versions are considered. It must be less or equal (preferably equal) to
--- value as passed to @vkCreateInstance@ as
--- @VkApplicationInfo::apiVersion@. Only versions 1.0 and 1.1 are supported
--- by the current implementation. Leaving it initialized to zero is
--- equivalent to @VK_API_VERSION_1_0@.
---
--- The documentation for this struct was generated from the following file:
---
--- vk_mem_alloc.h
 data AllocatorCreateInfo = AllocatorCreateInfo
-  { -- No documentation found for Nested "VmaAllocatorCreateInfo" "flags"
+  { -- | Flags for created allocator. Use
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1afd73b95e737ee7e76f827cb5472f559f VmaAllocatorCreateFlagBits>
+    -- enum.
     flags :: AllocatorCreateFlags
-  , -- No documentation found for Nested "VmaAllocatorCreateInfo" "physicalDevice"
+  , -- | Vulkan physical device.
+    --
+    -- It must be valid throughout whole lifetime of created allocator.
     physicalDevice :: Ptr PhysicalDevice_T
-  , -- No documentation found for Nested "VmaAllocatorCreateInfo" "device"
+  , -- | Vulkan device.
+    --
+    -- It must be valid throughout whole lifetime of created allocator.
     device :: Ptr Device_T
-  , -- No documentation found for Nested "VmaAllocatorCreateInfo" "preferredLargeHeapBlockSize"
+  , -- | Preferred size of a single @VkDeviceMemory@ block to be allocated from
+    -- large heaps > 1 GiB. Optional.
+    --
+    -- Set to 0 to use default, which is currently 256 MiB.
     preferredLargeHeapBlockSize :: DeviceSize
-  , -- No documentation found for Nested "VmaAllocatorCreateInfo" "pAllocationCallbacks"
+  , -- | Custom CPU memory allocation callbacks. Optional.
+    --
+    -- Optional, can be null. When specified, will also be used for all
+    -- CPU-side memory allocations.
     allocationCallbacks :: Maybe AllocationCallbacks
-  , -- No documentation found for Nested "VmaAllocatorCreateInfo" "pDeviceMemoryCallbacks"
+  , -- | Informative callbacks for @vkAllocateMemory@, @vkFreeMemory@. Optional.
+    --
+    -- Optional, can be null.
     deviceMemoryCallbacks :: Maybe DeviceMemoryCallbacks
-  , -- No documentation found for Nested "VmaAllocatorCreateInfo" "frameInUseCount"
+  , -- | Maximum number of additional frames that are in use at the same time as
+    -- current frame.
+    --
+    -- This value is used only when you make allocations with
+    -- VMA_ALLOCATION_CREATE_CAN_BECOME_LOST_BIT flag. Such allocation cannot
+    -- become lost if allocation.lastUseFrameIndex >=
+    -- allocator.currentFrameIndex - frameInUseCount.
+    --
+    -- For example, if you double-buffer your command buffers, so resources
+    -- used for rendering in previous frame may still be in use by the GPU at
+    -- the moment you allocate resources needed for the current frame, set this
+    -- value to 1.
+    --
+    -- If you want to allow any allocations other than used in the current
+    -- frame to become lost, set this value to 0.
     frameInUseCount :: Word32
-  , -- No documentation found for Nested "VmaAllocatorCreateInfo" "pHeapSizeLimit"
+  , -- | Either null or a pointer to an array of limits on maximum number of
+    -- bytes that can be allocated out of particular Vulkan memory heap.
+    --
+    -- If not NULL, it must be a pointer to an array of
+    -- @VkPhysicalDeviceMemoryProperties::memoryHeapCount@ elements, defining
+    -- limit on maximum number of bytes that can be allocated out of particular
+    -- Vulkan memory heap.
+    --
+    -- Any of the elements may be equal to @VK_WHOLE_SIZE@, which means no
+    -- limit on that heap. This is also the default in case of @pHeapSizeLimit@
+    -- = NULL.
+    --
+    -- If there is a limit defined for a heap:
+    --
+    -- -   If user tries to allocate more memory from that heap using this
+    --     allocator, the allocation fails with
+    --     @VK_ERROR_OUT_OF_DEVICE_MEMORY@.
+    --
+    -- -   If the limit is smaller than heap size reported in
+    --     @VkMemoryHeap::size@, the value of this limit will be reported
+    --     instead when using
+    --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1ab88db292a17974f911182543fda52d19 vmaGetMemoryProperties()>.
+    --
+    -- Warning! Using this feature may not be equivalent to installing a GPU
+    -- with smaller amount of memory, because graphics driver doesn\'t
+    -- necessary fail new allocations with @VK_ERROR_OUT_OF_DEVICE_MEMORY@
+    -- result when memory capacity is exceeded. It may return success and just
+    -- silently migrate some device memory blocks to system RAM. This driver
+    -- behavior can also be controlled using
+    -- VK_AMD_memory_overallocation_behavior extension.
     heapSizeLimit :: Ptr DeviceSize
-  , -- No documentation found for Nested "VmaAllocatorCreateInfo" "pVulkanFunctions"
+  , -- | Pointers to Vulkan functions. Can be null.
+    --
+    -- For details see
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_configuration_1config_Vulkan_functions Pointers to Vulkan functions>.
     vulkanFunctions :: Maybe VulkanFunctions
-  , -- No documentation found for Nested "VmaAllocatorCreateInfo" "pRecordSettings"
+  , -- | Parameters for recording of VMA calls. Can be null.
+    --
+    -- If not null, it enables recording of calls to VMA functions to a file.
+    -- If support for recording is not enabled using @VMA_RECORDING_ENABLED@
+    -- macro, creation of the allocator object fails with
+    -- @VK_ERROR_FEATURE_NOT_PRESENT@.
     recordSettings :: Maybe RecordSettings
-  , -- No documentation found for Nested "VmaAllocatorCreateInfo" "instance"
+  , -- | Handle to Vulkan instance object.
+    --
+    -- Starting from version 3.0.0 this member is no longer optional, it must
+    -- be set!
     instance' :: Ptr Instance_T
-  , -- No documentation found for Nested "VmaAllocatorCreateInfo" "vulkanApiVersion"
+  , -- | Optional. The highest version of Vulkan that the application is designed
+    -- to use.
+    --
+    -- It must be a value in the format as created by macro @VK_MAKE_VERSION@
+    -- or a constant like: @VK_API_VERSION_1_1@, @VK_API_VERSION_1_0@. The
+    -- patch version number specified is ignored. Only the major and minor
+    -- versions are considered. It must be less or equal (preferably equal) to
+    -- value as passed to @vkCreateInstance@ as
+    -- @VkApplicationInfo::apiVersion@. Only versions 1.0 and 1.1 are supported
+    -- by the current implementation. Leaving it initialized to zero is
+    -- equivalent to @VK_API_VERSION_1_0@.
     vulkanApiVersion :: Word32
   }
   deriving (Typeable)
@@ -2113,22 +1763,6 @@ instance Zero AllocatorCreateInfo where
 -- Deprecated. Optional configuration parameters to be passed to function
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a9f0f8f56db5f7f57fe4454f465142dac vmaDefragment()>.
 --
--- -   VkDeviceSize
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_info_1acb311c940a777270e67e1b81c5ab6a1d maxBytesToMove>
---
---     Maximum total numbers of bytes that can be copied while moving
---     allocations to different places.
---
--- -   uint32_t
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_info_1aa7c7304e13c71f604c907196c4e28fbc maxAllocationsToMove>
---
---     Maximum number of allocations that can be moved to different place.
---
--- == Detailed Description
---
--- Deprecated. Optional configuration parameters to be passed to function
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a9f0f8f56db5f7f57fe4454f465142dac vmaDefragment()>.
---
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_deprecated_1_deprecated000002 Deprecated>
 --
 -- This is a part of the old interface. It is recommended to use structure
@@ -2136,39 +1770,15 @@ instance Zero AllocatorCreateInfo where
 -- and function
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a36ba776fd7fd5cb1e9359fdc0d8e6e8a vmaDefragmentationBegin()>
 -- instead.
---
--- === maxAllocationsToMove
---
--- maxAllocationsToMove
--- VmaDefragmentationInfo
--- VmaDefragmentationInfo
--- maxAllocationsToMove
--- @uint32_t VmaDefragmentationInfo::maxAllocationsToMove@
---
--- Maximum number of allocations that can be moved to different place.
---
--- Default is @UINT32_MAX@, which means no limit.
---
--- === maxBytesToMove
---
--- maxBytesToMove
--- VmaDefragmentationInfo
--- VmaDefragmentationInfo
--- maxBytesToMove
--- @VkDeviceSize VmaDefragmentationInfo::maxBytesToMove@
---
--- Maximum total numbers of bytes that can be copied while moving
--- allocations to different places.
---
--- Default is @VK_WHOLE_SIZE@, which means no limit.
---
--- The documentation for this struct was generated from the following file:
---
--- vk_mem_alloc.h
 data DefragmentationInfo = DefragmentationInfo
-  { -- No documentation found for Nested "VmaDefragmentationInfo" "maxBytesToMove"
+  { -- | Maximum total numbers of bytes that can be copied while moving
+    -- allocations to different places.
+    --
+    -- Default is @VK_WHOLE_SIZE@, which means no limit.
     maxBytesToMove :: DeviceSize
-  , -- No documentation found for Nested "VmaDefragmentationInfo" "maxAllocationsToMove"
+  , -- | Maximum number of allocations that can be moved to different place.
+    --
+    -- Default is @UINT32_MAX@, which means no limit.
     maxAllocationsToMove :: Word32
   }
   deriving (Typeable)
@@ -2210,258 +1820,73 @@ instance Zero DefragmentationInfo where
 --
 -- Parameters for defragmentation.
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a88a77cef37e5d3c4fc9eb328885d048d VmaDefragmentationFlags>
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_info2_1a53e844ee5633e229cf6daf14b2d9fff9 flags>
---
---     Reserved for future use. Should be 0.
---
--- -   uint32_t
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_info2_1a3cf86ab32c1da779b4923d301a3056ba allocationCount>
---
---     Number of allocations in @pAllocations@ array.
---
--- -   const
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation VmaAllocation>
---     *
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_info2_1ab6d288f29d028156cf73542d630a2e32 pAllocations>
---
---     Pointer to array of allocations that can be defragmented.
---
--- -   VkBool32 *
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_info2_1a76d51a644dc7f5405d0cdd0025ecd0cc pAllocationsChanged>
---
---     Optional, output. Pointer to array that will be filled with
---     information whether the allocation at certain index has been changed
---     during defragmentation.
---
--- -   uint32_t
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_info2_1a7e70aa2a1081d849dcc7829b19d3ec9d poolCount>
---
---     Numer of pools in @pPools@ array.
---
--- -   const
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_pool VmaPool>
---     *
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_info2_1a3c9c6aa5c97d5670f8e362b3a6f3029b pPools>
---
---     Either null or pointer to array of pools to be defragmented.
---
--- -   VkDeviceSize
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_info2_1af78e1ea40c22d85137b65f6b384a4d0a maxCpuBytesToMove>
---
---     Maximum total numbers of bytes that can be copied while moving
---     allocations to different places using transfers on CPU side, like
---     @memcpy()@, @memmove()@.
---
--- -   uint32_t
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_info2_1a94c2c7223d52878445a8cccce396b671 maxCpuAllocationsToMove>
---
---     Maximum number of allocations that can be moved to a different place
---     using transfers on CPU side, like @memcpy()@, @memmove()@.
---
--- -   VkDeviceSize
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_info2_1a4ddbc898d0afe1518f863a3763628f08 maxGpuBytesToMove>
---
---     Maximum total numbers of bytes that can be copied while moving
---     allocations to different places using transfers on GPU side, posted
---     to @commandBuffer@.
---
--- -   uint32_t
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_info2_1a40d53d33e71ba0b66f844ed63c05a3f6 maxGpuAllocationsToMove>
---
---     Maximum number of allocations that can be moved to a different place
---     using transfers on GPU side, posted to @commandBuffer@.
---
--- -   VkCommandBuffer
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_info2_1a7f71f39590c5316771493d2333f9c1bd commandBuffer>
---
---     Optional. Command buffer where GPU copy commands will be posted.
---
--- == Detailed Description
---
--- Parameters for defragmentation.
---
 -- To be used with function
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a36ba776fd7fd5cb1e9359fdc0d8e6e8a vmaDefragmentationBegin()>.
---
--- === allocationCount
---
--- allocationCount
--- VmaDefragmentationInfo2
--- VmaDefragmentationInfo2
--- allocationCount
--- @uint32_t VmaDefragmentationInfo2::allocationCount@
---
--- Number of allocations in @pAllocations@ array.
---
--- === commandBuffer
---
--- commandBuffer
--- VmaDefragmentationInfo2
--- VmaDefragmentationInfo2
--- commandBuffer
--- @VkCommandBuffer VmaDefragmentationInfo2::commandBuffer@
---
--- Optional. Command buffer where GPU copy commands will be posted.
---
--- If not null, it must be a valid command buffer handle that supports
--- Transfer queue type. It must be in the recording state and outside of a
--- render pass instance. You need to submit it and make sure it finished
--- execution before calling
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a8774e20e91e245aae959ba63efa15dd2 vmaDefragmentationEnd()>.
---
--- Passing null means that only CPU defragmentation will be performed.
---
--- === flags
---
--- flags
--- VmaDefragmentationInfo2
--- VmaDefragmentationInfo2
--- flags
--- @VmaDefragmentationFlags VmaDefragmentationInfo2::flags@
---
--- Reserved for future use. Should be 0.
---
--- === maxCpuAllocationsToMove
---
--- maxCpuAllocationsToMove
--- VmaDefragmentationInfo2
--- VmaDefragmentationInfo2
--- maxCpuAllocationsToMove
--- @uint32_t VmaDefragmentationInfo2::maxCpuAllocationsToMove@
---
--- Maximum number of allocations that can be moved to a different place
--- using transfers on CPU side, like @memcpy()@, @memmove()@.
---
--- @UINT32_MAX@ means no limit.
---
--- === maxCpuBytesToMove
---
--- maxCpuBytesToMove
--- VmaDefragmentationInfo2
--- VmaDefragmentationInfo2
--- maxCpuBytesToMove
--- @VkDeviceSize VmaDefragmentationInfo2::maxCpuBytesToMove@
---
--- Maximum total numbers of bytes that can be copied while moving
--- allocations to different places using transfers on CPU side, like
--- @memcpy()@, @memmove()@.
---
--- @VK_WHOLE_SIZE@ means no limit.
---
--- === maxGpuAllocationsToMove
---
--- maxGpuAllocationsToMove
--- VmaDefragmentationInfo2
--- VmaDefragmentationInfo2
--- maxGpuAllocationsToMove
--- @uint32_t VmaDefragmentationInfo2::maxGpuAllocationsToMove@
---
--- Maximum number of allocations that can be moved to a different place
--- using transfers on GPU side, posted to @commandBuffer@.
---
--- @UINT32_MAX@ means no limit.
---
--- === maxGpuBytesToMove
---
--- maxGpuBytesToMove
--- VmaDefragmentationInfo2
--- VmaDefragmentationInfo2
--- maxGpuBytesToMove
--- @VkDeviceSize VmaDefragmentationInfo2::maxGpuBytesToMove@
---
--- Maximum total numbers of bytes that can be copied while moving
--- allocations to different places using transfers on GPU side, posted to
--- @commandBuffer@.
---
--- @VK_WHOLE_SIZE@ means no limit.
---
--- === pAllocations
---
--- pAllocations
--- VmaDefragmentationInfo2
--- VmaDefragmentationInfo2
--- pAllocations
--- @const VmaAllocation* VmaDefragmentationInfo2::pAllocations@
---
--- Pointer to array of allocations that can be defragmented.
---
--- The array should have @allocationCount@ elements. The array should not
--- contain nulls. Elements in the array should be unique - same allocation
--- cannot occur twice. It is safe to pass allocations that are in the lost
--- state - they are ignored. All allocations not present in this array are
--- considered non-moveable during this defragmentation.
---
--- === pAllocationsChanged
---
--- pAllocationsChanged
--- VmaDefragmentationInfo2
--- VmaDefragmentationInfo2
--- pAllocationsChanged
--- @VkBool32* VmaDefragmentationInfo2::pAllocationsChanged@
---
--- Optional, output. Pointer to array that will be filled with information
--- whether the allocation at certain index has been changed during
--- defragmentation.
---
--- The array should have @allocationCount@ elements. You can pass null if
--- you are not interested in this information.
---
--- === poolCount
---
--- poolCount
--- VmaDefragmentationInfo2
--- VmaDefragmentationInfo2
--- poolCount
--- @uint32_t VmaDefragmentationInfo2::poolCount@
---
--- Numer of pools in @pPools@ array.
---
--- === pPools
---
--- pPools
--- VmaDefragmentationInfo2
--- VmaDefragmentationInfo2
--- pPools
--- @const VmaPool* VmaDefragmentationInfo2::pPools@
---
--- Either null or pointer to array of pools to be defragmented.
---
--- All the allocations in the specified pools can be moved during
--- defragmentation and there is no way to check if they were really moved
--- as in @pAllocationsChanged@, so you must query all the allocations in
--- all these pools for new @VkDeviceMemory@ and offset using
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a86dd08aba8633bfa4ad0df2e76481d8b vmaGetAllocationInfo()>
--- if you might need to recreate buffers and images bound to them.
---
--- The array should have @poolCount@ elements. The array should not contain
--- nulls. Elements in the array should be unique - same pool cannot occur
--- twice.
---
--- Using this array is equivalent to specifying all allocations from the
--- pools in @pAllocations@. It might be more efficient.
---
--- The documentation for this struct was generated from the following file:
---
--- vk_mem_alloc.h
 data DefragmentationInfo2 = DefragmentationInfo2
-  { -- No documentation found for Nested "VmaDefragmentationInfo2" "flags"
+  { -- | Reserved for future use. Should be 0.
     flags :: DefragmentationFlags
-  , -- No documentation found for Nested "VmaDefragmentationInfo2" "pAllocations"
+  , -- | Pointer to array of allocations that can be defragmented.
+    --
+    -- The array should have @allocationCount@ elements. The array should not
+    -- contain nulls. Elements in the array should be unique - same allocation
+    -- cannot occur twice. It is safe to pass allocations that are in the lost
+    -- state - they are ignored. All allocations not present in this array are
+    -- considered non-moveable during this defragmentation.
     allocations :: Vector Allocation
-  , -- No documentation found for Nested "VmaDefragmentationInfo2" "pAllocationsChanged"
+  , -- | Optional, output. Pointer to array that will be filled with information
+    -- whether the allocation at certain index has been changed during
+    -- defragmentation.
+    --
+    -- The array should have @allocationCount@ elements. You can pass null if
+    -- you are not interested in this information.
     allocationsChanged :: Ptr Bool32
-  , -- No documentation found for Nested "VmaDefragmentationInfo2" "pPools"
+  , -- | Either null or pointer to array of pools to be defragmented.
+    --
+    -- All the allocations in the specified pools can be moved during
+    -- defragmentation and there is no way to check if they were really moved
+    -- as in @pAllocationsChanged@, so you must query all the allocations in
+    -- all these pools for new @VkDeviceMemory@ and offset using
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a86dd08aba8633bfa4ad0df2e76481d8b vmaGetAllocationInfo()>
+    -- if you might need to recreate buffers and images bound to them.
+    --
+    -- The array should have @poolCount@ elements. The array should not contain
+    -- nulls. Elements in the array should be unique - same pool cannot occur
+    -- twice.
+    --
+    -- Using this array is equivalent to specifying all allocations from the
+    -- pools in @pAllocations@. It might be more efficient.
     pools :: Vector Pool
-  , -- No documentation found for Nested "VmaDefragmentationInfo2" "maxCpuBytesToMove"
+  , -- | Maximum total numbers of bytes that can be copied while moving
+    -- allocations to different places using transfers on CPU side, like
+    -- @memcpy()@, @memmove()@.
+    --
+    -- @VK_WHOLE_SIZE@ means no limit.
     maxCpuBytesToMove :: DeviceSize
-  , -- No documentation found for Nested "VmaDefragmentationInfo2" "maxCpuAllocationsToMove"
+  , -- | Maximum number of allocations that can be moved to a different place
+    -- using transfers on CPU side, like @memcpy()@, @memmove()@.
+    --
+    -- @UINT32_MAX@ means no limit.
     maxCpuAllocationsToMove :: Word32
-  , -- No documentation found for Nested "VmaDefragmentationInfo2" "maxGpuBytesToMove"
+  , -- | Maximum total numbers of bytes that can be copied while moving
+    -- allocations to different places using transfers on GPU side, posted to
+    -- @commandBuffer@.
+    --
+    -- @VK_WHOLE_SIZE@ means no limit.
     maxGpuBytesToMove :: DeviceSize
-  , -- No documentation found for Nested "VmaDefragmentationInfo2" "maxGpuAllocationsToMove"
+  , -- | Maximum number of allocations that can be moved to a different place
+    -- using transfers on GPU side, posted to @commandBuffer@.
+    --
+    -- @UINT32_MAX@ means no limit.
     maxGpuAllocationsToMove :: Word32
-  , -- No documentation found for Nested "VmaDefragmentationInfo2" "commandBuffer"
+  , -- | Optional. Command buffer where GPU copy commands will be posted.
+    --
+    -- If not null, it must be a valid command buffer handle that supports
+    -- Transfer queue type. It must be in the recording state and outside of a
+    -- render pass instance. You need to submit it and make sure it finished
+    -- execution before calling
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a8774e20e91e245aae959ba63efa15dd2 vmaDefragmentationEnd()>.
+    --
+    -- Passing null means that only CPU defragmentation will be performed.
     commandBuffer :: Ptr CommandBuffer_T
   }
   deriving (Typeable)
@@ -2537,155 +1962,51 @@ instance Zero DefragmentationInfo2 where
 --
 -- Describes parameter of created
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_pool VmaPool>.
---
--- -   uint32_t
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_pool_create_info_1a596fa76b685d3f1f688f84a709a5b319 memoryTypeIndex>
---
---     Vulkan memory type index to allocate this pool from.
---
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a2770e325ea42e087c1b91fdf46d0292a VmaPoolCreateFlags>
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_pool_create_info_1a8405139f63d078340ae74513a59f5446 flags>
---
---     Use combination of
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a4d4f2efc2509157a9e4ecd4fd7942303 VmaPoolCreateFlagBits>.
---
--- -   VkDeviceSize
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_pool_create_info_1aa4265160536cdb9be821b7686c16c676 blockSize>
---
---     Size of a single @VkDeviceMemory@ block to be allocated as part of
---     this pool, in bytes. Optional.
---
--- -   size_t
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_pool_create_info_1ad8006fb803185c0a699d30f3e9a865ae minBlockCount>
---
---     Minimum number of blocks to be always allocated in this pool, even
---     if they stay empty.
---
--- -   size_t
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_pool_create_info_1ae41142f2834fcdc82baa4883c187b75c maxBlockCount>
---
---     Maximum number of blocks that can be allocated in this pool.
---     Optional.
---
--- -   uint32_t
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_pool_create_info_1a9437e43ffbb644dbbf7fc4e50cfad6aa frameInUseCount>
---
---     Maximum number of additional frames that are in use at the same time
---     as current frame.
---
--- == Detailed Description
---
--- Describes parameter of created
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_pool VmaPool>.
---
--- === blockSize
---
--- blockSize
--- VmaPoolCreateInfo
--- VmaPoolCreateInfo
--- blockSize
--- @VkDeviceSize VmaPoolCreateInfo::blockSize@
---
--- Size of a single @VkDeviceMemory@ block to be allocated as part of this
--- pool, in bytes. Optional.
---
--- Specify nonzero to set explicit, constant size of memory blocks used by
--- this pool.
---
--- Leave 0 to use default and let the library manage block sizes
--- automatically. Sizes of particular blocks may vary.
---
--- === flags
---
--- flags
--- VmaPoolCreateInfo
--- VmaPoolCreateInfo
--- flags
--- @VmaPoolCreateFlags VmaPoolCreateInfo::flags@
---
--- Use combination of
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a4d4f2efc2509157a9e4ecd4fd7942303 VmaPoolCreateFlagBits>.
---
--- === frameInUseCount
---
--- frameInUseCount
--- VmaPoolCreateInfo
--- VmaPoolCreateInfo
--- frameInUseCount
--- @uint32_t VmaPoolCreateInfo::frameInUseCount@
---
--- Maximum number of additional frames that are in use at the same time as
--- current frame.
---
--- This value is used only when you make allocations with
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1ad9889c10c798b040d59c92f257cae597a5f436af6c8fe8540573a6d22627a6fd2 VMA_ALLOCATION_CREATE_CAN_BECOME_LOST_BIT>
--- flag. Such allocation cannot become lost if allocation.lastUseFrameIndex
--- >= allocator.currentFrameIndex - frameInUseCount.
---
--- For example, if you double-buffer your command buffers, so resources
--- used for rendering in previous frame may still be in use by the GPU at
--- the moment you allocate resources needed for the current frame, set this
--- value to 1.
---
--- If you want to allow any allocations other than used in the current
--- frame to become lost, set this value to 0.
---
--- === maxBlockCount
---
--- maxBlockCount
--- VmaPoolCreateInfo
--- VmaPoolCreateInfo
--- maxBlockCount
--- @size_t VmaPoolCreateInfo::maxBlockCount@
---
--- Maximum number of blocks that can be allocated in this pool. Optional.
---
--- Set to 0 to use default, which is @SIZE_MAX@, which means no limit.
---
--- Set to same value as
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_pool_create_info_1ad8006fb803185c0a699d30f3e9a865ae VmaPoolCreateInfo::minBlockCount>
--- to have fixed amount of memory allocated throughout whole lifetime of
--- this pool.
---
--- === memoryTypeIndex
---
--- memoryTypeIndex
--- VmaPoolCreateInfo
--- VmaPoolCreateInfo
--- memoryTypeIndex
--- @uint32_t VmaPoolCreateInfo::memoryTypeIndex@
---
--- Vulkan memory type index to allocate this pool from.
---
--- === minBlockCount
---
--- minBlockCount
--- VmaPoolCreateInfo
--- VmaPoolCreateInfo
--- minBlockCount
--- @size_t VmaPoolCreateInfo::minBlockCount@
---
--- Minimum number of blocks to be always allocated in this pool, even if
--- they stay empty.
---
--- Set to 0 to have no preallocated blocks and allow the pool be completely
--- empty.
---
--- The documentation for this struct was generated from the following file:
---
--- vk_mem_alloc.h
 data PoolCreateInfo = PoolCreateInfo
-  { -- No documentation found for Nested "VmaPoolCreateInfo" "memoryTypeIndex"
+  { -- | Vulkan memory type index to allocate this pool from.
     memoryTypeIndex :: Word32
-  , -- No documentation found for Nested "VmaPoolCreateInfo" "flags"
+  , -- | Use combination of
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a4d4f2efc2509157a9e4ecd4fd7942303 VmaPoolCreateFlagBits>.
     flags :: PoolCreateFlags
-  , -- No documentation found for Nested "VmaPoolCreateInfo" "blockSize"
+  , -- | Size of a single @VkDeviceMemory@ block to be allocated as part of this
+    -- pool, in bytes. Optional.
+    --
+    -- Specify nonzero to set explicit, constant size of memory blocks used by
+    -- this pool.
+    --
+    -- Leave 0 to use default and let the library manage block sizes
+    -- automatically. Sizes of particular blocks may vary.
     blockSize :: DeviceSize
-  , -- No documentation found for Nested "VmaPoolCreateInfo" "minBlockCount"
+  , -- | Minimum number of blocks to be always allocated in this pool, even if
+    -- they stay empty.
+    --
+    -- Set to 0 to have no preallocated blocks and allow the pool be completely
+    -- empty.
     minBlockCount :: Word64
-  , -- No documentation found for Nested "VmaPoolCreateInfo" "maxBlockCount"
+  , -- | Maximum number of blocks that can be allocated in this pool. Optional.
+    --
+    -- Set to 0 to use default, which is @SIZE_MAX@, which means no limit.
+    --
+    -- Set to same value as
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_pool_create_info_1ad8006fb803185c0a699d30f3e9a865ae VmaPoolCreateInfo::minBlockCount>
+    -- to have fixed amount of memory allocated throughout whole lifetime of
+    -- this pool.
     maxBlockCount :: Word64
-  , -- No documentation found for Nested "VmaPoolCreateInfo" "frameInUseCount"
+  , -- | Maximum number of additional frames that are in use at the same time as
+    -- current frame.
+    --
+    -- This value is used only when you make allocations with
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1ad9889c10c798b040d59c92f257cae597a5f436af6c8fe8540573a6d22627a6fd2 VMA_ALLOCATION_CREATE_CAN_BECOME_LOST_BIT>
+    -- flag. Such allocation cannot become lost if allocation.lastUseFrameIndex
+    -- >= allocator.currentFrameIndex - frameInUseCount.
+    --
+    -- For example, if you double-buffer your command buffers, so resources
+    -- used for rendering in previous frame may still be in use by the GPU at
+    -- the moment you allocate resources needed for the current frame, set this
+    -- value to 1.
+    --
+    -- If you want to allow any allocations other than used in the current
+    -- frame to become lost, set this value to 0.
     frameInUseCount :: Word32
   }
   deriving (Typeable)
@@ -2743,89 +2064,17 @@ instance Zero PoolCreateInfo where
 --
 -- Statistics returned by function
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a9f0f8f56db5f7f57fe4454f465142dac vmaDefragment()>.
---
--- -   VkDeviceSize
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_stats_1a36f9d5df2a10ba2a36b16e126d60572d bytesMoved>
---
---     Total number of bytes that have been copied while moving allocations
---     to different places.
---
--- -   VkDeviceSize
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_stats_1ab0cb9ac0dbc106c77e384ea676422f28 bytesFreed>
---
---     Total number of bytes that have been released to the system by
---     freeing empty @VkDeviceMemory@ objects.
---
--- -   uint32_t
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_stats_1aefeabf130022008eadd75999478af3f9 allocationsMoved>
---
---     Number of allocations that have been moved to different places.
---
--- -   uint32_t
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_stats_1a0113f1877904a5d1ee8f409216ff276b deviceMemoryBlocksFreed>
---
---     Number of empty @VkDeviceMemory@ objects that have been released to
---     the system.
---
--- == Detailed Description
---
--- Statistics returned by function
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a9f0f8f56db5f7f57fe4454f465142dac vmaDefragment()>.
---
--- === allocationsMoved
---
--- allocationsMoved
--- VmaDefragmentationStats
--- VmaDefragmentationStats
--- allocationsMoved
--- @uint32_t VmaDefragmentationStats::allocationsMoved@
---
--- Number of allocations that have been moved to different places.
---
--- === bytesFreed
---
--- bytesFreed
--- VmaDefragmentationStats
--- VmaDefragmentationStats
--- bytesFreed
--- @VkDeviceSize VmaDefragmentationStats::bytesFreed@
---
--- Total number of bytes that have been released to the system by freeing
--- empty @VkDeviceMemory@ objects.
---
--- === bytesMoved
---
--- bytesMoved
--- VmaDefragmentationStats
--- VmaDefragmentationStats
--- bytesMoved
--- @VkDeviceSize VmaDefragmentationStats::bytesMoved@
---
--- Total number of bytes that have been copied while moving allocations to
--- different places.
---
--- === deviceMemoryBlocksFreed
---
--- deviceMemoryBlocksFreed
--- VmaDefragmentationStats
--- VmaDefragmentationStats
--- deviceMemoryBlocksFreed
--- @uint32_t VmaDefragmentationStats::deviceMemoryBlocksFreed@
---
--- Number of empty @VkDeviceMemory@ objects that have been released to the
--- system.
---
--- The documentation for this struct was generated from the following file:
---
--- vk_mem_alloc.h
 data DefragmentationStats = DefragmentationStats
-  { -- No documentation found for Nested "VmaDefragmentationStats" "bytesMoved"
+  { -- | Total number of bytes that have been copied while moving allocations to
+    -- different places.
     bytesMoved :: DeviceSize
-  , -- No documentation found for Nested "VmaDefragmentationStats" "bytesFreed"
+  , -- | Total number of bytes that have been released to the system by freeing
+    -- empty @VkDeviceMemory@ objects.
     bytesFreed :: DeviceSize
-  , -- No documentation found for Nested "VmaDefragmentationStats" "allocationsMoved"
+  , -- | Number of allocations that have been moved to different places.
     allocationsMoved :: Word32
-  , -- No documentation found for Nested "VmaDefragmentationStats" "deviceMemoryBlocksFreed"
+  , -- | Number of empty @VkDeviceMemory@ objects that have been released to the
+    -- system.
     deviceMemoryBlocksFreed :: Word32
   }
   deriving (Typeable)
@@ -2877,160 +2126,55 @@ instance Zero DefragmentationStats where
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation VmaAllocation>
 -- objects, that can be retrieved using function
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a86dd08aba8633bfa4ad0df2e76481d8b vmaGetAllocationInfo()>.
---
--- -   uint32_t
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation_info_1a7f6b0aa58c135e488e6b40a388dad9d5 memoryType>
---
---     Memory type index that this allocation was allocated from.
---
--- -   VkDeviceMemory
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation_info_1ae0bfb7dfdf79a76ffefc9a94677a2f67 deviceMemory>
---
---     Handle to Vulkan memory object.
---
--- -   VkDeviceSize
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation_info_1a4a3c732388dbdc7a23f9365b00825268 offset>
---
---     Offset into deviceMemory object to the beginning of this allocation,
---     in bytes. (deviceMemory, offset) pair is unique to this allocation.
---
--- -   VkDeviceSize
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation_info_1aac76d113a6a5ccbb09fea00fb25fd18f size>
---
---     Size of this allocation, in bytes.
---
--- -   void *
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation_info_1a5eeffbe2d2f30f53370ff14aefbadbe2 pMappedData>
---
---     Pointer to the beginning of this allocation as mapped data.
---
--- -   void *
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation_info_1adc507656149c04de7ed95d0042ba2a13 pUserData>
---
---     Custom general-purpose pointer that was passed as
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation_create_info_1a8259e85c272683434f4abb4ddddffe19 VmaAllocationCreateInfo::pUserData>
---     or set using
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1af9147d31ffc11d62fc187bde283ed14f vmaSetAllocationUserData()>.
---
--- == Detailed Description
---
--- Parameters of
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation VmaAllocation>
--- objects, that can be retrieved using function
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a86dd08aba8633bfa4ad0df2e76481d8b vmaGetAllocationInfo()>.
---
--- === deviceMemory
---
--- deviceMemory
--- VmaAllocationInfo
--- VmaAllocationInfo
--- deviceMemory
--- @VkDeviceMemory VmaAllocationInfo::deviceMemory@
---
--- Handle to Vulkan memory object.
---
--- Same memory object can be shared by multiple allocations.
---
--- It can change after call to
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a9f0f8f56db5f7f57fe4454f465142dac vmaDefragment()>
--- if this allocation is passed to the function, or if allocation is lost.
---
--- If the allocation is lost, it is equal to @VK_NULL_HANDLE@.
---
--- === memoryType
---
--- memoryType
--- VmaAllocationInfo
--- VmaAllocationInfo
--- memoryType
--- @uint32_t VmaAllocationInfo::memoryType@
---
--- Memory type index that this allocation was allocated from.
---
--- It never changes.
---
--- === offset
---
--- offset
--- VmaAllocationInfo
--- VmaAllocationInfo
--- offset
--- @VkDeviceSize VmaAllocationInfo::offset@
---
--- Offset into deviceMemory object to the beginning of this allocation, in
--- bytes. (deviceMemory, offset) pair is unique to this allocation.
---
--- It can change after call to
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a9f0f8f56db5f7f57fe4454f465142dac vmaDefragment()>
--- if this allocation is passed to the function, or if allocation is lost.
---
--- === pMappedData
---
--- pMappedData
--- VmaAllocationInfo
--- VmaAllocationInfo
--- pMappedData
--- @void* VmaAllocationInfo::pMappedData@
---
--- Pointer to the beginning of this allocation as mapped data.
---
--- If the allocation hasn\'t been mapped using
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1ad5bd1243512d099706de88168992f069 vmaMapMemory()>
--- and hasn\'t been created with
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1ad9889c10c798b040d59c92f257cae597a11da372cc3a82931c5e5d6146cd9dd1f VMA_ALLOCATION_CREATE_MAPPED_BIT>
--- flag, this value is null.
---
--- It can change after call to
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1ad5bd1243512d099706de88168992f069 vmaMapMemory()>,
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a9bc268595cb33f6ec4d519cfce81ff45 vmaUnmapMemory()>.
--- It can also change after call to
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a9f0f8f56db5f7f57fe4454f465142dac vmaDefragment()>
--- if this allocation is passed to the function.
---
--- === pUserData
---
--- pUserData
--- VmaAllocationInfo
--- VmaAllocationInfo
--- pUserData
--- @void* VmaAllocationInfo::pUserData@
---
--- Custom general-purpose pointer that was passed as
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation_create_info_1a8259e85c272683434f4abb4ddddffe19 VmaAllocationCreateInfo::pUserData>
--- or set using
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1af9147d31ffc11d62fc187bde283ed14f vmaSetAllocationUserData()>.
---
--- It can change after call to
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1af9147d31ffc11d62fc187bde283ed14f vmaSetAllocationUserData()>
--- for this allocation.
---
--- === size
---
--- size
--- VmaAllocationInfo
--- VmaAllocationInfo
--- size
--- @VkDeviceSize VmaAllocationInfo::size@
---
--- Size of this allocation, in bytes.
---
--- It never changes, unless allocation is lost.
---
--- The documentation for this struct was generated from the following file:
---
--- vk_mem_alloc.h
 data AllocationInfo = AllocationInfo
-  { -- No documentation found for Nested "VmaAllocationInfo" "memoryType"
+  { -- | Memory type index that this allocation was allocated from.
+    --
+    -- It never changes.
     memoryType :: Word32
-  , -- No documentation found for Nested "VmaAllocationInfo" "deviceMemory"
+  , -- | Handle to Vulkan memory object.
+    --
+    -- Same memory object can be shared by multiple allocations.
+    --
+    -- It can change after call to
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a9f0f8f56db5f7f57fe4454f465142dac vmaDefragment()>
+    -- if this allocation is passed to the function, or if allocation is lost.
+    --
+    -- If the allocation is lost, it is equal to @VK_NULL_HANDLE@.
     deviceMemory :: DeviceMemory
-  , -- No documentation found for Nested "VmaAllocationInfo" "offset"
+  , -- | Offset into deviceMemory object to the beginning of this allocation, in
+    -- bytes. (deviceMemory, offset) pair is unique to this allocation.
+    --
+    -- It can change after call to
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a9f0f8f56db5f7f57fe4454f465142dac vmaDefragment()>
+    -- if this allocation is passed to the function, or if allocation is lost.
     offset :: DeviceSize
-  , -- No documentation found for Nested "VmaAllocationInfo" "size"
+  , -- | Size of this allocation, in bytes.
+    --
+    -- It never changes, unless allocation is lost.
     size :: DeviceSize
-  , -- No documentation found for Nested "VmaAllocationInfo" "pMappedData"
+  , -- | Pointer to the beginning of this allocation as mapped data.
+    --
+    -- If the allocation hasn\'t been mapped using
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1ad5bd1243512d099706de88168992f069 vmaMapMemory()>
+    -- and hasn\'t been created with
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1ad9889c10c798b040d59c92f257cae597a11da372cc3a82931c5e5d6146cd9dd1f VMA_ALLOCATION_CREATE_MAPPED_BIT>
+    -- flag, this value is null.
+    --
+    -- It can change after call to
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1ad5bd1243512d099706de88168992f069 vmaMapMemory()>,
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a9bc268595cb33f6ec4d519cfce81ff45 vmaUnmapMemory()>.
+    -- It can also change after call to
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a9f0f8f56db5f7f57fe4454f465142dac vmaDefragment()>
+    -- if this allocation is passed to the function.
     mappedData :: Ptr ()
-  , -- No documentation found for Nested "VmaAllocationInfo" "pUserData"
+  , -- | Custom general-purpose pointer that was passed as
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation_create_info_1a8259e85c272683434f4abb4ddddffe19 VmaAllocationCreateInfo::pUserData>
+    -- or set using
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1af9147d31ffc11d62fc187bde283ed14f vmaSetAllocationUserData()>.
+    --
+    -- It can change after call to
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1af9147d31ffc11d62fc187bde283ed14f vmaSetAllocationUserData()>
+    -- for this allocation.
     userData :: Ptr ()
   }
   deriving (Typeable)
@@ -3086,76 +2230,21 @@ instance Zero AllocationInfo where
 -- Information about existing
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator VmaAllocator>
 -- object.
---
--- -   VkInstance
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_info_1a2ed6a4d2d3fea039d66a13f15d0ce5fe instance>
---
---     Handle to Vulkan instance object.
---
--- -   VkPhysicalDevice
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_info_1aba2b703f96e51d567717e1fb2935b47a physicalDevice>
---
---     Handle to Vulkan physical device object.
---
--- -   VkDevice
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_info_1a012b4c485bf3b0ea8921352c5ee0c357 device>
---
---     Handle to Vulkan device object.
---
--- == Detailed Description
---
--- Information about existing
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator VmaAllocator>
--- object.
---
--- === device
---
--- device
--- VmaAllocatorInfo
--- VmaAllocatorInfo
--- device
--- @VkDevice VmaAllocatorInfo::device@
---
--- Handle to Vulkan device object.
---
--- This is the same value as has been passed through
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1ad924ddd77b04039c88d0c09b0ffcd500 VmaAllocatorCreateInfo::device>.
---
--- === instance
---
--- instance
--- VmaAllocatorInfo
--- VmaAllocatorInfo
--- instance
--- @VkInstance VmaAllocatorInfo::instance@
---
--- Handle to Vulkan instance object.
---
--- This is the same value as has been passed through
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1a70dd42e29b1df1d1b9b61532ae0b370b VmaAllocatorCreateInfo::instance>.
---
--- === physicalDevice
---
--- physicalDevice
--- VmaAllocatorInfo
--- VmaAllocatorInfo
--- physicalDevice
--- @VkPhysicalDevice VmaAllocatorInfo::physicalDevice@
---
--- Handle to Vulkan physical device object.
---
--- This is the same value as has been passed through
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1a08230f04ae6ccf8a78150a9e829a7156 VmaAllocatorCreateInfo::physicalDevice>.
---
--- The documentation for this struct was generated from the following file:
---
--- vk_mem_alloc.h
 data AllocatorInfo = AllocatorInfo
-  { -- No documentation found for Nested "VmaAllocatorInfo" "instance"
+  { -- | Handle to Vulkan instance object.
+    --
+    -- This is the same value as has been passed through
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1a70dd42e29b1df1d1b9b61532ae0b370b VmaAllocatorCreateInfo::instance>.
     instance' :: Ptr Instance_T
-  , -- No documentation found for Nested "VmaAllocatorInfo" "physicalDevice"
+  , -- | Handle to Vulkan physical device object.
+    --
+    -- This is the same value as has been passed through
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1a08230f04ae6ccf8a78150a9e829a7156 VmaAllocatorCreateInfo::physicalDevice>.
     physicalDevice :: Ptr PhysicalDevice_T
-  , -- No documentation found for Nested "VmaAllocatorInfo" "device"
+  , -- | Handle to Vulkan device object.
+    --
+    -- This is the same value as has been passed through
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1ad924ddd77b04039c88d0c09b0ffcd500 VmaAllocatorCreateInfo::device>.
     device :: Ptr Device_T
   }
   deriving (Typeable)
@@ -3201,237 +2290,42 @@ instance Zero AllocatorInfo where
 --
 -- Pointers to some Vulkan functions - a subset used by the library.
 --
--- -   PFN_vkGetPhysicalDeviceProperties
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_vulkan_functions_1a77b7a74082823e865dd6546623468f96 vkGetPhysicalDeviceProperties>
---
--- -   PFN_vkGetPhysicalDeviceMemoryProperties
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_vulkan_functions_1a60d25c33bba06bb8592e6875cbaa9830 vkGetPhysicalDeviceMemoryProperties>
---
--- -   PFN_vkAllocateMemory
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_vulkan_functions_1a2943bf99dfd784a0e8f599d987e22e6c vkAllocateMemory>
---
--- -   PFN_vkFreeMemory
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_vulkan_functions_1a4c658701778564d62034255b5dda91b4 vkFreeMemory>
---
--- -   PFN_vkMapMemory
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_vulkan_functions_1ab5c1f38dea3a2cf00dc9eb4f57218c49 vkMapMemory>
---
--- -   PFN_vkUnmapMemory
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_vulkan_functions_1acc798589736f0becb317fc2196c1d8b9 vkUnmapMemory>
---
--- -   PFN_vkFlushMappedMemoryRanges
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_vulkan_functions_1a33c322f4c4ad2810f8a9c97a277572f9 vkFlushMappedMemoryRanges>
---
--- -   PFN_vkInvalidateMappedMemoryRanges
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_vulkan_functions_1a5c1093bc32386a8060c37c9f282078a1 vkInvalidateMappedMemoryRanges>
---
--- -   PFN_vkBindBufferMemory
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_vulkan_functions_1a94fc4f3a605d9880bb3c0ba2c2fc80b2 vkBindBufferMemory>
---
--- -   PFN_vkBindImageMemory
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_vulkan_functions_1a1338d96a128a5ade648b8d934907c637 vkBindImageMemory>
---
--- -   PFN_vkGetBufferMemoryRequirements
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_vulkan_functions_1a5b92901df89a4194b0d12f6071d4d143 vkGetBufferMemoryRequirements>
---
--- -   PFN_vkGetImageMemoryRequirements
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_vulkan_functions_1a475f6f49f8debe4d10800592606d53f4 vkGetImageMemoryRequirements>
---
--- -   PFN_vkCreateBuffer
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_vulkan_functions_1ae8084315a25006271a2edfc3a447519f vkCreateBuffer>
---
--- -   PFN_vkDestroyBuffer
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_vulkan_functions_1a7e054606faddb07f0e8556f3ed317d45 vkDestroyBuffer>
---
--- -   PFN_vkCreateImage
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_vulkan_functions_1a23ebe70be515b9b5010a1d691200e325 vkCreateImage>
---
--- -   PFN_vkDestroyImage
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_vulkan_functions_1a90b898227039b1dcb3520f6e91f09ffa vkDestroyImage>
---
--- -   PFN_vkCmdCopyBuffer
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_vulkan_functions_1ae5c0db8c89a3b82593dc16aa6a49fa3a vkCmdCopyBuffer>
---
--- == Detailed Description
---
--- Pointers to some Vulkan functions - a subset used by the library.
---
 -- Used in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1a3dc197be3227da7338b1643f70db36bd VmaAllocatorCreateInfo::pVulkanFunctions>.
---
--- === vkAllocateMemory
---
--- vkAllocateMemory
--- VmaVulkanFunctions
--- VmaVulkanFunctions
--- vkAllocateMemory
--- @PFN_vkAllocateMemory VmaVulkanFunctions::vkAllocateMemory@
---
--- === vkBindBufferMemory
---
--- vkBindBufferMemory
--- VmaVulkanFunctions
--- VmaVulkanFunctions
--- vkBindBufferMemory
--- @PFN_vkBindBufferMemory VmaVulkanFunctions::vkBindBufferMemory@
---
--- === vkBindImageMemory
---
--- vkBindImageMemory
--- VmaVulkanFunctions
--- VmaVulkanFunctions
--- vkBindImageMemory
--- @PFN_vkBindImageMemory VmaVulkanFunctions::vkBindImageMemory@
---
--- === vkCmdCopyBuffer
---
--- vkCmdCopyBuffer
--- VmaVulkanFunctions
--- VmaVulkanFunctions
--- vkCmdCopyBuffer
--- @PFN_vkCmdCopyBuffer VmaVulkanFunctions::vkCmdCopyBuffer@
---
--- === vkCreateBuffer
---
--- vkCreateBuffer
--- VmaVulkanFunctions
--- VmaVulkanFunctions
--- vkCreateBuffer
--- @PFN_vkCreateBuffer VmaVulkanFunctions::vkCreateBuffer@
---
--- === vkCreateImage
---
--- vkCreateImage
--- VmaVulkanFunctions
--- VmaVulkanFunctions
--- vkCreateImage
--- @PFN_vkCreateImage VmaVulkanFunctions::vkCreateImage@
---
--- === vkDestroyBuffer
---
--- vkDestroyBuffer
--- VmaVulkanFunctions
--- VmaVulkanFunctions
--- vkDestroyBuffer
--- @PFN_vkDestroyBuffer VmaVulkanFunctions::vkDestroyBuffer@
---
--- === vkDestroyImage
---
--- vkDestroyImage
--- VmaVulkanFunctions
--- VmaVulkanFunctions
--- vkDestroyImage
--- @PFN_vkDestroyImage VmaVulkanFunctions::vkDestroyImage@
---
--- === vkFlushMappedMemoryRanges
---
--- vkFlushMappedMemoryRanges
--- VmaVulkanFunctions
--- VmaVulkanFunctions
--- vkFlushMappedMemoryRanges
--- @PFN_vkFlushMappedMemoryRanges VmaVulkanFunctions::vkFlushMappedMemoryRanges@
---
--- === vkFreeMemory
---
--- vkFreeMemory
--- VmaVulkanFunctions
--- VmaVulkanFunctions
--- vkFreeMemory
--- @PFN_vkFreeMemory VmaVulkanFunctions::vkFreeMemory@
---
--- === vkGetBufferMemoryRequirements
---
--- vkGetBufferMemoryRequirements
--- VmaVulkanFunctions
--- VmaVulkanFunctions
--- vkGetBufferMemoryRequirements
--- @PFN_vkGetBufferMemoryRequirements VmaVulkanFunctions::vkGetBufferMemoryRequirements@
---
--- === vkGetImageMemoryRequirements
---
--- vkGetImageMemoryRequirements
--- VmaVulkanFunctions
--- VmaVulkanFunctions
--- vkGetImageMemoryRequirements
--- @PFN_vkGetImageMemoryRequirements VmaVulkanFunctions::vkGetImageMemoryRequirements@
---
--- === vkGetPhysicalDeviceMemoryProperties
---
--- vkGetPhysicalDeviceMemoryProperties
--- VmaVulkanFunctions
--- VmaVulkanFunctions
--- vkGetPhysicalDeviceMemoryProperties
--- @PFN_vkGetPhysicalDeviceMemoryProperties VmaVulkanFunctions::vkGetPhysicalDeviceMemoryProperties@
---
--- === vkGetPhysicalDeviceProperties
---
--- vkGetPhysicalDeviceProperties
--- VmaVulkanFunctions
--- VmaVulkanFunctions
--- vkGetPhysicalDeviceProperties
--- @PFN_vkGetPhysicalDeviceProperties VmaVulkanFunctions::vkGetPhysicalDeviceProperties@
---
--- === vkInvalidateMappedMemoryRanges
---
--- vkInvalidateMappedMemoryRanges
--- VmaVulkanFunctions
--- VmaVulkanFunctions
--- vkInvalidateMappedMemoryRanges
--- @PFN_vkInvalidateMappedMemoryRanges VmaVulkanFunctions::vkInvalidateMappedMemoryRanges@
---
--- === vkMapMemory
---
--- vkMapMemory
--- VmaVulkanFunctions
--- VmaVulkanFunctions
--- vkMapMemory
--- @PFN_vkMapMemory VmaVulkanFunctions::vkMapMemory@
---
--- === vkUnmapMemory
---
--- vkUnmapMemory
--- VmaVulkanFunctions
--- VmaVulkanFunctions
--- vkUnmapMemory
--- @PFN_vkUnmapMemory VmaVulkanFunctions::vkUnmapMemory@
---
--- The documentation for this struct was generated from the following file:
---
--- vk_mem_alloc.h
 data VulkanFunctions = VulkanFunctions
-  { -- No documentation found for Nested "VmaVulkanFunctions" "vkGetPhysicalDeviceProperties"
+  { 
     vkGetPhysicalDeviceProperties :: PFN_vkGetPhysicalDeviceProperties
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkGetPhysicalDeviceMemoryProperties"
+  , 
     vkGetPhysicalDeviceMemoryProperties :: PFN_vkGetPhysicalDeviceMemoryProperties
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkAllocateMemory"
+  , 
     vkAllocateMemory :: PFN_vkAllocateMemory
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkFreeMemory"
+  , 
     vkFreeMemory :: PFN_vkFreeMemory
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkMapMemory"
+  , 
     vkMapMemory :: PFN_vkMapMemory
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkUnmapMemory"
+  , 
     vkUnmapMemory :: PFN_vkUnmapMemory
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkFlushMappedMemoryRanges"
+  , 
     vkFlushMappedMemoryRanges :: PFN_vkFlushMappedMemoryRanges
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkInvalidateMappedMemoryRanges"
+  , 
     vkInvalidateMappedMemoryRanges :: PFN_vkInvalidateMappedMemoryRanges
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkBindBufferMemory"
+  , 
     vkBindBufferMemory :: PFN_vkBindBufferMemory
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkBindImageMemory"
+  , 
     vkBindImageMemory :: PFN_vkBindImageMemory
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkGetBufferMemoryRequirements"
+  , 
     vkGetBufferMemoryRequirements :: PFN_vkGetBufferMemoryRequirements
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkGetImageMemoryRequirements"
+  , 
     vkGetImageMemoryRequirements :: PFN_vkGetImageMemoryRequirements
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkCreateBuffer"
+  , 
     vkCreateBuffer :: PFN_vkCreateBuffer
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkDestroyBuffer"
+  , 
     vkDestroyBuffer :: PFN_vkDestroyBuffer
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkCreateImage"
+  , 
     vkCreateImage :: PFN_vkCreateImage
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkDestroyImage"
+  , 
     vkDestroyImage :: PFN_vkDestroyImage
-  , -- No documentation found for Nested "VmaVulkanFunctions" "vkCmdCopyBuffer"
+  , 
     vkCmdCopyBuffer :: PFN_vkCmdCopyBuffer
   , -- No documentation found for Nested "VmaVulkanFunctions" "vkGetBufferMemoryRequirements2KHR"
     vkGetBufferMemoryRequirements2KHR :: PFN_vkGetBufferMemoryRequirements2KHR
@@ -3540,133 +2434,28 @@ instance Zero VulkanFunctions where
 --
 -- Describes parameter of existing
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_pool VmaPool>.
---
--- -   VkDeviceSize
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_pool_stats_1a326807b2de2b0931cee4ed9a5f2e420c size>
---
---     Total amount of @VkDeviceMemory@ allocated from Vulkan for this
---     pool, in bytes.
---
--- -   VkDeviceSize
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_pool_stats_1ad7c54874724fce7b06aba526202d82a8 unusedSize>
---
---     Total number of bytes in the pool not used by any
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation VmaAllocation>.
---
--- -   size_t
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_pool_stats_1ad1924eb54fffa45e9e0e65670c8fe5eb allocationCount>
---
---     Number of
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation VmaAllocation>
---     objects created from this pool that were not destroyed or lost.
---
--- -   size_t
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_pool_stats_1ae4f3546ffa4d1e598b64d8e6134854f4 unusedRangeCount>
---
---     Number of continuous memory ranges in the pool not used by any
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation VmaAllocation>.
---
--- -   VkDeviceSize
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_pool_stats_1ab4c8f52dd42ab01998f60f0b6acc722b unusedRangeSizeMax>
---
---     Size of the largest continuous free memory region available for new
---     allocation.
---
--- -   size_t
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_pool_stats_1aa0b5cb45cef6f18571cefb03b9a230e7 blockCount>
---
---     Number of @VkDeviceMemory@ blocks allocated for this pool.
---
--- == Detailed Description
---
--- Describes parameter of existing
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_pool VmaPool>.
---
--- === allocationCount
---
--- allocationCount
--- VmaPoolStats
--- VmaPoolStats
--- allocationCount
--- @size_t VmaPoolStats::allocationCount@
---
--- Number of
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation VmaAllocation>
--- objects created from this pool that were not destroyed or lost.
---
--- === blockCount
---
--- blockCount
--- VmaPoolStats
--- VmaPoolStats
--- blockCount
--- @size_t VmaPoolStats::blockCount@
---
--- Number of @VkDeviceMemory@ blocks allocated for this pool.
---
--- === size
---
--- size
--- VmaPoolStats
--- VmaPoolStats
--- size
--- @VkDeviceSize VmaPoolStats::size@
---
--- Total amount of @VkDeviceMemory@ allocated from Vulkan for this pool, in
--- bytes.
---
--- === unusedRangeCount
---
--- unusedRangeCount
--- VmaPoolStats
--- VmaPoolStats
--- unusedRangeCount
--- @size_t VmaPoolStats::unusedRangeCount@
---
--- Number of continuous memory ranges in the pool not used by any
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation VmaAllocation>.
---
--- === unusedRangeSizeMax
---
--- unusedRangeSizeMax
--- VmaPoolStats
--- VmaPoolStats
--- unusedRangeSizeMax
--- @VkDeviceSize VmaPoolStats::unusedRangeSizeMax@
---
--- Size of the largest continuous free memory region available for new
--- allocation.
---
--- Making a new allocation of that size is not guaranteed to succeed
--- because of possible additional margin required to respect alignment and
--- buffer\/image granularity.
---
--- === unusedSize
---
--- unusedSize
--- VmaPoolStats
--- VmaPoolStats
--- unusedSize
--- @VkDeviceSize VmaPoolStats::unusedSize@
---
--- Total number of bytes in the pool not used by any
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation VmaAllocation>.
---
--- The documentation for this struct was generated from the following file:
---
--- vk_mem_alloc.h
 data PoolStats = PoolStats
-  { -- No documentation found for Nested "VmaPoolStats" "size"
+  { -- | Total amount of @VkDeviceMemory@ allocated from Vulkan for this pool, in
+    -- bytes.
     size :: DeviceSize
-  , -- No documentation found for Nested "VmaPoolStats" "unusedSize"
+  , -- | Total number of bytes in the pool not used by any
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation VmaAllocation>.
     unusedSize :: DeviceSize
-  , -- No documentation found for Nested "VmaPoolStats" "allocationCount"
+  , -- | Number of
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation VmaAllocation>
+    -- objects created from this pool that were not destroyed or lost.
     allocationCount :: Word64
-  , -- No documentation found for Nested "VmaPoolStats" "unusedRangeCount"
+  , -- | Number of continuous memory ranges in the pool not used by any
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation VmaAllocation>.
     unusedRangeCount :: Word64
-  , -- No documentation found for Nested "VmaPoolStats" "unusedRangeSizeMax"
+  , -- | Size of the largest continuous free memory region available for new
+    -- allocation.
+    --
+    -- Making a new allocation of that size is not guaranteed to succeed
+    -- because of possible additional margin required to respect alignment and
+    -- buffer\/image granularity.
     unusedRangeSizeMax :: DeviceSize
-  , -- No documentation found for Nested "VmaPoolStats" "blockCount"
+  , -- | Number of @VkDeviceMemory@ blocks allocated for this pool.
     blockCount :: Word64
   }
   deriving (Typeable)
@@ -3723,181 +2512,30 @@ instance Zero PoolStats where
 -- | VmaStatInfo
 --
 -- Calculated statistics of memory usage in entire allocator.
---
--- -   uint32_t
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_stat_info_1abc4bb7cd611900778464c56e50c970a4 blockCount>
---
---     Number of @VkDeviceMemory@ Vulkan memory blocks allocated.
---
--- -   uint32_t
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_stat_info_1a537741e4d5cdddc1c0ab95ec650afaff allocationCount>
---
---     Number of
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation VmaAllocation>
---     allocation objects allocated.
---
--- -   uint32_t
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_stat_info_1ae06129c771bfebfd6468a7f4276502a9 unusedRangeCount>
---
---     Number of free ranges of memory between allocations.
---
--- -   VkDeviceSize
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_stat_info_1ab0c6c73837e5a70c749fbd4f6064895a usedBytes>
---
---     Total number of bytes occupied by all allocations.
---
--- -   VkDeviceSize
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_stat_info_1a1859d290aca2cd582d8dc25922092669 unusedBytes>
---
---     Total number of bytes occupied by unused ranges.
---
--- -   VkDeviceSize
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_stat_info_1ade8b40bd3139c04aabd2fc538a356fea allocationSizeMin>
---
--- -   VkDeviceSize
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_stat_info_1a1081a039964e566c672e7a2347f9e599 allocationSizeAvg>
---
--- -   VkDeviceSize
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_stat_info_1a17e9733a5ecd76287d4db6e66f71f50c allocationSizeMax>
---
--- -   VkDeviceSize
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_stat_info_1aedeba931324f16589cd2416c0d2dd0d4 unusedRangeSizeMin>
---
--- -   VkDeviceSize
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_stat_info_1a2f9b3452af90c9768a30b7fb6ae194fc unusedRangeSizeAvg>
---
--- -   VkDeviceSize
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_stat_info_1a5ba1a2476c4d39b10f7e2f7ebbb72ac4 unusedRangeSizeMax>
---
--- == Detailed Description
---
--- Calculated statistics of memory usage in entire allocator.
---
--- === allocationCount
---
--- allocationCount
--- VmaStatInfo
--- VmaStatInfo
--- allocationCount
--- @uint32_t VmaStatInfo::allocationCount@
---
--- Number of
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation VmaAllocation>
--- allocation objects allocated.
---
--- === allocationSizeAvg
---
--- allocationSizeAvg
--- VmaStatInfo
--- VmaStatInfo
--- allocationSizeAvg
--- @VkDeviceSize VmaStatInfo::allocationSizeAvg@
---
--- === allocationSizeMax
---
--- allocationSizeMax
--- VmaStatInfo
--- VmaStatInfo
--- allocationSizeMax
--- @VkDeviceSize VmaStatInfo::allocationSizeMax@
---
--- === allocationSizeMin
---
--- allocationSizeMin
--- VmaStatInfo
--- VmaStatInfo
--- allocationSizeMin
--- @VkDeviceSize VmaStatInfo::allocationSizeMin@
---
--- === blockCount
---
--- blockCount
--- VmaStatInfo
--- VmaStatInfo
--- blockCount
--- @uint32_t VmaStatInfo::blockCount@
---
--- Number of @VkDeviceMemory@ Vulkan memory blocks allocated.
---
--- === unusedBytes
---
--- unusedBytes
--- VmaStatInfo
--- VmaStatInfo
--- unusedBytes
--- @VkDeviceSize VmaStatInfo::unusedBytes@
---
--- Total number of bytes occupied by unused ranges.
---
--- === unusedRangeCount
---
--- unusedRangeCount
--- VmaStatInfo
--- VmaStatInfo
--- unusedRangeCount
--- @uint32_t VmaStatInfo::unusedRangeCount@
---
--- Number of free ranges of memory between allocations.
---
--- === unusedRangeSizeAvg
---
--- unusedRangeSizeAvg
--- VmaStatInfo
--- VmaStatInfo
--- unusedRangeSizeAvg
--- @VkDeviceSize VmaStatInfo::unusedRangeSizeAvg@
---
--- === unusedRangeSizeMax
---
--- unusedRangeSizeMax
--- VmaStatInfo
--- VmaStatInfo
--- unusedRangeSizeMax
--- @VkDeviceSize VmaStatInfo::unusedRangeSizeMax@
---
--- === unusedRangeSizeMin
---
--- unusedRangeSizeMin
--- VmaStatInfo
--- VmaStatInfo
--- unusedRangeSizeMin
--- @VkDeviceSize VmaStatInfo::unusedRangeSizeMin@
---
--- === usedBytes
---
--- usedBytes
--- VmaStatInfo
--- VmaStatInfo
--- usedBytes
--- @VkDeviceSize VmaStatInfo::usedBytes@
---
--- Total number of bytes occupied by all allocations.
---
--- The documentation for this struct was generated from the following file:
---
--- vk_mem_alloc.h
 data StatInfo = StatInfo
-  { -- No documentation found for Nested "VmaStatInfo" "blockCount"
+  { -- | Number of @VkDeviceMemory@ Vulkan memory blocks allocated.
     blockCount :: Word32
-  , -- No documentation found for Nested "VmaStatInfo" "allocationCount"
+  , -- | Number of
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation VmaAllocation>
+    -- allocation objects allocated.
     allocationCount :: Word32
-  , -- No documentation found for Nested "VmaStatInfo" "unusedRangeCount"
+  , -- | Number of free ranges of memory between allocations.
     unusedRangeCount :: Word32
-  , -- No documentation found for Nested "VmaStatInfo" "usedBytes"
+  , -- | Total number of bytes occupied by all allocations.
     usedBytes :: DeviceSize
-  , -- No documentation found for Nested "VmaStatInfo" "unusedBytes"
+  , -- | Total number of bytes occupied by unused ranges.
     unusedBytes :: DeviceSize
-  , -- No documentation found for Nested "VmaStatInfo" "allocationSizeMin"
+  , 
     allocationSizeMin :: DeviceSize
-  , -- No documentation found for Nested "VmaStatInfo" "allocationSizeAvg"
+  , 
     allocationSizeAvg :: DeviceSize
-  , -- No documentation found for Nested "VmaStatInfo" "allocationSizeMax"
+  , 
     allocationSizeMax :: DeviceSize
-  , -- No documentation found for Nested "VmaStatInfo" "unusedRangeSizeMin"
+  , 
     unusedRangeSizeMin :: DeviceSize
-  , -- No documentation found for Nested "VmaStatInfo" "unusedRangeSizeAvg"
+  , 
     unusedRangeSizeAvg :: DeviceSize
-  , -- No documentation found for Nested "VmaStatInfo" "unusedRangeSizeMax"
+  , 
     unusedRangeSizeMax :: DeviceSize
   }
   deriving (Typeable)
@@ -3975,59 +2613,18 @@ instance Zero StatInfo where
 --
 -- Parameters for recording calls to VMA functions. To be used in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1ace2aa4877b16a42b0b7673d4e26000ee VmaAllocatorCreateInfo::pRecordSettings>.
---
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1af3929a1a4547c592fc0b0e55ef452828 VmaRecordFlags>
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_record_settings_1ad8fdcc92119ae7a8c08c1a564c01d63a flags>
---
---     Flags for recording. Use
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1acd24d5eb58abff7e1f43cb32a1ba1413 VmaRecordFlagBits>
---     enum.
---
--- -   const char *
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_record_settings_1a6cb1fdbf6bcb610b68f2010dd629e89d pFilePath>
---
---     Path to the file that should be written by the recording.
---
--- == Detailed Description
---
--- Parameters for recording calls to VMA functions. To be used in
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1ace2aa4877b16a42b0b7673d4e26000ee VmaAllocatorCreateInfo::pRecordSettings>.
---
--- === flags
---
--- flags
--- VmaRecordSettings
--- VmaRecordSettings
--- flags
--- @VmaRecordFlags VmaRecordSettings::flags@
---
--- Flags for recording. Use
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1acd24d5eb58abff7e1f43cb32a1ba1413 VmaRecordFlagBits>
--- enum.
---
--- === pFilePath
---
--- pFilePath
--- VmaRecordSettings
--- VmaRecordSettings
--- pFilePath
--- @const char* VmaRecordSettings::pFilePath@
---
--- Path to the file that should be written by the recording.
---
--- Suggested extension: \"csv\". If the file already exists, it will be
--- overwritten. It will be opened for the whole time
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator VmaAllocator>
--- object is alive. If opening this file fails, creation of the whole
--- allocator object fails.
---
--- The documentation for this struct was generated from the following file:
---
--- vk_mem_alloc.h
 data RecordSettings = RecordSettings
-  { -- No documentation found for Nested "VmaRecordSettings" "flags"
+  { -- | Flags for recording. Use
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1acd24d5eb58abff7e1f43cb32a1ba1413 VmaRecordFlagBits>
+    -- enum.
     flags :: RecordFlags
-  , -- No documentation found for Nested "VmaRecordSettings" "pFilePath"
+  , -- | Path to the file that should be written by the recording.
+    --
+    -- Suggested extension: \"csv\". If the file already exists, it will be
+    -- overwritten. It will be opened for the whole time
+    -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator VmaAllocator>
+    -- object is alive. If opening this file fails, creation of the whole
+    -- allocator object fails.
     filePath :: ByteString
   }
   deriving (Typeable)
@@ -4065,108 +2662,38 @@ instance Zero RecordSettings where
 --
 -- Statistics of current memory usage and available budget, in bytes, for
 -- specific memory heap.
---
--- -   VkDeviceSize
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_budget_1a58b492901baab685f466199124e514a0 blockBytes>
---
---     Sum size of all @VkDeviceMemory@ blocks allocated from particular
---     heap, in bytes.
---
--- -   VkDeviceSize
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_budget_1a7e2a6583ebd63e194951c542563804d8 allocationBytes>
---
---     Sum size of all allocations created in particular heap, in bytes.
---
--- -   VkDeviceSize
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_budget_1a84dd1ecca8b0110259eb206dbadb11f6 usage>
---
---     Estimated current memory usage of the program, in bytes.
---
--- -   VkDeviceSize
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_budget_1ab82e1d1754c2d210d0bdf90220bc6cdd budget>
---
---     Estimated amount of memory available to the program, in bytes.
---
--- == Detailed Description
---
--- Statistics of current memory usage and available budget, in bytes, for
--- specific memory heap.
---
--- === allocationBytes
---
--- allocationBytes
--- VmaBudget
--- VmaBudget
--- allocationBytes
--- @VkDeviceSize VmaBudget::allocationBytes@
---
--- Sum size of all allocations created in particular heap, in bytes.
---
--- Usually less or equal than @blockBytes@. Difference
--- @blockBytes - allocationBytes@ is the amount of memory allocated but
--- unused - available for new allocations or wasted due to fragmentation.
---
--- It might be greater than @blockBytes@ if there are some allocations in
--- lost state, as they account to this value as well.
---
--- === blockBytes
---
--- blockBytes
--- VmaBudget
--- VmaBudget
--- blockBytes
--- @VkDeviceSize VmaBudget::blockBytes@
---
--- Sum size of all @VkDeviceMemory@ blocks allocated from particular heap,
--- in bytes.
---
--- === budget
---
--- budget
--- VmaBudget
--- VmaBudget
--- budget
--- @VkDeviceSize VmaBudget::budget@
---
--- Estimated amount of memory available to the program, in bytes.
---
--- Fetched from system using @VK_EXT_memory_budget@ extension if enabled.
---
--- It might be different (most probably smaller) than
--- @VkMemoryHeap::size[heapIndex]@ due to factors external to the program,
--- like other programs also consuming system resources. Difference
--- @budget - usage@ is the amount of additional memory that can probably be
--- allocated without problems. Exceeding the budget may result in various
--- problems.
---
--- === usage
---
--- usage
--- VmaBudget
--- VmaBudget
--- usage
--- @VkDeviceSize VmaBudget::usage@
---
--- Estimated current memory usage of the program, in bytes.
---
--- Fetched from system using @VK_EXT_memory_budget@ extension if enabled.
---
--- It might be different than @blockBytes@ (usually higher) due to
--- additional implicit objects also occupying the memory, like swapchain,
--- pipelines, descriptor heaps, command buffers, or @VkDeviceMemory@ blocks
--- allocated outside of this library, if any.
---
--- The documentation for this struct was generated from the following file:
---
--- vk_mem_alloc.h
 data Budget = Budget
-  { -- No documentation found for Nested "VmaBudget" "blockBytes"
+  { -- | Sum size of all @VkDeviceMemory@ blocks allocated from particular heap,
+    -- in bytes.
     blockBytes :: DeviceSize
-  , -- No documentation found for Nested "VmaBudget" "allocationBytes"
+  , -- | Sum size of all allocations created in particular heap, in bytes.
+    --
+    -- Usually less or equal than @blockBytes@. Difference
+    -- @blockBytes - allocationBytes@ is the amount of memory allocated but
+    -- unused - available for new allocations or wasted due to fragmentation.
+    --
+    -- It might be greater than @blockBytes@ if there are some allocations in
+    -- lost state, as they account to this value as well.
     allocationBytes :: DeviceSize
-  , -- No documentation found for Nested "VmaBudget" "usage"
+  , -- | Estimated current memory usage of the program, in bytes.
+    --
+    -- Fetched from system using @VK_EXT_memory_budget@ extension if enabled.
+    --
+    -- It might be different than @blockBytes@ (usually higher) due to
+    -- additional implicit objects also occupying the memory, like swapchain,
+    -- pipelines, descriptor heaps, command buffers, or @VkDeviceMemory@ blocks
+    -- allocated outside of this library, if any.
     usage :: DeviceSize
-  , -- No documentation found for Nested "VmaBudget" "budget"
+  , -- | Estimated amount of memory available to the program, in bytes.
+    --
+    -- Fetched from system using @VK_EXT_memory_budget@ extension if enabled.
+    --
+    -- It might be different (most probably smaller) than
+    -- @VkMemoryHeap::size[heapIndex]@ due to factors external to the program,
+    -- like other programs also consuming system resources. Difference
+    -- @budget - usage@ is the amount of additional memory that can probably be
+    -- allocated without problems. Exceeding the budget may result in various
+    -- problems.
     budget :: DeviceSize
   }
   deriving (Typeable)
@@ -4217,71 +2744,17 @@ instance Zero Budget where
 -- Set of callbacks that the library will call for @vkAllocateMemory@ and
 -- @vkFreeMemory@.
 --
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a7e1ed85f7799600b03ad51a77acc21f3 PFN_vmaAllocateDeviceMemoryFunction>
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_device_memory_callbacks_1a4f17f7b255101e733b44d5633aceabfb pfnAllocate>
---
---     Optional, can be null.
---
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a154ccaaf53dc2c36378f80f0c4f3679b PFN_vmaFreeDeviceMemoryFunction>
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_device_memory_callbacks_1abe8a3328bbc916f6f712fdb6b299444c pfnFree>
---
---     Optional, can be null.
---
--- -   void *
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_device_memory_callbacks_1a24052de0937ddd54015a2df0363903c6 pUserData>
---
---     Optional, can be null.
---
--- == Detailed Description
---
--- Set of callbacks that the library will call for @vkAllocateMemory@ and
--- @vkFreeMemory@.
---
 -- Provided for informative purpose, e.g. to gather statistics about number
 -- of allocations or total amount of memory allocated in Vulkan.
 --
 -- Used in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocator_create_info_1af1380969b5e1ea4c3184a877892d260e VmaAllocatorCreateInfo::pDeviceMemoryCallbacks>.
---
--- === pfnAllocate
---
--- pfnAllocate
--- VmaDeviceMemoryCallbacks
--- VmaDeviceMemoryCallbacks
--- pfnAllocate
--- @PFN_vmaAllocateDeviceMemoryFunction VmaDeviceMemoryCallbacks::pfnAllocate@
---
--- Optional, can be null.
---
--- === pfnFree
---
--- pfnFree
--- VmaDeviceMemoryCallbacks
--- VmaDeviceMemoryCallbacks
--- pfnFree
--- @PFN_vmaFreeDeviceMemoryFunction VmaDeviceMemoryCallbacks::pfnFree@
---
--- Optional, can be null.
---
--- === pUserData
---
--- pUserData
--- VmaDeviceMemoryCallbacks
--- VmaDeviceMemoryCallbacks
--- pUserData
--- @void* VmaDeviceMemoryCallbacks::pUserData@
---
--- Optional, can be null.
---
--- The documentation for this struct was generated from the following file:
---
--- vk_mem_alloc.h
 data DeviceMemoryCallbacks = DeviceMemoryCallbacks
-  { -- No documentation found for Nested "VmaDeviceMemoryCallbacks" "pfnAllocate"
+  { -- | Optional, can be null.
     pfnAllocate :: PFN_vmaAllocateDeviceMemoryFunction
-  , -- No documentation found for Nested "VmaDeviceMemoryCallbacks" "pfnFree"
+  , -- | Optional, can be null.
     pfnFree :: PFN_vmaFreeDeviceMemoryFunction
-  , -- No documentation found for Nested "VmaDeviceMemoryCallbacks" "pUserData"
+  , -- | Optional, can be null.
     userData :: Ptr ()
   }
   deriving (Typeable)
@@ -4320,49 +2793,12 @@ instance Zero DeviceMemoryCallbacks where
 
 
 -- | VmaDefragmentationPassMoveInfo
---
--- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_allocation VmaAllocation>
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_pass_move_info_1ae885c861c2dd8d622e6c19e281d035cc allocation>
---
--- -   VkDeviceMemory
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_pass_move_info_1a06eb0c8690aa0d3478a036753492e769 memory>
---
--- -   VkDeviceSize
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_pass_move_info_1a8ab4508bc03625b0653c880576be96c6 offset>
---
--- === allocation
---
--- allocation
--- VmaDefragmentationPassMoveInfo
--- VmaDefragmentationPassMoveInfo
--- allocation
--- @VmaAllocation VmaDefragmentationPassMoveInfo::allocation@
---
--- === memory
---
--- memory
--- VmaDefragmentationPassMoveInfo
--- VmaDefragmentationPassMoveInfo
--- memory
--- @VkDeviceMemory VmaDefragmentationPassMoveInfo::memory@
---
--- === offset
---
--- offset
--- VmaDefragmentationPassMoveInfo
--- VmaDefragmentationPassMoveInfo
--- offset
--- @VkDeviceSize VmaDefragmentationPassMoveInfo::offset@
---
--- The documentation for this struct was generated from the following file:
---
--- vk_mem_alloc.h
 data DefragmentationPassMoveInfo = DefragmentationPassMoveInfo
-  { -- No documentation found for Nested "VmaDefragmentationPassMoveInfo" "allocation"
+  { 
     allocation :: Allocation
-  , -- No documentation found for Nested "VmaDefragmentationPassMoveInfo" "memory"
+  , 
     memory :: DeviceMemory
-  , -- No documentation found for Nested "VmaDefragmentationPassMoveInfo" "offset"
+  , 
     offset :: DeviceSize
   }
   deriving (Typeable)
@@ -4406,8 +2842,6 @@ instance Zero DefragmentationPassMoveInfo where
 
 -- | VmaStats
 --
--- General statistics from current state of Allocator.
---
 -- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_stat_info VmaStatInfo>
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_stats_1a13e3caf754be79352c42408756309331 memoryType>
 --     [VK_MAX_MEMORY_TYPES]
@@ -4418,8 +2852,6 @@ instance Zero DefragmentationPassMoveInfo where
 --
 -- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_stat_info VmaStatInfo>
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_stats_1a2e8f5b3353f2fefef3c27f29e245a1f9 total>
---
--- == Detailed Description
 --
 -- General statistics from current state of Allocator.
 --
@@ -4438,24 +2870,12 @@ instance Zero DefragmentationPassMoveInfo where
 -- VmaStats
 -- memoryType
 -- @VmaStatInfo VmaStats::memoryType[VK_MAX_MEMORY_TYPES]@
---
--- === total
---
--- total
--- VmaStats
--- VmaStats
--- total
--- @VmaStatInfo VmaStats::total@
---
--- The documentation for this struct was generated from the following file:
---
--- vk_mem_alloc.h
 data Stats = Stats
   { -- No documentation found for Nested "VmaStats" "memoryType"
     memoryType :: Vector StatInfo
   , -- No documentation found for Nested "VmaStats" "memoryHeap"
     memoryHeap :: Vector StatInfo
-  , -- No documentation found for Nested "VmaStats" "total"
+  , 
     total :: StatInfo
   }
   deriving (Typeable)
@@ -4509,10 +2929,6 @@ instance Zero Stats where
 --
 -- Represents custom memory pool.
 --
--- == Detailed Description
---
--- Represents custom memory pool.
---
 -- Fill structure
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_pool_create_info VmaPoolCreateInfo>
 -- and call function
@@ -4523,10 +2939,6 @@ instance Zero Stats where
 --
 -- For more information see
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_choosing_memory_type_1choosing_memory_type_custom_memory_pools Custom memory pools>.
---
--- The documentation for this struct was generated from the following file:
---
--- vk_mem_alloc.h
 newtype Pool = Pool Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
@@ -4539,11 +2951,6 @@ instance Show Pool where
 -- Represents Opaque object that represents started defragmentation
 -- process.
 --
--- == Detailed Description
---
--- Represents Opaque object that represents started defragmentation
--- process.
---
 -- Fill structure
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_struct_vma_defragmentation_info2 VmaDefragmentationInfo2>
 -- and call function
@@ -4551,10 +2958,6 @@ instance Show Pool where
 -- to create it. Call function
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_vk__mem__alloc_8h_1a8774e20e91e245aae959ba63efa15dd2 vmaDefragmentationEnd()>
 -- to destroy it.
---
--- The documentation for this struct was generated from the following file:
---
--- vk_mem_alloc.h
 newtype DefragmentationContext = DefragmentationContext Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
@@ -4563,10 +2966,6 @@ instance Show DefragmentationContext where
 
 
 -- | VmaAllocation
---
--- Represents single memory allocation.
---
--- == Detailed Description
 --
 -- Represents single memory allocation.
 --
@@ -4594,10 +2993,6 @@ instance Show DefragmentationContext where
 --
 -- Some kinds allocations can be in lost state. For more information, see
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#_lost_allocations Lost allocations>.
---
--- The documentation for this struct was generated from the following file:
---
--- vk_mem_alloc.h
 newtype Allocation = Allocation Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)
@@ -4606,10 +3001,6 @@ instance Show Allocation where
 
 
 -- | VmaAllocator
---
--- Represents main object of this library initialized.
---
--- == Detailed Description
 --
 -- Represents main object of this library initialized.
 --
@@ -4624,10 +3015,6 @@ instance Show Allocation where
 -- It is recommended to create just one object of this type per @VkDevice@
 -- object, right after Vulkan is initialized and keep it alive until before
 -- Vulkan device is destroyed.
---
--- The documentation for this struct was generated from the following file:
---
--- vk_mem_alloc.h
 newtype Allocator = Allocator Word64
   deriving newtype (Eq, Ord, Storable, Zero)
   deriving anyclass (IsHandle)

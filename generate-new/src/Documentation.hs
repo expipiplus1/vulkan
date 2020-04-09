@@ -7,6 +7,8 @@ module Documentation
   , splitDocumentation
   , guessDocumentee
   , iterateSuffixesM
+  , iterateSuffixes
+  , pattern Section
   , main
   ) where
 
@@ -67,7 +69,7 @@ guessDocumentee isValid (Pandoc _ bs) = do
 splitDocumentation :: CName -> Pandoc -> Either Text (Pandoc, [Documentation])
 splitDocumentation parent (Pandoc meta bs) = do
   (es, bs') <- iterateSuffixesM (splitPrefix meta) bs
-  pure (Pandoc meta bs', join (catMaybes es))
+  pure (Pandoc meta bs', join es)
   where
     splitPrefix m = \case
       -- Remove the "Document Notes" section
@@ -151,17 +153,38 @@ main = do
 -- Utils
 ----------------------------------------------------------------
 
+-- |
+-- >>> :{
+--  iterateSuffixesM
+--    (\case
+--      1 : 2 : xs -> pure @Identity (Just "one,two", xs)
+--      xs         -> pure (Nothing, xs)
+--    )
+--    [0 .. 4]
+-- :}
+-- Identity (["one,two"], [0,3,4])
 iterateSuffixesM
   :: forall m a b
    . Monad m
-  => ([a] -> m (b, [a]))
-  -- ^ A function which takes a list transforming it and returning something
+  => ([a] -> m (Maybe b, [a]))
+  -- ^ A function which takes a list and returns some @b@ and the list without
+  -- whatever prefix the @b@ is used in place of
   -> [a]
-  -- ^ A list to extract parts from
+  -- ^ A list to extract @b@s from
   -> m ([b], [a])
-  -- ^ (The list of (non-empty) extracted prefixes, the list without those
-  -- prefixes)
+  -- ^ (The list of @b@s, the list without those prefixes)
 iterateSuffixesM split' = foldrM go ([], [])
-  where
-    go :: a -> ([b], [a]) -> m ([b], [a])
-    go x (ss, xs) = first (: ss) <$> split' (x : xs)
+ where
+  go :: a -> ([b], [a]) -> m ([b], [a])
+  go x (ss, xs) = first (maybe ss (: ss)) <$> split' (x : xs)
+
+iterateSuffixes
+  :: forall a b
+   . ([a] -> (Maybe b, [a]))
+  -- ^ A function which takes a list and returns some @b@ and the list without
+  -- whatever prefix the @b@ is used in place of
+  -> [a]
+  -- ^ A list to extract @b@s from
+  -> ([b], [a])
+  -- ^ (The list of @b@s, the list without those prefixes)
+iterateSuffixes = coerce (iterateSuffixesM @Identity @a @b)

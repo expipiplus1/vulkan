@@ -76,10 +76,50 @@ splitDocumentation parent p@(Pandoc meta bs) =
         -> Para [Str s] : t
       bs -> bs
 
-    removeIncludeDirective = bottomUp $ \case
-      Para [Code _ "#include <vk_mem_alloc.h>"] : t -> t
-      t -> t
+    -- Doxygen+Pandoc results in some uninteresting type+member name garbage
+    removeUninteresting = bottomUp $ \case
+      -- documentation provenance
+      Para [Str "The", Space, Str "documentation", Space, Str "for", Space, Str "this", Space, Str "struct", Space, Str "was", Space, Str "generated", Space, Str "from", Space, Str "the", Space, Str "following", Space, Str "file:"] : Plain [Str "vk_mem_alloc.h"] : xs
+        -> xs
+      -- C stugg
+      Para [Code _ "#include <vk_mem_alloc.h>"]             : t  -> t
+      -- Boring headers
+      Header 2 _ [Str "Detailed", Space, Str "Description"] : xs -> xs
+      Header 2 _ [Str "Member", Space, Str "Data", Space, Str "Documentation"] : xs
+        -> xs
+      -- member list
+      BulletList bullets : xs | all isMemberBullet bullets -> xs
+      xs -> xs
 
-    bs' = removeIncludeDirective . replaceHeader $ bs
+    isMemberBullet = \case
+      [Para []] -> False
+      [Para ws] | Link ("", [], []) [Str _memberName] (_, _) <- List.last ws ->
+        True
+      _ -> False
+
+    -- Returns (member name, header, non garbage remainder)
+    isTypeMemberGarbage = \case
+      h@(Header 3 ("", [], []) [Str m1]) : Plain [Str m2] : Plain [Str t1] : Plain [Str t2] : Plain [Str m3] : Para [Code ("", [], []) c] : xs
+        | m1 == m2
+        , m1 == m3
+        , t1 == t2
+        , (t1 <> "::" <> m1) `T.isSuffixOf` c
+        -> Just (m1, h, xs)
+      _ -> Nothing
+
+    extractMembers = iterateSuffixes $ \case
+      xs
+        | Just (member, h, xs) <- isTypeMemberGarbage xs
+        , Section _ sectionBlocks rem <- (h : xs)
+        -> ( Just
+             (Documentation (Nested parent (CName member))
+                            (Pandoc meta sectionBlocks)
+             )
+           , rem
+           )
+      xs -> (Nothing, xs)
+
+    (ms, bs') = extractMembers . removeUninteresting . replaceHeader $ bs
   in
-    Right (Pandoc meta bs', [])
+    Right (Pandoc meta bs', ms)
+
