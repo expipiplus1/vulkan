@@ -1,8 +1,16 @@
 diff --git a/src/Language/C/Analysis/ConstEval.hs b/src/Language/C/Analysis/ConstEval.hs
-index 9af4aac..5d28c86 100644
+index 9af4aac..bbe64fb 100644
 --- a/src/Language/C/Analysis/ConstEval.hs
 +++ b/src/Language/C/Analysis/ConstEval.hs
-@@ -42,7 +42,7 @@ sizeofType md _ (DirectType TyVoid _ _) = return $ voidSize md
+@@ -3,6 +3,7 @@ module Language.C.Analysis.ConstEval where
+ 
+ import Control.Monad
+ import Data.Bits
++import Data.List (foldl')
+ import Data.Maybe
+ import qualified Data.Map as Map
+ import Language.C.Syntax.AST
+@@ -42,7 +43,7 @@ sizeofType md _ (DirectType TyVoid _ _) = return $ voidSize md
  sizeofType md _ (DirectType (TyIntegral it) _ _) = return $ iSize md it
  sizeofType md _ (DirectType (TyFloating ft) _ _) = return $ fSize md ft
  sizeofType md _ (DirectType (TyComplex ft) _ _) = return $ 2 * fSize md ft
@@ -11,7 +19,7 @@ index 9af4aac..5d28c86 100644
  sizeofType md _ (DirectType (TyEnum _) _ _) = return $ iSize md TyInt
  sizeofType md _ (DirectType (TyBuiltin b) _ _) = return $ builtinSize md b
  sizeofType md _ (PtrType _ _ _)  = return $ ptrSize md
-@@ -66,6 +66,7 @@ alignofType md _ (DirectType TyVoid _ _) = return $ voidAlign md
+@@ -66,6 +67,7 @@ alignofType md _ (DirectType TyVoid _ _) = return $ voidAlign md
  alignofType md _ (DirectType (TyIntegral it) _ _) = return $ iAlign md it
  alignofType md _ (DirectType (TyFloating ft) _ _) = return $ fAlign md ft
  alignofType md _ (DirectType (TyComplex ft) _ _) = return $ fAlign md ft
@@ -19,7 +27,7 @@ index 9af4aac..5d28c86 100644
  alignofType md _ (DirectType (TyEnum _) _ _) = return $ iAlign md TyInt
  alignofType md _ (DirectType (TyBuiltin b) _ _) = return $ builtinAlign md b
  alignofType md _ (PtrType _ _ _)  = return $ ptrAlign md
-@@ -75,8 +76,13 @@ alignofType md n (TypeDefType (TypeDefRef _ t _) _ _) = alignofType md n t
+@@ -75,8 +77,13 @@ alignofType md n (TypeDefType (TypeDefRef _ t _) _ _) = alignofType md n t
  alignofType _ n t = astError (nodeInfo n) $
                   "can't find alignment of type: " ++ (render . pretty) t
  
@@ -35,7 +43,7 @@ index 9af4aac..5d28c86 100644
    do dt <- getDefTable
       case lookupTag (sueRef ctr) dt of
         Just (Left _)   -> astError (nodeInfo ctr)
-@@ -84,13 +90,33 @@ compSize md ctr =
+@@ -84,13 +91,33 @@ compSize md ctr =
         Just (Right (CompDef (CompType _ tag ms _ ni))) ->
           do let ts = map declType ms
              sizes <- mapM (sizeofType md ni) ts
@@ -51,12 +59,12 @@ index 9af4aac..5d28c86 100644
 +                  StructTag ->
 +                    let sizeAndNextAlignment =
 +                          zip sizes (tail aligns ++ [alignment])
-+                        offsets = scanl
++                        offsets = foldl'
 +                          (\offset (memberSize, nextAlign)
 +                           -> roundToAlignment nextAlign (offset + memberSize))
 +                          0
 +                          sizeAndNextAlignment
-+                    in last offsets
++                    in offsets
 +            return (size, alignment)
 +       Just (Right (EnumDef _)) -> return $ (iSize md TyInt, iAlign md TyInt)
         Nothing         -> astError (nodeInfo ctr) "unknown composite"
