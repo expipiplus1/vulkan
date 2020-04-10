@@ -61,8 +61,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     creates the command pool.
+-- -   @device@ is the logical device that creates the command pool.
 --
 -- -   @pCreateInfo@ is a pointer to a 'CommandPoolCreateInfo' structure
 --     specifying the state of the command pool object.
@@ -78,13 +77,12 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   @pCreateInfo->queueFamilyIndex@ /must/ be the index of a queue
---     family available in the logical device
---     'Graphics.Vulkan.Core10.Handles.Device'.
+--     family available in the logical device @device@.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'CommandPoolCreateInfo' structure
@@ -149,11 +147,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     destroys the command pool.
+-- -   @device@ is the logical device that destroys the command pool.
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandPool' is the handle of the
---     command pool to destroy.
+-- -   @commandPool@ is the handle of the command pool to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
@@ -168,49 +164,46 @@ foreign import ccall
 -- Any primary command buffer allocated from another
 -- 'Graphics.Vulkan.Core10.Handles.CommandPool' that is in the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording or executable state>
--- and has a secondary command buffer allocated from
--- 'Graphics.Vulkan.Core10.Handles.CommandPool' recorded into it, becomes
+-- and has a secondary command buffer allocated from @commandPool@ recorded
+-- into it, becomes
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle invalid>.
 --
 -- == Valid Usage
 --
 -- -   All 'Graphics.Vulkan.Core10.Handles.CommandBuffer' objects allocated
---     from 'Graphics.Vulkan.Core10.Handles.CommandPool' /must/ not be in
---     the
+--     from @commandPool@ /must/ not be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>.
 --
 -- -   If 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.CommandPool' was
---     created, a compatible set of callbacks /must/ be provided here
+--     were provided when @commandPool@ was created, a compatible set of
+--     callbacks /must/ be provided here
 --
 -- -   If no
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.CommandPool' was
---     created, @pAllocator@ /must/ be @NULL@
+--     were provided when @commandPool@ was created, @pAllocator@ /must/ be
+--     @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.CommandPool' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.CommandPool' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.CommandPool' handle
+-- -   If @commandPool@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @commandPool@
+--     /must/ be a valid 'Graphics.Vulkan.Core10.Handles.CommandPool'
+--     handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
 --     pointer to a valid
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
 --     structure
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.CommandPool' is a valid handle,
---     it /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   If @commandPool@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandPool' /must/
---     be externally synchronized
+-- -   Host access to @commandPool@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -238,13 +231,11 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the command pool.
+-- -   @device@ is the logical device that owns the command pool.
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandPool' is the command pool to
---     reset.
+-- -   @commandPool@ is the command pool to reset.
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+-- -   @flags@ is a bitmask of
 --     'Graphics.Vulkan.Core10.Enums.CommandPoolResetFlagBits.CommandPoolResetFlagBits'
 --     controlling the reset operation.
 --
@@ -259,38 +250,34 @@ foreign import ccall
 -- Any primary command buffer allocated from another
 -- 'Graphics.Vulkan.Core10.Handles.CommandPool' that is in the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording or executable state>
--- and has a secondary command buffer allocated from
--- 'Graphics.Vulkan.Core10.Handles.CommandPool' recorded into it, becomes
+-- and has a secondary command buffer allocated from @commandPool@ recorded
+-- into it, becomes
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle invalid>.
 --
 -- == Valid Usage
 --
 -- -   All 'Graphics.Vulkan.Core10.Handles.CommandBuffer' objects allocated
---     from 'Graphics.Vulkan.Core10.Handles.CommandPool' /must/ not be in
---     the
+--     from @commandPool@ /must/ not be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandPool' /must/ be a valid
+-- -   @commandPool@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandPool' handle
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of
+-- -   @flags@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core10.Enums.CommandPoolResetFlagBits.CommandPoolResetFlagBits'
 --     values
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandPool' /must/ have been
---     created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   @commandPool@ /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandPool' /must/
---     be externally synchronized
+-- -   Host access to @commandPool@ /must/ be externally synchronized
 --
 -- == Return Codes
 --
@@ -323,7 +310,7 @@ resetCommandPool device commandPool flags = do
 --
 -- -   If the protected memory feature is not enabled, the
 --     'Graphics.Vulkan.Core10.Enums.CommandPoolCreateFlagBits.COMMAND_POOL_CREATE_PROTECTED_BIT'
---     bit of 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not be set.
+--     bit of @flags@ /must/ not be set.
 --
 -- == Valid Usage (Implicit)
 --
@@ -332,8 +319,7 @@ resetCommandPool device commandPool flags = do
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of
+-- -   @flags@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core10.Enums.CommandPoolCreateFlagBits.CommandPoolCreateFlagBits'
 --     values
 --
@@ -343,7 +329,7 @@ resetCommandPool device commandPool flags = do
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createCommandPool'
 data CommandPoolCreateInfo = CommandPoolCreateInfo
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+  { -- | @flags@ is a bitmask of
     -- 'Graphics.Vulkan.Core10.Enums.CommandPoolCreateFlagBits.CommandPoolCreateFlagBits'
     -- indicating usage behavior for the pool and command buffers allocated
     -- from it.

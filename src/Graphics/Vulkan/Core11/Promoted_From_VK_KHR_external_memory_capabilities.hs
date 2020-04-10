@@ -79,8 +79,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device from which to query the buffer capabilities.
+-- -   @physicalDevice@ is the physical device from which to query the
+--     buffer capabilities.
 --
 -- -   @pExternalBufferInfo@ is a pointer to a
 --     'PhysicalDeviceExternalBufferInfo' structure describing the
@@ -192,9 +192,8 @@ instance Zero ExternalMemoryProperties where
 -- will behave as if 'PhysicalDeviceExternalImageFormatInfo' was not
 -- present, and 'ExternalImageFormatProperties' will be ignored.
 --
--- If @handleType@ is not compatible with the
--- 'Graphics.Vulkan.Core10.Enums.Format.Format', @type@, @tiling@, @usage@,
--- and 'Graphics.Vulkan.Core10.BaseType.Flags' specified in
+-- If @handleType@ is not compatible with the @format@, @type@, @tiling@,
+-- @usage@, and @flags@ specified in
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2',
 -- then
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
@@ -264,7 +263,7 @@ instance Zero PhysicalDeviceExternalImageFormatInfo where
 -- 'ExternalMemoryProperties',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data ExternalImageFormatProperties = ExternalImageFormatProperties
-  { -- | 'ExternalMemoryProperties' is a 'ExternalMemoryProperties' structure
+  { -- | @externalMemoryProperties@ is a 'ExternalMemoryProperties' structure
     -- specifying various capabilities of the external handle type when used
     -- with the specified image creation parameters.
     externalMemoryProperties :: ExternalMemoryProperties }
@@ -311,7 +310,7 @@ instance Zero ExternalImageFormatProperties where
 -- 'getPhysicalDeviceExternalBufferProperties',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_external_memory_capabilities.getPhysicalDeviceExternalBufferPropertiesKHR'
 data PhysicalDeviceExternalBufferInfo = PhysicalDeviceExternalBufferInfo
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid combination of
+  { -- | @flags@ /must/ be a valid combination of
     -- 'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BufferCreateFlagBits'
     -- values
     flags :: BufferCreateFlags
@@ -376,7 +375,7 @@ instance Zero PhysicalDeviceExternalBufferInfo where
 -- 'getPhysicalDeviceExternalBufferProperties',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_external_memory_capabilities.getPhysicalDeviceExternalBufferPropertiesKHR'
 data ExternalBufferProperties = ExternalBufferProperties
-  { -- | 'ExternalMemoryProperties' is a 'ExternalMemoryProperties' structure
+  { -- | @externalMemoryProperties@ is a 'ExternalMemoryProperties' structure
     -- specifying various capabilities of the external handle type when used
     -- with the specified buffer creation parameters.
     externalMemoryProperties :: ExternalMemoryProperties }
@@ -460,15 +459,13 @@ instance Zero ExternalBufferProperties where
 -- is running on the Windows operating system, the contents of @deviceLUID@
 -- /can/ be cast to an @LUID@ object and /must/ be equal to the locally
 -- unique identifier of a @IDXGIAdapter1@ object that corresponds to
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'. If @deviceLUIDValid@ is
+-- @physicalDevice@. If @deviceLUIDValid@ is
 -- 'Graphics.Vulkan.Core10.BaseType.TRUE', @deviceNodeMask@ /must/ contain
 -- exactly one bit. If Vulkan is running on an operating system that
--- supports the Direct3D 12 API and
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' corresponds to an
+-- supports the Direct3D 12 API and @physicalDevice@ corresponds to an
 -- individual device in a linked device adapter, @deviceNodeMask@
--- identifies the Direct3D 12 node corresponding to
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'. Otherwise,
--- @deviceNodeMask@ /must/ be @1@.
+-- identifies the Direct3D 12 node corresponding to @physicalDevice@.
+-- Otherwise, @deviceNodeMask@ /must/ be @1@.
 --
 -- Note
 --

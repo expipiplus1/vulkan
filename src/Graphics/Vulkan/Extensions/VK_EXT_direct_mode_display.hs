@@ -30,11 +30,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' The physical device
---     the display is on.
+-- -   @physicalDevice@ The physical device the display is on.
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' The display to release
---     control of.
+-- -   @display@ The display to release control of.
 --
 -- == Return Codes
 --

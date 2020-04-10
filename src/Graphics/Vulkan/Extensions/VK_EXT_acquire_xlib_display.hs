@@ -50,29 +50,24 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' The physical device
---     the display is on.
+-- -   @physicalDevice@ The physical device the display is on.
 --
--- -   @dpy@ A connection to the X11 server that currently owns
---     'Graphics.Vulkan.Extensions.WSITypes.Display'.
+-- -   @dpy@ A connection to the X11 server that currently owns @display@.
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' The display the caller
---     wishes to control in Vulkan.
+-- -   @display@ The display the caller wishes to control in Vulkan.
 --
 -- = Description
 --
 -- All permissions necessary to control the display are granted to the
--- Vulkan instance associated with
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' until the display is
+-- Vulkan instance associated with @physicalDevice@ until the display is
 -- released or the X11 connection specified by @dpy@ is terminated.
 -- Permission to access the display /may/ be temporarily revoked during
 -- periods when the X11 server from which control was acquired itself loses
--- access to 'Graphics.Vulkan.Extensions.WSITypes.Display'. During such
--- periods, operations which require access to the display /must/ fail with
--- an approriate error code. If the X11 server associated with @dpy@ does
--- not own 'Graphics.Vulkan.Extensions.WSITypes.Display', or if permission
--- to access it has already been acquired by another entity, the call
--- /must/ return the error code
+-- access to @display@. During such periods, operations which require
+-- access to the display /must/ fail with an approriate error code. If the
+-- X11 server associated with @dpy@ does not own @display@, or if
+-- permission to access it has already been acquired by another entity, the
+-- call /must/ return the error code
 -- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'.
 --
 -- Note
@@ -113,8 +108,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' The physical device
---     to query the display handle on.
+-- -   @physicalDevice@ The physical device to query the display handle on.
 --
 -- -   @dpy@ A connection to the X11 server from which @rrOutput@ was
 --     queried.
@@ -128,8 +122,7 @@ foreign import ccall
 -- = Description
 --
 -- If there is no 'Graphics.Vulkan.Extensions.Handles.DisplayKHR'
--- corresponding to @rrOutput@ on
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
+-- corresponding to @rrOutput@ on @physicalDevice@,
 -- 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ be returned in
 -- @pDisplay@.
 --

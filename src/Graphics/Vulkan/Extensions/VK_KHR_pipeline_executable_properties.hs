@@ -114,8 +114,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the device that created
---     the pipeline.
+-- -   @device@ is the device that created the pipeline.
 --
 -- -   @pPipelineInfo@ describes the pipeline being queried.
 --
@@ -142,14 +141,13 @@ foreign import ccall
 -- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
 --     /must/ be enabled.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Pipeline' member of @pPipelineInfo@
---     /must/ have been created with
---     'Graphics.Vulkan.Core10.Handles.Device'.
+-- -   @pipeline@ member of @pPipelineInfo@ /must/ have been created with
+--     @device@.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pPipelineInfo@ /must/ be a valid pointer to a valid
 --     'PipelineInfoKHR' structure
@@ -209,8 +207,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the device that created
---     the pipeline.
+-- -   @device@ is the device that created the pipeline.
 --
 -- -   @pExecutableInfo@ describes the pipeline executable being queried.
 --
@@ -238,21 +235,19 @@ foreign import ccall
 -- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
 --     /must/ be enabled.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Pipeline' member of
---     @pExecutableInfo@ /must/ have been created with
---     'Graphics.Vulkan.Core10.Handles.Device'.
+-- -   @pipeline@ member of @pExecutableInfo@ /must/ have been created with
+--     @device@.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Pipeline' member of
---     @pExecutableInfo@ /must/ have been created with
+-- -   @pipeline@ member of @pExecutableInfo@ /must/ have been created with
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_CAPTURE_STATISTICS_BIT_KHR'
---     set in the 'Graphics.Vulkan.Core10.BaseType.Flags' field of
+--     set in the @flags@ field of
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' or
 --     'Graphics.Vulkan.Core10.Pipeline.ComputePipelineCreateInfo'.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pExecutableInfo@ /must/ be a valid pointer to a valid
 --     'PipelineExecutableInfoKHR' structure
@@ -312,8 +307,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the device that created
---     the pipeline.
+-- -   @device@ is the device that created the pipeline.
 --
 -- -   @pExecutableInfo@ describes the pipeline executable being queried.
 --
@@ -349,21 +343,19 @@ foreign import ccall
 -- -   <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineExecutableInfo pipelineExecutableInfo>
 --     /must/ be enabled.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Pipeline' member of
---     @pExecutableInfo@ /must/ have been created with
---     'Graphics.Vulkan.Core10.Handles.Device'.
+-- -   @pipeline@ member of @pExecutableInfo@ /must/ have been created with
+--     @device@.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Pipeline' member of
---     @pExecutableInfo@ /must/ have been created with
+-- -   @pipeline@ member of @pExecutableInfo@ /must/ have been created with
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_CAPTURE_INTERNAL_REPRESENTATIONS_BIT_KHR'
---     set in the 'Graphics.Vulkan.Core10.BaseType.Flags' field of
+--     set in the @flags@ field of
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo' or
 --     'Graphics.Vulkan.Core10.Pipeline.ComputePipelineCreateInfo'.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pExecutableInfo@ /must/ be a valid pointer to a valid
 --     'PipelineExecutableInfoKHR' structure
@@ -488,8 +480,8 @@ instance Zero PhysicalDevicePipelineExecutablePropertiesFeaturesKHR where
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getPipelineExecutablePropertiesKHR'
 data PipelineInfoKHR = PipelineInfoKHR
-  { -- | 'Graphics.Vulkan.Core10.Handles.Pipeline' /must/ be a valid
-    -- 'Graphics.Vulkan.Core10.Handles.Pipeline' handle
+  { -- | @pipeline@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Pipeline'
+    -- handle
     pipeline :: Pipeline }
   deriving (Typeable)
 deriving instance Show PipelineInfoKHR
@@ -629,13 +621,12 @@ instance Zero PipelineExecutablePropertiesKHR where
 -- 'getPipelineExecutableInternalRepresentationsKHR',
 -- 'getPipelineExecutableStatisticsKHR'
 data PipelineExecutableInfoKHR = PipelineExecutableInfoKHR
-  { -- | 'Graphics.Vulkan.Core10.Handles.Pipeline' /must/ be a valid
-    -- 'Graphics.Vulkan.Core10.Handles.Pipeline' handle
+  { -- | @pipeline@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Pipeline'
+    -- handle
     pipeline :: Pipeline
   , -- | @executableIndex@ /must/ be less than the number of executables
-    -- associated with 'Graphics.Vulkan.Core10.Handles.Pipeline' as returned in
-    -- the @pExecutableCount@ parameter of
-    -- 'getPipelineExecutablePropertiesKHR'.
+    -- associated with @pipeline@ as returned in the @pExecutableCount@
+    -- parameter of 'getPipelineExecutablePropertiesKHR'.
     executableIndex :: Word32
   }
   deriving (Typeable)
@@ -699,9 +690,8 @@ data PipelineExecutableStatisticKHR = PipelineExecutableStatisticKHR
     -- containing a null-terminated UTF-8 string which is a human readable
     -- description for this statistic.
     description :: ByteString
-  , -- | 'Graphics.Vulkan.Core10.Enums.Format.Format' is a
-    -- 'PipelineExecutableStatisticFormatKHR' value specifying the format of
-    -- the data found in @value@.
+  , -- | @format@ is a 'PipelineExecutableStatisticFormatKHR' value specifying
+    -- the format of the data found in @value@.
     format :: PipelineExecutableStatisticFormatKHR
   , -- | @value@ is the value of this statistic.
     value :: PipelineExecutableStatisticValueKHR

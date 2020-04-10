@@ -77,8 +77,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     created the device memory being exported.
+-- -   @device@ is the logical device that created the device memory being
+--     exported.
 --
 -- -   @pGetWin32HandleInfo@ is a pointer to a
 --     'MemoryGetWin32HandleInfoKHR' structure containing parameters of the
@@ -132,8 +132,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     will be importing @handle@.
+-- -   @device@ is the logical device that will be importing @handle@.
 --
 -- -   @handleType@ is the type of the handle @handle@.
 --
@@ -192,7 +191,7 @@ getMemoryWin32HandlePropertiesKHR device handleType handle = evalContT $ do
 --
 -- -   The memory from which @handle@ was exported, or the memory named by
 --     @name@ /must/ have been created on the same underlying physical
---     device as 'Graphics.Vulkan.Core10.Handles.Device'.
+--     device as @device@.
 --
 -- -   If @handleType@ is not @0@, it /must/ be defined as an NT handle or
 --     a global share handle.

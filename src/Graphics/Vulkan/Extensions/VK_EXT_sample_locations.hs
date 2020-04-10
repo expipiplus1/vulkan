@@ -78,8 +78,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command will be recorded.
+-- -   @commandBuffer@ is the command buffer into which the command will be
+--     recorded.
 --
 -- -   @pSampleLocationsInfo@ is the sample locations state to set.
 --
@@ -102,27 +102,25 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pSampleLocationsInfo@ /must/ be a valid pointer to a valid
 --     'SampleLocationsInfoEXT' structure
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics operations
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -158,9 +156,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device from which to query the additional multisampling
---     capabilities.
+-- -   @physicalDevice@ is the physical device from which to query the
+--     additional multisampling capabilities.
 --
 -- -   @samples@ is the sample count to query the capabilities for.
 --
@@ -372,7 +369,7 @@ data AttachmentSampleLocationsEXT = AttachmentSampleLocationsEXT
   { -- | @attachmentIndex@ /must/ be less than the @attachmentCount@ specified in
     -- 'Graphics.Vulkan.Core10.Pass.RenderPassCreateInfo' the render pass
     -- specified by
-    -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo'::'Graphics.Vulkan.Core10.Handles.RenderPass'
+    -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo'::@renderPass@
     -- was created with
     attachmentIndex :: Word32
   , -- | @sampleLocationsInfo@ /must/ be a valid 'SampleLocationsInfoEXT'
@@ -431,7 +428,7 @@ data SubpassSampleLocationsEXT = SubpassSampleLocationsEXT
   { -- | @subpassIndex@ /must/ be less than the @subpassCount@ specified in
     -- 'Graphics.Vulkan.Core10.Pass.RenderPassCreateInfo' the render pass
     -- specified by
-    -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo'::'Graphics.Vulkan.Core10.Handles.RenderPass'
+    -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo'::@renderPass@
     -- was created with
     subpassIndex :: Word32
   , -- | @sampleLocationsInfo@ /must/ be a valid 'SampleLocationsInfoEXT'

@@ -98,9 +98,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device that will be associated with the swapchain to be created, as
---     described for
+-- -   @physicalDevice@ is the physical device that will be associated with
+--     the swapchain to be created, as described for
 --     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
 --
 -- -   @pSurfaceInfo@ is a pointer to a 'PhysicalDeviceSurfaceInfo2KHR'
@@ -130,7 +129,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pSurfaceInfo@ /must/ be a valid pointer to a valid
@@ -180,9 +179,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device that will be associated with the swapchain to be created, as
---     described for
+-- -   @physicalDevice@ is the physical device that will be associated with
+--     the swapchain to be created, as described for
 --     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
 --
 -- -   @pSurfaceInfo@ is a pointer to a 'PhysicalDeviceSurfaceInfo2KHR'
@@ -218,14 +216,14 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @pSurfaceInfo->surface@ must be supported by
---     'Graphics.Vulkan.Core10.Handles.PhysicalDevice', as reported by
+-- -   @pSurfaceInfo->surface@ must be supported by @physicalDevice@, as
+--     reported by
 --     'Graphics.Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
 --     or an equivalent platform-specific mechanism.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pSurfaceInfo@ /must/ be a valid pointer to a valid

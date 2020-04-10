@@ -54,8 +54,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the device associated
---     with @swapChain@.
+-- -   @device@ is the device associated with @swapChain@.
 --
 -- -   @swapChain@ handle to enable local dimming.
 --
@@ -64,14 +63,14 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @swapChain@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.SwapchainKHR' handle
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.Device', and @swapChain@
---     /must/ have been created, allocated, or retrieved from the same
+-- -   Both of @device@, and @swapChain@ /must/ have been created,
+--     allocated, or retrieved from the same
 --     'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Valid Usage

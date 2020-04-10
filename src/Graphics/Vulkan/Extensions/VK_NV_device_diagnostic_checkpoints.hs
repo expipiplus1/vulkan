@@ -61,29 +61,27 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     that will receive the marker
+-- -   @commandBuffer@ is the command buffer that will receive the marker
 --
 -- -   @pCheckpointMarker@ is an opaque application-provided value that
 --     will be associated with the checkpoint.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics, compute, or transfer operations
+--     @commandBuffer@ was allocated from /must/ support graphics, compute,
+--     or transfer operations
 --
 -- == Host Synchronization
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -118,9 +116,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Queue' is the
---     'Graphics.Vulkan.Core10.Handles.Queue' object the caller would like
---     to retrieve checkpoint data for
+-- -   @queue@ is the 'Graphics.Vulkan.Core10.Handles.Queue' object the
+--     caller would like to retrieve checkpoint data for
 --
 -- -   @pCheckpointDataCount@ is a pointer to an integer related to the
 --     number of checkpoint markers available or queried, as described
@@ -144,13 +141,12 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The device that 'Graphics.Vulkan.Core10.Handles.Queue' belongs to
---     /must/ be in the lost state
+-- -   The device that @queue@ belongs to /must/ be in the lost state
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Queue' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Queue' handle
+-- -   @queue@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Queue'
+--     handle
 --
 -- -   @pCheckpointDataCount@ /must/ be a valid pointer to a @uint32_t@
 --     value

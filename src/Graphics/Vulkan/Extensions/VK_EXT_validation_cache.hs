@@ -100,8 +100,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     creates the validation cache object.
+-- -   @device@ is the logical device that creates the validation cache
+--     object.
 --
 -- -   @pCreateInfo@ is a pointer to a 'ValidationCacheCreateInfoEXT'
 --     structure containing the initial parameters for the validation cache
@@ -149,8 +149,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'ValidationCacheCreateInfoEXT' structure
@@ -213,8 +213,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     destroys the validation cache object.
+-- -   @device@ is the logical device that destroys the validation cache
+--     object.
 --
 -- -   @validationCache@ is the handle of the validation cache to destroy.
 --
@@ -235,8 +235,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   If @validationCache@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @validationCache@
@@ -249,7 +249,7 @@ foreign import ccall
 --     structure
 --
 -- -   If @validationCache@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
+--     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
@@ -281,8 +281,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the validation cache.
+-- -   @device@ is the logical device that owns the validation cache.
 --
 -- -   @validationCache@ is the validation cache to retrieve data from.
 --
@@ -356,8 +355,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @validationCache@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.ValidationCacheEXT' handle
@@ -369,7 +368,7 @@ foreign import ccall
 --     @pDataSize@ bytes
 --
 -- -   @validationCache@ /must/ have been created, allocated, or retrieved
---     from 'Graphics.Vulkan.Core10.Handles.Device'
+--     from @device@
 --
 -- == Return Codes
 --
@@ -417,8 +416,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the validation cache objects.
+-- -   @device@ is the logical device that owns the validation cache
+--     objects.
 --
 -- -   @dstCache@ is the handle of the validation cache to merge results
 --     into.
@@ -443,8 +442,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @dstCache@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.ValidationCacheEXT' handle
@@ -456,10 +455,10 @@ foreign import ccall
 -- -   @srcCacheCount@ /must/ be greater than @0@
 --
 -- -   @dstCache@ /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+--     @device@
 --
 -- -   Each element of @pSrcCaches@ /must/ have been created, allocated, or
---     retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
+--     retrieved from @device@
 --
 -- == Host Synchronization
 --
@@ -509,7 +508,7 @@ mergeValidationCachesEXT device dstCache srcCaches = evalContT $ do
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+-- -   @flags@ /must/ be @0@
 --
 -- -   If @initialDataSize@ is not @0@, @pInitialData@ /must/ be a valid
 --     pointer to an array of @initialDataSize@ bytes
@@ -519,7 +518,7 @@ mergeValidationCachesEXT device dstCache srcCaches = evalContT $ do
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'ValidationCacheCreateFlagsEXT', 'createValidationCacheEXT'
 data ValidationCacheCreateInfoEXT = ValidationCacheCreateInfoEXT
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is reserved for future use.
+  { -- | @flags@ is reserved for future use.
     flags :: ValidationCacheCreateFlagsEXT
   , -- | @initialDataSize@ is the number of bytes in @pInitialData@. If
     -- @initialDataSize@ is zero, the validation cache will initially be empty.

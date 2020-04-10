@@ -170,16 +170,14 @@ instance Zero PhysicalDeviceBufferDeviceAddressFeaturesEXT where
 --
 -- = Description
 --
--- If 'Graphics.Vulkan.Core10.BaseType.DeviceAddress' is zero, no specific
--- address is requested.
+-- If @deviceAddress@ is zero, no specific address is requested.
 --
--- If 'Graphics.Vulkan.Core10.BaseType.DeviceAddress' is not zero, then it
--- /must/ be an address retrieved from an identically created buffer on the
--- same implementation. The buffer /must/ also be bound to an identically
--- created 'Graphics.Vulkan.Core10.Handles.DeviceMemory' object.
+-- If @deviceAddress@ is not zero, then it /must/ be an address retrieved
+-- from an identically created buffer on the same implementation. The
+-- buffer /must/ also be bound to an identically created
+-- 'Graphics.Vulkan.Core10.Handles.DeviceMemory' object.
 --
--- If this structure is not present, it is as if
--- 'Graphics.Vulkan.Core10.BaseType.DeviceAddress' is zero.
+-- If this structure is not present, it is as if @deviceAddress@ is zero.
 --
 -- Apps /should/ avoid creating buffers with app-provided addresses and
 -- implementation-provided addresses in the same process, to reduce the
@@ -192,8 +190,7 @@ instance Zero PhysicalDeviceBufferDeviceAddressFeaturesEXT where
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceAddress',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data BufferDeviceAddressCreateInfoEXT = BufferDeviceAddressCreateInfoEXT
-  { -- | 'Graphics.Vulkan.Core10.BaseType.DeviceAddress' is the device address
-    -- requested for the buffer.
+  { -- | @deviceAddress@ is the device address requested for the buffer.
     deviceAddress :: DeviceAddress }
   deriving (Typeable)
 deriving instance Show BufferDeviceAddressCreateInfoEXT

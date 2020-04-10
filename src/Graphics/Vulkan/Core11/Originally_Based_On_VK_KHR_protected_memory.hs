@@ -82,8 +82,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the queue.
+-- -   @device@ is the logical device that owns the queue.
 --
 -- -   @pQueueInfo@ is a pointer to a 'DeviceQueueInfo2' structure,
 --     describing the parameters used to create the device queue.
@@ -299,13 +298,11 @@ instance Zero PhysicalDeviceProtectedMemoryProperties where
 --
 -- = Description
 --
--- The queue returned by 'getDeviceQueue2' /must/ have the same
--- 'Graphics.Vulkan.Core10.BaseType.Flags' value from this structure as
--- that used at device creation time in a
+-- The queue returned by 'getDeviceQueue2' /must/ have the same @flags@
+-- value from this structure as that used at device creation time in a
 -- 'Graphics.Vulkan.Core10.Device.DeviceQueueCreateInfo' instance. If no
--- matching 'Graphics.Vulkan.Core10.BaseType.Flags' were specified at
--- device creation time then @pQueue@ will return
--- 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'.
+-- matching @flags@ were specified at device creation time then @pQueue@
+-- will return 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'.
 --
 -- == Valid Usage (Implicit)
 --
@@ -315,21 +312,19 @@ instance Zero PhysicalDeviceProtectedMemoryProperties where
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getDeviceQueue2'
 data DeviceQueueInfo2 = DeviceQueueInfo2
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid combination of
+  { -- | @flags@ /must/ be a valid combination of
     -- 'Graphics.Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DeviceQueueCreateFlagBits'
     -- values
     flags :: DeviceQueueCreateFlags
   , -- | @queueFamilyIndex@ /must/ be one of the queue family indices specified
-    -- when 'Graphics.Vulkan.Core10.Handles.Device' was created, via the
+    -- when @device@ was created, via the
     -- 'Graphics.Vulkan.Core10.Device.DeviceQueueCreateInfo' structure
     queueFamilyIndex :: Word32
   , -- | @queueIndex@ /must/ be less than the number of queues created for the
     -- specified queue family index and
     -- 'Graphics.Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DeviceQueueCreateFlags'
-    -- member 'Graphics.Vulkan.Core10.BaseType.Flags' equal to this
-    -- 'Graphics.Vulkan.Core10.BaseType.Flags' value when
-    -- 'Graphics.Vulkan.Core10.Handles.Device' was created, via the
-    -- @queueCount@ member of the
+    -- member @flags@ equal to this @flags@ value when @device@ was created,
+    -- via the @queueCount@ member of the
     -- 'Graphics.Vulkan.Core10.Device.DeviceQueueCreateInfo' structure
     queueIndex :: Word32
   }

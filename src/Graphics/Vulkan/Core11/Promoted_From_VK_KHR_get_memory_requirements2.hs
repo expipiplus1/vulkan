@@ -79,8 +79,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the buffer.
+-- -   @device@ is the logical device that owns the buffer.
 --
 -- -   @pInfo@ is a pointer to a 'BufferMemoryRequirementsInfo2' structure
 --     containing parameters required for the memory requirements query.
@@ -117,8 +116,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the image.
+-- -   @device@ is the logical device that owns the image.
 --
 -- -   @pInfo@ is a pointer to a 'ImageMemoryRequirementsInfo2' structure
 --     containing parameters required for the memory requirements query.
@@ -155,8 +153,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the image.
+-- -   @device@ is the logical device that owns the image.
 --
 -- -   @pInfo@ is a pointer to a 'ImageSparseMemoryRequirementsInfo2'
 --     structure containing parameters required for the memory requirements
@@ -171,8 +168,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pInfo@ /must/ be a valid pointer to a valid
 --     'ImageSparseMemoryRequirementsInfo2' structure
@@ -217,8 +214,8 @@ getImageSparseMemoryRequirements2 device info = evalContT $ do
 -- 'getBufferMemoryRequirements2',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2KHR'
 data BufferMemoryRequirementsInfo2 = BufferMemoryRequirementsInfo2
-  { -- | 'Graphics.Vulkan.Core10.Handles.Buffer' /must/ be a valid
-    -- 'Graphics.Vulkan.Core10.Handles.Buffer' handle
+  { -- | @buffer@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Buffer'
+    -- handle
     buffer :: Buffer }
   deriving (Typeable)
 deriving instance Show BufferMemoryRequirementsInfo2
@@ -259,15 +256,14 @@ instance Zero BufferMemoryRequirementsInfo2 where
 --
 -- == Valid Usage
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' was created with a
---     /multi-planar/ format and the
+-- -   If @image@ was created with a /multi-planar/ format and the
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
 --     flag, there /must/ be a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.ImagePlaneMemoryRequirementsInfo'
 --     included in the @pNext@ chain of the 'ImageMemoryRequirementsInfo2'
 --     structure
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' was created with
+-- -   If @image@ was created with
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
 --     and with
 --     'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
@@ -276,25 +272,24 @@ instance Zero BufferMemoryRequirementsInfo2 where
 --     included in the @pNext@ chain of the 'ImageMemoryRequirementsInfo2'
 --     structure
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' was not created with the
+-- -   If @image@ was not created with the
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
 --     flag, there /must/ not be a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.ImagePlaneMemoryRequirementsInfo'
 --     included in the @pNext@ chain of the 'ImageMemoryRequirementsInfo2'
 --     structure
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' was created with a
---     single-plane format and with any @tiling@ other than
+-- -   If @image@ was created with a single-plane format and with any
+--     @tiling@ other than
 --     'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
 --     then there /must/ not be a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.ImagePlaneMemoryRequirementsInfo'
 --     included in the @pNext@ chain of the 'ImageMemoryRequirementsInfo2'
 --     structure
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' was created with the
+-- -   If @image@ was created with the
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
---     external memory handle type, then
---     'Graphics.Vulkan.Core10.Handles.Image' /must/ be bound to memory.
+--     external memory handle type, then @image@ /must/ be bound to memory.
 --
 -- == Valid Usage (Implicit)
 --
@@ -307,8 +302,8 @@ instance Zero BufferMemoryRequirementsInfo2 where
 -- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
 --     unique
 --
--- -   'Graphics.Vulkan.Core10.Handles.Image' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Image' handle
+-- -   @image@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Image'
+--     handle
 --
 -- = See Also
 --
@@ -319,7 +314,7 @@ instance Zero BufferMemoryRequirementsInfo2 where
 data ImageMemoryRequirementsInfo2 (es :: [Type]) = ImageMemoryRequirementsInfo2
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
     next :: Chain es
-  , -- | 'Graphics.Vulkan.Core10.Handles.Image' is the image to query.
+  , -- | @image@ is the image to query.
     image :: Image
   }
   deriving (Typeable)
@@ -376,8 +371,7 @@ instance es ~ '[] => Zero (ImageMemoryRequirementsInfo2 es) where
 -- 'getImageSparseMemoryRequirements2',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_get_memory_requirements2.getImageSparseMemoryRequirements2KHR'
 data ImageSparseMemoryRequirementsInfo2 = ImageSparseMemoryRequirementsInfo2
-  { -- | 'Graphics.Vulkan.Core10.Handles.Image' /must/ be a valid
-    -- 'Graphics.Vulkan.Core10.Handles.Image' handle
+  { -- | @image@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Image' handle
     image :: Image }
   deriving (Typeable)
 deriving instance Show ImageSparseMemoryRequirementsInfo2
@@ -438,7 +432,7 @@ instance Zero ImageSparseMemoryRequirementsInfo2 where
 data MemoryRequirements2 (es :: [Type]) = MemoryRequirements2
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
     next :: Chain es
-  , -- | 'Graphics.Vulkan.Core10.MemoryManagement.MemoryRequirements' is a
+  , -- | @memoryRequirements@ is a
     -- 'Graphics.Vulkan.Core10.MemoryManagement.MemoryRequirements' structure
     -- describing the memory requirements of the resource.
     memoryRequirements :: MemoryRequirements
@@ -497,7 +491,7 @@ instance es ~ '[] => Zero (MemoryRequirements2 es) where
 -- 'getImageSparseMemoryRequirements2',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_get_memory_requirements2.getImageSparseMemoryRequirements2KHR'
 data SparseImageMemoryRequirements2 = SparseImageMemoryRequirements2
-  { -- | 'Graphics.Vulkan.Core10.MemoryManagement.MemoryRequirements' is a
+  { -- | @memoryRequirements@ is a
     -- 'Graphics.Vulkan.Core10.SparseResourceMemoryManagement.SparseImageMemoryRequirements'
     -- structure describing the memory requirements of the sparse image.
     memoryRequirements :: SparseImageMemoryRequirements }

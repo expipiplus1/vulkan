@@ -55,8 +55,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device from which to query the fence capabilities.
+-- -   @physicalDevice@ is the physical device from which to query the
+--     fence capabilities.
 --
 -- -   @pExternalFenceInfo@ is a pointer to a
 --     'PhysicalDeviceExternalFenceInfo' structure describing the

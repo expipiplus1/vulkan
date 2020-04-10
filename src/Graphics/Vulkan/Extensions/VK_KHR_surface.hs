@@ -97,8 +97,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' is the instance used to
---     create the surface.
+-- -   @instance@ is the instance used to create the surface.
 --
 -- -   @surface@ is the surface to destroy.
 --
@@ -131,7 +130,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+-- -   @instance@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
 -- -   If @surface@ is not
@@ -144,8 +143,7 @@ foreign import ccall
 --     structure
 --
 -- -   If @surface@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Instance'
+--     allocated, or retrieved from @instance@
 --
 -- == Host Synchronization
 --
@@ -178,8 +176,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device.
+-- -   @physicalDevice@ is the physical device.
 --
 -- -   @queueFamilyIndex@ is the queue family.
 --
@@ -195,11 +192,11 @@ foreign import ccall
 -- -   @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
 --     returned by
 --     'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
---     for the given 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
+--     for the given @physicalDevice@
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @surface@ /must/ be a valid
@@ -208,9 +205,9 @@ foreign import ccall
 -- -   @pSupported@ /must/ be a valid pointer to a
 --     'Graphics.Vulkan.Core10.BaseType.Bool32' value
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', and
---     @surface@ /must/ have been created, allocated, or retrieved from the
---     same 'Graphics.Vulkan.Core10.Handles.Instance'
+-- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Return Codes
 --
@@ -252,9 +249,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device that will be associated with the swapchain to be created, as
---     described for
+-- -   @physicalDevice@ is the physical device that will be associated with
+--     the swapchain to be created, as described for
 --     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
 --
 -- -   @surface@ is the surface that will be associated with the swapchain.
@@ -264,7 +260,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @surface@ /must/ be a valid
@@ -273,9 +269,9 @@ foreign import ccall
 -- -   @pSurfaceCapabilities@ /must/ be a valid pointer to a
 --     'SurfaceCapabilitiesKHR' structure
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', and
---     @surface@ /must/ have been created, allocated, or retrieved from the
---     same 'Graphics.Vulkan.Core10.Handles.Instance'
+-- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Return Codes
 --
@@ -318,9 +314,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device that will be associated with the swapchain to be created, as
---     described for
+-- -   @physicalDevice@ is the physical device that will be associated with
+--     the swapchain to be created, as described for
 --     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
 --
 -- -   @surface@ is the surface that will be associated with the swapchain.
@@ -349,29 +344,26 @@ foreign import ccall
 --
 -- The number of format pairs supported /must/ be greater than or equal to
 -- 1. @pSurfaceFormats@ /must/ not contain an entry whose value for
--- 'Graphics.Vulkan.Core10.Enums.Format.Format' is
--- 'Graphics.Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'.
+-- @format@ is 'Graphics.Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'.
 --
 -- If @pSurfaceFormats@ includes an entry whose value for @colorSpace@ is
 -- 'Graphics.Vulkan.Extensions.VK_EXT_swapchain_colorspace.COLOR_SPACE_SRGB_NONLINEAR_KHR'
--- and whose value for 'Graphics.Vulkan.Core10.Enums.Format.Format' is a
--- UNORM (or SRGB) format and the corresponding SRGB (or UNORM) format is a
--- color renderable format for
+-- and whose value for @format@ is a UNORM (or SRGB) format and the
+-- corresponding SRGB (or UNORM) format is a color renderable format for
 -- 'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', then
 -- @pSurfaceFormats@ /must/ also contain an entry with the same value for
--- @colorSpace@ and 'Graphics.Vulkan.Core10.Enums.Format.Format' equal to
--- the corresponding SRGB (or UNORM) format.
+-- @colorSpace@ and @format@ equal to the corresponding SRGB (or UNORM)
+-- format.
 --
 -- == Valid Usage
 --
--- -   @surface@ must be supported by
---     'Graphics.Vulkan.Core10.Handles.PhysicalDevice', as reported by
+-- -   @surface@ must be supported by @physicalDevice@, as reported by
 --     'getPhysicalDeviceSurfaceSupportKHR' or an equivalent
 --     platform-specific mechanism.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @surface@ /must/ be a valid
@@ -385,9 +377,9 @@ foreign import ccall
 --     pointer to an array of @pSurfaceFormatCount@ 'SurfaceFormatKHR'
 --     structures
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', and
---     @surface@ /must/ have been created, allocated, or retrieved from the
---     same 'Graphics.Vulkan.Core10.Handles.Instance'
+-- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Return Codes
 --
@@ -438,9 +430,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device that will be associated with the swapchain to be created, as
---     described for
+-- -   @physicalDevice@ is the physical device that will be associated with
+--     the swapchain to be created, as described for
 --     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
 --
 -- -   @surface@ is the surface that will be associated with the swapchain.
@@ -469,7 +460,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @surface@ /must/ be a valid
@@ -483,9 +474,9 @@ foreign import ccall
 --     'Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image.PresentModeKHR'
 --     values
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', and
---     @surface@ /must/ have been created, allocated, or retrieved from the
---     same 'Graphics.Vulkan.Core10.Handles.Instance'
+-- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Return Codes
 --
@@ -689,9 +680,8 @@ instance Zero SurfaceCapabilitiesKHR where
 -- 'Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceFormat2KHR',
 -- 'getPhysicalDeviceSurfaceFormatsKHR'
 data SurfaceFormatKHR = SurfaceFormatKHR
-  { -- | 'Graphics.Vulkan.Core10.Enums.Format.Format' is a
-    -- 'Graphics.Vulkan.Core10.Enums.Format.Format' that is compatible with the
-    -- specified surface.
+  { -- | @format@ is a 'Graphics.Vulkan.Core10.Enums.Format.Format' that is
+    -- compatible with the specified surface.
     format :: Format
   , -- | @colorSpace@ is a presentation
     -- 'Graphics.Vulkan.Extensions.VK_EXT_swapchain_colorspace.ColorSpaceKHR'

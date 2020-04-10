@@ -95,8 +95,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     creates the image.
+-- -   @device@ is the logical device that creates the image.
 --
 -- -   @pCreateInfo@ is a pointer to a 'ImageCreateInfo' structure
 --     containing parameters to be used to create the image.
@@ -110,8 +109,7 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If the 'Graphics.Vulkan.Core10.BaseType.Flags' member of
---     @pCreateInfo@ includes
+-- -   If the @flags@ member of @pCreateInfo@ includes
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT',
 --     creating this 'Graphics.Vulkan.Core10.Handles.Image' /must/ not
 --     cause the total required sparse memory for all currently valid
@@ -120,8 +118,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid 'ImageCreateInfo'
 --     structure
@@ -185,10 +183,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     destroys the image.
+-- -   @device@ is the logical device that destroys the image.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Image' is the image to destroy.
+-- -   @image@ is the image to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
@@ -196,43 +193,39 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All submitted commands that refer to
---     'Graphics.Vulkan.Core10.Handles.Image', either directly or via a
---     'Graphics.Vulkan.Core10.Handles.ImageView', /must/ have completed
+-- -   All submitted commands that refer to @image@, either directly or via
+--     a 'Graphics.Vulkan.Core10.Handles.ImageView', /must/ have completed
 --     execution
 --
 -- -   If 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.Image' was
---     created, a compatible set of callbacks /must/ be provided here
+--     were provided when @image@ was created, a compatible set of
+--     callbacks /must/ be provided here
 --
 -- -   If no
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.Image' was
---     created, @pAllocator@ /must/ be @NULL@
+--     were provided when @image@ was created, @pAllocator@ /must/ be
+--     @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.Image' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Image' handle
+-- -   If @image@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @image@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Image'
+--     handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
 --     pointer to a valid
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
 --     structure
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' is a valid handle, it
---     /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   If @image@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.Image' /must/ be
---     externally synchronized
+-- -   Host access to @image@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -261,11 +254,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the image.
+-- -   @device@ is the logical device that owns the image.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Image' is the image whose layout is
---     being queried.
+-- -   @image@ is the image whose layout is being queried.
 --
 -- -   @pSubresource@ is a pointer to a 'ImageSubresource' structure
 --     selecting a specific image for the image subresource.
@@ -306,8 +297,7 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   'Graphics.Vulkan.Core10.Handles.Image' /must/ have been created with
---     @tiling@ equal to
+-- -   @image@ /must/ have been created with @tiling@ equal to
 --     'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' or
 --     'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
 --
@@ -315,25 +305,24 @@ foreign import ccall
 --     bit set
 --
 -- -   The @mipLevel@ member of @pSubresource@ /must/ be less than the
---     @mipLevels@ specified in 'ImageCreateInfo' when
---     'Graphics.Vulkan.Core10.Handles.Image' was created
+--     @mipLevels@ specified in 'ImageCreateInfo' when @image@ was created
 --
 -- -   The @arrayLayer@ member of @pSubresource@ /must/ be less than the
---     @arrayLayers@ specified in 'ImageCreateInfo' when
---     'Graphics.Vulkan.Core10.Handles.Image' was created
+--     @arrayLayers@ specified in 'ImageCreateInfo' when @image@ was
+--     created
 --
--- -   If the @tiling@ of the 'Graphics.Vulkan.Core10.Handles.Image' is
+-- -   If the @tiling@ of the @image@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' and
---     its 'Graphics.Vulkan.Core10.Enums.Format.Format' is a
+--     its @format@ is a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
 --     with two planes, the @aspectMask@ member of @pSubresource@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT'
 --
--- -   If the @tiling@ of the 'Graphics.Vulkan.Core10.Handles.Image' is
+-- -   If the @tiling@ of the @image@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' and
---     its 'Graphics.Vulkan.Core10.Enums.Format.Format' is a
+--     its @format@ is a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>
 --     with three planes, the @aspectMask@ member of @pSubresource@ /must/
 --     be
@@ -342,29 +331,28 @@ foreign import ccall
 --     or
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' was created with the
+-- -   If @image@ was created with the
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID'
---     external memory handle type, then
---     'Graphics.Vulkan.Core10.Handles.Image' /must/ be bound to memory.
+--     external memory handle type, then @image@ /must/ be bound to memory.
 --
--- -   If the @tiling@ of the 'Graphics.Vulkan.Core10.Handles.Image' is
+-- -   If the @tiling@ of the @image@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
 --     then the @aspectMask@ member of @pSubresource@ /must/ be
 --     @VK_IMAGE_ASPECT_MEMORY_PLANE_i_BIT_EXT@ and the index @i@ /must/ be
 --     less than the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkDrmFormatModifierPropertiesEXT drmFormatModifierPlaneCount>
 --     associated with the image’s
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageCreateInfo >
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageCreateInfo format>
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageDrmFormatModifierPropertiesEXT drmFormatModifier>.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.Image' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Image' handle
+-- -   @image@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Image'
+--     handle
 --
 -- -   @pSubresource@ /must/ be a valid pointer to a valid
 --     'ImageSubresource' structure
@@ -372,8 +360,8 @@ foreign import ccall
 -- -   @pLayout@ /must/ be a valid pointer to a 'SubresourceLayout'
 --     structure
 --
--- -   'Graphics.Vulkan.Core10.Handles.Image' /must/ have been created,
---     allocated, or retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
+-- -   @image@ /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- = See Also
 --
@@ -460,11 +448,10 @@ instance Zero ImageSubresource where
 -- 'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_LINEAR' /may/ not
 -- be supported unless other parameters meet all of the constraints:
 --
--- -   'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' is
+-- -   @imageType@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
 --
--- -   'Graphics.Vulkan.Core10.Enums.Format.Format' is not a depth\/stencil
---     format
+-- -   @format@ is not a depth\/stencil format
 --
 -- -   @mipLevels@ is 1
 --
@@ -478,8 +465,7 @@ instance Zero ImageSubresource where
 --     and\/or
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
 --
--- Images created with a 'Graphics.Vulkan.Core10.Enums.Format.Format' from
--- one of those listed in
+-- Images created with a @format@ from one of those listed in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>
 -- have further restrictions on their limits and capabilities compared to
 -- images created with other formats. Creation of images with a format
@@ -488,7 +474,7 @@ instance Zero ImageSubresource where
 -- /may/ not be supported unless other parameters meet all of the
 -- constraints:
 --
--- -   'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' is
+-- -   @imageType@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
 --
 -- -   @mipLevels@ is 1
@@ -583,9 +569,7 @@ instance Zero ImageSubresource where
 --         'Graphics.Vulkan.Core10.DeviceInitialization.ImageFormatProperties'::@linearTilingFeatures@
 --         found by calling
 --         'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'
---         with parameter 'Graphics.Vulkan.Core10.Enums.Format.Format'
---         equal to
---         'ImageCreateInfo'::'Graphics.Vulkan.Core10.Enums.Format.Format'.
+--         with parameter @format@ equal to 'ImageCreateInfo'::@format@.
 --
 --     -   If @tiling@ is
 --         'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL',
@@ -596,9 +580,7 @@ instance Zero ImageSubresource where
 --         'Graphics.Vulkan.Core10.DeviceInitialization.ImageFormatProperties'::@optimalTilingFeatures@
 --         found by calling
 --         'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'
---         with parameter 'Graphics.Vulkan.Core10.Enums.Format.Format'
---         equal to
---         'ImageCreateInfo'::'Graphics.Vulkan.Core10.Enums.Format.Format'.
+--         with parameter @format@ equal to 'ImageCreateInfo'::@format@.
 --
 --     -   If @tiling@ is
 --         'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL',
@@ -617,10 +599,8 @@ instance Zero ImageSubresource where
 --         calling
 --         'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceFormatProperties2'
 --         with
---         'Graphics.Vulkan.Core10.DeviceInitialization.ImageFormatProperties'::'Graphics.Vulkan.Core10.Enums.Format.Format'
---         equal to
---         'ImageCreateInfo'::'Graphics.Vulkan.Core10.Enums.Format.Format'
---         and with
+--         'Graphics.Vulkan.Core10.DeviceInitialization.ImageFormatProperties'::@format@
+--         equal to 'ImageCreateInfo'::@format@ and with
 --         'Graphics.Vulkan.Extensions.VK_EXT_image_drm_format_modifier.DrmFormatModifierPropertiesListEXT'
 --         chained into
 --         'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.ImageFormatProperties2';
@@ -645,11 +625,9 @@ instance Zero ImageSubresource where
 --         possibly multiple times, as follows:
 --
 --         -   The parameters
---             'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'::'Graphics.Vulkan.Core10.Enums.Format.Format',
---             'Graphics.Vulkan.Core10.Enums.ImageType.ImageType',
---             @tiling@, @usage@, and
---             'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be equal to
---             those in 'ImageCreateInfo'.
+--             'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'::@format@,
+--             @imageType@, @tiling@, @usage@, and @flags@ /must/ be equal
+--             to those in 'ImageCreateInfo'.
 --
 --         -   If 'ImageCreateInfo'::@pNext@ contains a
 --             'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'
@@ -680,16 +658,12 @@ instance Zero ImageSubresource where
 --             'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'::@pNext@
 --             /must/ contain a
 --             'Graphics.Vulkan.Extensions.VK_EXT_image_drm_format_modifier.PhysicalDeviceImageDrmFormatModifierInfoEXT'
---             structure where
---             'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode' is
---             equal to
---             'ImageCreateInfo'::'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode';
---             and, if
---             'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode' is
+--             structure where @sharingMode@ is equal to
+--             'ImageCreateInfo'::@sharingMode@; and, if @sharingMode@ is
 --             'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --             then @queueFamilyIndexCount@ and @pQueueFamilyIndices@
 --             /must/ be equal to those in 'ImageCreateInfo'; and, if
---             'Graphics.Vulkan.Core10.BaseType.Flags' contains
+--             @flags@ contains
 --             'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT',
 --             then the
 --             'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
@@ -770,35 +744,33 @@ instance Zero ImageSubresource where
 --     @imageCreateMaxArrayLayers@, @imageCreateMaxExtent@, and
 --     @imageCreateSampleCounts@.
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode' is
+-- -   If @sharingMode@ is
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     @pQueueFamilyIndices@ /must/ be a valid pointer to an array of
 --     @queueFamilyIndexCount@ @uint32_t@ values
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode' is
+-- -   If @sharingMode@ is
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     @queueFamilyIndexCount@ /must/ be greater than @1@
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode' is
+-- -   If @sharingMode@ is
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     each element of @pQueueFamilyIndices@ /must/ be unique and /must/ be
 --     less than @pQueueFamilyPropertyCount@ returned by either
 --     'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
 --     or
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceQueueFamilyProperties2'
---     for the 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' that was
---     used to create 'Graphics.Vulkan.Core10.Handles.Device'
+--     for the @physicalDevice@ that was used to create @device@
 --
 -- -   If the @pNext@ chain includes a
 --     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'
---     structure, and its @externalFormat@ member is non-zero the
---     'Graphics.Vulkan.Core10.Enums.Format.Format' /must/ be
---     'Graphics.Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'.
+--     structure, and its @externalFormat@ member is non-zero the @format@
+--     /must/ be 'Graphics.Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'.
 --
 -- -   If the @pNext@ chain does not include a
 --     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'
 --     structure, or does and its @externalFormat@ member is @0@, the
---     'Graphics.Vulkan.Core10.Enums.Format.Format' /must/ not be
+--     @format@ /must/ not be
 --     'Graphics.Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'.
 --
 -- -   @extent.width@ /must/ be greater than @0@.
@@ -811,19 +783,19 @@ instance Zero ImageSubresource where
 --
 -- -   @arrayLayers@ /must/ be greater than @0@
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+-- -   If @flags@ contains
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CUBE_COMPATIBLE_BIT',
---     'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' /must/ be
+--     @imageType@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+-- -   If @flags@ contains
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_FRAGMENT_DENSITY_MAP_BIT_EXT',
---     'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' /must/ be
+--     @imageType@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+-- -   If @flags@ contains
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT',
---     'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' /must/ be
+--     @imageType@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D'
 --
 -- -   @extent.width@ /must/ be less than or equal to
@@ -838,18 +810,18 @@ instance Zero ImageSubresource where
 --     @imageCreateMaxExtent.depth@ (as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>).
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' is
---     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' and
---     'Graphics.Vulkan.Core10.BaseType.Flags' contains
+-- -   If @imageType@ is
+--     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' and @flags@
+--     contains
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CUBE_COMPATIBLE_BIT',
 --     @extent.width@ and @extent.height@ /must/ be equal and @arrayLayers@
 --     /must/ be greater than or equal to 6
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' is
+-- -   If @imageType@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', both
 --     @extent.height@ and @extent.depth@ /must/ be @1@
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' is
+-- -   If @imageType@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D',
 --     @extent.depth@ /must/ be @1@
 --
@@ -865,15 +837,15 @@ instance Zero ImageSubresource where
 --     @imageCreateMaxArrayLayers@ (as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>).
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' is
+-- -   If @imageType@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D',
 --     @arrayLayers@ /must/ be @1@.
 --
 -- -   If @samples@ is not
 --     'Graphics.Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT',
---     then 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' /must/ be
---     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D',
---     'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not contain
+--     then @imageType@ /must/ be
+--     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', @flags@
+--     /must/ not contain
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CUBE_COMPATIBLE_BIT',
 --     @mipLevels@ /must/ be equal to @1@, and @imageCreateMaybeLinear@ (as
 --     defined in
@@ -943,78 +915,70 @@ instance Zero ImageSubresource where
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseBinding sparse bindings>
---     feature is not enabled, 'Graphics.Vulkan.Core10.BaseType.Flags'
---     /must/ not contain
+--     feature is not enabled, @flags@ /must/ not contain
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT'
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidencyAliased sparse aliased residency>
---     feature is not enabled, 'Graphics.Vulkan.Core10.BaseType.Flags'
---     /must/ not contain
+--     feature is not enabled, @flags@ /must/ not contain
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_ALIASED_BIT'
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' is
---     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D',
---     'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not contain
+-- -   If @imageType@ is
+--     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D', @flags@
+--     /must/ not contain
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidencyImage2D sparse residency for 2D images>
---     feature is not enabled, and
---     'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' is
---     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D',
---     'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not contain
+--     feature is not enabled, and @imageType@ is
+--     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', @flags@
+--     /must/ not contain
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidencyImage3D sparse residency for 3D images>
---     feature is not enabled, and
---     'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' is
---     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D',
---     'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not contain
+--     feature is not enabled, and @imageType@ is
+--     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D', @flags@
+--     /must/ not contain
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidency2Samples sparse residency for images with 2 samples>
---     feature is not enabled,
---     'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' is
+--     feature is not enabled, @imageType@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', and
 --     @samples@ is
 --     'Graphics.Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_2_BIT',
---     'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not contain
+--     @flags@ /must/ not contain
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidency4Samples sparse residency for images with 4 samples>
---     feature is not enabled,
---     'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' is
+--     feature is not enabled, @imageType@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', and
 --     @samples@ is
 --     'Graphics.Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_4_BIT',
---     'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not contain
+--     @flags@ /must/ not contain
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidency8Samples sparse residency for images with 8 samples>
---     feature is not enabled,
---     'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' is
+--     feature is not enabled, @imageType@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', and
 --     @samples@ is
 --     'Graphics.Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_8_BIT',
---     'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not contain
+--     @flags@ /must/ not contain
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-sparseResidency16Samples sparse residency for images with 16 samples>
---     feature is not enabled,
---     'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' is
+--     feature is not enabled, @imageType@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D', and
 --     @samples@ is
 --     'Graphics.Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_16_BIT',
---     'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not contain
+--     @flags@ /must/ not contain
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+-- -   If @flags@ contains
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_ALIASED_BIT',
@@ -1030,8 +994,8 @@ instance Zero ImageSubresource where
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT'
 --     /must/ not also be set
 --
--- -   If the protected memory feature is not enabled,
---     'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not contain
+-- -   If the protected memory feature is not enabled, @flags@ /must/ not
+--     contain
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_PROTECTED_BIT'.
 --
 -- -   If any of the bits
@@ -1056,10 +1020,8 @@ instance Zero ImageSubresource where
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties'::@externalMemoryProperties.compatibleHandleTypes@,
 --     as returned by
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
---     with 'Graphics.Vulkan.Core10.Enums.Format.Format',
---     'Graphics.Vulkan.Core10.Enums.ImageType.ImageType', @tiling@,
---     @usage@, and 'Graphics.Vulkan.Core10.BaseType.Flags' equal to those
---     in this structure, and with a
+--     with @format@, @imageType@, @tiling@, @usage@, and @flags@ equal to
+--     those in this structure, and with a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.PhysicalDeviceExternalImageFormatInfo'
 --     structure included in the @pNext@ chain, with a @handleType@ equal
 --     to any one of the handle types specified in
@@ -1072,40 +1034,37 @@ instance Zero ImageSubresource where
 --     'Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalImageFormatPropertiesNV'::@externalMemoryProperties.compatibleHandleTypes@,
 --     as returned by
 --     'Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities.getPhysicalDeviceExternalImageFormatPropertiesNV'
---     with 'Graphics.Vulkan.Core10.Enums.Format.Format',
---     'Graphics.Vulkan.Core10.Enums.ImageType.ImageType', @tiling@,
---     @usage@, and 'Graphics.Vulkan.Core10.BaseType.Flags' equal to those
---     in this structure, and with @externalHandleType@ equal to any one of
---     the handle types specified in
+--     with @format@, @imageType@, @tiling@, @usage@, and @flags@ equal to
+--     those in this structure, and with @externalHandleType@ equal to any
+--     one of the handle types specified in
 --     'Graphics.Vulkan.Extensions.VK_NV_external_memory.ExternalMemoryImageCreateInfoNV'::@handleTypes@
 --
 -- -   If the logical device was created with
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation.DeviceGroupDeviceCreateInfo'::@physicalDeviceCount@
---     equal to 1, 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not
---     contain
+--     equal to 1, @flags@ /must/ not contain
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT'
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+-- -   If @flags@ contains
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT',
 --     then @mipLevels@ /must/ be one, @arrayLayers@ /must/ be one,
---     'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' /must/ be
+--     @imageType@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'. and
 --     @imageCreateMaybeLinear@ (as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --     /must/ be @false@.
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+-- -   If @flags@ contains
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT',
---     then 'Graphics.Vulkan.Core10.Enums.Format.Format' /must/ be a
+--     then @format@ /must/ be a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#appendix-compressedtex-bc block-compressed image format>,
 --     an
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#appendix-compressedtex-etc2 ETC compressed image format>,
 --     or an
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#appendix-compressedtex-astc ASTC compressed image format>.
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+-- -   If @flags@ contains
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT',
---     then 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ also contain
+--     then @flags@ /must/ also contain
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'.
 --
 -- -   @initialLayout@ /must/ be
@@ -1120,42 +1079,37 @@ instance Zero ImageSubresource where
 --     /must/ be
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED'
 --
--- -   If the image 'Graphics.Vulkan.Core10.Enums.Format.Format' is one of
---     those listed in
+-- -   If the image @format@ is one of those listed in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>,
 --     then @mipLevels@ /must/ be 1
 --
--- -   If the image 'Graphics.Vulkan.Core10.Enums.Format.Format' is one of
---     those listed in
+-- -   If the image @format@ is one of those listed in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>,
 --     @samples@ must be
 --     'Graphics.Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
 --
--- -   If the image 'Graphics.Vulkan.Core10.Enums.Format.Format' is one of
---     those listed in
+-- -   If the image @format@ is one of those listed in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>,
---     'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' /must/ be
+--     @imageType@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
 --
--- -   If the image 'Graphics.Vulkan.Core10.Enums.Format.Format' is one of
---     those listed in
+-- -   If the image @format@ is one of those listed in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>,
 --     and the @ycbcrImageArrays@ feature is not enabled, @arrayLayers@
 --     /must/ be 1
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.Format.Format' is a /multi-planar/
---     format, and if @imageCreateFormatFeatures@ (as defined in
+-- -   If @format@ is a /multi-planar/ format, and if
+--     @imageCreateFormatFeatures@ (as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-creation-limits Image Creation Limits>)
 --     does not contain
 --     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DISJOINT_BIT',
---     then 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not contain
+--     then @flags@ /must/ not contain
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.Format.Format' is not a
---     /multi-planar/ format, and 'Graphics.Vulkan.Core10.BaseType.Flags'
---     does not include
+-- -   If @format@ is not a /multi-planar/ format, and @flags@ does not
+--     include
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_ALIAS_BIT',
---     'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not contain
+--     @flags@ /must/ not contain
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
 --
 -- -   If @tiling@ is
@@ -1175,22 +1129,21 @@ instance Zero ImageSubresource where
 --
 -- -   If @tiling@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT'
---     and 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+--     and @flags@ contains
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT',
 --     then the @pNext@ chain /must/ include a
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
 --     structure with non-zero @viewFormatCount@.
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+-- -   If @flags@ contains
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
---     'Graphics.Vulkan.Core10.Enums.Format.Format' /must/ be a depth or
---     depth\/stencil format
+--     @format@ /must/ be a depth or depth\/stencil format
 --
 -- -   If the @pNext@ chain includes a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'
 --     structure whose @handleTypes@ member includes
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID',
---     'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' /must/ be
+--     @imageType@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'.
 --
 -- -   If the @pNext@ chain includes a
@@ -1203,8 +1156,8 @@ instance Zero ImageSubresource where
 --
 -- -   If the @pNext@ chain includes a
 --     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'
---     structure whose @externalFormat@ member is not @0@,
---     'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not include
+--     structure whose @externalFormat@ member is not @0@, @flags@ /must/
+--     not include
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT'.
 --
 -- -   If the @pNext@ chain includes a
@@ -1218,8 +1171,7 @@ instance Zero ImageSubresource where
 --     structure whose @externalFormat@ member is not @0@, @tiling@ /must/
 --     be 'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL'.
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.Format.Format' is a depth-stencil
---     format, @usage@ includes
+-- -   If @format@ is a depth-stencil format, @usage@ includes
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT',
 --     and the @pNext@ chain includes a
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'
@@ -1228,8 +1180,7 @@ instance Zero ImageSubresource where
 --     member /must/ also include
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.Format.Format' is a depth-stencil
---     format, @usage@ does not include
+-- -   If @format@ is a depth-stencil format, @usage@ does not include
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT',
 --     and the @pNext@ chain includes a
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'
@@ -1238,8 +1189,7 @@ instance Zero ImageSubresource where
 --     member /must/ also not include
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.Format.Format' is a depth-stencil
---     format, @usage@ includes
+-- -   If @format@ is a depth-stencil format, @usage@ includes
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT',
 --     and the @pNext@ chain includes a
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'
@@ -1248,8 +1198,7 @@ instance Zero ImageSubresource where
 --     member /must/ also include
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT'
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.Format.Format' is a depth-stencil
---     format, @usage@ does not include
+-- -   If @format@ is a depth-stencil format, @usage@ does not include
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT',
 --     and the @pNext@ chain includes a
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'
@@ -1266,8 +1215,8 @@ instance Zero ImageSubresource where
 --     @extent.width@ /must/ be less than or equal to
 --     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxFramebufferWidth@
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.Format.Format' is a depth-stencil
---     format and the @pNext@ chain includes a
+-- -   If @format@ is a depth-stencil format and the @pNext@ chain includes
+--     a
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'
 --     structure with its @stencilUsage@ member including
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT',
@@ -1276,43 +1225,42 @@ instance Zero ImageSubresource where
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shaderStorageImageMultisample multisampled storage images>
---     feature is not enabled, 'Graphics.Vulkan.Core10.Enums.Format.Format'
---     is a depth-stencil format and the @pNext@ chain includes a
+--     feature is not enabled, @format@ is a depth-stencil format and the
+--     @pNext@ chain includes a
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_separate_stencil_usage.ImageStencilUsageCreateInfo'
 --     structure with its @stencilUsage@ including
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_STORAGE_BIT',
 --     @samples@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+-- -   If @flags@ contains
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV',
---     'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' /must/ be
+--     @imageType@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' or
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D'
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+-- -   If @flags@ contains
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV',
 --     it /must/ not contain
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CUBE_COMPATIBLE_BIT'
---     and the 'Graphics.Vulkan.Core10.Enums.Format.Format' /must/ not be a
---     depth\/stencil format
+--     and the @format@ /must/ not be a depth\/stencil format
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+-- -   If @flags@ contains
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'
---     and 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' is
+--     and @imageType@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D',
 --     @extent.width@ and @extent.height@ /must/ be greater than @1@
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+-- -   If @flags@ contains
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'
---     and 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' is
+--     and @imageType@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D',
 --     @extent.width@, @extent.height@, and @extent.depth@ /must/ be
 --     greater than @1@
 --
 -- -   If @usage@ includes
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV',
---     'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' /must/ be
+--     @imageType@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'.
 --
 -- -   If @usage@ includes
@@ -1325,22 +1273,22 @@ instance Zero ImageSubresource where
 --     @tiling@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL'.
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+-- -   If @flags@ contains
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT',
 --     @tiling@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL'
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+-- -   If @flags@ contains
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT',
---     'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' /must/ be
+--     @imageType@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D'
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+-- -   If @flags@ contains
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT',
---     'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not contain
+--     @flags@ /must/ not contain
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CUBE_COMPATIBLE_BIT'
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+-- -   If @flags@ contains
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT',
 --     @mipLevels@ /must/ be @1@
 --
@@ -1366,15 +1314,14 @@ instance Zero ImageSubresource where
 -- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
 --     unique
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of
+-- -   @flags@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlagBits'
 --     values
 --
--- -   'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' /must/ be a valid
+-- -   @imageType@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' value
 --
--- -   'Graphics.Vulkan.Core10.Enums.Format.Format' /must/ be a valid
+-- -   @format@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Enums.Format.Format' value
 --
 -- -   @samples@ /must/ be a valid
@@ -1390,8 +1337,8 @@ instance Zero ImageSubresource where
 --
 -- -   @usage@ /must/ not be @0@
 --
--- -   'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode' /must/ be a
---     valid 'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode' value
+-- -   @sharingMode@ /must/ be a valid
+--     'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode' value
 --
 -- -   @initialLayout@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
@@ -1413,18 +1360,17 @@ instance Zero ImageSubresource where
 data ImageCreateInfo (es :: [Type]) = ImageCreateInfo
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
     next :: Chain es
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+  , -- | @flags@ is a bitmask of
     -- 'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlagBits'
     -- describing additional parameters of the image.
     flags :: ImageCreateFlags
-  , -- | 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' is a
-    -- 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' value specifying the
-    -- basic dimensionality of the image. Layers in array textures do not count
-    -- as a dimension for the purposes of the image type.
+  , -- | @imageType@ is a 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType'
+    -- value specifying the basic dimensionality of the image. Layers in array
+    -- textures do not count as a dimension for the purposes of the image type.
     imageType :: ImageType
-  , -- | 'Graphics.Vulkan.Core10.Enums.Format.Format' is a
-    -- 'Graphics.Vulkan.Core10.Enums.Format.Format' describing the format and
-    -- type of the texel blocks that will be contained in the image.
+  , -- | @format@ is a 'Graphics.Vulkan.Core10.Enums.Format.Format' describing
+    -- the format and type of the texel blocks that will be contained in the
+    -- image.
     format :: Format
   , -- | @extent@ is a 'Graphics.Vulkan.Core10.SharedTypes.Extent3D' describing
     -- the number of data elements in each dimension of the base level.
@@ -1446,14 +1392,13 @@ data ImageCreateInfo (es :: [Type]) = ImageCreateInfo
     -- 'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits'
     -- describing the intended usage of the image.
     usage :: ImageUsageFlags
-  , -- | 'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode' is a
+  , -- | @sharingMode@ is a
     -- 'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode' value specifying
     -- the sharing mode of the image when it will be accessed by multiple queue
     -- families.
     sharingMode :: SharingMode
   , -- | @pQueueFamilyIndices@ is a list of queue families that will access this
-    -- image (ignored if 'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode'
-    -- is not
+    -- image (ignored if @sharingMode@ is not
     -- 'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT').
     queueFamilyIndices :: Vector Word32
   , -- | @initialLayout@ is a
@@ -1636,7 +1581,7 @@ instance es ~ '[] => Zero (ImageCreateInfo es) where
 -- plane index @i@ is defined by the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkDrmFormatModifierPropertiesEXT drmFormatModifierPlaneCount>
 -- associated with the image’s
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageCreateInfo >
+-- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageCreateInfo format>
 -- and
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#glossary-drm-format-modifier modifier>.
 -- The memory range used by the subresource is described by @offset@ and

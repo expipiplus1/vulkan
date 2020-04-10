@@ -78,8 +78,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     creates the query pool.
+-- -   @device@ is the logical device that creates the query pool.
 --
 -- -   @pCreateInfo@ is a pointer to a 'QueryPoolCreateInfo' structure
 --     containing the number and type of queries to be managed by the pool.
@@ -94,8 +93,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'QueryPoolCreateInfo' structure
@@ -160,11 +159,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     destroys the query pool.
+-- -   @device@ is the logical device that destroys the query pool.
 --
--- -   'Graphics.Vulkan.Core10.Handles.QueryPool' is the query pool to
---     destroy.
+-- -   @queryPool@ is the query pool to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
@@ -172,42 +169,38 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All submitted commands that refer to
---     'Graphics.Vulkan.Core10.Handles.QueryPool' /must/ have completed
---     execution
+-- -   All submitted commands that refer to @queryPool@ /must/ have
+--     completed execution
 --
 -- -   If 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.QueryPool' was
---     created, a compatible set of callbacks /must/ be provided here
+--     were provided when @queryPool@ was created, a compatible set of
+--     callbacks /must/ be provided here
 --
 -- -   If no
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.QueryPool' was
---     created, @pAllocator@ /must/ be @NULL@
+--     were provided when @queryPool@ was created, @pAllocator@ /must/ be
+--     @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.QueryPool' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.QueryPool' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.QueryPool' handle
+-- -   If @queryPool@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @queryPool@
+--     /must/ be a valid 'Graphics.Vulkan.Core10.Handles.QueryPool' handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
 --     pointer to a valid
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
 --     structure
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.QueryPool' is a valid handle, it
---     /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   If @queryPool@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.QueryPool' /must/ be
---     externally synchronized
+-- -   Host access to @queryPool@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -236,11 +229,10 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the query pool.
+-- -   @device@ is the logical device that owns the query pool.
 --
--- -   'Graphics.Vulkan.Core10.Handles.QueryPool' is the query pool
---     managing the queries containing the desired results.
+-- -   @queryPool@ is the query pool managing the queries containing the
+--     desired results.
 --
 -- -   @firstQuery@ is the initial query index.
 --
@@ -254,7 +246,7 @@ foreign import ccall
 -- -   @stride@ is the stride in bytes between results for individual
 --     queries within @pData@.
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+-- -   @flags@ is a bitmask of
 --     'Graphics.Vulkan.Core10.Enums.QueryResultFlagBits.QueryResultFlagBits'
 --     specifying how and when results are returned.
 --
@@ -265,10 +257,10 @@ foreign import ccall
 -- the pool contains one integer value for each bit that is enabled in
 -- 'QueryPoolCreateInfo'::@pipelineStatistics@ when the pool is created.
 --
--- If no bits are set in 'Graphics.Vulkan.Core10.BaseType.Flags', and all
--- requested queries are in the available state, results are written as an
--- array of 32-bit unsigned integer values. The behavior when not all
--- queries are available, is described
+-- If no bits are set in @flags@, and all requested queries are in the
+-- available state, results are written as an array of 32-bit unsigned
+-- integer values. The behavior when not all queries are available, is
+-- described
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-wait-bit-not-set below>.
 --
 -- If
@@ -364,81 +356,74 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   @firstQuery@ /must/ be less than the number of queries in
---     'Graphics.Vulkan.Core10.Handles.QueryPool'
+--     @queryPool@
 --
 -- -   If
 --     'Graphics.Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT'
---     is not set in 'Graphics.Vulkan.Core10.BaseType.Flags', then @pData@
---     and @stride@ /must/ be multiples of @4@
+--     is not set in @flags@, then @pData@ and @stride@ /must/ be multiples
+--     of @4@
 --
 -- -   If
 --     'Graphics.Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT'
---     is not set in 'Graphics.Vulkan.Core10.BaseType.Flags' and the
---     'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' used to create
---     'Graphics.Vulkan.Core10.Handles.QueryPool' was not
+--     is not set in @flags@ and the @queryType@ used to create @queryPool@
+--     was not
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
 --     then @pData@ and @stride@ /must/ be multiples of @4@
 --
 -- -   If
 --     'Graphics.Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT'
---     is set in 'Graphics.Vulkan.Core10.BaseType.Flags' then @pData@ and
---     @stride@ /must/ be multiples of @8@
+--     is set in @flags@ then @pData@ and @stride@ /must/ be multiples of
+--     @8@
 --
--- -   If the 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' used to
---     create 'Graphics.Vulkan.Core10.Handles.QueryPool' was
+-- -   If the @queryType@ used to create @queryPool@ was
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
 --     then @pData@ and @stride@ /must/ be multiples of the size of
 --     'Graphics.Vulkan.Extensions.VK_KHR_performance_query.PerformanceCounterResultKHR'
 --
 -- -   The sum of @firstQuery@ and @queryCount@ /must/ be less than or
---     equal to the number of queries in
---     'Graphics.Vulkan.Core10.Handles.QueryPool'
+--     equal to the number of queries in @queryPool@
 --
 -- -   @dataSize@ /must/ be large enough to contain the result of each
 --     query, as described
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-operation-memorylayout here>
 --
--- -   If the 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' used to
---     create 'Graphics.Vulkan.Core10.Handles.QueryPool' was
+-- -   If the @queryType@ used to create @queryPool@ was
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TIMESTAMP',
---     'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not contain
+--     @flags@ /must/ not contain
 --     'Graphics.Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_PARTIAL_BIT'
 --
--- -   If the 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' used to
---     create 'Graphics.Vulkan.Core10.Handles.QueryPool' was
+-- -   If the @queryType@ used to create @queryPool@ was
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
---     'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not contain
+--     @flags@ /must/ not contain
 --     'Graphics.Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_WITH_AVAILABILITY_BIT',
 --     'Graphics.Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_PARTIAL_BIT'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.QueryResultFlagBits.QUERY_RESULT_64_BIT'
 --
--- -   If the 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' used to
---     create 'Graphics.Vulkan.Core10.Handles.QueryPool' was
+-- -   If the @queryType@ used to create @queryPool@ was
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
---     the 'Graphics.Vulkan.Core10.Handles.QueryPool' /must/ have been
---     recorded once for each pass as retrieved via a call to
+--     the @queryPool@ /must/ have been recorded once for each pass as
+--     retrieved via a call to
 --     'Graphics.Vulkan.Extensions.VK_KHR_performance_query.getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR'
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.QueryPool' /must/ be a valid
+-- -   @queryPool@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.QueryPool' handle
 --
 -- -   @pData@ /must/ be a valid pointer to an array of @dataSize@ bytes
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of
+-- -   @flags@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core10.Enums.QueryResultFlagBits.QueryResultFlagBits'
 --     values
 --
 -- -   @dataSize@ /must/ be greater than @0@
 --
--- -   'Graphics.Vulkan.Core10.Handles.QueryPool' /must/ have been created,
---     allocated, or retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
+-- -   @queryPool@ /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- == Return Codes
 --
@@ -475,25 +460,23 @@ getQueryPoolResults device queryPool firstQuery queryCount dataSize data' stride
 --
 -- = Description
 --
--- @pipelineStatistics@ is ignored if
--- 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' is not
+-- @pipelineStatistics@ is ignored if @queryType@ is not
 -- 'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PIPELINE_STATISTICS'.
 --
 -- == Valid Usage
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-pipelineStatisticsQuery pipeline statistics queries>
---     feature is not enabled,
---     'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' /must/ not be
+--     feature is not enabled, @queryType@ /must/ not be
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PIPELINE_STATISTICS'
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' is
+-- -   If @queryType@ is
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PIPELINE_STATISTICS',
 --     @pipelineStatistics@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core10.Enums.QueryPipelineStatisticFlagBits.QueryPipelineStatisticFlagBits'
 --     values
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' is
+-- -   If @queryType@ is
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
 --     the @pNext@ chain /must/ include a structure of type
 --     'Graphics.Vulkan.Extensions.VK_KHR_performance_query.QueryPoolPerformanceCreateInfoKHR'
@@ -515,9 +498,9 @@ getQueryPoolResults device queryPool firstQuery queryCount dataSize data' stride
 -- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
 --     unique
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+-- -   @flags@ /must/ be @0@
 --
--- -   'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' /must/ be a valid
+-- -   @queryType@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' value
 --
 -- = See Also
@@ -530,11 +513,10 @@ getQueryPoolResults device queryPool firstQuery queryCount dataSize data' stride
 data QueryPoolCreateInfo (es :: [Type]) = QueryPoolCreateInfo
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
     next :: Chain es
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is reserved for future use.
+  , -- | @flags@ is reserved for future use.
     flags :: QueryPoolCreateFlags
-  , -- | 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' is a
-    -- 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' value specifying the
-    -- type of queries managed by the pool.
+  , -- | @queryType@ is a 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType'
+    -- value specifying the type of queries managed by the pool.
     queryType :: QueryType
   , -- | @queryCount@ is the number of queries managed by the pool.
     queryCount :: Word32

@@ -60,11 +60,10 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     that the descriptors will be recorded in.
+-- -   @commandBuffer@ is the command buffer that the descriptors will be
+--     recorded in.
 --
--- -   'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
---     is a
+-- -   @pipelineBindPoint@ is a
 --     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
 --     indicating whether the descriptors will be used by graphics
 --     pipelines or compute pipelines. There is a separate set of push
@@ -95,10 +94,9 @@ foreign import ccall
 -- When a command buffer begins recording, all push descriptors are
 -- undefined. Push descriptors /can/ be updated incrementally and cause
 -- shaders to use the updated descriptors for subsequent rendering commands
--- (either compute or graphics, according to the
--- 'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint')
--- until the descriptor is overwritten, or else until the set is disturbed
--- as described in
+-- (either compute or graphics, according to the @pipelineBindPoint@) until
+-- the descriptor is overwritten, or else until the set is disturbed as
+-- described in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-compatibility Pipeline Layout Compatibility>.
 -- When the set is disturbed or push descriptors with a different
 -- descriptor set layout are set, all push descriptors are undefined.
@@ -130,16 +128,14 @@ foreign import ccall
 -- from the push descriptor set layout in the pipeline layout. If the
 -- descriptor type is
 -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
--- the 'Graphics.Vulkan.Core10.Handles.Sampler' member of the @pImageInfo@
--- parameter is ignored and the immutable sampler is taken from the push
--- descriptor set layout in the pipeline layout.
+-- the @sampler@ member of the @pImageInfo@ parameter is ignored and the
+-- immutable sampler is taken from the push descriptor set layout in the
+-- pipeline layout.
 --
 -- == Valid Usage
 --
--- -   'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
---     /must/ be supported by the
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer'’s parent
---     'Graphics.Vulkan.Core10.Handles.CommandPool'’s queue family
+-- -   @pipelineBindPoint@ /must/ be supported by the @commandBuffer@’s
+--     parent 'Graphics.Vulkan.Core10.Handles.CommandPool'’s queue family
 --
 -- -   @set@ /must/ be less than
 --     'Graphics.Vulkan.Core10.PipelineLayout.PipelineLayoutCreateInfo'::@setLayoutCount@
@@ -151,11 +147,10 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
---     /must/ be a valid
+-- -   @pipelineBindPoint@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
 --     value
 --
@@ -166,27 +161,25 @@ foreign import ccall
 --     @descriptorWriteCount@ valid
 --     'Graphics.Vulkan.Core10.DescriptorSet.WriteDescriptorSet' structures
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics, or compute operations
+--     @commandBuffer@ was allocated from /must/ support graphics, or
+--     compute operations
 --
 -- -   @descriptorWriteCount@ /must/ be greater than @0@
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.CommandBuffer', and @layout@
---     /must/ have been created, allocated, or retrieved from the same
+-- -   Both of @commandBuffer@, and @layout@ /must/ have been created,
+--     allocated, or retrieved from the same
 --     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -226,33 +219,28 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     that the descriptors will be recorded in.
+-- -   @commandBuffer@ is the command buffer that the descriptors will be
+--     recorded in.
 --
--- -   'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate' is a
---     descriptor update template defining how to interpret the descriptor
---     information in @pData@.
+-- -   @descriptorUpdateTemplate@ is a descriptor update template defining
+--     how to interpret the descriptor information in @pData@.
 --
 -- -   @layout@ is a 'Graphics.Vulkan.Core10.Handles.PipelineLayout' object
 --     used to program the bindings. It /must/ be compatible with the
---     layout used to create the
---     'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate' handle.
+--     layout used to create the @descriptorUpdateTemplate@ handle.
 --
 -- -   @set@ is the set number of the descriptor set in the pipeline layout
 --     that will be updated. This /must/ be the same number used to create
---     the 'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate'
---     handle.
+--     the @descriptorUpdateTemplate@ handle.
 --
 -- -   @pData@ is a pointer to memory containing descriptors for the
 --     templated update.
 --
 -- == Valid Usage
 --
--- -   The
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
---     specified during the creation of the descriptor update template
---     /must/ be supported by the
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer'’s parent
+-- -   The @pipelineBindPoint@ specified during the creation of the
+--     descriptor update template /must/ be supported by the
+--     @commandBuffer@’s parent
 --     'Graphics.Vulkan.Core10.Handles.CommandPool'’s queue family
 --
 -- -   @pData@ /must/ be a valid pointer to a memory containing one or more
@@ -260,42 +248,37 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.DescriptorSet.DescriptorImageInfo',
 --     'Graphics.Vulkan.Core10.DescriptorSet.DescriptorBufferInfo', or
 --     'Graphics.Vulkan.Core10.Handles.BufferView' in a layout defined by
---     'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate' when it
---     was created with
+--     @descriptorUpdateTemplate@ when it was created with
 --     'Graphics.Vulkan.Extensions.VK_KHR_descriptor_update_template.createDescriptorUpdateTemplateKHR'
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate' /must/ be
---     a valid 'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate'
---     handle
+-- -   @descriptorUpdateTemplate@ /must/ be a valid
+--     'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate' handle
 --
 -- -   @layout@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PipelineLayout' handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics, or compute operations
+--     @commandBuffer@ was allocated from /must/ support graphics, or
+--     compute operations
 --
--- -   Each of 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
---     'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate', and
---     @layout@ /must/ have been created, allocated, or retrieved from the
---     same 'Graphics.Vulkan.Core10.Handles.Device'
+-- -   Each of @commandBuffer@, @descriptorUpdateTemplate@, and @layout@
+--     /must/ have been created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --

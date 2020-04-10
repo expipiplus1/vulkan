@@ -46,7 +46,7 @@ import Graphics.Vulkan.Extensions.VK_KHR_display (SurfaceTransformFlagsKHR)
 --     VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR.
 --
 -- -   The renderpass must have been created with
---     'Graphics.Vulkan.Core10.Pass.RenderPassCreateInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'
+--     'Graphics.Vulkan.Core10.Pass.RenderPassCreateInfo'::@flags@
 --     containing VK_RENDER_PASS_CREATE_TRANSFORM_BIT_QCOM.
 --
 -- == Valid Usage (Implicit)

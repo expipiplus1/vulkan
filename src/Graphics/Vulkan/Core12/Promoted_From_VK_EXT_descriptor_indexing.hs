@@ -678,7 +678,7 @@ instance Zero PhysicalDeviceDescriptorIndexingProperties where
 --     'Graphics.Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo'::@bindingCount@
 --
 -- -   If
---     'Graphics.Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'
+--     'Graphics.Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo'::@flags@
 --     includes
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',
 --     then all elements of @pBindingFlags@ /must/ not include
@@ -770,9 +770,7 @@ instance Zero PhysicalDeviceDescriptorIndexingProperties where
 --
 -- -   If an element of @pBindingFlags@ includes
 --     'Graphics.Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT',
---     that element’s
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' /must/
---     not be
+--     that element’s @descriptorType@ /must/ not be
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'

@@ -45,11 +45,10 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the query pool.
+-- -   @device@ is the logical device that owns the query pool.
 --
--- -   'Graphics.Vulkan.Core10.Handles.QueryPool' is the handle of the
---     query pool managing the queries being reset.
+-- -   @queryPool@ is the handle of the query pool managing the queries
+--     being reset.
 --
 -- -   @firstQuery@ is the initial query index to reset.
 --
@@ -60,7 +59,7 @@ foreign import ccall
 -- This command sets the status of query indices [@firstQuery@,
 -- @firstQuery@ + @queryCount@ - 1] to unavailable.
 --
--- If 'Graphics.Vulkan.Core10.Handles.QueryPool' is
+-- If @queryPool@ is
 -- 'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR'
 -- this command sets the status of query indices [@firstQuery@,
 -- @firstQuery@ + @queryCount@ - 1] to unavailable for each pass.
@@ -72,31 +71,29 @@ foreign import ccall
 --     feature /must/ be enabled
 --
 -- -   @firstQuery@ /must/ be less than the number of queries in
---     'Graphics.Vulkan.Core10.Handles.QueryPool'
+--     @queryPool@
 --
 -- -   The sum of @firstQuery@ and @queryCount@ /must/ be less than or
---     equal to the number of queries in
---     'Graphics.Vulkan.Core10.Handles.QueryPool'
+--     equal to the number of queries in @queryPool@
 --
 -- -   Submitted commands that refer to the range specified by @firstQuery@
---     and @queryCount@ in 'Graphics.Vulkan.Core10.Handles.QueryPool'
---     /must/ have completed execution
+--     and @queryCount@ in @queryPool@ /must/ have completed execution
 --
 -- -   The range of queries specified by @firstQuery@ and @queryCount@ in
---     'Graphics.Vulkan.Core10.Handles.QueryPool' /must/ not be in use by
---     calls to 'Graphics.Vulkan.Core10.Query.getQueryPoolResults' or
+--     @queryPool@ /must/ not be in use by calls to
+--     'Graphics.Vulkan.Core10.Query.getQueryPoolResults' or
 --     'resetQueryPool' in other threads
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.QueryPool' /must/ be a valid
+-- -   @queryPool@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.QueryPool' handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.QueryPool' /must/ have been created,
---     allocated, or retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
+-- -   @queryPool@ /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- = See Also
 --

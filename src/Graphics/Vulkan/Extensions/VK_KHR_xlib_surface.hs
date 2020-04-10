@@ -94,8 +94,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' is the instance to
---     associate the surface with.
+-- -   @instance@ is the instance to associate the surface with.
 --
 -- -   @pCreateInfo@ is a pointer to a 'XlibSurfaceCreateInfoKHR' structure
 --     containing the parameters affecting the creation of the surface
@@ -112,7 +111,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+-- -   @instance@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
@@ -170,8 +169,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device.
+-- -   @physicalDevice@ is the physical device.
 --
 -- -   @queueFamilyIndex@ is the queue family index.
 --
@@ -209,12 +207,12 @@ getPhysicalDeviceXlibPresentationSupportKHR physicalDevice queueFamilyIndex dpy 
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'XlibSurfaceCreateFlagsKHR', 'createXlibSurfaceKHR'
 data XlibSurfaceCreateInfoKHR = XlibSurfaceCreateInfoKHR
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+  { -- | @flags@ /must/ be @0@
     flags :: XlibSurfaceCreateFlagsKHR
   , -- | @dpy@ /must/ point to a valid Xlib
     -- 'Graphics.Vulkan.Extensions.WSITypes.Display'.
     dpy :: Ptr Display
-  , -- | 'Graphics.Vulkan.Extensions.WSITypes.Window' /must/ be a valid Xlib
+  , -- | @window@ /must/ be a valid Xlib
     -- 'Graphics.Vulkan.Extensions.WSITypes.Window'.
     window :: Window
   }

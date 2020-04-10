@@ -216,11 +216,10 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device
---     containing the ray tracing pipeline.
+-- -   @device@ is the logical device containing the ray tracing pipeline.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Pipeline' is the ray tracing
---     pipeline object containing the shaders.
+-- -   @pipeline@ is the ray tracing pipeline object containing the
+--     shaders.
 --
 -- -   @shader@ is the index of the shader to compile.
 --
@@ -259,8 +258,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     creates the buffer object.
+-- -   @device@ is the logical device that creates the buffer object.
 --
 -- -   @pCreateInfo@ is a pointer to a 'AccelerationStructureCreateInfoNV'
 --     structure containing parameters affecting creation of the
@@ -288,8 +286,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'AccelerationStructureCreateInfoNV' structure
@@ -354,8 +352,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     destroys the buffer.
+-- -   @device@ is the logical device that destroys the buffer.
 --
 -- -   @accelerationStructure@ is the acceleration structure to destroy.
 --
@@ -379,8 +376,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @accelerationStructure@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV' handle
@@ -391,7 +388,7 @@ foreign import ccall
 --     structure
 --
 -- -   @accelerationStructure@ /must/ have been created, allocated, or
---     retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
+--     retrieved from @device@
 --
 -- = See Also
 --
@@ -420,8 +417,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device on
---     which the acceleration structure was created.
+-- -   @device@ is the logical device on which the acceleration structure
+--     was created.
 --
 -- -   @pInfo@ specifies the acceleration structure to get memory
 --     requirements for.
@@ -457,8 +454,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the acceleration structures and memory.
+-- -   @device@ is the logical device that owns the acceleration structures
+--     and memory.
 --
 -- -   @bindInfoCount@ is the number of elements in @pBindInfos@.
 --
@@ -502,8 +499,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command will be recorded.
+-- -   @commandBuffer@ is the command buffer into which the command will be
+--     recorded.
 --
 -- -   @dst@ is a pointer to the target acceleration structure for the
 --     copy.
@@ -525,7 +522,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @dst@ /must/ be a valid
@@ -536,24 +533,22 @@ foreign import ccall
 --
 -- -   @mode@ /must/ be a valid 'CopyAccelerationStructureModeNV' value
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support compute operations
+--     @commandBuffer@ was allocated from /must/ support compute operations
 --
 -- -   This command /must/ only be called outside of a render pass instance
 --
--- -   Each of 'Graphics.Vulkan.Core10.Handles.CommandBuffer', @dst@, and
---     @src@ /must/ have been created, allocated, or retrieved from the
---     same 'Graphics.Vulkan.Core10.Handles.Device'
+-- -   Each of @commandBuffer@, @dst@, and @src@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -590,8 +585,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command will be recorded.
+-- -   @commandBuffer@ is the command buffer into which the command will be
+--     recorded.
 --
 -- -   @accelerationStructureCount@ is the count of acceleration structures
 --     for which to query the property.
@@ -599,70 +594,65 @@ foreign import ccall
 -- -   @pAccelerationStructures@ is a pointer to an array of existing
 --     previously built acceleration structures.
 --
--- -   'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' is a
---     'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' value specifying
---     the type of queries managed by the pool.
+-- -   @queryType@ is a 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType'
+--     value specifying the type of queries managed by the pool.
 --
--- -   'Graphics.Vulkan.Core10.Handles.QueryPool' is the query pool that
---     will manage the results of the query.
+-- -   @queryPool@ is the query pool that will manage the results of the
+--     query.
 --
 -- -   @firstQuery@ is the first query index within the query pool that
 --     will contain the @accelerationStructureCount@ number of results.
 --
 -- == Valid Usage
 --
--- -   'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' /must/ be
+-- -   @queryType@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV'
 --
--- -   'Graphics.Vulkan.Core10.Handles.QueryPool' /must/ have been created
---     with a 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' matching
---     'Graphics.Vulkan.Core10.Enums.QueryType.QueryType'
+-- -   @queryPool@ /must/ have been created with a @queryType@ matching
+--     @queryType@
 --
--- -   The queries identified by 'Graphics.Vulkan.Core10.Handles.QueryPool'
---     and @firstQuery@ /must/ be /unavailable/
+-- -   The queries identified by @queryPool@ and @firstQuery@ /must/ be
+--     /unavailable/
 --
 -- -   All acceleration structures in @accelerationStructures@ /must/ have
 --     been built with
 --     'BUILD_ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT_NV' if
---     'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' is
+--     @queryType@ is
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_ACCELERATION_STRUCTURE_COMPACTED_SIZE_NV'
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pAccelerationStructures@ /must/ be a valid pointer to an array of
 --     @accelerationStructureCount@ valid
 --     'Graphics.Vulkan.Extensions.Handles.AccelerationStructureNV' handles
 --
--- -   'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' /must/ be a valid
+-- -   @queryType@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' value
 --
--- -   'Graphics.Vulkan.Core10.Handles.QueryPool' /must/ be a valid
+-- -   @queryPool@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.QueryPool' handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support compute operations
+--     @commandBuffer@ was allocated from /must/ support compute operations
 --
 -- -   This command /must/ only be called outside of a render pass instance
 --
 -- -   @accelerationStructureCount@ /must/ be greater than @0@
 --
--- -   Each of 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
---     'Graphics.Vulkan.Core10.Handles.QueryPool', and the elements of
+-- -   Each of @commandBuffer@, @queryPool@, and the elements of
 --     @pAccelerationStructures@ /must/ have been created, allocated, or
 --     retrieved from the same 'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -701,8 +691,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command will be recorded.
+-- -   @commandBuffer@ is the command buffer into which the command will be
+--     recorded.
 --
 -- -   @pInfo@ contains the shared information for the acceleration
 --     structure’s structure.
@@ -739,8 +729,8 @@ foreign import ccall
 -- -   @dst@ /must/ have been created with compatible
 --     'AccelerationStructureInfoNV' where
 --     'AccelerationStructureInfoNV'::@type@ and
---     'AccelerationStructureInfoNV'::'Graphics.Vulkan.Core10.BaseType.Flags'
---     are identical, 'AccelerationStructureInfoNV'::@instanceCount@ and
+--     'AccelerationStructureInfoNV'::@flags@ are identical,
+--     'AccelerationStructureInfoNV'::@instanceCount@ and
 --     'AccelerationStructureInfoNV'::@geometryCount@ for @dst@ are greater
 --     than or equal to the build size and each geometry in
 --     'AccelerationStructureInfoNV'::@pGeometries@ for @dst@ has greater
@@ -752,7 +742,7 @@ foreign import ccall
 -- -   If @update@ is 'Graphics.Vulkan.Core10.BaseType.TRUE', @src@ /must/
 --     have been built before with
 --     'BUILD_ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT_NV' set in
---     'AccelerationStructureInfoNV'::'Graphics.Vulkan.Core10.BaseType.Flags'
+--     'AccelerationStructureInfoNV'::@flags@
 --
 -- -   If @update@ is 'Graphics.Vulkan.Core10.BaseType.FALSE', The @size@
 --     member of the
@@ -780,7 +770,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pInfo@ /must/ be a valid pointer to a valid
@@ -800,25 +790,23 @@ foreign import ccall
 -- -   @scratch@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Buffer'
 --     handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support compute operations
+--     @commandBuffer@ was allocated from /must/ support compute operations
 --
 -- -   This command /must/ only be called outside of a render pass instance
 --
--- -   Each of 'Graphics.Vulkan.Core10.Handles.CommandBuffer', @dst@,
---     @instanceData@, @scratch@, and @src@ that are valid handles of
---     non-ignored parameters /must/ have been created, allocated, or
---     retrieved from the same 'Graphics.Vulkan.Core10.Handles.Device'
+-- -   Each of @commandBuffer@, @dst@, @instanceData@, @scratch@, and @src@
+--     that are valid handles of non-ignored parameters /must/ have been
+--     created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -858,8 +846,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command will be recorded.
+-- -   @commandBuffer@ is the command buffer into which the command will be
+--     recorded.
 --
 -- -   @raygenShaderBindingTableBuffer@ is the buffer object that holds the
 --     shader binding table data for the ray generation shader stage.
@@ -955,8 +943,7 @@ foreign import ccall
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
 -- -   Any 'Graphics.Vulkan.Core10.Handles.Image' created with a
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'
---     containing
+--     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@flags@ containing
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode'
@@ -994,9 +981,8 @@ foreign import ccall
 --
 -- -   If the 'Graphics.Vulkan.Core10.Handles.Pipeline' object bound to the
 --     pipeline bind point used by this command requires any dynamic state,
---     that state /must/ have been set for
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer', and done so after
---     any previously bound pipeline with the corresponding state not
+--     that state /must/ have been set for @commandBuffer@, and done so
+--     after any previously bound pipeline with the corresponding state not
 --     specified as dynamic
 --
 -- -   There /must/ not have been any calls to dynamic state setting
@@ -1053,23 +1039,20 @@ foreign import ccall
 --     specified in the descriptor set bound to the same pipeline bind
 --     point
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.CommandBuffer' is an unprotected
---     command buffer, any resource accessed by the
---     'Graphics.Vulkan.Core10.Handles.Pipeline' object bound to the
---     pipeline bind point used by this command /must/ not be a protected
---     resource
+-- -   If @commandBuffer@ is an unprotected command buffer, any resource
+--     accessed by the 'Graphics.Vulkan.Core10.Handles.Pipeline' object
+--     bound to the pipeline bind point used by this command /must/ not be
+--     a protected resource
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.CommandBuffer' is a protected
---     command buffer, any resource written to by the
---     'Graphics.Vulkan.Core10.Handles.Pipeline' object bound to the
---     pipeline bind point used by this command /must/ not be an
---     unprotected resource
+-- -   If @commandBuffer@ is a protected command buffer, any resource
+--     written to by the 'Graphics.Vulkan.Core10.Handles.Pipeline' object
+--     bound to the pipeline bind point used by this command /must/ not be
+--     an unprotected resource
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.CommandBuffer' is a protected
---     command buffer, pipeline stages other than the framebuffer-space and
---     compute stages in the 'Graphics.Vulkan.Core10.Handles.Pipeline'
---     object bound to the pipeline bind point /must/ not write to any
---     resource
+-- -   If @commandBuffer@ is a protected command buffer, pipeline stages
+--     other than the framebuffer-space and compute stages in the
+--     'Graphics.Vulkan.Core10.Handles.Pipeline' object bound to the
+--     pipeline bind point /must/ not write to any resource
 --
 -- -   @raygenShaderBindingOffset@ /must/ be less than the size of
 --     @raygenShaderBindingTableBuffer@
@@ -1124,7 +1107,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @raygenShaderBindingTableBuffer@ /must/ be a valid
@@ -1145,17 +1128,15 @@ foreign import ccall
 --     @callableShaderBindingTableBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Buffer' handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support compute operations
+--     @commandBuffer@ was allocated from /must/ support compute operations
 --
 -- -   This command /must/ only be called outside of a render pass instance
 --
--- -   Each of @callableShaderBindingTableBuffer@,
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer',
+-- -   Each of @callableShaderBindingTableBuffer@, @commandBuffer@,
 --     @hitShaderBindingTableBuffer@, @missShaderBindingTableBuffer@, and
 --     @raygenShaderBindingTableBuffer@ that are valid handles of
 --     non-ignored parameters /must/ have been created, allocated, or
@@ -1164,8 +1145,7 @@ foreign import ccall
 -- == Host Synchronization
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -1202,11 +1182,10 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device
---     containing the ray tracing pipeline.
+-- -   @device@ is the logical device containing the ray tracing pipeline.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Pipeline' is the ray tracing
---     pipeline object containing the shaders.
+-- -   @pipeline@ is the ray tracing pipeline object containing the
+--     shaders.
 --
 -- -   @firstGroup@ is the index of the first group to retrieve a handle
 --     for from the 'RayTracingShaderGroupCreateInfoNV'::@pGroups@ array.
@@ -1221,8 +1200,7 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   The sum of @firstGroup@ and @groupCount@ /must/ be less than the
---     number of shader groups in
---     'Graphics.Vulkan.Core10.Handles.Pipeline'.
+--     number of shader groups in @pipeline@.
 --
 -- -   @dataSize@ /must/ be at least
 --     'PhysicalDeviceRayTracingPropertiesNV'::@shaderGroupHandleSize@ ×
@@ -1230,18 +1208,18 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.Pipeline' /must/ be a valid
+-- -   @pipeline@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' handle
 --
 -- -   @pData@ /must/ be a valid pointer to an array of @dataSize@ bytes
 --
 -- -   @dataSize@ /must/ be greater than @0@
 --
--- -   'Graphics.Vulkan.Core10.Handles.Pipeline' /must/ have been created,
---     allocated, or retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
+-- -   @pipeline@ /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- == Return Codes
 --
@@ -1278,8 +1256,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the acceleration structures.
+-- -   @device@ is the logical device that owns the acceleration
+--     structures.
 --
 -- -   @accelerationStructure@ is the acceleration structure.
 --
@@ -1323,10 +1301,10 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     creates the ray tracing pipelines.
+-- -   @device@ is the logical device that creates the ray tracing
+--     pipelines.
 --
--- -   'Graphics.Vulkan.Core10.Handles.PipelineCache' is either
+-- -   @pipelineCache@ is either
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', indicating that
 --     pipeline caching is disabled, or the handle of a valid
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#pipelines-cache pipeline cache>
@@ -1348,15 +1326,13 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If the 'Graphics.Vulkan.Core10.BaseType.Flags' member of any element
---     of @pCreateInfos@ contains the
+-- -   If the @flags@ member of any element of @pCreateInfos@ contains the
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
 --     flag, and the @basePipelineIndex@ member of that same element is not
 --     @-1@, @basePipelineIndex@ /must/ be less than the index into
 --     @pCreateInfos@ that corresponds to that element
 --
--- -   If the 'Graphics.Vulkan.Core10.BaseType.Flags' member of any element
---     of @pCreateInfos@ contains the
+-- -   If the @flags@ member of any element of @pCreateInfos@ contains the
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
 --     flag, the base pipeline /must/ have been created with the
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT'
@@ -1364,13 +1340,13 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.PipelineCache' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.PipelineCache' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.PipelineCache' handle
+-- -   If @pipelineCache@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @pipelineCache@
+--     /must/ be a valid 'Graphics.Vulkan.Core10.Handles.PipelineCache'
+--     handle
 --
 -- -   @pCreateInfos@ /must/ be a valid pointer to an array of
 --     @createInfoCount@ valid 'RayTracingPipelineCreateInfoNV' structures
@@ -1385,9 +1361,8 @@ foreign import ccall
 --
 -- -   @createInfoCount@ /must/ be greater than @0@
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.PipelineCache' is a valid handle,
---     it /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   If @pipelineCache@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
 --
 -- == Return Codes
 --
@@ -1566,25 +1541,25 @@ instance Zero RayTracingShaderGroupCreateInfoNV where
 --
 -- == Valid Usage
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains the
+-- -   If @flags@ contains the
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
 --     flag, and @basePipelineIndex@ is @-1@, @basePipelineHandle@ /must/
 --     be a valid handle to a ray tracing
 --     'Graphics.Vulkan.Core10.Handles.Pipeline'
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains the
+-- -   If @flags@ contains the
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
 --     flag, and @basePipelineHandle@ is
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     @basePipelineIndex@ /must/ be a valid index into the calling
 --     command’s @pCreateInfos@ parameter
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains the
+-- -   If @flags@ contains the
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
 --     flag, and @basePipelineIndex@ is not @-1@, @basePipelineHandle@
 --     /must/ be 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains the
+-- -   If @flags@ contains the
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PIPELINE_CREATE_DERIVATIVE_BIT'
 --     flag, and @basePipelineHandle@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
@@ -1621,8 +1596,7 @@ instance Zero RayTracingShaderGroupCreateInfoNV where
 -- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
 --     unique
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of
+-- -   @flags@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
 --     values
 --
@@ -1657,7 +1631,7 @@ instance Zero RayTracingShaderGroupCreateInfoNV where
 data RayTracingPipelineCreateInfoNV (es :: [Type]) = RayTracingPipelineCreateInfoNV
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
     next :: Chain es
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+  , -- | @flags@ is a bitmask of
     -- 'Graphics.Vulkan.Core10.Enums.PipelineCreateFlagBits.PipelineCreateFlagBits'
     -- specifying how the pipeline will be generated.
     flags :: PipelineCreateFlags
@@ -1767,7 +1741,7 @@ instance es ~ '[] => Zero (RayTracingPipelineCreateInfoNV es) where
 --
 -- = Description
 --
--- If 'Graphics.Vulkan.Core10.Enums.IndexType.IndexType' is
+-- If @indexType@ is
 -- 'Graphics.Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_NV', then this
 -- structure describes a set of triangles determined by @vertexCount@.
 -- Otherwise, this structure describes a set of indexed triangles
@@ -1791,25 +1765,22 @@ instance es ~ '[] => Zero (RayTracingPipelineCreateInfoNV es) where
 -- -   @indexOffset@ /must/ be less than the size of @indexData@
 --
 -- -   @indexOffset@ /must/ be a multiple of the element size of
---     'Graphics.Vulkan.Core10.Enums.IndexType.IndexType'
+--     @indexType@
 --
--- -   'Graphics.Vulkan.Core10.Enums.IndexType.IndexType' /must/ be
+-- -   @indexType@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT16',
 --     'Graphics.Vulkan.Core10.Enums.IndexType.INDEX_TYPE_UINT32', or
 --     'Graphics.Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_NV'
 --
 -- -   @indexData@ /must/ be
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' if
---     'Graphics.Vulkan.Core10.Enums.IndexType.IndexType' is
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' if @indexType@ is
 --     'Graphics.Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_NV'
 --
 -- -   @indexData@ /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Buffer' handle if
---     'Graphics.Vulkan.Core10.Enums.IndexType.IndexType' is not
+--     'Graphics.Vulkan.Core10.Handles.Buffer' handle if @indexType@ is not
 --     'Graphics.Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_NV'
 --
--- -   @indexCount@ /must/ be @0@ if
---     'Graphics.Vulkan.Core10.Enums.IndexType.IndexType' is
+-- -   @indexCount@ /must/ be @0@ if @indexType@ is
 --     'Graphics.Vulkan.Core10.Enums.IndexType.INDEX_TYPE_NONE_NV'
 --
 -- -   @transformOffset@ /must/ be less than the size of @transformData@
@@ -1834,7 +1805,7 @@ instance es ~ '[] => Zero (RayTracingPipelineCreateInfoNV es) where
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @indexData@
 --     /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Buffer' handle
 --
--- -   'Graphics.Vulkan.Core10.Enums.IndexType.IndexType' /must/ be a valid
+-- -   @indexType@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Enums.IndexType.IndexType' value
 --
 -- -   If @transformData@ is not
@@ -1872,8 +1843,7 @@ data GeometryTrianglesNV = GeometryTrianglesNV
     indexOffset :: DeviceSize
   , -- | @indexCount@ is the number of indices to include in this geometry.
     indexCount :: Word32
-  , -- | 'Graphics.Vulkan.Core10.Enums.IndexType.IndexType' is the format of each
-    -- index.
+  , -- | @indexType@ is the format of each index.
     indexType :: IndexType
   , -- | @transformData@ is a buffer containing optional reference to an array of
     -- 32-bit floats representing a 3x4 row major affine transformation matrix
@@ -2101,8 +2071,7 @@ data GeometryNV = GeometryNV
     geometryType :: GeometryTypeNV
   , -- | @geometry@ /must/ be a valid 'GeometryDataNV' structure
     geometry :: GeometryDataNV
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid combination of
-    -- 'GeometryFlagBitsNV' values
+  , -- | @flags@ /must/ be a valid combination of 'GeometryFlagBitsNV' values
     flags :: GeometryFlagsNV
   }
   deriving (Typeable)
@@ -2173,7 +2142,7 @@ instance Zero GeometryNV where
 --     @geometryType@ member of each geometry in @pGeometries@ /must/ be
 --     the same
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' has the
+-- -   If @flags@ has the
 --     'BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT_NV' bit set,
 --     then it /must/ not have the
 --     'BUILD_ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT_NV' bit set
@@ -2197,8 +2166,8 @@ instance Zero GeometryNV where
 --
 -- -   @type@ /must/ be a valid 'AccelerationStructureTypeNV' value
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of 'BuildAccelerationStructureFlagBitsNV' values
+-- -   @flags@ /must/ be a valid combination of
+--     'BuildAccelerationStructureFlagBitsNV' values
 --
 -- -   If @geometryCount@ is not @0@, @pGeometries@ /must/ be a valid
 --     pointer to an array of @geometryCount@ valid 'GeometryNV' structures
@@ -2213,9 +2182,8 @@ data AccelerationStructureInfoNV = AccelerationStructureInfoNV
   { -- | @type@ is a 'AccelerationStructureTypeNV' value specifying the type of
     -- acceleration structure that will be created.
     type' :: AccelerationStructureTypeNV
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
-    -- 'BuildAccelerationStructureFlagBitsNV' specifying additional parameters
-    -- of the acceleration structure.
+  , -- | @flags@ is a bitmask of 'BuildAccelerationStructureFlagBitsNV'
+    -- specifying additional parameters of the acceleration structure.
     flags :: BuildAccelerationStructureFlagsNV
   , -- | @instanceCount@ specifies the number of instances that will be in the
     -- new acceleration structure.

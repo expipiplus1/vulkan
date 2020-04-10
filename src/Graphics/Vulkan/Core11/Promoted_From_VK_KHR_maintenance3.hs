@@ -61,8 +61,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     would create the descriptor set layout.
+-- -   @device@ is the logical device that would create the descriptor set
+--     layout.
 --
 -- -   @pCreateInfo@ is a pointer to a
 --     'Graphics.Vulkan.Core10.DescriptorSet.DescriptorSetLayoutCreateInfo'

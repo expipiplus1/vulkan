@@ -79,8 +79,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' is the instance to
---     associate with the surface.
+-- -   @instance@ is the instance to associate with the surface.
 --
 -- -   @pCreateInfo@ is a pointer to a 'ImagePipeSurfaceCreateInfoFUCHSIA'
 --     structure containing parameters affecting the creation of the
@@ -97,7 +96,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+-- -   @instance@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
@@ -154,10 +153,9 @@ createImagePipeSurfaceFUCHSIA instance' createInfo allocator = evalContT $ do
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createImagePipeSurfaceFUCHSIA'
 data ImagePipeSurfaceCreateInfoFUCHSIA = ImagePipeSurfaceCreateInfoFUCHSIA
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+  { -- | @flags@ /must/ be @0@
     flags :: ImagePipeSurfaceCreateFlagsFUCHSIA
-  , -- | @imagePipeHandle@ /must/ be a valid
-    -- 'Graphics.Vulkan.Extensions.WSITypes.Zx_handle_t'
+  , -- | @imagePipeHandle@ /must/ be a valid @zx_handle_t@
     imagePipeHandle :: Zx_handle_t
   }
   deriving (Typeable)

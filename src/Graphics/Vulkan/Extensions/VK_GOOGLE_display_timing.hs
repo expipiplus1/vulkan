@@ -73,8 +73,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the device associated
---     with @swapchain@.
+-- -   @device@ is the device associated with @swapchain@.
 --
 -- -   @swapchain@ is the swapchain to obtain the refresh duration for.
 --
@@ -83,8 +82,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @swapchain@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.SwapchainKHR' handle
@@ -92,8 +91,8 @@ foreign import ccall
 -- -   @pDisplayTimingProperties@ /must/ be a valid pointer to a
 --     'RefreshCycleDurationGOOGLE' structure
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.Device', and @swapchain@
---     /must/ have been created, allocated, or retrieved from the same
+-- -   Both of @device@, and @swapchain@ /must/ have been created,
+--     allocated, or retrieved from the same
 --     'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Host Synchronization
@@ -138,8 +137,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the device associated
---     with @swapchain@.
+-- -   @device@ is the device associated with @swapchain@.
 --
 -- -   @swapchain@ is the swapchain to obtain presentation timing
 --     information duration for.
@@ -170,8 +168,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @swapchain@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.SwapchainKHR' handle
@@ -184,8 +182,8 @@ foreign import ccall
 --     /must/ be a valid pointer to an array of @pPresentationTimingCount@
 --     'PastPresentationTimingGOOGLE' structures
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.Device', and @swapchain@
---     /must/ have been created, allocated, or retrieved from the same
+-- -   Both of @device@, and @swapchain@ /must/ have been created,
+--     allocated, or retrieved from the same
 --     'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Host Synchronization

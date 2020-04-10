@@ -59,8 +59,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     creates the buffer view.
+-- -   @device@ is the logical device that creates the buffer view.
 --
 -- -   @pCreateInfo@ is a pointer to a 'BufferViewCreateInfo' structure
 --     containing parameters to be used to create the buffer.
@@ -75,8 +74,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'BufferViewCreateInfo' structure
@@ -141,11 +140,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     destroys the buffer view.
+-- -   @device@ is the logical device that destroys the buffer view.
 --
--- -   'Graphics.Vulkan.Core10.Handles.BufferView' is the buffer view to
---     destroy.
+-- -   @bufferView@ is the buffer view to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
@@ -153,42 +150,38 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All submitted commands that refer to
---     'Graphics.Vulkan.Core10.Handles.BufferView' /must/ have completed
---     execution
+-- -   All submitted commands that refer to @bufferView@ /must/ have
+--     completed execution
 --
 -- -   If 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.BufferView' was
---     created, a compatible set of callbacks /must/ be provided here
+--     were provided when @bufferView@ was created, a compatible set of
+--     callbacks /must/ be provided here
 --
 -- -   If no
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.BufferView' was
---     created, @pAllocator@ /must/ be @NULL@
+--     were provided when @bufferView@ was created, @pAllocator@ /must/ be
+--     @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.BufferView' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.BufferView' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.BufferView' handle
+-- -   If @bufferView@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @bufferView@
+--     /must/ be a valid 'Graphics.Vulkan.Core10.Handles.BufferView' handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
 --     pointer to a valid
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
 --     structure
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.BufferView' is a valid handle, it
---     /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   If @bufferView@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.BufferView' /must/ be
---     externally synchronized
+-- -   Host access to @bufferView@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -210,8 +203,7 @@ destroyBufferView device bufferView allocator = evalContT $ do
 --
 -- == Valid Usage
 --
--- -   @offset@ /must/ be less than the size of
---     'Graphics.Vulkan.Core10.Handles.Buffer'
+-- -   @offset@ /must/ be less than the size of @buffer@
 --
 -- -   If @range@ is not equal to
 --     'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE', @range@ /must/ be
@@ -219,14 +211,12 @@ destroyBufferView device bufferView allocator = evalContT $ do
 --
 -- -   If @range@ is not equal to
 --     'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE', @range@ /must/ be
---     an integer multiple of the texel block size of
---     'Graphics.Vulkan.Core10.Enums.Format.Format'
+--     an integer multiple of the texel block size of @format@
 --
 -- -   If @range@ is not equal to
 --     'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE', @range@ divided by
---     the texel block size of
---     'Graphics.Vulkan.Core10.Enums.Format.Format', multiplied by the
---     number of texels per texel block for that format (as defined in the
+--     the texel block size of @format@, multiplied by the number of texels
+--     per texel block for that format (as defined in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-compatibility Compatible Formats>
 --     table), /must/ be less than or equal to
 --     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxTexelBufferElements@
@@ -234,38 +224,36 @@ destroyBufferView device bufferView allocator = evalContT $ do
 -- -   If @range@ is not equal to
 --     'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE', the sum of
 --     @offset@ and @range@ /must/ be less than or equal to the size of
---     'Graphics.Vulkan.Core10.Handles.Buffer'
+--     @buffer@
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' /must/ have been created
---     with a @usage@ value containing at least one of
+-- -   @buffer@ /must/ have been created with a @usage@ value containing at
+--     least one of
 --     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT'
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' was created with @usage@
---     containing
+-- -   If @buffer@ was created with @usage@ containing
 --     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT',
---     'Graphics.Vulkan.Core10.Enums.Format.Format' /must/ be supported for
---     uniform texel buffers, as specified by the
+--     @format@ /must/ be supported for uniform texel buffers, as specified
+--     by the
 --     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT'
 --     flag in
 --     'Graphics.Vulkan.Core10.DeviceInitialization.FormatProperties'::@bufferFeatures@
 --     returned by
 --     'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' was created with @usage@
---     containing
+-- -   If @buffer@ was created with @usage@ containing
 --     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT',
---     'Graphics.Vulkan.Core10.Enums.Format.Format' /must/ be supported for
---     storage texel buffers, as specified by the
+--     @format@ /must/ be supported for storage texel buffers, as specified
+--     by the
 --     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT'
 --     flag in
 --     'Graphics.Vulkan.Core10.DeviceInitialization.FormatProperties'::@bufferFeatures@
 --     returned by
 --     'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' is non-sparse then it
---     /must/ be bound completely and contiguously to a single
+-- -   If @buffer@ is non-sparse then it /must/ be bound completely and
+--     contiguously to a single
 --     'Graphics.Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- -   If the
@@ -275,33 +263,31 @@ destroyBufferView device bufferView allocator = evalContT $ do
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-texelBufferAlignment texelBufferAlignment>
---     feature is enabled and if 'Graphics.Vulkan.Core10.Handles.Buffer'
---     was created with @usage@ containing
+--     feature is enabled and if @buffer@ was created with @usage@
+--     containing
 --     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT',
 --     @offset@ /must/ be a multiple of the lesser of
 --     'Graphics.Vulkan.Extensions.VK_EXT_texel_buffer_alignment.PhysicalDeviceTexelBufferAlignmentPropertiesEXT'::@storageTexelBufferOffsetAlignmentBytes@
 --     or, if
 --     'Graphics.Vulkan.Extensions.VK_EXT_texel_buffer_alignment.PhysicalDeviceTexelBufferAlignmentPropertiesEXT'::@storageTexelBufferOffsetSingleTexelAlignment@
 --     is 'Graphics.Vulkan.Core10.BaseType.TRUE', the size of a texel of
---     the requested 'Graphics.Vulkan.Core10.Enums.Format.Format'. If the
---     size of a texel is a multiple of three bytes, then the size of a
---     single component of 'Graphics.Vulkan.Core10.Enums.Format.Format' is
---     used instead
+--     the requested @format@. If the size of a texel is a multiple of
+--     three bytes, then the size of a single component of @format@ is used
+--     instead
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-texelBufferAlignment texelBufferAlignment>
---     feature is enabled and if 'Graphics.Vulkan.Core10.Handles.Buffer'
---     was created with @usage@ containing
+--     feature is enabled and if @buffer@ was created with @usage@
+--     containing
 --     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT',
 --     @offset@ /must/ be a multiple of the lesser of
 --     'Graphics.Vulkan.Extensions.VK_EXT_texel_buffer_alignment.PhysicalDeviceTexelBufferAlignmentPropertiesEXT'::@uniformTexelBufferOffsetAlignmentBytes@
 --     or, if
 --     'Graphics.Vulkan.Extensions.VK_EXT_texel_buffer_alignment.PhysicalDeviceTexelBufferAlignmentPropertiesEXT'::@uniformTexelBufferOffsetSingleTexelAlignment@
 --     is 'Graphics.Vulkan.Core10.BaseType.TRUE', the size of a texel of
---     the requested 'Graphics.Vulkan.Core10.Enums.Format.Format'. If the
---     size of a texel is a multiple of three bytes, then the size of a
---     single component of 'Graphics.Vulkan.Core10.Enums.Format.Format' is
---     used instead
+--     the requested @format@. If the size of a texel is a multiple of
+--     three bytes, then the size of a single component of @format@ is used
+--     instead
 --
 -- == Valid Usage (Implicit)
 --
@@ -310,12 +296,12 @@ destroyBufferView device bufferView allocator = evalContT $ do
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+-- -   @flags@ /must/ be @0@
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Buffer' handle
+-- -   @buffer@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Buffer'
+--     handle
 --
--- -   'Graphics.Vulkan.Core10.Enums.Format.Format' /must/ be a valid
+-- -   @format@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Enums.Format.Format' value
 --
 -- = See Also
@@ -327,15 +313,13 @@ destroyBufferView device bufferView allocator = evalContT $ do
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createBufferView'
 data BufferViewCreateInfo = BufferViewCreateInfo
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is reserved for future use.
+  { -- | @flags@ is reserved for future use.
     flags :: BufferViewCreateFlags
-  , -- | 'Graphics.Vulkan.Core10.Handles.Buffer' is a
-    -- 'Graphics.Vulkan.Core10.Handles.Buffer' on which the view will be
-    -- created.
+  , -- | @buffer@ is a 'Graphics.Vulkan.Core10.Handles.Buffer' on which the view
+    -- will be created.
     buffer :: Buffer
-  , -- | 'Graphics.Vulkan.Core10.Enums.Format.Format' is a
-    -- 'Graphics.Vulkan.Core10.Enums.Format.Format' describing the format of
-    -- the data elements in the buffer.
+  , -- | @format@ is a 'Graphics.Vulkan.Core10.Enums.Format.Format' describing
+    -- the format of the data elements in the buffer.
     format :: Format
   , -- | @offset@ is an offset in bytes from the base address of the buffer.
     -- Accesses to the buffer view from shaders use addressing that is relative
@@ -347,8 +331,7 @@ data BufferViewCreateInfo = BufferViewCreateInfo
     -- 'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE' is used and the
     -- remaining size of the buffer is not a multiple of the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#texel-block-size texel block size>
-    -- of 'Graphics.Vulkan.Core10.Enums.Format.Format', the nearest smaller
-    -- multiple is used.
+    -- of @format@, the nearest smaller multiple is used.
     range :: DeviceSize
   }
   deriving (Typeable)

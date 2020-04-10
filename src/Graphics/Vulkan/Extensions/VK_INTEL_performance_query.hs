@@ -141,8 +141,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device used
---     for the queries.
+-- -   @device@ is the logical device used for the queries.
 --
 -- -   @pInitializeInfo@ is a pointer to a
 --     'InitializePerformanceApiInfoINTEL' structure specifying
@@ -184,8 +183,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device used
---     for the queries.
+-- -   @device@ is the logical device used for the queries.
 --
 -- == Valid Usage (Implicit)
 --
@@ -215,24 +213,23 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pMarkerInfo@ /must/ be a valid pointer to a valid
 --     'PerformanceMarkerInfoINTEL' structure
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics, compute, or transfer operations
+--     @commandBuffer@ was allocated from /must/ support graphics, compute,
+--     or transfer operations
 --
 -- == Host Synchronization
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -281,24 +278,23 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pMarkerInfo@ /must/ be a valid pointer to a valid
 --     'PerformanceStreamMarkerInfoINTEL' structure
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics, compute, or transfer operations
+--     @commandBuffer@ was allocated from /must/ support graphics, compute,
+--     or transfer operations
 --
 -- == Host Synchronization
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -347,8 +343,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     where the override takes place.
+-- -   @commandBuffer@ is the command buffer where the override takes
+--     place.
 --
 -- -   @pOverrideInfo@ is a pointer to a 'PerformanceOverrideInfoINTEL'
 --     structure selecting the parameter to override.
@@ -361,24 +357,23 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pOverrideInfo@ /must/ be a valid pointer to a valid
 --     'PerformanceOverrideInfoINTEL' structure
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics, compute, or transfer operations
+--     @commandBuffer@ was allocated from /must/ support graphics, compute,
+--     or transfer operations
 --
 -- == Host Synchronization
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -428,8 +423,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     the performance query commands will be submitted to.
+-- -   @device@ is the logical device that the performance query commands
+--     will be submitted to.
 --
 -- -   @pAcquireInfo@ is a pointer to a
 --     'PerformanceConfigurationAcquireInfoINTEL' structure, specifying the
@@ -479,8 +474,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the device associated to
---     the configuration object to release.
+-- -   @device@ is the device associated to the configuration object to
+--     release.
 --
 -- -   @configuration@ is the configuration object to release.
 --
@@ -518,22 +513,21 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Queue' is the queue on which the
---     configuration will be used.
+-- -   @queue@ is the queue on which the configuration will be used.
 --
 -- -   @configuration@ is the configuration to use.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Queue' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Queue' handle
+-- -   @queue@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Queue'
+--     handle
 --
 -- -   @configuration@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.PerformanceConfigurationINTEL'
 --     handle
 --
--- -   Both of @configuration@, and 'Graphics.Vulkan.Core10.Handles.Queue'
---     /must/ have been created, allocated, or retrieved from the same
+-- -   Both of @configuration@, and @queue@ /must/ have been created,
+--     allocated, or retrieved from the same
 --     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Command Properties
@@ -581,8 +575,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device to
---     query.
+-- -   @device@ is the logical device to query.
 --
 -- -   @parameter@ is the parameter to query.
 --
@@ -712,8 +705,7 @@ instance Zero InitializePerformanceApiInfoINTEL where
 -- = Members
 --
 -- To create a pool for Intel performance queries, set
--- 'Graphics.Vulkan.Core10.Query.QueryPoolCreateInfo'::'Graphics.Vulkan.Core10.Enums.QueryType.QueryType'
--- to
+-- 'Graphics.Vulkan.Core10.Query.QueryPoolCreateInfo'::@queryType@ to
 -- 'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_INTEL'
 -- and add a 'QueryPoolCreateInfoINTEL' structure to the @pNext@ chain of
 -- the 'Graphics.Vulkan.Core10.Query.QueryPoolCreateInfo' structure.

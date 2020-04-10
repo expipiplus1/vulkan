@@ -91,8 +91,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' is the instance to
---     associate the surface with.
+-- -   @instance@ is the instance to associate the surface with.
 --
 -- -   @pCreateInfo@ is a pointer to a 'WaylandSurfaceCreateInfoKHR'
 --     structure containing parameters affecting the creation of the
@@ -109,7 +108,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+-- -   @instance@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
@@ -167,14 +166,12 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device.
+-- -   @physicalDevice@ is the physical device.
 --
 -- -   @queueFamilyIndex@ is the queue family index.
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' is a pointer to the
---     'Graphics.Vulkan.Extensions.WSITypes.Wl_display' associated with a
---     Wayland compositor.
+-- -   @display@ is a pointer to the @wl_display@ associated with a Wayland
+--     compositor.
 --
 -- = Description
 --
@@ -203,13 +200,11 @@ getPhysicalDeviceWaylandPresentationSupportKHR physicalDevice queueFamilyIndex d
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'WaylandSurfaceCreateFlagsKHR', 'createWaylandSurfaceKHR'
 data WaylandSurfaceCreateInfoKHR = WaylandSurfaceCreateInfoKHR
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+  { -- | @flags@ /must/ be @0@
     flags :: WaylandSurfaceCreateFlagsKHR
-  , -- | 'Graphics.Vulkan.Extensions.WSITypes.Display' /must/ point to a valid
-    -- Wayland 'Graphics.Vulkan.Extensions.WSITypes.Wl_display'.
+  , -- | @display@ /must/ point to a valid Wayland @wl_display@.
     display :: Ptr Wl_display
-  , -- | @surface@ /must/ point to a valid Wayland
-    -- 'Graphics.Vulkan.Extensions.WSITypes.Wl_surface'.
+  , -- | @surface@ /must/ point to a valid Wayland @wl_surface@.
     surface :: Ptr Wl_surface
   }
   deriving (Typeable)

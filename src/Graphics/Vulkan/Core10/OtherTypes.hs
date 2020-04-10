@@ -166,8 +166,7 @@ instance Zero MemoryBarrier where
 --
 -- == Valid Usage
 --
--- -   @offset@ /must/ be less than the size of
---     'Graphics.Vulkan.Core10.Handles.Buffer'
+-- -   @offset@ /must/ be less than the size of @buffer@
 --
 -- -   If @size@ is not equal to
 --     'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE', @size@ /must/ be
@@ -175,17 +174,14 @@ instance Zero MemoryBarrier where
 --
 -- -   If @size@ is not equal to
 --     'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE', @size@ /must/ be
---     less than or equal to than the size of
---     'Graphics.Vulkan.Core10.Handles.Buffer' minus @offset@
+--     less than or equal to than the size of @buffer@ minus @offset@
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' was created with a
---     sharing mode of
+-- -   If @buffer@ was created with a sharing mode of
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     at least one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@
 --     /must/ be 'Graphics.Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' was created with a
---     sharing mode of
+-- -   If @buffer@ was created with a sharing mode of
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     and one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ is
 --     'Graphics.Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED', the
@@ -195,16 +191,14 @@ instance Zero MemoryBarrier where
 --     transfers, as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers>.
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' was created with a
---     sharing mode of
+-- -   If @buffer@ was created with a sharing mode of
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE'
 --     and @srcQueueFamilyIndex@ is
 --     'Graphics.Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED',
 --     @dstQueueFamilyIndex@ /must/ also be
 --     'Graphics.Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' was created with a
---     sharing mode of
+-- -   If @buffer@ was created with a sharing mode of
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE'
 --     and @srcQueueFamilyIndex@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED', it
@@ -212,8 +206,7 @@ instance Zero MemoryBarrier where
 --     for external memory transfers, as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers>.
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' was created with a
---     sharing mode of
+-- -   If @buffer@ was created with a sharing mode of
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE'
 --     and @dstQueueFamilyIndex@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED', it
@@ -221,16 +214,15 @@ instance Zero MemoryBarrier where
 --     for external memory transfers, as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers>.
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' was created with a
---     sharing mode of
+-- -   If @buffer@ was created with a sharing mode of
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE',
 --     and @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not
 --     'Graphics.Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED', at least
 --     one of them /must/ be the same as the family of the queue that will
 --     execute this barrier
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' is non-sparse then it
---     /must/ be bound completely and contiguously to a single
+-- -   If @buffer@ is non-sparse then it /must/ be bound completely and
+--     contiguously to a single
 --     'Graphics.Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- == Valid Usage (Implicit)
@@ -240,8 +232,8 @@ instance Zero MemoryBarrier where
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Buffer' handle
+-- -   @buffer@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Buffer'
+--     handle
 --
 -- = See Also
 --
@@ -268,18 +260,16 @@ data BufferMemoryBarrier = BufferMemoryBarrier
   , -- | @dstQueueFamilyIndex@ is the destination queue family for a
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>.
     dstQueueFamilyIndex :: Word32
-  , -- | 'Graphics.Vulkan.Core10.Handles.Buffer' is a handle to the buffer whose
-    -- backing memory is affected by the barrier.
+  , -- | @buffer@ is a handle to the buffer whose backing memory is affected by
+    -- the barrier.
     buffer :: Buffer
-  , -- | @offset@ is an offset in bytes into the backing memory for
-    -- 'Graphics.Vulkan.Core10.Handles.Buffer'; this is relative to the base
-    -- offset as bound to the buffer (see
+  , -- | @offset@ is an offset in bytes into the backing memory for @buffer@;
+    -- this is relative to the base offset as bound to the buffer (see
     -- 'Graphics.Vulkan.Core10.MemoryManagement.bindBufferMemory').
     offset :: DeviceSize
   , -- | @size@ is a size in bytes of the affected area of backing memory for
-    -- 'Graphics.Vulkan.Core10.Handles.Buffer', or
-    -- 'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE' to use the range from
-    -- @offset@ to the end of the buffer.
+    -- @buffer@, or 'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE' to use the
+    -- range from @offset@ to the end of the buffer.
     size :: DeviceSize
   }
   deriving (Typeable)
@@ -400,9 +390,9 @@ instance Zero BufferMemoryBarrier where
 -- created with
 -- 'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 -- is dependent on the last sample locations used to render to the image
--- subresource as a depth\/stencil attachment, thus when the
--- 'Graphics.Vulkan.Core10.Handles.Image' member of a 'ImageMemoryBarrier'
--- is an image created with this flag the application /can/ include a
+-- subresource as a depth\/stencil attachment, thus when the @image@ member
+-- of a 'ImageMemoryBarrier' is an image created with this flag the
+-- application /can/ include a
 -- 'Graphics.Vulkan.Extensions.VK_EXT_sample_locations.SampleLocationsInfoEXT'
 -- structure in the @pNext@ chain of 'ImageMemoryBarrier' to specify the
 -- sample locations to use during the image layout transition.
@@ -418,8 +408,8 @@ instance Zero BufferMemoryBarrier where
 -- if @oldLayout@ would equal
 -- 'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED'.
 --
--- If 'Graphics.Vulkan.Core10.Handles.Image' has a multi-planar format and
--- the image is /disjoint/, then including
+-- If @image@ has a multi-planar format and the image is /disjoint/, then
+-- including
 -- 'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
 -- in the @aspectMask@ member of @subresourceRange@ is equivalent to
 -- including
@@ -438,14 +428,12 @@ instance Zero BufferMemoryBarrier where
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED' or
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PREINITIALIZED'
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' was created with a sharing
---     mode of
+-- -   If @image@ was created with a sharing mode of
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     at least one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@
 --     /must/ be 'Graphics.Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' was created with a sharing
---     mode of
+-- -   If @image@ was created with a sharing mode of
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     and one of @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ is
 --     'Graphics.Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED', the
@@ -455,16 +443,14 @@ instance Zero BufferMemoryBarrier where
 --     described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers>.
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' was created with a sharing
---     mode of
+-- -   If @image@ was created with a sharing mode of
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE'
 --     and @srcQueueFamilyIndex@ is
 --     'Graphics.Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED',
 --     @dstQueueFamilyIndex@ /must/ also be
 --     'Graphics.Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED'.
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' was created with a sharing
---     mode of
+-- -   If @image@ was created with a sharing mode of
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE'
 --     and @srcQueueFamilyIndex@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED', it
@@ -472,8 +458,7 @@ instance Zero BufferMemoryBarrier where
 --     for external memory transfers, as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers>.
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' was created with a sharing
---     mode of
+-- -   If @image@ was created with a sharing mode of
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE'
 --     and @dstQueueFamilyIndex@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED', it
@@ -481,8 +466,7 @@ instance Zero BufferMemoryBarrier where
 --     for external memory transfers, as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers>.
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' was created with a sharing
---     mode of
+-- -   If @image@ was created with a sharing mode of
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE',
 --     and @srcQueueFamilyIndex@ and @dstQueueFamilyIndex@ are not
 --     'Graphics.Vulkan.Core10.APIConstants.QUEUE_FAMILY_IGNORED', at least
@@ -491,29 +475,29 @@ instance Zero BufferMemoryBarrier where
 --
 -- -   @subresourceRange.baseMipLevel@ /must/ be less than the @mipLevels@
 --     specified in 'Graphics.Vulkan.Core10.Image.ImageCreateInfo' when
---     'Graphics.Vulkan.Core10.Handles.Image' was created
+--     @image@ was created
 --
 -- -   If @subresourceRange.levelCount@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.REMAINING_MIP_LEVELS',
 --     @subresourceRange.baseMipLevel@ + @subresourceRange.levelCount@
 --     /must/ be less than or equal to the @mipLevels@ specified in
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo' when
---     'Graphics.Vulkan.Core10.Handles.Image' was created
+--     'Graphics.Vulkan.Core10.Image.ImageCreateInfo' when @image@ was
+--     created
 --
 -- -   @subresourceRange.baseArrayLayer@ /must/ be less than the
 --     @arrayLayers@ specified in
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo' when
---     'Graphics.Vulkan.Core10.Handles.Image' was created
+--     'Graphics.Vulkan.Core10.Image.ImageCreateInfo' when @image@ was
+--     created
 --
 -- -   If @subresourceRange.layerCount@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.REMAINING_ARRAY_LAYERS',
 --     @subresourceRange.baseArrayLayer@ + @subresourceRange.layerCount@
 --     /must/ be less than or equal to the @arrayLayers@ specified in
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo' when
---     'Graphics.Vulkan.Core10.Handles.Image' was created
+--     'Graphics.Vulkan.Core10.Image.ImageCreateInfo' when @image@ was
+--     created
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' has a depth\/stencil
---     format with both depth and stencil and the
+-- -   If @image@ has a depth\/stencil format with both depth and stencil
+--     and the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
 --     feature is enabled, then the @aspectMask@ member of
 --     @subresourceRange@ /must/ include either or both
@@ -521,8 +505,8 @@ instance Zero BufferMemoryBarrier where
 --     and
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' has a depth\/stencil
---     format with both depth and stencil and the
+-- -   If @image@ has a depth\/stencil format with both depth and stencil
+--     and the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
 --     feature is not enabled, then the @aspectMask@ member of
 --     @subresourceRange@ /must/ include both
@@ -530,14 +514,13 @@ instance Zero BufferMemoryBarrier where
 --     and
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' has a single-plane color
---     format or is not /disjoint/, then the @aspectMask@ member of
---     @subresourceRange@ /must/ be
+-- -   If @image@ has a single-plane color format or is not /disjoint/,
+--     then the @aspectMask@ member of @subresourceRange@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' has a multi-planar format
---     and the image is /disjoint/, then the @aspectMask@ member of
---     @subresourceRange@ /must/ include either at least one of
+-- -   If @image@ has a multi-planar format and the image is /disjoint/,
+--     then the @aspectMask@ member of @subresourceRange@ /must/ include
+--     either at least one of
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT',
 --     and
@@ -545,50 +528,43 @@ instance Zero BufferMemoryBarrier where
 --     or /must/ include
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' has a multi-planar format
---     with only two planes, then the @aspectMask@ member of
---     @subresourceRange@ /must/ not include
+-- -   If @image@ has a multi-planar format with only two planes, then the
+--     @aspectMask@ member of @subresourceRange@ /must/ not include
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_2_BIT'
 --
 -- -   If either @oldLayout@ or @newLayout@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL'
---     then 'Graphics.Vulkan.Core10.Handles.Image' /must/ have been created
---     with
+--     then @image@ /must/ have been created with
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
 --     set
 --
 -- -   If either @oldLayout@ or @newLayout@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL'
---     then 'Graphics.Vulkan.Core10.Handles.Image' /must/ have been created
---     with
+--     then @image@ /must/ have been created with
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --     set
 --
 -- -   If either @oldLayout@ or @newLayout@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL'
---     then 'Graphics.Vulkan.Core10.Handles.Image' /must/ have been created
---     with
+--     then @image@ /must/ have been created with
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --     set
 --
 -- -   If either @oldLayout@ or @newLayout@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL'
---     then 'Graphics.Vulkan.Core10.Handles.Image' /must/ have been created
---     with
+--     then @image@ /must/ have been created with
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --     set
 --
 -- -   If either @oldLayout@ or @newLayout@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL'
---     then 'Graphics.Vulkan.Core10.Handles.Image' /must/ have been created
---     with
+--     then @image@ /must/ have been created with
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --     set
 --
 -- -   If either @oldLayout@ or @newLayout@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL'
---     then 'Graphics.Vulkan.Core10.Handles.Image' /must/ have been created
---     with
+--     then @image@ /must/ have been created with
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
@@ -596,26 +572,23 @@ instance Zero BufferMemoryBarrier where
 --
 -- -   If either @oldLayout@ or @newLayout@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL'
---     then 'Graphics.Vulkan.Core10.Handles.Image' /must/ have been created
---     with
+--     then @image@ /must/ have been created with
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_SRC_BIT'
 --     set
 --
 -- -   If either @oldLayout@ or @newLayout@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL'
---     then 'Graphics.Vulkan.Core10.Handles.Image' /must/ have been created
---     with
+--     then @image@ /must/ have been created with
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
 --     set
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' is non-sparse then it
---     /must/ be bound completely and contiguously to a single
+-- -   If @image@ is non-sparse then it /must/ be bound completely and
+--     contiguously to a single
 --     'Graphics.Vulkan.Core10.Handles.DeviceMemory' object
 --
 -- -   If either @oldLayout@ or @newLayout@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV'
---     then 'Graphics.Vulkan.Core10.Handles.Image' /must/ have been created
---     with
+--     then @image@ /must/ have been created with
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV'
 --     set
 --
@@ -636,8 +609,8 @@ instance Zero BufferMemoryBarrier where
 -- -   @newLayout@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
 --
--- -   'Graphics.Vulkan.Core10.Handles.Image' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Image' handle
+-- -   @image@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Image'
+--     handle
 --
 -- -   @subresourceRange@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.SharedTypes.ImageSubresourceRange' structure
@@ -676,13 +649,11 @@ data ImageMemoryBarrier (es :: [Type]) = ImageMemoryBarrier
   , -- | @dstQueueFamilyIndex@ is the destination queue family for a
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers queue family ownership transfer>.
     dstQueueFamilyIndex :: Word32
-  , -- | 'Graphics.Vulkan.Core10.Handles.Image' is a handle to the image affected
-    -- by this barrier.
+  , -- | @image@ is a handle to the image affected by this barrier.
     image :: Image
   , -- | @subresourceRange@ describes the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views image subresource range>
-    -- within 'Graphics.Vulkan.Core10.Handles.Image' that is affected by this
-    -- barrier.
+    -- within @image@ that is affected by this barrier.
     subresourceRange :: ImageSubresourceRange
   }
   deriving (Typeable)
@@ -849,10 +820,8 @@ instance Zero DrawIndirectCommand where
 --
 -- -   (@indexSize@ * (@firstIndex@ + @indexCount@) + @offset@) /must/ be
 --     less than or equal to the size of the bound index buffer, with
---     @indexSize@ being based on the type specified by
---     'Graphics.Vulkan.Core10.Enums.IndexType.IndexType', where the index
---     buffer, 'Graphics.Vulkan.Core10.Enums.IndexType.IndexType', and
---     @offset@ are specified via
+--     @indexSize@ being based on the type specified by @indexType@, where
+--     the index buffer, @indexType@, and @offset@ are specified via
 --     'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer'
 --
 -- -   If the

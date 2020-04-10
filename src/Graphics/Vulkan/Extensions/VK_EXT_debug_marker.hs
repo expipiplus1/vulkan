@@ -80,8 +80,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the device that created
---     the object.
+-- -   @device@ is the device that created the object.
 --
 -- -   @pNameInfo@ is a pointer to a 'DebugMarkerObjectNameInfoEXT'
 --     structure specifying the parameters of the name to set on the
@@ -89,8 +88,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pNameInfo@ /must/ be a valid pointer to a valid
 --     'DebugMarkerObjectNameInfoEXT' structure
@@ -133,16 +132,15 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the device that created
---     the object.
+-- -   @device@ is the device that created the object.
 --
 -- -   @pTagInfo@ is a pointer to a 'DebugMarkerObjectTagInfoEXT' structure
 --     specifying the parameters of the tag to attach to the object.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pTagInfo@ /must/ be a valid pointer to a valid
 --     'DebugMarkerObjectTagInfoEXT' structure
@@ -185,32 +183,31 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command is recorded.
+-- -   @commandBuffer@ is the command buffer into which the command is
+--     recorded.
 --
 -- -   @pMarkerInfo@ is a pointer to a 'DebugMarkerMarkerInfoEXT' structure
 --     specifying the parameters of the marker region to open.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pMarkerInfo@ /must/ be a valid pointer to a valid
 --     'DebugMarkerMarkerInfoEXT' structure
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics, or compute operations
+--     @commandBuffer@ was allocated from /must/ support graphics, or
+--     compute operations
 --
 -- == Host Synchronization
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -246,8 +243,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command is recorded.
+-- -   @commandBuffer@ is the command buffer into which the command is
+--     recorded.
 --
 -- = Description
 --
@@ -262,31 +259,29 @@ foreign import ccall
 --
 -- -   There /must/ be an outstanding 'cmdDebugMarkerBeginEXT' command
 --     prior to the 'cmdDebugMarkerEndEXT' on the queue that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' is submitted to
+--     @commandBuffer@ is submitted to
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.CommandBuffer' is a secondary
---     command buffer, there /must/ be an outstanding
---     'cmdDebugMarkerBeginEXT' command recorded to
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' that has not
---     previously been ended by a call to 'cmdDebugMarkerEndEXT'.
+-- -   If @commandBuffer@ is a secondary command buffer, there /must/ be an
+--     outstanding 'cmdDebugMarkerBeginEXT' command recorded to
+--     @commandBuffer@ that has not previously been ended by a call to
+--     'cmdDebugMarkerEndEXT'.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics, or compute operations
+--     @commandBuffer@ was allocated from /must/ support graphics, or
+--     compute operations
 --
 -- == Host Synchronization
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -320,32 +315,31 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command is recorded.
+-- -   @commandBuffer@ is the command buffer into which the command is
+--     recorded.
 --
 -- -   @pMarkerInfo@ is a pointer to a 'DebugMarkerMarkerInfoEXT' structure
 --     specifying the parameters of the marker to insert.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pMarkerInfo@ /must/ be a valid pointer to a valid
 --     'DebugMarkerMarkerInfoEXT' structure
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics, or compute operations
+--     @commandBuffer@ was allocated from /must/ support graphics, or
+--     compute operations
 --
 -- == Host Synchronization
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -387,12 +381,12 @@ cmdDebugMarkerInsertEXT commandBuffer markerInfo = evalContT $ do
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'debugMarkerSetObjectNameEXT'
 data DebugMarkerObjectNameInfoEXT = DebugMarkerObjectNameInfoEXT
-  { -- | 'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType' /must/ be a valid
+  { -- | @objectType@ /must/ be a valid
     -- 'Graphics.Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT'
     -- value
     objectType :: DebugReportObjectTypeEXT
   , -- | @object@ /must/ be a Vulkan object of the type associated with
-    -- 'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType' as defined in
+    -- @objectType@ as defined in
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debug-report-object-types>.
     object :: Word64
   , -- | @pObjectName@ /must/ be a null-terminated UTF-8 string
@@ -454,12 +448,12 @@ instance Zero DebugMarkerObjectNameInfoEXT where
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'debugMarkerSetObjectTagEXT'
 data DebugMarkerObjectTagInfoEXT = DebugMarkerObjectTagInfoEXT
-  { -- | 'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType' /must/ be a valid
+  { -- | @objectType@ /must/ be a valid
     -- 'Graphics.Vulkan.Extensions.VK_EXT_debug_report.DebugReportObjectTypeEXT'
     -- value
     objectType :: DebugReportObjectTypeEXT
   , -- | @object@ /must/ be a Vulkan object of the type associated with
-    -- 'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType' as defined in
+    -- @objectType@ as defined in
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debug-report-object-types>.
     object :: Word64
   , -- | @tagName@ is a numerical identifier of the tag.

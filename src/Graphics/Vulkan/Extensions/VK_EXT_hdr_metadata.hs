@@ -60,8 +60,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device where
---     the swapchain(s) were created.
+-- -   @device@ is the logical device where the swapchain(s) were created.
 --
 -- -   @swapchainCount@ is the number of swapchains included in
 --     @pSwapchains@.
@@ -74,8 +73,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pSwapchains@ /must/ be a valid pointer to an array of
 --     @swapchainCount@ valid
@@ -86,9 +85,9 @@ foreign import ccall
 --
 -- -   @swapchainCount@ /must/ be greater than @0@
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.Device', and the elements of
---     @pSwapchains@ /must/ have been created, allocated, or retrieved from
---     the same 'Graphics.Vulkan.Core10.Handles.Instance'
+-- -   Both of @device@, and the elements of @pSwapchains@ /must/ have been
+--     created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- = See Also
 --

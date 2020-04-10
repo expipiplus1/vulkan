@@ -77,7 +77,7 @@ pattern BUFFER_USAGE_UNIFORM_BUFFER_BIT = BufferUsageFlagBits 0x00000010
 -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'.
 pattern BUFFER_USAGE_STORAGE_BUFFER_BIT = BufferUsageFlagBits 0x00000020
 -- | 'BUFFER_USAGE_INDEX_BUFFER_BIT' specifies that the buffer is suitable
--- for passing as the 'Graphics.Vulkan.Core10.Handles.Buffer' parameter to
+-- for passing as the @buffer@ parameter to
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdBindIndexBuffer'.
 pattern BUFFER_USAGE_INDEX_BUFFER_BIT = BufferUsageFlagBits 0x00000040
 -- | 'BUFFER_USAGE_VERTEX_BUFFER_BIT' specifies that the buffer is suitable
@@ -85,14 +85,13 @@ pattern BUFFER_USAGE_INDEX_BUFFER_BIT = BufferUsageFlagBits 0x00000040
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdBindVertexBuffers'.
 pattern BUFFER_USAGE_VERTEX_BUFFER_BIT = BufferUsageFlagBits 0x00000080
 -- | 'BUFFER_USAGE_INDIRECT_BUFFER_BIT' specifies that the buffer is suitable
--- for passing as the 'Graphics.Vulkan.Core10.Handles.Buffer' parameter to
+-- for passing as the @buffer@ parameter to
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdDrawIndirect',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdDrawIndexedIndirect',
 -- 'Graphics.Vulkan.Extensions.VK_NV_mesh_shader.cmdDrawMeshTasksIndirectNV',
 -- 'Graphics.Vulkan.Extensions.VK_NV_mesh_shader.cmdDrawMeshTasksIndirectCountNV',
 -- or 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdDispatchIndirect'.
--- It is also suitable for passing as the
--- 'Graphics.Vulkan.Core10.Handles.Buffer' member of
+-- It is also suitable for passing as the @buffer@ member of
 -- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.IndirectCommandsTokenNVX',
 -- or @sequencesCountBuffer@ or @sequencesIndexBuffer@ member of
 -- 'Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands.CmdProcessCommandsInfoNVX'
@@ -103,8 +102,7 @@ pattern BUFFER_USAGE_INDIRECT_BUFFER_BIT = BufferUsageFlagBits 0x00000100
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.cmdBuildAccelerationStructureNV'.
 pattern BUFFER_USAGE_RAY_TRACING_BIT_NV = BufferUsageFlagBits 0x00000400
 -- | 'BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT' specifies that the buffer
--- is suitable for passing as the 'Graphics.Vulkan.Core10.Handles.Buffer'
--- parameter to
+-- is suitable for passing as the @buffer@ parameter to
 -- 'Graphics.Vulkan.Extensions.VK_EXT_conditional_rendering.cmdBeginConditionalRenderingEXT'.
 pattern BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT = BufferUsageFlagBits 0x00000200
 -- | 'BUFFER_USAGE_TRANSFORM_FEEDBACK_COUNTER_BUFFER_BIT_EXT' specifies that

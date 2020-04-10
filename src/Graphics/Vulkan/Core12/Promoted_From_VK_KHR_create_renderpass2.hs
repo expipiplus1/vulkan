@@ -124,8 +124,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     creates the render pass.
+-- -   @device@ is the logical device that creates the render pass.
 --
 -- -   @pCreateInfo@ is a pointer to a 'RenderPassCreateInfo2' structure
 --     describing the parameters of the render pass.
@@ -147,8 +146,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'RenderPassCreateInfo2' structure
@@ -203,8 +202,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     in which to record the command.
+-- -   @commandBuffer@ is the command buffer in which to record the
+--     command.
 --
 -- -   @pRenderPassBegin@ is a pointer to a
 --     'Graphics.Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo'
@@ -222,24 +221,21 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   Both the 'Graphics.Vulkan.Core10.Handles.Framebuffer' and
---     'Graphics.Vulkan.Core10.Handles.RenderPass' members of
+-- -   Both the @framebuffer@ and @renderPass@ members of
 --     @pRenderPassBegin@ /must/ have been created on the same
---     'Graphics.Vulkan.Core10.Handles.Device' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated on
+--     'Graphics.Vulkan.Core10.Handles.Device' that @commandBuffer@ was
+--     allocated on
 --
 -- -   If any of the @initialLayout@ or @finalLayout@ member of the
 --     'Graphics.Vulkan.Core10.Pass.AttachmentDescription' structures or
 --     the @layout@ member of the
 --     'Graphics.Vulkan.Core10.Pass.AttachmentReference' structures
 --     specified when creating the render pass specified in the
---     'Graphics.Vulkan.Core10.Handles.RenderPass' member of
---     @pRenderPassBegin@ is
+--     @renderPass@ member of @pRenderPassBegin@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL'
 --     then the corresponding attachment image view of the framebuffer
---     specified in the 'Graphics.Vulkan.Core10.Handles.Framebuffer' member
---     of @pRenderPassBegin@ /must/ have been created with a @usage@ value
---     including
+--     specified in the @framebuffer@ member of @pRenderPassBegin@ /must/
+--     have been created with a @usage@ value including
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_COLOR_ATTACHMENT_BIT'
 --
 -- -   If any of the @initialLayout@ or @finalLayout@ member of the
@@ -247,17 +243,15 @@ foreign import ccall
 --     the @layout@ member of the
 --     'Graphics.Vulkan.Core10.Pass.AttachmentReference' structures
 --     specified when creating the render pass specified in the
---     'Graphics.Vulkan.Core10.Handles.RenderPass' member of
---     @pRenderPassBegin@ is
+--     @renderPass@ member of @pRenderPassBegin@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL',
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL',
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL',
 --     or
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL'
 --     then the corresponding attachment image view of the framebuffer
---     specified in the 'Graphics.Vulkan.Core10.Handles.Framebuffer' member
---     of @pRenderPassBegin@ /must/ have been created with a @usage@ value
---     including
+--     specified in the @framebuffer@ member of @pRenderPassBegin@ /must/
+--     have been created with a @usage@ value including
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- -   If any of the @initialLayout@ or @finalLayout@ member of the
@@ -265,8 +259,7 @@ foreign import ccall
 --     the @layout@ member of the
 --     'Graphics.Vulkan.Core10.Pass.AttachmentReference' structures
 --     specified when creating the render pass specified in the
---     'Graphics.Vulkan.Core10.Handles.RenderPass' member of
---     @pRenderPassBegin@ is
+--     @renderPass@ member of @pRenderPassBegin@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
 --     or
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
@@ -274,9 +267,8 @@ foreign import ccall
 --     or
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
 --     then the corresponding attachment image view of the framebuffer
---     specified in the 'Graphics.Vulkan.Core10.Handles.Framebuffer' member
---     of @pRenderPassBegin@ /must/ have been created with a @usage@ value
---     including
+--     specified in the @framebuffer@ member of @pRenderPassBegin@ /must/
+--     have been created with a @usage@ value including
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- -   If any of the @stencilInitialLayout@ or @stencilFinalLayout@ member
@@ -285,15 +277,13 @@ foreign import ccall
 --     structures or the @stencilLayout@ member of the
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentReferenceStencilLayout'
 --     structures specified when creating the render pass specified in the
---     'Graphics.Vulkan.Core10.Handles.RenderPass' member of
---     @pRenderPassBegin@ is
+--     @renderPass@ member of @pRenderPassBegin@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL',
 --     or
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
 --     then the corresponding attachment image view of the framebuffer
---     specified in the 'Graphics.Vulkan.Core10.Handles.Framebuffer' member
---     of @pRenderPassBegin@ /must/ have been created with a @usage@ value
---     including
+--     specified in the @framebuffer@ member of @pRenderPassBegin@ /must/
+--     have been created with a @usage@ value including
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT'
 --
 -- -   If any of the @initialLayout@ or @finalLayout@ member of the
@@ -301,13 +291,11 @@ foreign import ccall
 --     the @layout@ member of the
 --     'Graphics.Vulkan.Core10.Pass.AttachmentReference' structures
 --     specified when creating the render pass specified in the
---     'Graphics.Vulkan.Core10.Handles.RenderPass' member of
---     @pRenderPassBegin@ is
+--     @renderPass@ member of @pRenderPassBegin@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL'
 --     then the corresponding attachment image view of the framebuffer
---     specified in the 'Graphics.Vulkan.Core10.Handles.Framebuffer' member
---     of @pRenderPassBegin@ /must/ have been created with a @usage@ value
---     including
+--     specified in the @framebuffer@ member of @pRenderPassBegin@ /must/
+--     have been created with a @usage@ value including
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
@@ -317,13 +305,11 @@ foreign import ccall
 --     the @layout@ member of the
 --     'Graphics.Vulkan.Core10.Pass.AttachmentReference' structures
 --     specified when creating the render pass specified in the
---     'Graphics.Vulkan.Core10.Handles.RenderPass' member of
---     @pRenderPassBegin@ is
+--     @renderPass@ member of @pRenderPassBegin@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL'
 --     then the corresponding attachment image view of the framebuffer
---     specified in the 'Graphics.Vulkan.Core10.Handles.Framebuffer' member
---     of @pRenderPassBegin@ /must/ have been created with a @usage@ value
---     including
+--     specified in the @framebuffer@ member of @pRenderPassBegin@ /must/
+--     have been created with a @usage@ value including
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_SRC_BIT'
 --
 -- -   If any of the @initialLayout@ or @finalLayout@ member of the
@@ -331,48 +317,41 @@ foreign import ccall
 --     the @layout@ member of the
 --     'Graphics.Vulkan.Core10.Pass.AttachmentReference' structures
 --     specified when creating the render pass specified in the
---     'Graphics.Vulkan.Core10.Handles.RenderPass' member of
---     @pRenderPassBegin@ is
+--     @renderPass@ member of @pRenderPassBegin@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL'
 --     then the corresponding attachment image view of the framebuffer
---     specified in the 'Graphics.Vulkan.Core10.Handles.Framebuffer' member
---     of @pRenderPassBegin@ /must/ have been created with a @usage@ value
---     including
+--     specified in the @framebuffer@ member of @pRenderPassBegin@ /must/
+--     have been created with a @usage@ value including
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_TRANSFER_DST_BIT'
 --
 -- -   If any of the @initialLayout@ members of the
 --     'Graphics.Vulkan.Core10.Pass.AttachmentDescription' structures
 --     specified when creating the render pass specified in the
---     'Graphics.Vulkan.Core10.Handles.RenderPass' member of
---     @pRenderPassBegin@ is not
+--     @renderPass@ member of @pRenderPassBegin@ is not
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED',
 --     then each such @initialLayout@ /must/ be equal to the current layout
 --     of the corresponding attachment image subresource of the framebuffer
---     specified in the 'Graphics.Vulkan.Core10.Handles.Framebuffer' member
---     of @pRenderPassBegin@
+--     specified in the @framebuffer@ member of @pRenderPassBegin@
 --
 -- -   The @srcStageMask@ and @dstStageMask@ members of any element of the
 --     @pDependencies@ member of
 --     'Graphics.Vulkan.Core10.Pass.RenderPassCreateInfo' used to create
---     'Graphics.Vulkan.Core10.Handles.RenderPass' /must/ be supported by
---     the capabilities of the queue family identified by the
---     @queueFamilyIndex@ member of the
+--     @renderPass@ /must/ be supported by the capabilities of the queue
+--     family identified by the @queueFamilyIndex@ member of the
 --     'Graphics.Vulkan.Core10.CommandPool.CommandPoolCreateInfo' used to
---     create the command pool which
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
+--     create the command pool which @commandBuffer@ was allocated from
 --
--- -   For any attachment in 'Graphics.Vulkan.Core10.Handles.Framebuffer'
---     that is used by 'Graphics.Vulkan.Core10.Handles.RenderPass' and is
---     bound to memory locations that are also bound to another attachment
---     used by 'Graphics.Vulkan.Core10.Handles.RenderPass', and if at least
---     one of those uses causes either attachment to be written to, both
---     attachments /must/ have had the
+-- -   For any attachment in @framebuffer@ that is used by @renderPass@ and
+--     is bound to memory locations that are also bound to another
+--     attachment used by @renderPass@, and if at least one of those uses
+--     causes either attachment to be written to, both attachments /must/
+--     have had the
 --     'Graphics.Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT'
 --     set
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pRenderPassBegin@ /must/ be a valid pointer to a valid
@@ -382,26 +361,24 @@ foreign import ccall
 -- -   @pSubpassBeginInfo@ /must/ be a valid pointer to a valid
 --     'SubpassBeginInfo' structure
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics operations
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
 --
 -- -   This command /must/ only be called outside of a render pass instance
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a primary
+-- -   @commandBuffer@ /must/ be a primary
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer'
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -446,8 +423,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     in which to record the command.
+-- -   @commandBuffer@ is the command buffer in which to record the
+--     command.
 --
 -- -   @pSubpassBeginInfo@ is a pointer to a 'SubpassBeginInfo' structure
 --     containing information about the subpass which is about to begin
@@ -473,7 +450,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pSubpassBeginInfo@ /must/ be a valid pointer to a valid
@@ -482,26 +459,24 @@ foreign import ccall
 -- -   @pSubpassEndInfo@ /must/ be a valid pointer to a valid
 --     'SubpassEndInfo' structure
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics operations
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
 --
 -- -   This command /must/ only be called inside of a render pass instance
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a primary
+-- -   @commandBuffer@ /must/ be a primary
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer'
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -537,8 +512,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     in which to end the current render pass instance.
+-- -   @commandBuffer@ is the command buffer in which to end the current
+--     render pass instance.
 --
 -- -   @pSubpassEndInfo@ is a pointer to a 'SubpassEndInfo' structure
 --     containing information about how the previous subpass will be ended.
@@ -559,32 +534,30 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pSubpassEndInfo@ /must/ be a valid pointer to a valid
 --     'SubpassEndInfo' structure
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics operations
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
 --
 -- -   This command /must/ only be called inside of a render pass instance
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a primary
+-- -   @commandBuffer@ /must/ be a primary
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer'
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -618,22 +591,22 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = evalContT $ do
 --
 -- If the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-separateDepthStencilLayouts separateDepthStencilLayouts>
--- feature is enabled, and 'Graphics.Vulkan.Core10.Enums.Format.Format' is
--- a depth\/stencil format, @initialLayout@ and @finalLayout@ /can/ be set
--- to a layout that only specifies the layout of the depth aspect.
+-- feature is enabled, and @format@ is a depth\/stencil format,
+-- @initialLayout@ and @finalLayout@ /can/ be set to a layout that only
+-- specifies the layout of the depth aspect.
 --
--- If 'Graphics.Vulkan.Core10.Enums.Format.Format' is a depth\/stencil
--- format, and @initialLayout@ only specifies the initial layout of the
--- depth aspect of the attachment, the initial layout of the stencil aspect
--- is specified by the @stencilInitialLayout@ member of a
+-- If @format@ is a depth\/stencil format, and @initialLayout@ only
+-- specifies the initial layout of the depth aspect of the attachment, the
+-- initial layout of the stencil aspect is specified by the
+-- @stencilInitialLayout@ member of a
 -- 'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
 -- structure included in the @pNext@ chain. Otherwise, @initialLayout@
 -- describes the initial layout for all relevant image aspects.
 --
--- If 'Graphics.Vulkan.Core10.Enums.Format.Format' is a depth\/stencil
--- format, and @finalLayout@ only specifies the final layout of the depth
--- aspect of the attachment, the final layout of the stencil aspect is
--- specified by the @stencilFinalLayout@ member of a
+-- If @format@ is a depth\/stencil format, and @finalLayout@ only specifies
+-- the final layout of the depth aspect of the attachment, the final layout
+-- of the stencil aspect is specified by the @stencilFinalLayout@ member of
+-- a
 -- 'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
 -- structure included in the @pNext@ chain. Otherwise, @finalLayout@
 -- describes the final layout for all relevant image aspects.
@@ -644,28 +617,25 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = evalContT $ do
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_UNDEFINED' or
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_PREINITIALIZED'
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.Format.Format' is a color format,
---     @initialLayout@ /must/ not be
+-- -   If @format@ is a color format, @initialLayout@ /must/ not be
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL',
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL',
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL',
 --     or
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL'
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.Format.Format' is a depth\/stencil
---     format, @initialLayout@ /must/ not be
+-- -   If @format@ is a depth\/stencil format, @initialLayout@ /must/ not
+--     be
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL'
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.Format.Format' is a color format,
---     @finalLayout@ /must/ not be
+-- -   If @format@ is a color format, @finalLayout@ /must/ not be
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL',
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL',
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL',
 --     or
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL'
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.Format.Format' is a depth\/stencil
---     format, @finalLayout@ /must/ not be
+-- -   If @format@ is a depth\/stencil format, @finalLayout@ /must/ not be
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL'
 --
 -- -   If the
@@ -686,25 +656,22 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = evalContT $ do
 --     or
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.Format.Format' is a color format,
---     @initialLayout@ /must/ not be
+-- -   If @format@ is a color format, @initialLayout@ /must/ not be
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.Format.Format' is a color format,
---     @finalLayout@ /must/ not be
+-- -   If @format@ is a color format, @finalLayout@ /must/ not be
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL',
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.Format.Format' is a depth\/stencil
---     format which includes both depth and stencil aspects, and
---     @initialLayout@ is
+-- -   If @format@ is a depth\/stencil format which includes both depth and
+--     stencil aspects, and @initialLayout@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
@@ -712,9 +679,8 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = evalContT $ do
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
 --     structure
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.Format.Format' is a depth\/stencil
---     format which includes both depth and stencil aspects, and
---     @finalLayout@ is
+-- -   If @format@ is a depth\/stencil format which includes both depth and
+--     stencil aspects, and @finalLayout@ is
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL',
@@ -722,30 +688,26 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = evalContT $ do
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_separate_depth_stencil_layouts.AttachmentDescriptionStencilLayout'
 --     structure
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.Format.Format' is a depth\/stencil
---     format which includes only the depth aspect, @initialLayout@ /must/
---     not be
+-- -   If @format@ is a depth\/stencil format which includes only the depth
+--     aspect, @initialLayout@ /must/ not be
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.Format.Format' is a depth\/stencil
---     format which includes only the depth aspect, @finalLayout@ /must/
---     not be
+-- -   If @format@ is a depth\/stencil format which includes only the depth
+--     aspect, @finalLayout@ /must/ not be
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_ATTACHMENT_OPTIMAL'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_STENCIL_READ_ONLY_OPTIMAL'
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.Format.Format' is a depth\/stencil
---     format which includes only the stencil aspect, @initialLayout@
---     /must/ not be
+-- -   If @format@ is a depth\/stencil format which includes only the
+--     stencil aspect, @initialLayout@ /must/ not be
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL'
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.Format.Format' is a depth\/stencil
---     format which includes only the stencil aspect, @finalLayout@ /must/
---     not be
+-- -   If @format@ is a depth\/stencil format which includes only the
+--     stencil aspect, @finalLayout@ /must/ not be
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL'
@@ -755,12 +717,11 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = evalContT $ do
 -- -   @sType@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2'
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of
+-- -   @flags@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.AttachmentDescriptionFlagBits'
 --     values
 --
--- -   'Graphics.Vulkan.Core10.Enums.Format.Format' /must/ be a valid
+-- -   @format@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Enums.Format.Format' value
 --
 -- -   @samples@ /must/ be a valid
@@ -802,13 +763,12 @@ cmdEndRenderPass2 commandBuffer subpassEndInfo = evalContT $ do
 data AttachmentDescription2 (es :: [Type]) = AttachmentDescription2
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
     next :: Chain es
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+  , -- | @flags@ is a bitmask of
     -- 'Graphics.Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.AttachmentDescriptionFlagBits'
     -- specifying additional properties of the attachment.
     flags :: AttachmentDescriptionFlags
-  , -- | 'Graphics.Vulkan.Core10.Enums.Format.Format' is a
-    -- 'Graphics.Vulkan.Core10.Enums.Format.Format' value specifying the format
-    -- of the image that will be used for the attachment.
+  , -- | @format@ is a 'Graphics.Vulkan.Core10.Enums.Format.Format' value
+    -- specifying the format of the image that will be used for the attachment.
     format :: Format
   , -- | @samples@ is the number of samples of the image as defined in
     -- 'Graphics.Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'.
@@ -1121,8 +1081,7 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --
 -- == Valid Usage
 --
--- -   'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
---     /must/ be
+-- -   @pipelineBindPoint@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_GRAPHICS'
 --
 -- -   @colorAttachmentCount@ /must/ be less than or equal to
@@ -1184,7 +1143,7 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 --     'Graphics.Vulkan.Core10.Pass.AttachmentReference' member, then each
 --     use /must/ use the same @layout@
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' includes
+-- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX',
 --     it /must/ also include
 --     'Graphics.Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX'.
@@ -1208,13 +1167,11 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 -- -   @sType@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2'
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of
+-- -   @flags@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SubpassDescriptionFlagBits'
 --     values
 --
--- -   'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
---     /must/ be a valid
+-- -   @pipelineBindPoint@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
 --     value
 --
@@ -1249,11 +1206,11 @@ instance es ~ '[] => Zero (AttachmentReference2 es) where
 data SubpassDescription2 (es :: [Type]) = SubpassDescription2
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
     next :: Chain es
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+  , -- | @flags@ is a bitmask of
     -- 'Graphics.Vulkan.Core10.Enums.SubpassDescriptionFlagBits.SubpassDescriptionFlagBits'
     -- specifying usage of the subpass.
     flags :: SubpassDescriptionFlags
-  , -- | 'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' is a
+  , -- | @pipelineBindPoint@ is a
     -- 'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' value
     -- specifying the pipeline type supported for this subpass.
     pipelineBindPoint :: PipelineBindPoint
@@ -1452,14 +1409,12 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
 --     one of the pipeline stages in @dstStageMask@, as specified in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-types-supported table of supported access types>
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DependencyFlagBits.DependencyFlags'
---     includes
+-- -   If @dependencyFlags@ includes
 --     'Graphics.Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_VIEW_LOCAL_BIT',
 --     @srcSubpass@ /must/ not be equal to
 --     'Graphics.Vulkan.Core10.APIConstants.SUBPASS_EXTERNAL'
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DependencyFlagBits.DependencyFlags'
---     includes
+-- -   If @dependencyFlags@ includes
 --     'Graphics.Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_VIEW_LOCAL_BIT',
 --     @dstSubpass@ /must/ not be equal to
 --     'Graphics.Vulkan.Core10.APIConstants.SUBPASS_EXTERNAL'
@@ -1467,16 +1422,13 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
 -- -   If @srcSubpass@ equals @dstSubpass@, and @srcStageMask@ and
 --     @dstStageMask@ both include a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-framebuffer-regions framebuffer-space stage>,
---     then
---     'Graphics.Vulkan.Core10.Enums.DependencyFlagBits.DependencyFlags'
---     /must/ include
+--     then @dependencyFlags@ /must/ include
 --     'Graphics.Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_BY_REGION_BIT'
 --
 -- -   If @viewOffset@ is not equal to @0@, @srcSubpass@ /must/ not be
 --     equal to @dstSubpass@
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DependencyFlagBits.DependencyFlags'
---     does not include
+-- -   If @dependencyFlags@ does not include
 --     'Graphics.Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_VIEW_LOCAL_BIT',
 --     @viewOffset@ /must/ be @0@
 --
@@ -1526,8 +1478,7 @@ instance es ~ '[] => Zero (SubpassDescription2 es) where
 -- -   @dstAccessMask@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core10.Enums.AccessFlagBits.AccessFlagBits' values
 --
--- -   'Graphics.Vulkan.Core10.Enums.DependencyFlagBits.DependencyFlags'
---     /must/ be a valid combination of
+-- -   @dependencyFlags@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core10.Enums.DependencyFlagBits.DependencyFlagBits'
 --     values
 --
@@ -1565,8 +1516,7 @@ data SubpassDependency2 = SubpassDependency2
     -- a
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-access-masks destination access mask>.
     dstAccessMask :: AccessFlags
-  , -- | 'Graphics.Vulkan.Core10.Enums.DependencyFlagBits.DependencyFlags' is a
-    -- bitmask of
+  , -- | @dependencyFlags@ is a bitmask of
     -- 'Graphics.Vulkan.Core10.Enums.DependencyFlagBits.DependencyFlagBits'.
     dependencyFlags :: DependencyFlags
   , -- | @viewOffset@ controls which views in the source subpass the views in the
@@ -1672,7 +1622,7 @@ instance Zero SubpassDependency2 where
 --     (including the same subpass), the 'AttachmentDescription2'
 --     structures describing them /must/ include
 --     'Graphics.Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT'
---     in 'Graphics.Vulkan.Core10.BaseType.Flags'
+--     in @flags@
 --
 -- -   If the @attachment@ member of any element of @pInputAttachments@,
 --     @pColorAttachments@, @pResolveAttachments@ or
@@ -1703,17 +1653,16 @@ instance Zero SubpassDependency2 where
 --     'Graphics.Vulkan.Core10.APIConstants.SUBPASS_EXTERNAL', all stage
 --     flags included in the @srcStageMask@ member of that dependency
 --     /must/ be a pipeline stage supported by the
---     'Graphics.Vulkan.Core10.Handles.Pipeline' identified by the
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
---     member of the source subpass
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types pipeline>
+--     identified by the @pipelineBindPoint@ member of the source subpass
 --
 -- -   For any element of @pDependencies@, if the @dstSubpass@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.SUBPASS_EXTERNAL', all stage
 --     flags included in the @dstStageMask@ member of that dependency
 --     /must/ be a pipeline stage supported by the
---     'Graphics.Vulkan.Core10.Handles.Pipeline' identified by the
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
---     member of the destination subpass
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types pipeline>
+--     identified by the @pipelineBindPoint@ member of the destination
+--     subpass
 --
 -- -   The set of bits included in any element of @pCorrelatedViewMasks@
 --     /must/ not overlap with the set of bits included in any other
@@ -1726,17 +1675,14 @@ instance Zero SubpassDependency2 where
 --     @pSubpasses@ /must/ either all be @0@, or all not be @0@
 --
 -- -   If the 'SubpassDescription2'::@viewMask@ member of all elements of
---     @pSubpasses@ is @0@, the
---     'Graphics.Vulkan.Core10.Enums.DependencyFlagBits.DependencyFlags'
---     member of any element of @pDependencies@ /must/ not include
+--     @pSubpasses@ is @0@, the @dependencyFlags@ member of any element of
+--     @pDependencies@ /must/ not include
 --     'Graphics.Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_VIEW_LOCAL_BIT'
 --
 -- -   For any element of @pDependencies@ where its @srcSubpass@ member
 --     equals its @dstSubpass@ member, if the @viewMask@ member of the
 --     corresponding element of @pSubpasses@ includes more than one bit,
---     its
---     'Graphics.Vulkan.Core10.Enums.DependencyFlagBits.DependencyFlags'
---     member /must/ include
+--     its @dependencyFlags@ member /must/ include
 --     'Graphics.Vulkan.Core10.Enums.DependencyFlagBits.DEPENDENCY_VIEW_LOCAL_BIT'
 --
 -- -   The @viewMask@ member /must/ not have a bit set at an index greater
@@ -1767,8 +1713,7 @@ instance Zero SubpassDependency2 where
 -- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
 --     unique
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of
+-- -   @flags@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core10.Enums.RenderPassCreateFlagBits.RenderPassCreateFlagBits'
 --     values
 --
@@ -1799,7 +1744,7 @@ instance Zero SubpassDependency2 where
 data RenderPassCreateInfo2 (es :: [Type]) = RenderPassCreateInfo2
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
     next :: Chain es
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is reserved for future use.
+  , -- | @flags@ is reserved for future use.
     flags :: RenderPassCreateFlags
   , -- | @pAttachments@ is a pointer to an array of @attachmentCount@
     -- 'AttachmentDescription2' structures describing the attachments used by

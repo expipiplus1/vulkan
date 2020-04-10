@@ -68,8 +68,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     created the device memory being exported.
+-- -   @device@ is the logical device that created the device memory being
+--     exported.
 --
 -- -   @pGetFdInfo@ is a pointer to a 'MemoryGetFdInfoKHR' structure
 --     containing parameters of the export operation.
@@ -125,8 +125,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     will be importing @fd@.
+-- -   @device@ is the logical device that will be importing @fd@.
 --
 -- -   @handleType@ is the type of the handle @fd@.
 --
@@ -185,8 +184,7 @@ getMemoryFdPropertiesKHR device handleType fd = evalContT $ do
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'.
 --
 -- -   The memory from which @fd@ was exported /must/ have been created on
---     the same underlying physical device as
---     'Graphics.Vulkan.Core10.Handles.Device'.
+--     the same underlying physical device as @device@.
 --
 -- -   If @handleType@ is not @0@, it /must/ be defined as a POSIX file
 --     descriptor handle.
@@ -195,9 +193,8 @@ getMemoryFdPropertiesKHR device handleType fd = evalContT $ do
 --     type specified by @handleType@.
 --
 -- -   The memory represented by @fd@ /must/ have been created from a
---     physical device and driver that is compatible with
---     'Graphics.Vulkan.Core10.Handles.Device' and @handleType@, as
---     described in
+--     physical device and driver that is compatible with @device@ and
+--     @handleType@, as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-memory-handle-types-compatibility>.
 --
 -- -   @fd@ /must/ obey any requirements listed for @handleType@ in

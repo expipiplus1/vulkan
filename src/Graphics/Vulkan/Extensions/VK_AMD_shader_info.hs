@@ -88,11 +88,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the device that created
---     'Graphics.Vulkan.Core10.Handles.Pipeline'.
+-- -   @device@ is the device that created @pipeline@.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Pipeline' is the target of the
---     query.
+-- -   @pipeline@ is the target of the query.
 --
 -- -   @shaderStage@ identifies the particular shader within the pipeline
 --     about which information is being queried.
@@ -144,10 +142,10 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.Pipeline' /must/ be a valid
+-- -   @pipeline@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' handle
 --
 -- -   @shaderStage@ /must/ be a valid
@@ -162,8 +160,8 @@ foreign import ccall
 --     not @NULL@, @pInfo@ /must/ be a valid pointer to an array of
 --     @pInfoSize@ bytes
 --
--- -   'Graphics.Vulkan.Core10.Handles.Pipeline' /must/ have been created,
---     allocated, or retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
+-- -   @pipeline@ /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- == Return Codes
 --

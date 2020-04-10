@@ -102,8 +102,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is a physical
---     device.
+-- -   @physicalDevice@ is a physical device.
 --
 -- -   @pPropertyCount@ is a pointer to an integer related to the number of
 --     display devices available or queried, as described below.
@@ -120,7 +119,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
@@ -175,8 +174,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is a physical
---     device.
+-- -   @physicalDevice@ is a physical device.
 --
 -- -   @pPropertyCount@ is a pointer to an integer related to the number of
 --     display planes available or queried, as described below.
@@ -193,7 +191,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
@@ -250,12 +248,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device associated with
---     'Graphics.Vulkan.Extensions.WSITypes.Display'.
+-- -   @physicalDevice@ is the physical device associated with @display@.
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' is the display to
---     query.
+-- -   @display@ is the display to query.
 --
 -- -   @pPropertyCount@ is a pointer to an integer related to the number of
 --     display modes available or queried, as described below.
@@ -272,10 +267,10 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' /must/ be a valid
+-- -   @display@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.DisplayKHR' handle
 --
 -- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
@@ -285,9 +280,8 @@ foreign import ccall
 --     to an array of @pPropertyCount@ 'DisplayModeProperties2KHR'
 --     structures
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' /must/ have been
---     created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
+-- -   @display@ /must/ have been created, allocated, or retrieved from
+--     @physicalDevice@
 --
 -- == Return Codes
 --
@@ -337,8 +331,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device associated with @pDisplayPlaneInfo@.
+-- -   @physicalDevice@ is the physical device associated with
+--     @pDisplayPlaneInfo@.
 --
 -- -   @pDisplayPlaneInfo@ is a pointer to a 'DisplayPlaneInfo2KHR'
 --     structure describing the plane and mode.

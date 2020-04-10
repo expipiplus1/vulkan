@@ -74,8 +74,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     created the fence being exported.
+-- -   @device@ is the logical device that created the fence being
+--     exported.
 --
 -- -   @pGetWin32HandleInfo@ is a pointer to a 'FenceGetWin32HandleInfoKHR'
 --     structure containing parameters of the export operation.
@@ -132,8 +132,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     created the fence.
+-- -   @device@ is the logical device that created the fence.
 --
 -- -   @pImportFenceWin32HandleInfo@ is a pointer to a
 --     'ImportFenceWin32HandleInfoKHR' structure specifying the fence and
@@ -223,11 +222,10 @@ importFenceWin32HandleKHR device importFenceWin32HandleInfo = evalContT $ do
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   'Graphics.Vulkan.Core10.Handles.Fence' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Fence' handle
+-- -   @fence@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Fence'
+--     handle
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of
+-- -   @flags@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core11.Enums.FenceImportFlagBits.FenceImportFlagBits'
 --     values
 --
@@ -237,8 +235,7 @@ importFenceWin32HandleKHR device importFenceWin32HandleInfo = evalContT $ do
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.Fence' /must/ be
---     externally synchronized
+-- -   Host access to @fence@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -248,10 +245,9 @@ importFenceWin32HandleKHR device importFenceWin32HandleInfo = evalContT $ do
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'importFenceWin32HandleKHR'
 data ImportFenceWin32HandleInfoKHR = ImportFenceWin32HandleInfoKHR
-  { -- | 'Graphics.Vulkan.Core10.Handles.Fence' is the fence into which the state
-    -- will be imported.
+  { -- | @fence@ is the fence into which the state will be imported.
     fence :: Fence
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+  , -- | @flags@ is a bitmask of
     -- 'Graphics.Vulkan.Core11.Enums.FenceImportFlagBits.FenceImportFlagBits'
     -- specifying additional parameters for the fence payload import operation.
     flags :: FenceImportFlags
@@ -423,23 +419,22 @@ instance Zero ExportFenceWin32HandleInfoKHR where
 --
 -- -   @handleType@ /must/ have been included in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_fence.ExportFenceCreateInfo'::@handleTypes@
---     when the 'Graphics.Vulkan.Core10.Handles.Fence'’s current payload
---     was created.
+--     when the @fence@’s current payload was created.
 --
 -- -   If @handleType@ is defined as an NT handle, 'getFenceWin32HandleKHR'
 --     /must/ be called no more than once for each valid unique combination
---     of 'Graphics.Vulkan.Core10.Handles.Fence' and @handleType@.
+--     of @fence@ and @handleType@.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Fence' /must/ not currently have its
---     payload replaced by an imported payload as described below in
+-- -   @fence@ /must/ not currently have its payload replaced by an
+--     imported payload as described below in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fences-importing Importing Fence Payloads>
 --     unless that imported payload’s handle type was included in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_fence_capabilities.ExternalFenceProperties'::@exportFromImportedHandleTypes@
 --     for @handleType@.
 --
 -- -   If @handleType@ refers to a handle type with copy payload
---     transference semantics, 'Graphics.Vulkan.Core10.Handles.Fence'
---     /must/ be signaled, or have an associated
+--     transference semantics, @fence@ /must/ be signaled, or have an
+--     associated
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fences-signaling fence signal operation>
 --     pending execution.
 --
@@ -453,8 +448,8 @@ instance Zero ExportFenceWin32HandleInfoKHR where
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   'Graphics.Vulkan.Core10.Handles.Fence' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Fence' handle
+-- -   @fence@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Fence'
+--     handle
 --
 -- -   @handleType@ /must/ be a valid
 --     'Graphics.Vulkan.Core11.Enums.ExternalFenceHandleTypeFlagBits.ExternalFenceHandleTypeFlagBits'
@@ -467,8 +462,7 @@ instance Zero ExportFenceWin32HandleInfoKHR where
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getFenceWin32HandleKHR'
 data FenceGetWin32HandleInfoKHR = FenceGetWin32HandleInfoKHR
-  { -- | 'Graphics.Vulkan.Core10.Handles.Fence' is the fence from which state
-    -- will be exported.
+  { -- | @fence@ is the fence from which state will be exported.
     fence :: Fence
   , -- | @handleType@ is the type of handle requested.
     handleType :: ExternalFenceHandleTypeFlagBits

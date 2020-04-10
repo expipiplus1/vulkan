@@ -109,30 +109,26 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is a logical device
---     associated with 'Graphics.Vulkan.Extensions.WSITypes.Display'.
+-- -   @device@ is a logical device associated with @display@.
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' is the display whose
---     power state is modified.
+-- -   @display@ is the display whose power state is modified.
 --
 -- -   @pDisplayPowerInfo@ is a 'DisplayPowerInfoEXT' structure specifying
---     the new power state of
---     'Graphics.Vulkan.Extensions.WSITypes.Display'.
+--     the new power state of @display@.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' /must/ be a valid
+-- -   @display@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.DisplayKHR' handle
 --
 -- -   @pDisplayPowerInfo@ /must/ be a valid pointer to a valid
 --     'DisplayPowerInfoEXT' structure
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.Device', and
---     'Graphics.Vulkan.Extensions.WSITypes.Display' /must/ have been
---     created, allocated, or retrieved from the same
+-- -   Both of @device@, and @display@ /must/ have been created, allocated,
+--     or retrieved from the same
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
 --
 -- == Return Codes
@@ -164,8 +160,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is a logical device on which
---     the event /may/ occur.
+-- -   @device@ is a logical device on which the event /may/ occur.
 --
 -- -   @pDeviceEventInfo@ is a pointer to a 'DeviceEventInfoEXT' structure
 --     describing the event of interest to the application.
@@ -179,8 +174,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pDeviceEventInfo@ /must/ be a valid pointer to a valid
 --     'DeviceEventInfoEXT' structure
@@ -228,11 +223,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is a logical device
---     associated with 'Graphics.Vulkan.Extensions.WSITypes.Display'
+-- -   @device@ is a logical device associated with @display@
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' is the display on
---     which the event /may/ occur.
+-- -   @display@ is the display on which the event /may/ occur.
 --
 -- -   @pDisplayEventInfo@ is a pointer to a 'DisplayEventInfoEXT'
 --     structure describing the event of interest to the application.
@@ -246,10 +239,10 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' /must/ be a valid
+-- -   @display@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.DisplayKHR' handle
 --
 -- -   @pDisplayEventInfo@ /must/ be a valid pointer to a valid
@@ -263,9 +256,8 @@ foreign import ccall
 -- -   @pFence@ /must/ be a valid pointer to a
 --     'Graphics.Vulkan.Core10.Handles.Fence' handle
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.Device', and
---     'Graphics.Vulkan.Extensions.WSITypes.Display' /must/ have been
---     created, allocated, or retrieved from the same
+-- -   Both of @device@, and @display@ /must/ have been created, allocated,
+--     or retrieved from the same
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
 --
 -- == Return Codes
@@ -304,8 +296,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the
---     'Graphics.Vulkan.Core10.Handles.Device' associated with @swapchain@.
+-- -   @device@ is the 'Graphics.Vulkan.Core10.Handles.Device' associated
+--     with @swapchain@.
 --
 -- -   @swapchain@ is the swapchain from which to query the counter value.
 --
@@ -326,8 +318,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @swapchain@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.SwapchainKHR' handle
@@ -338,8 +330,8 @@ foreign import ccall
 --
 -- -   @pCounterValue@ /must/ be a valid pointer to a @uint64_t@ value
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.Device', and @swapchain@
---     /must/ have been created, allocated, or retrieved from the same
+-- -   Both of @device@, and @swapchain@ /must/ have been created,
+--     allocated, or retrieved from the same
 --     'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Return Codes

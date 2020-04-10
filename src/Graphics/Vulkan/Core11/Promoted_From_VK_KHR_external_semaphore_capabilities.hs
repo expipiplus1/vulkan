@@ -66,8 +66,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device from which to query the semaphore capabilities.
+-- -   @physicalDevice@ is the physical device from which to query the
+--     semaphore capabilities.
 --
 -- -   @pExternalSemaphoreInfo@ is a pointer to a
 --     'PhysicalDeviceExternalSemaphoreInfo' structure describing the

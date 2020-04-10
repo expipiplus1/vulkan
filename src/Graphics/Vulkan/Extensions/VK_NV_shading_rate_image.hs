@@ -108,19 +108,16 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command will be recorded.
+-- -   @commandBuffer@ is the command buffer into which the command will be
+--     recorded.
 --
--- -   'Graphics.Vulkan.Core10.Handles.ImageView' is an image view handle
---     specifying the shading rate image.
---     'Graphics.Vulkan.Core10.Handles.ImageView' /may/ be set to
+-- -   @imageView@ is an image view handle specifying the shading rate
+--     image. @imageView@ /may/ be set to
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', which is
 --     equivalent to specifying a view of an image filled with zero values.
 --
--- -   'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout' is the layout
---     that the image subresources accessible from
---     'Graphics.Vulkan.Core10.Handles.ImageView' will be in when the
---     shading rate image is accessed.
+-- -   @imageLayout@ is the layout that the image subresources accessible
+--     from @imageView@ will be in when the shading rate image is accessed.
 --
 -- == Valid Usage
 --
@@ -128,68 +125,63 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-shadingRateImage shading rate image>
 --     feature /must/ be enabled.
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.ImageView' is not
+-- -   If @imageView@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ be a
 --     valid 'Graphics.Vulkan.Core10.Handles.ImageView' handle of type
 --     'Graphics.Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D' or
 --     'Graphics.Vulkan.Core10.Enums.ImageViewType.IMAGE_VIEW_TYPE_2D_ARRAY'.
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.ImageView' is not
+-- -   If @imageView@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ have a
 --     format of 'Graphics.Vulkan.Core10.Enums.Format.FORMAT_R8_UINT'.
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.ImageView' is not
+-- -   If @imageView@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', it /must/ have
 --     been created with a @usage@ value including
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV'
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.ImageView' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout' /must/ match
---     the actual 'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout' of
---     each subresource accessible from
---     'Graphics.Vulkan.Core10.Handles.ImageView' at the time the
---     subresource is accessed.
+-- -   If @imageView@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @imageLayout@
+--     /must/ match the actual
+--     'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout' of each
+--     subresource accessible from @imageView@ at the time the subresource
+--     is accessed.
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.ImageView' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout' /must/ be
+-- -   If @imageView@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @imageLayout@
+--     /must/ be
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_SHADING_RATE_OPTIMAL_NV'
 --     or 'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.ImageView' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.ImageView' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.ImageView' handle
+-- -   If @imageView@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @imageView@
+--     /must/ be a valid 'Graphics.Vulkan.Core10.Handles.ImageView' handle
 --
--- -   'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout' /must/ be a
---     valid 'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
+-- -   @imageLayout@ /must/ be a valid
+--     'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout' value
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics operations
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.CommandBuffer', and
---     'Graphics.Vulkan.Core10.Handles.ImageView' that are valid handles of
+-- -   Both of @commandBuffer@, and @imageView@ that are valid handles of
 --     non-ignored parameters /must/ have been created, allocated, or
 --     retrieved from the same 'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -226,8 +218,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command will be recorded.
+-- -   @commandBuffer@ is the command buffer into which the command will be
+--     recorded.
 --
 -- -   @firstViewport@ is the index of the first viewport whose shading
 --     rate palette is updated by the command.
@@ -263,29 +255,27 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pShadingRatePalettes@ /must/ be a valid pointer to an array of
 --     @viewportCount@ valid 'ShadingRatePaletteNV' structures
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics operations
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
 --
 -- -   @viewportCount@ /must/ be greater than @0@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -322,8 +312,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command will be recorded.
+-- -   @commandBuffer@ is the command buffer into which the command will be
+--     recorded.
 --
 -- -   @sampleOrderType@ specifies the mechanism used to order coverage
 --     samples in fragments larger than one pixel.
@@ -354,7 +344,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @sampleOrderType@ /must/ be a valid 'CoarseSampleOrderTypeNV' value
@@ -363,21 +353,19 @@ foreign import ccall
 --     be a valid pointer to an array of @customSampleOrderCount@ valid
 --     'CoarseSampleOrderCustomNV' structures
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics operations
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --

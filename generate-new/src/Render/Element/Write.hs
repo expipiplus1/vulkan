@@ -203,8 +203,8 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
       locate :: CName -> DocumenteeLocation
       locate n =
         let names = case n of
-              -- CName "" -> []
-              -- CName n' | isLower (T.head n') -> [mkFunName n]
+              CName "" -> []
+              CName n' | isLower (T.head n') -> [mkFunName n]
               _ -> [mkTyName n, mkFunName n, mkPatternName n]
         in  case asum ((\n -> (n, ) <$> findLocalModule n) <$> names) of
               Just (n, m) | m == modName -> ThisModule n

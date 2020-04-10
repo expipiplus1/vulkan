@@ -75,11 +75,9 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2'
 -- call and
 -- 'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT'
--- was set in
--- 'Graphics.Vulkan.Core10.Buffer.BufferCreateInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'
--- when 'Graphics.Vulkan.Core10.Handles.Buffer' was created then the
--- implementation /must/ set both @prefersDedicatedAllocation@ and
--- @requiresDedicatedAllocation@ to
+-- was set in 'Graphics.Vulkan.Core10.Buffer.BufferCreateInfo'::@flags@
+-- when @buffer@ was created then the implementation /must/ set both
+-- @prefersDedicatedAllocation@ and @requiresDedicatedAllocation@ to
 -- 'Graphics.Vulkan.Core10.BaseType.FALSE'.
 --
 -- If the 'MemoryDedicatedRequirements' structure is included in the
@@ -119,11 +117,9 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(..))
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
 -- call and
 -- 'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT'
--- was set in
--- 'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'
--- when 'Graphics.Vulkan.Core10.Handles.Image' was created then the
--- implementation /must/ set both @prefersDedicatedAllocation@ and
--- @requiresDedicatedAllocation@ to
+-- was set in 'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@flags@ when
+-- @image@ was created then the implementation /must/ set both
+-- @prefersDedicatedAllocation@ and @requiresDedicatedAllocation@ to
 -- 'Graphics.Vulkan.Core10.BaseType.FALSE'.
 --
 -- == Valid Usage (Implicit)
@@ -189,44 +185,36 @@ instance Zero MemoryDedicatedRequirements where
 --
 -- == Valid Usage
 --
--- -   At least one of 'Graphics.Vulkan.Core10.Handles.Image' and
---     'Graphics.Vulkan.Core10.Handles.Buffer' /must/ be
+-- -   At least one of @image@ and @buffer@ /must/ be
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+-- -   If @image@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     'Graphics.Vulkan.Core10.Memory.MemoryAllocateInfo'::@allocationSize@
 --     /must/ equal the
 --     'Graphics.Vulkan.Core10.MemoryManagement.MemoryRequirements'::@size@
 --     of the image
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.Image' /must/ have been created
---     without
+-- -   If @image@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @image@ /must/ have been created without
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT'
---     set in
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'
+--     set in 'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@flags@
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' is not
+-- -   If @buffer@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
 --     'Graphics.Vulkan.Core10.Memory.MemoryAllocateInfo'::@allocationSize@
 --     /must/ equal the
 --     'Graphics.Vulkan.Core10.MemoryManagement.MemoryRequirements'::@size@
 --     of the buffer
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.Buffer' /must/ have been created
---     without
+-- -   If @buffer@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @buffer@ /must/
+--     have been created without
 --     'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT'
---     set in
---     'Graphics.Vulkan.Core10.Buffer.BufferCreateInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'
+--     set in 'Graphics.Vulkan.Core10.Buffer.BufferCreateInfo'::@flags@
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' and
---     'Graphics.Vulkan.Core10.Memory.MemoryAllocateInfo' defines a memory
---     import operation with handle type
+-- -   If @image@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
+--     and 'Graphics.Vulkan.Core10.Memory.MemoryAllocateInfo' defines a
+--     memory import operation with handle type
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT',
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT',
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT',
@@ -236,13 +224,12 @@ instance Zero MemoryDedicatedRequirements where
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT',
 --     and the external handle was created by the Vulkan API, then the
 --     memory being imported /must/ also be a dedicated image allocation
---     and 'Graphics.Vulkan.Core10.Handles.Image' must be identical to the
---     image associated with the imported memory.
+--     and @image@ must be identical to the image associated with the
+--     imported memory.
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' and
---     'Graphics.Vulkan.Core10.Memory.MemoryAllocateInfo' defines a memory
---     import operation with handle type
+-- -   If @buffer@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
+--     and 'Graphics.Vulkan.Core10.Memory.MemoryAllocateInfo' defines a
+--     memory import operation with handle type
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT',
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT',
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT',
@@ -252,54 +239,46 @@ instance Zero MemoryDedicatedRequirements where
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT',
 --     and the external handle was created by the Vulkan API, then the
 --     memory being imported /must/ also be a dedicated buffer allocation
---     and 'Graphics.Vulkan.Core10.Handles.Buffer' must be identical to the
---     buffer associated with the imported memory.
+--     and @buffer@ must be identical to the buffer associated with the
+--     imported memory.
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' and
---     'Graphics.Vulkan.Core10.Memory.MemoryAllocateInfo' defines a memory
---     import operation with handle type
+-- -   If @image@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
+--     and 'Graphics.Vulkan.Core10.Memory.MemoryAllocateInfo' defines a
+--     memory import operation with handle type
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT',
 --     the memory being imported /must/ also be a dedicated image
---     allocation and 'Graphics.Vulkan.Core10.Handles.Image' must be
---     identical to the image associated with the imported memory.
+--     allocation and @image@ must be identical to the image associated
+--     with the imported memory.
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' and
---     'Graphics.Vulkan.Core10.Memory.MemoryAllocateInfo' defines a memory
---     import operation with handle type
+-- -   If @buffer@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
+--     and 'Graphics.Vulkan.Core10.Memory.MemoryAllocateInfo' defines a
+--     memory import operation with handle type
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT',
 --     the memory being imported /must/ also be a dedicated buffer
---     allocation and 'Graphics.Vulkan.Core10.Handles.Buffer' must be
---     identical to the buffer associated with the imported memory.
+--     allocation and @buffer@ must be identical to the buffer associated
+--     with the imported memory.
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.Image' /must/ not have been created
---     with
+-- -   If @image@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @image@ /must/ not have been created with
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
---     set in
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'
+--     set in 'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@flags@
 --
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO'
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.Image' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Image' handle
+-- -   If @image@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @image@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Image'
+--     handle
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.Buffer' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Buffer' handle
+-- -   If @buffer@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @buffer@ /must/
+--     be a valid 'Graphics.Vulkan.Core10.Handles.Buffer' handle
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.Buffer', and
---     'Graphics.Vulkan.Core10.Handles.Image' that are valid handles of
---     non-ignored parameters /must/ have been created, allocated, or
---     retrieved from the same 'Graphics.Vulkan.Core10.Handles.Device'
+-- -   Both of @buffer@, and @image@ that are valid handles of non-ignored
+--     parameters /must/ have been created, allocated, or retrieved from
+--     the same 'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- = See Also
 --
@@ -307,13 +286,11 @@ instance Zero MemoryDedicatedRequirements where
 -- 'Graphics.Vulkan.Core10.Handles.Image',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data MemoryDedicatedAllocateInfo = MemoryDedicatedAllocateInfo
-  { -- | 'Graphics.Vulkan.Core10.Handles.Image' is
-    -- 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' or a handle of an
-    -- image which this memory will be bound to.
+  { -- | @image@ is 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' or a handle
+    -- of an image which this memory will be bound to.
     image :: Image
-  , -- | 'Graphics.Vulkan.Core10.Handles.Buffer' is
-    -- 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' or a handle of a
-    -- buffer which this memory will be bound to.
+  , -- | @buffer@ is 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' or a
+    -- handle of a buffer which this memory will be bound to.
     buffer :: Buffer
   }
   deriving (Typeable)

@@ -73,8 +73,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the memory.
+-- -   @device@ is the logical device that owns the memory.
 --
 -- -   @memory@ is the 'Graphics.Vulkan.Core10.Handles.DeviceMemory'
 --     object.

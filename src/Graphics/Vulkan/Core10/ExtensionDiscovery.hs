@@ -165,8 +165,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device that will be queried.
+-- -   @physicalDevice@ is the physical device that will be queried.
 --
 -- -   @pLayerName@ is either @NULL@ or a pointer to a null-terminated
 --     UTF-8 string naming the layer to retrieve extensions from.
@@ -192,7 +191,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   If @pLayerName@ is not @NULL@, @pLayerName@ /must/ be a

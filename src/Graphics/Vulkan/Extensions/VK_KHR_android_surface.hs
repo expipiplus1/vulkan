@@ -79,8 +79,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' is the instance to
---     associate the surface with.
+-- -   @instance@ is the instance to associate the surface with.
 --
 -- -   @pCreateInfo@ is a pointer to a 'AndroidSurfaceCreateInfoKHR'
 --     structure containing parameters affecting the creation of the
@@ -126,7 +125,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+-- -   @instance@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
@@ -185,10 +184,10 @@ createAndroidSurfaceKHR instance' createInfo allocator = evalContT $ do
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createAndroidSurfaceKHR'
 data AndroidSurfaceCreateInfoKHR = AndroidSurfaceCreateInfoKHR
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+  { -- | @flags@ /must/ be @0@
     flags :: AndroidSurfaceCreateFlagsKHR
-  , -- | 'Graphics.Vulkan.Extensions.WSITypes.Window' /must/ point to a valid
-    -- Android 'Graphics.Vulkan.Extensions.WSITypes.ANativeWindow'.
+  , -- | @window@ /must/ point to a valid Android
+    -- 'Graphics.Vulkan.Extensions.WSITypes.ANativeWindow'.
     window :: Ptr ANativeWindow
   }
   deriving (Typeable)

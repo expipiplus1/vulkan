@@ -190,8 +190,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the device to create the
---     swapchain for.
+-- -   @device@ is the device to create the swapchain for.
 --
 -- -   @pCreateInfo@ is a pointer to a 'SwapchainCreateInfoKHR' structure
 --     specifying the parameters of the created swapchain.
@@ -236,8 +235,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'SwapchainCreateInfoKHR' structure
@@ -318,8 +317,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the
---     'Graphics.Vulkan.Core10.Handles.Device' associated with @swapchain@.
+-- -   @device@ is the 'Graphics.Vulkan.Core10.Handles.Device' associated
+--     with @swapchain@.
 --
 -- -   @swapchain@ is the swapchain to destroy.
 --
@@ -370,8 +369,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   If @swapchain@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @swapchain@
@@ -383,10 +382,9 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
 --     structure
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.Device', and @swapchain@
---     that are valid handles of non-ignored parameters /must/ have been
---     created, allocated, or retrieved from the same
---     'Graphics.Vulkan.Core10.Handles.Instance'
+-- -   Both of @device@, and @swapchain@ that are valid handles of
+--     non-ignored parameters /must/ have been created, allocated, or
+--     retrieved from the same 'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Host Synchronization
 --
@@ -419,8 +417,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the device associated
---     with @swapchain@.
+-- -   @device@ is the device associated with @swapchain@.
 --
 -- -   @swapchain@ is the swapchain to query.
 --
@@ -448,8 +445,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @swapchain@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.SwapchainKHR' handle
@@ -462,8 +459,8 @@ foreign import ccall
 --     valid pointer to an array of @pSwapchainImageCount@
 --     'Graphics.Vulkan.Core10.Handles.Image' handles
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.Device', and @swapchain@
---     /must/ have been created, allocated, or retrieved from the same
+-- -   Both of @device@, and @swapchain@ /must/ have been created,
+--     allocated, or retrieved from the same
 --     'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Return Codes
@@ -513,8 +510,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the device associated
---     with @swapchain@.
+-- -   @device@ is the device associated with @swapchain@.
 --
 -- -   @swapchain@ is the non-retired swapchain from which an image is
 --     being acquired.
@@ -522,13 +518,11 @@ foreign import ccall
 -- -   @timeout@ specifies how long the function waits, in nanoseconds, if
 --     no image is available.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Semaphore' is
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' or a semaphore to
---     signal.
+-- -   @semaphore@ is 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' or
+--     a semaphore to signal.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Fence' is
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' or a fence to
---     signal.
+-- -   @fence@ is 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' or a
+--     fence to signal.
 --
 -- -   @pImageIndex@ is a pointer to a @uint32_t@ in which the index of the
 --     next image to use (i.e. an index into the array of images returned
@@ -538,21 +532,19 @@ foreign import ccall
 --
 -- -   @swapchain@ /must/ not be in the retired state
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Semaphore' is not
+-- -   If @semaphore@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' it /must/ be
 --     unsignaled
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Semaphore' is not
+-- -   If @semaphore@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' it /must/ not have
 --     any uncompleted signal or wait operations pending
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Fence' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' it /must/ be
---     unsignaled and /must/ not be associated with any other queue command
---     that has not yet completed execution on that queue
+-- -   If @fence@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
+--     it /must/ be unsignaled and /must/ not be associated with any other
+--     queue command that has not yet completed execution on that queue
 --
--- -   'Graphics.Vulkan.Core10.Handles.Semaphore' and
---     'Graphics.Vulkan.Core10.Handles.Fence' /must/ not both be equal to
+-- -   @semaphore@ and @fence@ /must/ not both be equal to
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   If the number of currently acquired images is greater than the
@@ -564,52 +556,45 @@ foreign import ccall
 --     with the @surface@ used to create @swapchain@, @timeout@ /must/ not
 --     be @UINT64_MAX@
 --
--- -   'Graphics.Vulkan.Core10.Handles.Semaphore' /must/ have a
+-- -   @semaphore@ /must/ have a
 --     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY'
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @swapchain@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.SwapchainKHR' handle
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Semaphore' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.Semaphore' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Semaphore' handle
+-- -   If @semaphore@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @semaphore@
+--     /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Semaphore' handle
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Fence' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.Fence' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Fence' handle
+-- -   If @fence@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @fence@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Fence'
+--     handle
 --
 -- -   @pImageIndex@ /must/ be a valid pointer to a @uint32_t@ value
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Semaphore' is a valid handle, it
---     /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   If @semaphore@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Fence' is a valid handle, it
---     /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   If @fence@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.Device', and @swapchain@
---     that are valid handles of non-ignored parameters /must/ have been
---     created, allocated, or retrieved from the same
---     'Graphics.Vulkan.Core10.Handles.Instance'
+-- -   Both of @device@, and @swapchain@ that are valid handles of
+--     non-ignored parameters /must/ have been created, allocated, or
+--     retrieved from the same 'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Host Synchronization
 --
 -- -   Host access to @swapchain@ /must/ be externally synchronized
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.Semaphore' /must/ be
---     externally synchronized
+-- -   Host access to @semaphore@ /must/ be externally synchronized
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.Fence' /must/ be
---     externally synchronized
+-- -   Host access to @fence@ /must/ be externally synchronized
 --
 -- == Return Codes
 --
@@ -664,9 +649,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Queue' is a queue that is capable of
---     presentation to the target surface’s platform on the same device as
---     the image’s swapchain.
+-- -   @queue@ is a queue that is capable of presentation to the target
+--     surface’s platform on the same device as the image’s swapchain.
 --
 -- -   @pPresentInfo@ is a pointer to a 'PresentInfoKHR' structure
 --     specifying parameters of the presentation.
@@ -683,8 +667,7 @@ foreign import ccall
 --
 -- -   Each element of @pSwapchains@ member of @pPresentInfo@ /must/ be a
 --     swapchain that is created for a surface for which presentation is
---     supported from 'Graphics.Vulkan.Core10.Handles.Queue' as determined
---     using a call to
+--     supported from @queue@ as determined using a call to
 --     'Graphics.Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
 --
 -- -   If more than one member of @pSwapchains@ was created from a display
@@ -693,8 +676,8 @@ foreign import ccall
 --
 -- -   When a semaphore wait operation referring to a binary semaphore
 --     defined by the elements of the @pWaitSemaphores@ member of
---     @pPresentInfo@ executes on 'Graphics.Vulkan.Core10.Handles.Queue',
---     there /must/ be no other queues waiting on the same semaphore.
+--     @pPresentInfo@ executes on @queue@, there /must/ be no other queues
+--     waiting on the same semaphore.
 --
 -- -   All elements of the @pWaitSemaphores@ member of @pPresentInfo@
 --     /must/ be semaphores that are signaled, or have
@@ -754,16 +737,15 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Queue' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Queue' handle
+-- -   @queue@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Queue'
+--     handle
 --
 -- -   @pPresentInfo@ /must/ be a valid pointer to a valid 'PresentInfoKHR'
 --     structure
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.Queue' /must/ be
---     externally synchronized
+-- -   Host access to @queue@ /must/ be externally synchronized
 --
 -- -   Host access to @pPresentInfo.pWaitSemaphores@[] /must/ be externally
 --     synchronized
@@ -827,7 +809,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device.
+-- -   @device@ is the logical device.
 --
 -- -   @pDeviceGroupPresentCapabilities@ is a pointer to a
 --     'DeviceGroupPresentCapabilitiesKHR' structure in which the device’s
@@ -871,7 +853,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device.
+-- -   @device@ is the logical device.
 --
 -- -   @surface@ is the surface.
 --
@@ -888,8 +870,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @surface@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.SurfaceKHR' handle
@@ -897,9 +879,8 @@ foreign import ccall
 -- -   @pModes@ /must/ be a valid pointer to a
 --     'DeviceGroupPresentModeFlagsKHR' value
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.Device', and @surface@
---     /must/ have been created, allocated, or retrieved from the same
---     'Graphics.Vulkan.Core10.Handles.Instance'
+-- -   Both of @device@, and @surface@ /must/ have been created, allocated,
+--     or retrieved from the same 'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Host Synchronization
 --
@@ -946,8 +927,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the device associated
---     with @swapchain@.
+-- -   @device@ is the device associated with @swapchain@.
 --
 -- -   @pAcquireInfo@ is a pointer to a 'AcquireNextImageInfoKHR' structure
 --     containing parameters of the acquire.
@@ -968,8 +948,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pAcquireInfo@ /must/ be a valid pointer to a valid
 --     'AcquireNextImageInfoKHR' structure
@@ -1028,8 +1008,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device.
+-- -   @physicalDevice@ is the physical device.
 --
 -- -   @surface@ is the surface.
 --
@@ -1060,7 +1039,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @surface@ /must/ be a valid
@@ -1073,9 +1052,9 @@ foreign import ccall
 --     @pRectCount@ 'Graphics.Vulkan.Core10.CommandBufferBuilding.Rect2D'
 --     structures
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', and
---     @surface@ /must/ have been created, allocated, or retrieved from the
---     same 'Graphics.Vulkan.Core10.Handles.Instance'
+-- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Host Synchronization
 --
@@ -1264,9 +1243,8 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = evalContT $ do
 --     or
 --     'Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image.PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR'
 --
--- -   @imageFormat@ and @imageColorSpace@ /must/ match the
---     'Graphics.Vulkan.Core10.Enums.Format.Format' and @colorSpace@
---     members, respectively, of one of the
+-- -   @imageFormat@ and @imageColorSpace@ /must/ match the @format@ and
+--     @colorSpace@ members, respectively, of one of the
 --     'Graphics.Vulkan.Extensions.VK_KHR_surface.SurfaceFormatKHR'
 --     structures returned by
 --     'Graphics.Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceFormatsKHR'
@@ -1329,8 +1307,7 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = evalContT $ do
 --     'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
 --     or
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceQueueFamilyProperties2'
---     for the 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' that was
---     used to create 'Graphics.Vulkan.Core10.Handles.Device'
+--     for the @physicalDevice@ that was used to create @device@
 --
 -- -   @preTransform@ /must/ be one of the bits present in the
 --     @supportedTransforms@ member of the
@@ -1354,8 +1331,8 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = evalContT $ do
 --
 -- -   If the logical device was created with
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation.DeviceGroupDeviceCreateInfo'::@physicalDeviceCount@
---     equal to 1, 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not
---     contain 'SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR'
+--     equal to 1, @flags@ /must/ not contain
+--     'SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR'
 --
 -- -   If @oldSwapchain@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @oldSwapchain@
@@ -1367,15 +1344,13 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = evalContT $ do
 --     of the swapchain /must/ be supported as reported by
 --     'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceImageFormatProperties'
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
---     'SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR' then the @pNext@ chain
---     /must/ include a
+-- -   If @flags@ contains 'SWAPCHAIN_CREATE_MUTABLE_FORMAT_BIT_KHR' then
+--     the @pNext@ chain /must/ include a
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_image_format_list.ImageFormatListCreateInfo'
 --     structure with a @viewFormatCount@ greater than zero and
 --     @pViewFormats@ /must/ have an element equal to @imageFormat@
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
---     'SWAPCHAIN_CREATE_PROTECTED_BIT_KHR', then
+-- -   If @flags@ contains 'SWAPCHAIN_CREATE_PROTECTED_BIT_KHR', then
 --     'Graphics.Vulkan.Extensions.VK_KHR_surface_protected_capabilities.SurfaceProtectedCapabilitiesKHR'::@supportsProtected@
 --     /must/ be 'Graphics.Vulkan.Core10.BaseType.TRUE' in the
 --     'Graphics.Vulkan.Extensions.VK_KHR_surface_protected_capabilities.SurfaceProtectedCapabilitiesKHR'
@@ -1411,8 +1386,8 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = evalContT $ do
 -- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
 --     unique
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of 'SwapchainCreateFlagBitsKHR' values
+-- -   @flags@ /must/ be a valid combination of
+--     'SwapchainCreateFlagBitsKHR' values
 --
 -- -   @surface@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.SurfaceKHR' handle
@@ -1477,9 +1452,8 @@ getPhysicalDevicePresentRectanglesKHR physicalDevice surface = evalContT $ do
 data SwapchainCreateInfoKHR (es :: [Type]) = SwapchainCreateInfoKHR
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
     next :: Chain es
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
-    -- 'SwapchainCreateFlagBitsKHR' indicating parameters of the swapchain
-    -- creation.
+  , -- | @flags@ is a bitmask of 'SwapchainCreateFlagBitsKHR' indicating
+    -- parameters of the swapchain creation.
     flags :: SwapchainCreateFlagsKHR
   , -- | @surface@ is the surface onto which the swapchain will present images.
     -- If the creation succeeds, the swapchain becomes associated with
@@ -2064,28 +2038,26 @@ instance Zero BindImageMemorySwapchainInfoKHR where
 --
 -- -   @swapchain@ /must/ not be in the retired state
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Semaphore' is not
+-- -   If @semaphore@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' it /must/ be
 --     unsignaled
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Semaphore' is not
+-- -   If @semaphore@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' it /must/ not have
 --     any uncompleted signal or wait operations pending
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Fence' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' it /must/ be
---     unsignaled and /must/ not be associated with any other queue command
---     that has not yet completed execution on that queue
+-- -   If @fence@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
+--     it /must/ be unsignaled and /must/ not be associated with any other
+--     queue command that has not yet completed execution on that queue
 --
--- -   'Graphics.Vulkan.Core10.Handles.Semaphore' and
---     'Graphics.Vulkan.Core10.Handles.Fence' /must/ not both be equal to
+-- -   @semaphore@ and @fence@ /must/ not both be equal to
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   @deviceMask@ /must/ be a valid device mask
 --
 -- -   @deviceMask@ /must/ not be zero
 --
--- -   'Graphics.Vulkan.Core10.Handles.Semaphore' /must/ have a
+-- -   @semaphore@ /must/ have a
 --     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' of
 --     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY'
 --
@@ -2099,31 +2071,25 @@ instance Zero BindImageMemorySwapchainInfoKHR where
 -- -   @swapchain@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.SwapchainKHR' handle
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Semaphore' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.Semaphore' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Semaphore' handle
+-- -   If @semaphore@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @semaphore@
+--     /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Semaphore' handle
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Fence' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.Fence' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Fence' handle
+-- -   If @fence@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @fence@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Fence'
+--     handle
 --
--- -   Each of 'Graphics.Vulkan.Core10.Handles.Fence',
---     'Graphics.Vulkan.Core10.Handles.Semaphore', and @swapchain@ that are
---     valid handles of non-ignored parameters /must/ have been created,
---     allocated, or retrieved from the same
---     'Graphics.Vulkan.Core10.Handles.Instance'
+-- -   Each of @fence@, @semaphore@, and @swapchain@ that are valid handles
+--     of non-ignored parameters /must/ have been created, allocated, or
+--     retrieved from the same 'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Host Synchronization
 --
 -- -   Host access to @swapchain@ /must/ be externally synchronized
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.Semaphore' /must/ be
---     externally synchronized
+-- -   Host access to @semaphore@ /must/ be externally synchronized
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.Fence' /must/ be
---     externally synchronized
+-- -   Host access to @fence@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -2138,12 +2104,11 @@ data AcquireNextImageInfoKHR = AcquireNextImageInfoKHR
   , -- | @timeout@ specifies how long the function waits, in nanoseconds, if no
     -- image is available.
     timeout :: Word64
-  , -- | 'Graphics.Vulkan.Core10.Handles.Semaphore' is
-    -- 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' or a semaphore to
-    -- signal.
+  , -- | @semaphore@ is 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' or a
+    -- semaphore to signal.
     semaphore :: Semaphore
-  , -- | 'Graphics.Vulkan.Core10.Handles.Fence' is
-    -- 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' or a fence to signal.
+  , -- | @fence@ is 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' or a fence
+    -- to signal.
     fence :: Fence
   , -- | @deviceMask@ is a mask of physical devices for which the swapchain image
     -- will be ready to use when the semaphore or fence is signaled.

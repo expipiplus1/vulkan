@@ -91,8 +91,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' is the instance to
---     associate the surface with.
+-- -   @instance@ is the instance to associate the surface with.
 --
 -- -   @pCreateInfo@ is a pointer to a 'Win32SurfaceCreateInfoKHR'
 --     structure containing parameters affecting the creation of the
@@ -109,7 +108,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+-- -   @instance@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
@@ -167,8 +166,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device.
+-- -   @physicalDevice@ is the physical device.
 --
 -- -   @queueFamilyIndex@ is the queue family index.
 --
@@ -199,7 +197,7 @@ getPhysicalDeviceWin32PresentationSupportKHR physicalDevice queueFamilyIndex = d
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'Win32SurfaceCreateFlagsKHR', 'createWin32SurfaceKHR'
 data Win32SurfaceCreateInfoKHR = Win32SurfaceCreateInfoKHR
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+  { -- | @flags@ /must/ be @0@
     flags :: Win32SurfaceCreateFlagsKHR
   , -- | @hinstance@ /must/ be a valid Win32
     -- 'Graphics.Vulkan.Extensions.WSITypes.HINSTANCE'.

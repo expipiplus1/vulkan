@@ -57,7 +57,7 @@ import Graphics.Vulkan.Zero (Zero)
 -- or
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageView image views>
 -- created with the queried
--- 'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'::'Graphics.Vulkan.Core10.Enums.Format.Format':
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceFormatProperties'::@format@:
 --
 -- -   'FORMAT_FEATURE_SAMPLED_IMAGE_BIT' specifies that an image view
 --     /can/ be
@@ -99,9 +99,8 @@ import Graphics.Vulkan.Zero (Zero)
 --     If 'FORMAT_FEATURE_BLIT_SRC_BIT' is also set, an image can be used
 --     as the @srcImage@ to
 --     'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' with a
---     'Graphics.Vulkan.Core10.Enums.Filter.Filter' of
---     'Graphics.Vulkan.Core10.Enums.Filter.FILTER_LINEAR'. This bit /must/
---     only be exposed for formats that also support the
+--     @filter@ of 'Graphics.Vulkan.Core10.Enums.Filter.FILTER_LINEAR'.
+--     This bit /must/ only be exposed for formats that also support the
 --     'FORMAT_FEATURE_SAMPLED_IMAGE_BIT' or 'FORMAT_FEATURE_BLIT_SRC_BIT'.
 --
 --     If the format being queried is a depth\/stencil format, this bit
@@ -138,8 +137,7 @@ import Graphics.Vulkan.Zero (Zero)
 --     specifies that 'Graphics.Vulkan.Core10.Handles.Image' /can/ be used
 --     with a sampler that has either of @magFilter@ or @minFilter@ set to
 --     'Graphics.Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT',
---     or be the source image for a blit with
---     'Graphics.Vulkan.Core10.Enums.Filter.Filter' set to
+--     or be the source image for a blit with @filter@ set to
 --     'Graphics.Vulkan.Extensions.VK_EXT_filter_cubic.FILTER_CUBIC_EXT'.
 --     This bit /must/ only be exposed for formats that also support the
 --     'FORMAT_FEATURE_SAMPLED_IMAGE_BIT'. If the format being queried is a
@@ -216,7 +214,7 @@ import Graphics.Vulkan.Zero (Zero)
 -- or
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkBufferView buffer views>
 -- created with the queried
--- 'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceProperties'::'Graphics.Vulkan.Core10.Enums.Format.Format':
+-- 'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceProperties'::@format@:
 --
 -- -   'FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT' specifies that the format
 --     /can/ be used to create a buffer view that /can/ be bound to a
@@ -235,7 +233,7 @@ import Graphics.Vulkan.Zero (Zero)
 --
 -- -   'FORMAT_FEATURE_VERTEX_BUFFER_BIT' specifies that the format /can/
 --     be used as a vertex attribute format
---     ('Graphics.Vulkan.Core10.Pipeline.VertexInputAttributeDescription'::'Graphics.Vulkan.Core10.Enums.Format.Format').
+--     ('Graphics.Vulkan.Core10.Pipeline.VertexInputAttributeDescription'::@format@).
 --
 -- = See Also
 --
@@ -270,7 +268,7 @@ pattern FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT = FormatFeatureFlagBits 0x000000
 pattern FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT = FormatFeatureFlagBits 0x00000020
 -- | 'FORMAT_FEATURE_VERTEX_BUFFER_BIT' specifies that the format /can/ be
 -- used as a vertex attribute format
--- ('Graphics.Vulkan.Core10.Pipeline.VertexInputAttributeDescription'::'Graphics.Vulkan.Core10.Enums.Format.Format').
+-- ('Graphics.Vulkan.Core10.Pipeline.VertexInputAttributeDescription'::@format@).
 pattern FORMAT_FEATURE_VERTEX_BUFFER_BIT = FormatFeatureFlagBits 0x00000040
 -- | 'FORMAT_FEATURE_COLOR_ATTACHMENT_BIT' specifies that an image view /can/
 -- be used as a framebuffer color attachment and as an input attachment.
@@ -300,9 +298,8 @@ pattern FORMAT_FEATURE_BLIT_DST_BIT = FormatFeatureFlagBits 0x00000800
 -- If 'FORMAT_FEATURE_BLIT_SRC_BIT' is also set, an image can be used as
 -- the @srcImage@ to
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdBlitImage' with a
--- 'Graphics.Vulkan.Core10.Enums.Filter.Filter' of
--- 'Graphics.Vulkan.Core10.Enums.Filter.FILTER_LINEAR'. This bit /must/
--- only be exposed for formats that also support the
+-- @filter@ of 'Graphics.Vulkan.Core10.Enums.Filter.FILTER_LINEAR'. This
+-- bit /must/ only be exposed for formats that also support the
 -- 'FORMAT_FEATURE_SAMPLED_IMAGE_BIT' or 'FORMAT_FEATURE_BLIT_SRC_BIT'.
 --
 -- If the format being queried is a depth\/stencil format, this bit only

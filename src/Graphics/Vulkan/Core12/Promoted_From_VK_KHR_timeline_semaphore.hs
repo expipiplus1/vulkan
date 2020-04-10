@@ -91,11 +91,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the semaphore.
+-- -   @device@ is the logical device that owns the semaphore.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Semaphore' is the handle of the
---     semaphore to query.
+-- -   @semaphore@ is the handle of the semaphore to query.
 --
 -- -   @pValue@ is a pointer to a 64-bit integer value in which the current
 --     counter value of the semaphore is returned.
@@ -148,8 +146,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the semaphore.
+-- -   @device@ is the logical device that owns the semaphore.
 --
 -- -   @pWaitInfo@ is a pointer to a 'SemaphoreWaitInfo' structure
 --     containing information about the wait condition.
@@ -225,8 +222,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the semaphore.
+-- -   @device@ is the logical device that owns the semaphore.
 --
 -- -   @pSignalInfo@ is a pointer to a 'SemaphoreSignalInfo' structure
 --     containing information about the signal operation.
@@ -393,20 +389,17 @@ instance Zero PhysicalDeviceTimelineSemaphoreProperties where
 -- -   @sType@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO'
 --
--- -   'Graphics.Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' /must/ be
---     a valid 'Graphics.Vulkan.Core12.Enums.SemaphoreType.SemaphoreType'
---     value
+-- -   @semaphoreType@ /must/ be a valid
+--     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' value
 --
 -- == Valid Usage
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-timelineSemaphore timelineSemaphore>
---     feature is not enabled,
---     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' /must/
---     not equal
+--     feature is not enabled, @semaphoreType@ /must/ not equal
 --     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE'
 --
--- -   If 'Graphics.Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' is
+-- -   If @semaphoreType@ is
 --     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_BINARY',
 --     @initialValue@ /must/ be zero.
 --
@@ -421,12 +414,11 @@ instance Zero PhysicalDeviceTimelineSemaphoreProperties where
 -- 'Graphics.Vulkan.Core12.Enums.SemaphoreType.SemaphoreType',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data SemaphoreTypeCreateInfo = SemaphoreTypeCreateInfo
-  { -- | 'Graphics.Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' is a
+  { -- | @semaphoreType@ is a
     -- 'Graphics.Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' value
     -- specifying the type of the semaphore.
     semaphoreType :: SemaphoreType
-  , -- | @initialValue@ is the initial payload value if
-    -- 'Graphics.Vulkan.Core12.Enums.SemaphoreType.SemaphoreType' is
+  , -- | @initialValue@ is the initial payload value if @semaphoreType@ is
     -- 'Graphics.Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE'.
     initialValue :: Word64
   }
@@ -582,8 +574,7 @@ instance Zero TimelineSemaphoreSubmitInfo where
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of
+-- -   @flags@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core12.Enums.SemaphoreWaitFlagBits.SemaphoreWaitFlagBits'
 --     values
 --
@@ -604,7 +595,7 @@ instance Zero TimelineSemaphoreSubmitInfo where
 -- 'waitSemaphores',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_timeline_semaphore.waitSemaphoresKHR'
 data SemaphoreWaitInfo = SemaphoreWaitInfo
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+  { -- | @flags@ is a bitmask of
     -- 'Graphics.Vulkan.Core12.Enums.SemaphoreWaitFlagBits.SemaphoreWaitFlagBits'
     -- specifying additional parameters for the semaphore wait operation.
     flags :: SemaphoreWaitFlags
@@ -679,13 +670,12 @@ instance Zero SemaphoreWaitInfo where
 -- 'signalSemaphore',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_timeline_semaphore.signalSemaphoreKHR'
 data SemaphoreSignalInfo = SemaphoreSignalInfo
-  { -- | 'Graphics.Vulkan.Core10.Handles.Semaphore' /must/ be a valid
-    -- 'Graphics.Vulkan.Core10.Handles.Semaphore' handle
+  { -- | @semaphore@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Semaphore'
+    -- handle
     semaphore :: Semaphore
   , -- | @value@ /must/ have a value which does not differ from the current value
     -- of the semaphore or the value of any outstanding semaphore wait or
-    -- signal operation on 'Graphics.Vulkan.Core10.Handles.Semaphore' by more
-    -- than
+    -- signal operation on @semaphore@ by more than
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-maxTimelineSemaphoreValueDifference maxTimelineSemaphoreValueDifference>.
     value :: Word64
   }

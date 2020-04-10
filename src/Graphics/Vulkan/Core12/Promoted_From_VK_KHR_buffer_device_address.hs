@@ -75,8 +75,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     the buffer was created on.
+-- -   @device@ is the logical device that the buffer was created on.
 --
 -- -   @pInfo@ is a pointer to a 'BufferDeviceAddressInfo' structure
 --     specifying the buffer to retrieve an address for.
@@ -96,15 +95,14 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddress bufferDeviceAddress>
 --     feature /must/ be enabled
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Device' was created with multiple
---     physical devices, then the
+-- -   If @device@ was created with multiple physical devices, then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pInfo@ /must/ be a valid pointer to a valid
 --     'BufferDeviceAddressInfo' structure
@@ -131,8 +129,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     the buffer was created on.
+-- -   @device@ is the logical device that the buffer was created on.
 --
 -- -   @pInfo@ is a pointer to a 'BufferDeviceAddressInfo' structure
 --     specifying the buffer to retrieve an address for.
@@ -154,7 +151,7 @@ foreign import ccall
 --
 -- If the buffer was created with a non-zero value of
 -- 'BufferOpaqueCaptureAddressCreateInfo'::@opaqueCaptureAddress@ or
--- 'Graphics.Vulkan.Extensions.VK_EXT_buffer_device_address.BufferDeviceAddressCreateInfoEXT'::'Graphics.Vulkan.Core10.BaseType.DeviceAddress'
+-- 'Graphics.Vulkan.Extensions.VK_EXT_buffer_device_address.BufferDeviceAddressCreateInfoEXT'::@deviceAddress@
 -- the return value will be the same address that was returned at capture
 -- time.
 --
@@ -166,8 +163,7 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddressEXT ::bufferDeviceAddress>
 --     feature /must/ be enabled
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Device' was created with multiple
---     physical devices, then the
+-- -   If @device@ was created with multiple physical devices, then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDeviceEXT ::bufferDeviceAddressMultiDevice>
@@ -175,8 +171,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pInfo@ /must/ be a valid pointer to a valid
 --     'BufferDeviceAddressInfo' structure
@@ -204,8 +200,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     the memory object was allocated on.
+-- -   @device@ is the logical device that the memory object was allocated
+--     on.
 --
 -- -   @pInfo@ is a pointer to a 'DeviceMemoryOpaqueCaptureAddressInfo'
 --     structure specifying the memory object to retrieve an address for.
@@ -231,15 +227,14 @@ foreign import ccall
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddress bufferDeviceAddress>
 --     feature /must/ be enabled
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Device' was created with multiple
---     physical devices, then the
+-- -   If @device@ was created with multiple physical devices, then the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-bufferDeviceAddressMultiDevice bufferDeviceAddressMultiDevice>
 --     feature /must/ be enabled
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pInfo@ /must/ be a valid pointer to a valid
 --     'DeviceMemoryOpaqueCaptureAddressInfo' structure
@@ -352,14 +347,12 @@ instance Zero PhysicalDeviceBufferDeviceAddressFeatures where
 --
 -- == Valid Usage
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' is non-sparse and was not
---     created with the
+-- -   If @buffer@ is non-sparse and was not created with the
 --     'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
 --     flag, then it /must/ be bound completely and contiguously to a
 --     single 'Graphics.Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' /must/ have been created
---     with
+-- -   @buffer@ /must/ have been created with
 --     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT'
 --
 -- == Valid Usage (Implicit)
@@ -369,8 +362,8 @@ instance Zero PhysicalDeviceBufferDeviceAddressFeatures where
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Buffer' handle
+-- -   @buffer@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Buffer'
+--     handle
 --
 -- = See Also
 --
@@ -382,8 +375,7 @@ instance Zero PhysicalDeviceBufferDeviceAddressFeatures where
 -- 'getBufferOpaqueCaptureAddress',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_buffer_device_address.getBufferOpaqueCaptureAddressKHR'
 data BufferDeviceAddressInfo = BufferDeviceAddressInfo
-  { -- | 'Graphics.Vulkan.Core10.Handles.Buffer' specifies the buffer whose
-    -- address is being queried.
+  { -- | @buffer@ specifies the buffer whose address is being queried.
     buffer :: Buffer }
   deriving (Typeable)
 deriving instance Show BufferDeviceAddressInfo

@@ -140,8 +140,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is a physical
---     device.
+-- -   @physicalDevice@ is a physical device.
 --
 -- -   @pPropertyCount@ is a pointer to an integer related to the number of
 --     display devices available or queried, as described below.
@@ -152,23 +151,21 @@ foreign import ccall
 -- = Description
 --
 -- If @pProperties@ is @NULL@, then the number of display devices available
--- for 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is returned in
--- @pPropertyCount@. Otherwise, @pPropertyCount@ /must/ point to a variable
--- set by the user to the number of elements in the @pProperties@ array,
--- and on return the variable is overwritten with the number of structures
--- actually written to @pProperties@. If the value of @pPropertyCount@ is
--- less than the number of display devices for
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', at most
--- @pPropertyCount@ structures will be written. If @pPropertyCount@ is
--- smaller than the number of display devices available for
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
+-- for @physicalDevice@ is returned in @pPropertyCount@. Otherwise,
+-- @pPropertyCount@ /must/ point to a variable set by the user to the
+-- number of elements in the @pProperties@ array, and on return the
+-- variable is overwritten with the number of structures actually written
+-- to @pProperties@. If the value of @pPropertyCount@ is less than the
+-- number of display devices for @physicalDevice@, at most @pPropertyCount@
+-- structures will be written. If @pPropertyCount@ is smaller than the
+-- number of display devices available for @physicalDevice@,
 -- 'Graphics.Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned
 -- instead of 'Graphics.Vulkan.Core10.Enums.Result.SUCCESS' to indicate
 -- that not all the available values were returned.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
@@ -223,8 +220,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is a physical
---     device.
+-- -   @physicalDevice@ is a physical device.
 --
 -- -   @pPropertyCount@ is a pointer to an integer related to the number of
 --     display planes available or queried, as described below.
@@ -235,18 +231,17 @@ foreign import ccall
 -- = Description
 --
 -- If @pProperties@ is @NULL@, then the number of display planes available
--- for 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is returned in
--- @pPropertyCount@. Otherwise, @pPropertyCount@ /must/ point to a variable
--- set by the user to the number of elements in the @pProperties@ array,
--- and on return the variable is overwritten with the number of structures
--- actually written to @pProperties@. If the value of @pPropertyCount@ is
--- less than the number of display planes for
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', at most
--- @pPropertyCount@ structures will be written.
+-- for @physicalDevice@ is returned in @pPropertyCount@. Otherwise,
+-- @pPropertyCount@ /must/ point to a variable set by the user to the
+-- number of elements in the @pProperties@ array, and on return the
+-- variable is overwritten with the number of structures actually written
+-- to @pProperties@. If the value of @pPropertyCount@ is less than the
+-- number of display planes for @physicalDevice@, at most @pPropertyCount@
+-- structures will be written.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
@@ -303,8 +298,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is a physical
---     device.
+-- -   @physicalDevice@ is a physical device.
 --
 -- -   @planeIndex@ is the plane which the application wishes to use, and
 --     /must/ be in the range [0, physical device plane count - 1].
@@ -318,20 +312,17 @@ foreign import ccall
 -- = Description
 --
 -- If @pDisplays@ is @NULL@, then the number of displays usable with the
--- specified @planeIndex@ for
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is returned in
+-- specified @planeIndex@ for @physicalDevice@ is returned in
 -- @pDisplayCount@. Otherwise, @pDisplayCount@ /must/ point to a variable
 -- set by the user to the number of elements in the @pDisplays@ array, and
 -- on return the variable is overwritten with the number of handles
 -- actually written to @pDisplays@. If the value of @pDisplayCount@ is less
--- than the number of display planes for
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', at most @pDisplayCount@
--- handles will be written. If @pDisplayCount@ is smaller than the number
--- of displays usable with the specified @planeIndex@ for
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
--- 'Graphics.Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned
--- instead of 'Graphics.Vulkan.Core10.Enums.Result.SUCCESS' to indicate
--- that not all the available values were returned.
+-- than the number of display planes for @physicalDevice@, at most
+-- @pDisplayCount@ handles will be written. If @pDisplayCount@ is smaller
+-- than the number of displays usable with the specified @planeIndex@ for
+-- @physicalDevice@, 'Graphics.Vulkan.Core10.Enums.Result.INCOMPLETE' will
+-- be returned instead of 'Graphics.Vulkan.Core10.Enums.Result.SUCCESS' to
+-- indicate that not all the available values were returned.
 --
 -- == Valid Usage
 --
@@ -341,7 +332,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pDisplayCount@ /must/ be a valid pointer to a @uint32_t@ value
@@ -397,12 +388,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device associated with
---     'Graphics.Vulkan.Extensions.WSITypes.Display'.
+-- -   @physicalDevice@ is the physical device associated with @display@.
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' is the display to
---     query.
+-- -   @display@ is the display to query.
 --
 -- -   @pPropertyCount@ is a pointer to an integer related to the number of
 --     display modes available or queried, as described below.
@@ -413,28 +401,25 @@ foreign import ccall
 -- = Description
 --
 -- If @pProperties@ is @NULL@, then the number of display modes available
--- on the specified 'Graphics.Vulkan.Extensions.WSITypes.Display' for
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is returned in
+-- on the specified @display@ for @physicalDevice@ is returned in
 -- @pPropertyCount@. Otherwise, @pPropertyCount@ /must/ point to a variable
 -- set by the user to the number of elements in the @pProperties@ array,
 -- and on return the variable is overwritten with the number of structures
 -- actually written to @pProperties@. If the value of @pPropertyCount@ is
--- less than the number of display modes for
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', at most
+-- less than the number of display modes for @physicalDevice@, at most
 -- @pPropertyCount@ structures will be written. If @pPropertyCount@ is
 -- smaller than the number of display modes available on the specified
--- 'Graphics.Vulkan.Extensions.WSITypes.Display' for
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
+-- @display@ for @physicalDevice@,
 -- 'Graphics.Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned
 -- instead of 'Graphics.Vulkan.Core10.Enums.Result.SUCCESS' to indicate
 -- that not all the available values were returned.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' /must/ be a valid
+-- -   @display@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.DisplayKHR' handle
 --
 -- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
@@ -444,9 +429,8 @@ foreign import ccall
 --     to an array of @pPropertyCount@ 'DisplayModePropertiesKHR'
 --     structures
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' /must/ have been
---     created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
+-- -   @display@ /must/ have been created, allocated, or retrieved from
+--     @physicalDevice@
 --
 -- == Return Codes
 --
@@ -495,12 +479,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device associated with
---     'Graphics.Vulkan.Extensions.WSITypes.Display'.
+-- -   @physicalDevice@ is the physical device associated with @display@.
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' is the display to
---     create an additional mode for.
+-- -   @display@ is the display to create an additional mode for.
 --
 -- -   @pCreateInfo@ is a 'DisplayModeCreateInfoKHR' structure describing
 --     the new mode to create.
@@ -514,10 +495,10 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' /must/ be a valid
+-- -   @display@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.DisplayKHR' handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
@@ -531,14 +512,12 @@ foreign import ccall
 -- -   @pMode@ /must/ be a valid pointer to a
 --     'Graphics.Vulkan.Extensions.Handles.DisplayModeKHR' handle
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' /must/ have been
---     created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
+-- -   @display@ /must/ have been created, allocated, or retrieved from
+--     @physicalDevice@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Extensions.WSITypes.Display' /must/
---     be externally synchronized
+-- -   Host access to @display@ /must/ be externally synchronized
 --
 -- == Return Codes
 --
@@ -587,8 +566,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device associated with 'Graphics.Vulkan.Extensions.WSITypes.Display'
+-- -   @physicalDevice@ is the physical device associated with @display@
 --
 -- -   @mode@ is the display mode the application intends to program when
 --     using the specified plane. Note this parameter also implicitly
@@ -603,7 +581,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @mode@ /must/ be a valid
@@ -656,8 +634,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' is the instance
---     corresponding to the physical device the targeted display is on.
+-- -   @instance@ is the instance corresponding to the physical device the
+--     targeted display is on.
 --
 -- -   @pCreateInfo@ is a pointer to a 'DisplaySurfaceCreateInfoKHR'
 --     structure specifying which mode, plane, and other parameters to use,
@@ -674,7 +652,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+-- -   @instance@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
@@ -744,15 +722,14 @@ createDisplayPlaneSurfaceKHR instance' createInfo allocator = evalContT $ do
 -- 'Graphics.Vulkan.Core10.SharedTypes.Extent2D',
 -- 'SurfaceTransformFlagsKHR', 'getPhysicalDeviceDisplayPropertiesKHR'
 data DisplayPropertiesKHR = DisplayPropertiesKHR
-  { -- | 'Graphics.Vulkan.Extensions.WSITypes.Display' is a handle that is used
-    -- to refer to the display described here. This handle will be valid for
-    -- the lifetime of the Vulkan instance.
+  { -- | @display@ is a handle that is used to refer to the display described
+    -- here. This handle will be valid for the lifetime of the Vulkan instance.
     display :: DisplayKHR
   , -- | @displayName@ is a pointer to a null-terminated UTF-8 string containing
     -- the name of the display. Generally, this will be the name provided by
     -- the display’s EDID. It /can/ be @NULL@ if no suitable name is available.
     -- If not @NULL@, the memory it points to /must/ remain accessible as long
-    -- as 'Graphics.Vulkan.Extensions.WSITypes.Display' is valid.
+    -- as @display@ is valid.
     displayName :: ByteString
   , -- | @physicalDimensions@ describes the physical width and height of the
     -- visible portion of the display, in millimeters.
@@ -992,7 +969,7 @@ instance Zero DisplayModePropertiesKHR where
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createDisplayModeKHR'
 data DisplayModeCreateInfoKHR = DisplayModeCreateInfoKHR
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+  { -- | @flags@ /must/ be @0@
     flags :: DisplayModeCreateFlagsKHR
   , -- | @parameters@ /must/ be a valid 'DisplayModeParametersKHR' structure
     parameters :: DisplayModeParametersKHR
@@ -1207,7 +1184,7 @@ instance Zero DisplayPlaneCapabilitiesKHR where
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+-- -   @flags@ /must/ be @0@
 --
 -- -   @displayMode@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.DisplayModeKHR' handle
@@ -1224,8 +1201,7 @@ instance Zero DisplayPlaneCapabilitiesKHR where
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'SurfaceTransformFlagBitsKHR', 'createDisplayPlaneSurfaceKHR'
 data DisplaySurfaceCreateInfoKHR = DisplaySurfaceCreateInfoKHR
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is reserved for future use, and
-    -- /must/ be zero.
+  { -- | @flags@ is reserved for future use, and /must/ be zero.
     flags :: DisplaySurfaceCreateFlagsKHR
   , -- | @displayMode@ is a 'Graphics.Vulkan.Extensions.Handles.DisplayModeKHR'
     -- handle specifying the mode to use when displaying this surface.

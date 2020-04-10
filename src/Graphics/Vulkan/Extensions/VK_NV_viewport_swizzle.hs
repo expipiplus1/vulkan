@@ -133,7 +133,7 @@ instance Zero ViewportSwizzleNV where
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'ViewportSwizzleNV'
 data PipelineViewportSwizzleStateCreateInfoNV = PipelineViewportSwizzleStateCreateInfoNV
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+  { -- | @flags@ /must/ be @0@
     flags :: PipelineViewportSwizzleStateCreateFlagsNV
   , -- | @pViewportSwizzles@ /must/ be a valid pointer to an array of
     -- @viewportCount@ valid 'ViewportSwizzleNV' structures

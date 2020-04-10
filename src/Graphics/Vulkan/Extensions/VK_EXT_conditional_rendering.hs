@@ -76,8 +76,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which this command will be recorded.
+-- -   @commandBuffer@ is the command buffer into which this command will
+--     be recorded.
 --
 -- -   @pConditionalRenderingBegin@ is a pointer to a
 --     'ConditionalRenderingBeginInfoEXT' structure specifying parameters
@@ -90,27 +90,25 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pConditionalRenderingBegin@ /must/ be a valid pointer to a valid
 --     'ConditionalRenderingBeginInfoEXT' structure
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics, or compute operations
+--     @commandBuffer@ was allocated from /must/ support graphics, or
+--     compute operations
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -155,8 +153,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which this command will be recorded.
+-- -   @commandBuffer@ is the command buffer into which this command will
+--     be recorded.
 --
 -- = Description
 --
@@ -178,24 +176,22 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics, or compute operations
+--     @commandBuffer@ was allocated from /must/ support graphics, or
+--     compute operations
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -223,8 +219,7 @@ cmdEndConditionalRenderingEXT commandBuffer = do
 --
 -- = Description
 --
--- If the 32-bit value at @offset@ in
--- 'Graphics.Vulkan.Core10.Handles.Buffer' memory is zero, then the
+-- If the 32-bit value at @offset@ in @buffer@ memory is zero, then the
 -- rendering commands are discarded, otherwise they are executed as normal.
 -- If the value of the predicate in buffer memory changes while conditional
 -- rendering is active, the rendering commands /may/ be discarded in an
@@ -234,17 +229,16 @@ cmdEndConditionalRenderingEXT commandBuffer = do
 --
 -- == Valid Usage
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' is non-sparse then it
---     /must/ be bound completely and contiguously to a single
+-- -   If @buffer@ is non-sparse then it /must/ be bound completely and
+--     contiguously to a single
 --     'Graphics.Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' /must/ have been created
---     with the
+-- -   @buffer@ /must/ have been created with the
 --     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT'
 --     bit set
 --
--- -   @offset@ /must/ be less than the size of
---     'Graphics.Vulkan.Core10.Handles.Buffer' by at least 32 bits.
+-- -   @offset@ /must/ be less than the size of @buffer@ by at least 32
+--     bits.
 --
 -- -   @offset@ /must/ be a multiple of 4
 --
@@ -255,11 +249,11 @@ cmdEndConditionalRenderingEXT commandBuffer = do
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Buffer' handle
+-- -   @buffer@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Buffer'
+--     handle
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of 'ConditionalRenderingFlagBitsEXT' values
+-- -   @flags@ /must/ be a valid combination of
+--     'ConditionalRenderingFlagBitsEXT' values
 --
 -- = See Also
 --
@@ -268,15 +262,13 @@ cmdEndConditionalRenderingEXT commandBuffer = do
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'cmdBeginConditionalRenderingEXT'
 data ConditionalRenderingBeginInfoEXT = ConditionalRenderingBeginInfoEXT
-  { -- | 'Graphics.Vulkan.Core10.Handles.Buffer' is a buffer containing the
-    -- predicate for conditional rendering.
+  { -- | @buffer@ is a buffer containing the predicate for conditional rendering.
     buffer :: Buffer
-  , -- | @offset@ is the byte offset into 'Graphics.Vulkan.Core10.Handles.Buffer'
-    -- where the predicate is located.
+  , -- | @offset@ is the byte offset into @buffer@ where the predicate is
+    -- located.
     offset :: DeviceSize
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
-    -- 'ConditionalRenderingFlagsEXT' specifying the behavior of conditional
-    -- rendering.
+  , -- | @flags@ is a bitmask of 'ConditionalRenderingFlagsEXT' specifying the
+    -- behavior of conditional rendering.
     flags :: ConditionalRenderingFlagsEXT
   }
   deriving (Typeable)
@@ -468,9 +460,9 @@ newtype ConditionalRenderingFlagBitsEXT = ConditionalRenderingFlagBitsEXT Flags
 
 -- | 'CONDITIONAL_RENDERING_INVERTED_BIT_EXT' specifies the condition used to
 -- determine whether to discard rendering commands or not. That is, if the
--- 32-bit predicate read from 'Graphics.Vulkan.Core10.Handles.Buffer'
--- memory at @offset@ is zero, the rendering commands are not discarded,
--- and if non zero, then they are discarded.
+-- 32-bit predicate read from @buffer@ memory at @offset@ is zero, the
+-- rendering commands are not discarded, and if non zero, then they are
+-- discarded.
 pattern CONDITIONAL_RENDERING_INVERTED_BIT_EXT = ConditionalRenderingFlagBitsEXT 0x00000001
 
 type ConditionalRenderingFlagsEXT = ConditionalRenderingFlagBitsEXT

@@ -381,9 +381,8 @@ instance Zero ImageSubresourceLayers where
 -- 'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT'
 -- or
 -- 'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
--- if 'Graphics.Vulkan.Core10.Enums.Format.Format' is a color, depth-only
--- or stencil-only format, respectively, except if
--- 'Graphics.Vulkan.Core10.Enums.Format.Format' is a
+-- if @format@ is a color, depth-only or stencil-only format, respectively,
+-- except if @format@ is a
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>.
 -- If using a depth\/stencil format with both depth and stencil components,
 -- @aspectMask@ /must/ include at least one of
@@ -430,8 +429,8 @@ instance Zero ImageSubresourceLayers where
 -- 'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_COLOR_BIT'.
 --
 -- When creating a 'Graphics.Vulkan.Core10.Handles.ImageView', if sampler
--- Y′CBCR conversion is not enabled in the sampler and the image
--- 'Graphics.Vulkan.Core10.Enums.Format.Format' is
+-- Y′CBCR conversion is not enabled in the sampler and the image @format@
+-- is
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar>,
 -- the image /must/ have been created with
 -- 'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT',

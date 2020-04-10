@@ -58,10 +58,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the buffer.
+-- -   @device@ is the logical device that owns the buffer.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' is the buffer to query.
+-- -   @buffer@ is the buffer to query.
 --
 -- -   @pMemoryRequirements@ is a pointer to a 'MemoryRequirements'
 --     structure in which the memory requirements of the buffer object are
@@ -93,11 +92,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the buffer and memory.
+-- -   @device@ is the logical device that owns the buffer and memory.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' is the buffer to be attached
---     to memory.
+-- -   @buffer@ is the buffer to be attached to memory.
 --
 -- -   @memory@ is a 'Graphics.Vulkan.Core10.Handles.DeviceMemory' object
 --     describing the device memory to attach.
@@ -116,47 +113,42 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' /must/ not already be backed
---     by a memory object
+-- -   @buffer@ /must/ not already be backed by a memory object
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' /must/ not have been created
---     with any sparse memory binding flags
+-- -   @buffer@ /must/ not have been created with any sparse memory binding
+--     flags
 --
 -- -   @memoryOffset@ /must/ be less than the size of @memory@
 --
 -- -   @memory@ /must/ have been allocated using one of the memory types
 --     allowed in the @memoryTypeBits@ member of the 'MemoryRequirements'
 --     structure returned from a call to 'getBufferMemoryRequirements' with
---     'Graphics.Vulkan.Core10.Handles.Buffer'
+--     @buffer@
 --
 -- -   @memoryOffset@ /must/ be an integer multiple of the @alignment@
 --     member of the 'MemoryRequirements' structure returned from a call to
---     'getBufferMemoryRequirements' with
---     'Graphics.Vulkan.Core10.Handles.Buffer'
+--     'getBufferMemoryRequirements' with @buffer@
 --
 -- -   The @size@ member of the 'MemoryRequirements' structure returned
---     from a call to 'getBufferMemoryRequirements' with
---     'Graphics.Vulkan.Core10.Handles.Buffer' /must/ be less than or equal
---     to the size of @memory@ minus @memoryOffset@
+--     from a call to 'getBufferMemoryRequirements' with @buffer@ /must/ be
+--     less than or equal to the size of @memory@ minus @memoryOffset@
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' requires a dedicated
---     allocation(as reported by
+-- -   If @buffer@ requires a dedicated allocation(as reported by
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2'
 --     in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements'::requiresDedicatedAllocation
---     for 'Graphics.Vulkan.Core10.Handles.Buffer'), @memory@ /must/ have
---     been created with
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::'Graphics.Vulkan.Core10.Handles.Buffer'
---     equal to 'Graphics.Vulkan.Core10.Handles.Buffer'
+--     for @buffer@), @memory@ /must/ have been created with
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@
+--     equal to @buffer@
 --
 -- -   If the 'Graphics.Vulkan.Core10.Memory.MemoryAllocateInfo' provided
 --     when @memory@ was allocated included a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     structure in its @pNext@ chain, and
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::'Graphics.Vulkan.Core10.Handles.Buffer'
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@
 --     was not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', then
---     'Graphics.Vulkan.Core10.Handles.Buffer' /must/ equal
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::'Graphics.Vulkan.Core10.Handles.Buffer',
+--     @buffer@ /must/ equal
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@,
 --     and @memoryOffset@ /must/ be zero.
 --
 -- -   If buffer was created with the
@@ -171,31 +163,29 @@ foreign import ccall
 --     created with a memory type that reports
 --     'Graphics.Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' was created with
+-- -   If @buffer@ was created with
 --     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV'::@dedicatedAllocation@
 --     equal to 'Graphics.Vulkan.Core10.BaseType.TRUE', @memory@ /must/
 --     have been created with
---     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'::'Graphics.Vulkan.Core10.Handles.Buffer'
+--     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'::@buffer@
 --     equal to a buffer handle created with identical creation parameters
---     to 'Graphics.Vulkan.Core10.Handles.Buffer' and @memoryOffset@ /must/
---     be zero
+--     to @buffer@ and @memoryOffset@ /must/ be zero
 --
 -- -   If the value of
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@
 --     used to allocate @memory@ is not @0@, it /must/ include at least one
 --     of the handles set in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
---     when 'Graphics.Vulkan.Core10.Handles.Buffer' was created
+--     when @buffer@ was created
 --
 -- -   If @memory@ was created by a memory import operation, the external
 --     handle type of the imported memory /must/ also have been set in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
---     when 'Graphics.Vulkan.Core10.Handles.Buffer' was created
+--     when @buffer@ was created
 --
 -- -   If the
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.PhysicalDeviceBufferDeviceAddressFeatures'::@bufferDeviceAddress@
---     feature is enabled and 'Graphics.Vulkan.Core10.Handles.Buffer' was
---     created with the
+--     feature is enabled and @buffer@ was created with the
 --     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT'
 --     bit set, @memory@ /must/ have been allocated with the
 --     'Graphics.Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT'
@@ -203,25 +193,24 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Buffer' handle
+-- -   @buffer@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Buffer'
+--     handle
 --
 -- -   @memory@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.DeviceMemory' handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' /must/ have been created,
---     allocated, or retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
+-- -   @buffer@ /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- -   @memory@ /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+--     @device@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.Buffer' /must/ be
---     externally synchronized
+-- -   Host access to @buffer@ /must/ be externally synchronized
 --
 -- == Return Codes
 --
@@ -262,10 +251,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the image.
+-- -   @device@ is the logical device that owns the image.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Image' is the image to query.
+-- -   @image@ is the image to query.
 --
 -- -   @pMemoryRequirements@ is a pointer to a 'MemoryRequirements'
 --     structure in which the memory requirements of the image object are
@@ -297,10 +285,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the image and memory.
+-- -   @device@ is the logical device that owns the image and memory.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Image' is the image.
+-- -   @image@ is the image.
 --
 -- -   @memory@ is the 'Graphics.Vulkan.Core10.Handles.DeviceMemory' object
 --     describing the device memory to attach.
@@ -319,44 +306,38 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   'Graphics.Vulkan.Core10.Handles.Image' /must/ not have been created
---     with the
+-- -   @image@ /must/ not have been created with the
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
 --     set.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Image' /must/ not already be backed
---     by a memory object
+-- -   @image@ /must/ not already be backed by a memory object
 --
--- -   'Graphics.Vulkan.Core10.Handles.Image' /must/ not have been created
---     with any sparse memory binding flags
+-- -   @image@ /must/ not have been created with any sparse memory binding
+--     flags
 --
 -- -   @memoryOffset@ /must/ be less than the size of @memory@
 --
 -- -   @memory@ /must/ have been allocated using one of the memory types
 --     allowed in the @memoryTypeBits@ member of the 'MemoryRequirements'
 --     structure returned from a call to 'getImageMemoryRequirements' with
---     'Graphics.Vulkan.Core10.Handles.Image'
+--     @image@
 --
 -- -   @memoryOffset@ /must/ be an integer multiple of the @alignment@
 --     member of the 'MemoryRequirements' structure returned from a call to
---     'getImageMemoryRequirements' with
---     'Graphics.Vulkan.Core10.Handles.Image'
+--     'getImageMemoryRequirements' with @image@
 --
 -- -   The difference of the size of @memory@ and @memoryOffset@ /must/ be
 --     greater than or equal to the @size@ member of the
 --     'MemoryRequirements' structure returned from a call to
---     'getImageMemoryRequirements' with the same
---     'Graphics.Vulkan.Core10.Handles.Image'
+--     'getImageMemoryRequirements' with the same @image@
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' requires a dedicated
---     allocation (as reported by
+-- -   If @image@ requires a dedicated allocation (as reported by
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
 --     in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements'::requiresDedicatedAllocation
---     for 'Graphics.Vulkan.Core10.Handles.Image'), @memory@ /must/ have
---     been created with
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::'Graphics.Vulkan.Core10.Handles.Image'
---     equal to 'Graphics.Vulkan.Core10.Handles.Image'
+--     for @image@), @memory@ /must/ have been created with
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
+--     equal to @image@
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicated allocation image aliasing>
@@ -365,10 +346,10 @@ foreign import ccall
 --     @memory@ was allocated included a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     structure in its @pNext@ chain, and
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::'Graphics.Vulkan.Core10.Handles.Image'
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
 --     was not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', then
---     'Graphics.Vulkan.Core10.Handles.Image' /must/ equal
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::'Graphics.Vulkan.Core10.Handles.Image'
+--     @image@ /must/ equal
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
 --     and @memoryOffset@ /must/ be zero.
 --
 -- -   If the
@@ -378,11 +359,10 @@ foreign import ccall
 --     @memory@ was allocated included a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     structure in its @pNext@ chain, and
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::'Graphics.Vulkan.Core10.Handles.Image'
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
 --     was not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', then
---     @memoryOffset@ /must/ be zero, and
---     'Graphics.Vulkan.Core10.Handles.Image' /must/ be either equal to
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::'Graphics.Vulkan.Core10.Handles.Image'
+--     @memoryOffset@ /must/ be zero, and @image@ /must/ be either equal to
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
 --     or an image that was created using the same parameters in
 --     'Graphics.Vulkan.Core10.Image.ImageCreateInfo', with the exception
 --     that @extent@ and @arrayLayers@ /may/ differ subject to the
@@ -405,48 +385,46 @@ foreign import ccall
 --     created with a memory type that reports
 --     'Graphics.Vulkan.Core10.Enums.MemoryPropertyFlagBits.MEMORY_PROPERTY_PROTECTED_BIT'
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' was created with
+-- -   If @image@ was created with
 --     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationImageCreateInfoNV'::@dedicatedAllocation@
 --     equal to 'Graphics.Vulkan.Core10.BaseType.TRUE', @memory@ /must/
 --     have been created with
---     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'::'Graphics.Vulkan.Core10.Handles.Image'
+--     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'::@image@
 --     equal to an image handle created with identical creation parameters
---     to 'Graphics.Vulkan.Core10.Handles.Image' and @memoryOffset@ /must/
---     be zero
+--     to @image@ and @memoryOffset@ /must/ be zero
 --
 -- -   If the value of
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'::@handleTypes@
 --     used to allocate @memory@ is not @0@, it /must/ include at least one
 --     of the handles set in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
---     when 'Graphics.Vulkan.Core10.Handles.Image' was created
+--     when @image@ was created
 --
 -- -   If @memory@ was created by a memory import operation, the external
 --     handle type of the imported memory /must/ also have been set in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
---     when 'Graphics.Vulkan.Core10.Handles.Image' was created
+--     when @image@ was created
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.Image' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Image' handle
+-- -   @image@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Image'
+--     handle
 --
 -- -   @memory@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.DeviceMemory' handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.Image' /must/ have been created,
---     allocated, or retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
+-- -   @image@ /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- -   @memory@ /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+--     @device@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.Image' /must/ be
---     externally synchronized
+-- -   Host access to @image@ /must/ be externally synchronized
 --
 -- == Return Codes
 --

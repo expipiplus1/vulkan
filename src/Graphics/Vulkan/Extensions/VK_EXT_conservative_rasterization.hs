@@ -225,7 +225,7 @@ instance Zero PhysicalDeviceConservativeRasterizationPropertiesEXT where
 -- 'PipelineRasterizationConservativeStateCreateFlagsEXT',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineRasterizationConservativeStateCreateInfoEXT = PipelineRasterizationConservativeStateCreateInfoEXT
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+  { -- | @flags@ /must/ be @0@
     flags :: PipelineRasterizationConservativeStateCreateFlagsEXT
   , -- | @conservativeRasterizationMode@ /must/ be a valid
     -- 'ConservativeRasterizationModeEXT' value

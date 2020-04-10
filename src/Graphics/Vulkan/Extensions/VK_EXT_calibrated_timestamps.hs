@@ -86,8 +86,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device from which to query the set of calibrateable time domains.
+-- -   @physicalDevice@ is the physical device from which to query the set
+--     of calibrateable time domains.
 --
 -- -   @pTimeDomainCount@ is a pointer to an integer related to the number
 --     of calibrateable time domains available or queried, as described
@@ -100,8 +100,7 @@ foreign import ccall
 -- = Description
 --
 -- If @pTimeDomains@ is @NULL@, then the number of calibrateable time
--- domains supported for the given
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is returned in
+-- domains supported for the given @physicalDevice@ is returned in
 -- @pTimeDomainCount@. Otherwise, @pTimeDomainCount@ /must/ point to a
 -- variable set by the user to the number of elements in the @pTimeDomains@
 -- array, and on return the variable is overwritten with the number of
@@ -109,15 +108,14 @@ foreign import ccall
 -- @pTimeDomainCount@ is less than the number of calibrateable time domains
 -- supported, at most @pTimeDomainCount@ values will be written to
 -- @pTimeDomains@. If @pTimeDomainCount@ is smaller than the number of
--- calibrateable time domains supported for the given
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
+-- calibrateable time domains supported for the given @physicalDevice@,
 -- 'Graphics.Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned
 -- instead of 'Graphics.Vulkan.Core10.Enums.Result.SUCCESS' to indicate
 -- that not all the available values were returned.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pTimeDomainCount@ /must/ be a valid pointer to a @uint32_t@ value
@@ -170,8 +168,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device used
---     to perform the query.
+-- -   @device@ is the logical device used to perform the query.
 --
 -- -   @timestampCount@ is the number of timestamps to query.
 --

@@ -118,9 +118,9 @@ instance Zero PhysicalDeviceTexelBufferAlignmentFeaturesEXT where
 -- 'Graphics.Vulkan.Core10.BaseType.TRUE', then the buffer view’s offset
 -- /must/ be aligned to the lesser of the corresponding byte alignment
 -- value or the size of a single texel, based on
--- 'Graphics.Vulkan.Core10.BufferView.BufferViewCreateInfo'::'Graphics.Vulkan.Core10.Enums.Format.Format'.
--- If the size of a single texel is a multiple of three bytes, then the
--- size of a single component of the format is used instead.
+-- 'Graphics.Vulkan.Core10.BufferView.BufferViewCreateInfo'::@format@. If
+-- the size of a single texel is a multiple of three bytes, then the size
+-- of a single component of the format is used instead.
 --
 -- These limits /must/ not advertise a larger alignment than the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#limits-required required>

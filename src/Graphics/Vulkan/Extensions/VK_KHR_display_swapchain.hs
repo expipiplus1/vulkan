@@ -90,8 +90,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the device to create the
---     swapchains for.
+-- -   @device@ is the device to create the swapchains for.
 --
 -- -   @swapchainCount@ is the number of swapchains to create.
 --
@@ -131,8 +130,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pCreateInfos@ /must/ be a valid pointer to an array of
 --     @swapchainCount@ valid

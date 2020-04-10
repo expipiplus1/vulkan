@@ -80,8 +80,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     creates the fence.
+-- -   @device@ is the logical device that creates the fence.
 --
 -- -   @pCreateInfo@ is a pointer to a 'FenceCreateInfo' structure
 --     containing information about how the fence is to be created.
@@ -95,8 +94,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid 'FenceCreateInfo'
 --     structure
@@ -160,11 +159,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     destroys the fence.
+-- -   @device@ is the logical device that destroys the fence.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Fence' is the handle of the fence to
---     destroy.
+-- -   @fence@ is the handle of the fence to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
@@ -174,41 +171,37 @@ foreign import ccall
 --
 -- -   All
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-submission queue submission>
---     commands that refer to 'Graphics.Vulkan.Core10.Handles.Fence' /must/
---     have completed execution
+--     commands that refer to @fence@ /must/ have completed execution
 --
 -- -   If 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.Fence' was
---     created, a compatible set of callbacks /must/ be provided here
+--     were provided when @fence@ was created, a compatible set of
+--     callbacks /must/ be provided here
 --
 -- -   If no
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.Fence' was
---     created, @pAllocator@ /must/ be @NULL@
+--     were provided when @fence@ was created, @pAllocator@ /must/ be
+--     @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Fence' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.Fence' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Fence' handle
+-- -   If @fence@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @fence@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Fence'
+--     handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
 --     pointer to a valid
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
 --     structure
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Fence' is a valid handle, it
---     /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   If @fence@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.Fence' /must/ be
---     externally synchronized
+-- -   Host access to @fence@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -236,8 +229,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the fences.
+-- -   @device@ is the logical device that owns the fences.
 --
 -- -   @fenceCount@ is the number of fences to reset.
 --
@@ -266,8 +258,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pFences@ /must/ be a valid pointer to an array of @fenceCount@
 --     valid 'Graphics.Vulkan.Core10.Handles.Fence' handles
@@ -275,7 +267,7 @@ foreign import ccall
 -- -   @fenceCount@ /must/ be greater than @0@
 --
 -- -   Each element of @pFences@ /must/ have been created, allocated, or
---     retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
+--     retrieved from @device@
 --
 -- == Host Synchronization
 --
@@ -318,11 +310,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the fence.
+-- -   @device@ is the logical device that owns the fence.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Fence' is the handle of the fence to
---     query.
+-- -   @fence@ is the handle of the fence to query.
 --
 -- = Description
 --
@@ -332,9 +322,9 @@ foreign import ccall
 -- +---------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+
 -- | Status                                                  | Meaning                                                                                                                |
 -- +=========================================================+========================================================================================================================+
--- | 'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'           | The fence specified by 'Graphics.Vulkan.Core10.Handles.Fence' is signaled.                                             |
+-- | 'Graphics.Vulkan.Core10.Enums.Result.SUCCESS'           | The fence specified by @fence@ is signaled.                                                                            |
 -- +---------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+
--- | 'Graphics.Vulkan.Core10.Enums.Result.NOT_READY'         | The fence specified by 'Graphics.Vulkan.Core10.Handles.Fence' is unsignaled.                                           |
+-- | 'Graphics.Vulkan.Core10.Enums.Result.NOT_READY'         | The fence specified by @fence@ is unsignaled.                                                                          |
 -- +---------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------+
 -- | 'Graphics.Vulkan.Core10.Enums.Result.ERROR_DEVICE_LOST' | The device has been lost. See                                                                                          |
 -- |                                                         | <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-lost-device Lost Device>. |
@@ -393,8 +383,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the fences.
+-- -   @device@ is the logical device that owns the fences.
 --
 -- -   @fenceCount@ is the number of fences to wait on.
 --
@@ -448,8 +437,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pFences@ /must/ be a valid pointer to an array of @fenceCount@
 --     valid 'Graphics.Vulkan.Core10.Handles.Fence' handles
@@ -457,7 +446,7 @@ foreign import ccall
 -- -   @fenceCount@ /must/ be greater than @0@
 --
 -- -   Each element of @pFences@ /must/ have been created, allocated, or
---     retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
+--     retrieved from @device@
 --
 -- == Return Codes
 --
@@ -508,8 +497,7 @@ waitForFences device fences waitAll timeout = evalContT $ do
 -- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
 --     unique
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of
+-- -   @flags@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core10.Enums.FenceCreateFlagBits.FenceCreateFlagBits'
 --     values
 --
@@ -521,7 +509,7 @@ waitForFences device fences waitAll timeout = evalContT $ do
 data FenceCreateInfo (es :: [Type]) = FenceCreateInfo
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
     next :: Chain es
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+  , -- | @flags@ is a bitmask of
     -- 'Graphics.Vulkan.Core10.Enums.FenceCreateFlagBits.FenceCreateFlagBits'
     -- specifying the initial state and behavior of the fence.
     flags :: FenceCreateFlags

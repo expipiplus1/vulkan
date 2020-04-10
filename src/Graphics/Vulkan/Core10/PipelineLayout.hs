@@ -65,8 +65,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     creates the pipeline layout.
+-- -   @device@ is the logical device that creates the pipeline layout.
 --
 -- -   @pCreateInfo@ is a pointer to a 'PipelineLayoutCreateInfo' structure
 --     specifying the state of the pipeline layout object.
@@ -81,8 +80,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'PipelineLayoutCreateInfo' structure
@@ -148,11 +147,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     destroys the pipeline layout.
+-- -   @device@ is the logical device that destroys the pipeline layout.
 --
--- -   'Graphics.Vulkan.Core10.Handles.PipelineLayout' is the pipeline
---     layout to destroy.
+-- -   @pipelineLayout@ is the pipeline layout to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
@@ -161,43 +158,40 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   If 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.PipelineLayout'
---     was created, a compatible set of callbacks /must/ be provided here
+--     were provided when @pipelineLayout@ was created, a compatible set of
+--     callbacks /must/ be provided here
 --
 -- -   If no
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.PipelineLayout'
---     was created, @pAllocator@ /must/ be @NULL@
+--     were provided when @pipelineLayout@ was created, @pAllocator@ /must/
+--     be @NULL@
 --
--- -   'Graphics.Vulkan.Core10.Handles.PipelineLayout' /must/ not have been
---     passed to any @vkCmd*@ command for any command buffers that are
---     still in the
+-- -   @pipelineLayout@ /must/ not have been passed to any @vkCmd*@ command
+--     for any command buffers that are still in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --     when 'destroyPipelineLayout' is called
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.PipelineLayout' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.PipelineLayout' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.PipelineLayout' handle
+-- -   If @pipelineLayout@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @pipelineLayout@
+--     /must/ be a valid 'Graphics.Vulkan.Core10.Handles.PipelineLayout'
+--     handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
 --     pointer to a valid
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
 --     structure
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.PipelineLayout' is a valid
---     handle, it /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   If @pipelineLayout@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.PipelineLayout'
---     /must/ be externally synchronized
+-- -   Host access to @pipelineLayout@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -282,8 +276,7 @@ instance Zero PushConstantRange where
 -- -   The total number of descriptors in descriptor set layouts created
 --     without the
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     bit set with a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+--     bit set with a @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER'
 --     and
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
@@ -294,8 +287,7 @@ instance Zero PushConstantRange where
 -- -   The total number of descriptors in descriptor set layouts created
 --     without the
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     bit set with a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+--     bit set with a @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
 --     and
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
@@ -306,8 +298,7 @@ instance Zero PushConstantRange where
 -- -   The total number of descriptors in descriptor set layouts created
 --     without the
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     bit set with a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+--     bit set with a @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
 --     and
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
@@ -318,8 +309,7 @@ instance Zero PushConstantRange where
 -- -   The total number of descriptors in descriptor set layouts created
 --     without the
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     bit set with a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+--     bit set with a @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
 --     and
@@ -331,8 +321,7 @@ instance Zero PushConstantRange where
 -- -   The total number of descriptors in descriptor set layouts created
 --     without the
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     bit set with a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+--     bit set with a @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     and
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
@@ -343,8 +332,7 @@ instance Zero PushConstantRange where
 -- -   The total number of descriptors in descriptor set layouts created
 --     without the
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     bit set with a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+--     bit set with a @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
 --     accessible to any given shader stage across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
@@ -353,15 +341,13 @@ instance Zero PushConstantRange where
 -- -   The total number of bindings in descriptor set layouts created
 --     without the
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     bit set with a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+--     bit set with a @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
 --     accessible to any given shader stage across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Graphics.Vulkan.Extensions.VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockPropertiesEXT'::@maxPerStageDescriptorInlineUniformBlocks@
 --
--- -   The total number of descriptors with a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+-- -   The total number of descriptors with a @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER'
 --     and
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
@@ -369,8 +355,7 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxPerStageDescriptorUpdateAfterBindSamplers@
 --
--- -   The total number of descriptors with a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+-- -   The total number of descriptors with a @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
 --     and
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
@@ -378,8 +363,7 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxPerStageDescriptorUpdateAfterBindUniformBuffers@
 --
--- -   The total number of descriptors with a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+-- -   The total number of descriptors with a @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
 --     and
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
@@ -387,8 +371,7 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxPerStageDescriptorUpdateAfterBindStorageBuffers@
 --
--- -   The total number of descriptors with a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+-- -   The total number of descriptors with a @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
 --     and
@@ -397,8 +380,7 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxPerStageDescriptorUpdateAfterBindSampledImages@
 --
--- -   The total number of descriptors with a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+-- -   The total number of descriptors with a @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     and
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
@@ -406,15 +388,13 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxPerStageDescriptorUpdateAfterBindStorageImages@
 --
--- -   The total number of descriptors with a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+-- -   The total number of descriptors with a @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
 --     accessible to any given shader stage across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxPerStageDescriptorUpdateAfterBindInputAttachments@
 --
--- -   The total number of bindings with a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+-- -   The total number of bindings with a @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
 --     accessible to any given shader stage across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
@@ -423,8 +403,7 @@ instance Zero PushConstantRange where
 -- -   The total number of descriptors in descriptor set layouts created
 --     without the
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     bit set with a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+--     bit set with a @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER'
 --     and
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
@@ -435,8 +414,7 @@ instance Zero PushConstantRange where
 -- -   The total number of descriptors in descriptor set layouts created
 --     without the
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     bit set with a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+--     bit set with a @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
@@ -445,8 +423,7 @@ instance Zero PushConstantRange where
 -- -   The total number of descriptors in descriptor set layouts created
 --     without the
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     bit set with a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+--     bit set with a @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
@@ -455,8 +432,7 @@ instance Zero PushConstantRange where
 -- -   The total number of descriptors in descriptor set layouts created
 --     without the
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     bit set with a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+--     bit set with a @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
@@ -465,8 +441,7 @@ instance Zero PushConstantRange where
 -- -   The total number of descriptors in descriptor set layouts created
 --     without the
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     bit set with a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+--     bit set with a @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
@@ -475,8 +450,7 @@ instance Zero PushConstantRange where
 -- -   The total number of descriptors in descriptor set layouts created
 --     without the
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     bit set with a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+--     bit set with a @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
 --     and
@@ -488,8 +462,7 @@ instance Zero PushConstantRange where
 -- -   The total number of descriptors in descriptor set layouts created
 --     without the
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     bit set with a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+--     bit set with a @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     and
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER'
@@ -500,8 +473,7 @@ instance Zero PushConstantRange where
 -- -   The total number of descriptors in descriptor set layouts created
 --     without the
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     bit set with a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+--     bit set with a @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
@@ -510,8 +482,7 @@ instance Zero PushConstantRange where
 -- -   The total number of bindings in descriptor set layouts created
 --     without the
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     bit set with a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+--     bit set with a @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
@@ -572,8 +543,7 @@ instance Zero PushConstantRange where
 --     @pSetLayouts@ /must/ be less than or equal to
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_EXT_descriptor_indexing.PhysicalDeviceDescriptorIndexingProperties'::@maxDescriptorSetUpdateAfterBindInputAttachments@
 --
--- -   The total number of bindings with a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+-- -   The total number of bindings with a @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
@@ -587,8 +557,7 @@ instance Zero PushConstantRange where
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR'
 --     set
 --
--- -   The total number of bindings with a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+-- -   The total number of bindings with a @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV'
 --     accessible across all shader stages and across all elements of
 --     @pSetLayouts@ /must/ be less than or equal to
@@ -601,7 +570,7 @@ instance Zero PushConstantRange where
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+-- -   @flags@ /must/ be @0@
 --
 -- -   If @setLayoutCount@ is not @0@, @pSetLayouts@ /must/ be a valid
 --     pointer to an array of @setLayoutCount@ valid
@@ -619,7 +588,7 @@ instance Zero PushConstantRange where
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createPipelineLayout'
 data PipelineLayoutCreateInfo = PipelineLayoutCreateInfo
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is reserved for future use.
+  { -- | @flags@ is reserved for future use.
     flags :: PipelineLayoutCreateFlags
   , -- | @pSetLayouts@ is a pointer to an array of
     -- 'Graphics.Vulkan.Core10.Handles.DescriptorSetLayout' objects.

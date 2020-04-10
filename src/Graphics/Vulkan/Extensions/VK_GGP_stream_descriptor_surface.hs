@@ -79,8 +79,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' is the instance to
---     associate with the surface.
+-- -   @instance@ is the instance to associate with the surface.
 --
 -- -   @pCreateInfo@ is a pointer to a
 --     'StreamDescriptorSurfaceCreateInfoGGP' structure containing
@@ -97,7 +96,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+-- -   @instance@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
@@ -156,7 +155,7 @@ createStreamDescriptorSurfaceGGP instance' createInfo allocator = evalContT $ do
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createStreamDescriptorSurfaceGGP'
 data StreamDescriptorSurfaceCreateInfoGGP = StreamDescriptorSurfaceCreateInfoGGP
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+  { -- | @flags@ /must/ be @0@
     flags :: StreamDescriptorSurfaceCreateFlagsGGP
   , -- | @streamDescriptor@ /must/ be a valid
     -- 'Graphics.Vulkan.Extensions.WSITypes.GgpStreamDescriptor'

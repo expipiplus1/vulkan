@@ -79,8 +79,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     creates the shader module.
+-- -   @device@ is the logical device that creates the shader module.
 --
 -- -   @pCreateInfo@ is a pointer to a 'ShaderModuleCreateInfo' structure.
 --
@@ -109,8 +108,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'ShaderModuleCreateInfo' structure
@@ -177,11 +176,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     destroys the shader module.
+-- -   @device@ is the logical device that destroys the shader module.
 --
--- -   'Graphics.Vulkan.Core10.Handles.ShaderModule' is the handle of the
---     shader module to destroy.
+-- -   @shaderModule@ is the handle of the shader module to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
@@ -195,37 +192,35 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   If 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.ShaderModule' was
---     created, a compatible set of callbacks /must/ be provided here
+--     were provided when @shaderModule@ was created, a compatible set of
+--     callbacks /must/ be provided here
 --
 -- -   If no
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.ShaderModule' was
---     created, @pAllocator@ /must/ be @NULL@
+--     were provided when @shaderModule@ was created, @pAllocator@ /must/
+--     be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.ShaderModule' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.ShaderModule' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.ShaderModule' handle
+-- -   If @shaderModule@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @shaderModule@
+--     /must/ be a valid 'Graphics.Vulkan.Core10.Handles.ShaderModule'
+--     handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
 --     pointer to a valid
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
 --     structure
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.ShaderModule' is a valid handle,
---     it /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   If @shaderModule@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.ShaderModule' /must/
---     be externally synchronized
+-- -   Host access to @shaderModule@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -293,7 +288,7 @@ destroyShaderModule device shaderModule allocator = evalContT $ do
 -- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
 --     unique
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+-- -   @flags@ /must/ be @0@
 --
 -- -   @pCode@ /must/ be a valid pointer to an array of
 --     \(\textrm{codeSize} \over 4\) @uint32_t@ values
@@ -306,7 +301,7 @@ destroyShaderModule device shaderModule allocator = evalContT $ do
 data ShaderModuleCreateInfo (es :: [Type]) = ShaderModuleCreateInfo
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
     next :: Chain es
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is reserved for future use.
+  , -- | @flags@ is reserved for future use.
     flags :: ShaderModuleCreateFlags
   , -- | @pCode@ is a pointer to code that is used to create the shader module.
     -- The type and format of the code is determined from the content of the

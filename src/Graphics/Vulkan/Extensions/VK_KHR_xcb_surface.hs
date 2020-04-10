@@ -94,8 +94,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' is the instance to
---     associate the surface with.
+-- -   @instance@ is the instance to associate the surface with.
 --
 -- -   @pCreateInfo@ is a pointer to a 'XcbSurfaceCreateInfoKHR' structure
 --     containing parameters affecting the creation of the surface object.
@@ -111,7 +110,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+-- -   @instance@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
@@ -169,15 +168,12 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device.
+-- -   @physicalDevice@ is the physical device.
 --
 -- -   @queueFamilyIndex@ is the queue family index.
 --
--- -   @connection@ is a pointer to an
---     'Graphics.Vulkan.Extensions.WSITypes.Xcb_connection_t' to the X
---     server. @visual_id@ is an X11 visual
---     ('Graphics.Vulkan.Extensions.WSITypes.Xcb_visualid_t').
+-- -   @connection@ is a pointer to an @xcb_connection_t@ to the X server.
+--     @visual_id@ is an X11 visual (@xcb_visualid_t@).
 --
 -- = Description
 --
@@ -206,13 +202,11 @@ getPhysicalDeviceXcbPresentationSupportKHR physicalDevice queueFamilyIndex conne
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'XcbSurfaceCreateFlagsKHR', 'createXcbSurfaceKHR'
 data XcbSurfaceCreateInfoKHR = XcbSurfaceCreateInfoKHR
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+  { -- | @flags@ /must/ be @0@
     flags :: XcbSurfaceCreateFlagsKHR
-  , -- | @connection@ /must/ point to a valid X11
-    -- 'Graphics.Vulkan.Extensions.WSITypes.Xcb_connection_t'.
+  , -- | @connection@ /must/ point to a valid X11 @xcb_connection_t@.
     connection :: Ptr Xcb_connection_t
-  , -- | 'Graphics.Vulkan.Extensions.WSITypes.Window' /must/ be a valid X11
-    -- 'Graphics.Vulkan.Extensions.WSITypes.Xcb_window_t'.
+  , -- | @window@ /must/ be a valid X11 @xcb_window_t@.
     window :: Xcb_window_t
   }
   deriving (Typeable)

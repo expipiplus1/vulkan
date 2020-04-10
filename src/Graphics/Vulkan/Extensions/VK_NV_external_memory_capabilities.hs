@@ -86,15 +86,14 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device from which to query the image capabilities
+-- -   @physicalDevice@ is the physical device from which to query the
+--     image capabilities
 --
--- -   'Graphics.Vulkan.Core10.Enums.Format.Format' is the image format,
---     corresponding to
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::'Graphics.Vulkan.Core10.Enums.Format.Format'.
+-- -   @format@ is the image format, corresponding to
+--     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@format@.
 --
 -- -   @type@ is the image type, corresponding to
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::'Graphics.Vulkan.Core10.Enums.ImageType.ImageType'.
+--     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@imageType@.
 --
 -- -   @tiling@ is the image tiling, corresponding to
 --     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@tiling@.
@@ -102,9 +101,9 @@ foreign import ccall
 -- -   @usage@ is the intended usage of the image, corresponding to
 --     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@usage@.
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask describing
---     additional parameters of the image, corresponding to
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'.
+-- -   @flags@ is a bitmask describing additional parameters of the image,
+--     corresponding to
+--     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@flags@.
 --
 -- -   @externalHandleType@ is either one of the bits from
 --     'ExternalMemoryHandleTypeFlagBitsNV', or 0.
@@ -165,8 +164,7 @@ getPhysicalDeviceExternalImageFormatPropertiesNV physicalDevice format type' til
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.ImageFormatProperties',
 -- 'getPhysicalDeviceExternalImageFormatPropertiesNV'
 data ExternalImageFormatPropertiesNV = ExternalImageFormatPropertiesNV
-  { -- | 'Graphics.Vulkan.Core10.DeviceInitialization.ImageFormatProperties' will
-    -- be filled in as when calling
+  { -- | @imageFormatProperties@ will be filled in as when calling
     -- 'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceImageFormatProperties',
     -- but the values returned /may/ vary depending on the external handle type
     -- requested.

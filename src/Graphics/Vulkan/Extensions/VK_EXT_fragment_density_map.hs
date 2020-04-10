@@ -74,7 +74,7 @@ data PhysicalDeviceFragmentDensityMapFeaturesEXT = PhysicalDeviceFragmentDensity
     -- not enabled,
     -- 'Graphics.Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT'
     -- /must/ not be included in
-    -- 'Graphics.Vulkan.Core10.ImageView.ImageViewCreateInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'.
+    -- 'Graphics.Vulkan.Core10.ImageView.ImageViewCreateInfo'::@flags@.
     fragmentDensityMapDynamic :: Bool
   , -- | @fragmentDensityMapNonSubsampledImages@ specifies whether the
     -- implementation supports regular non-subsampled image attachments with
@@ -206,8 +206,7 @@ instance Zero PhysicalDeviceFragmentDensityMapPropertiesEXT where
 -- The fragment density map attachment is read at an
 -- implementation-dependent time either by the host during
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdBeginRenderPass' if the
--- attachment’s image view was not created with
--- 'Graphics.Vulkan.Core10.BaseType.Flags' containing
+-- attachment’s image view was not created with @flags@ containing
 -- 'Graphics.Vulkan.Core10.Enums.ImageViewCreateFlagBits.IMAGE_VIEW_CREATE_FRAGMENT_DENSITY_MAP_DYNAMIC_BIT_EXT',
 -- or by the device when drawing commands in the renderpass execute
 -- 'Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits.PIPELINE_STAGE_FRAGMENT_DENSITY_PROCESS_BIT_EXT'.

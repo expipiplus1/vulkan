@@ -74,8 +74,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' is the instance with which
---     to associate the surface.
+-- -   @instance@ is the instance with which to associate the surface.
 --
 -- -   @pCreateInfo@ is a pointer to a 'IOSSurfaceCreateInfoMVK' structure
 --     containing parameters affecting the creation of the surface object.
@@ -91,7 +90,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+-- -   @instance@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
@@ -149,7 +148,7 @@ createIOSSurfaceMVK instance' createInfo allocator = evalContT $ do
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createIOSSurfaceMVK'
 data IOSSurfaceCreateInfoMVK = IOSSurfaceCreateInfoMVK
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+  { -- | @flags@ /must/ be @0@
     flags :: IOSSurfaceCreateFlagsMVK
   , -- | @pView@ /must/ be a valid @UIView@ and /must/ be backed by a @CALayer@
     -- instance of type 'Graphics.Vulkan.Extensions.WSITypes.CAMetalLayer'.

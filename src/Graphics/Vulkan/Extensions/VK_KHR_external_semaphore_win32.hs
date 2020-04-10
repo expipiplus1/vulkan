@@ -85,8 +85,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     created the semaphore being exported.
+-- -   @device@ is the logical device that created the semaphore being
+--     exported.
 --
 -- -   @pGetWin32HandleInfo@ is a pointer to a
 --     'SemaphoreGetWin32HandleInfoKHR' structure containing parameters of
@@ -146,8 +146,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     created the semaphore.
+-- -   @device@ is the logical device that created the semaphore.
 --
 -- -   @pImportSemaphoreWin32HandleInfo@ is a pointer to a
 --     'ImportSemaphoreWin32HandleInfoKHR' structure specifying the
@@ -241,7 +240,7 @@ importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = evalContT 
 --     or
 --     'Graphics.Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT',
 --     the
---     'Graphics.Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'
+--     'Graphics.Vulkan.Core10.QueueSemaphore.SemaphoreCreateInfo'::@flags@
 --     field /must/ match that of the semaphore from which @handle@ or
 --     @name@ was exported.
 --
@@ -250,14 +249,14 @@ importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = evalContT 
 --     or
 --     'Graphics.Vulkan.Core11.Enums.ExternalSemaphoreHandleTypeFlagBits.EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT',
 --     the
---     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'::'Graphics.Vulkan.Core12.Enums.SemaphoreType.SemaphoreType'
+--     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'::@semaphoreType@
 --     field /must/ match that of the semaphore from which @handle@ or
 --     @name@ was exported.
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+-- -   If @flags@ contains
 --     'Graphics.Vulkan.Core11.Enums.SemaphoreImportFlagBits.SEMAPHORE_IMPORT_TEMPORARY_BIT',
 --     the
---     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'::'Graphics.Vulkan.Core12.Enums.SemaphoreType.SemaphoreType'
+--     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_timeline_semaphore.SemaphoreTypeCreateInfo'::@semaphoreType@
 --     field of the semaphore from which @handle@ or @name@ was exported
 --     /must/ not be
 --     'Graphics.Vulkan.Core12.Enums.SemaphoreType.SEMAPHORE_TYPE_TIMELINE'.
@@ -269,11 +268,10 @@ importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = evalContT 
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   'Graphics.Vulkan.Core10.Handles.Semaphore' /must/ be a valid
+-- -   @semaphore@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Semaphore' handle
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of
+-- -   @flags@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core11.Enums.SemaphoreImportFlagBits.SemaphoreImportFlagBits'
 --     values
 --
@@ -283,8 +281,7 @@ importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = evalContT 
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.Semaphore' /must/ be
---     externally synchronized
+-- -   Host access to @semaphore@ /must/ be externally synchronized
 --
 -- = See Also
 --
@@ -294,10 +291,9 @@ importSemaphoreWin32HandleKHR device importSemaphoreWin32HandleInfo = evalContT 
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'importSemaphoreWin32HandleKHR'
 data ImportSemaphoreWin32HandleInfoKHR = ImportSemaphoreWin32HandleInfoKHR
-  { -- | 'Graphics.Vulkan.Core10.Handles.Semaphore' is the semaphore into which
-    -- the payload will be imported.
+  { -- | @semaphore@ is the semaphore into which the payload will be imported.
     semaphore :: Semaphore
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+  , -- | @flags@ is a bitmask of
     -- 'Graphics.Vulkan.Core11.Enums.SemaphoreImportFlagBits.SemaphoreImportFlagBits'
     -- specifying additional parameters for the semaphore payload import
     -- operation.
@@ -604,16 +600,14 @@ instance Zero D3D12FenceSubmitInfoKHR where
 --
 -- -   @handleType@ /must/ have been included in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore.ExportSemaphoreCreateInfo'::@handleTypes@
---     when the 'Graphics.Vulkan.Core10.Handles.Semaphore'’s current
---     payload was created.
+--     when the @semaphore@’s current payload was created.
 --
 -- -   If @handleType@ is defined as an NT handle,
 --     'getSemaphoreWin32HandleKHR' /must/ be called no more than once for
---     each valid unique combination of
---     'Graphics.Vulkan.Core10.Handles.Semaphore' and @handleType@.
+--     each valid unique combination of @semaphore@ and @handleType@.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Semaphore' /must/ not currently have
---     its payload replaced by an imported payload as described below in
+-- -   @semaphore@ /must/ not currently have its payload replaced by an
+--     imported payload as described below in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>
 --     unless that imported payload’s handle type was included in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore_capabilities.ExternalSemaphoreProperties'::@exportFromImportedHandleTypes@
@@ -622,12 +616,11 @@ instance Zero D3D12FenceSubmitInfoKHR where
 -- -   If @handleType@ refers to a handle type with copy payload
 --     transference semantics, as defined below in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-importing Importing Semaphore Payloads>,
---     there /must/ be no queue waiting on
---     'Graphics.Vulkan.Core10.Handles.Semaphore'.
+--     there /must/ be no queue waiting on @semaphore@.
 --
 -- -   If @handleType@ refers to a handle type with copy payload
---     transference semantics, 'Graphics.Vulkan.Core10.Handles.Semaphore'
---     /must/ be signaled, or have an associated
+--     transference semantics, @semaphore@ /must/ be signaled, or have an
+--     associated
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores-signaling semaphore signal operation>
 --     pending execution.
 --
@@ -641,7 +634,7 @@ instance Zero D3D12FenceSubmitInfoKHR where
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   'Graphics.Vulkan.Core10.Handles.Semaphore' /must/ be a valid
+-- -   @semaphore@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Semaphore' handle
 --
 -- -   @handleType@ /must/ be a valid
@@ -655,8 +648,7 @@ instance Zero D3D12FenceSubmitInfoKHR where
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getSemaphoreWin32HandleKHR'
 data SemaphoreGetWin32HandleInfoKHR = SemaphoreGetWin32HandleInfoKHR
-  { -- | 'Graphics.Vulkan.Core10.Handles.Semaphore' is the semaphore from which
-    -- state will be exported.
+  { -- | @semaphore@ is the semaphore from which state will be exported.
     semaphore :: Semaphore
   , -- | @handleType@ is the type of handle requested.
     handleType :: ExternalSemaphoreHandleTypeFlagBits
