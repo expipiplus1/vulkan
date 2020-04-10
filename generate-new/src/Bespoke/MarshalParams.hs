@@ -91,6 +91,10 @@ isIntegral =
           , TypeName "size_t"
           , TypeName "VkDeviceSize"
           , TypeName "VkDeviceAddress"
+          , TypeName "VkDeviceOrHostAddressConstKHR"
+          , TypeName "VkDeviceOrHostAddressKHR"
+          , TypeName "VkFormat"
+          , TypeName "VkBool32"
           ]
   )
 

@@ -61,6 +61,29 @@ The docbook documentation will be in `docs/docbook`.
 - Groups of `lift`ed actions which don't return anything can be grouped under
   one `lift`:
 
+## To check
+
+- `VkAccelerationStructureGeometryTrianglesDataKHR: Unhandled Maybe conversion to TypeName "VkDeviceOrHostAddressConstKHR"`
+
+- `VkAccelerationStructureGeometryTrianglesDataKHR: Unhandled Maybe conversion to TypeName "VkDeviceOrHostAddressConstKHR"`
+
+- `VkAccelerationStructureBuildGeometryInfoKHR: Unhandled TypeName "VkAccelerationStructureGeometryKHR" conversion to: Ptr Const (Ptr Const (TypeName "VkAccelerationStructureGeometryKHR"))`
+
+- `VkAccelerationStructureCreateGeometryTypeInfoKHR: Unhandled Maybe conversion to TypeName "VkFormat"`
+
+- `VkAccelerationStructureCreateGeometryTypeInfoKHR: Unhandled Maybe conversion to TypeName "VkBool32"`
+
+- `VkAccelerationStructureInstanceKHR: TODO Bitfields`
+
+- `VkAccelerationStructureInstanceKHR: TODO Bitfields`
+
+- `VkAccelerationStructureInstanceKHR: TODO Bitfields`
+
+- `VkAccelerationStructureInstanceKHR: TODO Bitfields`
+
+- `VkAccelerationStructureVersionKHR: Unable to find ref named 2*VK_UUID_SIZE`
+
+
 # VMA TODOs
 
 ## TODO

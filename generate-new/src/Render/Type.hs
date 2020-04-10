@@ -163,6 +163,7 @@ cToHsType' structStyle preserve t = do
           Nothing   -> t'
           Just name -> namedTy name t'
       pure $ foldr (~>) (ConT ''IO :@ retTy) pTys
+    Bitfield _ _ -> throw "TODO Bitfields"
 
 -- TODO: Remove vulkan specific stuff here
 namedTy :: Text -> H.Type -> H.Type
