@@ -1,6 +1,7 @@
 {-# language CPP #-}
 module Graphics.Vulkan.Extensions.VK_EXT_transform_feedback  ( cmdBindTransformFeedbackBuffersEXT
                                                              , cmdBeginTransformFeedbackEXT
+                                                             , cmdWithTransformFeedbackEXT
                                                              , cmdEndTransformFeedbackEXT
                                                              , cmdBeginQueryIndexedEXT
                                                              , cmdWithQueryIndexedEXT
@@ -73,9 +74,8 @@ import Graphics.Vulkan.Core10.BaseType (DeviceSize)
 import Graphics.Vulkan.Core10.BaseType (Flags)
 import Graphics.Vulkan.CStruct (FromCStruct)
 import Graphics.Vulkan.CStruct (FromCStruct(..))
-import Graphics.Vulkan.Core10.Enums.QueryControlFlagBits (QueryControlFlags)
-import Graphics.Vulkan.Core10.Enums.QueryControlFlagBits (QueryControlFlags)
 import Graphics.Vulkan.Core10.Enums.QueryControlFlagBits (QueryControlFlagBits(..))
+import Graphics.Vulkan.Core10.Enums.QueryControlFlagBits (QueryControlFlags)
 import Graphics.Vulkan.Core10.Handles (QueryPool)
 import Graphics.Vulkan.Core10.Handles (QueryPool(..))
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
@@ -397,6 +397,14 @@ cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers cou
       pure $ pPCounterBufferOffsets
   lift $ vkCmdBeginTransformFeedbackEXT' (commandBufferHandle (commandBuffer)) (firstCounterBuffer) ((fromIntegral pCounterBuffersLength :: Word32)) (pPCounterBuffers) pCounterBufferOffsets
   pure $ ()
+
+-- | A safe wrapper for 'cmdBeginTransformFeedbackEXT' and
+-- 'cmdEndTransformFeedbackEXT' using 'bracket_'
+cmdWithTransformFeedbackEXT :: CommandBuffer -> Word32 -> Vector Buffer -> Either Word32 (Vector DeviceSize) -> IO r -> IO r
+cmdWithTransformFeedbackEXT commandBuffer firstCounterBuffer pCounterBuffers pCounterBufferOffsets =
+  bracket_
+    (cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer pCounterBuffers pCounterBufferOffsets)
+    (cmdEndTransformFeedbackEXT commandBuffer firstCounterBuffer pCounterBuffers pCounterBufferOffsets)
 
 
 foreign import ccall

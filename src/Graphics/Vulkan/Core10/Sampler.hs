@@ -141,11 +141,11 @@ createSampler device createInfo allocator = evalContT $ do
 -- | A safe wrapper for 'createSampler' and 'destroySampler' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withSampler :: PokeChain a => Device -> SamplerCreateInfo a -> Maybe AllocationCallbacks -> (Sampler -> IO r) -> IO r
-withSampler device samplerCreateInfo allocationCallbacks =
+withSampler :: PokeChain a => Device -> SamplerCreateInfo a -> Maybe AllocationCallbacks -> ((Sampler) -> IO r) -> IO r
+withSampler device pCreateInfo pAllocator =
   bracket
-    (createSampler device samplerCreateInfo allocationCallbacks)
-    (\o -> destroySampler device o allocationCallbacks)
+    (createSampler device pCreateInfo pAllocator)
+    (\(o0) -> destroySampler device o0 pAllocator)
 
 
 foreign import ccall

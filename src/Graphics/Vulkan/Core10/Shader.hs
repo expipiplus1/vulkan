@@ -159,11 +159,11 @@ createShaderModule device createInfo allocator = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withShaderModule :: PokeChain a => Device -> ShaderModuleCreateInfo a -> Maybe AllocationCallbacks -> (ShaderModule -> IO r) -> IO r
-withShaderModule device shaderModuleCreateInfo allocationCallbacks =
+withShaderModule :: PokeChain a => Device -> ShaderModuleCreateInfo a -> Maybe AllocationCallbacks -> ((ShaderModule) -> IO r) -> IO r
+withShaderModule device pCreateInfo pAllocator =
   bracket
-    (createShaderModule device shaderModuleCreateInfo allocationCallbacks)
-    (\o -> destroyShaderModule device o allocationCallbacks)
+    (createShaderModule device pCreateInfo pAllocator)
+    (\(o0) -> destroyShaderModule device o0 pAllocator)
 
 
 foreign import ccall

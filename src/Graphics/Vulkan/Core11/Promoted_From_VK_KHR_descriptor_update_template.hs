@@ -154,11 +154,11 @@ createDescriptorUpdateTemplate device createInfo allocator = evalContT $ do
 -- 'destroyDescriptorUpdateTemplate' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withDescriptorUpdateTemplate :: Device -> DescriptorUpdateTemplateCreateInfo -> Maybe AllocationCallbacks -> (DescriptorUpdateTemplate -> IO r) -> IO r
-withDescriptorUpdateTemplate device descriptorUpdateTemplateCreateInfo allocationCallbacks =
+withDescriptorUpdateTemplate :: Device -> DescriptorUpdateTemplateCreateInfo -> Maybe AllocationCallbacks -> ((DescriptorUpdateTemplate) -> IO r) -> IO r
+withDescriptorUpdateTemplate device pCreateInfo pAllocator =
   bracket
-    (createDescriptorUpdateTemplate device descriptorUpdateTemplateCreateInfo allocationCallbacks)
-    (\o -> destroyDescriptorUpdateTemplate device o allocationCallbacks)
+    (createDescriptorUpdateTemplate device pCreateInfo pAllocator)
+    (\(o0) -> destroyDescriptorUpdateTemplate device o0 pAllocator)
 
 
 foreign import ccall

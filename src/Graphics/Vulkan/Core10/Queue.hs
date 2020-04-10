@@ -191,10 +191,8 @@ foreign import ccall
 -- additional ordering constraints compared to other submission commands,
 -- with dependencies involving previous and subsequent queue operations.
 -- Information about these additional constraints can be found in the
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-semaphores semaphore>
--- and
--- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fences fence>
--- sections of
+-- 'Graphics.Vulkan.Core10.Handles.Semaphore' and
+-- 'Graphics.Vulkan.Core10.Handles.Fence' sections of
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization the synchronization chapter>.
 --
 -- Details on the interaction of @pWaitDstStageMask@ with synchronization

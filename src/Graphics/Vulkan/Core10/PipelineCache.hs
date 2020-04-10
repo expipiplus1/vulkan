@@ -21,10 +21,10 @@ import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Foreign.C.Types (CSize(..))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CSize)
-import Foreign.C.Types (CSize(..))
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -166,11 +166,11 @@ createPipelineCache device createInfo allocator = evalContT $ do
 -- using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withPipelineCache :: Device -> PipelineCacheCreateInfo -> Maybe AllocationCallbacks -> (PipelineCache -> IO r) -> IO r
-withPipelineCache device pipelineCacheCreateInfo allocationCallbacks =
+withPipelineCache :: Device -> PipelineCacheCreateInfo -> Maybe AllocationCallbacks -> ((PipelineCache) -> IO r) -> IO r
+withPipelineCache device pCreateInfo pAllocator =
   bracket
-    (createPipelineCache device pipelineCacheCreateInfo allocationCallbacks)
-    (\o -> destroyPipelineCache device o allocationCallbacks)
+    (createPipelineCache device pCreateInfo pAllocator)
+    (\(o0) -> destroyPipelineCache device o0 pAllocator)
 
 
 foreign import ccall

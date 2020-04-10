@@ -41,6 +41,7 @@ module Graphics.Vulkan.Core10.CommandBufferBuilding  ( cmdBindPipeline
                                                      , cmdCopyQueryPoolResults
                                                      , cmdPushConstants
                                                      , cmdBeginRenderPass
+                                                     , cmdWithRenderPass
                                                      , cmdNextSubpass
                                                      , cmdEndRenderPass
                                                      , cmdExecuteCommands
@@ -67,10 +68,10 @@ import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Foreign.C.Types (CFloat(..))
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CFloat)
-import Foreign.C.Types (CFloat(..))
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -99,9 +100,8 @@ import Graphics.Vulkan.Core10.SharedTypes (ClearValue)
 import Graphics.Vulkan.Core10.Handles (CommandBuffer)
 import Graphics.Vulkan.Core10.Handles (CommandBuffer(..))
 import Graphics.Vulkan.Core10.Handles (CommandBuffer_T)
-import Graphics.Vulkan.Core10.Enums.DependencyFlagBits (DependencyFlags)
-import Graphics.Vulkan.Core10.Enums.DependencyFlagBits (DependencyFlags)
 import Graphics.Vulkan.Core10.Enums.DependencyFlagBits (DependencyFlagBits(..))
+import Graphics.Vulkan.Core10.Enums.DependencyFlagBits (DependencyFlags)
 import Graphics.Vulkan.Core10.Handles (DescriptorSet)
 import Graphics.Vulkan.Core10.Handles (DescriptorSet(..))
 import Graphics.Vulkan.Dynamic (DeviceCmds(pVkCmdBeginQuery))
@@ -183,28 +183,22 @@ import Graphics.Vulkan.Core10.Handles (PipelineLayout(..))
 import Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlagBits)
 import Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlagBits(..))
 import Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlags)
-import Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlags)
-import Graphics.Vulkan.Core10.Enums.PipelineStageFlagBits (PipelineStageFlagBits(..))
 import Graphics.Vulkan.CStruct.Extends (PokeChain)
 import Graphics.Vulkan.CStruct.Extends (PokeChain(..))
-import Graphics.Vulkan.Core10.Enums.QueryControlFlagBits (QueryControlFlags)
-import Graphics.Vulkan.Core10.Enums.QueryControlFlagBits (QueryControlFlags)
 import Graphics.Vulkan.Core10.Enums.QueryControlFlagBits (QueryControlFlagBits(..))
+import Graphics.Vulkan.Core10.Enums.QueryControlFlagBits (QueryControlFlags)
 import Graphics.Vulkan.Core10.Handles (QueryPool)
 import Graphics.Vulkan.Core10.Handles (QueryPool(..))
-import Graphics.Vulkan.Core10.Enums.QueryResultFlagBits (QueryResultFlags)
-import Graphics.Vulkan.Core10.Enums.QueryResultFlagBits (QueryResultFlags)
 import Graphics.Vulkan.Core10.Enums.QueryResultFlagBits (QueryResultFlagBits(..))
+import Graphics.Vulkan.Core10.Enums.QueryResultFlagBits (QueryResultFlags)
 import Graphics.Vulkan.Core10.Handles (RenderPass)
 import {-# SOURCE #-} Graphics.Vulkan.Core12.Promoted_From_VK_KHR_imageless_framebuffer (RenderPassAttachmentBeginInfo)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_EXT_sample_locations (RenderPassSampleLocationsBeginInfoEXT)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_QCOM_render_pass_transform (RenderPassTransformBeginInfoQCOM)
-import Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlags)
-import Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlags)
 import Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlagBits(..))
-import Graphics.Vulkan.Core10.Enums.StencilFaceFlagBits (StencilFaceFlags)
-import Graphics.Vulkan.Core10.Enums.StencilFaceFlagBits (StencilFaceFlags)
+import Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits (ShaderStageFlags)
 import Graphics.Vulkan.Core10.Enums.StencilFaceFlagBits (StencilFaceFlagBits(..))
+import Graphics.Vulkan.Core10.Enums.StencilFaceFlagBits (StencilFaceFlags)
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
 import Graphics.Vulkan.Core10.Enums.SubpassContents (SubpassContents)
 import Graphics.Vulkan.Core10.Enums.SubpassContents (SubpassContents(..))
@@ -7842,6 +7836,14 @@ cmdBeginRenderPass commandBuffer renderPassBegin contents = evalContT $ do
   pRenderPassBegin <- ContT $ withCStruct (renderPassBegin)
   lift $ vkCmdBeginRenderPass' (commandBufferHandle (commandBuffer)) pRenderPassBegin (contents)
   pure $ ()
+
+-- | A safe wrapper for 'cmdBeginRenderPass' and 'cmdEndRenderPass' using
+-- 'bracket_'
+cmdWithRenderPass :: PokeChain a => CommandBuffer -> RenderPassBeginInfo a -> SubpassContents -> IO r -> IO r
+cmdWithRenderPass commandBuffer pRenderPassBegin contents =
+  bracket_
+    (cmdBeginRenderPass commandBuffer pRenderPassBegin contents)
+    (cmdEndRenderPass commandBuffer)
 
 
 foreign import ccall

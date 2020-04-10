@@ -18,10 +18,10 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Foreign.C.Types (CSize(..))
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CSize)
-import Foreign.C.Types (CSize(..))
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
@@ -55,9 +55,8 @@ import Graphics.Vulkan.Core10.Handles (QueryPool(..))
 import Graphics.Vulkan.Core10.Enums.QueryPoolCreateFlags (QueryPoolCreateFlags)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_INTEL_performance_query (QueryPoolCreateInfoINTEL)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_KHR_performance_query (QueryPoolPerformanceCreateInfoKHR)
-import Graphics.Vulkan.Core10.Enums.QueryResultFlagBits (QueryResultFlags)
-import Graphics.Vulkan.Core10.Enums.QueryResultFlagBits (QueryResultFlags)
 import Graphics.Vulkan.Core10.Enums.QueryResultFlagBits (QueryResultFlagBits(..))
+import Graphics.Vulkan.Core10.Enums.QueryResultFlagBits (QueryResultFlags)
 import Graphics.Vulkan.Core10.Enums.QueryType (QueryType)
 import Graphics.Vulkan.Core10.Enums.Result (Result)
 import Graphics.Vulkan.Core10.Enums.Result (Result(..))
@@ -143,11 +142,11 @@ createQueryPool device createInfo allocator = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withQueryPool :: PokeChain a => Device -> QueryPoolCreateInfo a -> Maybe AllocationCallbacks -> (QueryPool -> IO r) -> IO r
-withQueryPool device queryPoolCreateInfo allocationCallbacks =
+withQueryPool :: PokeChain a => Device -> QueryPoolCreateInfo a -> Maybe AllocationCallbacks -> ((QueryPool) -> IO r) -> IO r
+withQueryPool device pCreateInfo pAllocator =
   bracket
-    (createQueryPool device queryPoolCreateInfo allocationCallbacks)
-    (\o -> destroyQueryPool device o allocationCallbacks)
+    (createQueryPool device pCreateInfo pAllocator)
+    (\(o0) -> destroyQueryPool device o0 pAllocator)
 
 
 foreign import ccall

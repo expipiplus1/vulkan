@@ -138,11 +138,11 @@ createImageView device createInfo allocator = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withImageView :: PokeChain a => Device -> ImageViewCreateInfo a -> Maybe AllocationCallbacks -> (ImageView -> IO r) -> IO r
-withImageView device imageViewCreateInfo allocationCallbacks =
+withImageView :: PokeChain a => Device -> ImageViewCreateInfo a -> Maybe AllocationCallbacks -> ((ImageView) -> IO r) -> IO r
+withImageView device pCreateInfo pAllocator =
   bracket
-    (createImageView device imageViewCreateInfo allocationCallbacks)
-    (\o -> destroyImageView device o allocationCallbacks)
+    (createImageView device pCreateInfo pAllocator)
+    (\(o0) -> destroyImageView device o0 pAllocator)
 
 
 foreign import ccall

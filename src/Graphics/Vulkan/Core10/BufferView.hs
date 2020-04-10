@@ -123,11 +123,11 @@ createBufferView device createInfo allocator = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withBufferView :: Device -> BufferViewCreateInfo -> Maybe AllocationCallbacks -> (BufferView -> IO r) -> IO r
-withBufferView device bufferViewCreateInfo allocationCallbacks =
+withBufferView :: Device -> BufferViewCreateInfo -> Maybe AllocationCallbacks -> ((BufferView) -> IO r) -> IO r
+withBufferView device pCreateInfo pAllocator =
   bracket
-    (createBufferView device bufferViewCreateInfo allocationCallbacks)
-    (\o -> destroyBufferView device o allocationCallbacks)
+    (createBufferView device pCreateInfo pAllocator)
+    (\(o0) -> destroyBufferView device o0 pAllocator)
 
 
 foreign import ccall

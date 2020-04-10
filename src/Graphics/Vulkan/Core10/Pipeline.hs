@@ -26,6 +26,7 @@ module Graphics.Vulkan.Core10.Pipeline  ( createGraphicsPipelines
 
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
+import Data.Foldable (traverse_)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -298,11 +299,11 @@ createGraphicsPipelines device pipelineCache createInfos allocator = evalContT $
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withGraphicsPipelines :: PokeChain a => Device -> PipelineCache -> Vector (GraphicsPipelineCreateInfo a) -> Maybe AllocationCallbacks -> (Vector Pipeline -> IO r) -> IO r
-withGraphicsPipelines device pipelineCache graphicsPipelineCreateInfo allocationCallbacks =
+withGraphicsPipelines :: PokeChain a => Device -> PipelineCache -> Vector (GraphicsPipelineCreateInfo a) -> Maybe AllocationCallbacks -> ((Vector Pipeline) -> IO r) -> IO r
+withGraphicsPipelines device pipelineCache pCreateInfos pAllocator =
   bracket
-    (createGraphicsPipelines device pipelineCache graphicsPipelineCreateInfo allocationCallbacks)
-    (traverse (\o -> destroyPipeline device o allocationCallbacks))
+    (createGraphicsPipelines device pipelineCache pCreateInfos pAllocator)
+    (\(o0) -> traverse_ (\o0Elem -> destroyPipeline device o0Elem pAllocator) o0)
 
 
 foreign import ccall
@@ -421,11 +422,11 @@ createComputePipelines device pipelineCache createInfos allocator = evalContT $ 
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withComputePipelines :: PokeChain a => Device -> PipelineCache -> Vector (ComputePipelineCreateInfo a) -> Maybe AllocationCallbacks -> (Vector Pipeline -> IO r) -> IO r
-withComputePipelines device pipelineCache computePipelineCreateInfo allocationCallbacks =
+withComputePipelines :: PokeChain a => Device -> PipelineCache -> Vector (ComputePipelineCreateInfo a) -> Maybe AllocationCallbacks -> ((Vector Pipeline) -> IO r) -> IO r
+withComputePipelines device pipelineCache pCreateInfos pAllocator =
   bracket
-    (createComputePipelines device pipelineCache computePipelineCreateInfo allocationCallbacks)
-    (traverse (\o -> destroyPipeline device o allocationCallbacks))
+    (createComputePipelines device pipelineCache pCreateInfos pAllocator)
+    (\(o0) -> traverse_ (\o0Elem -> destroyPipeline device o0Elem pAllocator) o0)
 
 
 foreign import ccall

@@ -41,12 +41,12 @@ import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Foreign.C.Types (CSize(..))
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CSize)
-import Foreign.C.Types (CSize(..))
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -195,11 +195,11 @@ createValidationCacheEXT device createInfo allocator = evalContT $ do
 -- 'destroyValidationCacheEXT' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withValidationCacheEXT :: Device -> ValidationCacheCreateInfoEXT -> Maybe AllocationCallbacks -> (ValidationCacheEXT -> IO r) -> IO r
-withValidationCacheEXT device validationCacheCreateInfoEXT allocationCallbacks =
+withValidationCacheEXT :: Device -> ValidationCacheCreateInfoEXT -> Maybe AllocationCallbacks -> ((ValidationCacheEXT) -> IO r) -> IO r
+withValidationCacheEXT device pCreateInfo pAllocator =
   bracket
-    (createValidationCacheEXT device validationCacheCreateInfoEXT allocationCallbacks)
-    (\o -> destroyValidationCacheEXT device o allocationCallbacks)
+    (createValidationCacheEXT device pCreateInfo pAllocator)
+    (\(o0) -> destroyValidationCacheEXT device o0 pAllocator)
 
 
 foreign import ccall

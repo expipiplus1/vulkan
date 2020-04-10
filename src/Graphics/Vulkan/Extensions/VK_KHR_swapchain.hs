@@ -300,11 +300,11 @@ createSwapchainKHR device createInfo allocator = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withSwapchainKHR :: PokeChain a => Device -> SwapchainCreateInfoKHR a -> Maybe AllocationCallbacks -> (SwapchainKHR -> IO r) -> IO r
-withSwapchainKHR device swapchainCreateInfoKHR allocationCallbacks =
+withSwapchainKHR :: PokeChain a => Device -> SwapchainCreateInfoKHR a -> Maybe AllocationCallbacks -> ((SwapchainKHR) -> IO r) -> IO r
+withSwapchainKHR device pCreateInfo pAllocator =
   bracket
-    (createSwapchainKHR device swapchainCreateInfoKHR allocationCallbacks)
-    (\o -> destroySwapchainKHR device o allocationCallbacks)
+    (createSwapchainKHR device pCreateInfo pAllocator)
+    (\(o0) -> destroySwapchainKHR device o0 pAllocator)
 
 
 foreign import ccall

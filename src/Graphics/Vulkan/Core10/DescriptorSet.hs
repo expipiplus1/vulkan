@@ -187,11 +187,11 @@ createDescriptorSetLayout device createInfo allocator = evalContT $ do
 -- 'destroyDescriptorSetLayout' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withDescriptorSetLayout :: PokeChain a => Device -> DescriptorSetLayoutCreateInfo a -> Maybe AllocationCallbacks -> (DescriptorSetLayout -> IO r) -> IO r
-withDescriptorSetLayout device descriptorSetLayoutCreateInfo allocationCallbacks =
+withDescriptorSetLayout :: PokeChain a => Device -> DescriptorSetLayoutCreateInfo a -> Maybe AllocationCallbacks -> ((DescriptorSetLayout) -> IO r) -> IO r
+withDescriptorSetLayout device pCreateInfo pAllocator =
   bracket
-    (createDescriptorSetLayout device descriptorSetLayoutCreateInfo allocationCallbacks)
-    (\o -> destroyDescriptorSetLayout device o allocationCallbacks)
+    (createDescriptorSetLayout device pCreateInfo pAllocator)
+    (\(o0) -> destroyDescriptorSetLayout device o0 pAllocator)
 
 
 foreign import ccall
@@ -352,11 +352,11 @@ createDescriptorPool device createInfo allocator = evalContT $ do
 -- using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withDescriptorPool :: PokeChain a => Device -> DescriptorPoolCreateInfo a -> Maybe AllocationCallbacks -> (DescriptorPool -> IO r) -> IO r
-withDescriptorPool device descriptorPoolCreateInfo allocationCallbacks =
+withDescriptorPool :: PokeChain a => Device -> DescriptorPoolCreateInfo a -> Maybe AllocationCallbacks -> ((DescriptorPool) -> IO r) -> IO r
+withDescriptorPool device pCreateInfo pAllocator =
   bracket
-    (createDescriptorPool device descriptorPoolCreateInfo allocationCallbacks)
-    (\o -> destroyDescriptorPool device o allocationCallbacks)
+    (createDescriptorPool device pCreateInfo pAllocator)
+    (\(o0) -> destroyDescriptorPool device o0 pAllocator)
 
 
 foreign import ccall
@@ -648,11 +648,11 @@ allocateDescriptorSets device allocateInfo = evalContT $ do
 -- using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withDescriptorSets :: PokeChain a => Device -> DescriptorSetAllocateInfo a -> (Vector DescriptorSet -> IO r) -> IO r
-withDescriptorSets device descriptorSetAllocateInfo =
+withDescriptorSets :: PokeChain a => Device -> DescriptorSetAllocateInfo a -> DescriptorPool -> ((Vector DescriptorSet) -> IO r) -> IO r
+withDescriptorSets device pAllocateInfo descriptorPool =
   bracket
-    (allocateDescriptorSets device descriptorSetAllocateInfo)
-    (\o -> freeDescriptorSets device (descriptorPool (descriptorSetAllocateInfo :: DescriptorSetAllocateInfo _)) o)
+    (allocateDescriptorSets device pAllocateInfo)
+    (\(o0) -> freeDescriptorSets device descriptorPool o0)
 
 
 foreign import ccall

@@ -1,5 +1,6 @@
 {-# language CPP #-}
 module Graphics.Vulkan.Extensions.VK_EXT_conditional_rendering  ( cmdBeginConditionalRenderingEXT
+                                                                , cmdWithConditionalRenderingEXT
                                                                 , cmdEndConditionalRenderingEXT
                                                                 , ConditionalRenderingBeginInfoEXT(..)
                                                                 , CommandBufferInheritanceConditionalRenderingInfoEXT(..)
@@ -14,6 +15,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_conditional_rendering  ( cmdBeginCondit
                                                                 , pattern EXT_CONDITIONAL_RENDERING_EXTENSION_NAME
                                                                 ) where
 
+import Control.Exception.Base (bracket_)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -131,6 +133,14 @@ cmdBeginConditionalRenderingEXT commandBuffer conditionalRenderingBegin = evalCo
   pConditionalRenderingBegin <- ContT $ withCStruct (conditionalRenderingBegin)
   lift $ vkCmdBeginConditionalRenderingEXT' (commandBufferHandle (commandBuffer)) pConditionalRenderingBegin
   pure $ ()
+
+-- | A safe wrapper for 'cmdBeginConditionalRenderingEXT' and
+-- 'cmdEndConditionalRenderingEXT' using 'bracket_'
+cmdWithConditionalRenderingEXT :: CommandBuffer -> ConditionalRenderingBeginInfoEXT -> IO r -> IO r
+cmdWithConditionalRenderingEXT commandBuffer pConditionalRenderingBegin =
+  bracket_
+    (cmdBeginConditionalRenderingEXT commandBuffer pConditionalRenderingBegin)
+    (cmdEndConditionalRenderingEXT commandBuffer)
 
 
 foreign import ccall

@@ -55,9 +55,8 @@ import Graphics.Vulkan.Core10.Handles (CommandBuffer(CommandBuffer))
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_EXT_conditional_rendering (CommandBufferInheritanceConditionalRenderingInfoEXT)
 import {-# SOURCE #-} Graphics.Vulkan.Extensions.VK_QCOM_render_pass_transform (CommandBufferInheritanceRenderPassTransformInfoQCOM)
 import Graphics.Vulkan.Core10.Enums.CommandBufferLevel (CommandBufferLevel)
-import Graphics.Vulkan.Core10.Enums.CommandBufferResetFlagBits (CommandBufferResetFlags)
-import Graphics.Vulkan.Core10.Enums.CommandBufferResetFlagBits (CommandBufferResetFlags)
 import Graphics.Vulkan.Core10.Enums.CommandBufferResetFlagBits (CommandBufferResetFlagBits(..))
+import Graphics.Vulkan.Core10.Enums.CommandBufferResetFlagBits (CommandBufferResetFlags)
 import Graphics.Vulkan.Core10.Enums.CommandBufferUsageFlagBits (CommandBufferUsageFlags)
 import Graphics.Vulkan.Core10.Handles (CommandBuffer_T)
 import Graphics.Vulkan.Core10.Handles (CommandPool)
@@ -184,11 +183,11 @@ allocateCommandBuffers device allocateInfo = evalContT $ do
 -- using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withCommandBuffers :: Device -> CommandBufferAllocateInfo -> (Vector CommandBuffer -> IO r) -> IO r
-withCommandBuffers device commandBufferAllocateInfo =
+withCommandBuffers :: Device -> CommandBufferAllocateInfo -> ((Vector CommandBuffer) -> IO r) -> IO r
+withCommandBuffers device pAllocateInfo =
   bracket
-    (allocateCommandBuffers device commandBufferAllocateInfo)
-    (\o -> freeCommandBuffers device (commandPool (commandBufferAllocateInfo :: CommandBufferAllocateInfo)) o)
+    (allocateCommandBuffers device pAllocateInfo)
+    (\(o0) -> freeCommandBuffers device (commandPool (pAllocateInfo :: CommandBufferAllocateInfo)) o0)
 
 
 foreign import ccall
@@ -362,9 +361,9 @@ beginCommandBuffer commandBuffer beginInfo = evalContT $ do
 -- | A safe wrapper for 'beginCommandBuffer' and 'endCommandBuffer' using
 -- 'bracket_'
 useCommandBuffer :: PokeChain a => CommandBuffer -> CommandBufferBeginInfo a -> IO r -> IO r
-useCommandBuffer commandBuffer commandBufferBeginInfo =
+useCommandBuffer commandBuffer pBeginInfo =
   bracket_
-    (beginCommandBuffer commandBuffer commandBufferBeginInfo)
+    (beginCommandBuffer commandBuffer pBeginInfo)
     (endCommandBuffer commandBuffer)
 
 

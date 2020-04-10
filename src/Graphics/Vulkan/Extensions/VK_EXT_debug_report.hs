@@ -82,13 +82,13 @@ import Text.ParserCombinators.ReadPrec (step)
 import Data.ByteString (useAsCString)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Foreign.C.Types (CChar(..))
+import Foreign.C.Types (CSize(..))
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
-import Foreign.C.Types (CChar(..))
 import Foreign.C.Types (CSize)
-import Foreign.C.Types (CSize(..))
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -203,11 +203,11 @@ createDebugReportCallbackEXT instance' createInfo allocator = evalContT $ do
 -- 'destroyDebugReportCallbackEXT' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withDebugReportCallbackEXT :: Instance -> DebugReportCallbackCreateInfoEXT -> Maybe AllocationCallbacks -> (DebugReportCallbackEXT -> IO r) -> IO r
-withDebugReportCallbackEXT instance' debugReportCallbackCreateInfoEXT allocationCallbacks =
+withDebugReportCallbackEXT :: Instance -> DebugReportCallbackCreateInfoEXT -> Maybe AllocationCallbacks -> ((DebugReportCallbackEXT) -> IO r) -> IO r
+withDebugReportCallbackEXT instance' pCreateInfo pAllocator =
   bracket
-    (createDebugReportCallbackEXT instance' debugReportCallbackCreateInfoEXT allocationCallbacks)
-    (\o -> destroyDebugReportCallbackEXT instance' o allocationCallbacks)
+    (createDebugReportCallbackEXT instance' pCreateInfo pAllocator)
+    (\(o0) -> destroyDebugReportCallbackEXT instance' o0 pAllocator)
 
 
 foreign import ccall

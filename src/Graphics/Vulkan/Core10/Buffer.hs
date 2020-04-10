@@ -151,11 +151,11 @@ createBuffer device createInfo allocator = evalContT $ do
 -- | A safe wrapper for 'createBuffer' and 'destroyBuffer' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withBuffer :: PokeChain a => Device -> BufferCreateInfo a -> Maybe AllocationCallbacks -> (Buffer -> IO r) -> IO r
-withBuffer device bufferCreateInfo allocationCallbacks =
+withBuffer :: PokeChain a => Device -> BufferCreateInfo a -> Maybe AllocationCallbacks -> ((Buffer) -> IO r) -> IO r
+withBuffer device pCreateInfo pAllocator =
   bracket
-    (createBuffer device bufferCreateInfo allocationCallbacks)
-    (\o -> destroyBuffer device o allocationCallbacks)
+    (createBuffer device pCreateInfo pAllocator)
+    (\(o0) -> destroyBuffer device o0 pAllocator)
 
 
 foreign import ccall

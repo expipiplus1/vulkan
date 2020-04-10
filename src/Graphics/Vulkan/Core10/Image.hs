@@ -167,11 +167,11 @@ createImage device createInfo allocator = evalContT $ do
 -- | A safe wrapper for 'createImage' and 'destroyImage' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withImage :: PokeChain a => Device -> ImageCreateInfo a -> Maybe AllocationCallbacks -> (Image -> IO r) -> IO r
-withImage device imageCreateInfo allocationCallbacks =
+withImage :: PokeChain a => Device -> ImageCreateInfo a -> Maybe AllocationCallbacks -> ((Image) -> IO r) -> IO r
+withImage device pCreateInfo pAllocator =
   bracket
-    (createImage device imageCreateInfo allocationCallbacks)
-    (\o -> destroyImage device o allocationCallbacks)
+    (createImage device pCreateInfo pAllocator)
+    (\(o0) -> destroyImage device o0 pAllocator)
 
 
 foreign import ccall

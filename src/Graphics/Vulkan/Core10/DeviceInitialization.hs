@@ -45,10 +45,10 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Foreign.C.Types (CChar(..))
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
-import Foreign.C.Types (CChar(..))
 import Foreign.C.Types (CFloat)
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.C.Types (CSize)
@@ -99,16 +99,14 @@ import Graphics.Vulkan.Core10.Enums.Format (Format(..))
 import Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits (FormatFeatureFlags)
 import Graphics.Vulkan.CStruct (FromCStruct)
 import Graphics.Vulkan.CStruct (FromCStruct(..))
-import Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlags)
-import Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlags)
 import Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlagBits(..))
+import Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlags)
 import Graphics.Vulkan.Core10.Enums.ImageTiling (ImageTiling)
 import Graphics.Vulkan.Core10.Enums.ImageTiling (ImageTiling(..))
 import Graphics.Vulkan.Core10.Enums.ImageType (ImageType)
 import Graphics.Vulkan.Core10.Enums.ImageType (ImageType(..))
-import Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
-import Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
 import Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlagBits(..))
+import Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
 import Graphics.Vulkan.Core10.Handles (Instance)
 import Graphics.Vulkan.Core10.Handles (Instance(..))
 import Graphics.Vulkan.Core10.Handles (Instance(Instance))
@@ -254,11 +252,11 @@ createInstance createInfo allocator = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withInstance :: PokeChain a => InstanceCreateInfo a -> Maybe AllocationCallbacks -> (Instance -> IO r) -> IO r
-withInstance instanceCreateInfo allocationCallbacks =
+withInstance :: PokeChain a => InstanceCreateInfo a -> Maybe AllocationCallbacks -> ((Instance) -> IO r) -> IO r
+withInstance pCreateInfo pAllocator =
   bracket
-    (createInstance instanceCreateInfo allocationCallbacks)
-    (\o -> destroyInstance o allocationCallbacks)
+    (createInstance pCreateInfo pAllocator)
+    (\(o0) -> destroyInstance o0 pAllocator)
 
 
 foreign import ccall

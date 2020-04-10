@@ -260,11 +260,11 @@ createDevice physicalDevice createInfo allocator = evalContT $ do
 -- | A safe wrapper for 'createDevice' and 'destroyDevice' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withDevice :: PokeChain a => PhysicalDevice -> DeviceCreateInfo a -> Maybe AllocationCallbacks -> (Device -> IO r) -> IO r
-withDevice physicalDevice deviceCreateInfo allocationCallbacks =
+withDevice :: PokeChain a => PhysicalDevice -> DeviceCreateInfo a -> Maybe AllocationCallbacks -> ((Device) -> IO r) -> IO r
+withDevice physicalDevice pCreateInfo pAllocator =
   bracket
-    (createDevice physicalDevice deviceCreateInfo allocationCallbacks)
-    (\o -> destroyDevice o allocationCallbacks)
+    (createDevice physicalDevice pCreateInfo pAllocator)
+    (\(o0) -> destroyDevice o0 pAllocator)
 
 
 foreign import ccall

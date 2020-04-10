@@ -142,11 +142,11 @@ createFence device createInfo allocator = evalContT $ do
 -- | A safe wrapper for 'createFence' and 'destroyFence' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withFence :: PokeChain a => Device -> FenceCreateInfo a -> Maybe AllocationCallbacks -> (Fence -> IO r) -> IO r
-withFence device fenceCreateInfo allocationCallbacks =
+withFence :: PokeChain a => Device -> FenceCreateInfo a -> Maybe AllocationCallbacks -> ((Fence) -> IO r) -> IO r
+withFence device pCreateInfo pAllocator =
   bracket
-    (createFence device fenceCreateInfo allocationCallbacks)
-    (\o -> destroyFence device o allocationCallbacks)
+    (createFence device pCreateInfo pAllocator)
+    (\(o0) -> destroyFence device o0 pAllocator)
 
 
 foreign import ccall

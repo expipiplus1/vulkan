@@ -193,11 +193,11 @@ createSamplerYcbcrConversion device createInfo allocator = evalContT $ do
 -- 'destroySamplerYcbcrConversion' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withSamplerYcbcrConversion :: PokeChain a => Device -> SamplerYcbcrConversionCreateInfo a -> Maybe AllocationCallbacks -> (SamplerYcbcrConversion -> IO r) -> IO r
-withSamplerYcbcrConversion device samplerYcbcrConversionCreateInfo allocationCallbacks =
+withSamplerYcbcrConversion :: PokeChain a => Device -> SamplerYcbcrConversionCreateInfo a -> Maybe AllocationCallbacks -> ((SamplerYcbcrConversion) -> IO r) -> IO r
+withSamplerYcbcrConversion device pCreateInfo pAllocator =
   bracket
-    (createSamplerYcbcrConversion device samplerYcbcrConversionCreateInfo allocationCallbacks)
-    (\o -> destroySamplerYcbcrConversion device o allocationCallbacks)
+    (createSamplerYcbcrConversion device pCreateInfo pAllocator)
+    (\(o0) -> destroySamplerYcbcrConversion device o0 pAllocator)
 
 
 foreign import ccall

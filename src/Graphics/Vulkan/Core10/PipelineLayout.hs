@@ -130,11 +130,11 @@ createPipelineLayout device createInfo allocator = evalContT $ do
 -- using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withPipelineLayout :: Device -> PipelineLayoutCreateInfo -> Maybe AllocationCallbacks -> (PipelineLayout -> IO r) -> IO r
-withPipelineLayout device pipelineLayoutCreateInfo allocationCallbacks =
+withPipelineLayout :: Device -> PipelineLayoutCreateInfo -> Maybe AllocationCallbacks -> ((PipelineLayout) -> IO r) -> IO r
+withPipelineLayout device pCreateInfo pAllocator =
   bracket
-    (createPipelineLayout device pipelineLayoutCreateInfo allocationCallbacks)
-    (\o -> destroyPipelineLayout device o allocationCallbacks)
+    (createPipelineLayout device pCreateInfo pAllocator)
+    (\(o0) -> destroyPipelineLayout device o0 pAllocator)
 
 
 foreign import ccall

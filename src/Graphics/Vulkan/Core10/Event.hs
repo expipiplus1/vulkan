@@ -128,11 +128,11 @@ createEvent device createInfo allocator = evalContT $ do
 -- | A safe wrapper for 'createEvent' and 'destroyEvent' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withEvent :: Device -> EventCreateInfo -> Maybe AllocationCallbacks -> (Event -> IO r) -> IO r
-withEvent device eventCreateInfo allocationCallbacks =
+withEvent :: Device -> EventCreateInfo -> Maybe AllocationCallbacks -> ((Event) -> IO r) -> IO r
+withEvent device pCreateInfo pAllocator =
   bracket
-    (createEvent device eventCreateInfo allocationCallbacks)
-    (\o -> destroyEvent device o allocationCallbacks)
+    (createEvent device pCreateInfo pAllocator)
+    (\(o0) -> destroyEvent device o0 pAllocator)
 
 
 foreign import ccall

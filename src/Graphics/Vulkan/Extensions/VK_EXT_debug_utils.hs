@@ -5,6 +5,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_debug_utils  ( setDebugUtilsObjectNameE
                                                       , queueEndDebugUtilsLabelEXT
                                                       , queueInsertDebugUtilsLabelEXT
                                                       , cmdBeginDebugUtilsLabelEXT
+                                                      , cmdWithDebugUtilsLabelEXT
                                                       , cmdEndDebugUtilsLabelEXT
                                                       , cmdInsertDebugUtilsLabelEXT
                                                       , createDebugUtilsMessengerEXT
@@ -41,6 +42,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_debug_utils  ( setDebugUtilsObjectNameE
                                                       ) where
 
 import Control.Exception.Base (bracket)
+import Control.Exception.Base (bracket_)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -436,6 +438,14 @@ cmdBeginDebugUtilsLabelEXT commandBuffer labelInfo = evalContT $ do
   lift $ vkCmdBeginDebugUtilsLabelEXT' (commandBufferHandle (commandBuffer)) pLabelInfo
   pure $ ()
 
+-- | A safe wrapper for 'cmdBeginDebugUtilsLabelEXT' and
+-- 'cmdEndDebugUtilsLabelEXT' using 'bracket_'
+cmdWithDebugUtilsLabelEXT :: CommandBuffer -> DebugUtilsLabelEXT -> IO r -> IO r
+cmdWithDebugUtilsLabelEXT commandBuffer pLabelInfo =
+  bracket_
+    (cmdBeginDebugUtilsLabelEXT commandBuffer pLabelInfo)
+    (cmdEndDebugUtilsLabelEXT commandBuffer)
+
 
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -651,11 +661,11 @@ createDebugUtilsMessengerEXT instance' createInfo allocator = evalContT $ do
 -- 'destroyDebugUtilsMessengerEXT' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withDebugUtilsMessengerEXT :: Instance -> DebugUtilsMessengerCreateInfoEXT -> Maybe AllocationCallbacks -> (DebugUtilsMessengerEXT -> IO r) -> IO r
-withDebugUtilsMessengerEXT instance' debugUtilsMessengerCreateInfoEXT allocationCallbacks =
+withDebugUtilsMessengerEXT :: Instance -> DebugUtilsMessengerCreateInfoEXT -> Maybe AllocationCallbacks -> ((DebugUtilsMessengerEXT) -> IO r) -> IO r
+withDebugUtilsMessengerEXT instance' pCreateInfo pAllocator =
   bracket
-    (createDebugUtilsMessengerEXT instance' debugUtilsMessengerCreateInfoEXT allocationCallbacks)
-    (\o -> destroyDebugUtilsMessengerEXT instance' o allocationCallbacks)
+    (createDebugUtilsMessengerEXT instance' pCreateInfo pAllocator)
+    (\(o0) -> destroyDebugUtilsMessengerEXT instance' o0 pAllocator)
 
 
 foreign import ccall

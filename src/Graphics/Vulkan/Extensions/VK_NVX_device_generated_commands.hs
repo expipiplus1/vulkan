@@ -390,11 +390,11 @@ createIndirectCommandsLayoutNVX device createInfo allocator = evalContT $ do
 -- 'destroyIndirectCommandsLayoutNVX' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withIndirectCommandsLayoutNVX :: Device -> IndirectCommandsLayoutCreateInfoNVX -> Maybe AllocationCallbacks -> (IndirectCommandsLayoutNVX -> IO r) -> IO r
-withIndirectCommandsLayoutNVX device indirectCommandsLayoutCreateInfoNVX allocationCallbacks =
+withIndirectCommandsLayoutNVX :: Device -> IndirectCommandsLayoutCreateInfoNVX -> Maybe AllocationCallbacks -> ((IndirectCommandsLayoutNVX) -> IO r) -> IO r
+withIndirectCommandsLayoutNVX device pCreateInfo pAllocator =
   bracket
-    (createIndirectCommandsLayoutNVX device indirectCommandsLayoutCreateInfoNVX allocationCallbacks)
-    (\o -> destroyIndirectCommandsLayoutNVX device o allocationCallbacks)
+    (createIndirectCommandsLayoutNVX device pCreateInfo pAllocator)
+    (\(o0) -> destroyIndirectCommandsLayoutNVX device o0 pAllocator)
 
 
 foreign import ccall
@@ -538,11 +538,11 @@ createObjectTableNVX device createInfo allocator = evalContT $ do
 -- using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withObjectTableNVX :: Device -> ObjectTableCreateInfoNVX -> Maybe AllocationCallbacks -> (ObjectTableNVX -> IO r) -> IO r
-withObjectTableNVX device objectTableCreateInfoNVX allocationCallbacks =
+withObjectTableNVX :: Device -> ObjectTableCreateInfoNVX -> Maybe AllocationCallbacks -> ((ObjectTableNVX) -> IO r) -> IO r
+withObjectTableNVX device pCreateInfo pAllocator =
   bracket
-    (createObjectTableNVX device objectTableCreateInfoNVX allocationCallbacks)
-    (\o -> destroyObjectTableNVX device o allocationCallbacks)
+    (createObjectTableNVX device pCreateInfo pAllocator)
+    (\(o0) -> destroyObjectTableNVX device o0 pAllocator)
 
 
 foreign import ccall
@@ -711,10 +711,10 @@ registerObjectsNVX device objectTable objectTableEntries objectIndices = evalCon
 -- | A safe wrapper for 'registerObjectsNVX' and 'unregisterObjectsNVX' using
 -- 'bracket_'
 withRegisteredObjectsNVX :: Device -> ObjectTableNVX -> Vector ObjectTableEntryNVX -> Vector Word32 -> Vector ObjectEntryTypeNVX -> IO r -> IO r
-withRegisteredObjectsNVX device objectTableNVX objectTableEntryNVX objectIndices objectEntryTypeNVX =
+withRegisteredObjectsNVX device objectTable ppObjectTableEntries pObjectIndices pObjectEntryTypes =
   bracket_
-    (registerObjectsNVX device objectTableNVX objectTableEntryNVX objectIndices)
-    (unregisterObjectsNVX device objectTableNVX objectEntryTypeNVX objectIndices)
+    (registerObjectsNVX device objectTable ppObjectTableEntries pObjectIndices)
+    (unregisterObjectsNVX device objectTable pObjectEntryTypes pObjectIndices)
 
 
 foreign import ccall

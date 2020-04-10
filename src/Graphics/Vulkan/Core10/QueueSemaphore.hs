@@ -130,11 +130,11 @@ createSemaphore device createInfo allocator = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withSemaphore :: PokeChain a => Device -> SemaphoreCreateInfo a -> Maybe AllocationCallbacks -> (Semaphore -> IO r) -> IO r
-withSemaphore device semaphoreCreateInfo allocationCallbacks =
+withSemaphore :: PokeChain a => Device -> SemaphoreCreateInfo a -> Maybe AllocationCallbacks -> ((Semaphore) -> IO r) -> IO r
+withSemaphore device pCreateInfo pAllocator =
   bracket
-    (createSemaphore device semaphoreCreateInfo allocationCallbacks)
-    (\o -> destroySemaphore device o allocationCallbacks)
+    (createSemaphore device pCreateInfo pAllocator)
+    (\(o0) -> destroySemaphore device o0 pAllocator)
 
 
 foreign import ccall

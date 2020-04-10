@@ -1,6 +1,7 @@
 {-# language CPP #-}
 module Graphics.Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2  ( createRenderPass2
                                                                        , cmdBeginRenderPass2
+                                                                       , cmdWithRenderPass2
                                                                        , cmdNextSubpass2
                                                                        , cmdEndRenderPass2
                                                                        , AttachmentDescription2(..)
@@ -14,6 +15,7 @@ module Graphics.Vulkan.Core12.Promoted_From_VK_KHR_create_renderpass2  ( createR
                                                                        ) where
 
 import Control.Exception.Base (bracket)
+import Control.Exception.Base (bracket_)
 import Control.Monad (unless)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
@@ -423,6 +425,14 @@ cmdBeginRenderPass2 commandBuffer renderPassBegin subpassBeginInfo = evalContT $
   pSubpassBeginInfo <- ContT $ withCStruct (subpassBeginInfo)
   lift $ vkCmdBeginRenderPass2' (commandBufferHandle (commandBuffer)) pRenderPassBegin pSubpassBeginInfo
   pure $ ()
+
+-- | A safe wrapper for 'cmdBeginRenderPass2' and 'cmdEndRenderPass2' using
+-- 'bracket_'
+cmdWithRenderPass2 :: PokeChain a => CommandBuffer -> RenderPassBeginInfo a -> SubpassBeginInfo -> SubpassEndInfo -> IO r -> IO r
+cmdWithRenderPass2 commandBuffer pRenderPassBegin pSubpassBeginInfo pSubpassEndInfo =
+  bracket_
+    (cmdBeginRenderPass2 commandBuffer pRenderPassBegin pSubpassBeginInfo)
+    (cmdEndRenderPass2 commandBuffer pSubpassEndInfo)
 
 
 foreign import ccall
@@ -1693,8 +1703,7 @@ instance Zero SubpassDependency2 where
 --     'Graphics.Vulkan.Core10.APIConstants.SUBPASS_EXTERNAL', all stage
 --     flags included in the @srcStageMask@ member of that dependency
 --     /must/ be a pipeline stage supported by the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types pipeline>
---     identified by the
+--     'Graphics.Vulkan.Core10.Handles.Pipeline' identified by the
 --     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
 --     member of the source subpass
 --
@@ -1702,8 +1711,7 @@ instance Zero SubpassDependency2 where
 --     'Graphics.Vulkan.Core10.APIConstants.SUBPASS_EXTERNAL', all stage
 --     flags included in the @dstStageMask@ member of that dependency
 --     /must/ be a pipeline stage supported by the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types pipeline>
---     identified by the
+--     'Graphics.Vulkan.Core10.Handles.Pipeline' identified by the
 --     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
 --     member of the destination subpass
 --

@@ -101,12 +101,12 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Foreign.C.Types (CSize(..))
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CSize)
-import Foreign.C.Types (CSize(..))
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -335,11 +335,11 @@ createAccelerationStructureNV device createInfo allocator = evalContT $ do
 -- 'destroyAccelerationStructureNV' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withAccelerationStructureNV :: Device -> AccelerationStructureCreateInfoNV -> Maybe AllocationCallbacks -> (AccelerationStructureNV -> IO r) -> IO r
-withAccelerationStructureNV device accelerationStructureCreateInfoNV allocationCallbacks =
+withAccelerationStructureNV :: Device -> AccelerationStructureCreateInfoNV -> Maybe AllocationCallbacks -> ((AccelerationStructureNV) -> IO r) -> IO r
+withAccelerationStructureNV device pCreateInfo pAllocator =
   bracket
-    (createAccelerationStructureNV device accelerationStructureCreateInfoNV allocationCallbacks)
-    (\o -> destroyAccelerationStructureNV device o allocationCallbacks)
+    (createAccelerationStructureNV device pCreateInfo pAllocator)
+    (\(o0) -> destroyAccelerationStructureNV device o0 pAllocator)
 
 
 foreign import ccall

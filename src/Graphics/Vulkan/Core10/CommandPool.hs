@@ -31,9 +31,8 @@ import Graphics.Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Graphics.Vulkan.Core10.Handles (CommandPool)
 import Graphics.Vulkan.Core10.Handles (CommandPool(..))
 import Graphics.Vulkan.Core10.Enums.CommandPoolCreateFlagBits (CommandPoolCreateFlags)
-import Graphics.Vulkan.Core10.Enums.CommandPoolResetFlagBits (CommandPoolResetFlags)
-import Graphics.Vulkan.Core10.Enums.CommandPoolResetFlagBits (CommandPoolResetFlags)
 import Graphics.Vulkan.Core10.Enums.CommandPoolResetFlagBits (CommandPoolResetFlagBits(..))
+import Graphics.Vulkan.Core10.Enums.CommandPoolResetFlagBits (CommandPoolResetFlags)
 import Graphics.Vulkan.Core10.Handles (Device)
 import Graphics.Vulkan.Core10.Handles (Device(..))
 import Graphics.Vulkan.Dynamic (DeviceCmds(pVkCreateCommandPool))
@@ -132,11 +131,11 @@ createCommandPool device createInfo allocator = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withCommandPool :: Device -> CommandPoolCreateInfo -> Maybe AllocationCallbacks -> (CommandPool -> IO r) -> IO r
-withCommandPool device commandPoolCreateInfo allocationCallbacks =
+withCommandPool :: Device -> CommandPoolCreateInfo -> Maybe AllocationCallbacks -> ((CommandPool) -> IO r) -> IO r
+withCommandPool device pCreateInfo pAllocator =
   bracket
-    (createCommandPool device commandPoolCreateInfo allocationCallbacks)
-    (\o -> destroyCommandPool device o allocationCallbacks)
+    (createCommandPool device pCreateInfo pAllocator)
+    (\(o0) -> destroyCommandPool device o0 pAllocator)
 
 
 foreign import ccall

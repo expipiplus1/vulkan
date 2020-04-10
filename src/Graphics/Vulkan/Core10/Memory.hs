@@ -243,11 +243,11 @@ allocateMemory device allocateInfo allocator = evalContT $ do
 -- | A safe wrapper for 'allocateMemory' and 'freeMemory' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withMemory :: PokeChain a => Device -> MemoryAllocateInfo a -> Maybe AllocationCallbacks -> (DeviceMemory -> IO r) -> IO r
-withMemory device memoryAllocateInfo allocationCallbacks =
+withMemory :: PokeChain a => Device -> MemoryAllocateInfo a -> Maybe AllocationCallbacks -> ((DeviceMemory) -> IO r) -> IO r
+withMemory device pAllocateInfo pAllocator =
   bracket
-    (allocateMemory device memoryAllocateInfo allocationCallbacks)
-    (\o -> freeMemory device o allocationCallbacks)
+    (allocateMemory device pAllocateInfo pAllocator)
+    (\(o0) -> freeMemory device o0 pAllocator)
 
 
 foreign import ccall
@@ -489,11 +489,11 @@ mapMemory device memory offset size flags = evalContT $ do
 -- | A safe wrapper for 'mapMemory' and 'unmapMemory' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withMappedMemory :: Device -> DeviceMemory -> DeviceSize -> DeviceSize -> MemoryMapFlags -> (Ptr () -> IO r) -> IO r
-withMappedMemory device deviceMemory offset' size' flags' =
+withMappedMemory :: Device -> DeviceMemory -> DeviceSize -> DeviceSize -> MemoryMapFlags -> ((Ptr ()) -> IO r) -> IO r
+withMappedMemory device memory offset size flags =
   bracket
-    (mapMemory device deviceMemory offset' size' flags')
-    (\_ -> unmapMemory device deviceMemory)
+    (mapMemory device memory offset size flags)
+    (\(_) -> unmapMemory device memory)
 
 
 foreign import ccall

@@ -183,11 +183,11 @@ createFramebuffer device createInfo allocator = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withFramebuffer :: PokeChain a => Device -> FramebufferCreateInfo a -> Maybe AllocationCallbacks -> (Framebuffer -> IO r) -> IO r
-withFramebuffer device framebufferCreateInfo allocationCallbacks =
+withFramebuffer :: PokeChain a => Device -> FramebufferCreateInfo a -> Maybe AllocationCallbacks -> ((Framebuffer) -> IO r) -> IO r
+withFramebuffer device pCreateInfo pAllocator =
   bracket
-    (createFramebuffer device framebufferCreateInfo allocationCallbacks)
-    (\o -> destroyFramebuffer device o allocationCallbacks)
+    (createFramebuffer device pCreateInfo pAllocator)
+    (\(o0) -> destroyFramebuffer device o0 pAllocator)
 
 
 foreign import ccall
@@ -340,11 +340,11 @@ createRenderPass device createInfo allocator = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withRenderPass :: PokeChain a => Device -> RenderPassCreateInfo a -> Maybe AllocationCallbacks -> (RenderPass -> IO r) -> IO r
-withRenderPass device renderPassCreateInfo allocationCallbacks =
+withRenderPass :: PokeChain a => Device -> RenderPassCreateInfo a -> Maybe AllocationCallbacks -> ((RenderPass) -> IO r) -> IO r
+withRenderPass device pCreateInfo pAllocator =
   bracket
-    (createRenderPass device renderPassCreateInfo allocationCallbacks)
-    (\o -> destroyRenderPass device o allocationCallbacks)
+    (createRenderPass device pCreateInfo pAllocator)
+    (\(o0) -> destroyRenderPass device o0 pAllocator)
 
 
 foreign import ccall
@@ -1730,8 +1730,7 @@ instance Zero SubpassDependency where
 --     'Graphics.Vulkan.Core10.APIConstants.SUBPASS_EXTERNAL', all stage
 --     flags included in the @srcStageMask@ member of that dependency
 --     /must/ be a pipeline stage supported by the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types pipeline>
---     identified by the
+--     'Graphics.Vulkan.Core10.Handles.Pipeline' identified by the
 --     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
 --     member of the source subpass
 --
@@ -1739,8 +1738,7 @@ instance Zero SubpassDependency where
 --     'Graphics.Vulkan.Core10.APIConstants.SUBPASS_EXTERNAL', all stage
 --     flags included in the @dstStageMask@ member of that dependency
 --     /must/ be a pipeline stage supported by the
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-types pipeline>
---     identified by the
+--     'Graphics.Vulkan.Core10.Handles.Pipeline' identified by the
 --     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
 --     member of the destination subpass
 --
