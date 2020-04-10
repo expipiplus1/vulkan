@@ -1,6 +1,8 @@
 # Change Log
 
 ## WIP
+
+## [3.1.0.0] - 2020-03-10
   - Commands are now in MonadIO
   - Improved documentation
   - More `bracket` functions for `cmd`s
