@@ -1,5 +1,5 @@
 name: VulkanMemoryAllocator
-version: 0.0.0.0
+version: 0.1.0.0
 synopsis: Bindings to the VulkanMemoryAllocator library
 category: Graphics
 maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
@@ -38,6 +38,8 @@ library:
     - -Wno-unused-imports
     - -Wno-missing-signatures
     - -Wno-partial-type-signatures
+  verbatim:
+    other-modules:
 
 flags:
   safe-foreign-calls:

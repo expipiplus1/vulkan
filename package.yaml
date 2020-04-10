@@ -32,6 +32,8 @@ library:
     - -Wno-unused-imports
     - -Wno-missing-signatures
     - -Wno-partial-type-signatures
+  verbatim:
+    other-modules:
 
 executables:
   info:
@@ -126,3 +128,4 @@ default-extensions:
   - TypeSynonymInstances
   - UndecidableInstances
   - ViewPatterns
+

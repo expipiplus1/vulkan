@@ -4,7 +4,7 @@ cabal-version: 2.0
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a21dc48df8e1fdbf64cefc5086c8cacec0b60cab6e5a6badcfb045dd8b646607
+-- hash: 086f10e46bbcccf48a302edb10a880a1f1ae69338c49843294412d8c30d833e1
 
 name:           vulkan
 version:        3.1.0.0
@@ -451,8 +451,6 @@ library
       Graphics.Vulkan.NamedType
       Graphics.Vulkan.Version
       Graphics.Vulkan.Zero
-  other-modules:
-      Paths_vulkan
   hs-source-dirs:
       src
   default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
