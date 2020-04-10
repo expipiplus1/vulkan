@@ -27,3 +27,4 @@ result
 .hdevtools.sock
 
 generate-new/out
+generate-new/out-vma
