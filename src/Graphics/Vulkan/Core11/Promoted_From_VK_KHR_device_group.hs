@@ -20,6 +20,7 @@ module Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group  ( getDeviceGrou
                                                                  ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -30,6 +31,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -55,9 +57,8 @@ import Graphics.Vulkan.Core10.Handles (Device_T)
 import Graphics.Vulkan.CStruct (FromCStruct)
 import Graphics.Vulkan.CStruct (FromCStruct(..))
 import Graphics.Vulkan.Core11.Enums.MemoryAllocateFlagBits (MemoryAllocateFlags)
-import Graphics.Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits (PeerMemoryFeatureFlags)
-import Graphics.Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits (PeerMemoryFeatureFlags)
 import Graphics.Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits (PeerMemoryFeatureFlagBits(..))
+import Graphics.Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits (PeerMemoryFeatureFlags)
 import Graphics.Vulkan.Core10.CommandBufferBuilding (Rect2D)
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
 import Graphics.Vulkan.CStruct (ToCStruct)
@@ -91,8 +92,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the memory.
+-- -   @device@ is the logical device that owns the memory.
 --
 -- -   @heapIndex@ is the index of the memory heap from which the memory is
 --     allocated.
@@ -114,8 +114,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core11.Enums.PeerMemoryFeatureFlagBits.PeerMemoryFeatureFlags'
-getDeviceGroupPeerMemoryFeatures :: Device -> ("heapIndex" ::: Word32) -> ("localDeviceIndex" ::: Word32) -> ("remoteDeviceIndex" ::: Word32) -> IO (("peerMemoryFeatures" ::: PeerMemoryFeatureFlags))
-getDeviceGroupPeerMemoryFeatures device heapIndex localDeviceIndex remoteDeviceIndex = evalContT $ do
+getDeviceGroupPeerMemoryFeatures :: forall io . MonadIO io => Device -> ("heapIndex" ::: Word32) -> ("localDeviceIndex" ::: Word32) -> ("remoteDeviceIndex" ::: Word32) -> io (("peerMemoryFeatures" ::: PeerMemoryFeatureFlags))
+getDeviceGroupPeerMemoryFeatures device heapIndex localDeviceIndex remoteDeviceIndex = liftIO . evalContT $ do
   let vkGetDeviceGroupPeerMemoryFeatures' = mkVkGetDeviceGroupPeerMemoryFeatures (pVkGetDeviceGroupPeerMemoryFeatures (deviceCmds (device :: Device)))
   pPPeerMemoryFeatures <- ContT $ bracket (callocBytes @PeerMemoryFeatureFlags 4) free
   lift $ vkGetDeviceGroupPeerMemoryFeatures' (deviceHandle (device)) (heapIndex) (localDeviceIndex) (remoteDeviceIndex) (pPPeerMemoryFeatures)
@@ -134,8 +134,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is command buffer
---     whose current device mask is modified.
+-- -   @commandBuffer@ is command buffer whose current device mask is
+--     modified.
 --
 -- -   @deviceMask@ is the new value of the current device mask.
 --
@@ -167,24 +167,22 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics, compute, or transfer operations
+--     @commandBuffer@ was allocated from /must/ support graphics, compute,
+--     or transfer operations
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -201,8 +199,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdSetDeviceMask :: CommandBuffer -> ("deviceMask" ::: Word32) -> IO ()
-cmdSetDeviceMask commandBuffer deviceMask = do
+cmdSetDeviceMask :: forall io . MonadIO io => CommandBuffer -> ("deviceMask" ::: Word32) -> io ()
+cmdSetDeviceMask commandBuffer deviceMask = liftIO $ do
   let vkCmdSetDeviceMask' = mkVkCmdSetDeviceMask (pVkCmdSetDeviceMask (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdSetDeviceMask' (commandBufferHandle (commandBuffer)) (deviceMask)
   pure $ ()
@@ -219,8 +217,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command will be recorded.
+-- -   @commandBuffer@ is the command buffer into which the command will be
+--     recorded.
 --
 -- -   @baseGroupX@ is the start value for the X component of
 --     @WorkgroupId@.
@@ -295,8 +293,7 @@ foreign import ccall
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
 -- -   Any 'Graphics.Vulkan.Core10.Handles.Image' created with a
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'
---     containing
+--     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@flags@ containing
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode'
@@ -334,9 +331,8 @@ foreign import ccall
 --
 -- -   If the 'Graphics.Vulkan.Core10.Handles.Pipeline' object bound to the
 --     pipeline bind point used by this command requires any dynamic state,
---     that state /must/ have been set for
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer', and done so after
---     any previously bound pipeline with the corresponding state not
+--     that state /must/ have been set for @commandBuffer@, and done so
+--     after any previously bound pipeline with the corresponding state not
 --     specified as dynamic
 --
 -- -   There /must/ not have been any calls to dynamic state setting
@@ -393,11 +389,10 @@ foreign import ccall
 --     specified in the descriptor set bound to the same pipeline bind
 --     point
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.CommandBuffer' is an unprotected
---     command buffer, any resource accessed by the
---     'Graphics.Vulkan.Core10.Handles.Pipeline' object bound to the
---     pipeline bind point used by this command /must/ not be a protected
---     resource
+-- -   If @commandBuffer@ is an unprotected command buffer, any resource
+--     accessed by the 'Graphics.Vulkan.Core10.Handles.Pipeline' object
+--     bound to the pipeline bind point used by this command /must/ not be
+--     a protected resource
 --
 -- -   @baseGroupX@ /must/ be less than
 --     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxComputeWorkGroupCount@[0]
@@ -426,26 +421,23 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support compute operations
+--     @commandBuffer@ was allocated from /must/ support compute operations
 --
 -- -   This command /must/ only be called outside of a render pass instance
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -461,8 +453,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdDispatchBase :: CommandBuffer -> ("baseGroupX" ::: Word32) -> ("baseGroupY" ::: Word32) -> ("baseGroupZ" ::: Word32) -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> IO ()
-cmdDispatchBase commandBuffer baseGroupX baseGroupY baseGroupZ groupCountX groupCountY groupCountZ = do
+cmdDispatchBase :: forall io . MonadIO io => CommandBuffer -> ("baseGroupX" ::: Word32) -> ("baseGroupY" ::: Word32) -> ("baseGroupZ" ::: Word32) -> ("groupCountX" ::: Word32) -> ("groupCountY" ::: Word32) -> ("groupCountZ" ::: Word32) -> io ()
+cmdDispatchBase commandBuffer baseGroupX baseGroupY baseGroupZ groupCountX groupCountY groupCountZ = liftIO $ do
   let vkCmdDispatchBase' = mkVkCmdDispatchBase (pVkCmdDispatchBase (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdDispatchBase' (commandBufferHandle (commandBuffer)) (baseGroupX) (baseGroupY) (baseGroupZ) (groupCountX) (groupCountY) (groupCountZ)
   pure $ ()
@@ -518,8 +510,7 @@ pattern PIPELINE_CREATE_DISPATCH_BASE = PIPELINE_CREATE_DISPATCH_BASE_BIT
 -- -   @sType@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO'
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of
+-- -   @flags@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core11.Enums.MemoryAllocateFlagBits.MemoryAllocateFlagBits'
 --     values
 --
@@ -528,7 +519,7 @@ pattern PIPELINE_CREATE_DISPATCH_BASE = PIPELINE_CREATE_DISPATCH_BASE_BIT
 -- 'Graphics.Vulkan.Core11.Enums.MemoryAllocateFlagBits.MemoryAllocateFlags',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data MemoryAllocateFlagsInfo = MemoryAllocateFlagsInfo
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+  { -- | @flags@ is a bitmask of
     -- 'Graphics.Vulkan.Core11.Enums.MemoryAllocateFlagBits.MemoryAllocateFlagBits'
     -- controlling the allocation.
     flags :: MemoryAllocateFlags
@@ -536,7 +527,7 @@ data MemoryAllocateFlagsInfo = MemoryAllocateFlagsInfo
     -- indicating that memory /must/ be allocated on each device in the mask,
     -- if
     -- 'Graphics.Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_MASK_BIT'
-    -- is set in 'Graphics.Vulkan.Core10.BaseType.Flags'.
+    -- is set in @flags@.
     deviceMask :: Word32
   }
   deriving (Typeable)

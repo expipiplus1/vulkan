@@ -139,7 +139,7 @@ getPokeDirect' name toType fromType value = case fromType of
   Unit                    -> throw "Getting poke for a unit member"
   Normal   from           -> normal name toType from value
   Preserve _              -> pure value
-  ElidedLength os rs      -> elidedLength name os rs
+  ElidedLength ty os rs   -> elidedLength name ty os rs
   ElidedUnivalued value   -> elidedUnivalued name toType value
   VoidPtr -> normal name (Ptr NonConst Void) (Ptr NonConst Void) value
   ByteString              -> byteString name toType value
@@ -160,7 +160,7 @@ getPokeDirectElided'
   -> MarshalScheme a
   -> Stmt s r (Ref s ValueDoc)
 getPokeDirectElided' name toType fromType = case fromType of
-  ElidedLength os rs -> elidedLength name os rs
+  ElidedLength ty os rs -> elidedLength name ty os rs
   ElidedUnivalued value -> elidedUnivalued name toType value
   s -> throw $ "Unhandled elided poke from " <> show s <> " to " <> show toType
 ----------------------------------------------------------------
@@ -219,8 +219,8 @@ wrappedStructIndirect
   -> Ref s AddrDoc
   -> Stmt s r (Ref s ValueDoc)
 wrappedStructIndirect name toType fromName valueRef addrRef = case toType of
-  Ptr Const (TypeName n) | n == fromName -> do
-    storablePoke addrRef =<< wrappedStruct name (toType) fromName valueRef
+  Ptr Const (TypeName n) | n == fromName ->
+    storablePoke addrRef =<< wrappedStruct name toType fromName valueRef
   TypeName n | n == fromName -> do
     ty <- cToHsTypeWithHoles DoNotPreserve toType
     stmtC (Just ty) name $ do
@@ -273,11 +273,12 @@ elidedLength
   :: forall r a s
    . HasPoke a r
   => CName
+  -> CType
   -> Vector a
   -> Vector a
   -> Stmt s r (Ref s ValueDoc)
-elidedLength _ Empty Empty = throw "No vectors to get length from"
-elidedLength _ os    rs    = do
+elidedLength _ _       Empty Empty = throw "No vectors to get length from"
+elidedLength _ lenType os    rs    = do
   rsLengthRefs <- forV rs
     $ \r -> (name r, False, ) <$> lenRefFromSibling @a (name r)
   osLengthRefs <- forV os
@@ -309,10 +310,13 @@ elidedLength _ os    rs    = do
   assertions <- traverse (assertSame firstLengthRef) otherLengthRefs
   stmt (Just (ConT ''Word32)) (Just (unCName name1 <> "Count")) $ do
     traverse_ after assertions
-    l1 <- use len1
-    tellImport ''Word32
-    pure . Pure AlwaysInline . ValueDoc $ parens
-      ("fromIntegral" <+> l1 <+> ":: Word32")
+    l1       <- use len1
+    lenHType <- cToHsType DoPreserve lenType
+    Pure AlwaysInline . ValueDoc <$> case lenHType of
+      ConT i | i == ''Int -> pure l1
+      _                  -> do
+        lenTyDoc <- renderType lenHType
+        pure $ parens ("fromIntegral" <+> l1 <+> "::" <+> lenTyDoc)
 
 lenRefFromSibling
   :: forall a r s
@@ -621,7 +625,7 @@ tupleIndirect name size toElem fromElem valueRef firstAddrRef =
 
     subPokes <- renderSubStmts $ do
 
-      elemTy <- schemeType fromElem
+      elemTy <- schemeTypeNegative fromElem
       es     <- forV indices $ \i -> do
         valueRef <-
           stmt elemTy (Just (unCName name <> "Elem"))
@@ -716,7 +720,7 @@ vectorIndirect name toElem fromElem valueRef addrRef =
       -- TODO: Reduce duplication here and in peek
       elemAddr <- elemAddrRef toElem addrRef (Right indexRef)
 
-      elemTy   <- schemeType fromElem
+      elemTy   <- schemeTypeNegative fromElem
       elemRef  <- stmt elemTy (Just (unCName name <> "Elem")) $ pure $ Pure
         AlwaysInline
         (ValueDoc elemDoc)

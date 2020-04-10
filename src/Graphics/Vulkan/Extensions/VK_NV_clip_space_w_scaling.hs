@@ -8,6 +8,7 @@ module Graphics.Vulkan.Extensions.VK_NV_clip_space_w_scaling  ( cmdSetViewportWS
                                                               , pattern NV_CLIP_SPACE_W_SCALING_EXTENSION_NAME
                                                               ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Utils (maybePeek)
 import Foreign.Ptr (nullPtr)
@@ -17,6 +18,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Either (Either)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -60,8 +62,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command will be recorded.
+-- -   @commandBuffer@ is the command buffer into which the command will be
+--     recorded.
 --
 -- -   @firstViewport@ is the index of the first viewport whose parameters
 --     are updated by the command.
@@ -90,29 +92,27 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pViewportWScalings@ /must/ be a valid pointer to an array of
 --     @viewportCount@ 'ViewportWScalingNV' structures
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics operations
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
 --
 -- -   @viewportCount@ /must/ be greater than @0@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -128,8 +128,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer', 'ViewportWScalingNV'
-cmdSetViewportWScalingNV :: CommandBuffer -> ("firstViewport" ::: Word32) -> ("viewportWScalings" ::: Vector ViewportWScalingNV) -> IO ()
-cmdSetViewportWScalingNV commandBuffer firstViewport viewportWScalings = evalContT $ do
+cmdSetViewportWScalingNV :: forall io . MonadIO io => CommandBuffer -> ("firstViewport" ::: Word32) -> ("viewportWScalings" ::: Vector ViewportWScalingNV) -> io ()
+cmdSetViewportWScalingNV commandBuffer firstViewport viewportWScalings = liftIO . evalContT $ do
   let vkCmdSetViewportWScalingNV' = mkVkCmdSetViewportWScalingNV (pVkCmdSetViewportWScalingNV (deviceCmds (commandBuffer :: CommandBuffer)))
   pPViewportWScalings <- ContT $ allocaBytesAligned @ViewportWScalingNV ((Data.Vector.length (viewportWScalings)) * 8) 4
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPViewportWScalings `plusPtr` (8 * (i)) :: Ptr ViewportWScalingNV) (e) . ($ ())) (viewportWScalings)

@@ -8,6 +8,7 @@ module Graphics.Vulkan.Extensions.VK_NV_scissor_exclusive  ( cmdSetExclusiveScis
                                                            , pattern NV_SCISSOR_EXCLUSIVE_EXTENSION_NAME
                                                            ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Utils (maybePeek)
 import Foreign.Ptr (nullPtr)
@@ -17,6 +18,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Either (Either)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -60,8 +62,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command will be recorded.
+-- -   @commandBuffer@ is the command buffer into which the command will be
+--     recorded.
 --
 -- -   @firstExclusiveScissor@ is the index of the first exclusive scissor
 --     rectangle whose state is updated by the command.
@@ -120,30 +122,28 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pExclusiveScissors@ /must/ be a valid pointer to an array of
 --     @exclusiveScissorCount@
 --     'Graphics.Vulkan.Core10.CommandBufferBuilding.Rect2D' structures
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics operations
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
 --
 -- -   @exclusiveScissorCount@ /must/ be greater than @0@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -160,8 +160,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.Rect2D'
-cmdSetExclusiveScissorNV :: CommandBuffer -> ("firstExclusiveScissor" ::: Word32) -> ("exclusiveScissors" ::: Vector Rect2D) -> IO ()
-cmdSetExclusiveScissorNV commandBuffer firstExclusiveScissor exclusiveScissors = evalContT $ do
+cmdSetExclusiveScissorNV :: forall io . MonadIO io => CommandBuffer -> ("firstExclusiveScissor" ::: Word32) -> ("exclusiveScissors" ::: Vector Rect2D) -> io ()
+cmdSetExclusiveScissorNV commandBuffer firstExclusiveScissor exclusiveScissors = liftIO . evalContT $ do
   let vkCmdSetExclusiveScissorNV' = mkVkCmdSetExclusiveScissorNV (pVkCmdSetExclusiveScissorNV (deviceCmds (commandBuffer :: CommandBuffer)))
   pPExclusiveScissors <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (exclusiveScissors)) * 16) 4
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPExclusiveScissors `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (exclusiveScissors)

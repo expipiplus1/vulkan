@@ -24,6 +24,7 @@ module Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion  ( c
                                                                              ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -35,6 +36,7 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -113,8 +115,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     creates the sampler Y′CBCR conversion.
+-- -   @device@ is the logical device that creates the sampler Y′CBCR
+--     conversion.
 --
 -- -   @pCreateInfo@ is a pointer to a 'SamplerYcbcrConversionCreateInfo'
 --     structure specifying the requested sampler Y′CBCR conversion.
@@ -144,8 +146,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'SamplerYcbcrConversionCreateInfo' structure
@@ -176,8 +178,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core11.Handles.SamplerYcbcrConversion',
 -- 'SamplerYcbcrConversionCreateInfo'
-createSamplerYcbcrConversion :: PokeChain a => Device -> SamplerYcbcrConversionCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (SamplerYcbcrConversion)
-createSamplerYcbcrConversion device createInfo allocator = evalContT $ do
+createSamplerYcbcrConversion :: forall a io . (PokeChain a, MonadIO io) => Device -> SamplerYcbcrConversionCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SamplerYcbcrConversion)
+createSamplerYcbcrConversion device createInfo allocator = liftIO . evalContT $ do
   let vkCreateSamplerYcbcrConversion' = mkVkCreateSamplerYcbcrConversion (pVkCreateSamplerYcbcrConversion (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -193,11 +195,11 @@ createSamplerYcbcrConversion device createInfo allocator = evalContT $ do
 -- 'destroySamplerYcbcrConversion' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withSamplerYcbcrConversion :: PokeChain a => Device -> SamplerYcbcrConversionCreateInfo a -> Maybe AllocationCallbacks -> (SamplerYcbcrConversion -> IO r) -> IO r
-withSamplerYcbcrConversion device samplerYcbcrConversionCreateInfo allocationCallbacks =
+withSamplerYcbcrConversion :: forall a r . PokeChain a => Device -> SamplerYcbcrConversionCreateInfo a -> Maybe AllocationCallbacks -> ((SamplerYcbcrConversion) -> IO r) -> IO r
+withSamplerYcbcrConversion device pCreateInfo pAllocator =
   bracket
-    (createSamplerYcbcrConversion device samplerYcbcrConversionCreateInfo allocationCallbacks)
-    (\o -> destroySamplerYcbcrConversion device o allocationCallbacks)
+    (createSamplerYcbcrConversion device pCreateInfo pAllocator)
+    (\(o0) -> destroySamplerYcbcrConversion device o0 pAllocator)
 
 
 foreign import ccall
@@ -211,8 +213,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     destroys the Y′CBCR conversion.
+-- -   @device@ is the logical device that destroys the Y′CBCR conversion.
 --
 -- -   @ycbcrConversion@ is the conversion to destroy.
 --
@@ -222,8 +223,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   If @ycbcrConversion@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @ycbcrConversion@
@@ -236,7 +237,7 @@ foreign import ccall
 --     structure
 --
 -- -   If @ycbcrConversion@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
+--     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
@@ -247,8 +248,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core11.Handles.SamplerYcbcrConversion'
-destroySamplerYcbcrConversion :: Device -> SamplerYcbcrConversion -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroySamplerYcbcrConversion device ycbcrConversion allocator = evalContT $ do
+destroySamplerYcbcrConversion :: forall io . MonadIO io => Device -> SamplerYcbcrConversion -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroySamplerYcbcrConversion device ycbcrConversion allocator = liftIO . evalContT $ do
   let vkDestroySamplerYcbcrConversion' = mkVkDestroySamplerYcbcrConversion (pVkDestroySamplerYcbcrConversion (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -317,7 +318,7 @@ instance Zero SamplerYcbcrConversionInfo where
 -- on implementations where explicit reconstruction is not the default mode
 -- of operation.
 --
--- If 'Graphics.Vulkan.Core10.Enums.Format.Format' supports
+-- If @format@ supports
 -- 'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT'
 -- the @forceExplicitReconstruction@ value behaves as if it was set to
 -- 'Graphics.Vulkan.Core10.BaseType.TRUE'.
@@ -326,7 +327,7 @@ instance Zero SamplerYcbcrConversionInfo where
 -- 'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ExternalFormatANDROID'
 -- structure with non-zero @externalFormat@ member, the sampler Y′CBCR
 -- conversion object represents an /external format conversion/, and
--- 'Graphics.Vulkan.Core10.Enums.Format.Format' /must/ be
+-- @format@ /must/ be
 -- 'Graphics.Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'. Such conversions
 -- /must/ only be used to sample image views with a matching
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer-external-formats external format>.
@@ -335,13 +336,12 @@ instance Zero SamplerYcbcrConversionInfo where
 --
 -- == Valid Usage
 --
--- -   If an external format conversion is being created,
---     'Graphics.Vulkan.Core10.Enums.Format.Format' /must/ be
---     'Graphics.Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', otherwise it
---     /must/ not be
+-- -   If an external format conversion is being created, @format@ /must/
+--     be 'Graphics.Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', otherwise
+--     it /must/ not be
 --     'Graphics.Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'.
 --
--- -   'Graphics.Vulkan.Core10.Enums.Format.Format' /must/ support
+-- -   @format@ /must/ support
 --     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT'
@@ -356,9 +356,8 @@ instance Zero SamplerYcbcrConversionInfo where
 --     @xChromaOffset@ and @yChromaOffset@ /must/ not be
 --     'Graphics.Vulkan.Core11.Enums.ChromaLocation.CHROMA_LOCATION_MIDPOINT'
 --
--- -   'Graphics.Vulkan.Core10.Enums.Format.Format' /must/ represent
---     unsigned normalized values (i.e. the format must be a @UNORM@
---     format)
+-- -   @format@ /must/ represent unsigned normalized values (i.e. the
+--     format must be a @UNORM@ format)
 --
 -- -   If the format has a @_422@ or @_420@ suffix, then @components.g@
 --     /must/ be
@@ -392,9 +391,8 @@ instance Zero SamplerYcbcrConversionInfo where
 -- -   If @ycbcrModel@ is not
 --     'Graphics.Vulkan.Core11.Enums.SamplerYcbcrModelConversion.SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY',
 --     then @components.r@, @components.g@, and @components.b@ /must/
---     correspond to channels of the
---     'Graphics.Vulkan.Core10.Enums.Format.Format'; that is,
---     @components.r@, @components.g@, and @components.b@ /must/ not be
+--     correspond to channels of the @format@; that is, @components.r@,
+--     @components.g@, and @components.b@ /must/ not be
 --     'Graphics.Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_ZERO'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_ONE',
@@ -405,8 +403,8 @@ instance Zero SamplerYcbcrConversionInfo where
 -- -   If @ycbcrRange@ is
 --     'Graphics.Vulkan.Core11.Enums.SamplerYcbcrRange.SAMPLER_YCBCR_RANGE_ITU_NARROW'
 --     then the R, G and B channels obtained by applying the @component@
---     swizzle to 'Graphics.Vulkan.Core10.Enums.Format.Format' /must/ each
---     have a bit-depth greater than or equal to 8.
+--     swizzle to @format@ /must/ each have a bit-depth greater than or
+--     equal to 8.
 --
 -- -   If the format does not support
 --     'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT'
@@ -429,7 +427,7 @@ instance Zero SamplerYcbcrConversionInfo where
 -- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
 --     unique
 --
--- -   'Graphics.Vulkan.Core10.Enums.Format.Format' /must/ be a valid
+-- -   @format@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Enums.Format.Format' value
 --
 -- -   @ycbcrModel@ /must/ be a valid
@@ -477,8 +475,8 @@ instance Zero SamplerYcbcrConversionInfo where
 data SamplerYcbcrConversionCreateInfo (es :: [Type]) = SamplerYcbcrConversionCreateInfo
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
     next :: Chain es
-  , -- | 'Graphics.Vulkan.Core10.Enums.Format.Format' is the format of the image
-    -- from which color information will be retrieved.
+  , -- | @format@ is the format of the image from which color information will be
+    -- retrieved.
     format :: Format
   , -- | @ycbcrModel@ describes the color matrix for conversion between color
     -- models.
@@ -606,7 +604,7 @@ instance es ~ '[] => Zero (SamplerYcbcrConversionCreateInfo es) where
 --     less than the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkDrmFormatModifierPropertiesEXT drmFormatModifierPlaneCount>
 --     associated with the image’s
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageCreateInfo >
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageCreateInfo format>
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageDrmFormatModifierPropertiesEXT drmFormatModifier>.)
 --
@@ -687,7 +685,7 @@ instance Zero BindImagePlaneMemoryInfo where
 --     less than the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkDrmFormatModifierPropertiesEXT drmFormatModifierPlaneCount>
 --     associated with the image’s
---     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageCreateInfo >
+--     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageCreateInfo format>
 --     and
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VkImageDrmFormatModifierPropertiesEXT drmFormatModifier>.)
 --
@@ -757,13 +755,11 @@ instance Zero ImagePlaneMemoryRequirementsInfo where
 -- 'Graphics.Vulkan.Core10.BaseType.Bool32',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDeviceSamplerYcbcrConversionFeatures = PhysicalDeviceSamplerYcbcrConversionFeatures
-  { -- | 'Graphics.Vulkan.Core11.Handles.SamplerYcbcrConversion' specifies
-    -- whether the implementation supports
+  { -- | @samplerYcbcrConversion@ specifies whether the implementation supports
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>.
-    -- If 'Graphics.Vulkan.Core11.Handles.SamplerYcbcrConversion' is
-    -- 'Graphics.Vulkan.Core10.BaseType.FALSE', sampler Y′CBCR conversion is
-    -- not supported, and samplers using sampler Y′CBCR conversion /must/ not
-    -- be used.
+    -- If @samplerYcbcrConversion@ is 'Graphics.Vulkan.Core10.BaseType.FALSE',
+    -- sampler Y′CBCR conversion is not supported, and samplers using sampler
+    -- Y′CBCR conversion /must/ not be used.
     samplerYcbcrConversion :: Bool }
   deriving (Typeable)
 deriving instance Show PhysicalDeviceSamplerYcbcrConversionFeatures

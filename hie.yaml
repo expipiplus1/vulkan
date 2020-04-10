@@ -8,3 +8,4 @@ cradle:
 
     - path: "./examples/sdl-triangle"
       component: "exe:sdl-triangle"
+

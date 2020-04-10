@@ -8,6 +8,7 @@ module Graphics.Vulkan.Core10.Queue  ( getDeviceQueue
 
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -21,6 +22,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
@@ -87,8 +89,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the queue.
+-- -   @device@ is the logical device that owns the queue.
 --
 -- -   @queueFamilyIndex@ is the index of the queue family to which the
 --     queue belongs.
@@ -102,33 +103,29 @@ foreign import ccall
 -- = Description
 --
 -- 'getDeviceQueue' /must/ only be used to get queues that were created
--- with the 'Graphics.Vulkan.Core10.BaseType.Flags' parameter of
+-- with the @flags@ parameter of
 -- 'Graphics.Vulkan.Core10.Device.DeviceQueueCreateInfo' set to zero. To
--- get queues that were created with a non-zero
--- 'Graphics.Vulkan.Core10.BaseType.Flags' parameter use
+-- get queues that were created with a non-zero @flags@ parameter use
 -- 'Graphics.Vulkan.Core11.Originally_Based_On_VK_KHR_protected_memory.getDeviceQueue2'.
 --
 -- == Valid Usage
 --
 -- -   @queueFamilyIndex@ /must/ be one of the queue family indices
---     specified when 'Graphics.Vulkan.Core10.Handles.Device' was created,
---     via the 'Graphics.Vulkan.Core10.Device.DeviceQueueCreateInfo'
---     structure
+--     specified when @device@ was created, via the
+--     'Graphics.Vulkan.Core10.Device.DeviceQueueCreateInfo' structure
 --
 -- -   @queueIndex@ /must/ be less than the number of queues created for
---     the specified queue family index when
---     'Graphics.Vulkan.Core10.Handles.Device' was created, via the
+--     the specified queue family index when @device@ was created, via the
 --     @queueCount@ member of the
 --     'Graphics.Vulkan.Core10.Device.DeviceQueueCreateInfo' structure
 --
--- -   'Graphics.Vulkan.Core10.Device.DeviceQueueCreateInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'
---     /must/ have been set to zero when
---     'Graphics.Vulkan.Core10.Handles.Device' was created
+-- -   'Graphics.Vulkan.Core10.Device.DeviceQueueCreateInfo'::@flags@
+--     /must/ have been set to zero when @device@ was created
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pQueue@ /must/ be a valid pointer to a
 --     'Graphics.Vulkan.Core10.Handles.Queue' handle
@@ -137,8 +134,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Queue'
-getDeviceQueue :: Device -> ("queueFamilyIndex" ::: Word32) -> ("queueIndex" ::: Word32) -> IO (Queue)
-getDeviceQueue device queueFamilyIndex queueIndex = evalContT $ do
+getDeviceQueue :: forall io . MonadIO io => Device -> ("queueFamilyIndex" ::: Word32) -> ("queueIndex" ::: Word32) -> io (Queue)
+getDeviceQueue device queueFamilyIndex queueIndex = liftIO . evalContT $ do
   let cmds = deviceCmds (device :: Device)
   let vkGetDeviceQueue' = mkVkGetDeviceQueue (pVkGetDeviceQueue cmds)
   pPQueue <- ContT $ bracket (callocBytes @(Ptr Queue_T) 8) free
@@ -159,17 +156,15 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Queue' is the queue that the command
---     buffers will be submitted to.
+-- -   @queue@ is the queue that the command buffers will be submitted to.
 --
 -- -   @submitCount@ is the number of elements in the @pSubmits@ array.
 --
 -- -   @pSubmits@ is a pointer to an array of 'SubmitInfo' structures, each
 --     specifying a command buffer submission batch.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Fence' is an /optional/ handle to a
---     fence to be signaled once all submitted command buffers have
---     completed execution. If 'Graphics.Vulkan.Core10.Handles.Fence' is
+-- -   @fence@ is an /optional/ handle to a fence to be signaled once all
+--     submitted command buffers have completed execution. If @fence@ is
 --     not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', it defines a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fences-signaling fence signal operation>.
 --
@@ -239,15 +234,12 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Fence' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.Fence' /must/ be unsignaled
+-- -   If @fence@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @fence@ /must/ be unsignaled
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Fence' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.Fence' /must/ not be associated with
---     any other queue command that has not yet completed execution on that
---     queue
+-- -   If @fence@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @fence@ /must/ not be associated with any other queue command that
+--     has not yet completed execution on that queue
 --
 -- -   Any calls to
 --     'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdSetEvent',
@@ -261,8 +253,7 @@ foreign import ccall
 --
 -- -   Any stage flag included in any element of the @pWaitDstStageMask@
 --     member of any element of @pSubmits@ /must/ be a pipeline stage
---     supported by one of the capabilities of
---     'Graphics.Vulkan.Core10.Handles.Queue', as specified in the
+--     supported by one of the capabilities of @queue@, as specified in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-pipeline-stages-supported table of supported pipeline stages>
 --
 -- -   Each element of the @pSignalSemaphores@ member of any element of
@@ -271,8 +262,7 @@ foreign import ccall
 --
 -- -   When a semaphore wait operation referring to a binary semaphore
 --     defined by any element of the @pWaitSemaphores@ member of any
---     element of @pSubmits@ executes on
---     'Graphics.Vulkan.Core10.Handles.Queue', there /must/ be no other
+--     element of @pSubmits@ executes on @queue@, there /must/ be no other
 --     queues waiting on the same semaphore
 --
 -- -   All elements of the @pWaitSemaphores@ member of all elements of
@@ -310,8 +300,7 @@ foreign import ccall
 -- -   Each element of the @pCommandBuffers@ member of each element of
 --     @pSubmits@ /must/ have been allocated from a
 --     'Graphics.Vulkan.Core10.Handles.CommandPool' that was created for
---     the same queue family 'Graphics.Vulkan.Core10.Handles.Queue' belongs
---     to
+--     the same queue family @queue@ belongs to
 --
 -- -   If any element of @pSubmits->pCommandBuffers@ includes a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-queue-transfers-acquire Queue Family Transfer Acquire Operation>,
@@ -325,48 +314,41 @@ foreign import ccall
 --
 -- -   If a command recorded into any element of @pCommandBuffers@ was a
 --     'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdBeginQuery' whose
---     'Graphics.Vulkan.Core10.Handles.QueryPool' was created with a
---     'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' of
+--     @queryPool@ was created with a @queryType@ of
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
 --     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#profiling-lock profiling lock>
 --     /must/ have been held continuously on the
---     'Graphics.Vulkan.Core10.Handles.Device' that
---     'Graphics.Vulkan.Core10.Handles.Queue' was retrieved from,
---     throughout recording of those command buffers
+--     'Graphics.Vulkan.Core10.Handles.Device' that @queue@ was retrieved
+--     from, throughout recording of those command buffers
 --
 -- -   Any resource created with
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_EXCLUSIVE'
 --     that is read by an operation specified by @pSubmits@ /must/ not be
---     owned by any queue family other than the one which
---     'Graphics.Vulkan.Core10.Handles.Queue' belongs to, at the time it is
---     executed
+--     owned by any queue family other than the one which @queue@ belongs
+--     to, at the time it is executed
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Queue' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Queue' handle
+-- -   @queue@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Queue'
+--     handle
 --
 -- -   If @submitCount@ is not @0@, @pSubmits@ /must/ be a valid pointer to
 --     an array of @submitCount@ valid 'SubmitInfo' structures
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Fence' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.Fence' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Fence' handle
+-- -   If @fence@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @fence@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Fence'
+--     handle
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.Fence', and
---     'Graphics.Vulkan.Core10.Handles.Queue' that are valid handles of
---     non-ignored parameters /must/ have been created, allocated, or
---     retrieved from the same 'Graphics.Vulkan.Core10.Handles.Device'
+-- -   Both of @fence@, and @queue@ that are valid handles of non-ignored
+--     parameters /must/ have been created, allocated, or retrieved from
+--     the same 'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.Queue' /must/ be
---     externally synchronized
+-- -   Host access to @queue@ /must/ be externally synchronized
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.Fence' /must/ be
---     externally synchronized
+-- -   Host access to @fence@ /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -396,8 +378,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Fence',
 -- 'Graphics.Vulkan.Core10.Handles.Queue', 'SubmitInfo'
-queueSubmit :: PokeChain a => Queue -> ("submits" ::: Vector (SubmitInfo a)) -> Fence -> IO ()
-queueSubmit queue submits fence = evalContT $ do
+queueSubmit :: forall a io . (PokeChain a, MonadIO io) => Queue -> ("submits" ::: Vector (SubmitInfo a)) -> Fence -> io ()
+queueSubmit queue submits fence = liftIO . evalContT $ do
   let vkQueueSubmit' = mkVkQueueSubmit (pVkQueueSubmit (deviceCmds (queue :: Queue)))
   pPSubmits <- ContT $ allocaBytesAligned @(SubmitInfo _) ((Data.Vector.length (submits)) * 72) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPSubmits `plusPtr` (72 * (i)) :: Ptr (SubmitInfo _)) (e) . ($ ())) (submits)
@@ -416,8 +398,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Queue' is the queue on which to
---     wait.
+-- -   @queue@ is the queue on which to wait.
 --
 -- = Description
 --
@@ -426,13 +407,12 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Queue' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Queue' handle
+-- -   @queue@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Queue'
+--     handle
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.Queue' /must/ be
---     externally synchronized
+-- -   Host access to @queue@ /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -461,8 +441,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Queue'
-queueWaitIdle :: Queue -> IO ()
-queueWaitIdle queue = do
+queueWaitIdle :: forall io . MonadIO io => Queue -> io ()
+queueWaitIdle queue = liftIO $ do
   let vkQueueWaitIdle' = mkVkQueueWaitIdle (pVkQueueWaitIdle (deviceCmds (queue :: Queue)))
   r <- vkQueueWaitIdle' (queueHandle (queue))
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -479,24 +459,22 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device to
---     idle.
+-- -   @device@ is the logical device to idle.
 --
 -- = Description
 --
 -- 'deviceWaitIdle' is equivalent to calling 'queueWaitIdle' for all queues
--- owned by 'Graphics.Vulkan.Core10.Handles.Device'.
+-- owned by @device@.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- == Host Synchronization
 --
 -- -   Host access to all 'Graphics.Vulkan.Core10.Handles.Queue' objects
---     created from 'Graphics.Vulkan.Core10.Handles.Device' /must/ be
---     externally synchronized
+--     created from @device@ /must/ be externally synchronized
 --
 -- == Return Codes
 --
@@ -515,8 +493,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-deviceWaitIdle :: Device -> IO ()
-deviceWaitIdle device = do
+deviceWaitIdle :: forall io . MonadIO io => Device -> io ()
+deviceWaitIdle device = liftIO $ do
   let vkDeviceWaitIdle' = mkVkDeviceWaitIdle (pVkDeviceWaitIdle (deviceCmds (device :: Device)))
   r <- vkDeviceWaitIdle' (deviceHandle (device))
   when (r < SUCCESS) (throwIO (VulkanException r))

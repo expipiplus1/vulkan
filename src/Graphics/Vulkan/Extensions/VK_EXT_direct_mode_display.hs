@@ -7,6 +7,8 @@ module Graphics.Vulkan.Extensions.VK_EXT_direct_mode_display  ( releaseDisplayEX
                                                               , DisplayKHR(..)
                                                               ) where
 
+import Control.Monad.IO.Class (liftIO)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
@@ -30,11 +32,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' The physical device
---     the display is on.
+-- -   @physicalDevice@ The physical device the display is on.
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' The display to release
---     control of.
+-- -   @display@ The display to release control of.
 --
 -- == Return Codes
 --
@@ -46,8 +46,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-releaseDisplayEXT :: PhysicalDevice -> DisplayKHR -> IO ()
-releaseDisplayEXT physicalDevice display = do
+releaseDisplayEXT :: forall io . MonadIO io => PhysicalDevice -> DisplayKHR -> io ()
+releaseDisplayEXT physicalDevice display = liftIO $ do
   let vkReleaseDisplayEXT' = mkVkReleaseDisplayEXT (pVkReleaseDisplayEXT (instanceCmds (physicalDevice :: PhysicalDevice)))
   _ <- vkReleaseDisplayEXT' (physicalDeviceHandle (physicalDevice)) (display)
   pure $ ()

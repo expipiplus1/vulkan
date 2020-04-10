@@ -10,6 +10,7 @@ module Graphics.Vulkan.Extensions.VK_NV_device_diagnostic_checkpoints  ( cmdSetC
                                                                        ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -18,6 +19,7 @@ import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -61,29 +63,27 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     that will receive the marker
+-- -   @commandBuffer@ is the command buffer that will receive the marker
 --
 -- -   @pCheckpointMarker@ is an opaque application-provided value that
 --     will be associated with the checkpoint.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics, compute, or transfer operations
+--     @commandBuffer@ was allocated from /must/ support graphics, compute,
+--     or transfer operations
 --
 -- == Host Synchronization
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -100,8 +100,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdSetCheckpointNV :: CommandBuffer -> ("checkpointMarker" ::: Ptr ()) -> IO ()
-cmdSetCheckpointNV commandBuffer checkpointMarker = do
+cmdSetCheckpointNV :: forall io . MonadIO io => CommandBuffer -> ("checkpointMarker" ::: Ptr ()) -> io ()
+cmdSetCheckpointNV commandBuffer checkpointMarker = liftIO $ do
   let vkCmdSetCheckpointNV' = mkVkCmdSetCheckpointNV (pVkCmdSetCheckpointNV (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdSetCheckpointNV' (commandBufferHandle (commandBuffer)) (checkpointMarker)
   pure $ ()
@@ -118,9 +118,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Queue' is the
---     'Graphics.Vulkan.Core10.Handles.Queue' object the caller would like
---     to retrieve checkpoint data for
+-- -   @queue@ is the 'Graphics.Vulkan.Core10.Handles.Queue' object the
+--     caller would like to retrieve checkpoint data for
 --
 -- -   @pCheckpointDataCount@ is a pointer to an integer related to the
 --     number of checkpoint markers available or queried, as described
@@ -144,13 +143,12 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The device that 'Graphics.Vulkan.Core10.Handles.Queue' belongs to
---     /must/ be in the lost state
+-- -   The device that @queue@ belongs to /must/ be in the lost state
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Queue' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Queue' handle
+-- -   @queue@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Queue'
+--     handle
 --
 -- -   @pCheckpointDataCount@ /must/ be a valid pointer to a @uint32_t@
 --     value
@@ -163,8 +161,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'CheckpointDataNV', 'Graphics.Vulkan.Core10.Handles.Queue'
-getQueueCheckpointDataNV :: Queue -> IO (("checkpointData" ::: Vector CheckpointDataNV))
-getQueueCheckpointDataNV queue = evalContT $ do
+getQueueCheckpointDataNV :: forall io . MonadIO io => Queue -> io (("checkpointData" ::: Vector CheckpointDataNV))
+getQueueCheckpointDataNV queue = liftIO . evalContT $ do
   let vkGetQueueCheckpointDataNV' = mkVkGetQueueCheckpointDataNV (pVkGetQueueCheckpointDataNV (deviceCmds (queue :: Queue)))
   let queue' = queueHandle (queue)
   pPCheckpointDataCount <- ContT $ bracket (callocBytes @Word32 4) free

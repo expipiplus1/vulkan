@@ -13,6 +13,7 @@ module Graphics.Vulkan.Core10.Memory  ( allocateMemory
                                       ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -26,6 +27,7 @@ import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -99,8 +101,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the memory.
+-- -   @device@ is the logical device that owns the memory.
 --
 -- -   @pAllocateInfo@ is a pointer to a 'MemoryAllocateInfo' structure
 --     describing parameters of the allocation. A successful returned
@@ -173,14 +174,14 @@ foreign import ccall
 --     as returned by
 --     'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceMemoryProperties'
 --     for the 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' that
---     'Graphics.Vulkan.Core10.Handles.Device' was created from.
+--     @device@ was created from.
 --
 -- -   @pAllocateInfo->memoryTypeIndex@ /must/ be less than
 --     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceMemoryProperties'::@memoryTypeCount@
 --     as returned by
 --     'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceMemoryProperties'
 --     for the 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' that
---     'Graphics.Vulkan.Core10.Handles.Device' was created from.
+--     @device@ was created from.
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-deviceCoherentMemory deviceCoherentMemory>
@@ -190,8 +191,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pAllocateInfo@ /must/ be a valid pointer to a valid
 --     'MemoryAllocateInfo' structure
@@ -227,8 +228,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.DeviceMemory', 'MemoryAllocateInfo'
-allocateMemory :: PokeChain a => Device -> MemoryAllocateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (DeviceMemory)
-allocateMemory device allocateInfo allocator = evalContT $ do
+allocateMemory :: forall a io . (PokeChain a, MonadIO io) => Device -> MemoryAllocateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DeviceMemory)
+allocateMemory device allocateInfo allocator = liftIO . evalContT $ do
   let vkAllocateMemory' = mkVkAllocateMemory (pVkAllocateMemory (deviceCmds (device :: Device)))
   pAllocateInfo <- ContT $ withCStruct (allocateInfo)
   pAllocator <- case (allocator) of
@@ -243,11 +244,11 @@ allocateMemory device allocateInfo allocator = evalContT $ do
 -- | A safe wrapper for 'allocateMemory' and 'freeMemory' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withMemory :: PokeChain a => Device -> MemoryAllocateInfo a -> Maybe AllocationCallbacks -> (DeviceMemory -> IO r) -> IO r
-withMemory device memoryAllocateInfo allocationCallbacks =
+withMemory :: forall a r . PokeChain a => Device -> MemoryAllocateInfo a -> Maybe AllocationCallbacks -> ((DeviceMemory) -> IO r) -> IO r
+withMemory device pAllocateInfo pAllocator =
   bracket
-    (allocateMemory device memoryAllocateInfo allocationCallbacks)
-    (\o -> freeMemory device o allocationCallbacks)
+    (allocateMemory device pAllocateInfo pAllocator)
+    (\(o0) -> freeMemory device o0 pAllocator)
 
 
 foreign import ccall
@@ -261,8 +262,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the memory.
+-- -   @device@ is the logical device that owns the memory.
 --
 -- -   @memory@ is the 'Graphics.Vulkan.Core10.Handles.DeviceMemory' object
 --     to be freed.
@@ -305,8 +305,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   If @memory@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @memory@ /must/
@@ -318,7 +318,7 @@ foreign import ccall
 --     structure
 --
 -- -   If @memory@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
+--     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
@@ -329,8 +329,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.DeviceMemory'
-freeMemory :: Device -> DeviceMemory -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-freeMemory device memory allocator = evalContT $ do
+freeMemory :: forall io . MonadIO io => Device -> DeviceMemory -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+freeMemory device memory allocator = liftIO . evalContT $ do
   let vkFreeMemory' = mkVkFreeMemory (pVkFreeMemory (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -350,8 +350,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the memory.
+-- -   @device@ is the logical device that owns the memory.
 --
 -- -   @memory@ is the 'Graphics.Vulkan.Core10.Handles.DeviceMemory' object
 --     to be mapped.
@@ -363,7 +362,7 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE' to map from
 --     @offset@ to the end of the allocation.
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' is reserved for future use.
+-- -   @flags@ is reserved for future use.
 --
 -- -   @ppData@ is a pointer to a @void *@ variable in which is returned a
 --     host-accessible pointer to the beginning of the mapped range. This
@@ -440,18 +439,18 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @memory@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.DeviceMemory' handle
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+-- -   @flags@ /must/ be @0@
 --
 -- -   @ppData@ /must/ be a valid pointer to a pointer value
 --
 -- -   @memory@ /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+--     @device@
 --
 -- == Host Synchronization
 --
@@ -477,8 +476,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.DeviceMemory',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize',
 -- 'Graphics.Vulkan.Core10.Enums.MemoryMapFlags.MemoryMapFlags'
-mapMemory :: Device -> DeviceMemory -> ("offset" ::: DeviceSize) -> DeviceSize -> MemoryMapFlags -> IO (("data" ::: Ptr ()))
-mapMemory device memory offset size flags = evalContT $ do
+mapMemory :: forall io . MonadIO io => Device -> DeviceMemory -> ("offset" ::: DeviceSize) -> DeviceSize -> MemoryMapFlags -> io (("data" ::: Ptr ()))
+mapMemory device memory offset size flags = liftIO . evalContT $ do
   let vkMapMemory' = mkVkMapMemory (pVkMapMemory (deviceCmds (device :: Device)))
   pPpData <- ContT $ bracket (callocBytes @(Ptr ()) 8) free
   r <- lift $ vkMapMemory' (deviceHandle (device)) (memory) (offset) (size) (flags) (pPpData)
@@ -489,11 +488,11 @@ mapMemory device memory offset size flags = evalContT $ do
 -- | A safe wrapper for 'mapMemory' and 'unmapMemory' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withMappedMemory :: Device -> DeviceMemory -> DeviceSize -> DeviceSize -> MemoryMapFlags -> (Ptr () -> IO r) -> IO r
-withMappedMemory device deviceMemory offset' size' flags' =
+withMappedMemory :: forall r . Device -> DeviceMemory -> DeviceSize -> DeviceSize -> MemoryMapFlags -> ((Ptr ()) -> IO r) -> IO r
+withMappedMemory device memory offset size flags =
   bracket
-    (mapMemory device deviceMemory offset' size' flags')
-    (\_ -> unmapMemory device deviceMemory)
+    (mapMemory device memory offset size flags)
+    (\(_) -> unmapMemory device memory)
 
 
 foreign import ccall
@@ -507,8 +506,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the memory.
+-- -   @device@ is the logical device that owns the memory.
 --
 -- -   @memory@ is the memory object to be unmapped.
 --
@@ -518,14 +516,14 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @memory@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.DeviceMemory' handle
 --
 -- -   @memory@ /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+--     @device@
 --
 -- == Host Synchronization
 --
@@ -535,8 +533,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.DeviceMemory'
-unmapMemory :: Device -> DeviceMemory -> IO ()
-unmapMemory device memory = do
+unmapMemory :: forall io . MonadIO io => Device -> DeviceMemory -> io ()
+unmapMemory device memory = liftIO $ do
   let vkUnmapMemory' = mkVkUnmapMemory (pVkUnmapMemory (deviceCmds (device :: Device)))
   vkUnmapMemory' (deviceHandle (device)) (memory)
   pure $ ()
@@ -553,8 +551,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the memory ranges.
+-- -   @device@ is the logical device that owns the memory ranges.
 --
 -- -   @memoryRangeCount@ is the length of the @pMemoryRanges@ array.
 --
@@ -607,8 +604,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'MappedMemoryRange'
-flushMappedMemoryRanges :: Device -> ("memoryRanges" ::: Vector MappedMemoryRange) -> IO ()
-flushMappedMemoryRanges device memoryRanges = evalContT $ do
+flushMappedMemoryRanges :: forall io . MonadIO io => Device -> ("memoryRanges" ::: Vector MappedMemoryRange) -> io ()
+flushMappedMemoryRanges device memoryRanges = liftIO . evalContT $ do
   let vkFlushMappedMemoryRanges' = mkVkFlushMappedMemoryRanges (pVkFlushMappedMemoryRanges (deviceCmds (device :: Device)))
   pPMemoryRanges <- ContT $ allocaBytesAligned @MappedMemoryRange ((Data.Vector.length (memoryRanges)) * 40) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPMemoryRanges `plusPtr` (40 * (i)) :: Ptr MappedMemoryRange) (e) . ($ ())) (memoryRanges)
@@ -628,8 +625,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the memory ranges.
+-- -   @device@ is the logical device that owns the memory ranges.
 --
 -- -   @memoryRangeCount@ is the length of the @pMemoryRanges@ array.
 --
@@ -672,8 +668,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'MappedMemoryRange'
-invalidateMappedMemoryRanges :: Device -> ("memoryRanges" ::: Vector MappedMemoryRange) -> IO ()
-invalidateMappedMemoryRanges device memoryRanges = evalContT $ do
+invalidateMappedMemoryRanges :: forall io . MonadIO io => Device -> ("memoryRanges" ::: Vector MappedMemoryRange) -> io ()
+invalidateMappedMemoryRanges device memoryRanges = liftIO . evalContT $ do
   let vkInvalidateMappedMemoryRanges' = mkVkInvalidateMappedMemoryRanges (pVkInvalidateMappedMemoryRanges (deviceCmds (device :: Device)))
   pPMemoryRanges <- ContT $ allocaBytesAligned @MappedMemoryRange ((Data.Vector.length (memoryRanges)) * 40) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPMemoryRanges `plusPtr` (40 * (i)) :: Ptr MappedMemoryRange) (e) . ($ ())) (memoryRanges)
@@ -693,8 +689,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the memory.
+-- -   @device@ is the logical device that owns the memory.
 --
 -- -   @memory@ is the memory object being queried.
 --
@@ -718,8 +713,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.DeviceMemory',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-getDeviceMemoryCommitment :: Device -> DeviceMemory -> IO (("committedMemoryInBytes" ::: DeviceSize))
-getDeviceMemoryCommitment device memory = evalContT $ do
+getDeviceMemoryCommitment :: forall io . MonadIO io => Device -> DeviceMemory -> io (("committedMemoryInBytes" ::: DeviceSize))
+getDeviceMemoryCommitment device memory = liftIO . evalContT $ do
   let vkGetDeviceMemoryCommitment' = mkVkGetDeviceMemoryCommitment (pVkGetDeviceMemoryCommitment (deviceCmds (device :: Device)))
   pPCommittedMemoryInBytes <- ContT $ bracket (callocBytes @DeviceSize 8) free
   lift $ vkGetDeviceMemoryCommitment' (deviceHandle (device)) (memory) (pPCommittedMemoryInBytes)
@@ -745,7 +740,7 @@ getDeviceMemoryCommitment device memory = evalContT $ do
 --     with a non-zero @handleType@ value
 --
 -- -   'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.ImportAndroidHardwareBufferInfoANDROID'
---     with a non-@NULL@ 'Graphics.Vulkan.Core10.Handles.Buffer' value
+--     with a non-@NULL@ @buffer@ value
 --
 -- Importing memory /must/ not modify the content of the memory.
 -- Implementations /must/ ensure that importing memory does not enable the
@@ -792,9 +787,8 @@ getDeviceMemoryCommitment device memory = evalContT $ do
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     or
 --     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'
---     structure with either its 'Graphics.Vulkan.Core10.Handles.Image' or
---     'Graphics.Vulkan.Core10.Handles.Buffer' member set to a value other
---     than 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'.
+--     structure with either its @image@ or @buffer@ member set to a value
+--     other than 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'.
 --
 -- -   If the @pNext@ chain includes a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExportMemoryAllocateInfo'
@@ -853,8 +847,7 @@ getDeviceMemoryCommitment device memory = evalContT $ do
 --     or
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT',
 --     @allocationSize@ /must/ match the size reported in the memory
---     requirements of the 'Graphics.Vulkan.Core10.Handles.Image' or
---     'Graphics.Vulkan.Core10.Handles.Buffer' member of the
+--     requirements of the @image@ or @buffer@ member of the
 --     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'
 --     structure included in the @pNext@ chain.
 --
@@ -886,16 +879,14 @@ getDeviceMemoryCommitment device memory = evalContT $ do
 -- -   If the parameters define an import operation and the external handle
 --     is a host pointer, the @pNext@ chain /must/ not include a
 --     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'
---     structure with either its 'Graphics.Vulkan.Core10.Handles.Image' or
---     'Graphics.Vulkan.Core10.Handles.Buffer' field set to a value other
---     than 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'.
+--     structure with either its @image@ or @buffer@ field set to a value
+--     other than 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'.
 --
 -- -   If the parameters define an import operation and the external handle
 --     is a host pointer, the @pNext@ chain /must/ not include a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
---     structure with either its 'Graphics.Vulkan.Core10.Handles.Image' or
---     'Graphics.Vulkan.Core10.Handles.Buffer' field set to a value other
---     than 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'.
+--     structure with either its @image@ or @buffer@ field set to a value
+--     other than 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'.
 --
 -- -   If the parameters define an import operation and the external handle
 --     type is
@@ -910,13 +901,11 @@ getDeviceMemoryCommitment device memory = evalContT $ do
 --     and the @pNext@ chain does not include a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     structure or
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::'Graphics.Vulkan.Core10.Handles.Image'
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
 --     is 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', the Android
---     hardware buffer /must/ have a
---     @AHardwareBuffer_Desc@::'Graphics.Vulkan.Core10.Enums.Format.Format'
---     of @AHARDWAREBUFFER_FORMAT_BLOB@ and a
---     @AHardwareBuffer_Desc@::@usage@ that includes
---     @AHARDWAREBUFFER_USAGE_GPU_DATA_BUFFER@.
+--     hardware buffer /must/ have a @AHardwareBuffer_Desc@::@format@ of
+--     @AHARDWAREBUFFER_FORMAT_BLOB@ and a @AHardwareBuffer_Desc@::@usage@
+--     that includes @AHARDWAREBUFFER_USAGE_GPU_DATA_BUFFER@.
 --
 -- -   If the parameters define an import operation and the external handle
 --     type is
@@ -933,7 +922,7 @@ getDeviceMemoryCommitment device memory = evalContT $ do
 --     included in its @handleTypes@ member, and the @pNext@ chain includes
 --     a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
---     structure with 'Graphics.Vulkan.Core10.Handles.Image' not equal to
+--     structure with @image@ not equal to
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', then
 --     @allocationSize@ /must/ be @0@, otherwise @allocationSize@ /must/ be
 --     greater than @0@.
@@ -941,7 +930,7 @@ getDeviceMemoryCommitment device memory = evalContT $ do
 -- -   If the parameters define an import operation, the external handle is
 --     an Android hardware buffer, and the @pNext@ chain includes a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
---     with 'Graphics.Vulkan.Core10.Handles.Image' that is not
+--     with @image@ that is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', the Android
 --     hardware buffer’s
 --     'Graphics.Vulkan.Extensions.WSITypes.AHardwareBuffer'::@usage@
@@ -952,54 +941,50 @@ getDeviceMemoryCommitment device memory = evalContT $ do
 -- -   If the parameters define an import operation, the external handle is
 --     an Android hardware buffer, and the @pNext@ chain includes a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
---     with 'Graphics.Vulkan.Core10.Handles.Image' that is not
+--     with @image@ that is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', the format of
---     'Graphics.Vulkan.Core10.Handles.Image' /must/ be
+--     @image@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED' or the format
 --     returned by
 --     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.getAndroidHardwareBufferPropertiesANDROID'
 --     in
---     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferFormatPropertiesANDROID'::'Graphics.Vulkan.Core10.Enums.Format.Format'
+--     'Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_buffer.AndroidHardwareBufferFormatPropertiesANDROID'::@format@
 --     for the Android hardware buffer.
 --
 -- -   If the parameters define an import operation, the external handle is
 --     an Android hardware buffer, and the @pNext@ chain includes a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
---     structure with 'Graphics.Vulkan.Core10.Handles.Image' that is not
+--     structure with @image@ that is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', the width,
---     height, and array layer dimensions of
---     'Graphics.Vulkan.Core10.Handles.Image' and the Android hardware
---     buffer’s @AHardwareBuffer_Desc@ /must/ be identical.
+--     height, and array layer dimensions of @image@ and the Android
+--     hardware buffer’s @AHardwareBuffer_Desc@ /must/ be identical.
 --
 -- -   If the parameters define an import operation, the external handle is
 --     an Android hardware buffer, and the @pNext@ chain includes a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
---     structure with 'Graphics.Vulkan.Core10.Handles.Image' that is not
+--     structure with @image@ that is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', and the Android
 --     hardware buffer’s
 --     'Graphics.Vulkan.Extensions.WSITypes.AHardwareBuffer'::@usage@
---     includes @AHARDWAREBUFFER_USAGE_GPU_MIPMAP_COMPLETE@, the
---     'Graphics.Vulkan.Core10.Handles.Image' /must/ have a complete mipmap
---     chain.
+--     includes @AHARDWAREBUFFER_USAGE_GPU_MIPMAP_COMPLETE@, the @image@
+--     /must/ have a complete mipmap chain.
 --
 -- -   If the parameters define an import operation, the external handle is
 --     an Android hardware buffer, and the @pNext@ chain includes a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
---     structure with 'Graphics.Vulkan.Core10.Handles.Image' that is not
+--     structure with @image@ that is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', and the Android
 --     hardware buffer’s
 --     'Graphics.Vulkan.Extensions.WSITypes.AHardwareBuffer'::@usage@ does
---     not include @AHARDWAREBUFFER_USAGE_GPU_MIPMAP_COMPLETE@, the
---     'Graphics.Vulkan.Core10.Handles.Image' /must/ have exactly one
---     mipmap level.
+--     not include @AHARDWAREBUFFER_USAGE_GPU_MIPMAP_COMPLETE@, the @image@
+--     /must/ have exactly one mipmap level.
 --
 -- -   If the parameters define an import operation, the external handle is
 --     an Android hardware buffer, and the @pNext@ chain includes a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
---     structure with 'Graphics.Vulkan.Core10.Handles.Image' that is not
+--     structure with @image@ that is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', each bit set in
---     the usage of 'Graphics.Vulkan.Core10.Handles.Image' /must/ be listed
---     in
+--     the usage of @image@ /must/ be listed in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer-usage AHardwareBuffer Usage Equivalence>,
 --     and if there is a corresponding @AHARDWAREBUFFER_USAGE@ bit listed
 --     that bit /must/ be included in the Android hardware buffer’s
@@ -1008,12 +993,12 @@ getDeviceMemoryCommitment device memory = evalContT $ do
 -- -   If
 --     'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_buffer_device_address.MemoryOpaqueCaptureAddressAllocateInfo'::@opaqueCaptureAddress@
 --     is not zero,
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo'::@flags@
 --     /must/ include
 --     'Graphics.Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT'
 --
 -- -   If
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo'::@flags@
 --     includes
 --     'Graphics.Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_CAPTURE_REPLAY_BIT',
 --     the
@@ -1021,7 +1006,7 @@ getDeviceMemoryCommitment device memory = evalContT $ do
 --     feature /must/ be enabled
 --
 -- -   If
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group.MemoryAllocateFlagsInfo'::@flags@
 --     includes
 --     'Graphics.Vulkan.Core11.Enums.MemoryAllocateFlagBits.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT',
 --     the

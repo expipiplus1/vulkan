@@ -26,6 +26,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_full_screen_exclusive  ( getPhysicalDev
                                                                 ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -45,6 +46,7 @@ import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -70,9 +72,8 @@ import Graphics.Vulkan.Core10.Handles (Device(..))
 import Graphics.Vulkan.Dynamic (DeviceCmds(pVkAcquireFullScreenExclusiveModeEXT))
 import Graphics.Vulkan.Dynamic (DeviceCmds(pVkGetDeviceGroupSurfacePresentModes2EXT))
 import Graphics.Vulkan.Dynamic (DeviceCmds(pVkReleaseFullScreenExclusiveModeEXT))
-import Graphics.Vulkan.Extensions.VK_KHR_swapchain (DeviceGroupPresentModeFlagsKHR)
-import Graphics.Vulkan.Extensions.VK_KHR_swapchain (DeviceGroupPresentModeFlagsKHR)
 import Graphics.Vulkan.Extensions.VK_KHR_swapchain (DeviceGroupPresentModeFlagBitsKHR(..))
+import Graphics.Vulkan.Extensions.VK_KHR_swapchain (DeviceGroupPresentModeFlagsKHR)
 import Graphics.Vulkan.Core10.Handles (Device_T)
 import Graphics.Vulkan.CStruct (FromCStruct)
 import Graphics.Vulkan.CStruct (FromCStruct(..))
@@ -118,9 +119,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device that will be associated with the swapchain to be created, as
---     described for
+-- -   @physicalDevice@ is the physical device that will be associated with
+--     the swapchain to be created, as described for
 --     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
 --
 -- -   @pSurfaceInfo@ is a pointer to a
@@ -145,7 +145,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pSurfaceInfo@ /must/ be a valid pointer to a valid
@@ -181,8 +181,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image.PresentModeKHR'
-getPhysicalDeviceSurfacePresentModes2EXT :: PokeChain a => PhysicalDevice -> PhysicalDeviceSurfaceInfo2KHR a -> IO (Result, ("presentModes" ::: Vector PresentModeKHR))
-getPhysicalDeviceSurfacePresentModes2EXT physicalDevice surfaceInfo = evalContT $ do
+getPhysicalDeviceSurfacePresentModes2EXT :: forall a io . (PokeChain a, MonadIO io) => PhysicalDevice -> PhysicalDeviceSurfaceInfo2KHR a -> io (Result, ("presentModes" ::: Vector PresentModeKHR))
+getPhysicalDeviceSurfacePresentModes2EXT physicalDevice surfaceInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfacePresentModes2EXT' = mkVkGetPhysicalDeviceSurfacePresentModes2EXT (pVkGetPhysicalDeviceSurfacePresentModes2EXT (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pSurfaceInfo <- ContT $ withCStruct (surfaceInfo)
@@ -210,7 +210,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device.
+-- -   @device@ is the logical device.
 --
 -- -   @pSurfaceInfo@ is a pointer to a
 --     'Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
@@ -249,8 +249,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.DeviceGroupPresentModeFlagsKHR',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2.PhysicalDeviceSurfaceInfo2KHR'
-getDeviceGroupSurfacePresentModes2EXT :: PokeChain a => Device -> PhysicalDeviceSurfaceInfo2KHR a -> IO (("modes" ::: DeviceGroupPresentModeFlagsKHR))
-getDeviceGroupSurfacePresentModes2EXT device surfaceInfo = evalContT $ do
+getDeviceGroupSurfacePresentModes2EXT :: forall a io . (PokeChain a, MonadIO io) => Device -> PhysicalDeviceSurfaceInfo2KHR a -> io (("modes" ::: DeviceGroupPresentModeFlagsKHR))
+getDeviceGroupSurfacePresentModes2EXT device surfaceInfo = liftIO . evalContT $ do
   let vkGetDeviceGroupSurfacePresentModes2EXT' = mkVkGetDeviceGroupSurfacePresentModes2EXT (pVkGetDeviceGroupSurfacePresentModes2EXT (deviceCmds (device :: Device)))
   pSurfaceInfo <- ContT $ withCStruct (surfaceInfo)
   pPModes <- ContT $ bracket (callocBytes @DeviceGroupPresentModeFlagsKHR 4) free
@@ -272,8 +272,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the device associated
---     with @swapchain@.
+-- -   @device@ is the device associated with @swapchain@.
 --
 -- -   @swapchain@ is the swapchain to acquire exclusive full-screen access
 --     for.
@@ -308,14 +307,14 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @swapchain@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.SwapchainKHR' handle
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.Device', and @swapchain@
---     /must/ have been created, allocated, or retrieved from the same
+-- -   Both of @device@, and @swapchain@ /must/ have been created,
+--     allocated, or retrieved from the same
 --     'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Return Codes
@@ -338,8 +337,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Extensions.Handles.SwapchainKHR'
-acquireFullScreenExclusiveModeEXT :: Device -> SwapchainKHR -> IO ()
-acquireFullScreenExclusiveModeEXT device swapchain = do
+acquireFullScreenExclusiveModeEXT :: forall io . MonadIO io => Device -> SwapchainKHR -> io ()
+acquireFullScreenExclusiveModeEXT device swapchain = liftIO $ do
   let vkAcquireFullScreenExclusiveModeEXT' = mkVkAcquireFullScreenExclusiveModeEXT (pVkAcquireFullScreenExclusiveModeEXT (deviceCmds (device :: Device)))
   r <- vkAcquireFullScreenExclusiveModeEXT' (deviceHandle (device)) (swapchain)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -357,8 +356,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the device associated
---     with @swapchain@.
+-- -   @device@ is the device associated with @swapchain@.
 --
 -- -   @swapchain@ is the swapchain to release exclusive full-screen access
 --     from.
@@ -378,8 +376,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Extensions.Handles.SwapchainKHR'
-releaseFullScreenExclusiveModeEXT :: Device -> SwapchainKHR -> IO ()
-releaseFullScreenExclusiveModeEXT device swapchain = do
+releaseFullScreenExclusiveModeEXT :: forall io . MonadIO io => Device -> SwapchainKHR -> io ()
+releaseFullScreenExclusiveModeEXT device swapchain = liftIO $ do
   let vkReleaseFullScreenExclusiveModeEXT' = mkVkReleaseFullScreenExclusiveModeEXT (pVkReleaseFullScreenExclusiveModeEXT (deviceCmds (device :: Device)))
   r <- vkReleaseFullScreenExclusiveModeEXT' (deviceHandle (device)) (swapchain)
   when (r < SUCCESS) (throwIO (VulkanException r))

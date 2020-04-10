@@ -8,6 +8,7 @@ module Graphics.Vulkan.Core11.Promoted_From_VK_KHR_bind_memory2  ( bindBufferMem
                                                                  , ImageCreateFlags
                                                                  ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.Base (when)
@@ -18,6 +19,7 @@ import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
@@ -75,8 +77,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the buffers and memory.
+-- -   @device@ is the logical device that owns the buffers and memory.
 --
 -- -   @bindInfoCount@ is the number of elements in @pBindInfos@.
 --
@@ -106,8 +107,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'BindBufferMemoryInfo', 'Graphics.Vulkan.Core10.Handles.Device'
-bindBufferMemory2 :: PokeChain a => Device -> ("bindInfos" ::: Vector (BindBufferMemoryInfo a)) -> IO ()
-bindBufferMemory2 device bindInfos = evalContT $ do
+bindBufferMemory2 :: forall a io . (PokeChain a, MonadIO io) => Device -> ("bindInfos" ::: Vector (BindBufferMemoryInfo a)) -> io ()
+bindBufferMemory2 device bindInfos = liftIO . evalContT $ do
   let vkBindBufferMemory2' = mkVkBindBufferMemory2 (pVkBindBufferMemory2 (deviceCmds (device :: Device)))
   pPBindInfos <- ContT $ allocaBytesAligned @(BindBufferMemoryInfo _) ((Data.Vector.length (bindInfos)) * 40) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBindInfos `plusPtr` (40 * (i)) :: Ptr (BindBufferMemoryInfo _)) (e) . ($ ())) (bindInfos)
@@ -126,8 +127,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the images and memory.
+-- -   @device@ is the logical device that owns the images and memory.
 --
 -- -   @bindInfoCount@ is the number of elements in @pBindInfos@.
 --
@@ -148,8 +148,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pBindInfos@ /must/ be a valid pointer to an array of
 --     @bindInfoCount@ valid 'BindImageMemoryInfo' structures
@@ -171,8 +171,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'BindImageMemoryInfo', 'Graphics.Vulkan.Core10.Handles.Device'
-bindImageMemory2 :: PokeChain a => Device -> ("bindInfos" ::: Vector (BindImageMemoryInfo a)) -> IO ()
-bindImageMemory2 device bindInfos = evalContT $ do
+bindImageMemory2 :: forall a io . (PokeChain a, MonadIO io) => Device -> ("bindInfos" ::: Vector (BindImageMemoryInfo a)) -> io ()
+bindImageMemory2 device bindInfos = liftIO . evalContT $ do
   let vkBindImageMemory2' = mkVkBindImageMemory2 (pVkBindImageMemory2 (deviceCmds (device :: Device)))
   pPBindInfos <- ContT $ allocaBytesAligned @(BindImageMemoryInfo _) ((Data.Vector.length (bindInfos)) * 40) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBindInfos `plusPtr` (40 * (i)) :: Ptr (BindImageMemoryInfo _)) (e) . ($ ())) (bindInfos)
@@ -185,11 +185,10 @@ bindImageMemory2 device bindInfos = evalContT $ do
 --
 -- == Valid Usage
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' /must/ not already be backed
---     by a memory object
+-- -   @buffer@ /must/ not already be backed by a memory object
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' /must/ not have been created
---     with any sparse memory binding flags
+-- -   @buffer@ /must/ not have been created with any sparse memory binding
+--     flags
 --
 -- -   @memoryOffset@ /must/ be less than the size of @memory@
 --
@@ -198,50 +197,46 @@ bindImageMemory2 device bindInfos = evalContT $ do
 --     'Graphics.Vulkan.Core10.MemoryManagement.MemoryRequirements'
 --     structure returned from a call to
 --     'Graphics.Vulkan.Core10.MemoryManagement.getBufferMemoryRequirements'
---     with 'Graphics.Vulkan.Core10.Handles.Buffer'
+--     with @buffer@
 --
 -- -   @memoryOffset@ /must/ be an integer multiple of the @alignment@
 --     member of the
 --     'Graphics.Vulkan.Core10.MemoryManagement.MemoryRequirements'
 --     structure returned from a call to
 --     'Graphics.Vulkan.Core10.MemoryManagement.getBufferMemoryRequirements'
---     with 'Graphics.Vulkan.Core10.Handles.Buffer'
+--     with @buffer@
 --
 -- -   The @size@ member of the
 --     'Graphics.Vulkan.Core10.MemoryManagement.MemoryRequirements'
 --     structure returned from a call to
 --     'Graphics.Vulkan.Core10.MemoryManagement.getBufferMemoryRequirements'
---     with 'Graphics.Vulkan.Core10.Handles.Buffer' /must/ be less than or
---     equal to the size of @memory@ minus @memoryOffset@
+--     with @buffer@ /must/ be less than or equal to the size of @memory@
+--     minus @memoryOffset@
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' requires a dedicated
---     allocation(as reported by
+-- -   If @buffer@ requires a dedicated allocation(as reported by
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getBufferMemoryRequirements2'
 --     in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements'::requiresDedicatedAllocation
---     for 'Graphics.Vulkan.Core10.Handles.Buffer'), @memory@ /must/ have
---     been created with
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::'Graphics.Vulkan.Core10.Handles.Buffer'
---     equal to 'Graphics.Vulkan.Core10.Handles.Buffer' and @memoryOffset@
---     /must/ be zero
+--     for @buffer@), @memory@ /must/ have been created with
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@
+--     equal to @buffer@ and @memoryOffset@ /must/ be zero
 --
 -- -   If the 'Graphics.Vulkan.Core10.Memory.MemoryAllocateInfo' provided
 --     when @memory@ was allocated included a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     structure in its @pNext@ chain, and
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::'Graphics.Vulkan.Core10.Handles.Buffer'
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@
 --     was not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', then
---     'Graphics.Vulkan.Core10.Handles.Buffer' /must/ equal
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::'Graphics.Vulkan.Core10.Handles.Buffer'
+--     @buffer@ /must/ equal
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@buffer@
 --     and @memoryOffset@ /must/ be zero.
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' was created with
+-- -   If @buffer@ was created with
 --     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationBufferCreateInfoNV'::@dedicatedAllocation@
 --     equal to 'Graphics.Vulkan.Core10.BaseType.TRUE', @memory@ /must/
 --     have been created with
---     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'::'Graphics.Vulkan.Core10.Handles.Buffer'
---     equal to 'Graphics.Vulkan.Core10.Handles.Buffer' and @memoryOffset@
---     /must/ be zero
+--     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'::@buffer@
+--     equal to @buffer@ and @memoryOffset@ /must/ be zero
 --
 -- -   If the @pNext@ chain includes a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindBufferMemoryDeviceGroupInfo'
@@ -254,17 +249,16 @@ bindImageMemory2 device bindInfos = evalContT $ do
 --     used to allocate @memory@ is not @0@, it /must/ include at least one
 --     of the handles set in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
---     when 'Graphics.Vulkan.Core10.Handles.Buffer' was created
+--     when @buffer@ was created
 --
 -- -   If @memory@ was created by a memory import operation, the external
 --     handle type of the imported memory /must/ also have been set in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryBufferCreateInfo'::@handleTypes@
---     when 'Graphics.Vulkan.Core10.Handles.Buffer' was created
+--     when @buffer@ was created
 --
 -- -   If the
 --     'Graphics.Vulkan.Extensions.VK_KHR_buffer_device_address.PhysicalDeviceBufferDeviceAddressFeaturesKHR'::@bufferDeviceAddress@
---     feature is enabled and 'Graphics.Vulkan.Core10.Handles.Buffer' was
---     created with the
+--     feature is enabled and @buffer@ was created with the
 --     'Graphics.Vulkan.Extensions.VK_KHR_buffer_device_address.BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT_KHR'
 --     bit set, @memory@ /must/ have been allocated with the
 --     'Graphics.Vulkan.Extensions.VK_KHR_buffer_device_address.MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT_KHR'
@@ -281,15 +275,14 @@ bindImageMemory2 device bindInfos = evalContT $ do
 -- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
 --     unique
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Buffer' handle
+-- -   @buffer@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Buffer'
+--     handle
 --
 -- -   @memory@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.DeviceMemory' handle
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.Buffer', and @memory@ /must/
---     have been created, allocated, or retrieved from the same
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   Both of @buffer@, and @memory@ /must/ have been created, allocated,
+--     or retrieved from the same 'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- = See Also
 --
@@ -302,8 +295,7 @@ bindImageMemory2 device bindInfos = evalContT $ do
 data BindBufferMemoryInfo (es :: [Type]) = BindBufferMemoryInfo
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
     next :: Chain es
-  , -- | 'Graphics.Vulkan.Core10.Handles.Buffer' is the buffer to be attached to
-    -- memory.
+  , -- | @buffer@ is the buffer to be attached to memory.
     buffer :: Buffer
   , -- | @memory@ is a 'Graphics.Vulkan.Core10.Handles.DeviceMemory' object
     -- describing the device memory to attach.
@@ -371,11 +363,10 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --
 -- == Valid Usage
 --
--- -   'Graphics.Vulkan.Core10.Handles.Image' /must/ not already be backed
---     by a memory object
+-- -   @image@ /must/ not already be backed by a memory object
 --
--- -   'Graphics.Vulkan.Core10.Handles.Image' /must/ not have been created
---     with any sparse memory binding flags
+-- -   @image@ /must/ not have been created with any sparse memory binding
+--     flags
 --
 -- -   @memoryOffset@ /must/ be less than the size of @memory@
 --
@@ -386,7 +377,7 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     'Graphics.Vulkan.Core10.MemoryManagement.MemoryRequirements'
 --     structure returned from a call to
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
---     with 'Graphics.Vulkan.Core10.Handles.Image'
+--     with @image@
 --
 -- -   If the @pNext@ chain does not include a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.BindImagePlaneMemoryInfo'
@@ -395,7 +386,7 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     'Graphics.Vulkan.Core10.MemoryManagement.MemoryRequirements'
 --     structure returned from a call to
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
---     with 'Graphics.Vulkan.Core10.Handles.Image'
+--     with @image@
 --
 -- -   If the @pNext@ chain does not include a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.BindImagePlaneMemoryInfo'
@@ -404,12 +395,11 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     'Graphics.Vulkan.Core10.MemoryManagement.MemoryRequirements'
 --     structure returned from a call to
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
---     with the same 'Graphics.Vulkan.Core10.Handles.Image'
+--     with the same @image@
 --
 -- -   If the @pNext@ chain includes a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.BindImagePlaneMemoryInfo'
---     structure, 'Graphics.Vulkan.Core10.Handles.Image' /must/ have been
---     created with the
+--     structure, @image@ /must/ have been created with the
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'
 --     bit set.
 --
@@ -420,7 +410,7 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     'Graphics.Vulkan.Core10.MemoryManagement.MemoryRequirements'
 --     structure returned from a call to
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
---     with 'Graphics.Vulkan.Core10.Handles.Image' and where
+--     with @image@ and where
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.BindImagePlaneMemoryInfo'::@planeAspect@
 --     corresponds to the
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.ImagePlaneMemoryRequirementsInfo'::@planeAspect@
@@ -435,7 +425,7 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     'Graphics.Vulkan.Core10.MemoryManagement.MemoryRequirements'
 --     structure returned from a call to
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
---     with 'Graphics.Vulkan.Core10.Handles.Image' and where
+--     with @image@ and where
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.BindImagePlaneMemoryInfo'::@planeAspect@
 --     corresponds to the
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.ImagePlaneMemoryRequirementsInfo'::@planeAspect@
@@ -450,7 +440,7 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     'Graphics.Vulkan.Core10.MemoryManagement.MemoryRequirements'
 --     structure returned from a call to
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
---     with the same 'Graphics.Vulkan.Core10.Handles.Image' and where
+--     with the same @image@ and where
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.BindImagePlaneMemoryInfo'::@planeAspect@
 --     corresponds to the
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.ImagePlaneMemoryRequirementsInfo'::@planeAspect@
@@ -458,16 +448,13 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.ImageMemoryRequirementsInfo2'
 --     structure’s @pNext@ chain
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' requires a dedicated
---     allocation (as reported by
+-- -   If @image@ requires a dedicated allocation (as reported by
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_memory_requirements2.getImageMemoryRequirements2'
 --     in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedRequirements'::requiresDedicatedAllocation
---     for 'Graphics.Vulkan.Core10.Handles.Image'), @memory@ /must/ have
---     been created with
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::'Graphics.Vulkan.Core10.Handles.Image'
---     equal to 'Graphics.Vulkan.Core10.Handles.Image' and @memoryOffset@
---     /must/ be zero
+--     for @image@), @memory@ /must/ have been created with
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
+--     equal to @image@ and @memoryOffset@ /must/ be zero
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-dedicatedAllocationImageAliasing dedicated allocation image aliasing>
@@ -476,10 +463,10 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     @memory@ was allocated included a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     structure in its @pNext@ chain, and
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::'Graphics.Vulkan.Core10.Handles.Image'
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
 --     was not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', then
---     'Graphics.Vulkan.Core10.Handles.Image' /must/ equal
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::'Graphics.Vulkan.Core10.Handles.Image'
+--     @image@ /must/ equal
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
 --     and @memoryOffset@ /must/ be zero.
 --
 -- -   If the
@@ -489,11 +476,10 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     @memory@ was allocated included a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
 --     structure in its @pNext@ chain, and
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::'Graphics.Vulkan.Core10.Handles.Image'
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
 --     was not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', then
---     @memoryOffset@ /must/ be zero, and
---     'Graphics.Vulkan.Core10.Handles.Image' /must/ be either equal to
---     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::'Graphics.Vulkan.Core10.Handles.Image'
+--     @memoryOffset@ /must/ be zero, and @image@ /must/ be either equal to
+--     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'::@image@
 --     or an image that was created using the same parameters in
 --     'Graphics.Vulkan.Core10.Image.ImageCreateInfo', with the exception
 --     that @extent@ and @arrayLayers@ /may/ differ subject to the
@@ -504,13 +490,12 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     or smaller than the original image for which the allocation was
 --     created.
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' was created with
+-- -   If @image@ was created with
 --     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationImageCreateInfoNV'::@dedicatedAllocation@
 --     equal to 'Graphics.Vulkan.Core10.BaseType.TRUE', @memory@ /must/
 --     have been created with
---     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'::'Graphics.Vulkan.Core10.Handles.Image'
---     equal to 'Graphics.Vulkan.Core10.Handles.Image' and @memoryOffset@
---     /must/ be zero
+--     'Graphics.Vulkan.Extensions.VK_NV_dedicated_allocation.DedicatedAllocationMemoryAllocateInfoNV'::@image@
+--     equal to @image@ and @memoryOffset@ /must/ be zero
 --
 -- -   If the @pNext@ chain includes a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindImageMemoryDeviceGroupInfo'
@@ -522,8 +507,7 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindImageMemoryDeviceGroupInfo'
 --     structure, and
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindImageMemoryDeviceGroupInfo'::@splitInstanceBindRegionCount@
---     is not zero, then 'Graphics.Vulkan.Core10.Handles.Image' /must/ have
---     been created with the
+--     is not zero, then @image@ /must/ have been created with the
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT'
 --     bit set
 --
@@ -532,18 +516,16 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     structure, all elements of
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindImageMemoryDeviceGroupInfo'::@pSplitInstanceBindRegions@
 --     /must/ be valid rectangles contained within the dimensions of
---     'Graphics.Vulkan.Core10.Handles.Image'
+--     @image@
 --
 -- -   If the @pNext@ chain includes a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindImageMemoryDeviceGroupInfo'
 --     structure, the union of the areas of all elements of
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_groupAndVK_KHR_bind_memory2.BindImageMemoryDeviceGroupInfo'::@pSplitInstanceBindRegions@
---     that correspond to the same instance of
---     'Graphics.Vulkan.Core10.Handles.Image' /must/ cover the entire
---     image.
+--     that correspond to the same instance of @image@ /must/ cover the
+--     entire image.
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Image' was created with a valid
---     swapchain handle in
+-- -   If @image@ was created with a valid swapchain handle in
 --     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.ImageSwapchainCreateInfoKHR'::@swapchain@,
 --     then the @pNext@ chain /must/ include a
 --     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.BindImageMemorySwapchainInfoKHR'
@@ -564,12 +546,12 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 --     used to allocate @memory@ is not @0@, it /must/ include at least one
 --     of the handles set in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
---     when 'Graphics.Vulkan.Core10.Handles.Image' was created
+--     when @image@ was created
 --
 -- -   If @memory@ was created by a memory import operation, the external
 --     handle type of the imported memory /must/ also have been set in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
---     when 'Graphics.Vulkan.Core10.Handles.Image' was created
+--     when @image@ was created
 --
 -- == Valid Usage (Implicit)
 --
@@ -587,13 +569,12 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 -- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
 --     unique
 --
--- -   'Graphics.Vulkan.Core10.Handles.Image' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Image' handle
+-- -   @image@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Image'
+--     handle
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.Image', and @memory@ that
---     are valid handles of non-ignored parameters /must/ have been
---     created, allocated, or retrieved from the same
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   Both of @image@, and @memory@ that are valid handles of non-ignored
+--     parameters /must/ have been created, allocated, or retrieved from
+--     the same 'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- = See Also
 --
@@ -606,8 +587,7 @@ instance es ~ '[] => Zero (BindBufferMemoryInfo es) where
 data BindImageMemoryInfo (es :: [Type]) = BindImageMemoryInfo
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
     next :: Chain es
-  , -- | 'Graphics.Vulkan.Core10.Handles.Image' is the image to be attached to
-    -- memory.
+  , -- | @image@ is the image to be attached to memory.
     image :: Image
   , -- | @memory@ is a 'Graphics.Vulkan.Core10.Handles.DeviceMemory' object
     -- describing the device memory to attach.

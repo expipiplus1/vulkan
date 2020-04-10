@@ -1,5 +1,5 @@
 name: vulkan
-version: 3.0.0.0
+version: 3.1.0.0
 synopsis: Bindings to the Vulkan graphics API.
 category: Graphics
 maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
@@ -45,12 +45,15 @@ executables:
           - base < 4.14
           - vulkan
           - pretty-simple
+          - bytestring
       else:
         buildable: false
 
   sdl-triangle:
     main: Main.hs
     source-dirs: examples/sdl-triangle
+    build-tools:
+      - glslang
     when:
     - condition: flag(build-examples)
       then:
@@ -81,7 +84,7 @@ flags:
       Do not mark foreign imports as 'unsafe'. This means that
       callbacks from Vulkan to Haskell will work. If you are using
       these then make sure this flag is enabled.
-    default: yes
+    default: no
     manual: yes
 
   build-examples:

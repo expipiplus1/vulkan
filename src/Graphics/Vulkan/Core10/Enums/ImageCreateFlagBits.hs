@@ -84,7 +84,7 @@ pattern IMAGE_CREATE_CUBE_COMPATIBLE_BIT = ImageCreateFlagBits 0x00000010
 -- Accessing a subsampled image has additional considerations:
 --
 -- -   Image data read as an image sampler is undefined if the sampler was
---     not created with 'Graphics.Vulkan.Core10.BaseType.Flags' containing
+--     not created with @flags@ containing
 --     'Graphics.Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT'
 --     or was not sampled through the use of a combined image sampler with
 --     an immutable sampler in

@@ -11,12 +11,14 @@ module Graphics.Vulkan.Extensions.VK_EXT_acquire_xlib_display  ( acquireXlibDisp
                                                                ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import GHC.Base (when)
 import GHC.IO (throwIO)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Foreign.Storable (Storable(peek))
 import Foreign.Ptr (FunPtr)
@@ -50,29 +52,24 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' The physical device
---     the display is on.
+-- -   @physicalDevice@ The physical device the display is on.
 --
--- -   @dpy@ A connection to the X11 server that currently owns
---     'Graphics.Vulkan.Extensions.WSITypes.Display'.
+-- -   @dpy@ A connection to the X11 server that currently owns @display@.
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' The display the caller
---     wishes to control in Vulkan.
+-- -   @display@ The display the caller wishes to control in Vulkan.
 --
 -- = Description
 --
 -- All permissions necessary to control the display are granted to the
--- Vulkan instance associated with
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' until the display is
+-- Vulkan instance associated with @physicalDevice@ until the display is
 -- released or the X11 connection specified by @dpy@ is terminated.
 -- Permission to access the display /may/ be temporarily revoked during
 -- periods when the X11 server from which control was acquired itself loses
--- access to 'Graphics.Vulkan.Extensions.WSITypes.Display'. During such
--- periods, operations which require access to the display /must/ fail with
--- an approriate error code. If the X11 server associated with @dpy@ does
--- not own 'Graphics.Vulkan.Extensions.WSITypes.Display', or if permission
--- to access it has already been acquired by another entity, the call
--- /must/ return the error code
+-- access to @display@. During such periods, operations which require
+-- access to the display /must/ fail with an approriate error code. If the
+-- X11 server associated with @dpy@ does not own @display@, or if
+-- permission to access it has already been acquired by another entity, the
+-- call /must/ return the error code
 -- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_INITIALIZATION_FAILED'.
 --
 -- Note
@@ -94,8 +91,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-acquireXlibDisplayEXT :: PhysicalDevice -> ("dpy" ::: Ptr Display) -> DisplayKHR -> IO ()
-acquireXlibDisplayEXT physicalDevice dpy display = do
+acquireXlibDisplayEXT :: forall io . MonadIO io => PhysicalDevice -> ("dpy" ::: Ptr Display) -> DisplayKHR -> io ()
+acquireXlibDisplayEXT physicalDevice dpy display = liftIO $ do
   let vkAcquireXlibDisplayEXT' = mkVkAcquireXlibDisplayEXT (pVkAcquireXlibDisplayEXT (instanceCmds (physicalDevice :: PhysicalDevice)))
   r <- vkAcquireXlibDisplayEXT' (physicalDeviceHandle (physicalDevice)) (dpy) (display)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -113,8 +110,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' The physical device
---     to query the display handle on.
+-- -   @physicalDevice@ The physical device to query the display handle on.
 --
 -- -   @dpy@ A connection to the X11 server from which @rrOutput@ was
 --     queried.
@@ -128,8 +124,7 @@ foreign import ccall
 -- = Description
 --
 -- If there is no 'Graphics.Vulkan.Extensions.Handles.DisplayKHR'
--- corresponding to @rrOutput@ on
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
+-- corresponding to @rrOutput@ on @physicalDevice@,
 -- 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' /must/ be returned in
 -- @pDisplay@.
 --
@@ -143,8 +138,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getRandROutputDisplayEXT :: PhysicalDevice -> ("dpy" ::: Ptr Display) -> RROutput -> IO (DisplayKHR)
-getRandROutputDisplayEXT physicalDevice dpy rrOutput = evalContT $ do
+getRandROutputDisplayEXT :: forall io . MonadIO io => PhysicalDevice -> ("dpy" ::: Ptr Display) -> RROutput -> io (DisplayKHR)
+getRandROutputDisplayEXT physicalDevice dpy rrOutput = liftIO . evalContT $ do
   let vkGetRandROutputDisplayEXT' = mkVkGetRandROutputDisplayEXT (pVkGetRandROutputDisplayEXT (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPDisplay <- ContT $ bracket (callocBytes @DisplayKHR 8) free
   _ <- lift $ vkGetRandROutputDisplayEXT' (physicalDeviceHandle (physicalDevice)) (dpy) (rrOutput) (pPDisplay)

@@ -6,6 +6,7 @@ module Graphics.Vulkan.Core10.QueueSemaphore  ( createSemaphore
                                               ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -17,6 +18,7 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
@@ -67,8 +69,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     creates the semaphore.
+-- -   @device@ is the logical device that creates the semaphore.
 --
 -- -   @pCreateInfo@ is a pointer to a 'SemaphoreCreateInfo' structure
 --     containing information about how the semaphore is to be created.
@@ -82,8 +83,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'SemaphoreCreateInfo' structure
@@ -113,8 +114,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Semaphore', 'SemaphoreCreateInfo'
-createSemaphore :: PokeChain a => Device -> SemaphoreCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (Semaphore)
-createSemaphore device createInfo allocator = evalContT $ do
+createSemaphore :: forall a io . (PokeChain a, MonadIO io) => Device -> SemaphoreCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Semaphore)
+createSemaphore device createInfo allocator = liftIO . evalContT $ do
   let vkCreateSemaphore' = mkVkCreateSemaphore (pVkCreateSemaphore (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -130,11 +131,11 @@ createSemaphore device createInfo allocator = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withSemaphore :: PokeChain a => Device -> SemaphoreCreateInfo a -> Maybe AllocationCallbacks -> (Semaphore -> IO r) -> IO r
-withSemaphore device semaphoreCreateInfo allocationCallbacks =
+withSemaphore :: forall a r . PokeChain a => Device -> SemaphoreCreateInfo a -> Maybe AllocationCallbacks -> ((Semaphore) -> IO r) -> IO r
+withSemaphore device pCreateInfo pAllocator =
   bracket
-    (createSemaphore device semaphoreCreateInfo allocationCallbacks)
-    (\o -> destroySemaphore device o allocationCallbacks)
+    (createSemaphore device pCreateInfo pAllocator)
+    (\(o0) -> destroySemaphore device o0 pAllocator)
 
 
 foreign import ccall
@@ -148,11 +149,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     destroys the semaphore.
+-- -   @device@ is the logical device that destroys the semaphore.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Semaphore' is the handle of the
---     semaphore to destroy.
+-- -   @semaphore@ is the handle of the semaphore to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
@@ -160,50 +159,46 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All submitted batches that refer to
---     'Graphics.Vulkan.Core10.Handles.Semaphore' /must/ have completed
---     execution
+-- -   All submitted batches that refer to @semaphore@ /must/ have
+--     completed execution
 --
 -- -   If 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.Semaphore' was
---     created, a compatible set of callbacks /must/ be provided here
+--     were provided when @semaphore@ was created, a compatible set of
+--     callbacks /must/ be provided here
 --
 -- -   If no
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.Semaphore' was
---     created, @pAllocator@ /must/ be @NULL@
+--     were provided when @semaphore@ was created, @pAllocator@ /must/ be
+--     @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Semaphore' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.Semaphore' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Semaphore' handle
+-- -   If @semaphore@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @semaphore@
+--     /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Semaphore' handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
 --     pointer to a valid
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
 --     structure
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Semaphore' is a valid handle, it
---     /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   If @semaphore@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.Semaphore' /must/ be
---     externally synchronized
+-- -   Host access to @semaphore@ /must/ be externally synchronized
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Semaphore'
-destroySemaphore :: Device -> Semaphore -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroySemaphore device semaphore allocator = evalContT $ do
+destroySemaphore :: forall io . MonadIO io => Device -> Semaphore -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroySemaphore device semaphore allocator = liftIO . evalContT $ do
   let vkDestroySemaphore' = mkVkDestroySemaphore (pVkDestroySemaphore (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -231,7 +226,7 @@ destroySemaphore device semaphore allocator = evalContT $ do
 -- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
 --     unique
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+-- -   @flags@ /must/ be @0@
 --
 -- = See Also
 --
@@ -241,7 +236,7 @@ destroySemaphore device semaphore allocator = evalContT $ do
 data SemaphoreCreateInfo (es :: [Type]) = SemaphoreCreateInfo
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
     next :: Chain es
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is reserved for future use.
+  , -- | @flags@ is reserved for future use.
     flags :: SemaphoreCreateFlags
   }
   deriving (Typeable)

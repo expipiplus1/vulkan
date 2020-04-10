@@ -20,6 +20,7 @@ module Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities  ( getPhysi
                                                                       , pattern NV_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME
                                                                       ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.Base (when)
 import GHC.IO (throwIO)
@@ -35,6 +36,7 @@ import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -53,17 +55,15 @@ import Graphics.Vulkan.Core10.Enums.Format (Format)
 import Graphics.Vulkan.Core10.Enums.Format (Format(..))
 import Graphics.Vulkan.CStruct (FromCStruct)
 import Graphics.Vulkan.CStruct (FromCStruct(..))
-import Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlags)
-import Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlags)
 import Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlagBits(..))
+import Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlags)
 import Graphics.Vulkan.Core10.DeviceInitialization (ImageFormatProperties)
 import Graphics.Vulkan.Core10.Enums.ImageTiling (ImageTiling)
 import Graphics.Vulkan.Core10.Enums.ImageTiling (ImageTiling(..))
 import Graphics.Vulkan.Core10.Enums.ImageType (ImageType)
 import Graphics.Vulkan.Core10.Enums.ImageType (ImageType(..))
-import Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
-import Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
 import Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlagBits(..))
+import Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
 import Graphics.Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceExternalImageFormatPropertiesNV))
 import Graphics.Vulkan.Core10.Handles (PhysicalDevice)
 import Graphics.Vulkan.Core10.Handles (PhysicalDevice(..))
@@ -88,15 +88,14 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device from which to query the image capabilities
+-- -   @physicalDevice@ is the physical device from which to query the
+--     image capabilities
 --
--- -   'Graphics.Vulkan.Core10.Enums.Format.Format' is the image format,
---     corresponding to
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::'Graphics.Vulkan.Core10.Enums.Format.Format'.
+-- -   @format@ is the image format, corresponding to
+--     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@format@.
 --
 -- -   @type@ is the image type, corresponding to
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::'Graphics.Vulkan.Core10.Enums.ImageType.ImageType'.
+--     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@imageType@.
 --
 -- -   @tiling@ is the image tiling, corresponding to
 --     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@tiling@.
@@ -104,9 +103,9 @@ foreign import ccall
 -- -   @usage@ is the intended usage of the image, corresponding to
 --     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@usage@.
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask describing
---     additional parameters of the image, corresponding to
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'.
+-- -   @flags@ is a bitmask describing additional parameters of the image,
+--     corresponding to
+--     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@flags@.
 --
 -- -   @externalHandleType@ is either one of the bits from
 --     'ExternalMemoryHandleTypeFlagBitsNV', or 0.
@@ -148,8 +147,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType',
 -- 'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceExternalImageFormatPropertiesNV :: PhysicalDevice -> Format -> ImageType -> ImageTiling -> ImageUsageFlags -> ImageCreateFlags -> ("externalHandleType" ::: ExternalMemoryHandleTypeFlagsNV) -> IO (ExternalImageFormatPropertiesNV)
-getPhysicalDeviceExternalImageFormatPropertiesNV physicalDevice format type' tiling usage flags externalHandleType = evalContT $ do
+getPhysicalDeviceExternalImageFormatPropertiesNV :: forall io . MonadIO io => PhysicalDevice -> Format -> ImageType -> ImageTiling -> ImageUsageFlags -> ImageCreateFlags -> ("externalHandleType" ::: ExternalMemoryHandleTypeFlagsNV) -> io (ExternalImageFormatPropertiesNV)
+getPhysicalDeviceExternalImageFormatPropertiesNV physicalDevice format type' tiling usage flags externalHandleType = liftIO . evalContT $ do
   let vkGetPhysicalDeviceExternalImageFormatPropertiesNV' = mkVkGetPhysicalDeviceExternalImageFormatPropertiesNV (pVkGetPhysicalDeviceExternalImageFormatPropertiesNV (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPExternalImageFormatProperties <- ContT (withZeroCStruct @ExternalImageFormatPropertiesNV)
   r <- lift $ vkGetPhysicalDeviceExternalImageFormatPropertiesNV' (physicalDeviceHandle (physicalDevice)) (format) (type') (tiling) (usage) (flags) (externalHandleType) (pPExternalImageFormatProperties)
@@ -167,8 +166,7 @@ getPhysicalDeviceExternalImageFormatPropertiesNV physicalDevice format type' til
 -- 'Graphics.Vulkan.Core10.DeviceInitialization.ImageFormatProperties',
 -- 'getPhysicalDeviceExternalImageFormatPropertiesNV'
 data ExternalImageFormatPropertiesNV = ExternalImageFormatPropertiesNV
-  { -- | 'Graphics.Vulkan.Core10.DeviceInitialization.ImageFormatProperties' will
-    -- be filled in as when calling
+  { -- | @imageFormatProperties@ will be filled in as when calling
     -- 'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceImageFormatProperties',
     -- but the values returned /may/ vary depending on the external handle type
     -- requested.

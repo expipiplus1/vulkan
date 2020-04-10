@@ -26,6 +26,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_get_display_properties2  ( getPhysicalD
                                                                   ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -36,6 +37,7 @@ import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -102,8 +104,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is a physical
---     device.
+-- -   @physicalDevice@ is a physical device.
 --
 -- -   @pPropertyCount@ is a pointer to an integer related to the number of
 --     display devices available or queried, as described below.
@@ -120,7 +121,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
@@ -146,8 +147,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'DisplayProperties2KHR', 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceDisplayProperties2KHR :: PhysicalDevice -> IO (Result, ("properties" ::: Vector DisplayProperties2KHR))
-getPhysicalDeviceDisplayProperties2KHR physicalDevice = evalContT $ do
+getPhysicalDeviceDisplayProperties2KHR :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("properties" ::: Vector DisplayProperties2KHR))
+getPhysicalDeviceDisplayProperties2KHR physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceDisplayProperties2KHR' = mkVkGetPhysicalDeviceDisplayProperties2KHR (pVkGetPhysicalDeviceDisplayProperties2KHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -175,8 +176,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is a physical
---     device.
+-- -   @physicalDevice@ is a physical device.
 --
 -- -   @pPropertyCount@ is a pointer to an integer related to the number of
 --     display planes available or queried, as described below.
@@ -193,7 +193,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
@@ -221,8 +221,8 @@ foreign import ccall
 --
 -- 'DisplayPlaneProperties2KHR',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceDisplayPlaneProperties2KHR :: PhysicalDevice -> IO (Result, ("properties" ::: Vector DisplayPlaneProperties2KHR))
-getPhysicalDeviceDisplayPlaneProperties2KHR physicalDevice = evalContT $ do
+getPhysicalDeviceDisplayPlaneProperties2KHR :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("properties" ::: Vector DisplayPlaneProperties2KHR))
+getPhysicalDeviceDisplayPlaneProperties2KHR physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceDisplayPlaneProperties2KHR' = mkVkGetPhysicalDeviceDisplayPlaneProperties2KHR (pVkGetPhysicalDeviceDisplayPlaneProperties2KHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -250,12 +250,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device associated with
---     'Graphics.Vulkan.Extensions.WSITypes.Display'.
+-- -   @physicalDevice@ is the physical device associated with @display@.
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' is the display to
---     query.
+-- -   @display@ is the display to query.
 --
 -- -   @pPropertyCount@ is a pointer to an integer related to the number of
 --     display modes available or queried, as described below.
@@ -272,10 +269,10 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' /must/ be a valid
+-- -   @display@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.DisplayKHR' handle
 --
 -- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
@@ -285,9 +282,8 @@ foreign import ccall
 --     to an array of @pPropertyCount@ 'DisplayModeProperties2KHR'
 --     structures
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' /must/ have been
---     created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
+-- -   @display@ /must/ have been created, allocated, or retrieved from
+--     @physicalDevice@
 --
 -- == Return Codes
 --
@@ -308,8 +304,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Extensions.Handles.DisplayKHR',
 -- 'DisplayModeProperties2KHR',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getDisplayModeProperties2KHR :: PhysicalDevice -> DisplayKHR -> IO (Result, ("properties" ::: Vector DisplayModeProperties2KHR))
-getDisplayModeProperties2KHR physicalDevice display = evalContT $ do
+getDisplayModeProperties2KHR :: forall io . MonadIO io => PhysicalDevice -> DisplayKHR -> io (Result, ("properties" ::: Vector DisplayModeProperties2KHR))
+getDisplayModeProperties2KHR physicalDevice display = liftIO . evalContT $ do
   let vkGetDisplayModeProperties2KHR' = mkVkGetDisplayModeProperties2KHR (pVkGetDisplayModeProperties2KHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -337,8 +333,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device associated with @pDisplayPlaneInfo@.
+-- -   @physicalDevice@ is the physical device associated with
+--     @pDisplayPlaneInfo@.
 --
 -- -   @pDisplayPlaneInfo@ is a pointer to a 'DisplayPlaneInfo2KHR'
 --     structure describing the plane and mode.
@@ -370,8 +366,8 @@ foreign import ccall
 --
 -- 'DisplayPlaneCapabilities2KHR', 'DisplayPlaneInfo2KHR',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getDisplayPlaneCapabilities2KHR :: PhysicalDevice -> DisplayPlaneInfo2KHR -> IO (DisplayPlaneCapabilities2KHR)
-getDisplayPlaneCapabilities2KHR physicalDevice displayPlaneInfo = evalContT $ do
+getDisplayPlaneCapabilities2KHR :: forall io . MonadIO io => PhysicalDevice -> DisplayPlaneInfo2KHR -> io (DisplayPlaneCapabilities2KHR)
+getDisplayPlaneCapabilities2KHR physicalDevice displayPlaneInfo = liftIO . evalContT $ do
   let vkGetDisplayPlaneCapabilities2KHR' = mkVkGetDisplayPlaneCapabilities2KHR (pVkGetDisplayPlaneCapabilities2KHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   pDisplayPlaneInfo <- ContT $ withCStruct (displayPlaneInfo)
   pPCapabilities <- ContT (withZeroCStruct @DisplayPlaneCapabilities2KHR)

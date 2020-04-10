@@ -18,6 +18,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_validation_cache  ( createValidationCac
                                                            ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -41,12 +42,13 @@ import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Foreign.C.Types (CSize(..))
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CSize)
-import Foreign.C.Types (CSize(..))
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -100,8 +102,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     creates the validation cache object.
+-- -   @device@ is the logical device that creates the validation cache
+--     object.
 --
 -- -   @pCreateInfo@ is a pointer to a 'ValidationCacheCreateInfoEXT'
 --     structure containing the initial parameters for the validation cache
@@ -149,8 +151,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'ValidationCacheCreateInfoEXT' structure
@@ -178,8 +180,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'ValidationCacheCreateInfoEXT',
 -- 'Graphics.Vulkan.Extensions.Handles.ValidationCacheEXT'
-createValidationCacheEXT :: Device -> ValidationCacheCreateInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (ValidationCacheEXT)
-createValidationCacheEXT device createInfo allocator = evalContT $ do
+createValidationCacheEXT :: forall io . MonadIO io => Device -> ValidationCacheCreateInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io (ValidationCacheEXT)
+createValidationCacheEXT device createInfo allocator = liftIO . evalContT $ do
   let vkCreateValidationCacheEXT' = mkVkCreateValidationCacheEXT (pVkCreateValidationCacheEXT (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -195,11 +197,11 @@ createValidationCacheEXT device createInfo allocator = evalContT $ do
 -- 'destroyValidationCacheEXT' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withValidationCacheEXT :: Device -> ValidationCacheCreateInfoEXT -> Maybe AllocationCallbacks -> (ValidationCacheEXT -> IO r) -> IO r
-withValidationCacheEXT device validationCacheCreateInfoEXT allocationCallbacks =
+withValidationCacheEXT :: forall r . Device -> ValidationCacheCreateInfoEXT -> Maybe AllocationCallbacks -> ((ValidationCacheEXT) -> IO r) -> IO r
+withValidationCacheEXT device pCreateInfo pAllocator =
   bracket
-    (createValidationCacheEXT device validationCacheCreateInfoEXT allocationCallbacks)
-    (\o -> destroyValidationCacheEXT device o allocationCallbacks)
+    (createValidationCacheEXT device pCreateInfo pAllocator)
+    (\(o0) -> destroyValidationCacheEXT device o0 pAllocator)
 
 
 foreign import ccall
@@ -213,8 +215,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     destroys the validation cache object.
+-- -   @device@ is the logical device that destroys the validation cache
+--     object.
 --
 -- -   @validationCache@ is the handle of the validation cache to destroy.
 --
@@ -235,8 +237,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   If @validationCache@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @validationCache@
@@ -249,7 +251,7 @@ foreign import ccall
 --     structure
 --
 -- -   If @validationCache@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
+--     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
@@ -260,8 +262,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Extensions.Handles.ValidationCacheEXT'
-destroyValidationCacheEXT :: Device -> ValidationCacheEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyValidationCacheEXT device validationCache allocator = evalContT $ do
+destroyValidationCacheEXT :: forall io . MonadIO io => Device -> ValidationCacheEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyValidationCacheEXT device validationCache allocator = liftIO . evalContT $ do
   let vkDestroyValidationCacheEXT' = mkVkDestroyValidationCacheEXT (pVkDestroyValidationCacheEXT (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -281,8 +283,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the validation cache.
+-- -   @device@ is the logical device that owns the validation cache.
 --
 -- -   @validationCache@ is the validation cache to retrieve data from.
 --
@@ -356,8 +357,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @validationCache@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.ValidationCacheEXT' handle
@@ -369,7 +370,7 @@ foreign import ccall
 --     @pDataSize@ bytes
 --
 -- -   @validationCache@ /must/ have been created, allocated, or retrieved
---     from 'Graphics.Vulkan.Core10.Handles.Device'
+--     from @device@
 --
 -- == Return Codes
 --
@@ -389,8 +390,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Extensions.Handles.ValidationCacheEXT'
-getValidationCacheDataEXT :: Device -> ValidationCacheEXT -> IO (Result, ("data" ::: ByteString))
-getValidationCacheDataEXT device validationCache = evalContT $ do
+getValidationCacheDataEXT :: forall io . MonadIO io => Device -> ValidationCacheEXT -> io (Result, ("data" ::: ByteString))
+getValidationCacheDataEXT device validationCache = liftIO . evalContT $ do
   let vkGetValidationCacheDataEXT' = mkVkGetValidationCacheDataEXT (pVkGetValidationCacheDataEXT (deviceCmds (device :: Device)))
   let device' = deviceHandle (device)
   pPDataSize <- ContT $ bracket (callocBytes @CSize 8) free
@@ -417,8 +418,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the validation cache objects.
+-- -   @device@ is the logical device that owns the validation cache
+--     objects.
 --
 -- -   @dstCache@ is the handle of the validation cache to merge results
 --     into.
@@ -443,8 +444,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @dstCache@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.ValidationCacheEXT' handle
@@ -456,10 +457,10 @@ foreign import ccall
 -- -   @srcCacheCount@ /must/ be greater than @0@
 --
 -- -   @dstCache@ /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+--     @device@
 --
 -- -   Each element of @pSrcCaches@ /must/ have been created, allocated, or
---     retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
+--     retrieved from @device@
 --
 -- == Host Synchronization
 --
@@ -481,8 +482,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Extensions.Handles.ValidationCacheEXT'
-mergeValidationCachesEXT :: Device -> ("dstCache" ::: ValidationCacheEXT) -> ("srcCaches" ::: Vector ValidationCacheEXT) -> IO ()
-mergeValidationCachesEXT device dstCache srcCaches = evalContT $ do
+mergeValidationCachesEXT :: forall io . MonadIO io => Device -> ("dstCache" ::: ValidationCacheEXT) -> ("srcCaches" ::: Vector ValidationCacheEXT) -> io ()
+mergeValidationCachesEXT device dstCache srcCaches = liftIO . evalContT $ do
   let vkMergeValidationCachesEXT' = mkVkMergeValidationCachesEXT (pVkMergeValidationCachesEXT (deviceCmds (device :: Device)))
   pPSrcCaches <- ContT $ allocaBytesAligned @ValidationCacheEXT ((Data.Vector.length (srcCaches)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPSrcCaches `plusPtr` (8 * (i)) :: Ptr ValidationCacheEXT) (e)) (srcCaches)
@@ -509,7 +510,7 @@ mergeValidationCachesEXT device dstCache srcCaches = evalContT $ do
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+-- -   @flags@ /must/ be @0@
 --
 -- -   If @initialDataSize@ is not @0@, @pInitialData@ /must/ be a valid
 --     pointer to an array of @initialDataSize@ bytes
@@ -519,7 +520,7 @@ mergeValidationCachesEXT device dstCache srcCaches = evalContT $ do
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'ValidationCacheCreateFlagsEXT', 'createValidationCacheEXT'
 data ValidationCacheCreateInfoEXT = ValidationCacheCreateInfoEXT
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is reserved for future use.
+  { -- | @flags@ is reserved for future use.
     flags :: ValidationCacheCreateFlagsEXT
   , -- | @initialDataSize@ is the number of bytes in @pInitialData@. If
     -- @initialDataSize@ is zero, the validation cache will initially be empty.

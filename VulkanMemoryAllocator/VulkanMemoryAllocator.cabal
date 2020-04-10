@@ -1,0 +1,69 @@
+cabal-version: 2.2
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: bf65e56616559dd06dc12eaca84a968b2da67af7d27e25da79567a4677ba106b
+
+name:           VulkanMemoryAllocator
+version:        0.0.0.0
+synopsis:       Bindings to the VulkanMemoryAllocator library
+category:       Graphics
+homepage:       https://github.com/expipiplus1/vulkan#readme
+bug-reports:    https://github.com/expipiplus1/vulkan/issues
+maintainer:     Joe Hermaszewski <live.long.and.prosper@monoid.al>
+build-type:     Simple
+extra-source-files:
+    readme.md
+    changelog.md
+    VulkanMemoryAllocator/src/vk_mem_alloc.h
+
+source-repository head
+  type: git
+  location: https://github.com/expipiplus1/vulkan
+
+flag safe-foreign-calls
+  description: Do not mark foreign imports as 'unsafe'. This means that callbacks from VulkanMemoryAllocator to Haskell will work. If you are using these then make sure this flag is enabled.
+  manual: True
+  default: False
+
+flag vma-ndebug
+  description: Compile VulkanMemoryAllocator with NDEBUG to disable assertions.
+  manual: True
+  default: False
+
+flag vma-recording
+  description: Compile VulkanMemoryAllocator with VMA_RECORDING_ENABLED to enable recording functionality.
+  manual: True
+  default: False
+
+library
+  exposed-modules:
+      Graphics.VulkanMemoryAllocator
+  other-modules:
+      Paths_VulkanMemoryAllocator
+  hs-source-dirs:
+      src
+  default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
+  ghc-options: -Wall -Wno-unticked-promoted-constructors -Wno-missing-pattern-synonym-signatures -Wno-unused-imports -Wno-missing-signatures -Wno-partial-type-signatures
+  include-dirs:
+      VulkanMemoryAllocator/src
+  cxx-sources:
+      src/lib.cpp
+  extra-libraries:
+      stdc++
+  build-depends:
+      base <4.14
+    , bytestring
+    , transformers
+    , vector
+    , vector-sized
+    , vulkan ==3.1.*
+  if flag(safe-foreign-calls)
+    cpp-options: -DSAFE_FOREIGN_CALLS
+  if flag(vma-ndebug)
+    cxx-options: -DNDEBUG
+  if flag(vma-recording)
+    cxx-options: -DVMA_RECORDING_ENABLED
+  default-language: Haskell2010

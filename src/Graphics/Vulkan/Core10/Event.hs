@@ -9,6 +9,7 @@ module Graphics.Vulkan.Core10.Event  ( createEvent
                                      ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -18,6 +19,7 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -62,8 +64,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     creates the event.
+-- -   @device@ is the logical device that creates the event.
 --
 -- -   @pCreateInfo@ is a pointer to a 'EventCreateInfo' structure
 --     containing information about how the event is to be created.
@@ -81,8 +82,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid 'EventCreateInfo'
 --     structure
@@ -112,8 +113,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Event', 'EventCreateInfo'
-createEvent :: Device -> EventCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (Event)
-createEvent device createInfo allocator = evalContT $ do
+createEvent :: forall io . MonadIO io => Device -> EventCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Event)
+createEvent device createInfo allocator = liftIO . evalContT $ do
   let vkCreateEvent' = mkVkCreateEvent (pVkCreateEvent (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -128,11 +129,11 @@ createEvent device createInfo allocator = evalContT $ do
 -- | A safe wrapper for 'createEvent' and 'destroyEvent' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withEvent :: Device -> EventCreateInfo -> Maybe AllocationCallbacks -> (Event -> IO r) -> IO r
-withEvent device eventCreateInfo allocationCallbacks =
+withEvent :: forall r . Device -> EventCreateInfo -> Maybe AllocationCallbacks -> ((Event) -> IO r) -> IO r
+withEvent device pCreateInfo pAllocator =
   bracket
-    (createEvent device eventCreateInfo allocationCallbacks)
-    (\o -> destroyEvent device o allocationCallbacks)
+    (createEvent device pCreateInfo pAllocator)
+    (\(o0) -> destroyEvent device o0 pAllocator)
 
 
 foreign import ccall
@@ -146,11 +147,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     destroys the event.
+-- -   @device@ is the logical device that destroys the event.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Event' is the handle of the event to
---     destroy.
+-- -   @event@ is the handle of the event to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
@@ -158,50 +157,46 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All submitted commands that refer to
---     'Graphics.Vulkan.Core10.Handles.Event' /must/ have completed
+-- -   All submitted commands that refer to @event@ /must/ have completed
 --     execution
 --
 -- -   If 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.Event' was
---     created, a compatible set of callbacks /must/ be provided here
+--     were provided when @event@ was created, a compatible set of
+--     callbacks /must/ be provided here
 --
 -- -   If no
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.Event' was
---     created, @pAllocator@ /must/ be @NULL@
+--     were provided when @event@ was created, @pAllocator@ /must/ be
+--     @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Event' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.Event' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Event' handle
+-- -   If @event@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @event@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Event'
+--     handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
 --     pointer to a valid
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
 --     structure
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Event' is a valid handle, it
---     /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   If @event@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.Event' /must/ be
---     externally synchronized
+-- -   Host access to @event@ /must/ be externally synchronized
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Event'
-destroyEvent :: Device -> Event -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyEvent device event allocator = evalContT $ do
+destroyEvent :: forall io . MonadIO io => Device -> Event -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyEvent device event allocator = liftIO . evalContT $ do
   let vkDestroyEvent' = mkVkDestroyEvent (pVkDestroyEvent (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -221,28 +216,24 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the event.
+-- -   @device@ is the logical device that owns the event.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Event' is the handle of the event to
---     query.
+-- -   @event@ is the handle of the event to query.
 --
 -- = Description
 --
 -- Upon success, 'getEventStatus' returns the state of the event object
 -- with the following return codes:
 --
--- +---------------------------------------------------+----------------------------------------+
--- | Status                                            | Meaning                                |
--- +===================================================+========================================+
--- | 'Graphics.Vulkan.Core10.Enums.Result.EVENT_SET'   | The event specified by                 |
--- |                                                   | 'Graphics.Vulkan.Core10.Handles.Event' |
--- |                                                   | is signaled.                           |
--- +---------------------------------------------------+----------------------------------------+
--- | 'Graphics.Vulkan.Core10.Enums.Result.EVENT_RESET' | The event specified by                 |
--- |                                                   | 'Graphics.Vulkan.Core10.Handles.Event' |
--- |                                                   | is unsignaled.                         |
--- +---------------------------------------------------+----------------------------------------+
+-- +---------------------------------------------------+-----------------------------------+
+-- | Status                                            | Meaning                           |
+-- +===================================================+===================================+
+-- | 'Graphics.Vulkan.Core10.Enums.Result.EVENT_SET'   | The event specified by @event@ is |
+-- |                                                   | signaled.                         |
+-- +---------------------------------------------------+-----------------------------------+
+-- | 'Graphics.Vulkan.Core10.Enums.Result.EVENT_RESET' | The event specified by @event@ is |
+-- |                                                   | unsignaled.                       |
+-- +---------------------------------------------------+-----------------------------------+
 --
 -- Event Object Status Codes
 --
@@ -278,8 +269,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Event'
-getEventStatus :: Device -> Event -> IO (Result)
-getEventStatus device event = do
+getEventStatus :: forall io . MonadIO io => Device -> Event -> io (Result)
+getEventStatus device event = liftIO $ do
   let vkGetEventStatus' = mkVkGetEventStatus (pVkGetEventStatus (deviceCmds (device :: Device)))
   r <- vkGetEventStatus' (deviceHandle (device)) (event)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -297,35 +288,32 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the event.
+-- -   @device@ is the logical device that owns the event.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Event' is the event to set.
+-- -   @event@ is the event to set.
 --
 -- = Description
 --
 -- When 'setEvent' is executed on the host, it defines an /event signal
 -- operation/ which sets the event to the signaled state.
 --
--- If 'Graphics.Vulkan.Core10.Handles.Event' is already in the signaled
--- state when 'setEvent' is executed, then 'setEvent' has no effect, and no
--- event signal operation occurs.
+-- If @event@ is already in the signaled state when 'setEvent' is executed,
+-- then 'setEvent' has no effect, and no event signal operation occurs.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.Event' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Event' handle
+-- -   @event@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Event'
+--     handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.Event' /must/ have been created,
---     allocated, or retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
+-- -   @event@ /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.Event' /must/ be
---     externally synchronized
+-- -   Host access to @event@ /must/ be externally synchronized
 --
 -- == Return Codes
 --
@@ -343,8 +331,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Event'
-setEvent :: Device -> Event -> IO ()
-setEvent device event = do
+setEvent :: forall io . MonadIO io => Device -> Event -> io ()
+setEvent device event = liftIO $ do
   let vkSetEvent' = mkVkSetEvent (pVkSetEvent (deviceCmds (device :: Device)))
   r <- vkSetEvent' (deviceHandle (device)) (event)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -361,41 +349,39 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the event.
+-- -   @device@ is the logical device that owns the event.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Event' is the event to reset.
+-- -   @event@ is the event to reset.
 --
 -- = Description
 --
 -- When 'resetEvent' is executed on the host, it defines an /event unsignal
 -- operation/ which resets the event to the unsignaled state.
 --
--- If 'Graphics.Vulkan.Core10.Handles.Event' is already in the unsignaled
--- state when 'resetEvent' is executed, then 'resetEvent' has no effect,
--- and no event unsignal operation occurs.
+-- If @event@ is already in the unsignaled state when 'resetEvent' is
+-- executed, then 'resetEvent' has no effect, and no event unsignal
+-- operation occurs.
 --
 -- == Valid Usage
 --
--- -   'Graphics.Vulkan.Core10.Handles.Event' /must/ not be waited on by a
+-- -   @event@ /must/ not be waited on by a
 --     'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdWaitEvents' command
 --     that is currently executing
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.Event' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Event' handle
+-- -   @event@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Event'
+--     handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.Event' /must/ have been created,
---     allocated, or retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
+-- -   @event@ /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.Event' /must/ be
---     externally synchronized
+-- -   Host access to @event@ /must/ be externally synchronized
 --
 -- == Return Codes
 --
@@ -413,8 +399,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Event'
-resetEvent :: Device -> Event -> IO ()
-resetEvent device event = do
+resetEvent :: forall io . MonadIO io => Device -> Event -> io ()
+resetEvent device event = liftIO $ do
   let vkResetEvent' = mkVkResetEvent (pVkResetEvent (deviceCmds (device :: Device)))
   r <- vkResetEvent' (deviceHandle (device)) (event)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -431,7 +417,7 @@ resetEvent device event = do
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createEvent'
 data EventCreateInfo = EventCreateInfo
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+  { -- | @flags@ /must/ be @0@
     flags :: EventCreateFlags }
   deriving (Typeable)
 deriving instance Show EventCreateInfo

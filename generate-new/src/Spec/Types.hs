@@ -1,4 +1,5 @@
 {-# language UndecidableInstances #-}
+{-# language TypeFamilyDependencies #-}
 module Spec.Types
   ( CName(..)
   , module Spec.Types
@@ -128,7 +129,7 @@ data StructOrUnionType = AStruct | AUnion
 
 data WithSize = WithSize | WithoutSize
 
-type family SizeType (a :: WithSize) where
+type family SizeType (a :: WithSize) = r | r -> a where
   SizeType 'WithSize = Int
   SizeType 'WithoutSize = ()
 
@@ -176,11 +177,12 @@ instance M.Marshalable StructMember where
 --
 
 data Command = Command
-  { cName :: CName
-  , cReturnType :: CType
-  , cParameters :: Vector Parameter
+  { cName         :: CName
+  , cReturnType   :: CType
+  , cParameters   :: Vector Parameter
   , cSuccessCodes :: Vector Text
-  , cErrorCodes :: Vector Text
+  , cErrorCodes   :: Vector Text
+  , cIsDynamic    :: Bool
   }
   deriving (Show, Eq)
 
@@ -190,7 +192,7 @@ data Parameter = Parameter
   , pLengths    :: Vector M.ParameterLength
   , pIsOptional :: Vector Bool
   }
-  deriving (Show, Eq)
+  deriving (Show, Eq, Ord)
 
 instance M.Marshalable Parameter where
   name       = pName

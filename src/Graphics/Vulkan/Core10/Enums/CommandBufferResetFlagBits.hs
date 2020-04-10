@@ -33,8 +33,7 @@ newtype CommandBufferResetFlagBits = CommandBufferResetFlagBits Flags
 -- memory resources currently owned by the command buffer /should/ be
 -- returned to the parent command pool. If this flag is not set, then the
 -- command buffer /may/ hold onto memory resources and reuse them when
--- recording commands. 'Graphics.Vulkan.Core10.Handles.CommandBuffer' is
--- moved to the
+-- recording commands. @commandBuffer@ is moved to the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle initial state>.
 pattern COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT = CommandBufferResetFlagBits 0x00000001
 

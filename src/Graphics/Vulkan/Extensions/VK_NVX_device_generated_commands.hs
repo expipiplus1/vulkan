@@ -65,6 +65,7 @@ module Graphics.Vulkan.Extensions.VK_NVX_device_generated_commands  ( cmdProcess
 import Control.Exception.Base (bracket)
 import Control.Exception.Base (bracket_)
 import Control.Monad (unless)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -87,6 +88,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -173,8 +175,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the primary
---     command buffer in which the generation process takes space.
+-- -   @commandBuffer@ is the primary command buffer in which the
+--     generation process takes space.
 --
 -- -   @pProcessCommandsInfo@ is a pointer to a 'CmdProcessCommandsInfoNVX'
 --     structure containing parameters affecting the processing of
@@ -182,29 +184,27 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pProcessCommandsInfo@ /must/ be a valid pointer to a valid
 --     'CmdProcessCommandsInfoNVX' structure
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics, or compute operations
+--     @commandBuffer@ was allocated from /must/ support graphics, or
+--     compute operations
 --
 -- -   This command /must/ only be called inside of a render pass instance
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -221,8 +221,8 @@ foreign import ccall
 --
 -- 'CmdProcessCommandsInfoNVX',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdProcessCommandsNVX :: CommandBuffer -> CmdProcessCommandsInfoNVX -> IO ()
-cmdProcessCommandsNVX commandBuffer processCommandsInfo = evalContT $ do
+cmdProcessCommandsNVX :: forall io . MonadIO io => CommandBuffer -> CmdProcessCommandsInfoNVX -> io ()
+cmdProcessCommandsNVX commandBuffer processCommandsInfo = liftIO . evalContT $ do
   let vkCmdProcessCommandsNVX' = mkVkCmdProcessCommandsNVX (pVkCmdProcessCommandsNVX (deviceCmds (commandBuffer :: CommandBuffer)))
   pProcessCommandsInfo <- ContT $ withCStruct (processCommandsInfo)
   lift $ vkCmdProcessCommandsNVX' (commandBufferHandle (commandBuffer)) pProcessCommandsInfo
@@ -241,9 +241,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the secondary
---     command buffer in which the space for device-generated commands is
---     reserved.
+-- -   @commandBuffer@ is the secondary command buffer in which the space
+--     for device-generated commands is reserved.
 --
 -- -   @pProcessCommandsInfo@ is a pointer to a
 --     'CmdReserveSpaceForCommandsInfoNVX' structure containing parameters
@@ -251,42 +250,39 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The provided 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     not have had a prior space reservation since its creation or the
---     last reset.
+-- -   The provided @commandBuffer@ /must/ not have had a prior space
+--     reservation since its creation or the last reset.
 --
--- -   The state of the 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
---     /must/ be legal to execute all commands within the sequence provided
---     by the @indirectCommandsLayout@ member of @pProcessCommandsInfo@.
+-- -   The state of the @commandBuffer@ /must/ be legal to execute all
+--     commands within the sequence provided by the
+--     @indirectCommandsLayout@ member of @pProcessCommandsInfo@.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pReserveSpaceInfo@ /must/ be a valid pointer to a valid
 --     'CmdReserveSpaceForCommandsInfoNVX' structure
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics, or compute operations
+--     @commandBuffer@ was allocated from /must/ support graphics, or
+--     compute operations
 --
 -- -   This command /must/ only be called inside of a render pass instance
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a secondary
+-- -   @commandBuffer@ /must/ be a secondary
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer'
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -303,8 +299,8 @@ foreign import ccall
 --
 -- 'CmdReserveSpaceForCommandsInfoNVX',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdReserveSpaceForCommandsNVX :: CommandBuffer -> ("reserveSpaceInfo" ::: CmdReserveSpaceForCommandsInfoNVX) -> IO ()
-cmdReserveSpaceForCommandsNVX commandBuffer reserveSpaceInfo = evalContT $ do
+cmdReserveSpaceForCommandsNVX :: forall io . MonadIO io => CommandBuffer -> ("reserveSpaceInfo" ::: CmdReserveSpaceForCommandsInfoNVX) -> io ()
+cmdReserveSpaceForCommandsNVX commandBuffer reserveSpaceInfo = liftIO . evalContT $ do
   let vkCmdReserveSpaceForCommandsNVX' = mkVkCmdReserveSpaceForCommandsNVX (pVkCmdReserveSpaceForCommandsNVX (deviceCmds (commandBuffer :: CommandBuffer)))
   pReserveSpaceInfo <- ContT $ withCStruct (reserveSpaceInfo)
   lift $ vkCmdReserveSpaceForCommandsNVX' (commandBufferHandle (commandBuffer)) pReserveSpaceInfo
@@ -323,8 +319,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     creates the indirect command layout.
+-- -   @device@ is the logical device that creates the indirect command
+--     layout.
 --
 -- -   @pCreateInfo@ is a pointer to a
 --     'IndirectCommandsLayoutCreateInfoNVX' structure containing
@@ -340,8 +336,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'IndirectCommandsLayoutCreateInfoNVX' structure
@@ -373,8 +369,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'IndirectCommandsLayoutCreateInfoNVX',
 -- 'Graphics.Vulkan.Extensions.Handles.IndirectCommandsLayoutNVX'
-createIndirectCommandsLayoutNVX :: Device -> IndirectCommandsLayoutCreateInfoNVX -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (IndirectCommandsLayoutNVX)
-createIndirectCommandsLayoutNVX device createInfo allocator = evalContT $ do
+createIndirectCommandsLayoutNVX :: forall io . MonadIO io => Device -> IndirectCommandsLayoutCreateInfoNVX -> ("allocator" ::: Maybe AllocationCallbacks) -> io (IndirectCommandsLayoutNVX)
+createIndirectCommandsLayoutNVX device createInfo allocator = liftIO . evalContT $ do
   let vkCreateIndirectCommandsLayoutNVX' = mkVkCreateIndirectCommandsLayoutNVX (pVkCreateIndirectCommandsLayoutNVX (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -390,11 +386,11 @@ createIndirectCommandsLayoutNVX device createInfo allocator = evalContT $ do
 -- 'destroyIndirectCommandsLayoutNVX' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withIndirectCommandsLayoutNVX :: Device -> IndirectCommandsLayoutCreateInfoNVX -> Maybe AllocationCallbacks -> (IndirectCommandsLayoutNVX -> IO r) -> IO r
-withIndirectCommandsLayoutNVX device indirectCommandsLayoutCreateInfoNVX allocationCallbacks =
+withIndirectCommandsLayoutNVX :: forall r . Device -> IndirectCommandsLayoutCreateInfoNVX -> Maybe AllocationCallbacks -> ((IndirectCommandsLayoutNVX) -> IO r) -> IO r
+withIndirectCommandsLayoutNVX device pCreateInfo pAllocator =
   bracket
-    (createIndirectCommandsLayoutNVX device indirectCommandsLayoutCreateInfoNVX allocationCallbacks)
-    (\o -> destroyIndirectCommandsLayoutNVX device o allocationCallbacks)
+    (createIndirectCommandsLayoutNVX device pCreateInfo pAllocator)
+    (\(o0) -> destroyIndirectCommandsLayoutNVX device o0 pAllocator)
 
 
 foreign import ccall
@@ -408,8 +404,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     destroys the layout.
+-- -   @device@ is the logical device that destroys the layout.
 --
 -- -   @indirectCommandsLayout@ is the table to destroy.
 --
@@ -433,8 +428,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @indirectCommandsLayout@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.IndirectCommandsLayoutNVX'
@@ -446,15 +441,15 @@ foreign import ccall
 --     structure
 --
 -- -   @indirectCommandsLayout@ /must/ have been created, allocated, or
---     retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
+--     retrieved from @device@
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Extensions.Handles.IndirectCommandsLayoutNVX'
-destroyIndirectCommandsLayoutNVX :: Device -> IndirectCommandsLayoutNVX -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyIndirectCommandsLayoutNVX device indirectCommandsLayout allocator = evalContT $ do
+destroyIndirectCommandsLayoutNVX :: forall io . MonadIO io => Device -> IndirectCommandsLayoutNVX -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyIndirectCommandsLayoutNVX device indirectCommandsLayout allocator = liftIO . evalContT $ do
   let vkDestroyIndirectCommandsLayoutNVX' = mkVkDestroyIndirectCommandsLayoutNVX (pVkDestroyIndirectCommandsLayoutNVX (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -474,8 +469,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     creates the object table.
+-- -   @device@ is the logical device that creates the object table.
 --
 -- -   @pCreateInfo@ is a pointer to a 'ObjectTableCreateInfoNVX' structure
 --     containing parameters affecting creation of the table.
@@ -490,8 +484,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'ObjectTableCreateInfoNVX' structure
@@ -521,8 +515,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'ObjectTableCreateInfoNVX',
 -- 'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX'
-createObjectTableNVX :: Device -> ObjectTableCreateInfoNVX -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (ObjectTableNVX)
-createObjectTableNVX device createInfo allocator = evalContT $ do
+createObjectTableNVX :: forall io . MonadIO io => Device -> ObjectTableCreateInfoNVX -> ("allocator" ::: Maybe AllocationCallbacks) -> io (ObjectTableNVX)
+createObjectTableNVX device createInfo allocator = liftIO . evalContT $ do
   let vkCreateObjectTableNVX' = mkVkCreateObjectTableNVX (pVkCreateObjectTableNVX (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -538,11 +532,11 @@ createObjectTableNVX device createInfo allocator = evalContT $ do
 -- using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withObjectTableNVX :: Device -> ObjectTableCreateInfoNVX -> Maybe AllocationCallbacks -> (ObjectTableNVX -> IO r) -> IO r
-withObjectTableNVX device objectTableCreateInfoNVX allocationCallbacks =
+withObjectTableNVX :: forall r . Device -> ObjectTableCreateInfoNVX -> Maybe AllocationCallbacks -> ((ObjectTableNVX) -> IO r) -> IO r
+withObjectTableNVX device pCreateInfo pAllocator =
   bracket
-    (createObjectTableNVX device objectTableCreateInfoNVX allocationCallbacks)
-    (\o -> destroyObjectTableNVX device o allocationCallbacks)
+    (createObjectTableNVX device pCreateInfo pAllocator)
+    (\(o0) -> destroyObjectTableNVX device o0 pAllocator)
 
 
 foreign import ccall
@@ -556,8 +550,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     destroys the table.
+-- -   @device@ is the logical device that destroys the table.
 --
 -- -   @objectTable@ is the table to destroy.
 --
@@ -581,8 +574,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @objectTable@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX' handle
@@ -593,7 +586,7 @@ foreign import ccall
 --     structure
 --
 -- -   @objectTable@ /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+--     @device@
 --
 -- == Host Synchronization
 --
@@ -604,8 +597,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX'
-destroyObjectTableNVX :: Device -> ObjectTableNVX -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyObjectTableNVX device objectTable allocator = evalContT $ do
+destroyObjectTableNVX :: forall io . MonadIO io => Device -> ObjectTableNVX -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyObjectTableNVX device objectTable allocator = liftIO . evalContT $ do
   let vkDestroyObjectTableNVX' = mkVkDestroyObjectTableNVX (pVkDestroyObjectTableNVX (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -625,8 +618,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     creates the object table.
+-- -   @device@ is the logical device that creates the object table.
 --
 -- -   @objectTable@ is the table for which the resources are registered.
 --
@@ -655,8 +647,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @objectTable@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX' handle
@@ -670,7 +662,7 @@ foreign import ccall
 -- -   @objectCount@ /must/ be greater than @0@
 --
 -- -   @objectTable@ /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+--     @device@
 --
 -- == Host Synchronization
 --
@@ -692,8 +684,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'ObjectTableEntryNVX',
 -- 'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX'
-registerObjectsNVX :: Device -> ObjectTableNVX -> ("objectTableEntries" ::: Vector ObjectTableEntryNVX) -> ("objectIndices" ::: Vector Word32) -> IO ()
-registerObjectsNVX device objectTable objectTableEntries objectIndices = evalContT $ do
+registerObjectsNVX :: forall io . MonadIO io => Device -> ObjectTableNVX -> ("objectTableEntries" ::: Vector ObjectTableEntryNVX) -> ("objectIndices" ::: Vector Word32) -> io ()
+registerObjectsNVX device objectTable objectTableEntries objectIndices = liftIO . evalContT $ do
   let vkRegisterObjectsNVX' = mkVkRegisterObjectsNVX (pVkRegisterObjectsNVX (deviceCmds (device :: Device)))
   let ppObjectTableEntriesLength = Data.Vector.length $ (objectTableEntries)
   let pObjectIndicesLength = Data.Vector.length $ (objectIndices)
@@ -710,11 +702,11 @@ registerObjectsNVX device objectTable objectTableEntries objectIndices = evalCon
 
 -- | A safe wrapper for 'registerObjectsNVX' and 'unregisterObjectsNVX' using
 -- 'bracket_'
-withRegisteredObjectsNVX :: Device -> ObjectTableNVX -> Vector ObjectTableEntryNVX -> Vector Word32 -> Vector ObjectEntryTypeNVX -> IO r -> IO r
-withRegisteredObjectsNVX device objectTableNVX objectTableEntryNVX objectIndices objectEntryTypeNVX =
+withRegisteredObjectsNVX :: forall r . Device -> ObjectTableNVX -> Vector ObjectTableEntryNVX -> Vector Word32 -> Vector ObjectEntryTypeNVX -> IO r -> IO r
+withRegisteredObjectsNVX device objectTable ppObjectTableEntries pObjectIndices pObjectEntryTypes =
   bracket_
-    (registerObjectsNVX device objectTableNVX objectTableEntryNVX objectIndices)
-    (unregisterObjectsNVX device objectTableNVX objectEntryTypeNVX objectIndices)
+    (registerObjectsNVX device objectTable ppObjectTableEntries pObjectIndices)
+    (unregisterObjectsNVX device objectTable pObjectEntryTypes pObjectIndices)
 
 
 foreign import ccall
@@ -728,8 +720,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     creates the object table.
+-- -   @device@ is the logical device that creates the object table.
 --
 -- -   @objectTable@ is the table from which the resources are
 --     unregistered.
@@ -755,8 +746,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @objectTable@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX' handle
@@ -770,7 +761,7 @@ foreign import ccall
 -- -   @objectCount@ /must/ be greater than @0@
 --
 -- -   @objectTable@ /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+--     @device@
 --
 -- == Host Synchronization
 --
@@ -792,8 +783,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'ObjectEntryTypeNVX',
 -- 'Graphics.Vulkan.Extensions.Handles.ObjectTableNVX'
-unregisterObjectsNVX :: Device -> ObjectTableNVX -> ("objectEntryTypes" ::: Vector ObjectEntryTypeNVX) -> ("objectIndices" ::: Vector Word32) -> IO ()
-unregisterObjectsNVX device objectTable objectEntryTypes objectIndices = evalContT $ do
+unregisterObjectsNVX :: forall io . MonadIO io => Device -> ObjectTableNVX -> ("objectEntryTypes" ::: Vector ObjectEntryTypeNVX) -> ("objectIndices" ::: Vector Word32) -> io ()
+unregisterObjectsNVX device objectTable objectEntryTypes objectIndices = liftIO . evalContT $ do
   let vkUnregisterObjectsNVX' = mkVkUnregisterObjectsNVX (pVkUnregisterObjectsNVX (deviceCmds (device :: Device)))
   let pObjectEntryTypesLength = Data.Vector.length $ (objectEntryTypes)
   let pObjectIndicesLength = Data.Vector.length $ (objectIndices)
@@ -819,8 +810,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the handle to the
---     physical device whose properties will be queried.
+-- -   @physicalDevice@ is the handle to the physical device whose
+--     properties will be queried.
 --
 -- -   @pFeatures@ is a pointer to a 'DeviceGeneratedCommandsFeaturesNVX'
 --     structure in which features are returned.
@@ -835,8 +826,8 @@ foreign import ccall
 -- 'DeviceGeneratedCommandsFeaturesNVX',
 -- 'DeviceGeneratedCommandsLimitsNVX',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceGeneratedCommandsPropertiesNVX :: PhysicalDevice -> IO (DeviceGeneratedCommandsFeaturesNVX, DeviceGeneratedCommandsLimitsNVX)
-getPhysicalDeviceGeneratedCommandsPropertiesNVX physicalDevice = evalContT $ do
+getPhysicalDeviceGeneratedCommandsPropertiesNVX :: forall io . MonadIO io => PhysicalDevice -> io (DeviceGeneratedCommandsFeaturesNVX, DeviceGeneratedCommandsLimitsNVX)
+getPhysicalDeviceGeneratedCommandsPropertiesNVX physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX' = mkVkGetPhysicalDeviceGeneratedCommandsPropertiesNVX (pVkGetPhysicalDeviceGeneratedCommandsPropertiesNVX (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPFeatures <- ContT (withZeroCStruct @DeviceGeneratedCommandsFeaturesNVX)
   pPLimits <- ContT (withZeroCStruct @DeviceGeneratedCommandsLimitsNVX)
@@ -980,8 +971,7 @@ instance Zero DeviceGeneratedCommandsLimitsNVX where
 --
 -- == Valid Usage
 --
--- -   The 'Graphics.Vulkan.Core10.Handles.Buffer'’s usage flag /must/ have
---     the
+-- -   The @buffer@’s usage flag /must/ have the
 --     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_INDIRECT_BUFFER_BIT'
 --     bit set.
 --
@@ -992,8 +982,8 @@ instance Zero DeviceGeneratedCommandsLimitsNVX where
 --
 -- -   @tokenType@ /must/ be a valid 'IndirectCommandsTokenTypeNVX' value
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Buffer' handle
+-- -   @buffer@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Buffer'
+--     handle
 --
 -- = See Also
 --
@@ -1003,12 +993,11 @@ instance Zero DeviceGeneratedCommandsLimitsNVX where
 data IndirectCommandsTokenNVX = IndirectCommandsTokenNVX
   { -- | @tokenType@ specifies the token command type.
     tokenType :: IndirectCommandsTokenTypeNVX
-  , -- | 'Graphics.Vulkan.Core10.Handles.Buffer' specifies the
-    -- 'Graphics.Vulkan.Core10.Handles.Buffer' storing the functional arguments
-    -- for each squence. These argumetns can be written by the device.
+  , -- | @buffer@ specifies the 'Graphics.Vulkan.Core10.Handles.Buffer' storing
+    -- the functional arguments for each squence. These argumetns can be
+    -- written by the device.
     buffer :: Buffer
-  , -- | @offset@ specified an offset into
-    -- 'Graphics.Vulkan.Core10.Handles.Buffer' where the arguments start.
+  , -- | @offset@ specified an offset into @buffer@ where the arguments start.
     offset :: DeviceSize
   }
   deriving (Typeable)
@@ -1144,9 +1133,7 @@ instance Zero IndirectCommandsLayoutTokenNVX where
 --
 -- -   If the
 --     'DeviceGeneratedCommandsFeaturesNVX'::@computeBindingPointSupport@
---     feature is not enabled, then
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
---     /must/ not be
+--     feature is not enabled, then @pipelineBindPoint@ /must/ not be
 --     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PIPELINE_BIND_POINT_COMPUTE'
 --
 -- -   If @pTokens@ contains an entry of
@@ -1160,8 +1147,7 @@ instance Zero IndirectCommandsLayoutTokenNVX where
 --     'INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX').
 --
 -- -   The content of @pTokens@ /must/ include one single work provoking
---     token that is compatible with the
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'.
+--     token that is compatible with the @pipelineBindPoint@.
 --
 -- == Valid Usage (Implicit)
 --
@@ -1170,15 +1156,14 @@ instance Zero IndirectCommandsLayoutTokenNVX where
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
---     /must/ be a valid
+-- -   @pipelineBindPoint@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
 --     value
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of 'IndirectCommandsLayoutUsageFlagBitsNVX' values
+-- -   @flags@ /must/ be a valid combination of
+--     'IndirectCommandsLayoutUsageFlagBitsNVX' values
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not be @0@
+-- -   @flags@ /must/ not be @0@
 --
 -- -   @pTokens@ /must/ be a valid pointer to an array of @tokenCount@
 --     valid 'IndirectCommandsLayoutTokenNVX' structures
@@ -1192,13 +1177,12 @@ instance Zero IndirectCommandsLayoutTokenNVX where
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createIndirectCommandsLayoutNVX'
 data IndirectCommandsLayoutCreateInfoNVX = IndirectCommandsLayoutCreateInfoNVX
-  { -- | 'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' is
-    -- the 'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
-    -- that this layout targets.
+  { -- | @pipelineBindPoint@ is the
+    -- 'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' that
+    -- this layout targets.
     pipelineBindPoint :: PipelineBindPoint
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
-    -- 'IndirectCommandsLayoutUsageFlagBitsNVX' specifying usage hints of this
-    -- layout.
+  , -- | @flags@ is a bitmask of 'IndirectCommandsLayoutUsageFlagBitsNVX'
+    -- specifying usage hints of this layout.
     flags :: IndirectCommandsLayoutUsageFlagsNVX
   , -- | @pTokens@ is an array describing each command token in detail. See
     -- 'IndirectCommandsTokenTypeNVX' and 'IndirectCommandsLayoutTokenNVX'
@@ -1726,17 +1710,17 @@ instance Zero ObjectTableCreateInfoNVX where
 --
 -- -   If the
 --     'DeviceGeneratedCommandsFeaturesNVX'::@computeBindingPointSupport@
---     feature is not enabled, 'Graphics.Vulkan.Core10.BaseType.Flags'
---     /must/ not contain 'OBJECT_ENTRY_USAGE_COMPUTE_BIT_NVX'
+--     feature is not enabled, @flags@ /must/ not contain
+--     'OBJECT_ENTRY_USAGE_COMPUTE_BIT_NVX'
 --
 -- == Valid Usage (Implicit)
 --
 -- -   @type@ /must/ be a valid 'ObjectEntryTypeNVX' value
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of 'ObjectEntryUsageFlagBitsNVX' values
+-- -   @flags@ /must/ be a valid combination of
+--     'ObjectEntryUsageFlagBitsNVX' values
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not be @0@
+-- -   @flags@ /must/ not be @0@
 --
 -- = See Also
 --
@@ -1744,7 +1728,7 @@ instance Zero ObjectTableCreateInfoNVX where
 data ObjectTableEntryNVX = ObjectTableEntryNVX
   { -- | @type@ defines the entry type
     type' :: ObjectEntryTypeNVX
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' defines which
+  , -- | @flags@ defines which
     -- 'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' the
     -- resource can be used with. Some entry types allow only a single flag to
     -- be set.
@@ -1797,10 +1781,10 @@ instance Zero ObjectTableEntryNVX where
 data ObjectTablePipelineEntryNVX = ObjectTablePipelineEntryNVX
   { -- | @type@ /must/ be a valid 'ObjectEntryTypeNVX' value
     type' :: ObjectEntryTypeNVX
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not be @0@
+  , -- | @flags@ /must/ not be @0@
     flags :: ObjectEntryUsageFlagsNVX
-  , -- | 'Graphics.Vulkan.Core10.Handles.Pipeline' /must/ be a valid
-    -- 'Graphics.Vulkan.Core10.Handles.Pipeline' handle
+  , -- | @pipeline@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Pipeline'
+    -- handle
     pipeline :: Pipeline
   }
   deriving (Typeable)
@@ -1853,19 +1837,18 @@ instance Zero ObjectTablePipelineEntryNVX where
 --
 -- -   @type@ /must/ be a valid 'ObjectEntryTypeNVX' value
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of 'ObjectEntryUsageFlagBitsNVX' values
+-- -   @flags@ /must/ be a valid combination of
+--     'ObjectEntryUsageFlagBitsNVX' values
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not be @0@
+-- -   @flags@ /must/ not be @0@
 --
--- -   'Graphics.Vulkan.Core10.Handles.PipelineLayout' /must/ be a valid
+-- -   @pipelineLayout@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PipelineLayout' handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.DescriptorSet' /must/ be a valid
+-- -   @descriptorSet@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.DescriptorSet' handle
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.DescriptorSet', and
---     'Graphics.Vulkan.Core10.Handles.PipelineLayout' /must/ have been
+-- -   Both of @descriptorSet@, and @pipelineLayout@ /must/ have been
 --     created, allocated, or retrieved from the same
 --     'Graphics.Vulkan.Core10.Handles.Device'
 --
@@ -1879,11 +1862,11 @@ data ObjectTableDescriptorSetEntryNVX = ObjectTableDescriptorSetEntryNVX
     type' :: ObjectEntryTypeNVX
   , -- No documentation found for Nested "VkObjectTableDescriptorSetEntryNVX" "flags"
     flags :: ObjectEntryUsageFlagsNVX
-  , -- | 'Graphics.Vulkan.Core10.Handles.PipelineLayout' specifies the
-    -- 'Graphics.Vulkan.Core10.Handles.PipelineLayout' that the
-    -- 'Graphics.Vulkan.Core10.Handles.DescriptorSet' is used with.
+  , -- | @pipelineLayout@ specifies the
+    -- 'Graphics.Vulkan.Core10.Handles.PipelineLayout' that the @descriptorSet@
+    -- is used with.
     pipelineLayout :: PipelineLayout
-  , -- | 'Graphics.Vulkan.Core10.Handles.DescriptorSet' specifies the
+  , -- | @descriptorSet@ specifies the
     -- 'Graphics.Vulkan.Core10.Handles.DescriptorSet' that can be bound with
     -- this entry.
     descriptorSet :: DescriptorSet
@@ -1943,10 +1926,10 @@ instance Zero ObjectTableDescriptorSetEntryNVX where
 data ObjectTableVertexBufferEntryNVX = ObjectTableVertexBufferEntryNVX
   { -- | @type@ /must/ be a valid 'ObjectEntryTypeNVX' value
     type' :: ObjectEntryTypeNVX
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not be @0@
+  , -- | @flags@ /must/ not be @0@
     flags :: ObjectEntryUsageFlagsNVX
-  , -- | 'Graphics.Vulkan.Core10.Handles.Buffer' /must/ be a valid
-    -- 'Graphics.Vulkan.Core10.Handles.Buffer' handle
+  , -- | @buffer@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Buffer'
+    -- handle
     buffer :: Buffer
   }
   deriving (Typeable)
@@ -2001,12 +1984,12 @@ instance Zero ObjectTableVertexBufferEntryNVX where
 data ObjectTableIndexBufferEntryNVX = ObjectTableIndexBufferEntryNVX
   { -- | @type@ /must/ be a valid 'ObjectEntryTypeNVX' value
     type' :: ObjectEntryTypeNVX
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not be @0@
+  , -- | @flags@ /must/ not be @0@
     flags :: ObjectEntryUsageFlagsNVX
-  , -- | 'Graphics.Vulkan.Core10.Handles.Buffer' /must/ be a valid
-    -- 'Graphics.Vulkan.Core10.Handles.Buffer' handle
+  , -- | @buffer@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Buffer'
+    -- handle
     buffer :: Buffer
-  , -- | 'Graphics.Vulkan.Core10.Enums.IndexType.IndexType' /must/ be a valid
+  , -- | @indexType@ /must/ be a valid
     -- 'Graphics.Vulkan.Core10.Enums.IndexType.IndexType' value
     indexType :: IndexType
   }
@@ -2066,9 +2049,9 @@ instance Zero ObjectTableIndexBufferEntryNVX where
 data ObjectTablePushConstantEntryNVX = ObjectTablePushConstantEntryNVX
   { -- | @type@ /must/ be a valid 'ObjectEntryTypeNVX' value
     type' :: ObjectEntryTypeNVX
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not be @0@
+  , -- | @flags@ /must/ not be @0@
     flags :: ObjectEntryUsageFlagsNVX
-  , -- | 'Graphics.Vulkan.Core10.Handles.PipelineLayout' /must/ be a valid
+  , -- | @pipelineLayout@ /must/ be a valid
     -- 'Graphics.Vulkan.Core10.Handles.PipelineLayout' handle
     pipelineLayout :: PipelineLayout
   , -- | @stageFlags@ /must/ not be @0@

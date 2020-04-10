@@ -49,8 +49,7 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_
 --     'Graphics.Vulkan.Core10.Enums.Format.FORMAT_R8G8B8A8_UNORM' the
 --     image view /must/ not include blocks using any of the ASTC HDR modes
 --
--- -   'Graphics.Vulkan.Core10.Enums.Format.Format' of the image view
---     /must/ be one of
+-- -   @format@ of the image view /must/ be one of
 --     'Graphics.Vulkan.Core10.Enums.Format.FORMAT_ASTC_4x4_UNORM_BLOCK',
 --     'Graphics.Vulkan.Core10.Enums.Format.FORMAT_ASTC_4x4_SRGB_BLOCK',
 --     'Graphics.Vulkan.Core10.Enums.Format.FORMAT_ASTC_5x4_UNORM_BLOCK',
@@ -81,8 +80,7 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_
 --     or
 --     'Graphics.Vulkan.Core10.Enums.Format.FORMAT_ASTC_12x12_SRGB_BLOCK'
 --
--- If 'Graphics.Vulkan.Core10.Enums.Format.Format' uses sRGB encoding then
--- the @decodeMode@ has no effect.
+-- If @format@ uses sRGB encoding then the @decodeMode@ has no effect.
 --
 -- == Valid Usage (Implicit)
 --

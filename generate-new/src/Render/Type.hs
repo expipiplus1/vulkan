@@ -1,12 +1,13 @@
 {-# language TemplateHaskellQuotes #-}
 module Render.Type
   ( Preserve(..)
+  , ExtensibleStructStyle(..)
   , cToHsType
+  , cToHsTypeWrapped
   , cToHsTypeWithHoles
   , cToHsTypeQuantified
   , namedTy
-  )
-where
+  ) where
 
 import           Relude                  hiding ( lift
                                                 , State
@@ -42,7 +43,16 @@ cToHsTypeWithHoles
   => Preserve
   -> CType
   -> Sem r H.Type
-cToHsTypeWithHoles preserve t = runInputList holes $ cToHsType' preserve t
+cToHsTypeWithHoles = cToHsType' (Applied (pure WildCardT))
+
+-- | The same as 'cToHsType' except extensible structs are wrapped in @SomeStruct@
+cToHsTypeWrapped
+  :: forall r
+   . (HasErr r, HasRenderParams r, HasSpecInfo r)
+  => Preserve
+  -> CType
+  -> Sem r H.Type
+cToHsTypeWrapped = cToHsType' Wrapped
 
 -- | The same as 'cToHsType' except type variables are quantified with forall.
 cToHsTypeQuantified
@@ -57,11 +67,13 @@ cToHsTypeQuantified preserve t = do
         let name = mkName [i]
         case i of
           'q' -> pure Nothing
-          _ -> do
+          _   -> do
             put (name : u, succ i)
             pure $ Just (VarT name)
   ((usedVarNames, _), t) <-
-    runState ([], 'a') . runInputSem nextVar $ cToHsType' preserve t
+    runState ([], 'a') . runInputSem nextVar $ cToHsType' (Applied getVar)
+                                                          preserve
+                                                          t
   pure $ ForallT (PlainTV <$> reverse usedVarNames) [] t
 
 cToHsType
@@ -70,18 +82,20 @@ cToHsType
   => Preserve
   -> CType
   -> Sem r H.Type
-cToHsType preserve t = runInputList allVars $ cToHsType' preserve t
+cToHsType preserve t =
+  runInputList allVars $ cToHsType' (Applied getVar) preserve t
 
 cToHsType'
   :: forall r
-   . (HasErr r, HasRenderParams r, HasSpecInfo r, Member NextVar r)
-  => Preserve
+   . (HasErr r, HasRenderParams r, HasSpecInfo r)
+  => ExtensibleStructStyle r
+  -> Preserve
   -> CType
   -> Sem r H.Type
-cToHsType' preserve t = do
+cToHsType' structStyle preserve t = do
   RenderParams {..} <- input
-  case mkHsTypeOverride preserve t of
-    Just h  -> pure h
+  case mkHsTypeOverride structStyle preserve t of
+    Just h  -> h
     Nothing -> do
       t' <- r
       pure $ case preserve of
@@ -107,17 +121,17 @@ cToHsType' preserve t = do
           "Getting the unpreserved haskell type for char. This case should be implemented if this char is not better represented by a bytestring"
     Ptr _ Void -> pure $ ConT ''Ptr :@ TupleT 0
     Ptr _ p    -> do
-      t' <- cToHsType' preserve p
+      t' <- cToHsType' structStyle preserve p
       pure $ ConT ''Ptr :@ t'
     Array _ (NumericArraySize n) e -> do
-      e' <- cToHsType' preserve e
+      e' <- cToHsType' structStyle preserve e
       let arrayTy = ConT ''VSS.Vector :@ LitT (NumTyLit (fromIntegral n)) :@ e'
       pure $ case preserve of
         DoLower -> ConT ''Ptr :@ arrayTy
         _       -> arrayTy
     Array _ (SymbolicArraySize n) e -> do
       RenderParams {..} <- input
-      e'                <- cToHsType' preserve e
+      e'                <- cToHsType' structStyle preserve e
       let arrayTy = ConT ''VSS.Vector :@ ConT (typeName (mkTyName n)) :@ e'
       pure $ case preserve of
         DoLower -> ConT ''Ptr :@ arrayTy
@@ -135,14 +149,16 @@ cToHsType' preserve t = do
       RenderParams {..} <- input
       let con = ConT . typeName . mkTyName $ n
       getStruct n >>= \case
-        Just s | not (V.null (sExtendedBy s)) -> do
-          var <- nextVar
-          pure $ con :@ var
+        Just s | not (V.null (sExtendedBy s)) -> case structStyle of
+          Applied getVar -> do
+            var <- getVar
+            pure $ con :@ var
+          Wrapped -> pure $ ConT (mkName "SomeStruct") :@ con
         _ -> pure con
     Proto ret ps -> do
-      retTy <- cToHsType' preserve ret
+      retTy <- cToHsType' structStyle preserve ret
       pTys  <- forV ps $ \(n, c) -> do
-        t' <- cToHsType' preserve c
+        t' <- cToHsType' structStyle preserve c
         pure $ case n of
           Nothing   -> t'
           Just name -> namedTy name t'
@@ -167,8 +183,8 @@ namedTy name ty =
 
 type NextVar = Input (Maybe Type)
 
-nextVar :: (HasErr r, Member NextVar r) => Sem r Type
-nextVar =
+getVar :: (HasErr r, Member NextVar r) => Sem r Type
+getVar =
   input @(Maybe Type) >>= \case
     Nothing -> throw "Run out of variables"
     Just v ->  pure v
@@ -176,6 +192,3 @@ nextVar =
 -- 'r' is used elsewhere for return types
 allVars :: [Type]
 allVars = (\c -> VarT (mkName [c])) <$> ['a' .. 'q']
-
-holes :: [Type]
-holes = repeat WildCardT

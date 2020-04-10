@@ -9,6 +9,7 @@ module Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_semaphore_capabiliti
                                                                                     , ExternalSemaphoreFeatureFlags
                                                                                     ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.Ptr (castPtr)
@@ -16,6 +17,7 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -66,8 +68,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device from which to query the semaphore capabilities.
+-- -   @physicalDevice@ is the physical device from which to query the
+--     semaphore capabilities.
 --
 -- -   @pExternalSemaphoreInfo@ is a pointer to a
 --     'PhysicalDeviceExternalSemaphoreInfo' structure describing the
@@ -85,8 +87,8 @@ foreign import ccall
 -- 'ExternalSemaphoreProperties',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceExternalSemaphoreInfo'
-getPhysicalDeviceExternalSemaphoreProperties :: PokeChain a => PhysicalDevice -> PhysicalDeviceExternalSemaphoreInfo a -> IO (ExternalSemaphoreProperties)
-getPhysicalDeviceExternalSemaphoreProperties physicalDevice externalSemaphoreInfo = evalContT $ do
+getPhysicalDeviceExternalSemaphoreProperties :: forall a io . (PokeChain a, MonadIO io) => PhysicalDevice -> PhysicalDeviceExternalSemaphoreInfo a -> io (ExternalSemaphoreProperties)
+getPhysicalDeviceExternalSemaphoreProperties physicalDevice externalSemaphoreInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceExternalSemaphoreProperties' = mkVkGetPhysicalDeviceExternalSemaphoreProperties (pVkGetPhysicalDeviceExternalSemaphoreProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
   pExternalSemaphoreInfo <- ContT $ withCStruct (externalSemaphoreInfo)
   pPExternalSemaphoreProperties <- ContT (withZeroCStruct @ExternalSemaphoreProperties)

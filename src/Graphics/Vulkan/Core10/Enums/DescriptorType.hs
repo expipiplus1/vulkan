@@ -77,17 +77,15 @@ import Graphics.Vulkan.Zero (Zero)
 -- - otherwise they are ignored. The members accessed are as follows for
 -- each descriptor type:
 --
--- -   For 'DESCRIPTOR_TYPE_SAMPLER', only the
---     'Graphics.Vulkan.Core10.Handles.Sampler' member of each element of
+-- -   For 'DESCRIPTOR_TYPE_SAMPLER', only the @sampler@ member of each
+--     element of
 --     'Graphics.Vulkan.Core10.DescriptorSet.WriteDescriptorSet'::@pImageInfo@
 --     is accessed.
 --
 -- -   For 'DESCRIPTOR_TYPE_SAMPLED_IMAGE',
 --     'DESCRIPTOR_TYPE_STORAGE_IMAGE', or
---     'DESCRIPTOR_TYPE_INPUT_ATTACHMENT', only the
---     'Graphics.Vulkan.Core10.Handles.ImageView' and
---     'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout' members of
---     each element of
+--     'DESCRIPTOR_TYPE_INPUT_ATTACHMENT', only the @imageView@ and
+--     @imageLayout@ members of each element of
 --     'Graphics.Vulkan.Core10.DescriptorSet.WriteDescriptorSet'::@pImageInfo@
 --     are accessed.
 --
@@ -109,14 +107,14 @@ import Graphics.Vulkan.Zero (Zero)
 --     'Graphics.Vulkan.Core10.DescriptorSet.WriteDescriptorSet'::@pTexelBufferView@
 --     is accessed.
 --
--- When updating descriptors with a 'DescriptorType' of
+-- When updating descriptors with a @descriptorType@ of
 -- 'DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT', none of the @pImageInfo@,
 -- @pBufferInfo@, or @pTexelBufferView@ members are accessed, instead the
 -- source data of the descriptor update operation is taken from the
 -- 'Graphics.Vulkan.Extensions.VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlockEXT'
 -- structure in the @pNext@ chain of
 -- 'Graphics.Vulkan.Core10.DescriptorSet.WriteDescriptorSet'. When updating
--- descriptors with a 'DescriptorType' of
+-- descriptors with a @descriptorType@ of
 -- 'DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV', none of the @pImageInfo@,
 -- @pBufferInfo@, or @pTexelBufferView@ members are accessed, instead the
 -- source data of the descriptor update operation is taken from the

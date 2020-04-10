@@ -1,17 +1,17 @@
 {-# language DeriveFunctor, DeriveFoldable, DeriveTraversable #-}
-module Render.Spec
+module VK.Render
   where
 
 import           Relude                  hiding ( Enum )
 import           Polysemy
 import           Polysemy.Input
+import           Polysemy.Fixpoint
 import           Data.Vector                    ( Vector )
 import qualified Data.Vector                   as V
 import qualified Data.HashMap.Strict           as Map
 
 import           Bespoke
 import           Bespoke.Utils
-import           Bracket
 import           Error
 import           Marshal
 import           Render.Alias
@@ -35,6 +35,8 @@ import           Render.VkException
 import           Spec.Parse
 import           CType
 import           Documentation
+
+import           VK.Bracket
 
 data RenderedSpec a = RenderedSpec
   { rsHandles            :: Vector a
@@ -97,7 +99,7 @@ renderSpec spec@Spec {..} getDoc ss us cs = do
       [r] -> pure r
       rs  -> throw ("Found multiple error code enumerations: " <> show rs)
 
-  bs <- brackets specHandles
+  bs <- brackets cs specHandles
   let bracketMap      = Map.fromList [ (n, b) | (n, _, b) <- toList bs ]
       renderCommand'  = commandWithBrackets (`Map.lookup` bracketMap)
       filterConstants = V.filter ((`notElem` forbiddenConstants) . constName)
@@ -126,7 +128,7 @@ commandWithBrackets
   :: ( HasErr r
      , HasRenderParams r
      , HasSpecInfo r
-     , HasStmts r
+     , Member Fixpoint r
      , HasRenderedNames r
      )
   => (CName -> Maybe RenderElement)

@@ -2,12 +2,14 @@
 module Graphics.Vulkan.Core11.DeviceInitialization  (enumerateInstanceVersion) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
 import Foreign.Ptr (castFunPtr)
 import Foreign.Ptr (nullPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Foreign.Storable (Storable(peek))
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
@@ -44,8 +46,8 @@ foreign import ccall
 -- = See Also
 --
 -- No cross-references are available
-enumerateInstanceVersion :: IO (("apiVersion" ::: Word32))
-enumerateInstanceVersion  = evalContT $ do
+enumerateInstanceVersion :: forall io . MonadIO io => io (("apiVersion" ::: Word32))
+enumerateInstanceVersion  = liftIO . evalContT $ do
   vkEnumerateInstanceVersion' <- lift $ mkVkEnumerateInstanceVersion . castFunPtr @_ @(("pApiVersion" ::: Ptr Word32) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkEnumerateInstanceVersion"#)
   pPApiVersion <- ContT $ bracket (callocBytes @Word32 4) free
   _ <- lift $ vkEnumerateInstanceVersion' (pPApiVersion)

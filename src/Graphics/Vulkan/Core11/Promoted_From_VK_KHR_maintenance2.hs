@@ -187,8 +187,7 @@ instance Zero RenderPassInputAttachmentAspectCreateInfo where
 -- 'Graphics.Vulkan.Core11.Enums.PointClippingBehavior.PointClippingBehavior',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data PhysicalDevicePointClippingProperties = PhysicalDevicePointClippingProperties
-  { -- | 'Graphics.Vulkan.Core11.Enums.PointClippingBehavior.PointClippingBehavior'
-    -- is a
+  { -- | @pointClippingBehavior@ is a
     -- 'Graphics.Vulkan.Core11.Enums.PointClippingBehavior.PointClippingBehavior'
     -- value specifying the point clipping behavior supported by the
     -- implementation.

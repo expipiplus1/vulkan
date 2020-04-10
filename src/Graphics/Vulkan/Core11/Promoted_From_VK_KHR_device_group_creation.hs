@@ -11,6 +11,7 @@ module Graphics.Vulkan.Core11.Promoted_From_VK_KHR_device_group_creation  ( enum
 
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -23,6 +24,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -79,8 +81,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' is a handle to a Vulkan
---     instance previously created with
+-- -   @instance@ is a handle to a Vulkan instance previously created with
 --     'Graphics.Vulkan.Core10.DeviceInitialization.createInstance'.
 --
 -- -   @pPhysicalDeviceGroupCount@ is a pointer to an integer related to
@@ -110,7 +111,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+-- -   @instance@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
 -- -   @pPhysicalDeviceGroupCount@ /must/ be a valid pointer to a
@@ -142,8 +143,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Instance',
 -- 'PhysicalDeviceGroupProperties'
-enumeratePhysicalDeviceGroups :: Instance -> IO (Result, ("physicalDeviceGroupProperties" ::: Vector PhysicalDeviceGroupProperties))
-enumeratePhysicalDeviceGroups instance' = evalContT $ do
+enumeratePhysicalDeviceGroups :: forall io . MonadIO io => Instance -> io (Result, ("physicalDeviceGroupProperties" ::: Vector PhysicalDeviceGroupProperties))
+enumeratePhysicalDeviceGroups instance' = liftIO . evalContT $ do
   let vkEnumeratePhysicalDeviceGroups' = mkVkEnumeratePhysicalDeviceGroups (pVkEnumeratePhysicalDeviceGroups (instanceCmds (instance' :: Instance)))
   let instance'' = instanceHandle (instance')
   pPPhysicalDeviceGroupCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -254,7 +255,7 @@ instance Zero PhysicalDeviceGroupProperties where
 -- A logical device created without using 'DeviceGroupDeviceCreateInfo', or
 -- with @physicalDeviceCount@ equal to zero, is equivalent to a
 -- @physicalDeviceCount@ of one and @pPhysicalDevices@ pointing to the
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' parameter to
+-- @physicalDevice@ parameter to
 -- 'Graphics.Vulkan.Core10.Device.createDevice'. In particular, the device
 -- index of that physical device is zero.
 --
@@ -265,10 +266,9 @@ instance Zero PhysicalDeviceGroupProperties where
 -- -   All elements of @pPhysicalDevices@ /must/ be in the same device
 --     group as enumerated by 'enumeratePhysicalDeviceGroups'
 --
--- -   If @physicalDeviceCount@ is not @0@, the
---     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' parameter of
---     'Graphics.Vulkan.Core10.Device.createDevice' /must/ be an element of
---     @pPhysicalDevices@.
+-- -   If @physicalDeviceCount@ is not @0@, the @physicalDevice@ parameter
+--     of 'Graphics.Vulkan.Core10.Device.createDevice' /must/ be an element
+--     of @pPhysicalDevices@.
 --
 -- == Valid Usage (Implicit)
 --

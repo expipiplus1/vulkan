@@ -20,6 +20,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_surface  ( destroySurfaceKHR
                                                   ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -30,6 +31,7 @@ import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -97,8 +99,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' is the instance used to
---     create the surface.
+-- -   @instance@ is the instance used to create the surface.
 --
 -- -   @surface@ is the surface to destroy.
 --
@@ -131,7 +132,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+-- -   @instance@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
 -- -   If @surface@ is not
@@ -144,8 +145,7 @@ foreign import ccall
 --     structure
 --
 -- -   If @surface@ is a valid handle, it /must/ have been created,
---     allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Instance'
+--     allocated, or retrieved from @instance@
 --
 -- == Host Synchronization
 --
@@ -156,8 +156,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Instance',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'
-destroySurfaceKHR :: Instance -> SurfaceKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroySurfaceKHR instance' surface allocator = evalContT $ do
+destroySurfaceKHR :: forall io . MonadIO io => Instance -> SurfaceKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroySurfaceKHR instance' surface allocator = liftIO . evalContT $ do
   let vkDestroySurfaceKHR' = mkVkDestroySurfaceKHR (pVkDestroySurfaceKHR (instanceCmds (instance' :: Instance)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -178,8 +178,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device.
+-- -   @physicalDevice@ is the physical device.
 --
 -- -   @queueFamilyIndex@ is the queue family.
 --
@@ -195,11 +194,11 @@ foreign import ccall
 -- -   @queueFamilyIndex@ /must/ be less than @pQueueFamilyPropertyCount@
 --     returned by
 --     'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceQueueFamilyProperties'
---     for the given 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
+--     for the given @physicalDevice@
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @surface@ /must/ be a valid
@@ -208,9 +207,9 @@ foreign import ccall
 -- -   @pSupported@ /must/ be a valid pointer to a
 --     'Graphics.Vulkan.Core10.BaseType.Bool32' value
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', and
---     @surface@ /must/ have been created, allocated, or retrieved from the
---     same 'Graphics.Vulkan.Core10.Handles.Instance'
+-- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Return Codes
 --
@@ -231,8 +230,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.BaseType.Bool32',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'
-getPhysicalDeviceSurfaceSupportKHR :: PhysicalDevice -> ("queueFamilyIndex" ::: Word32) -> SurfaceKHR -> IO (("supported" ::: Bool))
-getPhysicalDeviceSurfaceSupportKHR physicalDevice queueFamilyIndex surface = evalContT $ do
+getPhysicalDeviceSurfaceSupportKHR :: forall io . MonadIO io => PhysicalDevice -> ("queueFamilyIndex" ::: Word32) -> SurfaceKHR -> io (("supported" ::: Bool))
+getPhysicalDeviceSurfaceSupportKHR physicalDevice queueFamilyIndex surface = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfaceSupportKHR' = mkVkGetPhysicalDeviceSurfaceSupportKHR (pVkGetPhysicalDeviceSurfaceSupportKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPSupported <- ContT $ bracket (callocBytes @Bool32 4) free
   r <- lift $ vkGetPhysicalDeviceSurfaceSupportKHR' (physicalDeviceHandle (physicalDevice)) (queueFamilyIndex) (surface) (pPSupported)
@@ -252,9 +251,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device that will be associated with the swapchain to be created, as
---     described for
+-- -   @physicalDevice@ is the physical device that will be associated with
+--     the swapchain to be created, as described for
 --     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
 --
 -- -   @surface@ is the surface that will be associated with the swapchain.
@@ -264,7 +262,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @surface@ /must/ be a valid
@@ -273,9 +271,9 @@ foreign import ccall
 -- -   @pSurfaceCapabilities@ /must/ be a valid pointer to a
 --     'SurfaceCapabilitiesKHR' structure
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', and
---     @surface@ /must/ have been created, allocated, or retrieved from the
---     same 'Graphics.Vulkan.Core10.Handles.Instance'
+-- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Return Codes
 --
@@ -296,8 +294,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'SurfaceCapabilitiesKHR',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'
-getPhysicalDeviceSurfaceCapabilitiesKHR :: PhysicalDevice -> SurfaceKHR -> IO (SurfaceCapabilitiesKHR)
-getPhysicalDeviceSurfaceCapabilitiesKHR physicalDevice surface = evalContT $ do
+getPhysicalDeviceSurfaceCapabilitiesKHR :: forall io . MonadIO io => PhysicalDevice -> SurfaceKHR -> io (SurfaceCapabilitiesKHR)
+getPhysicalDeviceSurfaceCapabilitiesKHR physicalDevice surface = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfaceCapabilitiesKHR' = mkVkGetPhysicalDeviceSurfaceCapabilitiesKHR (pVkGetPhysicalDeviceSurfaceCapabilitiesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPSurfaceCapabilities <- ContT (withZeroCStruct @SurfaceCapabilitiesKHR)
   r <- lift $ vkGetPhysicalDeviceSurfaceCapabilitiesKHR' (physicalDeviceHandle (physicalDevice)) (surface) (pPSurfaceCapabilities)
@@ -318,9 +316,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device that will be associated with the swapchain to be created, as
---     described for
+-- -   @physicalDevice@ is the physical device that will be associated with
+--     the swapchain to be created, as described for
 --     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
 --
 -- -   @surface@ is the surface that will be associated with the swapchain.
@@ -349,29 +346,26 @@ foreign import ccall
 --
 -- The number of format pairs supported /must/ be greater than or equal to
 -- 1. @pSurfaceFormats@ /must/ not contain an entry whose value for
--- 'Graphics.Vulkan.Core10.Enums.Format.Format' is
--- 'Graphics.Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'.
+-- @format@ is 'Graphics.Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED'.
 --
 -- If @pSurfaceFormats@ includes an entry whose value for @colorSpace@ is
 -- 'Graphics.Vulkan.Extensions.VK_EXT_swapchain_colorspace.COLOR_SPACE_SRGB_NONLINEAR_KHR'
--- and whose value for 'Graphics.Vulkan.Core10.Enums.Format.Format' is a
--- UNORM (or SRGB) format and the corresponding SRGB (or UNORM) format is a
--- color renderable format for
+-- and whose value for @format@ is a UNORM (or SRGB) format and the
+-- corresponding SRGB (or UNORM) format is a color renderable format for
 -- 'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_OPTIMAL', then
 -- @pSurfaceFormats@ /must/ also contain an entry with the same value for
--- @colorSpace@ and 'Graphics.Vulkan.Core10.Enums.Format.Format' equal to
--- the corresponding SRGB (or UNORM) format.
+-- @colorSpace@ and @format@ equal to the corresponding SRGB (or UNORM)
+-- format.
 --
 -- == Valid Usage
 --
--- -   @surface@ must be supported by
---     'Graphics.Vulkan.Core10.Handles.PhysicalDevice', as reported by
+-- -   @surface@ must be supported by @physicalDevice@, as reported by
 --     'getPhysicalDeviceSurfaceSupportKHR' or an equivalent
 --     platform-specific mechanism.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @surface@ /must/ be a valid
@@ -385,9 +379,9 @@ foreign import ccall
 --     pointer to an array of @pSurfaceFormatCount@ 'SurfaceFormatKHR'
 --     structures
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', and
---     @surface@ /must/ have been created, allocated, or retrieved from the
---     same 'Graphics.Vulkan.Core10.Handles.Instance'
+-- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Return Codes
 --
@@ -409,8 +403,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', 'SurfaceFormatKHR',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'
-getPhysicalDeviceSurfaceFormatsKHR :: PhysicalDevice -> SurfaceKHR -> IO (Result, ("surfaceFormats" ::: Vector SurfaceFormatKHR))
-getPhysicalDeviceSurfaceFormatsKHR physicalDevice surface = evalContT $ do
+getPhysicalDeviceSurfaceFormatsKHR :: forall io . MonadIO io => PhysicalDevice -> SurfaceKHR -> io (Result, ("surfaceFormats" ::: Vector SurfaceFormatKHR))
+getPhysicalDeviceSurfaceFormatsKHR physicalDevice surface = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfaceFormatsKHR' = mkVkGetPhysicalDeviceSurfaceFormatsKHR (pVkGetPhysicalDeviceSurfaceFormatsKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPSurfaceFormatCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -438,9 +432,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device that will be associated with the swapchain to be created, as
---     described for
+-- -   @physicalDevice@ is the physical device that will be associated with
+--     the swapchain to be created, as described for
 --     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
 --
 -- -   @surface@ is the surface that will be associated with the swapchain.
@@ -469,7 +462,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @surface@ /must/ be a valid
@@ -483,9 +476,9 @@ foreign import ccall
 --     'Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image.PresentModeKHR'
 --     values
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', and
---     @surface@ /must/ have been created, allocated, or retrieved from the
---     same 'Graphics.Vulkan.Core10.Handles.Instance'
+-- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Return Codes
 --
@@ -508,8 +501,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image.PresentModeKHR',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'
-getPhysicalDeviceSurfacePresentModesKHR :: PhysicalDevice -> SurfaceKHR -> IO (Result, ("presentModes" ::: Vector PresentModeKHR))
-getPhysicalDeviceSurfacePresentModesKHR physicalDevice surface = evalContT $ do
+getPhysicalDeviceSurfacePresentModesKHR :: forall io . MonadIO io => PhysicalDevice -> SurfaceKHR -> io (Result, ("presentModes" ::: Vector PresentModeKHR))
+getPhysicalDeviceSurfacePresentModesKHR physicalDevice surface = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfacePresentModesKHR' = mkVkGetPhysicalDeviceSurfacePresentModesKHR (pVkGetPhysicalDeviceSurfacePresentModesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPresentModeCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -689,9 +682,8 @@ instance Zero SurfaceCapabilitiesKHR where
 -- 'Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2.SurfaceFormat2KHR',
 -- 'getPhysicalDeviceSurfaceFormatsKHR'
 data SurfaceFormatKHR = SurfaceFormatKHR
-  { -- | 'Graphics.Vulkan.Core10.Enums.Format.Format' is a
-    -- 'Graphics.Vulkan.Core10.Enums.Format.Format' that is compatible with the
-    -- specified surface.
+  { -- | @format@ is a 'Graphics.Vulkan.Core10.Enums.Format.Format' that is
+    -- compatible with the specified surface.
     format :: Format
   , -- | @colorSpace@ is a presentation
     -- 'Graphics.Vulkan.Extensions.VK_EXT_swapchain_colorspace.ColorSpaceKHR'

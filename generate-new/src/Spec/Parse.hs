@@ -226,12 +226,12 @@ sizeGeneric
   -> StructOrUnion t WithoutSize c
   -> m (StructOrUnion t 'WithSize c)
 sizeGeneric getOffset getSize getTypeSize Struct {..} = do
-  ((newSize, newAlign), memberOffsets) <- scanOffsets getOffset
-                                                      getSize
-                                                      (getTypeSize . smType)
-                                                      sMembers
+  (newSize, newAlign, memberOffsets) <- scanOffsets getOffset
+                                                    getSize
+                                                    (getTypeSize . smType)
+                                                    sMembers
   pure Struct
-    { sSize      = roundToAlignment newAlign newSize
+    { sSize      = newSize
     , sAlignment = newAlign
     , sMembers   = V.zipWith (\o m -> m { smOffset = o }) memberOffsets sMembers
     , ..
@@ -678,6 +678,7 @@ parseCommands es =
     cReturnType   <- parseCType (allNonCommentText proto)
     cParameters   <- fromList
       <$> traverseV parseParameter (manyChildren "param" n)
+    let cIsDynamic = True
     pure Command { .. }
 
   parseParameter :: Node -> P Parameter

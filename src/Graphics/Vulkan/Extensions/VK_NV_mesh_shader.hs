@@ -11,9 +11,11 @@ module Graphics.Vulkan.Extensions.VK_NV_mesh_shader  ( cmdDrawMeshTasksNV
                                                      , pattern NV_MESH_SHADER_EXTENSION_NAME
                                                      ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -59,8 +61,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command will be recorded.
+-- -   @commandBuffer@ is the command buffer into which the command will be
+--     recorded.
 --
 -- -   @taskCount@ is the number of local workgroups to dispatch in the X
 --     dimension. Y and Z dimension are implicitly set to one.
@@ -118,8 +120,7 @@ foreign import ccall
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
 -- -   Any 'Graphics.Vulkan.Core10.Handles.Image' created with a
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'
---     containing
+--     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@flags@ containing
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode'
@@ -157,9 +158,8 @@ foreign import ccall
 --
 -- -   If the 'Graphics.Vulkan.Core10.Handles.Pipeline' object bound to the
 --     pipeline bind point used by this command requires any dynamic state,
---     that state /must/ have been set for
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer', and done so after
---     any previously bound pipeline with the corresponding state not
+--     that state /must/ have been set for @commandBuffer@, and done so
+--     after any previously bound pipeline with the corresponding state not
 --     specified as dynamic
 --
 -- -   There /must/ not have been any calls to dynamic state setting
@@ -216,15 +216,14 @@ foreign import ccall
 --     specified in the descriptor set bound to the same pipeline bind
 --     point
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.CommandBuffer' is an unprotected
---     command buffer, any resource accessed by the
---     'Graphics.Vulkan.Core10.Handles.Pipeline' object bound to the
---     pipeline bind point used by this command /must/ not be a protected
---     resource
+-- -   If @commandBuffer@ is an unprotected command buffer, any resource
+--     accessed by the 'Graphics.Vulkan.Core10.Handles.Pipeline' object
+--     bound to the pipeline bind point used by this command /must/ not be
+--     a protected resource
 --
 -- -   The current render pass /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
---     with the 'Graphics.Vulkan.Core10.Handles.RenderPass' member of the
+--     with the @renderPass@ member of the
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
 --     structure specified when creating the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to
@@ -261,26 +260,24 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics operations
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
 --
 -- -   This command /must/ only be called inside of a render pass instance
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -296,8 +293,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdDrawMeshTasksNV :: CommandBuffer -> ("taskCount" ::: Word32) -> ("firstTask" ::: Word32) -> IO ()
-cmdDrawMeshTasksNV commandBuffer taskCount firstTask = do
+cmdDrawMeshTasksNV :: forall io . MonadIO io => CommandBuffer -> ("taskCount" ::: Word32) -> ("firstTask" ::: Word32) -> io ()
+cmdDrawMeshTasksNV commandBuffer taskCount firstTask = liftIO $ do
   let vkCmdDrawMeshTasksNV' = mkVkCmdDrawMeshTasksNV (pVkCmdDrawMeshTasksNV (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdDrawMeshTasksNV' (commandBufferHandle (commandBuffer)) (taskCount) (firstTask)
   pure $ ()
@@ -315,14 +312,12 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command is recorded.
+-- -   @commandBuffer@ is the command buffer into which the command is
+--     recorded.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' is the buffer containing
---     draw parameters.
+-- -   @buffer@ is the buffer containing draw parameters.
 --
--- -   @offset@ is the byte offset into
---     'Graphics.Vulkan.Core10.Handles.Buffer' where parameters begin.
+-- -   @offset@ is the byte offset into @buffer@ where parameters begin.
 --
 -- -   @drawCount@ is the number of draws to execute, and /can/ be zero.
 --
@@ -334,11 +329,10 @@ foreign import ccall
 -- 'cmdDrawMeshTasksIndirectNV' behaves similarly to 'cmdDrawMeshTasksNV'
 -- except that the parameters are read by the device from a buffer during
 -- execution. @drawCount@ draws are executed by the command, with
--- parameters taken from 'Graphics.Vulkan.Core10.Handles.Buffer' starting
--- at @offset@ and increasing by @stride@ bytes for each successive draw.
--- The parameters of each draw are encoded in an array of
--- 'DrawMeshTasksIndirectCommandNV' structures. If @drawCount@ is less than
--- or equal to one, @stride@ is ignored.
+-- parameters taken from @buffer@ starting at @offset@ and increasing by
+-- @stride@ bytes for each successive draw. The parameters of each draw are
+-- encoded in an array of 'DrawMeshTasksIndirectCommandNV' structures. If
+-- @drawCount@ is less than or equal to one, @stride@ is ignored.
 --
 -- == Valid Usage
 --
@@ -386,8 +380,7 @@ foreign import ccall
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
 -- -   Any 'Graphics.Vulkan.Core10.Handles.Image' created with a
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'
---     containing
+--     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@flags@ containing
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode'
@@ -425,9 +418,8 @@ foreign import ccall
 --
 -- -   If the 'Graphics.Vulkan.Core10.Handles.Pipeline' object bound to the
 --     pipeline bind point used by this command requires any dynamic state,
---     that state /must/ have been set for
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer', and done so after
---     any previously bound pipeline with the corresponding state not
+--     that state /must/ have been set for @commandBuffer@, and done so
+--     after any previously bound pipeline with the corresponding state not
 --     specified as dynamic
 --
 -- -   There /must/ not have been any calls to dynamic state setting
@@ -484,15 +476,14 @@ foreign import ccall
 --     specified in the descriptor set bound to the same pipeline bind
 --     point
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.CommandBuffer' is an unprotected
---     command buffer, any resource accessed by the
---     'Graphics.Vulkan.Core10.Handles.Pipeline' object bound to the
---     pipeline bind point used by this command /must/ not be a protected
---     resource
+-- -   If @commandBuffer@ is an unprotected command buffer, any resource
+--     accessed by the 'Graphics.Vulkan.Core10.Handles.Pipeline' object
+--     bound to the pipeline bind point used by this command /must/ not be
+--     a protected resource
 --
 -- -   The current render pass /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
---     with the 'Graphics.Vulkan.Core10.Handles.RenderPass' member of the
+--     with the @renderPass@ member of the
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
 --     structure specified when creating the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to
@@ -524,19 +515,17 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' is non-sparse then it
---     /must/ be bound completely and contiguously to a single
+-- -   If @buffer@ is non-sparse then it /must/ be bound completely and
+--     contiguously to a single
 --     'Graphics.Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' /must/ have been created
---     with the
+-- -   @buffer@ /must/ have been created with the
 --     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_INDIRECT_BUFFER_BIT'
 --     bit set
 --
 -- -   @offset@ /must/ be a multiple of @4@
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ not be a
---     protected command buffer
+-- -   @commandBuffer@ /must/ not be a protected command buffer
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-multiDrawIndirect multi-draw indirect>
@@ -551,43 +540,39 @@ foreign import ccall
 --
 -- -   If @drawCount@ is equal to @1@, (@offset@ +
 --     @sizeof@('DrawMeshTasksIndirectCommandNV')) /must/ be less than or
---     equal to the size of 'Graphics.Vulkan.Core10.Handles.Buffer'
+--     equal to the size of @buffer@
 --
 -- -   If @drawCount@ is greater than @1@, (@stride@ × (@drawCount@ - 1) +
 --     @offset@ + @sizeof@('DrawMeshTasksIndirectCommandNV')) /must/ be
---     less than or equal to the size of
---     'Graphics.Vulkan.Core10.Handles.Buffer'
+--     less than or equal to the size of @buffer@
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Buffer' handle
+-- -   @buffer@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Buffer'
+--     handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics operations
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
 --
 -- -   This command /must/ only be called inside of a render pass instance
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.Buffer', and
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ have been
---     created, allocated, or retrieved from the same
+-- -   Both of @buffer@, and @commandBuffer@ /must/ have been created,
+--     allocated, or retrieved from the same
 --     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -605,8 +590,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdDrawMeshTasksIndirectNV :: CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
-cmdDrawMeshTasksIndirectNV commandBuffer buffer offset drawCount stride = do
+cmdDrawMeshTasksIndirectNV :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("drawCount" ::: Word32) -> ("stride" ::: Word32) -> io ()
+cmdDrawMeshTasksIndirectNV commandBuffer buffer offset drawCount stride = liftIO $ do
   let vkCmdDrawMeshTasksIndirectNV' = mkVkCmdDrawMeshTasksIndirectNV (pVkCmdDrawMeshTasksIndirectNV (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdDrawMeshTasksIndirectNV' (commandBufferHandle (commandBuffer)) (buffer) (offset) (drawCount) (stride)
   pure $ ()
@@ -624,14 +609,12 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command is recorded.
+-- -   @commandBuffer@ is the command buffer into which the command is
+--     recorded.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' is the buffer containing
---     draw parameters.
+-- -   @buffer@ is the buffer containing draw parameters.
 --
--- -   @offset@ is the byte offset into
---     'Graphics.Vulkan.Core10.Handles.Buffer' where parameters begin.
+-- -   @offset@ is the byte offset into @buffer@ where parameters begin.
 --
 -- -   @countBuffer@ is the buffer containing the draw count.
 --
@@ -699,8 +682,7 @@ foreign import ccall
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
 -- -   Any 'Graphics.Vulkan.Core10.Handles.Image' created with a
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'
---     containing
+--     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@flags@ containing
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode'
@@ -738,9 +720,8 @@ foreign import ccall
 --
 -- -   If the 'Graphics.Vulkan.Core10.Handles.Pipeline' object bound to the
 --     pipeline bind point used by this command requires any dynamic state,
---     that state /must/ have been set for
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer', and done so after
---     any previously bound pipeline with the corresponding state not
+--     that state /must/ have been set for @commandBuffer@, and done so
+--     after any previously bound pipeline with the corresponding state not
 --     specified as dynamic
 --
 -- -   There /must/ not have been any calls to dynamic state setting
@@ -797,15 +778,14 @@ foreign import ccall
 --     specified in the descriptor set bound to the same pipeline bind
 --     point
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.CommandBuffer' is an unprotected
---     command buffer, any resource accessed by the
---     'Graphics.Vulkan.Core10.Handles.Pipeline' object bound to the
---     pipeline bind point used by this command /must/ not be a protected
---     resource
+-- -   If @commandBuffer@ is an unprotected command buffer, any resource
+--     accessed by the 'Graphics.Vulkan.Core10.Handles.Pipeline' object
+--     bound to the pipeline bind point used by this command /must/ not be
+--     a protected resource
 --
 -- -   The current render pass /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
---     with the 'Graphics.Vulkan.Core10.Handles.RenderPass' member of the
+--     with the @renderPass@ member of the
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
 --     structure specified when creating the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to
@@ -837,19 +817,17 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT'
 --     bit set
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' is non-sparse then it
---     /must/ be bound completely and contiguously to a single
+-- -   If @buffer@ is non-sparse then it /must/ be bound completely and
+--     contiguously to a single
 --     'Graphics.Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' /must/ have been created
---     with the
+-- -   @buffer@ /must/ have been created with the
 --     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_INDIRECT_BUFFER_BIT'
 --     bit set
 --
 -- -   @offset@ /must/ be a multiple of @4@
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ not be a
---     protected command buffer
+-- -   @commandBuffer@ /must/ not be a protected command buffer
 --
 -- -   If @countBuffer@ is non-sparse then it /must/ be bound completely
 --     and contiguously to a single
@@ -870,50 +848,47 @@ foreign import ccall
 -- -   If @maxDrawCount@ is greater than or equal to @1@, (@stride@ ×
 --     (@maxDrawCount@ - 1) + @offset@ +
 --     @sizeof@('DrawMeshTasksIndirectCommandNV')) /must/ be less than or
---     equal to the size of 'Graphics.Vulkan.Core10.Handles.Buffer'
+--     equal to the size of @buffer@
 --
 -- -   If the count stored in @countBuffer@ is equal to @1@, (@offset@ +
 --     @sizeof@('DrawMeshTasksIndirectCommandNV')) /must/ be less than or
---     equal to the size of 'Graphics.Vulkan.Core10.Handles.Buffer'
+--     equal to the size of @buffer@
 --
 -- -   If the count stored in @countBuffer@ is greater than @1@, (@stride@
 --     × (@drawCount@ - 1) + @offset@ +
 --     @sizeof@('DrawMeshTasksIndirectCommandNV')) /must/ be less than or
---     equal to the size of 'Graphics.Vulkan.Core10.Handles.Buffer'
+--     equal to the size of @buffer@
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Buffer' handle
+-- -   @buffer@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Buffer'
+--     handle
 --
 -- -   @countBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Buffer' handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics operations
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
 --
 -- -   This command /must/ only be called inside of a render pass instance
 --
--- -   Each of 'Graphics.Vulkan.Core10.Handles.Buffer',
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer', and @countBuffer@
---     /must/ have been created, allocated, or retrieved from the same
+-- -   Each of @buffer@, @commandBuffer@, and @countBuffer@ /must/ have
+--     been created, allocated, or retrieved from the same
 --     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -931,8 +906,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdDrawMeshTasksIndirectCountNV :: CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("countBuffer" ::: Buffer) -> ("countBufferOffset" ::: DeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> IO ()
-cmdDrawMeshTasksIndirectCountNV commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride = do
+cmdDrawMeshTasksIndirectCountNV :: forall io . MonadIO io => CommandBuffer -> Buffer -> ("offset" ::: DeviceSize) -> ("countBuffer" ::: Buffer) -> ("countBufferOffset" ::: DeviceSize) -> ("maxDrawCount" ::: Word32) -> ("stride" ::: Word32) -> io ()
+cmdDrawMeshTasksIndirectCountNV commandBuffer buffer offset countBuffer countBufferOffset maxDrawCount stride = liftIO $ do
   let vkCmdDrawMeshTasksIndirectCountNV' = mkVkCmdDrawMeshTasksIndirectCountNV (pVkCmdDrawMeshTasksIndirectCountNV (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdDrawMeshTasksIndirectCountNV' (commandBufferHandle (commandBuffer)) (buffer) (offset) (countBuffer) (countBufferOffset) (maxDrawCount) (stride)
   pure $ ()

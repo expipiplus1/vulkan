@@ -23,6 +23,7 @@ module Graphics.Vulkan.Core10.DescriptorSet  ( createDescriptorSetLayout
 
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -38,6 +39,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Either (Either)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
@@ -123,8 +125,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     creates the descriptor set layout.
+-- -   @device@ is the logical device that creates the descriptor set
+--     layout.
 --
 -- -   @pCreateInfo@ is a pointer to a 'DescriptorSetLayoutCreateInfo'
 --     structure specifying the state of the descriptor set layout object.
@@ -139,8 +141,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'DescriptorSetLayoutCreateInfo' structure
@@ -170,8 +172,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.DescriptorSetLayout',
 -- 'DescriptorSetLayoutCreateInfo', 'Graphics.Vulkan.Core10.Handles.Device'
-createDescriptorSetLayout :: PokeChain a => Device -> DescriptorSetLayoutCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (DescriptorSetLayout)
-createDescriptorSetLayout device createInfo allocator = evalContT $ do
+createDescriptorSetLayout :: forall a io . (PokeChain a, MonadIO io) => Device -> DescriptorSetLayoutCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DescriptorSetLayout)
+createDescriptorSetLayout device createInfo allocator = liftIO . evalContT $ do
   let vkCreateDescriptorSetLayout' = mkVkCreateDescriptorSetLayout (pVkCreateDescriptorSetLayout (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -187,11 +189,11 @@ createDescriptorSetLayout device createInfo allocator = evalContT $ do
 -- 'destroyDescriptorSetLayout' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withDescriptorSetLayout :: PokeChain a => Device -> DescriptorSetLayoutCreateInfo a -> Maybe AllocationCallbacks -> (DescriptorSetLayout -> IO r) -> IO r
-withDescriptorSetLayout device descriptorSetLayoutCreateInfo allocationCallbacks =
+withDescriptorSetLayout :: forall a r . PokeChain a => Device -> DescriptorSetLayoutCreateInfo a -> Maybe AllocationCallbacks -> ((DescriptorSetLayout) -> IO r) -> IO r
+withDescriptorSetLayout device pCreateInfo pAllocator =
   bracket
-    (createDescriptorSetLayout device descriptorSetLayoutCreateInfo allocationCallbacks)
-    (\o -> destroyDescriptorSetLayout device o allocationCallbacks)
+    (createDescriptorSetLayout device pCreateInfo pAllocator)
+    (\(o0) -> destroyDescriptorSetLayout device o0 pAllocator)
 
 
 foreign import ccall
@@ -205,11 +207,10 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     destroys the descriptor set layout.
+-- -   @device@ is the logical device that destroys the descriptor set
+--     layout.
 --
--- -   'Graphics.Vulkan.Core10.Handles.DescriptorSetLayout' is the
---     descriptor set layout to destroy.
+-- -   @descriptorSetLayout@ is the descriptor set layout to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
@@ -218,47 +219,44 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   If 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when
---     'Graphics.Vulkan.Core10.Handles.DescriptorSetLayout' was created, a
---     compatible set of callbacks /must/ be provided here
+--     were provided when @descriptorSetLayout@ was created, a compatible
+--     set of callbacks /must/ be provided here
 --
 -- -   If no
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when
---     'Graphics.Vulkan.Core10.Handles.DescriptorSetLayout' was created,
---     @pAllocator@ /must/ be @NULL@
+--     were provided when @descriptorSetLayout@ was created, @pAllocator@
+--     /must/ be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.DescriptorSetLayout' is not
+-- -   If @descriptorSetLayout@ is not
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.DescriptorSetLayout' /must/ be a
---     valid 'Graphics.Vulkan.Core10.Handles.DescriptorSetLayout' handle
+--     @descriptorSetLayout@ /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.DescriptorSetLayout' handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
 --     pointer to a valid
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
 --     structure
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.DescriptorSetLayout' is a valid
---     handle, it /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   If @descriptorSetLayout@ is a valid handle, it /must/ have been
+--     created, allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.DescriptorSetLayout'
---     /must/ be externally synchronized
+-- -   Host access to @descriptorSetLayout@ /must/ be externally
+--     synchronized
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.DescriptorSetLayout',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-destroyDescriptorSetLayout :: Device -> DescriptorSetLayout -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyDescriptorSetLayout device descriptorSetLayout allocator = evalContT $ do
+destroyDescriptorSetLayout :: forall io . MonadIO io => Device -> DescriptorSetLayout -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyDescriptorSetLayout device descriptorSetLayout allocator = liftIO . evalContT $ do
   let vkDestroyDescriptorSetLayout' = mkVkDestroyDescriptorSetLayout (pVkDestroyDescriptorSetLayout (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -278,8 +276,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     creates the descriptor pool.
+-- -   @device@ is the logical device that creates the descriptor pool.
 --
 -- -   @pCreateInfo@ is a pointer to a 'DescriptorPoolCreateInfo' structure
 --     specifying the state of the descriptor pool object.
@@ -302,8 +299,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'DescriptorPoolCreateInfo' structure
@@ -335,8 +332,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.DescriptorPool',
 -- 'DescriptorPoolCreateInfo', 'Graphics.Vulkan.Core10.Handles.Device'
-createDescriptorPool :: PokeChain a => Device -> DescriptorPoolCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (DescriptorPool)
-createDescriptorPool device createInfo allocator = evalContT $ do
+createDescriptorPool :: forall a io . (PokeChain a, MonadIO io) => Device -> DescriptorPoolCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DescriptorPool)
+createDescriptorPool device createInfo allocator = liftIO . evalContT $ do
   let vkCreateDescriptorPool' = mkVkCreateDescriptorPool (pVkCreateDescriptorPool (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -352,11 +349,11 @@ createDescriptorPool device createInfo allocator = evalContT $ do
 -- using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withDescriptorPool :: PokeChain a => Device -> DescriptorPoolCreateInfo a -> Maybe AllocationCallbacks -> (DescriptorPool -> IO r) -> IO r
-withDescriptorPool device descriptorPoolCreateInfo allocationCallbacks =
+withDescriptorPool :: forall a r . PokeChain a => Device -> DescriptorPoolCreateInfo a -> Maybe AllocationCallbacks -> ((DescriptorPool) -> IO r) -> IO r
+withDescriptorPool device pCreateInfo pAllocator =
   bracket
-    (createDescriptorPool device descriptorPoolCreateInfo allocationCallbacks)
-    (\o -> destroyDescriptorPool device o allocationCallbacks)
+    (createDescriptorPool device pCreateInfo pAllocator)
+    (\(o0) -> destroyDescriptorPool device o0 pAllocator)
 
 
 foreign import ccall
@@ -370,11 +367,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     destroys the descriptor pool.
+-- -   @device@ is the logical device that destroys the descriptor pool.
 --
--- -   'Graphics.Vulkan.Core10.Handles.DescriptorPool' is the descriptor
---     pool to destroy.
+-- -   @descriptorPool@ is the descriptor pool to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
@@ -389,50 +384,47 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All submitted commands that refer to
---     'Graphics.Vulkan.Core10.Handles.DescriptorPool' (via any allocated
---     descriptor sets) /must/ have completed execution
+-- -   All submitted commands that refer to @descriptorPool@ (via any
+--     allocated descriptor sets) /must/ have completed execution
 --
 -- -   If 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.DescriptorPool'
---     was created, a compatible set of callbacks /must/ be provided here
+--     were provided when @descriptorPool@ was created, a compatible set of
+--     callbacks /must/ be provided here
 --
 -- -   If no
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.DescriptorPool'
---     was created, @pAllocator@ /must/ be @NULL@
+--     were provided when @descriptorPool@ was created, @pAllocator@ /must/
+--     be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.DescriptorPool' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.DescriptorPool' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.DescriptorPool' handle
+-- -   If @descriptorPool@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @descriptorPool@
+--     /must/ be a valid 'Graphics.Vulkan.Core10.Handles.DescriptorPool'
+--     handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
 --     pointer to a valid
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
 --     structure
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.DescriptorPool' is a valid
---     handle, it /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   If @descriptorPool@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.DescriptorPool'
---     /must/ be externally synchronized
+-- -   Host access to @descriptorPool@ /must/ be externally synchronized
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.DescriptorPool',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-destroyDescriptorPool :: Device -> DescriptorPool -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyDescriptorPool device descriptorPool allocator = evalContT $ do
+destroyDescriptorPool :: forall io . MonadIO io => Device -> DescriptorPool -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyDescriptorPool device descriptorPool allocator = liftIO . evalContT $ do
   let vkDestroyDescriptorPool' = mkVkDestroyDescriptorPool (pVkDestroyDescriptorPool (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -452,13 +444,11 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the descriptor pool.
+-- -   @device@ is the logical device that owns the descriptor pool.
 --
--- -   'Graphics.Vulkan.Core10.Handles.DescriptorPool' is the descriptor
---     pool to be reset.
+-- -   @descriptorPool@ is the descriptor pool to be reset.
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' is reserved for future use.
+-- -   @flags@ is reserved for future use.
 --
 -- = Description
 --
@@ -468,31 +458,28 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All uses of 'Graphics.Vulkan.Core10.Handles.DescriptorPool' (via any
---     allocated descriptor sets) /must/ have completed execution
+-- -   All uses of @descriptorPool@ (via any allocated descriptor sets)
+--     /must/ have completed execution
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.DescriptorPool' /must/ be a valid
+-- -   @descriptorPool@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.DescriptorPool' handle
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+-- -   @flags@ /must/ be @0@
 --
--- -   'Graphics.Vulkan.Core10.Handles.DescriptorPool' /must/ have been
---     created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   @descriptorPool@ /must/ have been created, allocated, or retrieved
+--     from @device@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.DescriptorPool'
---     /must/ be externally synchronized
+-- -   Host access to @descriptorPool@ /must/ be externally synchronized
 --
 -- -   Host access to any 'Graphics.Vulkan.Core10.Handles.DescriptorSet'
---     objects allocated from
---     'Graphics.Vulkan.Core10.Handles.DescriptorPool' /must/ be externally
+--     objects allocated from @descriptorPool@ /must/ be externally
 --     synchronized
 --
 -- == Return Codes
@@ -506,8 +493,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.DescriptorPool',
 -- 'Graphics.Vulkan.Core10.Enums.DescriptorPoolResetFlags.DescriptorPoolResetFlags',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-resetDescriptorPool :: Device -> DescriptorPool -> DescriptorPoolResetFlags -> IO ()
-resetDescriptorPool device descriptorPool flags = do
+resetDescriptorPool :: forall io . MonadIO io => Device -> DescriptorPool -> DescriptorPoolResetFlags -> io ()
+resetDescriptorPool device descriptorPool flags = liftIO $ do
   let vkResetDescriptorPool' = mkVkResetDescriptorPool (pVkResetDescriptorPool (deviceCmds (device :: Device)))
   _ <- vkResetDescriptorPool' (deviceHandle (device)) (descriptorPool) (flags)
   pure $ ()
@@ -524,8 +511,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the descriptor pool.
+-- -   @device@ is the logical device that owns the descriptor pool.
 --
 -- -   @pAllocateInfo@ is a pointer to a 'DescriptorSetAllocateInfo'
 --     structure describing parameters of the allocation.
@@ -596,8 +582,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pAllocateInfo@ /must/ be a valid pointer to a valid
 --     'DescriptorSetAllocateInfo' structure
@@ -634,8 +620,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.DescriptorSet',
 -- 'DescriptorSetAllocateInfo', 'Graphics.Vulkan.Core10.Handles.Device'
-allocateDescriptorSets :: PokeChain a => Device -> DescriptorSetAllocateInfo a -> IO (("descriptorSets" ::: Vector DescriptorSet))
-allocateDescriptorSets device allocateInfo = evalContT $ do
+allocateDescriptorSets :: forall a io . (PokeChain a, MonadIO io) => Device -> DescriptorSetAllocateInfo a -> io (("descriptorSets" ::: Vector DescriptorSet))
+allocateDescriptorSets device allocateInfo = liftIO . evalContT $ do
   let vkAllocateDescriptorSets' = mkVkAllocateDescriptorSets (pVkAllocateDescriptorSets (deviceCmds (device :: Device)))
   pAllocateInfo <- ContT $ withCStruct (allocateInfo)
   pPDescriptorSets <- ContT $ bracket (callocBytes @DescriptorSet ((fromIntegral . Data.Vector.length . setLayouts $ (allocateInfo)) * 8)) free
@@ -648,11 +634,11 @@ allocateDescriptorSets device allocateInfo = evalContT $ do
 -- using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withDescriptorSets :: PokeChain a => Device -> DescriptorSetAllocateInfo a -> (Vector DescriptorSet -> IO r) -> IO r
-withDescriptorSets device descriptorSetAllocateInfo =
+withDescriptorSets :: forall a r . PokeChain a => Device -> DescriptorSetAllocateInfo a -> DescriptorPool -> ((Vector DescriptorSet) -> IO r) -> IO r
+withDescriptorSets device pAllocateInfo descriptorPool =
   bracket
-    (allocateDescriptorSets device descriptorSetAllocateInfo)
-    (\o -> freeDescriptorSets device (descriptorPool (descriptorSetAllocateInfo :: DescriptorSetAllocateInfo _)) o)
+    (allocateDescriptorSets device pAllocateInfo)
+    (\(o0) -> freeDescriptorSets device descriptorPool o0)
 
 
 foreign import ccall
@@ -666,11 +652,10 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the descriptor pool.
+-- -   @device@ is the logical device that owns the descriptor pool.
 --
--- -   'Graphics.Vulkan.Core10.Handles.DescriptorPool' is the descriptor
---     pool from which the descriptor sets were allocated.
+-- -   @descriptorPool@ is the descriptor pool from which the descriptor
+--     sets were allocated.
 --
 -- -   @descriptorSetCount@ is the number of elements in the
 --     @pDescriptorSets@ array.
@@ -694,35 +679,31 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
 -- -   Each valid handle in @pDescriptorSets@ /must/ have been allocated
---     from 'Graphics.Vulkan.Core10.Handles.DescriptorPool'
+--     from @descriptorPool@
 --
--- -   'Graphics.Vulkan.Core10.Handles.DescriptorPool' /must/ have been
---     created with the
+-- -   @descriptorPool@ /must/ have been created with the
 --     'Graphics.Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT'
 --     flag
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.DescriptorPool' /must/ be a valid
+-- -   @descriptorPool@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.DescriptorPool' handle
 --
 -- -   @descriptorSetCount@ /must/ be greater than @0@
 --
--- -   'Graphics.Vulkan.Core10.Handles.DescriptorPool' /must/ have been
---     created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   @descriptorPool@ /must/ have been created, allocated, or retrieved
+--     from @device@
 --
 -- -   Each element of @pDescriptorSets@ that is a valid handle /must/ have
---     been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.DescriptorPool'
+--     been created, allocated, or retrieved from @descriptorPool@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.DescriptorPool'
---     /must/ be externally synchronized
+-- -   Host access to @descriptorPool@ /must/ be externally synchronized
 --
 -- -   Host access to each member of @pDescriptorSets@ /must/ be externally
 --     synchronized
@@ -738,8 +719,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.DescriptorPool',
 -- 'Graphics.Vulkan.Core10.Handles.DescriptorSet',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-freeDescriptorSets :: Device -> DescriptorPool -> ("descriptorSets" ::: Vector DescriptorSet) -> IO ()
-freeDescriptorSets device descriptorPool descriptorSets = evalContT $ do
+freeDescriptorSets :: forall io . MonadIO io => Device -> DescriptorPool -> ("descriptorSets" ::: Vector DescriptorSet) -> io ()
+freeDescriptorSets device descriptorPool descriptorSets = liftIO . evalContT $ do
   let vkFreeDescriptorSets' = mkVkFreeDescriptorSets (pVkFreeDescriptorSets (deviceCmds (device :: Device)))
   pPDescriptorSets <- ContT $ allocaBytesAligned @DescriptorSet ((Data.Vector.length (descriptorSets)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPDescriptorSets `plusPtr` (8 * (i)) :: Ptr DescriptorSet) (e)) (descriptorSets)
@@ -758,8 +739,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     updates the descriptor sets.
+-- -   @device@ is the logical device that updates the descriptor sets.
 --
 -- -   @descriptorWriteCount@ is the number of elements in the
 --     @pDescriptorWrites@ array.
@@ -812,8 +792,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   If @descriptorWriteCount@ is not @0@, @pDescriptorWrites@ /must/ be
 --     a valid pointer to an array of @descriptorWriteCount@ valid
@@ -835,8 +815,8 @@ foreign import ccall
 --
 -- 'CopyDescriptorSet', 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'WriteDescriptorSet'
-updateDescriptorSets :: PokeChain a => Device -> ("descriptorWrites" ::: Vector (WriteDescriptorSet a)) -> ("descriptorCopies" ::: Vector CopyDescriptorSet) -> IO ()
-updateDescriptorSets device descriptorWrites descriptorCopies = evalContT $ do
+updateDescriptorSets :: forall a io . (PokeChain a, MonadIO io) => Device -> ("descriptorWrites" ::: Vector (WriteDescriptorSet a)) -> ("descriptorCopies" ::: Vector CopyDescriptorSet) -> io ()
+updateDescriptorSets device descriptorWrites descriptorCopies = liftIO . evalContT $ do
   let vkUpdateDescriptorSets' = mkVkUpdateDescriptorSets (pVkUpdateDescriptorSets (deviceCmds (device :: Device)))
   pPDescriptorWrites <- ContT $ allocaBytesAligned @(WriteDescriptorSet _) ((Data.Vector.length (descriptorWrites)) * 64) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDescriptorWrites `plusPtr` (64 * (i)) :: Ptr (WriteDescriptorSet _)) (e) . ($ ())) (descriptorWrites)
@@ -873,8 +853,7 @@ updateDescriptorSets device descriptorWrites descriptorCopies = evalContT $ do
 --
 -- == Valid Usage
 --
--- -   @offset@ /must/ be less than the size of
---     'Graphics.Vulkan.Core10.Handles.Buffer'
+-- -   @offset@ /must/ be less than the size of @buffer@
 --
 -- -   If @range@ is not equal to
 --     'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE', @range@ /must/ be
@@ -882,25 +861,23 @@ updateDescriptorSets device descriptorWrites descriptorCopies = evalContT $ do
 --
 -- -   If @range@ is not equal to
 --     'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE', @range@ /must/ be
---     less than or equal to the size of
---     'Graphics.Vulkan.Core10.Handles.Buffer' minus @offset@
+--     less than or equal to the size of @buffer@ minus @offset@
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Buffer' handle
+-- -   @buffer@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Buffer'
+--     handle
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize', 'WriteDescriptorSet'
 data DescriptorBufferInfo = DescriptorBufferInfo
-  { -- | 'Graphics.Vulkan.Core10.Handles.Buffer' is the buffer resource.
+  { -- | @buffer@ is the buffer resource.
     buffer :: Buffer
-  , -- | @offset@ is the offset in bytes from the start of
-    -- 'Graphics.Vulkan.Core10.Handles.Buffer'. Access to buffer memory via
-    -- this descriptor uses addressing that is relative to this starting
-    -- offset.
+  , -- | @offset@ is the offset in bytes from the start of @buffer@. Access to
+    -- buffer memory via this descriptor uses addressing that is relative to
+    -- this starting offset.
     offset :: DeviceSize
   , -- | @range@ is the size in bytes that is used for this descriptor update, or
     -- 'Graphics.Vulkan.Core10.APIConstants.WHOLE_SIZE' to use the range from
@@ -955,31 +932,28 @@ instance Zero DescriptorBufferInfo where
 --
 -- == Valid Usage
 --
--- -   'Graphics.Vulkan.Core10.Handles.ImageView' /must/ not be 2D or 2D
---     array image view created from a 3D image
+-- -   @imageView@ /must/ not be 2D or 2D array image view created from a
+--     3D image
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.ImageView' is created from a
---     depth\/stencil image, the @aspectMask@ used to create the
---     'Graphics.Vulkan.Core10.Handles.ImageView' /must/ include either
+-- -   If @imageView@ is created from a depth\/stencil image, the
+--     @aspectMask@ used to create the @imageView@ /must/ include either
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_DEPTH_BIT'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_STENCIL_BIT'
 --     but not both.
 --
--- -   'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout' /must/ match
---     the actual 'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout' of
---     each subresource accessible from
---     'Graphics.Vulkan.Core10.Handles.ImageView' at the time this
---     descriptor is accessed as defined by the
+-- -   @imageLayout@ /must/ match the actual
+--     'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout' of each
+--     subresource accessible from @imageView@ at the time this descriptor
+--     is accessed as defined by the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-layouts-matching-rule image layout matching rules>
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Sampler' is used and the
+-- -   If @sampler@ is used and the
 --     'Graphics.Vulkan.Core10.Enums.Format.Format' of the image is a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion multi-planar format>,
 --     the image /must/ have been created with
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_MUTABLE_FORMAT_BIT',
---     and the @aspectMask@ of the
---     'Graphics.Vulkan.Core10.Handles.ImageView' /must/ be
+--     and the @aspectMask@ of the @imageView@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_0_BIT',
 --     'Graphics.Vulkan.Core10.Enums.ImageAspectFlagBits.IMAGE_ASPECT_PLANE_1_BIT'
 --     or (for three-plane formats only)
@@ -987,8 +961,7 @@ instance Zero DescriptorBufferInfo where
 --
 -- == Valid Usage (Implicit)
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.ImageView', and
---     'Graphics.Vulkan.Core10.Handles.Sampler' that are valid handles of
+-- -   Both of @imageView@, and @sampler@ that are valid handles of
 --     non-ignored parameters /must/ have been created, allocated, or
 --     retrieved from the same 'Graphics.Vulkan.Core10.Handles.Device'
 --
@@ -998,27 +971,24 @@ instance Zero DescriptorBufferInfo where
 -- 'Graphics.Vulkan.Core10.Handles.ImageView',
 -- 'Graphics.Vulkan.Core10.Handles.Sampler', 'WriteDescriptorSet'
 data DescriptorImageInfo = DescriptorImageInfo
-  { -- | 'Graphics.Vulkan.Core10.Handles.Sampler' is a sampler handle, and is
-    -- used in descriptor updates for types
+  { -- | @sampler@ is a sampler handle, and is used in descriptor updates for
+    -- types
     -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER'
     -- and
     -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
     -- if the binding being updated does not use immutable samplers.
     sampler :: Sampler
-  , -- | 'Graphics.Vulkan.Core10.Handles.ImageView' is an image view handle, and
-    -- is used in descriptor updates for types
+  , -- | @imageView@ is an image view handle, and is used in descriptor updates
+    -- for types
     -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
     -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
     -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
     -- and
     -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'.
     imageView :: ImageView
-  , -- | 'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout' is the layout
-    -- that the image subresources accessible from
-    -- 'Graphics.Vulkan.Core10.Handles.ImageView' will be in at the time this
-    -- descriptor is accessed.
-    -- 'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout' is used in
-    -- descriptor updates for types
+  , -- | @imageLayout@ is the layout that the image subresources accessible from
+    -- @imageView@ will be in at the time this descriptor is accessed.
+    -- @imageLayout@ is used in descriptor updates for types
     -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
     -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
     -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
@@ -1072,15 +1042,14 @@ instance Zero DescriptorImageInfo where
 --
 -- Only one of @pImageInfo@, @pBufferInfo@, or @pTexelBufferView@ members
 -- is used according to the descriptor type specified in the
--- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' member of
--- the containing 'WriteDescriptorSet' structure, or none of them in case
--- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- @descriptorType@ member of the containing 'WriteDescriptorSet'
+-- structure, or none of them in case @descriptorType@ is
 -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
 -- in which case the source data for the descriptor writes is taken from
 -- the
 -- 'Graphics.Vulkan.Extensions.VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlockEXT'
 -- structure included in the @pNext@ chain of 'WriteDescriptorSet', or if
--- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- @descriptorType@ is
 -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV',
 -- in which case the source data for the descriptor writes is taken from
 -- the
@@ -1117,17 +1086,15 @@ instance Zero DescriptorImageInfo where
 --
 -- -   All consecutive bindings updated via a single 'WriteDescriptorSet'
 --     structure, except those with a @descriptorCount@ of zero, /must/
---     have identical
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' and
---     @stageFlags@.
+--     have identical @descriptorType@ and @stageFlags@.
 --
 -- -   All consecutive bindings updated via a single 'WriteDescriptorSet'
 --     structure, except those with a @descriptorCount@ of zero, /must/ all
 --     either use immutable samplers or /must/ all not use immutable
 --     samplers.
 --
--- -   'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' /must/
---     match the type of @dstBinding@ within @dstSet@
+-- -   @descriptorType@ /must/ match the type of @dstBinding@ within
+--     @dstSet@
 --
 -- -   @dstSet@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.DescriptorSet' handle
@@ -1138,15 +1105,15 @@ instance Zero DescriptorImageInfo where
 --     bindings, as described by
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-updates-consecutive>
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
 --     @dstArrayElement@ /must/ be an integer multiple of @4@
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
 --     @descriptorCount@ /must/ be an integer multiple of @4@
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER',
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
@@ -1156,7 +1123,7 @@ instance Zero DescriptorImageInfo where
 --     @pImageInfo@ /must/ be a valid pointer to an array of
 --     @descriptorCount@ valid 'DescriptorImageInfo' structures
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER',
@@ -1164,7 +1131,7 @@ instance Zero DescriptorImageInfo where
 --     @descriptorCount@ valid 'Graphics.Vulkan.Core10.Handles.BufferView'
 --     handles
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER',
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER',
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
@@ -1173,54 +1140,50 @@ instance Zero DescriptorImageInfo where
 --     @pBufferInfo@ /must/ be a valid pointer to an array of
 --     @descriptorCount@ valid 'DescriptorBufferInfo' structures
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     and @dstSet@ was not allocated with a layout that included immutable
---     samplers for @dstBinding@ with
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType', the
---     'Graphics.Vulkan.Core10.Handles.Sampler' member of each element of
---     @pImageInfo@ /must/ be a valid
+--     samplers for @dstBinding@ with @descriptorType@, the @sampler@
+--     member of each element of @pImageInfo@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Sampler' object
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     or
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
---     the 'Graphics.Vulkan.Core10.Handles.ImageView' and
---     'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout' members of
---     each element of @pImageInfo@ /must/ be a valid
+--     the @imageView@ and @imageLayout@ members of each element of
+--     @pImageInfo@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.ImageView' and
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout', respectively
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT',
 --     the @pNext@ chain /must/ include a
 --     'Graphics.Vulkan.Extensions.VK_EXT_inline_uniform_block.WriteDescriptorSetInlineUniformBlockEXT'
 --     structure whose @dataSize@ member equals @descriptorCount@
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV',
 --     the @pNext@ chain /must/ include a
 --     'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.WriteDescriptorSetAccelerationStructureNV'
 --     structure whose @accelerationStructureCount@ member equals
 --     @descriptorCount@
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
---     then the 'Graphics.Vulkan.Core10.Handles.ImageView' member of each
---     @pImageInfo@ element /must/ have been created without a
+--     then the @imageView@ member of each @pImageInfo@ element /must/ have
+--     been created without a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --     structure in its @pNext@ chain
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
---     and if any element of @pImageInfo@ has a
---     'Graphics.Vulkan.Core10.Handles.ImageView' member that was created
---     with a
+--     and if any element of @pImageInfo@ has a @imageView@ member that was
+--     created with a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --     structure in its @pNext@ chain, then @dstSet@ /must/ have been
 --     allocated with a layout that included immutable samplers for
@@ -1229,12 +1192,12 @@ instance Zero DescriptorImageInfo where
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --     object
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
 --     and @dstSet@ was allocated with a layout that included immutable
---     samplers for @dstBinding@, then the
---     'Graphics.Vulkan.Core10.Handles.ImageView' member of each element of
---     @pImageInfo@ which corresponds to an immutable sampler that enables
+--     samplers for @dstBinding@, then the @imageView@ member of each
+--     element of @pImageInfo@ which corresponds to an immutable sampler
+--     that enables
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
 --     /must/ have been created with a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
@@ -1242,15 +1205,14 @@ instance Zero DescriptorImageInfo where
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionInfo'
 --     to the corresponding immutable sampler
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     for each descriptor that will be accessed via load or store
---     operations the
---     'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout' member for
---     corresponding elements of @pImageInfo@ /must/ be
+--     operations the @imageLayout@ member for corresponding elements of
+--     @pImageInfo@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.ImageLayout.IMAGE_LAYOUT_GENERAL'
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
@@ -1258,7 +1220,7 @@ instance Zero DescriptorImageInfo where
 --     multiple of
 --     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@minUniformBufferOffsetAlignment@
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC',
@@ -1266,36 +1228,36 @@ instance Zero DescriptorImageInfo where
 --     multiple of
 --     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@minStorageBufferOffsetAlignment@
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER',
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER',
 --     or
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC',
---     and the 'Graphics.Vulkan.Core10.Handles.Buffer' member of any
---     element of @pBufferInfo@ is the handle of a non-sparse buffer, then
---     that buffer /must/ be bound completely and contiguously to a single
+--     and the @buffer@ member of any element of @pBufferInfo@ is the
+--     handle of a non-sparse buffer, then that buffer /must/ be bound
+--     completely and contiguously to a single
 --     'Graphics.Vulkan.Core10.Handles.DeviceMemory' object
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
---     the 'Graphics.Vulkan.Core10.Handles.Buffer' member of each element
---     of @pBufferInfo@ /must/ have been created with
+--     the @buffer@ member of each element of @pBufferInfo@ /must/ have
+--     been created with
 --     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_UNIFORM_BUFFER_BIT'
 --     set
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC',
---     the 'Graphics.Vulkan.Core10.Handles.Buffer' member of each element
---     of @pBufferInfo@ /must/ have been created with
+--     the @buffer@ member of each element of @pBufferInfo@ /must/ have
+--     been created with
 --     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_BUFFER_BIT'
 --     set
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC',
@@ -1305,7 +1267,7 @@ instance Zero DescriptorImageInfo where
 --     than or equal to
 --     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxUniformBufferRange@
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC',
@@ -1315,59 +1277,58 @@ instance Zero DescriptorImageInfo where
 --     than or equal to
 --     'Graphics.Vulkan.Core10.DeviceInitialization.PhysicalDeviceLimits'::@maxStorageBufferRange@
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER',
 --     the 'Graphics.Vulkan.Core10.Handles.Buffer' that each element of
 --     @pTexelBufferView@ was created from /must/ have been created with
 --     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT'
 --     set
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER',
 --     the 'Graphics.Vulkan.Core10.Handles.Buffer' that each element of
 --     @pTexelBufferView@ was created from /must/ have been created with
 --     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT'
 --     set
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
---     the 'Graphics.Vulkan.Core10.Handles.ImageView' member of each
---     element of @pImageInfo@ /must/ have been created with the identity
---     swizzle
+--     the @imageView@ member of each element of @pImageInfo@ /must/ have
+--     been created with the identity swizzle
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
---     the 'Graphics.Vulkan.Core10.Handles.ImageView' member of each
---     element of @pImageInfo@ /must/ have been created with
+--     the @imageView@ member of each element of @pImageInfo@ /must/ have
+--     been created with
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT'
 --     set
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
---     the 'Graphics.Vulkan.Core10.Enums.ImageLayout.ImageLayout' member of
---     each element of @pImageInfo@ /must/ be a member of the list given in
+--     the @imageLayout@ member of each element of @pImageInfo@ /must/ be a
+--     member of the list given in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-sampledimage Sampled Image>
 --     or
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#descriptorsets-combinedimagesampler Combined Image Sampler>,
 --     corresponding to its type
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT',
---     the 'Graphics.Vulkan.Core10.Handles.ImageView' member of each
---     element of @pImageInfo@ /must/ have been created with
+--     the @imageView@ member of each element of @pImageInfo@ /must/ have
+--     been created with
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_INPUT_ATTACHMENT_BIT'
 --     set
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
---     the 'Graphics.Vulkan.Core10.Handles.ImageView' member of each
---     element of @pImageInfo@ /must/ have been created with
+--     the @imageView@ member of each element of @pImageInfo@ /must/ have
+--     been created with
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_STORAGE_BIT'
 --     set
 --
@@ -1376,7 +1337,7 @@ instance Zero DescriptorImageInfo where
 --     have identical
 --     'Graphics.Vulkan.Core12.Enums.DescriptorBindingFlagBits.DescriptorBindingFlagBits'.
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER',
 --     then @dstSet@ /must/ not have been allocated with a layout that
 --     included immutable samplers for @dstBinding@
@@ -1396,8 +1357,7 @@ instance Zero DescriptorImageInfo where
 -- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
 --     unique
 --
--- -   'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' /must/
---     be a valid
+-- -   @descriptorType@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' value
 --
 -- -   @descriptorCount@ /must/ be greater than @0@
@@ -1429,7 +1389,7 @@ data WriteDescriptorSet (es :: [Type]) = WriteDescriptorSet
     -- then @dstArrayElement@ specifies the starting byte offset within the
     -- binding.
     dstArrayElement :: Word32
-  , -- | 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is a
+  , -- | @descriptorType@ is a
     -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' specifying
     -- the type of each descriptor in @pImageInfo@, @pBufferInfo@, or
     -- @pTexelBufferView@, as described below. It /must/ be the same type as
@@ -1742,8 +1702,7 @@ instance Zero CopyDescriptorSet where
 -- = Description
 --
 -- -   @pImmutableSamplers@ affects initialization of samplers. If
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType'
---     specifies a
+--     @descriptorType@ specifies a
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
@@ -1763,21 +1722,19 @@ instance Zero CopyDescriptorSet where
 --     set layout and any descriptor pools and sets created using it. If
 --     @pImmutableSamplers@ is @NULL@, then the sampler slots are dynamic
 --     and sampler handles /must/ be bound into descriptor sets using this
---     layout. If
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is not
---     one of these descriptor types, then @pImmutableSamplers@ is ignored.
+--     layout. If @descriptorType@ is not one of these descriptor types,
+--     then @pImmutableSamplers@ is ignored.
 --
 -- The above layout definition allows the descriptor bindings to be
 -- specified sparsely such that not all binding numbers between 0 and the
 -- maximum binding number need to be specified in the @pBindings@ array.
 -- Bindings that are not specified have a @descriptorCount@ and
--- @stageFlags@ of zero, and the value of
--- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
--- undefined. However, all binding numbers between 0 and the maximum
--- binding number in the 'DescriptorSetLayoutCreateInfo'::@pBindings@ array
--- /may/ consume memory in the descriptor set layout even if not all
--- descriptor bindings are used, though it /should/ not consume additional
--- memory from the descriptor pool.
+-- @stageFlags@ of zero, and the value of @descriptorType@ is undefined.
+-- However, all binding numbers between 0 and the maximum binding number in
+-- the 'DescriptorSetLayoutCreateInfo'::@pBindings@ array /may/ consume
+-- memory in the descriptor set layout even if not all descriptor bindings
+-- are used, though it /should/ not consume additional memory from the
+-- descriptor pool.
 --
 -- Note
 --
@@ -1786,7 +1743,7 @@ instance Zero CopyDescriptorSet where
 --
 -- == Valid Usage
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLER'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
@@ -1795,11 +1752,11 @@ instance Zero CopyDescriptorSet where
 --     of @descriptorCount@ valid 'Graphics.Vulkan.Core10.Handles.Sampler'
 --     handles
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
 --     then @descriptorCount@ /must/ be a multiple of @4@
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
 --     then @descriptorCount@ /must/ be less than or equal to
 --     'Graphics.Vulkan.Extensions.VK_EXT_inline_uniform_block.PhysicalDeviceInlineUniformBlockPropertiesEXT'::@maxInlineUniformBlockSize@
@@ -1809,15 +1766,14 @@ instance Zero CopyDescriptorSet where
 --     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits'
 --     values
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   If @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INPUT_ATTACHMENT'
 --     and @descriptorCount@ is not @0@, then @stageFlags@ /must/ be @0@ or
 --     'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.SHADER_STAGE_FRAGMENT_BIT'
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' /must/
---     be a valid
+-- -   @descriptorType@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' value
 --
 -- = See Also
@@ -1830,7 +1786,7 @@ data DescriptorSetLayoutBinding = DescriptorSetLayoutBinding
   { -- | @binding@ is the binding number of this entry and corresponds to a
     -- resource of the same binding number in the shader stages.
     binding :: Word32
-  , -- | 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is a
+  , -- | @descriptorType@ is a
     -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' specifying
     -- which type of resource descriptors are used for this binding.
     descriptorType :: DescriptorType
@@ -1906,21 +1862,21 @@ instance Zero DescriptorSetLayoutBinding where
 -- -   The 'DescriptorSetLayoutBinding'::@binding@ members of the elements
 --     of the @pBindings@ array /must/ each have different values.
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+-- -   If @flags@ contains
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',
---     then all elements of @pBindings@ /must/ not have a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+--     then all elements of @pBindings@ /must/ not have a @descriptorType@
+--     of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+-- -   If @flags@ contains
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',
---     then all elements of @pBindings@ /must/ not have a
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+--     then all elements of @pBindings@ /must/ not have a @descriptorType@
+--     of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+-- -   If @flags@ contains
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR',
 --     then the total number of elements of all bindings /must/ be less
 --     than or equal to
@@ -1928,13 +1884,12 @@ instance Zero DescriptorSetLayoutBinding where
 --
 -- -   If any binding has the
 --     'Graphics.Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
---     bit set, 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ include
+--     bit set, @flags@ /must/ include
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
 --
 -- -   If any binding has the
 --     'Graphics.Vulkan.Core12.Enums.DescriptorBindingFlagBits.DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT'
---     bit set, then all bindings /must/ not have
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' of
+--     bit set, then all bindings /must/ not have @descriptorType@ of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC'
@@ -1950,8 +1905,7 @@ instance Zero DescriptorSetLayoutBinding where
 -- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
 --     unique
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of
+-- -   @flags@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DescriptorSetLayoutCreateFlagBits'
 --     values
 --
@@ -1970,7 +1924,7 @@ instance Zero DescriptorSetLayoutBinding where
 data DescriptorSetLayoutCreateInfo (es :: [Type]) = DescriptorSetLayoutCreateInfo
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
     next :: Chain es
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+  , -- | @flags@ is a bitmask of
     -- 'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DescriptorSetLayoutCreateFlagBits'
     -- specifying options for descriptor set layout creation.
     flags :: DescriptorSetLayoutCreateFlags
@@ -2138,7 +2092,7 @@ instance Zero DescriptorPoolSize where
 -- /can/ create an additional descriptor pool to perform further descriptor
 -- set allocations.
 --
--- If 'Graphics.Vulkan.Core10.BaseType.Flags' has the
+-- If @flags@ has the
 -- 'Graphics.Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
 -- bit set, descriptor pool creation /may/ fail with the error
 -- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_FRAGMENTATION' if the total
@@ -2161,8 +2115,7 @@ instance Zero DescriptorPoolSize where
 -- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
 --     unique
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of
+-- -   @flags@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DescriptorPoolCreateFlagBits'
 --     values
 --
@@ -2180,7 +2133,7 @@ instance Zero DescriptorPoolSize where
 data DescriptorPoolCreateInfo (es :: [Type]) = DescriptorPoolCreateInfo
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
     next :: Chain es
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+  , -- | @flags@ is a bitmask of
     -- 'Graphics.Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DescriptorPoolCreateFlagBits'
     -- specifying certain supported operations on the pool.
     flags :: DescriptorPoolCreateFlags
@@ -2260,8 +2213,7 @@ instance es ~ '[] => Zero (DescriptorPoolCreateInfo es) where
 --
 -- -   If any element of @pSetLayouts@ was created with the
 --     'Graphics.Vulkan.Core10.Enums.DescriptorSetLayoutCreateFlagBits.DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT'
---     bit set, 'Graphics.Vulkan.Core10.Handles.DescriptorPool' /must/ have
---     been created with the
+--     bit set, @descriptorPool@ /must/ have been created with the
 --     'Graphics.Vulkan.Core10.Enums.DescriptorPoolCreateFlagBits.DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT'
 --     flag set
 --
@@ -2276,7 +2228,7 @@ instance es ~ '[] => Zero (DescriptorPoolCreateInfo es) where
 -- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
 --     unique
 --
--- -   'Graphics.Vulkan.Core10.Handles.DescriptorPool' /must/ be a valid
+-- -   @descriptorPool@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.DescriptorPool' handle
 --
 -- -   @pSetLayouts@ /must/ be a valid pointer to an array of
@@ -2285,9 +2237,9 @@ instance es ~ '[] => Zero (DescriptorPoolCreateInfo es) where
 --
 -- -   @descriptorSetCount@ /must/ be greater than @0@
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.DescriptorPool', and the
---     elements of @pSetLayouts@ /must/ have been created, allocated, or
---     retrieved from the same 'Graphics.Vulkan.Core10.Handles.Device'
+-- -   Both of @descriptorPool@, and the elements of @pSetLayouts@ /must/
+--     have been created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- = See Also
 --
@@ -2298,8 +2250,7 @@ instance es ~ '[] => Zero (DescriptorPoolCreateInfo es) where
 data DescriptorSetAllocateInfo (es :: [Type]) = DescriptorSetAllocateInfo
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
     next :: Chain es
-  , -- | 'Graphics.Vulkan.Core10.Handles.DescriptorPool' is the pool which the
-    -- sets will be allocated from.
+  , -- | @descriptorPool@ is the pool which the sets will be allocated from.
     descriptorPool :: DescriptorPool
   , -- | @pSetLayouts@ is a pointer to an array of descriptor set layouts, with
     -- each member specifying how the corresponding descriptor set is

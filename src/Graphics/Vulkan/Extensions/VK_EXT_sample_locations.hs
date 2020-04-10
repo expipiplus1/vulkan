@@ -15,6 +15,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_sample_locations  ( cmdSetSampleLocatio
                                                            , pattern EXT_SAMPLE_LOCATIONS_EXTENSION_NAME
                                                            ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -23,6 +24,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CFloat)
@@ -78,8 +80,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command will be recorded.
+-- -   @commandBuffer@ is the command buffer into which the command will be
+--     recorded.
 --
 -- -   @pSampleLocationsInfo@ is the sample locations state to set.
 --
@@ -102,27 +104,25 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pSampleLocationsInfo@ /must/ be a valid pointer to a valid
 --     'SampleLocationsInfoEXT' structure
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics operations
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -138,8 +138,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer', 'SampleLocationsInfoEXT'
-cmdSetSampleLocationsEXT :: CommandBuffer -> SampleLocationsInfoEXT -> IO ()
-cmdSetSampleLocationsEXT commandBuffer sampleLocationsInfo = evalContT $ do
+cmdSetSampleLocationsEXT :: forall io . MonadIO io => CommandBuffer -> SampleLocationsInfoEXT -> io ()
+cmdSetSampleLocationsEXT commandBuffer sampleLocationsInfo = liftIO . evalContT $ do
   let vkCmdSetSampleLocationsEXT' = mkVkCmdSetSampleLocationsEXT (pVkCmdSetSampleLocationsEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   pSampleLocationsInfo <- ContT $ withCStruct (sampleLocationsInfo)
   lift $ vkCmdSetSampleLocationsEXT' (commandBufferHandle (commandBuffer)) pSampleLocationsInfo
@@ -158,9 +158,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device from which to query the additional multisampling
---     capabilities.
+-- -   @physicalDevice@ is the physical device from which to query the
+--     additional multisampling capabilities.
 --
 -- -   @samples@ is the sample count to query the capabilities for.
 --
@@ -176,8 +175,8 @@ foreign import ccall
 -- 'MultisamplePropertiesEXT',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Graphics.Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits'
-getPhysicalDeviceMultisamplePropertiesEXT :: PhysicalDevice -> ("samples" ::: SampleCountFlagBits) -> IO (MultisamplePropertiesEXT)
-getPhysicalDeviceMultisamplePropertiesEXT physicalDevice samples = evalContT $ do
+getPhysicalDeviceMultisamplePropertiesEXT :: forall io . MonadIO io => PhysicalDevice -> ("samples" ::: SampleCountFlagBits) -> io (MultisamplePropertiesEXT)
+getPhysicalDeviceMultisamplePropertiesEXT physicalDevice samples = liftIO . evalContT $ do
   let vkGetPhysicalDeviceMultisamplePropertiesEXT' = mkVkGetPhysicalDeviceMultisamplePropertiesEXT (pVkGetPhysicalDeviceMultisamplePropertiesEXT (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPMultisampleProperties <- ContT (withZeroCStruct @MultisamplePropertiesEXT)
   lift $ vkGetPhysicalDeviceMultisamplePropertiesEXT' (physicalDeviceHandle (physicalDevice)) (samples) (pPMultisampleProperties)
@@ -372,7 +371,7 @@ data AttachmentSampleLocationsEXT = AttachmentSampleLocationsEXT
   { -- | @attachmentIndex@ /must/ be less than the @attachmentCount@ specified in
     -- 'Graphics.Vulkan.Core10.Pass.RenderPassCreateInfo' the render pass
     -- specified by
-    -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo'::'Graphics.Vulkan.Core10.Handles.RenderPass'
+    -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo'::@renderPass@
     -- was created with
     attachmentIndex :: Word32
   , -- | @sampleLocationsInfo@ /must/ be a valid 'SampleLocationsInfoEXT'
@@ -431,7 +430,7 @@ data SubpassSampleLocationsEXT = SubpassSampleLocationsEXT
   { -- | @subpassIndex@ /must/ be less than the @subpassCount@ specified in
     -- 'Graphics.Vulkan.Core10.Pass.RenderPassCreateInfo' the render pass
     -- specified by
-    -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo'::'Graphics.Vulkan.Core10.Handles.RenderPass'
+    -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.RenderPassBeginInfo'::@renderPass@
     -- was created with
     subpassIndex :: Word32
   , -- | @sampleLocationsInfo@ /must/ be a valid 'SampleLocationsInfoEXT'

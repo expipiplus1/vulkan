@@ -44,6 +44,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_display  ( getPhysicalDeviceDisplayProp
                                                   ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -65,6 +66,7 @@ import Data.ByteString (useAsCString)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -140,8 +142,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is a physical
---     device.
+-- -   @physicalDevice@ is a physical device.
 --
 -- -   @pPropertyCount@ is a pointer to an integer related to the number of
 --     display devices available or queried, as described below.
@@ -152,23 +153,21 @@ foreign import ccall
 -- = Description
 --
 -- If @pProperties@ is @NULL@, then the number of display devices available
--- for 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is returned in
--- @pPropertyCount@. Otherwise, @pPropertyCount@ /must/ point to a variable
--- set by the user to the number of elements in the @pProperties@ array,
--- and on return the variable is overwritten with the number of structures
--- actually written to @pProperties@. If the value of @pPropertyCount@ is
--- less than the number of display devices for
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', at most
--- @pPropertyCount@ structures will be written. If @pPropertyCount@ is
--- smaller than the number of display devices available for
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
+-- for @physicalDevice@ is returned in @pPropertyCount@. Otherwise,
+-- @pPropertyCount@ /must/ point to a variable set by the user to the
+-- number of elements in the @pProperties@ array, and on return the
+-- variable is overwritten with the number of structures actually written
+-- to @pProperties@. If the value of @pPropertyCount@ is less than the
+-- number of display devices for @physicalDevice@, at most @pPropertyCount@
+-- structures will be written. If @pPropertyCount@ is smaller than the
+-- number of display devices available for @physicalDevice@,
 -- 'Graphics.Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned
 -- instead of 'Graphics.Vulkan.Core10.Enums.Result.SUCCESS' to indicate
 -- that not all the available values were returned.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
@@ -194,8 +193,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'DisplayPropertiesKHR', 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceDisplayPropertiesKHR :: PhysicalDevice -> IO (Result, ("properties" ::: Vector DisplayPropertiesKHR))
-getPhysicalDeviceDisplayPropertiesKHR physicalDevice = evalContT $ do
+getPhysicalDeviceDisplayPropertiesKHR :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("properties" ::: Vector DisplayPropertiesKHR))
+getPhysicalDeviceDisplayPropertiesKHR physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceDisplayPropertiesKHR' = mkVkGetPhysicalDeviceDisplayPropertiesKHR (pVkGetPhysicalDeviceDisplayPropertiesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -223,8 +222,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is a physical
---     device.
+-- -   @physicalDevice@ is a physical device.
 --
 -- -   @pPropertyCount@ is a pointer to an integer related to the number of
 --     display planes available or queried, as described below.
@@ -235,18 +233,17 @@ foreign import ccall
 -- = Description
 --
 -- If @pProperties@ is @NULL@, then the number of display planes available
--- for 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is returned in
--- @pPropertyCount@. Otherwise, @pPropertyCount@ /must/ point to a variable
--- set by the user to the number of elements in the @pProperties@ array,
--- and on return the variable is overwritten with the number of structures
--- actually written to @pProperties@. If the value of @pPropertyCount@ is
--- less than the number of display planes for
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', at most
--- @pPropertyCount@ structures will be written.
+-- for @physicalDevice@ is returned in @pPropertyCount@. Otherwise,
+-- @pPropertyCount@ /must/ point to a variable set by the user to the
+-- number of elements in the @pProperties@ array, and on return the
+-- variable is overwritten with the number of structures actually written
+-- to @pProperties@. If the value of @pPropertyCount@ is less than the
+-- number of display planes for @physicalDevice@, at most @pPropertyCount@
+-- structures will be written.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
@@ -274,8 +271,8 @@ foreign import ccall
 --
 -- 'DisplayPlanePropertiesKHR',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceDisplayPlanePropertiesKHR :: PhysicalDevice -> IO (Result, ("properties" ::: Vector DisplayPlanePropertiesKHR))
-getPhysicalDeviceDisplayPlanePropertiesKHR physicalDevice = evalContT $ do
+getPhysicalDeviceDisplayPlanePropertiesKHR :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("properties" ::: Vector DisplayPlanePropertiesKHR))
+getPhysicalDeviceDisplayPlanePropertiesKHR physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceDisplayPlanePropertiesKHR' = mkVkGetPhysicalDeviceDisplayPlanePropertiesKHR (pVkGetPhysicalDeviceDisplayPlanePropertiesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -303,8 +300,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is a physical
---     device.
+-- -   @physicalDevice@ is a physical device.
 --
 -- -   @planeIndex@ is the plane which the application wishes to use, and
 --     /must/ be in the range [0, physical device plane count - 1].
@@ -318,20 +314,17 @@ foreign import ccall
 -- = Description
 --
 -- If @pDisplays@ is @NULL@, then the number of displays usable with the
--- specified @planeIndex@ for
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is returned in
+-- specified @planeIndex@ for @physicalDevice@ is returned in
 -- @pDisplayCount@. Otherwise, @pDisplayCount@ /must/ point to a variable
 -- set by the user to the number of elements in the @pDisplays@ array, and
 -- on return the variable is overwritten with the number of handles
 -- actually written to @pDisplays@. If the value of @pDisplayCount@ is less
--- than the number of display planes for
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', at most @pDisplayCount@
--- handles will be written. If @pDisplayCount@ is smaller than the number
--- of displays usable with the specified @planeIndex@ for
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
--- 'Graphics.Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned
--- instead of 'Graphics.Vulkan.Core10.Enums.Result.SUCCESS' to indicate
--- that not all the available values were returned.
+-- than the number of display planes for @physicalDevice@, at most
+-- @pDisplayCount@ handles will be written. If @pDisplayCount@ is smaller
+-- than the number of displays usable with the specified @planeIndex@ for
+-- @physicalDevice@, 'Graphics.Vulkan.Core10.Enums.Result.INCOMPLETE' will
+-- be returned instead of 'Graphics.Vulkan.Core10.Enums.Result.SUCCESS' to
+-- indicate that not all the available values were returned.
 --
 -- == Valid Usage
 --
@@ -341,7 +334,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pDisplayCount@ /must/ be a valid pointer to a @uint32_t@ value
@@ -369,8 +362,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getDisplayPlaneSupportedDisplaysKHR :: PhysicalDevice -> ("planeIndex" ::: Word32) -> IO (Result, ("displays" ::: Vector DisplayKHR))
-getDisplayPlaneSupportedDisplaysKHR physicalDevice planeIndex = evalContT $ do
+getDisplayPlaneSupportedDisplaysKHR :: forall io . MonadIO io => PhysicalDevice -> ("planeIndex" ::: Word32) -> io (Result, ("displays" ::: Vector DisplayKHR))
+getDisplayPlaneSupportedDisplaysKHR physicalDevice planeIndex = liftIO . evalContT $ do
   let vkGetDisplayPlaneSupportedDisplaysKHR' = mkVkGetDisplayPlaneSupportedDisplaysKHR (pVkGetDisplayPlaneSupportedDisplaysKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPDisplayCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -397,12 +390,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device associated with
---     'Graphics.Vulkan.Extensions.WSITypes.Display'.
+-- -   @physicalDevice@ is the physical device associated with @display@.
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' is the display to
---     query.
+-- -   @display@ is the display to query.
 --
 -- -   @pPropertyCount@ is a pointer to an integer related to the number of
 --     display modes available or queried, as described below.
@@ -413,28 +403,25 @@ foreign import ccall
 -- = Description
 --
 -- If @pProperties@ is @NULL@, then the number of display modes available
--- on the specified 'Graphics.Vulkan.Extensions.WSITypes.Display' for
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is returned in
+-- on the specified @display@ for @physicalDevice@ is returned in
 -- @pPropertyCount@. Otherwise, @pPropertyCount@ /must/ point to a variable
 -- set by the user to the number of elements in the @pProperties@ array,
 -- and on return the variable is overwritten with the number of structures
 -- actually written to @pProperties@. If the value of @pPropertyCount@ is
--- less than the number of display modes for
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', at most
+-- less than the number of display modes for @physicalDevice@, at most
 -- @pPropertyCount@ structures will be written. If @pPropertyCount@ is
 -- smaller than the number of display modes available on the specified
--- 'Graphics.Vulkan.Extensions.WSITypes.Display' for
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
+-- @display@ for @physicalDevice@,
 -- 'Graphics.Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned
 -- instead of 'Graphics.Vulkan.Core10.Enums.Result.SUCCESS' to indicate
 -- that not all the available values were returned.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' /must/ be a valid
+-- -   @display@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.DisplayKHR' handle
 --
 -- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
@@ -444,9 +431,8 @@ foreign import ccall
 --     to an array of @pPropertyCount@ 'DisplayModePropertiesKHR'
 --     structures
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' /must/ have been
---     created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
+-- -   @display@ /must/ have been created, allocated, or retrieved from
+--     @physicalDevice@
 --
 -- == Return Codes
 --
@@ -467,8 +453,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Extensions.Handles.DisplayKHR',
 -- 'DisplayModePropertiesKHR',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getDisplayModePropertiesKHR :: PhysicalDevice -> DisplayKHR -> IO (Result, ("properties" ::: Vector DisplayModePropertiesKHR))
-getDisplayModePropertiesKHR physicalDevice display = evalContT $ do
+getDisplayModePropertiesKHR :: forall io . MonadIO io => PhysicalDevice -> DisplayKHR -> io (Result, ("properties" ::: Vector DisplayModePropertiesKHR))
+getDisplayModePropertiesKHR physicalDevice display = liftIO . evalContT $ do
   let vkGetDisplayModePropertiesKHR' = mkVkGetDisplayModePropertiesKHR (pVkGetDisplayModePropertiesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -495,12 +481,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device associated with
---     'Graphics.Vulkan.Extensions.WSITypes.Display'.
+-- -   @physicalDevice@ is the physical device associated with @display@.
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' is the display to
---     create an additional mode for.
+-- -   @display@ is the display to create an additional mode for.
 --
 -- -   @pCreateInfo@ is a 'DisplayModeCreateInfoKHR' structure describing
 --     the new mode to create.
@@ -514,10 +497,10 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' /must/ be a valid
+-- -   @display@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.DisplayKHR' handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
@@ -531,14 +514,12 @@ foreign import ccall
 -- -   @pMode@ /must/ be a valid pointer to a
 --     'Graphics.Vulkan.Extensions.Handles.DisplayModeKHR' handle
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' /must/ have been
---     created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
+-- -   @display@ /must/ have been created, allocated, or retrieved from
+--     @physicalDevice@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Extensions.WSITypes.Display' /must/
---     be externally synchronized
+-- -   Host access to @display@ /must/ be externally synchronized
 --
 -- == Return Codes
 --
@@ -561,8 +542,8 @@ foreign import ccall
 -- 'DisplayModeCreateInfoKHR',
 -- 'Graphics.Vulkan.Extensions.Handles.DisplayModeKHR',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-createDisplayModeKHR :: PhysicalDevice -> DisplayKHR -> DisplayModeCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (DisplayModeKHR)
-createDisplayModeKHR physicalDevice display createInfo allocator = evalContT $ do
+createDisplayModeKHR :: forall io . MonadIO io => PhysicalDevice -> DisplayKHR -> DisplayModeCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DisplayModeKHR)
+createDisplayModeKHR physicalDevice display createInfo allocator = liftIO . evalContT $ do
   let vkCreateDisplayModeKHR' = mkVkCreateDisplayModeKHR (pVkCreateDisplayModeKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -587,8 +568,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device associated with 'Graphics.Vulkan.Extensions.WSITypes.Display'
+-- -   @physicalDevice@ is the physical device associated with @display@
 --
 -- -   @mode@ is the display mode the application intends to program when
 --     using the specified plane. Note this parameter also implicitly
@@ -603,7 +583,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @mode@ /must/ be a valid
@@ -633,8 +613,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Extensions.Handles.DisplayModeKHR',
 -- 'DisplayPlaneCapabilitiesKHR',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getDisplayPlaneCapabilitiesKHR :: PhysicalDevice -> DisplayModeKHR -> ("planeIndex" ::: Word32) -> IO (DisplayPlaneCapabilitiesKHR)
-getDisplayPlaneCapabilitiesKHR physicalDevice mode planeIndex = evalContT $ do
+getDisplayPlaneCapabilitiesKHR :: forall io . MonadIO io => PhysicalDevice -> DisplayModeKHR -> ("planeIndex" ::: Word32) -> io (DisplayPlaneCapabilitiesKHR)
+getDisplayPlaneCapabilitiesKHR physicalDevice mode planeIndex = liftIO . evalContT $ do
   let vkGetDisplayPlaneCapabilitiesKHR' = mkVkGetDisplayPlaneCapabilitiesKHR (pVkGetDisplayPlaneCapabilitiesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPCapabilities <- ContT (withZeroCStruct @DisplayPlaneCapabilitiesKHR)
   r <- lift $ vkGetDisplayPlaneCapabilitiesKHR' (physicalDeviceHandle (physicalDevice)) (mode) (planeIndex) (pPCapabilities)
@@ -656,8 +636,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' is the instance
---     corresponding to the physical device the targeted display is on.
+-- -   @instance@ is the instance corresponding to the physical device the
+--     targeted display is on.
 --
 -- -   @pCreateInfo@ is a pointer to a 'DisplaySurfaceCreateInfoKHR'
 --     structure specifying which mode, plane, and other parameters to use,
@@ -674,7 +654,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+-- -   @instance@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
@@ -706,8 +686,8 @@ foreign import ccall
 -- 'DisplaySurfaceCreateInfoKHR',
 -- 'Graphics.Vulkan.Core10.Handles.Instance',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'
-createDisplayPlaneSurfaceKHR :: Instance -> DisplaySurfaceCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (SurfaceKHR)
-createDisplayPlaneSurfaceKHR instance' createInfo allocator = evalContT $ do
+createDisplayPlaneSurfaceKHR :: forall io . MonadIO io => Instance -> DisplaySurfaceCreateInfoKHR -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
+createDisplayPlaneSurfaceKHR instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateDisplayPlaneSurfaceKHR' = mkVkCreateDisplayPlaneSurfaceKHR (pVkCreateDisplayPlaneSurfaceKHR (instanceCmds (instance' :: Instance)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -744,15 +724,14 @@ createDisplayPlaneSurfaceKHR instance' createInfo allocator = evalContT $ do
 -- 'Graphics.Vulkan.Core10.SharedTypes.Extent2D',
 -- 'SurfaceTransformFlagsKHR', 'getPhysicalDeviceDisplayPropertiesKHR'
 data DisplayPropertiesKHR = DisplayPropertiesKHR
-  { -- | 'Graphics.Vulkan.Extensions.WSITypes.Display' is a handle that is used
-    -- to refer to the display described here. This handle will be valid for
-    -- the lifetime of the Vulkan instance.
+  { -- | @display@ is a handle that is used to refer to the display described
+    -- here. This handle will be valid for the lifetime of the Vulkan instance.
     display :: DisplayKHR
   , -- | @displayName@ is a pointer to a null-terminated UTF-8 string containing
     -- the name of the display. Generally, this will be the name provided by
     -- the display’s EDID. It /can/ be @NULL@ if no suitable name is available.
     -- If not @NULL@, the memory it points to /must/ remain accessible as long
-    -- as 'Graphics.Vulkan.Extensions.WSITypes.Display' is valid.
+    -- as @display@ is valid.
     displayName :: ByteString
   , -- | @physicalDimensions@ describes the physical width and height of the
     -- visible portion of the display, in millimeters.
@@ -992,7 +971,7 @@ instance Zero DisplayModePropertiesKHR where
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createDisplayModeKHR'
 data DisplayModeCreateInfoKHR = DisplayModeCreateInfoKHR
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+  { -- | @flags@ /must/ be @0@
     flags :: DisplayModeCreateFlagsKHR
   , -- | @parameters@ /must/ be a valid 'DisplayModeParametersKHR' structure
     parameters :: DisplayModeParametersKHR
@@ -1207,7 +1186,7 @@ instance Zero DisplayPlaneCapabilitiesKHR where
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+-- -   @flags@ /must/ be @0@
 --
 -- -   @displayMode@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.DisplayModeKHR' handle
@@ -1224,8 +1203,7 @@ instance Zero DisplayPlaneCapabilitiesKHR where
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'SurfaceTransformFlagBitsKHR', 'createDisplayPlaneSurfaceKHR'
 data DisplaySurfaceCreateInfoKHR = DisplaySurfaceCreateInfoKHR
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is reserved for future use, and
-    -- /must/ be zero.
+  { -- | @flags@ is reserved for future use, and /must/ be zero.
     flags :: DisplaySurfaceCreateFlagsKHR
   , -- | @displayMode@ is a 'Graphics.Vulkan.Extensions.Handles.DisplayModeKHR'
     -- handle specifying the mode to use when displaying this surface.

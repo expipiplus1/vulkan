@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 688a88becdc3391cf6a83e15b7442e4237d00b9e8e2a47717e1145b765cab275
+-- hash: 6c12383d1a50ee3ff29c4b9943470d00a22d711604a1eca895cb37ea90175a5c
 
 name:           generate-new
 version:        0.0.0
@@ -15,11 +15,12 @@ license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
 
-executable generate
-  main-is: Main.hs
-  other-modules:
+library
+  exposed-modules:
       AssignModules
       Bespoke
+      Bespoke.MarshalParams
+      Bespoke.RenderParams
       Bespoke.Seeds
       Bespoke.Utils
       Bracket
@@ -54,7 +55,6 @@ executable generate
       Render.Names
       Render.Peek
       Render.Scheme
-      Render.Spec
       Render.Spec.Extends
       Render.Spec.Versions
       Render.SpecInfo
@@ -76,11 +76,12 @@ executable generate
       Text.InterpolatedString.Perl6.Unindented
       TrackDepends
       Write.Segment
+  other-modules:
       Paths_generate_new
   hs-source-dirs:
       src
   default-extensions: BangPatterns BinaryLiterals BlockArguments ConstraintKinds DataKinds DeriveGeneric DerivingVia DisambiguateRecordFields DuplicateRecordFields EmptyCase FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings ParallelListComp PartialTypeSignatures PatternSynonyms PolyKinds RankNTypes RecordWildCards RecursiveDo ScopedTypeVariables StandaloneDeriving TemplateHaskellQuotes TupleSections TypeApplications TypeFamilies TypeOperators ViewPatterns
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -fno-warn-unticked-promoted-constructors -fno-warn-name-shadowing -O2 -flate-specialise -fspecialise-aggressively
+  ghc-options: -Wall -fno-warn-unticked-promoted-constructors -fno-warn-name-shadowing -O2 -flate-specialise -fspecialise-aggressively
   build-depends:
       algebraic-graphs
     , ascii-progress
@@ -117,6 +118,116 @@ executable generate
     , uniplate
     , unordered-containers
     , vector
+    , vector-algorithms
+    , vector-sized
+    , word-wrap
+    , xeno
+  default-language: Haskell2010
+
+executable vk
+  main-is: Main.hs
+  other-modules:
+      VK.Bracket
+      VK.Render
+      Paths_generate_new
+  hs-source-dirs:
+      vk
+  default-extensions: BangPatterns BinaryLiterals BlockArguments ConstraintKinds DataKinds DeriveGeneric DerivingVia DisambiguateRecordFields DuplicateRecordFields EmptyCase FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings ParallelListComp PartialTypeSignatures PatternSynonyms PolyKinds RankNTypes RecordWildCards RecursiveDo ScopedTypeVariables StandaloneDeriving TemplateHaskellQuotes TupleSections TypeApplications TypeFamilies TypeOperators ViewPatterns
+  ghc-options: -Wall -fno-warn-unticked-promoted-constructors -fno-warn-name-shadowing -O2 -flate-specialise -fspecialise-aggressively -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      algebraic-graphs
+    , ascii-progress
+    , async-pool
+    , base
+    , bytestring
+    , containers
+    , data-default
+    , deepseq
+    , dependent-map
+    , dependent-sum
+    , directory
+    , extra
+    , filepath
+    , generate-new
+    , inline-c
+    , interpolatedstring-perl6
+    , mtl
+    , pandoc
+    , parsec
+    , polysemy
+    , polysemy-plugin
+    , pretty-show
+    , prettyprinter
+    , regex-applicative
+    , relude
+    , say
+    , tagsoup
+    , template-haskell
+    , text
+    , th-orphans
+    , timeit
+    , transformers
+    , typed-process
+    , uniplate
+    , unordered-containers
+    , vector
+    , vector-algorithms
+    , vector-sized
+    , word-wrap
+    , xeno
+  default-language: Haskell2010
+
+executable vma
+  main-is: Main.hs
+  other-modules:
+      VMA.Bracket
+      VMA.Documentation
+      VMA.Render
+      VMA.RenderParams
+      Paths_generate_new
+  hs-source-dirs:
+      vma
+  default-extensions: BangPatterns BinaryLiterals BlockArguments ConstraintKinds DataKinds DeriveGeneric DerivingVia DisambiguateRecordFields DuplicateRecordFields EmptyCase FlexibleContexts FlexibleInstances FunctionalDependencies GADTs GeneralizedNewtypeDeriving InstanceSigs KindSignatures LambdaCase MonadComprehensions MultiParamTypeClasses MultiWayIf NoImplicitPrelude OverloadedStrings ParallelListComp PartialTypeSignatures PatternSynonyms PolyKinds RankNTypes RecordWildCards RecursiveDo ScopedTypeVariables StandaloneDeriving TemplateHaskellQuotes TupleSections TypeApplications TypeFamilies TypeOperators ViewPatterns
+  ghc-options: -Wall -fno-warn-unticked-promoted-constructors -fno-warn-name-shadowing -O2 -flate-specialise -fspecialise-aggressively -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      algebraic-graphs
+    , ascii-progress
+    , async-pool
+    , base
+    , bytestring
+    , containers
+    , data-default
+    , deepseq
+    , dependent-map
+    , dependent-sum
+    , directory
+    , extra
+    , filepath
+    , generate-new
+    , inline-c
+    , interpolatedstring-perl6
+    , language-c
+    , mtl
+    , pandoc
+    , parsec
+    , polysemy
+    , polysemy-plugin
+    , pretty-show
+    , prettyprinter
+    , regex-applicative
+    , relude
+    , say
+    , tagsoup
+    , template-haskell
+    , text
+    , th-orphans
+    , timeit
+    , transformers
+    , typed-process
+    , uniplate
+    , unordered-containers
+    , vector
+    , vector-algorithms
     , vector-sized
     , word-wrap
     , xeno

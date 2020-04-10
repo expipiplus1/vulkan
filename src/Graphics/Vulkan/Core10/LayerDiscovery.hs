@@ -5,6 +5,7 @@ module Graphics.Vulkan.Core10.LayerDiscovery  ( enumerateInstanceLayerProperties
                                               ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -17,6 +18,7 @@ import Data.ByteString (packCString)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.Storable (Storable)
@@ -118,8 +120,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'LayerProperties'
-enumerateInstanceLayerProperties :: IO (Result, ("properties" ::: Vector LayerProperties))
-enumerateInstanceLayerProperties  = evalContT $ do
+enumerateInstanceLayerProperties :: forall io . MonadIO io => io (Result, ("properties" ::: Vector LayerProperties))
+enumerateInstanceLayerProperties  = liftIO . evalContT $ do
   vkEnumerateInstanceLayerProperties' <- lift $ mkVkEnumerateInstanceLayerProperties . castFunPtr @_ @(("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr LayerProperties) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkEnumerateInstanceLayerProperties"#)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
   r <- lift $ vkEnumerateInstanceLayerProperties' (pPPropertyCount) (nullPtr)
@@ -174,7 +176,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pPropertyCount@ /must/ be a valid pointer to a @uint32_t@ value
@@ -200,8 +202,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'LayerProperties', 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-enumerateDeviceLayerProperties :: PhysicalDevice -> IO (Result, ("properties" ::: Vector LayerProperties))
-enumerateDeviceLayerProperties physicalDevice = evalContT $ do
+enumerateDeviceLayerProperties :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("properties" ::: Vector LayerProperties))
+enumerateDeviceLayerProperties physicalDevice = liftIO . evalContT $ do
   let vkEnumerateDeviceLayerProperties' = mkVkEnumerateDeviceLayerProperties (pVkEnumerateDeviceLayerProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free

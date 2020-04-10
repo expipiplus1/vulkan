@@ -13,6 +13,7 @@ module Graphics.Vulkan.Core10.SparseResourceMemoryManagement  ( getImageSparseMe
                                                               ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -27,6 +28,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -68,9 +70,8 @@ import Graphics.Vulkan.Core10.Enums.ImageTiling (ImageTiling)
 import Graphics.Vulkan.Core10.Enums.ImageTiling (ImageTiling(..))
 import Graphics.Vulkan.Core10.Enums.ImageType (ImageType)
 import Graphics.Vulkan.Core10.Enums.ImageType (ImageType(..))
-import Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
-import Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
 import Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlagBits(..))
+import Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
 import Graphics.Vulkan.Dynamic (InstanceCmds(pVkGetPhysicalDeviceSparseImageFormatProperties))
 import Graphics.Vulkan.Core10.SharedTypes (Offset3D)
 import Graphics.Vulkan.CStruct.Extends (PeekChain)
@@ -110,12 +111,10 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the image.
+-- -   @device@ is the logical device that owns the image.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Image' is the
---     'Graphics.Vulkan.Core10.Handles.Image' object to get the memory
---     requirements for.
+-- -   @image@ is the 'Graphics.Vulkan.Core10.Handles.Image' object to get
+--     the memory requirements for.
 --
 -- -   @pSparseMemoryRequirementCount@ is a pointer to an integer related
 --     to the number of sparse memory requirements available or queried, as
@@ -154,11 +153,11 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.Image' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Image' handle
+-- -   @image@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Image'
+--     handle
 --
 -- -   @pSparseMemoryRequirementCount@ /must/ be a valid pointer to a
 --     @uint32_t@ value
@@ -169,15 +168,15 @@ foreign import ccall
 --     @pSparseMemoryRequirementCount@ 'SparseImageMemoryRequirements'
 --     structures
 --
--- -   'Graphics.Vulkan.Core10.Handles.Image' /must/ have been created,
---     allocated, or retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
+-- -   @image@ /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Image', 'SparseImageMemoryRequirements'
-getImageSparseMemoryRequirements :: Device -> Image -> IO (("sparseMemoryRequirements" ::: Vector SparseImageMemoryRequirements))
-getImageSparseMemoryRequirements device image = evalContT $ do
+getImageSparseMemoryRequirements :: forall io . MonadIO io => Device -> Image -> io (("sparseMemoryRequirements" ::: Vector SparseImageMemoryRequirements))
+getImageSparseMemoryRequirements device image = liftIO . evalContT $ do
   let vkGetImageSparseMemoryRequirements' = mkVkGetImageSparseMemoryRequirements (pVkGetImageSparseMemoryRequirements (deviceCmds (device :: Device)))
   let device' = deviceHandle (device)
   pPSparseMemoryRequirementCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -203,10 +202,10 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device from which to query the sparse image capabilities.
+-- -   @physicalDevice@ is the physical device from which to query the
+--     sparse image capabilities.
 --
--- -   'Graphics.Vulkan.Core10.Enums.Format.Format' is the image format.
+-- -   @format@ is the image format.
 --
 -- -   @type@ is the dimensionality of image.
 --
@@ -255,19 +254,17 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.DeviceInitialization.ImageFormatProperties'::@sampleCounts@
 --     returned by
 --     'Graphics.Vulkan.Core10.DeviceInitialization.getPhysicalDeviceImageFormatProperties'
---     with 'Graphics.Vulkan.Core10.Enums.Format.Format', @type@, @tiling@,
---     and @usage@ equal to those in this command and
---     'Graphics.Vulkan.Core10.BaseType.Flags' equal to the value that is
---     set in
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'
---     when the image is created
+--     with @format@, @type@, @tiling@, and @usage@ equal to those in this
+--     command and @flags@ equal to the value that is set in
+--     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@flags@ when the
+--     image is created
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
--- -   'Graphics.Vulkan.Core10.Enums.Format.Format' /must/ be a valid
+-- -   @format@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Enums.Format.Format' value
 --
 -- -   @type@ /must/ be a valid
@@ -302,8 +299,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'Graphics.Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlagBits',
 -- 'SparseImageFormatProperties'
-getPhysicalDeviceSparseImageFormatProperties :: PhysicalDevice -> Format -> ImageType -> ("samples" ::: SampleCountFlagBits) -> ImageUsageFlags -> ImageTiling -> IO (("properties" ::: Vector SparseImageFormatProperties))
-getPhysicalDeviceSparseImageFormatProperties physicalDevice format type' samples usage tiling = evalContT $ do
+getPhysicalDeviceSparseImageFormatProperties :: forall io . MonadIO io => PhysicalDevice -> Format -> ImageType -> ("samples" ::: SampleCountFlagBits) -> ImageUsageFlags -> ImageTiling -> io (("properties" ::: Vector SparseImageFormatProperties))
+getPhysicalDeviceSparseImageFormatProperties physicalDevice format type' samples usage tiling = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSparseImageFormatProperties' = mkVkGetPhysicalDeviceSparseImageFormatProperties (pVkGetPhysicalDeviceSparseImageFormatProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -328,17 +325,17 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Queue' is the queue that the sparse
---     binding operations will be submitted to.
+-- -   @queue@ is the queue that the sparse binding operations will be
+--     submitted to.
 --
 -- -   @bindInfoCount@ is the number of elements in the @pBindInfo@ array.
 --
 -- -   @pBindInfo@ is a pointer to an array of 'BindSparseInfo' structures,
 --     each specifying a sparse binding submission batch.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Fence' is an /optional/ handle to a
---     fence to be signaled. If 'Graphics.Vulkan.Core10.Handles.Fence' is
---     not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', it defines a
+-- -   @fence@ is an /optional/ handle to a fence to be signaled. If
+--     @fence@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', it
+--     defines a
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#synchronization-fences-signaling fence signal operation>.
 --
 -- = Description
@@ -366,15 +363,12 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Fence' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.Fence' /must/ be unsignaled
+-- -   If @fence@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @fence@ /must/ be unsignaled
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Fence' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.Fence' /must/ not be associated with
---     any other queue command that has not yet completed execution on that
---     queue
+-- -   If @fence@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @fence@ /must/ not be associated with any other queue command that
+--     has not yet completed execution on that queue
 --
 -- -   Each element of the @pSignalSemaphores@ member of each element of
 --     @pBindInfo@ /must/ be unsignaled when the semaphore signal operation
@@ -382,8 +376,7 @@ foreign import ccall
 --
 -- -   When a semaphore wait operation referring to a binary semaphore
 --     defined by any element of the @pWaitSemaphores@ member of any
---     element of @pBindInfo@ executes on
---     'Graphics.Vulkan.Core10.Handles.Queue', there /must/ be no other
+--     element of @pBindInfo@ executes on @queue@, there /must/ be no other
 --     queues waiting on the same semaphore.
 --
 -- -   All elements of the @pWaitSemaphores@ member of all elements of
@@ -402,29 +395,25 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Queue' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Queue' handle
+-- -   @queue@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Queue'
+--     handle
 --
 -- -   If @bindInfoCount@ is not @0@, @pBindInfo@ /must/ be a valid pointer
 --     to an array of @bindInfoCount@ valid 'BindSparseInfo' structures
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Fence' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.Fence' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Fence' handle
+-- -   If @fence@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @fence@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Fence'
+--     handle
 --
--- -   The 'Graphics.Vulkan.Core10.Handles.Queue' /must/ support sparse
---     binding operations
+-- -   The @queue@ /must/ support sparse binding operations
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.Fence', and
---     'Graphics.Vulkan.Core10.Handles.Queue' that are valid handles of
---     non-ignored parameters /must/ have been created, allocated, or
---     retrieved from the same 'Graphics.Vulkan.Core10.Handles.Device'
+-- -   Both of @fence@, and @queue@ that are valid handles of non-ignored
+--     parameters /must/ have been created, allocated, or retrieved from
+--     the same 'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.Queue' /must/ be
---     externally synchronized
+-- -   Host access to @queue@ /must/ be externally synchronized
 --
 -- -   Host access to @pBindInfo@[].pBufferBinds[].buffer /must/ be
 --     externally synchronized
@@ -435,8 +424,7 @@ foreign import ccall
 -- -   Host access to @pBindInfo@[].pImageBinds[].image /must/ be
 --     externally synchronized
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.Fence' /must/ be
---     externally synchronized
+-- -   Host access to @fence@ /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -466,8 +454,8 @@ foreign import ccall
 --
 -- 'BindSparseInfo', 'Graphics.Vulkan.Core10.Handles.Fence',
 -- 'Graphics.Vulkan.Core10.Handles.Queue'
-queueBindSparse :: PokeChain a => Queue -> ("bindInfo" ::: Vector (BindSparseInfo a)) -> Fence -> IO ()
-queueBindSparse queue bindInfo fence = evalContT $ do
+queueBindSparse :: forall a io . (PokeChain a, MonadIO io) => Queue -> ("bindInfo" ::: Vector (BindSparseInfo a)) -> Fence -> io ()
+queueBindSparse queue bindInfo fence = liftIO . evalContT $ do
   let vkQueueBindSparse' = mkVkQueueBindSparse (pVkQueueBindSparse (deviceCmds (queue :: Queue)))
   pPBindInfo <- ContT $ allocaBytesAligned @(BindSparseInfo _) ((Data.Vector.length (bindInfo)) * 96) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPBindInfo `plusPtr` (96 * (i)) :: Ptr (BindSparseInfo _)) (e) . ($ ())) (bindInfo)
@@ -494,7 +482,7 @@ data SparseImageFormatProperties = SparseImageFormatProperties
   , -- | @imageGranularity@ is the width, height, and depth of the sparse image
     -- block in texels or compressed texel blocks.
     imageGranularity :: Extent3D
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+  , -- | @flags@ is a bitmask of
     -- 'Graphics.Vulkan.Core10.Enums.SparseImageFormatFlagBits.SparseImageFormatFlagBits'
     -- specifying additional information about the sparse resource.
     flags :: SparseImageFormatFlags
@@ -607,8 +595,7 @@ instance Zero SparseImageMemoryRequirements where
 -- = Description
 --
 -- The /binding range/ [@resourceOffset@, @resourceOffset@ + @size@) has
--- different constraints based on 'Graphics.Vulkan.Core10.BaseType.Flags'.
--- If 'Graphics.Vulkan.Core10.BaseType.Flags' contains
+-- different constraints based on @flags@. If @flags@ contains
 -- 'Graphics.Vulkan.Core10.Enums.SparseMemoryBindFlagBits.SPARSE_MEMORY_BIND_METADATA_BIT',
 -- the binding range /must/ be within the mip tail region of the metadata
 -- aspect. This metadata region is defined by:
@@ -626,7 +613,7 @@ instance Zero SparseImageMemoryRequirements where
 -- 'SparseImageMemoryRequirements'::@formatProperties.flags@ contains
 -- 'Graphics.Vulkan.Core10.Enums.SparseImageFormatFlagBits.SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT'.
 --
--- If 'Graphics.Vulkan.Core10.BaseType.Flags' does not contain
+-- If @flags@ does not contain
 -- 'Graphics.Vulkan.Core10.Enums.SparseMemoryBindFlagBits.SPARSE_MEMORY_BIND_METADATA_BIT',
 -- the binding range /must/ be within the range
 -- [0,'Graphics.Vulkan.Core10.MemoryManagement.MemoryRequirements'::@size@).
@@ -679,8 +666,7 @@ instance Zero SparseImageMemoryRequirements where
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @memory@ /must/
 --     be a valid 'Graphics.Vulkan.Core10.Handles.DeviceMemory' handle
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of
+-- -   @flags@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core10.Enums.SparseMemoryBindFlagBits.SparseMemoryBindFlagBits'
 --     values
 --
@@ -705,7 +691,7 @@ data SparseMemoryBind = SparseMemoryBind
     -- 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', this value is
     -- ignored.
     memoryOffset :: DeviceSize
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+  , -- | @flags@ is a bitmask of
     -- 'Graphics.Vulkan.Core10.Enums.SparseMemoryBindFlagBits.SparseMemoryBindFlagBits'
     -- specifying usage of the binding operation.
     flags :: SparseMemoryBindFlags
@@ -766,12 +752,10 @@ instance Zero SparseMemoryBind where
 --     overlap with those bound ranges
 --
 -- -   @memory@ and @memoryOffset@ /must/ match the memory requirements of
---     the calling command’s 'Graphics.Vulkan.Core10.Handles.Image', as
---     described in section
+--     the calling command’s @image@, as described in section
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-association>
 --
--- -   @subresource@ /must/ be a valid image subresource for
---     'Graphics.Vulkan.Core10.Handles.Image' (see
+-- -   @subresource@ /must/ be a valid image subresource for @image@ (see
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#resources-image-views>)
 --
 -- -   @offset.x@ /must/ be a multiple of the sparse image block width
@@ -808,7 +792,7 @@ instance Zero SparseMemoryBind where
 -- -   If @memory@ was created by a memory import operation, the external
 --     handle type of the imported memory /must/ also have been set in
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory.ExternalMemoryImageCreateInfo'::@handleTypes@
---     when 'Graphics.Vulkan.Core10.Handles.Image' was created.
+--     when @image@ was created.
 --
 -- == Valid Usage (Implicit)
 --
@@ -819,8 +803,7 @@ instance Zero SparseMemoryBind where
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @memory@ /must/
 --     be a valid 'Graphics.Vulkan.Core10.Handles.DeviceMemory' handle
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of
+-- -   @flags@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core10.Enums.SparseMemoryBindFlagBits.SparseMemoryBindFlagBits'
 --     values
 --
@@ -856,7 +839,7 @@ data SparseImageMemoryBind = SparseImageMemoryBind
     -- 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', this value is
     -- ignored.
     memoryOffset :: DeviceSize
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' are sparse memory binding flags.
+  , -- | @flags@ are sparse memory binding flags.
     flags :: SparseMemoryBindFlags
   }
   deriving (Typeable)
@@ -912,8 +895,8 @@ instance Zero SparseImageMemoryBind where
 -- 'BindSparseInfo', 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'SparseMemoryBind'
 data SparseBufferMemoryBindInfo = SparseBufferMemoryBindInfo
-  { -- | 'Graphics.Vulkan.Core10.Handles.Buffer' /must/ be a valid
-    -- 'Graphics.Vulkan.Core10.Handles.Buffer' handle
+  { -- | @buffer@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Buffer'
+    -- handle
     buffer :: Buffer
   , -- | @pBinds@ /must/ be a valid pointer to an array of @bindCount@ valid
     -- 'SparseMemoryBind' structures
@@ -960,16 +943,15 @@ instance Zero SparseBufferMemoryBindInfo where
 --
 -- == Valid Usage
 --
--- -   If the 'Graphics.Vulkan.Core10.BaseType.Flags' member of any element
---     of @pBinds@ contains
+-- -   If the @flags@ member of any element of @pBinds@ contains
 --     'Graphics.Vulkan.Core10.Enums.SparseMemoryBindFlagBits.SPARSE_MEMORY_BIND_METADATA_BIT',
 --     the binding range defined /must/ be within the mip tail region of
---     the metadata aspect of 'Graphics.Vulkan.Core10.Handles.Image'
+--     the metadata aspect of @image@
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Image' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Image' handle
+-- -   @image@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Image'
+--     handle
 --
 -- -   @pBinds@ /must/ be a valid pointer to an array of @bindCount@ valid
 --     'SparseMemoryBind' structures
@@ -981,8 +963,8 @@ instance Zero SparseBufferMemoryBindInfo where
 -- 'BindSparseInfo', 'Graphics.Vulkan.Core10.Handles.Image',
 -- 'SparseMemoryBind'
 data SparseImageOpaqueMemoryBindInfo = SparseImageOpaqueMemoryBindInfo
-  { -- | 'Graphics.Vulkan.Core10.Handles.Image' is the
-    -- 'Graphics.Vulkan.Core10.Handles.Image' object to be bound.
+  { -- | @image@ is the 'Graphics.Vulkan.Core10.Handles.Image' object to be
+    -- bound.
     image :: Image
   , -- | @pBinds@ is a pointer to an array of 'SparseMemoryBind' structures.
     binds :: Vector SparseMemoryBind
@@ -1030,18 +1012,18 @@ instance Zero SparseImageOpaqueMemoryBindInfo where
 --
 -- -   The @subresource.mipLevel@ member of each element of @pBinds@ /must/
 --     be less than the @mipLevels@ specified in
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo' when
---     'Graphics.Vulkan.Core10.Handles.Image' was created
+--     'Graphics.Vulkan.Core10.Image.ImageCreateInfo' when @image@ was
+--     created
 --
 -- -   The @subresource.arrayLayer@ member of each element of @pBinds@
 --     /must/ be less than the @arrayLayers@ specified in
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo' when
---     'Graphics.Vulkan.Core10.Handles.Image' was created
+--     'Graphics.Vulkan.Core10.Image.ImageCreateInfo' when @image@ was
+--     created
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Image' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Image' handle
+-- -   @image@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Image'
+--     handle
 --
 -- -   @pBinds@ /must/ be a valid pointer to an array of @bindCount@ valid
 --     'SparseImageMemoryBind' structures
@@ -1053,8 +1035,7 @@ instance Zero SparseImageOpaqueMemoryBindInfo where
 -- 'BindSparseInfo', 'Graphics.Vulkan.Core10.Handles.Image',
 -- 'SparseImageMemoryBind'
 data SparseImageMemoryBindInfo = SparseImageMemoryBindInfo
-  { -- | 'Graphics.Vulkan.Core10.Handles.Image' is the
-    -- 'Graphics.Vulkan.Core10.Handles.Image' object to be bound
+  { -- | @image@ is the 'Graphics.Vulkan.Core10.Handles.Image' object to be bound
     image :: Image
   , -- | @pBinds@ is a pointer to an array of 'SparseImageMemoryBind' structures
     binds :: Vector SparseImageMemoryBind

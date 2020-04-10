@@ -46,6 +46,7 @@ module Graphics.Vulkan.Extensions.VK_INTEL_performance_query  ( initializePerfor
                                                               ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -68,6 +69,7 @@ import Data.ByteString (useAsCString)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Control.Monad.Trans.Cont (runContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
@@ -141,8 +143,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device used
---     for the queries.
+-- -   @device@ is the logical device used for the queries.
 --
 -- -   @pInitializeInfo@ is a pointer to a
 --     'InitializePerformanceApiInfoINTEL' structure specifying
@@ -164,8 +165,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'InitializePerformanceApiInfoINTEL'
-initializePerformanceApiINTEL :: Device -> ("initializeInfo" ::: InitializePerformanceApiInfoINTEL) -> IO ()
-initializePerformanceApiINTEL device initializeInfo = evalContT $ do
+initializePerformanceApiINTEL :: forall io . MonadIO io => Device -> ("initializeInfo" ::: InitializePerformanceApiInfoINTEL) -> io ()
+initializePerformanceApiINTEL device initializeInfo = liftIO . evalContT $ do
   let vkInitializePerformanceApiINTEL' = mkVkInitializePerformanceApiINTEL (pVkInitializePerformanceApiINTEL (deviceCmds (device :: Device)))
   pInitializeInfo <- ContT $ withCStruct (initializeInfo)
   r <- lift $ vkInitializePerformanceApiINTEL' (deviceHandle (device)) pInitializeInfo
@@ -184,16 +185,15 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device used
---     for the queries.
+-- -   @device@ is the logical device used for the queries.
 --
 -- == Valid Usage (Implicit)
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-uninitializePerformanceApiINTEL :: Device -> IO ()
-uninitializePerformanceApiINTEL device = do
+uninitializePerformanceApiINTEL :: forall io . MonadIO io => Device -> io ()
+uninitializePerformanceApiINTEL device = liftIO $ do
   let vkUninitializePerformanceApiINTEL' = mkVkUninitializePerformanceApiINTEL (pVkUninitializePerformanceApiINTEL (deviceCmds (device :: Device)))
   vkUninitializePerformanceApiINTEL' (deviceHandle (device))
   pure $ ()
@@ -215,24 +215,23 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pMarkerInfo@ /must/ be a valid pointer to a valid
 --     'PerformanceMarkerInfoINTEL' structure
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics, compute, or transfer operations
+--     @commandBuffer@ was allocated from /must/ support graphics, compute,
+--     or transfer operations
 --
 -- == Host Synchronization
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -262,8 +261,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'PerformanceMarkerInfoINTEL'
-cmdSetPerformanceMarkerINTEL :: CommandBuffer -> PerformanceMarkerInfoINTEL -> IO ()
-cmdSetPerformanceMarkerINTEL commandBuffer markerInfo = evalContT $ do
+cmdSetPerformanceMarkerINTEL :: forall io . MonadIO io => CommandBuffer -> PerformanceMarkerInfoINTEL -> io ()
+cmdSetPerformanceMarkerINTEL commandBuffer markerInfo = liftIO . evalContT $ do
   let vkCmdSetPerformanceMarkerINTEL' = mkVkCmdSetPerformanceMarkerINTEL (pVkCmdSetPerformanceMarkerINTEL (deviceCmds (commandBuffer :: CommandBuffer)))
   pMarkerInfo <- ContT $ withCStruct (markerInfo)
   r <- lift $ vkCmdSetPerformanceMarkerINTEL' (commandBufferHandle (commandBuffer)) pMarkerInfo
@@ -281,24 +280,23 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pMarkerInfo@ /must/ be a valid pointer to a valid
 --     'PerformanceStreamMarkerInfoINTEL' structure
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics, compute, or transfer operations
+--     @commandBuffer@ was allocated from /must/ support graphics, compute,
+--     or transfer operations
 --
 -- == Host Synchronization
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -328,8 +326,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'PerformanceStreamMarkerInfoINTEL'
-cmdSetPerformanceStreamMarkerINTEL :: CommandBuffer -> PerformanceStreamMarkerInfoINTEL -> IO ()
-cmdSetPerformanceStreamMarkerINTEL commandBuffer markerInfo = evalContT $ do
+cmdSetPerformanceStreamMarkerINTEL :: forall io . MonadIO io => CommandBuffer -> PerformanceStreamMarkerInfoINTEL -> io ()
+cmdSetPerformanceStreamMarkerINTEL commandBuffer markerInfo = liftIO . evalContT $ do
   let vkCmdSetPerformanceStreamMarkerINTEL' = mkVkCmdSetPerformanceStreamMarkerINTEL (pVkCmdSetPerformanceStreamMarkerINTEL (deviceCmds (commandBuffer :: CommandBuffer)))
   pMarkerInfo <- ContT $ withCStruct (markerInfo)
   r <- lift $ vkCmdSetPerformanceStreamMarkerINTEL' (commandBufferHandle (commandBuffer)) pMarkerInfo
@@ -347,8 +345,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     where the override takes place.
+-- -   @commandBuffer@ is the command buffer where the override takes
+--     place.
 --
 -- -   @pOverrideInfo@ is a pointer to a 'PerformanceOverrideInfoINTEL'
 --     structure selecting the parameter to override.
@@ -361,24 +359,23 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pOverrideInfo@ /must/ be a valid pointer to a valid
 --     'PerformanceOverrideInfoINTEL' structure
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics, compute, or transfer operations
+--     @commandBuffer@ was allocated from /must/ support graphics, compute,
+--     or transfer operations
 --
 -- == Host Synchronization
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -408,8 +405,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'PerformanceOverrideInfoINTEL'
-cmdSetPerformanceOverrideINTEL :: CommandBuffer -> PerformanceOverrideInfoINTEL -> IO ()
-cmdSetPerformanceOverrideINTEL commandBuffer overrideInfo = evalContT $ do
+cmdSetPerformanceOverrideINTEL :: forall io . MonadIO io => CommandBuffer -> PerformanceOverrideInfoINTEL -> io ()
+cmdSetPerformanceOverrideINTEL commandBuffer overrideInfo = liftIO . evalContT $ do
   let vkCmdSetPerformanceOverrideINTEL' = mkVkCmdSetPerformanceOverrideINTEL (pVkCmdSetPerformanceOverrideINTEL (deviceCmds (commandBuffer :: CommandBuffer)))
   pOverrideInfo <- ContT $ withCStruct (overrideInfo)
   r <- lift $ vkCmdSetPerformanceOverrideINTEL' (commandBufferHandle (commandBuffer)) pOverrideInfo
@@ -428,8 +425,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     the performance query commands will be submitted to.
+-- -   @device@ is the logical device that the performance query commands
+--     will be submitted to.
 --
 -- -   @pAcquireInfo@ is a pointer to a
 --     'PerformanceConfigurationAcquireInfoINTEL' structure, specifying the
@@ -456,8 +453,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'PerformanceConfigurationAcquireInfoINTEL',
 -- 'Graphics.Vulkan.Extensions.Handles.PerformanceConfigurationINTEL'
-acquirePerformanceConfigurationINTEL :: Device -> PerformanceConfigurationAcquireInfoINTEL -> IO (PerformanceConfigurationINTEL)
-acquirePerformanceConfigurationINTEL device acquireInfo = evalContT $ do
+acquirePerformanceConfigurationINTEL :: forall io . MonadIO io => Device -> PerformanceConfigurationAcquireInfoINTEL -> io (PerformanceConfigurationINTEL)
+acquirePerformanceConfigurationINTEL device acquireInfo = liftIO . evalContT $ do
   let vkAcquirePerformanceConfigurationINTEL' = mkVkAcquirePerformanceConfigurationINTEL (pVkAcquirePerformanceConfigurationINTEL (deviceCmds (device :: Device)))
   pAcquireInfo <- ContT $ withCStruct (acquireInfo)
   pPConfiguration <- ContT $ bracket (callocBytes @PerformanceConfigurationINTEL 8) free
@@ -479,8 +476,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the device associated to
---     the configuration object to release.
+-- -   @device@ is the device associated to the configuration object to
+--     release.
 --
 -- -   @configuration@ is the configuration object to release.
 --
@@ -500,8 +497,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Extensions.Handles.PerformanceConfigurationINTEL'
-releasePerformanceConfigurationINTEL :: Device -> PerformanceConfigurationINTEL -> IO ()
-releasePerformanceConfigurationINTEL device configuration = do
+releasePerformanceConfigurationINTEL :: forall io . MonadIO io => Device -> PerformanceConfigurationINTEL -> io ()
+releasePerformanceConfigurationINTEL device configuration = liftIO $ do
   let vkReleasePerformanceConfigurationINTEL' = mkVkReleasePerformanceConfigurationINTEL (pVkReleasePerformanceConfigurationINTEL (deviceCmds (device :: Device)))
   r <- vkReleasePerformanceConfigurationINTEL' (deviceHandle (device)) (configuration)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -518,22 +515,21 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Queue' is the queue on which the
---     configuration will be used.
+-- -   @queue@ is the queue on which the configuration will be used.
 --
 -- -   @configuration@ is the configuration to use.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Queue' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Queue' handle
+-- -   @queue@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Queue'
+--     handle
 --
 -- -   @configuration@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.PerformanceConfigurationINTEL'
 --     handle
 --
--- -   Both of @configuration@, and 'Graphics.Vulkan.Core10.Handles.Queue'
---     /must/ have been created, allocated, or retrieved from the same
+-- -   Both of @configuration@, and @queue@ /must/ have been created,
+--     allocated, or retrieved from the same
 --     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Command Properties
@@ -562,8 +558,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Extensions.Handles.PerformanceConfigurationINTEL',
 -- 'Graphics.Vulkan.Core10.Handles.Queue'
-queueSetPerformanceConfigurationINTEL :: Queue -> PerformanceConfigurationINTEL -> IO ()
-queueSetPerformanceConfigurationINTEL queue configuration = do
+queueSetPerformanceConfigurationINTEL :: forall io . MonadIO io => Queue -> PerformanceConfigurationINTEL -> io ()
+queueSetPerformanceConfigurationINTEL queue configuration = liftIO $ do
   let vkQueueSetPerformanceConfigurationINTEL' = mkVkQueueSetPerformanceConfigurationINTEL (pVkQueueSetPerformanceConfigurationINTEL (deviceCmds (queue :: Queue)))
   r <- vkQueueSetPerformanceConfigurationINTEL' (queueHandle (queue)) (configuration)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -581,8 +577,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device to
---     query.
+-- -   @device@ is the logical device to query.
 --
 -- -   @parameter@ is the parameter to query.
 --
@@ -605,8 +600,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'PerformanceParameterTypeINTEL', 'PerformanceValueINTEL'
-getPerformanceParameterINTEL :: Device -> PerformanceParameterTypeINTEL -> IO (PerformanceValueINTEL)
-getPerformanceParameterINTEL device parameter = evalContT $ do
+getPerformanceParameterINTEL :: forall io . MonadIO io => Device -> PerformanceParameterTypeINTEL -> io (PerformanceValueINTEL)
+getPerformanceParameterINTEL device parameter = liftIO . evalContT $ do
   let vkGetPerformanceParameterINTEL' = mkVkGetPerformanceParameterINTEL (pVkGetPerformanceParameterINTEL (deviceCmds (device :: Device)))
   pPValue <- ContT (withZeroCStruct @PerformanceValueINTEL)
   r <- lift $ vkGetPerformanceParameterINTEL' (deviceHandle (device)) (parameter) (pPValue)
@@ -712,8 +707,7 @@ instance Zero InitializePerformanceApiInfoINTEL where
 -- = Members
 --
 -- To create a pool for Intel performance queries, set
--- 'Graphics.Vulkan.Core10.Query.QueryPoolCreateInfo'::'Graphics.Vulkan.Core10.Enums.QueryType.QueryType'
--- to
+-- 'Graphics.Vulkan.Core10.Query.QueryPoolCreateInfo'::@queryType@ to
 -- 'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_INTEL'
 -- and add a 'QueryPoolCreateInfoINTEL' structure to the @pNext@ chain of
 -- the 'Graphics.Vulkan.Core10.Query.QueryPoolCreateInfo' structure.

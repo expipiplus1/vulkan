@@ -19,6 +19,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_display_swapchain  ( createSharedSwapch
                                                             ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -31,6 +32,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable(peek))
@@ -90,8 +92,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the device to create the
---     swapchains for.
+-- -   @device@ is the device to create the swapchains for.
 --
 -- -   @swapchainCount@ is the number of swapchains to create.
 --
@@ -131,8 +132,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pCreateInfos@ /must/ be a valid pointer to an array of
 --     @swapchainCount@ valid
@@ -182,8 +183,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_swapchain.SwapchainCreateInfoKHR',
 -- 'Graphics.Vulkan.Extensions.Handles.SwapchainKHR'
-createSharedSwapchainsKHR :: PokeChain a => Device -> ("createInfos" ::: Vector (SwapchainCreateInfoKHR a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (("swapchains" ::: Vector SwapchainKHR))
-createSharedSwapchainsKHR device createInfos allocator = evalContT $ do
+createSharedSwapchainsKHR :: forall a io . (PokeChain a, MonadIO io) => Device -> ("createInfos" ::: Vector (SwapchainCreateInfoKHR a)) -> ("allocator" ::: Maybe AllocationCallbacks) -> io (("swapchains" ::: Vector SwapchainKHR))
+createSharedSwapchainsKHR device createInfos allocator = liftIO . evalContT $ do
   let vkCreateSharedSwapchainsKHR' = mkVkCreateSharedSwapchainsKHR (pVkCreateSharedSwapchainsKHR (deviceCmds (device :: Device)))
   pPCreateInfos <- ContT $ allocaBytesAligned @(SwapchainCreateInfoKHR _) ((Data.Vector.length (createInfos)) * 104) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPCreateInfos `plusPtr` (104 * (i)) :: Ptr (SwapchainCreateInfoKHR _)) (e) . ($ ())) (createInfos)

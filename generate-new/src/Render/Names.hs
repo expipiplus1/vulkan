@@ -1,6 +1,7 @@
 module Render.Names
   ( HasRenderedNames
   , withRenderedNames
+  , specRenderedNames
   , isStructOrUnion
   , getRenderedStruct
   , isNewtype
@@ -29,9 +30,24 @@ data RenderedNames = RenderedNames
   , rnResolveAlias           :: HName -> HName
   }
 
-withRenderedNames
-  :: HasRenderParams r => Spec -> Sem (Input RenderedNames ': r) a -> Sem r a
-withRenderedNames Spec {..} a = do
+instance Semigroup RenderedNames where
+  rn1 <> rn2 = RenderedNames
+    { rnStructs                = concatBoth rnStructs
+    , rnUnions                 = concatBoth rnUnions
+    , rnEnums                  = concatBoth rnEnums
+    , rnNonDispatchableHandles = concatBoth rnNonDispatchableHandles
+    , rnDispatchableHandles    = concatBoth rnDispatchableHandles
+    , rnResolveAlias           = appEndo (concatBoth (Endo . rnResolveAlias))
+    }
+   where
+    concatBoth :: Monoid a => (RenderedNames -> a) -> a
+    concatBoth f = f rn1 <> f rn2
+
+instance Monoid RenderedNames where
+  mempty = RenderedNames mempty mempty mempty mempty mempty id
+
+specRenderedNames :: HasRenderParams r => Spec -> Sem r RenderedNames
+specRenderedNames Spec {..} = do
   RenderParams {..} <- input
   let
     rnStructs =
@@ -60,7 +76,13 @@ withRenderedNames Spec {..} a = do
       )
     -- TODO: Handle alias cycles!
     rnResolveAlias n = maybe n rnResolveAlias (Map.lookup n aliasMap)
-  runInputConst RenderedNames { .. } a
+  pure RenderedNames { .. }
+
+withRenderedNames
+  :: HasRenderParams r => Spec -> Sem (Input RenderedNames ': r) a -> Sem r a
+withRenderedNames spec a = do
+  rns <- specRenderedNames spec
+  runInputConst rns a
 
 isStructOrUnion :: HasRenderedNames r => HName -> Sem r Bool
 isStructOrUnion n = do

@@ -79,7 +79,7 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_
 -- -   If @coverageToColorEnable@ is
 --     'Graphics.Vulkan.Core10.BaseType.TRUE', then the render pass subpass
 --     indicated by
---     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::'Graphics.Vulkan.Core10.Handles.RenderPass'
+--     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@renderPass@
 --     and
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'::@subpass@
 --     /must/ have a color attachment at the location selected by
@@ -97,7 +97,7 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_
 -- -   @sType@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_COVERAGE_TO_COLOR_STATE_CREATE_INFO_NV'
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+-- -   @flags@ /must/ be @0@
 --
 -- = See Also
 --
@@ -105,7 +105,7 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_
 -- 'PipelineCoverageToColorStateCreateFlagsNV',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineCoverageToColorStateCreateInfoNV = PipelineCoverageToColorStateCreateInfoNV
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is reserved for future use.
+  { -- | @flags@ is reserved for future use.
     flags :: PipelineCoverageToColorStateCreateFlagsNV
   , -- | @coverageToColorEnable@ controls whether the fragment coverage value
     -- replaces a fragment color output.

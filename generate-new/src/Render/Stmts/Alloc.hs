@@ -67,10 +67,11 @@ allocate
   -> MarshalScheme a
   -> Stmt s r (Ref s AddrDoc)
 allocate a = \case
-  Normal fromTy     -> normal (name a) (type' a) fromTy
-  Vector (Normal _) -> allocateVector a
-  ByteString        -> allocateByteString a
-  s                 -> throw $ "Unhandled allocation for type " <> show s
+  Normal   fromTy     -> normal (name a) (type' a) fromTy
+  Preserve fromTy     -> normal (name a) (type' a) fromTy
+  Vector   (Normal _) -> allocateVector a
+  ByteString          -> allocateByteString a
+  s                   -> throw $ "Unhandled allocation for type " <> show s
 
 normal
   :: (HasErr r, HasRenderElem r, HasRenderParams r, HasSpecInfo r)

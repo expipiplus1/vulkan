@@ -6,6 +6,7 @@ module Graphics.Vulkan.Core10.Sampler  ( createSampler
                                        ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -17,6 +18,7 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CFloat)
@@ -76,8 +78,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     creates the sampler.
+-- -   @device@ is the logical device that creates the sampler.
 --
 -- -   @pCreateInfo@ is a pointer to a 'SamplerCreateInfo' structure
 --     specifying the state of the sampler object.
@@ -92,8 +93,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'SamplerCreateInfo' structure
@@ -125,8 +126,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Sampler', 'SamplerCreateInfo'
-createSampler :: PokeChain a => Device -> SamplerCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (Sampler)
-createSampler device createInfo allocator = evalContT $ do
+createSampler :: forall a io . (PokeChain a, MonadIO io) => Device -> SamplerCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Sampler)
+createSampler device createInfo allocator = liftIO . evalContT $ do
   let vkCreateSampler' = mkVkCreateSampler (pVkCreateSampler (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -141,11 +142,11 @@ createSampler device createInfo allocator = evalContT $ do
 -- | A safe wrapper for 'createSampler' and 'destroySampler' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withSampler :: PokeChain a => Device -> SamplerCreateInfo a -> Maybe AllocationCallbacks -> (Sampler -> IO r) -> IO r
-withSampler device samplerCreateInfo allocationCallbacks =
+withSampler :: forall a r . PokeChain a => Device -> SamplerCreateInfo a -> Maybe AllocationCallbacks -> ((Sampler) -> IO r) -> IO r
+withSampler device pCreateInfo pAllocator =
   bracket
-    (createSampler device samplerCreateInfo allocationCallbacks)
-    (\o -> destroySampler device o allocationCallbacks)
+    (createSampler device pCreateInfo pAllocator)
+    (\(o0) -> destroySampler device o0 pAllocator)
 
 
 foreign import ccall
@@ -159,10 +160,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     destroys the sampler.
+-- -   @device@ is the logical device that destroys the sampler.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Sampler' is the sampler to destroy.
+-- -   @sampler@ is the sampler to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
@@ -170,50 +170,46 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All submitted commands that refer to
---     'Graphics.Vulkan.Core10.Handles.Sampler' /must/ have completed
+-- -   All submitted commands that refer to @sampler@ /must/ have completed
 --     execution
 --
 -- -   If 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.Sampler' was
---     created, a compatible set of callbacks /must/ be provided here
+--     were provided when @sampler@ was created, a compatible set of
+--     callbacks /must/ be provided here
 --
 -- -   If no
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.Sampler' was
---     created, @pAllocator@ /must/ be @NULL@
+--     were provided when @sampler@ was created, @pAllocator@ /must/ be
+--     @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Sampler' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.Sampler' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Sampler' handle
+-- -   If @sampler@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @sampler@ /must/
+--     be a valid 'Graphics.Vulkan.Core10.Handles.Sampler' handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
 --     pointer to a valid
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
 --     structure
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Sampler' is a valid handle, it
---     /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   If @sampler@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.Sampler' /must/ be
---     externally synchronized
+-- -   Host access to @sampler@ /must/ be externally synchronized
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Sampler'
-destroySampler :: Device -> Sampler -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroySampler device sampler allocator = evalContT $ do
+destroySampler :: forall io . MonadIO io => Device -> Sampler -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroySampler device sampler allocator = liftIO . evalContT $ do
   let vkDestroySampler' = mkVkDestroySampler (pVkDestroySampler (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -324,8 +320,8 @@ destroySampler device sampler allocator = evalContT $ do
 --
 -- -   If any of @addressModeU@, @addressModeV@ or @addressModeW@ are
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER',
---     'Graphics.Vulkan.Core10.Enums.BorderColor.BorderColor' /must/ be a
---     valid 'Graphics.Vulkan.Core10.Enums.BorderColor.BorderColor' value
+--     @borderColor@ /must/ be a valid
+--     'Graphics.Vulkan.Core10.Enums.BorderColor.BorderColor' value
 --
 -- -   If
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>
@@ -352,7 +348,7 @@ destroySampler device sampler allocator = evalContT $ do
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE'
 --
 -- -   If @compareEnable@ is 'Graphics.Vulkan.Core10.BaseType.TRUE',
---     'Graphics.Vulkan.Core10.Enums.CompareOp.CompareOp' /must/ be a valid
+--     @compareOp@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Enums.CompareOp.CompareOp' value
 --
 -- -   If either @magFilter@ or @minFilter@ is
@@ -365,37 +361,37 @@ destroySampler device sampler allocator = evalContT $ do
 --     /must/ be
 --     'Graphics.Vulkan.Core12.Enums.SamplerReductionMode.SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE'
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' includes
+-- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
 --     then @minFilter@ and @magFilter@ /must/ be equal.
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' includes
+-- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
 --     then @mipmapMode@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.SamplerMipmapMode.SAMPLER_MIPMAP_MODE_NEAREST'.
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' includes
+-- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
 --     then @minLod@ and @maxLod@ /must/ be zero.
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' includes
+-- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
 --     then @addressModeU@ and @addressModeV@ /must/ each be either
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER'.
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' includes
+-- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
 --     then @anisotropyEnable@ /must/ be
 --     'Graphics.Vulkan.Core10.BaseType.FALSE'.
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' includes
+-- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
 --     then @compareEnable@ /must/ be
 --     'Graphics.Vulkan.Core10.BaseType.FALSE'.
 --
--- -   If 'Graphics.Vulkan.Core10.BaseType.Flags' includes
+-- -   If @flags@ includes
 --     'Graphics.Vulkan.Core10.Enums.SamplerCreateFlagBits.SAMPLER_CREATE_SUBSAMPLED_BIT_EXT',
 --     then @unnormalizedCoordinates@ /must/ be
 --     'Graphics.Vulkan.Core10.BaseType.FALSE'.
@@ -415,8 +411,7 @@ destroySampler device sampler allocator = evalContT $ do
 -- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
 --     unique
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of
+-- -   @flags@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core10.Enums.SamplerCreateFlagBits.SamplerCreateFlagBits'
 --     values
 --
@@ -456,7 +451,7 @@ destroySampler device sampler allocator = evalContT $ do
 data SamplerCreateInfo (es :: [Type]) = SamplerCreateInfo
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
     next :: Chain es
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+  , -- | @flags@ is a bitmask of
     -- 'Graphics.Vulkan.Core10.Enums.SamplerCreateFlagBits.SamplerCreateFlagBits'
     -- describing additional parameters of the sampler.
     flags :: SamplerCreateFlags
@@ -508,10 +503,9 @@ data SamplerCreateInfo (es :: [Type]) = SamplerCreateInfo
     -- -   Note: Some implementations will default to shader state if this
     --     member does not match.
     compareEnable :: Bool
-  , -- | 'Graphics.Vulkan.Core10.Enums.CompareOp.CompareOp' is a
-    -- 'Graphics.Vulkan.Core10.Enums.CompareOp.CompareOp' value specifying the
-    -- comparison function to apply to fetched data before filtering as
-    -- described in the
+  , -- | @compareOp@ is a 'Graphics.Vulkan.Core10.Enums.CompareOp.CompareOp'
+    -- value specifying the comparison function to apply to fetched data before
+    -- filtering as described in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#textures-depth-compare-operation Depth Compare Operation>
     -- section.
     compareOp :: CompareOp
@@ -522,7 +516,7 @@ data SamplerCreateInfo (es :: [Type]) = SamplerCreateInfo
     minLod :: Float
   , -- No documentation found for Nested "VkSamplerCreateInfo" "maxLod"
     maxLod :: Float
-  , -- | 'Graphics.Vulkan.Core10.Enums.BorderColor.BorderColor' is a
+  , -- | @borderColor@ is a
     -- 'Graphics.Vulkan.Core10.Enums.BorderColor.BorderColor' value specifying
     -- the predefined border color to use.
     borderColor :: BorderColor

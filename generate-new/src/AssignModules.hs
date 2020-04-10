@@ -30,9 +30,10 @@ import           Algebra.Graph.AdjacencyIntMap
 import           Error
 import           Spec.Types
 import           Render.Element
-import           Render.Spec
 import           Render.SpecInfo
 import           Haskell
+
+import           VK.Render
 
 -- | Assign all render elements a module
 assignModules

@@ -1,6 +1,7 @@
 {-# language CPP #-}
 module Graphics.Vulkan.Extensions.VK_EXT_transform_feedback  ( cmdBindTransformFeedbackBuffersEXT
                                                              , cmdBeginTransformFeedbackEXT
+                                                             , cmdWithTransformFeedbackEXT
                                                              , cmdEndTransformFeedbackEXT
                                                              , cmdBeginQueryIndexedEXT
                                                              , cmdWithQueryIndexedEXT
@@ -18,6 +19,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_transform_feedback  ( cmdBindTransformF
 
 import Control.Exception.Base (bracket_)
 import Control.Monad (unless)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
@@ -36,6 +38,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
 import qualified Data.Vector (null)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.Either (Either)
 import Data.String (IsString)
@@ -73,9 +76,8 @@ import Graphics.Vulkan.Core10.BaseType (DeviceSize)
 import Graphics.Vulkan.Core10.BaseType (Flags)
 import Graphics.Vulkan.CStruct (FromCStruct)
 import Graphics.Vulkan.CStruct (FromCStruct(..))
-import Graphics.Vulkan.Core10.Enums.QueryControlFlagBits (QueryControlFlags)
-import Graphics.Vulkan.Core10.Enums.QueryControlFlagBits (QueryControlFlags)
 import Graphics.Vulkan.Core10.Enums.QueryControlFlagBits (QueryControlFlagBits(..))
+import Graphics.Vulkan.Core10.Enums.QueryControlFlagBits (QueryControlFlags)
 import Graphics.Vulkan.Core10.Handles (QueryPool)
 import Graphics.Vulkan.Core10.Handles (QueryPool(..))
 import Graphics.Vulkan.Core10.Enums.StructureType (StructureType)
@@ -98,8 +100,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command is recorded.
+-- -   @commandBuffer@ is the command buffer into which the command is
+--     recorded.
 --
 -- -   @firstBinding@ is the index of the first transform feedback binding
 --     whose state is updated by the command.
@@ -169,7 +171,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pBuffers@ /must/ be a valid pointer to an array of @bindingCount@
@@ -182,27 +184,25 @@ foreign import ccall
 --     array of @bindingCount@ 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
 --     values
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics operations
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
 --
 -- -   If @pSizes@ is not @NULL@, @bindingCount@ /must/ be greater than @0@
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.CommandBuffer', and the
---     elements of @pBuffers@ /must/ have been created, allocated, or
---     retrieved from the same 'Graphics.Vulkan.Core10.Handles.Device'
+-- -   Both of @commandBuffer@, and the elements of @pBuffers@ /must/ have
+--     been created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -220,8 +220,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdBindTransformFeedbackBuffersEXT :: CommandBuffer -> ("firstBinding" ::: Word32) -> ("buffers" ::: Vector Buffer) -> ("offsets" ::: Vector DeviceSize) -> ("sizes" ::: Either Word32 (Vector DeviceSize)) -> IO ()
-cmdBindTransformFeedbackBuffersEXT commandBuffer firstBinding buffers offsets sizes = evalContT $ do
+cmdBindTransformFeedbackBuffersEXT :: forall io . MonadIO io => CommandBuffer -> ("firstBinding" ::: Word32) -> ("buffers" ::: Vector Buffer) -> ("offsets" ::: Vector DeviceSize) -> ("sizes" ::: Either Word32 (Vector DeviceSize)) -> io ()
+cmdBindTransformFeedbackBuffersEXT commandBuffer firstBinding buffers offsets sizes = liftIO . evalContT $ do
   let vkCmdBindTransformFeedbackBuffersEXT' = mkVkCmdBindTransformFeedbackBuffersEXT (pVkCmdBindTransformFeedbackBuffersEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   let pBuffersLength = Data.Vector.length $ (buffers)
   let pOffsetsLength = Data.Vector.length $ (offsets)
@@ -256,8 +256,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command is recorded.
+-- -   @commandBuffer@ is the command buffer into which the command is
+--     recorded.
 --
 -- -   @firstCounterBuffer@ is the index of the first transform feedback
 --     buffer corresponding to @pCounterBuffers@[0] and
@@ -333,7 +333,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   If @counterBufferCount@ is not @0@, and @pCounterBufferOffsets@ is
@@ -341,28 +341,26 @@ foreign import ccall
 --     array of @counterBufferCount@
 --     'Graphics.Vulkan.Core10.BaseType.DeviceSize' values
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics operations
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
 --
 -- -   This command /must/ only be called inside of a render pass instance
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.CommandBuffer', and the
---     elements of @pCounterBuffers@ that are valid handles of non-ignored
---     parameters /must/ have been created, allocated, or retrieved from
---     the same 'Graphics.Vulkan.Core10.Handles.Device'
+-- -   Both of @commandBuffer@, and the elements of @pCounterBuffers@ that
+--     are valid handles of non-ignored parameters /must/ have been
+--     created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -380,8 +378,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdBeginTransformFeedbackEXT :: CommandBuffer -> ("firstCounterBuffer" ::: Word32) -> ("counterBuffers" ::: Vector Buffer) -> ("counterBufferOffsets" ::: Either Word32 (Vector DeviceSize)) -> IO ()
-cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers counterBufferOffsets = evalContT $ do
+cmdBeginTransformFeedbackEXT :: forall io . MonadIO io => CommandBuffer -> ("firstCounterBuffer" ::: Word32) -> ("counterBuffers" ::: Vector Buffer) -> ("counterBufferOffsets" ::: Either Word32 (Vector DeviceSize)) -> io ()
+cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers counterBufferOffsets = liftIO . evalContT $ do
   let vkCmdBeginTransformFeedbackEXT' = mkVkCmdBeginTransformFeedbackEXT (pVkCmdBeginTransformFeedbackEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   let pCounterBuffersLength = Data.Vector.length $ (counterBuffers)
   let pCounterBufferOffsetsLength = either id (fromIntegral . Data.Vector.length) (counterBufferOffsets)
@@ -398,6 +396,14 @@ cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers cou
   lift $ vkCmdBeginTransformFeedbackEXT' (commandBufferHandle (commandBuffer)) (firstCounterBuffer) ((fromIntegral pCounterBuffersLength :: Word32)) (pPCounterBuffers) pCounterBufferOffsets
   pure $ ()
 
+-- | A safe wrapper for 'cmdBeginTransformFeedbackEXT' and
+-- 'cmdEndTransformFeedbackEXT' using 'bracket_'
+cmdWithTransformFeedbackEXT :: forall r . CommandBuffer -> Word32 -> Vector Buffer -> Either Word32 (Vector DeviceSize) -> IO r -> IO r
+cmdWithTransformFeedbackEXT commandBuffer firstCounterBuffer pCounterBuffers pCounterBufferOffsets =
+  bracket_
+    (cmdBeginTransformFeedbackEXT commandBuffer firstCounterBuffer pCounterBuffers pCounterBufferOffsets)
+    (cmdEndTransformFeedbackEXT commandBuffer firstCounterBuffer pCounterBuffers pCounterBufferOffsets)
+
 
 foreign import ccall
 #if !defined(SAFE_FOREIGN_CALLS)
@@ -411,8 +417,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command is recorded.
+-- -   @commandBuffer@ is the command buffer into which the command is
+--     recorded.
 --
 -- -   @firstCounterBuffer@ is the index of the first transform feedback
 --     buffer corresponding to @pCounterBuffers@[0] and
@@ -474,7 +480,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   If @counterBufferCount@ is not @0@, and @pCounterBufferOffsets@ is
@@ -482,28 +488,26 @@ foreign import ccall
 --     array of @counterBufferCount@
 --     'Graphics.Vulkan.Core10.BaseType.DeviceSize' values
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics operations
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
 --
 -- -   This command /must/ only be called inside of a render pass instance
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.CommandBuffer', and the
---     elements of @pCounterBuffers@ that are valid handles of non-ignored
---     parameters /must/ have been created, allocated, or retrieved from
---     the same 'Graphics.Vulkan.Core10.Handles.Device'
+-- -   Both of @commandBuffer@, and the elements of @pCounterBuffers@ that
+--     are valid handles of non-ignored parameters /must/ have been
+--     created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -521,8 +525,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdEndTransformFeedbackEXT :: CommandBuffer -> ("firstCounterBuffer" ::: Word32) -> ("counterBuffers" ::: Vector Buffer) -> ("counterBufferOffsets" ::: Either Word32 (Vector DeviceSize)) -> IO ()
-cmdEndTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers counterBufferOffsets = evalContT $ do
+cmdEndTransformFeedbackEXT :: forall io . MonadIO io => CommandBuffer -> ("firstCounterBuffer" ::: Word32) -> ("counterBuffers" ::: Vector Buffer) -> ("counterBufferOffsets" ::: Either Word32 (Vector DeviceSize)) -> io ()
+cmdEndTransformFeedbackEXT commandBuffer firstCounterBuffer counterBuffers counterBufferOffsets = liftIO . evalContT $ do
   let vkCmdEndTransformFeedbackEXT' = mkVkCmdEndTransformFeedbackEXT (pVkCmdEndTransformFeedbackEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   let pCounterBuffersLength = Data.Vector.length $ (counterBuffers)
   let pCounterBufferOffsetsLength = either id (fromIntegral . Data.Vector.length) (counterBufferOffsets)
@@ -551,16 +555,16 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which this command will be recorded.
+-- -   @commandBuffer@ is the command buffer into which this command will
+--     be recorded.
 --
--- -   'Graphics.Vulkan.Core10.Handles.QueryPool' is the query pool that
---     will manage the results of the query.
+-- -   @queryPool@ is the query pool that will manage the results of the
+--     query.
 --
 -- -   @query@ is the query index within the query pool that will contain
 --     the results.
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+-- -   @flags@ is a bitmask of
 --     'Graphics.Vulkan.Core10.Enums.QueryControlFlagBits.QueryControlFlagBits'
 --     specifying constraints on the types of queries that /can/ be
 --     performed.
@@ -577,128 +581,104 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   'Graphics.Vulkan.Core10.Handles.QueryPool' /must/ have been created
---     with a 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' that
---     differs from that of any queries that are
+-- -   @queryPool@ /must/ have been created with a @queryType@ that differs
+--     from that of any queries that are
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-operation-active active>
---     within 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
+--     within @commandBuffer@
 --
 -- -   All queries used by the command /must/ be unavailable
 --
--- -   The 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' used to
---     create 'Graphics.Vulkan.Core10.Handles.QueryPool' /must/ not be
+-- -   The @queryType@ used to create @queryPool@ /must/ not be
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TIMESTAMP'
 --
 -- -   If the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-occlusionQueryPrecise precise occlusion queries>
---     feature is not enabled, or the
---     'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' used to create
---     'Graphics.Vulkan.Core10.Handles.QueryPool' was not
+--     feature is not enabled, or the @queryType@ used to create
+--     @queryPool@ was not
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_OCCLUSION',
---     'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not contain
+--     @flags@ /must/ not contain
 --     'Graphics.Vulkan.Core10.Enums.QueryControlFlagBits.QUERY_CONTROL_PRECISE_BIT'
 --
--- -   @query@ /must/ be less than the number of queries in
---     'Graphics.Vulkan.Core10.Handles.QueryPool'
+-- -   @query@ /must/ be less than the number of queries in @queryPool@
 --
--- -   If the 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' used to
---     create 'Graphics.Vulkan.Core10.Handles.QueryPool' was
+-- -   If the @queryType@ used to create @queryPool@ was
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_OCCLUSION', the
---     'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics operations
+--     'Graphics.Vulkan.Core10.Handles.CommandPool' that @commandBuffer@
+--     was allocated from /must/ support graphics operations
 --
--- -   If the 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' used to
---     create 'Graphics.Vulkan.Core10.Handles.QueryPool' was
+-- -   If the @queryType@ used to create @queryPool@ was
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PIPELINE_STATISTICS'
 --     and any of the @pipelineStatistics@ indicate graphics operations,
 --     the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics operations
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
 --
--- -   If the 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' used to
---     create 'Graphics.Vulkan.Core10.Handles.QueryPool' was
+-- -   If the @queryType@ used to create @queryPool@ was
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PIPELINE_STATISTICS'
 --     and any of the @pipelineStatistics@ indicate compute operations, the
---     'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support compute operations
+--     'Graphics.Vulkan.Core10.Handles.CommandPool' that @commandBuffer@
+--     was allocated from /must/ support compute operations
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ not be a
---     protected command buffer
+-- -   @commandBuffer@ /must/ not be a protected command buffer
 --
 -- -   If called within a render pass instance, the sum of @query@ and the
 --     number of bits set in the current subpass’s view mask /must/ be less
---     than or equal to the number of queries in
---     'Graphics.Vulkan.Core10.Handles.QueryPool'
+--     than or equal to the number of queries in @queryPool@
 --
--- -   If the 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' used to
---     create 'Graphics.Vulkan.Core10.Handles.QueryPool' was
+-- -   If the @queryType@ used to create @queryPool@ was
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT'
 --     the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics operations
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
 --
--- -   If the 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' used to
---     create 'Graphics.Vulkan.Core10.Handles.QueryPool' was
+-- -   If the @queryType@ used to create @queryPool@ was
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT'
 --     the @index@ parameter /must/ be less than
 --     'PhysicalDeviceTransformFeedbackPropertiesEXT'::@maxTransformFeedbackStreams@
 --
--- -   If the 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' used to
---     create 'Graphics.Vulkan.Core10.Handles.QueryPool' was not
+-- -   If the @queryType@ used to create @queryPool@ was not
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT'
 --     the @index@ /must/ be zero
 --
--- -   If the 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' used to
---     create 'Graphics.Vulkan.Core10.Handles.QueryPool' was
+-- -   If the @queryType@ used to create @queryPool@ was
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT'
 --     then
 --     'PhysicalDeviceTransformFeedbackPropertiesEXT'::@transformFeedbackQueries@
 --     /must/ be supported
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.QueryPool' was created with a
---     'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' of
+-- -   If @queryPool@ was created with a @queryType@ of
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
 --     the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#profiling-lock profiling lock>
 --     /must/ have been held before
 --     'Graphics.Vulkan.Core10.CommandBuffer.beginCommandBuffer' was called
---     on 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
+--     on @commandBuffer@
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.QueryPool' was created with a
---     'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' of
+-- -   If @queryPool@ was created with a @queryType@ of
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR'
---     and one of the counters used to create
---     'Graphics.Vulkan.Core10.Handles.QueryPool' was
+--     and one of the counters used to create @queryPool@ was
 --     'Graphics.Vulkan.Extensions.VK_KHR_performance_query.PERFORMANCE_COUNTER_SCOPE_COMMAND_BUFFER_KHR',
 --     the query begin /must/ be the first recorded command in
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer'
+--     @commandBuffer@
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.QueryPool' was created with a
---     'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' of
+-- -   If @queryPool@ was created with a @queryType@ of
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR'
---     and one of the counters used to create
---     'Graphics.Vulkan.Core10.Handles.QueryPool' was
+--     and one of the counters used to create @queryPool@ was
 --     'Graphics.Vulkan.Extensions.VK_KHR_performance_query.PERFORMANCE_COUNTER_SCOPE_RENDER_PASS_KHR',
 --     the begin command /must/ not be recorded within a render pass
 --     instance
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.QueryPool' was created with a
---     'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' of
+-- -   If @queryPool@ was created with a @queryType@ of
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR'
---     and another query pool with a
---     'Graphics.Vulkan.Core10.Enums.QueryType.QueryType'
+--     and another query pool with a @queryType@
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR'
---     has been used within 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
---     its parent primary command buffer or secondary command buffer
---     recorded within the same parent primary command buffer as
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer', the
+--     has been used within @commandBuffer@, its parent primary command
+--     buffer or secondary command buffer recorded within the same parent
+--     primary command buffer as @commandBuffer@, the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-features-performanceCounterMultipleQueryPools performanceCounterMultipleQueryPools>
 --     feature /must/ be enabled
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.QueryPool' was created with a
---     'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' of
+-- -   If @queryPool@ was created with a @queryType@ of
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR',
 --     this command /must/ not be recorded in a command buffer that, either
 --     directly or through secondary command buffers, also contains a
@@ -707,37 +687,33 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.QueryPool' /must/ be a valid
+-- -   @queryPool@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.QueryPool' handle
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of
+-- -   @flags@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core10.Enums.QueryControlFlagBits.QueryControlFlagBits'
 --     values
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics, or compute operations
+--     @commandBuffer@ was allocated from /must/ support graphics, or
+--     compute operations
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.CommandBuffer', and
---     'Graphics.Vulkan.Core10.Handles.QueryPool' /must/ have been created,
+-- -   Both of @commandBuffer@, and @queryPool@ /must/ have been created,
 --     allocated, or retrieved from the same
 --     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -755,15 +731,15 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.Enums.QueryControlFlagBits.QueryControlFlags',
 -- 'Graphics.Vulkan.Core10.Handles.QueryPool'
-cmdBeginQueryIndexedEXT :: CommandBuffer -> QueryPool -> ("query" ::: Word32) -> QueryControlFlags -> ("index" ::: Word32) -> IO ()
-cmdBeginQueryIndexedEXT commandBuffer queryPool query flags index = do
+cmdBeginQueryIndexedEXT :: forall io . MonadIO io => CommandBuffer -> QueryPool -> ("query" ::: Word32) -> QueryControlFlags -> ("index" ::: Word32) -> io ()
+cmdBeginQueryIndexedEXT commandBuffer queryPool query flags index = liftIO $ do
   let vkCmdBeginQueryIndexedEXT' = mkVkCmdBeginQueryIndexedEXT (pVkCmdBeginQueryIndexedEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdBeginQueryIndexedEXT' (commandBufferHandle (commandBuffer)) (queryPool) (query) (flags) (index)
   pure $ ()
 
 -- | A safe wrapper for 'cmdBeginQueryIndexedEXT' and 'cmdEndQueryIndexedEXT'
 -- using 'bracket_'
-cmdWithQueryIndexedEXT :: CommandBuffer -> QueryPool -> Word32 -> QueryControlFlags -> Word32 -> IO r -> IO r
+cmdWithQueryIndexedEXT :: forall r . CommandBuffer -> QueryPool -> Word32 -> QueryControlFlags -> Word32 -> IO r -> IO r
 cmdWithQueryIndexedEXT commandBuffer queryPool query flags index =
   bracket_
     (cmdBeginQueryIndexedEXT commandBuffer queryPool query flags index)
@@ -781,11 +757,11 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which this command will be recorded.
+-- -   @commandBuffer@ is the command buffer into which this command will
+--     be recorded.
 --
--- -   'Graphics.Vulkan.Core10.Handles.QueryPool' is the query pool that is
---     managing the results of the query.
+-- -   @queryPool@ is the query pool that is managing the results of the
+--     query.
 --
 -- -   @query@ is the query index within the query pool where the result is
 --     stored.
@@ -803,61 +779,53 @@ foreign import ccall
 -- -   All queries used by the command /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-operation-active active>
 --
--- -   @query@ /must/ be less than the number of queries in
---     'Graphics.Vulkan.Core10.Handles.QueryPool'
+-- -   @query@ /must/ be less than the number of queries in @queryPool@
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ not be a
---     protected command buffer
+-- -   @commandBuffer@ /must/ not be a protected command buffer
 --
 -- -   If 'cmdEndQueryIndexedEXT' is called within a render pass instance,
 --     the sum of @query@ and the number of bits set in the current
 --     subpass’s view mask /must/ be less than or equal to the number of
---     queries in 'Graphics.Vulkan.Core10.Handles.QueryPool'
+--     queries in @queryPool@
 --
--- -   If the 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' used to
---     create 'Graphics.Vulkan.Core10.Handles.QueryPool' was
+-- -   If the @queryType@ used to create @queryPool@ was
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT'
 --     the @index@ parameter /must/ be less than
 --     'PhysicalDeviceTransformFeedbackPropertiesEXT'::@maxTransformFeedbackStreams@
 --
--- -   If the 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' used to
---     create 'Graphics.Vulkan.Core10.Handles.QueryPool' was not
+-- -   If the @queryType@ used to create @queryPool@ was not
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT'
 --     the @index@ /must/ be zero
 --
--- -   If the 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' used to
---     create 'Graphics.Vulkan.Core10.Handles.QueryPool' was
+-- -   If the @queryType@ used to create @queryPool@ was
 --     'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_TRANSFORM_FEEDBACK_STREAM_EXT'
 --     @index@ /must/ equal the @index@ used to begin the query
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.QueryPool' /must/ be a valid
+-- -   @queryPool@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.QueryPool' handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics, or compute operations
+--     @commandBuffer@ was allocated from /must/ support graphics, or
+--     compute operations
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.CommandBuffer', and
---     'Graphics.Vulkan.Core10.Handles.QueryPool' /must/ have been created,
+-- -   Both of @commandBuffer@, and @queryPool@ /must/ have been created,
 --     allocated, or retrieved from the same
 --     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -874,8 +842,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.Handles.QueryPool'
-cmdEndQueryIndexedEXT :: CommandBuffer -> QueryPool -> ("query" ::: Word32) -> ("index" ::: Word32) -> IO ()
-cmdEndQueryIndexedEXT commandBuffer queryPool query index = do
+cmdEndQueryIndexedEXT :: forall io . MonadIO io => CommandBuffer -> QueryPool -> ("query" ::: Word32) -> ("index" ::: Word32) -> io ()
+cmdEndQueryIndexedEXT commandBuffer queryPool query index = liftIO $ do
   let vkCmdEndQueryIndexedEXT' = mkVkCmdEndQueryIndexedEXT (pVkCmdEndQueryIndexedEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdEndQueryIndexedEXT' (commandBufferHandle (commandBuffer)) (queryPool) (query) (index)
   pure $ ()
@@ -893,8 +861,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command is recorded.
+-- -   @commandBuffer@ is the command buffer into which the command is
+--     recorded.
 --
 -- -   @instanceCount@ is the number of instances to draw.
 --
@@ -977,8 +945,7 @@ foreign import ccall
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceImageFormatProperties2'
 --
 -- -   Any 'Graphics.Vulkan.Core10.Handles.Image' created with a
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'
---     containing
+--     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@flags@ containing
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CORNER_SAMPLED_BIT_NV'
 --     sampled as a result of this command /must/ only be sampled using a
 --     'Graphics.Vulkan.Core10.Enums.SamplerAddressMode.SamplerAddressMode'
@@ -1016,9 +983,8 @@ foreign import ccall
 --
 -- -   If the 'Graphics.Vulkan.Core10.Handles.Pipeline' object bound to the
 --     pipeline bind point used by this command requires any dynamic state,
---     that state /must/ have been set for
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer', and done so after
---     any previously bound pipeline with the corresponding state not
+--     that state /must/ have been set for @commandBuffer@, and done so
+--     after any previously bound pipeline with the corresponding state not
 --     specified as dynamic
 --
 -- -   There /must/ not have been any calls to dynamic state setting
@@ -1075,15 +1041,14 @@ foreign import ccall
 --     specified in the descriptor set bound to the same pipeline bind
 --     point
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.CommandBuffer' is an unprotected
---     command buffer, any resource accessed by the
---     'Graphics.Vulkan.Core10.Handles.Pipeline' object bound to the
---     pipeline bind point used by this command /must/ not be a protected
---     resource
+-- -   If @commandBuffer@ is an unprotected command buffer, any resource
+--     accessed by the 'Graphics.Vulkan.Core10.Handles.Pipeline' object
+--     bound to the pipeline bind point used by this command /must/ not be
+--     a protected resource
 --
 -- -   The current render pass /must/ be
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#renderpass-compatibility compatible>
---     with the 'Graphics.Vulkan.Core10.Handles.RenderPass' member of the
+--     with the @renderPass@ member of the
 --     'Graphics.Vulkan.Core10.Pipeline.GraphicsPipelineCreateInfo'
 --     structure specified when creating the
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' bound to
@@ -1137,38 +1102,35 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.Enums.BufferUsageFlagBits.BUFFER_USAGE_INDIRECT_BUFFER_BIT'
 --     bit set
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ not be a
---     protected command buffer
+-- -   @commandBuffer@ /must/ not be a protected command buffer
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @counterBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Buffer' handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics operations
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
 --
 -- -   This command /must/ only be called inside of a render pass instance
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.CommandBuffer', and
---     @counterBuffer@ /must/ have been created, allocated, or retrieved
---     from the same 'Graphics.Vulkan.Core10.Handles.Device'
+-- -   Both of @commandBuffer@, and @counterBuffer@ /must/ have been
+--     created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Device'
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -1186,8 +1148,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Buffer',
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.BaseType.DeviceSize'
-cmdDrawIndirectByteCountEXT :: CommandBuffer -> ("instanceCount" ::: Word32) -> ("firstInstance" ::: Word32) -> ("counterBuffer" ::: Buffer) -> ("counterBufferOffset" ::: DeviceSize) -> ("counterOffset" ::: Word32) -> ("vertexStride" ::: Word32) -> IO ()
-cmdDrawIndirectByteCountEXT commandBuffer instanceCount firstInstance counterBuffer counterBufferOffset counterOffset vertexStride = do
+cmdDrawIndirectByteCountEXT :: forall io . MonadIO io => CommandBuffer -> ("instanceCount" ::: Word32) -> ("firstInstance" ::: Word32) -> ("counterBuffer" ::: Buffer) -> ("counterBufferOffset" ::: DeviceSize) -> ("counterOffset" ::: Word32) -> ("vertexStride" ::: Word32) -> io ()
+cmdDrawIndirectByteCountEXT commandBuffer instanceCount firstInstance counterBuffer counterBufferOffset counterOffset vertexStride = liftIO $ do
   let vkCmdDrawIndirectByteCountEXT' = mkVkCmdDrawIndirectByteCountEXT (pVkCmdDrawIndirectByteCountEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdDrawIndirectByteCountEXT' (commandBufferHandle (commandBuffer)) (instanceCount) (firstInstance) (counterBuffer) (counterBufferOffset) (counterOffset) (vertexStride)
   pure $ ()
@@ -1423,7 +1385,7 @@ instance Zero PhysicalDeviceTransformFeedbackPropertiesEXT where
 -- 'PipelineRasterizationStateStreamCreateFlagsEXT',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineRasterizationStateStreamCreateInfoEXT = PipelineRasterizationStateStreamCreateInfoEXT
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+  { -- | @flags@ /must/ be @0@
     flags :: PipelineRasterizationStateStreamCreateFlagsEXT
   , -- | @rasterizationStream@ /must/ be zero if
     -- 'PhysicalDeviceTransformFeedbackPropertiesEXT'::@transformFeedbackRasterizationStreamSelect@

@@ -15,6 +15,7 @@ module Graphics.Vulkan.Extensions.VK_ANDROID_external_memory_android_hardware_bu
                                                                                       ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -26,6 +27,7 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
@@ -89,15 +91,13 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     will be importing 'Graphics.Vulkan.Core10.Handles.Buffer'.
+-- -   @device@ is the logical device that will be importing @buffer@.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' is the Android hardware
---     buffer which will be imported.
+-- -   @buffer@ is the Android hardware buffer which will be imported.
 --
 -- -   @pProperties@ is a pointer to a
 --     'AndroidHardwareBufferPropertiesANDROID' structure in which the
---     properties of 'Graphics.Vulkan.Core10.Handles.Buffer' are returned.
+--     properties of @buffer@ are returned.
 --
 -- == Return Codes
 --
@@ -113,8 +113,8 @@ foreign import ccall
 --
 -- 'AndroidHardwareBufferPropertiesANDROID',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-getAndroidHardwareBufferPropertiesANDROID :: (PokeChain a, PeekChain a) => Device -> Ptr AHardwareBuffer -> IO (AndroidHardwareBufferPropertiesANDROID a)
-getAndroidHardwareBufferPropertiesANDROID device buffer = evalContT $ do
+getAndroidHardwareBufferPropertiesANDROID :: forall a io . (PokeChain a, PeekChain a, MonadIO io) => Device -> Ptr AHardwareBuffer -> io (AndroidHardwareBufferPropertiesANDROID a)
+getAndroidHardwareBufferPropertiesANDROID device buffer = liftIO . evalContT $ do
   let vkGetAndroidHardwareBufferPropertiesANDROID' = mkVkGetAndroidHardwareBufferPropertiesANDROID (pVkGetAndroidHardwareBufferPropertiesANDROID (deviceCmds (device :: Device)))
   pPProperties <- ContT (withZeroCStruct @(AndroidHardwareBufferPropertiesANDROID _))
   r <- lift $ vkGetAndroidHardwareBufferPropertiesANDROID' (deviceHandle (device)) (buffer) (pPProperties)
@@ -135,8 +135,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     created the device memory being exported.
+-- -   @device@ is the logical device that created the device memory being
+--     exported.
 --
 -- -   @pInfo@ is a pointer to a
 --     'MemoryGetAndroidHardwareBufferInfoANDROID' structure containing
@@ -175,8 +175,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'MemoryGetAndroidHardwareBufferInfoANDROID'
-getMemoryAndroidHardwareBufferANDROID :: Device -> MemoryGetAndroidHardwareBufferInfoANDROID -> IO (Ptr AHardwareBuffer)
-getMemoryAndroidHardwareBufferANDROID device info = evalContT $ do
+getMemoryAndroidHardwareBufferANDROID :: forall io . MonadIO io => Device -> MemoryGetAndroidHardwareBufferInfoANDROID -> io (Ptr AHardwareBuffer)
+getMemoryAndroidHardwareBufferANDROID device info = liftIO . evalContT $ do
   let vkGetMemoryAndroidHardwareBufferANDROID' = mkVkGetMemoryAndroidHardwareBufferANDROID (pVkGetMemoryAndroidHardwareBufferANDROID (deviceCmds (device :: Device)))
   pInfo <- ContT $ withCStruct (info)
   pPBuffer <- ContT $ bracket (callocBytes @(Ptr AHardwareBuffer) 8) free
@@ -198,17 +198,16 @@ getMemoryAndroidHardwareBufferANDROID device info = evalContT $ do
 --
 -- == Valid Usage
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' is not @NULL@, Android
---     hardware buffers /must/ be supported for import, as reported by
+-- -   If @buffer@ is not @NULL@, Android hardware buffers /must/ be
+--     supported for import, as reported by
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalImageFormatProperties'
 --     or
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'.
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Buffer' is not @NULL@, it /must/
---     be a valid Android hardware buffer object with
---     @AHardwareBuffer_Desc@::'Graphics.Vulkan.Core10.Enums.Format.Format'
---     and @AHardwareBuffer_Desc@::@usage@ compatible with Vulkan as
---     described in
+-- -   If @buffer@ is not @NULL@, it /must/ be a valid Android hardware
+--     buffer object with @AHardwareBuffer_Desc@::@format@ and
+--     @AHardwareBuffer_Desc@::@usage@ compatible with Vulkan as described
+--     in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer Android Hardware Buffers>.
 --
 -- == Valid Usage (Implicit)
@@ -216,15 +215,14 @@ getMemoryAndroidHardwareBufferANDROID device info = evalContT $ do
 -- -   @sType@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_IMPORT_ANDROID_HARDWARE_BUFFER_INFO_ANDROID'
 --
--- -   'Graphics.Vulkan.Core10.Handles.Buffer' /must/ be a valid pointer to
---     an 'Graphics.Vulkan.Extensions.WSITypes.AHardwareBuffer' value
+-- -   @buffer@ /must/ be a valid pointer to an
+--     'Graphics.Vulkan.Extensions.WSITypes.AHardwareBuffer' value
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data ImportAndroidHardwareBufferInfoANDROID = ImportAndroidHardwareBufferInfoANDROID
-  { -- | 'Graphics.Vulkan.Core10.Handles.Buffer' is the Android hardware buffer
-    -- to import.
+  { -- | @buffer@ is the Android hardware buffer to import.
     buffer :: Ptr AHardwareBuffer }
   deriving (Typeable)
 deriving instance Show ImportAndroidHardwareBufferInfoANDROID
@@ -270,8 +268,7 @@ instance Zero ImportAndroidHardwareBufferInfoANDROID where
 -- buffer usage flags listed in the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer-usage AHardwareBuffer Usage Equivalence>
 -- table when the corresponding Vulkan image usage or image creation flags
--- are included in the @usage@ or 'Graphics.Vulkan.Core10.BaseType.Flags'
--- fields of
+-- are included in the @usage@ or @flags@ fields of
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.PhysicalDeviceImageFormatInfo2'.
 -- It /must/ include at least one GPU usage flag
 -- (@AHARDWAREBUFFER_USAGE_GPU_@*), even if none of the corresponding
@@ -422,9 +419,8 @@ instance es ~ '[] => Zero (AndroidHardwareBufferPropertiesANDROID es) where
 --     'Graphics.Vulkan.Core10.Memory.MemoryAllocateInfo' used to allocate
 --     @memory@ included a
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_dedicated_allocation.MemoryDedicatedAllocateInfo'
---     with non-@NULL@ 'Graphics.Vulkan.Core10.Handles.Image' member, then
---     that 'Graphics.Vulkan.Core10.Handles.Image' /must/ already be bound
---     to @memory@.
+--     with non-@NULL@ @image@ member, then that @image@ /must/ already be
+--     bound to @memory@.
 --
 -- == Valid Usage (Implicit)
 --
@@ -487,9 +483,8 @@ instance Zero MemoryGetAndroidHardwareBufferInfoANDROID where
 --
 -- If the Android hardware buffer has one of the formats listed in the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-external-android-hardware-buffer-formats Format Equivalence table>,
--- then 'Graphics.Vulkan.Core10.Enums.Format.Format' /must/ have the
--- equivalent Vulkan format listed in the table. Otherwise,
--- 'Graphics.Vulkan.Core10.Enums.Format.Format' /may/ be
+-- then @format@ /must/ have the equivalent Vulkan format listed in the
+-- table. Otherwise, @format@ /may/ be
 -- 'Graphics.Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', indicating the
 -- Android hardware buffer /can/ only be used with an external format.
 --
@@ -538,12 +533,12 @@ instance Zero MemoryGetAndroidHardwareBufferInfoANDROID where
 -- samplers and pipelines created from them) for any Android hardware
 -- buffers that have the same external format.
 --
--- If 'Graphics.Vulkan.Core10.Enums.Format.Format' is not
+-- If @format@ is not
 -- 'Graphics.Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', then the value
 -- of @samplerYcbcrConversionComponents@ /must/ be valid when used as the
 -- @components@ member of
 -- 'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_sampler_ycbcr_conversion.SamplerYcbcrConversionCreateInfo'
--- with that format. If 'Graphics.Vulkan.Core10.Enums.Format.Format' is
+-- with that format. If @format@ is
 -- 'Graphics.Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED', all members of
 -- @samplerYcbcrConversionComponents@ /must/ be
 -- 'Graphics.Vulkan.Core10.Enums.ComponentSwizzle.COMPONENT_SWIZZLE_IDENTITY'.
@@ -581,8 +576,8 @@ instance Zero MemoryGetAndroidHardwareBufferInfoANDROID where
 -- 'Graphics.Vulkan.Core11.Enums.SamplerYcbcrRange.SamplerYcbcrRange',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data AndroidHardwareBufferFormatPropertiesANDROID = AndroidHardwareBufferFormatPropertiesANDROID
-  { -- | 'Graphics.Vulkan.Core10.Enums.Format.Format' is the Vulkan format
-    -- corresponding to the Android hardware buffer’s format, or
+  { -- | @format@ is the Vulkan format corresponding to the Android hardware
+    -- buffer’s format, or
     -- 'Graphics.Vulkan.Core10.Enums.Format.FORMAT_UNDEFINED' if there is not
     -- an equivalent Vulkan format.
     format :: Format
@@ -590,8 +585,7 @@ data AndroidHardwareBufferFormatPropertiesANDROID = AndroidHardwareBufferFormatP
     -- for use with 'ExternalFormatANDROID'. It /must/ not be zero.
     externalFormat :: Word64
   , -- | @formatFeatures@ describes the capabilities of this external format when
-    -- used with an image bound to memory imported from
-    -- 'Graphics.Vulkan.Core10.Handles.Buffer'.
+    -- used with an image bound to memory imported from @buffer@.
     formatFeatures :: FormatFeatureFlags
   , -- | @samplerYcbcrConversionComponents@ is the component swizzle that
     -- /should/ be used in
@@ -674,8 +668,7 @@ instance Zero AndroidHardwareBufferFormatPropertiesANDROID where
 --
 -- If @externalFormat@ is zero, the effect is as if the
 -- 'ExternalFormatANDROID' structure was not present. Otherwise, the
--- 'Graphics.Vulkan.Core10.Handles.Image' will have the specified external
--- format.
+-- @image@ will have the specified external format.
 --
 -- == Valid Usage (Implicit)
 --

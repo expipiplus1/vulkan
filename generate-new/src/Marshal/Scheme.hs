@@ -38,7 +38,7 @@ data MarshalScheme a
   | Normal CType
     -- ^ Stays the same but uses more idiomatic Haskell types, for example
     -- Float instead of CFloat
-  | ElidedLength (Vector a) (Vector a) -- optional and required lengths
+  | ElidedLength CType (Vector a) (Vector a) -- optional and required lengths
     -- ^ This parameter only appears on the C side, it's value can be inferred
     -- from the lengths of some optional and required vectors
   | ElidedUnivalued Text
@@ -75,16 +75,16 @@ data MarshalScheme a
   | InOutCount (MarshalScheme a)
     -- ^ A non-const pointer to some count value, used to send and return
     -- additional the length of a vector.
-    -- Not typically used for structs
+    -- - Not typically used for structs
   | Custom (CustomScheme a)
     -- ^ A non-elided scheme with some complex behavior
   | ElidedCustom (CustomSchemeElided a)
     -- ^ An elided scheme with some complex behavior
-  deriving (Show)
+  deriving (Show, Eq, Ord)
 
 data CustomScheme a = CustomScheme
   { csName :: Text
-    -- ^ A name for debugging
+    -- ^ A name for Eq and Ord, also useful for debugging
   , csZero :: Maybe (Doc ())
     -- ^ The 'zero' value for this scheme if possible
   , csType
@@ -119,8 +119,15 @@ data CustomScheme a = CustomScheme
       -> Stmt s r (Ref s ValueDoc)
   }
 
+instance Eq (CustomScheme a) where
+  (==) = (==) `on` csName
+
+instance Ord (CustomScheme a) where
+  compare = compare `on` csName
+
 data CustomSchemeElided a = CustomSchemeElided
   { cseName :: Text
+    -- ^ A name for Eq and Ord, also useful for debugging
   , cseDirectPoke
       :: forall k (s :: k) r
        . ( Marshalable a
@@ -143,6 +150,12 @@ data CustomSchemeElided a = CustomSchemeElided
          )
       => Maybe (Ref s AddrDoc -> Stmt s r (Ref s ValueDoc))
   }
+
+instance Eq (CustomSchemeElided a) where
+  (==) = (==) `on` cseName
+
+instance Ord (CustomSchemeElided a) where
+  compare = compare `on` cseName
 
 instance P.Show (CustomScheme a) where
   showsPrec d (CustomScheme name _ _ _ _) =
@@ -172,6 +185,18 @@ data MarshalParams = MarshalParams
   , getBespokeScheme
       :: forall a . Marshalable a => CName -> a -> Maybe (MarshalScheme a)
   }
+
+instance Semigroup MarshalParams where
+  mp1 <> mp2 = MarshalParams
+    { isDefaultable       = getAny . concatBoth (Any .: isDefaultable)
+    , isPassAsPointerType = getAny . concatBoth (Any .: isPassAsPointerType)
+    , getBespokeScheme    = \p x ->
+                              getBespokeScheme mp1 p x <|> getBespokeScheme mp2 p x
+    }
+   where
+    concatBoth :: Monoid a => (MarshalParams -> a) -> a
+    concatBoth f = f mp1 <> f mp2
+    (.:) = (.) . (.)
 
 ----------------------------------------------------------------
 -- Schemes
@@ -230,11 +255,11 @@ lengthScheme ps p = do
   guard (any (\v -> type' v /= Ptr Const Void) vs)
   case V.partition isTopOptional vs of
     -- Make sure they exist
-    (Empty, Empty)                     -> empty
+    (Empty, Empty)                   -> empty
     (Empty, rs) | all isReturnPtr rs -> empty
     (os, Empty) | length os > 1 ->
       throw "TODO: Handle multiple optional vectors without any required ones"
-    (os, rs) -> pure $ ElidedLength os rs
+    (os, rs) -> pure $ ElidedLength (type' p) os rs
 
 -- | Matches const and non-const void pointers, exposes them as 'Ptr ()'
 voidPointerScheme :: Marshalable a => a -> ND r (MarshalScheme a)
@@ -482,7 +507,7 @@ isElided = \case
   Unit              -> False
   Preserve _        -> False
   Normal   _        -> False
-  ElidedLength _ _  -> True
+  ElidedLength{}    -> True
   ElidedUnivalued _ -> True
   ElidedVoid        -> True
   VoidPtr           -> False
@@ -496,3 +521,24 @@ isElided = \case
   WrappedStruct _   -> False
   Custom        _   -> False
   ElidedCustom  _   -> True
+
+isNegative :: MarshalScheme a -> Bool
+isNegative = \case
+  Unit              -> True
+  Preserve _        -> True
+  Normal   _        -> True
+  ElidedLength{}    -> False
+  ElidedUnivalued _ -> False
+  ElidedVoid        -> False
+  VoidPtr           -> True
+  ByteString        -> True
+  Maybe        _    -> True
+  Vector       _    -> True
+  EitherWord32 _    -> True
+  Tupled _ _        -> True
+  Returned      _   -> False
+  -- TODO: We should probably be more careful with InOutCount
+  InOutCount    _   -> True
+  WrappedStruct _   -> True
+  Custom        _   -> True
+  ElidedCustom  _   -> False

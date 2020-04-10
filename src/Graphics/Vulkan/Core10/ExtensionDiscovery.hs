@@ -5,6 +5,7 @@ module Graphics.Vulkan.Core10.ExtensionDiscovery  ( enumerateInstanceExtensionPr
                                                   ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -18,9 +19,10 @@ import Data.ByteString (useAsCString)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
+import Foreign.C.Types (CChar(..))
+import Control.Monad.IO.Class (MonadIO)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
-import Foreign.C.Types (CChar(..))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
 import Foreign.Storable (Storable(poke))
@@ -134,8 +136,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'ExtensionProperties'
-enumerateInstanceExtensionProperties :: ("layerName" ::: Maybe ByteString) -> IO (Result, ("properties" ::: Vector ExtensionProperties))
-enumerateInstanceExtensionProperties layerName = evalContT $ do
+enumerateInstanceExtensionProperties :: forall io . MonadIO io => ("layerName" ::: Maybe ByteString) -> io (Result, ("properties" ::: Vector ExtensionProperties))
+enumerateInstanceExtensionProperties layerName = liftIO . evalContT $ do
   vkEnumerateInstanceExtensionProperties' <- lift $ mkVkEnumerateInstanceExtensionProperties . castFunPtr @_ @(("pLayerName" ::: Ptr CChar) -> ("pPropertyCount" ::: Ptr Word32) -> ("pProperties" ::: Ptr ExtensionProperties) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkEnumerateInstanceExtensionProperties"#)
   pLayerName <- case (layerName) of
     Nothing -> pure nullPtr
@@ -165,8 +167,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device that will be queried.
+-- -   @physicalDevice@ is the physical device that will be queried.
 --
 -- -   @pLayerName@ is either @NULL@ or a pointer to a null-terminated
 --     UTF-8 string naming the layer to retrieve extensions from.
@@ -192,7 +193,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   If @pLayerName@ is not @NULL@, @pLayerName@ /must/ be a
@@ -223,8 +224,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'ExtensionProperties', 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-enumerateDeviceExtensionProperties :: PhysicalDevice -> ("layerName" ::: Maybe ByteString) -> IO (Result, ("properties" ::: Vector ExtensionProperties))
-enumerateDeviceExtensionProperties physicalDevice layerName = evalContT $ do
+enumerateDeviceExtensionProperties :: forall io . MonadIO io => PhysicalDevice -> ("layerName" ::: Maybe ByteString) -> io (Result, ("properties" ::: Vector ExtensionProperties))
+enumerateDeviceExtensionProperties physicalDevice layerName = liftIO . evalContT $ do
   let vkEnumerateDeviceExtensionProperties' = mkVkEnumerateDeviceExtensionProperties (pVkEnumerateDeviceExtensionProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pLayerName <- case (layerName) of

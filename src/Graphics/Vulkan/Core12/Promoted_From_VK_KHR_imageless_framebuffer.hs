@@ -185,8 +185,7 @@ instance Zero FramebufferAttachmentsCreateInfo where
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of
+-- -   @flags@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlagBits'
 --     values
 --
@@ -208,11 +207,11 @@ instance Zero FramebufferAttachmentsCreateInfo where
 -- 'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data FramebufferAttachmentImageInfo = FramebufferAttachmentImageInfo
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+  { -- | @flags@ is a bitmask of
     -- 'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlagBits',
     -- matching the value of
-    -- 'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'
-    -- used to create an image that will be used with this framebuffer.
+    -- 'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@flags@ used to create
+    -- an image that will be used with this framebuffer.
     flags :: ImageCreateFlags
   , -- | @usage@ is a bitmask of
     -- 'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlagBits',

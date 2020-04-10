@@ -11,6 +11,7 @@ import qualified Data.Set                      as Set
 import qualified Data.Vector.Extra             as V
 import           Data.Vector.Extra              ( Vector )
 import           Data.Text                     as T
+import           Data.Char                      ( isLower )
 import           Data.Text.IO                  as T
 import           Data.Set                       ( unions )
 import           Data.List.Extra                ( nubOrd
@@ -201,7 +202,10 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
     let
       locate :: CName -> DocumenteeLocation
       locate n =
-        let names = [mkTyName n, mkFunName n, mkPatternName n]
+        let names = case n of
+              CName "" -> []
+              CName n' | isLower (T.head n') -> [mkFunName n]
+              _ -> [mkTyName n, mkFunName n, mkPatternName n]
         in  case asum ((\n -> (n, ) <$> findLocalModule n) <$> names) of
               Just (n, m) | m == modName -> ThisModule n
               Just (n, m)                -> OtherModule m n
@@ -210,7 +214,7 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
       getDocumentation :: Documentee -> Doc ()
       getDocumentation target = case getDoc target of
         Nothing -> "-- No documentation found for" <+> viaShow target
-        Just d  -> case documentationToHaddock locate d of
+        Just d  -> case documentationToHaddock externalDocHTML locate d of
           Left e ->
             "-- Error getting documentation for"
               <+> viaShow target
@@ -320,6 +324,7 @@ renderImport' findModule getName getNameSpace (Import n qual children withAll so
             (  (wrapSymbol (getNameSpace n) . getName <$> children)
             <> (if withAll then V.singleton ".." else V.empty)
             )
+    when (T.null mod') $ throw "Trying to render an import with no module!"
     pure $ "import" <> sourceDoc <> qualDoc <+> pretty mod' <+> parenList
       (V.singleton (spec <> baseP <> childrenDoc))
 
@@ -368,41 +373,31 @@ fixOddImport n = fromMaybe (Just n) (lookup n fixes)
 --
 ----------------------------------------------------------------
 
--- Sometimes we need to lookup the type of a constructor or the level of a handle
-data TypeInfo = TypeInfo
+newtype TypeInfo = TypeInfo
   { tiConMap :: HName -> Maybe HName
-  , tiIsHandle :: HName -> Maybe Handle
-  , tiIsCommand :: HName -> Maybe Command
   }
 
 type HasTypeInfo r = MemberWithError (Input TypeInfo) r
 
 withTypeInfo
   :: HasRenderParams r => Spec -> Sem (Input TypeInfo ': r) a -> Sem r a
-withTypeInfo Spec {..} a = do
+withTypeInfo spec a = do
+  ti <- specTypeInfo spec
+  runInputConst ti a
+
+specTypeInfo :: HasRenderParams r => Spec -> Sem r TypeInfo
+specTypeInfo Spec {..} = do
   RenderParams {..} <- input
-  let
-    tyMap :: Map HName HName
-    tyMap = Map.fromList
-      [ (mkConName eExportedName evName, mkTyName eExportedName)
-      | Enum {..} <- V.toList specEnums
-      , let eExportedName = case eType of
-              AnEnum         -> eName
-              ABitmask flags -> flags
-      , EnumValue {..} <- V.toList eValues
-      ]
-    handleMap :: Map HName Handle
-    handleMap = Map.fromList
-      [ (mkTyName hName, h) | h@Handle {..} <- V.toList specHandles ]
-    commandMap :: Map HName Command
-    commandMap = Map.fromList
-      [ (mkFunName cName, c) | c@Command {..} <- V.toList specCommands ]
-  runInputConst
-    (TypeInfo (`Map.lookup` tyMap)
-              (`Map.lookup` handleMap)
-              (`Map.lookup` commandMap)
-    )
-    a
+  let tyMap :: Map HName HName
+      tyMap = Map.fromList
+        [ (mkConName eExportedName evName, mkTyName eExportedName)
+        | Enum {..} <- V.toList specEnums
+        , let eExportedName = case eType of
+                AnEnum         -> eName
+                ABitmask flags -> flags
+        , EnumValue {..} <- V.toList eValues
+        ]
+  pure $ TypeInfo (`Map.lookup` tyMap)
 
 adoptConstructors :: HasTypeInfo r => Import HName -> Sem r (Import HName)
 adoptConstructors = \case

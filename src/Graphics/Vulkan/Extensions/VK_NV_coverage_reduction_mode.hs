@@ -15,6 +15,7 @@ module Graphics.Vulkan.Extensions.VK_NV_coverage_reduction_mode  ( getPhysicalDe
                                                                  ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -35,6 +36,7 @@ import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -89,8 +91,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device from which to query the set of combinations.
+-- -   @physicalDevice@ is the physical device from which to query the set
+--     of combinations.
 --
 -- -   @pCombinationCount@ is a pointer to an integer related to the number
 --     of combinations available or queried, as described below.
@@ -103,21 +105,21 @@ foreign import ccall
 -- = Description
 --
 -- If @pCombinations@ is @NULL@, then the number of supported combinations
--- for the given 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is
--- returned in @pCombinationCount@. Otherwise, @pCombinationCount@ /must/
--- point to a variable set by the user to the number of elements in the
--- @pCombinations@ array, and on return the variable is overwritten with
--- the number of values actually written to @pCombinations@. If the value
--- of @pCombinationCount@ is less than the number of combinations supported
--- for the given 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', at most
--- @pCombinationCount@ values will be written @pCombinations@ and
--- 'Graphics.Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned
--- instead of 'Graphics.Vulkan.Core10.Enums.Result.SUCCESS' to indicate
--- that not all the supported values were returned.
+-- for the given @physicalDevice@ is returned in @pCombinationCount@.
+-- Otherwise, @pCombinationCount@ /must/ point to a variable set by the
+-- user to the number of elements in the @pCombinations@ array, and on
+-- return the variable is overwritten with the number of values actually
+-- written to @pCombinations@. If the value of @pCombinationCount@ is less
+-- than the number of combinations supported for the given
+-- @physicalDevice@, at most @pCombinationCount@ values will be written
+-- @pCombinations@ and 'Graphics.Vulkan.Core10.Enums.Result.INCOMPLETE'
+-- will be returned instead of
+-- 'Graphics.Vulkan.Core10.Enums.Result.SUCCESS' to indicate that not all
+-- the supported values were returned.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pCombinationCount@ /must/ be a valid pointer to a @uint32_t@ value
@@ -145,8 +147,8 @@ foreign import ccall
 --
 -- 'FramebufferMixedSamplesCombinationNV',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV :: PhysicalDevice -> IO (Result, ("combinations" ::: Vector FramebufferMixedSamplesCombinationNV))
-getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV physicalDevice = evalContT $ do
+getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("combinations" ::: Vector FramebufferMixedSamplesCombinationNV))
+getPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV' = mkVkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV (pVkGetPhysicalDeviceSupportedFramebufferMixedSamplesCombinationsNV (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPCombinationCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -252,7 +254,7 @@ instance Zero PhysicalDeviceCoverageReductionModeFeaturesNV where
 -- -   @sType@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_COVERAGE_REDUCTION_STATE_CREATE_INFO_NV'
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+-- -   @flags@ /must/ be @0@
 --
 -- -   @coverageReductionMode@ /must/ be a valid 'CoverageReductionModeNV'
 --     value
@@ -263,7 +265,7 @@ instance Zero PhysicalDeviceCoverageReductionModeFeaturesNV where
 -- 'PipelineCoverageReductionStateCreateFlagsNV',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineCoverageReductionStateCreateInfoNV = PipelineCoverageReductionStateCreateInfoNV
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is reserved for future use.
+  { -- | @flags@ is reserved for future use.
     flags :: PipelineCoverageReductionStateCreateFlagsNV
   , -- | @coverageReductionMode@ is a 'CoverageReductionModeNV' value controlling
     -- how the /color sample mask/ is generated from the coverage mask.

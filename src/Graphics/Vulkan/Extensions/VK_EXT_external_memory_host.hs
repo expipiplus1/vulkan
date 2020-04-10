@@ -11,6 +11,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_external_memory_host  ( getMemoryHostPo
                                                                , ExternalMemoryHandleTypeFlagBitsKHR
                                                                ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.Base (when)
 import GHC.IO (throwIO)
@@ -18,6 +19,7 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -64,8 +66,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     will be importing @pHostPointer@.
+-- -   @device@ is the logical device that will be importing
+--     @pHostPointer@.
 --
 -- -   @handleType@ is the type of the handle @pHostPointer@.
 --
@@ -95,8 +97,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @handleType@ /must/ be a valid
 --     'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits'
@@ -120,8 +122,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'MemoryHostPointerPropertiesEXT'
-getMemoryHostPointerPropertiesEXT :: Device -> ExternalMemoryHandleTypeFlagBits -> ("hostPointer" ::: Ptr ()) -> IO (MemoryHostPointerPropertiesEXT)
-getMemoryHostPointerPropertiesEXT device handleType hostPointer = evalContT $ do
+getMemoryHostPointerPropertiesEXT :: forall io . MonadIO io => Device -> ExternalMemoryHandleTypeFlagBits -> ("hostPointer" ::: Ptr ()) -> io (MemoryHostPointerPropertiesEXT)
+getMemoryHostPointerPropertiesEXT device handleType hostPointer = liftIO . evalContT $ do
   let vkGetMemoryHostPointerPropertiesEXT' = mkVkGetMemoryHostPointerPropertiesEXT (pVkGetMemoryHostPointerPropertiesEXT (deviceCmds (device :: Device)))
   pPMemoryHostPointerProperties <- ContT (withZeroCStruct @MemoryHostPointerPropertiesEXT)
   r <- lift $ vkGetMemoryHostPointerPropertiesEXT' (deviceHandle (device)) (handleType) (hostPointer) (pPMemoryHostPointerProperties)

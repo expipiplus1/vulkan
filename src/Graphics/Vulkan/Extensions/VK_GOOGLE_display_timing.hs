@@ -13,6 +13,7 @@ module Graphics.Vulkan.Extensions.VK_GOOGLE_display_timing  ( getRefreshCycleDur
                                                             ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -26,6 +27,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Either (Either)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -73,8 +75,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the device associated
---     with @swapchain@.
+-- -   @device@ is the device associated with @swapchain@.
 --
 -- -   @swapchain@ is the swapchain to obtain the refresh duration for.
 --
@@ -83,8 +84,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @swapchain@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.SwapchainKHR' handle
@@ -92,8 +93,8 @@ foreign import ccall
 -- -   @pDisplayTimingProperties@ /must/ be a valid pointer to a
 --     'RefreshCycleDurationGOOGLE' structure
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.Device', and @swapchain@
---     /must/ have been created, allocated, or retrieved from the same
+-- -   Both of @device@, and @swapchain@ /must/ have been created,
+--     allocated, or retrieved from the same
 --     'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Host Synchronization
@@ -116,8 +117,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'RefreshCycleDurationGOOGLE',
 -- 'Graphics.Vulkan.Extensions.Handles.SwapchainKHR'
-getRefreshCycleDurationGOOGLE :: Device -> SwapchainKHR -> IO (("displayTimingProperties" ::: RefreshCycleDurationGOOGLE))
-getRefreshCycleDurationGOOGLE device swapchain = evalContT $ do
+getRefreshCycleDurationGOOGLE :: forall io . MonadIO io => Device -> SwapchainKHR -> io (("displayTimingProperties" ::: RefreshCycleDurationGOOGLE))
+getRefreshCycleDurationGOOGLE device swapchain = liftIO . evalContT $ do
   let vkGetRefreshCycleDurationGOOGLE' = mkVkGetRefreshCycleDurationGOOGLE (pVkGetRefreshCycleDurationGOOGLE (deviceCmds (device :: Device)))
   pPDisplayTimingProperties <- ContT (withZeroCStruct @RefreshCycleDurationGOOGLE)
   r <- lift $ vkGetRefreshCycleDurationGOOGLE' (deviceHandle (device)) (swapchain) (pPDisplayTimingProperties)
@@ -138,8 +139,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the device associated
---     with @swapchain@.
+-- -   @device@ is the device associated with @swapchain@.
 --
 -- -   @swapchain@ is the swapchain to obtain presentation timing
 --     information duration for.
@@ -170,8 +170,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @swapchain@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.SwapchainKHR' handle
@@ -184,8 +184,8 @@ foreign import ccall
 --     /must/ be a valid pointer to an array of @pPresentationTimingCount@
 --     'PastPresentationTimingGOOGLE' structures
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.Device', and @swapchain@
---     /must/ have been created, allocated, or retrieved from the same
+-- -   Both of @device@, and @swapchain@ /must/ have been created,
+--     allocated, or retrieved from the same
 --     'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Host Synchronization
@@ -212,8 +212,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'PastPresentationTimingGOOGLE',
 -- 'Graphics.Vulkan.Extensions.Handles.SwapchainKHR'
-getPastPresentationTimingGOOGLE :: Device -> SwapchainKHR -> IO (Result, ("presentationTimings" ::: Vector PastPresentationTimingGOOGLE))
-getPastPresentationTimingGOOGLE device swapchain = evalContT $ do
+getPastPresentationTimingGOOGLE :: forall io . MonadIO io => Device -> SwapchainKHR -> io (Result, ("presentationTimings" ::: Vector PastPresentationTimingGOOGLE))
+getPastPresentationTimingGOOGLE device swapchain = liftIO . evalContT $ do
   let vkGetPastPresentationTimingGOOGLE' = mkVkGetPastPresentationTimingGOOGLE (pVkGetPastPresentationTimingGOOGLE (deviceCmds (device :: Device)))
   let device' = deviceHandle (device)
   pPPresentationTimingCount <- ContT $ bracket (callocBytes @Word32 4) free

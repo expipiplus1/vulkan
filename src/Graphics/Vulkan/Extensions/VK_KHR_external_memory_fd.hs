@@ -11,6 +11,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_external_memory_fd  ( getMemoryFdKHR
                                                              ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -20,10 +21,11 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Foreign.C.Types (CInt(..))
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CInt)
-import Foreign.C.Types (CInt(..))
 import Foreign.C.Types (CInt(CInt))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -68,8 +70,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     created the device memory being exported.
+-- -   @device@ is the logical device that created the device memory being
+--     exported.
 --
 -- -   @pGetFdInfo@ is a pointer to a 'MemoryGetFdInfoKHR' structure
 --     containing parameters of the export operation.
@@ -102,8 +104,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'MemoryGetFdInfoKHR'
-getMemoryFdKHR :: Device -> MemoryGetFdInfoKHR -> IO (("fd" ::: Int32))
-getMemoryFdKHR device getFdInfo = evalContT $ do
+getMemoryFdKHR :: forall io . MonadIO io => Device -> MemoryGetFdInfoKHR -> io (("fd" ::: Int32))
+getMemoryFdKHR device getFdInfo = liftIO . evalContT $ do
   let vkGetMemoryFdKHR' = mkVkGetMemoryFdKHR (pVkGetMemoryFdKHR (deviceCmds (device :: Device)))
   pGetFdInfo <- ContT $ withCStruct (getFdInfo)
   pPFd <- ContT $ bracket (callocBytes @CInt 4) free
@@ -125,8 +127,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     will be importing @fd@.
+-- -   @device@ is the logical device that will be importing @fd@.
 --
 -- -   @handleType@ is the type of the handle @fd@.
 --
@@ -150,8 +151,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'MemoryFdPropertiesKHR'
-getMemoryFdPropertiesKHR :: Device -> ExternalMemoryHandleTypeFlagBits -> ("fd" ::: Int32) -> IO (MemoryFdPropertiesKHR)
-getMemoryFdPropertiesKHR device handleType fd = evalContT $ do
+getMemoryFdPropertiesKHR :: forall io . MonadIO io => Device -> ExternalMemoryHandleTypeFlagBits -> ("fd" ::: Int32) -> io (MemoryFdPropertiesKHR)
+getMemoryFdPropertiesKHR device handleType fd = liftIO . evalContT $ do
   let vkGetMemoryFdPropertiesKHR' = mkVkGetMemoryFdPropertiesKHR (pVkGetMemoryFdPropertiesKHR (deviceCmds (device :: Device)))
   pPMemoryFdProperties <- ContT (withZeroCStruct @MemoryFdPropertiesKHR)
   r <- lift $ vkGetMemoryFdPropertiesKHR' (deviceHandle (device)) (handleType) (CInt (fd)) (pPMemoryFdProperties)
@@ -185,8 +186,7 @@ getMemoryFdPropertiesKHR device handleType fd = evalContT $ do
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_memory_capabilities.ExternalBufferProperties'.
 --
 -- -   The memory from which @fd@ was exported /must/ have been created on
---     the same underlying physical device as
---     'Graphics.Vulkan.Core10.Handles.Device'.
+--     the same underlying physical device as @device@.
 --
 -- -   If @handleType@ is not @0@, it /must/ be defined as a POSIX file
 --     descriptor handle.
@@ -195,9 +195,8 @@ getMemoryFdPropertiesKHR device handleType fd = evalContT $ do
 --     type specified by @handleType@.
 --
 -- -   The memory represented by @fd@ /must/ have been created from a
---     physical device and driver that is compatible with
---     'Graphics.Vulkan.Core10.Handles.Device' and @handleType@, as
---     described in
+--     physical device and driver that is compatible with @device@ and
+--     @handleType@, as described in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#external-memory-handle-types-compatibility>.
 --
 -- -   @fd@ /must/ obey any requirements listed for @handleType@ in

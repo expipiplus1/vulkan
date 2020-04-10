@@ -16,6 +16,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_shared_presentable_image  ( getSwapchai
                                                                    , SwapchainKHR(..)
                                                                    ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.Base (when)
 import GHC.IO (throwIO)
@@ -30,6 +31,7 @@ import GHC.Show (showsPrec)
 import Text.ParserCombinators.ReadPrec ((+++))
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -73,21 +75,20 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the device associated
---     with @swapchain@.
+-- -   @device@ is the device associated with @swapchain@.
 --
 -- -   @swapchain@ is the swapchain to query.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @swapchain@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.SwapchainKHR' handle
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.Device', and @swapchain@
---     /must/ have been created, allocated, or retrieved from the same
+-- -   Both of @device@, and @swapchain@ /must/ have been created,
+--     allocated, or retrieved from the same
 --     'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Host Synchronization
@@ -120,8 +121,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Extensions.Handles.SwapchainKHR'
-getSwapchainStatusKHR :: Device -> SwapchainKHR -> IO (Result)
-getSwapchainStatusKHR device swapchain = do
+getSwapchainStatusKHR :: forall io . MonadIO io => Device -> SwapchainKHR -> io (Result)
+getSwapchainStatusKHR device swapchain = liftIO $ do
   let vkGetSwapchainStatusKHR' = mkVkGetSwapchainStatusKHR (pVkGetSwapchainStatusKHR (deviceCmds (device :: Device)))
   r <- vkGetSwapchainStatusKHR' (deviceHandle (device)) (swapchain)
   when (r < SUCCESS) (throwIO (VulkanException r))

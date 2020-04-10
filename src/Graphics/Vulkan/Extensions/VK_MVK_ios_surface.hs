@@ -10,6 +10,7 @@ module Graphics.Vulkan.Extensions.VK_MVK_ios_surface  ( createIOSSurfaceMVK
                                                       ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -28,6 +29,7 @@ import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -74,8 +76,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' is the instance with which
---     to associate the surface.
+-- -   @instance@ is the instance with which to associate the surface.
 --
 -- -   @pCreateInfo@ is a pointer to a 'IOSSurfaceCreateInfoMVK' structure
 --     containing parameters affecting the creation of the surface object.
@@ -91,7 +92,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+-- -   @instance@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
@@ -124,8 +125,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'IOSSurfaceCreateInfoMVK', 'Graphics.Vulkan.Core10.Handles.Instance',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'
-createIOSSurfaceMVK :: Instance -> IOSSurfaceCreateInfoMVK -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (SurfaceKHR)
-createIOSSurfaceMVK instance' createInfo allocator = evalContT $ do
+createIOSSurfaceMVK :: forall io . MonadIO io => Instance -> IOSSurfaceCreateInfoMVK -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
+createIOSSurfaceMVK instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateIOSSurfaceMVK' = mkVkCreateIOSSurfaceMVK (pVkCreateIOSSurfaceMVK (instanceCmds (instance' :: Instance)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -149,7 +150,7 @@ createIOSSurfaceMVK instance' createInfo allocator = evalContT $ do
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createIOSSurfaceMVK'
 data IOSSurfaceCreateInfoMVK = IOSSurfaceCreateInfoMVK
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+  { -- | @flags@ /must/ be @0@
     flags :: IOSSurfaceCreateFlagsMVK
   , -- | @pView@ /must/ be a valid @UIView@ and /must/ be backed by a @CALayer@
     -- instance of type 'Graphics.Vulkan.Extensions.WSITypes.CAMetalLayer'.

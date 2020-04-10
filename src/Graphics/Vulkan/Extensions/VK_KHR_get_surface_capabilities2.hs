@@ -19,6 +19,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_get_surface_capabilities2  ( getPhysica
                                                                     ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -31,6 +32,7 @@ import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
@@ -98,9 +100,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device that will be associated with the swapchain to be created, as
---     described for
+-- -   @physicalDevice@ is the physical device that will be associated with
+--     the swapchain to be created, as described for
 --     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
 --
 -- -   @pSurfaceInfo@ is a pointer to a 'PhysicalDeviceSurfaceInfo2KHR'
@@ -130,7 +131,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pSurfaceInfo@ /must/ be a valid pointer to a valid
@@ -157,8 +158,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceSurfaceInfo2KHR', 'SurfaceCapabilities2KHR'
-getPhysicalDeviceSurfaceCapabilities2KHR :: (PokeChain a, PokeChain b, PeekChain b) => PhysicalDevice -> PhysicalDeviceSurfaceInfo2KHR a -> IO (SurfaceCapabilities2KHR b)
-getPhysicalDeviceSurfaceCapabilities2KHR physicalDevice surfaceInfo = evalContT $ do
+getPhysicalDeviceSurfaceCapabilities2KHR :: forall a b io . (PokeChain a, PokeChain b, PeekChain b, MonadIO io) => PhysicalDevice -> PhysicalDeviceSurfaceInfo2KHR a -> io (SurfaceCapabilities2KHR b)
+getPhysicalDeviceSurfaceCapabilities2KHR physicalDevice surfaceInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfaceCapabilities2KHR' = mkVkGetPhysicalDeviceSurfaceCapabilities2KHR (pVkGetPhysicalDeviceSurfaceCapabilities2KHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   pSurfaceInfo <- ContT $ withCStruct (surfaceInfo)
   pPSurfaceCapabilities <- ContT (withZeroCStruct @(SurfaceCapabilities2KHR _))
@@ -180,9 +181,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device that will be associated with the swapchain to be created, as
---     described for
+-- -   @physicalDevice@ is the physical device that will be associated with
+--     the swapchain to be created, as described for
 --     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
 --
 -- -   @pSurfaceInfo@ is a pointer to a 'PhysicalDeviceSurfaceInfo2KHR'
@@ -218,14 +218,14 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   @pSurfaceInfo->surface@ must be supported by
---     'Graphics.Vulkan.Core10.Handles.PhysicalDevice', as reported by
+-- -   @pSurfaceInfo->surface@ must be supported by @physicalDevice@, as
+--     reported by
 --     'Graphics.Vulkan.Extensions.VK_KHR_surface.getPhysicalDeviceSurfaceSupportKHR'
 --     or an equivalent platform-specific mechanism.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pSurfaceInfo@ /must/ be a valid pointer to a valid
@@ -259,8 +259,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceSurfaceInfo2KHR', 'SurfaceFormat2KHR'
-getPhysicalDeviceSurfaceFormats2KHR :: PokeChain a => PhysicalDevice -> PhysicalDeviceSurfaceInfo2KHR a -> IO (Result, ("surfaceFormats" ::: Vector SurfaceFormat2KHR))
-getPhysicalDeviceSurfaceFormats2KHR physicalDevice surfaceInfo = evalContT $ do
+getPhysicalDeviceSurfaceFormats2KHR :: forall a io . (PokeChain a, MonadIO io) => PhysicalDevice -> PhysicalDeviceSurfaceInfo2KHR a -> io (Result, ("surfaceFormats" ::: Vector SurfaceFormat2KHR))
+getPhysicalDeviceSurfaceFormats2KHR physicalDevice surfaceInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfaceFormats2KHR' = mkVkGetPhysicalDeviceSurfaceFormats2KHR (pVkGetPhysicalDeviceSurfaceFormats2KHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pSurfaceInfo <- ContT $ withCStruct (surfaceInfo)

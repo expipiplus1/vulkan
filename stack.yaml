@@ -1,6 +1,7 @@
 resolver: lts-15.0
 packages:
 - .
+- VulkanMemoryAllocator
 extra-deps:
 - github: haskell-game/sdl2
   commit: 45679ab73fe4113eeae3b17ecaa2bec3b00bfd81

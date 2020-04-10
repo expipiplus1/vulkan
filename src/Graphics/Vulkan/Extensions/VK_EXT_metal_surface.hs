@@ -11,6 +11,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_metal_surface  ( createMetalSurfaceEXT
                                                         ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -29,6 +30,7 @@ import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -77,8 +79,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' is the instance with which
---     to associate the surface.
+-- -   @instance@ is the instance with which to associate the surface.
 --
 -- -   @pCreateInfo@ is a pointer to a 'MetalSurfaceCreateInfoEXT'
 --     structure specifying parameters affecting the creation of the
@@ -95,7 +96,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+-- -   @instance@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
@@ -128,8 +129,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Instance', 'MetalSurfaceCreateInfoEXT',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'
-createMetalSurfaceEXT :: Instance -> MetalSurfaceCreateInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (SurfaceKHR)
-createMetalSurfaceEXT instance' createInfo allocator = evalContT $ do
+createMetalSurfaceEXT :: forall io . MonadIO io => Instance -> MetalSurfaceCreateInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
+createMetalSurfaceEXT instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateMetalSurfaceEXT' = mkVkCreateMetalSurfaceEXT (pVkCreateMetalSurfaceEXT (instanceCmds (instance' :: Instance)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -153,7 +154,7 @@ createMetalSurfaceEXT instance' createInfo allocator = evalContT $ do
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createMetalSurfaceEXT'
 data MetalSurfaceCreateInfoEXT = MetalSurfaceCreateInfoEXT
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+  { -- | @flags@ /must/ be @0@
     flags :: MetalSurfaceCreateFlagsEXT
   , -- | @pLayer@ is a reference to a
     -- 'Graphics.Vulkan.Extensions.WSITypes.CAMetalLayer' object representing a

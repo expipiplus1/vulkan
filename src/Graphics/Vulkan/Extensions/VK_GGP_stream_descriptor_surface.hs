@@ -11,6 +11,7 @@ module Graphics.Vulkan.Extensions.VK_GGP_stream_descriptor_surface  ( createStre
                                                                     ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -29,6 +30,7 @@ import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -79,8 +81,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' is the instance to
---     associate with the surface.
+-- -   @instance@ is the instance to associate with the surface.
 --
 -- -   @pCreateInfo@ is a pointer to a
 --     'StreamDescriptorSurfaceCreateInfoGGP' structure containing
@@ -97,7 +98,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+-- -   @instance@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
@@ -131,8 +132,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Instance',
 -- 'StreamDescriptorSurfaceCreateInfoGGP',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'
-createStreamDescriptorSurfaceGGP :: Instance -> StreamDescriptorSurfaceCreateInfoGGP -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (SurfaceKHR)
-createStreamDescriptorSurfaceGGP instance' createInfo allocator = evalContT $ do
+createStreamDescriptorSurfaceGGP :: forall io . MonadIO io => Instance -> StreamDescriptorSurfaceCreateInfoGGP -> ("allocator" ::: Maybe AllocationCallbacks) -> io (SurfaceKHR)
+createStreamDescriptorSurfaceGGP instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateStreamDescriptorSurfaceGGP' = mkVkCreateStreamDescriptorSurfaceGGP (pVkCreateStreamDescriptorSurfaceGGP (instanceCmds (instance' :: Instance)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -156,7 +157,7 @@ createStreamDescriptorSurfaceGGP instance' createInfo allocator = evalContT $ do
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createStreamDescriptorSurfaceGGP'
 data StreamDescriptorSurfaceCreateInfoGGP = StreamDescriptorSurfaceCreateInfoGGP
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+  { -- | @flags@ /must/ be @0@
     flags :: StreamDescriptorSurfaceCreateFlagsGGP
   , -- | @streamDescriptor@ /must/ be a valid
     -- 'Graphics.Vulkan.Extensions.WSITypes.GgpStreamDescriptor'

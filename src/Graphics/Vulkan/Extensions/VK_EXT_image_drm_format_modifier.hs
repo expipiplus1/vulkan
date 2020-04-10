@@ -12,6 +12,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_image_drm_format_modifier  ( getImageDr
                                                                     , pattern EXT_IMAGE_DRM_FORMAT_MODIFIER_EXTENSION_NAME
                                                                     ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -20,6 +21,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -68,10 +70,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the image.
+-- -   @device@ is the logical device that owns the image.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Image' is the queried image.
+-- -   @image@ is the queried image.
 --
 -- -   @pProperties@ will return properties of the image’s /DRM format
 --     modifier/.
@@ -87,8 +88,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Image',
 -- 'ImageDrmFormatModifierPropertiesEXT'
-getImageDrmFormatModifierPropertiesEXT :: Device -> Image -> IO (ImageDrmFormatModifierPropertiesEXT)
-getImageDrmFormatModifierPropertiesEXT device image = evalContT $ do
+getImageDrmFormatModifierPropertiesEXT :: forall io . MonadIO io => Device -> Image -> io (ImageDrmFormatModifierPropertiesEXT)
+getImageDrmFormatModifierPropertiesEXT device image = liftIO . evalContT $ do
   let vkGetImageDrmFormatModifierPropertiesEXT' = mkVkGetImageDrmFormatModifierPropertiesEXT (pVkGetImageDrmFormatModifierPropertiesEXT (deviceCmds (device :: Device)))
   pPProperties <- ContT (withZeroCStruct @ImageDrmFormatModifierPropertiesEXT)
   _ <- lift $ vkGetImageDrmFormatModifierPropertiesEXT' (deviceHandle (device)) (image) (pPProperties)
@@ -103,9 +104,9 @@ getImageDrmFormatModifierPropertiesEXT device image = evalContT $ do
 --
 -- If @pDrmFormatModifierProperties@ is @NULL@, then the function returns
 -- in @drmFormatModifierCount@ the number of modifiers compatible with the
--- queried 'Graphics.Vulkan.Core10.Enums.Format.Format'. Otherwise, the
--- application /must/ set @drmFormatModifierCount@ to the length of the
--- array @pDrmFormatModifierProperties@; the function will write at most
+-- queried @format@. Otherwise, the application /must/ set
+-- @drmFormatModifierCount@ to the length of the array
+-- @pDrmFormatModifierProperties@; the function will write at most
 -- @drmFormatModifierCount@ elements to the array, and will return in
 -- @drmFormatModifierCount@ the number of elements written.
 --
@@ -120,8 +121,7 @@ getImageDrmFormatModifierPropertiesEXT device image = evalContT $ do
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data DrmFormatModifierPropertiesListEXT = DrmFormatModifierPropertiesListEXT
   { -- | @drmFormatModifierCount@ is an inout parameter related to the number of
-    -- modifiers compatible with the
-    -- 'Graphics.Vulkan.Core10.Enums.Format.Format', as described below.
+    -- modifiers compatible with the @format@, as described below.
     drmFormatModifierCount :: Word32
   , -- | @pDrmFormatModifierProperties@ is either @NULL@ or an array of
     -- 'DrmFormatModifierPropertiesEXT' structures.
@@ -220,12 +220,12 @@ instance Zero DrmFormatModifierPropertiesListEXT where
 -- then the partition of the image’s __memory__ into /memory planes/ is
 -- implementation-specific and /may/ be unrelated to the partition of the
 -- image’s __content__ into /format planes/. For example, consider an image
--- whose 'Graphics.Vulkan.Core10.Enums.Format.Format' is
+-- whose @format@ is
 -- 'Graphics.Vulkan.Core10.Enums.Format.FORMAT_G8_B8_R8_3PLANE_420_UNORM',
 -- @tiling@ is
 -- 'Graphics.Vulkan.Core10.Enums.ImageTiling.IMAGE_TILING_DRM_FORMAT_MODIFIER_EXT',
--- whose @drmFormatModifier@ is not @DRM_FORMAT_MOD_LINEAR@, and
--- 'Graphics.Vulkan.Core10.BaseType.Flags' lacks
+-- whose @drmFormatModifier@ is not @DRM_FORMAT_MOD_LINEAR@, and @flags@
+-- lacks
 -- 'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_DISJOINT_BIT'.
 -- The image has 3 /format planes/, and commands such
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdCopyBufferToImage' act
@@ -255,14 +255,14 @@ data DrmFormatModifierPropertiesEXT = DrmFormatModifierPropertiesEXT
   { -- | @drmFormatModifier@ is a /Linux DRM format modifier/.
     drmFormatModifier :: Word64
   , -- | @drmFormatModifierPlaneCount@ is the number of /memory planes/ in any
-    -- image created with 'Graphics.Vulkan.Core10.Enums.Format.Format' and
-    -- @drmFormatModifier@. An image’s /memory planecount/ is distinct from its
-    -- /format planecount/, as explained below.
+    -- image created with @format@ and @drmFormatModifier@. An image’s /memory
+    -- planecount/ is distinct from its /format planecount/, as explained
+    -- below.
     drmFormatModifierPlaneCount :: Word32
   , -- | @drmFormatModifierTilingFeatures@ is a bitmask of
     -- 'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FormatFeatureFlagBits'
-    -- that are supported by any image created with
-    -- 'Graphics.Vulkan.Core10.Enums.Format.Format' and @drmFormatModifier@.
+    -- that are supported by any image created with @format@ and
+    -- @drmFormatModifier@.
     drmFormatModifierTilingFeatures :: FormatFeatureFlags
   }
   deriving (Typeable)
@@ -321,30 +321,29 @@ instance Zero DrmFormatModifierPropertiesEXT where
 --
 -- == Valid Usage
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode' is
+-- -   If @sharingMode@ is
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     then @pQueueFamilyIndices@ /must/ be a valid pointer to an array of
 --     @queueFamilyIndexCount@ @uint32_t@ values.
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode' is
+-- -   If @sharingMode@ is
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     then @queueFamilyIndexCount@ /must/ be greater than @1@.
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode' is
+-- -   If @sharingMode@ is
 --     'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT',
 --     each element of @pQueueFamilyIndices@ /must/ be unique and /must/ be
 --     less than the @pQueueFamilyPropertyCount@ returned by
 --     'Graphics.Vulkan.Core11.Promoted_From_VK_KHR_get_physical_device_properties2.getPhysicalDeviceQueueFamilyProperties2'
---     for the 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' that was
---     used to create 'Graphics.Vulkan.Core10.Handles.Device'.
+--     for the @physicalDevice@ that was used to create @device@.
 --
 -- == Valid Usage (Implicit)
 --
 -- -   @sType@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_DRM_FORMAT_MODIFIER_INFO_EXT'
 --
--- -   'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode' /must/ be a
---     valid 'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode' value
+-- -   @sharingMode@ /must/ be a valid
+--     'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode' value
 --
 -- = See Also
 --
@@ -356,12 +355,11 @@ data PhysicalDeviceImageDrmFormatModifierInfoEXT = PhysicalDeviceImageDrmFormatM
     -- 'ImageDrmFormatModifierExplicitCreateInfoEXT'::@modifier@ or to
     -- 'ImageDrmFormatModifierListCreateInfoEXT'::@pModifiers@.
     drmFormatModifier :: Word64
-  , -- | 'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode' specifies how the
-    -- image will be accessed by multiple queue families.
+  , -- | @sharingMode@ specifies how the image will be accessed by multiple queue
+    -- families.
     sharingMode :: SharingMode
   , -- | @pQueueFamilyIndices@ is a list of queue families that will access the
-    -- image (ignored if 'Graphics.Vulkan.Core10.Enums.SharingMode.SharingMode'
-    -- is not
+    -- image (ignored if @sharingMode@ is not
     -- 'Graphics.Vulkan.Core10.Enums.SharingMode.SHARING_MODE_CONCURRENT').
     queueFamilyIndices :: Vector Word32
   }
@@ -509,8 +507,8 @@ instance Zero ImageDrmFormatModifierListCreateInfoEXT where
 -- -   @drmFormatModifierPlaneCount@ /must/ be equal to the
 --     'DrmFormatModifierPropertiesEXT'::@drmFormatModifierPlaneCount@
 --     associated with
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::'Graphics.Vulkan.Core10.Enums.Format.Format'
---     and @drmFormatModifier@, as found by querying
+--     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@format@ and
+--     @drmFormatModifier@, as found by querying
 --     'DrmFormatModifierPropertiesListEXT'.
 --
 -- -   For each element of @pPlaneLayouts@, @size@ /must/ be 0
@@ -588,15 +586,14 @@ instance Zero ImageDrmFormatModifierExplicitCreateInfoEXT where
 --
 -- = Description
 --
--- If the 'Graphics.Vulkan.Core10.Handles.Image' was created with
+-- If the @image@ was created with
 -- 'ImageDrmFormatModifierListCreateInfoEXT', then the returned
 -- @drmFormatModifier@ /must/ belong to the list of modifiers provided at
 -- time of image creation in
 -- 'ImageDrmFormatModifierListCreateInfoEXT'::@pDrmFormatModifiers@. If the
--- 'Graphics.Vulkan.Core10.Handles.Image' was created with
--- 'ImageDrmFormatModifierExplicitCreateInfoEXT', then the returned
--- @drmFormatModifier@ /must/ be the modifier provided at time of image
--- creation in
+-- @image@ was created with 'ImageDrmFormatModifierExplicitCreateInfoEXT',
+-- then the returned @drmFormatModifier@ /must/ be the modifier provided at
+-- time of image creation in
 -- 'ImageDrmFormatModifierExplicitCreateInfoEXT'::@drmFormatModifier@.
 --
 -- == Valid Usage (Implicit)

@@ -9,11 +9,13 @@ module Graphics.Vulkan.Core11.Promoted_From_VK_KHR_external_fence_capabilities  
                                                                                 , ExternalFenceFeatureFlags
                                                                                 ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -55,8 +57,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device from which to query the fence capabilities.
+-- -   @physicalDevice@ is the physical device from which to query the
+--     fence capabilities.
 --
 -- -   @pExternalFenceInfo@ is a pointer to a
 --     'PhysicalDeviceExternalFenceInfo' structure describing the
@@ -74,8 +76,8 @@ foreign import ccall
 -- 'ExternalFenceProperties',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceExternalFenceInfo'
-getPhysicalDeviceExternalFenceProperties :: PhysicalDevice -> PhysicalDeviceExternalFenceInfo -> IO (ExternalFenceProperties)
-getPhysicalDeviceExternalFenceProperties physicalDevice externalFenceInfo = evalContT $ do
+getPhysicalDeviceExternalFenceProperties :: forall io . MonadIO io => PhysicalDevice -> PhysicalDeviceExternalFenceInfo -> io (ExternalFenceProperties)
+getPhysicalDeviceExternalFenceProperties physicalDevice externalFenceInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceExternalFenceProperties' = mkVkGetPhysicalDeviceExternalFenceProperties (pVkGetPhysicalDeviceExternalFenceProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
   pExternalFenceInfo <- ContT $ withCStruct (externalFenceInfo)
   pPExternalFenceProperties <- ContT (withZeroCStruct @ExternalFenceProperties)

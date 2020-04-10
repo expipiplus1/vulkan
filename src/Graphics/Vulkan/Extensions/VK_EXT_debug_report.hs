@@ -62,6 +62,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_debug_report  ( createDebugReportCallba
                                                        ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -82,13 +83,14 @@ import Text.ParserCombinators.ReadPrec (step)
 import Data.ByteString (useAsCString)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Foreign.C.Types (CChar(..))
+import Foreign.C.Types (CSize(..))
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
-import Foreign.C.Types (CChar(..))
 import Foreign.C.Types (CSize)
-import Foreign.C.Types (CSize(..))
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -139,8 +141,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' the instance the callback
---     will be logged on.
+-- -   @instance@ the instance the callback will be logged on.
 --
 -- -   @pCreateInfo@ is a pointer to a 'DebugReportCallbackCreateInfoEXT'
 --     structure defining the conditions under which this callback will be
@@ -156,7 +157,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+-- -   @instance@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
@@ -186,8 +187,8 @@ foreign import ccall
 -- 'DebugReportCallbackCreateInfoEXT',
 -- 'Graphics.Vulkan.Extensions.Handles.DebugReportCallbackEXT',
 -- 'Graphics.Vulkan.Core10.Handles.Instance'
-createDebugReportCallbackEXT :: Instance -> DebugReportCallbackCreateInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (DebugReportCallbackEXT)
-createDebugReportCallbackEXT instance' createInfo allocator = evalContT $ do
+createDebugReportCallbackEXT :: forall io . MonadIO io => Instance -> DebugReportCallbackCreateInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DebugReportCallbackEXT)
+createDebugReportCallbackEXT instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateDebugReportCallbackEXT' = mkVkCreateDebugReportCallbackEXT (pVkCreateDebugReportCallbackEXT (instanceCmds (instance' :: Instance)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -203,11 +204,11 @@ createDebugReportCallbackEXT instance' createInfo allocator = evalContT $ do
 -- 'destroyDebugReportCallbackEXT' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withDebugReportCallbackEXT :: Instance -> DebugReportCallbackCreateInfoEXT -> Maybe AllocationCallbacks -> (DebugReportCallbackEXT -> IO r) -> IO r
-withDebugReportCallbackEXT instance' debugReportCallbackCreateInfoEXT allocationCallbacks =
+withDebugReportCallbackEXT :: forall r . Instance -> DebugReportCallbackCreateInfoEXT -> Maybe AllocationCallbacks -> ((DebugReportCallbackEXT) -> IO r) -> IO r
+withDebugReportCallbackEXT instance' pCreateInfo pAllocator =
   bracket
-    (createDebugReportCallbackEXT instance' debugReportCallbackCreateInfoEXT allocationCallbacks)
-    (\o -> destroyDebugReportCallbackEXT instance' o allocationCallbacks)
+    (createDebugReportCallbackEXT instance' pCreateInfo pAllocator)
+    (\(o0) -> destroyDebugReportCallbackEXT instance' o0 pAllocator)
 
 
 foreign import ccall
@@ -221,8 +222,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' the instance where the
---     callback was created.
+-- -   @instance@ the instance where the callback was created.
 --
 -- -   @callback@ the
 --     'Graphics.Vulkan.Extensions.Handles.DebugReportCallbackEXT' object
@@ -248,7 +248,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+-- -   @instance@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
 -- -   @callback@ /must/ be a valid
@@ -260,7 +260,7 @@ foreign import ccall
 --     structure
 --
 -- -   @callback@ /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Instance'
+--     @instance@
 --
 -- == Host Synchronization
 --
@@ -271,8 +271,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Extensions.Handles.DebugReportCallbackEXT',
 -- 'Graphics.Vulkan.Core10.Handles.Instance'
-destroyDebugReportCallbackEXT :: Instance -> DebugReportCallbackEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyDebugReportCallbackEXT instance' callback allocator = evalContT $ do
+destroyDebugReportCallbackEXT :: forall io . MonadIO io => Instance -> DebugReportCallbackEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyDebugReportCallbackEXT instance' callback allocator = liftIO . evalContT $ do
   let vkDestroyDebugReportCallbackEXT' = mkVkDestroyDebugReportCallbackEXT (pVkDestroyDebugReportCallbackEXT (instanceCmds (instance' :: Instance)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -292,15 +292,14 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' is the debug stream’s
+-- -   @instance@ is the debug stream’s
 --     'Graphics.Vulkan.Core10.Handles.Instance'.
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' specifies the
---     'DebugReportFlagBitsEXT' classification of this event\/message.
+-- -   @flags@ specifies the 'DebugReportFlagBitsEXT' classification of
+--     this event\/message.
 --
--- -   'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType' is a
---     'DebugReportObjectTypeEXT' specifying the type of object being used
---     or created at the time the event was triggered.
+-- -   @objectType@ is a 'DebugReportObjectTypeEXT' specifying the type of
+--     object being used or created at the time the event was triggered.
 --
 -- -   @object@ this is the object where the issue was detected. @object@
 --     /can/ be 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' if there
@@ -328,25 +327,23 @@ foreign import ccall
 -- -   @object@ /must/ be a Vulkan object or
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType' is not
---     'DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT' and @object@ is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @object@ /must/
---     be a Vulkan object of the corresponding type associated with
---     'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType' as defined in
+-- -   If @objectType@ is not 'DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT' and
+--     @object@ is not 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @object@ /must/ be a Vulkan object of the corresponding type
+--     associated with @objectType@ as defined in
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debug-report-object-types>.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+-- -   @instance@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of 'DebugReportFlagBitsEXT' values
+-- -   @flags@ /must/ be a valid combination of 'DebugReportFlagBitsEXT'
+--     values
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not be @0@
+-- -   @flags@ /must/ not be @0@
 --
--- -   'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType' /must/ be a
---     valid 'DebugReportObjectTypeEXT' value
+-- -   @objectType@ /must/ be a valid 'DebugReportObjectTypeEXT' value
 --
 -- -   @pLayerPrefix@ /must/ be a null-terminated UTF-8 string
 --
@@ -356,8 +353,8 @@ foreign import ccall
 --
 -- 'DebugReportFlagsEXT', 'DebugReportObjectTypeEXT',
 -- 'Graphics.Vulkan.Core10.Handles.Instance'
-debugReportMessageEXT :: Instance -> DebugReportFlagsEXT -> DebugReportObjectTypeEXT -> ("object" ::: Word64) -> ("location" ::: Word64) -> ("messageCode" ::: Int32) -> ("layerPrefix" ::: ByteString) -> ("message" ::: ByteString) -> IO ()
-debugReportMessageEXT instance' flags objectType object location messageCode layerPrefix message = evalContT $ do
+debugReportMessageEXT :: forall io . MonadIO io => Instance -> DebugReportFlagsEXT -> DebugReportObjectTypeEXT -> ("object" ::: Word64) -> ("location" ::: Word64) -> ("messageCode" ::: Int32) -> ("layerPrefix" ::: ByteString) -> ("message" ::: ByteString) -> io ()
+debugReportMessageEXT instance' flags objectType object location messageCode layerPrefix message = liftIO . evalContT $ do
   let vkDebugReportMessageEXT' = mkVkDebugReportMessageEXT (pVkDebugReportMessageEXT (instanceCmds (instance' :: Instance)))
   pLayerPrefix <- ContT $ useAsCString (layerPrefix)
   pMessage <- ContT $ useAsCString (message)
@@ -375,8 +372,7 @@ pattern STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT = STRUCTURE_TYPE_DEBUG_REPOR
 -- = Description
 --
 -- For each 'Graphics.Vulkan.Extensions.Handles.DebugReportCallbackEXT'
--- that is created the
--- 'DebugReportCallbackCreateInfoEXT'::'Graphics.Vulkan.Core10.BaseType.Flags'
+-- that is created the 'DebugReportCallbackCreateInfoEXT'::@flags@
 -- determine when that 'DebugReportCallbackCreateInfoEXT'::@pfnCallback@ is
 -- called. When an event happens, the implementation will do a bitwise AND
 -- of the event’s 'DebugReportFlagBitsEXT' flags to each
@@ -403,8 +399,7 @@ pattern STRUCTURE_TYPE_DEBUG_REPORT_CREATE_INFO_EXT = STRUCTURE_TYPE_DEBUG_REPOR
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createDebugReportCallbackEXT'
 data DebugReportCallbackCreateInfoEXT = DebugReportCallbackCreateInfoEXT
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid combination of
-    -- 'DebugReportFlagBitsEXT' values
+  { -- | @flags@ /must/ be a valid combination of 'DebugReportFlagBitsEXT' values
     flags :: DebugReportFlagsEXT
   , -- | @pfnCallback@ /must/ be a valid 'PFN_vkDebugReportCallbackEXT' value
     pfnCallback :: PFN_vkDebugReportCallbackEXT
@@ -810,16 +805,15 @@ type FN_vkDebugReportCallbackEXT = DebugReportFlagsEXT -> DebugReportObjectTypeE
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' specifies the
---     'DebugReportFlagBitsEXT' that triggered this callback.
+-- -   @flags@ specifies the 'DebugReportFlagBitsEXT' that triggered this
+--     callback.
 --
--- -   'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType' is a
---     'DebugReportObjectTypeEXT' value specifying the type of object being
---     used or created at the time the event was triggered.
+-- -   @objectType@ is a 'DebugReportObjectTypeEXT' value specifying the
+--     type of object being used or created at the time the event was
+--     triggered.
 --
--- -   @object@ is the object where the issue was detected. If
---     'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType' is
---     'DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT', @object@ is undefined.
+-- -   @object@ is the object where the issue was detected. If @objectType@
+--     is 'DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT', @object@ is undefined.
 --
 -- -   @location@ is a component (layer, driver, loader) defined value
 --     specifying the /location/ of the trigger. This is an /optional/
@@ -851,12 +845,11 @@ type FN_vkDebugReportCallbackEXT = DebugReportFlagsEXT -> DebugReportObjectTypeE
 -- layer development.
 --
 -- @object@ /must/ be a Vulkan object or
--- 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'. If
--- 'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType' is not
--- 'DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT' and @object@ is not
+-- 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'. If @objectType@ is
+-- not 'DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT' and @object@ is not
 -- 'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @object@ /must/ be a
--- Vulkan object of the corresponding type associated with
--- 'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType' as defined in
+-- Vulkan object of the corresponding type associated with @objectType@ as
+-- defined in
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debug-report-object-types>.
 --
 -- = See Also

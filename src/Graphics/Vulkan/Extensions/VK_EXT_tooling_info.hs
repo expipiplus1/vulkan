@@ -18,6 +18,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_tooling_info  ( getPhysicalDeviceToolPr
                                                        ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -36,6 +37,7 @@ import Data.ByteString (packCString)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -87,11 +89,11 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the handle to the
---     physical device to query for active tools.
+-- -   @physicalDevice@ is the handle to the physical device to query for
+--     active tools.
 --
 -- -   @pToolCount@ is a pointer to an integer describing the number of
---     tools active on 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'.
+--     tools active on @physicalDevice@.
 --
 -- -   @pToolProperties@ is either @NULL@ or a pointer to an array of
 --     'PhysicalDeviceToolPropertiesEXT' structures.
@@ -99,13 +101,12 @@ foreign import ccall
 -- = Description
 --
 -- If @pToolProperties@ is @NULL@, then the number of tools currently
--- active on 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is returned in
--- @pToolCount@. Otherwise, @pToolCount@ /must/ point to a variable set by
--- the user to the number of elements in the @pToolProperties@ array, and
--- on return the variable is overwritten with the number of structures
--- actually written to @pToolProperties@. If @pToolCount@ is less than the
--- number of currently active tools, at most @pToolCount@ structures will
--- be written.
+-- active on @physicalDevice@ is returned in @pToolCount@. Otherwise,
+-- @pToolCount@ /must/ point to a variable set by the user to the number of
+-- elements in the @pToolProperties@ array, and on return the variable is
+-- overwritten with the number of structures actually written to
+-- @pToolProperties@. If @pToolCount@ is less than the number of currently
+-- active tools, at most @pToolCount@ structures will be written.
 --
 -- The count and properties of active tools /may/ change in response to
 -- events outside the scope of the specification. An application /should/
@@ -113,7 +114,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pToolCount@ /must/ be a valid pointer to a @uint32_t@ value
@@ -135,8 +136,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceToolPropertiesEXT'
-getPhysicalDeviceToolPropertiesEXT :: PhysicalDevice -> IO (Result, ("toolProperties" ::: Vector PhysicalDeviceToolPropertiesEXT))
-getPhysicalDeviceToolPropertiesEXT physicalDevice = evalContT $ do
+getPhysicalDeviceToolPropertiesEXT :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("toolProperties" ::: Vector PhysicalDeviceToolPropertiesEXT))
+getPhysicalDeviceToolPropertiesEXT physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceToolPropertiesEXT' = mkVkGetPhysicalDeviceToolPropertiesEXT (pVkGetPhysicalDeviceToolPropertiesEXT (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPToolCount <- ContT $ bracket (callocBytes @Word32 4) free

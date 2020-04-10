@@ -5,6 +5,11 @@ module Documentation
   , Documentee(..)
   , docBookToDocumentation
   , splitDocumentation
+  , guessDocumentee
+  , iterateSuffixesM
+  , iterateSuffixes
+  , pattern Section
+  , isHeaderLE
   , main
   ) where
 
@@ -12,7 +17,6 @@ import           Control.Monad
 import           Data.Default
 import           Data.Foldable
 import           Data.Maybe
-import qualified Data.Text.Extra               as T
 import           Documentation.RunAsciiDoctor
                                          hiding ( main )
 import           Relude                  hiding ( rem
@@ -37,26 +41,26 @@ data Documentee
   deriving (Show, Eq, Ord)
 
 docBookToDocumentation
-  :: Text
+  :: (Documentee -> Bool)
+  -- ^ Is a valid documentee name
+  -> Text
   -- ^ The docbook string
   -> Either Text [Documentation]
-docBookToDocumentation db = mdo
+docBookToDocumentation isValid db = mdo
   let readerOptions = def
   pandoc             <- first show $ runPure (readDocBook readerOptions db)
   (removed, subDocs) <- splitDocumentation name pandoc
-  name               <- guessDocumentee removed
+  name               <- guessDocumentee isValid removed
   pure $ Documentation (TopLevel name) removed : subDocs
 
-guessDocumentee :: Pandoc -> Either Text CName
-guessDocumentee (Pandoc _ bs) = do
+guessDocumentee :: (Documentee -> Bool) -> Pandoc -> Either Text CName
+guessDocumentee isValid (Pandoc _ bs) = do
   firstWord <- case bs of
     Para (Str n : _) : _ -> pure n
-    _                    -> Left "Unable to find first word in documentation"
-  if "vk"
-       `T.isPrefixOf` T.toLower firstWord
-       ||             "pfn_"
-       `T.isPrefixOf` T.toLower firstWord
+    _ -> Left "Unable to find first word in documentation"
+  if isValid (TopLevel (CName firstWord))
     then pure (CName firstWord)
+    -- TODO: Fix error message here.
     else Left "First word of documentation doesn't begin with \"vk\" or \"pfn\""
 
 -- | If the description is a bullet list of "enames" then remove those from the
@@ -66,7 +70,7 @@ guessDocumentee (Pandoc _ bs) = do
 splitDocumentation :: CName -> Pandoc -> Either Text (Pandoc, [Documentation])
 splitDocumentation parent (Pandoc meta bs) = do
   (es, bs') <- iterateSuffixesM (splitPrefix meta) bs
-  pure (Pandoc meta bs', join (catMaybes es))
+  pure (Pandoc meta bs', join es)
   where
     splitPrefix m = \case
       -- Remove the "Document Notes" section
@@ -142,7 +146,7 @@ main = do
   [d, m] <- getArgs
   manTxtToDocbook [] d m >>= \case
     Left  e  -> sayErr e
-    Right d' -> case docBookToDocumentation d' of
+    Right d' -> case docBookToDocumentation (const True) d' of
       Left  e  -> sayErr e
       Right ds -> for_ ds sayShow
 
@@ -150,17 +154,38 @@ main = do
 -- Utils
 ----------------------------------------------------------------
 
+-- |
+-- >>> :{
+--  iterateSuffixesM
+--    (\case
+--      1 : 2 : xs -> pure @Identity (Just "one,two", xs)
+--      xs         -> pure (Nothing, xs)
+--    )
+--    [0 .. 4]
+-- :}
+-- Identity (["one,two"], [0,3,4])
 iterateSuffixesM
   :: forall m a b
    . Monad m
-  => ([a] -> m (b, [a]))
-  -- ^ A function which takes a list transforming it and returning something
+  => ([a] -> m (Maybe b, [a]))
+  -- ^ A function which takes a list and returns some @b@ and the list without
+  -- whatever prefix the @b@ is used in place of
   -> [a]
-  -- ^ A list to extract parts from
+  -- ^ A list to extract @b@s from
   -> m ([b], [a])
-  -- ^ (The list of (non-empty) extracted prefixes, the list without those
-  -- prefixes)
+  -- ^ (The list of @b@s, the list without those prefixes)
 iterateSuffixesM split' = foldrM go ([], [])
-  where
-    go :: a -> ([b], [a]) -> m ([b], [a])
-    go x (ss, xs) = first (: ss) <$> split' (x : xs)
+ where
+  go :: a -> ([b], [a]) -> m ([b], [a])
+  go x (ss, xs) = first (maybe ss (: ss)) <$> split' (x : xs)
+
+iterateSuffixes
+  :: forall a b
+   . ([a] -> (Maybe b, [a]))
+  -- ^ A function which takes a list and returns some @b@ and the list without
+  -- whatever prefix the @b@ is used in place of
+  -> [a]
+  -- ^ A list to extract @b@s from
+  -> ([b], [a])
+  -- ^ (The list of @b@s, the list without those prefixes)
+iterateSuffixes = coerce (iterateSuffixesM @Identity @a @b)

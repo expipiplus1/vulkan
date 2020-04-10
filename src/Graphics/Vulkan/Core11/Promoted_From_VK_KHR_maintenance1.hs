@@ -8,6 +8,8 @@ module Graphics.Vulkan.Core11.Promoted_From_VK_KHR_maintenance1  ( trimCommandPo
                                                                  , FormatFeatureFlags
                                                                  ) where
 
+import Control.Monad.IO.Class (liftIO)
+import Control.Monad.IO.Class (MonadIO)
 import Foreign.Ptr (FunPtr)
 import Foreign.Ptr (Ptr)
 import Graphics.Vulkan.Core10.Handles (CommandPool)
@@ -35,13 +37,11 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the command pool.
+-- -   @device@ is the logical device that owns the command pool.
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandPool' is the command pool to
---     trim.
+-- -   @commandPool@ is the command pool to trim.
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' is reserved for future use.
+-- -   @flags@ is reserved for future use.
 --
 -- = Description
 --
@@ -86,30 +86,28 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandPool' /must/ be a valid
+-- -   @commandPool@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandPool' handle
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+-- -   @flags@ /must/ be @0@
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandPool' /must/ have been
---     created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   @commandPool@ /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandPool' /must/
---     be externally synchronized
+-- -   Host access to @commandPool@ /must/ be externally synchronized
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandPool',
 -- 'Graphics.Vulkan.Core11.Enums.CommandPoolTrimFlags.CommandPoolTrimFlags',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-trimCommandPool :: Device -> CommandPool -> CommandPoolTrimFlags -> IO ()
-trimCommandPool device commandPool flags = do
+trimCommandPool :: forall io . MonadIO io => Device -> CommandPool -> CommandPoolTrimFlags -> io ()
+trimCommandPool device commandPool flags = liftIO $ do
   let vkTrimCommandPool' = mkVkTrimCommandPool (pVkTrimCommandPool (deviceCmds (device :: Device)))
   vkTrimCommandPool' (deviceHandle (device)) (commandPool) (flags)
   pure $ ()

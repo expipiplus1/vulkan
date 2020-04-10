@@ -4,9 +4,11 @@ module Graphics.Vulkan.Core12.Promoted_From_VK_EXT_host_query_reset  ( resetQuer
                                                                      , StructureType(..)
                                                                      ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -45,11 +47,10 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the query pool.
+-- -   @device@ is the logical device that owns the query pool.
 --
--- -   'Graphics.Vulkan.Core10.Handles.QueryPool' is the handle of the
---     query pool managing the queries being reset.
+-- -   @queryPool@ is the handle of the query pool managing the queries
+--     being reset.
 --
 -- -   @firstQuery@ is the initial query index to reset.
 --
@@ -60,7 +61,7 @@ foreign import ccall
 -- This command sets the status of query indices [@firstQuery@,
 -- @firstQuery@ + @queryCount@ - 1] to unavailable.
 --
--- If 'Graphics.Vulkan.Core10.Handles.QueryPool' is
+-- If @queryPool@ is
 -- 'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_PERFORMANCE_QUERY_KHR'
 -- this command sets the status of query indices [@firstQuery@,
 -- @firstQuery@ + @queryCount@ - 1] to unavailable for each pass.
@@ -72,38 +73,36 @@ foreign import ccall
 --     feature /must/ be enabled
 --
 -- -   @firstQuery@ /must/ be less than the number of queries in
---     'Graphics.Vulkan.Core10.Handles.QueryPool'
+--     @queryPool@
 --
 -- -   The sum of @firstQuery@ and @queryCount@ /must/ be less than or
---     equal to the number of queries in
---     'Graphics.Vulkan.Core10.Handles.QueryPool'
+--     equal to the number of queries in @queryPool@
 --
 -- -   Submitted commands that refer to the range specified by @firstQuery@
---     and @queryCount@ in 'Graphics.Vulkan.Core10.Handles.QueryPool'
---     /must/ have completed execution
+--     and @queryCount@ in @queryPool@ /must/ have completed execution
 --
 -- -   The range of queries specified by @firstQuery@ and @queryCount@ in
---     'Graphics.Vulkan.Core10.Handles.QueryPool' /must/ not be in use by
---     calls to 'Graphics.Vulkan.Core10.Query.getQueryPoolResults' or
+--     @queryPool@ /must/ not be in use by calls to
+--     'Graphics.Vulkan.Core10.Query.getQueryPoolResults' or
 --     'resetQueryPool' in other threads
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.QueryPool' /must/ be a valid
+-- -   @queryPool@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.QueryPool' handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.QueryPool' /must/ have been created,
---     allocated, or retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
+-- -   @queryPool@ /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.QueryPool'
-resetQueryPool :: Device -> QueryPool -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> IO ()
-resetQueryPool device queryPool firstQuery queryCount = do
+resetQueryPool :: forall io . MonadIO io => Device -> QueryPool -> ("firstQuery" ::: Word32) -> ("queryCount" ::: Word32) -> io ()
+resetQueryPool device queryPool firstQuery queryCount = liftIO $ do
   let vkResetQueryPool' = mkVkResetQueryPool (pVkResetQueryPool (deviceCmds (device :: Device)))
   vkResetQueryPool' (deviceHandle (device)) (queryPool) (firstQuery) (queryCount)
   pure $ ()

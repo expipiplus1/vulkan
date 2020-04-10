@@ -8,6 +8,7 @@ module Graphics.Vulkan.Core10.PipelineCache  ( createPipelineCache
                                              ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -21,10 +22,11 @@ import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Foreign.C.Types (CSize(..))
+import Control.Monad.IO.Class (MonadIO)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CSize)
-import Foreign.C.Types (CSize(..))
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -72,8 +74,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     creates the pipeline cache object.
+-- -   @device@ is the logical device that creates the pipeline cache
+--     object.
 --
 -- -   @pCreateInfo@ is a pointer to a 'PipelineCacheCreateInfo' structure
 --     containing initial parameters for the pipeline cache object.
@@ -117,8 +119,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'PipelineCacheCreateInfo' structure
@@ -149,8 +151,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.PipelineCache',
 -- 'PipelineCacheCreateInfo'
-createPipelineCache :: Device -> PipelineCacheCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (PipelineCache)
-createPipelineCache device createInfo allocator = evalContT $ do
+createPipelineCache :: forall io . MonadIO io => Device -> PipelineCacheCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> io (PipelineCache)
+createPipelineCache device createInfo allocator = liftIO . evalContT $ do
   let vkCreatePipelineCache' = mkVkCreatePipelineCache (pVkCreatePipelineCache (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -166,11 +168,11 @@ createPipelineCache device createInfo allocator = evalContT $ do
 -- using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withPipelineCache :: Device -> PipelineCacheCreateInfo -> Maybe AllocationCallbacks -> (PipelineCache -> IO r) -> IO r
-withPipelineCache device pipelineCacheCreateInfo allocationCallbacks =
+withPipelineCache :: forall r . Device -> PipelineCacheCreateInfo -> Maybe AllocationCallbacks -> ((PipelineCache) -> IO r) -> IO r
+withPipelineCache device pCreateInfo pAllocator =
   bracket
-    (createPipelineCache device pipelineCacheCreateInfo allocationCallbacks)
-    (\o -> destroyPipelineCache device o allocationCallbacks)
+    (createPipelineCache device pCreateInfo pAllocator)
+    (\(o0) -> destroyPipelineCache device o0 pAllocator)
 
 
 foreign import ccall
@@ -184,11 +186,10 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     destroys the pipeline cache object.
+-- -   @device@ is the logical device that destroys the pipeline cache
+--     object.
 --
--- -   'Graphics.Vulkan.Core10.Handles.PipelineCache' is the handle of the
---     pipeline cache to destroy.
+-- -   @pipelineCache@ is the handle of the pipeline cache to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
@@ -197,45 +198,43 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   If 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.PipelineCache'
---     was created, a compatible set of callbacks /must/ be provided here
+--     were provided when @pipelineCache@ was created, a compatible set of
+--     callbacks /must/ be provided here
 --
 -- -   If no
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.PipelineCache'
---     was created, @pAllocator@ /must/ be @NULL@
+--     were provided when @pipelineCache@ was created, @pAllocator@ /must/
+--     be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.PipelineCache' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.PipelineCache' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.PipelineCache' handle
+-- -   If @pipelineCache@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @pipelineCache@
+--     /must/ be a valid 'Graphics.Vulkan.Core10.Handles.PipelineCache'
+--     handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
 --     pointer to a valid
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
 --     structure
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.PipelineCache' is a valid handle,
---     it /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   If @pipelineCache@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.PipelineCache' /must/
---     be externally synchronized
+-- -   Host access to @pipelineCache@ /must/ be externally synchronized
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.PipelineCache'
-destroyPipelineCache :: Device -> PipelineCache -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyPipelineCache device pipelineCache allocator = evalContT $ do
+destroyPipelineCache :: forall io . MonadIO io => Device -> PipelineCache -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyPipelineCache device pipelineCache allocator = liftIO . evalContT $ do
   let vkDestroyPipelineCache' = mkVkDestroyPipelineCache (pVkDestroyPipelineCache (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -255,11 +254,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the pipeline cache.
+-- -   @device@ is the logical device that owns the pipeline cache.
 --
--- -   'Graphics.Vulkan.Core10.Handles.PipelineCache' is the pipeline cache
---     to retrieve data from.
+-- -   @pipelineCache@ is the pipeline cache to retrieve data from.
 --
 -- -   @pDataSize@ is a pointer to a @size_t@ value related to the amount
 --     of data in the pipeline cache, as described below.
@@ -334,10 +331,10 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.PipelineCache' /must/ be a valid
+-- -   @pipelineCache@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PipelineCache' handle
 --
 -- -   @pDataSize@ /must/ be a valid pointer to a @size_t@ value
@@ -346,9 +343,8 @@ foreign import ccall
 --     not @NULL@, @pData@ /must/ be a valid pointer to an array of
 --     @pDataSize@ bytes
 --
--- -   'Graphics.Vulkan.Core10.Handles.PipelineCache' /must/ have been
---     created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   @pipelineCache@ /must/ have been created, allocated, or retrieved
+--     from @device@
 --
 -- == Return Codes
 --
@@ -368,8 +364,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.PipelineCache'
-getPipelineCacheData :: Device -> PipelineCache -> IO (Result, ("data" ::: ByteString))
-getPipelineCacheData device pipelineCache = evalContT $ do
+getPipelineCacheData :: forall io . MonadIO io => Device -> PipelineCache -> io (Result, ("data" ::: ByteString))
+getPipelineCacheData device pipelineCache = liftIO . evalContT $ do
   let vkGetPipelineCacheData' = mkVkGetPipelineCacheData (pVkGetPipelineCacheData (deviceCmds (device :: Device)))
   let device' = deviceHandle (device)
   pPDataSize <- ContT $ bracket (callocBytes @CSize 8) free
@@ -395,8 +391,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the pipeline cache objects.
+-- -   @device@ is the logical device that owns the pipeline cache objects.
 --
 -- -   @dstCache@ is the handle of the pipeline cache to merge results
 --     into.
@@ -421,8 +416,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @dstCache@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PipelineCache' handle
@@ -434,10 +429,10 @@ foreign import ccall
 -- -   @srcCacheCount@ /must/ be greater than @0@
 --
 -- -   @dstCache@ /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+--     @device@
 --
 -- -   Each element of @pSrcCaches@ /must/ have been created, allocated, or
---     retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
+--     retrieved from @device@
 --
 -- == Host Synchronization
 --
@@ -459,8 +454,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.PipelineCache'
-mergePipelineCaches :: Device -> ("dstCache" ::: PipelineCache) -> ("srcCaches" ::: Vector PipelineCache) -> IO ()
-mergePipelineCaches device dstCache srcCaches = evalContT $ do
+mergePipelineCaches :: forall io . MonadIO io => Device -> ("dstCache" ::: PipelineCache) -> ("srcCaches" ::: Vector PipelineCache) -> io ()
+mergePipelineCaches device dstCache srcCaches = liftIO . evalContT $ do
   let vkMergePipelineCaches' = mkVkMergePipelineCaches (pVkMergePipelineCaches (deviceCmds (device :: Device)))
   pPSrcCaches <- ContT $ allocaBytesAligned @PipelineCache ((Data.Vector.length (srcCaches)) * 8) 8
   lift $ Data.Vector.imapM_ (\i e -> poke (pPSrcCaches `plusPtr` (8 * (i)) :: Ptr PipelineCache) (e)) (srcCaches)
@@ -487,7 +482,7 @@ mergePipelineCaches device dstCache srcCaches = evalContT $ do
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+-- -   @flags@ /must/ be @0@
 --
 -- -   If @initialDataSize@ is not @0@, @pInitialData@ /must/ be a valid
 --     pointer to an array of @initialDataSize@ bytes
@@ -498,7 +493,7 @@ mergePipelineCaches device dstCache srcCaches = evalContT $ do
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createPipelineCache'
 data PipelineCacheCreateInfo = PipelineCacheCreateInfo
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is reserved for future use.
+  { -- | @flags@ is reserved for future use.
     flags :: PipelineCacheCreateFlags
   , -- | @initialDataSize@ is the number of bytes in @pInitialData@. If
     -- @initialDataSize@ is zero, the pipeline cache will initially be empty.

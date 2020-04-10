@@ -126,7 +126,7 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_
 -- -   @sType@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.StructureType.STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV'
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+-- -   @flags@ /must/ be @0@
 --
 -- -   @coverageModulationMode@ /must/ be a valid
 --     'CoverageModulationModeNV' value
@@ -137,7 +137,7 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_
 -- 'PipelineCoverageModulationStateCreateFlagsNV',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineCoverageModulationStateCreateInfoNV = PipelineCoverageModulationStateCreateInfoNV
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is reserved for future use.
+  { -- | @flags@ is reserved for future use.
     flags :: PipelineCoverageModulationStateCreateFlagsNV
   , -- | @coverageModulationMode@ is a 'CoverageModulationModeNV' value
     -- controlling which color components are modulated.

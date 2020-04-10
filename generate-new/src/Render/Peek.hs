@@ -100,7 +100,7 @@ peekIdiomatic name lengths fromType addr scheme = do
   RenderParams {..} <- input
   r                 <- peekWrapped name lengths fromType addr scheme
   t                 <- raise $ refType r
-  toTy              <- schemeType scheme
+  toTy              <- schemeTypeNegative scheme
   -- If this is already the correct type don't try wrapping it
   if Just t == toTy
     then pure r
@@ -153,16 +153,17 @@ peekWrapped
   -> MarshalScheme a
   -> Sem (NonDet ': StmtE s r ': r) (Ref s ValueDoc)
 peekWrapped name lengths fromType addr = \case
-  Normal   toType   -> raise $ normalPeek name addr toType fromType
-  Preserve _toType  -> raise $ storablePeek name addr fromType
-  ElidedVoid        -> empty
-  ElidedLength _ _  -> raise $ storablePeek name addr fromType
-  ElidedUnivalued _ -> empty
-  ByteString        -> raise $ byteStringPeek @a name lengths addr fromType
-  VoidPtr           -> raise $ storablePeek name addr fromType
-  Maybe  toType     -> raise $ maybePeek' name lengths addr fromType toType
-  Vector toElem     -> raise $ vectorPeek name lengths addr fromType toElem
-  Tupled _ toElem   -> raise $ tuplePeek name addr fromType toElem
+  Normal   toType      -> raise $ normalPeek name addr toType fromType
+  Preserve _toType     -> raise $ storablePeek name addr fromType
+  ElidedVoid           -> empty
+  -- TODO: Should this take into account the type?
+  ElidedLength{}       -> raise $ storablePeek name addr fromType
+  ElidedUnivalued _    -> empty
+  ByteString           -> raise $ byteStringPeek @a name lengths addr fromType
+  VoidPtr              -> raise $ storablePeek name addr fromType
+  Maybe  toType        -> raise $ maybePeek' name lengths addr fromType toType
+  Vector toElem        -> raise $ vectorPeek name lengths addr fromType toElem
+  Tupled _ toElem      -> raise $ tuplePeek name addr fromType toElem
   WrappedStruct toName -> raise $ wrappedStructPeek name addr toName fromType
   EitherWord32 toElem ->
     raise $ eitherWord32Peek name lengths addr fromType toElem
@@ -679,7 +680,7 @@ getLenRef lengths = do
             renderType
             =<< note
                   "Unable to get type for struct with length specifying member for allocation"
-            =<< schemeType siScheme
+            =<< schemeTypeNegative siScheme
           tellImportWithAll (mkTyName structName)
           pure
             .   Pure AlwaysInline
@@ -687,7 +688,7 @@ getLenRef lengths = do
             $   "fromIntegral $"
             <+> pretty (mkMemberName member)
             <+> parens (structValue <+> "::" <+> structTyDoc)
-    NullTerminated :<| _ -> throw "Trying to allocate a null terminated"
+    NullTerminated :<| _ -> throw "Trying to allocate a null terminated array"
     -- _ -> throw "Trying to allocate something with multiple lengths"
 
 ----------------------------------------------------------------

@@ -10,6 +10,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_hdr_metadata  ( setHdrMetadataEXT
                                                        ) where
 
 import Control.Monad (unless)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.IO (throwIO)
 import Foreign.Ptr (nullPtr)
@@ -18,6 +19,7 @@ import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CFloat)
@@ -60,8 +62,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device where
---     the swapchain(s) were created.
+-- -   @device@ is the logical device where the swapchain(s) were created.
 --
 -- -   @swapchainCount@ is the number of swapchains included in
 --     @pSwapchains@.
@@ -74,8 +75,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pSwapchains@ /must/ be a valid pointer to an array of
 --     @swapchainCount@ valid
@@ -86,16 +87,16 @@ foreign import ccall
 --
 -- -   @swapchainCount@ /must/ be greater than @0@
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.Device', and the elements of
---     @pSwapchains@ /must/ have been created, allocated, or retrieved from
---     the same 'Graphics.Vulkan.Core10.Handles.Instance'
+-- -   Both of @device@, and the elements of @pSwapchains@ /must/ have been
+--     created, allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'HdrMetadataEXT',
 -- 'Graphics.Vulkan.Extensions.Handles.SwapchainKHR'
-setHdrMetadataEXT :: Device -> ("swapchains" ::: Vector SwapchainKHR) -> ("metadata" ::: Vector HdrMetadataEXT) -> IO ()
-setHdrMetadataEXT device swapchains metadata = evalContT $ do
+setHdrMetadataEXT :: forall io . MonadIO io => Device -> ("swapchains" ::: Vector SwapchainKHR) -> ("metadata" ::: Vector HdrMetadataEXT) -> io ()
+setHdrMetadataEXT device swapchains metadata = liftIO . evalContT $ do
   let vkSetHdrMetadataEXT' = mkVkSetHdrMetadataEXT (pVkSetHdrMetadataEXT (deviceCmds (device :: Device)))
   let pSwapchainsLength = Data.Vector.length $ (swapchains)
   let pMetadataLength = Data.Vector.length $ (metadata)

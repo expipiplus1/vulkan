@@ -191,13 +191,11 @@ data PhysicalDeviceVulkan11Features = PhysicalDeviceVulkan11Features
     variablePointers :: Bool
   , -- | @protectedMemory@ specifies whether protected memory is supported.
     protectedMemory :: Bool
-  , -- | 'Graphics.Vulkan.Core11.Handles.SamplerYcbcrConversion' specifies
-    -- whether the implementation supports
+  , -- | @samplerYcbcrConversion@ specifies whether the implementation supports
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#samplers-YCbCr-conversion sampler Y′CBCR conversion>.
-    -- If 'Graphics.Vulkan.Core11.Handles.SamplerYcbcrConversion' is
-    -- 'Graphics.Vulkan.Core10.BaseType.FALSE', sampler Y′CBCR conversion is
-    -- not supported, and samplers using sampler Y′CBCR conversion /must/ not
-    -- be used.
+    -- If @samplerYcbcrConversion@ is 'Graphics.Vulkan.Core10.BaseType.FALSE',
+    -- sampler Y′CBCR conversion is not supported, and samplers using sampler
+    -- Y′CBCR conversion /must/ not be used.
     samplerYcbcrConversion :: Bool
   , -- | @shaderDrawParameters@ specifies whether shader draw parameters are
     -- supported.
@@ -357,8 +355,7 @@ data PhysicalDeviceVulkan11Properties = PhysicalDeviceVulkan11Properties
     -- are available in all stages, or are restricted to fragment and compute
     -- stages.
     subgroupQuadOperationsInAllStages :: Bool
-  , -- | 'Graphics.Vulkan.Core11.Enums.PointClippingBehavior.PointClippingBehavior'
-    -- /must/ be a valid
+  , -- | @pointClippingBehavior@ /must/ be a valid
     -- 'Graphics.Vulkan.Core11.Enums.PointClippingBehavior.PointClippingBehavior'
     -- value
     pointClippingBehavior :: PointClippingBehavior
@@ -1213,9 +1210,8 @@ data PhysicalDeviceVulkan12Properties = PhysicalDeviceVulkan12Properties
   , -- | @driverInfo@ /must/ be a null-terminated UTF-8 string whose length is
     -- less than or equal to VK_MAX_DRIVER_INFO_SIZE
     driverInfo :: ByteString
-  , -- | 'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.ConformanceVersion'
-    -- is the version of the Vulkan conformance test this driver is conformant
-    -- against (see
+  , -- | @conformanceVersion@ is the version of the Vulkan conformance test this
+    -- driver is conformant against (see
     -- 'Graphics.Vulkan.Core12.Promoted_From_VK_KHR_driver_properties.ConformanceVersion').
     conformanceVersion :: ConformanceVersion
   , -- | @denormBehaviorIndependence@ /must/ be a valid

@@ -15,6 +15,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_line_rasterization  ( cmdSetLineStipple
                                                              , pattern EXT_LINE_RASTERIZATION_EXTENSION_NAME
                                                              ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
@@ -27,6 +28,7 @@ import GHC.Show (showsPrec)
 import Text.ParserCombinators.ReadPrec ((+++))
 import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -70,8 +72,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command will be recorded.
+-- -   @commandBuffer@ is the command buffer into which the command will be
+--     recorded.
 --
 -- -   @lineStippleFactor@ is the repeat factor used in stippled line
 --     rasterization.
@@ -85,24 +87,22 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics operations
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -118,8 +118,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdSetLineStippleEXT :: CommandBuffer -> ("lineStippleFactor" ::: Word32) -> ("lineStipplePattern" ::: Word16) -> IO ()
-cmdSetLineStippleEXT commandBuffer lineStippleFactor lineStipplePattern = do
+cmdSetLineStippleEXT :: forall io . MonadIO io => CommandBuffer -> ("lineStippleFactor" ::: Word32) -> ("lineStipplePattern" ::: Word16) -> io ()
+cmdSetLineStippleEXT commandBuffer lineStippleFactor lineStipplePattern = liftIO $ do
   let vkCmdSetLineStippleEXT' = mkVkCmdSetLineStippleEXT (pVkCmdSetLineStippleEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdSetLineStippleEXT' (commandBufferHandle (commandBuffer)) (lineStippleFactor) (lineStipplePattern)
   pure $ ()

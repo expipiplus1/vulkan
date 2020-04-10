@@ -7,11 +7,13 @@ module Graphics.Vulkan.Extensions.VK_NVX_image_view_handle  ( getImageViewHandle
                                                             , pattern NVX_IMAGE_VIEW_HANDLE_EXTENSION_NAME
                                                             ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -49,8 +51,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the image view.
+-- -   @device@ is the logical device that owns the image view.
 --
 -- -   @pInfo@ describes the image view to query and type of handle.
 --
@@ -59,8 +60,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'ImageViewHandleInfoNVX'
-getImageViewHandleNVX :: Device -> ImageViewHandleInfoNVX -> IO (Word32)
-getImageViewHandleNVX device info = evalContT $ do
+getImageViewHandleNVX :: forall io . MonadIO io => Device -> ImageViewHandleInfoNVX -> io (Word32)
+getImageViewHandleNVX device info = liftIO . evalContT $ do
   let vkGetImageViewHandleNVX' = mkVkGetImageViewHandleNVX (pVkGetImageViewHandleNVX (deviceCmds (device :: Device)))
   pInfo <- ContT $ withCStruct (info)
   r <- lift $ vkGetImageViewHandleNVX' (deviceHandle (device)) pInfo
@@ -72,31 +73,29 @@ getImageViewHandleNVX device info = evalContT $ do
 --
 -- == Valid Usage
 --
--- -   'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' /must/
---     be
+-- -   @descriptorType@ /must/ be
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE',
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
 --     or
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
 --
--- -   'Graphics.Vulkan.Core10.Handles.Sampler' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Sampler' if
---     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+-- -   @sampler@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Sampler'
+--     if @descriptorType@ is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER'
 --
 -- -   If descriptorType is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_SAMPLED_IMAGE'
 --     or
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER',
---     the image that 'Graphics.Vulkan.Core10.Handles.ImageView' was
---     created from /must/ have been created with the
+--     the image that @imageView@ was created from /must/ have been created
+--     with the
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_SAMPLED_BIT'
 --     usage bit set
 --
 -- -   If descriptorType is
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_STORAGE_IMAGE',
---     the image that 'Graphics.Vulkan.Core10.Handles.ImageView' was
---     created from /must/ have been created with the
+--     the image that @imageView@ was created from /must/ have been created
+--     with the
 --     'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.IMAGE_USAGE_STORAGE_BIT'
 --     usage bit set
 --
@@ -107,20 +106,17 @@ getImageViewHandleNVX device info = evalContT $ do
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   'Graphics.Vulkan.Core10.Handles.ImageView' /must/ be a valid
+-- -   @imageView@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.ImageView' handle
 --
--- -   'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' /must/
---     be a valid
+-- -   @descriptorType@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' value
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Sampler' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.Sampler' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Sampler' handle
+-- -   If @sampler@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @sampler@ /must/
+--     be a valid 'Graphics.Vulkan.Core10.Handles.Sampler' handle
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.ImageView', and
---     'Graphics.Vulkan.Core10.Handles.Sampler' that are valid handles of
+-- -   Both of @imageView@, and @sampler@ that are valid handles of
 --     non-ignored parameters /must/ have been created, allocated, or
 --     retrieved from the same 'Graphics.Vulkan.Core10.Handles.Device'
 --
@@ -132,13 +128,12 @@ getImageViewHandleNVX device info = evalContT $ do
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'getImageViewHandleNVX'
 data ImageViewHandleInfoNVX = ImageViewHandleInfoNVX
-  { -- | 'Graphics.Vulkan.Core10.Handles.ImageView' is the image view to query.
+  { -- | @imageView@ is the image view to query.
     imageView :: ImageView
-  , -- | 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is the type
-    -- of descriptor for which to query a handle.
+  , -- | @descriptorType@ is the type of descriptor for which to query a handle.
     descriptorType :: DescriptorType
-  , -- | 'Graphics.Vulkan.Core10.Handles.Sampler' is the sampler to combine with
-    -- the image view when generating the handle.
+  , -- | @sampler@ is the sampler to combine with the image view when generating
+    -- the handle.
     sampler :: Sampler
   }
   deriving (Typeable)

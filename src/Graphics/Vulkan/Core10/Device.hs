@@ -7,6 +7,7 @@ module Graphics.Vulkan.Core10.Device  ( createDevice
                                       ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -24,6 +25,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
@@ -148,8 +150,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be one of the
---     device handles returned from a call to
+-- -   @physicalDevice@ /must/ be one of the device handles returned from a
+--     call to
 --     'Graphics.Vulkan.Core10.DeviceInitialization.enumeratePhysicalDevices'
 --     (see
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#devsandqueues-physical-device-enumeration Physical Device Enumeration>).
@@ -201,7 +203,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
@@ -242,8 +244,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'DeviceCreateInfo',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-createDevice :: PokeChain a => PhysicalDevice -> DeviceCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (Device)
-createDevice physicalDevice createInfo allocator = evalContT $ do
+createDevice :: forall a io . (PokeChain a, MonadIO io) => PhysicalDevice -> DeviceCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Device)
+createDevice physicalDevice createInfo allocator = liftIO . evalContT $ do
   let cmds = instanceCmds (physicalDevice :: PhysicalDevice)
   let vkCreateDevice' = mkVkCreateDevice (pVkCreateDevice cmds)
   pCreateInfo <- ContT $ withCStruct (createInfo)
@@ -260,11 +262,11 @@ createDevice physicalDevice createInfo allocator = evalContT $ do
 -- | A safe wrapper for 'createDevice' and 'destroyDevice' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withDevice :: PokeChain a => PhysicalDevice -> DeviceCreateInfo a -> Maybe AllocationCallbacks -> (Device -> IO r) -> IO r
-withDevice physicalDevice deviceCreateInfo allocationCallbacks =
+withDevice :: forall a r . PokeChain a => PhysicalDevice -> DeviceCreateInfo a -> Maybe AllocationCallbacks -> ((Device) -> IO r) -> IO r
+withDevice physicalDevice pCreateInfo pAllocator =
   bracket
-    (createDevice physicalDevice deviceCreateInfo allocationCallbacks)
-    (\o -> destroyDevice o allocationCallbacks)
+    (createDevice physicalDevice pCreateInfo pAllocator)
+    (\(o0) -> destroyDevice o0 pAllocator)
 
 
 foreign import ccall
@@ -278,8 +280,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device to
---     destroy.
+-- -   @device@ is the logical device to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
@@ -303,23 +304,21 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All child objects created on 'Graphics.Vulkan.Core10.Handles.Device'
---     /must/ have been destroyed prior to destroying
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   All child objects created on @device@ /must/ have been destroyed
+--     prior to destroying @device@
 --
 -- -   If 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.Device' was
---     created, a compatible set of callbacks /must/ be provided here
+--     were provided when @device@ was created, a compatible set of
+--     callbacks /must/ be provided here
 --
 -- -   If no
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.Device' was
---     created, @pAllocator@ /must/ be @NULL@
+--     were provided when @device@ was created, @pAllocator@ /must/ be
+--     @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Device' is not @NULL@,
---     'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
+-- -   If @device@ is not @NULL@, @device@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Device' handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
@@ -329,15 +328,14 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.Device' /must/ be
---     externally synchronized
+-- -   Host access to @device@ /must/ be externally synchronized
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-destroyDevice :: Device -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyDevice device allocator = evalContT $ do
+destroyDevice :: forall io . MonadIO io => Device -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyDevice device allocator = liftIO . evalContT $ do
   let vkDestroyDevice' = mkVkDestroyDevice (pVkDestroyDevice (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -369,7 +367,7 @@ destroyDevice device allocator = evalContT $ do
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#features-protectedMemory protected memory>
 --     feature is not enabled, the
 --     'Graphics.Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DEVICE_QUEUE_CREATE_PROTECTED_BIT'
---     bit of 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not be set.
+--     bit of @flags@ /must/ not be set.
 --
 -- == Valid Usage (Implicit)
 --
@@ -382,8 +380,7 @@ destroyDevice device allocator = evalContT $ do
 -- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
 --     unique
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of
+-- -   @flags@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core10.Enums.DeviceQueueCreateFlagBits.DeviceQueueCreateFlagBits'
 --     values
 --
@@ -400,8 +397,7 @@ destroyDevice device allocator = evalContT $ do
 data DeviceQueueCreateInfo (es :: [Type]) = DeviceQueueCreateInfo
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
     next :: Chain es
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask indicating behavior
-    -- of the queue.
+  , -- | @flags@ is a bitmask indicating behavior of the queue.
     flags :: DeviceQueueCreateFlags
   , -- | @queueFamilyIndex@ is an unsigned integer indicating the index of the
     -- queue family to create on this device. This index corresponds to the
@@ -637,7 +633,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 -- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
 --     unique
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+-- -   @flags@ /must/ be @0@
 --
 -- -   @pQueueCreateInfos@ /must/ be a valid pointer to an array of
 --     @queueCreateInfoCount@ valid 'DeviceQueueCreateInfo' structures
@@ -667,7 +663,7 @@ instance es ~ '[] => Zero (DeviceQueueCreateInfo es) where
 data DeviceCreateInfo (es :: [Type]) = DeviceCreateInfo
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
     next :: Chain es
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is reserved for future use.
+  , -- | @flags@ is reserved for future use.
     flags :: DeviceCreateFlags
   , -- | @pQueueCreateInfos@ is a pointer to an array of 'DeviceQueueCreateInfo'
     -- structures describing the queues that are requested to be created along

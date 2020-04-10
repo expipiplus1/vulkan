@@ -4,10 +4,10 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 97aeb006bf1191f6c233aad3fbec9197f40f3f47669293e753165eeb3827a474
+-- hash: 0d595958b1e29a041962649e6443fee1867d188d738bf97424d639b89de19c43
 
 name:           vulkan
-version:        3.0.0.0
+version:        3.1.0.0
 synopsis:       Bindings to the Vulkan graphics API.
 category:       Graphics
 homepage:       https://github.com/expipiplus1/vulkan#readme
@@ -33,7 +33,7 @@ flag build-examples
 flag safe-foreign-calls
   description: Do not mark foreign imports as 'unsafe'. This means that callbacks from Vulkan to Haskell will work. If you are using these then make sure this flag is enabled.
   manual: True
-  default: True
+  default: False
 
 library
   exposed-modules:
@@ -483,6 +483,7 @@ executable info
   if flag(build-examples)
     build-depends:
         base <4.14
+      , bytestring
       , pretty-simple
       , vulkan
     buildable: True
@@ -500,6 +501,8 @@ executable sdl-triangle
   default-extensions: AllowAmbiguousTypes CPP DataKinds DefaultSignatures DeriveAnyClass DerivingStrategies DuplicateRecordFields FlexibleContexts FlexibleInstances GADTs GeneralizedNewtypeDeriving InstanceSigs LambdaCase MagicHash NoMonomorphismRestriction OverloadedStrings PartialTypeSignatures PatternSynonyms PolyKinds QuantifiedConstraints RankNTypes RecordWildCards RoleAnnotations ScopedTypeVariables StandaloneDeriving Strict TypeApplications TypeFamilyDependencies TypeOperators TypeSynonymInstances UndecidableInstances ViewPatterns
   c-sources:
       examples/sdl-triangle/DebugCallback.c
+  build-tool-depends:
+      glslang:glslang
   if flag(build-examples)
     build-depends:
         base <4.14

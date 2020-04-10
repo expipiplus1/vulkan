@@ -29,6 +29,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_display_control  ( displayPowerControlE
                                                           ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -47,6 +48,7 @@ import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -109,30 +111,26 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is a logical device
---     associated with 'Graphics.Vulkan.Extensions.WSITypes.Display'.
+-- -   @device@ is a logical device associated with @display@.
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' is the display whose
---     power state is modified.
+-- -   @display@ is the display whose power state is modified.
 --
 -- -   @pDisplayPowerInfo@ is a 'DisplayPowerInfoEXT' structure specifying
---     the new power state of
---     'Graphics.Vulkan.Extensions.WSITypes.Display'.
+--     the new power state of @display@.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' /must/ be a valid
+-- -   @display@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.DisplayKHR' handle
 --
 -- -   @pDisplayPowerInfo@ /must/ be a valid pointer to a valid
 --     'DisplayPowerInfoEXT' structure
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.Device', and
---     'Graphics.Vulkan.Extensions.WSITypes.Display' /must/ have been
---     created, allocated, or retrieved from the same
+-- -   Both of @device@, and @display@ /must/ have been created, allocated,
+--     or retrieved from the same
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
 --
 -- == Return Codes
@@ -145,8 +143,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Extensions.Handles.DisplayKHR', 'DisplayPowerInfoEXT'
-displayPowerControlEXT :: Device -> DisplayKHR -> DisplayPowerInfoEXT -> IO ()
-displayPowerControlEXT device display displayPowerInfo = evalContT $ do
+displayPowerControlEXT :: forall io . MonadIO io => Device -> DisplayKHR -> DisplayPowerInfoEXT -> io ()
+displayPowerControlEXT device display displayPowerInfo = liftIO . evalContT $ do
   let vkDisplayPowerControlEXT' = mkVkDisplayPowerControlEXT (pVkDisplayPowerControlEXT (deviceCmds (device :: Device)))
   pDisplayPowerInfo <- ContT $ withCStruct (displayPowerInfo)
   _ <- lift $ vkDisplayPowerControlEXT' (deviceHandle (device)) (display) pDisplayPowerInfo
@@ -164,8 +162,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is a logical device on which
---     the event /may/ occur.
+-- -   @device@ is a logical device on which the event /may/ occur.
 --
 -- -   @pDeviceEventInfo@ is a pointer to a 'DeviceEventInfoEXT' structure
 --     describing the event of interest to the application.
@@ -179,8 +176,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pDeviceEventInfo@ /must/ be a valid pointer to a valid
 --     'DeviceEventInfoEXT' structure
@@ -204,8 +201,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'DeviceEventInfoEXT',
 -- 'Graphics.Vulkan.Core10.Handles.Fence'
-registerDeviceEventEXT :: Device -> DeviceEventInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (Fence)
-registerDeviceEventEXT device deviceEventInfo allocator = evalContT $ do
+registerDeviceEventEXT :: forall io . MonadIO io => Device -> DeviceEventInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Fence)
+registerDeviceEventEXT device deviceEventInfo allocator = liftIO . evalContT $ do
   let vkRegisterDeviceEventEXT' = mkVkRegisterDeviceEventEXT (pVkRegisterDeviceEventEXT (deviceCmds (device :: Device)))
   pDeviceEventInfo <- ContT $ withCStruct (deviceEventInfo)
   pAllocator <- case (allocator) of
@@ -228,11 +225,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is a logical device
---     associated with 'Graphics.Vulkan.Extensions.WSITypes.Display'
+-- -   @device@ is a logical device associated with @display@
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' is the display on
---     which the event /may/ occur.
+-- -   @display@ is the display on which the event /may/ occur.
 --
 -- -   @pDisplayEventInfo@ is a pointer to a 'DisplayEventInfoEXT'
 --     structure describing the event of interest to the application.
@@ -246,10 +241,10 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   'Graphics.Vulkan.Extensions.WSITypes.Display' /must/ be a valid
+-- -   @display@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.DisplayKHR' handle
 --
 -- -   @pDisplayEventInfo@ /must/ be a valid pointer to a valid
@@ -263,9 +258,8 @@ foreign import ccall
 -- -   @pFence@ /must/ be a valid pointer to a
 --     'Graphics.Vulkan.Core10.Handles.Fence' handle
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.Device', and
---     'Graphics.Vulkan.Extensions.WSITypes.Display' /must/ have been
---     created, allocated, or retrieved from the same
+-- -   Both of @device@, and @display@ /must/ have been created, allocated,
+--     or retrieved from the same
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
 --
 -- == Return Codes
@@ -280,8 +274,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'DisplayEventInfoEXT',
 -- 'Graphics.Vulkan.Extensions.Handles.DisplayKHR',
 -- 'Graphics.Vulkan.Core10.Handles.Fence'
-registerDisplayEventEXT :: Device -> DisplayKHR -> DisplayEventInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (Fence)
-registerDisplayEventEXT device display displayEventInfo allocator = evalContT $ do
+registerDisplayEventEXT :: forall io . MonadIO io => Device -> DisplayKHR -> DisplayEventInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Fence)
+registerDisplayEventEXT device display displayEventInfo allocator = liftIO . evalContT $ do
   let vkRegisterDisplayEventEXT' = mkVkRegisterDisplayEventEXT (pVkRegisterDisplayEventEXT (deviceCmds (device :: Device)))
   pDisplayEventInfo <- ContT $ withCStruct (displayEventInfo)
   pAllocator <- case (allocator) of
@@ -304,8 +298,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the
---     'Graphics.Vulkan.Core10.Handles.Device' associated with @swapchain@.
+-- -   @device@ is the 'Graphics.Vulkan.Core10.Handles.Device' associated
+--     with @swapchain@.
 --
 -- -   @swapchain@ is the swapchain from which to query the counter value.
 --
@@ -326,8 +320,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @swapchain@ /must/ be a valid
 --     'Graphics.Vulkan.Extensions.Handles.SwapchainKHR' handle
@@ -338,8 +332,8 @@ foreign import ccall
 --
 -- -   @pCounterValue@ /must/ be a valid pointer to a @uint64_t@ value
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.Device', and @swapchain@
---     /must/ have been created, allocated, or retrieved from the same
+-- -   Both of @device@, and @swapchain@ /must/ have been created,
+--     allocated, or retrieved from the same
 --     'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Return Codes
@@ -359,8 +353,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Extensions.VK_EXT_display_surface_counter.SurfaceCounterFlagBitsEXT',
 -- 'Graphics.Vulkan.Extensions.Handles.SwapchainKHR'
-getSwapchainCounterEXT :: Device -> SwapchainKHR -> SurfaceCounterFlagBitsEXT -> IO (("counterValue" ::: Word64))
-getSwapchainCounterEXT device swapchain counter = evalContT $ do
+getSwapchainCounterEXT :: forall io . MonadIO io => Device -> SwapchainKHR -> SurfaceCounterFlagBitsEXT -> io (("counterValue" ::: Word64))
+getSwapchainCounterEXT device swapchain counter = liftIO . evalContT $ do
   let vkGetSwapchainCounterEXT' = mkVkGetSwapchainCounterEXT (pVkGetSwapchainCounterEXT (deviceCmds (device :: Device)))
   pPCounterValue <- ContT $ bracket (callocBytes @Word64 8) free
   r <- lift $ vkGetSwapchainCounterEXT' (deviceHandle (device)) (swapchain) (counter) (pPCounterValue)

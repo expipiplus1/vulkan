@@ -9,7 +9,13 @@ import           Relude                  hiding ( Type
                                                 )
 import           Data.Text.Prettyprint.Doc
 import           Data.Text.Extra                ( upperCaseFirst )
-import           Language.Haskell.TH.Syntax     ( nameBase )
+import           Language.Haskell.TH.Syntax     ( nameBase
+                                                , nameModule
+                                                , mkNameG_tc
+                                                , mkName
+                                                , Pred
+                                                )
+import           Language.Haskell.TH.Datatype   ( quantifyType )
 import           Data.List.Extra                ( nubOrd )
 import           Polysemy
 import           Polysemy.Input
@@ -57,23 +63,7 @@ renderCommand m@MarshaledCommand {..} = contextShow (unCName mcName) $ do
   RenderParams {..} <- input
   let Command {..} = mcCommand
   genRe ("command " <> unCName mcName) $ do
-    ffiTy <- cToHsType
-      DoLower
-      (Proto cReturnType
-             [ (Nothing, pType) | Parameter {..} <- toList cParameters ]
-      )
-    let dynamicBindType = ConT ''FunPtr :@ ffiTy ~> ffiTy
-        dynName         = getDynName mcCommand
-    dynamicBindTypeDoc <- renderType dynamicBindType
-    importConstructors dynamicBindType
-    tellDoc $ vsep
-      [ "foreign import ccall"
-      , "#if !defined(SAFE_FOREIGN_CALLS)"
-      , indent 2 "unsafe"
-      , "#endif"
-      , indent 2 "\"dynamic\"" <+> pretty dynName
-      , indent 2 ("::" <+> dynamicBindTypeDoc)
-      ]
+    renderForeignDecl mcCommand
 
     let siblingMap = Map.fromList
           [ (n, SiblingInfo (pretty . unCName $ n) (mpScheme p))
@@ -89,49 +79,15 @@ renderCommand m@MarshaledCommand {..} = contextShow (unCName mcName) $ do
       then marshaledDualPurposeCommandCall commandName m
       else marshaledCommandCall commandName m
 
-paramType
-  :: (HasErr r, HasRenderParams r)
-  => (MarshalScheme Parameter -> Sem r (Maybe H.Type))
-  -> MarshaledParam
-  -> Sem r (Maybe H.Type)
-paramType st MarshaledParam {..} = contextShow (pName mpParam) $ do
-  RenderParams {..} <- input
-  let Parameter {..} = mpParam
-  n <- st mpScheme
-  pure $ namedTy (unName . mkParamName $ pName) <$> n
-
 makeReturnType
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)
   => Bool
-  -> Bool
   -> MarshaledCommand
   -> Sem r H.Type
-makeReturnType includeInOutCountTypes includeReturnType MarshaledCommand {..} = do
-  let pos = \case
-        InOutCount _ | not includeInOutCountTypes -> pure Nothing
-        s                               -> schemeTypePositive s
-  pts <- V.mapMaybe id <$> traverseV (paramType pos) mcParams
-  r   <- case mcReturn of
-    C.Void                    -> pure V.empty
-    _ | not includeReturnType -> pure V.empty
-    r                         -> V.singleton <$> cToHsType DoNotPreserve r
-  let ts = r <> pts
-  pure $ ConT ''IO :@ foldl' (:@) (TupleT (length ts)) ts
-
-constrainStructVariables
-  :: (HasErr r, HasRenderParams r, HasRenderElem r, HasRenderedNames r)
-  => Type
-  -> Sem r Type
-constrainStructVariables t = do
-  (ns, ps) <- structVariables t
-  unless (null ns) $ tellImport (TyConName "PokeChain")
-  unless (null ps) $ tellImport (TyConName "PeekChain")
-  pure $ ForallT
-    []
-    (  ((ConT (typeName (TyConName "PokeChain")) :@) . VarT <$> (ns <> ps))
-    <> ((ConT (typeName (TyConName "PeekChain")) :@) . VarT <$> ps)
-    )
-    t
+makeReturnType includeInOutCountTypes mc@MarshaledCommand {..}
+  = do
+    ts <- marshaledCommandReturnTypes includeInOutCountTypes mc
+    pure $ VarT ioVar :@ foldl' (:@) (TupleT (length ts)) ts
 
 structVariables
   :: (HasErr r, HasRenderedNames r) => Type -> Sem r ([Name], [Name])
@@ -149,9 +105,9 @@ structVariables = \case
   ConT n :@ _ | n == ''Ptr -> pure ([], [])
   f :@ x                  -> liftA2 (<>) (structVariables f) (structVariables x)
   ConT   _                -> pure ([], [])
+  VarT   _                -> pure ([], [])
   TupleT _                -> pure ([], [])
-  t ->
-    throw $ "Unhandled Type constructor in negativeStructVariables: " <> show t
+  t -> throw $ "Unhandled Type constructor in structVariables: " <> show t
 
 ----------------------------------------------------------------
 -- Calling this command
@@ -172,7 +128,7 @@ marshaledCommandCall
 marshaledCommandCall commandName m@MarshaledCommand {..} = do
   RenderParams {..} <- input
 
-  includeReturnType <- shouldIncludeReturnType m
+  includeReturnType <- marshaledCommandShouldIncludeReturnValue m
 
   tellExport (ETerm commandName)
 
@@ -185,7 +141,7 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
     paramRefs <- forV mcParams $ \MarshaledParam {..} -> if isElided mpScheme
       then pure Nothing
       else Just <$> do
-        ty       <- schemeType mpScheme
+        ty       <- schemeTypeNegative mpScheme
         valueRef <-
           stmt ty (Just . unName . mkParamName . pName $ mpParam)
           . pure
@@ -227,26 +183,29 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
       pure . Pure NeverInline $ tupled @() (unValueDoc <$> rets)
 
   rhs <- case stmtsDoc of
-    IOStmts    d -> pure d
+    IOStmts d -> do
+      tellImport 'liftIO
+      pure $ "liftIO $" <+> d
     ContTStmts d -> do
       tellImport 'evalContT
-      pure $ "evalContT $" <+> d
+      tellImport 'liftIO
+      pure $ "liftIO . evalContT $" <+> d
 
   ----------------------------------------------------------------
   -- The type of this command
   ----------------------------------------------------------------
-  nts <- V.mapMaybe id <$> traverseV (paramType schemeType) mcParams
-  r   <- makeReturnType True includeReturnType m
+  nts <- marshaledCommandInputTypes m
+  r   <- makeReturnType True m
   let t         = foldr arrowUniqueVars r nts
       paramName = pretty . mkParamName . pName . mpParam
       isArg p = case mpScheme p of
-        ElidedLength _ _  -> Nothing
+        ElidedLength{}    -> Nothing
         ElidedUnivalued _ -> Nothing
         ElidedVoid        -> Nothing
         Returned _        -> Nothing
         _                 -> Just p
       paramNames = toList (paramName <$> V.mapMaybe isArg mcParams)
-  tDoc <- renderType =<< constrainStructVariables t
+  tDoc <- renderType . addMonadIO =<< constrainStructVariables t
 
 
   tellDocWithHaddock $ \getDoc -> vsep
@@ -353,12 +312,13 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
   --
   -- Get the type of this function
   --
-  includeReturnType <- shouldIncludeReturnType m
+  includeReturnType <- marshaledCommandShouldIncludeReturnValue m
   let negativeSchemeType = \case
         InOutCount _ -> pure Nothing
-        s            -> schemeType s
-  nts <- V.mapMaybe id <$> traverseV (paramType negativeSchemeType) mcParams
-  returnType <- makeReturnType False includeReturnType m
+        s            -> schemeTypeNegative s
+  nts <-
+    V.mapMaybe id <$> traverseV (marshaledParamType negativeSchemeType) mcParams
+  returnType <- makeReturnType False m
   let commandType = foldr (~>) returnType nts
 
   --
@@ -366,7 +326,7 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
   --
   let paramName = pretty . mkParamName . pName . mpParam
       isArg p = case mpScheme p of
-        ElidedLength _ _  -> Nothing
+        ElidedLength{}    -> Nothing
         ElidedUnivalued _ -> Nothing
         ElidedVoid        -> Nothing
         Returned   _      -> Nothing
@@ -388,7 +348,7 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
     --
     (getLengthPokes, getLengthPeeks, countAddr, countPeek) <-
       pokesForGettingCount mcParams countParamIndex vecParamIndices
-    ret1 <- runWithPokes False m funRef getLengthPokes
+    ret1        <- runWithPokes False m funRef getLengthPokes
 
     filledCount <- stmt Nothing Nothing $ do
       after ret1
@@ -425,13 +385,15 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
       pure . Pure NeverInline $ tupled @() (unValueDoc <$> rets)
 
   rhs <- case stmtsDoc of
-    IOStmts    d -> pure d
+    IOStmts d -> do
+      tellImport 'liftIO
+      pure $ "liftIO $" <+> d
     ContTStmts d -> do
       tellImport 'evalContT
-      pure $ "evalContT $" <+> d
+      tellImport 'liftIO
+      pure $ "liftIO . evalContT $" <+> d
 
-
-  tDoc <- renderType =<< constrainStructVariables commandType
+  tDoc <- renderType . addMonadIO =<< constrainStructVariables commandType
   tellDocWithHaddock $ \getDoc -> vsep
     [ getDoc (TopLevel (cName mcCommand))
     , pretty commandName <+> "::" <+> indent 0 tDoc
@@ -586,7 +548,7 @@ paramRefUnnamed
   -> Stmt s r (Ref s ValueDoc)
 paramRefUnnamed MarshaledParam {..} = do
   RenderParams {..} <- input
-  ty                <- schemeType mpScheme
+  ty                <- schemeTypeNegative mpScheme
   stmt ty (Just . unName . mkParamName . pName $ mpParam)
     . pure
     . Pure AlwaysInline
@@ -594,16 +556,6 @@ paramRefUnnamed MarshaledParam {..} = do
     . pretty
     . mkParamName
     $ pName mpParam
-
-shouldIncludeReturnType :: HasRenderParams r => MarshaledCommand -> Sem r Bool
-shouldIncludeReturnType MarshaledCommand {..} = do
-  RenderParams {..} <- input
-  pure
-    $  mcReturn
-    /= C.Void
-    && (mcReturn == successCodeType --> any isSuccessCodeReturned
-                                            (cSuccessCodes mcCommand)
-       )
 
 castRef
   :: forall a b r s
@@ -628,7 +580,20 @@ getCCall
      )
   => Command
   -> Stmt s r (Ref s FunDoc)
-getCCall c = do
+getCCall c = if cIsDynamic c
+  then getCCallDynamic c
+  else pureStmt (FunDoc (pretty (getStaticName c)))
+
+getCCallDynamic
+  :: ( HasErr r
+     , HasRenderParams r
+     , HasSpecInfo r
+     , HasRenderParams r
+     , HasRenderElem r
+     )
+  => Command
+  -> Stmt s r (Ref s FunDoc)
+getCCallDynamic c = do
   RenderParams {..} <- input
   let -- What to do in the case that this command isn't dispatched from a handle
       noHandle = stmt Nothing (Just (unCName (cName c) <> "'")) $ do
@@ -702,6 +667,49 @@ commandHandle Command {..} = case cParameters V.!? 0 of
   Just p@Parameter {..} | TypeName t <- pType -> fmap (p, ) <$> getHandle t
   _ -> pure Nothing
 
+renderForeignDecl
+  :: ( HasErr r
+     , HasSpecInfo r
+     , HasRenderElem r
+     , HasRenderParams r
+     , HasRenderedNames r
+     )
+  => Command
+  -> Sem r ()
+renderForeignDecl c@Command {..} = do
+  ffiTy <- cToHsType
+    DoLower
+    (Proto cReturnType
+           [ (Nothing, pType) | Parameter {..} <- toList cParameters ]
+    )
+  if cIsDynamic
+    then do
+      let dynamicBindType = ConT ''FunPtr :@ ffiTy ~> ffiTy
+          dynName         = getDynName c
+      dynamicBindTypeDoc <- renderType dynamicBindType
+      importConstructors dynamicBindType
+      tellDoc $ vsep
+        [ "foreign import ccall"
+        , "#if !defined(SAFE_FOREIGN_CALLS)"
+        , indent 2 "unsafe"
+        , "#endif"
+        , indent 2 "\"dynamic\"" <+> pretty dynName
+        , indent 2 ("::" <+> dynamicBindTypeDoc)
+        ]
+    else do
+      let staticName = getStaticName c
+      staticBindTypeDoc <- renderType ffiTy
+      importConstructors ffiTy
+      tellDoc $ vsep
+        [ "foreign import ccall"
+        , "#if !defined(SAFE_FOREIGN_CALLS)"
+        , indent 2 "unsafe"
+        , "#endif"
+        , indent 2 (dquotes (pretty (unCName cName)) <+> pretty staticName)
+        , indent 2 ("::" <+> staticBindTypeDoc)
+        ]
+
+
 ----------------------------------------------------------------
 -- Poking values
 ----------------------------------------------------------------
@@ -746,10 +754,43 @@ lowerParamType p@Parameter {..} = case pType of
   _              -> p
 
 ----------------------------------------------------------------
+--
+----------------------------------------------------------------
+
+addMonadIO :: Type -> Type
+addMonadIO = addConstraints
+      [ConT ''MonadIO :@ VarT ioVar]
+
+ioVar :: Name
+ioVar = mkName "io"
+
+constrainStructVariables
+  :: (HasErr r, HasRenderParams r, HasRenderElem r, HasRenderedNames r)
+  => Type
+  -> Sem r Type
+constrainStructVariables t = do
+  (ns, ps) <- structVariables t
+  unless (null ns) $ tellImport (TyConName "PokeChain")
+  unless (null ps) $ tellImport (TyConName "PeekChain")
+  pure $ addConstraints
+    (  ((ConT (typeName (TyConName "PokeChain")) :@) . VarT <$> (ns <> ps))
+    <> ((ConT (typeName (TyConName "PeekChain")) :@) . VarT <$> ps)
+    )
+    t
+
+addConstraints :: [Pred] -> Type -> Type
+addConstraints new = quantifyType . \case
+  ForallT vs ctx ty -> ForallT vs (ctx <> new) ty
+  ty                -> ForallT [] new ty
+
+----------------------------------------------------------------
 -- ImportConstructors
 ----------------------------------------------------------------
 
 -- | Foreign imports require constructors in scope for newtypes
+--
+-- TODO: This currently assumes that the newtypes are in the same module as any
+-- synonyms pointing to them.
 importConstructors
   :: forall r
    . (HasSpecInfo r, HasRenderElem r, HasRenderParams r, HasRenderedNames r)
@@ -761,7 +802,14 @@ importConstructors t = do
       isNewtype' :: Name -> Sem r Bool
       isNewtype' n = pure (n `elem` builtinNewtypes)
         <||> isNewtype (TyConName . T.pack . nameBase $ n)
-  for_ names $ \n -> whenM (isNewtype' n) $ tellImportWithAll n
+      setNameBase :: Name -> HName -> Name
+      setNameBase n = case nameModule n of
+        Nothing -> mkName . T.unpack . unName
+        Just m  -> mkNameG_tc "" m . T.unpack . unName
+  resolveAlias <- do
+    ra <- getResolveAlias
+    pure $ \n -> setNameBase n (ra . TyConName . T.pack . nameBase $ n)
+  for_ names $ \n -> whenM (isNewtype' n) $ tellImportWithAll (resolveAlias n)
 
 builtinNewtypes :: [Name]
 builtinNewtypes =
@@ -800,9 +848,8 @@ builtinNewtypes =
 getDynName :: Command -> Text
 getDynName = ("mk" <>) . upperCaseFirst . unCName . cName
 
-infixr 2 -->
-(-->) :: Bool -> Bool -> Bool
-a --> b = not a || b
+getStaticName :: Command -> Text
+getStaticName = ("ffi" <>) . upperCaseFirst . unCName . cName
 
 (<||>) :: Applicative f => f Bool -> f Bool -> f Bool
 (<||>) = liftA2 (||)

@@ -1,0 +1,94 @@
+name: VulkanMemoryAllocator
+version: 0.0.0.0
+synopsis: Bindings to the VulkanMemoryAllocator library
+category: Graphics
+maintainer: Joe Hermaszewski <live.long.and.prosper@monoid.al>
+github: expipiplus1/vulkan
+extra-source-files:
+  - readme.md
+  - changelog.md
+  - VulkanMemoryAllocator/src/vk_mem_alloc.h
+
+library:
+  source-dirs: src
+  include-dirs:
+    VulkanMemoryAllocator/src
+  extra-libraries:
+    stdc++
+  cxx-sources:
+    src/lib.cpp
+  dependencies:
+    - base < 4.14
+    - vulkan == 3.1.*
+    - bytestring
+    - transformers
+    - vector
+    - vector-sized
+  when:
+    - condition: flag(safe-foreign-calls)
+      cpp-options: -DSAFE_FOREIGN_CALLS
+    - condition: flag(vma-ndebug)
+      cxx-options: -DNDEBUG
+    - condition: flag(vma-recording)
+      cxx-options: -DVMA_RECORDING_ENABLED
+  ghc-options:
+    - -Wall
+    - -Wno-unticked-promoted-constructors
+    - -Wno-missing-pattern-synonym-signatures
+    - -Wno-unused-imports
+    - -Wno-missing-signatures
+    - -Wno-partial-type-signatures
+
+flags:
+  safe-foreign-calls:
+    description:
+      Do not mark foreign imports as 'unsafe'. This means that callbacks from
+      VulkanMemoryAllocator to Haskell will work. If you are using these then
+      make sure this flag is enabled.
+    default: no
+    manual: yes
+  vma-ndebug:
+    description:
+      Compile VulkanMemoryAllocator with NDEBUG to disable assertions.
+    default: no
+    manual: yes
+  vma-recording:
+    description:
+      Compile VulkanMemoryAllocator with VMA_RECORDING_ENABLED to enable
+      recording functionality.
+    default: no
+    manual: yes
+
+default-extensions:
+  - AllowAmbiguousTypes
+  - CPP
+  - DataKinds
+  - DefaultSignatures
+  - DeriveAnyClass
+  - DerivingStrategies
+  - DuplicateRecordFields
+  - FlexibleContexts
+  - FlexibleInstances
+  - GADTs
+  - GeneralizedNewtypeDeriving
+  - InstanceSigs
+  - LambdaCase
+  - MagicHash
+  - NoMonomorphismRestriction
+  - OverloadedStrings
+  - PartialTypeSignatures
+  - PatternSynonyms
+  - PolyKinds
+  - QuantifiedConstraints
+  - RankNTypes
+  - RecordWildCards
+  - RoleAnnotations
+  - ScopedTypeVariables
+  - StandaloneDeriving
+  - Strict
+  - TypeApplications
+  - TypeFamilyDependencies
+  - TypeOperators
+  - TypeSynonymInstances
+  - UndecidableInstances
+  - ViewPatterns

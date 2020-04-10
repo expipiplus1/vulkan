@@ -1,5 +1,13 @@
 # Change Log
 
+## WIP
+
+## [3.1.0.0] - 2020-03-10
+  - Commands are now in MonadIO
+  - Improved documentation
+  - More `bracket` functions for `cmd`s
+  - Add `:&` and `::&` pattern synonyms for extensible struct construction
+
 ## [3.0.0.0] - 2020-02-29
   - Rewrite, bindings are now much more idiomatic Haskell
   - Add `sdl-triangle` and `info` examples

@@ -22,6 +22,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_display_surface_counter  ( getPhysicalD
                                                                   , SurfaceTransformFlagsKHR
                                                                   ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import GHC.Base (when)
 import GHC.IO (throwIO)
@@ -38,6 +39,7 @@ import Text.ParserCombinators.ReadPrec (prec)
 import Text.ParserCombinators.ReadPrec (step)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -88,9 +90,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device that will be associated with the swapchain to be created, as
---     described for
+-- -   @physicalDevice@ is the physical device that will be associated with
+--     the swapchain to be created, as described for
 --     'Graphics.Vulkan.Extensions.VK_KHR_swapchain.createSwapchainKHR'.
 --
 -- -   @surface@ is the surface that will be associated with the swapchain.
@@ -107,7 +108,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @surface@ /must/ be a valid
@@ -116,9 +117,9 @@ foreign import ccall
 -- -   @pSurfaceCapabilities@ /must/ be a valid pointer to a
 --     'SurfaceCapabilities2EXT' structure
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', and
---     @surface@ /must/ have been created, allocated, or retrieved from the
---     same 'Graphics.Vulkan.Core10.Handles.Instance'
+-- -   Both of @physicalDevice@, and @surface@ /must/ have been created,
+--     allocated, or retrieved from the same
+--     'Graphics.Vulkan.Core10.Handles.Instance'
 --
 -- == Return Codes
 --
@@ -139,8 +140,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'SurfaceCapabilities2EXT',
 -- 'Graphics.Vulkan.Extensions.Handles.SurfaceKHR'
-getPhysicalDeviceSurfaceCapabilities2EXT :: PhysicalDevice -> SurfaceKHR -> IO (SurfaceCapabilities2EXT)
-getPhysicalDeviceSurfaceCapabilities2EXT physicalDevice surface = evalContT $ do
+getPhysicalDeviceSurfaceCapabilities2EXT :: forall io . MonadIO io => PhysicalDevice -> SurfaceKHR -> io (SurfaceCapabilities2EXT)
+getPhysicalDeviceSurfaceCapabilities2EXT physicalDevice surface = liftIO . evalContT $ do
   let vkGetPhysicalDeviceSurfaceCapabilities2EXT' = mkVkGetPhysicalDeviceSurfaceCapabilities2EXT (pVkGetPhysicalDeviceSurfaceCapabilities2EXT (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPSurfaceCapabilities <- ContT (withZeroCStruct @SurfaceCapabilities2EXT)
   r <- lift $ vkGetPhysicalDeviceSurfaceCapabilities2EXT' (physicalDeviceHandle (physicalDevice)) (surface) (pPSurfaceCapabilities)

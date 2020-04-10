@@ -27,6 +27,7 @@ module Graphics.Vulkan.Core10.DeviceInitialization  ( createInstance
 
 import Control.Exception.Base (bracket)
 import Control.Monad (unless)
+import Control.Monad.IO.Class (liftIO)
 import Data.Typeable (eqT)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
@@ -45,10 +46,11 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Foreign.C.Types (CChar(..))
+import Control.Monad.IO.Class (MonadIO)
 import Data.Type.Equality ((:~:)(Refl))
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
-import Foreign.C.Types (CChar(..))
 import Foreign.C.Types (CFloat)
 import Foreign.C.Types (CFloat(CFloat))
 import Foreign.C.Types (CSize)
@@ -99,16 +101,14 @@ import Graphics.Vulkan.Core10.Enums.Format (Format(..))
 import Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits (FormatFeatureFlags)
 import Graphics.Vulkan.CStruct (FromCStruct)
 import Graphics.Vulkan.CStruct (FromCStruct(..))
-import Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlags)
-import Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlags)
 import Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlagBits(..))
+import Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits (ImageCreateFlags)
 import Graphics.Vulkan.Core10.Enums.ImageTiling (ImageTiling)
 import Graphics.Vulkan.Core10.Enums.ImageTiling (ImageTiling(..))
 import Graphics.Vulkan.Core10.Enums.ImageType (ImageType)
 import Graphics.Vulkan.Core10.Enums.ImageType (ImageType(..))
-import Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
-import Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
 import Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlagBits(..))
+import Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits (ImageUsageFlags)
 import Graphics.Vulkan.Core10.Handles (Instance)
 import Graphics.Vulkan.Core10.Handles (Instance(..))
 import Graphics.Vulkan.Core10.Handles (Instance(Instance))
@@ -236,8 +236,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Instance', 'InstanceCreateInfo'
-createInstance :: PokeChain a => InstanceCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (Instance)
-createInstance createInfo allocator = evalContT $ do
+createInstance :: forall a io . (PokeChain a, MonadIO io) => InstanceCreateInfo a -> ("allocator" ::: Maybe AllocationCallbacks) -> io (Instance)
+createInstance createInfo allocator = liftIO . evalContT $ do
   vkCreateInstance' <- lift $ mkVkCreateInstance . castFunPtr @_ @(("pCreateInfo" ::: Ptr (InstanceCreateInfo _)) -> ("pAllocator" ::: Ptr AllocationCallbacks) -> ("pInstance" ::: Ptr (Ptr Instance_T)) -> IO Result) <$> getInstanceProcAddr' nullPtr (Ptr "vkCreateInstance"#)
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -254,11 +254,11 @@ createInstance createInfo allocator = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withInstance :: PokeChain a => InstanceCreateInfo a -> Maybe AllocationCallbacks -> (Instance -> IO r) -> IO r
-withInstance instanceCreateInfo allocationCallbacks =
+withInstance :: forall a r . PokeChain a => InstanceCreateInfo a -> Maybe AllocationCallbacks -> ((Instance) -> IO r) -> IO r
+withInstance pCreateInfo pAllocator =
   bracket
-    (createInstance instanceCreateInfo allocationCallbacks)
-    (\o -> destroyInstance o allocationCallbacks)
+    (createInstance pCreateInfo pAllocator)
+    (\(o0) -> destroyInstance o0 pAllocator)
 
 
 foreign import ccall
@@ -272,8 +272,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' is the handle of the
---     instance to destroy.
+-- -   @instance@ is the handle of the instance to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
@@ -281,23 +280,21 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   All child objects created using
---     'Graphics.Vulkan.Core10.Handles.Instance' /must/ have been destroyed
---     prior to destroying 'Graphics.Vulkan.Core10.Handles.Instance'
+-- -   All child objects created using @instance@ /must/ have been
+--     destroyed prior to destroying @instance@
 --
 -- -   If 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.Instance' was
---     created, a compatible set of callbacks /must/ be provided here
+--     were provided when @instance@ was created, a compatible set of
+--     callbacks /must/ be provided here
 --
 -- -   If no
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.Instance' was
---     created, @pAllocator@ /must/ be @NULL@
+--     were provided when @instance@ was created, @pAllocator@ /must/ be
+--     @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Instance' is not @NULL@,
---     'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+-- -   If @instance@ is not @NULL@, @instance@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
@@ -307,15 +304,14 @@ foreign import ccall
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.Instance' /must/ be
---     externally synchronized
+-- -   Host access to @instance@ /must/ be externally synchronized
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.Instance'
-destroyInstance :: Instance -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyInstance instance' allocator = evalContT $ do
+destroyInstance :: forall io . MonadIO io => Instance -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyInstance instance' allocator = liftIO . evalContT $ do
   let vkDestroyInstance' = mkVkDestroyInstance (pVkDestroyInstance (instanceCmds (instance' :: Instance)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -336,8 +332,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' is a handle to a Vulkan
---     instance previously created with 'createInstance'.
+-- -   @instance@ is a handle to a Vulkan instance previously created with
+--     'createInstance'.
 --
 -- -   @pPhysicalDeviceCount@ is a pointer to an integer related to the
 --     number of physical devices available or queried, as described below.
@@ -362,7 +358,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+-- -   @instance@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
 -- -   @pPhysicalDeviceCount@ /must/ be a valid pointer to a @uint32_t@
@@ -393,8 +389,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.Instance',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-enumeratePhysicalDevices :: Instance -> IO (Result, ("physicalDevices" ::: Vector PhysicalDevice))
-enumeratePhysicalDevices instance' = evalContT $ do
+enumeratePhysicalDevices :: forall io . MonadIO io => Instance -> io (Result, ("physicalDevices" ::: Vector PhysicalDevice))
+enumeratePhysicalDevices instance' = liftIO . evalContT $ do
   let cmds = instanceCmds (instance' :: Instance)
   let vkEnumeratePhysicalDevices' = mkVkEnumeratePhysicalDevices (pVkEnumeratePhysicalDevices cmds)
   let instance'' = instanceHandle (instance')
@@ -432,27 +428,27 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.FuncPointers.PFN_vkVoidFunction', and must be
 -- cast to the type of the command being queried. The function pointer
 -- /must/ only be called with a dispatchable object (the first parameter)
--- that is 'Graphics.Vulkan.Core10.Handles.Device' or a child of
--- 'Graphics.Vulkan.Core10.Handles.Device'.
+-- that is @device@ or a child of @device@.
 --
--- +-----------------------------------------+----------------------+-----------------------+
--- | 'Graphics.Vulkan.Core10.Handles.Device' | @pName@              | return value          |
--- +=========================================+======================+=======================+
--- | @NULL@                                  | *1                   | undefined             |
--- +-----------------------------------------+----------------------+-----------------------+
--- | invalid device                          | *1                   | undefined             |
--- +-----------------------------------------+----------------------+-----------------------+
--- | device                                  | @NULL@               | undefined             |
--- +-----------------------------------------+----------------------+-----------------------+
--- | device                                  | core device-level    | fp2                   |
--- |                                         | Vulkan command       |                       |
--- +-----------------------------------------+----------------------+-----------------------+
--- | device                                  | enabled extension    | fp2                   |
--- |                                         | device-level         |                       |
--- |                                         | commands             |                       |
--- +-----------------------------------------+----------------------+-----------------------+
--- | any other case, not covered above       | @NULL@               |                       |
--- +-----------------------------------------+----------------------+-----------------------+
+-- +----------------------+----------------------+-----------------------+
+-- | @device@             | @pName@              | return value          |
+-- +======================+======================+=======================+
+-- | @NULL@               | *1                   | undefined             |
+-- +----------------------+----------------------+-----------------------+
+-- | invalid device       | *1                   | undefined             |
+-- +----------------------+----------------------+-----------------------+
+-- | device               | @NULL@               | undefined             |
+-- +----------------------+----------------------+-----------------------+
+-- | device               | core device-level    | fp2                   |
+-- |                      | Vulkan command       |                       |
+-- +----------------------+----------------------+-----------------------+
+-- | device               | enabled extension    | fp2                   |
+-- |                      | device-level         |                       |
+-- |                      | commands             |                       |
+-- +----------------------+----------------------+-----------------------+
+-- | any other case, not  | @NULL@               |                       |
+-- | covered above        |                      |                       |
+-- +----------------------+----------------------+-----------------------+
 --
 -- vkGetDeviceProcAddr behavior
 --
@@ -462,10 +458,8 @@ foreign import ccall
 --
 -- [2]
 --     The returned function pointer /must/ only be called with a
---     dispatchable object (the first parameter) that is
---     'Graphics.Vulkan.Core10.Handles.Device' or a child of
---     'Graphics.Vulkan.Core10.Handles.Device' e.g.
---     'Graphics.Vulkan.Core10.Handles.Device',
+--     dispatchable object (the first parameter) that is @device@ or a
+--     child of @device@ e.g. 'Graphics.Vulkan.Core10.Handles.Device',
 --     'Graphics.Vulkan.Core10.Handles.Queue', or
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer'.
 --
@@ -475,8 +469,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.FuncPointers.PFN_vkVoidFunction',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-getDeviceProcAddr :: Device -> ("name" ::: ByteString) -> IO (PFN_vkVoidFunction)
-getDeviceProcAddr device name = evalContT $ do
+getDeviceProcAddr :: forall io . MonadIO io => Device -> ("name" ::: ByteString) -> io (PFN_vkVoidFunction)
+getDeviceProcAddr device name = liftIO . evalContT $ do
   let vkGetDeviceProcAddr' = mkVkGetDeviceProcAddr (pVkGetDeviceProcAddr (deviceCmds (device :: Device)))
   pName <- ContT $ useAsCString (name)
   r <- lift $ vkGetDeviceProcAddr' (deviceHandle (device)) pName
@@ -494,9 +488,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' is the instance that the
---     function pointer will be compatible with, or @NULL@ for commands not
---     dependent on any instance.
+-- -   @instance@ is the instance that the function pointer will be
+--     compatible with, or @NULL@ for commands not dependent on any
+--     instance.
 --
 -- -   @pName@ is the name of the command to obtain.
 --
@@ -515,31 +509,31 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.FuncPointers.PFN_vkVoidFunction', and must be
 -- cast to the type of the command being queried.
 --
--- +-------------------------------------------+----------------------------------------------------------------------------------+-----------------------+
--- | 'Graphics.Vulkan.Core10.Handles.Instance' | @pName@                                                                          | return value          |
--- +===========================================+==================================================================================+=======================+
--- | *1                                        | @NULL@                                                                           | undefined             |
--- +-------------------------------------------+----------------------------------------------------------------------------------+-----------------------+
--- | invalid non-@NULL@ instance               | *1                                                                               | undefined             |
--- +-------------------------------------------+----------------------------------------------------------------------------------+-----------------------+
--- | @NULL@                                    | 'Graphics.Vulkan.Core11.DeviceInitialization.enumerateInstanceVersion'           | fp                    |
--- +-------------------------------------------+----------------------------------------------------------------------------------+-----------------------+
--- | @NULL@                                    | 'Graphics.Vulkan.Core10.ExtensionDiscovery.enumerateInstanceExtensionProperties' | fp                    |
--- +-------------------------------------------+----------------------------------------------------------------------------------+-----------------------+
--- | @NULL@                                    | 'Graphics.Vulkan.Core10.LayerDiscovery.enumerateInstanceLayerProperties'         | fp                    |
--- +-------------------------------------------+----------------------------------------------------------------------------------+-----------------------+
--- | @NULL@                                    | 'createInstance'                                                                 | fp                    |
--- +-------------------------------------------+----------------------------------------------------------------------------------+-----------------------+
--- | instance                                  | core Vulkan command                                                              | fp2                   |
--- +-------------------------------------------+----------------------------------------------------------------------------------+-----------------------+
--- | instance                                  | enabled instance extension commands for                                          | fp2                   |
--- |                                           | 'Graphics.Vulkan.Core10.Handles.Instance'                                        |                       |
--- +-------------------------------------------+----------------------------------------------------------------------------------+-----------------------+
--- | instance                                  | available device extension3 commands for                                         | fp2                   |
--- |                                           | 'Graphics.Vulkan.Core10.Handles.Instance'                                        |                       |
--- +-------------------------------------------+----------------------------------------------------------------------------------+-----------------------+
--- | any other case, not covered above         | @NULL@                                                                           |                       |
--- +-------------------------------------------+----------------------------------------------------------------------------------+-----------------------+
+-- +----------------------+----------------------------------------------------------------------------------+-----------------------+
+-- | @instance@           | @pName@                                                                          | return value          |
+-- +======================+==================================================================================+=======================+
+-- | *1                   | @NULL@                                                                           | undefined             |
+-- +----------------------+----------------------------------------------------------------------------------+-----------------------+
+-- | invalid non-@NULL@   | *1                                                                               | undefined             |
+-- | instance             |                                                                                  |                       |
+-- +----------------------+----------------------------------------------------------------------------------+-----------------------+
+-- | @NULL@               | 'Graphics.Vulkan.Core11.DeviceInitialization.enumerateInstanceVersion'           | fp                    |
+-- +----------------------+----------------------------------------------------------------------------------+-----------------------+
+-- | @NULL@               | 'Graphics.Vulkan.Core10.ExtensionDiscovery.enumerateInstanceExtensionProperties' | fp                    |
+-- +----------------------+----------------------------------------------------------------------------------+-----------------------+
+-- | @NULL@               | 'Graphics.Vulkan.Core10.LayerDiscovery.enumerateInstanceLayerProperties'         | fp                    |
+-- +----------------------+----------------------------------------------------------------------------------+-----------------------+
+-- | @NULL@               | 'createInstance'                                                                 | fp                    |
+-- +----------------------+----------------------------------------------------------------------------------+-----------------------+
+-- | instance             | core Vulkan command                                                              | fp2                   |
+-- +----------------------+----------------------------------------------------------------------------------+-----------------------+
+-- | instance             | enabled instance extension commands for @instance@                               | fp2                   |
+-- +----------------------+----------------------------------------------------------------------------------+-----------------------+
+-- | instance             | available device extension3 commands for @instance@                              | fp2                   |
+-- +----------------------+----------------------------------------------------------------------------------+-----------------------+
+-- | any other case, not  | @NULL@                                                                           |                       |
+-- | covered above        |                                                                                  |                       |
+-- +----------------------+----------------------------------------------------------------------------------+-----------------------+
 --
 -- vkGetInstanceProcAddr behavior
 --
@@ -549,10 +543,8 @@ foreign import ccall
 --
 -- [2]
 --     The returned function pointer /must/ only be called with a
---     dispatchable object (the first parameter) that is
---     'Graphics.Vulkan.Core10.Handles.Instance' or a child of
---     'Graphics.Vulkan.Core10.Handles.Instance', e.g.
---     'Graphics.Vulkan.Core10.Handles.Instance',
+--     dispatchable object (the first parameter) that is @instance@ or a
+--     child of @instance@, e.g. 'Graphics.Vulkan.Core10.Handles.Instance',
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 --     'Graphics.Vulkan.Core10.Handles.Device',
 --     'Graphics.Vulkan.Core10.Handles.Queue', or
@@ -560,13 +552,11 @@ foreign import ccall
 --
 -- [3]
 --     An “available device extension” is a device extension supported by
---     any physical device enumerated by
---     'Graphics.Vulkan.Core10.Handles.Instance'.
+--     any physical device enumerated by @instance@.
 --
 -- == Valid Usage (Implicit)
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.Instance' is not @NULL@,
---     'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+-- -   If @instance@ is not @NULL@, @instance@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
 -- -   @pName@ /must/ be a null-terminated UTF-8 string
@@ -575,8 +565,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.FuncPointers.PFN_vkVoidFunction',
 -- 'Graphics.Vulkan.Core10.Handles.Instance'
-getInstanceProcAddr :: Instance -> ("name" ::: ByteString) -> IO (PFN_vkVoidFunction)
-getInstanceProcAddr instance' name = evalContT $ do
+getInstanceProcAddr :: forall io . MonadIO io => Instance -> ("name" ::: ByteString) -> io (PFN_vkVoidFunction)
+getInstanceProcAddr instance' name = liftIO . evalContT $ do
   let vkGetInstanceProcAddr' = mkVkGetInstanceProcAddr (pVkGetInstanceProcAddr (instanceCmds (instance' :: Instance)))
   pName <- ContT $ useAsCString (name)
   r <- lift $ vkGetInstanceProcAddr' (instanceHandle (instance')) pName
@@ -594,8 +584,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the handle to the
---     physical device whose properties will be queried.
+-- -   @physicalDevice@ is the handle to the physical device whose
+--     properties will be queried.
 --
 -- -   @pProperties@ is a pointer to a 'PhysicalDeviceProperties' structure
 --     in which properties are returned.
@@ -606,8 +596,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceProperties'
-getPhysicalDeviceProperties :: PhysicalDevice -> IO (PhysicalDeviceProperties)
-getPhysicalDeviceProperties physicalDevice = evalContT $ do
+getPhysicalDeviceProperties :: forall io . MonadIO io => PhysicalDevice -> io (PhysicalDeviceProperties)
+getPhysicalDeviceProperties physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceProperties' = mkVkGetPhysicalDeviceProperties (pVkGetPhysicalDeviceProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPProperties <- ContT (withZeroCStruct @PhysicalDeviceProperties)
   lift $ vkGetPhysicalDeviceProperties' (physicalDeviceHandle (physicalDevice)) (pPProperties)
@@ -627,8 +617,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the handle to the
---     physical device whose properties will be queried.
+-- -   @physicalDevice@ is the handle to the physical device whose
+--     properties will be queried.
 --
 -- -   @pQueueFamilyPropertyCount@ is a pointer to an integer related to
 --     the number of queue families available or queried, as described
@@ -652,7 +642,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pQueueFamilyPropertyCount@ /must/ be a valid pointer to a
@@ -666,8 +656,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', 'QueueFamilyProperties'
-getPhysicalDeviceQueueFamilyProperties :: PhysicalDevice -> IO (("queueFamilyProperties" ::: Vector QueueFamilyProperties))
-getPhysicalDeviceQueueFamilyProperties physicalDevice = evalContT $ do
+getPhysicalDeviceQueueFamilyProperties :: forall io . MonadIO io => PhysicalDevice -> io (("queueFamilyProperties" ::: Vector QueueFamilyProperties))
+getPhysicalDeviceQueueFamilyProperties physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceQueueFamilyProperties' = mkVkGetPhysicalDeviceQueueFamilyProperties (pVkGetPhysicalDeviceQueueFamilyProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPQueueFamilyPropertyCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -693,8 +683,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the handle to the
---     device to query.
+-- -   @physicalDevice@ is the handle to the device to query.
 --
 -- -   @pMemoryProperties@ is a pointer to a
 --     'PhysicalDeviceMemoryProperties' structure in which the properties
@@ -706,8 +695,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceMemoryProperties'
-getPhysicalDeviceMemoryProperties :: PhysicalDevice -> IO (PhysicalDeviceMemoryProperties)
-getPhysicalDeviceMemoryProperties physicalDevice = evalContT $ do
+getPhysicalDeviceMemoryProperties :: forall io . MonadIO io => PhysicalDevice -> io (PhysicalDeviceMemoryProperties)
+getPhysicalDeviceMemoryProperties physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceMemoryProperties' = mkVkGetPhysicalDeviceMemoryProperties (pVkGetPhysicalDeviceMemoryProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPMemoryProperties <- ContT (withZeroCStruct @PhysicalDeviceMemoryProperties)
   lift $ vkGetPhysicalDeviceMemoryProperties' (physicalDeviceHandle (physicalDevice)) (pPMemoryProperties)
@@ -726,8 +715,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device from which to query the supported features.
+-- -   @physicalDevice@ is the physical device from which to query the
+--     supported features.
 --
 -- -   @pFeatures@ is a pointer to a 'PhysicalDeviceFeatures' structure in
 --     which the physical device features are returned. For each feature, a
@@ -742,8 +731,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'PhysicalDeviceFeatures'
-getPhysicalDeviceFeatures :: PhysicalDevice -> IO (PhysicalDeviceFeatures)
-getPhysicalDeviceFeatures physicalDevice = evalContT $ do
+getPhysicalDeviceFeatures :: forall io . MonadIO io => PhysicalDevice -> io (PhysicalDeviceFeatures)
+getPhysicalDeviceFeatures physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceFeatures' = mkVkGetPhysicalDeviceFeatures (pVkGetPhysicalDeviceFeatures (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPFeatures <- ContT (withZeroCStruct @PhysicalDeviceFeatures)
   lift $ vkGetPhysicalDeviceFeatures' (physicalDeviceHandle (physicalDevice)) (pPFeatures)
@@ -763,15 +752,13 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device from which to query the format properties.
+-- -   @physicalDevice@ is the physical device from which to query the
+--     format properties.
 --
--- -   'Graphics.Vulkan.Core10.Enums.Format.Format' is the format whose
---     properties are queried.
+-- -   @format@ is the format whose properties are queried.
 --
 -- -   @pFormatProperties@ is a pointer to a 'FormatProperties' structure
---     in which physical device properties for
---     'Graphics.Vulkan.Core10.Enums.Format.Format' are returned.
+--     in which physical device properties for @format@ are returned.
 --
 -- == Valid Usage (Implicit)
 --
@@ -779,8 +766,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Enums.Format.Format', 'FormatProperties',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceFormatProperties :: PhysicalDevice -> Format -> IO (FormatProperties)
-getPhysicalDeviceFormatProperties physicalDevice format = evalContT $ do
+getPhysicalDeviceFormatProperties :: forall io . MonadIO io => PhysicalDevice -> Format -> io (FormatProperties)
+getPhysicalDeviceFormatProperties physicalDevice format = liftIO . evalContT $ do
   let vkGetPhysicalDeviceFormatProperties' = mkVkGetPhysicalDeviceFormatProperties (pVkGetPhysicalDeviceFormatProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPFormatProperties <- ContT (withZeroCStruct @FormatProperties)
   lift $ vkGetPhysicalDeviceFormatProperties' (physicalDeviceHandle (physicalDevice)) (format) (pPFormatProperties)
@@ -800,17 +787,16 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device from which to query the image capabilities.
+-- -   @physicalDevice@ is the physical device from which to query the
+--     image capabilities.
 --
--- -   'Graphics.Vulkan.Core10.Enums.Format.Format' is a
---     'Graphics.Vulkan.Core10.Enums.Format.Format' value specifying the
---     image format, corresponding to
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::'Graphics.Vulkan.Core10.Enums.Format.Format'.
+-- -   @format@ is a 'Graphics.Vulkan.Core10.Enums.Format.Format' value
+--     specifying the image format, corresponding to
+--     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@format@.
 --
 -- -   @type@ is a 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' value
 --     specifying the image type, corresponding to
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::'Graphics.Vulkan.Core10.Enums.ImageType.ImageType'.
+--     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@imageType@.
 --
 -- -   @tiling@ is a 'Graphics.Vulkan.Core10.Enums.ImageTiling.ImageTiling'
 --     value specifying the image tiling, corresponding to
@@ -821,27 +807,24 @@ foreign import ccall
 --     specifying the intended usage of the image, corresponding to
 --     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@usage@.
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+-- -   @flags@ is a bitmask of
 --     'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.ImageCreateFlagBits'
 --     specifying additional parameters of the image, corresponding to
---     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::'Graphics.Vulkan.Core10.BaseType.Flags'.
+--     'Graphics.Vulkan.Core10.Image.ImageCreateInfo'::@flags@.
 --
 -- -   @pImageFormatProperties@ is a pointer to a 'ImageFormatProperties'
 --     structure in which capabilities are returned.
 --
 -- = Description
 --
--- The 'Graphics.Vulkan.Core10.Enums.Format.Format', @type@, @tiling@,
--- @usage@, and 'Graphics.Vulkan.Core10.BaseType.Flags' parameters
+-- The @format@, @type@, @tiling@, @usage@, and @flags@ parameters
 -- correspond to parameters that would be consumed by
 -- 'Graphics.Vulkan.Core10.Image.createImage' (as members of
 -- 'Graphics.Vulkan.Core10.Image.ImageCreateInfo').
 --
--- If 'Graphics.Vulkan.Core10.Enums.Format.Format' is not a supported image
--- format, or if the combination of
--- 'Graphics.Vulkan.Core10.Enums.Format.Format', @type@, @tiling@, @usage@,
--- and 'Graphics.Vulkan.Core10.BaseType.Flags' is not supported for images,
--- then 'getPhysicalDeviceImageFormatProperties' returns
+-- If @format@ is not a supported image format, or if the combination of
+-- @format@, @type@, @tiling@, @usage@, and @flags@ is not supported for
+-- images, then 'getPhysicalDeviceImageFormatProperties' returns
 -- 'Graphics.Vulkan.Core10.Enums.Result.ERROR_FORMAT_NOT_SUPPORTED'.
 --
 -- The limitations on an image format that are reported by
@@ -854,8 +837,7 @@ foreign import ccall
 -- such that the bits set in @flags1@ are a subset of the bits set in
 -- @flags2@, then the limitations for @usage1@ and @flags1@ /must/ be no
 -- more strict than the limitations for @usage2@ and @flags2@, for all
--- values of 'Graphics.Vulkan.Core10.Enums.Format.Format', @type@, and
--- @tiling@.
+-- values of @format@, @type@, and @tiling@.
 --
 -- == Return Codes
 --
@@ -880,8 +862,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType',
 -- 'Graphics.Vulkan.Core10.Enums.ImageUsageFlagBits.ImageUsageFlags',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-getPhysicalDeviceImageFormatProperties :: PhysicalDevice -> Format -> ImageType -> ImageTiling -> ImageUsageFlags -> ImageCreateFlags -> IO (ImageFormatProperties)
-getPhysicalDeviceImageFormatProperties physicalDevice format type' tiling usage flags = evalContT $ do
+getPhysicalDeviceImageFormatProperties :: forall io . MonadIO io => PhysicalDevice -> Format -> ImageType -> ImageTiling -> ImageUsageFlags -> ImageCreateFlags -> io (ImageFormatProperties)
+getPhysicalDeviceImageFormatProperties physicalDevice format type' tiling usage flags = liftIO . evalContT $ do
   let vkGetPhysicalDeviceImageFormatProperties' = mkVkGetPhysicalDeviceImageFormatProperties (pVkGetPhysicalDeviceImageFormatProperties (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPImageFormatProperties <- ContT (withZeroCStruct @ImageFormatProperties)
   r <- lift $ vkGetPhysicalDeviceImageFormatProperties' (physicalDeviceHandle (physicalDevice)) (format) (type') (tiling) (usage) (flags) (pPImageFormatProperties)
@@ -1235,7 +1217,7 @@ instance Zero ApplicationInfo where
 -- -   The @sType@ value of each struct in the @pNext@ chain /must/ be
 --     unique
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+-- -   @flags@ /must/ be @0@
 --
 -- -   If @pApplicationInfo@ is not @NULL@, @pApplicationInfo@ /must/ be a
 --     valid pointer to a valid 'ApplicationInfo' structure
@@ -1257,7 +1239,7 @@ instance Zero ApplicationInfo where
 data InstanceCreateInfo (es :: [Type]) = InstanceCreateInfo
   { -- | @pNext@ is @NULL@ or a pointer to an extension-specific structure.
     next :: Chain es
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is reserved for future use.
+  , -- | @flags@ is reserved for future use.
     flags :: InstanceCreateFlags
   , -- | @pApplicationInfo@ is @NULL@ or a pointer to a 'ApplicationInfo'
     -- structure. If not @NULL@, this information helps implementations
@@ -1433,7 +1415,7 @@ instance es ~ '[] => Zero (InstanceCreateInfo es) where
 -- 'Graphics.Vulkan.Core10.Enums.QueueFlagBits.QueueFlags',
 -- 'getPhysicalDeviceQueueFamilyProperties'
 data QueueFamilyProperties = QueueFamilyProperties
-  { -- | 'Graphics.Vulkan.Core10.Enums.QueueFlagBits.QueueFlags' is a bitmask of
+  { -- | @queueFlags@ is a bitmask of
     -- 'Graphics.Vulkan.Core10.Enums.QueueFlagBits.QueueFlagBits' indicating
     -- capabilities of the queues in this queue family.
     queueFlags :: QueueFlags
@@ -1515,9 +1497,8 @@ instance Zero QueueFamilyProperties where
 --
 -- At least one heap /must/ include
 -- 'Graphics.Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_DEVICE_LOCAL_BIT'
--- in 'MemoryHeap'::'Graphics.Vulkan.Core10.BaseType.Flags'. If there are
--- multiple heaps that all have similar performance characteristics, they
--- /may/ all include
+-- in 'MemoryHeap'::@flags@. If there are multiple heaps that all have
+-- similar performance characteristics, they /may/ all include
 -- 'Graphics.Vulkan.Core10.Enums.MemoryHeapFlagBits.MEMORY_HEAP_DEVICE_LOCAL_BIT'.
 -- In a unified memory architecture (UMA) system there is often only a
 -- single memory heap which is considered to be equally “local” to the host
@@ -1874,7 +1855,7 @@ instance Zero MemoryType where
 data MemoryHeap = MemoryHeap
   { -- | @size@ is the total memory size in bytes in the heap.
     size :: DeviceSize
-  , -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+  , -- | @flags@ is a bitmask of
     -- 'Graphics.Vulkan.Core10.Enums.MemoryHeapFlagBits.MemoryHeapFlagBits'
     -- specifying attribute flags for the heap.
     flags :: MemoryHeapFlags
@@ -1922,13 +1903,11 @@ instance Zero MemoryHeap where
 -- If no format feature flags are supported, the format itself is not
 -- supported, and images of that format cannot be created.
 --
--- If 'Graphics.Vulkan.Core10.Enums.Format.Format' is a block-compressed
--- format, then @bufferFeatures@ /must/ not support any features for the
--- format.
+-- If @format@ is a block-compressed format, then @bufferFeatures@ /must/
+-- not support any features for the format.
 --
--- If 'Graphics.Vulkan.Core10.Enums.Format.Format' is not a multi-plane
--- format then @linearTilingFeatures@ and @optimalTilingFeatures@ /must/
--- not contain
+-- If @format@ is not a multi-plane format then @linearTilingFeatures@ and
+-- @optimalTilingFeatures@ /must/ not contain
 -- 'Graphics.Vulkan.Core10.Enums.FormatFeatureFlagBits.FORMAT_FEATURE_DISJOINT_BIT'.
 --
 -- = See Also
@@ -2018,11 +1997,10 @@ instance Zero FormatProperties where
 --         structure with a handle type included in the @handleTypes@
 --         member for which mipmap image support is not required
 --
---     -   image 'Graphics.Vulkan.Core10.Enums.Format.Format' is one of
---         those listed in
+--     -   image @format@ is one of those listed in
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>
 --
---     -   'Graphics.Vulkan.Core10.BaseType.Flags' contains
+--     -   @flags@ contains
 --         'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SUBSAMPLED_BIT_EXT'
 --
 -- -   @maxArrayLayers@ is the maximum number of array layers.
@@ -2039,8 +2017,7 @@ instance Zero FormatProperties where
 --         and @type@ is
 --         'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D'
 --
---     -   'Graphics.Vulkan.Core10.Enums.Format.Format' is one of those
---         listed in
+--     -   @format@ is one of those listed in
 --         <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#formats-requiring-sampler-ycbcr-conversion>
 --
 -- -   If @tiling@ is
@@ -2321,12 +2298,11 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- factors. See
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#framebuffer-dsb>.
     dualSrcBlend :: Bool
-  , -- | 'Graphics.Vulkan.Core10.Enums.LogicOp.LogicOp' specifies whether logic
-    -- operations are supported. If this feature is not enabled, the
-    -- @logicOpEnable@ member of the
+  , -- | @logicOp@ specifies whether logic operations are supported. If this
+    -- feature is not enabled, the @logicOpEnable@ member of the
     -- 'Graphics.Vulkan.Core10.Pipeline.PipelineColorBlendStateCreateInfo'
     -- structure /must/ be set to 'Graphics.Vulkan.Core10.BaseType.FALSE', and
-    -- the 'Graphics.Vulkan.Core10.Enums.LogicOp.LogicOp' member is ignored.
+    -- the @logicOp@ member is ignored.
     logicOp :: Bool
   , -- | @multiDrawIndirect@ specifies whether multiple draw indirect is
     -- supported. If this feature is not enabled, the @drawCount@ parameter to
@@ -2592,14 +2568,13 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     textureCompressionBC :: Bool
   , -- | @occlusionQueryPrecise@ specifies whether occlusion queries returning
     -- actual sample counts are supported. Occlusion queries are created in a
-    -- 'Graphics.Vulkan.Core10.Handles.QueryPool' by specifying the
-    -- 'Graphics.Vulkan.Core10.Enums.QueryType.QueryType' of
-    -- 'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_OCCLUSION' in the
+    -- 'Graphics.Vulkan.Core10.Handles.QueryPool' by specifying the @queryType@
+    -- of 'Graphics.Vulkan.Core10.Enums.QueryType.QUERY_TYPE_OCCLUSION' in the
     -- 'Graphics.Vulkan.Core10.Query.QueryPoolCreateInfo' structure which is
     -- passed to 'Graphics.Vulkan.Core10.Query.createQueryPool'. If this
     -- feature is enabled, queries of this type /can/ enable
     -- 'Graphics.Vulkan.Core10.Enums.QueryControlFlagBits.QUERY_CONTROL_PRECISE_BIT'
-    -- in the 'Graphics.Vulkan.Core10.BaseType.Flags' parameter to
+    -- in the @flags@ parameter to
     -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.cmdBeginQuery'. If this
     -- feature is not supported, the implementation supports only boolean
     -- occlusion queries. When any samples are passed, boolean queries will
@@ -2851,7 +2826,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- 'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_BINDING_BIT'
     -- and
     -- 'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_BINDING_BIT'
-    -- set in the 'Graphics.Vulkan.Core10.BaseType.Flags' member of the
+    -- set in the @flags@ member of the
     -- 'Graphics.Vulkan.Core10.Buffer.BufferCreateInfo' and
     -- 'Graphics.Vulkan.Core10.Image.ImageCreateInfo' structures, respectively.
     -- Otherwise resource memory /can/ be managed as described in
@@ -2861,72 +2836,67 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- partially resident buffers. If this feature is not enabled, buffers
     -- /must/ not be created with
     -- 'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_RESIDENCY_BIT'
-    -- set in the 'Graphics.Vulkan.Core10.BaseType.Flags' member of the
+    -- set in the @flags@ member of the
     -- 'Graphics.Vulkan.Core10.Buffer.BufferCreateInfo' structure.
     sparseResidencyBuffer :: Bool
   , -- | @sparseResidencyImage2D@ specifies whether the device /can/ access
     -- partially resident 2D images with 1 sample per pixel. If this feature is
-    -- not enabled, images with an
-    -- 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' of
+    -- not enabled, images with an @imageType@ of
     -- 'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' and @samples@ set
     -- to 'Graphics.Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_1_BIT'
     -- /must/ not be created with
     -- 'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
-    -- set in the 'Graphics.Vulkan.Core10.BaseType.Flags' member of the
+    -- set in the @flags@ member of the
     -- 'Graphics.Vulkan.Core10.Image.ImageCreateInfo' structure.
     sparseResidencyImage2D :: Bool
   , -- | @sparseResidencyImage3D@ specifies whether the device /can/ access
     -- partially resident 3D images. If this feature is not enabled, images
-    -- with an 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' of
+    -- with an @imageType@ of
     -- 'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D' /must/ not be
     -- created with
     -- 'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
-    -- set in the 'Graphics.Vulkan.Core10.BaseType.Flags' member of the
+    -- set in the @flags@ member of the
     -- 'Graphics.Vulkan.Core10.Image.ImageCreateInfo' structure.
     sparseResidencyImage3D :: Bool
   , -- | @sparseResidency2Samples@ specifies whether the physical device /can/
     -- access partially resident 2D images with 2 samples per pixel. If this
-    -- feature is not enabled, images with an
-    -- 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' of
+    -- feature is not enabled, images with an @imageType@ of
     -- 'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' and @samples@ set
     -- to 'Graphics.Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_2_BIT'
     -- /must/ not be created with
     -- 'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
-    -- set in the 'Graphics.Vulkan.Core10.BaseType.Flags' member of the
+    -- set in the @flags@ member of the
     -- 'Graphics.Vulkan.Core10.Image.ImageCreateInfo' structure.
     sparseResidency2Samples :: Bool
   , -- | @sparseResidency4Samples@ specifies whether the physical device /can/
     -- access partially resident 2D images with 4 samples per pixel. If this
-    -- feature is not enabled, images with an
-    -- 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' of
+    -- feature is not enabled, images with an @imageType@ of
     -- 'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' and @samples@ set
     -- to 'Graphics.Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_4_BIT'
     -- /must/ not be created with
     -- 'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
-    -- set in the 'Graphics.Vulkan.Core10.BaseType.Flags' member of the
+    -- set in the @flags@ member of the
     -- 'Graphics.Vulkan.Core10.Image.ImageCreateInfo' structure.
     sparseResidency4Samples :: Bool
   , -- | @sparseResidency8Samples@ specifies whether the physical device /can/
     -- access partially resident 2D images with 8 samples per pixel. If this
-    -- feature is not enabled, images with an
-    -- 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' of
+    -- feature is not enabled, images with an @imageType@ of
     -- 'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' and @samples@ set
     -- to 'Graphics.Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_8_BIT'
     -- /must/ not be created with
     -- 'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
-    -- set in the 'Graphics.Vulkan.Core10.BaseType.Flags' member of the
+    -- set in the @flags@ member of the
     -- 'Graphics.Vulkan.Core10.Image.ImageCreateInfo' structure.
     sparseResidency8Samples :: Bool
   , -- | @sparseResidency16Samples@ specifies whether the physical device /can/
     -- access partially resident 2D images with 16 samples per pixel. If this
-    -- feature is not enabled, images with an
-    -- 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' of
+    -- feature is not enabled, images with an @imageType@ of
     -- 'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' and @samples@ set
     -- to
     -- 'Graphics.Vulkan.Core10.Enums.SampleCountFlagBits.SAMPLE_COUNT_16_BIT'
     -- /must/ not be created with
     -- 'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_RESIDENCY_BIT'
-    -- set in the 'Graphics.Vulkan.Core10.BaseType.Flags' member of the
+    -- set in the @flags@ member of the
     -- 'Graphics.Vulkan.Core10.Image.ImageCreateInfo' structure.
     sparseResidency16Samples :: Bool
   , -- | @sparseResidencyAliased@ specifies whether the physical device /can/
@@ -2935,8 +2905,7 @@ data PhysicalDeviceFeatures = PhysicalDeviceFeatures
     -- 'Graphics.Vulkan.Core10.Enums.BufferCreateFlagBits.BUFFER_CREATE_SPARSE_ALIASED_BIT'
     -- and
     -- 'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_SPARSE_ALIASED_BIT'
-    -- enum values /must/ not be used in
-    -- 'Graphics.Vulkan.Core10.BaseType.Flags' members of the
+    -- enum values /must/ not be used in @flags@ members of the
     -- 'Graphics.Vulkan.Core10.Buffer.BufferCreateInfo' and
     -- 'Graphics.Vulkan.Core10.Image.ImageCreateInfo' structures, respectively.
     sparseResidencyAliased :: Bool
@@ -3250,7 +3219,7 @@ data PhysicalDeviceSparseProperties = PhysicalDeviceSparseProperties
     -- structure will be placed in the mip tail. If this property is reported
     -- the implementation is allowed to return
     -- 'Graphics.Vulkan.Core10.Enums.SparseImageFormatFlagBits.SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT'
-    -- in the 'Graphics.Vulkan.Core10.BaseType.Flags' member of
+    -- in the @flags@ member of
     -- 'Graphics.Vulkan.Core10.SparseResourceMemoryManagement.SparseImageFormatProperties',
     -- indicating that mip level dimensions that are not integer multiples of
     -- the corresponding dimensions of the sparse image block will be placed in
@@ -3339,28 +3308,24 @@ instance Zero PhysicalDeviceSparseProperties where
 -- 'Graphics.Vulkan.Core10.Enums.SampleCountFlagBits.SampleCountFlags'
 data PhysicalDeviceLimits = PhysicalDeviceLimits
   { -- | @maxImageDimension1D@ is the maximum dimension (@width@) supported for
-    -- all images created with an
-    -- 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' of
+    -- all images created with an @imageType@ of
     -- 'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_1D'.
     maxImageDimension1D :: Word32
   , -- | @maxImageDimension2D@ is the maximum dimension (@width@ or @height@)
-    -- supported for all images created with an
-    -- 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' of
+    -- supported for all images created with an @imageType@ of
     -- 'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' and without
     -- 'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CUBE_COMPATIBLE_BIT'
-    -- set in 'Graphics.Vulkan.Core10.BaseType.Flags'.
+    -- set in @flags@.
     maxImageDimension2D :: Word32
   , -- | @maxImageDimension3D@ is the maximum dimension (@width@, @height@, or
-    -- @depth@) supported for all images created with an
-    -- 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' of
+    -- @depth@) supported for all images created with an @imageType@ of
     -- 'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_3D'.
     maxImageDimension3D :: Word32
   , -- | @maxImageDimensionCube@ is the maximum dimension (@width@ or @height@)
-    -- supported for all images created with an
-    -- 'Graphics.Vulkan.Core10.Enums.ImageType.ImageType' of
+    -- supported for all images created with an @imageType@ of
     -- 'Graphics.Vulkan.Core10.Enums.ImageType.IMAGE_TYPE_2D' and with
     -- 'Graphics.Vulkan.Core10.Enums.ImageCreateFlagBits.IMAGE_CREATE_CUBE_COMPATIBLE_BIT'
-    -- set in 'Graphics.Vulkan.Core10.BaseType.Flags'.
+    -- set in @flags@.
     maxImageDimensionCube :: Word32
   , -- | @maxImageArrayLayers@ is the maximum number of layers (@arrayLayers@)
     -- for an image.
@@ -4039,9 +4004,8 @@ data PhysicalDeviceLimits = PhysicalDeviceLimits
     -- 'Graphics.Vulkan.Core10.BaseType.TRUE', all queues that advertise the
     -- 'Graphics.Vulkan.Core10.Enums.QueueFlagBits.QUEUE_GRAPHICS_BIT' or
     -- 'Graphics.Vulkan.Core10.Enums.QueueFlagBits.QUEUE_COMPUTE_BIT' in the
-    -- 'QueueFamilyProperties'::'Graphics.Vulkan.Core10.Enums.QueueFlagBits.QueueFlags'
-    -- support 'QueueFamilyProperties'::@timestampValidBits@ of at least 36.
-    -- See
+    -- 'QueueFamilyProperties'::@queueFlags@ support
+    -- 'QueueFamilyProperties'::@timestampValidBits@ of at least 36. See
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#queries-timestamps Timestamp Queries>.
     timestampComputeAndGraphics :: Bool
   , -- | @timestampPeriod@ is the number of nanoseconds /required/ for a

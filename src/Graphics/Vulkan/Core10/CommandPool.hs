@@ -7,6 +7,7 @@ module Graphics.Vulkan.Core10.CommandPool  ( createCommandPool
                                            ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -16,6 +17,7 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -31,9 +33,8 @@ import Graphics.Vulkan.Core10.AllocationCallbacks (AllocationCallbacks)
 import Graphics.Vulkan.Core10.Handles (CommandPool)
 import Graphics.Vulkan.Core10.Handles (CommandPool(..))
 import Graphics.Vulkan.Core10.Enums.CommandPoolCreateFlagBits (CommandPoolCreateFlags)
-import Graphics.Vulkan.Core10.Enums.CommandPoolResetFlagBits (CommandPoolResetFlags)
-import Graphics.Vulkan.Core10.Enums.CommandPoolResetFlagBits (CommandPoolResetFlags)
 import Graphics.Vulkan.Core10.Enums.CommandPoolResetFlagBits (CommandPoolResetFlagBits(..))
+import Graphics.Vulkan.Core10.Enums.CommandPoolResetFlagBits (CommandPoolResetFlags)
 import Graphics.Vulkan.Core10.Handles (Device)
 import Graphics.Vulkan.Core10.Handles (Device(..))
 import Graphics.Vulkan.Dynamic (DeviceCmds(pVkCreateCommandPool))
@@ -62,8 +63,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     creates the command pool.
+-- -   @device@ is the logical device that creates the command pool.
 --
 -- -   @pCreateInfo@ is a pointer to a 'CommandPoolCreateInfo' structure
 --     specifying the state of the command pool object.
@@ -79,13 +79,12 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   @pCreateInfo->queueFamilyIndex@ /must/ be the index of a queue
---     family available in the logical device
---     'Graphics.Vulkan.Core10.Handles.Device'.
+--     family available in the logical device @device@.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'CommandPoolCreateInfo' structure
@@ -115,8 +114,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.CommandPool', 'CommandPoolCreateInfo',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-createCommandPool :: Device -> CommandPoolCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (CommandPool)
-createCommandPool device createInfo allocator = evalContT $ do
+createCommandPool :: forall io . MonadIO io => Device -> CommandPoolCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> io (CommandPool)
+createCommandPool device createInfo allocator = liftIO . evalContT $ do
   let vkCreateCommandPool' = mkVkCreateCommandPool (pVkCreateCommandPool (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -132,11 +131,11 @@ createCommandPool device createInfo allocator = evalContT $ do
 -- 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withCommandPool :: Device -> CommandPoolCreateInfo -> Maybe AllocationCallbacks -> (CommandPool -> IO r) -> IO r
-withCommandPool device commandPoolCreateInfo allocationCallbacks =
+withCommandPool :: forall r . Device -> CommandPoolCreateInfo -> Maybe AllocationCallbacks -> ((CommandPool) -> IO r) -> IO r
+withCommandPool device pCreateInfo pAllocator =
   bracket
-    (createCommandPool device commandPoolCreateInfo allocationCallbacks)
-    (\o -> destroyCommandPool device o allocationCallbacks)
+    (createCommandPool device pCreateInfo pAllocator)
+    (\(o0) -> destroyCommandPool device o0 pAllocator)
 
 
 foreign import ccall
@@ -150,11 +149,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     destroys the command pool.
+-- -   @device@ is the logical device that destroys the command pool.
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandPool' is the handle of the
---     command pool to destroy.
+-- -   @commandPool@ is the handle of the command pool to destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
@@ -169,57 +166,54 @@ foreign import ccall
 -- Any primary command buffer allocated from another
 -- 'Graphics.Vulkan.Core10.Handles.CommandPool' that is in the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording or executable state>
--- and has a secondary command buffer allocated from
--- 'Graphics.Vulkan.Core10.Handles.CommandPool' recorded into it, becomes
+-- and has a secondary command buffer allocated from @commandPool@ recorded
+-- into it, becomes
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle invalid>.
 --
 -- == Valid Usage
 --
 -- -   All 'Graphics.Vulkan.Core10.Handles.CommandBuffer' objects allocated
---     from 'Graphics.Vulkan.Core10.Handles.CommandPool' /must/ not be in
---     the
+--     from @commandPool@ /must/ not be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>.
 --
 -- -   If 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.CommandPool' was
---     created, a compatible set of callbacks /must/ be provided here
+--     were provided when @commandPool@ was created, a compatible set of
+--     callbacks /must/ be provided here
 --
 -- -   If no
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when 'Graphics.Vulkan.Core10.Handles.CommandPool' was
---     created, @pAllocator@ /must/ be @NULL@
+--     were provided when @commandPool@ was created, @pAllocator@ /must/ be
+--     @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.CommandPool' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core10.Handles.CommandPool' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.CommandPool' handle
+-- -   If @commandPool@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE', @commandPool@
+--     /must/ be a valid 'Graphics.Vulkan.Core10.Handles.CommandPool'
+--     handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
 --     pointer to a valid
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
 --     structure
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.CommandPool' is a valid handle,
---     it /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   If @commandPool@ is a valid handle, it /must/ have been created,
+--     allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandPool' /must/
---     be externally synchronized
+-- -   Host access to @commandPool@ /must/ be externally synchronized
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core10.Handles.CommandPool',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-destroyCommandPool :: Device -> CommandPool -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyCommandPool device commandPool allocator = evalContT $ do
+destroyCommandPool :: forall io . MonadIO io => Device -> CommandPool -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyCommandPool device commandPool allocator = liftIO . evalContT $ do
   let vkDestroyCommandPool' = mkVkDestroyCommandPool (pVkDestroyCommandPool (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -239,13 +233,11 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the command pool.
+-- -   @device@ is the logical device that owns the command pool.
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandPool' is the command pool to
---     reset.
+-- -   @commandPool@ is the command pool to reset.
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+-- -   @flags@ is a bitmask of
 --     'Graphics.Vulkan.Core10.Enums.CommandPoolResetFlagBits.CommandPoolResetFlagBits'
 --     controlling the reset operation.
 --
@@ -260,38 +252,34 @@ foreign import ccall
 -- Any primary command buffer allocated from another
 -- 'Graphics.Vulkan.Core10.Handles.CommandPool' that is in the
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording or executable state>
--- and has a secondary command buffer allocated from
--- 'Graphics.Vulkan.Core10.Handles.CommandPool' recorded into it, becomes
+-- and has a secondary command buffer allocated from @commandPool@ recorded
+-- into it, becomes
 -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle invalid>.
 --
 -- == Valid Usage
 --
 -- -   All 'Graphics.Vulkan.Core10.Handles.CommandBuffer' objects allocated
---     from 'Graphics.Vulkan.Core10.Handles.CommandPool' /must/ not be in
---     the
+--     from @commandPool@ /must/ not be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle pending state>
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandPool' /must/ be a valid
+-- -   @commandPool@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandPool' handle
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of
+-- -   @flags@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core10.Enums.CommandPoolResetFlagBits.CommandPoolResetFlagBits'
 --     values
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandPool' /must/ have been
---     created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   @commandPool@ /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandPool' /must/
---     be externally synchronized
+-- -   Host access to @commandPool@ /must/ be externally synchronized
 --
 -- == Return Codes
 --
@@ -310,8 +298,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.CommandPool',
 -- 'Graphics.Vulkan.Core10.Enums.CommandPoolResetFlagBits.CommandPoolResetFlags',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-resetCommandPool :: Device -> CommandPool -> CommandPoolResetFlags -> IO ()
-resetCommandPool device commandPool flags = do
+resetCommandPool :: forall io . MonadIO io => Device -> CommandPool -> CommandPoolResetFlags -> io ()
+resetCommandPool device commandPool flags = liftIO $ do
   let vkResetCommandPool' = mkVkResetCommandPool (pVkResetCommandPool (deviceCmds (device :: Device)))
   r <- vkResetCommandPool' (deviceHandle (device)) (commandPool) (flags)
   when (r < SUCCESS) (throwIO (VulkanException r))
@@ -324,7 +312,7 @@ resetCommandPool device commandPool flags = do
 --
 -- -   If the protected memory feature is not enabled, the
 --     'Graphics.Vulkan.Core10.Enums.CommandPoolCreateFlagBits.COMMAND_POOL_CREATE_PROTECTED_BIT'
---     bit of 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ not be set.
+--     bit of @flags@ /must/ not be set.
 --
 -- == Valid Usage (Implicit)
 --
@@ -333,8 +321,7 @@ resetCommandPool device commandPool flags = do
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be a valid
---     combination of
+-- -   @flags@ /must/ be a valid combination of
 --     'Graphics.Vulkan.Core10.Enums.CommandPoolCreateFlagBits.CommandPoolCreateFlagBits'
 --     values
 --
@@ -344,7 +331,7 @@ resetCommandPool device commandPool flags = do
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createCommandPool'
 data CommandPoolCreateInfo = CommandPoolCreateInfo
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
+  { -- | @flags@ is a bitmask of
     -- 'Graphics.Vulkan.Core10.Enums.CommandPoolCreateFlagBits.CommandPoolCreateFlagBits'
     -- indicating usage behavior for the pool and command buffers allocated
     -- from it.

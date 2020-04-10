@@ -3,6 +3,7 @@ module Documentation.All
   ) where
 
 import           Relude
+import qualified Data.Text.Extra               as T
 import           Control.Monad.Except
 import qualified Data.Map                      as Map
 import           Data.Text.Extra                ( (<+>) )
@@ -21,6 +22,7 @@ import           GHC.Conc                       ( numCapabilities )
 
 import           Documentation
 import           Documentation.RunAsciiDoctor
+import           Spec.Name
 
 -- | Creat a function which can be used to query for documentation
 -- Might take a few seconds to run, as vulkan has lots of documentation.
@@ -66,11 +68,15 @@ loadDocumentation
   -- ^ The asciidoc .txt file to load
   -> ExceptT Text IO [Documentation]
 loadDocumentation extensions vkDocs doc = do
+  let isValid = \case
+        TopLevel (CName n) ->
+          "vk" `T.isPrefixOf` T.toLower n || "pfn_" `T.isPrefixOf` T.toLower n
+        Nested p _ -> isValid (TopLevel p)
   docbook <- ExceptT $ manTxtToDocbook extensions vkDocs doc
   withExceptT (("Error while parsing documentation for" <+> show doc) <+>)
     . ExceptT
     . pure
-    $ docBookToDocumentation docbook
+    $ docBookToDocumentation isValid docbook
 
 ----------------------------------------------------------------
 -- Utils

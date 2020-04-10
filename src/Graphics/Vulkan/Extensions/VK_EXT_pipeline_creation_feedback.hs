@@ -52,9 +52,8 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_
 --
 -- = Description
 --
--- If the 'PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT' is not set in
--- 'Graphics.Vulkan.Core10.BaseType.Flags', an implementation /must/ not
--- set any other bits in 'Graphics.Vulkan.Core10.BaseType.Flags', and all
+-- If the 'PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT' is not set in @flags@,
+-- an implementation /must/ not set any other bits in @flags@, and all
 -- other 'PipelineCreationFeedbackEXT' data members are undefined.
 --
 -- = See Also
@@ -63,9 +62,8 @@ import Graphics.Vulkan.Core10.Enums.StructureType (StructureType(STRUCTURE_TYPE_
 -- 'PipelineCreationFeedbackFlagBitsEXT',
 -- 'PipelineCreationFeedbackFlagsEXT'
 data PipelineCreationFeedbackEXT = PipelineCreationFeedbackEXT
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
-    -- 'PipelineCreationFeedbackFlagBitsEXT' providing feedback about the
-    -- creation of a pipeline or of a pipeline stage.
+  { -- | @flags@ is a bitmask of 'PipelineCreationFeedbackFlagBitsEXT' providing
+    -- feedback about the creation of a pipeline or of a pipeline stage.
     flags :: PipelineCreationFeedbackFlagsEXT
   , -- | @duration@ is the duration spent creating a pipeline or pipeline stage
     -- in nanoseconds.
@@ -115,9 +113,8 @@ instance Zero PipelineCreationFeedbackEXT where
 -- @pPipelineCreationFeedback@ and /may/ write pipeline stage creation
 -- feedback to @pPipelineStageCreationFeedbacks@. An implementation /must/
 -- set or clear the 'PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT' in
--- 'PipelineCreationFeedbackEXT'::'Graphics.Vulkan.Core10.BaseType.Flags'
--- for @pPipelineCreationFeedback@ and every element of
--- @pPipelineStageCreationFeedbacks@.
+-- 'PipelineCreationFeedbackEXT'::@flags@ for @pPipelineCreationFeedback@
+-- and every element of @pPipelineStageCreationFeedbacks@.
 --
 -- Note
 --
@@ -248,14 +245,13 @@ newtype PipelineCreationFeedbackFlagBitsEXT = PipelineCreationFeedbackFlagBitsEX
 pattern PIPELINE_CREATION_FEEDBACK_VALID_BIT_EXT = PipelineCreationFeedbackFlagBitsEXT 0x00000001
 -- | 'PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT'
 -- indicates that a readily usable pipeline or pipeline stage was found in
--- the 'Graphics.Vulkan.Core10.Handles.PipelineCache' specified by the
--- application in the pipeline creation command.
+-- the @pipelineCache@ specified by the application in the pipeline
+-- creation command.
 --
 -- An implementation /should/ set the
 -- 'PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT_EXT' bit
 -- if it was able to avoid the large majority of pipeline or pipeline stage
--- creation work by using the
--- 'Graphics.Vulkan.Core10.Handles.PipelineCache' parameter of
+-- creation work by using the @pipelineCache@ parameter of
 -- 'Graphics.Vulkan.Core10.Pipeline.createGraphicsPipelines',
 -- 'Graphics.Vulkan.Extensions.VK_NV_ray_tracing.createRayTracingPipelinesNV',
 -- or 'Graphics.Vulkan.Core10.Pipeline.createComputePipelines'. When an

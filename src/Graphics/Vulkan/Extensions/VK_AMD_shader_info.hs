@@ -14,6 +14,7 @@ module Graphics.Vulkan.Extensions.VK_AMD_shader_info  ( getShaderInfoAMD
                                                       ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -34,11 +35,12 @@ import Text.ParserCombinators.ReadPrec (step)
 import Data.ByteString (packCStringLen)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Foreign.C.Types (CSize(..))
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CChar)
 import Foreign.C.Types (CSize)
-import Foreign.C.Types (CSize(..))
 import Foreign.C.Types (CSize(CSize))
 import Foreign.Storable (Storable)
 import Foreign.Storable (Storable(peek))
@@ -88,11 +90,9 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the device that created
---     'Graphics.Vulkan.Core10.Handles.Pipeline'.
+-- -   @device@ is the device that created @pipeline@.
 --
--- -   'Graphics.Vulkan.Core10.Handles.Pipeline' is the target of the
---     query.
+-- -   @pipeline@ is the target of the query.
 --
 -- -   @shaderStage@ identifies the particular shader within the pipeline
 --     about which information is being queried.
@@ -144,10 +144,10 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.Pipeline' /must/ be a valid
+-- -   @pipeline@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Pipeline' handle
 --
 -- -   @shaderStage@ /must/ be a valid
@@ -162,8 +162,8 @@ foreign import ccall
 --     not @NULL@, @pInfo@ /must/ be a valid pointer to an array of
 --     @pInfoSize@ bytes
 --
--- -   'Graphics.Vulkan.Core10.Handles.Pipeline' /must/ have been created,
---     allocated, or retrieved from 'Graphics.Vulkan.Core10.Handles.Device'
+-- -   @pipeline@ /must/ have been created, allocated, or retrieved from
+--     @device@
 --
 -- == Return Codes
 --
@@ -184,8 +184,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.Pipeline', 'ShaderInfoTypeAMD',
 -- 'Graphics.Vulkan.Core10.Enums.ShaderStageFlagBits.ShaderStageFlagBits'
-getShaderInfoAMD :: Device -> Pipeline -> ShaderStageFlagBits -> ShaderInfoTypeAMD -> IO (Result, ("info" ::: ByteString))
-getShaderInfoAMD device pipeline shaderStage infoType = evalContT $ do
+getShaderInfoAMD :: forall io . MonadIO io => Device -> Pipeline -> ShaderStageFlagBits -> ShaderInfoTypeAMD -> io (Result, ("info" ::: ByteString))
+getShaderInfoAMD device pipeline shaderStage infoType = liftIO . evalContT $ do
   let vkGetShaderInfoAMD' = mkVkGetShaderInfoAMD (pVkGetShaderInfoAMD (deviceCmds (device :: Device)))
   let device' = deviceHandle (device)
   pPInfoSize <- ContT $ bracket (callocBytes @CSize 8) free

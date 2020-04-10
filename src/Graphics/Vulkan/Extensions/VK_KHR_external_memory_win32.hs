@@ -16,6 +16,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_external_memory_win32  ( getMemoryWin32
                                                                 ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -25,6 +26,7 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -77,8 +79,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     created the device memory being exported.
+-- -   @device@ is the logical device that created the device memory being
+--     exported.
 --
 -- -   @pGetWin32HandleInfo@ is a pointer to a
 --     'MemoryGetWin32HandleInfoKHR' structure containing parameters of the
@@ -109,8 +111,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device', 'MemoryGetWin32HandleInfoKHR'
-getMemoryWin32HandleKHR :: Device -> MemoryGetWin32HandleInfoKHR -> IO (HANDLE)
-getMemoryWin32HandleKHR device getWin32HandleInfo = evalContT $ do
+getMemoryWin32HandleKHR :: forall io . MonadIO io => Device -> MemoryGetWin32HandleInfoKHR -> io (HANDLE)
+getMemoryWin32HandleKHR device getWin32HandleInfo = liftIO . evalContT $ do
   let vkGetMemoryWin32HandleKHR' = mkVkGetMemoryWin32HandleKHR (pVkGetMemoryWin32HandleKHR (deviceCmds (device :: Device)))
   pGetWin32HandleInfo <- ContT $ withCStruct (getWin32HandleInfo)
   pPHandle <- ContT $ bracket (callocBytes @HANDLE 8) free
@@ -132,8 +134,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     will be importing @handle@.
+-- -   @device@ is the logical device that will be importing @handle@.
 --
 -- -   @handleType@ is the type of the handle @handle@.
 --
@@ -156,8 +157,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core11.Enums.ExternalMemoryHandleTypeFlagBits.ExternalMemoryHandleTypeFlagBits',
 -- 'MemoryWin32HandlePropertiesKHR'
-getMemoryWin32HandlePropertiesKHR :: Device -> ExternalMemoryHandleTypeFlagBits -> HANDLE -> IO (MemoryWin32HandlePropertiesKHR)
-getMemoryWin32HandlePropertiesKHR device handleType handle = evalContT $ do
+getMemoryWin32HandlePropertiesKHR :: forall io . MonadIO io => Device -> ExternalMemoryHandleTypeFlagBits -> HANDLE -> io (MemoryWin32HandlePropertiesKHR)
+getMemoryWin32HandlePropertiesKHR device handleType handle = liftIO . evalContT $ do
   let vkGetMemoryWin32HandlePropertiesKHR' = mkVkGetMemoryWin32HandlePropertiesKHR (pVkGetMemoryWin32HandlePropertiesKHR (deviceCmds (device :: Device)))
   pPMemoryWin32HandleProperties <- ContT (withZeroCStruct @MemoryWin32HandlePropertiesKHR)
   r <- lift $ vkGetMemoryWin32HandlePropertiesKHR' (deviceHandle (device)) (handleType) (handle) (pPMemoryWin32HandleProperties)
@@ -192,7 +193,7 @@ getMemoryWin32HandlePropertiesKHR device handleType handle = evalContT $ do
 --
 -- -   The memory from which @handle@ was exported, or the memory named by
 --     @name@ /must/ have been created on the same underlying physical
---     device as 'Graphics.Vulkan.Core10.Handles.Device'.
+--     device as @device@.
 --
 -- -   If @handleType@ is not @0@, it /must/ be defined as an NT handle or
 --     a global share handle.

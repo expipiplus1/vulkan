@@ -13,6 +13,7 @@ module Graphics.Vulkan.Core11.Promoted_From_VK_KHR_descriptor_update_template  (
                                                                                ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -25,6 +26,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Typeable (Typeable)
 import Foreign.C.Types (CSize)
 import Foreign.C.Types (CSize(CSize))
@@ -86,8 +88,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     creates the descriptor update template.
+-- -   @device@ is the logical device that creates the descriptor update
+--     template.
 --
 -- -   @pCreateInfo@ is a pointer to a 'DescriptorUpdateTemplateCreateInfo'
 --     structure specifying the set of descriptors to update with a single
@@ -105,8 +107,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
 --     'DescriptorUpdateTemplateCreateInfo' structure
@@ -137,8 +139,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate',
 -- 'DescriptorUpdateTemplateCreateInfo',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-createDescriptorUpdateTemplate :: Device -> DescriptorUpdateTemplateCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (DescriptorUpdateTemplate)
-createDescriptorUpdateTemplate device createInfo allocator = evalContT $ do
+createDescriptorUpdateTemplate :: forall io . MonadIO io => Device -> DescriptorUpdateTemplateCreateInfo -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DescriptorUpdateTemplate)
+createDescriptorUpdateTemplate device createInfo allocator = liftIO . evalContT $ do
   let vkCreateDescriptorUpdateTemplate' = mkVkCreateDescriptorUpdateTemplate (pVkCreateDescriptorUpdateTemplate (deviceCmds (device :: Device)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -154,11 +156,11 @@ createDescriptorUpdateTemplate device createInfo allocator = evalContT $ do
 -- 'destroyDescriptorUpdateTemplate' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withDescriptorUpdateTemplate :: Device -> DescriptorUpdateTemplateCreateInfo -> Maybe AllocationCallbacks -> (DescriptorUpdateTemplate -> IO r) -> IO r
-withDescriptorUpdateTemplate device descriptorUpdateTemplateCreateInfo allocationCallbacks =
+withDescriptorUpdateTemplate :: forall r . Device -> DescriptorUpdateTemplateCreateInfo -> Maybe AllocationCallbacks -> ((DescriptorUpdateTemplate) -> IO r) -> IO r
+withDescriptorUpdateTemplate device pCreateInfo pAllocator =
   bracket
-    (createDescriptorUpdateTemplate device descriptorUpdateTemplateCreateInfo allocationCallbacks)
-    (\o -> destroyDescriptorUpdateTemplate device o allocationCallbacks)
+    (createDescriptorUpdateTemplate device pCreateInfo pAllocator)
+    (\(o0) -> destroyDescriptorUpdateTemplate device o0 pAllocator)
 
 
 foreign import ccall
@@ -173,11 +175,11 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     has been used to create the descriptor update template
+-- -   @device@ is the logical device that has been used to create the
+--     descriptor update template
 --
--- -   'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate' is the
---     descriptor update template to destroy.
+-- -   @descriptorUpdateTemplate@ is the descriptor update template to
+--     destroy.
 --
 -- -   @pAllocator@ controls host memory allocation as described in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#memory-allocation Memory Allocation>
@@ -186,49 +188,44 @@ foreign import ccall
 -- == Valid Usage
 --
 -- -   If 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when
---     'Graphics.Vulkan.Core10.Handles.DescriptorSetLayout' was created, a
---     compatible set of callbacks /must/ be provided here
+--     were provided when @descriptorSetLayout@ was created, a compatible
+--     set of callbacks /must/ be provided here
 --
 -- -   If no
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
---     were provided when
---     'Graphics.Vulkan.Core10.Handles.DescriptorSetLayout' was created,
---     @pAllocator@ /must/ be @NULL@
+--     were provided when @descriptorSetLayout@ was created, @pAllocator@
+--     /must/ be @NULL@
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
---
--- -   If 'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate' is not
---     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
---     'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate' /must/ be
---     a valid 'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate'
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
 --     handle
+--
+-- -   If @descriptorUpdateTemplate@ is not
+--     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE',
+--     @descriptorUpdateTemplate@ /must/ be a valid
+--     'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate' handle
 --
 -- -   If @pAllocator@ is not @NULL@, @pAllocator@ /must/ be a valid
 --     pointer to a valid
 --     'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks'
 --     structure
 --
--- -   If 'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate' is a
---     valid handle, it /must/ have been created, allocated, or retrieved
---     from 'Graphics.Vulkan.Core10.Handles.Device'
+-- -   If @descriptorUpdateTemplate@ is a valid handle, it /must/ have been
+--     created, allocated, or retrieved from @device@
 --
 -- == Host Synchronization
 --
--- -   Host access to
---     'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate' /must/ be
---     externally synchronized
+-- -   Host access to @descriptorUpdateTemplate@ /must/ be externally
+--     synchronized
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-destroyDescriptorUpdateTemplate :: Device -> DescriptorUpdateTemplate -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyDescriptorUpdateTemplate device descriptorUpdateTemplate allocator = evalContT $ do
+destroyDescriptorUpdateTemplate :: forall io . MonadIO io => Device -> DescriptorUpdateTemplate -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyDescriptorUpdateTemplate device descriptorUpdateTemplate allocator = liftIO . evalContT $ do
   let vkDestroyDescriptorUpdateTemplate' = mkVkDestroyDescriptorUpdateTemplate (pVkDestroyDescriptorUpdateTemplate (deviceCmds (device :: Device)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -249,13 +246,11 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     updates the descriptor sets.
+-- -   @device@ is the logical device that updates the descriptor sets.
 --
--- -   'Graphics.Vulkan.Core10.Handles.DescriptorSet' is the descriptor set
---     to update
+-- -   @descriptorSet@ is the descriptor set to update
 --
--- -   'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate' is a
+-- -   @descriptorUpdateTemplate@ is a
 --     'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate' object
 --     specifying the update mapping between @pData@ and the descriptor set
 --     to update.
@@ -273,29 +268,26 @@ foreign import ccall
 --     'Graphics.Vulkan.Core10.DescriptorSet.DescriptorImageInfo',
 --     'Graphics.Vulkan.Core10.DescriptorSet.DescriptorBufferInfo', or
 --     'Graphics.Vulkan.Core10.Handles.BufferView' in a layout defined by
---     'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate' when it
---     was created with 'createDescriptorUpdateTemplate'
+--     @descriptorUpdateTemplate@ when it was created with
+--     'createDescriptorUpdateTemplate'
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
---
--- -   'Graphics.Vulkan.Core10.Handles.DescriptorSet' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.DescriptorSet' handle
---
--- -   'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate' /must/ be
---     a valid 'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate'
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
 --     handle
 --
--- -   'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate' /must/
---     have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Device'
+-- -   @descriptorSet@ /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.DescriptorSet' handle
+--
+-- -   @descriptorUpdateTemplate@ /must/ be a valid
+--     'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate' handle
+--
+-- -   @descriptorUpdateTemplate@ /must/ have been created, allocated, or
+--     retrieved from @device@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.DescriptorSet' /must/
---     be externally synchronized
+-- -   Host access to @descriptorSet@ /must/ be externally synchronized
 --
 -- __API example.__
 --
@@ -380,8 +372,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.DescriptorSet',
 -- 'Graphics.Vulkan.Core11.Handles.DescriptorUpdateTemplate',
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-updateDescriptorSetWithTemplate :: Device -> DescriptorSet -> DescriptorUpdateTemplate -> ("data" ::: Ptr ()) -> IO ()
-updateDescriptorSetWithTemplate device descriptorSet descriptorUpdateTemplate data' = do
+updateDescriptorSetWithTemplate :: forall io . MonadIO io => Device -> DescriptorSet -> DescriptorUpdateTemplate -> ("data" ::: Ptr ()) -> io ()
+updateDescriptorSetWithTemplate device descriptorSet descriptorUpdateTemplate data' = liftIO $ do
   let vkUpdateDescriptorSetWithTemplate' = mkVkUpdateDescriptorSetWithTemplate (pVkUpdateDescriptorSetWithTemplate (deviceCmds (device :: Device)))
   vkUpdateDescriptorSetWithTemplate' (deviceHandle (device)) (descriptorSet) (descriptorUpdateTemplate) (data')
   pure $ ()
@@ -413,8 +405,7 @@ updateDescriptorSetWithTemplate device descriptorSet descriptorUpdateTemplate da
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' /must/
---     be a valid
+-- -   @descriptorType@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' value
 --
 -- = See Also
@@ -442,7 +433,7 @@ data DescriptorUpdateTemplateEntry = DescriptorUpdateTemplateEntry
     -- remaining array elements in the destination binding refer to the
     -- remaining number of bytes in it.
     descriptorCount :: Word32
-  , -- | 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is a
+  , -- | @descriptorType@ is a
     -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' specifying
     -- the type of the descriptor.
     descriptorType :: DescriptorType
@@ -457,8 +448,7 @@ data DescriptorUpdateTemplateEntry = DescriptorUpdateTemplateEntry
     -- >     const char *ptr = (const char *)pData + pDescriptorUpdateEntries[i].offset + j * pDescriptorUpdateEntries[i].stride
     --
     -- The stride is useful in case the bindings are stored in structs along
-    -- with other data. If
-    -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DescriptorType' is
+    -- with other data. If @descriptorType@ is
     -- 'Graphics.Vulkan.Core10.Enums.DescriptorType.DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT'
     -- then the value of @stride@ is ignored and the stride is assumed to be
     -- @1@, i.e. the descriptor update information for them is always specified
@@ -523,19 +513,18 @@ instance Zero DescriptorUpdateTemplateEntry where
 --
 -- -   If @templateType@ is
 --     'Graphics.Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET',
---     'Graphics.Vulkan.Core10.Handles.DescriptorSetLayout' /must/ be a
---     valid 'Graphics.Vulkan.Core10.Handles.DescriptorSetLayout' handle
+--     @descriptorSetLayout@ /must/ be a valid
+--     'Graphics.Vulkan.Core10.Handles.DescriptorSetLayout' handle
 --
 -- -   If @templateType@ is
 --     'Graphics.Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR',
---     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
---     /must/ be a valid
+--     @pipelineBindPoint@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
 --     value
 --
 -- -   If @templateType@ is
 --     'Graphics.Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR',
---     'Graphics.Vulkan.Core10.Handles.PipelineLayout' /must/ be a valid
+--     @pipelineLayout@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PipelineLayout' handle
 --
 -- -   If @templateType@ is
@@ -551,7 +540,7 @@ instance Zero DescriptorUpdateTemplateEntry where
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+-- -   @flags@ /must/ be @0@
 --
 -- -   @pDescriptorUpdateEntries@ /must/ be a valid pointer to an array of
 --     @descriptorUpdateEntryCount@ valid 'DescriptorUpdateTemplateEntry'
@@ -563,8 +552,7 @@ instance Zero DescriptorUpdateTemplateEntry where
 --
 -- -   @descriptorUpdateEntryCount@ /must/ be greater than @0@
 --
--- -   Both of 'Graphics.Vulkan.Core10.Handles.DescriptorSetLayout', and
---     'Graphics.Vulkan.Core10.Handles.PipelineLayout' that are valid
+-- -   Both of @descriptorSetLayout@, and @pipelineLayout@ that are valid
 --     handles of non-ignored parameters /must/ have been created,
 --     allocated, or retrieved from the same
 --     'Graphics.Vulkan.Core10.Handles.Device'
@@ -581,7 +569,7 @@ instance Zero DescriptorUpdateTemplateEntry where
 -- 'createDescriptorUpdateTemplate',
 -- 'Graphics.Vulkan.Extensions.VK_KHR_descriptor_update_template.createDescriptorUpdateTemplateKHR'
 data DescriptorUpdateTemplateCreateInfo = DescriptorUpdateTemplateCreateInfo
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is reserved for future use.
+  { -- | @flags@ is reserved for future use.
     flags :: DescriptorUpdateTemplateCreateFlags
   , -- | @pDescriptorUpdateEntries@ is a pointer to an array of
     -- 'DescriptorUpdateTemplateEntry' structures describing the descriptors to
@@ -591,33 +579,31 @@ data DescriptorUpdateTemplateCreateInfo = DescriptorUpdateTemplateCreateInfo
     -- set to
     -- 'Graphics.Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET'
     -- it /can/ only be used to update descriptor sets with a fixed
-    -- 'Graphics.Vulkan.Core10.Handles.DescriptorSetLayout'. If set to
+    -- @descriptorSetLayout@. If set to
     -- 'Graphics.Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR'
     -- it /can/ only be used to push descriptor sets using the provided
-    -- 'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint',
-    -- 'Graphics.Vulkan.Core10.Handles.PipelineLayout', and @set@ number.
+    -- @pipelineBindPoint@, @pipelineLayout@, and @set@ number.
     templateType :: DescriptorUpdateTemplateType
-  , -- | 'Graphics.Vulkan.Core10.Handles.DescriptorSetLayout' is the descriptor
-    -- set layout the parameter update template will be used with. All
-    -- descriptor sets which are going to be updated through the newly created
-    -- descriptor update template /must/ be created with this layout.
-    -- 'Graphics.Vulkan.Core10.Handles.DescriptorSetLayout' is the descriptor
-    -- set layout used to build the descriptor update template. All descriptor
-    -- sets which are going to be updated through the newly created descriptor
+  , -- | @descriptorSetLayout@ is the descriptor set layout the parameter update
+    -- template will be used with. All descriptor sets which are going to be
+    -- updated through the newly created descriptor update template /must/ be
+    -- created with this layout. @descriptorSetLayout@ is the descriptor set
+    -- layout used to build the descriptor update template. All descriptor sets
+    -- which are going to be updated through the newly created descriptor
     -- update template /must/ be created with a layout that matches (is the
     -- same as, or defined identically to) this layout. This parameter is
     -- ignored if @templateType@ is not
     -- 'Graphics.Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET'.
     descriptorSetLayout :: DescriptorSetLayout
-  , -- | 'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint' is a
+  , -- | @pipelineBindPoint@ is a
     -- 'Graphics.Vulkan.Core10.Enums.PipelineBindPoint.PipelineBindPoint'
     -- indicating whether the descriptors will be used by graphics pipelines or
     -- compute pipelines. This parameter is ignored if @templateType@ is not
     -- 'Graphics.Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR'
     pipelineBindPoint :: PipelineBindPoint
-  , -- | 'Graphics.Vulkan.Core10.Handles.PipelineLayout' is a
-    -- 'Graphics.Vulkan.Core10.Handles.PipelineLayout' object used to program
-    -- the bindings. This parameter is ignored if @templateType@ is not
+  , -- | @pipelineLayout@ is a 'Graphics.Vulkan.Core10.Handles.PipelineLayout'
+    -- object used to program the bindings. This parameter is ignored if
+    -- @templateType@ is not
     -- 'Graphics.Vulkan.Core11.Enums.DescriptorUpdateTemplateType.DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR'
     pipelineLayout :: PipelineLayout
   , -- | @set@ is the set number of the descriptor set in the pipeline layout

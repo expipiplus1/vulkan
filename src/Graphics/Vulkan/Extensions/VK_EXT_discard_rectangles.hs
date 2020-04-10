@@ -13,6 +13,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_discard_rectangles  ( cmdSetDiscardRect
                                                              , pattern EXT_DISCARD_RECTANGLES_EXTENSION_NAME
                                                              ) where
 
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Utils (maybePeek)
 import Foreign.Ptr (nullPtr)
@@ -32,6 +33,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.Either (Either)
 import Data.String (IsString)
@@ -77,8 +79,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command will be recorded.
+-- -   @commandBuffer@ is the command buffer into which the command will be
+--     recorded.
 --
 -- -   @firstDiscardRectangle@ is the index of the first discard rectangle
 --     whose state is updated by the command.
@@ -118,30 +120,28 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pDiscardRectangles@ /must/ be a valid pointer to an array of
 --     @discardRectangleCount@
 --     'Graphics.Vulkan.Core10.CommandBufferBuilding.Rect2D' structures
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics operations
+--     @commandBuffer@ was allocated from /must/ support graphics
+--     operations
 --
 -- -   @discardRectangleCount@ /must/ be greater than @0@
 --
 -- == Host Synchronization
 --
--- -   Host access to 'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/
---     be externally synchronized
+-- -   Host access to @commandBuffer@ /must/ be externally synchronized
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -158,8 +158,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer',
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.Rect2D'
-cmdSetDiscardRectangleEXT :: CommandBuffer -> ("firstDiscardRectangle" ::: Word32) -> ("discardRectangles" ::: Vector Rect2D) -> IO ()
-cmdSetDiscardRectangleEXT commandBuffer firstDiscardRectangle discardRectangles = evalContT $ do
+cmdSetDiscardRectangleEXT :: forall io . MonadIO io => CommandBuffer -> ("firstDiscardRectangle" ::: Word32) -> ("discardRectangles" ::: Vector Rect2D) -> io ()
+cmdSetDiscardRectangleEXT commandBuffer firstDiscardRectangle discardRectangles = liftIO . evalContT $ do
   let vkCmdSetDiscardRectangleEXT' = mkVkCmdSetDiscardRectangleEXT (pVkCmdSetDiscardRectangleEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   pPDiscardRectangles <- ContT $ allocaBytesAligned @Rect2D ((Data.Vector.length (discardRectangles)) * 16) 4
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPDiscardRectangles `plusPtr` (16 * (i)) :: Ptr Rect2D) (e) . ($ ())) (discardRectangles)
@@ -238,7 +238,7 @@ instance Zero PhysicalDeviceDiscardRectanglePropertiesEXT where
 -- 'Graphics.Vulkan.Core10.CommandBufferBuilding.Rect2D',
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType'
 data PipelineDiscardRectangleStateCreateInfoEXT = PipelineDiscardRectangleStateCreateInfoEXT
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+  { -- | @flags@ /must/ be @0@
     flags :: PipelineDiscardRectangleStateCreateFlagsEXT
   , -- | @discardRectangleMode@ /must/ be a valid 'DiscardRectangleModeEXT' value
     discardRectangleMode :: DiscardRectangleModeEXT

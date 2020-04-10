@@ -51,6 +51,7 @@ module Graphics.Vulkan.Extensions.VK_KHR_performance_query  ( enumeratePhysicalD
                                                             ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -76,6 +77,7 @@ import Control.Monad.Trans.Cont (runContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -155,9 +157,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the handle to the
---     physical device whose queue family performance query counter
---     properties will be queried.
+-- -   @physicalDevice@ is the handle to the physical device whose queue
+--     family performance query counter properties will be queried.
 --
 -- -   @queueFamilyIndex@ is the index into the queue family of the
 --     physical device we want to get properties for.
@@ -185,7 +186,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pCounterCount@ /must/ be a valid pointer to a @uint32_t@ value
@@ -219,8 +220,8 @@ foreign import ccall
 --
 -- 'PerformanceCounterDescriptionKHR', 'PerformanceCounterKHR',
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'
-enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR :: PhysicalDevice -> ("queueFamilyIndex" ::: Word32) -> IO (Result, ("counters" ::: Vector PerformanceCounterKHR), ("counterDescriptions" ::: Vector PerformanceCounterDescriptionKHR))
-enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR physicalDevice queueFamilyIndex = evalContT $ do
+enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR :: forall io . MonadIO io => PhysicalDevice -> ("queueFamilyIndex" ::: Word32) -> io (Result, ("counters" ::: Vector PerformanceCounterKHR), ("counterDescriptions" ::: Vector PerformanceCounterDescriptionKHR))
+enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR physicalDevice queueFamilyIndex = liftIO . evalContT $ do
   let vkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR' = mkVkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR (pVkEnumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPCounterCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -252,9 +253,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the handle to the
---     physical device whose queue family performance query counter
---     properties will be queried.
+-- -   @physicalDevice@ is the handle to the physical device whose queue
+--     family performance query counter properties will be queried.
 --
 -- -   @pPerformanceQueryCreateInfo@ is a pointer to a
 --     'QueryPoolPerformanceCreateInfoKHR' of the performance query that is
@@ -268,10 +268,9 @@ foreign import ccall
 --
 -- The @pPerformanceQueryCreateInfo@ member
 -- 'QueryPoolPerformanceCreateInfoKHR'::@queueFamilyIndex@ /must/ be a
--- queue family of 'Graphics.Vulkan.Core10.Handles.PhysicalDevice'. The
--- number of passes required to capture the counters specified in the
--- @pPerformanceQueryCreateInfo@ member
--- 'QueryPoolPerformanceCreateInfoKHR'::@pCounters@ is returned in
+-- queue family of @physicalDevice@. The number of passes required to
+-- capture the counters specified in the @pPerformanceQueryCreateInfo@
+-- member 'QueryPoolPerformanceCreateInfoKHR'::@pCounters@ is returned in
 -- @pNumPasses@.
 --
 -- == Valid Usage (Implicit)
@@ -280,8 +279,8 @@ foreign import ccall
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
 -- 'QueryPoolPerformanceCreateInfoKHR'
-getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR :: PhysicalDevice -> ("performanceQueryCreateInfo" ::: QueryPoolPerformanceCreateInfoKHR) -> IO (("numPasses" ::: Word32))
-getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR physicalDevice performanceQueryCreateInfo = evalContT $ do
+getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR :: forall io . MonadIO io => PhysicalDevice -> ("performanceQueryCreateInfo" ::: QueryPoolPerformanceCreateInfoKHR) -> io (("numPasses" ::: Word32))
+getPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR physicalDevice performanceQueryCreateInfo = liftIO . evalContT $ do
   let vkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR' = mkVkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR (pVkGetPhysicalDeviceQueueFamilyPerformanceQueryPassesKHR (instanceCmds (physicalDevice :: PhysicalDevice)))
   pPerformanceQueryCreateInfo <- ContT $ withCStruct (performanceQueryCreateInfo)
   pPNumPasses <- ContT $ bracket (callocBytes @Word32 4) free
@@ -301,8 +300,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device to
---     profile.
+-- -   @device@ is the logical device to profile.
 --
 -- -   @pInfo@ is a pointer to a 'AcquireProfilingLockInfoKHR' structure
 --     which contains information about how the profiling is to be
@@ -326,8 +324,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'AcquireProfilingLockInfoKHR', 'Graphics.Vulkan.Core10.Handles.Device'
-acquireProfilingLockKHR :: Device -> AcquireProfilingLockInfoKHR -> IO ()
-acquireProfilingLockKHR device info = evalContT $ do
+acquireProfilingLockKHR :: forall io . MonadIO io => Device -> AcquireProfilingLockInfoKHR -> io ()
+acquireProfilingLockKHR device info = liftIO . evalContT $ do
   let vkAcquireProfilingLockKHR' = mkVkAcquireProfilingLockKHR (pVkAcquireProfilingLockKHR (deviceCmds (device :: Device)))
   pInfo <- ContT $ withCStruct (info)
   r <- lift $ vkAcquireProfilingLockKHR' (deviceHandle (device)) pInfo
@@ -345,25 +343,23 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device to
---     cease profiling on.
+-- -   @device@ is the logical device to cease profiling on.
 --
 -- == Valid Usage
 --
--- -   The profiling lock of 'Graphics.Vulkan.Core10.Handles.Device' /must/
---     have been held via a previous successful call to
---     'acquireProfilingLockKHR'
+-- -   The profiling lock of @device@ /must/ have been held via a previous
+--     successful call to 'acquireProfilingLockKHR'
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Device'
-releaseProfilingLockKHR :: Device -> IO ()
-releaseProfilingLockKHR device = do
+releaseProfilingLockKHR :: forall io . MonadIO io => Device -> io ()
+releaseProfilingLockKHR device = liftIO $ do
   let vkReleaseProfilingLockKHR' = mkVkReleaseProfilingLockKHR (pVkReleaseProfilingLockKHR (deviceCmds (device :: Device)))
   vkReleaseProfilingLockKHR' (deviceHandle (device))
   pure $ ()
@@ -586,9 +582,8 @@ instance Zero PerformanceCounterKHR where
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'enumeratePhysicalDeviceQueueFamilyPerformanceQueryCountersKHR'
 data PerformanceCounterDescriptionKHR = PerformanceCounterDescriptionKHR
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is a bitmask of
-    -- 'PerformanceCounterDescriptionFlagBitsKHR' indicating the usage behavior
-    -- for the counter.
+  { -- | @flags@ is a bitmask of 'PerformanceCounterDescriptionFlagBitsKHR'
+    -- indicating the usage behavior for the counter.
     flags :: PerformanceCounterDescriptionFlagsKHR
   , -- | @name@ is an array of size
     -- 'Graphics.Vulkan.Core10.APIConstants.MAX_DESCRIPTION_SIZE', containing a
@@ -744,7 +739,7 @@ instance Zero QueryPoolPerformanceCreateInfoKHR where
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'acquireProfilingLockKHR'
 data AcquireProfilingLockInfoKHR = AcquireProfilingLockInfoKHR
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+  { -- | @flags@ /must/ be @0@
     flags :: AcquireProfilingLockFlagsKHR
   , -- | @timeout@ indicates how long the function waits, in nanoseconds, if the
     -- profiling lock is not available.

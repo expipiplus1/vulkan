@@ -1,6 +1,7 @@
 module Render.Element
   ( genRe
   , emptyRenderElement
+  , makeRenderElementInternal
   , HasRenderElem
   , HasRenderParams
   , RenderElement(..)
@@ -58,7 +59,9 @@ import           Data.Vector.Extra              ( Vector
 import           Data.Text                     as T
 import           Data.Set                       ( insert )
 import           Data.Text.Prettyprint.Doc
-import           Data.Char                      ( isAlpha )
+import           Data.Char                      ( isAlpha
+                                                , isLower
+                                                )
 import           Polysemy
 import           Polysemy.State
 import           Polysemy.Input
@@ -195,6 +198,7 @@ nameNameSpace = \case
 thNameNamespace :: Name -> NameSpace
 thNameNamespace n = case nameSpace n of
   Just TcClsName -> Type
+  Just DataName  -> Pattern
   _              -> Plain
 
 ----------------------------------------------------------------
@@ -227,17 +231,22 @@ data RenderParams = RenderParams
   , mkIdiomaticType             :: Type -> Maybe IdiomaticType
     -- ^ Overrides for using a different type than default on the Haskell side
     -- than the C side
-  , mkHsTypeOverride            :: Preserve -> CType -> Maybe Type
-    -- ^ Override for using a different type than default on the Haskell sied
-  , unionDiscriminators         :: Vector UnionDiscriminator
-  , successCodeType             :: CType
-  , isSuccessCodeReturned       :: Text -> Bool
+  , mkHsTypeOverride
+      :: forall r
+       . ExtensibleStructStyle r
+      -> Preserve
+      -> CType
+      -> Maybe (Sem r Type)
+    -- ^ Override for using a different type than default on the Haskell side
+  , unionDiscriminators   :: Vector UnionDiscriminator
+  , successCodeType       :: CType
+  , isSuccessCodeReturned :: Text -> Bool
     -- ^ Is this success code returned from a function (failure codes are thrown)
     --
     -- use @const True@ to always return success codes
-  , firstSuccessCode            :: CName
+  , firstSuccessCode      :: CName
     -- Any code less than this is an error code
-  , exceptionTypeName           :: HName
+  , exceptionTypeName     :: HName
     -- The name for the exception wrapper
   , complexMemberLengthFunction
       :: forall r
@@ -253,6 +262,12 @@ data RenderParams = RenderParams
     -- (other parameter or member). Sometimes also this isn't a trivial case of
     -- getting that member of the struct, so use this field for writing those
     -- complex overrides.
+  , isExternalName :: HName -> Maybe ModName
+    -- ^ If you want to refer to something in another package without using
+    -- template haskell ''quotes, put the module in here
+  , externalDocHTML :: Maybe Text
+    -- ^ If we can't find a place in the generated source to link to, link to
+    -- this documentation instead.
   }
 
 data UnionDiscriminator = UnionDiscriminator
@@ -320,6 +335,11 @@ emptyRenderElement n = RenderElement { reName              = n
                             , reReexportable      = mempty
                             }
 
+-- | Prevent any exports from being in the module export list
+makeRenderElementInternal :: RenderElement -> RenderElement
+makeRenderElementInternal re =
+  re { reExports = mempty, reInternal = reExports re <> reInternal re }
+
 tellExplicitModule :: (HasRenderElem r, HasErr r) => ModName -> Sem r ()
 tellExplicitModule mod = gets reExplicitModule >>= \case
   Nothing -> modify' (\r -> r { reExplicitModule = Just mod })
@@ -363,22 +383,52 @@ class Importable a where
     -> Sem r ()
 
 instance Importable Name where
-  addImport (Import i qual children withAll source) = case nameModule i of
-    Just _ -> do
-      -- This is an name in an external library, don't import with source
-      RenderParams {..} <- input
-      let q = qual || V.elem i alwaysQualifiedNames
-      modify' $ \r -> r
-        { reImports = insert (Import i q children withAll False) (reImports r)
-        }
-    Nothing -> do
-      let mkLocalName = TyConName . T.pack . nameBase
-      addImport
-        (Import (mkLocalName i) qual (mkLocalName <$> children) withAll source)
+  addImport import'@(Import i qual children withAll source) = do
+    RenderParams {..} <- input
+    let mkLocalName n =
+          let b = T.pack . nameBase $ n
+          in  case nameSpace n of
+                Just TcClsName         -> TyConName b
+                Just DataName          -> ConName b
+                Just VarName           -> TermName b
+                _ | isLower (T.head b) -> TermName b
+                -- TODO: Defaults to TyCon over patterns
+                _                      -> TyConName b
+        localName = mkLocalName i
+    withModule <- fromMaybe i <$> addModName localName
+    case nameModule withModule of
+      Just _ -> do
+        -- This is an name in an external library, don't import with source
+        RenderParams {..} <- input
+        let q = qual || V.elem withModule alwaysQualifiedNames
+        modify' $ \r -> r
+          { reImports = insert (Import withModule q children withAll False)
+                               (reImports r)
+          }
+      Nothing -> case isExternalName localName of
+        Just (ModName modName) -> addImport import'
+          { importName = mkName (T.unpack modName <> "." <> nameBase withModule)
+          }
+        Nothing -> addImport
+          (Import localName qual (mkLocalName <$> children) withAll source)
 
 instance Importable HName where
-  addImport i =
-    modify' $ \r -> r { reLocalImports = insert i (reLocalImports r) }
+  addImport i = addModName (importName i) >>= \case
+    Just n -> addImport i
+      { importName     = n
+      , importChildren = mkName . T.unpack . unName <$> importChildren i
+      }
+    Nothing ->
+      modify' $ \r -> r { reLocalImports = insert i (reLocalImports r) }
+
+addModName :: HasRenderParams r => HName -> Sem r (Maybe Name)
+addModName n = do
+  let mkName' m n = case n of
+        TyConName s -> mkNameG_tc "" (T.unpack m) (T.unpack s)
+        ConName   s -> mkNameG_d "" (T.unpack m) (T.unpack s)
+        TermName  s -> mkNameG_v "" (T.unpack m) (T.unpack s)
+  RenderParams {..} <- input
+  pure $ isExternalName n <&> \(ModName modName) -> mkName' modName n
 
 tellSourceImport, tellImportWithAll, tellQualImport, tellQualImportWithAll, tellImport
   :: (HasRenderElem r, HasRenderParams r, Importable a) => a -> Sem r ()

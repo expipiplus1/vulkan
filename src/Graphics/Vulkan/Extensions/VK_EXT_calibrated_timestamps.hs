@@ -15,6 +15,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_calibrated_timestamps  ( getPhysicalDev
                                                                 ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -36,6 +37,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -86,8 +88,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is the physical
---     device from which to query the set of calibrateable time domains.
+-- -   @physicalDevice@ is the physical device from which to query the set
+--     of calibrateable time domains.
 --
 -- -   @pTimeDomainCount@ is a pointer to an integer related to the number
 --     of calibrateable time domains available or queried, as described
@@ -100,8 +102,7 @@ foreign import ccall
 -- = Description
 --
 -- If @pTimeDomains@ is @NULL@, then the number of calibrateable time
--- domains supported for the given
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice' is returned in
+-- domains supported for the given @physicalDevice@ is returned in
 -- @pTimeDomainCount@. Otherwise, @pTimeDomainCount@ /must/ point to a
 -- variable set by the user to the number of elements in the @pTimeDomains@
 -- array, and on return the variable is overwritten with the number of
@@ -109,15 +110,14 @@ foreign import ccall
 -- @pTimeDomainCount@ is less than the number of calibrateable time domains
 -- supported, at most @pTimeDomainCount@ values will be written to
 -- @pTimeDomains@. If @pTimeDomainCount@ is smaller than the number of
--- calibrateable time domains supported for the given
--- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice',
+-- calibrateable time domains supported for the given @physicalDevice@,
 -- 'Graphics.Vulkan.Core10.Enums.Result.INCOMPLETE' will be returned
 -- instead of 'Graphics.Vulkan.Core10.Enums.Result.SUCCESS' to indicate
 -- that not all the available values were returned.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.PhysicalDevice' /must/ be a valid
+-- -   @physicalDevice@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.PhysicalDevice' handle
 --
 -- -   @pTimeDomainCount@ /must/ be a valid pointer to a @uint32_t@ value
@@ -143,8 +143,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.PhysicalDevice', 'TimeDomainEXT'
-getPhysicalDeviceCalibrateableTimeDomainsEXT :: PhysicalDevice -> IO (Result, ("timeDomains" ::: Vector TimeDomainEXT))
-getPhysicalDeviceCalibrateableTimeDomainsEXT physicalDevice = evalContT $ do
+getPhysicalDeviceCalibrateableTimeDomainsEXT :: forall io . MonadIO io => PhysicalDevice -> io (Result, ("timeDomains" ::: Vector TimeDomainEXT))
+getPhysicalDeviceCalibrateableTimeDomainsEXT physicalDevice = liftIO . evalContT $ do
   let vkGetPhysicalDeviceCalibrateableTimeDomainsEXT' = mkVkGetPhysicalDeviceCalibrateableTimeDomainsEXT (pVkGetPhysicalDeviceCalibrateableTimeDomainsEXT (instanceCmds (physicalDevice :: PhysicalDevice)))
   let physicalDevice' = physicalDeviceHandle (physicalDevice)
   pPTimeDomainCount <- ContT $ bracket (callocBytes @Word32 4) free
@@ -170,8 +170,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device used
---     to perform the query.
+-- -   @device@ is the logical device used to perform the query.
 --
 -- -   @timestampCount@ is the number of timestamps to query.
 --
@@ -221,8 +220,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'CalibratedTimestampInfoEXT', 'Graphics.Vulkan.Core10.Handles.Device'
-getCalibratedTimestampsEXT :: Device -> ("timestampInfos" ::: Vector CalibratedTimestampInfoEXT) -> IO (("timestamps" ::: Vector Word64), ("maxDeviation" ::: Word64))
-getCalibratedTimestampsEXT device timestampInfos = evalContT $ do
+getCalibratedTimestampsEXT :: forall io . MonadIO io => Device -> ("timestampInfos" ::: Vector CalibratedTimestampInfoEXT) -> io (("timestamps" ::: Vector Word64), ("maxDeviation" ::: Word64))
+getCalibratedTimestampsEXT device timestampInfos = liftIO . evalContT $ do
   let vkGetCalibratedTimestampsEXT' = mkVkGetCalibratedTimestampsEXT (pVkGetCalibratedTimestampsEXT (deviceCmds (device :: Device)))
   pPTimestampInfos <- ContT $ allocaBytesAligned @CalibratedTimestampInfoEXT ((Data.Vector.length (timestampInfos)) * 24) 8
   Data.Vector.imapM_ (\i e -> ContT $ pokeCStruct (pPTimestampInfos `plusPtr` (24 * (i)) :: Ptr CalibratedTimestampInfoEXT) (e) . ($ ())) (timestampInfos)

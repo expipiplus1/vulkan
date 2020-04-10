@@ -1,8 +1,5 @@
 maintainer: generator.i.ardly.know.er@monoid.al
 ghc-options:
-- -threaded
-- -rtsopts
-- -with-rtsopts=-N
 - -Wall
 - -fno-warn-unticked-promoted-constructors
 - -fno-warn-name-shadowing
@@ -51,46 +48,68 @@ default-extensions:
 name: generate-new
 synopsis: A program to generate the vulkan package from the vulkan docs.
 author: Joe Hermaszewski
+
+library:
+  source-dirs: src
+
 executables:
-  generate:
-    source-dirs: src
+  vk:
     main: Main.hs
+    source-dirs: vk
     dependencies:
-    - algebraic-graphs
-    - ascii-progress
-    - async-pool
-    - base
-    - bytestring
-    - containers
-    - data-default
-    - deepseq
-    - dependent-map
-    - dependent-sum
-    - directory
-    - extra
-    - filepath
-    - inline-c
-    - interpolatedstring-perl6
-    - mtl
-    - pandoc
-    - parsec
-    - polysemy
-    - polysemy-plugin
-    - pretty-show
-    - prettyprinter
-    - regex-applicative
-    - relude
-    - say
-    - tagsoup
-    - template-haskell
-    - text
-    - th-orphans
-    - timeit
-    - transformers
-    - typed-process
-    - uniplate
-    - unordered-containers
-    - vector
-    - vector-sized
-    - word-wrap
-    - xeno
+      - generate-new
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+  vma:
+    main: Main.hs
+    source-dirs: vma
+    dependencies:
+      - generate-new
+      - language-c
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+
+dependencies:
+  - algebraic-graphs
+  - ascii-progress
+  - async-pool
+  - base
+  - bytestring
+  - containers
+  - data-default
+  - deepseq
+  - dependent-map
+  - dependent-sum
+  - directory
+  - extra
+  - filepath
+  - inline-c
+  - interpolatedstring-perl6
+  - mtl
+  - pandoc
+  - parsec
+  - polysemy
+  - polysemy-plugin
+  - pretty-show
+  - prettyprinter
+  - regex-applicative
+  - relude
+  - say
+  - tagsoup
+  - template-haskell
+  - text
+  - th-orphans
+  - timeit
+  - transformers
+  - typed-process
+  - uniplate
+  - unordered-containers
+  - vector
+  - vector-sized
+  - vector-algorithms
+  - word-wrap
+  - xeno

@@ -14,6 +14,7 @@ module Graphics.Vulkan.Extensions.VK_NV_external_memory_win32  ( getMemoryWin32H
                                                                ) where
 
 import Control.Exception.Base (bracket)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -23,6 +24,7 @@ import Foreign.Ptr (nullPtr)
 import Foreign.Ptr (plusPtr)
 import Control.Monad.Trans.Class (lift)
 import Control.Monad.Trans.Cont (evalContT)
+import Control.Monad.IO.Class (MonadIO)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
 import Foreign.Storable (Storable)
@@ -40,9 +42,8 @@ import Graphics.Vulkan.Dynamic (DeviceCmds(pVkGetMemoryWin32HandleNV))
 import Graphics.Vulkan.Core10.Handles (DeviceMemory)
 import Graphics.Vulkan.Core10.Handles (DeviceMemory(..))
 import Graphics.Vulkan.Core10.Handles (Device_T)
-import Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities (ExternalMemoryHandleTypeFlagsNV)
-import Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities (ExternalMemoryHandleTypeFlagsNV)
 import Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities (ExternalMemoryHandleTypeFlagBitsNV(..))
+import Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities (ExternalMemoryHandleTypeFlagsNV)
 import Graphics.Vulkan.CStruct (FromCStruct)
 import Graphics.Vulkan.CStruct (FromCStruct(..))
 import Graphics.Vulkan.Extensions.WSITypes (HANDLE)
@@ -74,8 +75,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the logical device that
---     owns the memory.
+-- -   @device@ is the logical device that owns the memory.
 --
 -- -   @memory@ is the 'Graphics.Vulkan.Core10.Handles.DeviceMemory'
 --     object.
@@ -105,8 +105,8 @@ foreign import ccall
 -- 'Graphics.Vulkan.Core10.Handles.Device',
 -- 'Graphics.Vulkan.Core10.Handles.DeviceMemory',
 -- 'Graphics.Vulkan.Extensions.VK_NV_external_memory_capabilities.ExternalMemoryHandleTypeFlagsNV'
-getMemoryWin32HandleNV :: Device -> DeviceMemory -> ExternalMemoryHandleTypeFlagsNV -> IO (HANDLE)
-getMemoryWin32HandleNV device memory handleType = evalContT $ do
+getMemoryWin32HandleNV :: forall io . MonadIO io => Device -> DeviceMemory -> ExternalMemoryHandleTypeFlagsNV -> io (HANDLE)
+getMemoryWin32HandleNV device memory handleType = liftIO . evalContT $ do
   let vkGetMemoryWin32HandleNV' = mkVkGetMemoryWin32HandleNV (pVkGetMemoryWin32HandleNV (deviceCmds (device :: Device)))
   pPHandle <- ContT $ bracket (callocBytes @HANDLE 8) free
   r <- lift $ vkGetMemoryWin32HandleNV' (deviceHandle (device)) (memory) (handleType) (pPHandle)

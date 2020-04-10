@@ -166,8 +166,8 @@ instance Zero BindBufferMemoryDeviceGroupInfo where
 --     of memory.
 --
 -- If @deviceIndexCount@ is greater than zero, then on device index i
--- 'Graphics.Vulkan.Core10.Handles.Image' is attached to the instance of
--- the memory on the physical device with device index pDeviceIndices[i].
+-- @image@ is attached to the instance of the memory on the physical device
+-- with device index pDeviceIndices[i].
 --
 -- Let N be the number of physical devices in the logical device. If
 -- @splitInstanceBindRegionCount@ is greater than zero, then
@@ -179,9 +179,8 @@ instance Zero BindBufferMemoryDeviceGroupInfo where
 -- being bound to a contiguous range of memory. In other words,
 -- horizontally adjacent image blocks use consecutive blocks of memory,
 -- vertically adjacent image blocks are separated by the number of bytes
--- per block multiplied by the width in blocks of
--- 'Graphics.Vulkan.Core10.Handles.Image', and the block at (0,0)
--- corresponds to memory starting at @memoryOffset@.
+-- per block multiplied by the width in blocks of @image@, and the block at
+-- (0,0) corresponds to memory starting at @memoryOffset@.
 --
 -- If @splitInstanceBindRegionCount@ and @deviceIndexCount@ are zero and
 -- the memory comes from a memory heap with the

@@ -22,11 +22,11 @@ data MarshaledStruct t = MarshaledStruct
   , msMembers :: V.Vector MarshaledStructMember
   }
 
-data MarshaledStructMember =
-  MarshaledStructMember
-    { msmStructMember :: StructMember
-    , msmScheme :: MarshalScheme StructMember
-    }
+data MarshaledStructMember = MarshaledStructMember
+  { msmStructMember :: StructMember
+  , msmScheme       :: MarshalScheme StructMember
+  }
+  deriving Show
 
 marshalStruct
   :: (HasMarshalParams r, HasErr r, HasSpecInfo r)

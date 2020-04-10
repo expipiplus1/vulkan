@@ -5,6 +5,7 @@ module Graphics.Vulkan.Extensions.VK_EXT_debug_utils  ( setDebugUtilsObjectNameE
                                                       , queueEndDebugUtilsLabelEXT
                                                       , queueInsertDebugUtilsLabelEXT
                                                       , cmdBeginDebugUtilsLabelEXT
+                                                      , cmdWithDebugUtilsLabelEXT
                                                       , cmdEndDebugUtilsLabelEXT
                                                       , cmdInsertDebugUtilsLabelEXT
                                                       , createDebugUtilsMessengerEXT
@@ -41,6 +42,8 @@ module Graphics.Vulkan.Extensions.VK_EXT_debug_utils  ( setDebugUtilsObjectNameE
                                                       ) where
 
 import Control.Exception.Base (bracket)
+import Control.Exception.Base (bracket_)
+import Control.Monad.IO.Class (liftIO)
 import Foreign.Marshal.Alloc (allocaBytesAligned)
 import Foreign.Marshal.Alloc (callocBytes)
 import Foreign.Marshal.Alloc (free)
@@ -65,6 +68,7 @@ import Control.Monad.Trans.Cont (evalContT)
 import Data.Vector (generateM)
 import qualified Data.Vector (imapM_)
 import qualified Data.Vector (length)
+import Control.Monad.IO.Class (MonadIO)
 import Data.Bits (Bits)
 import Data.String (IsString)
 import Data.Typeable (Typeable)
@@ -149,8 +153,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the device that created
---     the object.
+-- -   @device@ is the device that created the object.
 --
 -- -   @pNameInfo@ is a pointer to a 'DebugUtilsObjectNameInfoEXT'
 --     structure specifying parameters of the name to set on the object.
@@ -165,8 +168,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pNameInfo@ /must/ be a valid pointer to a valid
 --     'DebugUtilsObjectNameInfoEXT' structure
@@ -191,8 +194,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'DebugUtilsObjectNameInfoEXT', 'Graphics.Vulkan.Core10.Handles.Device'
-setDebugUtilsObjectNameEXT :: Device -> DebugUtilsObjectNameInfoEXT -> IO ()
-setDebugUtilsObjectNameEXT device nameInfo = evalContT $ do
+setDebugUtilsObjectNameEXT :: forall io . MonadIO io => Device -> DebugUtilsObjectNameInfoEXT -> io ()
+setDebugUtilsObjectNameEXT device nameInfo = liftIO . evalContT $ do
   let vkSetDebugUtilsObjectNameEXT' = mkVkSetDebugUtilsObjectNameEXT (pVkSetDebugUtilsObjectNameEXT (deviceCmds (device :: Device)))
   pNameInfo <- ContT $ withCStruct (nameInfo)
   r <- lift $ vkSetDebugUtilsObjectNameEXT' (deviceHandle (device)) pNameInfo
@@ -210,16 +213,15 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' is the device that created
---     the object.
+-- -   @device@ is the device that created the object.
 --
 -- -   @pTagInfo@ is a pointer to a 'DebugUtilsObjectTagInfoEXT' structure
 --     specifying parameters of the tag to attach to the object.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Device' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Device' handle
+-- -   @device@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Device'
+--     handle
 --
 -- -   @pTagInfo@ /must/ be a valid pointer to a valid
 --     'DebugUtilsObjectTagInfoEXT' structure
@@ -244,8 +246,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'DebugUtilsObjectTagInfoEXT', 'Graphics.Vulkan.Core10.Handles.Device'
-setDebugUtilsObjectTagEXT :: Device -> DebugUtilsObjectTagInfoEXT -> IO ()
-setDebugUtilsObjectTagEXT device tagInfo = evalContT $ do
+setDebugUtilsObjectTagEXT :: forall io . MonadIO io => Device -> DebugUtilsObjectTagInfoEXT -> io ()
+setDebugUtilsObjectTagEXT device tagInfo = liftIO . evalContT $ do
   let vkSetDebugUtilsObjectTagEXT' = mkVkSetDebugUtilsObjectTagEXT (pVkSetDebugUtilsObjectTagEXT (deviceCmds (device :: Device)))
   pTagInfo <- ContT $ withCStruct (tagInfo)
   r <- lift $ vkSetDebugUtilsObjectTagEXT' (deviceHandle (device)) pTagInfo
@@ -263,8 +265,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Queue' is the queue in which to
---     start a debug label region.
+-- -   @queue@ is the queue in which to start a debug label region.
 --
 -- -   @pLabelInfo@ is a pointer to a 'DebugUtilsLabelEXT' structure
 --     specifying parameters of the label region to open.
@@ -282,8 +283,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'DebugUtilsLabelEXT', 'Graphics.Vulkan.Core10.Handles.Queue'
-queueBeginDebugUtilsLabelEXT :: Queue -> ("labelInfo" ::: DebugUtilsLabelEXT) -> IO ()
-queueBeginDebugUtilsLabelEXT queue labelInfo = evalContT $ do
+queueBeginDebugUtilsLabelEXT :: forall io . MonadIO io => Queue -> ("labelInfo" ::: DebugUtilsLabelEXT) -> io ()
+queueBeginDebugUtilsLabelEXT queue labelInfo = liftIO . evalContT $ do
   let vkQueueBeginDebugUtilsLabelEXT' = mkVkQueueBeginDebugUtilsLabelEXT (pVkQueueBeginDebugUtilsLabelEXT (deviceCmds (queue :: Queue)))
   pLabelInfo <- ContT $ withCStruct (labelInfo)
   lift $ vkQueueBeginDebugUtilsLabelEXT' (queueHandle (queue)) pLabelInfo
@@ -301,8 +302,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Queue' is the queue in which a debug
---     label region should be closed.
+-- -   @queue@ is the queue in which a debug label region should be closed.
 --
 -- = Description
 --
@@ -316,8 +316,8 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Queue' /must/ be a valid
---     'Graphics.Vulkan.Core10.Handles.Queue' handle
+-- -   @queue@ /must/ be a valid 'Graphics.Vulkan.Core10.Handles.Queue'
+--     handle
 --
 -- == Command Properties
 --
@@ -332,8 +332,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.Queue'
-queueEndDebugUtilsLabelEXT :: Queue -> IO ()
-queueEndDebugUtilsLabelEXT queue = do
+queueEndDebugUtilsLabelEXT :: forall io . MonadIO io => Queue -> io ()
+queueEndDebugUtilsLabelEXT queue = liftIO $ do
   let vkQueueEndDebugUtilsLabelEXT' = mkVkQueueEndDebugUtilsLabelEXT (pVkQueueEndDebugUtilsLabelEXT (deviceCmds (queue :: Queue)))
   vkQueueEndDebugUtilsLabelEXT' (queueHandle (queue))
   pure $ ()
@@ -350,8 +350,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Queue' is the queue into which a
---     debug label will be inserted.
+-- -   @queue@ is the queue into which a debug label will be inserted.
 --
 -- -   @pLabelInfo@ is a pointer to a 'DebugUtilsLabelEXT' structure
 --     specifying parameters of the label to insert.
@@ -369,8 +368,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'DebugUtilsLabelEXT', 'Graphics.Vulkan.Core10.Handles.Queue'
-queueInsertDebugUtilsLabelEXT :: Queue -> ("labelInfo" ::: DebugUtilsLabelEXT) -> IO ()
-queueInsertDebugUtilsLabelEXT queue labelInfo = evalContT $ do
+queueInsertDebugUtilsLabelEXT :: forall io . MonadIO io => Queue -> ("labelInfo" ::: DebugUtilsLabelEXT) -> io ()
+queueInsertDebugUtilsLabelEXT queue labelInfo = liftIO . evalContT $ do
   let vkQueueInsertDebugUtilsLabelEXT' = mkVkQueueInsertDebugUtilsLabelEXT (pVkQueueInsertDebugUtilsLabelEXT (deviceCmds (queue :: Queue)))
   pLabelInfo <- ContT $ withCStruct (labelInfo)
   lift $ vkQueueInsertDebugUtilsLabelEXT' (queueHandle (queue)) pLabelInfo
@@ -388,32 +387,31 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command is recorded.
+-- -   @commandBuffer@ is the command buffer into which the command is
+--     recorded.
 --
 -- -   @pLabelInfo@ is a pointer to a 'DebugUtilsLabelEXT' structure
 --     specifying parameters of the label region to open.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pLabelInfo@ /must/ be a valid pointer to a valid
 --     'DebugUtilsLabelEXT' structure
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics, or compute operations
+--     @commandBuffer@ was allocated from /must/ support graphics, or
+--     compute operations
 --
 -- == Host Synchronization
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -429,12 +427,20 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer', 'DebugUtilsLabelEXT'
-cmdBeginDebugUtilsLabelEXT :: CommandBuffer -> ("labelInfo" ::: DebugUtilsLabelEXT) -> IO ()
-cmdBeginDebugUtilsLabelEXT commandBuffer labelInfo = evalContT $ do
+cmdBeginDebugUtilsLabelEXT :: forall io . MonadIO io => CommandBuffer -> ("labelInfo" ::: DebugUtilsLabelEXT) -> io ()
+cmdBeginDebugUtilsLabelEXT commandBuffer labelInfo = liftIO . evalContT $ do
   let vkCmdBeginDebugUtilsLabelEXT' = mkVkCmdBeginDebugUtilsLabelEXT (pVkCmdBeginDebugUtilsLabelEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   pLabelInfo <- ContT $ withCStruct (labelInfo)
   lift $ vkCmdBeginDebugUtilsLabelEXT' (commandBufferHandle (commandBuffer)) pLabelInfo
   pure $ ()
+
+-- | A safe wrapper for 'cmdBeginDebugUtilsLabelEXT' and
+-- 'cmdEndDebugUtilsLabelEXT' using 'bracket_'
+cmdWithDebugUtilsLabelEXT :: forall r . CommandBuffer -> DebugUtilsLabelEXT -> IO r -> IO r
+cmdWithDebugUtilsLabelEXT commandBuffer pLabelInfo =
+  bracket_
+    (cmdBeginDebugUtilsLabelEXT commandBuffer pLabelInfo)
+    (cmdEndDebugUtilsLabelEXT commandBuffer)
 
 
 foreign import ccall
@@ -448,8 +454,8 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command is recorded.
+-- -   @commandBuffer@ is the command buffer into which the command is
+--     recorded.
 --
 -- = Description
 --
@@ -464,31 +470,29 @@ foreign import ccall
 --
 -- -   There /must/ be an outstanding 'cmdBeginDebugUtilsLabelEXT' command
 --     prior to the 'cmdEndDebugUtilsLabelEXT' on the queue that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' is submitted to
+--     @commandBuffer@ is submitted to
 --
--- -   If 'Graphics.Vulkan.Core10.Handles.CommandBuffer' is a secondary
---     command buffer, there /must/ be an outstanding
---     'cmdBeginDebugUtilsLabelEXT' command recorded to
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' that has not
---     previously been ended by a call to 'cmdEndDebugUtilsLabelEXT'.
+-- -   If @commandBuffer@ is a secondary command buffer, there /must/ be an
+--     outstanding 'cmdBeginDebugUtilsLabelEXT' command recorded to
+--     @commandBuffer@ that has not previously been ended by a call to
+--     'cmdEndDebugUtilsLabelEXT'.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics, or compute operations
+--     @commandBuffer@ was allocated from /must/ support graphics, or
+--     compute operations
 --
 -- == Host Synchronization
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -504,8 +508,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer'
-cmdEndDebugUtilsLabelEXT :: CommandBuffer -> IO ()
-cmdEndDebugUtilsLabelEXT commandBuffer = do
+cmdEndDebugUtilsLabelEXT :: forall io . MonadIO io => CommandBuffer -> io ()
+cmdEndDebugUtilsLabelEXT commandBuffer = liftIO $ do
   let vkCmdEndDebugUtilsLabelEXT' = mkVkCmdEndDebugUtilsLabelEXT (pVkCmdEndDebugUtilsLabelEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   vkCmdEndDebugUtilsLabelEXT' (commandBufferHandle (commandBuffer))
   pure $ ()
@@ -522,32 +526,31 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' is the command buffer
---     into which the command is recorded.
+-- -   @commandBuffer@ is the command buffer into which the command is
+--     recorded.
 --
 -- -   @pInfo@ is a pointer to a 'DebugUtilsLabelEXT' structure specifying
 --     parameters of the label to insert.
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be a valid
+-- -   @commandBuffer@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.CommandBuffer' handle
 --
 -- -   @pLabelInfo@ /must/ be a valid pointer to a valid
 --     'DebugUtilsLabelEXT' structure
 --
--- -   'Graphics.Vulkan.Core10.Handles.CommandBuffer' /must/ be in the
+-- -   @commandBuffer@ /must/ be in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#commandbuffers-lifecycle recording state>
 --
 -- -   The 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ support graphics, or compute operations
+--     @commandBuffer@ was allocated from /must/ support graphics, or
+--     compute operations
 --
 -- == Host Synchronization
 --
 -- -   Host access to the 'Graphics.Vulkan.Core10.Handles.CommandPool' that
---     'Graphics.Vulkan.Core10.Handles.CommandBuffer' was allocated from
---     /must/ be externally synchronized
+--     @commandBuffer@ was allocated from /must/ be externally synchronized
 --
 -- == Command Properties
 --
@@ -563,8 +566,8 @@ foreign import ccall
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.Handles.CommandBuffer', 'DebugUtilsLabelEXT'
-cmdInsertDebugUtilsLabelEXT :: CommandBuffer -> ("labelInfo" ::: DebugUtilsLabelEXT) -> IO ()
-cmdInsertDebugUtilsLabelEXT commandBuffer labelInfo = evalContT $ do
+cmdInsertDebugUtilsLabelEXT :: forall io . MonadIO io => CommandBuffer -> ("labelInfo" ::: DebugUtilsLabelEXT) -> io ()
+cmdInsertDebugUtilsLabelEXT commandBuffer labelInfo = liftIO . evalContT $ do
   let vkCmdInsertDebugUtilsLabelEXT' = mkVkCmdInsertDebugUtilsLabelEXT (pVkCmdInsertDebugUtilsLabelEXT (deviceCmds (commandBuffer :: CommandBuffer)))
   pLabelInfo <- ContT $ withCStruct (labelInfo)
   lift $ vkCmdInsertDebugUtilsLabelEXT' (commandBufferHandle (commandBuffer)) pLabelInfo
@@ -582,8 +585,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' the instance the messenger
---     will be used with.
+-- -   @instance@ the instance the messenger will be used with.
 --
 -- -   @pCreateInfo@ is a pointer to a 'DebugUtilsMessengerCreateInfoEXT'
 --     structure containing the callback pointer, as well as defining
@@ -599,7 +601,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+-- -   @instance@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
 -- -   @pCreateInfo@ /must/ be a valid pointer to a valid
@@ -625,8 +627,7 @@ foreign import ccall
 --
 -- The application /must/ ensure that 'createDebugUtilsMessengerEXT' is not
 -- executed in parallel with any Vulkan command that is also called with
--- 'Graphics.Vulkan.Core10.Handles.Instance' or child of
--- 'Graphics.Vulkan.Core10.Handles.Instance' as the dispatchable argument.
+-- @instance@ or child of @instance@ as the dispatchable argument.
 --
 -- = See Also
 --
@@ -634,8 +635,8 @@ foreign import ccall
 -- 'DebugUtilsMessengerCreateInfoEXT',
 -- 'Graphics.Vulkan.Extensions.Handles.DebugUtilsMessengerEXT',
 -- 'Graphics.Vulkan.Core10.Handles.Instance'
-createDebugUtilsMessengerEXT :: Instance -> DebugUtilsMessengerCreateInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> IO (DebugUtilsMessengerEXT)
-createDebugUtilsMessengerEXT instance' createInfo allocator = evalContT $ do
+createDebugUtilsMessengerEXT :: forall io . MonadIO io => Instance -> DebugUtilsMessengerCreateInfoEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io (DebugUtilsMessengerEXT)
+createDebugUtilsMessengerEXT instance' createInfo allocator = liftIO . evalContT $ do
   let vkCreateDebugUtilsMessengerEXT' = mkVkCreateDebugUtilsMessengerEXT (pVkCreateDebugUtilsMessengerEXT (instanceCmds (instance' :: Instance)))
   pCreateInfo <- ContT $ withCStruct (createInfo)
   pAllocator <- case (allocator) of
@@ -651,11 +652,11 @@ createDebugUtilsMessengerEXT instance' createInfo allocator = evalContT $ do
 -- 'destroyDebugUtilsMessengerEXT' using 'bracket'
 --
 -- The allocated value must not be returned from the provided computation
-withDebugUtilsMessengerEXT :: Instance -> DebugUtilsMessengerCreateInfoEXT -> Maybe AllocationCallbacks -> (DebugUtilsMessengerEXT -> IO r) -> IO r
-withDebugUtilsMessengerEXT instance' debugUtilsMessengerCreateInfoEXT allocationCallbacks =
+withDebugUtilsMessengerEXT :: forall r . Instance -> DebugUtilsMessengerCreateInfoEXT -> Maybe AllocationCallbacks -> ((DebugUtilsMessengerEXT) -> IO r) -> IO r
+withDebugUtilsMessengerEXT instance' pCreateInfo pAllocator =
   bracket
-    (createDebugUtilsMessengerEXT instance' debugUtilsMessengerCreateInfoEXT allocationCallbacks)
-    (\o -> destroyDebugUtilsMessengerEXT instance' o allocationCallbacks)
+    (createDebugUtilsMessengerEXT instance' pCreateInfo pAllocator)
+    (\(o0) -> destroyDebugUtilsMessengerEXT instance' o0 pAllocator)
 
 
 foreign import ccall
@@ -669,8 +670,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' the instance where the
---     callback was created.
+-- -   @instance@ the instance where the callback was created.
 --
 -- -   @messenger@ the
 --     'Graphics.Vulkan.Extensions.Handles.DebugUtilsMessengerEXT' object
@@ -696,7 +696,7 @@ foreign import ccall
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+-- -   @instance@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
 -- -   @messenger@ /must/ be a valid
@@ -708,7 +708,7 @@ foreign import ccall
 --     structure
 --
 -- -   @messenger@ /must/ have been created, allocated, or retrieved from
---     'Graphics.Vulkan.Core10.Handles.Instance'
+--     @instance@
 --
 -- == Host Synchronization
 --
@@ -716,16 +716,15 @@ foreign import ccall
 --
 -- The application /must/ ensure that 'destroyDebugUtilsMessengerEXT' is
 -- not executed in parallel with any Vulkan command that is also called
--- with 'Graphics.Vulkan.Core10.Handles.Instance' or child of
--- 'Graphics.Vulkan.Core10.Handles.Instance' as the dispatchable argument.
+-- with @instance@ or child of @instance@ as the dispatchable argument.
 --
 -- = See Also
 --
 -- 'Graphics.Vulkan.Core10.AllocationCallbacks.AllocationCallbacks',
 -- 'Graphics.Vulkan.Extensions.Handles.DebugUtilsMessengerEXT',
 -- 'Graphics.Vulkan.Core10.Handles.Instance'
-destroyDebugUtilsMessengerEXT :: Instance -> DebugUtilsMessengerEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> IO ()
-destroyDebugUtilsMessengerEXT instance' messenger allocator = evalContT $ do
+destroyDebugUtilsMessengerEXT :: forall io . MonadIO io => Instance -> DebugUtilsMessengerEXT -> ("allocator" ::: Maybe AllocationCallbacks) -> io ()
+destroyDebugUtilsMessengerEXT instance' messenger allocator = liftIO . evalContT $ do
   let vkDestroyDebugUtilsMessengerEXT' = mkVkDestroyDebugUtilsMessengerEXT (pVkDestroyDebugUtilsMessengerEXT (instanceCmds (instance' :: Instance)))
   pAllocator <- case (allocator) of
     Nothing -> pure nullPtr
@@ -745,7 +744,7 @@ foreign import ccall
 --
 -- = Parameters
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' is the debug stream’s
+-- -   @instance@ is the debug stream’s
 --     'Graphics.Vulkan.Core10.Handles.Instance'.
 --
 -- -   @messageSeverity@ is the 'DebugUtilsMessageSeverityFlagBitsEXT'
@@ -766,13 +765,13 @@ foreign import ccall
 --
 -- == Valid Usage
 --
--- -   The 'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType' member of
---     each element of @pCallbackData->pObjects@ /must/ not be
+-- -   The @objectType@ member of each element of @pCallbackData->pObjects@
+--     /must/ not be
 --     'Graphics.Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_UNKNOWN'
 --
 -- == Valid Usage (Implicit)
 --
--- -   'Graphics.Vulkan.Core10.Handles.Instance' /must/ be a valid
+-- -   @instance@ /must/ be a valid
 --     'Graphics.Vulkan.Core10.Handles.Instance' handle
 --
 -- -   @messageSeverity@ /must/ be a valid
@@ -791,8 +790,8 @@ foreign import ccall
 -- 'DebugUtilsMessageSeverityFlagBitsEXT', 'DebugUtilsMessageTypeFlagsEXT',
 -- 'DebugUtilsMessengerCallbackDataEXT',
 -- 'Graphics.Vulkan.Core10.Handles.Instance'
-submitDebugUtilsMessageEXT :: Instance -> DebugUtilsMessageSeverityFlagBitsEXT -> ("messageTypes" ::: DebugUtilsMessageTypeFlagsEXT) -> DebugUtilsMessengerCallbackDataEXT -> IO ()
-submitDebugUtilsMessageEXT instance' messageSeverity messageTypes callbackData = evalContT $ do
+submitDebugUtilsMessageEXT :: forall io . MonadIO io => Instance -> DebugUtilsMessageSeverityFlagBitsEXT -> ("messageTypes" ::: DebugUtilsMessageTypeFlagsEXT) -> DebugUtilsMessengerCallbackDataEXT -> io ()
+submitDebugUtilsMessageEXT instance' messageSeverity messageTypes callbackData = liftIO . evalContT $ do
   let vkSubmitDebugUtilsMessageEXT' = mkVkSubmitDebugUtilsMessageEXT (pVkSubmitDebugUtilsMessageEXT (instanceCmds (instance' :: Instance)))
   pCallbackData <- ContT $ withCStruct (callbackData)
   lift $ vkSubmitDebugUtilsMessageEXT' (instanceHandle (instance')) (messageSeverity) (messageTypes) pCallbackData
@@ -811,18 +810,16 @@ submitDebugUtilsMessageEXT instance' messageSeverity messageTypes callbackData =
 --
 -- == Valid Usage
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType' is
+-- -   If @objectType@ is
 --     'Graphics.Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_UNKNOWN',
 --     @objectHandle@ /must/ not be
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE'
 --
--- -   If 'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType' is not
+-- -   If @objectType@ is not
 --     'Graphics.Vulkan.Core10.Enums.ObjectType.OBJECT_TYPE_UNKNOWN',
 --     @objectHandle@ /must/ be
 --     'Graphics.Vulkan.Core10.APIConstants.NULL_HANDLE' or a valid Vulkan
---     handle of the type associated with
---     'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType' as defined in
---     the
+--     handle of the type associated with @objectType@ as defined in the
 --     <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debugging-object-types VkObjectType and Vulkan Handle Relationship>
 --     table
 --
@@ -833,8 +830,8 @@ submitDebugUtilsMessageEXT instance' messageSeverity messageTypes callbackData =
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType' /must/ be a
---     valid 'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType' value
+-- -   @objectType@ /must/ be a valid
+--     'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType' value
 --
 -- -   @pObjectName@ /must/ be a null-terminated UTF-8 string
 --
@@ -845,9 +842,8 @@ submitDebugUtilsMessageEXT instance' messageSeverity messageTypes callbackData =
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'setDebugUtilsObjectNameEXT'
 data DebugUtilsObjectNameInfoEXT = DebugUtilsObjectNameInfoEXT
-  { -- | 'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType' is a
-    -- 'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType' specifying the type
-    -- of the object to be named.
+  { -- | @objectType@ is a 'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType'
+    -- specifying the type of the object to be named.
     objectType :: ObjectType
   , -- | @objectHandle@ is the object to be named.
     objectHandle :: Word64
@@ -911,12 +907,11 @@ instance Zero DebugUtilsObjectNameInfoEXT where
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'setDebugUtilsObjectTagEXT'
 data DebugUtilsObjectTagInfoEXT = DebugUtilsObjectTagInfoEXT
-  { -- | 'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType' /must/ be a valid
+  { -- | @objectType@ /must/ be a valid
     -- 'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType' value
     objectType :: ObjectType
   , -- | @objectHandle@ /must/ be a valid Vulkan handle of the type associated
-    -- with 'Graphics.Vulkan.Core10.Enums.ObjectType.ObjectType' as defined in
-    -- the
+    -- with @objectType@ as defined in the
     -- <https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#debugging-object-types VkObjectType and Vulkan Handle Relationship>
     -- table
     objectHandle :: Word64
@@ -1092,7 +1087,7 @@ instance Zero DebugUtilsLabelEXT where
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'createDebugUtilsMessengerEXT'
 data DebugUtilsMessengerCreateInfoEXT = DebugUtilsMessengerCreateInfoEXT
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+  { -- | @flags@ /must/ be @0@
     flags :: DebugUtilsMessengerCreateFlagsEXT
   , -- | @messageSeverity@ /must/ not be @0@
     messageSeverity :: DebugUtilsMessageSeverityFlagsEXT
@@ -1195,7 +1190,7 @@ instance Zero DebugUtilsMessengerCreateInfoEXT where
 --
 -- -   @pNext@ /must/ be @NULL@
 --
--- -   'Graphics.Vulkan.Core10.BaseType.Flags' /must/ be @0@
+-- -   @flags@ /must/ be @0@
 --
 -- -   If @pMessageIdName@ is not @NULL@, @pMessageIdName@ /must/ be a
 --     null-terminated UTF-8 string
@@ -1221,8 +1216,7 @@ instance Zero DebugUtilsMessengerCreateInfoEXT where
 -- 'Graphics.Vulkan.Core10.Enums.StructureType.StructureType',
 -- 'submitDebugUtilsMessageEXT'
 data DebugUtilsMessengerCallbackDataEXT = DebugUtilsMessengerCallbackDataEXT
-  { -- | 'Graphics.Vulkan.Core10.BaseType.Flags' is 0 and reserved for future
-    -- use.
+  { -- | @flags@ is 0 and reserved for future use.
     flags :: DebugUtilsMessengerCallbackDataFlagsEXT
   , -- | @pMessageIdName@ is a null-terminated string that identifies the
     -- particular message ID that is associated with the provided message. If
