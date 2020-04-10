@@ -26,7 +26,8 @@ import `Graphics.Vulkan.Zero` too.
 - Documentation is included more or less verbatim from the Vulkan C API
   documentation. The parameters it references might not map one-to-one with
   what's in these bindings. It should be obvious in most cases what it's trying
-  to say.
+  to say. If part of the documentation is misleading or unclear with respect to
+  these Haskell bindings please open an issue and we can special case a fix.
 
 - Parameters are named with the `:::` operator where it would be useful; this
   operator simply ignores the string on the left.
