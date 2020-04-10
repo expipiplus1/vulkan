@@ -1238,7 +1238,7 @@ foreign import ccall
   unsafe
 #endif
   "vmaFlushAllocation" ffiVmaFlushAllocation
-  :: Allocator -> Allocation -> DeviceSize -> DeviceSize -> IO ()
+  :: Allocator -> Allocation -> DeviceSize -> DeviceSize -> IO Result
 
 -- | Flushes memory of given allocation.
 --
@@ -1264,10 +1264,13 @@ foreign import ccall
 -- @allocation@. If you mean whole allocation, you can pass 0 and
 -- @VK_WHOLE_SIZE@, respectively. Do not pass allocation\'s offset as
 -- @offset@!!!
+--
+-- This function returns the @VkResult@ from @vkFlushMappedMemoryRanges@ if
+-- it is called, otherwise @VK_SUCCESS@.
 flushAllocation :: forall io . MonadIO io => Allocator -> Allocation -> ("offset" ::: DeviceSize) -> DeviceSize -> io ()
 flushAllocation allocator allocation offset size = liftIO $ do
-  (ffiVmaFlushAllocation) (allocator) (allocation) (offset) (size)
-  pure $ ()
+  r <- (ffiVmaFlushAllocation) (allocator) (allocation) (offset) (size)
+  when (r < SUCCESS) (throwIO (VulkanException r))
 
 
 foreign import ccall
@@ -1275,7 +1278,7 @@ foreign import ccall
   unsafe
 #endif
   "vmaInvalidateAllocation" ffiVmaInvalidateAllocation
-  :: Allocator -> Allocation -> DeviceSize -> DeviceSize -> IO ()
+  :: Allocator -> Allocation -> DeviceSize -> DeviceSize -> IO Result
 
 -- | Invalidates memory of given allocation.
 --
@@ -1301,10 +1304,14 @@ foreign import ccall
 -- @allocation@. If you mean whole allocation, you can pass 0 and
 -- @VK_WHOLE_SIZE@, respectively. Do not pass allocation\'s offset as
 -- @offset@!!!
+--
+-- This function returns the @VkResult@ from
+-- @vkInvalidateMappedMemoryRanges@ if it is called, otherwise
+-- @VK_SUCCESS@.
 invalidateAllocation :: forall io . MonadIO io => Allocator -> Allocation -> ("offset" ::: DeviceSize) -> DeviceSize -> io ()
 invalidateAllocation allocator allocation offset size = liftIO $ do
-  (ffiVmaInvalidateAllocation) (allocator) (allocation) (offset) (size)
-  pure $ ()
+  r <- (ffiVmaInvalidateAllocation) (allocator) (allocation) (offset) (size)
+  when (r < SUCCESS) (throwIO (VulkanException r))
 
 
 foreign import ccall
