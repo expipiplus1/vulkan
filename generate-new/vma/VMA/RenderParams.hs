@@ -63,8 +63,14 @@ renderParams handles = r
       in  mkIdiomaticType vulkanParams . dropVulkanModule
     , mkHsTypeOverride            = \structStyle preserve t ->
                                       case vulkanManifest structStyle vulkanParams t of
-                                        Just r -> pure r
-                                        _      -> case preserve of
+                                        Just t -> Just $ do
+                                          t <- t
+                                          case preserve of
+                                            DoNotPreserve -> case mkIdiomaticType r t of
+                                              Just i  -> pure $ itType i
+                                              Nothing -> pure t
+                                            _ -> pure t
+                                        _ -> case preserve of
                                           DoNotPreserve -> Nothing
                                           _             -> case t of
                                             TypeName n

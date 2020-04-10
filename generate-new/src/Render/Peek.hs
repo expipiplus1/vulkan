@@ -100,7 +100,7 @@ peekIdiomatic name lengths fromType addr scheme = do
   RenderParams {..} <- input
   r                 <- peekWrapped name lengths fromType addr scheme
   t                 <- raise $ refType r
-  toTy              <- schemeType scheme
+  toTy              <- schemeTypeNegative scheme
   -- If this is already the correct type don't try wrapping it
   if Just t == toTy
     then pure r
@@ -680,7 +680,7 @@ getLenRef lengths = do
             renderType
             =<< note
                   "Unable to get type for struct with length specifying member for allocation"
-            =<< schemeType siScheme
+            =<< schemeTypeNegative siScheme
           tellImportWithAll (mkTyName structName)
           pure
             .   Pure AlwaysInline

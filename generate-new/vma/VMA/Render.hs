@@ -4,7 +4,6 @@ module VMA.Render
 import           Relude                  hiding ( Handle )
 import qualified Data.Map                      as Map
 import           Data.Vector                    ( Vector )
-import qualified Data.Vector                   as V
 import           Polysemy
 import           Polysemy.Fixpoint
 
@@ -37,7 +36,7 @@ renderHeader
   -> Vector (a, MarshaledCommand)
   -> Sem r (Vector (a, RenderElement))
 renderHeader enums structs handles funcPointers commands = do
-  bs <- brackets
+  bs <- brackets (snd <$> commands)
   let bracketMap      = Map.fromList [ (n, b) | (n, _, b) <- toList bs ]
       renderCommand'  = commandWithBrackets (`Map.lookup` bracketMap)
   sequenceV

@@ -17,11 +17,11 @@ import           Render.Type
 import           Render.Element
 import           Render.SpecInfo
 
-schemeType
+schemeTypeNegative
   :: (HasErr r, HasRenderParams r, Show a, HasSpecInfo r)
   => MarshalScheme a
   -> Sem r (Maybe H.Type)
-schemeType s = do
+schemeTypeNegative s = do
   RenderParams {..} <- input
   case s of
     Unit              -> pure $ Just (ConT ''())
@@ -32,19 +32,19 @@ schemeType s = do
     ElidedVoid        -> pure Nothing
     VoidPtr           -> pure . Just $ ConT ''Ptr :@ ConT ''()
     ByteString        -> pure . Just $ ConT ''ByteString
-    Maybe  e          -> fmap (ConT ''Maybe :@) <$> schemeType e
-    Vector e          -> fmap (ConT ''V.Vector :@) <$> schemeType e
+    Maybe  e          -> fmap (ConT ''Maybe :@) <$> schemeTypeNegative e
+    Vector e          -> fmap (ConT ''V.Vector :@) <$> schemeTypeNegative e
     EitherWord32 e ->
       fmap (\t -> ConT ''Either :@ ConT ''Word32 :@ (ConT ''V.Vector :@ t))
-        <$> schemeType e
+        <$> schemeTypeNegative e
     Tupled n e ->
       fmap (foldl' (:@) (TupleT (fromIntegral n)) . replicate (fromIntegral n))
-        <$> schemeType e
+        <$> schemeTypeNegative e
     WrappedStruct n ->
       pure . Just $ ConT (typeName (TyConName "SomeStruct")) :@ ConT
         (typeName (mkTyName n))
     Returned     _                 -> pure Nothing
-    InOutCount   s                 -> schemeType s
+    InOutCount   s                 -> schemeTypeNegative s
     Custom       CustomScheme {..} -> Just <$> csType
     ElidedCustom _                 -> pure Nothing
 
@@ -54,8 +54,8 @@ schemeTypePositive
   => MarshalScheme a
   -> Sem r (Maybe H.Type)
 schemeTypePositive s = case s of
-  Returned   t -> schemeType t
-  InOutCount t -> schemeType t
+  Returned   t -> schemeTypeNegative t
+  InOutCount t -> schemeTypeNegative t
   _            -> pure Nothing
 
 isInOutCount :: MarshalScheme a -> Bool

@@ -625,7 +625,7 @@ tupleIndirect name size toElem fromElem valueRef firstAddrRef =
 
     subPokes <- renderSubStmts $ do
 
-      elemTy <- schemeType fromElem
+      elemTy <- schemeTypeNegative fromElem
       es     <- forV indices $ \i -> do
         valueRef <-
           stmt elemTy (Just (unCName name <> "Elem"))
@@ -720,7 +720,7 @@ vectorIndirect name toElem fromElem valueRef addrRef =
       -- TODO: Reduce duplication here and in peek
       elemAddr <- elemAddrRef toElem addrRef (Right indexRef)
 
-      elemTy   <- schemeType fromElem
+      elemTy   <- schemeTypeNegative fromElem
       elemRef  <- stmt elemTy (Just (unCName name <> "Elem")) $ pure $ Pure
         AlwaysInline
         (ValueDoc elemDoc)

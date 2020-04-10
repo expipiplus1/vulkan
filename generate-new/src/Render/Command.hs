@@ -12,6 +12,7 @@ import           Data.Text.Extra                ( upperCaseFirst )
 import           Language.Haskell.TH.Syntax     ( nameBase
                                                 , nameModule
                                                 , mkNameG_tc
+                                                , mkName
                                                 )
 import           Data.List.Extra                ( nubOrd )
 import           Polysemy
@@ -76,34 +77,15 @@ renderCommand m@MarshaledCommand {..} = contextShow (unCName mcName) $ do
       then marshaledDualPurposeCommandCall commandName m
       else marshaledCommandCall commandName m
 
-paramType
-  :: (HasErr r, HasRenderParams r)
-  => (MarshalScheme Parameter -> Sem r (Maybe H.Type))
-  -> MarshaledParam
-  -> Sem r (Maybe H.Type)
-paramType st MarshaledParam {..} = contextShow (pName mpParam) $ do
-  RenderParams {..} <- input
-  let Parameter {..} = mpParam
-  n <- st mpScheme
-  pure $ namedTy (unName . mkParamName $ pName) <$> n
-
 makeReturnType
   :: (HasErr r, HasRenderParams r, HasSpecInfo r)
   => Bool
-  -> Bool
   -> MarshaledCommand
   -> Sem r H.Type
-makeReturnType includeInOutCountTypes includeReturnType MarshaledCommand {..} = do
-  let pos = \case
-        InOutCount _ | not includeInOutCountTypes -> pure Nothing
-        s                               -> schemeTypePositive s
-  pts <- V.mapMaybe id <$> traverseV (paramType pos) mcParams
-  r   <- case mcReturn of
-    C.Void                    -> pure V.empty
-    _ | not includeReturnType -> pure V.empty
-    r                         -> V.singleton <$> cToHsType DoNotPreserve r
-  let ts = r <> pts
-  pure $ ConT ''IO :@ foldl' (:@) (TupleT (length ts)) ts
+makeReturnType includeInOutCountTypes mc@MarshaledCommand {..}
+  = do
+    ts <- marshaledCommandReturnTypes includeInOutCountTypes mc
+    pure $ ConT ''IO :@ foldl' (:@) (TupleT (length ts)) ts
 
 constrainStructVariables
   :: (HasErr r, HasRenderParams r, HasRenderElem r, HasRenderedNames r)
@@ -159,7 +141,7 @@ marshaledCommandCall
 marshaledCommandCall commandName m@MarshaledCommand {..} = do
   RenderParams {..} <- input
 
-  includeReturnType <- shouldIncludeReturnType m
+  includeReturnType <- marshaledCommandShouldIncludeReturnValue m
 
   tellExport (ETerm commandName)
 
@@ -172,7 +154,7 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
     paramRefs <- forV mcParams $ \MarshaledParam {..} -> if isElided mpScheme
       then pure Nothing
       else Just <$> do
-        ty       <- schemeType mpScheme
+        ty       <- schemeTypeNegative mpScheme
         valueRef <-
           stmt ty (Just . unName . mkParamName . pName $ mpParam)
           . pure
@@ -222,8 +204,8 @@ marshaledCommandCall commandName m@MarshaledCommand {..} = do
   ----------------------------------------------------------------
   -- The type of this command
   ----------------------------------------------------------------
-  nts <- V.mapMaybe id <$> traverseV (paramType schemeType) mcParams
-  r   <- makeReturnType True includeReturnType m
+  nts <- marshaledCommandInputTypes m
+  r   <- makeReturnType True m
   let t         = foldr arrowUniqueVars r nts
       paramName = pretty . mkParamName . pName . mpParam
       isArg p = case mpScheme p of
@@ -340,12 +322,13 @@ marshaledDualPurposeCommandCall commandName m@MarshaledCommand {..} = do
   --
   -- Get the type of this function
   --
-  includeReturnType <- shouldIncludeReturnType m
+  includeReturnType <- marshaledCommandShouldIncludeReturnValue m
   let negativeSchemeType = \case
         InOutCount _ -> pure Nothing
-        s            -> schemeType s
-  nts <- V.mapMaybe id <$> traverseV (paramType negativeSchemeType) mcParams
-  returnType <- makeReturnType False includeReturnType m
+        s            -> schemeTypeNegative s
+  nts <-
+    V.mapMaybe id <$> traverseV (marshaledParamType negativeSchemeType) mcParams
+  returnType <- makeReturnType False m
   let commandType = foldr (~>) returnType nts
 
   --
@@ -573,7 +556,7 @@ paramRefUnnamed
   -> Stmt s r (Ref s ValueDoc)
 paramRefUnnamed MarshaledParam {..} = do
   RenderParams {..} <- input
-  ty                <- schemeType mpScheme
+  ty                <- schemeTypeNegative mpScheme
   stmt ty (Just . unName . mkParamName . pName $ mpParam)
     . pure
     . Pure AlwaysInline
@@ -581,16 +564,6 @@ paramRefUnnamed MarshaledParam {..} = do
     . pretty
     . mkParamName
     $ pName mpParam
-
-shouldIncludeReturnType :: HasRenderParams r => MarshaledCommand -> Sem r Bool
-shouldIncludeReturnType MarshaledCommand {..} = do
-  RenderParams {..} <- input
-  pure
-    $  mcReturn
-    /= C.Void
-    && (mcReturn == successCodeType --> any isSuccessCodeReturned
-                                            (cSuccessCodes mcCommand)
-       )
 
 castRef
   :: forall a b r s
@@ -803,14 +776,14 @@ importConstructors
   -> Sem r ()
 importConstructors t = do
   RenderParams {..} <- input
-  let
-    names = nubOrd $ allTypeNames t
-    isNewtype' :: Name -> Sem r Bool
-    isNewtype' n = pure (n `elem` builtinNewtypes)
-      <||> isNewtype (TyConName . T.pack . nameBase $ n)
-    setNameBase :: Name -> HName -> Name
-    setNameBase n =
-      mkNameG_tc "" (fromMaybe "" (nameModule n)) . T.unpack . unName
+  let names = nubOrd $ allTypeNames t
+      isNewtype' :: Name -> Sem r Bool
+      isNewtype' n = pure (n `elem` builtinNewtypes)
+        <||> isNewtype (TyConName . T.pack . nameBase $ n)
+      setNameBase :: Name -> HName -> Name
+      setNameBase n = case nameModule n of
+        Nothing -> mkName . T.unpack . unName
+        Just m  -> mkNameG_tc "" m . T.unpack . unName
   resolveAlias <- do
     ra <- getResolveAlias
     pure $ \n -> setNameBase n (ra . TyConName . T.pack . nameBase $ n)
@@ -855,10 +828,6 @@ getDynName = ("mk" <>) . upperCaseFirst . unCName . cName
 
 getStaticName :: Command -> Text
 getStaticName = ("ffi" <>) . upperCaseFirst . unCName . cName
-
-infixr 2 -->
-(-->) :: Bool -> Bool -> Bool
-a --> b = not a || b
 
 (<||>) :: Applicative f => f Bool -> f Bool -> f Bool
 (<||>) = liftA2 (||)

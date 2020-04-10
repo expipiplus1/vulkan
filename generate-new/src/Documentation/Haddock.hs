@@ -85,11 +85,10 @@ fixLinks :: Maybe Text -> (CName -> DocumenteeLocation) -> Pandoc -> Pandoc
 fixLinks externalDocHTML findDocs = topDown fixInlines
  where
   fixInlines = \case
-    Link ("", [], []) [Str name] (_, "") ->
-      let names = CName name : toList (CName <$> T.dropSuffix "()" name)
-      in  case asum (locationToHaddock . findDocs <$> names) of
-            Nothing -> Code ("", [], []) name
-            Just h  -> h
+    Link ("", [], []) [Str name] (_, "")
+      | names <- CName name : toList (CName <$> T.dropSuffix "()" name)
+      , Just h <- asum (locationToHaddock . findDocs <$> names)
+      -> h
     -- Because of https://github.com/haskell/haddock/issues/802 the best we
     -- can do is link to the spec
     Link attrs t (tag, title)

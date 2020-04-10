@@ -83,7 +83,7 @@ renderUnionMember tyName MarshaledStructMember {..} = do
   RenderParams {..} <- input
   let StructMember {..} = msmStructMember
   let con               = mkConName tyName smName
-  t    <- note "Union member is elided" =<< schemeType msmScheme
+  t    <- note "Union member is elided" =<< schemeTypeNegative msmScheme
   tDoc <- renderTypeHighPrec t
   pure $ pretty con <+> tDoc
 
@@ -126,7 +126,7 @@ toCStructInstance MarshaledStruct {..} = do
             . Pure AlwaysInline
             . AddrDoc
             $ ("castPtr @_ @" <> pTyDoc <+> addrVar)
-        ty       <- schemeType msmScheme
+        ty       <- schemeTypeNegative msmScheme
         valueRef <-
           stmt ty Nothing . pure . Pure AlwaysInline . ValueDoc . pretty $ mVar
         getPokeIndirect msmStructMember msmScheme valueRef addrRef

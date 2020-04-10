@@ -4,7 +4,9 @@ module Bracket
 import           Relude                  hiding ( Handle
                                                 , Type
                                                 )
-import           Data.List.Extra                ( nubOrd )
+import           Data.List.Extra                ( nubOrd
+                                                , elemIndex
+                                                )
 import qualified Data.Text.Extra               as T
 import           Language.Haskell.TH            ( mkName )
 import           Data.Text.Prettyprint.Doc
@@ -27,9 +29,12 @@ import           Spec.Parse
 import           Haskell                       as H
 import           Error
 import           CType
+import           Marshal.Scheme
+import           Marshal.Command
+import           Render.Scheme
 
 data Bracket = Bracket
-  { bInnerType           :: ConstructedType
+  { bInnerTypes          :: [MarshalScheme Parameter]
   , bWrapperName         :: CName
   , bCreate              :: CName
   , bDestroy             :: CName
@@ -37,85 +42,114 @@ data Bracket = Bracket
   , bDestroyArguments    :: [Argument]
   , bDestroyIndividually :: Bool
   }
-
-data ConstructedType
-  = Single { unConstructedType :: CType }
-  | Optional { unConstructedType :: CType }
-  | Multiple { unConstructedType :: CType }
-  deriving (Eq, Ord)
-
-pattern SingleTypeName :: Text -> ConstructedType
-pattern SingleTypeName t = Single (TypeName (CName t))
-
-getConstructedType
-  :: (HasErr r, HasRenderElem r, HasRenderParams r, HasSpecInfo r)
-  => ConstructedType
-  -> Sem r Type
-getConstructedType = \case
-  Single   Void -> pure (ConT ''())
-  Single   t    -> cToHsType DoNotPreserve t
-  Optional t    -> do
-    t <- cToHsType DoNotPreserve t
-    pure (ConT ''Maybe :@ t)
-  Multiple t -> do
-    t <- cToHsType DoNotPreserve t
-    pure (ConT ''Vector :@ t)
+  deriving (Show)
 
 data Argument
-  = Provided ConstructedType Text
-  | Resource
+  = Provided Text (MarshalScheme Parameter)
+  -- ^ This value is passed in explicitly
+  | Resource ResourceType Int
+  -- ^ This value is the resource being used, element n of generated tuple
   | Member Text Text
-  deriving (Eq, Ord)
+  -- ^ (The name of a provided parameter, The record selector)
+  deriving (Show, Eq, Ord)
 
+data ResourceType
+  = IdentityResource
+  -- ^ This value is just the resource being used
+  | ElemResource
+  -- ^ This value is an element in the vector of resources being used
+  deriving (Show, Eq, Ord)
+
+isResource :: Argument -> Bool
+isResource = \case
+  Resource     _ _ -> True
+  _                -> False
+
+-- | Try to generate a bracket automatically from the types of a pair of
+-- marshaled commands.
 autoBracket
-  :: forall r
-   . (HasErr r, HasSpecInfo r)
-  => (CName -> Text)
-  -- ^ Get parameter name
+  :: (HasErr r, HasRenderParams r, HasSpecInfo r)
+  => MarshaledCommand
+  -- ^ Begin
+  -> MarshaledCommand
+  -- ^ End
   -> CName
-  -- ^ With
-  -> CName
-  -- ^ Create
-  -> CName
-  -- ^ Destroy
+  -- ^ Bracketing function name
   -> Sem r Bracket
-autoBracket paramName withName beginName endName = do
-  let get :: CName -> Sem r Command
-      get n = note ("Unable to find command " <> show n) =<< getCommand n
-  begin <- get beginName
-  end   <- get endName
-  let toArg :: Parameter -> Argument
-      toArg Parameter {..} = Provided (Single pType) (paramName pName)
-      bInnerType           = Single (cReturnType begin)
-      bWrapperName         = withName
-      bCreate              = beginName
-      bDestroy             = endName
-      bCreateArguments     = toArg <$> toList (cParameters begin)
-      bDestroyArguments    = toArg <$> toList (cParameters end)
+autoBracket create destroy with = do
+  beginHasReturnType <- marshaledCommandShouldIncludeReturnValue create
+  let bWrapperName = with
+      bCreate      = mcName create
+      bDestroy     = mcName destroy
+      bInnerTypes =
+        [ Normal t | beginHasReturnType, let t = mcReturn create ]
+          <> [ s
+             | MarshaledParam {..} <- toList (mcParams create)
+             , not (isElided mpScheme)
+             , Returned s <- pure mpScheme
+             ]
+      bCreateArguments =
+        [ Provided (unCName (pName mpParam)) mpScheme
+        | MarshaledParam {..} <- toList (mcParams create)
+        , not (isElided mpScheme)
+        , isNegative mpScheme
+        ]
       bDestroyIndividually = False
+      destroyNegativeParams =
+        [ mp
+        | mp@MarshaledParam {..} <- toList (mcParams destroy)
+        , not (isElided mpScheme)
+        , isNegative mpScheme
+        ]
+  destroyReturnTypes <- marshaledCommandReturnTypes False destroy
+  unless (null destroyReturnTypes)
+    $ throw "TODO: Bracketing functions where the destructor returns a value"
+  bDestroyArguments <- forV destroyNegativeParams $ \MarshaledParam {..} ->
+    let
+      provided             = Provided (unCName (pName mpParam)) mpScheme
+      providedForCreate    = provided `elem` bCreateArguments
+      providedByCreate     = mpScheme `elemIndex` bInnerTypes
+      providedByCreateElem = Vector mpScheme `elemIndex` bInnerTypes
+    in
+      case (providedForCreate, providedByCreate, providedByCreateElem) of
+        (False, Nothing, Nothing) -> pure provided
+        (True , Nothing, Nothing) -> pure provided
+        (False, Just i , Nothing) -> pure (Resource IdentityResource i)
+        (False, Nothing, Just i ) -> pure (Resource ElemResource i)
+        -- TODO: Neaten error messages
+        (True, Just _, Just _) ->
+          throw
+            $ "Destructor input "
+            <> show (pName mpParam)
+            <> " is ambiguous, it is provided for the create function and is also present in the output of the create function and an element in an output vector of the create function"
+        (False, Just _, Just _) ->
+          throw
+            $ "Destructor input "
+            <> show (pName mpParam)
+            <> " is ambiguous, it is both provided for by the output of the create function and an element in an output vector of the create function"
+        (True, Just _, Nothing) ->
+          throw
+            $ "Destructor input "
+            <> show (pName mpParam)
+            <> " is ambiguous, it is both provided for the create function and output by the create function"
+        (True, Nothing, Just _) ->
+          throw
+            $ "Destructor input "
+            <> show (pName mpParam)
+            <> " is ambiguous, it is both provided for the create function and output (in a vector) by the create function"
   pure Bracket { .. }
 
-autoBracketBeginEndWith
-  :: (HasErr r, HasSpecInfo r)
-  => (CName -> Text)
-  -- ^ get param name
-  -> CName
-  -- ^ begin
-  -> Sem r Bracket
-autoBracketBeginEndWith paramName begin =
-  let end  = CName (T.replace "Begin" "End" (unCName begin))
-      with = CName (T.replace "Begin" "With" (unCName begin))
-  in  autoBracket paramName with begin end
-
-writePair
+renderBracket
   :: (HasErr r, HasRenderParams r, HasRenderedNames r, HasSpecInfo r)
-  => Bracket
-  -> Sem r (CType, CName, CName, RenderElement)
-  -- ^ (Inner type, create, with, render element)
-writePair b@Bracket {..} =
+  => (Text -> Text)
+  -- ^ Render param name
+  -> Bracket
+  -> Sem r (CName, CName, RenderElement)
+  -- ^ (create, with, render element)
+renderBracket paramName b@Bracket {..} =
   let arguments = nubOrd (bCreateArguments ++ bDestroyArguments)
   in
-    fmap (unConstructedType bInnerType, bCreate, bWrapperName, )
+    fmap (bCreate, bWrapperName, )
     . genRe ("bracket " <> unCName bWrapperName)
     $ do
         RenderParams {..} <- input
@@ -123,18 +157,31 @@ writePair b@Bracket {..} =
             destroy     = mkFunName bDestroy
             wrapperName = mkFunName bWrapperName
         tellExport (ETerm wrapperName)
-        argHsTypes <- traverseV getConstructedType
-                                [ t | Provided t _ <- arguments ]
-        let argHsVars = [ pretty v | Provided _ v <- arguments ]
-        innerHsType <- getConstructedType bInnerType
-        let
-          noDestructorResource = Resource `notElem` bDestroyArguments
-          noResource = bInnerType == Single Void && noDestructorResource
-          cont = if noResource
-            then ConT ''IO :@ VarT (mkName "r")
-            else innerHsType ~> ConT ''IO :@ VarT (mkName "r")
-          wrapperType =
-            foldr (~>) (ConT ''IO :@ VarT (mkName "r")) (argHsTypes ++ [cont])
+
+        --
+        -- Getting the bracket type
+        --
+        argHsTypes <- traverseV
+          (   note "argument type has no representation in a negative position"
+          <=< schemeTypeNegative
+          )
+          [ t | Provided _ t <- arguments ]
+        let argHsVars = [ pretty (paramName v) | Provided v _ <- arguments ]
+        innerHsType <- do
+          ts <- traverse
+            (   note "Inner type has no representation in a negative position"
+            <=< schemeTypeNegative
+            )
+            bInnerTypes
+          pure $ foldl' (:@) (TupleT (length ts)) ts
+        let noDestructorResource = not (any isResource bDestroyArguments)
+            noResource           = null bInnerTypes && noDestructorResource
+            cont                 = if noResource
+              then ConT ''IO :@ VarT (mkName "r")
+              else innerHsType ~> ConT ''IO :@ VarT (mkName "r")
+            wrapperType = foldr (~>)
+                                (ConT ''IO :@ VarT (mkName "r"))
+                                (argHsTypes ++ [cont])
         constrainedType <- constrainStructVariables wrapperType
         wrapperTDoc     <- renderType constrainedType
         bracketDoc      <- if noResource
@@ -144,8 +191,12 @@ writePair b@Bracket {..} =
           else do
             tellImport 'Control.Exception.bracket
             pure "bracket"
-        createCall <- renderCreate b
-        destroyCall <- renderDestroy b
+
+        --
+        -- The actual function
+        --
+        createCall  <- renderCreate paramName b
+        destroyCall <- renderDestroy paramName b
         tellDoc $ vsep
           [ comment
             (T.unlines
@@ -170,11 +221,7 @@ writePair b@Bracket {..} =
             2
             (pretty bracketDoc <> line <> indent
               2
-              (vsep
-                [ parens createCall
-                , parens destroyCall
-                ]
-              )
+              (vsep [parens createCall, parens destroyCall])
             )
           ]
 
@@ -185,15 +232,17 @@ renderCreate
      , HasRenderedNames r
      , HasRenderElem r
      )
-  => Bracket
+  => (Text -> Text)
+  -> Bracket
   -> Sem r (Doc ())
-renderCreate Bracket {..} = do
+renderCreate paramName Bracket {..} = do
   RenderParams {..} <- input
   let create = mkFunName bCreate
   createArgVars <- forV bCreateArguments $ \case
-    Provided _ v -> pure (pretty v)
-    Resource     -> throw "Resource used in its own construction"
-    Member _ _   -> throw "Member used during construction"
+    Provided v _ -> pure (pretty (paramName v))
+    Resource _ _ -> throw "Resource used in its own construction"
+    -- Would be a bit weird to hit this, but nothing unhandleable
+    Member   _ _ -> throw "TODO: Member used during construction"
   tellImport create
   pure $ pretty create <+> sep createArgVars
 
@@ -204,28 +253,60 @@ renderDestroy
      , HasRenderedNames r
      , HasRenderElem r
      )
-  => Bracket
+  => (Text -> Text)
+  -> Bracket
   -> Sem r (Doc ())
-renderDestroy Bracket {..} = do
+renderDestroy paramName Bracket {..} = do
   RenderParams {..} <- input
   let arguments            = nubOrd (bCreateArguments ++ bDestroyArguments)
       destroy              = mkFunName bDestroy
-      noDestructorResource = Resource `notElem` bDestroyArguments
-      noResource           = bInnerType == Single Void && noDestructorResource
-      resourcePattern      = if noDestructorResource then "_" else "o"
+      noDestructorResource = not . any isResource $ bDestroyArguments
+      noResource           = null bInnerTypes && noDestructorResource
+      usedResourceIndices  = [ n | Resource _ n <- bDestroyArguments ]
+      resourcePattern      = case length bInnerTypes of
+        n -> tupled
+          [ if i `elem` usedResourceIndices then "o" <> show i else "_"
+          | i <- [0 .. n - 1]
+          ]
   destroyArgVars <- forV bDestroyArguments $ \case
-    Provided _ v -> pure $ pretty v
-    Resource     -> pure "o"
-    Member member argument
-      | [t] <- [ t | Provided (Single t) v <- arguments, v == argument ] -> do
-        argTyDoc <- renderType =<< cToHsTypeWithHoles DoNotPreserve t
-        pure $ parens
-          (pretty member <+> parens (pretty argument <+> "::" <+> argTyDoc))
-      | otherwise -> throw "Can't find single argument for member"
+    Provided v                _ -> pure $ (pretty (paramName v), Nothing)
+    Resource IdentityResource n -> pure ("o" <> show n, Nothing)
+    Resource ElemResource n ->
+      let v = "o" <> show n in pure (v <> "Elem", Just v)
+    Member sibling member -> do
+      let correctSibling = \case
+            Provided n s | n == sibling -> Just s
+            _                           -> Nothing
+      case mapMaybe correctSibling bCreateArguments of
+        []  -> throw $ "Unable to find sibling " <> sibling
+        [s] -> schemeTypeNegative s >>= \case
+          Nothing ->
+            throw
+              $  "Unable to get type for sibling member "
+              <> sibling
+              <> "::"
+              <> member
+          Just t -> do
+            tDoc <- renderType t
+            pure
+              ( parens
+                (pretty member <+> parens (pretty sibling <+> "::" <+> tDoc))
+              , Nothing
+              )
+        _ -> throw $ "Found multiple siblings with the same name " <> sibling
+  let (appVars, catMaybes -> toTraverse) = unzip destroyArgVars
   tellImport destroy
-  let callDestructor =
+  unless (null toTraverse) (tellImport 'traverse_)
+  when (length toTraverse >= 2)
+    $ throw
+        "TODO: zipping resource vectors, at the moment this will destroy according to the cartesian product of the destructor resource vectors, which given the way this library marshals commands is almost certainly not what you want"
+  let withTraversals call = \case
+        []     -> call
+        x : xs -> withTraversals
+          ("traverse_" <+> parens ("\\" <> x <> "Elem" <+> "->" <+> call) <+> x)
+          xs
+      callDestructor =
         (if noResource then emptyDoc else "\\" <> resourcePattern <+> "-> ")
-          <>  pretty destroy
-          <+> sep destroyArgVars
+          <> withTraversals (pretty destroy <+> sep appVars) toTraverse
       traverseDestroy = "traverse" <+> parens callDestructor
   pure $ bool callDestructor traverseDestroy bDestroyIndividually

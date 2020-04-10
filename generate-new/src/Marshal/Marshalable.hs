@@ -16,7 +16,7 @@ data ParameterLength
   | NamedMemberLength CName CName
     -- ^ The length is specified by a member of another (struct) parameter, an
     -- example is vkAllocateCommandBuffers
-  deriving (Show, Eq)
+  deriving (Show, Eq, Ord)
 
 class Marshalable a where
   name       :: a -> CName

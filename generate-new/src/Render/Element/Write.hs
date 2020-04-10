@@ -11,6 +11,7 @@ import qualified Data.Set                      as Set
 import qualified Data.Vector.Extra             as V
 import           Data.Vector.Extra              ( Vector )
 import           Data.Text                     as T
+import           Data.Char                      ( isLower )
 import           Data.Text.IO                  as T
 import           Data.Set                       ( unions )
 import           Data.List.Extra                ( nubOrd
@@ -201,7 +202,10 @@ renderModule out boot getDoc findModule findLocalModule (Segment modName unsorte
     let
       locate :: CName -> DocumenteeLocation
       locate n =
-        let names = [mkTyName n, mkFunName n, mkPatternName n]
+        let names = case n of
+              -- CName "" -> []
+              -- CName n' | isLower (T.head n') -> [mkFunName n]
+              _ -> [mkTyName n, mkFunName n, mkPatternName n]
         in  case asum ((\n -> (n, ) <$> findLocalModule n) <$> names) of
               Just (n, m) | m == modName -> ThisModule n
               Just (n, m)                -> OtherModule m n
@@ -320,6 +324,7 @@ renderImport' findModule getName getNameSpace (Import n qual children withAll so
             (  (wrapSymbol (getNameSpace n) . getName <$> children)
             <> (if withAll then V.singleton ".." else V.empty)
             )
+    when (T.null mod') $ throw "Trying to render an import with no module!"
     pure $ "import" <> sourceDoc <> qualDoc <+> pretty mod' <+> parenList
       (V.singleton (spec <> baseP <> childrenDoc))
 

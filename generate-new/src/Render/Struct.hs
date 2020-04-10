@@ -93,7 +93,7 @@ renderStructMember
 renderStructMember sName MarshaledStructMember {..} = do
   let StructMember {..} = msmStructMember
   RenderParams {..} <- input
-  m                 <- schemeType msmScheme
+  m                 <- schemeTypeNegative msmScheme
   traverse
     (\t -> do
       tDoc <- renderType t
@@ -461,7 +461,7 @@ memberVal
   -> Doc ()
   -> Stmt s r (Ref s ValueDoc)
 memberVal MarshaledStructMember {..} doc = do
-  ty <- schemeType msmScheme
+  ty <- schemeTypeNegative msmScheme
   v  <-
     stmt ty (Just . unCName . smName $ msmStructMember)
     . pure

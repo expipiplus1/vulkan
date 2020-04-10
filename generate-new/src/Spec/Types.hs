@@ -192,7 +192,7 @@ data Parameter = Parameter
   , pLengths    :: Vector M.ParameterLength
   , pIsOptional :: Vector Bool
   }
-  deriving (Show, Eq)
+  deriving (Show, Eq, Ord)
 
 instance M.Marshalable Parameter where
   name       = pName
