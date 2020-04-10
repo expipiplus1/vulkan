@@ -15,12 +15,8 @@ import           Language.Haskell.TH.Syntax     ( nameBase
                                                 , mkName
                                                 , Pred
                                                 )
-import           Language.Haskell.TH.Datatype   ( freeVariablesWellScoped
-                                                , quantifyType
-                                                )
-import           Data.List.Extra                ( nubOrd
-                                                , (\\)
-                                                )
+import           Language.Haskell.TH.Datatype   ( quantifyType )
+import           Data.List.Extra                ( nubOrd )
 import           Polysemy
 import           Polysemy.Input
 import qualified Data.Text                     as T
