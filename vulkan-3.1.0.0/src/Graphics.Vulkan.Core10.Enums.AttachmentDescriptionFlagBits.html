@@ -1,0 +1,391 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Graphics.Vulkan.Core10.Enums.AttachmentDescriptionFlagBits</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.html#AttachmentDescriptionFlagBits"><span class="hs-identifier">AttachmentDescriptionFlagBits</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.html#ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT"><span class="hs-identifier">ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT</span></a></span><span>
+</span><span id="line-3"></span><span>                                                                                                  </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-4"></span><span>                                                                                                  </span><span class="hs-special">)</span><span>
+</span><span id="line-5"></span><span>                                                                   </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.html#AttachmentDescriptionFlags"><span class="hs-identifier">AttachmentDescriptionFlags</span></a></span><span>
+</span><span id="line-6"></span><span>                                                                   </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-7"></span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.BaseType.html"><span class="hs-identifier">Graphics.Vulkan.Core10.BaseType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Graphics.Vulkan.Core10.BaseType.html#Flags"><span class="hs-identifier">Flags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Graphics.Vulkan.Zero.html"><span class="hs-identifier">Graphics.Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Graphics.Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- | VkAttachmentDescriptionFlagBits - Bitmask specifying additional</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- properties of an attachment</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- 'AttachmentDescriptionFlags'</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">newtype</span><span> </span><span id="AttachmentDescriptionFlagBits"><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.html#AttachmentDescriptionFlagBits"><span class="hs-identifier hs-var">AttachmentDescriptionFlagBits</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="AttachmentDescriptionFlagBits"><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.html#AttachmentDescriptionFlagBits"><span class="hs-identifier hs-var">AttachmentDescriptionFlagBits</span></a></span></span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.BaseType.html#Flags"><span class="hs-identifier hs-type">Flags</span></a></span><span>
+</span><span id="line-30"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621680003573"><span id="local-6989586621680003575"><span class="annot"><span class="annottext">AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; Bool
+(AttachmentDescriptionFlagBits
+ -&gt; AttachmentDescriptionFlagBits -&gt; Bool)
+-&gt; (AttachmentDescriptionFlagBits
+    -&gt; AttachmentDescriptionFlagBits -&gt; Bool)
+-&gt; Eq AttachmentDescriptionFlagBits
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; Bool
+$c/= :: AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; Bool
+== :: AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; Bool
+$c== :: AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680003557"><span id="local-6989586621680003559"><span id="local-6989586621680003561"><span id="local-6989586621680003563"><span id="local-6989586621680003565"><span id="local-6989586621680003567"><span id="local-6989586621680003569"><span class="annot"><span class="annottext">Eq AttachmentDescriptionFlagBits
+Eq AttachmentDescriptionFlagBits =&gt;
+(AttachmentDescriptionFlagBits
+ -&gt; AttachmentDescriptionFlagBits -&gt; Ordering)
+-&gt; (AttachmentDescriptionFlagBits
+    -&gt; AttachmentDescriptionFlagBits -&gt; Bool)
+-&gt; (AttachmentDescriptionFlagBits
+    -&gt; AttachmentDescriptionFlagBits -&gt; Bool)
+-&gt; (AttachmentDescriptionFlagBits
+    -&gt; AttachmentDescriptionFlagBits -&gt; Bool)
+-&gt; (AttachmentDescriptionFlagBits
+    -&gt; AttachmentDescriptionFlagBits -&gt; Bool)
+-&gt; (AttachmentDescriptionFlagBits
+    -&gt; AttachmentDescriptionFlagBits -&gt; AttachmentDescriptionFlagBits)
+-&gt; (AttachmentDescriptionFlagBits
+    -&gt; AttachmentDescriptionFlagBits -&gt; AttachmentDescriptionFlagBits)
+-&gt; Ord AttachmentDescriptionFlagBits
+AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; Bool
+AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; Ordering
+AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; AttachmentDescriptionFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; AttachmentDescriptionFlagBits
+$cmin :: AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; AttachmentDescriptionFlagBits
+max :: AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; AttachmentDescriptionFlagBits
+$cmax :: AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; AttachmentDescriptionFlagBits
+&gt;= :: AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; Bool
+$c&gt;= :: AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; Bool
+&gt; :: AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; Bool
+$c&gt; :: AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; Bool
+&lt;= :: AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; Bool
+$c&lt;= :: AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; Bool
+&lt; :: AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; Bool
+$c&lt; :: AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; Bool
+compare :: AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; Ordering
+$ccompare :: AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; Ordering
+$cp1Ord :: Eq AttachmentDescriptionFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680003540"><span id="local-6989586621680003542"><span id="local-6989586621680003544"><span id="local-6989586621680003546"><span id="local-6989586621680003548"><span id="local-6989586621680003550"><span id="local-6989586621680003552"><span id="local-6989586621680003554"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO AttachmentDescriptionFlagBits
+Ptr b -&gt; Int -&gt; AttachmentDescriptionFlagBits -&gt; IO ()
+Ptr AttachmentDescriptionFlagBits
+-&gt; IO AttachmentDescriptionFlagBits
+Ptr AttachmentDescriptionFlagBits
+-&gt; Int -&gt; IO AttachmentDescriptionFlagBits
+Ptr AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits -&gt; IO ()
+Ptr AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; IO ()
+AttachmentDescriptionFlagBits -&gt; Int
+(AttachmentDescriptionFlagBits -&gt; Int)
+-&gt; (AttachmentDescriptionFlagBits -&gt; Int)
+-&gt; (Ptr AttachmentDescriptionFlagBits
+    -&gt; Int -&gt; IO AttachmentDescriptionFlagBits)
+-&gt; (Ptr AttachmentDescriptionFlagBits
+    -&gt; Int -&gt; AttachmentDescriptionFlagBits -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO AttachmentDescriptionFlagBits)
+-&gt; (forall b.
+    Ptr b -&gt; Int -&gt; AttachmentDescriptionFlagBits -&gt; IO ())
+-&gt; (Ptr AttachmentDescriptionFlagBits
+    -&gt; IO AttachmentDescriptionFlagBits)
+-&gt; (Ptr AttachmentDescriptionFlagBits
+    -&gt; AttachmentDescriptionFlagBits -&gt; IO ())
+-&gt; Storable AttachmentDescriptionFlagBits
+forall b. Ptr b -&gt; Int -&gt; IO AttachmentDescriptionFlagBits
+forall b. Ptr b -&gt; Int -&gt; AttachmentDescriptionFlagBits -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; IO ()
+$cpoke :: Ptr AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; IO ()
+peek :: Ptr AttachmentDescriptionFlagBits
+-&gt; IO AttachmentDescriptionFlagBits
+$cpeek :: Ptr AttachmentDescriptionFlagBits
+-&gt; IO AttachmentDescriptionFlagBits
+pokeByteOff :: Ptr b -&gt; Int -&gt; AttachmentDescriptionFlagBits -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; AttachmentDescriptionFlagBits -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO AttachmentDescriptionFlagBits
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO AttachmentDescriptionFlagBits
+pokeElemOff :: Ptr AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits -&gt; IO ()
+$cpokeElemOff :: Ptr AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits -&gt; IO ()
+peekElemOff :: Ptr AttachmentDescriptionFlagBits
+-&gt; Int -&gt; IO AttachmentDescriptionFlagBits
+$cpeekElemOff :: Ptr AttachmentDescriptionFlagBits
+-&gt; Int -&gt; IO AttachmentDescriptionFlagBits
+alignment :: AttachmentDescriptionFlagBits -&gt; Int
+$calignment :: AttachmentDescriptionFlagBits -&gt; Int
+sizeOf :: AttachmentDescriptionFlagBits -&gt; Int
+$csizeOf :: AttachmentDescriptionFlagBits -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680003537"><span class="annot"><span class="annottext">AttachmentDescriptionFlagBits
+AttachmentDescriptionFlagBits -&gt; Zero AttachmentDescriptionFlagBits
+forall a. a -&gt; Zero a
+zero :: AttachmentDescriptionFlagBits
+$czero :: AttachmentDescriptionFlagBits
+</span><a href="Graphics.Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621680003491"><span id="local-6989586621680003493"><span id="local-6989586621680003495"><span id="local-6989586621680003497"><span id="local-6989586621680003499"><span id="local-6989586621680003501"><span id="local-6989586621680003503"><span id="local-6989586621680003505"><span id="local-6989586621680003507"><span id="local-6989586621680003509"><span id="local-6989586621680003511"><span id="local-6989586621680003513"><span id="local-6989586621680003515"><span id="local-6989586621680003517"><span id="local-6989586621680003519"><span id="local-6989586621680003521"><span id="local-6989586621680003523"><span id="local-6989586621680003525"><span id="local-6989586621680003527"><span id="local-6989586621680003529"><span id="local-6989586621680003531"><span id="local-6989586621680003533"><span class="annot"><span class="annottext">Eq AttachmentDescriptionFlagBits
+AttachmentDescriptionFlagBits
+Eq AttachmentDescriptionFlagBits =&gt;
+(AttachmentDescriptionFlagBits
+ -&gt; AttachmentDescriptionFlagBits -&gt; AttachmentDescriptionFlagBits)
+-&gt; (AttachmentDescriptionFlagBits
+    -&gt; AttachmentDescriptionFlagBits -&gt; AttachmentDescriptionFlagBits)
+-&gt; (AttachmentDescriptionFlagBits
+    -&gt; AttachmentDescriptionFlagBits -&gt; AttachmentDescriptionFlagBits)
+-&gt; (AttachmentDescriptionFlagBits -&gt; AttachmentDescriptionFlagBits)
+-&gt; (AttachmentDescriptionFlagBits
+    -&gt; Int -&gt; AttachmentDescriptionFlagBits)
+-&gt; (AttachmentDescriptionFlagBits
+    -&gt; Int -&gt; AttachmentDescriptionFlagBits)
+-&gt; AttachmentDescriptionFlagBits
+-&gt; (Int -&gt; AttachmentDescriptionFlagBits)
+-&gt; (AttachmentDescriptionFlagBits
+    -&gt; Int -&gt; AttachmentDescriptionFlagBits)
+-&gt; (AttachmentDescriptionFlagBits
+    -&gt; Int -&gt; AttachmentDescriptionFlagBits)
+-&gt; (AttachmentDescriptionFlagBits
+    -&gt; Int -&gt; AttachmentDescriptionFlagBits)
+-&gt; (AttachmentDescriptionFlagBits -&gt; Int -&gt; Bool)
+-&gt; (AttachmentDescriptionFlagBits -&gt; Maybe Int)
+-&gt; (AttachmentDescriptionFlagBits -&gt; Int)
+-&gt; (AttachmentDescriptionFlagBits -&gt; Bool)
+-&gt; (AttachmentDescriptionFlagBits
+    -&gt; Int -&gt; AttachmentDescriptionFlagBits)
+-&gt; (AttachmentDescriptionFlagBits
+    -&gt; Int -&gt; AttachmentDescriptionFlagBits)
+-&gt; (AttachmentDescriptionFlagBits
+    -&gt; Int -&gt; AttachmentDescriptionFlagBits)
+-&gt; (AttachmentDescriptionFlagBits
+    -&gt; Int -&gt; AttachmentDescriptionFlagBits)
+-&gt; (AttachmentDescriptionFlagBits
+    -&gt; Int -&gt; AttachmentDescriptionFlagBits)
+-&gt; (AttachmentDescriptionFlagBits
+    -&gt; Int -&gt; AttachmentDescriptionFlagBits)
+-&gt; (AttachmentDescriptionFlagBits -&gt; Int)
+-&gt; Bits AttachmentDescriptionFlagBits
+Int -&gt; AttachmentDescriptionFlagBits
+AttachmentDescriptionFlagBits -&gt; Bool
+AttachmentDescriptionFlagBits -&gt; Int
+AttachmentDescriptionFlagBits -&gt; Maybe Int
+AttachmentDescriptionFlagBits -&gt; AttachmentDescriptionFlagBits
+AttachmentDescriptionFlagBits -&gt; Int -&gt; Bool
+AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits
+AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; AttachmentDescriptionFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: AttachmentDescriptionFlagBits -&gt; Int
+$cpopCount :: AttachmentDescriptionFlagBits -&gt; Int
+rotateR :: AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits
+$crotateR :: AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits
+rotateL :: AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits
+$crotateL :: AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits
+unsafeShiftR :: AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits
+$cunsafeShiftR :: AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits
+shiftR :: AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits
+$cshiftR :: AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits
+unsafeShiftL :: AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits
+$cunsafeShiftL :: AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits
+shiftL :: AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits
+$cshiftL :: AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits
+isSigned :: AttachmentDescriptionFlagBits -&gt; Bool
+$cisSigned :: AttachmentDescriptionFlagBits -&gt; Bool
+bitSize :: AttachmentDescriptionFlagBits -&gt; Int
+$cbitSize :: AttachmentDescriptionFlagBits -&gt; Int
+bitSizeMaybe :: AttachmentDescriptionFlagBits -&gt; Maybe Int
+$cbitSizeMaybe :: AttachmentDescriptionFlagBits -&gt; Maybe Int
+testBit :: AttachmentDescriptionFlagBits -&gt; Int -&gt; Bool
+$ctestBit :: AttachmentDescriptionFlagBits -&gt; Int -&gt; Bool
+complementBit :: AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits
+$ccomplementBit :: AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits
+clearBit :: AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits
+$cclearBit :: AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits
+setBit :: AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits
+$csetBit :: AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits
+bit :: Int -&gt; AttachmentDescriptionFlagBits
+$cbit :: Int -&gt; AttachmentDescriptionFlagBits
+zeroBits :: AttachmentDescriptionFlagBits
+$czeroBits :: AttachmentDescriptionFlagBits
+rotate :: AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits
+$crotate :: AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits
+shift :: AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits
+$cshift :: AttachmentDescriptionFlagBits
+-&gt; Int -&gt; AttachmentDescriptionFlagBits
+complement :: AttachmentDescriptionFlagBits -&gt; AttachmentDescriptionFlagBits
+$ccomplement :: AttachmentDescriptionFlagBits -&gt; AttachmentDescriptionFlagBits
+xor :: AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; AttachmentDescriptionFlagBits
+$cxor :: AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; AttachmentDescriptionFlagBits
+.|. :: AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; AttachmentDescriptionFlagBits
+$c.|. :: AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; AttachmentDescriptionFlagBits
+.&amp;. :: AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; AttachmentDescriptionFlagBits
+$c.&amp;. :: AttachmentDescriptionFlagBits
+-&gt; AttachmentDescriptionFlagBits -&gt; AttachmentDescriptionFlagBits
+$cp1Bits :: Eq AttachmentDescriptionFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- | 'ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT' specifies that the attachment</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- aliases the same device memory as other attachments.</span><span>
+</span><span id="line-34"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT"><span id="%24mATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT"><span id="ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT"><span class="annot"><span class="annottext">$bATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT :: AttachmentDescriptionFlagBits
+$mATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT :: forall r.
+AttachmentDescriptionFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Graphics.Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.html#%24bATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT"><span class="hs-identifier hs-var hs-var hs-var">ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.html#AttachmentDescriptionFlagBits"><span class="hs-identifier hs-type">AttachmentDescriptionFlagBits</span></a></span><span> </span><span class="hs-number">0x00000001</span><span>
+</span><span id="line-35"></span><span>
+</span><span id="line-36"></span><span class="hs-keyword">type</span><span> </span><span id="AttachmentDescriptionFlags"><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.html#AttachmentDescriptionFlags"><span class="hs-identifier hs-var">AttachmentDescriptionFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.html#AttachmentDescriptionFlagBits"><span class="hs-identifier hs-type">AttachmentDescriptionFlagBits</span></a></span><span>
+</span><span id="line-37"></span><span>
+</span><span id="line-38"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680003483"><span id="local-6989586621680003485"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.html#AttachmentDescriptionFlagBits"><span class="hs-identifier hs-type">AttachmentDescriptionFlagBits</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-39"></span><span>  </span><span id="local-6989586621680003481"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; AttachmentDescriptionFlagBits -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></span></span><span> </span><span id="local-6989586621680003479"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621680003479"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-40"></span><span>    </span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.html#ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT"><span class="hs-identifier hs-type">ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT&quot;</span></span><span>
+</span><span id="line-41"></span><span>    </span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.html#AttachmentDescriptionFlagBits"><span class="hs-identifier hs-type">AttachmentDescriptionFlagBits</span></a></span><span> </span><span id="local-6989586621680003478"><span class="annot"><span class="annottext">x :: Flags
+</span><a href="#local-6989586621680003478"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621680003479"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;AttachmentDescriptionFlagBits 0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680003478"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-42"></span><span>
+</span><span id="line-43"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621680003470"><span id="local-6989586621680003473"><span id="local-6989586621680003475"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.html#AttachmentDescriptionFlagBits"><span class="hs-identifier hs-type">AttachmentDescriptionFlagBits</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-44"></span><span>  </span><span id="local-6989586621680003468"><span class="annot"><span class="annottext">readPrec :: ReadPrec AttachmentDescriptionFlagBits
+</span><a href="#local-6989586621680003468"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec AttachmentDescriptionFlagBits
+-&gt; ReadPrec AttachmentDescriptionFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec AttachmentDescriptionFlagBits)]
+-&gt; ReadPrec AttachmentDescriptionFlagBits
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">AttachmentDescriptionFlagBits
+-&gt; ReadPrec AttachmentDescriptionFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">AttachmentDescriptionFlagBits
+</span><a href="Graphics.Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.html#ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT"><span class="hs-identifier hs-var">ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-45"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec AttachmentDescriptionFlagBits
+-&gt; ReadPrec AttachmentDescriptionFlagBits
+-&gt; ReadPrec AttachmentDescriptionFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-46"></span><span>                     </span><span class="annot"><span class="annottext">Int
+-&gt; ReadPrec AttachmentDescriptionFlagBits
+-&gt; ReadPrec AttachmentDescriptionFlagBits
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-47"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;AttachmentDescriptionFlagBits&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-48"></span><span>                       </span><span id="local-6989586621680003467"><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680003467"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags -&gt; ReadPrec Flags
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-49"></span><span>                       </span><span class="annot"><span class="annottext">AttachmentDescriptionFlagBits
+-&gt; ReadPrec AttachmentDescriptionFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Flags -&gt; AttachmentDescriptionFlagBits
+</span><a href="Graphics.Vulkan.Core10.Enums.AttachmentDescriptionFlagBits.html#AttachmentDescriptionFlagBits"><span class="hs-identifier hs-var">AttachmentDescriptionFlagBits</span></a></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621680003467"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-50"></span><span>
+</span><span id="line-51"></span></pre></body></html>

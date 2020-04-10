@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>indexed-list-literals-0.2.1.2: Type safe indexed list literals</title><link href="linuwial.css" rel="stylesheet" type="text/css" title="Linuwial" /><link rel="stylesheet" type="text/css" href="quick-jump.css" /><link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400i,700" /><script src="haddock-bundle.min.js" async="async" type="text/javascript"></script><script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { processClass: "mathjax", ignoreClass: ".*" } });</script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script></head><body><div id="package-header"><span class="caption">indexed-list-literals-0.2.1.2: Type safe indexed list literals</span><ul class="links" id="page-menu"><li><a href="index.html">Contents</a></li><li><a href="doc-index.html">Index</a></li></ul></div><div id="content"><div id="description"><h1>indexed-list-literals-0.2.1.2: Type safe indexed list literals</h1><div class="doc"><p>This is an incredibly simple library, which makes writing lists where the length is known at compile time a little bit nicer.</p><p>If you write a function with the signature</p><pre>vector :: ILL input length output =&gt; input -&gt; Vector length output</pre><p>then</p><pre>v :: Vector 3 Int
+v = vector (1,2,3)
+
+x :: Vector 0 Double
+x = vector $ ZeroTuple @Double
+
+y :: Vector 1 Double
+y = vector (Only 1)
+
+z :: Vector 2 String
+z = vector (&quot;Hello&quot;, &quot;World&quot;)</pre><p>If want matrix literals you can write a function</p><pre>matrix :: (ILL row width ty, ILL matrix height row) =&gt; matrix -&gt; Matrix width height ty</pre><p>then</p><pre>a :: Matrix 0 0 Bool
+a = matrix $ ZeroTuple @(ZeroTuple Bool)
+
+b :: Matrix 1 2 String
+b = matrix $ Only (&quot;Hello&quot;,&quot;World&quot;)
+
+c :: Matrix 4 5 Double
+c = matrix ((1,2,3,0,0)
+           ,(4,5,6,0,0)
+           ,(7,8,9,0,0)
+           ,(0,0,0,0,0))</pre><p>The full code is in test/Docs.hs</p><p>This only supports literals of length up to 20, though that can be easily extended using the code generator in src/Data/IndexedListLiterals.hs</p></div></div><div id="module-list"><p class="caption">Signatures</p></div><div id="module-list"><p class="caption">Modules</p><ul><li><span class="module details-toggle-control details-toggle" data-details-id="n.1">Data</span><details id="n.1" open="open"><summary class="hide-when-js-enabled">Submodules</summary><ul><li><span class="module"><span class="noexpander">&nbsp;</span><a href="Data-IndexedListLiterals.html">Data.IndexedListLiterals</a></span></li></ul></details></li></ul></div></div><div id="footer"><p>Produced by <a href="http://www.haskell.org/haddock/">Haddock</a> version 2.23.0</p></div></body></html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlags</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlags.html#PipelineCacheCreateFlags"><span class="hs-identifier">PipelineCacheCreateFlags</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-3"></span><span>
+</span><span id="line-4"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.BaseType.html"><span class="hs-identifier">Graphics.Vulkan.Core10.BaseType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Graphics.Vulkan.Core10.BaseType.html#Flags"><span class="hs-identifier">Flags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Graphics.Vulkan.Zero.html"><span class="hs-identifier">Graphics.Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Graphics.Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-comment">-- | VkPipelineCacheCreateFlags - Reserved for future use</span><span>
+</span><span id="line-20"></span><span class="hs-comment">--</span><span>
+</span><span id="line-21"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-22"></span><span class="hs-comment">--</span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- 'PipelineCacheCreateFlags' is a bitmask type for setting a mask, but is</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- currently reserved for future use.</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- 'Graphics.Vulkan.Core10.PipelineCache.PipelineCacheCreateInfo'</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">newtype</span><span> </span><span id="PipelineCacheCreateFlags"><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlags.html#PipelineCacheCreateFlags"><span class="hs-identifier hs-var">PipelineCacheCreateFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="PipelineCacheCreateFlags"><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlags.html#PipelineCacheCreateFlags"><span class="hs-identifier hs-var">PipelineCacheCreateFlags</span></a></span></span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.BaseType.html#Flags"><span class="hs-identifier hs-type">Flags</span></a></span><span>
+</span><span id="line-30"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679993956"><span id="local-6989586621679993958"><span class="annot"><span class="annottext">PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; Bool
+(PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; Bool)
+-&gt; (PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; Bool)
+-&gt; Eq PipelineCacheCreateFlags
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; Bool
+$c/= :: PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; Bool
+== :: PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; Bool
+$c== :: PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679993940"><span id="local-6989586621679993942"><span id="local-6989586621679993944"><span id="local-6989586621679993946"><span id="local-6989586621679993948"><span id="local-6989586621679993950"><span id="local-6989586621679993952"><span class="annot"><span class="annottext">Eq PipelineCacheCreateFlags
+Eq PipelineCacheCreateFlags =&gt;
+(PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; Ordering)
+-&gt; (PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; Bool)
+-&gt; (PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; Bool)
+-&gt; (PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; Bool)
+-&gt; (PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; Bool)
+-&gt; (PipelineCacheCreateFlags
+    -&gt; PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags)
+-&gt; (PipelineCacheCreateFlags
+    -&gt; PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags)
+-&gt; Ord PipelineCacheCreateFlags
+PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; Bool
+PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; Ordering
+PipelineCacheCreateFlags
+-&gt; PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: PipelineCacheCreateFlags
+-&gt; PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags
+$cmin :: PipelineCacheCreateFlags
+-&gt; PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags
+max :: PipelineCacheCreateFlags
+-&gt; PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags
+$cmax :: PipelineCacheCreateFlags
+-&gt; PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags
+&gt;= :: PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; Bool
+$c&gt;= :: PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; Bool
+&gt; :: PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; Bool
+$c&gt; :: PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; Bool
+&lt;= :: PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; Bool
+$c&lt;= :: PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; Bool
+&lt; :: PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; Bool
+$c&lt; :: PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; Bool
+compare :: PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; Ordering
+$ccompare :: PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; Ordering
+$cp1Ord :: Eq PipelineCacheCreateFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679993923"><span id="local-6989586621679993925"><span id="local-6989586621679993927"><span id="local-6989586621679993929"><span id="local-6989586621679993931"><span id="local-6989586621679993933"><span id="local-6989586621679993935"><span id="local-6989586621679993937"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO PipelineCacheCreateFlags
+Ptr b -&gt; Int -&gt; PipelineCacheCreateFlags -&gt; IO ()
+Ptr PipelineCacheCreateFlags -&gt; IO PipelineCacheCreateFlags
+Ptr PipelineCacheCreateFlags -&gt; Int -&gt; IO PipelineCacheCreateFlags
+Ptr PipelineCacheCreateFlags
+-&gt; Int -&gt; PipelineCacheCreateFlags -&gt; IO ()
+Ptr PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; IO ()
+PipelineCacheCreateFlags -&gt; Int
+(PipelineCacheCreateFlags -&gt; Int)
+-&gt; (PipelineCacheCreateFlags -&gt; Int)
+-&gt; (Ptr PipelineCacheCreateFlags
+    -&gt; Int -&gt; IO PipelineCacheCreateFlags)
+-&gt; (Ptr PipelineCacheCreateFlags
+    -&gt; Int -&gt; PipelineCacheCreateFlags -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO PipelineCacheCreateFlags)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; PipelineCacheCreateFlags -&gt; IO ())
+-&gt; (Ptr PipelineCacheCreateFlags -&gt; IO PipelineCacheCreateFlags)
+-&gt; (Ptr PipelineCacheCreateFlags
+    -&gt; PipelineCacheCreateFlags -&gt; IO ())
+-&gt; Storable PipelineCacheCreateFlags
+forall b. Ptr b -&gt; Int -&gt; IO PipelineCacheCreateFlags
+forall b. Ptr b -&gt; Int -&gt; PipelineCacheCreateFlags -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; IO ()
+$cpoke :: Ptr PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags -&gt; IO ()
+peek :: Ptr PipelineCacheCreateFlags -&gt; IO PipelineCacheCreateFlags
+$cpeek :: Ptr PipelineCacheCreateFlags -&gt; IO PipelineCacheCreateFlags
+pokeByteOff :: Ptr b -&gt; Int -&gt; PipelineCacheCreateFlags -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; PipelineCacheCreateFlags -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO PipelineCacheCreateFlags
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO PipelineCacheCreateFlags
+pokeElemOff :: Ptr PipelineCacheCreateFlags
+-&gt; Int -&gt; PipelineCacheCreateFlags -&gt; IO ()
+$cpokeElemOff :: Ptr PipelineCacheCreateFlags
+-&gt; Int -&gt; PipelineCacheCreateFlags -&gt; IO ()
+peekElemOff :: Ptr PipelineCacheCreateFlags -&gt; Int -&gt; IO PipelineCacheCreateFlags
+$cpeekElemOff :: Ptr PipelineCacheCreateFlags -&gt; Int -&gt; IO PipelineCacheCreateFlags
+alignment :: PipelineCacheCreateFlags -&gt; Int
+$calignment :: PipelineCacheCreateFlags -&gt; Int
+sizeOf :: PipelineCacheCreateFlags -&gt; Int
+$csizeOf :: PipelineCacheCreateFlags -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679993920"><span class="annot"><span class="annottext">PipelineCacheCreateFlags
+PipelineCacheCreateFlags -&gt; Zero PipelineCacheCreateFlags
+forall a. a -&gt; Zero a
+zero :: PipelineCacheCreateFlags
+$czero :: PipelineCacheCreateFlags
+</span><a href="Graphics.Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679993874"><span id="local-6989586621679993876"><span id="local-6989586621679993878"><span id="local-6989586621679993880"><span id="local-6989586621679993882"><span id="local-6989586621679993884"><span id="local-6989586621679993886"><span id="local-6989586621679993888"><span id="local-6989586621679993890"><span id="local-6989586621679993892"><span id="local-6989586621679993894"><span id="local-6989586621679993896"><span id="local-6989586621679993898"><span id="local-6989586621679993900"><span id="local-6989586621679993902"><span id="local-6989586621679993904"><span id="local-6989586621679993906"><span id="local-6989586621679993908"><span id="local-6989586621679993910"><span id="local-6989586621679993912"><span id="local-6989586621679993914"><span id="local-6989586621679993916"><span class="annot"><span class="annottext">Eq PipelineCacheCreateFlags
+PipelineCacheCreateFlags
+Eq PipelineCacheCreateFlags =&gt;
+(PipelineCacheCreateFlags
+ -&gt; PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags)
+-&gt; (PipelineCacheCreateFlags
+    -&gt; PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags)
+-&gt; (PipelineCacheCreateFlags
+    -&gt; PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags)
+-&gt; (PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags)
+-&gt; (PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags)
+-&gt; (PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags)
+-&gt; PipelineCacheCreateFlags
+-&gt; (Int -&gt; PipelineCacheCreateFlags)
+-&gt; (PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags)
+-&gt; (PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags)
+-&gt; (PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags)
+-&gt; (PipelineCacheCreateFlags -&gt; Int -&gt; Bool)
+-&gt; (PipelineCacheCreateFlags -&gt; Maybe Int)
+-&gt; (PipelineCacheCreateFlags -&gt; Int)
+-&gt; (PipelineCacheCreateFlags -&gt; Bool)
+-&gt; (PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags)
+-&gt; (PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags)
+-&gt; (PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags)
+-&gt; (PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags)
+-&gt; (PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags)
+-&gt; (PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags)
+-&gt; (PipelineCacheCreateFlags -&gt; Int)
+-&gt; Bits PipelineCacheCreateFlags
+Int -&gt; PipelineCacheCreateFlags
+PipelineCacheCreateFlags -&gt; Bool
+PipelineCacheCreateFlags -&gt; Int
+PipelineCacheCreateFlags -&gt; Maybe Int
+PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags
+PipelineCacheCreateFlags -&gt; Int -&gt; Bool
+PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags
+PipelineCacheCreateFlags
+-&gt; PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: PipelineCacheCreateFlags -&gt; Int
+$cpopCount :: PipelineCacheCreateFlags -&gt; Int
+rotateR :: PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags
+$crotateR :: PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags
+rotateL :: PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags
+$crotateL :: PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags
+unsafeShiftR :: PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags
+$cunsafeShiftR :: PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags
+shiftR :: PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags
+$cshiftR :: PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags
+unsafeShiftL :: PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags
+$cunsafeShiftL :: PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags
+shiftL :: PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags
+$cshiftL :: PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags
+isSigned :: PipelineCacheCreateFlags -&gt; Bool
+$cisSigned :: PipelineCacheCreateFlags -&gt; Bool
+bitSize :: PipelineCacheCreateFlags -&gt; Int
+$cbitSize :: PipelineCacheCreateFlags -&gt; Int
+bitSizeMaybe :: PipelineCacheCreateFlags -&gt; Maybe Int
+$cbitSizeMaybe :: PipelineCacheCreateFlags -&gt; Maybe Int
+testBit :: PipelineCacheCreateFlags -&gt; Int -&gt; Bool
+$ctestBit :: PipelineCacheCreateFlags -&gt; Int -&gt; Bool
+complementBit :: PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags
+$ccomplementBit :: PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags
+clearBit :: PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags
+$cclearBit :: PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags
+setBit :: PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags
+$csetBit :: PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags
+bit :: Int -&gt; PipelineCacheCreateFlags
+$cbit :: Int -&gt; PipelineCacheCreateFlags
+zeroBits :: PipelineCacheCreateFlags
+$czeroBits :: PipelineCacheCreateFlags
+rotate :: PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags
+$crotate :: PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags
+shift :: PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags
+$cshift :: PipelineCacheCreateFlags -&gt; Int -&gt; PipelineCacheCreateFlags
+complement :: PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags
+$ccomplement :: PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags
+xor :: PipelineCacheCreateFlags
+-&gt; PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags
+$cxor :: PipelineCacheCreateFlags
+-&gt; PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags
+.|. :: PipelineCacheCreateFlags
+-&gt; PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags
+$c.|. :: PipelineCacheCreateFlags
+-&gt; PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags
+.&amp;. :: PipelineCacheCreateFlags
+-&gt; PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags
+$c.&amp;. :: PipelineCacheCreateFlags
+-&gt; PipelineCacheCreateFlags -&gt; PipelineCacheCreateFlags
+$cp1Bits :: Eq PipelineCacheCreateFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span>
+</span><span id="line-32"></span><span>
+</span><span id="line-33"></span><span>
+</span><span id="line-34"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679993868"><span id="local-6989586621679993870"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlags.html#PipelineCacheCreateFlags"><span class="hs-identifier hs-type">PipelineCacheCreateFlags</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-35"></span><span>  </span><span id="local-6989586621679993866"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; PipelineCacheCreateFlags -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></span></span><span> </span><span id="local-6989586621679993864"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621679993864"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-36"></span><span>    </span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlags.html#PipelineCacheCreateFlags"><span class="hs-identifier hs-type">PipelineCacheCreateFlags</span></a></span><span> </span><span id="local-6989586621679993863"><span class="annot"><span class="annottext">x :: Flags
+</span><a href="#local-6989586621679993863"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679993864"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;PipelineCacheCreateFlags 0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621679993863"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-37"></span><span>
+</span><span id="line-38"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679993855"><span id="local-6989586621679993858"><span id="local-6989586621679993860"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlags.html#PipelineCacheCreateFlags"><span class="hs-identifier hs-type">PipelineCacheCreateFlags</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-39"></span><span>  </span><span id="local-6989586621679993853"><span class="annot"><span class="annottext">readPrec :: ReadPrec PipelineCacheCreateFlags
+</span><a href="#local-6989586621679993853"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec PipelineCacheCreateFlags
+-&gt; ReadPrec PipelineCacheCreateFlags
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec PipelineCacheCreateFlags)]
+-&gt; ReadPrec PipelineCacheCreateFlags
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-40"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec PipelineCacheCreateFlags
+-&gt; ReadPrec PipelineCacheCreateFlags
+-&gt; ReadPrec PipelineCacheCreateFlags
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-41"></span><span>                     </span><span class="annot"><span class="annottext">Int
+-&gt; ReadPrec PipelineCacheCreateFlags
+-&gt; ReadPrec PipelineCacheCreateFlags
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-42"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;PipelineCacheCreateFlags&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-43"></span><span>                       </span><span id="local-6989586621679993852"><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621679993852"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags -&gt; ReadPrec Flags
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-44"></span><span>                       </span><span class="annot"><span class="annottext">PipelineCacheCreateFlags -&gt; ReadPrec PipelineCacheCreateFlags
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Flags -&gt; PipelineCacheCreateFlags
+</span><a href="Graphics.Vulkan.Core10.Enums.PipelineCacheCreateFlags.html#PipelineCacheCreateFlags"><span class="hs-identifier hs-var">PipelineCacheCreateFlags</span></a></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621679993852"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span>
+</span><span id="line-46"></span></pre></body></html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Graphics.Vulkan.Core10.Enums.SparseMemoryBindFlagBits</span><span>  </span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.SparseMemoryBindFlagBits.html#SparseMemoryBindFlagBits"><span class="hs-identifier">SparseMemoryBindFlagBits</span></a></span><span class="hs-special">(</span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.SparseMemoryBindFlagBits.html#SPARSE_MEMORY_BIND_METADATA_BIT"><span class="hs-identifier">SPARSE_MEMORY_BIND_METADATA_BIT</span></a></span><span>
+</span><span id="line-3"></span><span>                                                                                        </span><span class="hs-special">,</span><span> </span><span class="hs-glyph">..</span><span>
+</span><span id="line-4"></span><span>                                                                                        </span><span class="hs-special">)</span><span>
+</span><span id="line-5"></span><span>                                                              </span><span class="hs-special">,</span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.SparseMemoryBindFlagBits.html#SparseMemoryBindFlags"><span class="hs-identifier">SparseMemoryBindFlags</span></a></span><span>
+</span><span id="line-6"></span><span>                                                              </span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-7"></span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-20"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-21"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.BaseType.html"><span class="hs-identifier">Graphics.Vulkan.Core10.BaseType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Graphics.Vulkan.Core10.BaseType.html#Flags"><span class="hs-identifier">Flags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-22"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Graphics.Vulkan.Zero.html"><span class="hs-identifier">Graphics.Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Graphics.Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- | VkSparseMemoryBindFlagBits - Bitmask specifying usage of a sparse memory</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- binding operation</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- 'SparseMemoryBindFlags'</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">newtype</span><span> </span><span id="SparseMemoryBindFlagBits"><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.SparseMemoryBindFlagBits.html#SparseMemoryBindFlagBits"><span class="hs-identifier hs-var">SparseMemoryBindFlagBits</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="SparseMemoryBindFlagBits"><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.SparseMemoryBindFlagBits.html#SparseMemoryBindFlagBits"><span class="hs-identifier hs-var">SparseMemoryBindFlagBits</span></a></span></span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.BaseType.html#Flags"><span class="hs-identifier hs-type">Flags</span></a></span><span>
+</span><span id="line-30"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679988938"><span id="local-6989586621679988940"><span class="annot"><span class="annottext">SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; Bool
+(SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; Bool)
+-&gt; (SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; Bool)
+-&gt; Eq SparseMemoryBindFlagBits
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; Bool
+$c/= :: SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; Bool
+== :: SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; Bool
+$c== :: SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679988922"><span id="local-6989586621679988924"><span id="local-6989586621679988926"><span id="local-6989586621679988928"><span id="local-6989586621679988930"><span id="local-6989586621679988932"><span id="local-6989586621679988934"><span class="annot"><span class="annottext">Eq SparseMemoryBindFlagBits
+Eq SparseMemoryBindFlagBits =&gt;
+(SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; Ordering)
+-&gt; (SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; Bool)
+-&gt; (SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; Bool)
+-&gt; (SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; Bool)
+-&gt; (SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; Bool)
+-&gt; (SparseMemoryBindFlagBits
+    -&gt; SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits)
+-&gt; (SparseMemoryBindFlagBits
+    -&gt; SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits)
+-&gt; Ord SparseMemoryBindFlagBits
+SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; Bool
+SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; Ordering
+SparseMemoryBindFlagBits
+-&gt; SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: SparseMemoryBindFlagBits
+-&gt; SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits
+$cmin :: SparseMemoryBindFlagBits
+-&gt; SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits
+max :: SparseMemoryBindFlagBits
+-&gt; SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits
+$cmax :: SparseMemoryBindFlagBits
+-&gt; SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits
+&gt;= :: SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; Bool
+$c&gt;= :: SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; Bool
+&gt; :: SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; Bool
+$c&gt; :: SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; Bool
+&lt;= :: SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; Bool
+$c&lt;= :: SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; Bool
+&lt; :: SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; Bool
+$c&lt; :: SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; Bool
+compare :: SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; Ordering
+$ccompare :: SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; Ordering
+$cp1Ord :: Eq SparseMemoryBindFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679988905"><span id="local-6989586621679988907"><span id="local-6989586621679988909"><span id="local-6989586621679988911"><span id="local-6989586621679988913"><span id="local-6989586621679988915"><span id="local-6989586621679988917"><span id="local-6989586621679988919"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO SparseMemoryBindFlagBits
+Ptr b -&gt; Int -&gt; SparseMemoryBindFlagBits -&gt; IO ()
+Ptr SparseMemoryBindFlagBits -&gt; IO SparseMemoryBindFlagBits
+Ptr SparseMemoryBindFlagBits -&gt; Int -&gt; IO SparseMemoryBindFlagBits
+Ptr SparseMemoryBindFlagBits
+-&gt; Int -&gt; SparseMemoryBindFlagBits -&gt; IO ()
+Ptr SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; IO ()
+SparseMemoryBindFlagBits -&gt; Int
+(SparseMemoryBindFlagBits -&gt; Int)
+-&gt; (SparseMemoryBindFlagBits -&gt; Int)
+-&gt; (Ptr SparseMemoryBindFlagBits
+    -&gt; Int -&gt; IO SparseMemoryBindFlagBits)
+-&gt; (Ptr SparseMemoryBindFlagBits
+    -&gt; Int -&gt; SparseMemoryBindFlagBits -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO SparseMemoryBindFlagBits)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; SparseMemoryBindFlagBits -&gt; IO ())
+-&gt; (Ptr SparseMemoryBindFlagBits -&gt; IO SparseMemoryBindFlagBits)
+-&gt; (Ptr SparseMemoryBindFlagBits
+    -&gt; SparseMemoryBindFlagBits -&gt; IO ())
+-&gt; Storable SparseMemoryBindFlagBits
+forall b. Ptr b -&gt; Int -&gt; IO SparseMemoryBindFlagBits
+forall b. Ptr b -&gt; Int -&gt; SparseMemoryBindFlagBits -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; IO ()
+$cpoke :: Ptr SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits -&gt; IO ()
+peek :: Ptr SparseMemoryBindFlagBits -&gt; IO SparseMemoryBindFlagBits
+$cpeek :: Ptr SparseMemoryBindFlagBits -&gt; IO SparseMemoryBindFlagBits
+pokeByteOff :: Ptr b -&gt; Int -&gt; SparseMemoryBindFlagBits -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; SparseMemoryBindFlagBits -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO SparseMemoryBindFlagBits
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO SparseMemoryBindFlagBits
+pokeElemOff :: Ptr SparseMemoryBindFlagBits
+-&gt; Int -&gt; SparseMemoryBindFlagBits -&gt; IO ()
+$cpokeElemOff :: Ptr SparseMemoryBindFlagBits
+-&gt; Int -&gt; SparseMemoryBindFlagBits -&gt; IO ()
+peekElemOff :: Ptr SparseMemoryBindFlagBits -&gt; Int -&gt; IO SparseMemoryBindFlagBits
+$cpeekElemOff :: Ptr SparseMemoryBindFlagBits -&gt; Int -&gt; IO SparseMemoryBindFlagBits
+alignment :: SparseMemoryBindFlagBits -&gt; Int
+$calignment :: SparseMemoryBindFlagBits -&gt; Int
+sizeOf :: SparseMemoryBindFlagBits -&gt; Int
+$csizeOf :: SparseMemoryBindFlagBits -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679988902"><span class="annot"><span class="annottext">SparseMemoryBindFlagBits
+SparseMemoryBindFlagBits -&gt; Zero SparseMemoryBindFlagBits
+forall a. a -&gt; Zero a
+zero :: SparseMemoryBindFlagBits
+$czero :: SparseMemoryBindFlagBits
+</span><a href="Graphics.Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679988856"><span id="local-6989586621679988858"><span id="local-6989586621679988860"><span id="local-6989586621679988862"><span id="local-6989586621679988864"><span id="local-6989586621679988866"><span id="local-6989586621679988868"><span id="local-6989586621679988870"><span id="local-6989586621679988872"><span id="local-6989586621679988874"><span id="local-6989586621679988876"><span id="local-6989586621679988878"><span id="local-6989586621679988880"><span id="local-6989586621679988882"><span id="local-6989586621679988884"><span id="local-6989586621679988886"><span id="local-6989586621679988888"><span id="local-6989586621679988890"><span id="local-6989586621679988892"><span id="local-6989586621679988894"><span id="local-6989586621679988896"><span id="local-6989586621679988898"><span class="annot"><span class="annottext">Eq SparseMemoryBindFlagBits
+SparseMemoryBindFlagBits
+Eq SparseMemoryBindFlagBits =&gt;
+(SparseMemoryBindFlagBits
+ -&gt; SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits)
+-&gt; (SparseMemoryBindFlagBits
+    -&gt; SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits)
+-&gt; (SparseMemoryBindFlagBits
+    -&gt; SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits)
+-&gt; (SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits)
+-&gt; (SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits)
+-&gt; (SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits)
+-&gt; SparseMemoryBindFlagBits
+-&gt; (Int -&gt; SparseMemoryBindFlagBits)
+-&gt; (SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits)
+-&gt; (SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits)
+-&gt; (SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits)
+-&gt; (SparseMemoryBindFlagBits -&gt; Int -&gt; Bool)
+-&gt; (SparseMemoryBindFlagBits -&gt; Maybe Int)
+-&gt; (SparseMemoryBindFlagBits -&gt; Int)
+-&gt; (SparseMemoryBindFlagBits -&gt; Bool)
+-&gt; (SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits)
+-&gt; (SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits)
+-&gt; (SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits)
+-&gt; (SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits)
+-&gt; (SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits)
+-&gt; (SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits)
+-&gt; (SparseMemoryBindFlagBits -&gt; Int)
+-&gt; Bits SparseMemoryBindFlagBits
+Int -&gt; SparseMemoryBindFlagBits
+SparseMemoryBindFlagBits -&gt; Bool
+SparseMemoryBindFlagBits -&gt; Int
+SparseMemoryBindFlagBits -&gt; Maybe Int
+SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits
+SparseMemoryBindFlagBits -&gt; Int -&gt; Bool
+SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits
+SparseMemoryBindFlagBits
+-&gt; SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: SparseMemoryBindFlagBits -&gt; Int
+$cpopCount :: SparseMemoryBindFlagBits -&gt; Int
+rotateR :: SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits
+$crotateR :: SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits
+rotateL :: SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits
+$crotateL :: SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits
+unsafeShiftR :: SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits
+$cunsafeShiftR :: SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits
+shiftR :: SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits
+$cshiftR :: SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits
+unsafeShiftL :: SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits
+$cunsafeShiftL :: SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits
+shiftL :: SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits
+$cshiftL :: SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits
+isSigned :: SparseMemoryBindFlagBits -&gt; Bool
+$cisSigned :: SparseMemoryBindFlagBits -&gt; Bool
+bitSize :: SparseMemoryBindFlagBits -&gt; Int
+$cbitSize :: SparseMemoryBindFlagBits -&gt; Int
+bitSizeMaybe :: SparseMemoryBindFlagBits -&gt; Maybe Int
+$cbitSizeMaybe :: SparseMemoryBindFlagBits -&gt; Maybe Int
+testBit :: SparseMemoryBindFlagBits -&gt; Int -&gt; Bool
+$ctestBit :: SparseMemoryBindFlagBits -&gt; Int -&gt; Bool
+complementBit :: SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits
+$ccomplementBit :: SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits
+clearBit :: SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits
+$cclearBit :: SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits
+setBit :: SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits
+$csetBit :: SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits
+bit :: Int -&gt; SparseMemoryBindFlagBits
+$cbit :: Int -&gt; SparseMemoryBindFlagBits
+zeroBits :: SparseMemoryBindFlagBits
+$czeroBits :: SparseMemoryBindFlagBits
+rotate :: SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits
+$crotate :: SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits
+shift :: SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits
+$cshift :: SparseMemoryBindFlagBits -&gt; Int -&gt; SparseMemoryBindFlagBits
+complement :: SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits
+$ccomplement :: SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits
+xor :: SparseMemoryBindFlagBits
+-&gt; SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits
+$cxor :: SparseMemoryBindFlagBits
+-&gt; SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits
+.|. :: SparseMemoryBindFlagBits
+-&gt; SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits
+$c.|. :: SparseMemoryBindFlagBits
+-&gt; SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits
+.&amp;. :: SparseMemoryBindFlagBits
+-&gt; SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits
+$c.&amp;. :: SparseMemoryBindFlagBits
+-&gt; SparseMemoryBindFlagBits -&gt; SparseMemoryBindFlagBits
+$cp1Bits :: Eq SparseMemoryBindFlagBits
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span>
+</span><span id="line-32"></span><span class="hs-comment">-- | 'SPARSE_MEMORY_BIND_METADATA_BIT' specifies that the memory being bound</span><span>
+</span><span id="line-33"></span><span class="hs-comment">-- is only for the metadata aspect.</span><span>
+</span><span id="line-34"></span><span class="hs-keyword">pattern</span><span> </span><span id="%24bSPARSE_MEMORY_BIND_METADATA_BIT"><span id="%24mSPARSE_MEMORY_BIND_METADATA_BIT"><span id="SPARSE_MEMORY_BIND_METADATA_BIT"><span class="annot"><span class="annottext">$bSPARSE_MEMORY_BIND_METADATA_BIT :: SparseMemoryBindFlagBits
+$mSPARSE_MEMORY_BIND_METADATA_BIT :: forall r.
+SparseMemoryBindFlagBits -&gt; (Void# -&gt; r) -&gt; (Void# -&gt; r) -&gt; r
+</span><a href="Graphics.Vulkan.Core10.Enums.SparseMemoryBindFlagBits.html#%24bSPARSE_MEMORY_BIND_METADATA_BIT"><span class="hs-identifier hs-var hs-var hs-var">SPARSE_MEMORY_BIND_METADATA_BIT</span></a></span></span></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.SparseMemoryBindFlagBits.html#SparseMemoryBindFlagBits"><span class="hs-identifier hs-type">SparseMemoryBindFlagBits</span></a></span><span> </span><span class="hs-number">0x00000001</span><span>
+</span><span id="line-35"></span><span>
+</span><span id="line-36"></span><span class="hs-keyword">type</span><span> </span><span id="SparseMemoryBindFlags"><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.SparseMemoryBindFlagBits.html#SparseMemoryBindFlags"><span class="hs-identifier hs-var">SparseMemoryBindFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.SparseMemoryBindFlagBits.html#SparseMemoryBindFlagBits"><span class="hs-identifier hs-type">SparseMemoryBindFlagBits</span></a></span><span>
+</span><span id="line-37"></span><span>
+</span><span id="line-38"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679988848"><span id="local-6989586621679988850"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.SparseMemoryBindFlagBits.html#SparseMemoryBindFlagBits"><span class="hs-identifier hs-type">SparseMemoryBindFlagBits</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-39"></span><span>  </span><span id="local-6989586621679988846"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; SparseMemoryBindFlagBits -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></span></span><span> </span><span id="local-6989586621679988844"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621679988844"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-40"></span><span>    </span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.SparseMemoryBindFlagBits.html#SPARSE_MEMORY_BIND_METADATA_BIT"><span class="hs-identifier hs-type">SPARSE_MEMORY_BIND_METADATA_BIT</span></a></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;SPARSE_MEMORY_BIND_METADATA_BIT&quot;</span></span><span>
+</span><span id="line-41"></span><span>    </span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.SparseMemoryBindFlagBits.html#SparseMemoryBindFlagBits"><span class="hs-identifier hs-type">SparseMemoryBindFlagBits</span></a></span><span> </span><span id="local-6989586621679988843"><span class="annot"><span class="annottext">x :: Flags
+</span><a href="#local-6989586621679988843"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679988844"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;SparseMemoryBindFlagBits 0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621679988843"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-42"></span><span>
+</span><span id="line-43"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679988835"><span id="local-6989586621679988838"><span id="local-6989586621679988840"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.SparseMemoryBindFlagBits.html#SparseMemoryBindFlagBits"><span class="hs-identifier hs-type">SparseMemoryBindFlagBits</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-44"></span><span>  </span><span id="local-6989586621679988833"><span class="annot"><span class="annottext">readPrec :: ReadPrec SparseMemoryBindFlagBits
+</span><a href="#local-6989586621679988833"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec SparseMemoryBindFlagBits
+-&gt; ReadPrec SparseMemoryBindFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec SparseMemoryBindFlagBits)]
+-&gt; ReadPrec SparseMemoryBindFlagBits
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">(</span><span class="annot"><span class="hs-string">&quot;SPARSE_MEMORY_BIND_METADATA_BIT&quot;</span></span><span class="hs-special">,</span><span> </span><span class="annot"><span class="annottext">SparseMemoryBindFlagBits -&gt; ReadPrec SparseMemoryBindFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="annot"><span class="annottext">SparseMemoryBindFlagBits
+</span><a href="Graphics.Vulkan.Core10.Enums.SparseMemoryBindFlagBits.html#SPARSE_MEMORY_BIND_METADATA_BIT"><span class="hs-identifier hs-var">SPARSE_MEMORY_BIND_METADATA_BIT</span></a></span><span class="hs-special">)</span><span class="hs-special">]</span><span>
+</span><span id="line-45"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec SparseMemoryBindFlagBits
+-&gt; ReadPrec SparseMemoryBindFlagBits
+-&gt; ReadPrec SparseMemoryBindFlagBits
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-46"></span><span>                     </span><span class="annot"><span class="annottext">Int
+-&gt; ReadPrec SparseMemoryBindFlagBits
+-&gt; ReadPrec SparseMemoryBindFlagBits
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-47"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;SparseMemoryBindFlagBits&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-48"></span><span>                       </span><span id="local-6989586621679988832"><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621679988832"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags -&gt; ReadPrec Flags
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-49"></span><span>                       </span><span class="annot"><span class="annottext">SparseMemoryBindFlagBits -&gt; ReadPrec SparseMemoryBindFlagBits
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Flags -&gt; SparseMemoryBindFlagBits
+</span><a href="Graphics.Vulkan.Core10.Enums.SparseMemoryBindFlagBits.html#SparseMemoryBindFlagBits"><span class="hs-identifier hs-var">SparseMemoryBindFlagBits</span></a></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621679988832"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-50"></span><span>
+</span><span id="line-51"></span></pre></body></html>

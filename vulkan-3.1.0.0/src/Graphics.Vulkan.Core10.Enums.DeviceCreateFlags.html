@@ -1,0 +1,281 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><link rel="stylesheet" type="text/css" href="style.css" /><script type="text/javascript" src="highlight.js"></script></head><body><pre><span class="hs-pragma">{-# language CPP #-}</span><span>
+</span><span id="line-2"></span><span class="hs-keyword">module</span><span> </span><span class="hs-identifier">Graphics.Vulkan.Core10.Enums.DeviceCreateFlags</span><span>  </span><span class="hs-special">(</span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.DeviceCreateFlags.html#DeviceCreateFlags"><span class="hs-identifier">DeviceCreateFlags</span></a></span><span class="hs-special">(</span><span class="hs-glyph">..</span><span class="hs-special">)</span><span class="hs-special">)</span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-3"></span><span>
+</span><span id="line-4"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">choose</span></span><span class="hs-special">)</span><span>
+</span><span id="line-5"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">expectP</span></span><span class="hs-special">)</span><span>
+</span><span id="line-6"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">parens</span></span><span class="hs-special">)</span><span>
+</span><span id="line-7"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showParen</span></span><span class="hs-special">)</span><span>
+</span><span id="line-8"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Show</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showString</span></span><span class="hs-special">)</span><span>
+</span><span id="line-9"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Numeric</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">showHex</span></span><span class="hs-special">)</span><span>
+</span><span id="line-10"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-operator">(+++)</span></span><span class="hs-special">)</span><span>
+</span><span id="line-11"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">prec</span></span><span class="hs-special">)</span><span>
+</span><span id="line-12"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.ParserCombinators.ReadPrec</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">step</span></span><span class="hs-special">)</span><span>
+</span><span id="line-13"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Data.Bits</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Bits</span></span><span class="hs-special">)</span><span>
+</span><span id="line-14"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Foreign.Storable</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Storable</span></span><span class="hs-special">)</span><span>
+</span><span id="line-15"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">GHC.Read</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Read</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">readPrec</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-16"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><span class="hs-identifier">Text.Read.Lex</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Lexeme</span></span><span class="hs-special">(</span><span class="annot"><span class="hs-identifier">Ident</span></span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-17"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.BaseType.html"><span class="hs-identifier">Graphics.Vulkan.Core10.BaseType</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Graphics.Vulkan.Core10.BaseType.html#Flags"><span class="hs-identifier">Flags</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-18"></span><span class="hs-keyword">import</span><span> </span><span class="annot"><a href="Graphics.Vulkan.Zero.html"><span class="hs-identifier">Graphics.Vulkan.Zero</span></a></span><span> </span><span class="hs-special">(</span><span class="annot"><a href="Graphics.Vulkan.Zero.html#Zero"><span class="hs-identifier">Zero</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-19"></span><span class="hs-comment">-- | VkDeviceCreateFlags - Reserved for future use</span><span>
+</span><span id="line-20"></span><span class="hs-comment">--</span><span>
+</span><span id="line-21"></span><span class="hs-comment">-- = Description</span><span>
+</span><span id="line-22"></span><span class="hs-comment">--</span><span>
+</span><span id="line-23"></span><span class="hs-comment">-- 'DeviceCreateFlags' is a bitmask type for setting a mask, but is</span><span>
+</span><span id="line-24"></span><span class="hs-comment">-- currently reserved for future use.</span><span>
+</span><span id="line-25"></span><span class="hs-comment">--</span><span>
+</span><span id="line-26"></span><span class="hs-comment">-- = See Also</span><span>
+</span><span id="line-27"></span><span class="hs-comment">--</span><span>
+</span><span id="line-28"></span><span class="hs-comment">-- 'Graphics.Vulkan.Core10.Device.DeviceCreateInfo'</span><span>
+</span><span id="line-29"></span><span class="hs-keyword">newtype</span><span> </span><span id="DeviceCreateFlags"><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.DeviceCreateFlags.html#DeviceCreateFlags"><span class="hs-identifier hs-var">DeviceCreateFlags</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span id="DeviceCreateFlags"><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.DeviceCreateFlags.html#DeviceCreateFlags"><span class="hs-identifier hs-var">DeviceCreateFlags</span></a></span></span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.BaseType.html#Flags"><span class="hs-identifier hs-type">Flags</span></a></span><span>
+</span><span id="line-30"></span><span>  </span><span class="hs-keyword">deriving</span><span> </span><span class="annot"><span class="hs-keyword">newtype</span></span><span> </span><span class="hs-special">(</span><span id="local-6989586621679999519"><span id="local-6989586621679999521"><span class="annot"><span class="annottext">DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; Bool
+(DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; Bool)
+-&gt; (DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; Bool)
+-&gt; Eq DeviceCreateFlags
+forall a. (a -&gt; a -&gt; Bool) -&gt; (a -&gt; a -&gt; Bool) -&gt; Eq a
+/= :: DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; Bool
+$c/= :: DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; Bool
+== :: DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; Bool
+$c== :: DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; Bool
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var">Eq</span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679999503"><span id="local-6989586621679999505"><span id="local-6989586621679999507"><span id="local-6989586621679999509"><span id="local-6989586621679999511"><span id="local-6989586621679999513"><span id="local-6989586621679999515"><span class="annot"><span class="annottext">Eq DeviceCreateFlags
+Eq DeviceCreateFlags =&gt;
+(DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; Ordering)
+-&gt; (DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; Bool)
+-&gt; (DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; Bool)
+-&gt; (DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; Bool)
+-&gt; (DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; Bool)
+-&gt; (DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; DeviceCreateFlags)
+-&gt; (DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; DeviceCreateFlags)
+-&gt; Ord DeviceCreateFlags
+DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; Bool
+DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; Ordering
+DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; DeviceCreateFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; Ordering)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; Bool)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; Ord a
+min :: DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; DeviceCreateFlags
+$cmin :: DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; DeviceCreateFlags
+max :: DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; DeviceCreateFlags
+$cmax :: DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; DeviceCreateFlags
+&gt;= :: DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; Bool
+$c&gt;= :: DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; Bool
+&gt; :: DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; Bool
+$c&gt; :: DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; Bool
+&lt;= :: DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; Bool
+$c&lt;= :: DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; Bool
+&lt; :: DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; Bool
+$c&lt; :: DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; Bool
+compare :: DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; Ordering
+$ccompare :: DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; Ordering
+$cp1Ord :: Eq DeviceCreateFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Ord</span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679999486"><span id="local-6989586621679999488"><span id="local-6989586621679999490"><span id="local-6989586621679999492"><span id="local-6989586621679999494"><span id="local-6989586621679999496"><span id="local-6989586621679999498"><span id="local-6989586621679999500"><span class="annot"><span class="annottext">Ptr b -&gt; Int -&gt; IO DeviceCreateFlags
+Ptr b -&gt; Int -&gt; DeviceCreateFlags -&gt; IO ()
+Ptr DeviceCreateFlags -&gt; IO DeviceCreateFlags
+Ptr DeviceCreateFlags -&gt; Int -&gt; IO DeviceCreateFlags
+Ptr DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags -&gt; IO ()
+Ptr DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; IO ()
+DeviceCreateFlags -&gt; Int
+(DeviceCreateFlags -&gt; Int)
+-&gt; (DeviceCreateFlags -&gt; Int)
+-&gt; (Ptr DeviceCreateFlags -&gt; Int -&gt; IO DeviceCreateFlags)
+-&gt; (Ptr DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO DeviceCreateFlags)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; DeviceCreateFlags -&gt; IO ())
+-&gt; (Ptr DeviceCreateFlags -&gt; IO DeviceCreateFlags)
+-&gt; (Ptr DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; IO ())
+-&gt; Storable DeviceCreateFlags
+forall b. Ptr b -&gt; Int -&gt; IO DeviceCreateFlags
+forall b. Ptr b -&gt; Int -&gt; DeviceCreateFlags -&gt; IO ()
+forall a.
+(a -&gt; Int)
+-&gt; (a -&gt; Int)
+-&gt; (Ptr a -&gt; Int -&gt; IO a)
+-&gt; (Ptr a -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (forall b. Ptr b -&gt; Int -&gt; IO a)
+-&gt; (forall b. Ptr b -&gt; Int -&gt; a -&gt; IO ())
+-&gt; (Ptr a -&gt; IO a)
+-&gt; (Ptr a -&gt; a -&gt; IO ())
+-&gt; Storable a
+poke :: Ptr DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; IO ()
+$cpoke :: Ptr DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; IO ()
+peek :: Ptr DeviceCreateFlags -&gt; IO DeviceCreateFlags
+$cpeek :: Ptr DeviceCreateFlags -&gt; IO DeviceCreateFlags
+pokeByteOff :: Ptr b -&gt; Int -&gt; DeviceCreateFlags -&gt; IO ()
+$cpokeByteOff :: forall b. Ptr b -&gt; Int -&gt; DeviceCreateFlags -&gt; IO ()
+peekByteOff :: Ptr b -&gt; Int -&gt; IO DeviceCreateFlags
+$cpeekByteOff :: forall b. Ptr b -&gt; Int -&gt; IO DeviceCreateFlags
+pokeElemOff :: Ptr DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags -&gt; IO ()
+$cpokeElemOff :: Ptr DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags -&gt; IO ()
+peekElemOff :: Ptr DeviceCreateFlags -&gt; Int -&gt; IO DeviceCreateFlags
+$cpeekElemOff :: Ptr DeviceCreateFlags -&gt; Int -&gt; IO DeviceCreateFlags
+alignment :: DeviceCreateFlags -&gt; Int
+$calignment :: DeviceCreateFlags -&gt; Int
+sizeOf :: DeviceCreateFlags -&gt; Int
+$csizeOf :: DeviceCreateFlags -&gt; Int
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Storable</span></span></span></span></span></span></span></span></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679999483"><span class="annot"><span class="annottext">DeviceCreateFlags
+DeviceCreateFlags -&gt; Zero DeviceCreateFlags
+forall a. a -&gt; Zero a
+zero :: DeviceCreateFlags
+$czero :: DeviceCreateFlags
+</span><a href="Graphics.Vulkan.Zero.html#C%3AZero"><span class="hs-identifier hs-var hs-var hs-var hs-var">Zero</span></a></span></span><span class="hs-special">,</span><span> </span><span id="local-6989586621679999437"><span id="local-6989586621679999439"><span id="local-6989586621679999441"><span id="local-6989586621679999443"><span id="local-6989586621679999445"><span id="local-6989586621679999447"><span id="local-6989586621679999449"><span id="local-6989586621679999451"><span id="local-6989586621679999453"><span id="local-6989586621679999455"><span id="local-6989586621679999457"><span id="local-6989586621679999459"><span id="local-6989586621679999461"><span id="local-6989586621679999463"><span id="local-6989586621679999465"><span id="local-6989586621679999467"><span id="local-6989586621679999469"><span id="local-6989586621679999471"><span id="local-6989586621679999473"><span id="local-6989586621679999475"><span id="local-6989586621679999477"><span id="local-6989586621679999479"><span class="annot"><span class="annottext">Eq DeviceCreateFlags
+DeviceCreateFlags
+Eq DeviceCreateFlags =&gt;
+(DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; DeviceCreateFlags)
+-&gt; (DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; DeviceCreateFlags)
+-&gt; (DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; DeviceCreateFlags)
+-&gt; (DeviceCreateFlags -&gt; DeviceCreateFlags)
+-&gt; (DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags)
+-&gt; (DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags)
+-&gt; DeviceCreateFlags
+-&gt; (Int -&gt; DeviceCreateFlags)
+-&gt; (DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags)
+-&gt; (DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags)
+-&gt; (DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags)
+-&gt; (DeviceCreateFlags -&gt; Int -&gt; Bool)
+-&gt; (DeviceCreateFlags -&gt; Maybe Int)
+-&gt; (DeviceCreateFlags -&gt; Int)
+-&gt; (DeviceCreateFlags -&gt; Bool)
+-&gt; (DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags)
+-&gt; (DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags)
+-&gt; (DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags)
+-&gt; (DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags)
+-&gt; (DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags)
+-&gt; (DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags)
+-&gt; (DeviceCreateFlags -&gt; Int)
+-&gt; Bits DeviceCreateFlags
+Int -&gt; DeviceCreateFlags
+DeviceCreateFlags -&gt; Bool
+DeviceCreateFlags -&gt; Int
+DeviceCreateFlags -&gt; Maybe Int
+DeviceCreateFlags -&gt; DeviceCreateFlags
+DeviceCreateFlags -&gt; Int -&gt; Bool
+DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags
+DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; DeviceCreateFlags
+forall a.
+Eq a =&gt;
+(a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a -&gt; a)
+-&gt; (a -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; a
+-&gt; (Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; Bool)
+-&gt; (a -&gt; Maybe Int)
+-&gt; (a -&gt; Int)
+-&gt; (a -&gt; Bool)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int -&gt; a)
+-&gt; (a -&gt; Int)
+-&gt; Bits a
+popCount :: DeviceCreateFlags -&gt; Int
+$cpopCount :: DeviceCreateFlags -&gt; Int
+rotateR :: DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags
+$crotateR :: DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags
+rotateL :: DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags
+$crotateL :: DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags
+unsafeShiftR :: DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags
+$cunsafeShiftR :: DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags
+shiftR :: DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags
+$cshiftR :: DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags
+unsafeShiftL :: DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags
+$cunsafeShiftL :: DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags
+shiftL :: DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags
+$cshiftL :: DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags
+isSigned :: DeviceCreateFlags -&gt; Bool
+$cisSigned :: DeviceCreateFlags -&gt; Bool
+bitSize :: DeviceCreateFlags -&gt; Int
+$cbitSize :: DeviceCreateFlags -&gt; Int
+bitSizeMaybe :: DeviceCreateFlags -&gt; Maybe Int
+$cbitSizeMaybe :: DeviceCreateFlags -&gt; Maybe Int
+testBit :: DeviceCreateFlags -&gt; Int -&gt; Bool
+$ctestBit :: DeviceCreateFlags -&gt; Int -&gt; Bool
+complementBit :: DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags
+$ccomplementBit :: DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags
+clearBit :: DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags
+$cclearBit :: DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags
+setBit :: DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags
+$csetBit :: DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags
+bit :: Int -&gt; DeviceCreateFlags
+$cbit :: Int -&gt; DeviceCreateFlags
+zeroBits :: DeviceCreateFlags
+$czeroBits :: DeviceCreateFlags
+rotate :: DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags
+$crotate :: DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags
+shift :: DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags
+$cshift :: DeviceCreateFlags -&gt; Int -&gt; DeviceCreateFlags
+complement :: DeviceCreateFlags -&gt; DeviceCreateFlags
+$ccomplement :: DeviceCreateFlags -&gt; DeviceCreateFlags
+xor :: DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; DeviceCreateFlags
+$cxor :: DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; DeviceCreateFlags
+.|. :: DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; DeviceCreateFlags
+$c.|. :: DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; DeviceCreateFlags
+.&amp;. :: DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; DeviceCreateFlags
+$c.&amp;. :: DeviceCreateFlags -&gt; DeviceCreateFlags -&gt; DeviceCreateFlags
+$cp1Bits :: Eq DeviceCreateFlags
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var hs-var">Bits</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="hs-special">)</span><span>
+</span><span id="line-31"></span><span>
+</span><span id="line-32"></span><span>
+</span><span id="line-33"></span><span>
+</span><span id="line-34"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679999431"><span id="local-6989586621679999433"><span class="annot"><span class="hs-identifier hs-type">Show</span></span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.DeviceCreateFlags.html#DeviceCreateFlags"><span class="hs-identifier hs-type">DeviceCreateFlags</span></a></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-35"></span><span>  </span><span id="local-6989586621679999429"><span class="annot"><span class="annottext">showsPrec :: Int -&gt; DeviceCreateFlags -&gt; ShowS
+</span><span class="hs-identifier hs-var hs-var hs-var hs-var">showsPrec</span></span></span><span> </span><span id="local-6989586621679999427"><span class="annot"><span class="annottext">p :: Int
+</span><a href="#local-6989586621679999427"><span class="hs-identifier hs-var">p</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="hs-glyph">\</span><span class="hs-glyph">case</span><span>
+</span><span id="line-36"></span><span>    </span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.DeviceCreateFlags.html#DeviceCreateFlags"><span class="hs-identifier hs-type">DeviceCreateFlags</span></a></span><span> </span><span id="local-6989586621679999426"><span class="annot"><span class="annottext">x :: Flags
+</span><a href="#local-6989586621679999426"><span class="hs-identifier hs-var">x</span></a></span></span><span> </span><span class="hs-glyph">-&gt;</span><span> </span><span class="annot"><span class="annottext">Bool -&gt; ShowS -&gt; ShowS
+</span><span class="hs-identifier hs-var">showParen</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Int
+</span><a href="#local-6989586621679999427"><span class="hs-identifier hs-var">p</span></a></span><span> </span><span class="annot"><span class="annottext">Int -&gt; Int -&gt; Bool
+forall a. Ord a =&gt; a -&gt; a -&gt; Bool
+</span><span class="hs-operator hs-var">&gt;=</span></span><span> </span><span class="annot"><span class="hs-number">11</span></span><span class="hs-special">)</span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; ShowS
+</span><span class="hs-identifier hs-var">showString</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DeviceCreateFlags 0x&quot;</span></span><span> </span><span class="annot"><span class="annottext">ShowS -&gt; ShowS -&gt; ShowS
+forall b c a. (b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c
+</span><span class="hs-operator hs-var">.</span></span><span> </span><span class="annot"><span class="annottext">Flags -&gt; ShowS
+forall a. (Integral a, Show a) =&gt; a -&gt; ShowS
+</span><span class="hs-identifier hs-var">showHex</span></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621679999426"><span class="hs-identifier hs-var">x</span></a></span><span class="hs-special">)</span><span>
+</span><span id="line-37"></span><span>
+</span><span id="line-38"></span><span class="hs-keyword">instance</span><span> </span><span id="local-6989586621679999418"><span id="local-6989586621679999421"><span id="local-6989586621679999423"><span class="annot"><span class="hs-identifier hs-type">Read</span></span><span> </span><span class="annot"><a href="Graphics.Vulkan.Core10.Enums.DeviceCreateFlags.html#DeviceCreateFlags"><span class="hs-identifier hs-type">DeviceCreateFlags</span></a></span></span></span></span><span> </span><span class="hs-keyword">where</span><span>
+</span><span id="line-39"></span><span>  </span><span id="local-6989586621679999416"><span class="annot"><span class="annottext">readPrec :: ReadPrec DeviceCreateFlags
+</span><a href="#local-6989586621679999416"><span class="hs-identifier hs-var hs-var hs-var hs-var">readPrec</span></a></span></span><span> </span><span class="hs-glyph">=</span><span> </span><span class="annot"><span class="annottext">ReadPrec DeviceCreateFlags -&gt; ReadPrec DeviceCreateFlags
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">parens</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">[(String, ReadPrec DeviceCreateFlags)]
+-&gt; ReadPrec DeviceCreateFlags
+forall a. [(String, ReadPrec a)] -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">choose</span></span><span> </span><span class="hs-special">[</span><span class="hs-special">]</span><span>
+</span><span id="line-40"></span><span>                     </span><span class="annot"><span class="annottext">ReadPrec DeviceCreateFlags
+-&gt; ReadPrec DeviceCreateFlags -&gt; ReadPrec DeviceCreateFlags
+forall a. ReadPrec a -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-operator hs-var">+++</span></span><span>
+</span><span id="line-41"></span><span>                     </span><span class="annot"><span class="annottext">Int -&gt; ReadPrec DeviceCreateFlags -&gt; ReadPrec DeviceCreateFlags
+forall a. Int -&gt; ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">prec</span></span><span> </span><span class="annot"><span class="hs-number">10</span></span><span> </span><span class="hs-special">(</span><span class="hs-keyword">do</span><span>
+</span><span id="line-42"></span><span>                       </span><span class="annot"><span class="annottext">Lexeme -&gt; ReadPrec ()
+</span><span class="hs-identifier hs-var">expectP</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">String -&gt; Lexeme
+</span><span class="hs-identifier hs-var">Ident</span></span><span> </span><span class="annot"><span class="hs-string">&quot;DeviceCreateFlags&quot;</span></span><span class="hs-special">)</span><span>
+</span><span id="line-43"></span><span>                       </span><span id="local-6989586621679999415"><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621679999415"><span class="hs-identifier hs-var">v</span></a></span></span><span> </span><span class="hs-glyph">&lt;-</span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags -&gt; ReadPrec Flags
+forall a. ReadPrec a -&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">step</span></span><span> </span><span class="annot"><span class="annottext">ReadPrec Flags
+forall a. Read a =&gt; ReadPrec a
+</span><span class="hs-identifier hs-var">readPrec</span></span><span>
+</span><span id="line-44"></span><span>                       </span><span class="annot"><span class="annottext">DeviceCreateFlags -&gt; ReadPrec DeviceCreateFlags
+forall (f :: * -&gt; *) a. Applicative f =&gt; a -&gt; f a
+</span><span class="hs-identifier hs-var">pure</span></span><span> </span><span class="hs-special">(</span><span class="annot"><span class="annottext">Flags -&gt; DeviceCreateFlags
+</span><a href="Graphics.Vulkan.Core10.Enums.DeviceCreateFlags.html#DeviceCreateFlags"><span class="hs-identifier hs-var">DeviceCreateFlags</span></a></span><span> </span><span class="annot"><span class="annottext">Flags
+</span><a href="#local-6989586621679999415"><span class="hs-identifier hs-var">v</span></a></span><span class="hs-special">)</span><span class="hs-special">)</span><span class="hs-special">)</span><span>
+</span><span id="line-45"></span><span>
+</span><span id="line-46"></span></pre></body></html>
